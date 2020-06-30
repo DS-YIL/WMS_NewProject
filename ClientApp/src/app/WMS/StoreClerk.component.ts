@@ -114,7 +114,7 @@ export class StoreClerkComponent implements OnInit {
     this.inwardModel.pendingqty = parseInt(this.PoDetails.quotationqty) - this.inwardModel.confirmqty;
   }
   onsubmitGRN() {
-    if (this.podetailsList.length > 0) {
+    if (this.podetailsList.length > 0 && this.podetailsList[0].receivedqty>'0') {
 
       this.spinner.show();
       // this.onVerifyDetails(this.podetailsList);
