@@ -225,7 +225,7 @@ namespace WMS.Common {
         ///   Looks up a localized string similar to select distinct openpo.projectname,inwa.invoiceno,inwa.grnnumber,inwa.pono,openpo.material, (inw.confirmqty+inw.returnqty) as receivedqty,openpo.materialdescription, openpo.quotationqty,inw.receivedqty,inw.confirmqty,inw.returnqty from wms.wms_securityinward inwa  
         /// left join wms.wms_storeinward inw on inw.inwmasterid=inwa.inwmasterid
         /// inner join wms.openpolistview openpo on openpo.pono=inwa.pono
-        ///  where  inwa.pono=&apos;#pono&apos;  and inwa.invoiceno= &apos;#invoiceno&apos; and inw.confirmqty&gt;0 order by inwa.grnnumber des [rest of string was truncated]&quot;;.
+        ///  where  inwa.pono=&apos;#pono&apos;  and inwa.invoiceno= &apos;#invoiceno&apos;  order by inwa.grnnumber desc.
         /// </summary>
         public static string Getdetailsforthreewaymatching {
             get {
