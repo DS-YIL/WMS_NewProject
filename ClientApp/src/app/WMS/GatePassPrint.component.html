@@ -1,0 +1,114 @@
+<div *ngIf="materialList.length>0" id="printTemplate" style="margin-left:5px;margin-right:5px;">
+  <!--<div class="row">
+    <div class="col-lg-8 col-md-8 col-sm-8"></div>
+    <div class="col-lg-4 col-md-4 col-sm-4">Doc No:768787</div>
+  </div>-->
+      <table border="1" style="margin-top:10px">
+        <thead>
+          <tr>
+            <td>
+              <div class="row printheader" style="margin: 0px; padding-top: 5px;">
+                <div class="col-lg-4 col-md-4 col-sm-4 "><img src="assets/banner1.jpg" height="60" width="150" /></div>
+                <div class="col-lg-3 col-md-3 col-sm-3"></div>
+                <div class="col-lg-5 col-md-5 col-sm-5 form-group">
+                  <span class="form-group"><b>Yokogawa India Limited</b></span><br />
+                  <span class="form-group">Plot No.96, Complex,3rd Cross, Hosur Road,</span><br />
+                  <span class="form-group"> Electronic City, Bengaluru, Karnataka 560100</span>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <div class="printmain">
+                <div class="row" style="border-bottom: 1px solid;margin: 0px;padding-top: 5px;">
+                  <div class="col-lg-4 col-md-4 col-sm-4"></div>
+                  <div class="col-lg-6 col-md-6 col-sm-6 form-group">
+                    <label class="form-label"><b>Gate Pass ({{materialList[0].gatepasstype}} Items)</b></label>
+                  </div>
+                </div>
+                <div class="row" style="border-bottom: 1px solid;margin: 0px;padding-top: 5px;">
+                  <div class="col-lg-6 col-md-6 col-sm-6 form-group">
+                    <label class="form-label"><b>Name of the person:</b></label>&nbsp;<span>{{materialList[0].name}}</span><br />
+                    <label class="form-label"><b>Representing:</b></label>&nbsp;<span>{{materialList[0].vendorname}}</span><br />
+                    <label class="form-label"><b>Document Ref:</b></label>&nbsp;<span>{{materialList[0].referenceno}}</span>
+                  </div>
+                  <div class="col-lg-2 col-md-2 col-sm-2"></div>
+                  <div class="col-lg-4 col-md-4 col-sm-4 form-group">
+                    <label class="form-label"><b>No:</b></label>&nbsp;<span>{{materialList[0].gatepassid}}</span><br />
+                    <label class="form-label"><b>Date:</b></label>&nbsp;<span>{{materialList[0].requestedon  | date :  constants.dateFormat}}</span><br />
+                  </div>
+                </div>
+                <div class="row m-2">
+                  <p-table *ngIf="materialList.length>0" [value]="materialList" [style]="{'width':'97%','height':'80%','overflow':'auto!important'}"
+                           [responsive]="true" [rows]="50"
+                           [resizableColumns]="true"
+                           columnResizeMode="expand"
+                           appendTo="body">
+                    <ng-template pTemplate="header">
+          <tr>
+            <th class="ptable-cell" style="text-align:center">Sl No</th>
+            <!--<th class="ptable-cell">Material</th>-->
+            <th class="ptable-cell" style="text-align:center">Material Description</th>
+            <th class="ptable-cell" style="text-align:center">Quantity</th>
+            <!--<th class="ptable-cell">Value</th>-->
+            <th class="ptable-cell" style="text-align:center">Remarks</th>
+            <!--<th class="ptable-cell">Expected Date</th>-->
+            <!--<th *ngIf="materialList[0].gatepasstype=='Returnable'" class="ptable-cell">Returned Date</th>-->
+          </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex" let-rindex=0>
+            <tr>
+              <td class="ptable-cell" style="text-align:right"> {{ri+1}} </td>
+              <!--<td class="ptable-cell" style="text-align:right"> {{rowData.materialid}} </td>-->
+              <td class="ptable-cell" style="text-align:right"> {{rowData.materialdescription}} </td>
+              <td class="ptable-cell" style="text-align:right">{{rowData.quantity}}</td>
+              <!--<td class="ptable-cell" style="text-align:right">{{rowData.materialcost}}</td>-->
+              <td class="ptable-cell" style="text-align:right"> {{rowData.remarks}} </td>
+
+              <!--<td class="ptable-cell" style="text-align:right">{{rowData.expecteddate | date :  constants.dateFormat}}</td>-->
+              <!--<td *ngIf="materialList[0].gatepasstype=='Returnable'" class="ptable-cell" style="text-align:right">{{rowData.returneddate | date :  constants.dateFormat}}</td>-->
+          </ng-template>
+          </p-table>
+          <br />
+          <div class="col-lg-4 col-md-4 col-sm-4"></div>
+          <div class="col-lg-2 col-md-2 col-sm-2">
+            <span style="text-align:center" *ngIf="materialList.length==1"><b>Total {{materialList.length}} Item</b></span>
+            <span style="text-align:center" *ngIf="materialList.length>1"><b>Total {{materialList.length}} Items</b></span>
+          </div>
+    </div>
+  </div>
+  </td>
+  </tr>
+  </tbody>
+  <tfoot>
+    <div class="printfooter">
+      <div class="row m-0" >
+        <div class="col-lg-3 col-md-3 col-sm-3 form-inline">
+          <label class="form-label">Authorised by : </label>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-3 form-inline">
+          <label class="form-label">Prepared by : </label>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-4 form-inline">
+          <label class="form-label">Signature of the Receiver :</label>
+        </div>
+      </div>
+    </div>
+  </tfoot>
+  </table>
+</div>
+
+<div class="footer">
+  <div class="row">
+    <div class="col-lg-5 col-md-5"></div>
+    <div class="col-lg-4 col-md-4" style="margin-top:5px;margin-bottom:5px;margin-left:20px;">
+      <button type="button" class="btn btn-primary" (click)="printGatePass()">{{prnttxt}}</button>
+    </div>
+  </div>
+</div>
+
+
+

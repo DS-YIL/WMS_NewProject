@@ -1,0 +1,81 @@
+<div class="row">
+  <div class="col-md-4" style="text-decoration: underline;"><h4>PO List</h4></div>
+  <div class="col-md-6"></div>
+  <div class="col-md-2">
+    <i class="fa fa-plus-square expand" aria-hidden="true" (click)="showHideFilterBlock()" pTooltip="Expand"></i>
+  </div>
+</div><br />
+<form [formGroup]="POfilterForm">
+  <div *ngIf="showFilterBlock" class="form-control" style="height:100%;border-radius:0px;">
+    <div class="row" style="margin-top:10px">
+      <div class="col-lg-3 col-md-3 col-sm-3 form-group">
+        <label class="form-label">PO No</label>
+        <input class="form-control" formControlName="PONo" [(ngModel)]="PoFilterParams.PONo">
+      </div>
+      <div class="col-lg-3 col-md-3 col-sm-3 form-group">
+        <label for="venderid" class="form-label">Vendor Name</label>
+        <div class="form-inline-list">
+          <input type="text" class="form-control forms-input" formControlName="venderid" [value]="POfilterForm.controls.venderid.value" (keyup)="onsrchTxtChange('venderid',POfilterForm.controls.venderid.value,'PoFilterParams')">
+          <div class="input-group-append">
+            <button type="button" class="btn btn-outline-secondary form-control" style="cursor:pointer" pButton icon="fa fa-list" aria-hidden="true" (click)="bindSearchListData($event,'POfilterForm','venderid',POfilterForm.controls.venderid.value,undefined)"></button>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-3 col-sm-3 form-group">
+        <label for="docNo" class="form-label">Document Number</label>
+        <input class="form-control" type="text" formControlName="DocumentNo" [(ngModel)]="PoFilterParams.DocumentNo">
+      </div>
+    </div>
+    <div class="row">
+      <div class="ui-g-4 ui-md-4">
+      </div>
+      <div class="ui-g-4 ui-md-4">
+        <button type="button" class="btn btn-success" (click)="bindList()" label="Save">Submit</button>
+      </div>
+    </div>
+  </div><br />
+</form>
+<div class="row form-control" style="height:100%;border-radius:0px;">
+  <p-table #dt [value]="POList" [style]="{'width':'100%','overflow':'auto!important'}"
+           [responsive]="true" [rows]="50"
+           [resizableColumns]="true"
+           columnResizeMode="expand"
+           [paginator]="true" [rowsPerPageOptions]="[25,50,75,100]"
+           appendTo="body">
+    <ng-template pTemplate="header">
+      <tr class="mprltbldata">
+        <th>Sl.No.</th>
+        <th>PO No</th>
+        <th>Vendor Name</th>
+        <th>Job Name</th>
+        <th>Quotation Qty</th>
+        <th>MPR Document No</th>
+        <th></th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex" let-rindex=0>
+      <tr>
+        <td class="ptable-cell">
+          {{ri+1}}
+        </td>
+        <td class="ptable-cell" style="font-size:11px">{{rowData.pono}}</td>
+        <td class="ptable-cell">{{rowData.vendorname}}</td>
+        <td class="ptable-cell">{{rowData.jobName}}</td>
+        <td class="ptable-cell">{{rowData.quotationqty}}</td>
+        <td class="ptable-cell">{{rowData.documentno}}</td>
+        <td class="ptable-cell"></td>
+      </tr>
+    </ng-template>
+  </p-table><br />
+</div>
+<p-dialog #dialog header="List View" [(visible)]="showList" [contentStyle]="{'overflow':'visible'}">
+  <div class="ui-g ui-fluid">
+    <p-listbox [options]="searchItems" [(ngModel)]="selectedItem" optionLabel="name" (onChange)="onSelectedOptionsChange(selectedItem,null)"></p-listbox>
+  </div>
+  <p-footer>
+    <div class="ui-dialog-buttonpane ui-helper-clearfix">
+      <button type="button" pButton icon="fa fa-close" (click)="dialogCancel('showList')" label="Cancel"></button>
+    </div>
+  </p-footer>
+</p-dialog>
+

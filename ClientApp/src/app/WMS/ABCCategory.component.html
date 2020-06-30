@@ -1,0 +1,84 @@
+<div class="card" style="    min-height: 500px;border-radius: 10px;box-shadow: 5px 10px #888888;">
+  <div class="card-header text-center cardheadertext">
+    <span>
+      <i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;ABC Classification
+    </span>
+  </div>
+  <div class="card-body" style="overflow-y:scroll">
+    <div class="row">
+      <div class="col-lg-3 col-md-3 col-sm-3"></div>
+      <div class="col-lg-3 col-md-3 col-sm-3 form-inline">
+        <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">Start Date: </label>&nbsp;&nbsp;
+        <div class="form-inline-list">
+          <p-calendar class="mprldatepick" [(ngModel)]="classA.startdate" [monthNavigator]="true" dateFormat="dd/mm/yy" [yearNavigator]="true" yearRange="1900:2050"></p-calendar>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-3 col-sm-3 form-inline">
+        <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">End Date: </label>&nbsp;&nbsp;
+        <div class="form-inline-list">
+          <p-calendar class="mprldatepick" [(ngModel)]="classA.enddate" [monthNavigator]="true" dateFormat="dd/mm/yy" [yearNavigator]="true" yearRange="1900:2050"></p-calendar>
+        </div>
+      </div>
+    </div><br />
+    <div class="row" style="color:brown">
+      <div class="col-lg-3 col-md-3 col-sm-3"></div>
+      <div class="col-lg-1 col-md-1 col-sm-1 form-inline">
+        <label class="form-label" style="font-weight:600;font-size:14px;"><b>Class</b></label>
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-2 form-inline" style="margin-left:40px">
+        <label class="form-label" style="font-weight:600;font-size:14px;"><b>Min</b></label>
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-2 form-inline" style="margin-left:40px">
+        <label class="form-label" style="font-weight:600;font-size:14px;"><b>Max</b></label>
+      </div>
+    </div>
+    <br />
+    <div class="row">
+      <div class="col-lg-3 col-md-3 col-sm-3"></div>
+      <div class="col-lg-1 col-md-1 col-sm-1 form-inline">
+        <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;"><b>A</b></label>
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-2 form-inline">
+        <input type="number" class="form-control" [(ngModel)]="classA.minpricevalue" />
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-2 form-inline">
+        <input type="number" class="form-control" readonly [(ngModel)]="classA.maxpricevalue" />
+      </div>
+    </div>
+    <br />
+    <div class="row">
+      <div class="col-lg-3 col-md-3 col-sm-3"></div>
+      <div class="col-lg-1 col-md-1 col-sm-1 form-inline">
+        <label class="form-label"  style="font-weight:600;font-size:14px;color:darkblue;"><b>B</b></label>
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-2 form-inline">
+        <input type="number" class="form-control" [(ngModel)]="classB.minpricevalue" />
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-2 form-inline">
+        <input type="number" class="form-control" [(ngModel)]="classB.maxpricevalue" />
+      </div>
+    </div>
+    <br />
+    <div class="row">
+      <div class="col-lg-3 col-md-3 col-sm-3"></div>
+      <div class="col-lg-1 col-md-1 col-sm-1 form-inline">
+        <label class="form-label"  style="font-weight:600;font-size:14px;color:darkblue;"><b>C</b></label>
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-2 form-inline">
+        <input type="number" class="form-control" readonly [(ngModel)]="classC.minpricevalue" />
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-2 form-inline">
+        <input type="number" class="form-control" [(ngModel)]="classC.maxpricevalue" />
+      </div>
+    </div>
+    <br>
+    <div class="row">
+      <div class="col-lg-5 col-md-5 col-sm-5"></div>
+      <div class="col-lg-1 col-md-1 col-sm-1">
+        <button type="button" class="btn btn-primary" (click)="updateABCRange()" label="Save">Classify</button>
+      </div>
+    </div>
+  </div>
+  </div>
+   
+   

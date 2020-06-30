@@ -1,0 +1,192 @@
+<div class="card" style="    min-height: 500px;border-radius: 10px;box-shadow: 5px 10px #888888;">
+  <div class="card-header text-center cardheadertext">
+    <span>
+      <i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;Cycle configuration
+    </span>
+  </div>
+  <div class="card-body" style="overflow-y:scroll">
+    <div class="row">
+      <div class="col-md-4 col-lg-4">
+        <div class="row" style="margin-top:20px">
+
+          <div class="col-lg-4 col-md-4">
+            <span style="font-weight:600;font-size:14px;color:darkblue;float:right">Percentage:</span>
+          </div>
+          <div class="col-lg-8 col-md-8">
+            <form class="form-inline">
+              <div class="form-group">
+                <label style="font-weight:600;color:brown">A:&nbsp;</label>
+                <input type="number" placeholder="A%" min="0" max="100" [(ngModel)]="configmodel.apercentage" class="form-control" style="width:65px;" [ngModelOptions]="{standalone: true}">
+              </div>&nbsp;
+              <div class="form-group">
+                <label style="font-weight:bolder;color:brown">B:&nbsp;</label>
+                <input type="number" placeholder="B%" min="0" max="100" [(ngModel)]="configmodel.bpercentage" class="form-control" style="width:65px;" [ngModelOptions]="{standalone: true}">
+              </div>&nbsp;
+              <div class="form-group">
+                <label style="font-weight:bolder;color:brown">C:&nbsp;</label>
+                <input type="number" placeholder="C%" min="0" max="100" [(ngModel)]="configmodel.cpercentage" class="form-control" style="width:65px;" [ngModelOptions]="{standalone: true}">
+              </div>
+            </form>
+
+          </div>
+        </div>
+
+        <div class="row" style="margin-top:5px">
+          <div class="col-lg-4 col-md-4">
+            <span style="font-weight:600;font-size:14px;color:darkblue;float:right">Frequency:</span>
+          </div>
+          <div class="col-lg-4 col-md-4">
+            <select class="form-control" (change)="setCycleCount()" [(ngModel)]="configmodel.frequency">
+              <option value="">Select frequency</option>
+              <option value="Daily">Daily</option>
+              <option value="Weekly">Weekly</option>
+              <option value="Twice in a week">Twice in a week</option>
+              <option value="Monthly">Monthly</option>
+              <option value="Quarterly">Quarterly</option>
+              <option value="Yearly">Yearly</option>
+            </select>
+          </div>
+        </div>
+        <div class="row" style="margin-top:5px">
+          <div class="col-lg-4 col-md-4">
+            <span style="font-weight:600;font-size:14px;color:darkblue;float:right">Cycle Count:</span>
+          </div>
+          <div class="col-lg-2 col-md-2">
+            <input type="number" placeholder="Cycle" [(ngModel)]="configmodel.cyclecount" class="form-control" style="width:65px;" [ngModelOptions]="{standalone: true}">
+          </div>
+        </div>
+
+      </div>
+      <div class="col-md-6 col-lg-6">
+        <div *ngIf="showweekly" style="margin-top:20px;">
+          <div class="row">
+            <div class="col-lg-3 col-md-3">
+              <label style="font-weight:600;font-size:14px;color:darkblue;float:right">Select day</label>
+
+            </div>
+            <div class="col-lg-6 col-md-6">
+              <select [(ngModel)]="weekday1">
+                <option value="">Select</option>
+                <option value="Monday">Monday</option>
+                <option value="Tuesday">Tuesday</option>
+                <option value="Wednesday">Wednesday</option>
+                <option value="Thursday">Thursday</option>
+                <option value="Friday">Friday</option>
+              </select>
+
+            </div>
+
+          </div>
+
+        </div>
+        <div *ngIf="showyearly" style="margin-top:20px;">
+          <div class="row">
+            <div class="col-lg-3 col-md-3">
+              <label style="color:brown; font-weight:bolder">Select date</label>
+
+            </div>
+            <div class="col-lg-6 col-md-6">
+              <p-calendar class="mprldatepick" dateFormat="dd/mm/yy" [(ngModel)]="yearlynotifdate" [monthNavigator]="true" [yearNavigator]="true" yearRange="2020:2050"></p-calendar>
+            </div>
+
+          </div>
+
+        </div>
+        <div *ngIf="showbiweekly" style="margin-top:20px;">
+          <div class="row">
+            <div class="col-lg-3 col-md-3">
+              <label style="color:brown; font-weight:bolder">Select day 1</label>
+
+            </div>
+            <div class="col-lg-6 col-md-6">
+              <select [(ngModel)]="weekday2">
+                <option value="">Select</option>
+                <option value="Monday">Monday</option>
+                <option value="Tuesday">Tuesday</option>
+                <option value="Wednesday">Wednesday</option>
+                <option value="Thursday">Thursday</option>
+                <option value="Friday">Friday</option>
+              </select>
+
+            </div>
+
+          </div>
+          <div class="row">
+            <div class="col-lg-3 col-md-3">
+              <label style="color:brown; font-weight:bolder">Select day 2</label>
+
+            </div>
+            <div class="col-lg-6 col-md-6">
+              <select [(ngModel)]="weekday3">
+                <option value="">Select</option>
+                <option value="Monday">Monday</option>
+                <option value="Tuesday">Tuesday</option>
+                <option value="Wednesday">Wednesday</option>
+                <option value="Thursday">Thursday</option>
+                <option value="Friday">Friday</option>
+              </select>
+
+            </div>
+
+          </div>
+
+        </div>
+        <!--<div *ngIf="showmonthly || showquarterly" style="margin-top:20px;">
+        <div class="row">
+          <div class="col-lg-6 col-md-6">
+            <label>start date :{{this.configmodel.startdate | date:'dd/MM/yyyy'}}</label>
+          </div>
+          <div class="col-lg-6 col-md-6">
+            <label>End date :{{this.configmodel.enddate | date:'dd/MM/yyyy'}}</label>
+          </div>
+        </div>
+
+
+        <p-table #dt [columns]="cols" [value]="DayList" [style]="{'width':'100%','overflow':'auto!important'}"
+                 [responsive]="true"
+                 [resizableColumns]="true"
+                 columnResizeMode="expand"
+                 appendTo="body">
+          <ng-template pTemplate="header" let-columns>
+          </ng-template>
+          <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
+            <tr>
+              <td class="ptable-cell" style="text-align:center">{{rowData.description}}</td>
+
+              <td class="ptable-cell" style="text-align:center">
+                <p-calendar class="mprldatepick" appendTo="body" dateFormat="dd/mm/yy" [(ngModel)]="rowData.showdate" [monthNavigator]="true" [yearNavigator]="true" yearRange="2020:2050"></p-calendar>
+              </td>
+
+
+
+            </tr>
+          </ng-template>
+
+        </p-table>
+      </div>-->
+
+
+
+
+
+      </div>
+
+
+    </div>
+    <hr />
+
+    <div style="text-align: center;margin-top:5px;">
+      <input class="btn btn-primary btn-sm" (click)="updateCycleCountConfig()" type="button" value="Submit">
+    </div>
+  </div>
+  </div>
+   
+
+
+
+
+
+
+
+
+

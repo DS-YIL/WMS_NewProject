@@ -1,0 +1,509 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="checkponoexists" xml:space="preserve">
+    <value>select distinct* from wms.openpolistview openpo left join wms.wms_securityinward inw on openpo.pono=inw.pono where openpo.pono='#pono'  order by receiveddate desc limit 1</value>
+    <comment>checkpono</comment>
+  </data>
+  <data name="GetdetailsByrequestid" xml:space="preserve">
+    <value>select sum(iss.issuedqty) as issuedqty,op.jobname,req.requestforissueid,emp."name",req.requesteddate,sk.materialid,sk.pono,req.requestedquantity,sk.availableqty,req.requestid from wms.wms_stock sk 
+      left join wms.openpolistview op on op.pono=sk.pono
+       inner join wms.wms_materialrequest req on req.materialid=sk.materialid
+      left join wms.wms_materialissue iss on iss.itemid=sk.itemid
+      inner join wms.employee emp on emp.employeeno=req.requesterid
+ where requestid=#requestid and req.deleteflag=false and sk.availableqty!=0
+ group by req.requestforissueid,sk.materialid,sk.pono,req.requestedquantity,sk.availableqty,req.requestid,emp."name",req.requesteddate,op.jobname</value>
+  </data>
+  <data name="GetListForMaterialRequestByapproverid" xml:space="preserve">
+    <value>select req.requestid,req.requesteddate,req.requesterid,po.projectname,emp."name" 
+ from wms.wms_materialrequest req left join wms.openpolistview po on po.pono=req.pono 
+left join wms.employee emp on req.requesterid=emp.employeeno 
+--where req.approverid='#approverid'
+group by req.requestid,req.requesteddate,req.requesterid,po.projectname,emp."name" order by req.requestid desc</value>
+  </data>
+  <data name="GetListForMaterialRequestByrequesterid" xml:space="preserve">
+    <value>select * from wms.wms_materialrequest where requesterid='#requesterid'</value>
+  </data>
+  <data name="getnextrequestid" xml:space="preserve">
+    <value>select requestid from wms.wms_materialrequest order by requestid desc limit 1</value>
+  </data>
+  <data name="Getponodetailsformaterialissue" xml:space="preserve">
+    <value>select distinct* from wms.wms_storeinward inw inner join wms.wms_securityinward inwmaster on inwmaster.inwmasterid=inw.inwmasterid  
+where  inwmaster.pono='#pono'</value>
+    <comment>Getponodetailsformaterialissue</comment>
+  </data>
+  <data name="insertbarcodedata" xml:space="preserve">
+    <value>INSERT INTO wms.wms_barcode(barcodeid,barcode,createddate,createdby,deleteflag)VALUES(DEFAULT,@barcode,@createddate,@createdby,@deleteflag)returning barcodeid</value>
+    <comment>barcodedata insertion</comment>
+  </data>
+  <data name="insertinvoicedata" xml:space="preserve">
+    <value>INSERT INTO wms.wms_securityinward(inwmasterid,pono,invoiceno,invoicedate,receivedby,receiveddate,deleteflag,departmentid)VALUES(default,@pono,@invoiceno,@invoicedate,@receivedby,@receiveddate,@deleteflag,@departmentid)</value>
+    <comment>invoice data insertion</comment>
+  </data>
+  <data name="materialquest" xml:space="preserve">
+    <value>INSERT INTO wms.wms_materialrequest(requestforissueid,quantity,approveremailid,approverid,pono,materialid,requesterid,requestid,requestedquantity,requesteddate,deleteflag)VALUES(default,@quantity,@approveremailid,@approverid,@pono,@materialid,@requesterid,@requestid,@requestedquantity,current_date,false)</value>
+    <comment>insert material request data</comment>
+  </data>
+  <data name="openpolist" xml:space="preserve">
+    <value>select  max(track.enteredon) as enteredon,max(op.projectcode)as projectcode,op.pono,min(track.status)as status,max(op.vendorname)as vendorname,max(op.jobname) as jobname,max(op.quotationqty)as quotationqty 
+from wms.openpolistview op
+      left join wms.wms_trackstatus track on track.pono=op.pono
+      where projectmanager='#projectmanager' 
+      </value>
+    <comment>getopenpono list</comment>
+  </data>
+  <data name="Getdetailsforthreewaymatching" xml:space="preserve">
+    <value>select distinct openpo.projectname,inwa.invoiceno,inwa.grnnumber,inwa.pono,openpo.material, (inw.confirmqty+inw.returnqty) as receivedqty,openpo.materialdescription, openpo.quotationqty,inw.receivedqty,inw.confirmqty,inw.returnqty from wms.wms_securityinward inwa  
+ left join wms.wms_storeinward inw on inw.inwmasterid=inwa.inwmasterid
+ inner join wms.openpolistview openpo on openpo.pono=inwa.pono
+  where  inwa.pono='#pono'  and inwa.invoiceno ilike '%#invoiceno' order by inwa.grnnumber desc</value>
+  </data>
+  <data name="getGRNNo" xml:space="preserve">
+    <value>select grnnumber from wms.wms_securityinward   where pono='#pono' and grnnumber is not null 
+and deleteflag=false order by grndate desc limit 1</value>
+  </data>
+  <data name="getinwmasterid" xml:space="preserve">
+    <value>select inwmasterid from wms.wms_securityinward where pono='#pono' and invoiceno='#invoiceno' limit 1</value>
+  </data>
+  <data name="getlocationasresponse" xml:space="preserve">
+    <value>select * from wms.wms_stock  stock 
+left join wms.wms_rd_bin bins on bins.binid=stock.binid
+left join wms.wms_rd_rack rack on rack.rackid=stock.rackid
+where itemid=#itemid</value>
+  </data>
+  <data name="insertforinvoicequery" xml:space="preserve">
+    <value>INSERT INTO wms.wms_storeinward(inwmasterid,receiveddate,receivedby,receivedqty,returnqty,confirmqty,materialid,deleteflag)
+VALUES(@inwmasterid,@receiveddate,@receivedby,@receivedqty,@returnqty,@confirmqty,@materialid,@deleteflag)returning inwardid</value>
+  </data>
+  <data name="insertqueryforlocationhistory" xml:space="preserve">
+    <value>INSERT INTO wms.wms_storageallowcationhistorymaster(itemlocation,itemid,createddate,createdby)values(@itemlocation,@itemid,@createddate,@createdby)</value>
+  </data>
+  <data name="insertqueryforqualitycheck" xml:space="preserve">
+    <value>INSERT INTO wms.wms_qualitycheck(inwardid,quality,qtype,qcdate,qcby,remarks,deleteflag)VALUES(@inwardid,@quality,@qtype,@qcdate,@qcby,@remarks,@deleteflag)</value>
+  </data>
+  <data name="insertqueryforstatusforqty" xml:space="preserve">
+    <value>INSERT INTO wms.wms_trackstatus(pono,status,enteredon,returnqty)VALUES(@pono,'Store Checked',current_timestamp,@returnqty)</value>
+  </data>
+  <data name="insertqueryforstatuswarehouse" xml:space="preserve">
+    <value>INSERT INTO wms.wms_trackstatus(pono,status,enteredon)VALUES(@pono,'In Store',current_timestamp)</value>
+  </data>
+  <data name="insertstock" xml:space="preserve">
+    <value>INSERT INTO wms.wms_stock(inwmasterid,stockstatus,pono,binid,vendorid,totalquantity,shelflife,availableqty,deleteflag,itemlocation,createddate,createdby,materialid)VALUES(@inwmasterid,@stockstatus,@pono,@binid,@vendorid,@totalquantity,@shelflife,@availableqty,@deleteflag,@itemlocation,@createddate,@createdby,@materialid)returning itemid</value>
+  </data>
+  <data name="lastinsertedgrn" xml:space="preserve">
+    <value>select * from  wms.wms_sequencemaster  where  enddate&gt;=current_date and id=1</value>
+  </data>
+  <data name="materialrequestquery" xml:space="preserve">
+    <value>select distinct  max(req.requesteddate)as requesteddate,max(issue.approvedstatus)as approvedstatus,max(issue.issuedqty) as issuedqty,max(req.requestforissueid)as requestforissueid,max(issue.approvedstatus) as approvedstatus,req.requestid,max(openpo.pono) as pono,max(openpo.projectname)as projectname,max(openpo.material)as material,max(openpo.materialdescription) as materialdescription,max(openpo.quotationqty) quotationqty,max(req.requestedquantity)as requestedquantity,max(req.ackremarks)as ackremarks 
+ from   wms.wms_stock  sk left join wms.openpolistview openpo on openpo.pono = sk.pono 
+  left join wms.wms_materialrequest req on req.pono = openpo.pono
+  left join  wms.wms_materialissue issue on issue.requestforissueid=req.requestforissueid</value>
+  </data>
+  <data name="queryforitemdetails" xml:space="preserve">
+    <value>select distinct stocks.itemlocation,stocks.itemid,inw.grnnumber,inw.pono,inw.invoiceno,openpo.projectname,openpo.material,openpo.materialdescription,openpo.quotationqty,inwa.receivedqty,inwa.confirmqty,inwa.returnqty from wms.wms_securityinward inw
+left join wms.wms_storeinward inwa on inw.inwmasterid=inwa.inwmasterid
+left join wms.wms_stock stocks on  stocks.inwmasterid=inwa.inwmasterid
+inner join wms.openpolistview openpo on openpo.pono=inw.pono
+where inw.grnnumber='#grnnumber' limit 1</value>
+  </data>
+  <data name="statusupdatebySecurity" xml:space="preserve">
+    <value>INSERT INTO wms.wms_trackstatus(pono,status,enteredon)VALUES(@pono,'Security Checked',current_timestamp)</value>
+  </data>
+  <data name="updateackstatus" xml:space="preserve">
+    <value>update wms.wms_materialrequest set ackstatus=@ackstatus,ackremarks=@ackremarks where requestid=@requestid</value>
+  </data>
+  <data name="updateapproverstatus" xml:space="preserve">
+    <value>insert into wms.wms_materialissue(materialissueid,pono,itemid,requestforissueid,itemissueddate,itemreceiverid,deleteflag,itemreturnable,approvedby,approvedon,issuedqty,approvedstatus)
+values(default,@pono,@itemid,@requestforissueid,@itemissueddate,@itemreceiverid,false,@itemreturnable,@approvedby,@approvedon,@issuedqty,@approvedstatus)</value>
+  </data>
+  <data name="updategrnnumber" xml:space="preserve">
+    <value>update wms.wms_securityinward set grnnumber=@grnnumber,grndate=current_date where invoiceno='#invoiceno' and pono='#pono'</value>
+  </data>
+  <data name="updateseqnumber" xml:space="preserve">
+    <value>update wms.wms_sequencemaster set sequencenumber=@grnnextsequence where id=@id</value>
+  </data>
+  <data name="Verifythreewaymatch" xml:space="preserve">
+    <value>select Count(*),grnnumber from wms.wms_securityinward inw 
+inner join wms.openpolistview openpo on inw.pono=openpo.pono 
+where  inw.invoiceno='#invoiceno' and openpo.pono='#pono' group by grnnumber</value>
+  </data>
+  <data name="getgatepasslist" xml:space="preserve">
+    <value>select ygs.materialdescription,emp.name,* from wms.wms_gatepass gate
+   left join wms.wms_gatepassmaterial mat on gate.gatepassid=mat.gatepassid 
+   left join wms.employee emp on emp.employeeno=gate.requestedby
+   left join wms."MaterialMasterYGS" ygs on ygs.material=mat.materialid and mat.deleteflag=false 
+   where gate.deleteflag=false  order by gate.gatepassid desc</value>
+  </data>
+  <data name="insertgatepassdata" xml:space="preserve">
+    <value>insert into wms.wms_gatepass(gatepassid, gatepasstype, status, referenceno, vehicleno, requestedby, requestedon,deleteflag,vendorname,print,reasonforgatepass)values(default,@gatepasstype,@status,@referenceno,@vehicleno, @requestedby,@requestedon,@deleteflag,@vendorname,'true',@reasonforgatepass)returning gatepassid</value>
+  </data>
+  <data name="checkmaterial" xml:space="preserve">
+    <value>select * from wms.wms_stock where materialid='#materialid' limit 1</value>
+  </data>
+  <data name="checkmaterialandqty" xml:space="preserve">
+    <value>select * from wms.wms_stock where materialid='#materialid' and availableqty&gt;=#availableqty limit 1</value>
+  </data>
+  <data name="checkqty" xml:space="preserve">
+    <value>select * from wms.wms_stock where availableqty &gt;=#availableqty limit 1</value>
+  </data>
+  <data name="insertgatepassmaterial" xml:space="preserve">
+    <value>insert into wms.wms_gatepassmaterial(gatepassmaterialid,gatepassid,materialid,quantity,deleteflag,remarks,materialcost,expecteddate)values(default,@gatepassid,@materialid,@quantity,@deleteflag,@remarks,@materialcost,@expecteddate)</value>
+  </data>
+  <data name="updategatepass" xml:space="preserve">
+    <value>update wms.wms_gatepass set gatepasstype=@gatepasstype,status=@status,referenceno=@referenceno,vehicleno=@vehicleno,requestedby=@requestedby,vendorname=@vendorname,reasonforgatepass=@reasonforgatepass where gatepassid=#gatepassid</value>
+  </data>
+  <data name="updategatepassmaterial" xml:space="preserve">
+    <value>update wms.wms_gatepassmaterial set gatepassid=@gatepassid,materialid=@materialid,quantity=@quantity,remarks=@remarks,materialcost=@materialcost,expecteddate=@expecteddate,returneddate=@returneddate where gatepassmaterialid=#gatepassmaterialid</value>
+  </data>
+  <data name="deletegatepassmaterial" xml:space="preserve">
+    <value>update wms.wms_gatepassmaterial set deleteflag='true' where gatepassmaterialid=#gatepassmaterialid</value>
+  </data>
+  <data name="getgatepassmaterialdetailList" xml:space="preserve">
+    <value>select * from wms.wms_gatepassmaterial material
+      inner join wms.wms_gatepass pass on pass.gatepassid=material.gatepassid 
+      inner join wms.employee emp on pass.requestedby=emp.employeeno
+      inner join wms."MaterialMasterYGS" ygs on ygs.material=material.materialid
+           where pass.gatepassid=#gatepassid and pass.deleteflag=false --and material.deleteflag=false</value>
+  </data>
+  <data name="updategatepassapproverstatus" xml:space="preserve">
+    <value>update wms.wms_gatepass set approverstatus=@approverstatus,approverremarks=@approverremarks,approvedon=@approvedon where gatepassid=#gatepassid</value>
+  </data>
+  <data name="checkreprintalreadydone" xml:space="preserve">
+    <value>select * from wms.wms_reprinthistory where </value>
+  </data>
+  <data name="getinwardmasterid" xml:space="preserve">
+    <value>select inwmasterid from wms.wms_securityinward where grnnumber='#grnnumber' order by grndate desc limit 1</value>
+  </data>
+  <data name="getprintdetails" xml:space="preserve">
+    <value>select * from wms.wms_gatepass where gatepassid=#gatepassid and deleteflag=false</value>
+  </data>
+  <data name="insertreprintcount" xml:space="preserve">
+    <value>insert into wms.wms_reprinthistory(reprinthistoryid,gatepassid,reprintedon,reprintedby,reprintcount)values(default,@gatepassid,current_date,@reprintedby,@reprintcount)returning reprinthistoryid</value>
+  </data>
+  <data name="printstatusupdate" xml:space="preserve">
+    <value>update wms.wms_gatepass set print=false,printedon=current_date,printedby=@printedby where gatepassid=#gatepassid</value>
+  </data>
+  <data name="reprintcountupdate" xml:space="preserve">
+    <value>update wms.wms_gatepass set reprintedon=current_date,reprintedby=@reprintedby,reprintcount=@reprintcount where gatepassid=#gatepassid</value>
+  </data>
+  <data name="updatereprintcount" xml:space="preserve">
+    <value>update wms.wms_reprinthistory
+          set reprintcount=@reprintcount where reprinthistoryid=#reprinthistoryid</value>
+  </data>
+  <data name="getcategorylist" xml:space="preserve">
+    <value>select ws.unitprice,ws.materialid,op.materialdescription,
+    sum(availableqty) as availableqty,( SELECT wrc.categoryname
+           FROM wms.wms_rd_category wrc
+          WHERE ws.unitprice ::numeric &gt;= wrc.minpricevalue::numeric and 
+          ws.unitprice ::numeric &lt;= wrc.maxpricevalue::numeric  and wrc.deleteflag=false 
+         LIMIT 1) AS category from wms.wms_stock ws
+ inner join wms."MaterialMasterYGS" op on  ws.materialid =op.material 
+ WHERE ws.materialid IS NOT null and ws.unitprice is not null
+group by ws.materialid,op.materialdescription,ws.unitprice</value>
+  </data>
+  <data name="getcategorylistbymaterailid" xml:space="preserve">
+    <value>select itemid, sec.grnnumber , totalquantity,availableqty,totalquantity - availableqty AS issuedqty,itemlocation from
+wms.wms_stock ws inner join wms.wms_securityinward sec on sec.pono =ws.pono where ws.materialid='#materialid'</value>
+  </data>
+  <data name="getitemid" xml:space="preserve">
+    <value>select itemid from wms.wms_stock where materialid='#materialid' and pono='#pono' limit 1</value>
+  </data>
+  <data name="getreportforcategory" xml:space="preserve">
+    <value />
+  </data>
+  <data name="getrequestforissueid" xml:space="preserve">
+    <value>select requestforissueid  from wms.wms_materialrequest where materialid='materialid' and pono='#pono' limit 1</value>
+  </data>
+  <data name="updatelocation" xml:space="preserve">
+    <value>update wms.wms_stock set itemlocation='#itemlocation' where itemid=#itemid</value>
+  </data>
+  <data name="insertABCrange" xml:space="preserve">
+    <value>insert into wms.wms_rd_category(categoryid,categoryname,minpricevalue,maxpricevalue,createdby,createdon,deleteflag,startdate,enddate)values(default,@categoryname,@minpricevalue,@maxpricevalue,@createdby,current_date,false,@startdate,@enddate)</value>
+  </data>
+  <data name="updateABCrange" xml:space="preserve">
+    <value>update wms.wms_rd_category set deleteflag=true,updatedby=@updatedby,updatedon=@updatedon</value>
+  </data>
+  <data name="getabccategorydata" xml:space="preserve">
+    <value>select * from wms.wms_rd_category where deleteflag=false</value>
+  </data>
+  <data name="GetABCdetailsBycategory" xml:space="preserve">
+    <value>select * from wms.v_getdeailsbycategory  where category like '%abcname'</value>
+  </data>
+  <data name="GetallavlqtyABCList" xml:space="preserve">
+    <value>select Sum(ws.unitprice*ws.availableqty) as totalcost,
+    sum(availableqty) as availableqty,( SELECT wrc.categoryname
+           FROM wms.wms_rd_category wrc
+          WHERE ws.unitprice ::numeric &gt;= wrc.minpricevalue::numeric and
+          (ws.unitprice ::numeric &lt;= wrc.maxpricevalue::numeric or ws.unitprice ::numeric = wrc.maxpricevalue::numeric is null) and wrc.deleteflag=false
+         LIMIT 1) AS category from wms.wms_stock ws
+ inner join wms."MaterialMasterYGS" op on  ws.materialid =op.material
+ WHERE ws.materialid IS NOT null and ws.unitprice is not null
+group by category</value>
+  </data>
+  <data name="getFIFOList" xml:space="preserve">
+    <value>select itemid,createddate::date,materialid,mat.materialdescription,itemlocation,shelflife,sk.availableqty ,pono from wms.wms_stock sk inner join  wms."MaterialMasterYGS" mat on mat.material=sk.materialid
+where stockstatus='active' and sk.deleteflag=false and availableqty!=0</value>
+  </data>
+  <data name="checkoldestmaterial" xml:space="preserve">
+    <value>select * from wms.wms_stock where materialid='#materialid' and createddate&lt;'#createddate'  order by createddate asc limit 1</value>
+  </data>
+  <data name="insertFIFOdata" xml:space="preserve">
+    <value>insert into wms.wms_fifoitemdistribution(fifoid,itemid,materialid,enteredon,pono)values(default,@itemid,@materialid,current_date,@pono)</value>
+  </data>
+  <data name="updateqtyafterissue" xml:space="preserve">
+    <value>update wms.wms_stock set availableqty=#availableqty where itemid=#itemid</value>
+  </data>
+  <data name="getASNList" xml:space="preserve">
+    <value>select pono,vendorname,quotationqty ,deliverydate  from wms.openpolistview</value>
+  </data>
+  <data name="updatecyclecountconfig" xml:space="preserve">
+    <value>update wms.cyclecountconfig set apercentage=@apercentage,bpercentage=@bpercentage,cpercentage=@cpercentage,cyclecount=@cyclecount,frequency=@frequency where id = #cid</value>
+  </data>
+  <data name="emailbody" xml:space="preserve">
+    <value>&lt;html&gt;&lt;meta charset=\"ISO-8859-1\"&gt;&lt;head&gt;&lt;link rel ='stylesheet' href ='https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css'&gt;&lt;/head&gt;
+&lt;body&gt;&lt;div class='container'&gt;
+&lt;p&gt;Dear #user,&lt;/p&gt;
+&lt;p&gt;#subbody&lt;/p&gt;
+&lt;p&gt;
+LINK:&lt;/p&gt;
+&lt;a href="http://10.29.15.183:100/WMS/Login"&gt;http://10.29.15.183:100/WMS/Login&lt;/a&gt;
+&lt;p style='margin-bottom:0px;'&gt;Regards,&lt;/p&gt;&lt;p&gt; #sender.&lt;/p&gt;&lt;/div&gt;&lt;/body&gt;&lt;/html&gt;</value>
+  </data>
+  <data name="getitemlocationList" xml:space="preserve">
+    <value>select distinct ygs.materialdescription,ygs.material,itemlocation,createddate,sk.itemid,availableqty from wms.wms_stock sk inner join wms."MaterialMasterYGS" ygs on ygs.material=sk.materialid where materialid='#materialid' and availableqty&gt;0 --and sk.deleteflag=false</value>
+  </data>
+  <data name="insertAuthUserData" xml:space="preserve">
+    <value>insert into wms.auth_users(authid,employeeid,roleid,createddate,createdby,deleteflag)values(default,@employeeid,@roleid,@createddate,@createdby,@deleteflag)returning authid</value>
+  </data>
+  <data name="getUserAcessNames" xml:space="preserve">
+    <value>select * from wms.v_getAccessList where employeeid='#employeeid' and roleid =#roleid</value>
+  </data>
+  <data name="verifyGRNgenerated" xml:space="preserve">
+    <value>select grnnumber from wms.wms_securityinward inw 
+inner join wms.openpolistview openpo on inw.pono=openpo.pono 
+where  inw.invoiceno='#invoiceno' and openpo.pono='#pono'</value>
+  </data>
+  <data name="getInvoiceDetails" xml:space="preserve">
+    <value>select sinward.grnnumber,sinward.invoiceno, 
+      max(storeinward .receivedqty) as receivedqty, max(storeinward.returnqty) as returnedqty,
+      max(storeinward.confirmqty) as confirmedqty from wms.wms_securityinward sinward
+left join wms.wms_storeinward storeinward on sinward.inwmasterid = storeinward.inwmasterid 
+where sinward.pono = '#pono' group by sinward.grnnumber,sinward.invoiceno</value>
+    <comment>get invoice details and qty received , returned and confirmed</comment>
+  </data>
+  <data name="getLocationDetails" xml:space="preserve">
+    <value>select itemlocation,availableqty from wms.wms_stock where materialid ='#materialid' and availableqty!=0</value>
+    <comment>get location details for material</comment>
+  </data>
+  <data name="getMaterialDetails" xml:space="preserve">
+    <value>select sum(matiss.issuedqty) as qtyissued,sec.grnnumber,openpo.material as materialid,
+    max(sk.availableqty) as qtyavailable,max(sk.totalquantity ) as qtytotal
+    from wms.wms_stock sk
+      left  join wms.wms_materialissue matiss on matiss.itemid=sk.itemid
+      inner join wms.wms_securityinward sec on sec.inwmasterid=sk.inwmasterid
+      left join wms.openpolistview openpo on sec.pono = openpo.pono
+      where -- matiss.issuedqty is not null  and                         
+      sec.grnnumber='#grn'
+      group by sec.grnnumber,openpo.material,
+      sk.inwmasterid</value>
+    <comment>get material details based on grn number</comment>
+  </data>
+  <data name="getMaterialRequestDetails" xml:space="preserve">
+    <value>select distinct st.materialid,req.requesterid,issue.approvedby,issue.issuedqty,emp.name as requestername,
+emp1.name as approvername
+      from wms.wms_stock st
+      left join wms.wms_materialissue issue on issue.itemid = st.itemid
+      left join wms.wms_materialrequest req on req.requestforissueid  = issue .requestforissueid
+     
+      inner join wms.employee emp on emp.employeeno=req.requesterid
+      inner join wms.employee emp1 on emp1.employeeno=issue.approvedby
+      where issue.issuedqty is not null and st.materialid = '#materialid'</value>
+    <comment>get material requested and issued details</comment>
+  </data>
+  <data name="getpolist" xml:space="preserve">
+    <value>select distinct(pono),quotationqty from wms.openpolistview</value>
+    <comment>get list of PO Numbers</comment>
+  </data>
+  <data name="string1" xml:space="preserve">
+    <value />
+  </data>
+  <data name="getmaterialdetailfprrequest" xml:space="preserve">
+    <value>select distinct * from   wms.wms_stock  sk left join wms.openpolistview openpo on openpo.pono = sk.pono where sk.availableqty!=0</value>
+  </data>
+  <data name="issuedqtydetails" xml:space="preserve">
+    <value>select max(req.requestedquantity)as requestedquantity, max(req.materialid)as materialid, max(req.requestid)as requestid,req.requestforissueid,sum(issuedqty)as issuedquantity
+ from wms.wms_materialrequest  req
+ left join wms.wms_materialissue iss on req.requestforissueid=iss.requestforissueid
+ where req.requestid=#requestid
+  group by req.requestforissueid,iss.materialissueid</value>
+  </data>
+  <data name="getsecurityreceivedlist" xml:space="preserve">
+    <value>select sl.pono,Max(emp.name) as receivedby ,Max(ol.vendorname) as suppliername from wms.wms_securityinward sl 
+left outer join wms.openpolistview ol on sl.pono = ol.pono 
+left outer join wms.employee emp on sl.receivedby = emp.employeeno</value>
+  </data>
+  <data name="getmaterialdetailsbyreserveid" xml:space="preserve">
+    <value>select distinct max(res.reserveformaterialid) as reserveformaterialid, max(sk.availableqty)as availableqty,res.pono,max(res.materialid)as materialid,max(res.reserveid) as reserveid,max(op.jobname)as jobname,max(res.reservedon)as reservedon,max(res.reservedqty)as reservedqty,max(emp."name")as name from wms.wms_materialreserve res
+inner join wms.employee emp on emp.employeeno=res.reservedby
+inner join wms.wms_stock sk on sk.pono=res.pono 
+left join wms.openpolistview op on op.pono=res.pono
+where reserveid=#reserveid and sk.availableqty&gt;0
+group by res.pono</value>
+  </data>
+  <data name="getnextreservetid" xml:space="preserve">
+    <value>select reserveid from wms.wms_materialreserve order by reserveid desc limit 1</value>
+  </data>
+  <data name="GetreleasedmaterialList" xml:space="preserve">
+    <value>select req.reserveid,max(req.reservedon)as reservedon,req.reservedby,po.projectname,emp."name" 
+ from wms.wms_materialreserve req left join wms.openpolistview po on po.pono=req.pono 
+left join wms.employee emp on req.reservedby=emp.employeeno 
+group by req.reserveid,req.reservedby,po.projectname,emp."name" order by req.reserveid desc</value>
+  </data>
+  <data name="Getreleasedqty" xml:space="preserve">
+    <value>select max(req.reservedqty)as reservedqty, max(req.materialid)as materialid, max(req.reserveid)as reserveid,req.reserveformaterialid,sum(issuedqty)as releasedquantity
+         from wms.wms_materialreserve  req
+        left join wms.wms_materialissue iss on req.reserveformaterialid=iss.reserveformaterialid
+       where req.reserveid=#reserveid and req.reservedqty&gt;0
+       group by req.reserveformaterialid,iss.materialissueid</value>
+  </data>
+  <data name="getreservedmaterialList" xml:space="preserve">
+    <value>select  res.reserveid,max(res.pono) as pono,max(op.projectname) as projectname,max(res.reservedon) as reservedon,
+max(iss.approvedstatus)as approvedstatus
+from wms.wms_materialreserve res 
+left join wms.wms_stock sk on sk.materialid=res.materialid
+left join wms.openpolistview op on op.pono=res.pono
+left join wms.wms_materialissue iss on iss.reserveformaterialid=res.reserveformaterialid 
+where reservedby='#reservedby'
+group by res.reserveid</value>
+  </data>
+  <data name="insertreservematerial" xml:space="preserve">
+    <value>insert into wms.wms_materialreserve(reserveformaterialid,materialid,itemid,pono,reservedon,reservedby,reservedqty,reserveid)
+values(default,@materialid,@itemid,@pono,current_timestamp,@reservedby,@reservedqty,@reserveid)</value>
+  </data>
+  <data name="updateackstatusforreserved" xml:space="preserve">
+    <value>update wms.wms_materialreserve set ackstatus=@ackstatus,ackremarks=@ackremarks where reserveid=@reserveid</value>
+  </data>
+  <data name="updateapproverstatusforrelease" xml:space="preserve">
+    <value>insert into wms.wms_materialissue(materialissueid,pono,itemid,reserveformaterialid,itemissueddate,itemreceiverid,deleteflag,itemreturnable,approvedby,approvedon,issuedqty,approvedstatus)
+ values(default,@pono,@itemid,@reserveformaterialid,@itemissueddate,@itemreceiverid,false,@itemreturnable,@approvedby,@approvedon,@issuedqty,@approvedstatus)</value>
+  </data>
+  <data name="updatestock" xml:space="preserve">
+    <value>update wms.wms_stock set availableqty=#availableqty where itemid=#itemid</value>
+  </data>
+</root>

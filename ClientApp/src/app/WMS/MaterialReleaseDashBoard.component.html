@@ -1,0 +1,41 @@
+<div class="card" style="    min-height: 500px;border-radius: 10px;box-shadow: 5px 10px #888888;">
+  <div class="card-header text-center cardheadertext">
+    <span>
+      <i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;Material Release Dashboard
+    </span>
+  </div>
+  <div class="card-body" style="overflow-y:scroll">
+    <div class="form-control" style="height:100%;">
+      <p-table #dt [value]="materialreleaseList" [scrollable]="true" scrollHeight="430px">
+        <ng-template pTemplate="header">
+          <tr class="mprltbldata">
+            <th style="text-align:center;width:70px">Sl.No.</th>
+            <th style="text-align:center">Reserved Id</th>
+            <th style="text-align: center">Reserved On</th>
+            <th style="text-align:center">Reserved By</th>
+            <th style="text-align:center">Project Name</th>
+          </tr>
+          <tr>
+            <th></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'requestforissueid', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'requesteddate', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'name', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'projectname', 'contains')"></th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
+          <tr>
+            <td class="ptable-cell" style="text-align:right;width:70px;">
+              {{ri+1}}
+            </td>
+            <td class="ptable-cell" style="text-align:center;width:100%;"><a *ngIf="rowData.reserveid" [routerLink]="['/WMS/MaterialRelease',rowData.reserveid]" routerLinkActive="active">{{rowData.reserveid}}</a></td>
+            <td class="ptable-cell" style="text-align:center;width:100%;">{{rowData.reservedon  | date :  constants.dateFormat}}</td>
+            <td class="ptable-cell" style="text-align:center;width:100%;">{{rowData.name}}</td>
+            <td class="ptable-cell" style="text-align:left;width:100%;">{{rowData.projectname}}</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+  </div>
+    

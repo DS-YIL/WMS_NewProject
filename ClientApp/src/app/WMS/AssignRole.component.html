@@ -1,0 +1,29 @@
+<div class="row">
+  <div class="col-lg-4 col-md-4 col-sm-4">
+    <label class="form-label">Select Employee:</label>
+    <div class="form-inline-list">
+      <select [(ngModel)]="authUser.employeeid" class="form-control">
+        <option value=0>select</option>
+        <option *ngFor="let data of employeeModel" [ngValue]="data.employeeno">
+          {{data.name}}
+        </option>
+      </select>
+    </div>
+  </div>
+
+  <div class="col-lg-4 col-md-4 col-sm-4">
+    <label class="form-label">Select Role:</label>
+    <select [(ngModel)]="authUser.roleid" class="form-control" (change)="rolechange();">
+      <option value=0>select</option>
+      <option *ngFor="let data of roleNameModel" [ngValue]="data.roleid">
+        {{data.rolename}}
+      </option>
+    </select>
+  </div>
+</div><br />
+<div class="row">
+  <div class="col-lg-4 col-md-4 col-sm-4"></div>
+    <div class="col-lg-4 col-md-4 col-sm-4">
+      <button class="btn btn bg-primary" (click)="assignRole()">Assign</button>  
+    </div>
+  </div>

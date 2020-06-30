@@ -1,0 +1,145 @@
+
+  <div class="card" style="height:490px; width:100%;border-radius:10px;">
+    <div class="card-header cardheadertext text-center">
+      <span style="color: white;padding-top: 20px;"><i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;Cycle count </span>
+      <button type="button" *ngIf="showsubmitbutton" style="border-radius: 10em!important;background-color: rgb(18, 88, 121)!important;color: #fff;float:right;margin-left: 5px;" rounded="true" size="lg" class="my-0" (click)="submit()">Submit</button>
+      <button type="button" *ngIf="showsubmitbuttonuser" style="border-radius: 10em!important;background-color: rgb(18, 88, 121)!important;color: #fff;float:right;margin-left: 5px;" rounded="true" size="lg" class="my-0" (click)="submit()">Submit</button>
+    </div>
+    <div class="card-body" style="padding-top:5px;">
+      <div class="row" *ngIf="!isapprover">
+
+
+        <div>
+          <p-table #dt [columns]="cols" [value]="CyclecountMaterialList" [style]="{'width':'100%','overflow':'auto!important'}"
+                   [responsive]="true" [rows]="50"
+                   [resizableColumns]="true"
+                   columnResizeMode="expand"
+                   [paginator]="true" [rowsPerPageOptions]="[25,50,75,100]"
+                   appendTo="body">
+            <ng-template pTemplate="header" let-columns>
+              <tr class="mprltbldata">
+                <th style="text-align:center;width:60px">Sl.No.</th>
+                <th style="text-align:center;width:100px">Category</th>
+                <th style="text-align:center;width:250px">Material</th>
+                <th style="text-align:center">Available  Qty</th>
+                <th style="text-align:center">Physical  Qty</th>
+                <th style="text-align:center">difference</th>
+                <th style="text-align:center">Status</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
+              <tr>
+                <td class="ptable-cell" style="text-align:right">
+                  {{ri+1}}
+                </td>
+                <td class="ptable-cell" style="text-align:center"><button type="button" class="btn btn-link">{{rowData.category}}</button></td>
+                <td class="ptable-cell" style="text-align:center">{{rowData.materialid}}</td>
+
+                <td class="ptable-cell" style="text-align:center">{{rowData.availableqty}}</td>
+                <td class="ptable-cell" style="text-align:center">
+                  <input type="number" *ngIf="!rowData.iscounted" style="width:100px" [(ngModel)]="rowData.physicalqty" (change)="calculatedifference(rowData)" class="form-control" />
+                  <label *ngIf="rowData.iscounted">{{rowData.physicalqty}}</label>
+                </td>
+                <td class="ptable-cell" style="text-align:center">
+                  {{rowData.difference}}
+                </td>
+                <td class="ptable-cell" style="text-align:center">
+                  {{rowData.status}}
+                </td>
+
+
+              </tr>
+            </ng-template>
+
+          </p-table>
+
+
+        </div>
+
+
+      </div>
+      <div class="row" *ngIf="isapprover">
+
+        <div>
+          <div class="row">
+            <div class="col-md-1 col-lg-1">
+              <label style="color:brown; font-size:medium; font-weight:600">&nbsp;Status :</label>
+            </div>
+            <div class="col-md-2 col-lg-2">
+              <select [(ngModel)]="status" (change)="filterbystatus()">
+                <option value="Pending">Pending</option>
+                <option value="Approved">Approved</option>
+                <option value="Rejected">Rejected</option>
+              </select>
+            </div>
+
+
+          </div>
+          <p-table #dt [columns]="cols" [value]="CyclecountPendingMaterialList" [style]="{'width':'100%','overflow':'auto!important'}"
+                   [responsive]="true" [rows]="50"
+                   [resizableColumns]="true"
+                   columnResizeMode="expand"
+                   [paginator]="true" [rowsPerPageOptions]="[25,50,75,100]"
+                   appendTo="body">
+            <ng-template pTemplate="header" let-columns>
+              <tr class="mprltbldata">
+                <th style="text-align:center;width:60px">Sl.No.</th>
+                <!--<th style="text-align:center;width:50px">Id</th>-->
+                <th style="text-align:center;width:100px">Category</th>
+                <th style="text-align:center;width:250px">Material</th>
+                <th style="text-align:center">Available  Qty</th>
+                <th style="text-align:center">Physical  Qty</th>
+                <th style="text-align:center">difference</th>
+                <th style="text-align:center">Counted on</th>
+                <th style="text-align:center">Remarks</th>
+                <th style="text-align:center" *ngIf="showApprovecolumn">Approve</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
+              <tr>
+                <td class="ptable-cell" style="text-align:right">
+                  {{ri+1}}
+                </td>
+                <!--<td class="ptable-cell" style="text-align:right">
+              {{rowData.id}}
+            </td>-->
+                <td class="ptable-cell" style="text-align:center"><button type="button" class="btn btn-link">{{rowData.category}}</button></td>
+                <td class="ptable-cell" style="text-align:center">{{rowData.materialid}}</td>
+
+                <td class="ptable-cell" style="text-align:center">{{rowData.availableqty}}</td>
+                <td class="ptable-cell" style="text-align:center">
+                  <input type="number" *ngIf="rowData.status === 'Counted'" style="width:100px" [(ngModel)]="rowData.physicalqty" (change)="calculatedifference(rowData)" class="form-control" />
+                  <label *ngIf="rowData.status !== 'Counted'">{{rowData.physicalqty}}</label>
+                </td>
+                <td class="ptable-cell" style="text-align:center">
+                  {{rowData.difference}}
+                </td>
+                <td class="ptable-cell" style="text-align:center">
+                  {{rowData.counted_on | date : 'dd/MM/yyyy'}}
+                </td>
+                <td class="ptable-cell" style="text-align:center;padding:0px;">
+                  <textarea *ngIf="showApprovecolumn" [(ngModel)]="rowData.remarks"></textarea>
+                  <label *ngIf="!showApprovecolumn">{{rowData.remarks}}</label>
+                </td>
+                <td class="ptable-cell" style="text-align:center" *ngIf="showApprovecolumn">
+                  <select *ngIf="rowData.status === 'Pending'" (change)="setapproval($event,rowData)">
+                    <option value="">Select</option>
+                    <option value="1">Approve</option>
+                    <option value="0">Reject</option>
+                  </select>
+                  <!--<input type="checkbox" [(ngModel)]="rowData.isapprovalprocess" />-->
+                </td>
+              </tr>
+            </ng-template>
+
+          </p-table>
+
+
+        </div>
+
+
+      </div>
+
+    </div>
+  </div>
+  

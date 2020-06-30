@@ -1,0 +1,131 @@
+<div class="card" style="    min-height: 500px;border-radius: 10px;box-shadow: 5px 10px #888888;">
+  <div class="card-header text-center cardheadertext">
+    <span>
+      <i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;Excess Movement Inventory
+    </span>
+  </div>
+  <div class="card-body" style="overflow-y:scroll">
+    <div class="row">
+      <div class="col-xs-3 col-lg-3 col-md-3 col-sm-3 form-inline">
+        <label class="form-label" style="font-size:14px; font-weight:600;color:darkblue;">Peroid:</label>&nbsp;&nbsp;
+        <div class="form-inline-list">
+          <select class="form-control forms-input" [(ngModel)]="movingDays" style="width:100px !important">
+            <option value=1>1</option>
+            <option value=2>2</option>
+            <option value=3>3</option>
+            <option value=4>4</option>
+            <option value=4>5</option>
+          </select>&nbsp;&nbsp;
+        </div><span style="font-size:14px; font-weight:600;color:darkblue;">Years</span>
+      </div>
+      <div class="col-lg-1 col-md-1 col-sm-1 form-inline">
+        <button type="button" class="btn btn-primary btn-sm" (click)="getExcessInventoryList()" label="Save">Submit</button>
+      </div>
+    </div>
+    <!--<div class="row">
+      <div class="col-lg-3 col-md-3 col-sm-3 form-inline">
+        <label class="form-label">Movement In</label>&nbsp;&nbsp;
+        <div class="form-inline-list" style="width:92px">
+          <select class="form-control forms-input" [(ngModel)]="daysSelection">
+            <option value='Weeks'>Week</option>
+            <option value='Months'>Month</option>
+            <option value='Years'>Year</option>
+          </select>
+        </div>{{daysSelection}}
+      </div>
+      <div class="col-lg-4 col-md-4 col-sm-4 form-inline">
+        <label class="form-label">Material which are  moved from last</label>&nbsp;&nbsp;
+        <div class="form-inline-list">
+          <select class="form-control forms-input" [(ngModel)]="movingDays">
+            <option value=1>1-2</option>
+            <option value=2>2-3</option>
+            <option value=3>3-4</option>
+            <option value=4>4-5</option>
+          </select>&nbsp;&nbsp;
+        </div>{{daysSelection}}
+      </div>
+      <div class="col-lg-1 col-md-1 col-sm-1">
+        <button type="button" class="btn btn-primary" (click)="getExcessInventoryList()" label="Save">Submit</button>
+      </div>
+    </div>-->
+    <div style="margin-top:10px;">
+      <p-table #dt [columns]="cols" [value]="ExcessInventoryList" [style]="{'width':'100%','overflow':'auto!important'}"
+               [responsive]="true" [rows]="50"
+               [resizableColumns]="true"
+               columnResizeMode="expand"
+               [paginator]="true" [rowsPerPageOptions]="[25,50,75,100]"
+               appendTo="body">
+        <!--<ng-template pTemplate="caption">
+          <div class="ui-helper-clearfix" style="text-align: left">
+            <button type="button" pButton icon="pi pi-file-excel" iconPos="left" label="EXCEL" (click)="exportExcel()" style="margin-right: 0.5em;" class="ui-button-success"></button>
+            <button type="button" pButton icon="pi pi-file-pdf" iconPos="left" label="PDF" (click)="exportPdf()" class="ui-button-warning"></button>
+          </div>
+        </ng-template>-->
+        <ng-template pTemplate="header" let-columns>
+          <tr class="mprltbldata">
+            <th style="text-align:center;width:5px">Sl.No.</th>
+            <th style="width:100px;text-align:center;width:50px;">Material</th>
+            <th style="width:100px;text-align:center">Material Descr</th>
+            <th style="width:100px;text-align:center;width:50px;">Total consumed Qty for last {{ this.movingDays }} years</th>
+            <th style="width:100px;text-align:center;width:50px;">Available Qty</th>
+            <!--<th style="text-align:center">Last Consumed Date</th>
+            <th style="text-align:center">Last Consumed Days</th>-->
+
+          </tr>
+          <tr>
+            <th></th>
+            <!--<th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'ponumber', 'contains')"></th>-->
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'materialid', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'materialdescription', 'contains')"></th>
+            <!--<th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'departmentname', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'itemlocation', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'projectname', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'projectname', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'vendorname', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'receiveddate', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'receivedqty', 'contains')"></th>-->
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'issuedqty', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'availableqty', 'contains')"></th>
+            <!--<th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'unitprice', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'category', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'daysinstock', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'reportdate', 'contains')"></th>-->
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
+          <!--[ngStyle]="{'background-color': (rowData.availableqty>rowData.issuedqty) ? '#73c7af' : ''}"-->
+          <tr>
+            <td class="ptable-cell" style="text-align:right;width:5px">
+              {{ri+1}}
+            </td>
+            <!--<td class="ptable-cell" style="text-align:center">{{rowData.ponumber}}</td>-->
+            <td class="ptable-cell" style="text-align:center;width:50px">{{rowData.materialid}}</td>
+            <td class="ptable-cell" style="text-align:center">{{rowData.materialdescription}}</td>
+            <!--<td class="ptable-cell" style="text-align:center">{{rowData.departmentname}}</td>
+            <td class="ptable-cell" style="text-align:center">{{rowData.itemlocation}}</td>
+            <td class="ptable-cell" style="text-align:center">{{rowData.projectname}}</td>
+            <td class="ptable-cell" style="text-align:center">{{rowData.vendorname}}</td>
+            <td class="ptable-cell" style="text-align:center">{{rowData.receiveddate  | date :  constants.dateFormat}}</td>
+            <td class="ptable-cell" style="text-align:right">{{rowData.receivedqty}}</td>-->
+            <td class="ptable-cell" style="text-align:right;width:50px">al{{rowData.issuedqty}}</td>
+            <td class="ptable-cell" style="text-align:right;width:50px">li{{rowData.availableqty}}</td>
+            <!--<td class="ptable-cell" style="text-align:right">{{rowData.unitprice}}</td>
+            <td class="ptable-cell" style="text-align:center">{{rowData.category}}</td>
+            <td class="ptable-cell" style="text-align:right">{{rowData.daysinstock}}</td>
+            <td class="ptable-cell" style="text-align:center">{{rowData.reportdate  | date :  constants.dateFormat}}</td>-->
+            <!--<td class="ptable-cell" style="text-align:right">{{rowData.lastconsumed | date :  constants.dateFormat}}</td>
+            <td class="ptable-cell" style="text-align:right">{{rowData.lastconsumeddays}}</td>-->
+            -t
+
+          </tr>
+
+
+          -t
+        </ng-template>
+      </p-table>
+    </div>
+
+
+  </div>
+</div>
+

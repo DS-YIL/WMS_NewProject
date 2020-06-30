@@ -1,0 +1,64 @@
+<div class="card" style="    min-height: 500px;border-radius: 10px;box-shadow: 5px 10px #888888;">
+  <div class="card-header text-center cardheadertext">
+    <span>
+      <i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;Inventory Report
+    </span>
+  </div>
+  <div class="card-body" style="overflow-y:scroll">
+    <div class="row">
+      <div class="col-lg-2 col-md-2 col-sm-2 form-group">
+        <label class="form-label">From Date</label>
+        <p-calendar class="mprldatepick" [(ngModel)]="fromDate" [monthNavigator]="true" [yearNavigator]="true" yearRange="1900:2050"></p-calendar>
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-2 form-group">
+        <label class="form-label">To Date</label>
+        <p-calendar class="mprldatepick" [(ngModel)]="toDate" [monthNavigator]="true" [yearNavigator]="true" yearRange="1900:2050"></p-calendar>
+      </div>
+      <div class="col-lg-3 col-md-3 col-sm-3">
+        <button type="button" class="btn btn-primary" style="margin-top: 22px" (click)="getinventoryList()" label="Save">Submit</button>
+      </div>
+    </div>
+
+    <p-table #dt [columns]="cols" [value]="inventoryList">
+      <!--<ng-template pTemplate="caption">
+      <div class="ui-helper-clearfix" style="text-align: left">
+        <button type="button" pButton icon="pi pi-file-excel" iconPos="left" label="EXCEL" (click)="exportExcel()" style="margin-right: 0.5em;" class="ui-button-success"></button>
+        <button type="button" pButton icon="pi pi-file-pdf" iconPos="left" label="PDF" (click)="exportPdf()" class="ui-button-warning"></button>
+      </div>
+    </ng-template>-->
+      <ng-template pTemplate="header" let-columns>
+        <tr class="mprltbldata">
+          <th style="text-align:center;width:70px">Sl.No.</th>
+          <th style="text-align:center;" *ngFor="let col of columns">
+            {{col.header}}
+          </th>
+        </tr>
+        <tr>
+          <th></th>
+          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'material', 'contains')"></th>
+          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'materialdescription', 'contains')"></th>
+          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'projectname', 'contains')"></th>
+          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'received', 'contains')"></th>
+          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'issued', 'contains')"></th>
+          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'balance', 'contains')"></th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
+        <tr>
+          <td class="ptable-cell" style="text-align:right">
+            {{ri+1}}
+          </td>
+          <td class="ptable-cell" style="text-align:center">{{rowData.material}}</td>
+          <td class="ptable-cell" style="text-align:center">{{rowData.materialdescription}}</td>
+          <td class="ptable-cell" style="text-align:center">{{rowData.projectname}}</td>
+          <td class="ptable-cell" style="text-align:right">{{rowData.received}}</td>
+          <td class="ptable-cell" style="text-align:right">{{rowData.issued}}</td>
+          <td class="ptable-cell" style="text-align:right">{{rowData.balance}}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+  </div>
+   
+   
+

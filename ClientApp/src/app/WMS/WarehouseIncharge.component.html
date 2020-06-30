@@ -1,0 +1,135 @@
+<div class="card" style="height:50px; width:100%;border-radius:10px;">
+  <div class="card-header cardheadertext text-center"><i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;Warehouse Incharge</div>
+  </div>
+    <div class="form-control" style="height:100%">
+      <div class="row " style="margin-top:10px">
+        <div class="col-lg-3 col-md-3 form-inline">
+          <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">GRN No: </label>&nbsp;&nbsp;
+          <input class="form-control" type="text" [(ngModel)]="PoDetails.grnnumber">&nbsp;&nbsp;&nbsp;&nbsp;
+          <button type="button" class="btn btn-primary btn-sm" label="Save" (click)="SearchGRNNo()">Search</button>
+        </div>
+        <div class="col-md-3 col-lg-3  pt-2" style="font-weight:600;font-size:14px;color:darkblue;" *ngIf="podetailsList.length>0">
+          PO No : <span style="color:#dc3545;">{{podetailsList[0].pono}}</span>
+        </div>
+        <div class="col-md-3 col-lg-3 pt-2" style="font-weight:600;font-size:14px;color:darkblue;" *ngIf="podetailsList.length>0">
+          Invoice No : <span style="color:#dc3545;">{{podetailsList[0].invoiceno}}</span>
+        </div>
+        <div class="col-md-3 col-lg-3 pt-2" style="font-weight:600;font-size:14px;color:darkblue;" *ngIf="podetailsList.length>0">
+          GRN No : <span style="color:#dc3545;">{{podetailsList[0].grnnumber}}</span>
+        </div>
+      </div>
+      <div class="row " style="margin-top:10px">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+          <p-table #dt [value]="podetailsList" [style]="{'width':'100%','overflow':'auto!important'}"
+                   [responsive]="true" [rows]="50"
+                   [resizableColumns]="true"
+                   columnResizeMode="expand"
+                   [paginator]="true" [rowsPerPageOptions]="[25,50,75,100]"
+                   appendTo="body">
+            <ng-template pTemplate="header">
+              <tr class="mprltbldata">
+                <th style="text-align:center;width:70px">Sl.No.</th>
+                <th style="width:200px;text-align:center">Project Name</th>
+                <th style="width:100px;text-align:center">Material</th>
+                <th style="width:120px;text-align:center">Material Description</th>
+                <th style="width:100px;text-align:center">PO Quantity</th>
+                <th style="width:100px;text-align:center">Received Quantity</th>
+                <th style="width:100px;text-align:center">Accepted Quantity</th>
+                <th style="width:100px;text-align: center">Returned Quantity</th>
+                <th style="width:100px;text-align:center">Pending Quantity</th>
+                <th style="width:150px; text-align: center">Location</th>
+              </tr>
+              <tr>
+                <th></th>
+                <th> <input pInputText type="text" style="width:100%;" class="form-control" (input)="dt.filter($event.target.value, 'projectname', 'contains')"></th>
+                <th> <input pInputText type="text" style="width:100%;" class="form-control" (input)="dt.filter($event.target.value, 'material', 'contains')"></th>
+                <th> <input pInputText type="text" style="width:100%;" class="form-control" (input)="dt.filter($event.target.value, 'materialdescription', 'contains')"></th>
+                <th> <input pInputText type="text" style="width:100%;" class="form-control" (input)="dt.filter($event.target.value, 'quotationqty', 'contains')"></th>
+                <th> <input pInputText type="text" style="width:100%;" class="form-control" (input)="dt.filter($event.target.value, 'receivedqty', 'contains')"></th>
+                <th> <input pInputText type="text" style="width:100%;" class="form-control" (input)="dt.filter($event.target.value, 'confirmqty', 'contains')"></th>
+                <th> <input pInputText type="text" style="width:100%;" class="form-control" (input)="dt.filter($event.target.value, 'returnqty', 'contains')"></th>
+                <th></th>
+                <th> <input pInputText type="text" style="width:100%;" class="form-control" (input)="dt.filter($event.target.value, 'Location', 'contains')"></th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
+              <tr>
+                <td class="ptable-cell" style="text-align:right;width:70px">{{ri+1}}</td>
+                <td class="ptable-cell" style="text-align: left;width:200px;">{{rowData.projectname}}</td>
+                <td class="ptable-cell" style="text-align:center;width:100px;">{{rowData.material}}</td>
+                <td class="ptable-cell" style="text-align:left;width:120px;">{{rowData.materialdescription}}</td>
+                <td class="ptable-cell" style="text-align:right;width:100px;">{{rowData.quotationqty}}</td>
+                <td class="ptable-cell" style="text-align:right;width:100px;">{{rowData.receivedqty}}</td>
+                <td class="ptable-cell" style="text-align:right;width:100px;">{{rowData.confirmqty}}</td>
+                <td class="ptable-cell" style="text-align:right;width:100px;">{{rowData.returnqty}}</td>
+                <td class="ptable-cell" style="text-align:right;width:100px;">{{rowData.quotationqty-rowData.confirmqty}}</td>
+                <td class="ptable-cell" style="text-align:left;width:150px;">
+                  {{rowData.itemlocation}}&nbsp;
+                  <!--<div style="text-align:center">-->
+                  <!--<p-autoComplete [(ngModel)]="store" [suggestions]="stores" (completeMethod)="loadStores($event)"></p-autoComplete>-->
+                  <i *ngIf="!rowData.itemlocation" class="fa fa-location-arrow" style="color:blue;float:right" pTooltip="Add Location" (click)="showDialog(rowData,ri)" aria-hidden="true"></i>
+                  <!--</div>-->
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+      </div>
+      <br />
+      <p-dialog #dialog header="Put Away Location" [(visible)]="showLocationDialog" [contentStyle]="{'overflow':'visible'}">
+        <form [formGroup]="StockModelForm">
+          <div class="row " style="margin-top:10px">
+            <div class="col-lg-4 col-md-4 col-sm-4 form-group">
+              <label for="itemlocation" class="form-label">Select Location</label>
+              <div class="form-inline-list">
+                <p-autoComplete [(ngModel)]="store" [suggestions]="searchItems" formControlName="itemlocation" field="name" [dropdown]="true" (completeMethod)="bindSearchListData($event,'StockModelForm','itemlocation',StockModelForm.controls.itemlocation.value,undefined)"></p-autoComplete>
+                <!--<input type="text" class="form-control forms-input" formControlName="itemlocation" [value]="StockModelForm.controls.itemlocation.value" (keyup)="onsrchTxtChange('itemlocation',StockModelForm.controls.itemlocation.value,'StockModel')">
+                <div class="input-group-append">
+                  <button type="button" class="btn btn-outline-secondary form-control" style="cursor:pointer" pButton icon="fa fa-list" aria-hidden="true" (click)="bindSearchListData($event,'StockModelForm','itemlocation',StockModelForm.controls.itemlocation.value,undefined)"></button>
+                </div>-->
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-4 form-group">
+              <label for="rackid" class="form-label">Select Rack</label>
+              <div class="form-inline-list">
+                <p-autoComplete [(ngModel)]="rack" [suggestions]="searchItems" formControlName="rackid" field="name" [dropdown]="true" (completeMethod)="bindSearchListData($event,'StockModelForm','rackid',StockModelForm.controls.rackid.value,undefined)"></p-autoComplete>
+                <!--<input type="text" class="form-control forms-input" formControlName="rackid" [value]="StockModelForm.controls.rackid.value" (keyup)="onsrchTxtChange('rackid',StockModelForm.controls.rackid.value,'StockModel')">
+                <div class="input-group-append">
+                  <button type="button" class="btn btn-outline-secondary form-control" style="cursor:pointer" pButton icon="fa fa-list" aria-hidden="true" (click)="bindSearchListData($event,'StockModelForm','rackid',StockModelForm.controls.rackid.value,undefined)"></button>
+                </div>-->
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-4 form-group">
+              <label for="binid" class="form-label">Select Bin</label>
+              <div class="form-inline-list">
+                <p-autoComplete [(ngModel)]="bin" [suggestions]="searchItems" formControlName="binid" field="name" [dropdown]="true" (completeMethod)="bindSearchListData($event,'StockModelForm','binid',StockModelForm.controls.binid.value,undefined)"></p-autoComplete>
+                <!--<input type="text" class="form-control forms-input" formControlName="binid" [value]="StockModelForm.controls.binid.value" (keyup)="onsrchTxtChange('binid',StockModelForm.controls.binid.value,'StockModel')">
+                <div class="input-group-append">
+                  <button type="button" class="btn btn-outline-secondary form-control" style="cursor:pointer" pButton icon="fa fa-list" aria-hidden="true" (click)="bindSearchListData($event,'StockModelForm','binid',StockModelForm.controls.binid.value,undefined)"></button>
+                </div>-->
+              </div>
+            </div>
+            <!--<div class="col-lg-4 col-md-4 col-sm-4 form-group">
+              <label class="form-label">Shelf Life</label><br />
+              <p-calendar [(ngModel)]="StockModel.shelflife" formControlName="shelflife" [monthNavigator]="true" [yearNavigator]="true" yearRange="1900:2050"></p-calendar>
+            </div>-->
+          </div>
+        </form>
+        <p-footer>
+          <div class="ui-dialog-buttonpane ui-helper-clearfix">
+            <button type="button" pButton icon="fa fa-close" (click)="onSubmitStockDetails()" label="Submit"></button>
+          </div>
+        </p-footer>
+      </p-dialog>
+
+      <p-dialog header="List View" [(visible)]="showList" [contentStyle]="{'overflow':'visible'}">
+        <div class="ui-g ui-fluid">
+          <p-listbox [options]="searchItems" [(ngModel)]="selectedItem" optionLabel="name" (onChange)="onSelectedOptionsChange(selectedItem)"></p-listbox>
+        </div>
+        <p-footer>
+          <div class="ui-dialog-buttonpane ui-helper-clearfix">
+            <button type="button" pButton icon="fa fa-close" (click)="dialogCancel('showList')" label="Cancel"></button>
+          </div>
+        </p-footer>
+      </p-dialog>
+    </div>

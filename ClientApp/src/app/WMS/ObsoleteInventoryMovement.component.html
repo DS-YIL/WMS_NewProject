@@ -1,0 +1,97 @@
+<div class="card" style="    min-height: 500px;border-radius: 10px;box-shadow: 5px 10px #888888;">
+  <div class="card-header text-center cardheadertext">
+    <span>
+      <i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;Obsolete Movement Inventory
+    </span>
+  </div>
+  <div class="card-body" style="overflow-y:scroll">
+    <div class="row">
+      <div class="col-lg-3 col-md-3 form-inline">
+        <label class="form-label" style="font-size:14px; font-weight:600;color:darkblue;">Peroid:</label>&nbsp;&nbsp;
+        <div class="form-inline-list">
+          <select class="form-control forms-input" [(ngModel)]="movingDays" style="width:100px !important">
+            <option value=1>1</option>
+            <option value=2>2</option>
+            <option value=3>3</option>
+            <option value=4>4</option>
+            <option value=4>5</option>
+          </select>&nbsp;&nbsp;
+        </div><span style="font-size:14px; font-weight:600;color:darkblue;">Years</span>
+      </div>
+      <div class="col-lg-1 col-md-1 form-inline">
+        <button type="button" class="btn btn-primary btn-sm" (click)="getObsoleteInventoryList()" label="Save">Submit</button>
+      </div>
+    </div>
+    <div style="margin-top:10px;">
+      <p-table #dt [columns]="cols" [value]="ObsoleteInventoryList" [style]="{'width':'100%','overflow':'auto!important'}"
+               [responsive]="true" [rows]="50"
+               [resizableColumns]="true"
+               columnResizeMode="expand"
+               [paginator]="true" [rowsPerPageOptions]="[25,50,75,100]"
+               appendTo="body">
+        <!--<ng-template pTemplate="caption">
+      <div class="ui-helper-clearfix" style="text-align: left">
+        <button type="button" pButton icon="pi pi-file-excel" iconPos="left" label="EXCEL" (click)="exportExcel()" style="margin-right: 0.5em;" class="ui-button-success"></button>
+        <button type="button" pButton icon="pi pi-file-pdf" iconPos="left" label="PDF" (click)="exportPdf()" class="ui-button-warning"></button>
+      </div>
+    </ng-template>-->
+        <ng-template pTemplate="header" let-columns>
+          <tr class="mprltbldata">
+            <th style="text-align:center;width:60px">Sl.No.</th>
+            <th *ngFor="let col of columns" style="width:100px;text-align:center;">
+              {{col.header}}
+            </th>
+            <!--<th style="text-align:center">Last Consumed Date</th>
+        <th style="text-align:center">Last Consumed Days</th>-->
+
+          </tr>
+          <tr>
+            <th></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'ponumber', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'materialid', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'materialdescription', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'departmentname', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'itemlocation', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'projectname', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'vendorname', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'receiveddate', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'receivedqty', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'issuedqty', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'availableqty', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'unitprice', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'category', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'daysinstock', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'reportdate', 'contains')"></th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
+          <tr>
+            <td class="ptable-cell" style="text-align:right">
+              {{ri+1}}
+            </td>
+            <td class="ptable-cell" style="text-align:center">{{rowData.ponumber}}</td>
+            <td class="ptable-cell" style="text-align:center">{{rowData.materialid}}</td>
+            <td class="ptable-cell" style="text-align:center">{{rowData.materialdescription}}</td>
+            <td class="ptable-cell" style="text-align:center">{{rowData.departmentname}}</td>
+            <td class="ptable-cell" style="text-align:center">{{rowData.itemlocation}}</td>
+            <td class="ptable-cell" style="text-align:center">{{rowData.projectname}}</td>
+            <td class="ptable-cell" style="text-align:center">{{rowData.vendorname}}</td>
+            <td class="ptable-cell" style="text-align:center">{{rowData.receiveddate  | date :  constants.dateFormat}}</td>
+            <td class="ptable-cell" style="text-align:right">{{rowData.receivedqty}}</td>
+            <td class="ptable-cell" style="text-align:right">{{rowData.issuedqty}}</td>
+            <td class="ptable-cell" style="text-align:right">{{rowData.availableqty}}</td>
+            <td class="ptable-cell" style="text-align:right">{{rowData.unitprice}}</td>
+            <td class="ptable-cell" style="text-align:center">{{rowData.category}}</td>
+            <td class="ptable-cell" style="text-align:right">{{rowData.daysinstock}}</td>
+            <td class="ptable-cell" style="text-align:center">{{rowData.reportdate  | date :  constants.dateFormat}}</td>
+            <!--<td class="ptable-cell" style="text-align:right">{{rowData.lastconsumed | date :  constants.dateFormat}}</td>
+        <td class="ptable-cell" style="text-align:right">{{rowData.lastconsumeddays}}</td>-->
+
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+   
+  </div>
+  </div>
+   

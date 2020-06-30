@@ -1,0 +1,52 @@
+<div id="login" class=" my-animation" style="background-image: url('../../../assets/wmslogin1.png');height:560px; width:100%; background-size: cover;background-repeat: no-repeat;margin-top:-20px;">
+  <div class="d-flex justify-content-end align-items-center" >
+  <div class="h-100 d-flex justify-content-end align-items-center">
+    <div class="card" style="width:450px;margin-top:20%;margin-right:10%">
+      <div class="card-header" style="height:60px;">
+        <img src="./assets/usericon.png" alt="login image" height="40px;" width="40" />
+        <label style="color:brown; font-size:20px;font-weight:600;" >&nbsp;&nbsp;Log In</label>
+      </div>
+      <div class="card-body">
+        <form [formGroup]="LoginForm">
+          <div class="row">
+            <div class="col-sm-12 col-md-12 col-lg-12 form-group">
+              <div class="input-group form-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="fa fa-user"></i></span>
+                </div>
+                <input type="text" placeholder="Domain Id" formControlName="DomainId" ngModel maxlength="20" class="form-control" [(ngModel)]="LoginModel.DomainId" [ngClass]="{ 'is-invalid': LoginSubmitted && LoginForm.controls.DomainId.errors}" required>
+                <span *ngIf="LoginSubmitted && LoginForm.controls.DomainId.errors" class="invalid-feedback">Please enter Domain Id</span>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-12 col-md-12 col-lg-12 form-group">
+              <div class="input-group form-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="fa fa-key"></i></span>
+                </div>
+                <input type="password" formControlName="Password" ngModel maxlength="20" class="form-control" [(ngModel)]="LoginModel.Password" [ngClass]="{ 'is-invalid': LoginSubmitted && LoginForm.controls.Password.errors }" required placeholder="Password">
+                <span *ngIf="LoginSubmitted && LoginForm.controls.Password.errors" class="invalid-feedback">Please enter Password</span>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-12 col-md-12 col-lg-12 form-inline">
+              <select id="manWeeks" class="form-control forms-input" style="width:100% !important;" formControlName="roleid" [(ngModel)]="LoginModel.roleid" [ngClass]="{ 'is-invalid': LoginSubmitted &&   LoginForm.controls.roleid.value=='0'}">
+                <option value=0>Select Role</option>
+                <option *ngFor="let data of roleNameModel" [ngValue]="data.roleid">
+                  {{data.rolename}}
+                </option>
+              </select>
+              <span *ngIf="LoginSubmitted && LoginForm.controls.roleid.value=='0'" class="invalid-feedback">Select Role</span>
+            </div>
+          </div><br />
+          <div class="form-group">
+            <button type="submit" class="btn btn-info float-right" (click)="Login()">Login</button>
+          </div><br /><br />
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>

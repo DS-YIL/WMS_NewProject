@@ -1,0 +1,177 @@
+<div class="form-control" style="height:100%;border-radius:0px;">
+  <div class="row" style="min-height:500px;">
+    <div class="col-lg-4 col-md-4">
+      <div class="card" style="min-height:500px;border-radius:10px; box-shadow:5px 10px #888888;">
+        <div class="card-header cardheadertext"><i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;Security Check</div>
+        <div class="card-body">
+          <div class="row " style="margin-top:5px;">
+            <div class="col-lg-12 col-md-12 col-sm-12 form-inline">
+              <label class="text-primary" style="font-weight:600">PO No: </label>&nbsp;&nbsp;
+              <input class="form-control" type="text" [(ngModel)]="PoDetails.pono" id="ponoid" maxlength="10">&nbsp;&nbsp;
+              <button type="button" class="btn btn-primary" label="Save" (click)="SearchPoNo()">Search</button>
+            </div>
+          </div>
+          <div *ngIf="showDetails">
+            <div class="row" style="margin-top:10px;">
+              <div class="col-lg-3 col-md-3">
+                <label class="text-primary" style="font-weight:600">Supplier : </label>
+              </div>
+              <div class="col-lg-6 col-md-6">
+                <label class="form-label" style="font-weight:600">{{PoDetails.vendorname}}</label>
+              </div>
+
+            </div>
+            <div class="row" style="margin-top:10px;">
+              <div class="col-lg-3 col-md-3">
+                <label class="text-primary" style="font-weight:600">Invoice No : </label>
+              </div>
+              <div class="col-lg-6 col-md-6">
+                <input class="form-control" type="text" [disabled]="disSaveBtn" [(ngModel)]="Poinvoicedetails.invoiceno">
+              </div>
+
+            </div>
+            <div class="row" style="margin-top:20px;">
+              <div class="col-lg-5 col-md-5">
+                <button type="button" style="float:right" [disabled]="disSaveBtn" class="btn btn-success" (click)="onsaveSecDetails()" label="Save">Save</button>
+              </div>
+              <div class="col-lg-6 col-md-6">
+                <button type="button" style="float:left" class="btn btn-success" (click)="onsaveSecDetails()" label="Save">Print Barcode</button>
+              </div>
+             
+            </div>
+            <!--<div class="row " style="margin-top:10px;margin-left:10px">
+              <div class="col-lg-4 col-md-4 col-sm-4 form-group">
+
+                <input class="form-control" type="text" readonly [(ngModel)]="PoDetails.vendorname">
+              </div>
+              <div class="col-lg-4 col-md-4 col-sm-4 form-group">
+                <label class="form-label">Quanity: </label>
+                <input class="form-control" type="text" readonly [(ngModel)]="PoDetails.quotationqty">
+              </div>
+            </div>
+            <div class="row " style="margin-top:10px;margin-left:20px">
+              <div class="col-lg-4 col-md-4 col-sm-4 form-group">
+                <label class="form-label">Invoice No: </label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-lg-4 col-md-4 col-sm-4"></div>
+              <div class="col-lg-4 col-md-4 col-sm-4">
+                <button type="button" [disabled]="disSaveBtn" class="btn btn-success" (click)="onsaveSecDetails()" label="Save">Save</button>&nbsp;&nbsp;&nbsp;
+                <button type="button" class="btn btn-success" (click)="onsaveSecDetails()" label="Save">Print Barcode</button>
+
+              </div>
+            </div>-->
+          </div>
+
+
+
+        </div>
+      </div>
+     
+    </div>
+    <div class="col-lg-8 col-md-8">
+      <div class="card" style="    min-height: 500px;border-radius: 10px;box-shadow: 5px 10px #888888;">
+        <div class="card-header cardheadertext">
+          <span>
+            <i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;Today's Shipment List
+          </span>
+          <span style="float:right">
+            <i class="pi pi-calendar" style="color:white; font-size:20px;"></i>&nbsp;{{todatsdate | date: 'dd/MM/yyyy'}}
+          </span>
+        </div>
+        <div class="card-body" style="overflow-y:scroll">
+          <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+              <div class="row">
+                <div class="col-lg-4 col-md-4">
+                  <div class="card" style="height: 108px;margin-bottom:10px;width: 100%;background-image: url('./assets/Login.jpg');border-radius: 10px;">
+                    <h5 style="color:white;margin-left:10px;margin-top:10px"><i class="fa fa-cubes"></i>&nbsp;Total Shipments</h5>
+                    <h5 style="color:white;margin-left:20px;font-weight:600;">{{deliverycount}}</h5>
+                    <button class="btn btn-success btn-sm" (click)="showdevlist()">{{btntext}}</button>
+                  </div>
+
+                </div>
+                <div class="col-lg-4 col-md-4">
+                  <div class="card" style="height: 108px;margin-bottom:10px;width: 100%;background-image: url('./assets/Login.jpg');border-radius: 10px;">
+                    <h5 style="color:white;margin-left:10px;margin-top:10px"><i class="fa fa-cubes"></i>&nbsp;Total Received</h5>
+                    <h5 style="color:white;margin-left:20px; font-weight:600;">{{receivedcount}}</h5>
+                    <button class="btn btn-success btn-sm" (click)="showreceivedlist()">{{btnreceivetext}}</button>
+                  </div>
+
+                </div>
+
+              </div>
+
+              <div *ngIf="showtable">
+                <p-table *ngIf="showPoList" [value]="currentDatePoList" [style]="{'width':'95%','height':'80%','overflow':'auto!important','box-shadow' : '5px 10px #888888'}">
+                  <ng-template pTemplate="header">
+                    <tr class="mprltbldata">
+                      <th class="ptable-cell" style="text-align:center;width:10%;">Sl.No.</th>
+                      <th class="ptable-cell" style="text-align:center;width:20%;">PO No</th>
+                      <th class="ptable-cell" style="text-align:center">Supplier Name</th>
+                    </tr>
+                  </ng-template>
+                  <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex" let-rindex=0>
+                    <tr>
+                      <td class="ptable-cell" style="text-align:right;width:10%;"> {{ri+1}} </td>
+                      <td class="ptable-cell" style="text-align:center;width:20%;"> {{rowData.pono}} </td>
+                      <td class="ptable-cell" style="text-align:center"> {{rowData.vendorname}} </td>
+                  </ng-template>
+                  <ng-template pTemplate="emptymessage">
+                    <tr>
+                      <td colspan="4" style="text-align:center;color:red">No Shipment notifications for today.</td>
+                    </tr>
+                  </ng-template>
+                </p-table>
+              </div>
+              <div *ngIf="showreceivedtable" style="margin-top:10px;">
+                <p-table *ngIf="showPoList" [value]="currentDatePoReceivedList" [style]="{'width':'95%','height':'80%','overflow':'auto!important','box-shadow' : '5px 10px #888888'}">
+                  <ng-template pTemplate="header">
+                    <tr class="mprltbldata">
+                      <th class="ptable-cell" style="text-align:center;width:10%;">Sl.No.</th>
+                      <th class="ptable-cell" style="text-align:center;width:20%;">PO No</th>
+                      <th class="ptable-cell" style="text-align:center">Supplier Name</th>
+                      <th class="ptable-cell" style="text-align:center;width:25%;">Received By</th>
+                      <!--<th class="ptable-cell" style="text-align:center">Delivery Date</th>-->
+                    </tr>
+                  </ng-template>
+                  <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex" let-rindex=0>
+                    <tr>
+                      <td class="ptable-cell" style="text-align:right;;width:10%;"> {{ri+1}} </td>
+                      <td class="ptable-cell" style="text-align:center;width:20%;"> {{rowData.pono}} </td>
+                      <td class="ptable-cell" style="text-align:center"> {{rowData.suppliername}} </td>
+                      <td class="ptable-cell" style="text-align:center;width:25%;">{{rowData.receivedby}}</td>
+                  </ng-template>
+                  <ng-template pTemplate="emptymessage">
+                    <tr>
+                      <td colspan="4" style="text-align:center;color:red">No received notifications for today.</td>
+                    </tr>
+                  </ng-template>
+                </p-table>
+              </div>
+
+
+            </div>
+          </div>
+
+        </div>
+
+        </div>
+       
+      </div>
+     
+
+  </div>
+  
+
+ 
+  <!--<div class="row" style="margin-left:20px">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+      <div style="display:none" id="valdatediv">
+        <label class="form-label">Please enter PONO </label>&nbsp;&nbsp;
+      </div>
+      </div>
+    </div>-->
+     
+    </div>

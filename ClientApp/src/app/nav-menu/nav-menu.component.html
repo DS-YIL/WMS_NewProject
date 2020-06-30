@@ -1,0 +1,22 @@
+<header>
+  <nav
+    class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow mb-3 navclass">
+    <div class="container" style="margin:0px;padding:0px;max-width: 100%">
+      <div class="navbar-brand" style="padding-left: 0em;">
+        <img class="" src="./assets/Yoko.jpg" />
+        <label style="margin-left:75%;color:white;font-weight:900">Warehouse Management System</label>
+      </div>
+      <button type="text" id="btnuser"  pButton label="&nbsp;{{username}}" icon="pi pi-user" (click)="op1.toggle($event)"></button>
+    </div>
+  </nav>
+</header>
+<div style="margin-top: -20px;" id="menudiv">
+  <p-menubar [model]="items"  [style]="{'background-color': 'rgb(148, 195, 226)'}"></p-menubar>
+</div>
+<p-overlayPanel #op1>
+  <p-panelMenu [model]="useritems" [style]="{'width':'150px'}"></p-panelMenu>
+</p-overlayPanel>
+<p-toast position="top-right"></p-toast>
+
+
+

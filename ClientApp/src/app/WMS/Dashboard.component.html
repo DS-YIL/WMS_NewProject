@@ -1,0 +1,111 @@
+
+<!--<form [formGroup]="POfilterForm">
+  <div class="form-control" style="height:100%;border-radius:0px;">
+    <div class="row" style="margin-top:10px">
+      <div class="col-lg-3 col-md-3 col-sm-3 form-group">
+        <label class="form-label">PO No</label>
+        <input class="form-control" formControlName="PONo" [(ngModel)]="PoFilterParams.PONo">
+      </div>
+      <div class="col-lg-3 col-md-3 col-sm-3 form-group">
+        <label for="venderid" class="form-label">Vendor Name</label>
+        <div class="form-inline-list">
+          <input type="text" class="form-control forms-input" formControlName="venderid" [value]="POfilterForm.controls.venderid.value" (keyup)="onsrchTxtChange('venderid',POfilterForm.controls.venderid.value,'PoFilterParams')">
+          <div class="input-group-append">
+            <button type="button" class="btn btn-outline-secondary form-control" style="cursor:pointer" pButton icon="fa fa-list" aria-hidden="true" (click)="bindSearchListData($event,'POfilterForm','venderid',POfilterForm.controls.venderid.value,undefined)"></button>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-3 col-sm-3 form-group">
+        <label for="docNo" class="form-label">Document Number</label>
+        <input class="form-control" type="text" formControlName="DocumentNo" [(ngModel)]="PoFilterParams.DocumentNo">
+      </div>
+    </div>
+    <div class="row">
+      <div class="ui-g-4 ui-md-4">
+      </div>
+      <div class="ui-g-4 ui-md-4">
+        <button type="button" class="btn btn-success" (click)="bindList()" label="Save">Search</button>
+      </div>
+    </div>
+  </div><br />
+</form>-->
+<div class="card" style="    min-height: 500px;border-radius: 10px;box-shadow: 5px 10px #888888;">
+  <div class="card-header text-center cardheadertext">
+    <span>
+      <i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;PM Dashboard
+    </span>
+  </div>
+  <div class="card-body" style="overflow-y:scroll">
+    <div class="row" style="height:100%;border-radius:0px;">
+      <p-table #dt [value]="POList" [style]="{'width':'100%','overflow':'auto!important'}"
+               [responsive]="true" [rows]="50"
+               [resizableColumns]="true"
+               columnResizeMode="expand"
+               [paginator]="true" [rowsPerPageOptions]="[25,50,75,100]"
+               appendTo="body">
+        <ng-template pTemplate="header">
+          <tr class="mprltbldata">
+            <th style="text-align:center;width:70px">Sl.No.</th>
+            <th style="text-align:center">Project Code</th>
+            <th style="text-align:center">PO No</th>
+            <th style="text-align:center">Status</th>
+            <th style="text-align:center">Vendor Name</th>
+            <th style="text-align:center">Job Name</th>
+            <th style="text-align:center">Quotation Qty</th>
+            <th style="text-align:center">Received Date</th>
+            <!--<th style="text-align:center">View</th>-->
+            <th style="text-align:center">Request</th>
+            <th style="text-align:center">Reserve</th>
+            <!--<th>Material Description</th>-->
+            <!--<th style="text-align:center">Invoice No</th>-->
+          </tr>
+          <tr>
+            <th></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'projectcode', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'pono', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'status', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'vendorname', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'jobName', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'quotationqty', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'enteredon', 'contains')"></th>
+            <!--<th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'quotationqty', 'contains')"></th>-->
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'enteredon', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'enteredon', 'contains')"></th>
+            <!--<th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'invoiceno', 'contains')"></th>-->
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex" let-rindex=0>
+          <tr>
+            <td class="ptable-cell" style="text-align:right">
+              {{ri+1}}
+            </td>
+            <td class="ptable-cell" style="text-align:left">{{rowData.projectcode}}</td>
+            <td class="ptable-cell" style="font-size:11px; text-align:center">{{rowData.pono}}</td>
+            <td class="ptable-cell" style="text-align:center">{{rowData.status}}</td>
+            <td class="ptable-cell" style="text-align:center">{{rowData.vendorname}}</td>
+            <td class="ptable-cell" style="text-align:center">{{rowData.jobName}}</td>
+            <td class="ptable-cell" style="text-align:right">{{rowData.quotationqty}}</td>
+            <td class="ptable-cell" style="text-align:center">{{rowData.enteredon | date :  constants.dateFormat}}</td>
+            <!--<td  class="ptable-cell" style="text-align:center" ><button class="btn btn-primary fa fa-eye" (click)="materialrequestedview(rowData.pono);"></button></td>-->
+            <td class="ptable-cell" style="text-align:center"><button class="btn btn-primary fa fa-plus" (click)="materialrequest(rowData.pono);"></button></td>
+            <td class="ptable-cell" style="text-align:center"><button class="btn btn-primary fa fa-reorder" (click)="materialReserve(rowData.pono);"></button></td>
+            <!--<td class="ptable-cell">{{rowData.materialdescription}}</td>-->
+            <!--<td class="ptable-cell" style="text-align:center">{{rowData.invoiceno}}</td>-->
+          </tr>
+        </ng-template>
+      </p-table><br />
+    </div>
+  </div>
+  </div>
+   
+    <p-dialog #dialog header="List View :" [(visible)]="showList" [contentStyle]="{'overflow':'visible'}">
+      <div class="ui-g ui-fluid">
+        <p-listbox [options]="searchItems" [(ngModel)]="selectedItem" optionLabel="name" (onChange)="onSelectedOptionsChange(selectedItem,null)"></p-listbox>
+      </div>
+      <p-footer>
+        <div class="ui-dialog-buttonpane ui-helper-clearfix">
+          <button type="button" pButton icon="fa fa-close" (click)="dialogCancel('showList')" label="Cancel"></button>
+        </div>
+      </p-footer>
+    </p-dialog>
+

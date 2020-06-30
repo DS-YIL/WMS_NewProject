@@ -1,0 +1,128 @@
+
+<div class="card" style="    min-height: 500px;border-radius: 10px;box-shadow: 5px 10px #888888;">
+  <div class="card-header text-center cardheadertext">
+    <span>
+      <i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;Reserved Material List
+    </span>
+  </div>
+  <div class="card-body" style="overflow-y:scroll">
+    <p-table #dt [value]="reserveList">
+      <ng-template pTemplate="header">
+        <tr class="mprltbldata">
+          <th style="text-align:center;width:70px">Sl.No.</th>
+          <th style="text-align:center;width:100px">Reserve Id</th>
+          <th style="text-align:center;width:200px">PO No</th>
+          <th style="text-align:center">Project Name</th>
+          <th style="text-align:center;width:150px">Reserved On</th>
+          <th style="text-align:center;width:150px">Acknowledge</th>
+          <th style="text-align:center;width:150px">Status</th>
+          <!--<th style="text-align:center">Requested Quantity</th>
+        <th style="text-align:center">Received Quantity</th>
+        <th style="text-align:center;width:200px">Acknowledge</th>-->
+        </tr>
+        <tr>
+          <th></th>
+          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'requestforissueid', 'contains')"></th>
+          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'pono', 'contains')"></th>
+          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'projectname', 'contains')"></th>
+          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'material', 'contains')"></th>
+          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'materialdescription', 'contains')"></th>
+          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'quotationqty', 'contains')"></th>
+          <!--<th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'requestedquantity', 'contains')"></th>
+        <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'quotationqty', 'contains')"></th>
+        <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'ackremarks', 'contains')"></th>-->
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
+        <tr>
+          <td class="ptable-cell" style="text-align:right">{{ri+1}}</td>
+          <td class="ptable-cell" style="text-align:center;width:100%;">
+            <button type="button" class="btn btn-link" (click)="showmaterialdetails(rowData.reserveid);" style="padding-left:0px;">{{rowData.reserveid}}</button>
+          </td>
+          <td class="ptable-cell" style="text-align:center">{{rowData.pono}}</td>
+          <td class="ptable-cell" style="text-align:left">{{rowData.projectname}}</td>
+          <td class="ptable-cell" style="text-align:left">{{rowData.reservedon| date :  constants.dateFormat}}</td>
+          <td class="ptable-cell">
+            <div *ngIf="rowData.approvedstatus=='approved'" class="form-inline">
+              <p-checkbox [(ngModel)]="rowData.status" binary="true" (click)="ackStatusChanges()"></p-checkbox> &nbsp;&nbsp;
+              <textarea type="text" style="width:140px" class="form-control" [(ngModel)]="rowData.ackremarks"></textarea>
+            </div>
+          </td>
+
+          <td class="ptable-cell" style="text-align:center">
+            {{rowData.approvedstatus}}
+            <!--<div *ngIf="rowData.approvedstatus=='approved'" class="form-inline">
+
+            <textarea type="text" style="width:140px" class="form-control" disabled="disabled" [(ngModel)]="rowData.approvedstatus"></textarea>
+          </div>-->
+            <span *ngIf="rowData.ackstatus=='received'">{{rowData.approvedstatus}}</span>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+    <br />
+    <br />
+    <div>
+      <div class="row">
+        <div class="col-lg-5 col-md-5">
+        </div>
+        <!--<div class="col-lg-2 col-md-2 col-sm-2 " style="margin-top:5px;margin-bottom:5px">
+        <button type="button" class="btn btn-primary" [disabled]="btnDisable" (click)="onMaterialRequestDeatilsSubmit()">Material Request</button>
+
+      </div>-->
+        <div *ngIf="showAck" class="col-lg-2 col-md-2 col-sm-2 " style="margin-top:5px;margin-bottom:5px">
+          <button type="button" class="btn btn-primary" [disabled]="btnDisable" (click)="materialAckUpdate()">Send Acknowledge</button>
+        </div>
+      </div>
+    </div>
+    <div style="height: 5px; overflow-y: scroll">
+
+      <p-dialog header="Material Reserved Details" [(visible)]="AddDialog" [contentStyle]="{'overflow-y': 'auto', 'overflow-x': 'hidden', 'max-height': '80vh','min-height':'250px'}" showEffect="fade" [modal]="true" [responsive]="true" [style]="{width: '1024px'}">
+        <div *ngIf="showdialog">
+          <div class="row  pl-0">
+            <div class="col-lg-4 col-md-4 col-sm-4 pt-2">
+              <label>Reserved Id :</label>&nbsp;<span><label>{{materiallistData[0].reserveid}}</label></span>
+            </div>
+
+          </div>
+
+        </div>
+        <p-table #dt [value]="materiallistData">
+          <ng-template pTemplate="header">
+            <tr class="mprltbldata">
+              <th style="text-align:center;width:70px">S.No</th>
+              <th style="text-align:center">Material</th>
+              <th style="text-align:center">Reserved  Qty</th>
+              <th style="text-align:center">Released Qty</th>
+
+
+            </tr>
+
+          </ng-template>
+          <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
+            <tr>
+              <td class="ptable-cell" style="text-align:right">
+                {{ri+1}}
+              </td>
+              <td class="ptable-cell" style="text-align:center">{{rowData.materialid}}</td>
+              <td class="ptable-cell" style="text-align:left">{{rowData.reservedqty}}</td>
+              <td class="ptable-cell" style="text-align:left">
+                {{rowData.releasedquantity}}
+
+              </td>
+              <!--<td class="ptable-cell" style="text-align:left">{{rowData.createddate | date :  constants.dateFormat}}</td>-->
+            </tr>
+          </ng-template>
+
+        </p-table>
+        <p-footer>
+          <!--<div class="ui-dialog-buttonpane ui-helper-clearfix">
+          <button type="button" pButton icon="fa fa-check" class="ui-button-success" (click)="Cancel()" label="OK"></button>
+          <button type="button" pButton icon="fa fa-close" class="ui-button-danger" (click)="Cancel()" label="Cancel"></button>
+        </div>-->
+        </p-footer>
+      </p-dialog>
+    </div>
+  </div>
+  </div>
+   

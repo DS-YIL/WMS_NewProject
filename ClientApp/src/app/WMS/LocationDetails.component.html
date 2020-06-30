@@ -1,0 +1,50 @@
+<div>
+  <button type="button" icon="fa fa-arrow-left" pButton aria-hidden="true" pTooltip="Back" (click)="backMaterialDetails()" style="float: left;
+    height: 26px;"></button>
+  <h5 style="text-align:center">Location Details</h5>
+</div>
+<h6 style="text-align:left">Material ID: {{materialid}}</h6>
+<p-table #dt  [columns]="cols" [value]="LocationDetails" >
+  <!--<ng-template pTemplate="caption">
+    <div class="ui-helper-clearfix" style="text-align: left">
+      <button type="button" pButton icon="pi pi-file-excel" iconPos="left" label="EXCEL" (click)="exportExcel()" style="margin-right: 0.5em;" class="ui-button-success"></button>
+      <button type="button" pButton icon="pi pi-file-pdf" iconPos="left" label="PDF" (click)="exportPdf()" class="ui-button-warning"></button>
+    </div>
+  </ng-template>-->
+  <ng-template pTemplate="header" let-columns>
+    <tr class="mprltbldata">
+      <th style="text-align:center;width:70px">S.No</th>
+      <th *ngFor="let col of columns">
+        {{col.header}}
+      </th>
+    </tr>
+    <tr>
+      <th></th>
+      <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'availableqty', 'contains')"></th>
+      <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'itemlocation', 'contains')"></th>
+      
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
+    <tr>
+      <td class="ptable-cell" style="text-align:right">
+        {{ri+1}}
+      </td>
+      <td class="ptable-cell" style="text-align:center">{{rowData.availableqty}}</td>
+      <td class="ptable-cell" style="text-align:left">{{rowData.itemlocation}}</td>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="footer">
+    <tr>
+      <td>Total</td>
+      <td style="text-align:center">{{QtyTotal}}</td>
+      <td></td>
+    </tr>
+    
+  </ng-template>
+</p-table>
+
+<!--<p-footer>
+  <label>
+    Total Qty:{{QtyTotal}}</label>
+</p-footer>-->
