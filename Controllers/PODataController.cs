@@ -28,7 +28,7 @@ namespace WMS.Controllers
 		[HttpGet("GetOpenPoList")]
 		public async Task<IEnumerable<OpenPoModel>> GetPoNodata(string loginid, string pono = null, string docno = null, string vendorid = null)
 		{
-			return await this._poService.getOpenPoList(loginid, pono, docno, vendorid);
+			return await this._poService.getOpenPoList(loginid, pono, docno, vendorid); 
 		}
 //Get list of PO 
         [HttpGet("GetPOList")]
