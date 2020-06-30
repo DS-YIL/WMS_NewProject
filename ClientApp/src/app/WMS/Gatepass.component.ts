@@ -278,6 +278,14 @@ export class GatePassComponent implements OnInit {
 
   }
 
+  //Check if material is already selected in material list drop down
+  onMaterialSelected(material:any) {
+    if (this.gatepassModel.materialList.filter(li => li.materialid == material.code).length > 0) {
+      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Material already exist' });
+      return false;
+    }
+  }
+
   //update return dated based on role
   updateReturnedDate(gatepassobject: any) {
     this.gatepassModel = new gatepassModel();

@@ -32,7 +32,7 @@
           <tr class="mprltbldata">
             <th style="text-align: center;
     width: 70px
-">Sl.No.</th>
+">Sl. No.</th>
             <th style="text-align:center">GatePass Id</th>
             <!--<th style="text-align:center">Material</th>
             <th style="text-align:center">Qty</th>-->
@@ -230,7 +230,7 @@
                 <input *ngIf="rowData.materialid" [(ngModel)]="rowData.materialid" class="form-control" type="text" name="{{rowData.materialid}}" />
                 <!--<p-autoComplete *ngIf="!rowData.materialid" [(ngModel)]="material" [suggestions]="searchItems" formControlName="itemlocation" field="name" [dropdown]="true" (completeMethod)="bindSearchListData($event,'StockModelForm','itemlocation',StockModelForm.controls.itemlocation.value,undefined)"></p-autoComplete>-->
 
-                <p-autoComplete appendTo="body" *ngIf="!rowData.materialid"  [(ngModel)]="material"  type="text" [suggestions]="searchItems" field="name" [dropdown]="true" (completeMethod)="bindSearchListData($event,'ItemId')" size="8"></p-autoComplete>
+                <p-autoComplete appendTo="body" *ngIf="!rowData.materialid" (onSelect)="onMaterialSelected(material)"  [(ngModel)]="material"  type="text" [suggestions]="searchItems" field="name" [dropdown]="true" (completeMethod)="bindSearchListData($event,'ItemId')" size="8"></p-autoComplete>
               </td>
                 <td class="ptable-cell" style="text-align:right">
                   <input style="text-align:left" pInputText type="number" class="form-control" [(ngModel)]="rowData.quantity">
