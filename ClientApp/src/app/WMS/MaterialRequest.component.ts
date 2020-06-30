@@ -64,6 +64,8 @@ export class MaterialRequestComponent implements OnInit {
     this.btnDisable = true;
     this.requestList.forEach(item => {
       item.requesterid = this.employee.employeeno;
+      if (item.requestedquantity == null)
+        item.requestedquantity = 0;
     })
     this.wmsService.materialRequestUpdate(this.requestList).subscribe(data => {
       this.spinner.hide();
