@@ -1103,17 +1103,17 @@ namespace WMS.DAL
 								item.requestedquantity
 							});
 						}
-						if (result != 0)
-						{
-							int availableqty = item.availableqty - item.requestedquantity;
-							string updatequery = WMSResource.updatestock.Replace("#availableqty", Convert.ToString(availableqty)).Replace("#itemid", Convert.ToString(item.itemid));
-							using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
-							{
-								result = DB.Execute(updatequery, new
-								{
-								});
-							}
-						}
+						//if (result != 0)
+						//{
+						//	int availableqty = item.availableqty - item.requestedquantity;
+						//	string updatequery = WMSResource.updatestock.Replace("#availableqty", Convert.ToString(availableqty)).Replace("#itemid", Convert.ToString(item.itemid));
+						//	using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
+						//	{
+						//		result = DB.Execute(updatequery, new
+						//		{
+						//		});
+						//	}
+						//}
 
 					}
 
@@ -1170,7 +1170,7 @@ namespace WMS.DAL
 					string approvedstatus = string.Empty;
 					if (item.issuedqty != 0)
 					{
-						approvedstatus = "approved";
+						approvedstatus = "Approved";
 					}
 					//else
 					//{
@@ -2658,8 +2658,9 @@ namespace WMS.DAL
 					}
 					if (approverid != null)
 					{
-						materialrequestquery = materialrequestquery + " and openpo.projectmanager = '" + approverid + "' limit 50";
+						materialrequestquery = materialrequestquery + " and openpo.projectmanager = '" + approverid + "' ";
 					}
+					materialrequestquery = materialrequestquery + " group by sk.materialid limit 50";
 					await pgsql.OpenAsync();
 					return await pgsql.QueryAsync<IssueRequestModel>(
 					  materialrequestquery, null, commandType: CommandType.Text);

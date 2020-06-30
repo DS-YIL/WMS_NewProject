@@ -372,7 +372,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select distinct * from   wms.wms_stock  sk left join wms.openpolistview openpo on openpo.pono = sk.pono where sk.availableqty!=0.
+        ///   Looks up a localized string similar to select sk.materialid,sum(sk.availableqty)as availableqty,max(openpo.materialdescription)as materialdescription,max(openpo.quotationqty)as quotationqty from   wms.wms_stock  sk left join wms.openpolistview openpo on openpo.pono = sk.pono where sk.availableqty!=0 .
         /// </summary>
         public static string getmaterialdetailfprrequest {
             get {
@@ -521,7 +521,7 @@ namespace WMS.Common {
         ///left join wms.openpolistview op on op.pono=res.pono
         ///left join wms.wms_materialissue iss on iss.reserveformaterialid=res.reserveformaterialid 
         ///where reservedby=&apos;#reservedby&apos;
-        ///group by res.reserveid.
+        ///group by res.reserveid order by res.reserveid desc.
         /// </summary>
         public static string getreservedmaterialList {
             get {

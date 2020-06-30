@@ -447,7 +447,7 @@ emp1.name as approvername
     <value />
   </data>
   <data name="getmaterialdetailfprrequest" xml:space="preserve">
-    <value>select distinct * from   wms.wms_stock  sk left join wms.openpolistview openpo on openpo.pono = sk.pono where sk.availableqty!=0</value>
+    <value>select sk.materialid,sum(sk.availableqty)as availableqty,max(openpo.materialdescription)as materialdescription,max(openpo.quotationqty)as quotationqty from   wms.wms_stock  sk left join wms.openpolistview openpo on openpo.pono = sk.pono where sk.availableqty!=0 </value>
   </data>
   <data name="issuedqtydetails" xml:space="preserve">
     <value>select max(req.requestedquantity)as requestedquantity, max(req.materialid)as materialid, max(req.requestid)as requestid,req.requestforissueid,sum(issuedqty)as issuedquantity
@@ -493,7 +493,7 @@ left join wms.wms_stock sk on sk.materialid=res.materialid
 left join wms.openpolistview op on op.pono=res.pono
 left join wms.wms_materialissue iss on iss.reserveformaterialid=res.reserveformaterialid 
 where reservedby='#reservedby'
-group by res.reserveid</value>
+group by res.reserveid order by res.reserveid desc</value>
   </data>
   <data name="insertreservematerial" xml:space="preserve">
     <value>insert into wms.wms_materialreserve(reserveformaterialid,materialid,itemid,pono,reservedon,reservedby,reservedqty,reserveid)
