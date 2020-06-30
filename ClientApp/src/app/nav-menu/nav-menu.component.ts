@@ -63,12 +63,10 @@ export class NavMenuComponent implements OnInit {
       this.router.navigateByUrl('WMS/Home');
     }
     if (this.emp.roleid == "4") {//inventory manager
-      this.items.push({ label: 'Material Requests', icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialIssueDashboard') });
+      this.items.push({ label: 'Material Issue', icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialIssueDashboard') });
       this.items.push({ label: '"Put Away"  Material wise', icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/WarehouseIncharge') });
       this.items.push({ label: 'Cycle Count', icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/Cyclecount') });
       this.items.push({ label: 'Gate Pass', icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GatePass') });
-      this.items.push({ label: 'Material Requests', icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReqView') });
-      this.items.push({ label: 'Material Release', icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReleaseDashboard') });
       this.router.navigateByUrl('WMS/MaterialIssueDashboard');
     }
     if (this.emp.roleid == "5") {//project manager
@@ -83,7 +81,6 @@ export class NavMenuComponent implements OnInit {
     }
     if (this.emp.roleid == "7") {//admin
       this.items.push({ label: 'Gate Pass', icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GatePass') });
-      this.items.push({ label: 'Material Requests', icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReqView') });
       this.items.push({
         label: 'Inventory Ageing',
         icon: 'pi pi-fw pi-bars',
