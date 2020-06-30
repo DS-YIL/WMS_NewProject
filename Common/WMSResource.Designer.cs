@@ -225,7 +225,7 @@ namespace WMS.Common {
         ///   Looks up a localized string similar to select distinct openpo.projectname,inwa.invoiceno,inwa.grnnumber,inwa.pono,openpo.material, (inw.confirmqty+inw.returnqty) as receivedqty,openpo.materialdescription, openpo.quotationqty,inw.receivedqty,inw.confirmqty,inw.returnqty from wms.wms_securityinward inwa  
         /// left join wms.wms_storeinward inw on inw.inwmasterid=inwa.inwmasterid
         /// inner join wms.openpolistview openpo on openpo.pono=inwa.pono
-        ///  where  inwa.pono=&apos;#pono&apos;  and inwa.invoiceno ilike &apos;%#invoiceno&apos; order by inwa.grnnumber desc.
+        ///  where  inwa.pono=&apos;#pono&apos;  and inwa.invoiceno= &apos;#invoiceno&apos; and inw.confirmqty&gt;0 order by inwa.grnnumber des [rest of string was truncated]&quot;;.
         /// </summary>
         public static string Getdetailsforthreewaymatching {
             get {
@@ -381,14 +381,12 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select sum(matiss.issuedqty) as qtyissued,sec.grnnumber,openpo.material as materialid,
+        ///   Looks up a localized string similar to select mat.quantity as quantity,sum(req.requestedquantity)as requestedquantity,sum(res.reservedqty)as reservedqty,matiss.issuedqty as qtyissued,sec.grnnumber,openpo.material as materialid,
         ///    max(sk.availableqty) as qtyavailable,max(sk.totalquantity ) as qtytotal
         ///    from wms.wms_stock sk
         ///      left  join wms.wms_materialissue matiss on matiss.itemid=sk.itemid
-        ///      inner join wms.wms_securityinward sec on sec.inwmasterid=sk.inwmasterid
-        ///      left join wms.openpolistview openpo on sec.pono = openpo.pono
-        ///      where -- matiss.issuedqty is not null  and                         
-        ///      sec.grnnumber=&apos;#g [rest of string was truncated]&quot;;.
+        ///      left join wms.wms_materialreserve res on res.itemid=sk.itemid
+        ///      left join wms.wms_securityinward sec on sec.inwmasterid=sk.inwmasteri [rest of string was truncated]&quot;;.
         /// </summary>
         public static string getMaterialDetails {
             get {
@@ -607,7 +605,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to insert into wms.wms_gatepassmaterial(gatepassmaterialid,gatepassid,materialid,quantity,deleteflag,remarks,materialcost,expecteddate)values(default,@gatepassid,@materialid,@quantity,@deleteflag,@remarks,@materialcost,@expecteddate).
+        ///   Looks up a localized string similar to insert into wms.wms_gatepassmaterial(gatepassmaterialid,gatepassid,materialid,quantity,deleteflag,remarks,materialcost,expecteddate,returneddate)values(default,@gatepassid,@materialid,@quantity,@deleteflag,@remarks,@materialcost,@expecteddate,@returneddate).
         /// </summary>
         public static string insertgatepassmaterial {
             get {

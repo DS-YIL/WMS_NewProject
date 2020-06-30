@@ -172,7 +172,7 @@ from wms.openpolistview op
     <value>select distinct openpo.projectname,inwa.invoiceno,inwa.grnnumber,inwa.pono,openpo.material, (inw.confirmqty+inw.returnqty) as receivedqty,openpo.materialdescription, openpo.quotationqty,inw.receivedqty,inw.confirmqty,inw.returnqty from wms.wms_securityinward inwa  
  left join wms.wms_storeinward inw on inw.inwmasterid=inwa.inwmasterid
  inner join wms.openpolistview openpo on openpo.pono=inwa.pono
-  where  inwa.pono='#pono'  and inwa.invoiceno ilike '%#invoiceno' order by inwa.grnnumber desc</value>
+  where  inwa.pono='#pono'  and inwa.invoiceno= '#invoiceno' and inw.confirmqty&gt;0 order by inwa.grnnumber desc</value>
   </data>
   <data name="getGRNNo" xml:space="preserve">
     <value>select grnnumber from wms.wms_securityinward   where pono='#pono' and grnnumber is not null 
