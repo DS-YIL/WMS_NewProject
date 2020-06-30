@@ -8,13 +8,15 @@ import { NgxSpinnerService } from "ngx-spinner";
 import { MessageService } from 'primeng/api';
 import { gatepassModel, materialistModel } from '../Models/WMS.Model';
 import { isNullOrUndefined } from 'util';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-GatePass',
-  templateUrl: './GatePass.component.html'
+  templateUrl: './GatePass.component.html',
+  providers: [DatePipe]
 })
 export class GatePassComponent implements OnInit {
-  constructor(private formBuilder: FormBuilder, private messageService: MessageService, private wmsService: wmsService, private route: ActivatedRoute, private router: Router, public constants: constants, private spinner: NgxSpinnerService) { }
+  constructor(private formBuilder: FormBuilder, private messageService: MessageService, private datePipe: DatePipe, private wmsService: wmsService, private route: ActivatedRoute, private router: Router, public constants: constants, private spinner: NgxSpinnerService) { }
 
   public formName: string;
   public txtName; GatepassTxt: string;
@@ -65,18 +67,10 @@ export class GatePassComponent implements OnInit {
     else {
       //Check if material code is already entered
       if (this.gatepassModel.materialList.filter(li => li.materialid == this.material.code && li.gatepassmaterialid != "0").length > 0) {
-        this.materialistModel = { materialid: "", gatepassmaterialid: "0", materialdescription: "", quantity: 0, materialcost: "0", remarks: " ", expecteddate: this.date, returneddate: this.date };
-        this.gatepassModel.materialList.push(this.materialistModel);
-        this.material = "";
+        this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Material already exist' });
+        return false;
       }
-      else {
-        //Check if material code is already entered
-        if (this.gatepassModel.materialList.filter(li => li.materialid == this.material.code && li.gatepassmaterialid == "0").length > 0) {
-          this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Material already exist' });
-          return false;
-        }
-    }
-   
+    
 
       this.gatePassChange();
       if (this.material.code) {
@@ -87,7 +81,6 @@ export class GatePassComponent implements OnInit {
 
         // this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].returneddate = this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].expecteddate;
       }
-      debugger;
       if (this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].materialid && this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].quantity) {
         this.wmsService.checkMaterialandQty(this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].materialid, this.materialistModel.quantity).subscribe(data => {
           if (data == "true") {
@@ -127,7 +120,7 @@ export class GatePassComponent implements OnInit {
     this.dynamicData.tableName = this.constants[name].tableName;
     this.dynamicData.searchCondition = "" + this.constants[name].condition;
     this.dynamicData.searchCondition += "materialid" + " ilike '" + searchTxt + "%'" + " and availableqty>=1";
-    this.wmsService.GetListItems(this.dynamicData).subscribe(data => {
+    this.wmsService.GetMaterialItems(this.dynamicData).subscribe(data => {
       this.searchresult = data;
       this.searchItems = [];
       var fName = "";
@@ -168,16 +161,13 @@ export class GatePassComponent implements OnInit {
           material.remarks = result[i].remarks;
          //material.approverstatus = result[i].approverstatus;
           material.expecteddate = new Date(result[i].expecteddate);
-          debugger;
           if (isNullOrUndefined(result[i].returneddate)) {
-            debugger
             //material.returneddate = new Date(this.date).toLocaleDateString();
-            material.returneddate = undefined;
+            material.returneddate = this.checkValiddate(result[i].returneddate) == "" ? undefined : this.checkValiddate(result[i].returneddate);
           }
           else {
-            debugger
             
-            material.returneddate = new Date(result[i].returneddate).toLocaleDateString();
+            material.returneddate = this.checkValiddate(result[i].returneddate) == "" ? undefined : this.checkValiddate(result[i].returneddate);
           }
           
           item.materialList.push(material);
@@ -198,7 +188,7 @@ export class GatePassComponent implements OnInit {
     this[dialog] = true;
     this.gatepassModel = new gatepassModel();
     if (gatepassobject) {
-      debugger;
+
       this.gpIndx = gpIndx;
       this.gatepassModel = gatepassobject;
       //this.materialistModel = { materialid: "", gatepassmaterialid: "0", materialdescription: "", quantity: 0, materialcost: "0", remarks: " ", expecteddate: this.date, returneddate: this.date };
@@ -247,6 +237,19 @@ export class GatePassComponent implements OnInit {
 
   }
 
+  //check date is valid or not
+  checkValiddate(date: any) {
+    try {
+      if (!date || (this.datePipe.transform(date, this.constants.dateFormat) == "01/01/0001"))
+        return "";
+      else
+        return date;
+    }
+    catch{
+      return "";
+    }
+  }
+
   //check material and quntity availablity in stock
   checkMaterialandQty(material: any, matIndex: number) {
     if (material.quantity) {
@@ -263,7 +266,7 @@ export class GatePassComponent implements OnInit {
 
   //Delete material for gatepass
   removematerial(id: number, matIndex: number) {
-    debugger;
+
     this.gatepassModel.materialList.splice(matIndex, 1);
     if (id != 0) {
       this.wmsService.deleteGatepassmaterial(id).subscribe(data => {
@@ -303,8 +306,6 @@ export class GatePassComponent implements OnInit {
 
   //saving gatepass details --Gayathri
   onSubmitgatepassData() {
-    debugger;
-    //alert(this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].returneddate);
      if (this.gatepassModel.materialList.length == 0) {
       this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please Add materials to create GatePass' });
       return false;
@@ -320,17 +321,13 @@ export class GatePassComponent implements OnInit {
         this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please select Expected Date' });
         return false;
       }
-     
-      else {
-        //Check if material code is already entered
-        //if (this.material.code) {
-        //  if (this.gatepassModel.materialList.filter(li => li.materialid == this.material.code).length > 0) {
-        //    //this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Material already exist' });
-        //    //return false;
-        //  }
-        //}
-        debugger;
-        alert(this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].returneddate);
+      else if (this.gatepassModel.materialList.filter(li => li.materialid == this.material.code && li.gatepassmaterialid != "0").length > 0) {
+        //alert("entered");
+        //console.log(this.gatepassModel);
+        this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Material already exist' });
+        return false;
+      }
+        //alert(this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].returneddate);
         this.gatePassChange();
         if (this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].materialid == "" && !isNullOrUndefined(this.material.code)) {
           this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].materialid = this.material.code;
@@ -348,7 +345,7 @@ export class GatePassComponent implements OnInit {
                   this.updateReturnedDateDialog = false;
                   this.getGatePassList();
                   if (data)
-                    this.messageService.add({ severity: 'success', summary: 'Success Message', detail: 'Data Saved' });
+                    this.messageService.add({ severity: 'success', summary: 'Success Message', detail: 'Gate Pass Created Successfully' });
                 })
               }
               else
@@ -363,21 +360,21 @@ export class GatePassComponent implements OnInit {
           }
         }
         else {
-          debugger;
+         
           console.log(this.gatepassModel);
-          alert(this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].returneddate);
+          //alert(this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].returneddate);
           this.wmsService.saveoreditgatepassmaterial(this.gatepassModel).subscribe(data => {
             this.gatepassdialog = false;
             this.updateReturnedDateDialog = false;
             this.getGatePassList();
             if (data)
-              this.messageService.add({ severity: 'success', summary: 'Success Message', detail: 'Data Saved' });
+              this.messageService.add({ severity: 'success', summary: 'Success Message', detail: 'Gate Pass Created Successfully' });
           })
         }
 
 
       }
-    }
+    
     else {
       this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Select Type' });
     }

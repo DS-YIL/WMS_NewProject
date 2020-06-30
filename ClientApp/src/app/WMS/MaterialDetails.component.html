@@ -1,46 +1,60 @@
-<div>
-  <button type="button" icon="fa fa-arrow-left" pButton aria-hidden="true" pTooltip="Back" (click)="backInvoiceDetails()" style="float: left;
+<div class="card" style="    min-height: 500px;border-radius: 10px;box-shadow: 5px 10px #888888;">
+  <div class="card-header text-center cardheadertext">
+    <span>
+      <i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;Material Details
+    </span>
+    <button type="button" icon="fa fa-arrow-left" pButton aria-hidden="true" pTooltip="Back" (click)="backInvoiceDetails()" style="float: left;
     height: 26px;"></button>
-  <h5 style="text-align:center">Material Details</h5>
-</div>
+  </div>
+  <!--<div>
+    <button type="button" icon="fa fa-arrow-left" pButton aria-hidden="true" pTooltip="Back" (click)="backInvoiceDetails()" style="float: left;
+    height: 26px;"></button>
+    <h5 style="text-align:center">Material Details</h5>
+  </div>-->
+  <div class="card-body" style="overflow-y:scroll">
+    <div class="row col-lg-12 col-md-12 col-sm-12">
+      <div class="col-lg-4 col-md-4 col-sm-4 form-group" style="font-weight:600;font-size:14px;color:darkblue;">
+        GRN No.: <label class="form-label" style="color:#dc3545;">{{grnno}}</label>
+      </div>
+      </div>
+      <!--<h5 style="text-align:left">GRN No.: {{grnno}}</h5>-->
+      <p-table #dt [columns]="cols" [value]="MaterialData">
+        <!--<ng-template pTemplate="caption">
+          <div class="ui-helper-clearfix" style="text-align: left">
+            <button type="button" pButton icon="pi pi-file-excel" iconPos="left" label="EXCEL" (click)="exportExcel()" style="margin-right: 0.5em;" class="ui-button-success"></button>
+            <button type="button" pButton icon="pi pi-file-pdf" iconPos="left" label="PDF" (click)="exportPdf()" class="ui-button-warning"></button>
+          </div>
+        </ng-template>-->
+        <ng-template pTemplate="header" let-columns>
+          <tr class="mprltbldata">
+            <th style="text-align:center;width:70px">Sl. No.</th>
+            <th *ngFor="let col of columns" style="text-align:center;">
+              {{col.header}}
+            </th>
+          </tr>
+          <tr>
+            <th></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'materialid', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'qtytotal', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'issued', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'qtyavailable', 'contains')"></th>
 
-<h5 style="text-align:left">GRN No.: {{grnno}}</h5>
-<p-table #dt  [columns]="cols" [value]="MaterialData">
-  <!--<ng-template pTemplate="caption">
-    <div class="ui-helper-clearfix" style="text-align: left">
-      <button type="button" pButton icon="pi pi-file-excel" iconPos="left" label="EXCEL" (click)="exportExcel()" style="margin-right: 0.5em;" class="ui-button-success"></button>
-      <button type="button" pButton icon="pi pi-file-pdf" iconPos="left" label="PDF" (click)="exportPdf()" class="ui-button-warning"></button>
+
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
+          <tr>
+            <td class="ptable-cell" style="text-align:right">
+              {{ri+1}}
+            </td>
+            <td class="ptable-cell" style="text-align:center">{{rowData.materialid}}</td>
+            <td class="ptable-cell" style="text-align:right">{{rowData.qtytotal}}</td>
+            <td class="ptable-cell" style="text-align:right"><a style="color:#36f !important" (click)="IssuedMatDetails(rowData.materialid)">{{rowData.issued}}</a></td>
+            <td class="ptable-cell" style="text-align:right"><a style="color:#36f !important" (click)="AvailableMaterialLoc(rowData.materialid)">{{rowData.qtyavailable}}</a></td>
+
+
+          </tr>
+        </ng-template>
+      </p-table>
     </div>
-  </ng-template>-->
-  <ng-template pTemplate="header" let-columns>
-    <tr class="mprltbldata">
-      <th style="text-align:center;width:70px">S.No</th>
-      <th *ngFor="let col of columns">
-        {{col.header}}
-      </th>
-    </tr>
-    <tr>
-      <th></th>
-      <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'materialid', 'contains')"></th>
-      <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'qtytotal', 'contains')"></th>
-      <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'issued', 'contains')"></th>
-      <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'qtyavailable', 'contains')"></th>
-
-
-    </tr>
-  </ng-template>
-  <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
-    <tr>
-      <td class="ptable-cell" style="text-align:right">
-        {{ri+1}}
-      </td>
-      <td class="ptable-cell" style="text-align:center">{{rowData.materialid}}</td>
-      <td class="ptable-cell" style="text-align:center">{{rowData.qtytotal}}</td>
-      <td class="ptable-cell" style="text-align:center"><a style="color:#36f !important" (click)="IssuedMatDetails(rowData.materialid)">{{rowData.issued}}</a></td>
-      <td class="ptable-cell" style="text-align:center"><a style="color:#36f !important" (click)="AvailableMaterialLoc(rowData.materialid)">{{rowData.qtyavailable}}</a></td>
-
-
-    </tr>
-  </ng-template>
-</p-table>
-
+    </div>

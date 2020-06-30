@@ -231,8 +231,10 @@ namespace WMS.DAL
 				try
 				{
 					string query = WMSResource.getMaterialDetails.Replace("#grn", grnNo);// + pono+"'";//li
-					return await pgsql.QueryAsync<MaterialDetails>(
+					var materialList= await pgsql.QueryAsync<MaterialDetails>(
 					   query, null, commandType: CommandType.Text);
+
+					return materialList;
 
 
 				}
@@ -662,7 +664,7 @@ namespace WMS.DAL
 					DataTable dataTable = new DataTable();
 					IDbCommand selectCommand = pgsql.CreateCommand();
 					string query = "";
-					query = "select Distinct(materialid) from " + Result.tableName + Result.searchCondition + "";
+					query = "select * from " + Result.tableName + Result.searchCondition + "";
 					if (!string.IsNullOrEmpty(Result.query))
 						query = Result.query;
 					selectCommand.CommandText = query;
@@ -687,6 +689,45 @@ namespace WMS.DAL
 			}
 
 		}
+
+		//Get material List- gayathri  GetMaterialItems
+		public DataTable GetMaterialItems(DynamicSearchResult Result)
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+
+				try
+				{
+					pgsql.OpenAsync();
+					DataTable dataTable = new DataTable();
+					IDbCommand selectCommand = pgsql.CreateCommand();
+					string query = "";
+					query = "select Distinct(materialid) from " + Result.tableName + Result.searchCondition + "";
+					if (!string.IsNullOrEmpty(Result.query))
+						query = Result.query;
+					selectCommand.CommandText = query;
+					IDbDataAdapter dbDataAdapter = new NpgsqlDataAdapter();
+					dbDataAdapter.SelectCommand = selectCommand;
+
+					DataSet dataSet = new DataSet();
+
+					dbDataAdapter.Fill(dataSet);
+					return dataTable = dataSet.Tables[0];
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "GetMaterialItems", Ex.StackTrace.ToString());
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+				//throw new NotImplementedException();
+			}
+
+		}
+
 		/// <summary>
 		/// material request by Project manager
 		/// </summary>
@@ -1298,8 +1339,8 @@ namespace WMS.DAL
 								item.remarks,
 								item.materialcost,
 								item.expecteddate,
-								
-							});
+								item.returneddate,
+								});
 						}
 						else
 						{

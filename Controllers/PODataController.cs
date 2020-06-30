@@ -115,6 +115,13 @@ namespace WMS.Controllers
 		{
 			return Ok(this._poService.GetListItems(Result));
 		}
+
+		[HttpPost("GetMaterialItems")]
+		public IActionResult GetMaterialItems([FromBody] DynamicSearchResult Result)
+		{
+			return Ok(this._poService.GetMaterialItems(Result));
+		}
+
 		//not using
 		[HttpPost("issuerequest")]
 		public IActionResult issuerequest([FromBody] List<IssueRequestModel> model)

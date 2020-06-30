@@ -30,6 +30,7 @@ namespace WMS.Interfaces
         Task<string> insertquantity(List<inwardModel> datamodel);
        string InsertStock(StockModel data);
 		System.Data.DataTable GetListItems(DynamicSearchResult result);
+        System.Data.DataTable GetMaterialItems(DynamicSearchResult result);
         int IssueRequest(List<IssueRequestModel> reqdata);
         Task<IEnumerable<inwardModel>> getitemdeatils(string grnnumber);
         Task<IEnumerable<IssueRequestModel>> MaterialRequest(string pono,string material);

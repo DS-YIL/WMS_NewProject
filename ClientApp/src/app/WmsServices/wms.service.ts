@@ -48,6 +48,10 @@ export class wmsService {
     return this.http.post<any>(this.url + 'POData/GetListItems/', search, this.httpOptions);
   }
 
+  GetMaterialItems(search: DynamicSearchResult): Observable<any> {
+    return this.http.post<any>(this.url + 'POData/GetMaterialItems/', search, this.httpOptions);
+  }
+
   getPoDetails(PoNo: string): Observable<any> {
     return this.http.get<any>(this.url + 'POData/CheckPoNoexists?PONO=' + PoNo + '', this.httpOptions);
   }

@@ -27,6 +27,7 @@ export class MaterialDetailsComponent implements OnInit {
   pono: string;
   grnno: string;
   grnNo: string;
+  poQty: any;
 
   ngOnInit() {
     if (localStorage.getItem("Employee"))
@@ -47,6 +48,7 @@ export class MaterialDetailsComponent implements OnInit {
     debugger;
     this.grnNo = this.currentRoute.snapshot.queryParams.grnNo;
     this.pono = this.currentRoute.snapshot.queryParams.pono;
+    this.poQty = this.currentRoute.snapshot.queryParams.qty;
     this.getMaterialDetails(this.grnNo);
     this.exportColumns = this.cols.map(col => ({ title: col.header, dataKey: col.field }));
   }
@@ -60,7 +62,7 @@ export class MaterialDetailsComponent implements OnInit {
   }
 
   backInvoiceDetails() {
-    this.router.navigate(['/WMS/InvoiceDetails'], { queryParams: { PONO: this.pono } });
+    this.router.navigate(['/WMS/InvoiceDetails'], { queryParams: { PONO: this.pono, qty: this.poQty } });
   }
 
   getMaterialDetails(grnNo:string) {

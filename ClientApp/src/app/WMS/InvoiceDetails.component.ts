@@ -55,7 +55,7 @@ export class InvoiceDetailsComponent implements OnInit {
 
   MaterialDetails(grnNo: string)
   {
-    this.router.navigate(['/WMS/MaterialDetails'], { queryParams: { grnNo: grnNo, pono:this.pono } });
+    this.router.navigate(['/WMS/MaterialDetails'], { queryParams: { grnNo: grnNo, pono: this.pono, qty: this.poQty } });
     }
 
   backPOStatus() {

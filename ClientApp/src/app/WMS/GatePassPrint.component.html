@@ -49,24 +49,24 @@
                            appendTo="body">
                     <ng-template pTemplate="header">
           <tr>
-            <th class="ptable-cell" style="text-align:center">Sl No</th>
+            <th class="ptable-cell" style="text-align:center;width:30px">Sl. No.</th>
             <!--<th class="ptable-cell">Material</th>-->
-            <th class="ptable-cell" style="text-align:center">Material Description</th>
-            <th class="ptable-cell" style="text-align:center">Quantity</th>
+            <th class="ptable-cell" style="text-align:center;width:150px">Material Description</th>
+            <th class="ptable-cell" style="text-align:center;width:60px">Quantity</th>
             <!--<th class="ptable-cell">Value</th>-->
-            <th class="ptable-cell" style="text-align:center">Remarks</th>
+            <th class="ptable-cell" style="text-align:center;width:80px">Remarks</th>
             <!--<th class="ptable-cell">Expected Date</th>-->
             <!--<th *ngIf="materialList[0].gatepasstype=='Returnable'" class="ptable-cell">Returned Date</th>-->
           </tr>
           </ng-template>
           <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex" let-rindex=0>
             <tr>
-              <td class="ptable-cell" style="text-align:right"> {{ri+1}} </td>
+              <td class="ptable-cell" style="text-align:center;width:30px"> {{ri+1}} </td>
               <!--<td class="ptable-cell" style="text-align:right"> {{rowData.materialid}} </td>-->
-              <td class="ptable-cell" style="text-align:right"> {{rowData.materialdescription}} </td>
-              <td class="ptable-cell" style="text-align:right">{{rowData.quantity}}</td>
+              <td class="ptable-cell" style="text-align:left;width:150px"> {{rowData.materialdescription}} </td>
+              <td class="ptable-cell" style="text-align:right;width:60px">{{rowData.quantity}}</td>
               <!--<td class="ptable-cell" style="text-align:right">{{rowData.materialcost}}</td>-->
-              <td class="ptable-cell" style="text-align:right"> {{rowData.remarks}} </td>
+              <td class="ptable-cell" style="text-align:left;width:80px"> {{rowData.remarks}} </td>
 
               <!--<td class="ptable-cell" style="text-align:right">{{rowData.expecteddate | date :  constants.dateFormat}}</td>-->
               <!--<td *ngIf="materialList[0].gatepasstype=='Returnable'" class="ptable-cell" style="text-align:right">{{rowData.returneddate | date :  constants.dateFormat}}</td>-->
@@ -80,24 +80,28 @@
           </div>
     </div>
   </div>
+
   </td>
   </tr>
   </tbody>
-  <tfoot>
-    <div class="printfooter">
-      <div class="row m-0" >
-        <div class="col-lg-3 col-md-3 col-sm-3 form-inline">
-          <label class="form-label">Authorised by : </label>
-        </div>
-        <div class="col-lg-3 col-md-3 col-sm-3 form-inline">
-          <label class="form-label">Prepared by : </label>
-        </div>
-        <div class="col-lg-4 col-md-4 col-sm-4 form-inline">
-          <label class="form-label">Signature of the Receiver :</label>
-        </div>
+<tfoot>
+ 
+  <div class="printfooter">
+    <br /><br /><br /><br />
+    <div class="row m-0">
+
+      <div class="col-lg-3 col-md-3 col-sm-3 form-inline">
+        <label class="form-label">Authorised by : </label>
+      </div>
+      <div class="col-lg-3 col-md-3 col-sm-3 form-inline">
+        <label class="form-label">Prepared by : </label>
+      </div>
+      <div class="col-lg-4 col-md-4 col-sm-4 form-inline">
+        <label class="form-label">Signature of the Receiver :</label>
       </div>
     </div>
-  </tfoot>
+  </div>
+</tfoot>
   </table>
 </div>
 

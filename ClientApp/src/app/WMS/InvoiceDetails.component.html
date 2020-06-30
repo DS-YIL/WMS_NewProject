@@ -7,16 +7,16 @@
     height: 26px;"></button>
   </div>
   <div class="card-body" style="overflow-y:scroll">
-    <div class="row">
+    <div class="row col-lg-12 col-md-12 col-sm-12">
       <div class="col-lg-4 col-md-4 col-sm-4 form-group" style="font-weight:600;font-size:14px;color:darkblue;">
         PO No.: <label class="form-label" style="color:#dc3545;">{{pono}}</label>
       </div>
-      <div class="col-lg-2 col-md-2 col-sm-2 form-group" style="font-weight:600;font-size:14px;color:darkblue;">
+      <div class="col-lg-4 col-md-4 col-sm-4 form-group" style="font-weight:600;font-size:14px;color:darkblue;">
         PO Qty: <label class="form-label" style="color:#dc3545;">{{poQty}}</label>
 
       </div>
-      <div class="col-lg-2 col-md-2 col-sm-2 form-group" style="font-weight:600;font-size:14px;color:darkblue;">
-        pending Qty: <label class="form-label" style="color:#dc3545;">{{pendingqty}}</label>
+      <div class="col-lg-4 col-md-4 col-sm-4 form-group" style="font-weight:600;font-size:14px;color:darkblue;">
+        Pending Qty: <label class="form-label" style="color:#dc3545;">{{pendingqty}}</label>
       </div>
     </div>
 
@@ -29,8 +29,8 @@
     </ng-template>-->
       <ng-template pTemplate="header" let-columns>
         <tr class="mprltbldata">
-          <th style="text-align:center;width:70px">Sl.No.</th>
-          <th *ngFor="let col of columns">
+          <th style="text-align:center;width:70px" >Sl. No.</th>
+          <th *ngFor="let col of columns" style="text-align:center;">
             {{col.header}}
           </th>
         </tr>
@@ -47,14 +47,14 @@
       </ng-template>
       <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
         <tr>
-          <td class="ptable-cell" style="text-align:right">
+          <td class="ptable-cell" style="text-align:center">
             {{ri+1}}
           </td>
-          <td class="ptable-cell" style="text-align:center">{{rowData.invoiceno}}</td>
+          <td class="ptable-cell" style="text-align:left">{{rowData.invoiceno}}</td>
           <td class="ptable-cell" style="text-align:center"><a style="color:#36f !important" (click)="MaterialDetails(rowData.grnnumber)">{{rowData.grnnumber}}</a></td>
-          <td class="ptable-cell" style="text-align:center">{{rowData.receivedqty}}</td>
-          <td class="ptable-cell" style="text-align:center">{{rowData.confirmedqty}}</td>
-          <td class="ptable-cell" style="text-align:center">{{rowData.returnedqty}}</td>
+          <td class="ptable-cell" style="text-align:right">{{rowData.receivedqty}}</td>
+          <td class="ptable-cell" style="text-align:right">{{rowData.confirmedqty}}</td>
+          <td class="ptable-cell" style="text-align:right">{{rowData.returnedqty}}</td>
 
         </tr>
       </ng-template>
@@ -64,7 +64,7 @@
           <td></td>
           <td></td>
           <td>Total</td>
-          <td style="text-align:center">{{confirmQtyTotal}}</td>
+          <td style="text-align:right">{{confirmQtyTotal}}</td>
           <td></td>
         </tr>
 

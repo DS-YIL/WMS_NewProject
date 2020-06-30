@@ -35,7 +35,7 @@ export class GatePassApproverComponent implements OnInit {
       }
     });
     this.gatepassModel = new gatepassModel();
-    this.gatepassModel.approverstatus = "Approved"
+    this.gatepassModel.approverstatus = "Approved";
 
   }
 
@@ -44,7 +44,9 @@ export class GatePassApproverComponent implements OnInit {
   bindMaterilaDetails(gatepassId: any) {
     this.wmsService.gatepassmaterialdetail(gatepassId).subscribe(data => {
       this.materialList = data;
+      console.log(data);
       this.gatepassModel = this.materialList[0];
+      console.log(this.gatepassModel);
       if (this.gatepassModel.approverstatus == 'Approved')
         this.btnDisable = true;
     });
@@ -54,7 +56,11 @@ export class GatePassApproverComponent implements OnInit {
     this.gatepassModel.gatepassid = this.materialList[0].gatepassid;
     this.wmsService.updategatepassapproverstatus(this.gatepassModel).subscribe(data => {
       //this.materialList = data;
-      this.messageService.add({ severity: 'success', summary: 'success Message', detail: 'Status updated' });
+      this.gatepassModel.status = "Approved";
+      if (this.gatepassModel.status == 'Approved')
+        this.btnDisable = true;
+  
+      this.messageService.add({ severity: 'success', summary: 'success Message', detail: 'Gate Pass Approved' });
     });
   }
 
