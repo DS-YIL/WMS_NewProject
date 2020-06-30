@@ -209,15 +209,15 @@
             </ng-template>
             <ng-template pTemplate="header">
               <tr class="mprltbldata">
-                <th class="ptable-cell" style="width:60px;">Sl. No.</th>
+                <th class="ptable-cell" style="width:60px;text-align:center">Sl. No.</th>
                 <!--<th class="ptable-cell">Material</th>-->
-                <th class="ptable-cell">Material</th>
-                <th class="ptable-cell">Quantity</th>
-                <th class="ptable-cell">Price(INR)</th>
-                <th class="ptable-cell">Remarks</th>
-                <th class="ptable-cell">Expected Date</th>
+                <th style="text-align:center" class="ptable-cell">Material</th>
+                <th style="text-align:center" class="ptable-cell">Quantity</th>
+                <th style="text-align:center" class="ptable-cell">Price(INR)</th>
+                <th style="text-align:center" class="ptable-cell">Remarks</th>
+                <th style="text-align:center" class="ptable-cell">Expected Date</th>
                 <!--<th *ngIf="gatepassModel.gatepasstype=='Returnable'" class="ptable-cell">Returned Date</th>-->
-                <th class="ptable-cell"></th>
+                <th style="text-align:center" class="ptable-cell"></th>
               </tr>
             </ng-template>
             <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex" let-rindex=0>

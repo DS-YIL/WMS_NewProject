@@ -50,6 +50,7 @@ export class GatePassComponent implements OnInit {
 
   //Adding new material - Gayathri
   addNewMaterial() {
+  
     if (this.gatepassModel.materialList.length == 0 || isNullOrUndefined(this.material)) {
       this.materialistModel = { materialid: "", gatepassmaterialid: "0", materialdescription: "", quantity: 0, materialcost: "0", remarks: " ", expecteddate: this.date, returneddate: this.date };
       this.gatepassModel.materialList.push(this.materialistModel);
@@ -57,7 +58,7 @@ export class GatePassComponent implements OnInit {
     }
     //check if materiallist is empty and gatepass materialid is null
     else if (!this.material && !this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].materialid) {
-      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Add Material' });
+      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'please Add Material' });
       return false;
     }
     else if (this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].expecteddate == undefined) {
@@ -318,15 +319,15 @@ export class GatePassComponent implements OnInit {
       this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please Add materials to create GatePass' });
       return false;
     }
-    else if (this.gatepassModel.materialList.length == 1 && !this.material)
-    {
-      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please Add materials to create GatePass' });
-      return false;
-    }
-   else if (this.gatepassModel.gatepasstype != "0") {
+    //else if (this.gatepassModel.materialList.length >= 1 && !this.material)
+    //{
+    //  this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please Add materials to create GatePass' });
+    //  return false;
+    //}
+    else if (this.gatepassModel.gatepasstype != "0") {
       this.gatepassModel.requestedby = this.employee.employeeno;
       //check if materiallist is empty and gatepass materialid is null
-      if (!this.material && !this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].materialid && this.gatepassModel.materialList.length == 0) {
+      if (!this.material && !this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].materialid ) {
         this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Add Material' });
         return false;
       }
@@ -352,11 +353,13 @@ export class GatePassComponent implements OnInit {
             this.wmsService.checkMaterialandQty(this.material.code, this.materialistModel.quantity).subscribe(data => {
               if (data == "true") {
                 // this.gatepassModel.materialList.push(this.materialistModel);
-
+                //this.gatepassModel.materialList.push(this.materialistModel);
+                //this.materialistModel = new materialistModel();
+                this.material = "";
                 this.wmsService.saveoreditgatepassmaterial(this.gatepassModel).subscribe(data => {
                   this.gatepassdialog = false;
                   this.updateReturnedDateDialog = false;
-                  this.getGatePassList();
+                  this.getGatePassList()
                   if (data)
                     this.messageService.add({ severity: 'success', summary: 'Success Message', detail: 'Gate Pass Created Successfully' });
                 })
