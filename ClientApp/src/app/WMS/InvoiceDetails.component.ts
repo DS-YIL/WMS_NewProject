@@ -41,9 +41,9 @@ export class InvoiceDetailsComponent implements OnInit {
     this.cols = [
       { field: 'invoiceno', header: 'Invoice No.' },
       { field: 'grnno', header: 'GRN No.' },
-      { field: 'receivedqty', header: 'Received Quantity' },
-      { field: 'confirmqty', header: 'Confirmed Quantity' },
-      { field: 'returnqty', header: 'Returned Quantity' },
+      { field: 'receivedqty', header: 'Received Qty' },
+      { field: 'confirmqty', header: 'Accepted Qty' },
+      { field: 'returnqty', header: 'Returned Qty' },
       
     ];
 

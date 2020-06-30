@@ -26,6 +26,7 @@ export class MaterialRequestDetailsComponent implements OnInit {
   exportColumns: any[];
   pono: string;
   grnNo: string;
+  poQty: any;
   QtyTotal: any = 0;
 
   ngOnInit() {
@@ -47,6 +48,7 @@ export class MaterialRequestDetailsComponent implements OnInit {
     var materialid = this.currentRoute.snapshot.queryParams.materialid;
     this.grnNo = this.currentRoute.snapshot.queryParams.grnNo;
     this.pono = this.currentRoute.snapshot.queryParams.pono;
+    this.poQty = this.currentRoute.snapshot.queryParams.qty;
     this.getMaterialRequestDetails(materialid);
     this.exportColumns = this.cols.map(col => ({ title: col.header, dataKey: col.field }));
   }
@@ -54,7 +56,7 @@ export class MaterialRequestDetailsComponent implements OnInit {
   
 
   backMaterialDetails() {
-    this.router.navigate(['/WMS/MaterialDetails'], { queryParams: { grnNo: this.grnNo, pono: this.pono } });
+    this.router.navigate(['/WMS/MaterialDetails'], { queryParams: { grnNo: this.grnNo, pono: this.pono, qty: this.poQty } });
   }
 
   getMaterialRequestDetails(materialid:string) {

@@ -40,9 +40,9 @@ export class MaterialDetailsComponent implements OnInit {
 
     this.cols = [
       { field: 'materialdescription', header: 'Material' },
-      { field: 'totalquantity', header: 'Total Quantity' },
-      { field: 'issued', header: 'Issued Quantity' },
-      { field: 'availableqty', header: 'Available Quantity' },
+      { field: 'totalquantity', header: 'Accepted Qty' },
+      { field: 'issued', header: 'Issued Qty' },
+      { field: 'availableqty', header: 'Available Qty' },
       
     ];
     debugger;
@@ -55,10 +55,10 @@ export class MaterialDetailsComponent implements OnInit {
 
   AvailableMaterialLoc(materialid: string)
   {
-    this.router.navigate(['/WMS/LocationDetails'], { queryParams: { materialid: materialid, pono: this.pono, grnNo: this.grnNo } });
+    this.router.navigate(['/WMS/LocationDetails'], { queryParams: { materialid: materialid, pono: this.pono, grnNo: this.grnNo, qty: this.poQty } });
   }
   IssuedMatDetails(materialid: string) {
-    this.router.navigate(['/WMS/MaterialReqDetails'], { queryParams: { materialid: materialid, pono: this.pono, grnNo: this.grnNo} });
+    this.router.navigate(['/WMS/MaterialReqDetails'], { queryParams: { materialid: materialid, pono: this.pono, grnNo: this.grnNo, qty: this.poQty } });
   }
 
   backInvoiceDetails() {

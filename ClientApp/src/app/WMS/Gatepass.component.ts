@@ -306,7 +306,12 @@ export class GatePassComponent implements OnInit {
 
   //saving gatepass details --Gayathri
   onSubmitgatepassData() {
-     if (this.gatepassModel.materialList.length == 0) {
+    if (this.gatepassModel.materialList.length == 0) {
+      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please Add materials to create GatePass' });
+      return false;
+    }
+    else if (this.gatepassModel.materialList.length == 1 && !this.material)
+    {
       this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please Add materials to create GatePass' });
       return false;
     }
