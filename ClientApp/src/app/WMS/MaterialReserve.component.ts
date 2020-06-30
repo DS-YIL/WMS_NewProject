@@ -21,6 +21,7 @@ export class MaterialReserveComponent implements OnInit {
   public displayItemRequestDialog; RequestDetailsSubmitted; showAck; btnDisable: boolean = false;
   public materialRequestDetails: materialRequestDetails;
   public pono: string;
+  public reservedfor: Date;
 
   ngOnInit() {
     if (localStorage.getItem("Employee"))
@@ -34,7 +35,7 @@ export class MaterialReserveComponent implements OnInit {
         this.pono = params["pono"];
       }
     });
-
+    this.reservedfor = new Date();
     this.getMaterialRequestlist();
   }
 
@@ -60,16 +61,21 @@ export class MaterialReserveComponent implements OnInit {
 
   //requested quantity update
   onMaterialRequestDeatilsSubmit() {
+    if (!this.reservedfor) {
+      this.messageService.add({ severity: 'error', summary: 'Validation', detail: 'Please select Reserve for' });
+      return;
+    }
     this.spinner.show();
     this.btnDisable = true;
     this.reserveList.forEach(item => {
       item.reservedby = this.employee.employeeno;
+      item.ReserveUpto = this.reservedfor;
     })
     this.wmsService.materialReserveUpdate(this.reserveList).subscribe(data => {
       this.spinner.hide();
       if (data) {
         this.messageService.add({ severity: 'success', summary: 'success Message', detail: 'material Reserved' });
-        //this.router.navigateByUrl("/WMS/MaterialReqView/"+ this.pono);
+        this.router.navigateByUrl("/WMS/MaterialReserveView");
       }
       else {
         this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Reserve Failed' });

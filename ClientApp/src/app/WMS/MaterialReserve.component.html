@@ -12,8 +12,11 @@
         <div class="col-xs-3 col-sm-3  col-md-3 pt-2" style="font-weight:600;font-size:14px;color:darkblue;">
           PO No : <span style="color:#dc3545;">{{reserveList[0].pono}}</span>
         </div>
-        <div class="col-xs-9 col-sm-9 col-md-9 pt-2" style="font-weight:600;font-size:14px;color:darkblue;">
+        <div class="col-xs-5 col-sm-5 col-md-5 pt-2" style="font-weight:600;font-size:14px;color:darkblue;">
           Project Name : <span style="color:#dc3545;">{{reserveList[0].projectname}}</span>
+        </div>
+        <div class="col-xs-4 col-sm-4  col-md-4 pt-2" style="font-weight:600;font-size:14px;color:darkblue;">
+          Reserve For : <p-calendar [(ngModel)]="reservedfor"></p-calendar>
         </div>
       </div>
     </div>
