@@ -23,7 +23,7 @@
   </ng-template>-->
       <ng-template pTemplate="header" let-columns>
         <tr class="mprltbldata">
-          <th style="text-align:center;width:70px">Sl.No.</th>
+          <th style="text-align:center;width:70px">Sl. No.</th>
           <th style="text-align:center" *ngFor="let col of columns">
             {{col.header}}
           </th>
@@ -49,8 +49,8 @@
       </ng-template>
       <ng-template pTemplate="footer">
         <tr>
-          <td>Total</td>
-          <td style="text-align:right">{{QtyTotal}}</td>
+          <td style="color: #17a2b8;">Total</td>
+          <td style="text-align:right;color: #17a2b8;">{{QtyTotal}}</td>
           <td></td>
           <td></td>
           <td ></td>
