@@ -38,12 +38,11 @@ export class LoginComponent implements OnInit {
       Password: ['', [Validators.required]],
       roleid: ['', [Validators.required]],
     });
-    this.getRoles();
-    //this.commonComponent.animateCSS('login', 'zoomInDown');
-    //if (localStorage.getItem("Roles") && JSON.parse(localStorage.getItem("Roles")))
-    //  this.roleNameModel = JSON.parse(localStorage.getItem("Roles"));
-    //else
-    //  this.getRoles();
+    this.commonComponent.animateCSS('login', 'zoomInDown');
+    if (localStorage.getItem("Roles") && JSON.parse(localStorage.getItem("Roles")))
+      this.roleNameModel = JSON.parse(localStorage.getItem("Roles"));
+    else
+      this.getRoles();
   }
 
   //get Role list

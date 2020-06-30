@@ -75,16 +75,13 @@
     <br />
     <br />
     <div *ngIf="reserveList.length>0">
+      <div style="text-align: center;margin-top:5px;">
+        <button type="button" class="btn btn-primary" [disabled]="btnDisable" (click)="onMaterialRequestDeatilsSubmit()">Material Reserve</button>
+      </div>
       <div class="row">
-        <div class="col-lg-4 col-md-4 col-sm-4">
-        </div>
-        <div class="col-lg-2 col-md-2 col-sm-2 " style="margin-top:5px;margin-bottom:5px">
-          <button type="button" class="btn btn-primary" [disabled]="btnDisable" (click)="onMaterialRequestDeatilsSubmit()">Material Reserve</button>
-
-        </div>
-        <div *ngIf="showAck" class="col-lg-2 col-md-2 col-sm-2 " style="margin-top:5px;margin-bottom:5px">
-          <button type="button" class="btn btn-primary" [disabled]="btnDisable" (click)="materialAckUpdate()">Material Release</button>
-        </div>
+        <!--<div *ngIf="showAck" class="col-lg-2 col-md-2 col-sm-2 " style="margin-top:5px;margin-bottom:5px">
+      <button type="button" class="btn btn-primary" [disabled]="btnDisable" (click)="materialAckUpdate()">Material Release</button>
+    </div>-->
       </div>
     </div>
     </div>

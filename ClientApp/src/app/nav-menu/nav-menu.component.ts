@@ -124,7 +124,7 @@ export class NavMenuComponent implements OnInit {
 
   logout() {
     localStorage.removeItem("Employee");
-    localStorage.removeItem("Roles");
+   // localStorage.removeItem("Roles");
     this.loggedin = false;
     let element: HTMLElement = document.getElementById("btnuser") as HTMLElement;
     element.hidden = true;

@@ -153,6 +153,9 @@ export class MaterialIssueComponent implements OnInit {
       data.issuedquantity = data.quantity;
     }
   }
+  backtoDashboard() {
+    this.router.navigateByUrl("/WMS/MaterialIssueDashboard");
+  }
 
 
   //requested quantity update
