@@ -831,7 +831,7 @@ namespace WMS.DAL
 				{
 					materialrequestquery = materialrequestquery + " where  req.requesterid = '" + approverid + "' ";
 				}
-				materialrequestquery = materialrequestquery + " group by req.requestid limit 50";
+				materialrequestquery = materialrequestquery + " group by req.requestid order by req.requestid desc limit 50";
 				try
 				{
 					await pgsql.OpenAsync();
@@ -2746,20 +2746,21 @@ namespace WMS.DAL
 								item.reservedby,
 								item.reservedqty,
 								reserveid,
+								item.reserveupto
 							});
 						}
 
-						if (result != 0)
-						{
-							int availableqty = item.availableqty - item.reservedqty;
-							string updatequery = WMSResource.updatestock.Replace("#availableqty", Convert.ToString(availableqty)).Replace("#itemid", Convert.ToString(item.itemid));
-							using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
-							{
-								result = DB.Execute(updatequery, new
-								{
-								});
-							}
-						}
+						//if (result != 0)
+						//{
+						//	int availableqty = item.availableqty - item.reservedqty;
+						//	string updatequery = WMSResource.updatestock.Replace("#availableqty", Convert.ToString(availableqty)).Replace("#itemid", Convert.ToString(item.itemid));
+						//	using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
+						//	{
+						//		result = DB.Execute(updatequery, new
+						//		{
+						//		});
+						//	}
+						//}
 
 					}
 				}

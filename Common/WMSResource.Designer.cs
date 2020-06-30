@@ -372,7 +372,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select sk.materialid,sum(sk.availableqty)as availableqty,max(openpo.materialdescription)as materialdescription,max(openpo.quotationqty)as quotationqty from   wms.wms_stock  sk left join wms.openpolistview openpo on openpo.pono = sk.pono where sk.availableqty!=0 .
+        ///   Looks up a localized string similar to select sk.materialid,sum(sk.availableqty)as availableqty,max(openpo.materialdescription)as materialdescription,max(openpo.quotationqty)as quotationqty,max(sk.pono) as pono from   wms.wms_stock  sk left join wms.openpolistview openpo on openpo.pono = sk.pono where sk.availableqty!=0 .
         /// </summary>
         public static string getmaterialdetailfprrequest {
             get {
@@ -668,8 +668,8 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to insert into wms.wms_materialreserve(reserveformaterialid,materialid,itemid,pono,reservedon,reservedby,reservedqty,reserveid)
-        ///values(default,@materialid,@itemid,@pono,current_timestamp,@reservedby,@reservedqty,@reserveid).
+        ///   Looks up a localized string similar to insert into wms.wms_materialreserve(reserveformaterialid,materialid,itemid,pono,reservedon,reservedby,reservedqty,reserveid,reserveupto)
+        ///values(default,@materialid,@itemid,@pono,current_timestamp,@reservedby,@reservedqty,@reserveid,@reserveupto).
         /// </summary>
         public static string insertreservematerial {
             get {

@@ -69,7 +69,7 @@ export class MaterialRequestComponent implements OnInit {
       this.spinner.hide();
       if (data) {
         this.messageService.add({ severity: 'success', summary: 'success Message', detail: 'Request sent' });
-        //this.router.navigateByUrl("/WMS/MaterialReqView/"+ this.pono);
+        this.router.navigateByUrl("/WMS/MaterialReqView/"+ this.pono);
       }
       else {
         this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Update Failed' });

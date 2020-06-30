@@ -480,6 +480,7 @@ namespace WMS.Models
 		public string approvedstatus { get; set; }
 		public bool status { get; set; }
 		public string ackremarks { get; set; }
+		public DateTime reserveupto { get; set; }
 	}
 		public class SecurityInwardreceivedModel
 	{
