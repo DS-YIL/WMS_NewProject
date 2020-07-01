@@ -372,7 +372,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select max(sk.itemid)as itemid,sk.materialid as material,sum(sk.availableqty)as availableqty,max(openpo.materialdescription)as materialdescription,max(openpo.quotationqty)as quotationqty,max(sk.pono) as pono from   wms.wms_stock  sk left join wms.openpolistview openpo on openpo.pono = sk.pono where sk.availableqty!=0 .
+        ///   Looks up a localized string similar to select max(openpo.projectname)as projectname,max(sk.itemid)as itemid,sk.materialid as material,sum(sk.availableqty)as availableqty,max(openpo.materialdescription)as materialdescription,max(openpo.quotationqty)as quotationqty,max(sk.pono) as pono from   wms.wms_stock  sk left join wms.openpolistview openpo on openpo.pono = sk.pono where sk.availableqty!=0 .
         /// </summary>
         public static string getmaterialdetailfprrequest {
             get {
@@ -514,14 +514,14 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select  res.reserveid,max(res.pono) as pono,max(op.projectname) as projectname,max(res.reservedon) as reservedon,
+        ///   Looks up a localized string similar to select  max(res.reserveupto)as reserveupto,res.reserveid,max(res.pono) as pono,max(op.projectname) as projectname,max(res.reservedon) as reservedon,
         ///max(iss.approvedstatus)as approvedstatus
         ///from wms.wms_materialreserve res 
         ///left join wms.wms_stock sk on sk.materialid=res.materialid
         ///left join wms.openpolistview op on op.pono=res.pono
         ///left join wms.wms_materialissue iss on iss.reserveformaterialid=res.reserveformaterialid 
         ///where reservedby=&apos;#reservedby&apos;
-        ///group by res.reserveid order by res.reserveid desc.
+        ///group by res.reserveid order by res.reserveid des [rest of string was truncated]&quot;;.
         /// </summary>
         public static string getreservedmaterialList {
             get {
