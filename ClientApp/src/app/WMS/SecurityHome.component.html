@@ -109,14 +109,14 @@
                     <tr class="mprltbldata">
                       <th class="ptable-cell" style="text-align:center;width:10%;">Sl.No.</th>
                       <th class="ptable-cell" style="text-align:center;width:20%;">PO No</th>
-                      <th class="ptable-cell" style="text-align:center">Supplier Name</th>
+                      <th class="ptable-cell" style="text-align:center;width:70%">Supplier Name</th>
                     </tr>
                   </ng-template>
                   <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex" let-rindex=0>
                     <tr>
                       <td class="ptable-cell" style="text-align:right;width:10%;"> {{ri+1}} </td>
                       <td class="ptable-cell" style="text-align:center;width:20%;"> {{rowData.pono}} </td>
-                      <td class="ptable-cell" style="text-align:center"> {{rowData.vendorname}} </td>
+                      <td class="ptable-cell" style="text-align:left;width:70%"> {{rowData.vendorname}} </td>
                   </ng-template>
                   <ng-template pTemplate="emptymessage">
                     <tr>
@@ -140,8 +140,8 @@
                     <tr>
                       <td class="ptable-cell" style="text-align:right;;width:10%;"> {{ri+1}} </td>
                       <td class="ptable-cell" style="text-align:center;width:20%;"> {{rowData.pono}} </td>
-                      <td class="ptable-cell" style="text-align:center"> {{rowData.suppliername}} </td>
-                      <td class="ptable-cell" style="text-align:center;width:25%;">{{rowData.receivedby}}</td>
+                      <td class="ptable-cell" style="text-align:left"> {{rowData.suppliername}} </td>
+                      <td class="ptable-cell" style="text-align:left;width:25%;">{{rowData.receivedby}}</td>
                   </ng-template>
                   <ng-template pTemplate="emptymessage">
                     <tr>
