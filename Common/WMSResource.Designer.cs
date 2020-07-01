@@ -425,6 +425,20 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to select sec.grnnumber,sec.pono,mtmaster.materialdescription,sk.materialid, sk.availableqty,sk.itemid
+        /// from wms.wms_securityinward sec
+        ///left join wms.wms_stock sk on sec.inwmasterid = sk.inwmasterid
+        ///left  join wms.openpolistview openpo on sk.pono = openpo.pono
+        ///left join wms.&quot;MaterialMasterYGS&quot;  mtmaster on mtmaster.material= sk.materialid
+        ///where sec.grnnumber =&apos;#grn&apos;.
+        /// </summary>
+        public static string getmatforgrnno {
+            get {
+                return ResourceManager.GetString("getmatforgrnno", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to select requestid from wms.wms_materialrequest order by requestid desc limit 1.
         /// </summary>
         public static string getnextrequestid {

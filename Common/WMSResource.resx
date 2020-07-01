@@ -509,4 +509,12 @@ values(default,@materialid,@itemid,@pono,current_timestamp,@reservedby,@reserved
   <data name="updatestock" xml:space="preserve">
     <value>update wms.wms_stock set availableqty=#availableqty where itemid=#itemid</value>
   </data>
+  <data name="getmatforgrnno" xml:space="preserve">
+    <value>select sec.grnnumber,sec.pono,mtmaster.materialdescription,sk.materialid, sk.availableqty,sk.itemid
+ from wms.wms_securityinward sec
+left join wms.wms_stock sk on sec.inwmasterid = sk.inwmasterid
+left  join wms.openpolistview openpo on sk.pono = openpo.pono
+left join wms."MaterialMasterYGS"  mtmaster on mtmaster.material= sk.materialid
+where sec.grnnumber ='#grn'</value>
+  </data>
 </root>
