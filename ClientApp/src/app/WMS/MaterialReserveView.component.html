@@ -45,7 +45,7 @@
           <td class="ptable-cell" style="text-align:center">{{rowData.pono}}</td>
           <td class="ptable-cell" style="text-align:left">{{rowData.projectname}}</td>
           <td class="ptable-cell" style="text-align:center">{{rowData.reservedon| date :  constants.dateFormat}}</td>
-          <td class="ptable-cell" style="text-align:center">{{rowData.reserveupto| date :  constants.dateFormat}}</td>
+          <td class="ptable-cell" style="text-align:center">{{checkValiddate(rowData.reserveupto)}}</td>
           <!--<td class="ptable-cell">
     <div *ngIf="rowData.approvedstatus=='approved'" class="form-inline">
       <p-checkbox [(ngModel)]="rowData.status" binary="true" (click)="ackStatusChanges()"></p-checkbox> &nbsp;&nbsp;

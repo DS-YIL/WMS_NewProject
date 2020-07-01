@@ -7,17 +7,20 @@ import { Employee, DynamicSearchResult, searchList } from '../Models/Common.Mode
 import { NgxSpinnerService } from "ngx-spinner";
 import { materialRequestDetails } from 'src/app/Models/WMS.Model';
 import { MessageService } from 'primeng/api';
+import { commonComponent } from '../WmsCommon/CommonCode';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-MaterialRequest',
-  templateUrl: './MaterialReserveView.component.html'
+  templateUrl: './MaterialReserveView.component.html',
+  providers: [DatePipe]
 })
 export class MaterialReserveViewComponent implements OnInit {
   AddDialog: boolean;
   showdialog: boolean;
   public materiallistData: Array<any> = [];
 
-  constructor(private formBuilder: FormBuilder, private messageService: MessageService, private wmsService: wmsService, private route: ActivatedRoute, private router: Router, public constants: constants, private spinner: NgxSpinnerService) { }
+  constructor(private formBuilder: FormBuilder, private messageService: MessageService, private datePipe: DatePipe,private wmsService: wmsService, private route: ActivatedRoute, private router: Router, public constants: constants, private spinner: NgxSpinnerService) { }
 
   public reserveList: Array<any> = [];
   public employee: Employee;
@@ -115,5 +118,19 @@ this.showdialog=true;
   }
   Cancel() {
     this.AddDialog = false;
+  }
+
+  //checkValiddate
+  //check date is valid or not
+  checkValiddate(date: any) {
+    try {
+      if (!date || (this.datePipe.transform(date, this.constants.dateFormat) == "01/01/0001"))
+        return "";
+      else
+        return this.datePipe.transform(date, this.constants.dateFormat);
+    }
+    catch{
+      return "";
+    }
   }
 }
