@@ -486,7 +486,7 @@ group by req.reserveid,req.reservedby,po.projectname,emp."name" order by req.res
        group by req.reserveformaterialid,iss.materialissueid</value>
   </data>
   <data name="getreservedmaterialList" xml:space="preserve">
-    <value>select  max(res.reserveupto)as reserveupto,res.reserveid,max(res.pono) as pono,max(op.projectname) as projectname,max(res.reservedon) as reservedon,
+    <value>select  max(op.projectname)as projectname,max(res.reserveupto)as reserveupto,res.reserveid,max(res.pono) as pono,max(op.projectname) as projectname,max(res.reservedon) as reservedon,
 max(iss.approvedstatus)as approvedstatus
 from wms.wms_materialreserve res 
 left join wms.wms_stock sk on sk.materialid=res.materialid
