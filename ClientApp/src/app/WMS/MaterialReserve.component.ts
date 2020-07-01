@@ -35,7 +35,7 @@ export class MaterialReserveComponent implements OnInit {
         this.pono = params["pono"];
       }
     });
-    this.reservedfor = new Date();
+  
     this.getMaterialRequestlist();
   }
 
@@ -43,6 +43,7 @@ export class MaterialReserveComponent implements OnInit {
   getMaterialRequestlist() {
     //this.employee.employeeno = "180129";
     this.wmsService.getMaterialRequestlistdata(this.employee.employeeno, this.pono).subscribe(data => {
+      this.reservedfor = new Date();
       this.reserveList = data;
       this.reserveList.forEach(item => {
         if (!item.requestedquantity)
@@ -111,5 +112,12 @@ export class MaterialReserveComponent implements OnInit {
   //redirect to PM Dashboard
   backtoDashboard() {
     this.router.navigateByUrl("/WMS/Dashboard");
+  }
+
+  parseDate(dateString: string): Date {
+    if (dateString) {
+      return new Date(dateString);
+    }
+    return null;
   }
 }
