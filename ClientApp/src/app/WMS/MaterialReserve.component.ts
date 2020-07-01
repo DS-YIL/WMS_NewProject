@@ -61,6 +61,7 @@ export class MaterialReserveComponent implements OnInit {
 
   //requested quantity update
   onMaterialRequestDeatilsSubmit() {
+    debugger;
     if (!this.reservedfor) {
       this.messageService.add({ severity: 'error', summary: 'Validation', detail: 'Please select Reserve for' });
       return;
@@ -68,6 +69,7 @@ export class MaterialReserveComponent implements OnInit {
     this.spinner.show();
     this.btnDisable = true;
     this.reserveList.forEach(item => {
+      debugger;
       item.reservedby = this.employee.employeeno;
       item.ReserveUpto = this.reservedfor;
     })
