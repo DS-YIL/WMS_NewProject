@@ -37,7 +37,7 @@ export class ObsoleteInventoryMovementComponent implements OnInit {
 
     this.daysSelection = "Weeks";
     this.movingDays = 4;
-    this.getObsoleteInventoryList();
+   // this.getObsoleteInventoryList();
 
 
     this.cols = [

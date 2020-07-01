@@ -38,7 +38,7 @@ export class ExcessInventoryMovementComponent implements OnInit {
 
     this.daysSelection = "Weeks";
     this.movingDays = 4;
-    this.getExcessInventoryList();
+    //this.getExcessInventoryList();
 
     this.cols = [
       //{ field: 'ponumber', header: 'PO No' },
