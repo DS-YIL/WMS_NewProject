@@ -62,7 +62,7 @@
 
             <!--<span *ngIf="rowData.approvedstatus=='approved'">{{rowData.requestedquantity}}</span>-->
 
-            <input *ngIf="rowData.approvedstatus!='approved'" pInputText type="number" class="form-control" [(ngModel)]="rowData.requestedquantity" (change)="reqQtyChange(rowData)">
+            <input *ngIf="rowData.approvedstatus!='approved'" style="text-align:right" pInputText type="number" class="form-control" [(ngModel)]="rowData.requestedquantity" (change)="reqQtyChange(rowData)">
           </td>
 
           <!--<td class="ptable-cell" style="text-align:center">
