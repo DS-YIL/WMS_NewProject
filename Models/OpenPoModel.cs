@@ -481,6 +481,7 @@ namespace WMS.Models
 		public bool status { get; set; }
 		public string ackremarks { get; set; }
 		public DateTime reserveupto { get; set; }
+		public string projectname { get; set; }
 	}
 		public class SecurityInwardreceivedModel
 	{
