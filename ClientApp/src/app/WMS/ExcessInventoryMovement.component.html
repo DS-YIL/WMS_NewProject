@@ -65,7 +65,7 @@
           <tr class="mprltbldata">
             <th style="text-align:center;width:5px">Sl.No.</th>
             <th style="width:100px;text-align:center;width:50px;">Material</th>
-            <th style="width:100px;text-align:center">Material Descr</th>
+            <th style="width:100px;text-align:center">Material Description</th>
             <th style="width:100px;text-align:center;width:50px;">Total consumed Qty for last {{ this.movingDays }} years</th>
             <th style="width:100px;text-align:center;width:50px;">Available Qty</th>
             <!--<th style="text-align:center">Last Consumed Date</th>
@@ -100,7 +100,7 @@
             </td>
             <!--<td class="ptable-cell" style="text-align:center">{{rowData.ponumber}}</td>-->
             <td class="ptable-cell" style="text-align:center;width:50px">{{rowData.materialid}}</td>
-            <td class="ptable-cell" style="text-align:center">{{rowData.materialdescription}}</td>
+            <td class="ptable-cell" style="text-align:left">{{rowData.materialdescription}}</td>
             <!--<td class="ptable-cell" style="text-align:center">{{rowData.departmentname}}</td>
             <td class="ptable-cell" style="text-align:center">{{rowData.itemlocation}}</td>
             <td class="ptable-cell" style="text-align:center">{{rowData.projectname}}</td>
@@ -118,9 +118,6 @@
            
 
           </tr>
-
-
-          -t
         </ng-template>
       </p-table>
     </div>

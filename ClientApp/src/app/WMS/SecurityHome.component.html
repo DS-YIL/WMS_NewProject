@@ -96,7 +96,7 @@
                   <div class="card" style="height: 108px;margin-bottom:10px;width: 100%;background-image: url('./assets/Login.jpg');border-radius: 10px;">
                     <h5 style="color:white;margin-left:10px;margin-top:10px"><i class="fa fa-cubes"></i>&nbsp;Total Received</h5>
                     <h5 style="color:white;margin-left:20px; font-weight:600;">{{receivedcount}}</h5>
-                    <button class="btn btn-success btn-sm" (click)="showreceivedlist()">{{btnreceivetext}}</button>
+                    <button class="btn btn-warning btn-sm" (click)="showreceivedlist()">{{btnreceivetext}}</button>
                   </div>
 
                 </div>
@@ -104,9 +104,9 @@
               </div>
 
               <div *ngIf="showtable">
-                <p-table *ngIf="showPoList" [value]="currentDatePoList" [style]="{'width':'95%','height':'80%','overflow':'auto!important','box-shadow' : '5px 10px #888888'}">
+                <p-table *ngIf="showPoList" [value]="currentDatePoList" [style]="{'width':'95%','height':'80%','overflow':'auto!important','box-shadow' : '5px 5px #28a745'}">
                   <ng-template pTemplate="header">
-                    <tr class="mprltbldata">
+                    <tr class="mprltbldata" style="background-color:aqua !important">
                       <th class="ptable-cell" style="text-align:center;width:10%;">Sl.No.</th>
                       <th class="ptable-cell" style="text-align:center;width:20%;">PO No</th>
                       <th class="ptable-cell" style="text-align:center;width:70%">Supplier Name</th>
@@ -126,7 +126,7 @@
                 </p-table>
               </div>
               <div *ngIf="showreceivedtable" style="margin-top:10px;">
-                <p-table *ngIf="showPoList" [value]="currentDatePoReceivedList" [style]="{'width':'95%','height':'80%','overflow':'auto!important','box-shadow' : '5px 10px #888888'}">
+                <p-table *ngIf="showreceivedPoList" [value]="currentDatePoReceivedList" [style]="{'width':'95%','height':'80%','overflow':'auto!important','box-shadow' : '5px 5px #ffc107'}">
                   <ng-template pTemplate="header">
                     <tr class="mprltbldata">
                       <th class="ptable-cell" style="text-align:center;width:10%;">Sl.No.</th>

@@ -565,6 +565,19 @@ fieldset.scheduler-border {
   font-size: 12px !important;
 }
 
+.labelheading {
+  font-weight: 600;
+  font-size: 14px;
+  color: darkblue;
+}
+
+.labeltext {
+  font-weight: 600;
+  font-size: 14px;
+  color:#dc3545;
+}
+
+
 .mprltbldata > td {
   font-size: 12px !important;
 }

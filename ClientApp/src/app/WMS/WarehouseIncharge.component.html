@@ -8,14 +8,14 @@
           <input class="form-control" type="text" [(ngModel)]="PoDetails.grnnumber">&nbsp;&nbsp;&nbsp;&nbsp;
           <button type="button" class="btn btn-primary btn-sm" label="Save" (click)="SearchGRNNo()">Search</button>
         </div>
-        <div class="col-md-3 col-lg-3  pt-2" style="font-weight:600;font-size:14px;color:darkblue;" *ngIf="podetailsList.length>0">
-          PO No : <span style="color:#dc3545;">{{podetailsList[0].pono}}</span>
+        <div class="col-md-3 col-lg-3  pt-2 labelheading"  *ngIf="podetailsList.length>0">
+          PO No : <span class="labeltext">{{podetailsList[0].pono}}</span>
         </div>
-        <div class="col-md-3 col-lg-3 pt-2" style="font-weight:600;font-size:14px;color:darkblue;" *ngIf="podetailsList.length>0">
-          Invoice No : <span style="color:#dc3545;">{{podetailsList[0].invoiceno}}</span>
+        <div class="col-md-3 col-lg-3 pt-2 labelheading" style="font-weight:600;font-size:14px;color:darkblue;" *ngIf="podetailsList.length>0">
+          Invoice No : <span class="labeltext">{{podetailsList[0].invoiceno}}</span>
         </div>
-        <div class="col-md-3 col-lg-3 pt-2" style="font-weight:600;font-size:14px;color:darkblue;" *ngIf="podetailsList.length>0">
-          GRN No : <span style="color:#dc3545;">{{podetailsList[0].grnnumber}}</span>
+        <div class="col-md-3 col-lg-3 pt-2 labelheading" style="font-weight:600;font-size:14px;color:darkblue;" *ngIf="podetailsList.length>0">
+          GRN No : <span class="labeltext">{{podetailsList[0].grnnumber}}</span>
         </div>
       </div>
       <div class="row " style="margin-top:10px">

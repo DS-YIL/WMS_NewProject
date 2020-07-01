@@ -22,6 +22,7 @@ export class SecurityHomeComponent implements OnInit {
   public Poinvoicedetails: PoDetails;
   public employee: Employee;
   public showDetails; disSaveBtn; showPoList: boolean = false;
+  showreceiveList: boolean = false;
   showreceivedPoList: boolean = false;
   public BarcodeModel: BarcodeModel;
   public currentDatePoList: Array<any> = [];
@@ -38,10 +39,10 @@ export class SecurityHomeComponent implements OnInit {
   ngOnInit() {
 
     debugger;
-    this.showtable = false;
+    this.showtable = true;
     this.showreceivedtable = false;
     this.btnreceivetext = "Show";
-    this.btntext = "Show";
+    this.btntext = "Hide";
     this.deliverycount = "0";
     this.receivedcount = "0";
     this.todatsdate = new Date();

@@ -9,19 +9,19 @@
   <div class="card-body" style="overflow-y:scroll">
     <div *ngIf="showavailableqtyList">
       <div class="row  pl-0">
-        <div class="col-lg-4 col-md-4 col-sm-4 pt-2">
-          <label>Request Id :</label>&nbsp;<span><label>{{materialissueList[0].requestid}}</label></span>
+        <div class="col-lg-4 col-md-4 col-sm-4 pt-2 labelheading">
+          <label>Request Id :</label>&nbsp;<span><label class="labeltext">{{materialissueList[0].requestid}}</label></span>
         </div>
-        <div class="col-lg-6 col-md-6 col-sm-6 pt-2">
-          <label>Job Code :</label>&nbsp;<span><label>{{materialissueList[0].jobname}}</label></span>
+        <div class="col-lg-6 col-md-6 col-sm-6 pt-2 labelheading">
+          <label>Job Code :</label>&nbsp;<span><label class="labeltext">{{materialissueList[0].jobname}}</label></span>
         </div>
       </div>
       <div class="row  pl-0">
-        <div class="col-lg-4 col-md-4 col-sm-4 pt-2">
-          <label>Requested By :</label>&nbsp;<span><label>{{materialissueList[0].name}}</label></span>
+        <div class="col-lg-4 col-md-4 col-sm-4 pt-2 labelheading">
+          <label>Requested By :</label>&nbsp;<span><label class="labeltext">{{materialissueList[0].name}}</label></span>
         </div>
-        <div class="col-lg-4 col-md-4 col-sm-4 pt-2">
-          <label>Requested On :</label>&nbsp;<span><label>{{materialissueList[0].requesteddate | date :  constants.dateFormat}}</label></span>
+        <div class="col-lg-4 col-md-4 col-sm-4 pt-2 labelheading">
+          <label>Requested On :</label>&nbsp;<span><label class="labeltext">{{materialissueList[0].requesteddate | date :  constants.dateFormat}}</label></span>
         </div>
       </div>
     </div>

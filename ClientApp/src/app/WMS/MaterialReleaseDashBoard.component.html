@@ -10,17 +10,19 @@
         <ng-template pTemplate="header">
           <tr class="mprltbldata">
             <th style="text-align:center;width:70px">Sl.No.</th>
-            <th style="text-align:center">Reserved Id</th>
-            <th style="text-align: center">Reserved On</th>
-            <th style="text-align:center">Reserved By</th>
+            <th style="text-align:center;width:100px">Reserved Id</th>
             <th style="text-align:center">Project Name</th>
+            <th style="text-align: center;width:150px">Reserved On</th>
+            <th style="text-align:center;width:300px">Reserved By</th>
+
           </tr>
           <tr>
             <th></th>
             <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'requestforissueid', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'projectname', 'contains')"></th>
             <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'requesteddate', 'contains')"></th>
             <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'name', 'contains')"></th>
-            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'projectname', 'contains')"></th>
+
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
@@ -28,10 +30,11 @@
             <td class="ptable-cell" style="text-align:right;width:70px;">
               {{ri+1}}
             </td>
-            <td class="ptable-cell" style="text-align:center;width:100%;"><a *ngIf="rowData.reserveid" [routerLink]="['/WMS/MaterialRelease',rowData.reserveid]" routerLinkActive="active">{{rowData.reserveid}}</a></td>
-            <td class="ptable-cell" style="text-align:center;width:100%;">{{rowData.reservedon  | date :  constants.dateFormat}}</td>
-            <td class="ptable-cell" style="text-align:center;width:100%;">{{rowData.name}}</td>
-            <td class="ptable-cell" style="text-align:left;width:100%;">{{rowData.projectname}}</td>
+            <td class="ptable-cell" style="text-align:center;width:100px"><a *ngIf="rowData.reserveid" [routerLink]="['/WMS/MaterialRelease',rowData.reserveid]" routerLinkActive="active">{{rowData.reserveid}}</a></td>
+            <td class="ptable-cell" style="text-align:left;">{{rowData.projectname}}</td>
+            <td class="ptable-cell" style="text-align:center;width:150px">{{rowData.reservedon  | date :  constants.dateFormat}}</td>
+            <td class="ptable-cell" style="text-align:left;width:300px">{{rowData.name}}</td>
+
           </tr>
         </ng-template>
       </p-table>
