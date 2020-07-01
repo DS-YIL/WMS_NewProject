@@ -447,7 +447,7 @@ emp1.name as approvername
     <value />
   </data>
   <data name="getmaterialdetailfprrequest" xml:space="preserve">
-    <value>select sk.materialid,sum(sk.availableqty)as availableqty,max(openpo.materialdescription)as materialdescription,max(openpo.quotationqty)as quotationqty,max(sk.pono) as pono from   wms.wms_stock  sk left join wms.openpolistview openpo on openpo.pono = sk.pono where sk.availableqty!=0 </value>
+    <value>select max(sk.itemid)as itemid,sk.materialid,sum(sk.availableqty)as availableqty,max(openpo.materialdescription)as materialdescription,max(openpo.quotationqty)as quotationqty,max(sk.pono) as pono from   wms.wms_stock  sk left join wms.openpolistview openpo on openpo.pono = sk.pono where sk.availableqty!=0 </value>
   </data>
   <data name="issuedqtydetails" xml:space="preserve">
     <value>select max(req.requestedquantity)as requestedquantity, max(req.materialid)as materialid, max(req.requestid)as requestid,req.requestforissueid,sum(issuedqty)as issuedquantity
