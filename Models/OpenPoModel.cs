@@ -149,6 +149,7 @@ namespace WMS.Models
 	//Material Details
 	public class MaterialDetails
 	{
+		public int itemid { get; set; }
 		public string pono { get; set; }
 		public string grnnumber { get; set; }
 		public string materialdescription { get; set; }

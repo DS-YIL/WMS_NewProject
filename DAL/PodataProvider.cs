@@ -228,15 +228,126 @@ namespace WMS.DAL
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
 
+
+
 				try
 				{
-					string query = WMSResource.getMaterialDetails.Replace("#grn", grnNo);// + pono+"'";//li
-					var materialList= await pgsql.QueryAsync<MaterialDetails>(
-					   query, null, commandType: CommandType.Text);
-
-					return materialList;
+					//string query = WMSResource.getMaterialDetails.Replace("#grn", grnNo);// + pono+"'";//li
+					//var materialList= await pgsql.QueryAsync<MaterialDetails>(
+					//   query, null, commandType: CommandType.Text);
 
 
+
+					List<MaterialDetails> objMaterial = new List<MaterialDetails>();
+					MaterialDetails result = new MaterialDetails();
+					string getMatQuery = WMSResource.getmatforgrnno.Replace("#grn", grnNo);
+					var MaterialList = await pgsql.QueryAsync<MaterialDetails>(
+					   getMatQuery, null, commandType: CommandType.Text);
+
+
+
+					if (MaterialList != null)
+					{
+						foreach (MaterialDetails mtData in MaterialList)
+						{
+							result.materialid = mtData.materialid;
+							result.materialdescription = mtData.materialdescription;
+							result.availableqty = mtData.availableqty;
+							result.grnnumber = mtData.grnnumber;
+
+
+
+							//To get issued qty get data from material issue, material reserve and gatepassmaterial table
+
+
+
+							string matIssuedQuery = "select issuedqty from wms.wms_materialissue where itemid =" + mtData.itemid;
+							var issuedQty = await pgsql.QueryAsync<int>(
+											matIssuedQuery, null, commandType: CommandType.Text);
+
+
+
+							//Get material reserved qty
+							string matReserveQuery = "select sum(reservedqty) from wms.wms_materialreserve where itemid =" + mtData.itemid;
+							var reservedQty = await pgsql.QueryFirstOrDefaultAsync<int>(
+											matReserveQuery, null, commandType: CommandType.Text);
+
+
+							int issuedqty = 0;
+
+							//get material in gatepass
+							gatepassModel obj = new gatepassModel();
+							string matgateQuery = "select sum(gtmat.quantity)as quantity from wms.wms_gatepassmaterial gtmat left join wms.wms_gatepass gp on gp.gatepassid = gtmat.gatepassid where materialid = '" + mtData.materialid + "' and gp.approvedon != null";
+							//IssueRequestModel obj = new IssueRequestModel();
+							//pgsql.Open();
+							
+							obj = pgsql.QuerySingle<gatepassModel>(
+							   matgateQuery, null, commandType: CommandType.Text);
+							
+							issuedqty=obj.quantity;
+							result.issued = Convert.ToInt32(issuedQty) + Convert.ToInt32(reservedQty) + issuedqty;
+							objMaterial.Add(result);
+
+
+
+
+						}
+					}
+
+
+
+
+
+					//string reqDetailsQuery = WMSResource.getrequestDetailsMaterial.Replace("#grn", grnNo);
+
+
+
+					//var requestDetails = await pgsql.QueryAsync<MaterialDetails>(
+					//   reqDetailsQuery, null, commandType: CommandType.Text);
+					//if(requestDetails != null)
+					//{
+					//    foreach(MaterialDetails matData in requestDetails)
+					//    {
+					//        string reserveQuery = WMSResource.getreserveQtyDetailsMaterial.Replace("#grn", matData.grnnumber);
+					//        string issuedQuery = WMSResource.getissuedQtyDetailsMaterial.Replace("#grn", matData.grnnumber);
+					//        var reserveDetails = await pgsql.QueryAsync<MaterialDetails>(
+					//   reserveQuery, null, commandType: CommandType.Text);
+
+
+
+					//        var issuedDetails = await pgsql.QueryAsync<MaterialDetails>(
+					//  issuedQuery, null, commandType: CommandType.Text);
+					//    }
+					//    result.grnnumber = requestDetails.FirstOrDefault().grnnumber;
+					//    result.reservedqty = requestDetails.FirstOrDefault().reservedqty;
+					//    result.qtyavailable = requestDetails.FirstOrDefault().qtyavailable;
+					//    result.qtytotal = requestDetails.FirstOrDefault().qtytotal;
+					//}
+
+
+
+
+
+
+
+
+
+					//var finaltempdata = requestDetails.Concat(reserveDetails);
+					//var finaldata = finaltempdata.Concat(issuedDetails);
+
+
+
+
+
+					//foreach(MaterialDetails mtdata in finaldata)
+					//{
+					//    mtdata.issued =Convert.ToInt32( mtdata.reservedqty) + Convert.ToInt32(mtdata.issuedqty);
+					//}
+					//return finaldata;
+
+
+
+					return objMaterial;
 				}
 				catch (Exception Ex)
 				{
