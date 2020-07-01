@@ -43,7 +43,7 @@
           <td class="ptable-cell" style="text-align:left">{{rowData.projectname}}</td>
           <td class="ptable-cell" style="text-align:center">{{rowData.requesteddate| date :  constants.dateFormat}}</td>
           <td class="ptable-cell">
-            <div *ngIf="rowData.approvedstatus=='approved'" class="form-inline">
+            <div *ngIf="rowData.approvedstatus=='Approved'" class="form-inline">
               <p-checkbox [(ngModel)]="rowData.status" binary="true" (click)="ackStatusChanges()"></p-checkbox> &nbsp;&nbsp;
               <textarea type="text" style="width:140px" class="form-control" [(ngModel)]="rowData.ackremarks"></textarea>
             </div>
