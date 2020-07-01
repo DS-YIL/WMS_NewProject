@@ -43,8 +43,9 @@ export class LoginComponent implements OnInit {
     if (localStorage.getItem("Roles") && JSON.parse(localStorage.getItem("Roles")))
       this.roleNameModel = JSON.parse(localStorage.getItem("Roles"));
     else {
+      var pg = this;
       setTimeout(function () {
-        this.getRoles();
+        pg.getRoles();
       }, 3000);
     }
   }

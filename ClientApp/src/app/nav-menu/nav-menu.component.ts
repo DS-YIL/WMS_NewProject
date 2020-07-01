@@ -84,6 +84,7 @@ export class NavMenuComponent implements OnInit {
       this.items.push({
         label: 'Inventory Ageing',
         icon: 'pi pi-fw pi-bars',
+        style: { 'font-weight': '600' },
         items: [
           { label: 'Obsolete', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-caret-right', command: () => this.router.navigateByUrl('WMS/ObsoleteInventoryMovement') },
           { label: 'Excess', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-caret-right', command: () => this.router.navigateByUrl('WMS/ExcessInventoryMovement') },
@@ -92,6 +93,7 @@ export class NavMenuComponent implements OnInit {
       this.items.push({
         label: 'ABC Analysis',
         icon: 'pi pi-fw pi-bars',
+        style: { 'font-weight': '600' },
         items: [
           { label: 'ABC Category', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-caret-right', command: () => this.router.navigateByUrl('WMS/ABCCategory') },
           { label: 'ABC Analysis', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-caret-right', command: () => this.router.navigateByUrl('WMS/ABCAnalysis') },
@@ -100,6 +102,7 @@ export class NavMenuComponent implements OnInit {
       this.items.push({
         label: 'Cycle count',
         icon: 'pi pi-fw pi-bars',
+        style: { 'font-weight': '600' },
         items: [
           { label: 'Cycle Count', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-caret-right', command: () => this.router.navigateByUrl('WMS/Cyclecount') },
           { label: 'Cycle Config', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-caret-right', command: () => this.router.navigateByUrl('WMS/Cycleconfig') },
@@ -109,9 +112,10 @@ export class NavMenuComponent implements OnInit {
       this.items.push({
         label: 'Other',
         icon: 'pi pi-fw pi-bars',
+        style: {'font-weight': '600' },
         items: [
-          { label: 'FIFO LIst', icon: 'pi pi-fw pi-bars', style: { 'width': '200px', 'font-weight': '600' }, command: () => this.router.navigateByUrl('WMS/FIFOList') },
-          { label: 'Inventory Movement', icon: 'pi pi-fw pi-bars', style: { 'width': '200px', 'font-weight': '600' }, command: () => this.router.navigateByUrl('WMS/InventoryMovement') },
+          { label: 'FIFO LIst', icon: 'pi pi-fw pi-bars', style: { 'width': '200px' }, command: () => this.router.navigateByUrl('WMS/FIFOList') },
+          { label: 'Inventory Movement', icon: 'pi pi-fw pi-bars', style: { 'width': '200px' }, command: () => this.router.navigateByUrl('WMS/InventoryMovement') },
         ]
       });
       this.router.navigateByUrl('/WMS/Home');
