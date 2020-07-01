@@ -37,31 +37,32 @@
     </ng-template>-->
         <ng-template pTemplate="header" let-columns>
           <tr class="mprltbldata">
-            <th style="text-align:center;width:60px">Sl.No.</th>
-            <th *ngFor="let col of columns" style="width:100px;text-align:center;">
-              {{col.header}}
-            </th>
+            <th style="text-align:center;width:5px">Sl.No.</th>
+            <th style="width:100px;text-align:center;width:50px;">Material</th>
+            <th style="width:100px;text-align:center">Material Description</th>
+            <th style="width:100px;text-align:center;width:50px;">Total consumed Qty for last {{ this.movingDays }} years</th>
+            <th style="width:100px;text-align:center;width:50px;">Available Qty</th>
             <!--<th style="text-align:center">Last Consumed Date</th>
-        <th style="text-align:center">Last Consumed Days</th>-->
+  <th style="text-align:center">Last Consumed Days</th>-->
 
           </tr>
           <tr>
             <th></th>
-            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'ponumber', 'contains')"></th>
+            <!--<th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'ponumber', 'contains')"></th>-->
             <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'materialid', 'contains')"></th>
             <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'materialdescription', 'contains')"></th>
-            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'departmentname', 'contains')"></th>
+            <!--<th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'departmentname', 'contains')"></th>
             <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'itemlocation', 'contains')"></th>
             <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'projectname', 'contains')"></th>
             <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'vendorname', 'contains')"></th>
             <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'receiveddate', 'contains')"></th>
-            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'receivedqty', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'receivedqty', 'contains')"></th>-->
             <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'issuedqty', 'contains')"></th>
             <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'availableqty', 'contains')"></th>
-            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'unitprice', 'contains')"></th>
+            <!--<th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'unitprice', 'contains')"></th>
             <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'category', 'contains')"></th>
             <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'daysinstock', 'contains')"></th>
-            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'reportdate', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'reportdate', 'contains')"></th>-->
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
@@ -69,21 +70,21 @@
             <td class="ptable-cell" style="text-align:right">
               {{ri+1}}
             </td>
-            <td class="ptable-cell" style="text-align:center">{{rowData.ponumber}}</td>
+            <!--<td class="ptable-cell" style="text-align:center">{{rowData.ponumber}}</td>-->
             <td class="ptable-cell" style="text-align:center">{{rowData.materialid}}</td>
             <td class="ptable-cell" style="text-align:center">{{rowData.materialdescription}}</td>
-            <td class="ptable-cell" style="text-align:center">{{rowData.departmentname}}</td>
+            <!--<td class="ptable-cell" style="text-align:center">{{rowData.departmentname}}</td>
             <td class="ptable-cell" style="text-align:center">{{rowData.itemlocation}}</td>
             <td class="ptable-cell" style="text-align:center">{{rowData.projectname}}</td>
             <td class="ptable-cell" style="text-align:center">{{rowData.vendorname}}</td>
             <td class="ptable-cell" style="text-align:center">{{rowData.receiveddate  | date :  constants.dateFormat}}</td>
-            <td class="ptable-cell" style="text-align:right">{{rowData.receivedqty}}</td>
+            <td class="ptable-cell" style="text-align:right">{{rowData.receivedqty}}</td>-->
             <td class="ptable-cell" style="text-align:right">{{rowData.issuedqty}}</td>
             <td class="ptable-cell" style="text-align:right">{{rowData.availableqty}}</td>
-            <td class="ptable-cell" style="text-align:right">{{rowData.unitprice}}</td>
+            <!--<td class="ptable-cell" style="text-align:right">{{rowData.unitprice}}</td>
             <td class="ptable-cell" style="text-align:center">{{rowData.category}}</td>
             <td class="ptable-cell" style="text-align:right">{{rowData.daysinstock}}</td>
-            <td class="ptable-cell" style="text-align:center">{{rowData.reportdate  | date :  constants.dateFormat}}</td>
+            <td class="ptable-cell" style="text-align:center">{{rowData.reportdate  | date :  constants.dateFormat}}</td>-->
             <!--<td class="ptable-cell" style="text-align:right">{{rowData.lastconsumed | date :  constants.dateFormat}}</td>
         <td class="ptable-cell" style="text-align:right">{{rowData.lastconsumeddays}}</td>-->
 
