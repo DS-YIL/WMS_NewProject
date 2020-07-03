@@ -2552,11 +2552,12 @@ namespace WMS.DAL
 				try
 				{
 					string query = WMSResource.getitemlocationList.Replace("#materialid", material);
-
-
 					await pgsql.OpenAsync();
-					return await pgsql.QueryAsync<IssueRequestModel>(
+					var data = await pgsql.QueryAsync<IssueRequestModel>(
 					  query, null, commandType: CommandType.Text);
+					  data = data.OrderByDescending(o => o.createddate);
+					return data;
+					
 
 
 				}

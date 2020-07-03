@@ -13,7 +13,7 @@
             <th style="text-align:center;width:100px">Request Id</th>
             <th style="text-align:center">Project Name</th>
             <th style="text-align: center;width:150px">Requested On</th>
-            <th style="text-align:center;width:300px">Requestor Name</th>
+            <th style="text-align:center;width:300px">Requester Name</th>
 
           </tr>
           <tr>
@@ -32,7 +32,7 @@
             <td class="ptable-cell" style="text-align:center;width:100px;"><a *ngIf="rowData.requestid" [routerLink]="['/WMS/MaterialIssue',rowData.requestid,rowData.pono]" routerLinkActive="active">{{rowData.requestid}}</a></td>
             <td class="ptable-cell" style="text-align:left;">{{rowData.projectname}}</td>
             <td class="ptable-cell" style="text-align:center;width:150px;">{{rowData.requesteddate  | date :  constants.dateFormat}}</td>
-            <td class="ptable-cell" style="text-align:center;width:300px;">{{rowData.name}}</td>
+            <td class="ptable-cell" style="text-align:left;width:300px;">{{rowData.name}}</td>
 
           </tr>
         </ng-template>
