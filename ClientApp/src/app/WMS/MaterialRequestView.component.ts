@@ -88,7 +88,7 @@ export class MaterialRequestViewComponent implements OnInit {
     else {
       this.spinner.show();
       this.btnDisable = true;
-      this.wmsService.ackmaterialreceivedfroreserved(this.requestList).subscribe(data => {
+      this.wmsService.ackmaterialreceived(this.requestList).subscribe(data => {
         this.spinner.hide();
         if (data)
           this.messageService.add({ severity: 'sucess', summary: 'sucee Message', detail: 'acknowledged' });
