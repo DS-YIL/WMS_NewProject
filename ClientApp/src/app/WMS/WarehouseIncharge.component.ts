@@ -139,7 +139,7 @@ export class WarehouseInchargeComponent implements OnInit {
       this.StockModel.grnnumber = this.PoDetails.grnnumber;
       this.StockModel.vendorid = this.PoDetails.vendorid;
       this.StockModel.paitemid = this.PoDetails.paitemid;
-      this.StockModel.totalquantity = this.PoDetails.quotationqty;
+      this.StockModel.totalquantity = this.PoDetails.materialqty;
       this.StockModel.createdby = this.employee.employeeno;
       this.StockModel.itemlocation = this.store.code;
       this.StockModel.rackid = this.rack.code;

@@ -52,9 +52,9 @@ export class MaterialRequestComponent implements OnInit {
 
   //check validations for requested quantity
   reqQtyChange(data: any) {
-    if (data.requestedquantity > data.quotationqty) {
-      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Requested Quantity should be lessthan or equal to po quantity' });
-      data.requestedquantity = data.quotationqty;
+    if (data.requestedquantity > data.materialqty) {
+      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Requested Quantity should be lessthan or equal to material quantity' });
+      data.requestedquantity = data.materialqty;
     }
   }
 

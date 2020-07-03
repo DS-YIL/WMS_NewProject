@@ -73,7 +73,7 @@
               <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'projectname', 'contains')"></th>
               <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'material', 'contains')"></th>
               <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'materialdescription', 'contains')"></th>
-              <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'quotationqty', 'contains')"></th>
+              <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'materialqty', 'contains')"></th>
               <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'receivedqty', 'contains')"></th>
               <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'confirmqty', 'contains')"></th>
               <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'returnqty', 'contains')"></th>
@@ -92,18 +92,18 @@
               <td class="ptable-cell" style="text-align:center">{{rowData.projectname}}</td>
               <td class="ptable-cell" style="text-align:center;width:10%;">{{rowData.material}}</td>
               <td class="ptable-cell" style="text-align:left">{{rowData.materialdescription}}</td>
-              <td class="ptable-cell" style="text-align:right;width:10%;">{{rowData.quotationqty}}</td>
+              <td class="ptable-cell" style="text-align:right;width:10%;">{{rowData.materialqty}}</td>
               <td class="ptable-cell" style="text-align:right;width:10%;">
                 <span *ngIf="grnnumber">{{rowData.receivedqty}}</span>
-                <input *ngIf="!grnnumber" pInputText type="number" (change)="checkreceivedqty(rowData.receivedqty,rowData.quotationqty);" id="receivedqty" class="form-control" [(ngModel)]="rowData.receivedqty">
+                <input *ngIf="!grnnumber" pInputText type="number" (change)="checkreceivedqty(rowData.receivedqty,rowData.confirmqty,rowData.returnqty,rowData.materialqty);" id="receivedqty" class="form-control" [(ngModel)]="rowData.receivedqty">
               </td>
               <td class="ptable-cell" style="text-align:right;width:10%;">
                 <span *ngIf="grnnumber">{{rowData.confirmqty}}</span>
-                <input *ngIf="!grnnumber" pInputText type="number" class="form-control" (change)="checkconfirmqty(rowData.confirmqty,rowData.quotationqty);" id="confirmqty" [(ngModel)]="rowData.confirmqty">
+                <input *ngIf="!grnnumber" pInputText type="number" class="form-control" (change)="checkconfirmqty(rowData.confirmqty,rowData.receivedqty,rowData.returnqty,rowData.materialqty);" id="confirmqty" [(ngModel)]="rowData.confirmqty">
               </td>
               <td class="ptable-cell" style="text-align:right;width:10%;">
                 <span *ngIf="grnnumber">{{rowData.returnqty}}</span>
-                <input *ngIf="!grnnumber" style="text-align:right" pInputText type="number" (change)="checkreturnqty(rowData.returnqty,rowData.quotationqty);" id="returnqty" class="form-control" [(ngModel)]="rowData.returnqty">
+                <input *ngIf="!grnnumber" style="text-align:right" pInputText type="number" (change)="checkreturnqty(rowData.returnqty,rowData.receivedqty,rowData.confirmqty,rowData.materialqty);" id="returnqty" class="form-control" [(ngModel)]="rowData.returnqty">
               </td>
               <!--<td class="ptable-cell">
               <div style="text-align: center;">

@@ -27,6 +27,7 @@ export class PoDetails {
   grnnumber: string;
   itemid: number;
   confirmqty: number;
+  materialqty: string;
 
 }
 
@@ -82,6 +83,7 @@ export class inwardModel {
   itemlocation: string;
   invoiceno: string;
   projectname: string;
+  materialqty: number;
 }
 
 

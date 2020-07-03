@@ -1116,8 +1116,10 @@ namespace WMS.DAL
 					string query = WMSResource.GetListForMaterialRequestByapproverid.Replace("#approverid", approverid);
 
 					await pgsql.OpenAsync();
-					return await pgsql.QueryAsync<IssueRequestModel>(
-					   query, null, commandType: CommandType.Text);
+					var data = await pgsql.QueryAsync<IssueRequestModel>(
+					  query, null, commandType: CommandType.Text);
+					data = data.OrderByDescending(o => o.createddate);
+					return data;
 
 
 				}

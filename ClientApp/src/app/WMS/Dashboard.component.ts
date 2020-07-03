@@ -6,13 +6,16 @@ import { constants } from 'src/app/Models/WMSConstants'
 import { NgxSpinnerService } from "ngx-spinner";
 import { Employee, DynamicSearchResult, searchList } from 'src/app/Models/Common.Model';
 import { PoFilterParams, PoDetails } from 'src/app/Models/WMS.Model';
+import { DatePipe } from '@angular/common';
+
 
 @Component({
   selector: 'app-Dashboard',
-  templateUrl: './Dashboard.component.html'
+  templateUrl: './Dashboard.component.html',
+  providers: [DatePipe]
 })
 export class DashboardComponent implements OnInit {
-  constructor(private formBuilder: FormBuilder, private spinner: NgxSpinnerService, public wmsService: wmsService, public constants: constants, private route: ActivatedRoute, private router: Router) { }
+  constructor(private formBuilder: FormBuilder, private spinner: NgxSpinnerService, public wmsService: wmsService, private datePipe: DatePipe, public constants: constants, private route: ActivatedRoute, private router: Router) { }
   public employee: Employee;
   public formName: string;
   public txtName: string;
@@ -126,6 +129,17 @@ export class DashboardComponent implements OnInit {
   //}
    materialReserve(pono) {
      this.router.navigate(['/WMS/MaterialReserve/', pono]);
+  }
+  checkValiddate(date: any) {
+    try {
+      if (!date || (this.datePipe.transform(date, this.constants.dateFormat) == "01/01/0001"))
+        return "";
+      else
+        return this.datePipe.transform(date, this.constants.dateFormat);
+    }
+    catch{
+      return "";
+    }
   }
 
 }

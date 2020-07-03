@@ -44,7 +44,7 @@
                 <th> <input pInputText type="text" style="width:100%;" class="form-control" (input)="dt.filter($event.target.value, 'projectname', 'contains')"></th>
                 <th> <input pInputText type="text" style="width:100%;" class="form-control" (input)="dt.filter($event.target.value, 'material', 'contains')"></th>
                 <th> <input pInputText type="text" style="width:100%;" class="form-control" (input)="dt.filter($event.target.value, 'materialdescription', 'contains')"></th>
-                <th> <input pInputText type="text" style="width:100%;" class="form-control" (input)="dt.filter($event.target.value, 'quotationqty', 'contains')"></th>
+                <th> <input pInputText type="text" style="width:100%;" class="form-control" (input)="dt.filter($event.target.value, 'materialqty', 'contains')"></th>
                 <th> <input pInputText type="text" style="width:100%;" class="form-control" (input)="dt.filter($event.target.value, 'receivedqty', 'contains')"></th>
                 <th> <input pInputText type="text" style="width:100%;" class="form-control" (input)="dt.filter($event.target.value, 'confirmqty', 'contains')"></th>
                 <th> <input pInputText type="text" style="width:100%;" class="form-control" (input)="dt.filter($event.target.value, 'returnqty', 'contains')"></th>
@@ -58,11 +58,11 @@
                 <td class="ptable-cell" style="text-align: left;width:200px;">{{rowData.projectname}}</td>
                 <td class="ptable-cell" style="text-align:center;width:100px;">{{rowData.material}}</td>
                 <td class="ptable-cell" style="text-align:left;width:120px;">{{rowData.materialdescription}}</td>
-                <td class="ptable-cell" style="text-align:right;width:100px;">{{rowData.quotationqty}}</td>
+                <td class="ptable-cell" style="text-align:right;width:100px;">{{rowData.materialqty}}</td>
                 <td class="ptable-cell" style="text-align:right;width:100px;">{{rowData.receivedqty}}</td>
                 <td class="ptable-cell" style="text-align:right;width:100px;">{{rowData.confirmqty}}</td>
                 <td class="ptable-cell" style="text-align:right;width:100px;">{{rowData.returnqty}}</td>
-                <td class="ptable-cell" style="text-align:right;width:100px;">{{rowData.quotationqty-rowData.confirmqty}}</td>
+                <td class="ptable-cell" style="text-align:right;width:100px;">{{rowData.materialqty-rowData.confirmqty}}</td>
                 <td class="ptable-cell" style="text-align:left;width:150px;">
                   {{rowData.itemlocation}}&nbsp;
                   <!--<div style="text-align:center">-->

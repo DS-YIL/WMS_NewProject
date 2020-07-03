@@ -7,6 +7,7 @@ import { NgxSpinnerService } from "ngx-spinner";
 import { PoDetails, BarcodeModel, inwardModel } from 'src/app/Models/WMS.Model';
 import { MessageService } from 'primeng/api';
 import { first } from 'rxjs/operators';
+import { isNullOrUndefined } from 'util';
 
 @Component({
   selector: 'app-StoreClerk',
@@ -38,22 +39,34 @@ export class StoreClerkComponent implements OnInit {
     this.inwardModel.receiveddate = new Date();
     this.inwardModel.qcdate = new Date();
   }
-  checkreceivedqty(entredvalue, maxvalue) {
+  checkreceivedqty(entredvalue,confirmedqty,returnedqty, maxvalue) {
     if (entredvalue > maxvalue) {
-      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please enter received quantity less than PONo quantity' });
+      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please enter received quantity less than material quantity' });
       (<HTMLInputElement>document.getElementById("receivedqty")).value = "";
 
     }
+    if (entredvalue != (confirmedqty + returnedqty) && confirmedqty && returnedqty) {
+      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'received quantity must be equals to sum of return and accepted quantity.' });
+      (<HTMLInputElement>document.getElementById("receivedqty")).value = "";
+    }
   }
-  checkconfirmqty(entredvalue, maxvalue) {
+  checkconfirmqty(entredvalue, receivedqty, returnedqty, maxvalue) {
     if (entredvalue > maxvalue) {
-      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please enter confirm quantity less than PONo quantity' });
+      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please enter confirm quantity less than material quantity' });
+      (<HTMLInputElement>document.getElementById("confirmqty")).value = "";
+    }
+    if (entredvalue != (receivedqty - returnedqty) && receivedqty && returnedqty) {
+      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'sum of return and accepted quantity must be equal to received qty' });
       (<HTMLInputElement>document.getElementById("confirmqty")).value = "";
     }
   }
-  checkreturnqty(entredvalue, maxvalue) {
+  checkreturnqty(entredvalue,receivedqty,acceptedqty, maxvalue) {
     if (entredvalue > maxvalue) {
-      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please enter return quantity less than PONo quantity' });
+      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please enter return quantity less than material quantity' });
+      (<HTMLInputElement>document.getElementById("returnqty")).value = "";
+    }
+    if (entredvalue != (receivedqty - acceptedqty) && receivedqty && acceptedqty) {
+      this.messageService.add({ severity: 'error', summary: 'Error Message', detail:  'sum of return and accepted quantity must be equal to received qty' });
       (<HTMLInputElement>document.getElementById("returnqty")).value = "";
     }
   }
@@ -111,7 +124,7 @@ export class StoreClerkComponent implements OnInit {
   }
 
   quanityChange() {
-    this.inwardModel.pendingqty = parseInt(this.PoDetails.quotationqty) - this.inwardModel.confirmqty;
+    this.inwardModel.pendingqty = parseInt(this.PoDetails.materialqty) - this.inwardModel.confirmqty;
   }
   onsubmitGRN() {
     if (this.podetailsList.length > 0 && this.podetailsList[0].receivedqty>'0') {
@@ -119,7 +132,7 @@ export class StoreClerkComponent implements OnInit {
       this.spinner.show();
       // this.onVerifyDetails(this.podetailsList);
       this.inwardModel.pono = this.PoDetails.pono;
-      this.inwardModel.receivedqty = this.PoDetails.quotationqty;
+      this.inwardModel.receivedqty = this.PoDetails.materialqty;
       this.inwardModel.receivedby = this.inwardModel.qcby = this.employee.employeeno;
       this.podetailsList.forEach(item => {
         item.receivedby = this.employee.employeeno;
