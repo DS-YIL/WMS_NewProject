@@ -209,11 +209,11 @@ namespace WMS.Common {
         
         /// <summary>
         ///   Looks up a localized string similar to select sum(iss.issuedqty) as issuedqty,op.jobname,req.requestforissueid,emp.&quot;name&quot;,req.requesteddate,sk.materialid,sk.pono,req.requestedquantity,sk.availableqty,req.requestid from wms.wms_stock sk 
-        ///      left join wms.openpolistview op on op.pono=sk.pono
+        ///      inner join wms.openpolistview op on op.pono=sk.pono
         ///       inner join wms.wms_materialrequest req on req.materialid=sk.materialid
-        ///      left join wms.wms_materialissue iss on iss.itemid=sk.itemid
+        ///      inner join wms.wms_materialissue iss on iss.itemid=sk.itemid
         ///      inner join wms.employee emp on emp.employeeno=req.requesterid
-        /// where requestid=#requestid and req.dele [rest of string was truncated]&quot;;.
+        /// where requestid=#requestid and req.de [rest of string was truncated]&quot;;.
         /// </summary>
         public static string GetdetailsByrequestid {
             get {
@@ -329,11 +329,11 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select req.requestid,req.requesteddate,req.requesterid,po.projectname,emp.&quot;name&quot; 
+        ///   Looks up a localized string similar to select req.pono,req.requestid,req.requesteddate,req.requesterid,po.projectname,emp.&quot;name&quot; 
         /// from wms.wms_materialrequest req left join wms.openpolistview po on po.pono=req.pono 
         ///left join wms.employee emp on req.requesterid=emp.employeeno 
         ///--where req.approverid=&apos;#approverid&apos;
-        ///group by req.requestid,req.requesteddate,req.requesterid,po.projectname,emp.&quot;name&quot; order by req.requestid desc.
+        ///group by req.requestid,req.requesteddate,req.requesterid,po.projectname,emp.&quot;name&quot;,req.pono  order by req.requestid desc.
         /// </summary>
         public static string GetListForMaterialRequestByapproverid {
             get {

@@ -1138,7 +1138,7 @@ namespace WMS.DAL
 		/// </summary>
 		/// <param name="requestid"></param>
 		/// <returns></returns>
-		public async Task<IEnumerable<IssueRequestModel>> GetmaterialdetailsByrequestid(string requestid)
+		public async Task<IEnumerable<IssueRequestModel>> GetmaterialdetailsByrequestid(string requestid,string pono)
 		{
 
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -1146,7 +1146,7 @@ namespace WMS.DAL
 
 				try
 				{
-					string query = WMSResource.GetdetailsByrequestid.Replace("#requestid", requestid);
+					string query = WMSResource.GetdetailsByrequestid.Replace("#requestid", requestid).Replace("#pono",pono);
 
 					await pgsql.OpenAsync();
 					return await pgsql.QueryAsync<IssueRequestModel>(

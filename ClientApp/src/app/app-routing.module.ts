@@ -56,7 +56,7 @@ const routes: Routes = [{
     { path: "MaterialRequest", component: MaterialRequestComponent, canActivate: [AuthGuard] },
     { path: 'MaterialRequest/:pono', component: MaterialRequestComponent, canActivate: [AuthGuard] },
     { path: "MaterialIssueDashboard", component: MaterialIssueDashBoardComponent, canActivate: [AuthGuard] },
-    { path: "MaterialIssue/:requestid", component: MaterialIssueComponent, canActivate: [AuthGuard] },
+    { path: "MaterialIssue/:requestid/:pono", component: MaterialIssueComponent, canActivate: [AuthGuard] },
     { path: "GatePass", component: GatePassComponent, canActivate: [AuthGuard] },
     { path: "GatePassApprover/:gatepassid", component: GatePassApproverComponent, canActivate: [AuthGuard] },
     { path: "GatePassPrint/:gatepassid", component: GatePassPrintComponent, canActivate: [AuthGuard] },

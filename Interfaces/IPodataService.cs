@@ -38,7 +38,7 @@ namespace WMS.Interfaces
         int acknowledgeMaterialReceived(List<IssueRequestModel> dataobj);
         Task<IEnumerable<IssueRequestModel>> GetMaterialissueList(string requesterid);
         Task<IEnumerable<IssueRequestModel>> GetMaterialissueListforapprover(string approverid);
-        Task<IEnumerable<IssueRequestModel>> GetmaterialdetailsByrequestid(string requestid);
+        Task<IEnumerable<IssueRequestModel>> GetmaterialdetailsByrequestid(string requestid,string pono);
         Task<IEnumerable<IssueRequestModel>> GetPonodetails(string pono);
         int updaterequestedqty(List<IssueRequestModel> dataobj);
         int ApproveMaterialissue(List<IssueRequestModel> dataobj);

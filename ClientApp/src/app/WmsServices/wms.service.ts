@@ -137,8 +137,8 @@ export class wmsService {
   GetreleasedMaterilalist(loginid: string): Observable<any> {
     return this.http.get<any>(this.url + 'POData/GetreleasedMaterilalist', this.httpOptions);
   }
-  getmaterialIssueListbyrequestid(requestid: string): Observable<any> {
-    return this.http.get<any>(this.url + 'POData/getmaterialIssueListbyrequestid?requestid=' + requestid + '', this.httpOptions);
+  getmaterialIssueListbyrequestid(requestid: string,pono:string): Observable<any> {
+    return this.http.get<any>(this.url + 'POData/getmaterialIssueListbyrequestid?requestid=' + requestid + '&pono='+pono, this.httpOptions);
   }
   getmaterialIssueListbyreserveid(reserveid: string): Observable<any> {
     return this.http.get<any>(this.url + 'POData/Getmaterialdetailsbyreserveid?reserveid=' + reserveid + '', this.httpOptions);

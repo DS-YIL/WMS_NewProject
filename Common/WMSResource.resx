@@ -123,19 +123,19 @@
   </data>
   <data name="GetdetailsByrequestid" xml:space="preserve">
     <value>select sum(iss.issuedqty) as issuedqty,op.jobname,req.requestforissueid,emp."name",req.requesteddate,sk.materialid,sk.pono,req.requestedquantity,sk.availableqty,req.requestid from wms.wms_stock sk 
-      left join wms.openpolistview op on op.pono=sk.pono
+      inner join wms.openpolistview op on op.pono=sk.pono
        inner join wms.wms_materialrequest req on req.materialid=sk.materialid
-      left join wms.wms_materialissue iss on iss.itemid=sk.itemid
+      inner join wms.wms_materialissue iss on iss.itemid=sk.itemid
       inner join wms.employee emp on emp.employeeno=req.requesterid
- where requestid=#requestid and req.deleteflag=false and sk.availableqty!=0
+ where requestid=#requestid and req.deleteflag=false and sk.availableqty!=0 and sk.pono='#pono' 
  group by req.requestforissueid,sk.materialid,sk.pono,req.requestedquantity,sk.availableqty,req.requestid,emp."name",req.requesteddate,op.jobname</value>
   </data>
   <data name="GetListForMaterialRequestByapproverid" xml:space="preserve">
-    <value>select req.requestid,req.requesteddate,req.requesterid,po.projectname,emp."name" 
+    <value>select req.pono,req.requestid,req.requesteddate,req.requesterid,po.projectname,emp."name" 
  from wms.wms_materialrequest req left join wms.openpolistview po on po.pono=req.pono 
 left join wms.employee emp on req.requesterid=emp.employeeno 
 --where req.approverid='#approverid'
-group by req.requestid,req.requesteddate,req.requesterid,po.projectname,emp."name" order by req.requestid desc</value>
+group by req.requestid,req.requesteddate,req.requesterid,po.projectname,emp."name",req.pono  order by req.requestid desc</value>
   </data>
   <data name="GetListForMaterialRequestByrequesterid" xml:space="preserve">
     <value>select * from wms.wms_materialrequest where requesterid='#requesterid'</value>

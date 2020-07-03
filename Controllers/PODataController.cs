@@ -156,9 +156,9 @@ namespace WMS.Controllers
 			return await this._poService.GetMaterialissueListforapprover(approverid);
 		}
 		[HttpGet("getmaterialIssueListbyrequestid")]
-		public async Task<IEnumerable<IssueRequestModel>> getmaterialrequestbyrequestid(string requestid)
+		public async Task<IEnumerable<IssueRequestModel>> getmaterialrequestbyrequestid(string requestid,string pono)
 		{
-			return await this._poService.GetmaterialdetailsByrequestid(requestid);
+			return await this._poService.GetmaterialdetailsByrequestid(requestid,pono);
 		}
 
 		[HttpGet("getponodetailsBypono")]

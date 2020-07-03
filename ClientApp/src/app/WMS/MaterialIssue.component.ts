@@ -33,6 +33,7 @@ export class MaterialIssueComponent implements OnInit {
   public displayItemRequestDialog; RequestDetailsSubmitted: boolean = false;
   public materialRequestDetails: materialRequestDetails;
   public requestId: string;
+  public pono: string;
   public Oldestdata: FIFOValues;
   public itemlocationData: Array<any> = [];
   public showavailableqtyList: boolean = false;
@@ -49,6 +50,9 @@ export class MaterialIssueComponent implements OnInit {
     this.route.params.subscribe(params => {
       if (params["requestid"]) {
         this.requestId = params["requestid"];
+      }
+      if (params["pono"]) {
+        this.pono = params["pono"];
       }
     });
 
@@ -132,7 +136,7 @@ export class MaterialIssueComponent implements OnInit {
     }
   }
   getmaterialIssueListbyrequestid() {
-    this.wmsService.getmaterialIssueListbyrequestid(this.requestId).subscribe(data => {
+    this.wmsService.getmaterialIssueListbyrequestid(this.requestId,this.pono).subscribe(data => {
       this.materialissueList = data;
       if (this.materialissueList.length != 0)
         this.showavailableqtyList = true;
