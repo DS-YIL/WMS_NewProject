@@ -99,8 +99,8 @@ export class wmsService {
   }
 
   //Get material request, isuued and approved details
-  getMaterialRequestDetails(materialid: string): Observable<any> {
-    return this.http.get<any>(this.url + 'POData/getReqMatdetailsformaterialid?materialid=' + materialid, this.httpOptions);
+  getMaterialRequestDetails(materialid: string,gnrno:string): Observable<any> {
+    return this.http.get<any>(this.url + 'POData/getReqMatdetailsformaterialid?materialid=' + materialid + '&grnnumber=' + gnrno,this.httpOptions);
   }
 
   insertitems(inwardModel: inwardModel[]): Observable<any> {

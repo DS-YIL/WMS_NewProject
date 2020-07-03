@@ -34,6 +34,9 @@
           <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'requesterid', 'contains')"></th>
           <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'itemreceiverid', 'contains')"></th>
           <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'approverid', 'contains')"></th>
+          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'approverid', 'contains')"></th>
+          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'approverid', 'contains')"></th>
+          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'approverid', 'contains')"></th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
@@ -42,9 +45,13 @@
             {{ri+1}}
           </td>
           <td class="ptable-cell" style="text-align:right">{{rowData.quantity}}</td>
-          <td class="ptable-cell" style="text-align:left">{{rowData.requesterid}}</td>
-          <td class="ptable-cell" style="text-align:left">{{rowData.itemreceiverid}}</td>
-          <td class="ptable-cell" style="text-align:left">{{rowData.approverid}}</td>
+          <td class="ptable-cell" style="text-align:left">{{rowData.type}}</td>
+          <td class="ptable-cell" style="text-align:left">{{rowData.requestername}}</td>
+          <td class="ptable-cell" style="text-align:left">{{rowData.issuedon| date :  constants.dateFormat}}</td>
+          <td class="ptable-cell" style="text-align:left">{{rowData.details}}</td>
+          <td class="ptable-cell" style="text-align:left">{{rowData.approvername}}</td>
+          <td class="ptable-cell" style="text-align:left">{{rowData.acknowledge}}</td>
+        
         </tr>
       </ng-template>
       <ng-template pTemplate="footer">
@@ -53,8 +60,11 @@
           <td style="text-align:right;color: #17a2b8;">{{QtyTotal}}</td>
           <td></td>
           <td></td>
-          <td ></td>
-         
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+
         </tr>
 
       </ng-template>

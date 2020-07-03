@@ -65,9 +65,9 @@ namespace WMS.Controllers
 
 		//Get material request details
 		[HttpGet("getReqMatdetailsformaterialid")]
-		public async Task<IEnumerable<ReqMatDetails>> getReqMatdetails(string materialid)
+		public async Task<IEnumerable<ReqMatDetails>> getReqMatdetails(string materialid,string grnnumber)
 		{
-			return await this._poService.getReqMatdetails(materialid);
+			return await this._poService.getReqMatdetails(materialid, grnnumber);
 		}
 
 		[HttpPost("insertbarcodeandinvoiceinfo")]

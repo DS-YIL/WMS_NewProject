@@ -159,6 +159,7 @@ namespace WMS.Models
 		public string qtyavailable { get; set; }
 		public string materialid { get;set; } 
 		public string qtytotal { get; set; }
+		public  int confirmqty { get; set; }
 	}
 
 	//Location Details
@@ -172,12 +173,22 @@ namespace WMS.Models
 	public class ReqMatDetails
 	{
 		public string materialid { get; set; }
+		public string gatepasstype { get; set; }
+		public string jobname { get; set; }
+		public int itemid { get; set; }
 		public int quantity { get; set; }
 		public string requesterid { get; set; }
 		public string itemreceiverid { get; set; }
 		public string approverid { get; set; }
 		public string requestername { get; set; }
 		public string approvername { get; set; }
+		public string type { get; set; }
+
+		public string details { get; set; }
+		public string acknowledge { get; set; }
+		public DateTime issuedon { get; set; }
+
+
 	}
 	public class DynamicSearchResult
 	{

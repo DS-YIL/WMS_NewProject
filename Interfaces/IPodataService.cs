@@ -21,7 +21,7 @@ namespace WMS.Interfaces
         Task<IEnumerable<LocationDetails>> getlocationdetails(string materialid);
 
         //Get material request and issued details
-        Task<IEnumerable<ReqMatDetails>> getReqMatdetails(string materialid);
+        Task<IEnumerable<ReqMatDetails>> getReqMatdetails(string materialid,string grnnumber);
         OpenPoModel CheckPoexists(string PONO);
         int InsertBarcodeInfo(BarcodeModel dataobj);
         //int insertInvoicedetails(iwardmasterModel obj);
