@@ -222,7 +222,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select distinct openpo.projectname,inwa.invoiceno,inwa.grnnumber,inwa.pono,openpo.material, (inw.confirmqty+inw.returnqty) as receivedqty,openpo.materialdescription, openpo.quotationqty,inw.receivedqty,inw.confirmqty,inw.returnqty from wms.wms_securityinward inwa  
+        ///   Looks up a localized string similar to select distinct openpo.projectname,inwa.invoiceno,inwa.grnnumber,inwa.pono,openpo.material,openpo.materialqty,(inw.confirmqty+inw.returnqty) as receivedqty,openpo.materialdescription, openpo.quotationqty,inw.receivedqty,inw.confirmqty,inw.returnqty from wms.wms_securityinward inwa  
         /// left join wms.wms_storeinward inw on inw.inwmasterid=inwa.inwmasterid
         /// inner join wms.openpolistview openpo on openpo.pono=inwa.pono
         ///  where  inwa.pono=&apos;#pono&apos;  and inwa.invoiceno= &apos;#invoiceno&apos;  order by inwa.grnnumber desc.
@@ -764,11 +764,11 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select distinct stocks.itemlocation,stocks.itemid,inw.grnnumber,inw.pono,inw.invoiceno,openpo.projectname,openpo.material,openpo.materialdescription,openpo.quotationqty,inwa.receivedqty,inwa.confirmqty,inwa.returnqty from wms.wms_securityinward inw
+        ///   Looks up a localized string similar to select distinct stocks.itemlocation,stocks.itemid,inw.grnnumber,inw.pono,inw.invoiceno,openpo.projectname,openpo.materialqty,openpo.material,openpo.materialdescription,openpo.quotationqty,inwa.receivedqty,inwa.confirmqty,inwa.returnqty from wms.wms_securityinward inw
         ///left join wms.wms_storeinward inwa on inw.inwmasterid=inwa.inwmasterid
         ///left join wms.wms_stock stocks on  stocks.inwmasterid=inwa.inwmasterid
         ///inner join wms.openpolistview openpo on openpo.pono=inw.pono
-        ///where inw.grnnumber=&apos;#grnnumber&apos; limit 1.
+        ///where inw.grnnumber=&apos;#grnnumber&apos; limi [rest of string was truncated]&quot;;.
         /// </summary>
         public static string queryforitemdetails {
             get {
