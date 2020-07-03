@@ -181,9 +181,9 @@ export class MaterialIssueComponent implements OnInit {
         this.wmsService.approvematerialrequest(this.materialissueList).subscribe(data => {
           this.spinner.hide();
           if (data)
-            this.messageService.add({ severity: 'success', summary: 'sucee Message', detail: 'Status updated' });
+            this.messageService.add({ severity: 'success', summary: 'sucee Message', detail: 'Material issued.' });
           else
-            this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Update Failed' });
+            this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Material issue failed.' });
 
         });
       }

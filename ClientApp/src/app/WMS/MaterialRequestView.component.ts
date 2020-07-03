@@ -91,9 +91,9 @@ export class MaterialRequestViewComponent implements OnInit {
       this.wmsService.ackmaterialreceivedfroreserved(this.requestList).subscribe(data => {
         this.spinner.hide();
         if (data)
-          this.messageService.add({ severity: 'sucess', summary: 'sucee Message', detail: 'Status updated' });
+          this.messageService.add({ severity: 'sucess', summary: 'sucee Message', detail: 'acknowledged' });
         else
-          this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Update Failed' });
+          this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'acknowledge failed' });
       });
     }
   }

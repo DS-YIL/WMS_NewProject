@@ -42,7 +42,7 @@
           Invoice No : <span class="labeltext">{{podetailsList[0].invoiceno}}</span>
         </div>
         <div class="col-lg-3 col-md-3 labelheading" style="font-weight:600;font-size:14px;color:darkblue;" *ngIf="podetailsList.length>0">
-          <span *ngIf="grnnumber">GRN No : </span><span class="labeltext">{{grnnumber}}</span>
+          <span *ngIf="grnnumber">WMS GRN No : </span><span class="labeltext">{{grnnumber}}</span>
         </div>
 
       </div>
@@ -61,7 +61,7 @@
               <th style="text-align:center">Project Name</th>
               <th style="text-align:center;width:10%;">Material</th>
               <th style="text-align:center;">Material Description</th>
-              <th style="text-align:center;width:10%;">PO Qty</th>
+              <th style="text-align:center;width:10%;">Material Qty</th>
               <th style="text-align:center;width:10%;">Received Qty</th>
               <th style="text-align: center;width:10%;">Accepted Qty</th>
               <th style="text-align:center;width:10%;">Returned Qty</th>
@@ -119,7 +119,7 @@
 
 
     </div>
-    <div class="card-footer">
+    <div class="card-footer" *ngIf="podetailsList.length">
       <button type="button" class="btn btn-success" style="margin-left:45%" [disabled]="grnnumber" (click)="onsubmitGRN()">Post GRN </button>
     </div>
   </div>

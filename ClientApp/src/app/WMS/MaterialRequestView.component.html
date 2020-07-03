@@ -1,12 +1,12 @@
 
-<div class="card" style="    min-height: 500px;border-radius: 10px;box-shadow: 5px 10px #888888;">
+<div class="card" style="max-height:100vh;border-radius: 10px;box-shadow: 5px 10px #888888;">
   <div class="card-header text-center cardheadertext">
     <span>
       <i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;Requested Material List
     </span>
   </div>
-  <div class="card-body" style="overflow-y:scroll">
-    <p-table #dt [value]="requestList">
+  <div class="card-body" style="overflow-y:visible;padding:0px;">
+    <p-table #dt [value]="requestList" [style]="{'width':'100%'}" [scrollable]="true"  scrollHeight="53vh">
       <ng-template pTemplate="header">
         <tr class="mprltbldata">
           <th style="text-align:center;width:70px">Sl.No.</th>
@@ -14,8 +14,8 @@
           <th style="text-align:center;width:200px">PO No</th>
           <th style="text-align:center">Project Name</th>
           <th style="text-align:center;width:150px">Requested On</th>
-          <th style="text-align:center;width:150px">PM Acknowlegment</th>
-          <th style="text-align:center;width:150px">Status</th>
+          <th style="text-align:center;width:200px">PM Acknowlegment</th>
+          <th style="text-align:center;width:100px">Status</th>
           <!--<th style="text-align:center">Requested Quantity</th>
         <th style="text-align:center">Received Quantity</th>
         <th style="text-align:center;width:200px">Acknowledge</th>-->
@@ -35,14 +35,14 @@
       </ng-template>
       <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
         <tr>
-          <td class="ptable-cell" style="text-align:right">{{ri+1}}</td>
-          <td class="ptable-cell" style="text-align:center;width:100%;">
+          <td class="ptable-cell" style="text-align:right;width:70px;">{{ri+1}}</td>
+          <td class="ptable-cell" style="text-align:center;width:100px;">
             <button type="button" class="btn btn-link" (click)="showmaterialdetails(rowData.requestid);" style="padding-left:0px;">{{rowData.requestid}}</button>
           </td>
-          <td class="ptable-cell" style="text-align:center">{{rowData.pono}}</td>
+          <td class="ptable-cell" style="text-align:center;width:200px;">{{rowData.pono}}</td>
           <td class="ptable-cell" style="text-align:left">{{rowData.projectname}}</td>
-          <td class="ptable-cell" style="text-align:center">{{rowData.requesteddate| date :  constants.dateFormat}}</td>
-          <td class="ptable-cell">
+          <td class="ptable-cell" style="text-align:center;width:150px;">{{rowData.requesteddate| date :  constants.dateFormat}}</td>
+          <td class="ptable-cell" style="width:200px;">
             <div *ngIf="rowData.approvedstatus=='Approved'" class="form-inline">
               <p-checkbox [(ngModel)]="rowData.status" binary="true" (click)="ackStatusChanges()"></p-checkbox> &nbsp;&nbsp;
               <textarea type="text" style="width:140px" class="form-control" [(ngModel)]="rowData.ackremarks"></textarea>
@@ -55,7 +55,7 @@
           <!--<input *ngIf="rowData.approvedstatus!='approved'" pInputText type="number" class="form-control" [(ngModel)]="rowData.requestedquantity" (change)="reqQtyChange(rowData)">-->
           <!--</td>
         <td class="ptable-cell" style="text-align:right">{{rowData.requestedquantity}}</td>-->
-        <td class="ptable-cell" style="text-align:center">
+        <td class="ptable-cell" style="text-align:center;width:100px;">
           {{rowData.approvedstatus}}
           <!--<div *ngIf="rowData.approvedstatus=='approved'" class="form-inline">
 
@@ -69,7 +69,7 @@
     </p-table>
     <br />
     <br />
-    <div *ngIf="showAck" style="text-align: center;margin-top:5px;">
+    <div *ngIf="showAck" style="text-align: center;margin-top:0px;padding-top:0px;">
       <button type="button" class="btn btn-primary" [disabled]="btnDisable" (click)="materialAckUpdate()">Send Acknowledge</button>
     </div>
     <div style="height: 5px; overflow-y: scroll">

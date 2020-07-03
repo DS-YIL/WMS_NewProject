@@ -71,11 +71,11 @@
       <p-dialog header="Item Location" [(visible)]="AddDialog" [contentStyle]="{'overflow-y': 'auto', 'overflow-x': 'hidden', 'max-height': '80vh','min-height':'250px'}" showEffect="fade" [modal]="true" [responsive]="true" [style]="{width: '1024px'}">
         <div *ngIf="showdialog">
           <div class="row  pl-0">
-            <div class="col-lg-4 col-md-4 col-sm-4 pt-2">
-              <label>Material Id :</label>&nbsp;<span><label>{{itemlocationData[0].material}}</label></span>
+            <div class="col-lg-4 col-md-4 col-sm-4 pt-2 labelheading">
+              <label>Material Id :</label>&nbsp;<span><label class="labeltext">{{itemlocationData[0].material}}</label></span>
             </div>
-            <div class="col-lg-6 col-md-6 col-sm-6 pt-2">
-              <label>Material desc :</label>&nbsp;<span><label>{{itemlocationData[0].materialdescription}}</label></span>
+            <div class="col-lg-6 col-md-6 col-sm-6 pt-2 labelheading">
+              <label>Material desc :</label>&nbsp;<span><label class="labeltext">{{itemlocationData[0].materialdescription}}</label></span>
             </div>
           </div>
 
@@ -98,11 +98,11 @@
                 {{ri+1}}
               </td>
               <td class="ptable-cell" style="text-align:center">{{rowData.itemlocation}}</td>
-              <td class="ptable-cell" style="text-align:left">{{rowData.availableqty}}</td>
-              <td class="ptable-cell" style="text-align:left">
-                <input id="{{ri+1}}" pInputText type="number" style="text-align:center" class="form-control" (change)="checkissueqty($event,rowData.issueqty,rowData.availableqty,rowData.materialid,rowData.createddate);" [(ngModel)]="rowData.issuedquantity">
+              <td class="ptable-cell" style="text-align:right">{{rowData.availableqty}}</td>
+              <td class="ptable-cell" style="text-align:right">
+                <input id="{{ri+1}}" pInputText type="number" style="text-align:right" class="form-control" (change)="checkissueqty($event,rowData.issueqty,rowData.availableqty,rowData.materialid,rowData.createddate);" [(ngModel)]="rowData.issuedquantity">
               </td>
-              <td class="ptable-cell" style="text-align:left">{{rowData.createddate | date :  constants.dateFormat}}</td>
+              <td class="ptable-cell" style="text-align:center">{{rowData.createddate | date :  constants.dateFormat}}</td>
             </tr>
           </ng-template>
 

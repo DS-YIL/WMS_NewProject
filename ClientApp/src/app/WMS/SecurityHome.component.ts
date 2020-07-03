@@ -132,12 +132,17 @@ export class SecurityHomeComponent implements OnInit {
         }
         else {
           this.PoDetails = new PoDetails();
-          this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'No data for this PoNo' });
+          this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'No data for this PO No' });
+          this.showDetails = false;
         }
       })
     }
     else
-      this.messageService.add({ severity: 'error', summary: 'Validation', detail: 'Enter PoNo' });
+      this.messageService.add({ severity: 'error', summary: 'Validation', detail: 'Enter PO No' });
+  }
+
+  printbarcode() {
+
   }
 
   //update invoice no
@@ -168,6 +173,6 @@ export class SecurityHomeComponent implements OnInit {
       });
     }
     else
-      this.messageService.add({ severity: 'error', summary: 'Validation', detail: 'Invoice number mandatory' });
+      this.messageService.add({ severity: 'error', summary: 'Validation', detail: 'Please enter invoce no' });
   }
 }

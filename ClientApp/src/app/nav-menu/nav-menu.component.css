@@ -18,7 +18,8 @@ html {
   box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
 }
 .navclass {
-  background-color: #1976d2 !important;
+  /*background: linear-gradient(to bottom, #0099cc 0%, #9900ff 100%);*/
+  background: linear-gradient(to bottom, #3366ff 0%, #669999 100%);
 }
 
 .navtext {
