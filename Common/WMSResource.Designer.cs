@@ -372,7 +372,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select max(openpo.projectname)as projectname,max(sk.itemid)as itemid,sk.materialid as material,sum(sk.availableqty)as availableqty,max(openpo.materialdescription)as materialdescription,max(openpo.quotationqty)as quotationqty,max(sk.pono) as pono from   wms.wms_stock  sk left join wms.openpolistview openpo on openpo.pono = sk.pono where sk.availableqty!=0 .
+        ///   Looks up a localized string similar to select max(openpo.projectname)as projectname,max(sk.itemid)as itemid,sk.materialid as material,sum(sk.availableqty)as availableqty,max(openpo.materialdescription)as materialdescription,max(openpo.quotationqty)as quotationqty,max(openpo.materialqty )as materialqty,max(sk.pono) as pono from   wms.wms_stock  sk left join wms.openpolistview openpo on openpo.pono = sk.pono where sk.availableqty!=0 .
         /// </summary>
         public static string getmaterialdetailfprrequest {
             get {
@@ -742,7 +742,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select  max(track.enteredon) as enteredon,max(op.projectcode)as projectcode,op.pono,min(track.status)as status,max(op.vendorname)as vendorname,max(op.jobname) as jobname,max(op.quotationqty)as quotationqty 
+        ///   Looks up a localized string similar to select  max(track.enteredon) as enteredon,max(op.projectcode)as projectcode,op.pono,min(track.status)as status,max(op.vendorname)as vendorname,max(op.jobname) as jobname,max(op.quotationqty)as quotationqty ,max(op.materialqty) as materialqty
         ///from wms.openpolistview op
         ///      left join wms.wms_trackstatus track on track.pono=op.pono
         ///      where projectmanager=&apos;#projectmanager&apos; 
