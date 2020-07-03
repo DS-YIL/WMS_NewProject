@@ -227,70 +227,60 @@ namespace WMS.DAL
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
-
-
-
 				try
 				{
-					//string query = WMSResource.getMaterialDetails.Replace("#grn", grnNo);// + pono+"'";//li
-					//var materialList= await pgsql.QueryAsync<MaterialDetails>(
-					//   query, null, commandType: CommandType.Text);
-
-
-
 					List<MaterialDetails> objMaterial = new List<MaterialDetails>();
-					MaterialDetails result = new MaterialDetails();
+					MaterialDetails result = null;
 					string getMatQuery = WMSResource.getmatforgrnno.Replace("#grn", grnNo);
 					var MaterialList = await pgsql.QueryAsync<MaterialDetails>(
 					   getMatQuery, null, commandType: CommandType.Text);
 
-
-
 					if (MaterialList != null)
 					{
+						int totalissed = 0;
 						foreach (MaterialDetails mtData in MaterialList)
 						{
+							result = new MaterialDetails();
 							result.materialid = mtData.materialid;
 							result.materialdescription = mtData.materialdescription;
 							result.availableqty = mtData.availableqty;
 							result.grnnumber = mtData.grnnumber;
-
-
-
+							result.confirmqty = mtData.confirmqty;
 							//To get issued qty get data from material issue, material reserve and gatepassmaterial table
-
-
-
-							string matIssuedQuery = "select issuedqty from wms.wms_materialissue where itemid =" + mtData.itemid;
-							var issuedQty = await pgsql.QueryAsync<int>(
-											matIssuedQuery, null, commandType: CommandType.Text);
-
-
-
-							//Get material reserved qty
-							string matReserveQuery = "select sum(reservedqty) from wms.wms_materialreserve where itemid =" + mtData.itemid;
-							var reservedQty = await pgsql.QueryFirstOrDefaultAsync<int>(
-											matReserveQuery, null, commandType: CommandType.Text);
-
-
 							int issuedqty = 0;
+							int reservedqty = 0;
+							ReportModel modelobj = new ReportModel();
+							string matIssuedQuery = "select sum(issuedqty)as issuedqty from wms.wms_materialissue where itemid =" + mtData.itemid;
+							modelobj =  pgsql.QuerySingleOrDefault<ReportModel>(
+											matIssuedQuery, null, commandType: CommandType.Text);
+							if(modelobj!=null)
+							{
+								issuedqty = modelobj.issuedqty;
+							}
+							//Get material reserved qty
+							ReserveMaterialModel modeldataobj = new ReserveMaterialModel();
+							string matReserveQuery = "select sum(reservedqty)as reservedqty from wms.wms_materialreserve where itemid =" + mtData.itemid;
+							modeldataobj =  pgsql.QuerySingleOrDefault<ReserveMaterialModel>(
+											matReserveQuery, null, commandType: CommandType.Text);
+							if (modeldataobj != null)
+							{
+								reservedqty = modeldataobj.reservedqty;
+							}
+							int gatepassissuedqty = 0;
 
 							//get material in gatepass
 							gatepassModel obj = new gatepassModel();
-							string matgateQuery = "select sum(gtmat.quantity)as quantity from wms.wms_gatepassmaterial gtmat left join wms.wms_gatepass gp on gp.gatepassid = gtmat.gatepassid where materialid = '" + mtData.materialid + "' and gp.approvedon != null";
+							string matgateQuery = "select sum(gtmat.quantity)as quantity from wms.wms_gatepassmaterial gtmat left join wms.wms_gatepass gp on gp.gatepassid = gtmat.gatepassid where materialid = '" + mtData.materialid + "' and gp.approvedon != null and gp.approverstatus!=null";
 							//IssueRequestModel obj = new IssueRequestModel();
 							//pgsql.Open();
 							
 							obj = pgsql.QuerySingle<gatepassModel>(
 							   matgateQuery, null, commandType: CommandType.Text);
-							
-							issuedqty=obj.quantity;
-							result.issued = Convert.ToInt32(issuedQty) + Convert.ToInt32(reservedQty) + issuedqty;
+
+							gatepassissuedqty = obj.quantity;
+							 totalissed = Convert.ToInt32(issuedqty) + Convert.ToInt32(reservedqty) + gatepassissuedqty;
+							result.issued = totalissed;
 							objMaterial.Add(result);
-
-
-
-
 						}
 					}
 
@@ -392,17 +382,58 @@ namespace WMS.DAL
 
 
 		//Get material requested, acknowledged and issued details
-		public async Task<IEnumerable<ReqMatDetails>> getReqMatdetails(string materialid)
+		public async Task<IEnumerable<ReqMatDetails>> getReqMatdetails(string materialid,string grnnumber)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
-
+				ReqMatDetails obj = new ReqMatDetails();
+				ReqMatDetails objs = null;
+				List<ReqMatDetails> listobj = new List<ReqMatDetails>();
 				try
 				{
-					string query = WMSResource.getMaterialRequestDetails.Replace("#materialid", materialid);
-					return await pgsql.QueryAsync<ReqMatDetails>(
+					string query = WMSResource.getMaterialRequestDetails.Replace("#materialid", materialid).Replace("#grnnumber", grnnumber);
+					obj=  pgsql.QuerySingle<ReqMatDetails>(
 					   query, null, commandType: CommandType.Text);
-
+					string reservequery = "select max(emp.name) as requestername,max(emp1.name)  as approvedby,max(res.reservedon) as issuedon,sum(res.reservedqty) as quantity from wms.wms_materialreserve res left join wms.employee emp on res.reservedby = emp.employeeno left join wms.employee emp1 on emp1.employeeno = res.releasedby where res.itemid=" + obj.itemid;
+					var data = pgsql.QuerySingle<ReqMatDetails>(
+					   reservequery, null, commandType: CommandType.Text);
+					objs = new ReqMatDetails();
+					objs.quantity = data.quantity;
+					objs.type = "Project Reserve";
+					objs.requestername = data.requestername;
+					objs.issuedon = data.issuedon;
+					objs.details = obj.jobname;
+					objs.approvername = data.approvername;
+					listobj.Add(objs);
+					string requstedquery = "select sum(issue.issuedqty)as quantity,max(emp.name) as requestername,max(emp1.name) as approvername from wms.wms_materialissue issue inner join wms.wms_materialrequest req on req.requestforissueid = issue.requestforissueid left join wms.employee emp on emp.employeeno = req.requesterid left join wms.employee emp1 on emp1.employeeno = req.approverid  where issue.itemid=" + obj.itemid;
+					var data1 = pgsql.QuerySingle<ReqMatDetails>(
+				   requstedquery, null, commandType: CommandType.Text);
+					objs = new ReqMatDetails();
+					objs.quantity = data1.quantity;
+					objs.type = "Project Requested";
+					objs.requestername = data1.requestername;
+					objs.issuedon = data1.issuedon;
+					objs.details = obj.jobname;
+					objs.approvername = data1.approvername;
+					objs.acknowledge = data1.requestername;
+					listobj.Add(objs);
+					string gatepassquery= " select max(gate.gatepasstype)as gatepasstype,sum(mat.quantity)as quantity,max(gate.approvedon) as issuedon,max(emp.name) as requestername,max(emp1.name) as approvername from wms.wms_gatepass gate  inner join wms.wms_gatepassmaterial mat on mat.gatepassid = gate.gatepassid  left join wms.employee emp on emp.employeeno = gate.requestedby left join wms.employee emp1 on emp1.employeeno = gate.approvedby where mat.materialid = '" + obj.materialid + "' and gate.approvedon != null and gate.approverstatus!=null";
+					var data2 = pgsql.QuerySingleOrDefault<ReqMatDetails>(
+				   gatepassquery, null, commandType: CommandType.Text);
+					objs = new ReqMatDetails();
+					if (data2.quantity != 0)
+					{
+						objs.quantity = data2.quantity;
+						objs.type = data2.gatepasstype;
+						objs.requestername = data2.requestername;
+						objs.issuedon = data1.issuedon;
+						objs.details = obj.jobname;
+						objs.approvername = data1.approvername;
+						objs.acknowledge = data1.requestername;
+						listobj.Add(objs);
+					}
+					
+					return listobj;
 
 				}
 				catch (Exception Ex)

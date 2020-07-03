@@ -408,15 +408,13 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select distinct st.materialid,req.requesterid,issue.approvedby,issue.issuedqty,emp.name as requestername,
-        ///emp1.name as approvername
-        ///      from wms.wms_stock st
-        ///      left join wms.wms_materialissue issue on issue.itemid = st.itemid
-        ///      left join wms.wms_materialrequest req on req.requestforissueid  = issue .requestforissueid
-        ///     
-        ///      inner join wms.employee emp on emp.employeeno=req.requesterid
-        ///      inner join wms.employee emp1 on emp1.employeeno=issue.approvedby
-        ///      where issue.issuedqty is [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to select openpo.jobname, inw.confirmqty,sec.grnnumber,sec.pono,mtmaster.materialdescription,
+        ///sk.materialid, sk.availableqty,sk.itemid
+        /// from wms.wms_securityinward sec left join wms.wms_storeinward inw on inw.inwmasterid=sec.inwmasterid
+        ///left join wms.wms_stock sk on sec.inwmasterid = sk.inwmasterid
+        ///left  join wms.openpolistview openpo on sk.pono = openpo.pono
+        ///left join wms.&quot;MaterialMasterYGS&quot;  mtmaster on mtmaster.material= sk.materialid 
+        ///where sec.grnnumber =&apos;#grnnumber&apos; and sk.materialid=&apos;#materialid&apos;.
         /// </summary>
         public static string getMaterialRequestDetails {
             get {
@@ -425,8 +423,8 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select sec.grnnumber,sec.pono,mtmaster.materialdescription,sk.materialid, sk.availableqty,sk.itemid
-        /// from wms.wms_securityinward sec
+        ///   Looks up a localized string similar to select  inw.confirmqty,sec.grnnumber,sec.pono,mtmaster.materialdescription,sk.materialid, sk.availableqty,sk.itemid
+        /// from wms.wms_securityinward sec left join wms.wms_storeinward inw on inw.inwmasterid=sec.inwmasterid
         ///left join wms.wms_stock sk on sec.inwmasterid = sk.inwmasterid
         ///left  join wms.openpolistview openpo on sk.pono = openpo.pono
         ///left join wms.&quot;MaterialMasterYGS&quot;  mtmaster on mtmaster.material= sk.materialid
