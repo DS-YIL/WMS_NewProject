@@ -51,6 +51,9 @@ export class GatePassApproverComponent implements OnInit {
         this.btnDisable = true;
     });
   }
+  backtogatepass() {
+    this.router.navigateByUrl("WMS/GatePass");
+  }
 
   updategatepassapproverstatus() {
     this.gatepassModel.gatepassid = this.materialList[0].gatepassid;

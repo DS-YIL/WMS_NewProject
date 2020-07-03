@@ -1,67 +1,91 @@
 <div class="form-control" style="height:100%;border-radius:0px;">
   <div class="row" style="min-height:500px;">
     <div class="col-lg-4 col-md-4">
-      <div class="card" style="min-height:500px;border-radius:10px; box-shadow:5px 10px #888888;">
-        <div class="card-header cardheadertext"><i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;Security Check</div>
+      <div class="card" style="max-height:80vh;min-height: 80vh;border-radius:10px; box-shadow:5px 10px #888888;width:100%">
+        <div class="card-header cardheadertext">
+          <span class="cardheaderdata">
+            <i class="fa fa-check-circle-o"></i>&nbsp;Security Check
+          </span>
+       
+        </div>
         <div class="card-body">
+         
           <div class="row " style="margin-top:5px;">
             <div class="col-lg-12 col-md-12 col-sm-12 form-inline">
-              <label class="text-primary" style="font-weight:600">PO No: </label>&nbsp;&nbsp;
+              <label class="labelheading">PO No: </label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
               <input class="form-control" type="text" [(ngModel)]="PoDetails.pono" id="ponoid" maxlength="10">&nbsp;&nbsp;
-              <button type="button" class="btn btn-primary" label="Save" (click)="SearchPoNo()">Search</button>
+              <button type="button" class="btn btn-primary btn-sm" label="Save" (click)="SearchPoNo()">Search</button>
             </div>
           </div>
           <div *ngIf="showDetails">
-            <div class="row" style="margin-top:10px;">
-              <div class="col-lg-3 col-md-3">
-                <label class="text-primary" style="font-weight:600">Supplier : </label>
+            <div class="row " style="margin-top:5px;">
+              <div class="col-lg-2 col-md-2">
+                <label class="labelheading">Supplier:</label>
               </div>
-              <div class="col-lg-6 col-md-6">
-                <label class="form-label" style="font-weight:600">{{PoDetails.vendorname}}</label>
+              <div class="col-lg-10 col-md-10">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label class="labeltext">{{PoDetails.vendorname}}</label>
               </div>
-
+              <!--<div class="col-lg-12 col-md-12 col-sm-12 form-inline">
+                <label class="labelheading">Supplier :</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <label class="labeltext">{{PoDetails.vendorname}}</label>
+              </div>-->
             </div>
-            <div class="row" style="margin-top:10px;">
-              <div class="col-lg-3 col-md-3">
-                <label class="text-primary" style="font-weight:600">Invoice No : </label>
+            <div class="row " style="margin-top:5px;">
+              <div class="col-lg-12 col-md-12 col-sm-12 form-inline">
+                <label class="labelheading">Invoice No: </label>&nbsp;&nbsp;&nbsp;
+                <input class="form-control" type="text" [disabled]="disSaveBtn" [(ngModel)]="Poinvoicedetails.invoiceno">
               </div>
-              <div class="col-lg-6 col-md-6">
+            </div>
+            <!--<div class="row" style="margin-top:5px;">
+    <div class="col-lg-4 col-md-4 labelheading">
+      <label class="text-primary" style="float:left">Supplier : </label>
+    </div>
+    <div class="col-lg-8 col-md-8 labeltext">
+      <label class="form-label">{{PoDetails.vendorname}}</label>
+    </div>
+
+  </div>-->
+            <!--<div class="row" style="margin-top:5px;">
+              <div class="col-lg-4 col-md-4 labelheading">
+                <label class="text-primary" style="float:left">Invoice No :</label>
+              </div>
+              <div class="col-lg-8 col-md-8">
                 <input class="form-control" type="text" [disabled]="disSaveBtn" [(ngModel)]="Poinvoicedetails.invoiceno">
               </div>
 
-            </div>
+            </div>-->
             <div class="row" style="margin-top:20px;">
               <div class="col-lg-5 col-md-5">
                 <button type="button" style="float:right" [disabled]="disSaveBtn" class="btn btn-success" (click)="onsaveSecDetails()" label="Save">Save</button>
               </div>
               <div class="col-lg-6 col-md-6">
-                <button type="button" style="float:left" class="btn btn-success" (click)="onsaveSecDetails()" label="Save">Print Barcode</button>
+                <button type="button" style="float:left" class="btn btn-success" (click)="printbarcode()" label="Save">Print Barcode</button>
               </div>
-             
+
             </div>
             <!--<div class="row " style="margin-top:10px;margin-left:10px">
-              <div class="col-lg-4 col-md-4 col-sm-4 form-group">
+    <div class="col-lg-4 col-md-4 col-sm-4 form-group">
 
-                <input class="form-control" type="text" readonly [(ngModel)]="PoDetails.vendorname">
-              </div>
-              <div class="col-lg-4 col-md-4 col-sm-4 form-group">
-                <label class="form-label">Quanity: </label>
-                <input class="form-control" type="text" readonly [(ngModel)]="PoDetails.quotationqty">
-              </div>
-            </div>
-            <div class="row " style="margin-top:10px;margin-left:20px">
-              <div class="col-lg-4 col-md-4 col-sm-4 form-group">
-                <label class="form-label">Invoice No: </label>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-lg-4 col-md-4 col-sm-4"></div>
-              <div class="col-lg-4 col-md-4 col-sm-4">
-                <button type="button" [disabled]="disSaveBtn" class="btn btn-success" (click)="onsaveSecDetails()" label="Save">Save</button>&nbsp;&nbsp;&nbsp;
-                <button type="button" class="btn btn-success" (click)="onsaveSecDetails()" label="Save">Print Barcode</button>
+      <input class="form-control" type="text" readonly [(ngModel)]="PoDetails.vendorname">
+    </div>
+    <div class="col-lg-4 col-md-4 col-sm-4 form-group">
+      <label class="form-label">Quanity: </label>
+      <input class="form-control" type="text" readonly [(ngModel)]="PoDetails.quotationqty">
+    </div>
+  </div>
+  <div class="row " style="margin-top:10px;margin-left:20px">
+    <div class="col-lg-4 col-md-4 col-sm-4 form-group">
+      <label class="form-label">Invoice No: </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-4 col-md-4 col-sm-4"></div>
+    <div class="col-lg-4 col-md-4 col-sm-4">
+      <button type="button" [disabled]="disSaveBtn" class="btn btn-success" (click)="onsaveSecDetails()" label="Save">Save</button>&nbsp;&nbsp;&nbsp;
+      <button type="button" class="btn btn-success" (click)="onsaveSecDetails()" label="Save">Print Barcode</button>
 
-              </div>
-            </div>-->
+    </div>
+  </div>-->
           </div>
 
 
@@ -71,13 +95,13 @@
      
     </div>
     <div class="col-lg-8 col-md-8">
-      <div class="card" style="    min-height: 500px;border-radius: 10px;box-shadow: 5px 10px #888888;">
+      <div class="card" style="min-height: 80vh; max-height: 80vh; border-radius: 10px; box-shadow: 5px 10px #888888;">
         <div class="card-header cardheadertext">
-          <span>
-            <i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;Today's Shipment List
+          <span class="cardheaderdata">
+            <i class="fa fa-check-circle-o"></i>&nbsp;Today's Shipment List
           </span>
-          <span style="float:right">
-            <i class="pi pi-calendar" style="color:white; font-size:20px;"></i>&nbsp;{{todatsdate | date: 'dd/MM/yyyy'}}
+          <span style="float:right" class="cardheaderdata">
+            <i class="pi pi-calendar"></i>&nbsp;{{todatsdate | date: 'dd/MM/yyyy'}}
           </span>
         </div>
         <div class="card-body" style="overflow-y:scroll">
@@ -85,18 +109,18 @@
             <div class="col-lg-12 col-md-12 col-sm-12">
               <div class="row">
                 <div class="col-lg-4 col-md-4">
-                  <div class="card" style="height: 108px;margin-bottom:10px;width: 100%;background-image: url('./assets/Login.jpg');border-radius: 10px;">
-                    <h5 style="color:white;margin-left:10px;margin-top:10px"><i class="fa fa-cubes"></i>&nbsp;Total Shipments</h5>
+                  <div class="card" style="height: 108px;margin-bottom:10px;width: 100%;  background-image: url('./assets/Login.jpg');border-radius: 10px;">
+                    <h5 style="color:white;margin-left:10px;margin-top:10px"><i class="fa fa-cubes"></i>&nbsp;Expected Shipments</h5>
                     <h5 style="color:white;margin-left:20px;font-weight:600;">{{deliverycount}}</h5>
-                    <button class="btn btn-success btn-sm" (click)="showdevlist()">{{btntext}}</button>
+                    <button class="btn btn-sm" style="background-color:#99CC99 !important;color:black;font-weight:600" (click)="showdevlist()">{{btntext}}</button>
                   </div>
 
                 </div>
                 <div class="col-lg-4 col-md-4">
                   <div class="card" style="height: 108px;margin-bottom:10px;width: 100%;background-image: url('./assets/Login.jpg');border-radius: 10px;">
-                    <h5 style="color:white;margin-left:10px;margin-top:10px"><i class="fa fa-cubes"></i>&nbsp;Total Received</h5>
+                    <h5 style="color:white;margin-left:10px;margin-top:10px"><i class="fa fa-cubes"></i>&nbsp;Received Shipments</h5>
                     <h5 style="color:white;margin-left:20px; font-weight:600;">{{receivedcount}}</h5>
-                    <button class="btn btn-warning btn-sm" (click)="showreceivedlist()">{{btnreceivetext}}</button>
+                    <button class="btn btn-light btn-sm" style="background-color:#9999FF!important;color:black;font-weight:600" (click)="showreceivedlist()">{{btnreceivetext}}</button>
                   </div>
 
                 </div>
@@ -104,9 +128,9 @@
               </div>
 
               <div *ngIf="showtable">
-                <p-table *ngIf="showPoList" [value]="currentDatePoList" [style]="{'width':'95%','height':'80%','overflow':'auto!important','box-shadow' : '5px 5px #28a745'}">
+                <p-table *ngIf="showPoList" [value]="currentDatePoList" [style]="{'width':'95%','height':'80%','overflow':'auto!important','box-shadow' : '5px 5px #888888'}">
                   <ng-template pTemplate="header">
-                    <tr class="mprltbldata" style="background-color:aqua !important">
+                    <tr class="sectbldata1" style="background-color:aqua !important">
                       <th class="ptable-cell" style="text-align:center;width:10%;">Sl.No.</th>
                       <th class="ptable-cell" style="text-align:center;width:20%;">PO No</th>
                       <th class="ptable-cell" style="text-align:center;width:70%">Supplier Name</th>
@@ -126,9 +150,9 @@
                 </p-table>
               </div>
               <div *ngIf="showreceivedtable" style="margin-top:10px;">
-                <p-table *ngIf="showreceivedPoList" [value]="currentDatePoReceivedList" [style]="{'width':'95%','height':'80%','overflow':'auto!important','box-shadow' : '5px 5px #ffc107'}">
+                <p-table *ngIf="showreceivedPoList" [value]="currentDatePoReceivedList" [style]="{'width':'95%','height':'80%','overflow':'auto!important','box-shadow' : '5px 5px #888888'}">
                   <ng-template pTemplate="header">
-                    <tr class="mprltbldata">
+                    <tr class="sectbldata">
                       <th class="ptable-cell" style="text-align:center;width:10%;">Sl.No.</th>
                       <th class="ptable-cell" style="text-align:center;width:20%;">PO No</th>
                       <th class="ptable-cell" style="text-align:center">Supplier Name</th>

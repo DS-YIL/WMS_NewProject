@@ -145,6 +145,59 @@ export class GatePassComponent implements OnInit {
     });
   }
 
+  exportPdf() {
+    debugger;
+    import("jspdf").then(jsPDF => {
+      import("jspdf-autotable").then(x => {
+        const doc = new jsPDF.default(0, 0);
+        var device = "";
+        var model = "";
+        var make = "";
+        var pageHeight = doc.internal.pageSize.height || doc.internal.pageSize.getHeight();
+        var pageWidth = doc.internal.pageSize.width || doc.internal.pageSize.getWidth();
+        doc.setDrawColor(0);
+        doc.setFillColor(255, 255, 255);
+        doc.rect(10, 10, 190, 52, 'FD');
+        var img = new Image()
+        img.src = './assets/banner1.jpg'
+        doc.addImage(img, 'jpg', 12, 12, 40, 15);
+        doc.setFontSize(14);
+        doc.text("YOKOGAWA INDIA LIMITED ", 120, 17);
+        doc.setFontSize(12);
+        doc.text("Plot No. 96, 3rd Cross, Hosur Road", 120, 22);
+        doc.setFontSize(12);
+        doc.text("Electronic city, Banglore - 560100", 120, 27);
+        doc.line(10, 30, 200, 30);
+        doc.text("Gate Pass [Type] Items", pageWidth / 2, 36, 'center');
+        doc.line(10, 40, 200, 40);
+        doc.text("Name of the Person : [Name] ", 12, 45);
+        doc.text("No: [No] ", 125, 45);
+        doc.text("Representing: [Representing] ", 12, 52);
+        doc.text("Document Ref Date: [Date] ", 12, 59);
+
+
+        //var reportTitle = "Device Report" + device + model + make;
+        //var splitTitle = doc.splitTextToSize(reportTitle, 180);
+        //if (device == "" && model == "" && make == "") {
+        //  doc.text(splitTitle, 85, 10);
+        //}
+        //else {
+        //  doc.text(splitTitle, 20, 10);
+        //}
+
+        //doc.autoTable({
+        //  styles: { fillColor: [255, 0, 0] },
+        //  columnStyles: { 0: { halign: 'center', fillColor: [0, 255, 0] } }, // Cells in first column centered and green
+        //  margin: { top: 10 },
+        //})
+
+        //doc.autoTable(this.exportColumns, this.PrintDocs);
+       // doc.save('devicereport.pdf');
+        doc.output('dataurlnewwindow');
+      })
+    })
+  }
+
   //prepare list based on gate pass id
   prepareGatepassList() {
     this.gatepasslist.forEach(item => {
@@ -400,6 +453,7 @@ export class GatePassComponent implements OnInit {
 
   //showing print page
   showprint(gatepassobject: gatepassModel) {
+    //this.exportPdf();
     this.router.navigate(['/WMS/GatePassPrint', gatepassobject.gatepassid]);
   }
 

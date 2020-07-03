@@ -2144,6 +2144,15 @@ namespace WMS.DAL
 					var finaldata = finaltempdata.Concat(cdata);
 					foreach (CycleCountList cc in finaldata)
 					{
+						if (todaycountdata != null && todaycountdata.Count() > 0)
+						{
+							cc.todayscount = todaycountdata.Count();
+						}
+						else
+						{
+							cc.todayscount = 0;
+
+						}
 						string Querycheckcounted = "Select * from wms.cyclecount where materialid = '" + cc.materialid + "' and counted_on = current_date";
 						var countdata = await pgsql.QueryAsync<CycleCountList>(Querycheckcounted, null, commandType: CommandType.Text);
 						if (countdata != null && countdata.Count() > 0)
@@ -2153,15 +2162,7 @@ namespace WMS.DAL
 							cc.physicalqty = dt.physicalqty;
 							cc.difference = dt.difference;
 							cc.iscounted = true;
-							if (todaycountdata != null && todaycountdata.Count() > 0)
-							{
-								cc.todayscount = todaycountdata.Count();
-							}
-							else
-							{
-								cc.todayscount = 0;
-
-							}
+							
 						}
 					}
 

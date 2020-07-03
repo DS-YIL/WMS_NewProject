@@ -155,6 +155,10 @@ export class MaterialReleaseComponent implements OnInit {
     }
   }
 
+  backtoDashboard() {
+    this.router.navigateByUrl("WMS/MaterialReleaseDashboard");
+  }
+
 
   //requested quantity update
   onMaterialIssueDeatilsSubmit() {

@@ -141,7 +141,7 @@ export class StoreClerkComponent implements OnInit {
           }
 
           if (data) {
-            this.messageService.add({ severity: 'success', summary: 'Success Message', detail: 'Saved Sucessfully' });
+            this.messageService.add({ severity: 'success', summary: 'Success Message', detail: 'GRN Posted' });
             this.showQtyUpdateDialog = false;
             this.disGrnBtn = true;
           }

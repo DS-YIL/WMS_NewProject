@@ -161,7 +161,7 @@ where  inwmaster.pono='#pono'</value>
     <comment>insert material request data</comment>
   </data>
   <data name="openpolist" xml:space="preserve">
-    <value>select  max(track.enteredon) as enteredon,max(op.projectcode)as projectcode,op.pono,min(track.status)as status,max(op.vendorname)as vendorname,max(op.jobname) as jobname,max(op.quotationqty)as quotationqty 
+    <value>select  max(track.enteredon) as enteredon,max(op.projectcode)as projectcode,op.pono,min(track.status)as status,max(op.vendorname)as vendorname,max(op.jobname) as jobname,max(op.quotationqty)as quotationqty ,max(op.materialqty) as materialqty
 from wms.openpolistview op
       left join wms.wms_trackstatus track on track.pono=op.pono
       where projectmanager='#projectmanager' 
@@ -169,7 +169,7 @@ from wms.openpolistview op
     <comment>getopenpono list</comment>
   </data>
   <data name="Getdetailsforthreewaymatching" xml:space="preserve">
-    <value>select distinct openpo.projectname,inwa.invoiceno,inwa.grnnumber,inwa.pono,openpo.material, (inw.confirmqty+inw.returnqty) as receivedqty,openpo.materialdescription, openpo.quotationqty,inw.receivedqty,inw.confirmqty,inw.returnqty from wms.wms_securityinward inwa  
+    <value>select distinct openpo.projectname,inwa.invoiceno,inwa.grnnumber,inwa.pono,openpo.material,openpo.materialqty,(inw.confirmqty+inw.returnqty) as receivedqty,openpo.materialdescription, openpo.quotationqty,inw.receivedqty,inw.confirmqty,inw.returnqty from wms.wms_securityinward inwa  
  left join wms.wms_storeinward inw on inw.inwmasterid=inwa.inwmasterid
  inner join wms.openpolistview openpo on openpo.pono=inwa.pono
   where  inwa.pono='#pono'  and inwa.invoiceno= '#invoiceno'  order by inwa.grnnumber desc</value>
@@ -216,7 +216,7 @@ VALUES(@inwmasterid,@receiveddate,@receivedby,@receivedqty,@returnqty,@confirmqt
   left join  wms.wms_materialissue issue on issue.requestforissueid=req.requestforissueid</value>
   </data>
   <data name="queryforitemdetails" xml:space="preserve">
-    <value>select distinct stocks.itemlocation,stocks.itemid,inw.grnnumber,inw.pono,inw.invoiceno,openpo.projectname,openpo.material,openpo.materialdescription,openpo.quotationqty,inwa.receivedqty,inwa.confirmqty,inwa.returnqty from wms.wms_securityinward inw
+    <value>select distinct stocks.itemlocation,stocks.itemid,inw.grnnumber,inw.pono,inw.invoiceno,openpo.projectname,openpo.materialqty,openpo.material,openpo.materialdescription,openpo.quotationqty,inwa.receivedqty,inwa.confirmqty,inwa.returnqty from wms.wms_securityinward inw
 left join wms.wms_storeinward inwa on inw.inwmasterid=inwa.inwmasterid
 left join wms.wms_stock stocks on  stocks.inwmasterid=inwa.inwmasterid
 inner join wms.openpolistview openpo on openpo.pono=inw.pono
@@ -445,7 +445,7 @@ where sec.grnnumber ='#grnnumber' and sk.materialid='#materialid'</value>
     <value />
   </data>
   <data name="getmaterialdetailfprrequest" xml:space="preserve">
-    <value>select max(openpo.projectname)as projectname,max(sk.itemid)as itemid,sk.materialid as material,sum(sk.availableqty)as availableqty,max(openpo.materialdescription)as materialdescription,max(openpo.quotationqty)as quotationqty,max(sk.pono) as pono from   wms.wms_stock  sk left join wms.openpolistview openpo on openpo.pono = sk.pono where sk.availableqty!=0 </value>
+    <value>select max(openpo.projectname)as projectname,max(sk.itemid)as itemid,sk.materialid as material,sum(sk.availableqty)as availableqty,max(openpo.materialdescription)as materialdescription,max(openpo.quotationqty)as quotationqty,max(openpo.materialqty )as materialqty,max(sk.pono) as pono from   wms.wms_stock  sk left join wms.openpolistview openpo on openpo.pono = sk.pono where sk.availableqty!=0 </value>
   </data>
   <data name="issuedqtydetails" xml:space="preserve">
     <value>select max(req.requestedquantity)as requestedquantity, max(req.materialid)as materialid, max(req.requestid)as requestid,req.requestforissueid,sum(issuedqty)as issuedquantity
