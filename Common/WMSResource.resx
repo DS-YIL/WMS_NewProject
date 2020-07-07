@@ -528,4 +528,7 @@ values(default,@pono,@itemid,@gatepassmaterialid,@itemissueddate,@itemreceiverid
   <data name="updatestockavailable" xml:space="preserve">
     <value>update wms.wms_stock set availableqty=#availableqty where itemid=#itemid</value>
   </data>
+  <data name="getMateDescr" xml:space="preserve">
+    <value>select Materialdescription from wms."MaterialMasterYGS"  where Material = '#materialid'</value>
+  </data>
 </root>

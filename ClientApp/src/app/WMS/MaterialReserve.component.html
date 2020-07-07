@@ -16,7 +16,7 @@
           Project Name : <span style="color:#dc3545;">{{reserveList[0].projectname}}</span>
         </div>
         <div class="col-xs-4 col-sm-4  col-md-4 pt-2" style="font-weight:600;font-size:14px;color:darkblue;">
-          Reserve For : <input type="date" [value]="reservedfor |  date:'yyyy-MM-dd'" (input)="reservedfor=parseDate($event.target.value)" >
+          Reserve For : <input type="date" [value]="reservedfor |  date:'yyyy-MM-dd'"  min={{mindate}} max={{maxdate}} (input)="reservedfor=parseDate($event.target.value)" >
         </div>
       </div>
     </div>

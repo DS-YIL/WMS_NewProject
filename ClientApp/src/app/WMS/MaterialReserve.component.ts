@@ -7,14 +7,16 @@ import { Employee, DynamicSearchResult, searchList } from '../Models/Common.Mode
 import { NgxSpinnerService } from "ngx-spinner";
 import { materialRequestDetails } from 'src/app/Models/WMS.Model';
 import { MessageService } from 'primeng/api';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-MaterialRequest',
-  templateUrl: './MaterialReserve.component.html'
+  templateUrl: './MaterialReserve.component.html',
+  providers: [DatePipe]
 })
 export class MaterialReserveComponent implements OnInit {
 
-  constructor(private formBuilder: FormBuilder, private messageService: MessageService, private wmsService: wmsService, private route: ActivatedRoute, private router: Router, public constants: constants, private spinner: NgxSpinnerService) { }
+  constructor(private formBuilder: FormBuilder, private messageService: MessageService, private datePipe: DatePipe,  private wmsService: wmsService, private route: ActivatedRoute, private router: Router, public constants: constants, private spinner: NgxSpinnerService) { }
 
   public reserveList: Array<any> = [];
   public employee: Employee;
@@ -22,13 +24,14 @@ export class MaterialReserveComponent implements OnInit {
   public materialRequestDetails: materialRequestDetails;
   public pono: string;
   public reservedfor: Date;
+  public mindate: string;
+  public maxdate: string;
 
   ngOnInit() {
     if (localStorage.getItem("Employee"))
       this.employee = JSON.parse(localStorage.getItem("Employee"));
     else
       this.router.navigateByUrl("Login");
-
 
     this.route.params.subscribe(params => {
       if (params["pono"]) {
@@ -43,7 +46,11 @@ export class MaterialReserveComponent implements OnInit {
   getMaterialRequestlist() {
     //this.employee.employeeno = "180129";
     this.wmsService.getMaterialRequestlistdata(this.employee.employeeno, this.pono).subscribe(data => {
+      var minDate = new Date();
+      var maxdate = new Date(new Date().setDate(new Date().getDate() + 14));
       this.reservedfor = new Date();
+      this.mindate = this.datePipe.transform(minDate, "yyyy-MM-dd");
+      this.maxdate = this.datePipe.transform(maxdate, "yyyy-MM-dd");
       this.reserveList = data;
       this.reserveList.forEach(item => {
         if (!item.requestedquantity)
