@@ -46,7 +46,7 @@ namespace WMS.Interfaces
         int SaveOrUpdateGatepassDetails(gatepassModel dataobj);
         string checkmaterialandqty(string material=null,int qty=0);
         int deletegatepassmaterial(int gatepassmaterialid);
-        int updategatepassapproverstatus(gatepassModel model);
+        int updategatepassapproverstatus(List<gatepassModel> model);
         Task<IEnumerable<gatepassModel>> GetmaterialList(int gatepassid);
         int updateprintstatus(gatepassModel model);
         int updatereprintstatus(reprintModel model);

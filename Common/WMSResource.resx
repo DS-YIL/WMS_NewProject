@@ -518,4 +518,11 @@ left  join wms.openpolistview openpo on sk.pono = openpo.pono
 left join wms."MaterialMasterYGS"  mtmaster on mtmaster.material= sk.materialid
 where sec.grnnumber ='#grn'</value>
   </data>
+  <data name="updategatepassmaterialissue" xml:space="preserve">
+    <value>insert into wms.wms_materialissue(materialissueid,pono,itemid,gatepassmaterialid,itemissueddate,itemreceiverid,deleteflag,itemreturnable,approvedby,approvedon,issuedqty,approvedstatus)
+values(default,@pono,@itemid,@gatepassmaterialid,@itemissueddate,@itemreceiverid,false,@itemreturnable,@approvedby,@approvedon,@issuedqty,@approvedstatus)</value>
+  </data>
+  <data name="updatestockavailable" xml:space="preserve">
+    <value>update wms.wms_stock set availableqty=#availableqty where itemid=#itemid</value>
+  </data>
 </root>

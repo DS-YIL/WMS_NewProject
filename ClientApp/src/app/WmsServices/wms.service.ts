@@ -175,7 +175,7 @@ export class wmsService {
     const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }), responseType: 'text' as any };
     return this.http.get<any>(this.url + 'POData/checkmaterialandqty?material=' + material + '&qty=' + qty + '', httpOptions);
   }
-  updategatepassapproverstatus(gatepassModel: gatepassModel): Observable<any> {
+  updategatepassapproverstatus(gatepassModel: any): Observable<any> {
     return this.http.post<any>(this.url + 'POData/updategatepassapproverstatus/', gatepassModel, this.httpOptions);
   }
   deleteGatepassmaterial(id: number): Observable<any> {

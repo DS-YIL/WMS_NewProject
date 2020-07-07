@@ -885,6 +885,16 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to insert into wms.wms_materialissue(materialissueid,pono,itemid,gatepassmaterialid,itemissueddate,itemreceiverid,deleteflag,itemreturnable,approvedby,approvedon,issuedqty,approvedstatus)
+        ///values(default,@pono,@itemid,@gatepassmaterialid,@itemissueddate,@itemreceiverid,false,@itemreturnable,@approvedby,@approvedon,@issuedqty,@approvedstatus).
+        /// </summary>
+        public static string updategatepassmaterialissue {
+            get {
+                return ResourceManager.GetString("updategatepassmaterialissue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to update wms.wms_securityinward set grnnumber=@grnnumber,grndate=current_date where invoiceno=&apos;#invoiceno&apos; and pono=&apos;#pono&apos;.
         /// </summary>
         public static string updategrnnumber {
@@ -936,6 +946,15 @@ namespace WMS.Common {
         public static string updatestock {
             get {
                 return ResourceManager.GetString("updatestock", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to update wms.wms_stock set availableqty=#availableqty where itemid=#itemid.
+        /// </summary>
+        public static string updatestockavailable {
+            get {
+                return ResourceManager.GetString("updatestockavailable", resourceCulture);
             }
         }
         

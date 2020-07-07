@@ -57,7 +57,10 @@ export class GatePassApproverComponent implements OnInit {
 
   updategatepassapproverstatus() {
     this.gatepassModel.gatepassid = this.materialList[0].gatepassid;
-    this.wmsService.updategatepassapproverstatus(this.gatepassModel).subscribe(data => {
+    //this.materialList.forEach(item => {
+    //  item.pono = this.gatepassModel.pono;
+    //})
+    this.wmsService.updategatepassapproverstatus(this.materialList).subscribe(data => {
       //this.materialList = data;
       this.gatepassModel.status = "Approved";
       if (this.gatepassModel.status == 'Approved')

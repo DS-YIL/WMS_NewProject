@@ -1622,25 +1622,82 @@ namespace WMS.DAL
 		/// </summary>
 		/// <param name="model"></param>
 		/// <returns></returns>
-		public int updategatepassapproverstatus(gatepassModel model)
+		public int updategatepassapproverstatus(List<gatepassModel> model)
 		{
 			int returndata = 0;
 			try
 			{
-				model.approvedon = System.DateTime.Now;
-				string insertquery = WMSResource.updategatepassapproverstatus.Replace("#gatepassid", Convert.ToString(model.gatepassid));
-				using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
+				foreach (var item in model)
 				{
-					var data = DB.Execute(insertquery, new
-
+					gatepassModel gatemodel = new gatepassModel();
+					using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 					{
-						model.approverremarks,
-						model.approverstatus,
-						model.approvedon,
 
-					});
-					returndata = Convert.ToInt32(data);
+						
+						string query = "select * from wms.wms_stock where materialid='"+item.materialid+"'and availableqty>0 order by createddate asc";
+
+						 pgsql.OpenAsync();
+						 gatemodel =  pgsql.QueryFirstOrDefault<gatepassModel>(
+						   query, null, commandType: CommandType.Text);
+					}
+					item.itemid = gatemodel.itemid;
+					string updateapproverstatus = WMSResource.updategatepassmaterialissue;
+					string approvedstatus = item.approverstatus;
+					item.itemissueddate = System.DateTime.Now;
+					item.issuedqty = item.quantity;
+					item.approvedon = System.DateTime.Now;
+					Boolean itemreturnable = false ;
+					if (item.itemreturnable== "Returnable")
+					{
+						itemreturnable = true;
+					}
+
+					using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
+					{
+
+						var result = DB.Execute(updateapproverstatus, new
+						{
+							approvedstatus,
+							item.gatepassmaterialid,
+							item.approvedon,
+							item.issuedqty,
+							item.materialid,
+							item.pono,
+							item.itemid,
+							itemreturnable,
+							item.approvedby,
+							item.itemissueddate,
+							item.itemreceiverid,
+
+						});
+					}
+					int qty = gatemodel.availableqty - item.issuedqty;
+					string updatestockavailable = WMSResource.updatestockavailable.Replace("#availableqty", Convert.ToString(qty)).Replace("#itemid", Convert.ToString(item.itemid));
+					using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
+					{
+						var result = DB.Execute(updatestockavailable, new
+						{
+
+						});
+					}
+
+
 				}
+				model[0].approvedon = System.DateTime.Now;
+					string insertquery = WMSResource.updategatepassapproverstatus.Replace("#gatepassid", Convert.ToString(model[0].gatepassid));
+					using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
+					{
+						var data = DB.Execute(insertquery, new
+
+						{
+							model[0].approverremarks,
+							model[0].approverstatus,
+							model[0].approvedon,
+
+						});
+						returndata = Convert.ToInt32(data);
+					}
+				
 				return returndata;
 
 			}
