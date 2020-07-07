@@ -76,9 +76,9 @@
         </div>
       </div>
       <br />
-      <p-dialog #dialog header="Put Away Location" [(visible)]="showLocationDialog" [contentStyle]="{'overflow':'visible'}">
+      <p-dialog  header="Put Away Location" [(visible)]="showLocationDialog" [contentStyle]="{'overflow':'visible'}" [style]="{width: '50%'}">
         <form [formGroup]="StockModelForm">
-          <div class="row " style="margin-top:10px">
+          <div class="row " style="margin-top:10px;">
             <div class="col-lg-4 col-md-4 col-sm-4 form-group">
               <label for="itemlocation" class="form-label">Select Location</label>
               <div class="form-inline-list">

@@ -3192,7 +3192,7 @@ namespace WMS.DAL
 			{
 				try
 				{
-					string materialrequestquery = "select * from wms.wms_rd_locator where deleteflag=false";
+					string materialrequestquery = "select * from wms.wms_rd_locator where deleteflag=false order by locatorname asc";
 
 					await pgsql.OpenAsync();
 					return await pgsql.QueryAsync<dropdownModel>(
@@ -3217,7 +3217,7 @@ namespace WMS.DAL
 			{
 				try
 				{
-					string materialrequestquery = "select * from wms.wms_rd_bin where deleteflag=false";
+					string materialrequestquery = "select * from wms.wms_rd_bin where deleteflag=false  order by binnumber asc";
 
 					await pgsql.OpenAsync();
 					return await pgsql.QueryAsync<dropdownModel>(
@@ -3242,7 +3242,7 @@ namespace WMS.DAL
 			{
 				try
 				{
-					string materialrequestquery = "select * from wms.wms_rd_rack where deleteflag=false";
+					string materialrequestquery = "select * from wms.wms_rd_rack where deleteflag=false order by racknumber asc";
 
 					await pgsql.OpenAsync();
 					return await pgsql.QueryAsync<dropdownModel>(
