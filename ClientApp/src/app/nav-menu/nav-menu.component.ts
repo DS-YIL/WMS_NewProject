@@ -121,6 +121,11 @@ export class NavMenuComponent implements OnInit {
       });
       this.router.navigateByUrl('/WMS/Home');
     }
+    if (this.emp.roleid == "8") {//Approver     
+      this.items.push({ label: 'Gate Pass Approval', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GatePass') });
+      this.router.navigateByUrl('WMS/GatePass');
+    }
+
     let element1: HTMLDivElement = document.getElementById("menudiv") as HTMLDivElement;
     element1.hidden = false;
    

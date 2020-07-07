@@ -34,7 +34,8 @@ export class GatePassComponent implements OnInit {
   public materialistModel: materialistModel;
   public material: any;
   public gpIndx: number;
-  public date: Date=null;
+  public date: Date = null;
+  public approverstatus: string;
 
   ngOnInit() {
     if (localStorage.getItem("Employee"))
@@ -45,6 +46,12 @@ export class GatePassComponent implements OnInit {
     this.materialistModel = new materialistModel();
     this.getGatePassList();
     this.GatepassTxt = "Gate Pass - Request Materials"
+
+    if (this.employee.roleid == "8") //for approver
+      this.approverstatus = "Pending";
+
+    else
+      this.approverstatus = "";
   }
 
 
@@ -142,6 +149,9 @@ export class GatePassComponent implements OnInit {
   getGatePassList() {
     this.wmsService.getGatePassList().subscribe(data => {
       this.gatepasslist = data;
+      if (this.employee.roleid == "8") {
+        this.gatepasslist = this.gatepasslist.filter(li => li.gatepasstype == 'Non Returnable' && li.gate);
+      }
       this.gatepassModelList = [];
       this.prepareGatepassList();
     });

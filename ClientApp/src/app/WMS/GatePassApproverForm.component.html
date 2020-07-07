@@ -18,13 +18,12 @@
         <div class="col-lg-3 col-md-3 col-sm-3 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
           Supplier:&nbsp;<span style="color:#dc3545;">{{materialList[0].vendorname}}</span>
         </div>
-        <div class="col-lg-3 col-md-3 col-sm-3 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
+        <div class="col-lg-3 col-md-3 col-sm-3 form-inline" *ngIf="employee.roleid!='8'" style="font-weight:600;font-size:14px;color:darkblue;">
           Type:&nbsp;<span style="color:#dc3545;">{{materialList[0].gatepasstype}}</span>
         </div>
       </div>
       <br />
       <div class="row" style="padding-left:20px;">
-
         <div class="col-lg-3 col-md-3 col-sm-3 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
           Reason:&nbsp;<span style="color:#dc3545;">{{materialList[0].reasonforgatepass}}</span>
         </div>
@@ -86,7 +85,7 @@
         </p-table>
       </div>
       <!--</div>-->
-      <div *ngIf="employee.roleid=='4'">
+      <div *ngIf="employee.roleid=='4' || employee.roleid=='8'">
 
         <div class="row">
           <div class="col-lg-1 col-md-1 col-sm-1"></div>
