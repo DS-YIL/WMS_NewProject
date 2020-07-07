@@ -845,9 +845,10 @@ namespace WMS.DAL
 					DataTable dataTable = new DataTable();
 					IDbCommand selectCommand = pgsql.CreateCommand();
 					string query = "";
-					query = "select Distinct(materialid) from " + Result.tableName + Result.searchCondition + "";
+					query = "select Distinct(sk.materialid),ygs.unitprice as materialcost from " + Result.tableName+ WMSResource.getgatepassunitprice + Result.searchCondition + "";
 					if (!string.IsNullOrEmpty(Result.query))
 						query = Result.query;
+					
 					selectCommand.CommandText = query;
 					IDbDataAdapter dbDataAdapter = new NpgsqlDataAdapter();
 					dbDataAdapter.SelectCommand = selectCommand;
@@ -1647,7 +1648,7 @@ namespace WMS.DAL
 					item.issuedqty = item.quantity;
 					item.approvedon = System.DateTime.Now;
 					Boolean itemreturnable = false ;
-					if (item.itemreturnable== "Returnable")
+					if (item.gatepasstype== "Returnable")
 					{
 						itemreturnable = true;
 					}

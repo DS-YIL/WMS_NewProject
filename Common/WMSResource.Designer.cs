@@ -270,6 +270,15 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to sk left join wms.&quot;MaterialMasterYGS&quot; ygs on ygs.material=sk.materialid.
+        /// </summary>
+        public static string getgatepassunitprice {
+            get {
+                return ResourceManager.GetString("getgatepassunitprice", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to select grnnumber from wms.wms_securityinward   where pono=&apos;#pono&apos; and grnnumber is not null 
         ///and deleteflag=false order by grndate desc limit 1.
         /// </summary>

@@ -118,9 +118,9 @@ export class GatePassComponent implements OnInit {
       searchTxt = "";
     searchTxt = searchTxt.replace('*', '%');
     this.dynamicData = new DynamicSearchResult();
-    this.dynamicData.tableName = this.constants[name].tableName;
+    this.dynamicData.tableName = this.constants[name].tableName + " ";
     this.dynamicData.searchCondition = "" + this.constants[name].condition;
-    this.dynamicData.searchCondition += "materialid" + " ilike '" + searchTxt + "%'" + " and availableqty>=1";
+    this.dynamicData.searchCondition += "sk.materialid" + " ilike '" + searchTxt + "%'" + " and sk.availableqty>=1";
     this.wmsService.GetMaterialItems(this.dynamicData).subscribe(data => {
       this.searchresult = data;
       this.searchItems = [];
@@ -131,6 +131,7 @@ export class GatePassComponent implements OnInit {
           //fName = item[this.constants[name].fieldName] + " - " + item[this.constants[name].fieldId];
           fName = item[this.constants[name].fieldId];
         var value = { listName: name, name: fName, code: item[this.constants[name].fieldId] };
+        this.materialistModel.materialcost = data[0].materialcost;
         this.searchItems.push(value);
       });
     });
