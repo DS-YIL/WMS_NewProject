@@ -144,7 +144,7 @@ export class MaterialIssueComponent implements OnInit {
         //if (!item.issuedquantity)
         //  item.issuedquantity = item.requestedquantity;
         if (item.issuedqty >= item.requestedquantity)
-          this.showissueqtyOKorCancel = false;
+          this.showissueqtyOKorCancel = true;
         //(<HTMLInputElement>document.getElementById('footerdiv')).style.display = "none";
       });
     });
