@@ -265,6 +265,15 @@ export class wmsService {
     this.currentUserSubject.next(null);
     //window.location.reload();
   }
-
+  getlocationdata(): Observable<any> {
+    return this.http.get<any>(this.url + 'POData/getlocationdata/', this.httpOptions);
+  }
+  getbindata(): Observable<any> {
+    return this.http.get<any>(this.url + 'POData/getbindata/', this.httpOptions);
+  }
+  getrackdata(): Observable<any> {
+    return this.http.get<any>(this.url + 'POData/getrackata/', this.httpOptions);
+  }
 }
+
 

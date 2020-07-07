@@ -396,6 +396,23 @@ namespace WMS.Controllers
 
 			return this._poService.getSecurityreceivedList();
 		}
+		[HttpGet("getlocationdata")]
+		public async Task<IEnumerable<dropdownModel>> getlocationdata()
+		{
+
+			return await this._poService.Getlocationdata();
+		}
+		[HttpGet("getbindata")]
+		public async Task<IEnumerable<dropdownModel>> getbindata()
+		{
+
+			return await this._poService.Getbindata();
+		}
+		[HttpGet("getrackata")]
+		public async Task<IEnumerable<dropdownModel>> getrackata()
+		{
+			return await this._poService.Getrackdata();
+		}
 		//[HttpPost("securitysendemail")]
 		//public EmailModel sendemail(EmailModel obj)
 		//{

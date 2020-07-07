@@ -82,31 +82,53 @@
             <div class="col-lg-4 col-md-4 col-sm-4 form-group">
               <label for="itemlocation" class="form-label">Select Location</label>
               <div class="form-inline-list">
-                <p-autoComplete [(ngModel)]="store" [suggestions]="searchItems" formControlName="itemlocation" field="name" [dropdown]="true" (completeMethod)="bindSearchListData($event,'StockModelForm','itemlocation',StockModelForm.controls.itemlocation.value,undefined)"></p-autoComplete>
+                <select  class="form-control dropdown" formControlName="locatorid" [(ngModel)]="StockModel.locatorid">
+
+                  <option selected></option>
+                  <option *ngFor=" let loclist of locationlist " value={{loclist.locatorid}}>
+                    {{loclist.locatorname}}
+                  </option>
+                </select>
+                <!--<p-autoComplete [(ngModel)]="store" [suggestions]="searchItems" formControlName="itemlocation" field="name" [dropdown]="true" (completeMethod)="bindSearchListData($event,'StockModelForm','itemlocation',StockModelForm.controls.itemlocation.value,undefined)"></p-autoComplete>-->
                 <!--<input type="text" class="form-control forms-input" formControlName="itemlocation" [value]="StockModelForm.controls.itemlocation.value" (keyup)="onsrchTxtChange('itemlocation',StockModelForm.controls.itemlocation.value,'StockModel')">
-                <div class="input-group-append">
-                  <button type="button" class="btn btn-outline-secondary form-control" style="cursor:pointer" pButton icon="fa fa-list" aria-hidden="true" (click)="bindSearchListData($event,'StockModelForm','itemlocation',StockModelForm.controls.itemlocation.value,undefined)"></button>
-                </div>-->
+  <div class="input-group-append">
+    <button type="button" class="btn btn-outline-secondary form-control" style="cursor:pointer" pButton icon="fa fa-list" aria-hidden="true" (click)="bindSearchListData($event,'StockModelForm','itemlocation',StockModelForm.controls.itemlocation.value,undefined)"></button>
+  </div>-->
               </div>
             </div>
             <div class="col-lg-4 col-md-4 col-sm-4 form-group">
               <label for="rackid" class="form-label">Select Rack</label>
               <div class="form-inline-list">
-                <p-autoComplete [(ngModel)]="rack" [suggestions]="searchItems" formControlName="rackid" field="name" [dropdown]="true" (completeMethod)="bindSearchListData($event,'StockModelForm','rackid',StockModelForm.controls.rackid.value,undefined)"></p-autoComplete>
+
+                <select  class="form-control dropdown" formControlName="rackid" [(ngModel)]="StockModel.rackid">
+
+                  <option selected value="*ngIf=rackid"></option>
+                  <option  *ngFor=" let loclist of racklist " value={{loclist.rackid}}>
+                    {{loclist.racknumber}}
+                  </option>
+                </select>
+                <!--<p-autoComplete [(ngModel)]="rack" [suggestions]="searchItems" formControlName="rackid" field="name" [dropdown]="true" (completeMethod)="bindSearchListData($event,'StockModelForm','rackid',StockModelForm.controls.rackid.value,undefined)"></p-autoComplete>-->
                 <!--<input type="text" class="form-control forms-input" formControlName="rackid" [value]="StockModelForm.controls.rackid.value" (keyup)="onsrchTxtChange('rackid',StockModelForm.controls.rackid.value,'StockModel')">
-                <div class="input-group-append">
-                  <button type="button" class="btn btn-outline-secondary form-control" style="cursor:pointer" pButton icon="fa fa-list" aria-hidden="true" (click)="bindSearchListData($event,'StockModelForm','rackid',StockModelForm.controls.rackid.value,undefined)"></button>
-                </div>-->
+  <div class="input-group-append">
+    <button type="button" class="btn btn-outline-secondary form-control" style="cursor:pointer" pButton icon="fa fa-list" aria-hidden="true" (click)="bindSearchListData($event,'StockModelForm','rackid',StockModelForm.controls.rackid.value,undefined)"></button>
+  </div>-->
               </div>
             </div>
             <div class="col-lg-4 col-md-4 col-sm-4 form-group">
               <label for="binid" class="form-label">Select Bin</label>
               <div class="form-inline-list">
-                <p-autoComplete [(ngModel)]="bin" [suggestions]="searchItems" formControlName="binid" field="name" [dropdown]="true" (completeMethod)="bindSearchListData($event,'StockModelForm','binid',StockModelForm.controls.binid.value,undefined)"></p-autoComplete>
+                <select class="form-control dropdown" formControlName="binid" [(ngModel)]="StockModel.binid">
+
+                  <option selected></option>
+                  <option *ngFor=" let loclist of binlist"   value={{loclist.binid}}>
+                    {{loclist.binnumber}}
+                  </option>
+                </select>
+                <!--<p-autoComplete [(ngModel)]="bin" [suggestions]="searchItems" formControlName="binid" field="name" [dropdown]="true" (completeMethod)="bindSearchListData($event,'StockModelForm','binid',StockModelForm.controls.binid.value,undefined)"></p-autoComplete>-->
                 <!--<input type="text" class="form-control forms-input" formControlName="binid" [value]="StockModelForm.controls.binid.value" (keyup)="onsrchTxtChange('binid',StockModelForm.controls.binid.value,'StockModel')">
-                <div class="input-group-append">
-                  <button type="button" class="btn btn-outline-secondary form-control" style="cursor:pointer" pButton icon="fa fa-list" aria-hidden="true" (click)="bindSearchListData($event,'StockModelForm','binid',StockModelForm.controls.binid.value,undefined)"></button>
-                </div>-->
+  <div class="input-group-append">
+    <button type="button" class="btn btn-outline-secondary form-control" style="cursor:pointer" pButton icon="fa fa-list" aria-hidden="true" (click)="bindSearchListData($event,'StockModelForm','binid',StockModelForm.controls.binid.value,undefined)"></button>
+  </div>-->
               </div>
             </div>
             <!--<div class="col-lg-4 col-md-4 col-sm-4 form-group">

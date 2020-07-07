@@ -13,6 +13,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   templateUrl: './WarehouseIncharge.component.html'
 })
 export class WarehouseInchargeComponent implements OnInit {
+    binid: any;
+    rackid: any;
 
   constructor(private formBuilder: FormBuilder, private messageService: MessageService, private wmsService: wmsService, private route: ActivatedRoute, private router: Router, public constants: constants, private spinner: NgxSpinnerService) { }
 
@@ -36,7 +38,9 @@ export class WarehouseInchargeComponent implements OnInit {
   public StockModel: StockModel;
   public StockModelForm: FormGroup;
   public rowIndex: number;
-
+  public locationlist: any[] = [];
+  public binlist: any[] = [];
+  public racklist: any[] = [];
   ngOnInit() {
     if (localStorage.getItem("Employee"))
       this.employee = JSON.parse(localStorage.getItem("Employee"));
@@ -47,16 +51,66 @@ export class WarehouseInchargeComponent implements OnInit {
     this.StockModel = new StockModel();
     this.StockModel.shelflife = new Date();
     this.StockModelForm = this.formBuilder.group({
-      itemlocation: ['', [Validators.required]],
+      locatorid: ['', [Validators.required]],
       rackid: ['', [Validators.required]],
       binid: ['', [Validators.required]],
-      shelflife: ['', [Validators.required]]
+      shelflife: ['', [Validators.required]],
+      binnumber: ['', [Validators.required]],
+      itemlocation: ['', [Validators.required]]
     });
 
     // this.loadStores();
   }
 
-
+  
+ locationListdata() {
+    this.wmsService.getlocationdata().
+      subscribe(
+        res => {
+          //this._list = res; //save posts in array
+          this.locationlist = res;
+          let _list: any[] = [];
+          for (let i = 0; i < (res.length); i++) {
+            _list.push({
+              locatorid: res[i].locatorid,
+              locatorname: res[i].locatorname
+            });
+          }
+          this.locationlist = _list;
+        });
+  }
+  binListdata() {
+    this.wmsService.getbindata().
+      subscribe(
+        res => {
+          //this._list = res; //save posts in array
+          this.binlist = res;
+          let _list: any[] = [];
+          for (let i = 0; i < (res.length); i++) {
+            _list.push({
+              binid: res[i].binid,
+              binnumber: res[i].binnumber
+            });
+          }
+          this.binlist = _list;
+        });
+  }
+  rackListdata() {
+    this.wmsService.getrackdata().
+      subscribe(
+        res => {
+          //this._list = res; //save posts in array
+          this.racklist = res;
+          let _list: any[] = [];
+          for (let i = 0; i < (res.length); i++) {
+            _list.push({
+              rackid: res[i].rackid,
+             racknumber: res[i].racknumber
+            });
+          }
+          this.racklist = _list;
+        });
+  } 
 
   public bindSearchListData(e: any, formName?: string, name?: string, searchTxt?: string, callback?: () => any): void {
     this.formName = formName;
@@ -126,13 +180,32 @@ export class WarehouseInchargeComponent implements OnInit {
     this.showLocationDialog = true;
     this.PoDetails = details;
     this.rowIndex = index;
-    this.store = "";
+    this.binid = details.binid;
+    this.rackid = details.rackid;
+    this.StockModelForm = this.formBuilder.group({
+      rackid: [details.rackid],
+      binid: [details.binid],
+      locatorid: [details.storeid]
+    });
+    this.locationListdata();
+    this.binListdata();
+    this.rackListdata();
+   // this.locationlist=
     this.rack = "";
     this.bin = "";
+    this.store ="";
+  
+    //this.StockModelForm.setValue({ itemlocation: details.store });
+    //this.StockModelForm.setValue({ rackid: details.rack });
+    //this.StockModelForm.setValue({ binid: details.bin });
+    this.StockModelForm.controls['itemlocation'].setValue(details.store);
+    
+    //this.StockModelForm["rackid"] = details.rack;
+    //this.StockModelForm["binid"] = details.bin;
   }
 
   onSubmitStockDetails() {
-    if (this.store.name && this.rack.name) {
+    if (this.StockModelForm.controls.rackid.value && this.StockModelForm.controls.locatorid.value) {
       this.StockModel.material = this.PoDetails.material;
       this.StockModel.itemid = this.PoDetails.itemid;
       this.StockModel.pono = this.PoDetails.pono;
@@ -140,17 +213,25 @@ export class WarehouseInchargeComponent implements OnInit {
       this.StockModel.vendorid = this.PoDetails.vendorid;
       this.StockModel.paitemid = this.PoDetails.paitemid;
       this.StockModel.totalquantity = this.PoDetails.materialqty;
-      this.StockModel.createdby = this.employee.employeeno;
-      this.StockModel.itemlocation = this.store.code;
-      this.StockModel.rackid = this.rack.code;
-      this.StockModel.binid = this.bin.code;
+    this.StockModel.createdby = this.employee.employeeno;
+    var binnumber: any[] = [];
+    var storelocation: any[] = [];
+    var rack: any[] = [];
+    binnumber = this.binlist.filter(x => x.binid == this.binid);
+    storelocation = this.locationlist.filter(x => x.locatorid == this.StockModelForm.controls.locatorid.value);
+    rack = this.racklist.filter(x => x.rackid == this.StockModelForm.controls.rackid.value);
+    this.StockModel.binnumber = binnumber[0].binnumber;
+      this.StockModel.racknumber = storelocation[0].locatorname;
+    this.StockModel.itemlocation = storelocation[0].locatorname;
+    this.StockModel.rackid = rack[0].rackid;
+    this.StockModel.binid = binnumber[0].binid;
       this.StockModel.confirmqty = this.PoDetails.confirmqty;
-      this.StockModel.itemreceivedfrom = new Date();
-      //this.StockModel.itemlocation = this.store.name + "." + this.rack.name + '.' + this.bin.name;
-      this.StockModel.itemlocation = this.store.name + "." + this.rack.name;
-      if (this.bin && this.bin.name)
-        this.StockModel.itemlocation += '.' + this.bin.name;
-      if (!this.bin && !this.bin.code)
+    this.StockModel.itemreceivedfrom = new Date();
+    this.StockModel.itemlocation = storelocation[0].locatorname + "." + rack[0].racknumber + '.' + binnumber[0].binnumber;
+    this.StockModel.itemlocation = storelocation[0].locatorname + "." + rack[0].racknumber;
+      if (this.StockModelForm.controls.binid.value)
+        this.StockModel.itemlocation += '.' + binnumber[0].binnumber;
+      if (!this.StockModelForm.controls.binid.value)
         this.StockModel.binid = 1;
       this.wmsService.InsertStock(this.StockModel).subscribe(data => {
         // if (data) {

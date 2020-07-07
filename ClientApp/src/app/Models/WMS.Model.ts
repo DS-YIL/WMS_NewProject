@@ -105,7 +105,9 @@ export class StockModel {
   createdby: string;
   confirmqty: number;
 material: string;
- 
+  binnumber: string;
+  racknumber: string;
+  locatorid: number;
 }
 
 export class materialRequestDetails {

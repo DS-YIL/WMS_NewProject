@@ -754,7 +754,8 @@ namespace WMS.DAL
 					{
 						result = DB.Execute(updatequery, new
 						{
-
+							data.binid,
+							data.rackid
 
 						});
 					}
@@ -3183,5 +3184,89 @@ namespace WMS.DAL
 
 			}
 		}
+
+		public async Task<IEnumerable<dropdownModel>> Getlocationdata()
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				try
+				{
+					string materialrequestquery = "select * from wms.wms_rd_locator where deleteflag=false";
+
+					await pgsql.OpenAsync();
+					return await pgsql.QueryAsync<dropdownModel>(
+					  materialrequestquery, null, commandType: CommandType.Text);
+
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "Getlocationdata", Ex.StackTrace.ToString());
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+			}
+		}
+		public async Task<IEnumerable<dropdownModel>> Getbindata()
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				try
+				{
+					string materialrequestquery = "select * from wms.wms_rd_bin where deleteflag=false";
+
+					await pgsql.OpenAsync();
+					return await pgsql.QueryAsync<dropdownModel>(
+					  materialrequestquery, null, commandType: CommandType.Text);
+
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "Getlocationdata", Ex.StackTrace.ToString());
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+			}
+		}
+		public async Task<IEnumerable<dropdownModel>> Getrackdata()
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				try
+				{
+					string materialrequestquery = "select * from wms.wms_rd_rack where deleteflag=false";
+
+					await pgsql.OpenAsync();
+					return await pgsql.QueryAsync<dropdownModel>(
+					  materialrequestquery, null, commandType: CommandType.Text);
+
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "Getlocationdata", Ex.StackTrace.ToString());
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+			}
+		}
+
+
+
+
+
+
+
+
 	}
 }

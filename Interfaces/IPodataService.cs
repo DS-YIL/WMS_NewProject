@@ -85,5 +85,8 @@ namespace WMS.Interfaces
         int ApproveMaterialRelease(List<ReserveMaterialModel> dataobj);
         int acknowledgeMaterialReceivedforreserved(List<ReserveMaterialModel> dataobj);
 		Task<IEnumerable<SecurityInwardreceivedModel>> getSecurityreceivedList();
+        Task<IEnumerable<dropdownModel>> Getlocationdata();
+        Task<IEnumerable<dropdownModel>> Getbindata();
+        Task<IEnumerable<dropdownModel>> Getrackdata();
     }
 }

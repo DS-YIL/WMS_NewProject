@@ -68,6 +68,12 @@ namespace WMS.Models
 	}
 	public class inwardModel
 	{
+		public string binnumber { get; set; }
+		public string racknumber { get; set; }
+		public string locatorname { get; set; }
+		public string storeid { get; set; }
+		public string rackid { get; set; }
+		public string binid { get; set; }
 		public int itemid { get; set; }
 
 		public int vendorid { get; set; }
@@ -504,5 +510,14 @@ namespace WMS.Models
 		public string receivedby { get; set; }
 
 		public string suppliername { get; set; }
+	}
+	public class dropdownModel
+	{
+		public int binid{get;set;}
+		public string binnumber { get; set; }
+		public int locatorid { get; set; }
+		public string locatorname { get; set; }
+		public int rackid { get; set; }
+		public string racknumber { get; set; }
 	}
 }
