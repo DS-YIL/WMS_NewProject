@@ -1645,7 +1645,7 @@ namespace WMS.DAL
 					string updateapproverstatus = WMSResource.updategatepassmaterialissue;
 					string approvedstatus = item.approverstatus;
 					item.itemissueddate = System.DateTime.Now;
-					item.issuedqty = item.quantity;
+					//item.issuedqty = item.quantity;
 					item.approvedon = System.DateTime.Now;
 					Boolean itemreturnable = false ;
 					if (item.gatepasstype== "Returnable")

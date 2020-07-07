@@ -44,8 +44,8 @@
           Remarks:&nbsp;<span style="color:#dc3545;">{{gatepassModel.approverremarks}}</span>
         </div>
         <!--<div class="col-lg-2 col-md-2 col-sm-2 form-inline">
-        <label class="form-label"><b>Vehicle No:</b></label>&nbsp;<span>{{materialList[0].vehicleno}}</span>
-      </div>-->
+          <label class="form-label"><b>Vehicle No:</b></label>&nbsp;<span>{{materialList[0].vehicleno}}</span>
+        </div>-->
       </div>
       <!--<br />-->
       <div class="row mt-4" style="margin:14px">
@@ -60,7 +60,8 @@
               <th class="ptable-cell" style="text-align:center;width:60px;">Sl.No.</th>
               <th class="ptable-cell" style="text-align:center">Material</th>
               <th class="ptable-cell" style="text-align:center;width:350px;">Material Description</th>
-              <th class="ptable-cell" style="text-align:center">Quantity</th>
+              <th class="ptable-cell" style="text-align:center">Requested Qty</th>
+              <th class="ptable-cell" style="text-align:center">Issue Qty</th>
               <th class="ptable-cell" style="text-align:center">Price</th>
               <th class="ptable-cell" style="text-align:center">Remarks</th>
               <th class="ptable-cell" style="text-align:center">Expected Date</th>
@@ -70,15 +71,18 @@
           <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex" let-rindex=0>
             <tr>
               <td class="ptable-cell" style="text-align:center"> {{ri+1}} </td>
-              <td class="ptable-cell" style="text-align:left"> {{rowData.materialid}} </td>
+              <td class="ptable-cell" style="text-align:left"><button type="button" class="btn btn-link" (click)="showmateriallocationList(rowData.materialid,ri+1,ri);" style="padding-left:0px;">{{rowData.materialid}}</button></td>
               <td class="ptable-cell" style="text-align:left"> {{rowData.materialdescription}} </td>
               <td class="ptable-cell" style="text-align:right">{{rowData.quantity}}</td>
+              <td class="ptable-cell">
+                <input pInputText type="number" style="text-align:center" class="form-control" [disabled]="txtDisable" [(ngModel)]="rowData.issuedquantity">
+              </td>
               <td class="ptable-cell" style="text-align:right"><span *ngIf="rowData.materialcost">{{rowData.materialcost}}</span></td>
               <td class="ptable-cell" style="text-align:left"> {{rowData.remarks}} </td>
               <td class="ptable-cell" style="text-align:center">{{checkValiddate(rowData.expecteddate)}}</td>
               <td *ngIf="materialList[0].gatepasstype=='Returnable' && rowData.returneddate" class="ptable-cell" style="text-align:center">{{checkValiddate(rowData.returneddate)}}</td>
 
-          </ng-template>
+</ng-template>
         </p-table>
       </div>
       <!--</div>-->
@@ -111,5 +115,59 @@
       </div>
     </div>
   </div>
-  </div>
-   
+</div>
+
+<div style="height: 5px; overflow-y: scroll">
+
+  <p-dialog header="Item Location" [(visible)]="AddDialog" [contentStyle]="{'overflow-y': 'scroll', 'overflow-x': 'hidden', 'max-height': '350px','min-height':'350px'}" showEffect="fade" [modal]="true" [responsive]="true" [style]="{width: '1024px'}">
+    <div *ngIf="showdialog">
+      <div class="row  pl-0">
+        <div class="col-lg-4 col-md-4 col-sm-4 pt-2 labelheading">
+          <label>Material Id :</label>&nbsp;<span><label class="labeltext">{{itemlocationData[0].material}}</label></span>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-6 pt-2 labelheading">
+          <label>Material desc :</label>&nbsp;<span><label class="labeltext">{{itemlocationData[0].materialdescription}}</label></span>
+        </div>
+        <!--<div class="col-lg-2 col-md-2 col-sm-2 pt-2 labelheading">
+          <label>Requested qty :</label>&nbsp;<span><label class="labeltext">{{materialList[0].quantity}}</label></span>
+        </div>-->
+      </div>
+
+    </div>
+    <p-table #dt [value]="itemlocationData">
+      <ng-template pTemplate="header">
+        <tr class="mprltbldata">
+          <th style="text-align:center;width:70px">S.No</th>
+          <th style="text-align:center">Location</th>
+          <th style="text-align:center">Available Qty</th>
+          <th style="text-align:center">Issue Qty</th>
+          <th style="text-align:center">Received Date</th>
+
+        </tr>
+
+      </ng-template>
+      <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
+        <tr>
+          <td class="ptable-cell" style="text-align:right">
+            {{ri+1}}
+          </td>
+          <td class="ptable-cell" style="text-align:center">{{rowData.itemlocation}}</td>
+          <td class="ptable-cell" style="text-align:right">{{rowData.availableqty}}</td>
+          <td class="ptable-cell" style="text-align:right">
+            <input id="id_{{ri+1}}" pInputText type="number" style="text-align:right" class="form-control" (change)="checkissueqty($event,rowData.issuedquantity,rowData.availableqty,rowData.material,rowData.createddate);" [(ngModel)]="rowData.issuedquantity">
+          </td>
+          <td class="ptable-cell" style="text-align:center">{{rowData.createddate | date :  constants.dateFormat}}</td>
+        </tr>
+      </ng-template>
+
+    </p-table>
+    <p-footer>
+      <div class="ui-dialog-buttonpane ui-helper-clearfix">
+        <button type="button" pButton icon="fa fa-check" class="ui-button-success" (click)="issuematerial(itemlocationData)" label="OK"></button>
+        <button type="button" pButton icon="fa fa-close" class="ui-button-danger" (click)="Cancel()" label="Cancel"></button>
+      </div>
+    </p-footer>
+  </p-dialog>
+</div>
+
+

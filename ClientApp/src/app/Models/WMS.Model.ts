@@ -124,6 +124,7 @@ export class daylist {
 }
 
 export class gatepassModel {
+  issuedquantity: number;
   gatepassid: number;
   gatepasstype: string;
   status: string;

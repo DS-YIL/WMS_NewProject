@@ -121,6 +121,7 @@ export class GatePassComponent implements OnInit {
     this.dynamicData.tableName = this.constants[name].tableName + " ";
     this.dynamicData.searchCondition = "" + this.constants[name].condition;
     this.dynamicData.searchCondition += "sk.materialid" + " ilike '" + searchTxt + "%'" + " and sk.availableqty>=1";
+    this.materialistModel.materialcost = "";
     this.wmsService.GetMaterialItems(this.dynamicData).subscribe(data => {
       this.searchresult = data;
       this.searchItems = [];
