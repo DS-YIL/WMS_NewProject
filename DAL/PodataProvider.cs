@@ -479,6 +479,40 @@ namespace WMS.DAL
 				//throw new NotImplementedException();
 			}
 		}
+
+
+		/// <summary>
+		/// get list of info for quality check
+		/// Ramesh kumar 07/07/2020
+		/// </summary>
+		/// <param name="invoiceno"></param>
+		/// <param name="pono"></param>
+		/// <returns></returns>
+		public async Task<IEnumerable<OpenPoModel>> Getqualitydetails(string invoiceno, string pono)
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+
+				try
+				{
+					await pgsql.OpenAsync();
+					string query = WMSResource.getdataforqualitydetails.Replace("#pono", pono).Replace("#invoiceno", invoiceno);// + pono+"'";//li
+					var data = await pgsql.QueryAsync<OpenPoModel>(
+					   query, null, commandType: CommandType.Text);
+					return data;
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "Getqualitydetails", Ex.StackTrace.ToString());
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+				//throw new NotImplementedException();
+			}
+		}
 		/// <summary>
 		/// to verify three way match and generate GRN No
 		/// </summary>
@@ -577,6 +611,114 @@ namespace WMS.DAL
 				//throw new NotImplementedException();
 			}
 		}
+		/// <summary>
+		/// to receive material
+		/// Ramesh kumar 07/07/2020
+		/// </summary>
+		/// <param name="datamodel"></param>
+		/// <returns></returns>
+
+		public async Task<string> receivequantity(List<inwardModel> datamodel)
+		{
+
+			inwardModel obj = new inwardModel();
+			inwardModel getgrnnoforpo = new inwardModel();
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+
+				try
+				{
+					datamodel[0].receiveddate = System.DateTime.Now;
+					await pgsql.OpenAsync();
+
+					string query = WMSResource.getinwmasterid.Replace("#pono", datamodel[0].pono).Replace("#invoiceno", datamodel[0].invoiceno);
+					obj = pgsql.QuerySingle<inwardModel>(
+					   query, null, commandType: CommandType.Text);
+					string getGRNno = WMSResource.getGRNNo.Replace("#pono", datamodel[0].pono);
+					getgrnnoforpo = pgsql.QueryFirstOrDefault<inwardModel>(
+					   getGRNno, null, commandType: CommandType.Text);
+					int inwardid = 0;
+					if (obj.inwmasterid != 0)
+					{
+
+						foreach (var item in datamodel)
+						{
+							string insertforinvoicequery = WMSResource.receiveforinvoice;
+							item.deleteflag = false;
+							string materialid = item.Material;
+							string qry = "select qualitycheck from wms.\"MaterialMasterYGS\" where material = '" + materialid + "'";
+							var data = pgsql.QueryFirstOrDefault<OpenPoModel>(
+					        qry, null, commandType: CommandType.Text);
+							bool qc = data.qualitycheck;
+							int? confirmqty = null;
+                            if (qc)
+                            {
+								confirmqty = null;
+                            }
+                            else
+                            {
+								confirmqty = item.receivedqty;
+							}
+
+							using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
+							{
+								var results = DB.ExecuteScalar(insertforinvoicequery, new
+								{
+									obj.inwmasterid,
+									item.receiveddate,
+									item.receivedby,
+									item.receivedqty,
+									confirmqty,
+									materialid,
+									item.deleteflag,
+
+								}) ;
+                                inwardid = Convert.ToInt32(results);
+
+
+                                //if (inwardid != 0)
+                                //{
+                                //    string insertqueryforqualitycheck =WMSResource.insertqueryforqualitycheck;
+
+                                //    var data = DB.ExecuteScalar(insertqueryforqualitycheck, new
+                                //    {
+                                //        inwardid,
+                                //        datamodel.quality,
+                                //        datamodel.qtype,
+                                //        datamodel.qcdate,
+                                //        datamodel.qcby,
+                                //        datamodel.remarks,
+                                //        datamodel.deleteflag,
+
+                                //    });
+                                //string insertqueryforstatusforqty = WMSResource.insertqueryforstatusforqty;
+
+                                //var data1 = DB.ExecuteScalar(insertqueryforstatusforqty, new
+                                //{
+                                //	item.pono,
+                                //	item.returnqty
+
+                                //});
+
+                            }
+						}
+					}
+
+					//}
+					return (Convert.ToString(inwardid));
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "insertquantity", Ex.StackTrace.ToString());
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+			}
+		}
+
 
 
 		/// <summary>
@@ -2585,7 +2727,7 @@ namespace WMS.DAL
 				try
 				{
 					string query = WMSResource.getASNList;
-					query = query + " where deliverydate = '" + deliverydate + "'";
+					query = query + " where asno.deliverydate >= '" + deliverydate + " 00:00:00' and asno.deliverydate <= '" + deliverydate + " 23:59:59'";
 					await pgsql.OpenAsync();
 					return await pgsql.QueryAsync<OpenPoModel>(
 					   query, null, commandType: CommandType.Text);
@@ -3226,7 +3368,7 @@ namespace WMS.DAL
 					string date = dt.ToString("yyyy-MM-dd");
 					string query = WMSResource.getsecurityreceivedlist;
 					query = query + " where sl.invoicedate <= '" + date + " 23:59:59' and sl.invoicedate >= '" + date + " 00:00:00'";
-					query = query + " group by sl.pono";
+					query = query + " group by sl.pono, sl.asn ";
 					await pgsql.OpenAsync();
 					return await pgsql.QueryAsync<SecurityInwardreceivedModel>(
 					   query, null, commandType: CommandType.Text);
@@ -3243,6 +3385,79 @@ namespace WMS.DAL
 
 			}
 		}
+		
+			public async Task<string> insertquantitycheck(List<inwardModel> datamodel)
+		{
+
+			inwardModel obj = new inwardModel();
+			inwardModel getgrnnoforpo = new inwardModel();
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+
+				try
+				{
+					await pgsql.OpenAsync();
+
+					string checkedon = DateTime.Now.ToString("yyyy-MM-dd");
+						foreach (var item in datamodel)
+						{
+						string insertforquality = WMSResource.insertqualitycheck.Replace("#inwardid", item.inwardid.ToString());
+							string materialid = item.Material;
+							using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
+							{
+                            var results = DB.ExecuteScalar(insertforquality, new
+                            {
+                                item.confirmqty,
+                                item.returnqty,
+                                item.receivedby,
+                                item.remarks
+
+                            });
+                            //inwardid = Convert.ToInt32(results);
+                            //if (inwardid != 0)
+                            //{
+                            //    string insertqueryforqualitycheck =WMSResource.insertqueryforqualitycheck;
+
+                            //    var data = DB.ExecuteScalar(insertqueryforqualitycheck, new
+                            //    {
+                            //        inwardid,
+                            //        datamodel.quality,
+                            //        datamodel.qtype,
+                            //        datamodel.qcdate,
+                            //        datamodel.qcby,
+                            //        datamodel.remarks,
+                            //        datamodel.deleteflag,
+
+                            //    });
+                            string insertqueryforstatusforqty = WMSResource.insertqueryforstatusforqty;
+
+                            var data1 = DB.ExecuteScalar(insertqueryforstatusforqty, new
+                            {
+                                item.pono,
+                                item.returnqty
+
+                            });
+
+
+                        }
+					}
+
+					//}
+					return "counted";
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "insertquantitycheck", Ex.StackTrace.ToString());
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+			}
+		}
+
+
 
 		public async Task<IEnumerable<dropdownModel>> Getlocationdata()
 		{

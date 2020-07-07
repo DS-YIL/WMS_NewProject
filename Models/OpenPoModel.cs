@@ -33,6 +33,11 @@ namespace WMS.Models
 		public int totalrecivedqty { get; set; }
 		public DateTime enteredon { get; set; }
 		public int materialqty { get; set; }
+		public string asn { get; set; }
+		public bool qualitycheck { get; set; }
+		public int inwardid { get; set; }
+		public string remarks { get; set; }
+		public string checkedby { get; set; }
 	}
 	public class BarcodeModel
 	{
@@ -99,6 +104,8 @@ namespace WMS.Models
         public string itemlocation { get; set; }
 		public string invoiceno { get; set; }
 		public int materialqty { get; set; }
+
+		public string asn { get; set; }
 	}
 	public class StockModel
 	{
@@ -515,6 +522,8 @@ namespace WMS.Models
 	{
 		public string pono { get; set; }
 		public string receivedby { get; set; }
+
+		public string asn { get; set; }
 
 		public string suppliername { get; set; }
 	}

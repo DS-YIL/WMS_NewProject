@@ -84,6 +84,8 @@ export class inwardModel {
   invoiceno: string;
   projectname: string;
   materialqty: number;
+  qualitycheck: boolean;
+  checkedby: string
 }
 
 

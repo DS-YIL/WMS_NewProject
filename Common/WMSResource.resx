@@ -169,7 +169,7 @@ from wms.openpolistview op
     <comment>getopenpono list</comment>
   </data>
   <data name="Getdetailsforthreewaymatching" xml:space="preserve">
-    <value>select distinct openpo.projectname,inwa.invoiceno,inwa.grnnumber,inwa.pono,openpo.material,openpo.materialqty,(inw.confirmqty+inw.returnqty) as receivedqty,openpo.materialdescription, openpo.quotationqty,inw.receivedqty,inw.confirmqty,inw.returnqty from wms.wms_securityinward inwa  
+    <value>select distinct openpo.projectname,inwa.invoiceno,inw.checkedby,inwa.grnnumber,inwa.pono,openpo.material,openpo.materialqty,(inw.confirmqty+inw.returnqty) as receivedqty,openpo.materialdescription, openpo.quotationqty,inw.receivedqty,inw.confirmqty,inw.returnqty from wms.wms_securityinward inwa  
  left join wms.wms_storeinward inw on inw.inwmasterid=inwa.inwmasterid
  inner join wms.openpolistview openpo on openpo.pono=inwa.pono
   where  inwa.pono='#pono'  and inwa.invoiceno= '#invoiceno'  order by inwa.grnnumber desc</value>
@@ -373,7 +373,8 @@ where stockstatus='active' and sk.deleteflag=false and availableqty!=0</value>
     <value>update wms.wms_stock set availableqty=#availableqty where itemid=#itemid</value>
   </data>
   <data name="getASNList" xml:space="preserve">
-    <value>select pono,vendorname,quotationqty ,deliverydate  from wms.openpolistview</value>
+    <value>select asno.pono, asno.asn,po.suppliername as vendorname from wms.wms_asn asno left outer join wms.wms_polist po
+on asno.pono = po.pono</value>
   </data>
   <data name="updatecyclecountconfig" xml:space="preserve">
     <value>update wms.cyclecountconfig set apercentage=@apercentage,bpercentage=@bpercentage,cpercentage=@cpercentage,cyclecount=@cyclecount,frequency=@frequency where id = #cid</value>
@@ -458,8 +459,8 @@ where sec.grnnumber ='#grnnumber' and sk.materialid='#materialid'</value>
   group by req.requestforissueid,iss.materialissueid</value>
   </data>
   <data name="getsecurityreceivedlist" xml:space="preserve">
-    <value>select sl.pono,Max(emp.name) as receivedby ,Max(ol.vendorname) as suppliername from wms.wms_securityinward sl 
-left outer join wms.openpolistview ol on sl.pono = ol.pono 
+    <value>select sl.pono,sl.asn,Max(emp.name) as receivedby ,Max(ol.suppliername) as suppliername from wms.wms_securityinward sl 
+left outer join wms.wms_polist ol on sl.pono = ol.pono 
 left outer join wms.employee emp on sl.receivedby = emp.employeeno</value>
   </data>
   <data name="getmaterialdetailsbyreserveid" xml:space="preserve">
@@ -530,5 +531,24 @@ values(default,@pono,@itemid,@gatepassmaterialid,@itemissueddate,@itemreceiverid
   </data>
   <data name="getMateDescr" xml:space="preserve">
     <value>select Materialdescription from wms."MaterialMasterYGS"  where Material = '#materialid'</value>
+  </data>
+   <data name="insertqualitycheck" xml:space="preserve">
+    <value>UPDATE  wms.wms_storeinward set  confirmqty=@confirmqty,returnqty = @returnqty,checkedby = @receivedby,checkedon=current_date,remarks=@remarks where inwardid =#inwardid</value>
+  </data>
+  <data name="getdataforqualitydetails" xml:space="preserve">
+    <value>select distinct openpo.projectname,inw.inwardid,inw.remarks,inw.checkedby,inwa.invoiceno,inwa.grnnumber,inwa.pono,openpo.material,openpo.materialqty,(inw.confirmqty+inw.returnqty) as receivedqty,openpo.materialdescription, openpo.quotationqty,inw.receivedqty,inw.returnqty,mat.qualitycheck, 
+CASE
+     WHEN mat.qualitycheck=True  THEN inw.confirmqty
+     ELSE  inw.receivedqty
+END as confirmqty
+from wms.wms_securityinward inwa  
+ left join wms.wms_storeinward inw on inw.inwmasterid=inwa.inwmasterid
+ inner join wms.openpolistview openpo on openpo.pono=inwa.pono
+ left outer join wms."MaterialMasterYGS" mat on mat.material = openpo.material
+  where  inwa.pono='#pono'  and inwa.invoiceno= '#invoiceno'  order by inwa.grnnumber desc</value>
+  </data>
+  <data name="receiveforinvoice" xml:space="preserve">
+    <value>INSERT INTO wms.wms_storeinward(inwmasterid,receiveddate,receivedby,receivedqty,confirmqty,materialid,deleteflag)
+VALUES(@inwmasterid,@receiveddate,@receivedby,@receivedqty,@confirmqty,@materialid,@deleteflag)returning inwardid</value>
   </data>
 </root>

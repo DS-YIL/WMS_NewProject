@@ -173,7 +173,8 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select pono,vendorname,quotationqty ,deliverydate  from wms.openpolistview.
+        ///   Looks up a localized string similar to select asno.pono, asno.asn,po.suppliername as vendorname from wms.wms_asn asno left outer join wms.wms_polist po
+        ///on asno.pono = po.pono.
         /// </summary>
         public static string getASNList {
             get {
@@ -208,6 +209,22 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to select distinct openpo.projectname,inw.inwardid,inw.remarks,inw.checkedby,inwa.invoiceno,inwa.grnnumber,inwa.pono,openpo.material,openpo.materialqty,(inw.confirmqty+inw.returnqty) as receivedqty,openpo.materialdescription, openpo.quotationqty,inw.receivedqty,inw.returnqty,mat.qualitycheck, 
+        ///CASE
+        ///     WHEN mat.qualitycheck=True  THEN inw.confirmqty
+        ///     ELSE  inw.receivedqty
+        ///END as confirmqty
+        ///from wms.wms_securityinward inwa  
+        /// left join wms.wms_storeinward inw on inw.inwmasterid=inwa.inwmasterid
+        /// inn [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string getdataforqualitydetails {
+            get {
+                return ResourceManager.GetString("getdataforqualitydetails", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to select sum(iss.issuedqty) as issuedqty,op.jobname,req.requestforissueid,emp.&quot;name&quot;,req.requesteddate,sk.materialid,sk.pono,req.requestedquantity,sk.availableqty,req.requestid from wms.wms_stock sk 
         ///      inner join wms.openpolistview op on op.pono=sk.pono
         ///       inner join wms.wms_materialrequest req on req.materialid=sk.materialid
@@ -222,10 +239,10 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select distinct openpo.projectname,inwa.invoiceno,inwa.grnnumber,inwa.pono,openpo.material,openpo.materialqty,(inw.confirmqty+inw.returnqty) as receivedqty,openpo.materialdescription, openpo.quotationqty,inw.receivedqty,inw.confirmqty,inw.returnqty from wms.wms_securityinward inwa  
+        ///   Looks up a localized string similar to select distinct openpo.projectname,inwa.invoiceno,inw.checkedby,inwa.grnnumber,inwa.pono,openpo.material,openpo.materialqty,(inw.confirmqty+inw.returnqty) as receivedqty,openpo.materialdescription, openpo.quotationqty,inw.receivedqty,inw.confirmqty,inw.returnqty from wms.wms_securityinward inwa  
         /// left join wms.wms_storeinward inw on inw.inwmasterid=inwa.inwmasterid
         /// inner join wms.openpolistview openpo on openpo.pono=inwa.pono
-        ///  where  inwa.pono=&apos;#pono&apos;  and inwa.invoiceno= &apos;#invoiceno&apos;  order by inwa.grnnumber desc.
+        ///  where  inwa.pono=&apos;#pono&apos;  and inwa.invoiceno= &apos;#invoiceno&apos;  order by inwa.g [rest of string was truncated]&quot;;.
         /// </summary>
         public static string Getdetailsforthreewaymatching {
             get {
@@ -560,8 +577,8 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select sl.pono,Max(emp.name) as receivedby ,Max(ol.vendorname) as suppliername from wms.wms_securityinward sl 
-        ///left outer join wms.openpolistview ol on sl.pono = ol.pono 
+        ///   Looks up a localized string similar to select sl.pono,sl.asn,Max(emp.name) as receivedby ,Max(ol.suppliername) as suppliername from wms.wms_securityinward sl 
+        ///left outer join wms.wms_polist ol on sl.pono = ol.pono 
         ///left outer join wms.employee emp on sl.receivedby = emp.employeeno.
         /// </summary>
         public static string getsecurityreceivedlist {
@@ -649,6 +666,15 @@ namespace WMS.Common {
         public static string insertinvoicedata {
             get {
                 return ResourceManager.GetString("insertinvoicedata", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to UPDATE  wms.wms_storeinward set  confirmqty=@confirmqty,returnqty = @returnqty,checkedby = @receivedby,checkedon=current_date,remarks=@remarks where inwardid =#inwardid.
+        /// </summary>
+        public static string insertqualitycheck {
+            get {
+                return ResourceManager.GetString("insertqualitycheck", resourceCulture);
             }
         }
         
@@ -789,6 +815,15 @@ namespace WMS.Common {
         public static string queryforitemdetails {
             get {
                 return ResourceManager.GetString("queryforitemdetails", resourceCulture);
+            }
+        }
+		/// <summary>
+        ///   Looks up a localized string similar to INSERT INTO wms.wms_storeinward(inwmasterid,receiveddate,receivedby,receivedqty,confirmqty,materialid,deleteflag)
+        ///VALUES(@inwmasterid,@receiveddate,@receivedby,@receivedqty,@confirmqty,@materialid,@deleteflag)returning inwardid.
+        /// </summary>
+        public static string receiveforinvoice {
+            get {
+                return ResourceManager.GetString("receiveforinvoice", resourceCulture);
             }
         }
         

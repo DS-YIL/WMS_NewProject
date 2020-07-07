@@ -10,10 +10,10 @@ import { first } from 'rxjs/operators';
 import { isNullOrUndefined } from 'util';
 
 @Component({
-  selector: 'app-StoreClerk',
-  templateUrl: './StoreClerk.component.html'
+  selector: 'app-QualityCheck',
+  templateUrl: './QualityCheck.component.html'
 })
-export class StoreClerkComponent implements OnInit {
+export class QualityCheckComponent implements OnInit {
 
   constructor(private messageService: MessageService, private wmsService: wmsService, private route: ActivatedRoute, private router: Router, public constants: constants, private spinner: NgxSpinnerService) { }
 
@@ -46,27 +46,31 @@ export class StoreClerkComponent implements OnInit {
       (<HTMLInputElement>document.getElementById("receivedqty")).value = "";
 
     }
+    if (entredvalue != (confirmedqty + returnedqty) && confirmedqty && returnedqty) {
+      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'received quantity must be equals to sum of return and accepted quantity.' });
+      (<HTMLInputElement>document.getElementById("receivedqty")).value = "";
+    }
   }
-  //checkconfirmqty(entredvalue, receivedqty, returnedqty, maxvalue) {
-  //  if (entredvalue > maxvalue) {
-  //    this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please enter confirm quantity less than material quantity' });
-  //    (<HTMLInputElement>document.getElementById("confirmqty")).value = "";
-  //  }
-  //  if (entredvalue != (receivedqty - returnedqty) && receivedqty && returnedqty) {
-  //    this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'sum of return and accepted quantity must be equal to received qty' });
-  //    (<HTMLInputElement>document.getElementById("confirmqty")).value = "";
-  //  }
-  //}
-  //checkreturnqty(entredvalue,receivedqty,acceptedqty, maxvalue) {
-  //  if (entredvalue > maxvalue) {
-  //    this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please enter return quantity less than material quantity' });
-  //    (<HTMLInputElement>document.getElementById("returnqty")).value = "";
-  //  }
-  //  if (entredvalue != (receivedqty - acceptedqty) && receivedqty && acceptedqty) {
-  //    this.messageService.add({ severity: 'error', summary: 'Error Message', detail:  'sum of return and accepted quantity must be equal to received qty' });
-  //    (<HTMLInputElement>document.getElementById("returnqty")).value = "";
-  //  }
-  //}
+  checkconfirmqty(entredvalue, receivedqty, returnedqty, maxvalue) {
+    if (entredvalue > maxvalue) {
+      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please enter confirm quantity less than material quantity' });
+      (<HTMLInputElement>document.getElementById("confirmqty")).value = "";
+    }
+    if (entredvalue != (receivedqty - returnedqty) && receivedqty && returnedqty) {
+      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'sum of return and accepted quantity must be equal to received qty' });
+      (<HTMLInputElement>document.getElementById("confirmqty")).value = "";
+    }
+  }
+  checkreturnqty(entredvalue,receivedqty,acceptedqty, maxvalue) {
+    if (entredvalue > maxvalue) {
+      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please enter return quantity less than material quantity' });
+      (<HTMLInputElement>document.getElementById("returnqty")).value = "";
+    }
+    if (entredvalue != (receivedqty - acceptedqty) && receivedqty && acceptedqty) {
+      this.messageService.add({ severity: 'error', summary: 'Error Message', detail:  'sum of return and accepted quantity must be equal to received qty' });
+      (<HTMLInputElement>document.getElementById("returnqty")).value = "";
+    }
+  }
   scanBarcode() {
     if (this.PoDetails.pono) {
       this.PoDetails.pono;
@@ -77,7 +81,7 @@ export class StoreClerkComponent implements OnInit {
       //this.spinner.hide();
       //  if (data == true) {
       this.showQtyUpdateDialog = true;
-      this.getponodetails(this.PoDetails.pono);
+      this.getqualitydetails(this.PoDetails.pono);
       // this.messageService.add({ severity: 'success', summary: 'Success Message', detail: 'GRN Posted  Sucessfully' });
       // }
       //else
@@ -90,7 +94,6 @@ export class StoreClerkComponent implements OnInit {
 
   }
   getponodetails(data) {
-    this.qualitychecked = false;
     this.podetailsList = [];
     this.wmsService.Getthreewaymatchingdetails(data).subscribe(data => {
       this.spinner.hide();
@@ -99,11 +102,30 @@ export class StoreClerkComponent implements OnInit {
         // this.PoDetails = data[0];
         this.podetailsList = data;
         this.grnnumber = this.podetailsList[0].grnnumber;
-
         this.showDetails = true;
-        if (this.podetailsList[0].checkedby) {
-          this.qualitychecked = true;
+      }
+      else
+        this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'No data' });
+    })
+  }
+
+  getqualitydetails(data) {
+    this.podetailsList = [];
+    this.wmsService.Getdataforqualitycheck(data).subscribe(data => {
+      this.spinner.hide();
+      if (data) {
+        debugger;
+        this.disGrnBtn = false;
+        // this.PoDetails = data[0];
+        this.podetailsList = data;
+        this.grnnumber = this.podetailsList[0].grnnumber;
+        if (!this.grnnumber) {
+          this.disGrnBtn = true;
         }
+        if (this.podetailsList[0].checkedby) {
+          this.disGrnBtn = true;
+        }
+        this.showDetails = true;
       }
       else
         this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'No data' });
@@ -129,7 +151,6 @@ export class StoreClerkComponent implements OnInit {
     this.inwardModel.pendingqty = parseInt(this.PoDetails.materialqty) - this.inwardModel.confirmqty;
   }
   onsubmit() {
-    debugger;
     if (this.podetailsList.length > 0 && this.podetailsList[0].receivedqty>'0') {
 
       this.spinner.show();
@@ -140,25 +161,33 @@ export class StoreClerkComponent implements OnInit {
       this.podetailsList.forEach(item => {
         item.receivedby = this.employee.employeeno;
       });
-        this.wmsService.insertitems(this.podetailsList).subscribe(data => {
+      this.recqty = this.podetailsList[0].confirmqty + this.podetailsList[0].returnqty;
+      this.totalqty = parseInt(this.podetailsList[0].receivedqty);
+      if (this.totalqty == this.recqty) {
+        this.wmsService.insertqualitycheck(this.podetailsList).subscribe(data => {
           this.spinner.hide();
+         
           if (data != null) {
-            this.wmsService.verifythreewaymatch(this.PoDetails.pono).subscribe(info => {
-              if (info != null)
-                this.grnnumber = info.grnnumber;
-              //this.grnnumber = data;
-            })
+           
           }
           if (data == null) {
             this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Something went wrong' });
           }
 
           if (data) {
-            this.messageService.add({ severity: 'success', summary: 'Success Message', detail: 'Goods received' });
+            
+            this.messageService.add({ severity: 'success', summary: 'Success Message', detail: 'Quality checked' });
             this.showQtyUpdateDialog = false;
             this.disGrnBtn = true;
+            
           }
+          this.getqualitydetails(this.PoDetails.pono);
         });
+      }
+      else {
+        this.messageService.add({ severity: 'error', summary: 'Validation', detail: 'Accept and return quantity  should be equal to  Received quantity ' });
+        this.spinner.hide();
+      }
     }
     else
       this.messageService.add({ severity: 'error', summary: 'Validation', detail: 'Enter Quantity' });
