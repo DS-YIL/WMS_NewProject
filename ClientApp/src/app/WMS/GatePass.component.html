@@ -33,7 +33,7 @@
   <div class="row mt-4">
     <div class="col-lg-3 col-md-3 col-sm-3  form-inline">
       </div>
-      <div class="col-lg-3 col-md-3 col-sm-3  form-inline">
+      <div class="col-lg-2 col-md-2 col-sm-2  form-inline">
         <label class="form-label">Status:</label>&nbsp;&nbsp;
         <div class="form-inline-list">
           <select class="form-control forms-input" [(ngModel)]="approverstatus">
@@ -45,7 +45,7 @@
         </div>
       </div>
       <div class="col-lg-2 col-md-2 col-sm-2 form-inline">
-        <button type="button" class="btn btn-primary" (click)="getGatePassList()">Search</button>
+        <button type="button" class="btn btn-primary" (click)="searchGatePassList()">Search</button>
       </div>
     </div>
   </div>
@@ -70,7 +70,7 @@
         <th style="text-align:center">Status</th>
         <th style="text-align:center">Requested By</th>
         <th style="text-align:center">Requested On</th>
-        <th *ngIf="employee.roleid!='4' && employee.roleid !='8'" style="text-align:center;width:5%">Edit</th>
+        <th *ngIf="employee.roleid !='8'" style="text-align:center;width:5%">Edit</th>
         <th *ngIf="employee.roleid!='4' && employee.roleid !='8'" style="text-align:center;width:5%">Print</th>
         <th *ngIf="employee.roleid=='7'" style="text-align:center">Returned Date</th>
       </tr>
@@ -106,7 +106,7 @@
         <td class="ptable-cell" *ngIf="!rowData.approverstatus" style="text-align:left">Pending</td>
         <td class="ptable-cell" style="text-align:left">{{rowData.name}}</td>
         <td class="ptable-cell" style="text-align:center">{{rowData.requestedon | date :  constants.dateFormat}}</td>
-        <td class="ptable-cell" *ngIf="employee.roleid!='4' && employee.roleid !='8'" style="text-align:center"><button *ngIf="rowData.approverstatus!='Approved' && rowData.requestedby==employee.employeeno" type="button" icon="fa fa-edit" pButton aria-hidden="true" (click)="openGatepassDialog(rowData,ri,'gatepassdialog')"></button></td>
+        <td class="ptable-cell" style="text-align:center" *ngIf="employee.roleid !='8'"><button  type="button" icon="fa fa-edit" pButton aria-hidden="true" (click)="openGatepassDialog(rowData,ri,'gatepassdialog')"></button></td>
         <td class="ptable-cell" *ngIf="employee.roleid!='4' && employee.roleid !='8'" style="text-align:center"><button *ngIf="rowData.approverstatus=='Approved'" type="button" icon="fa fa-print" pButton aria-hidden="true" (click)="showprint(rowData)"></button></td>
         <td *ngIf="employee.roleid=='7'" class="ptable-cell" style="text-align:center"><button *ngIf="rowData.gatepasstype=='Returnable' && employee.roleid=='7' && rowData.approverstatus=='Approved' && rowData.print==false" type="button" icon="fa fa-pencil" pButton aria-hidden="true" (click)="openGatepassDialog(rowData,ri,'updateReturnedDateDialog')"></button></td>
       </tr>
@@ -227,18 +227,10 @@
   </div>-->
   <!--Add and Update materials-->
   <div class="row " style="margin-top:10px">
-    12
-
     <div class="col-lg-12 col-md-12 col-sm-12">
-      12
-
       <p-table [value]="gatepassModel.materialList" [style]="{'width':'97%','height':'500px','overflow':'visible!important'}">
-        at
-        <ng-template pTemplate="caption">
-          Add M
-          aterial
-          <button type="button" icon="fa fa-plus" pButton aria-hidden="true" pTooltip="Add material" (click)="addNewMaterial()" style="float: right;
-    height: 26px;"></button>
+        <ng-template pTemplate="caption">Add Material
+          <button type="button" icon="fa fa-plus" pButton aria-hidden="true" pTooltip="Add material" (click)="addNewMaterial()" style="float: right;height: 26px;"></button>
         </ng-template>
         <ng-template pTemplate="header">
           <tr class="mprltbldata">
@@ -288,17 +280,8 @@
 
 
             </td>-->
-
-
-
-            <td class="ptable-cell" style="text-align:center">ce ="<button pButton type="button" icon="fa fa-trash" class="ui-button-info" style="margin-left: 1px;" (click)="removematerial(rowData.gatepassmaterialid, ri)"></button></td>
-            at
-            >
-
+            <td class="ptable-cell" style="text-align:center"><button pButton type="button" icon="fa fa-trash" class="ui-button-info" style="margin-left: 1px;" (click)="removematerial(rowData.gatepassmaterialid, ri)"></button></td>
         </ng-template>
-        at
-        >
-
       </p-table>
     </div>
   </div>
