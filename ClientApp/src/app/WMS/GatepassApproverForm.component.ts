@@ -121,9 +121,10 @@ export class GatePassApproverComponent implements OnInit {
     });
   }
   //check issued quantity
-  checkissueqty($event, entredvalue, maxvalue, material, createddate) {
+  checkissueqty($event, entredvalue, maxvalue, material, createddate,index) {
     var id = $event.target.id;
     if (entredvalue > maxvalue) {
+      this.itemlocationData[index].issuedquantity = 0;
       this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please enter issue quantity less than Available quantity' });
       // this.btnDisableformaterial = true;
       (<HTMLInputElement>document.getElementById(id)).value ="0";
@@ -149,12 +150,9 @@ export class GatePassApproverComponent implements OnInit {
   issuematerial(itemlocationData) {
     var totalissuedqty = 0;
     this.itemlocationData.forEach(item => {
-      if (item.issuedquantity != "0") {
-        totalissuedqty = totalissuedqty + (item.issuedquantity);
+      if (item.issuedquantity != "0")
 
-        (<HTMLInputElement>document.getElementById(this.id)).value = totalissuedqty.toString();
-        this.materialList[this.roindex].issuedqty = totalissuedqty;
-      }
+        totalissuedqty = totalissuedqty + (item.issuedquantity);
       //this.FIFOvalues.issueqty = totalissuedqty;
       //item.issuedqty = totalissuedqty;
     
@@ -164,6 +162,8 @@ export class GatePassApproverComponent implements OnInit {
     });
 
 
+   // (<HTMLInputElement>document.getElementById(this.id)).value = totalissuedqty.toString();
+    this.materialList[this.roindex].issuedqty = totalissuedqty;
     this.txtDisable = true;
 
     this.AddDialog = false;

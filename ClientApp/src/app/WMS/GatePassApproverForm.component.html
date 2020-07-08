@@ -75,7 +75,7 @@
               <td class="ptable-cell" style="text-align:left"> {{rowData.materialdescription}} </td>
               <td class="ptable-cell" style="text-align:right">{{rowData.quantity}}</td>
               <td class="ptable-cell">
-                <input pInputText type="number" style="text-align:center" class="form-control" [disabled]="txtDisable" [(ngModel)]="rowData.issuedquantity">
+                <input pInputText type="number" style="text-align:center" class="form-control" [disabled]="txtDisable" [(ngModel)]="rowData.issuedqty">
               </td>
               <td class="ptable-cell" style="text-align:right"><span *ngIf="rowData.materialcost">{{rowData.materialcost}}</span></td>
               <td class="ptable-cell" style="text-align:left"> {{rowData.remarks}} </td>
@@ -154,7 +154,7 @@
           <td class="ptable-cell" style="text-align:center">{{rowData.itemlocation}}</td>
           <td class="ptable-cell" style="text-align:right">{{rowData.availableqty}}</td>
           <td class="ptable-cell" style="text-align:right">
-            <input id="id_{{ri+1}}" pInputText type="number" style="text-align:right" class="form-control" (change)="checkissueqty($event,rowData.issuedquantity,rowData.availableqty,rowData.material,rowData.createddate);" [(ngModel)]="rowData.issuedquantity">
+            <input id="id_{{ri+1}}" pInputText type="number" style="text-align:right" class="form-control" (change)="checkissueqty($event,rowData.issuedquantity,rowData.availableqty,rowData.material,rowData.createddate,ri);" [(ngModel)]="rowData.issuedquantity">
           </td>
           <td class="ptable-cell" style="text-align:center">{{rowData.createddate | date :  constants.dateFormat}}</td>
         </tr>
