@@ -4,7 +4,7 @@ import { HttpHeaders } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { constants } from '../Models/WMSConstants'
-import { Employee, Login, DynamicSearchResult } from '../Models/Common.Model';
+import { Employee, Login, DynamicSearchResult, printMaterial } from '../Models/Common.Model';
 import { PoFilterParams, PoDetails, BarcodeModel, StockModel, materialRequestDetails, inwardModel, gatepassModel } from '../Models/WMS.Model';
 import { Text } from '@angular/compiler/src/i18n/i18n_ast';
 
@@ -68,6 +68,11 @@ export class wmsService {
     return this.http.get<any[]>(this.url + 'POData/GetPOList', this.httpOptions);
   }
 
+  //generate barcode for materials
+  generateBarcodeMaterial(printdata: printMaterial): Observable<any> {
+    return this.http.post<any>(this.url + 'POData/generateBarcodeMaterial', printdata, this.httpOptions);
+  }
+
   insertbarcodeandinvoiceinfo(BarcodeModel: BarcodeModel): Observable<any> {
     return this.http.post<any>(this.url + 'POData/insertbarcodeandinvoiceinfo', BarcodeModel, this.httpOptions);
   }
@@ -100,8 +105,8 @@ export class wmsService {
   }
 
   //Get location details
-  getLocationDetails(materialid: string): Observable<any> {
-    return this.http.get<any>(this.url + 'POData/getlocationdetailsformaterialid?materialid=' + materialid, this.httpOptions);
+  getLocationDetails(materialid: string, gnrno:string): Observable<any> {
+    return this.http.get<any>(this.url + 'POData/getlocationdetailsformaterialid?materialid=' + materialid + '&grnnumber=' + gnrno, this.httpOptions);
   }
 
   //Get material request, isuued and approved details

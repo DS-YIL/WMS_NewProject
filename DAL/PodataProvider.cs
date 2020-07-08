@@ -9,10 +9,14 @@ using WMS.Common;
 using WMS.Interfaces;
 using System.Web;
 using WMS.Models;
+using System.Web;
 using Microsoft.AspNetCore.Http;
 using System.IO;
 using System.Net.Sockets;
 using System.Net;
+using ZXing;
+using ZXing.Common;
+using ZXing.CoreCompat.System.Drawing;
 
 namespace WMS.DAL
 {
@@ -128,6 +132,38 @@ namespace WMS.DAL
 				}
 				//throw new NotImplementedException();
 			}
+		}
+
+		///<summary>
+		///Generating barcode
+		///</summary>
+		public printMaterial generateBarcodeMaterial(printMaterial printMat)
+        {
+			string path = "";
+			path = Environment.CurrentDirectory+ @"\Barcodes\";
+			//path = System.Web. Server.MapPath("/Images/BarCodeImages");
+			//generate barcode
+			var content = printMat.grnno+"-"+printMat.materialid;
+			BarcodeWriter writer = new BarcodeWriter
+			{
+				Format = BarcodeFormat.CODE_128,
+                Options = new EncodingOptions
+				{
+					Height = 40,
+					Width = 80,
+					PureBarcode = false,
+					Margin = 10,
+				},
+			};
+            var bitmap = writer.Write(content);
+
+			// write text and generate a 2-D barcode as a bitmap
+			writer
+				.Write(content)
+				.Save(path + "/" + content + ".bmp");
+
+			printMat.barcodePath = path+content + ".bmp";
+			return printMat;
 		}
 
 		/// <summary>
@@ -354,14 +390,14 @@ namespace WMS.DAL
 
 
 		//Get location details based on material id
-		public async Task<IEnumerable<LocationDetails>> getlocationdetails(string materialid)
+		public async Task<IEnumerable<LocationDetails>> getlocationdetails(string materialid, string grnnumber)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
 
 				try
 				{
-					string query = WMSResource.getLocationDetails.Replace("#materialid", materialid);
+					string query = WMSResource.getLocationDetails.Replace("#materialid", materialid).Replace("#grn",grnnumber);
 					return await pgsql.QueryAsync<LocationDetails>(
 					   query, null, commandType: CommandType.Text);
 

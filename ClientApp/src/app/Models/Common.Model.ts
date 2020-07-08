@@ -25,6 +25,16 @@ export class DynamicSearchResult {
   query: string;
 }
 
+export class printMaterial {
+  materialid: any;
+  receiveddate: any;
+  grnno: any;
+  pono: any;
+  invoiceno: any;
+  noofprint: any;
+  barcodePath: any;
+}
+
 export class searchParams {
   tableName: string;
   fieldName: string;
