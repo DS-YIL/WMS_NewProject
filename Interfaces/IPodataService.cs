@@ -50,6 +50,8 @@ namespace WMS.Interfaces
         int deletegatepassmaterial(int gatepassmaterialid);
         int updategatepassapproverstatus(List<gatepassModel> model);
         Task<IEnumerable<gatepassModel>> GetmaterialList(int gatepassid);
+        Task<IEnumerable<gatepassapprovalsModel>> getGatePassApprovalHistoryList(int gatepassid);
+        
         int updateprintstatus(gatepassModel model);
         int updatereprintstatus(reprintModel model);
         Task<IEnumerable<ReportModel>> GetreportBasedCategory(int categoryid);

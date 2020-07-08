@@ -552,4 +552,7 @@ from wms.wms_securityinward inwa
     <value>INSERT INTO wms.wms_storeinward(inwmasterid,receiveddate,receivedby,receivedqty,confirmqty,materialid,deleteflag)
 VALUES(@inwmasterid,@receiveddate,@receivedby,@receivedqty,@confirmqty,@materialid,@deleteflag)returning inwardid</value>
   </data>
+  <data name="getGatePassApprovalHistoryList" xml:space="preserve">
+    <value>select * from wms.wms_gatepassapprovals where gatepassid =#gatepassid and currentstatus =true</value>
+  </data>
 </root>

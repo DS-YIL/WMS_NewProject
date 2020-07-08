@@ -180,6 +180,9 @@ export class wmsService {
   gatepassmaterialdetail(gatepassId): Observable<any> {
     return this.http.get<any>(this.url + 'POData/getmaterialdetailsbygatepassid?gatepassid=' + gatepassId + '', this.httpOptions);
   }
+  getGatePassApprovalHistoryList(gatepassId): Observable<any> {
+    return this.http.get<any>(this.url + 'POData/getGatePassApprovalHistoryList?gatepassid=' + gatepassId + '', this.httpOptions);
+  }
 
   checkMaterialandQty(material, qty): Observable<any> {
     const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }), responseType: 'text' as any };

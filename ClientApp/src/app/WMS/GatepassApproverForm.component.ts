@@ -16,9 +16,9 @@ import { ConfirmationService } from 'primeng/api';
 })
 export class GatePassApproverComponent implements OnInit {
   txtDisable: boolean = true;
-   // btnDisableformaterial: boolean=false;
-  constructor(private ConfirmationService: ConfirmationService,private formBuilder: FormBuilder, private messageService: MessageService, private wmsService: wmsService, private datePipe: DatePipe, private route: ActivatedRoute, private router: Router, public constants: constants, private spinner: NgxSpinnerService) { }
-  public  AddDialog: boolean;
+  // btnDisableformaterial: boolean=false;
+  constructor(private ConfirmationService: ConfirmationService, private formBuilder: FormBuilder, private messageService: MessageService, private wmsService: wmsService, private datePipe: DatePipe, private route: ActivatedRoute, private router: Router, public constants: constants, private spinner: NgxSpinnerService) { }
+  public AddDialog: boolean;
   public id: any;
   roindex: any;
   public showdialog: boolean;
@@ -29,6 +29,8 @@ export class GatePassApproverComponent implements OnInit {
   public itemlocationData: Array<any> = [];
   public Oldestdata: FIFOValues;
   public FIFOvalues: FIFOValues;
+  public gatePassApprovalList: Array<any> = [];
+
   ngOnInit() {
     if (localStorage.getItem("Employee"))
       this.employee = JSON.parse(localStorage.getItem("Employee"));
@@ -39,10 +41,14 @@ export class GatePassApproverComponent implements OnInit {
       if (params["gatepassid"]) {
         var gatepassId = params["gatepassid"]
         this.bindMaterilaDetails(gatepassId);
+        if (this.employee.roleid == "8") {
+          this.getGatePassHistoryList(gatepassId);
+        }
       }
     });
     this.gatepassModel = new gatepassModel();
     this.gatepassModel.approverstatus = "Approved";
+
 
   }
 
@@ -61,7 +67,13 @@ export class GatePassApproverComponent implements OnInit {
   backtogatepass() {
     this.router.navigateByUrl("WMS/GatePass");
   }
-
+  getGatePassHistoryList(gatepassId: any) {
+    this.wmsService.getGatePassApprovalHistoryList(gatepassId).subscribe(data => {
+      this.gatePassApprovalList = data;
+     //if (this.gatePassApprovalList.filter(li => li.approverid == this.employee.employeeno)[0].approverstatus != "Approved")
+        //this.btnDisable = false;
+    });
+  }
   updategatepassapproverstatus() {
     this.gatepassModel.gatepassid = this.materialList[0].gatepassid;
     //this.materialList.forEach(item => {
@@ -72,7 +84,7 @@ export class GatePassApproverComponent implements OnInit {
       this.gatepassModel.status = "Approved";
       if (this.gatepassModel.status == 'Approved')
         this.btnDisable = true;
-  
+
       this.messageService.add({ severity: 'success', summary: 'success Message', detail: 'Gate Pass Approved' });
     });
   }
@@ -80,7 +92,7 @@ export class GatePassApproverComponent implements OnInit {
   //check date is valid or not
   checkValiddate(date: any) {
     try {
-      if (!date || (this.datePipe.transform(date, this.constants.dateFormat) == "01/01/0001") )
+      if (!date || (this.datePipe.transform(date, this.constants.dateFormat) == "01/01/0001"))
         return "";
       else
         return this.datePipe.transform(date, this.constants.dateFormat);
@@ -121,18 +133,18 @@ export class GatePassApproverComponent implements OnInit {
     });
   }
   //check issued quantity
-  checkissueqty($event, entredvalue, maxvalue, material, createddate,index) {
+  checkissueqty($event, entredvalue, maxvalue, material, createddate, index) {
     var id = $event.target.id;
     if (entredvalue > maxvalue) {
       this.itemlocationData[index].issuedquantity = 0;
       this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please enter issue quantity less than Available quantity' });
       // this.btnDisableformaterial = true;
-      (<HTMLInputElement>document.getElementById(id)).value ="0";
+      (<HTMLInputElement>document.getElementById(id)).value = "0";
       this.materialList[this.roindex].issuedqty = 0;
 
     }
     else {
-     // this.btnDisableformaterial = false;
+      // this.btnDisableformaterial = false;
       this.wmsService.checkoldestmaterial(material, createddate).subscribe(data => {
         this.Oldestdata = data;
         if (data != null) {
@@ -155,14 +167,14 @@ export class GatePassApproverComponent implements OnInit {
         totalissuedqty = totalissuedqty + (item.issuedquantity);
       //this.FIFOvalues.issueqty = totalissuedqty;
       //item.issuedqty = totalissuedqty;
-    
+
       //item.issuedquantity = totalissuedqty;
       //item.issuedqty = totalissuedqty;
 
     });
 
 
-   // (<HTMLInputElement>document.getElementById(this.id)).value = totalissuedqty.toString();
+    // (<HTMLInputElement>document.getElementById(this.id)).value = totalissuedqty.toString();
     this.materialList[this.roindex].issuedqty = totalissuedqty;
     this.txtDisable = true;
 

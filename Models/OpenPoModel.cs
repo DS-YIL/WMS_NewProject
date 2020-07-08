@@ -539,3 +539,16 @@ namespace WMS.Models
 		public string racknumber { get; set; }
 	}
 }
+public class gatepassapprovalsModel
+{
+	public int historyid { get; set; }
+	public int gatepassid { get; set; }
+	public int approverid { get; set; }
+	public string approvername { get; set; }
+	public string approverstatus { get; set; }
+	public DateTime approvedon { get; set; }
+	public int label { get; set; }
+	public string remarks { get; set; }
+	public Boolean currentStatus { get; set; }
+
+}

@@ -261,6 +261,15 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to select * from wms.wms_gatepassapprovals where gatepassid =#gatepassid and currentstatus =true.
+        /// </summary>
+        public static string getGatePassApprovalHistoryList {
+            get {
+                return ResourceManager.GetString("getGatePassApprovalHistoryList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to select ygs.materialdescription,emp.name,* from wms.wms_gatepass gate
         ///   left join wms.wms_gatepassmaterial mat on gate.gatepassid=mat.gatepassid 
         ///   left join wms.employee emp on emp.employeeno=gate.requestedby
