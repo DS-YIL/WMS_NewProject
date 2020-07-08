@@ -151,7 +151,7 @@ export class GatePassComponent implements OnInit {
     this.wmsService.getGatePassList().subscribe(data => {
       this.totalGatePassList = data;
       if (this.employee.roleid == "8") {
-        this.gatepasslist = this.totalGatePassList.filter(li => li.gatepasstype == 'Non Returnable' && li.approverstatus == this.approverstatus && li.approverstatus == null);
+        this.gatepasslist = this.totalGatePassList.filter(li => li.gatepasstype == 'Non Returnable' && (li.approverstatus == this.approverstatus || li.approverstatus == null));
       }
       else {
         this.gatepasslist = this.totalGatePassList;
@@ -164,7 +164,7 @@ export class GatePassComponent implements OnInit {
   searchGatePassList() {
     if (this.approverstatus != "0") {
       if (this.approverstatus == "Pending")
-        this.gatepasslist = this.totalGatePassList.filter(li => li.gatepasstype == 'Non Returnable' && li.approverstatus == this.approverstatus &&  li.approverstatus == null);
+        this.gatepasslist = this.totalGatePassList.filter(li => li.gatepasstype == 'Non Returnable' && (li.approverstatus == this.approverstatus ||  li.approverstatus == null));
         else
         this.gatepasslist = this.totalGatePassList.filter(li => li.gatepasstype == 'Non Returnable' &&  li.approverstatus == this.approverstatus);
     }
@@ -412,7 +412,7 @@ export class GatePassComponent implements OnInit {
         this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Add Material' });
         return false;
       }
-      else if (this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].expecteddate == undefined) {
+      else if (this.gatepassModel.gatepasstype =="Returnable" && this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].expecteddate == undefined) {
         this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please select Expected Date' });
         return false;
       }
