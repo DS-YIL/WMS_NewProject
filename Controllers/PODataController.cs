@@ -92,13 +92,13 @@ namespace WMS.Controllers
 		}
 
 		[HttpGet("Getqualitydetails")]
-		public async Task<IEnumerable<OpenPoModel>> Getqualitydetails(string pono)
+		public async Task<IEnumerable<OpenPoModel>> Getqualitydetails()
 		{
 
-			string[] ponoandinvoice = pono.Split('-');
-			string ponodata = ponoandinvoice[0];
-			string invoiceno = ponoandinvoice[1];
-			return await this._poService.Getqualitydetails(invoiceno, ponodata);
+			//string[] ponoandinvoice = pono.Split('-');
+			//string ponodata = ponoandinvoice[0];
+			//string invoiceno = ponoandinvoice[1];
+			return await this._poService.Getqualitydetails();
 		}
 
 		[HttpGet("verifythreewaymatch")]

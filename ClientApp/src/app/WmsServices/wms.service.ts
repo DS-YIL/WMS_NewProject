@@ -80,8 +80,8 @@ export class wmsService {
     return this.http.get<inwardModel[]>(this.url + 'POData/Getthreewaymatchingdetails?PONO=' + PoNo + '', this.httpOptions);
   }
 
-  Getdataforqualitycheck(PoNo: string): Observable<inwardModel[]> {
-    return this.http.get<inwardModel[]>(this.url + 'POData/Getqualitydetails?PONO=' + PoNo + '', this.httpOptions);
+  Getdataforqualitycheck(): Observable<inwardModel[]> {
+    return this.http.get<inwardModel[]>(this.url + 'POData/Getqualitydetails', this.httpOptions);
   }
 
   

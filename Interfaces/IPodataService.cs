@@ -26,7 +26,7 @@ namespace WMS.Interfaces
         int InsertBarcodeInfo(BarcodeModel dataobj);
         //int insertInvoicedetails(iwardmasterModel obj);
         Task<IEnumerable<T>> GetDeatilsForthreeWaymatching(string invoiceno,string pono);
-        Task<IEnumerable<T>> Getqualitydetails(string invoiceno, string pono);
+        Task<IEnumerable<T>> Getqualitydetails();
         Task<OpenPoModel> VerifythreeWay(string pono,string invoiceno);
         Task<string> insertquantity(List<inwardModel> datamodel);
         Task<string> receivequantity(List<inwardModel> datamodel);

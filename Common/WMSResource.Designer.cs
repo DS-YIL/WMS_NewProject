@@ -209,14 +209,14 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select distinct openpo.projectname,inw.inwardid,inw.remarks,inw.checkedby,inwa.invoiceno,inwa.grnnumber,inwa.pono,openpo.material,openpo.materialqty,(inw.confirmqty+inw.returnqty) as receivedqty,openpo.materialdescription, openpo.quotationqty,inw.receivedqty,inw.returnqty,mat.qualitycheck, 
-        ///CASE
-        ///     WHEN mat.qualitycheck=True  THEN inw.confirmqty
-        ///     ELSE  inw.receivedqty
-        ///END as confirmqty
-        ///from wms.wms_securityinward inwa  
-        /// left join wms.wms_storeinward inw on inw.inwmasterid=inwa.inwmasterid
-        /// inn [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to select stinw.inwardid,stinw.inwmasterid,stinw.materialid as material,secinw.grnnumber,openpo.materialdescription,stinw.receivedqty,stinw.returnqty,stinw.remarks,stinw.checkedby,mat.qualitycheck,
+        ///  CASE
+        ///     WHEN mat.qualitycheck=True  THEN stinw.confirmqty
+        ///     ELSE  stinw.receivedqty
+        ///  END as confirmqty
+        ///  from wms.wms_storeinward stinw
+        ///  left outer join wms.wms_securityinward secinw on secinw.inwmasterid=stinw.inwmasterid
+        ///  left outer join wms.&quot;MaterialMasterYGS&quot; mat on mat.material = stinw.material [rest of string was truncated]&quot;;.
         /// </summary>
         public static string getdataforqualitydetails {
             get {
@@ -586,7 +586,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select sl.pono,sl.asn,Max(emp.name) as receivedby ,Max(ol.suppliername) as suppliername from wms.wms_securityinward sl 
+        ///   Looks up a localized string similar to select sl.pono,sl.asn,Max(emp.name) as receivedby ,Max(ol.suppliername) as suppliername,Max(sl.suppliername) as npsuppliername from wms.wms_securityinward sl 
         ///left outer join wms.wms_polist ol on sl.pono = ol.pono 
         ///left outer join wms.employee emp on sl.receivedby = emp.employeeno.
         /// </summary>
@@ -671,11 +671,20 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO wms.wms_securityinward(inwmasterid,pono,invoiceno,invoicedate,receivedby,receiveddate,deleteflag,departmentid)VALUES(default,@pono,@invoiceno,@invoicedate,@receivedby,@receiveddate,@deleteflag,@departmentid).
+        ///   Looks up a localized string similar to INSERT INTO wms.wms_securityinward(inwmasterid,pono,invoiceno,invoicedate,receivedby,receiveddate,deleteflag,departmentid,suppliername)VALUES(default,@pono,@invoiceno,@invoicedate,@receivedby,@receiveddate,@deleteflag,@departmentid,@suppliername).
         /// </summary>
         public static string insertinvoicedata {
             get {
                 return ResourceManager.GetString("insertinvoicedata", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to insert into wms.wms_polist(pono,deliverydate,vendorid,suppliername) values (@pono,current_date,null,@suppliername).
+        /// </summary>
+        public static string insertpo {
+            get {
+                return ResourceManager.GetString("insertpo", resourceCulture);
             }
         }
         
@@ -829,8 +838,8 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO wms.wms_storeinward(inwmasterid,receiveddate,receivedby,receivedqty,confirmqty,materialid,deleteflag)
-        ///VALUES(@inwmasterid,@receiveddate,@receivedby,@receivedqty,@confirmqty,@materialid,@deleteflag)returning inwardid.
+        ///   Looks up a localized string similar to INSERT INTO wms.wms_storeinward(inwmasterid,receiveddate,receivedby,receivedqty,confirmqty,materialid,deleteflag,checkedby,checkedon)
+        ///VALUES(@inwmasterid,@receiveddate,@receivedby,@receivedqty,@confirmqty,@materialid,@deleteflag,@checkedby,@checkedon)returning inwardid.
         /// </summary>
         public static string receiveforinvoice {
             get {
