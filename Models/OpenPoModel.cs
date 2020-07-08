@@ -261,6 +261,7 @@ namespace WMS.Models
     }
     public class gatepassModel
     {
+		
 		public int pono { get; set; }
 		public int itemid { get; set; }
 		public string itemreturnable { get; set; }
@@ -309,7 +310,8 @@ namespace WMS.Models
 		public int materialcost { get; set; }
 		public DateTime expecteddate { get; set; }
 		public DateTime returneddate { get; set; }
-		
+		public int issueqty { get; set; }
+
 	}
 
 		public class reprintModel

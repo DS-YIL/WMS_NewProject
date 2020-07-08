@@ -839,8 +839,8 @@ namespace WMS.DAL
 				data.createddate = System.DateTime.Now;
 				string insertquery = WMSResource.insertstock;
 				int itemid = 0;
-				if (data.itemid == 0)
-				{
+				//if (data.itemid == 0)
+				//{
 					string materialid = data.Material;
 					data.availableqty = data.confirmqty;
 					using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
@@ -885,23 +885,23 @@ namespace WMS.DAL
 
 						}
 					}
-				}
+				//}
 
-				else
-				{
-					itemid = data.itemid;
-					string updatequery = WMSResource.updatelocation.Replace("#itemlocation", data.itemlocation).Replace("#itemid", Convert.ToString(itemid));
+				//else
+				//{
+				//	itemid = data.itemid;
+				//	string updatequery = WMSResource.updatelocation.Replace("#itemlocation", data.itemlocation).Replace("#itemid", Convert.ToString(itemid));
 
-					using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
-					{
-						result = DB.Execute(updatequery, new
-						{
-							data.binid,
-							data.rackid
+				//	using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
+				//	{
+				//		result = DB.Execute(updatequery, new
+				//		{
+				//			data.binid,
+				//			data.rackid
 
-						});
-					}
-				}
+				//		});
+				//	}
+				//}
 				using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 				{
 
@@ -1610,6 +1610,21 @@ namespace WMS.DAL
 				}
 				foreach (var item in dataobj.materialList)
 				{
+					int itemid = 0;
+
+					using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+					{
+
+						string materialrequestquery = "select itemid from wms.wms_materialissue where gatepassmaterialid="+item.gatepassmaterialid;
+
+						pgsql.OpenAsync();
+						gatepassModel gatemodel = new gatepassModel();
+				gatemodel= pgsql.QueryFirstOrDefault<gatepassModel>(
+						  materialrequestquery, null, commandType: CommandType.Text);
+						if(gatemodel!=null)
+						itemid = gatemodel.itemid;
+					}
+
 
 					using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
 					{
@@ -1628,10 +1643,18 @@ namespace WMS.DAL
 								item.materialcost,
 								item.expecteddate,
 								item.returneddate,
+								item.issueqty
 								});
+
 						}
 						else
 						{
+							string updatestockquery = "update wms.wms_stock set availableqty=availableqty+"+item.quantity+" where itemid="+itemid;
+
+							var result1 = DB.ExecuteScalar(updatestockquery, new
+							{
+							});
+
 							string updatequery = WMSResource.updategatepassmaterial.Replace("#gatepassmaterialid", Convert.ToString(item.gatepassmaterialid));
 
 							var result = DB.ExecuteScalar(updatequery, new
@@ -1814,6 +1837,14 @@ namespace WMS.DAL
 
 						});
 					}
+						string updateissueqty = "update  wms.wms_gatepassmaterial set issueqty=" + item.issuedqty + " where gatepassmaterialid=" + item.gatepassmaterialid;
+						using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
+						{
+							var result = DB.Execute(updateissueqty, new
+							{
+
+							});
+						}
 					int qty = gatemodel.availableqty - item.issuedqty;
 					string updatestockavailable = WMSResource.updatestockavailable.Replace("#availableqty", Convert.ToString(qty)).Replace("#itemid", Convert.ToString(item.itemid));
 					using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
