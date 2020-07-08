@@ -10,6 +10,7 @@ export class Employee {
   pwd: string;
   domainid: string;
   roleid: string;
+  
 }
 
 export class Login {
