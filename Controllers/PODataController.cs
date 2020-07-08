@@ -90,6 +90,17 @@ namespace WMS.Controllers
 			string invoiceno = ponoandinvoice[1];
 			return await this._poService.GetDeatilsForthreeWaymatching(invoiceno, ponodata);
 		}
+
+		[HttpGet("Getqualitydetails")]
+		public async Task<IEnumerable<OpenPoModel>> Getqualitydetails(string pono)
+		{
+
+			string[] ponoandinvoice = pono.Split('-');
+			string ponodata = ponoandinvoice[0];
+			string invoiceno = ponoandinvoice[1];
+			return await this._poService.Getqualitydetails(invoiceno, ponodata);
+		}
+
 		[HttpGet("verifythreewaymatch")]
 		public async Task<OpenPoModel> verifythreewaymatching(string pono)
 		{
@@ -102,6 +113,18 @@ namespace WMS.Controllers
 		public async Task<string> insertitemdata([FromBody] List<inwardModel> data)
 		{
 			return await this._poService.insertquantity(data);
+		}
+
+		[HttpPost("receiveinvoice")]
+		public async Task<string> receiveinvoice([FromBody] List<inwardModel> data)
+		{
+			return await this._poService.receivequantity(data);
+		}
+
+		[HttpPost("qualitycheck")]
+		public async Task<string> insertqualitycheck([FromBody] List<inwardModel> data)
+		{
+			return await this._poService.insertquantitycheck(data);
 		}
 
 		[HttpPost("updateitemlocation")]

@@ -26,9 +26,11 @@ namespace WMS.Interfaces
         int InsertBarcodeInfo(BarcodeModel dataobj);
         //int insertInvoicedetails(iwardmasterModel obj);
         Task<IEnumerable<T>> GetDeatilsForthreeWaymatching(string invoiceno,string pono);
+        Task<IEnumerable<T>> Getqualitydetails(string invoiceno, string pono);
         Task<OpenPoModel> VerifythreeWay(string pono,string invoiceno);
         Task<string> insertquantity(List<inwardModel> datamodel);
-       string InsertStock(StockModel data);
+        Task<string> receivequantity(List<inwardModel> datamodel);
+        string InsertStock(StockModel data);
 		System.Data.DataTable GetListItems(DynamicSearchResult result);
         System.Data.DataTable GetMaterialItems(DynamicSearchResult result);
         int IssueRequest(List<IssueRequestModel> reqdata);
@@ -88,5 +90,6 @@ namespace WMS.Interfaces
         Task<IEnumerable<dropdownModel>> Getlocationdata();
         Task<IEnumerable<dropdownModel>> Getbindata();
         Task<IEnumerable<dropdownModel>> Getrackdata();
+		Task<string> insertquantitycheck(List<inwardModel> datamodel);
     }
 }

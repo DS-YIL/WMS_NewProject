@@ -67,7 +67,8 @@
                   {{rowData.itemlocation}}&nbsp;
                   <!--<div style="text-align:center">-->
                   <!--<p-autoComplete [(ngModel)]="store" [suggestions]="stores" (completeMethod)="loadStores($event)"></p-autoComplete>-->
-                  <i *ngIf="!rowData.itemlocation" class="fa fa-location-arrow" style="color:blue;float:right" pTooltip="Add Location" (click)="showDialog(rowData,ri)" aria-hidden="true"></i>
+                  <i *ngIf="!rowData.itemlocation && rowData.confirmqty != 0" class="fa fa-location-arrow" style="color:blue;float:right" pTooltip="Add Location" (click)="showDialog(rowData,ri)" aria-hidden="true"></i>
+                  <label *ngIf="rowData.confirmqty === 0" class="labeltext">No quantity to put away</label>
                   <!--</div>-->
                 </td>
               </tr>

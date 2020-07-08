@@ -60,6 +60,7 @@ import { MaterialReserveComponent } from './WMS/MaterialReserve.component';
 import { MaterialReserveViewComponent } from './WMS/MaterialReserveView.component';
 import { MaterialReleaseDashBoardComponent } from './WMS/MaterialReleaseDashBoard.component';
 import { MaterialReleaseComponent } from './WMS/MaterialRelease.component';
+import { QualityCheckComponent } from './WMS/QualityCheck.component';
 
 
 
@@ -109,7 +110,8 @@ import {MenubarModule} from 'primeng/menubar';
     MaterialReserveComponent,
     MaterialReserveViewComponent,
     MaterialReleaseDashBoardComponent,
-    MaterialReleaseComponent
+    MaterialReleaseComponent,
+    QualityCheckComponent
 
 
 

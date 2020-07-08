@@ -80,6 +80,12 @@ export class wmsService {
     return this.http.get<inwardModel[]>(this.url + 'POData/Getthreewaymatchingdetails?PONO=' + PoNo + '', this.httpOptions);
   }
 
+  Getdataforqualitycheck(PoNo: string): Observable<inwardModel[]> {
+    return this.http.get<inwardModel[]>(this.url + 'POData/Getqualitydetails?PONO=' + PoNo + '', this.httpOptions);
+  }
+
+  
+
   verifythreewaymatch(PoNo: string): Observable<any> {
     return this.http.get<any>(this.url + 'POData/verifythreewaymatch?pono=' + PoNo, this.httpOptions);
   }
@@ -105,7 +111,11 @@ export class wmsService {
 
   insertitems(inwardModel: inwardModel[]): Observable<any> {
     const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }), responseType: 'text' as any };
-    return this.http.post<any>(this.url + 'POData/GRNposting', inwardModel, httpOptions);
+    return this.http.post<any>(this.url + 'POData/receiveinvoice', inwardModel, httpOptions);
+  }
+  insertqualitycheck(inwardModel: inwardModel[]): Observable<any> {
+    const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }), responseType: 'text' as any };
+    return this.http.post<any>(this.url + 'POData/qualitycheck', inwardModel, httpOptions);
   }
 
   InsertStock(StockModel: StockModel): Observable<any> {

@@ -35,10 +35,13 @@ export class SecurityHomeComponent implements OnInit {
   receivedcount: string = "0";
   btnreceivetext: string = "";
   todatsdate: Date;
+  ispochecked: boolean = false;
+  isnonpochecked: boolean = false;
 
   ngOnInit() {
 
     debugger;
+    this.ispochecked = true;
     this.showtable = true;
     this.showreceivedtable = false;
     this.btnreceivetext = "Show";
@@ -117,6 +120,19 @@ export class SecurityHomeComponent implements OnInit {
       this.btnreceivetext = "Show";
     }
   }
+  pocheck() {
+    this.Poinvoicedetails.vendorname = "";
+    this.Poinvoicedetails.invoiceno = "";
+    this.ispochecked = true;
+    this.isnonpochecked = false;
+  }
+  nonpocheck() {
+    this.PoDetails.pono = "";
+    this.Poinvoicedetails.vendorname = "";
+    this.Poinvoicedetails.invoiceno = "";
+    this.ispochecked = false;
+    this.isnonpochecked = true;
+  }
 
   //get details based on po no
   SearchPoNo() {
@@ -155,6 +171,9 @@ export class SecurityHomeComponent implements OnInit {
       this.BarcodeModel.barcode = "testbarcodetext";
       this.BarcodeModel.createdby = this.employee.employeeno;
       this.BarcodeModel.pono = this.PoDetails.pono;
+      if (this.isnonpochecked) {
+        this.BarcodeModel.pono = "NP0000001";
+      }
       this.BarcodeModel.invoiceno = this.Poinvoicedetails.invoiceno;
       this.BarcodeModel.departmentid = this.PoDetails.departmentid
       this.BarcodeModel.receivedby = this.employee.employeeno;

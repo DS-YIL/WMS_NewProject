@@ -35,12 +35,12 @@
                 <td class="ptable-cell" style="text-align:center"><button type="button" class="btn btn-link">{{rowData.category}}</button></td>
                 <td class="ptable-cell" style="text-align:left">{{rowData.materialid}}</td>
 
-                <td class="ptable-cell" style="text-align:left">{{rowData.availableqty}}</td>
-                <td class="ptable-cell" style="text-align:center">
-                  <input type="number" *ngIf="!rowData.iscounted" style="width:100px;text-align:left" [(ngModel)]="rowData.physicalqty" (change)="calculatedifference(rowData)" class="form-control" />
+                <td class="ptable-cell" style="text-align:right">{{rowData.availableqty}}</td>
+                <td class="ptable-cell" style="text-align:right">
+                  <input type="number" *ngIf="!rowData.iscounted" style="width:100px;text-align:right" [(ngModel)]="rowData.physicalqty" (change)="calculatedifference(rowData)" class="form-control" />
                   <label *ngIf="rowData.iscounted">{{rowData.physicalqty}}</label>
                 </td>
-                <td class="ptable-cell" style="text-align:left">
+                <td class="ptable-cell" style="text-align:right">
                   {{rowData.difference}}
                 </td>
                 <td class="ptable-cell" style="text-align:center">
@@ -106,18 +106,18 @@
                 <td class="ptable-cell" style="text-align:center"><button type="button" class="btn btn-link">{{rowData.category}}</button></td>
                 <td class="ptable-cell" style="text-align:center">{{rowData.materialid}}</td>
 
-                <td class="ptable-cell" style="text-align:center">{{rowData.availableqty}}</td>
-                <td class="ptable-cell" style="text-align:center">
-                  <input type="number" *ngIf="rowData.status === 'Counted'" style="width:100px" [(ngModel)]="rowData.physicalqty" (change)="calculatedifference(rowData)" class="form-control" />
+                <td class="ptable-cell" style="text-align:right">{{rowData.availableqty}}</td>
+                <td class="ptable-cell" style="text-align:right">
+                  <input type="number" *ngIf="rowData.status === 'Counted'" style="width:100px;text-align:right;" [(ngModel)]="rowData.physicalqty" (change)="calculatedifference(rowData)" class="form-control" />
                   <label *ngIf="rowData.status !== 'Counted'">{{rowData.physicalqty}}</label>
                 </td>
-                <td class="ptable-cell" style="text-align:center">
+                <td class="ptable-cell" style="text-align:right">
                   {{rowData.difference}}
                 </td>
                 <td class="ptable-cell" style="text-align:center">
                   {{rowData.counted_on | date : 'dd/MM/yyyy'}}
                 </td>
-                <td class="ptable-cell" style="text-align:center;padding:0px;">
+                <td class="ptable-cell" style="text-align:left;padding:0px;">
                   <textarea *ngIf="showApprovecolumn" [(ngModel)]="rowData.remarks"></textarea>
                   <label *ngIf="!showApprovecolumn">{{rowData.remarks}}</label>
                 </td>
