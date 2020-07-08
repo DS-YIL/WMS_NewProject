@@ -201,12 +201,10 @@ export class WarehouseInchargeComponent implements OnInit {
     //api call
     this.wmsService.generateBarcodeMaterial(this.printData).subscribe(data => {
       if (data) {
-        debugger;
-       // alert(data.path);
-        this.printData = data;
         
-        //alert(this.printData.noofprint);
-//this.ge
+        this.printData = data;
+        console.log(this.printData);
+        
       }
       else {
         alert("Error while generating Barcode");

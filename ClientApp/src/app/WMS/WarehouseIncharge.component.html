@@ -1,5 +1,5 @@
 <div class="card" style="height:40px; width:100%;border-radius:10px;">
-  <div class="card-header cardheadertext text-center"><i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;Warehouse Incharge</div>
+  <div class="card-header cardheadertext text-center"><i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;Put Away</div>
 </div>
 <div class="form-control" style="height:100%">
   <div class="row " style="margin-top:10px">
@@ -235,64 +235,64 @@
   <div class="input-group-append">
     <button type="button" class="btn btn-outline-secondary form-control" style="cursor:pointer" pButton icon="fa fa-list" aria-hidden="true" (click)="bindSearchListData($event,'StockModelForm','itemlocation',StockModelForm.controls.itemlocation.value,undefined)"></button>
   </div>-->
-              </div>
-            </div>
-            <div class="col-lg-4 col-md-4 col-sm-4 form-group">
-              <label for="rackid" class="form-label">Select Rack</label>
-              <div class="form-inline-list">
-
-                <select  class="form-control dropdown" formControlName="rackid" [(ngModel)]="StockModel.rackid">
-
-                  <option selected value="*ngIf=rackid"></option>
-                  <option  *ngFor=" let loclist of racklist " value={{loclist.rackid}}>
-                    {{loclist.racknumber}}
-                  </option>
-                </select>
-                <!--<p-autoComplete [(ngModel)]="rack" [suggestions]="searchItems" formControlName="rackid" field="name" [dropdown]="true" (completeMethod)="bindSearchListData($event,'StockModelForm','rackid',StockModelForm.controls.rackid.value,undefined)"></p-autoComplete>-->
-                <!--<input type="text" class="form-control forms-input" formControlName="rackid" [value]="StockModelForm.controls.rackid.value" (keyup)="onsrchTxtChange('rackid',StockModelForm.controls.rackid.value,'StockModel')">
-  <div class="input-group-append">
-    <button type="button" class="btn btn-outline-secondary form-control" style="cursor:pointer" pButton icon="fa fa-list" aria-hidden="true" (click)="bindSearchListData($event,'StockModelForm','rackid',StockModelForm.controls.rackid.value,undefined)"></button>
-  </div>-->
-              </div>
-            </div>
-            <div class="col-lg-4 col-md-4 col-sm-4 form-group">
-              <label for="binid" class="form-label">Select Bin</label>
-              <div class="form-inline-list">
-                <select class="form-control dropdown" formControlName="binid" [(ngModel)]="StockModel.binid">
-
-                  <option selected></option>
-                  <option *ngFor=" let loclist of binlist"   value={{loclist.binid}}>
-                    {{loclist.binnumber}}
-                  </option>
-                </select>
-                <!--<p-autoComplete [(ngModel)]="bin" [suggestions]="searchItems" formControlName="binid" field="name" [dropdown]="true" (completeMethod)="bindSearchListData($event,'StockModelForm','binid',StockModelForm.controls.binid.value,undefined)"></p-autoComplete>-->
-                <!--<input type="text" class="form-control forms-input" formControlName="binid" [value]="StockModelForm.controls.binid.value" (keyup)="onsrchTxtChange('binid',StockModelForm.controls.binid.value,'StockModel')">
-  <div class="input-group-append">
-    <button type="button" class="btn btn-outline-secondary form-control" style="cursor:pointer" pButton icon="fa fa-list" aria-hidden="true" (click)="bindSearchListData($event,'StockModelForm','binid',StockModelForm.controls.binid.value,undefined)"></button>
-  </div>-->
-              </div>
-            </div>
-            <!--<div class="col-lg-4 col-md-4 col-sm-4 form-group">
-              <label class="form-label">Shelf Life</label><br />
-              <p-calendar [(ngModel)]="StockModel.shelflife" formControlName="shelflife" [monthNavigator]="true" [yearNavigator]="true" yearRange="1900:2050"></p-calendar>
-            </div>-->
+</div>
           </div>
-        </form>
-        <p-footer>
-          <div class="ui-dialog-buttonpane ui-helper-clearfix">
-            <button type="button" pButton icon="fa fa-close" (click)="onSubmitStockDetails()" label="Submit"></button>
-          </div>
-        </p-footer>
-      </p-dialog>
+          <div class="col-lg-4 col-md-4 col-sm-4 form-group">
+            <label for="rackid" class="form-label">Select Rack</label>
+            <div class="form-inline-list">
 
-      <p-dialog header="List View" [(visible)]="showList" [contentStyle]="{'overflow':'visible'}">
-        <div class="ui-g ui-fluid">
-          <p-listbox [options]="searchItems" [(ngModel)]="selectedItem" optionLabel="name" (onChange)="onSelectedOptionsChange(selectedItem)"></p-listbox>
+              <select class="form-control dropdown" formControlName="rackid" [(ngModel)]="StockModel.rackid">
+
+                <option selected value="*ngIf=rackid"></option>
+                <option *ngFor=" let loclist of racklist " value={{loclist.rackid}}>
+                  {{loclist.racknumber}}
+                </option>
+              </select>
+              <!--<p-autoComplete [(ngModel)]="rack" [suggestions]="searchItems" formControlName="rackid" field="name" [dropdown]="true" (completeMethod)="bindSearchListData($event,'StockModelForm','rackid',StockModelForm.controls.rackid.value,undefined)"></p-autoComplete>-->
+              <!--<input type="text" class="form-control forms-input" formControlName="rackid" [value]="StockModelForm.controls.rackid.value" (keyup)="onsrchTxtChange('rackid',StockModelForm.controls.rackid.value,'StockModel')">
+              <div class="input-group-append">
+                <button type="button" class="btn btn-outline-secondary form-control" style="cursor:pointer" pButton icon="fa fa-list" aria-hidden="true" (click)="bindSearchListData($event,'StockModelForm','rackid',StockModelForm.controls.rackid.value,undefined)"></button>
+              </div>-->
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-4 col-sm-4 form-group">
+            <label for="binid" class="form-label">Select Bin</label>
+            <div class="form-inline-list">
+              <select class="form-control dropdown" formControlName="binid" [(ngModel)]="StockModel.binid">
+
+                <option selected></option>
+                <option *ngFor=" let loclist of binlist" value={{loclist.binid}}>
+                  {{loclist.binnumber}}
+                </option>
+              </select>
+              <!--<p-autoComplete [(ngModel)]="bin" [suggestions]="searchItems" formControlName="binid" field="name" [dropdown]="true" (completeMethod)="bindSearchListData($event,'StockModelForm','binid',StockModelForm.controls.binid.value,undefined)"></p-autoComplete>-->
+              <!--<input type="text" class="form-control forms-input" formControlName="binid" [value]="StockModelForm.controls.binid.value" (keyup)="onsrchTxtChange('binid',StockModelForm.controls.binid.value,'StockModel')">
+              <div class="input-group-append">
+                <button type="button" class="btn btn-outline-secondary form-control" style="cursor:pointer" pButton icon="fa fa-list" aria-hidden="true" (click)="bindSearchListData($event,'StockModelForm','binid',StockModelForm.controls.binid.value,undefined)"></button>
+              </div>-->
+            </div>
+          </div>
+          <!--<div class="col-lg-4 col-md-4 col-sm-4 form-group">
+            <label class="form-label">Shelf Life</label><br />
+            <p-calendar [(ngModel)]="StockModel.shelflife" formControlName="shelflife" [monthNavigator]="true" [yearNavigator]="true" yearRange="1900:2050"></p-calendar>
+          </div>-->
         </div>
-        <p-footer>
-          <div class="ui-dialog-buttonpane ui-helper-clearfix">
-            <button type="button" pButton icon="fa fa-close" (click)="dialogCancel('showList')" label="Cancel"></button>
-          </div>
-        </p-footer>
-      </p-dialog>
-    </div>
+      </form>
+      <p-footer>
+        <div class="ui-dialog-buttonpane ui-helper-clearfix">
+          <button type="button" pButton icon="fa fa-close" (click)="onSubmitStockDetails()" label="Submit"></button>
+        </div>
+      </p-footer>
+    </p-dialog>
+
+    <p-dialog header="List View" [(visible)]="showList" [contentStyle]="{'overflow':'visible'}">
+      <div class="ui-g ui-fluid">
+        <p-listbox [options]="searchItems" [(ngModel)]="selectedItem" optionLabel="name" (onChange)="onSelectedOptionsChange(selectedItem)"></p-listbox>
+      </div>
+      <p-footer>
+        <div class="ui-dialog-buttonpane ui-helper-clearfix">
+          <button type="button" pButton icon="fa fa-close" (click)="dialogCancel('showList')" label="Cancel"></button>
+        </div>
+      </p-footer>
+    </p-dialog>
+</div>
