@@ -119,6 +119,8 @@ export class NavMenuComponent implements OnInit {
           { label: 'Inventory Movement', icon: 'pi pi-fw pi-bars', style: { 'width': '200px' }, command: () => this.router.navigateByUrl('WMS/InventoryMovement') },
         ]
       });
+      this.items.push({ label: 'BarCode', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/Barcode') });
+
       this.router.navigateByUrl('/WMS/Home');
     }
     if (this.emp.roleid == "8") {//Approver     

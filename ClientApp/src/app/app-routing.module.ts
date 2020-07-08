@@ -34,6 +34,7 @@ import { MaterialReserveViewComponent } from './WMS/MaterialReserveView.componen
 import { MaterialReleaseDashBoardComponent } from './WMS/MaterialReleaseDashBoard.component';
 import { MaterialReleaseComponent } from './WMS/MaterialRelease.component';
 import { QualityCheckComponent } from './WMS/QualityCheck.component';
+import { BarcodeComponent } from './WMS/Barcode.component';
 
 const routes: Routes = [{
   path: 'WMS',
@@ -82,7 +83,8 @@ const routes: Routes = [{
     { path: "MaterialReserveView", component: MaterialReserveViewComponent, canActivate: [AuthGuard] },
     { path: "MaterialReleaseDashboard", component: MaterialReleaseDashBoardComponent, canActivate: [AuthGuard] },
     { path: "MaterialRelease/:reserveid", component: MaterialReleaseComponent, canActivate: [AuthGuard] },
-    { path: "QualityCheck", component: QualityCheckComponent, canActivate: [AuthGuard] }
+    { path: "QualityCheck", component: QualityCheckComponent, canActivate: [AuthGuard] },
+ { path: "Barcode", component: BarcodeComponent, canActivate: [AuthGuard] },
   ]
 
 },

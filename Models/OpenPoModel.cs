@@ -39,6 +39,18 @@ namespace WMS.Models
 		public string remarks { get; set; }
 		public string checkedby { get; set; }
 	}
+
+	public class printMaterial
+	{
+		public string materialid { get; set; }
+		public string receiveddate { get; set; }
+		public string grnno { get; set; }
+		public string pono { get; set; }
+		public string invoiceno { get; set; }
+		public int noofprint { get; set; }
+		public string barcodePath { get; set; }
+}
+
 	public class BarcodeModel
 	{
 		public int departmentid { get; set; }

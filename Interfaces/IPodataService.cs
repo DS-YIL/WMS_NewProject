@@ -18,11 +18,12 @@ namespace WMS.Interfaces
         Task<IEnumerable<MaterialDetails>> getMaterialDetails(string grnno);
 
         //Location Details
-        Task<IEnumerable<LocationDetails>> getlocationdetails(string materialid);
+        Task<IEnumerable<LocationDetails>> getlocationdetails(string materialid, string grnnumber);
 
         //Get material request and issued details
         Task<IEnumerable<ReqMatDetails>> getReqMatdetails(string materialid,string grnnumber);
         OpenPoModel CheckPoexists(string PONO);
+        printMaterial generateBarcodeMaterial(printMaterial printMat);
         int InsertBarcodeInfo(BarcodeModel dataobj);
         //int insertInvoicedetails(iwardmasterModel obj);
         Task<IEnumerable<T>> GetDeatilsForthreeWaymatching(string invoiceno,string pono);

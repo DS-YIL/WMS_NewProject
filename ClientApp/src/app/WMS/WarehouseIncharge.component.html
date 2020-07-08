@@ -1,97 +1,232 @@
 <div class="card" style="height:40px; width:100%;border-radius:10px;">
   <div class="card-header cardheadertext text-center"><i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;Warehouse Incharge</div>
+</div>
+<div class="form-control" style="height:100%">
+  <div class="row " style="margin-top:10px">
+    <div class="col-lg-3 col-md-3 form-inline">
+      <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">GRN No: </label>&nbsp;&nbsp;
+      <input class="form-control" type="text" [(ngModel)]="PoDetails.grnnumber">&nbsp;&nbsp;&nbsp;&nbsp;
+      <button type="button" class="btn btn-primary btn-sm" label="Save" (click)="SearchGRNNo()">Search</button>
+    </div>
+    <div class="col-md-3 col-lg-3  pt-2 labelheading" *ngIf="podetailsList.length>0">
+      PO No : <span class="labeltext">{{podetailsList[0].pono}}</span>
+    </div>
+    <div class="col-md-3 col-lg-3 pt-2 labelheading" style="font-weight:600;font-size:14px;color:darkblue;" *ngIf="podetailsList.length>0">
+      Invoice No : <span class="labeltext">{{podetailsList[0].invoiceno}}</span>
+    </div>
+    <div class="col-md-3 col-lg-3 pt-2 labelheading" style="font-weight:600;font-size:14px;color:darkblue;" *ngIf="podetailsList.length>0">
+      WMS GRN No : <span class="labeltext">{{podetailsList[0].grnnumber}}</span>
+    </div>
   </div>
-    <div class="form-control" style="height:100%">
-      <div class="row " style="margin-top:10px">
-        <div class="col-lg-3 col-md-3 form-inline">
-          <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">GRN No: </label>&nbsp;&nbsp;
-          <input class="form-control" type="text" [(ngModel)]="PoDetails.grnnumber">&nbsp;&nbsp;&nbsp;&nbsp;
-          <button type="button" class="btn btn-primary btn-sm" label="Save" (click)="SearchGRNNo()">Search</button>
-        </div>
-        <div class="col-md-3 col-lg-3  pt-2 labelheading"  *ngIf="podetailsList.length>0">
-          PO No : <span class="labeltext">{{podetailsList[0].pono}}</span>
-        </div>
-        <div class="col-md-3 col-lg-3 pt-2 labelheading" style="font-weight:600;font-size:14px;color:darkblue;" *ngIf="podetailsList.length>0">
-          Invoice No : <span class="labeltext">{{podetailsList[0].invoiceno}}</span>
-        </div>
-        <div class="col-md-3 col-lg-3 pt-2 labelheading" style="font-weight:600;font-size:14px;color:darkblue;" *ngIf="podetailsList.length>0">
-         WMS GRN No : <span class="labeltext">{{podetailsList[0].grnnumber}}</span>
-        </div>
-      </div>
-      <div class="row " style="margin-top:10px">
-        <div class="col-lg-12 col-md-12 col-sm-12">
-          <p-table #dt [value]="podetailsList" [style]="{'width':'100%','overflow':'auto!important'}"
-                   [responsive]="true" [rows]="50"
-                   [resizableColumns]="true"
-                   columnResizeMode="expand"
-                   [paginator]="true" [rowsPerPageOptions]="[25,50,75,100]"
-                   appendTo="body">
-            <ng-template pTemplate="header">
-              <tr class="mprltbldata">
-                <th style="text-align:center;width:70px">Sl.No.</th>
-                <th style="width:200px;text-align:center">Project Name</th>
-                <th style="width:100px;text-align:center">Material</th>
-                <th style="width:120px;text-align:center">Material Description</th>
-                <th style="width:100px;text-align:center">Material Quantity</th>
-                <th style="width:100px;text-align:center">Received Quantity</th>
-                <th style="width:100px;text-align:center">Accepted Quantity</th>
-                <th style="width:100px;text-align: center">Returned Quantity</th>
-                <th style="width:100px;text-align:center">Pending Quantity</th>
-                <th style="width:150px; text-align: center">Location</th>
-              </tr>
-              <tr>
-                <th></th>
-                <th> <input pInputText type="text" style="width:100%;" class="form-control" (input)="dt.filter($event.target.value, 'projectname', 'contains')"></th>
-                <th> <input pInputText type="text" style="width:100%;" class="form-control" (input)="dt.filter($event.target.value, 'material', 'contains')"></th>
-                <th> <input pInputText type="text" style="width:100%;" class="form-control" (input)="dt.filter($event.target.value, 'materialdescription', 'contains')"></th>
-                <th> <input pInputText type="text" style="width:100%;" class="form-control" (input)="dt.filter($event.target.value, 'materialqty', 'contains')"></th>
-                <th> <input pInputText type="text" style="width:100%;" class="form-control" (input)="dt.filter($event.target.value, 'receivedqty', 'contains')"></th>
-                <th> <input pInputText type="text" style="width:100%;" class="form-control" (input)="dt.filter($event.target.value, 'confirmqty', 'contains')"></th>
-                <th> <input pInputText type="text" style="width:100%;" class="form-control" (input)="dt.filter($event.target.value, 'returnqty', 'contains')"></th>
-                <th></th>
-                <th> <input pInputText type="text" style="width:100%;" class="form-control" (input)="dt.filter($event.target.value, 'Location', 'contains')"></th>
-              </tr>
-            </ng-template>
-            <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
-              <tr>
-                <td class="ptable-cell" style="text-align:right;width:70px">{{ri+1}}</td>
-                <td class="ptable-cell" style="text-align: left;width:200px;">{{rowData.projectname}}</td>
-                <td class="ptable-cell" style="text-align:center;width:100px;">{{rowData.material}}</td>
-                <td class="ptable-cell" style="text-align:left;width:120px;">{{rowData.materialdescription}}</td>
-                <td class="ptable-cell" style="text-align:right;width:100px;">{{rowData.materialqty}}</td>
-                <td class="ptable-cell" style="text-align:right;width:100px;">{{rowData.receivedqty}}</td>
-                <td class="ptable-cell" style="text-align:right;width:100px;">{{rowData.confirmqty}}</td>
-                <td class="ptable-cell" style="text-align:right;width:100px;">{{rowData.returnqty}}</td>
-                <td class="ptable-cell" style="text-align:right;width:100px;">{{rowData.materialqty-rowData.confirmqty}}</td>
-                <td class="ptable-cell" style="text-align:left;width:150px;">
-                  {{rowData.itemlocation}}&nbsp;
-                  <!--<div style="text-align:center">-->
-                  <!--<p-autoComplete [(ngModel)]="store" [suggestions]="stores" (completeMethod)="loadStores($event)"></p-autoComplete>-->
-                  <i *ngIf="!rowData.itemlocation && rowData.confirmqty != 0" class="fa fa-location-arrow" style="color:blue;float:right" pTooltip="Add Location" (click)="showDialog(rowData,ri)" aria-hidden="true"></i>
-                  <label *ngIf="rowData.confirmqty === 0" class="labeltext">No quantity to put away</label>
-                  <!--</div>-->
-                </td>
-              </tr>
-            </ng-template>
-          </p-table>
-        </div>
-      </div>
-      <br />
-      <p-dialog  header="Put Away Location" [(visible)]="showLocationDialog" [contentStyle]="{'overflow':'visible'}" [style]="{width: '50%'}">
-        <form [formGroup]="StockModelForm">
-          <div class="row " style="margin-top:10px;">
-            <div class="col-lg-4 col-md-4 col-sm-4 form-group">
-              <label for="itemlocation" class="form-label">Select Location</label>
-              <div class="form-inline-list">
-                <select  class="form-control dropdown" formControlName="locatorid" [(ngModel)]="StockModel.locatorid">
+  <div class="row " style="margin-top:10px">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+      <p-table #dt [value]="podetailsList" [style]="{'width':'100%','overflow':'auto!important'}"
+               [responsive]="true" [rows]="50"
+               [resizableColumns]="true"
+               columnResizeMode="expand"
+               [paginator]="true" [rowsPerPageOptions]="[25,50,75,100]"
+               appendTo="body">
+        <ng-template pTemplate="header">
+          <tr class="mprltbldata">
+            <th style="text-align:center;width:70px">Sl.No.</th>
+            <th style="width:200px;text-align:center">Project Name</th>
+            <th style="width:100px;text-align:center">Material</th>
+            <th style="width:120px;text-align:center">Material Description</th>
+            <th style="width:100px;text-align:center">Material Quantity</th>
+            <th style="width:100px;text-align:center">Received Quantity</th>
+            <th style="width:100px;text-align:center">Accepted Quantity</th>
+            <th style="width:100px;text-align: center">Returned Quantity</th>
+            <th style="width:100px;text-align:center">Pending Quantity</th>
+            <th style="width:100px;text-align:center">Material Barcode</th>
+            <th style="width:150px; text-align: center">Location</th>
 
-                  <option selected></option>
-                  <option *ngFor=" let loclist of locationlist " value={{loclist.locatorid}}>
-                    {{loclist.locatorname}}
-                  </option>
-                </select>
-                <!--<p-autoComplete [(ngModel)]="store" [suggestions]="searchItems" formControlName="itemlocation" field="name" [dropdown]="true" (completeMethod)="bindSearchListData($event,'StockModelForm','itemlocation',StockModelForm.controls.itemlocation.value,undefined)"></p-autoComplete>-->
-                <!--<input type="text" class="form-control forms-input" formControlName="itemlocation" [value]="StockModelForm.controls.itemlocation.value" (keyup)="onsrchTxtChange('itemlocation',StockModelForm.controls.itemlocation.value,'StockModel')">
+          </tr>
+          <tr>
+            <th></th>
+            <th> <input pInputText type="text" style="width:100%;" class="form-control" (input)="dt.filter($event.target.value, 'projectname', 'contains')"></th>
+            <th> <input pInputText type="text" style="width:100%;" class="form-control" (input)="dt.filter($event.target.value, 'material', 'contains')"></th>
+            <th> <input pInputText type="text" style="width:100%;" class="form-control" (input)="dt.filter($event.target.value, 'materialdescription', 'contains')"></th>
+            <th> <input pInputText type="text" style="width:100%;" class="form-control" (input)="dt.filter($event.target.value, 'materialqty', 'contains')"></th>
+            <th> <input pInputText type="text" style="width:100%;" class="form-control" (input)="dt.filter($event.target.value, 'receivedqty', 'contains')"></th>
+            <th> <input pInputText type="text" style="width:100%;" class="form-control" (input)="dt.filter($event.target.value, 'confirmqty', 'contains')"></th>
+            <th> <input pInputText type="text" style="width:100%;" class="form-control" (input)="dt.filter($event.target.value, 'returnqty', 'contains')"></th>
+            <th></th>
+            <th></th>
+            <th> <input pInputText type="text" style="width:100%;" class="form-control" (input)="dt.filter($event.target.value, 'Location', 'contains')"></th>
+
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
+          <tr>
+            <td class="ptable-cell" style="text-align:right;width:70px">{{ri+1}}</td>
+            <td class="ptable-cell" style="text-align: left;width:200px;">{{rowData.projectname}}</td>
+            <td class="ptable-cell" style="text-align:center;width:100px;">{{rowData.material}}</td>
+            <td class="ptable-cell" style="text-align:left;width:120px;">{{rowData.materialdescription}}</td>
+            <td class="ptable-cell" style="text-align:right;width:100px;">{{rowData.materialqty}}</td>
+            <td class="ptable-cell" style="text-align:right;width:100px;">{{rowData.receivedqty}}</td>
+            <td class="ptable-cell" style="text-align:right;width:100px;">{{rowData.confirmqty}}</td>
+            <td class="ptable-cell" style="text-align:right;width:100px;">{{rowData.returnqty}}</td>
+            <td class="ptable-cell" style="text-align:right;width:100px;">{{rowData.materialqty-rowData.confirmqty}}</td>
+            <td style="text-align:center">
+              <button type="button" icon="fa fa-print" pButton aria-hidden="true" (click)="generateBarcode(rowData)"></button>
+            </td>
+            <td class="ptable-cell" style="text-align:left;width:150px;">
+              {{rowData.itemlocation}}&nbsp;
+              <!--<div style="text-align:center">-->
+              <!--<p-autoComplete [(ngModel)]="store" [suggestions]="stores" (completeMethod)="loadStores($event)"></p-autoComplete>-->
+              <i *ngIf="!rowData.itemlocation && rowData.confirmqty != 0" class="fa fa-location-arrow" style="color:blue;float:right" pTooltip="Add Location" (click)="showDialog(rowData,ri)" aria-hidden="true"></i>
+              <label *ngIf="rowData.confirmqty === 0" class="labeltext">No quantity to put away</label>
+              <!--</div>-->
+            </td>
+
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+  <br />
+  <p-dialog header="Generate Barcode" [(visible)]="showPrintDialog" [contentStyle]="{'overflow':'visible'}" [style]="{width: '60%'}">
+    <div class="row ">
+      <div class="col-lg-1 col-md-1 col-sm-1 form-inline ">
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
+        <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">PO No.:</label>
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
+        <input type="text" [disabled]="true" class="form-control" [(ngModel)]="podetailsList[0].pono" />
+      </div>
+      <div class="col-lg-1 col-md-1 col-sm-1 form-inline ">
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
+        <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">Invoice No.:</label>
+      </div>
+      <div class="col-lg-3 col-md-3 col-sm-3 form-inline ">
+        <input type="text" [disabled]="true" class="form-control" [(ngModel)]="podetailsList[0].invoiceno" />
+      </div>
+    </div>
+    <br />
+    <div class="row">
+      <div class="col-lg-1 col-md-1 col-sm-1 form-inline">
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
+        <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">GRN No.:</label>
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
+        <input type="text" [disabled]="true" class="form-control" [(ngModel)]="podetailsList[0].grnnumber" />
+      </div>
+      <div class="col-lg-1 col-md-1 col-sm-1 form-inline">
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
+        <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">Material Code:</label>
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
+        <input type="text" [disabled]="true" class="form-control" [(ngModel)]="materialCode" />
+      </div>
+
+    </div>
+    <br />
+    <div class="row">
+      <div class="col-lg-1 col-md-1 col-sm-1 form-inline">
+      </div>
+
+      <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
+        <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">Received Date:</label>
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
+        <input type="text" [disabled]="true" class="form-control" [(ngModel)]="receivedDate" />
+      </div>
+      <div class="col-lg-1 col-md-1 col-sm-1 form-inline">
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
+        <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">Accepted Qty:</label>
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
+        <input type="text" [disabled]="true" class="form-control" [(ngModel)]="acceptedQty" />
+      </div>
+
+      <!--<div class="col-lg-2 col-md-2 col-sm-2 form-inline">
+        <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">Item No.</label>
+      </div>
+      <div class="col-lg-3 col-md-3 col-sm-3 form-inline">
+        <input type="text" class="form-control" value="40" />
+      </div>-->
+    </div>
+    <br />
+    <div class="row">
+      <div class="ccol-lg-1 col-md-1 col-sm-1 form-inline">
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
+        <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">No. of Print:</label>
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
+        <input type="text" class="form-control" [(ngModel)]="noOfPrint" />
+      </div>
+      <div class="col-lg-1 col-md-1 col-sm-1 form-inline">
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
+        <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">Qty:</label>
+      </div>
+      <div class="col-lg-3 col-md-3 col-sm-3 form-inline ">
+        <button (click)="decreaseQty()"><<</button>
+        <input type="text" class="form-control" [disabled]="true" value="{{qty}}/{{noOfPrint}}" style="width: 100px;text-align:center" />
+        <button (click)="increaseQty()">&#62;&#62;</button>
+      </div>
+    </div>
+
+    <br>
+    <div class="row">
+      <div class="col-lg-5 col-md-5 col-sm-5"></div>
+      <div class="col-lg-3 col-md-3 col-sm-3">
+        <button type="button" class="btn btn-primary" (click)="GenerateBarcode()" label="Save">Generate Barcode</button>
+      </div>
+    </div>
+  </p-dialog>
+
+  <p-dialog header="Put Away Location" [(visible)]="showPrintLabel" [contentStyle]="{'overflow':'visible'}" [style]="{width: '50%'}">
+    <form [formGroup]="StockModelForm">
+      <div class="row">
+        <div class="col-lg-7 col-md-7 col-sm-7"></div>
+        <div class="col-lg-5 col-md-5 col-sm-5">
+          <label>No. of prints:</label>
+          <label>{{printData.noofprint}}</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-3 col-md-3 col-sm-3"></div>
+        <div class="col-lg-7 col-md-7 col-sm-7">
+          <img class="images" src="{{printData.barcodePath}}" />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-3 col-md-3 col-sm-3"></div>
+        <div class="col-lg-7 col-md-7 col-sm-7">
+          <label>ReceivedDate:{{printData.receiveddate}}</label>&nbsp;&nbsp;
+          <label>Qty:1/{{printData.noofprint}}</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-5 col-md-5 col-sm-5"></div>
+        <div class="col-lg-3 col-md-3 col-sm-3">
+          <button type="button" class="btn btn-primary"  label="Save">Print</button>
+        </div>
+      </div>
+    </form>
+  </p-dialog>
+    <p-dialog header="Put Away Location" [(visible)]="showLocationDialog" [contentStyle]="{'overflow':'visible'}" [style]="{width: '50%'}">
+      <form [formGroup]="StockModelForm">
+        <div class="row " style="margin-top:10px;">
+          <div class="col-lg-4 col-md-4 col-sm-4 form-group">
+            <label for="itemlocation" class="form-label">Select Location</label>
+            <div class="form-inline-list">
+              <select class="form-control dropdown" formControlName="locatorid" [(ngModel)]="StockModel.locatorid">
+                <option selected></option>
+                <option *ngFor=" let loclist of locationlist " value={{loclist.locatorid
+            }}>
+            {{loclist.locatorname}}
+            </option>
+            </select>
+            <!--<p-autoComplete [(ngModel)]="store" [suggestions]="searchItems" formControlName="itemlocation" field="name" [dropdown]="true" (completeMethod)="bindSearchListData($event,'StockModelForm','itemlocation',StockModelForm.controls.itemlocation.value,undefined)"></p-autoComplete>-->
+            <!--<input type="text" class="form-control forms-input" formControlName="itemlocation" [value]="StockModelForm.controls.itemlocation.value" (keyup)="onsrchTxtChange('itemlocation',StockModelForm.controls.itemlocation.value,'StockModel')">
   <div class="input-group-append">
     <button type="button" class="btn btn-outline-secondary form-control" style="cursor:pointer" pButton icon="fa fa-list" aria-hidden="true" (click)="bindSearchListData($event,'StockModelForm','itemlocation',StockModelForm.controls.itemlocation.value,undefined)"></button>
   </div>-->

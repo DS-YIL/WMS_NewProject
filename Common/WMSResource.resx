@@ -217,7 +217,7 @@ VALUES(@inwmasterid,@receiveddate,@receivedby,@receivedqty,@returnqty,@confirmqt
   </data>
   <data name="queryforitemdetails" xml:space="preserve">
     <value>select distinct bin.binnumber, rack.racknumber, loc.locatorname,mat.rackid,mat.binid,
- mat.storeid,stocks.itemlocation,stocks.itemid,inw.grnnumber,inw.pono,inw.invoiceno,openpo.projectname,openpo.materialqty,openpo.material,openpo.materialdescription,openpo.quotationqty,inwa.receivedqty,inwa.confirmqty,inwa.returnqty from wms.wms_securityinward inw
+ mat.storeid,stocks.itemlocation,stocks.itemid,inw.grnnumber,inw.pono,inw.invoiceno,inw.receiveddate,openpo.projectname,openpo.materialqty,openpo.material,openpo.materialdescription,openpo.quotationqty,inwa.receivedqty,inwa.confirmqty,inwa.returnqty from wms.wms_securityinward inw
 left join wms.wms_storeinward inwa on inw.inwmasterid=inwa.inwmasterid
 left join wms.wms_stock stocks on  inwa.inwmasterid=inwa.inwmasterid
 inner join wms.openpolistview openpo on openpo.pono=inw.pono 
@@ -413,7 +413,11 @@ where sinward.pono = '#pono' group by sinward.grnnumber,sinward.invoiceno</value
     <comment>get invoice details and qty received , returned and confirmed</comment>
   </data>
   <data name="getLocationDetails" xml:space="preserve">
-    <value>select itemlocation,availableqty from wms.wms_stock where materialid ='#materialid' and availableqty!=0</value>
+    <value>select  sk.itemlocation ,sk.materialid, sk.availableqty
+ from wms.wms_securityinward sec left join wms.wms_storeinward inw on inw.inwmasterid=sec.inwmasterid
+left join wms.wms_stock sk on sec.inwmasterid = sk.inwmasterid
+left join wms."MaterialMasterYGS"  mtmaster on mtmaster.material= sk.materialid
+where sec.grnnumber ='#grn' and sk.materialid ='#materialid' and sk.availableqty!=0</value>
     <comment>get location details for material</comment>
   </data>
   <data name="getMaterialDetails" xml:space="preserve">
