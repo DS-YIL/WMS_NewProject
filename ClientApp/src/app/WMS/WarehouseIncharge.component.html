@@ -182,12 +182,12 @@
     </div>
   </p-dialog>
 
-  <p-dialog header="Put Away Location" [(visible)]="showPrintLabel" [contentStyle]="{'overflow':'visible'}" [style]="{width: '50%'}">
-    <form [formGroup]="StockModelForm">
+  <p-dialog header="Print Barcode" [(visible)]="showPrintLabel" [contentStyle]="{'overflow':'visible'}" [style]="{width: '50%'}">
+    <form>
       <div class="row">
-        <div class="col-lg-7 col-md-7 col-sm-7"></div>
-        <div class="col-lg-5 col-md-5 col-sm-5">
-          <label>No. of prints:</label>
+        <div class="col-lg-9 col-md-9 col-sm-9"></div>
+        <div class="col-lg-3 col-md-3 col-sm-3">
+          <label><b>No. of prints:</b></label>
           <label>{{printData.noofprint}}</label>
         </div>
       </div>
@@ -197,20 +197,25 @@
           <img class="images" src="{{printData.barcodePath}}" />
         </div>
       </div>
-      <div class="row">
-        <div class="col-lg-3 col-md-3 col-sm-3"></div>
-        <div class="col-lg-7 col-md-7 col-sm-7">
-          <label>ReceivedDate:{{printData.receiveddate}}</label>&nbsp;&nbsp;
-          <label>Qty:1/{{printData.noofprint}}</label>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-lg-5 col-md-5 col-sm-5"></div>
-        <div class="col-lg-3 col-md-3 col-sm-3">
-          <button type="button" class="btn btn-primary"  label="Save">Print</button>
-        </div>
-      </div>
-    </form>
+      <br/><br/>
+           <div class="row">
+             <div class="col-lg-3 col-md-3 col-sm-3"></div>
+             <div class="col-lg-2 col-md-2 col-sm-2">
+               <label>{{printData.receiveddate}}</label>&nbsp;&nbsp;
+              
+             </div>
+             <div class="col-lg-3 col-md-3 col-sm-3"></div>
+             <div class="col-lg-2 col-md-2 col-sm-2">
+               <label>1/{{printData.noofprint}}</label>
+             </div>
+           </div>
+             <div class="row">
+               <div class="col-lg-5 col-md-5 col-sm-5"></div>
+               <div class="col-lg-3 col-md-3 col-sm-3">
+                 <button type="button" class="btn btn-primary" label="Save">Print</button>
+               </div>
+             </div>
+</form>
   </p-dialog>
     <p-dialog header="Put Away Location" [(visible)]="showLocationDialog" [contentStyle]="{'overflow':'visible'}" [style]="{width: '50%'}">
       <form [formGroup]="StockModelForm">

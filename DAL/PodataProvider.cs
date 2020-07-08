@@ -139,30 +139,40 @@ namespace WMS.DAL
 		///</summary>
 		public printMaterial generateBarcodeMaterial(printMaterial printMat)
         {
-			string path = "";
-			path = Environment.CurrentDirectory+ @"\Barcodes\";
-			//path = System.Web. Server.MapPath("/Images/BarCodeImages");
-			//generate barcode
-			var content = printMat.grnno+"-"+printMat.materialid;
-			BarcodeWriter writer = new BarcodeWriter
-			{
-				Format = BarcodeFormat.CODE_128,
-                Options = new EncodingOptions
+            try
+            {
+				string path = "";
+
+				path = Environment.CurrentDirectory + @"\Barcodes\";
+				//path = System.Web. Server.MapPath("/Images/BarCodeImages");
+				//generate barcode
+				var content = printMat.grnno + "-" + printMat.materialid;
+				BarcodeWriter writer = new BarcodeWriter
 				{
-					Height = 40,
-					Width = 80,
-					PureBarcode = false,
-					Margin = 10,
-				},
-			};
-            var bitmap = writer.Write(content);
+					Format = BarcodeFormat.CODE_128,
+					Options = new EncodingOptions
+					{
+						Height = 40,
+						Width = 80,
+						PureBarcode = false,
+						Margin = 10,
+					},
+				};
+				var bitmap = writer.Write(content);
 
-			// write text and generate a 2-D barcode as a bitmap
-			writer
-				.Write(content)
-				.Save(path + "/" + content + ".bmp");
+				// write text and generate a 2-D barcode as a bitmap
+				writer
+					.Write(content)
+					.Save(path + "/" + content + ".bmp");
 
-			printMat.barcodePath = path+content + ".bmp";
+				printMat.barcodePath = path + content + ".bmp";
+				
+			}
+			catch(Exception ex)
+            {
+				printMat.errorMsg = ex.Message;
+
+			}
 			return printMat;
 		}
 
