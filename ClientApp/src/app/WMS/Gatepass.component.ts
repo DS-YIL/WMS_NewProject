@@ -69,7 +69,7 @@ export class GatePassComponent implements OnInit {
       this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'please Add Material' });
       return false;
     }
-    else if (this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].expecteddate == undefined) {
+    else if (this.gatepassModel.gatepasstype == "Returnable" && this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].expecteddate == undefined) {
       this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please select Expected Date' });
       return false;
     }

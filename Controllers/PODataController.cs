@@ -238,6 +238,12 @@ namespace WMS.Controllers
 		{
 			return await this._poService.GetmaterialList(gatepassid);
 		}
+		[HttpGet("getGatePassApprovalHistoryList")]
+		public async Task<IEnumerable<gatepassapprovalsModel>> getGatePassApprovalHistoryList(int gatepassid)
+		{
+			return await this._poService.getGatePassApprovalHistoryList(gatepassid);
+		}
+		
 
 		[HttpPost("updateprintstatus")]
 		public int updateprintstatus(gatepassModel model)

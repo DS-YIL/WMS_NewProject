@@ -30,6 +30,7 @@ export class GatePassApproverComponent implements OnInit {
   public Oldestdata: FIFOValues;
   public FIFOvalues: FIFOValues;
   public gatePassApprovalList: Array<any> = [];
+  public showHistory: boolean = false;
 
   ngOnInit() {
     if (localStorage.getItem("Employee"))
@@ -73,6 +74,9 @@ export class GatePassApproverComponent implements OnInit {
      //if (this.gatePassApprovalList.filter(li => li.approverid == this.employee.employeeno)[0].approverstatus != "Approved")
         //this.btnDisable = false;
     });
+  }
+  showHistoryList() {
+    this.showHistory = !this.showHistory;
   }
   updategatepassapproverstatus() {
     this.gatepassModel.gatepassid = this.materialList[0].gatepassid;
