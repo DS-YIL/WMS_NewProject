@@ -44,6 +44,7 @@ export class BarcodeModel {
   departmentid: number;
   invoicedate: Date;
   receivedby: string;
+  suppliername: string;
 }
 
 export class Cyclecountconfig {
@@ -85,7 +86,9 @@ export class inwardModel {
   projectname: string;
   materialqty: number;
   qualitycheck: boolean;
-  checkedby: string
+  checkedby: string;
+  material: string;
+  materialdescription: string;
 }
 
 

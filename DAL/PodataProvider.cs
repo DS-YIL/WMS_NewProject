@@ -204,21 +204,53 @@ namespace WMS.DAL
 						dataobj.receiveddate = System.DateTime.Now;
 						//if (barcodeid != 0)
 						//{
-						dataobj.invoicedate = System.DateTime.Now;
-						var results = DB.Execute(insertqueryforinvoice, new
-						{
+						if(dataobj.pono == "NONPO")
+                        {
+							string compare = "NP"+DateTime.Now.Year.ToString().Substring(2);
+							string Query = "select pono as POno from wms.wms_securityinward where pono like '"+compare+"%' order by invoicedate desc limit 1";
+							var data = DB.QueryFirstOrDefault<POList>(
+							Query, null, commandType: CommandType.Text);
+							if(data != null)
+                            {
+								string[] poserial = data.POno.Split('P');
+								int serial = Convert.ToInt32(poserial[1].Substring(2));
+								int nextserial = serial + 1;
+								string nextpo = "NP" + DateTime.Now.Year.ToString().Substring(2) + nextserial.ToString().PadLeft(5, '0');
+								dataobj.pono = nextpo;
+							}
+                            else
+                            {
+								string nextpo = "NP" + DateTime.Now.Year.ToString().Substring(2) + "00001";
+								dataobj.pono = nextpo;
+								//string insertpoqry = WMSResource.insertpo;
+								//DB.Execute(insertpoqry, new
+								//{
+								//	dataobj.pono,
+								//	dataobj,
+								//	//barcodeid,
+								//});
 
-							dataobj.invoicedate,
-							dataobj.departmentid,
-							dataobj.invoiceno,
-							dataobj.receiveddate,
-							dataobj.receivedby,
-							dataobj.pono,
-							dataobj.deleteflag,
-							//barcodeid,
-						});
-						//}
-						return (Convert.ToInt32(results));
+							}
+
+							
+						}
+						dataobj.invoicedate = System.DateTime.Now;
+                        var results = DB.Execute(insertqueryforinvoice, new
+                        {
+
+                            dataobj.invoicedate,
+                            dataobj.departmentid,
+                            dataobj.invoiceno,
+                            dataobj.receiveddate,
+                            dataobj.receivedby,
+                            dataobj.pono,
+                            dataobj.deleteflag,
+							dataobj.suppliername
+
+                            //barcodeid,
+                        });
+                        ////}
+                        return (Convert.ToInt32(results));
 					}
 
 				}
@@ -499,9 +531,23 @@ namespace WMS.DAL
 				try
 				{
 					await pgsql.OpenAsync();
+					List<OpenPoModel> datalist = new List<OpenPoModel>();
 					string query = WMSResource.Getdetailsforthreewaymatching.Replace("#pono", pono).Replace("#invoiceno", invoiceno);// + pono+"'";//li
-					return await pgsql.QueryAsync<OpenPoModel>(
+					var data = await pgsql.QueryAsync<OpenPoModel>(
 					   query, null, commandType: CommandType.Text);
+					if(data.Count() == 0)
+                    {
+                        if (pono.StartsWith("NP"))
+                        {
+							OpenPoModel po = new OpenPoModel();
+							po.pono = pono;
+							po.invoiceno = invoiceno;
+							datalist.Add(po);
+							data = datalist;
+                        }
+                    }
+
+					return data;
 				}
 				catch (Exception Ex)
 				{
@@ -524,7 +570,7 @@ namespace WMS.DAL
 		/// <param name="invoiceno"></param>
 		/// <param name="pono"></param>
 		/// <returns></returns>
-		public async Task<IEnumerable<OpenPoModel>> Getqualitydetails(string invoiceno, string pono)
+		public async Task<IEnumerable<OpenPoModel>> Getqualitydetails()
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
@@ -532,7 +578,7 @@ namespace WMS.DAL
 				try
 				{
 					await pgsql.OpenAsync();
-					string query = WMSResource.getdataforqualitydetails.Replace("#pono", pono).Replace("#invoiceno", invoiceno);// + pono+"'";//li
+					string query = WMSResource.getdataforqualitydetails;// + pono+"'";//li
 					var data = await pgsql.QueryAsync<OpenPoModel>(
 					   query, null, commandType: CommandType.Text);
 					return data;
@@ -567,7 +613,19 @@ namespace WMS.DAL
 					await pgsql.OpenAsync();
 					string lastinsertedgrn = WMSResource.lastinsertedgrn;
 					iwardmasterModel info = new iwardmasterModel();
-					string query = WMSResource.Verifythreewaymatch.Replace("#pono", pono).Replace("#invoiceno", invoiceno);
+					string query = "";
+
+					if (pono.StartsWith("NP"))
+                    {
+						query = "select Count(*),grnnumber,pono from wms.wms_securityinward where invoiceno = '"+ invoiceno + "' and pono = '"+ pono + "' group by grnnumber,pono";
+
+					}
+                    else
+                    {
+						query = WMSResource.Verifythreewaymatch.Replace("#pono", pono).Replace("#invoiceno", invoiceno);
+
+					}
+ 
 					info = pgsql.QuerySingle<iwardmasterModel>(
 					  query, null, commandType: CommandType.Text);
 					if (info != null && info.grnnumber == null)
@@ -684,59 +742,69 @@ namespace WMS.DAL
 							string materialid = item.Material;
 							string qry = "select qualitycheck from wms.\"MaterialMasterYGS\" where material = '" + materialid + "'";
 							var data = pgsql.QueryFirstOrDefault<OpenPoModel>(
-							qry, null, commandType: CommandType.Text);
+					        qry, null, commandType: CommandType.Text);
 							bool qc = data.qualitycheck;
 							int? confirmqty = null;
-							if (qc)
-							{
+							string checkedby = null;
+							DateTime? checkedon = null;
+                            if (qc)
+                            {
 								confirmqty = null;
-							}
-							else
-							{
+                            }
+                            else
+                            {
 								confirmqty = item.receivedqty;
+								checkedby = item.receivedby;
+								checkedon = item.receiveddate;
+                                
 							}
 
 							using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
 							{
-								var results = DB.ExecuteScalar(insertforinvoicequery, new
-								{
-									obj.inwmasterid,
-									item.receiveddate,
-									item.receivedby,
-									item.receivedqty,
-									confirmqty,
-									materialid,
-									item.deleteflag,
+									var results = DB.ExecuteScalar(insertforinvoicequery, new
+									{
+										obj.inwmasterid,
+										item.receiveddate,
+										item.receivedby,
+										item.receivedqty,
+										confirmqty,
+										materialid,
+										item.deleteflag,
+										checkedby,
+										checkedon
 
-								});
-								inwardid = Convert.ToInt32(results);
+									});
+									inwardid = Convert.ToInt32(results);
+								
+								
+                                
 
 
-								//if (inwardid != 0)
-								//{
-								//    string insertqueryforqualitycheck =WMSResource.insertqueryforqualitycheck;
+                                //if (inwardid != 0)
+                                //{
+                                //    string insertqueryforqualitycheck =WMSResource.insertqueryforqualitycheck;
 
-								//    var data = DB.ExecuteScalar(insertqueryforqualitycheck, new
-								//    {
-								//        inwardid,
-								//        datamodel.quality,
-								//        datamodel.qtype,
-								//        datamodel.qcdate,
-								//        datamodel.qcby,
-								//        datamodel.remarks,
-								//        datamodel.deleteflag,
+                                //    var data = DB.ExecuteScalar(insertqueryforqualitycheck, new
+                                //    {
+                                //        inwardid,
+                                //        datamodel.quality,
+                                //        datamodel.qtype,
+                                //        datamodel.qcdate,
+                                //        datamodel.qcby,
+                                //        datamodel.remarks,
+                                //        datamodel.deleteflag,
 
-								//    });
-								//string insertqueryforstatusforqty = WMSResource.insertqueryforstatusforqty;
+                                //    });
+                                //string insertqueryforstatusforqty = WMSResource.insertqueryforstatusforqty;
 
-								//var data1 = DB.ExecuteScalar(insertqueryforstatusforqty, new
-								//{
-								//	item.pono,
-								//	item.returnqty
+                                //var data1 = DB.ExecuteScalar(insertqueryforstatusforqty, new
+                                //{
+                                //	item.pono,
+                                //	item.returnqty
 
-								//});
+                                //});
 
-							}
+                            }
 						}
 					}
 

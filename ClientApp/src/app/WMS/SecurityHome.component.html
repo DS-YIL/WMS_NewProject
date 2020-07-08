@@ -22,7 +22,7 @@
           <div *ngIf="ispochecked">
             <div class="row " style="margin-top:5px;">
               <div class="col-lg-12 col-md-12 col-sm-12 form-inline">
-                <label class="labelheading">PO No: </label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <label class="labelheading">PO/ASN No: </label>&nbsp;&nbsp;
                 <input class="form-control" type="text" [(ngModel)]="PoDetails.pono" id="ponoid" maxlength="10">&nbsp;&nbsp;
                 <button type="button" class="btn btn-primary btn-sm" label="Save" (click)="SearchPoNo()">Search</button>
               </div>
@@ -170,7 +170,7 @@
                   <ng-template pTemplate="header">
                     <tr class="sectbldata1" style="background-color:aqua !important">
                       <th class="ptable-cell" style="text-align:center;width:10%;">Sl.No.</th>
-                      <th class="ptable-cell" style="text-align:center;width:20%;">Ref. No</th>
+                      <th class="ptable-cell" style="text-align:center;width:20%;">ASN No</th>
                       <th class="ptable-cell" style="text-align:center;width:20%;">PO No</th>
                       <th class="ptable-cell" style="text-align:center;width:50%">Supplier Name</th>
                     </tr>
@@ -180,7 +180,7 @@
                       <td class="ptable-cell" style="text-align:right;width:10%;"> {{ri+1}} </td>
                       <td class="ptable-cell" style="text-align:center;width:20%;"> {{rowData.asn}} </td>
                       <td class="ptable-cell" style="text-align:center;width:20%;"> {{rowData.pono}} </td>
-                      <td class="ptable-cell" style="text-align:left;width:70%"> {{rowData.vendorname}} </td>
+                      <td class="ptable-cell" style="text-align:left;width:70%">{{rowData.vendorname}} </td>
 </ng-template>
                   <ng-template pTemplate="emptymessage">
                     <tr>
@@ -194,7 +194,7 @@
                   <ng-template pTemplate="header">
                     <tr class="sectbldata">
                       <th class="ptable-cell" style="text-align:center;width:10%;">Sl.No.</th>
-                      <th class="ptable-cell" style="text-align:center;width:20%;">Ref. No</th>
+                      <th class="ptable-cell" style="text-align:center;width:20%;">ASN No</th>
                       <th class="ptable-cell" style="text-align:center;width:20%;">PO No</th>
                       <th class="ptable-cell" style="text-align:center">Supplier Name</th>
                       <th class="ptable-cell" style="text-align:center;width:25%;">Received By</th>
@@ -206,7 +206,8 @@
                       <td class="ptable-cell" style="text-align:right;;width:10%;"> {{ri+1}} </td>
                       <td class="ptable-cell" style="text-align:center;width:20%;"> {{rowData.asn}} </td>
                       <td class="ptable-cell" style="text-align:center;width:20%;"> {{rowData.pono}} </td>
-                      <td class="ptable-cell" style="text-align:left"> {{rowData.suppliername}} </td>
+                      <td class="ptable-cell" style="text-align:left">
+                      <span [innerText]="getsuppliername(rowData)"></span></td>
                       <td class="ptable-cell" style="text-align:left;width:25%;">{{rowData.receivedby}}</td>
 </ng-template>
                   <ng-template pTemplate="emptymessage">

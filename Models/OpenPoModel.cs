@@ -69,6 +69,8 @@ namespace WMS.Models
 		public string Material { get; set; }
 		public string Materialdescription { get; set; }
 
+		public string suppliername { get; set; }
+
 	}
 
 	public class iwardmasterModel
@@ -540,6 +542,7 @@ namespace WMS.Models
 		public string asn { get; set; }
 
 		public string suppliername { get; set; }
+		public string npsuppliername { get; set; }
 	}
 	public class dropdownModel
 	{

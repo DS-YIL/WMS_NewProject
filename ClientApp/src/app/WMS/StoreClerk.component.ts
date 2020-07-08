@@ -27,13 +27,15 @@ export class StoreClerkComponent implements OnInit {
   public grnnumber: string = "";
   public totalqty: number;
   public recqty: number;
+  inwardemptymodel: inwardModel;
   qualitychecked: boolean = false;
+  isnonpoentry: boolean = false;
   ngOnInit() {
     if (localStorage.getItem("Employee"))
       this.employee = JSON.parse(localStorage.getItem("Employee"));
     else
       this.router.navigateByUrl("Login");
-
+    this.inwardemptymodel = new inwardModel();
     this.PoDetails = new PoDetails();
     this.inwardModel = new inwardModel();
     this.inwardModel.quality = "0";
@@ -89,6 +91,16 @@ export class StoreClerkComponent implements OnInit {
 
 
   }
+  addrows() {
+    debugger;
+    this.inwardemptymodel.material = "";
+    this.inwardemptymodel.materialdescription = "";
+    this.inwardemptymodel.materialqty = 0;
+    this.inwardemptymodel.receivedqty = '0';
+
+    this.podetailsList.push(this.inwardemptymodel);
+
+  }
   getponodetails(data) {
     this.qualitychecked = false;
     this.podetailsList = [];
@@ -99,6 +111,11 @@ export class StoreClerkComponent implements OnInit {
         // this.PoDetails = data[0];
         this.podetailsList = data;
         this.grnnumber = this.podetailsList[0].grnnumber;
+        var pono = this.podetailsList[0].pono;
+        if (pono.startsWith("NP") && !this.grnnumber) {
+          this.isnonpoentry = true;
+        }
+
 
         this.showDetails = true;
         if (this.podetailsList[0].checkedby) {
@@ -130,7 +147,7 @@ export class StoreClerkComponent implements OnInit {
   }
   onsubmit() {
     debugger;
-    if (this.podetailsList.length > 0 && this.podetailsList[0].receivedqty>'0') {
+    if (this.podetailsList.length > 0 && this.podetailsList[0].receivedqty> '0') {
 
       this.spinner.show();
       // this.onVerifyDetails(this.podetailsList);

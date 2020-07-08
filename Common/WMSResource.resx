@@ -153,7 +153,7 @@ where  inwmaster.pono='#pono'</value>
     <comment>barcodedata insertion</comment>
   </data>
   <data name="insertinvoicedata" xml:space="preserve">
-    <value>INSERT INTO wms.wms_securityinward(inwmasterid,pono,invoiceno,invoicedate,receivedby,receiveddate,deleteflag,departmentid)VALUES(default,@pono,@invoiceno,@invoicedate,@receivedby,@receiveddate,@deleteflag,@departmentid)</value>
+    <value>INSERT INTO wms.wms_securityinward(inwmasterid,pono,invoiceno,invoicedate,receivedby,receiveddate,deleteflag,departmentid,suppliername)VALUES(default,@pono,@invoiceno,@invoicedate,@receivedby,@receiveddate,@deleteflag,@departmentid,@suppliername)</value>
     <comment>invoice data insertion</comment>
   </data>
   <data name="materialquest" xml:space="preserve">
@@ -464,7 +464,7 @@ where sec.grnnumber ='#grnnumber' and sk.materialid='#materialid'</value>
   group by req.requestforissueid,iss.materialissueid</value>
   </data>
   <data name="getsecurityreceivedlist" xml:space="preserve">
-    <value>select sl.pono,sl.asn,Max(emp.name) as receivedby ,Max(ol.suppliername) as suppliername from wms.wms_securityinward sl 
+    <value>select sl.pono,sl.asn,Max(emp.name) as receivedby ,Max(ol.suppliername) as suppliername,Max(sl.suppliername) as npsuppliername from wms.wms_securityinward sl 
 left outer join wms.wms_polist ol on sl.pono = ol.pono 
 left outer join wms.employee emp on sl.receivedby = emp.employeeno</value>
   </data>
@@ -541,22 +541,25 @@ values(default,@pono,@itemid,@gatepassmaterialid,@itemissueddate,@itemreceiverid
     <value>UPDATE  wms.wms_storeinward set  confirmqty=@confirmqty,returnqty = @returnqty,checkedby = @receivedby,checkedon=current_date,remarks=@remarks where inwardid =#inwardid</value>
   </data>
   <data name="getdataforqualitydetails" xml:space="preserve">
-    <value>select distinct openpo.projectname,inw.inwardid,inw.remarks,inw.checkedby,inwa.invoiceno,inwa.grnnumber,inwa.pono,openpo.material,openpo.materialqty,(inw.confirmqty+inw.returnqty) as receivedqty,openpo.materialdescription, openpo.quotationqty,inw.receivedqty,inw.returnqty,mat.qualitycheck, 
-CASE
-     WHEN mat.qualitycheck=True  THEN inw.confirmqty
-     ELSE  inw.receivedqty
-END as confirmqty
-from wms.wms_securityinward inwa  
- left join wms.wms_storeinward inw on inw.inwmasterid=inwa.inwmasterid
- inner join wms.openpolistview openpo on openpo.pono=inwa.pono
- left outer join wms."MaterialMasterYGS" mat on mat.material = openpo.material
-  where  inwa.pono='#pono'  and inwa.invoiceno= '#invoiceno'  order by inwa.grnnumber desc</value>
+    <value>select stinw.inwardid,stinw.inwmasterid,stinw.materialid as material,secinw.grnnumber,openpo.materialdescription,stinw.receivedqty,stinw.returnqty,stinw.remarks,stinw.checkedby,mat.qualitycheck,
+  CASE
+     WHEN mat.qualitycheck=True  THEN stinw.confirmqty
+     ELSE  stinw.receivedqty
+  END as confirmqty
+  from wms.wms_storeinward stinw
+  left outer join wms.wms_securityinward secinw on secinw.inwmasterid=stinw.inwmasterid
+  left outer join wms."MaterialMasterYGS" mat on mat.material = stinw.materialid
+  left outer join wms.openpolistview openpo on openpo.pono=secinw.pono
+  where stinw.checkedby is null</value>
   </data>
   <data name="receiveforinvoice" xml:space="preserve">
-    <value>INSERT INTO wms.wms_storeinward(inwmasterid,receiveddate,receivedby,receivedqty,confirmqty,materialid,deleteflag)
-VALUES(@inwmasterid,@receiveddate,@receivedby,@receivedqty,@confirmqty,@materialid,@deleteflag)returning inwardid</value>
+    <value>INSERT INTO wms.wms_storeinward(inwmasterid,receiveddate,receivedby,receivedqty,confirmqty,materialid,deleteflag,checkedby,checkedon)
+VALUES(@inwmasterid,@receiveddate,@receivedby,@receivedqty,@confirmqty,@materialid,@deleteflag,@checkedby,@checkedon)returning inwardid</value>
   </data>
   <data name="getGatePassApprovalHistoryList" xml:space="preserve">
     <value>select * from wms.wms_gatepassapprovals where gatepassid =#gatepassid and currentstatus =true</value>
+  </data>
+   <data name="insertpo" xml:space="preserve">
+    <value>insert into wms.wms_polist(pono,deliverydate,vendorid,suppliername) values (@pono,current_date,null,@suppliername)</value>
   </data>
 </root>
