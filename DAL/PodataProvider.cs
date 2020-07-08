@@ -1643,7 +1643,7 @@ namespace WMS.DAL
 								item.materialcost,
 								item.expecteddate,
 								item.returneddate,
-								item.issueqty
+								item.issuedqty
 								});
 
 						}
@@ -1837,7 +1837,7 @@ namespace WMS.DAL
 
 						});
 					}
-						string updateissueqty = "update  wms.wms_gatepassmaterial set issueqty=" + item.issuedqty + " where gatepassmaterialid=" + item.gatepassmaterialid;
+						string updateissueqty = "update  wms.wms_gatepassmaterial set issuedqty=" + item.issuedqty + " where gatepassmaterialid=" + item.gatepassmaterialid;
 						using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
 						{
 							var result = DB.Execute(updateissueqty, new
@@ -2721,7 +2721,7 @@ namespace WMS.DAL
 								item.pono
 
 							});
-							int availableqty = item.availableqty - item.issueqty;
+							int availableqty = item.availableqty - item.issuedqty;
 
 							string insertqueryforstatusforqty = WMSResource.updateqtyafterissue.Replace("#itemid", Convert.ToString(item.itemid)).Replace("#availableqty", Convert.ToString(availableqty));
 

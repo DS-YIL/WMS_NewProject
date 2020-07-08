@@ -310,7 +310,7 @@ namespace WMS.Models
 		public int materialcost { get; set; }
 		public DateTime expecteddate { get; set; }
 		public DateTime returneddate { get; set; }
-		public int issueqty { get; set; }
+		public int issuedqty { get; set; }
 
 	}
 
@@ -429,7 +429,7 @@ namespace WMS.Models
 		public int availableqty { get; set; }
 		public string pono { get; set; }
 		public int itemid { get; set; }
-		public int issueqty { get;set; }
+		public int issuedqty { get;set; }
 	}
 	public class EmailModel
 	{
