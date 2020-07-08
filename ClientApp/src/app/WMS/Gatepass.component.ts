@@ -27,6 +27,7 @@ export class GatePassComponent implements OnInit {
   public searchresult: Array<object> = [];
 
   public gatepasslist: Array<any> = [];
+  public totalGatePassList: Array<any> = [];
   public gatepassModelList: Array<gatepassModel> = [];
   public employee: Employee;
   public gatepassdialog; updateReturnedDateDialog: boolean = false;
@@ -57,7 +58,7 @@ export class GatePassComponent implements OnInit {
 
   //Adding new material - Gayathri
   addNewMaterial() {
-  
+
     if (this.gatepassModel.materialList.length == 0 || isNullOrUndefined(this.material)) {
       this.materialistModel = { materialid: "", gatepassmaterialid: "0", materialdescription: "", quantity: 0, materialcost: "0", remarks: " ", expecteddate: this.date, returneddate: this.date };
       this.gatepassModel.materialList.push(this.materialistModel);
@@ -78,7 +79,7 @@ export class GatePassComponent implements OnInit {
         this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Material already exist' });
         return false;
       }
-    
+
 
       this.gatePassChange();
       if (this.material.code) {
@@ -148,15 +149,30 @@ export class GatePassComponent implements OnInit {
   //get gatepass list
   getGatePassList() {
     this.wmsService.getGatePassList().subscribe(data => {
-      this.gatepasslist = data;
+      this.totalGatePassList = data;
       if (this.employee.roleid == "8") {
-        this.gatepasslist = this.gatepasslist.filter(li => li.gatepasstype == 'Non Returnable' && li.gate);
+        this.gatepasslist = this.totalGatePassList.filter(li => li.gatepasstype == 'Non Returnable' && li.approverstatus == this.approverstatus && li.approverstatus == null);
+      }
+      else {
+        this.gatepasslist = this.totalGatePassList;
       }
       this.gatepassModelList = [];
       this.prepareGatepassList();
     });
   }
 
+  searchGatePassList() {
+    if (this.approverstatus != "0") {
+      if (this.approverstatus == "Pending")
+        this.gatepasslist = this.totalGatePassList.filter(li => li.gatepasstype == 'Non Returnable' && li.approverstatus == this.approverstatus &&  li.approverstatus == null);
+        else
+        this.gatepasslist = this.totalGatePassList.filter(li => li.gatepasstype == 'Non Returnable' &&  li.approverstatus == this.approverstatus);
+    }
+    else
+      this.gatepasslist = this.totalGatePassList.filter(li => li.gatepasstype == 'Non Returnable');
+    this.gatepassModelList = [];
+    this.prepareGatepassList();
+  }
   exportPdf() {
     debugger;
     import("jspdf").then(jsPDF => {
@@ -204,7 +220,7 @@ export class GatePassComponent implements OnInit {
         //})
 
         //doc.autoTable(this.exportColumns, this.PrintDocs);
-       // doc.save('devicereport.pdf');
+        // doc.save('devicereport.pdf');
         doc.output('dataurlnewwindow');
       })
     })
@@ -216,7 +232,7 @@ export class GatePassComponent implements OnInit {
       var res = this.gatepassModelList.filter(li => li.gatepassid == item.gatepassid);
       if (res.length == 0) {
         item.materialList = [];
-        var result = this.gatepasslist.filter(li => li.gatepassid == item.gatepassid && li.gatepassmaterialid != "0" && li.deleteflag ==false);
+        var result = this.gatepasslist.filter(li => li.gatepassid == item.gatepassid && li.gatepassmaterialid != "0" && li.deleteflag == false);
         for (var i = 0; i < result.length; i++) {
           var material = new materialistModel();
           material.gatepassmaterialid = result[i].gatepassmaterialid;
@@ -225,17 +241,17 @@ export class GatePassComponent implements OnInit {
           material.quantity = result[i].quantity;
           material.materialcost = result[i].materialcost;
           material.remarks = result[i].remarks;
-         //material.approverstatus = result[i].approverstatus;
+          //material.approverstatus = result[i].approverstatus;
           material.expecteddate = new Date(result[i].expecteddate);
           if (isNullOrUndefined(result[i].returneddate)) {
             //material.returneddate = new Date(this.date).toLocaleDateString();
             material.returneddate = this.checkValiddate(result[i].returneddate) == "" ? undefined : this.checkValiddate(result[i].returneddate);
           }
           else {
-            
+
             material.returneddate = this.checkValiddate(result[i].returneddate) == "" ? undefined : this.checkValiddate(result[i].returneddate);
           }
-          
+
           item.materialList.push(material);
         }
 
@@ -345,7 +361,7 @@ export class GatePassComponent implements OnInit {
   }
 
   //Check if material is already selected in material list drop down
-  onMaterialSelected(material:any) {
+  onMaterialSelected(material: any) {
     if (this.gatepassModel.materialList.filter(li => li.materialid == material.code).length > 0) {
       this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Material already exist' });
       return false;
@@ -392,7 +408,7 @@ export class GatePassComponent implements OnInit {
     else if (this.gatepassModel.gatepasstype != "0") {
       this.gatepassModel.requestedby = this.employee.employeeno;
       //check if materiallist is empty and gatepass materialid is null
-      if (!this.material && !this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].materialid ) {
+      if (!this.material && !this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].materialid) {
         this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Add Material' });
         return false;
       }
@@ -406,56 +422,56 @@ export class GatePassComponent implements OnInit {
         this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Material already exist' });
         return false;
       }
-        //alert(this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].returneddate);
-        this.gatePassChange();
-        if (this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].materialid == "" && !isNullOrUndefined(this.material.code)) {
-          this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].materialid = this.material.code;
-          this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].materialdescription = this.material.name;
-          this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].expecteddate = new Date(this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].expecteddate).toLocaleDateString();
-          this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].returneddate = this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].returneddate != null ? new Date(this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].returneddate).toLocaleDateString() : undefined;
-          
-          if (this.materialistModel.materialid && this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].quantity) {
-            this.wmsService.checkMaterialandQty(this.material.code, this.materialistModel.quantity).subscribe(data => {
-              if (data == "true") {
-                // this.gatepassModel.materialList.push(this.materialistModel);
-                //this.gatepassModel.materialList.push(this.materialistModel);
-                //this.materialistModel = new materialistModel();
-                this.material = "";
-                this.wmsService.saveoreditgatepassmaterial(this.gatepassModel).subscribe(data => {
-                  this.gatepassdialog = false;
-                  this.updateReturnedDateDialog = false;
-                  this.getGatePassList()
-                  if (data)
-                    this.messageService.add({ severity: 'success', summary: 'Success Message', detail: 'Gate Pass Created Successfully' });
-                })
-              }
-              else
-                this.messageService.add({ severity: 'error', summary: 'Error Message', detail: data });
-            });
-          }
-          else {
-            if (!this.materialistModel.materialid)
-              this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'select material from list' });
-            else if (!this.materialistModel.quantity)
-              this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Enter Quantity' });
-          }
+      //alert(this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].returneddate);
+      this.gatePassChange();
+      if (this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].materialid == "" && !isNullOrUndefined(this.material.code)) {
+        this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].materialid = this.material.code;
+        this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].materialdescription = this.material.name;
+        this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].expecteddate = new Date(this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].expecteddate).toLocaleDateString();
+        this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].returneddate = this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].returneddate != null ? new Date(this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].returneddate).toLocaleDateString() : undefined;
+
+        if (this.materialistModel.materialid && this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].quantity) {
+          this.wmsService.checkMaterialandQty(this.material.code, this.materialistModel.quantity).subscribe(data => {
+            if (data == "true") {
+              // this.gatepassModel.materialList.push(this.materialistModel);
+              //this.gatepassModel.materialList.push(this.materialistModel);
+              //this.materialistModel = new materialistModel();
+              this.material = "";
+              this.wmsService.saveoreditgatepassmaterial(this.gatepassModel).subscribe(data => {
+                this.gatepassdialog = false;
+                this.updateReturnedDateDialog = false;
+                this.getGatePassList()
+                if (data)
+                  this.messageService.add({ severity: 'success', summary: 'Success Message', detail: 'Gate Pass Created Successfully' });
+              })
+            }
+            else
+              this.messageService.add({ severity: 'error', summary: 'Error Message', detail: data });
+          });
         }
         else {
-         
-          console.log(this.gatepassModel);
-          //alert(this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].returneddate);
-          this.wmsService.saveoreditgatepassmaterial(this.gatepassModel).subscribe(data => {
-            this.gatepassdialog = false;
-            this.updateReturnedDateDialog = false;
-            this.getGatePassList();
-            if (data)
-              this.messageService.add({ severity: 'success', summary: 'Success Message', detail: 'Gate Pass Created Successfully' });
-          })
+          if (!this.materialistModel.materialid)
+            this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'select material from list' });
+          else if (!this.materialistModel.quantity)
+            this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Enter Quantity' });
         }
-
-
       }
-    
+      else {
+
+        console.log(this.gatepassModel);
+        //alert(this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].returneddate);
+        this.wmsService.saveoreditgatepassmaterial(this.gatepassModel).subscribe(data => {
+          this.gatepassdialog = false;
+          this.updateReturnedDateDialog = false;
+          this.getGatePassList();
+          if (data)
+            this.messageService.add({ severity: 'success', summary: 'Success Message', detail: 'Gate Pass Created Successfully' });
+        })
+      }
+
+
+    }
+
     else {
       this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Select Type' });
     }
