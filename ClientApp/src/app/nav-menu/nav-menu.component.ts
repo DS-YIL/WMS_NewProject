@@ -37,18 +37,32 @@ export class NavMenuComponent implements OnInit {
       
   }
 
+  activeMenu(event) {
+    let node;
+    if (event.target.tagName === "A") {
+      node = event.target;
+    } else {
+      node = event.target.parentNode;
+    }
+    let menuitem = document.getElementsByClassName("ui-menuitem-link");
+    for (let i = 0; i < menuitem.length; i++) {
+      menuitem[i].classList.remove("active");
+    }
+    node.classList.add("active")
+  }
+
   bindMenu() {
     debugger;
     this.items = [];
     this.items = [
-      { label: 'Home', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-home', command: () => this.router.navigateByUrl('WMS/Home') }
+      { label: 'Home', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-home', command: () => this.router.navigateByUrl('WMS/Home'), styleClass: 'active' }
     ];
     this.useritems = [
       { label: 'Log Out', icon: 'pi pi-fw pi-angle-right', command: () => this.logout() }
     ];
     if (this.emp.roleid == "1") {
       this.items = [];
-      this.items.push({ label: 'Inbound Shipment', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/SecurityCheck') });
+      this.items.push({ label: 'Inbound Shipment', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/SecurityCheck'), styleClass: 'active' });
       this.router.navigateByUrl('WMS/SecurityCheck');
     }
     if(this.emp.roleid == "2") {//inventory enquiry

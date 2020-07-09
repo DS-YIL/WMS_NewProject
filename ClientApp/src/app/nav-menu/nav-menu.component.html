@@ -10,10 +10,10 @@
   </nav>
 </header>
 <div style="margin-top: -20px;" id="menudiv">
-  <p-menubar [model]="items" [style]="{'background': 'linear-gradient(to bottom, #669999 0%, #669999 100%)','color':'white'}"></p-menubar>
+  <p-menubar [model]="items" [style]="{'background': 'linear-gradient(to bottom, #669999 0%, #669999 100%)','color':'white'}" (click) = "activeMenu($event)"></p-menubar>
 </div>
 <p-overlayPanel #op1>
-  <p-panelMenu [model]="useritems" [style]="{'width':'150px'}"></p-panelMenu>
+  <p-panelMenu [model]="useritems" [style]="{'width':'150px'}" ></p-panelMenu>
 </p-overlayPanel>
 <p-toast position="top-right"></p-toast>
 
