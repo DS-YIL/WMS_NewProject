@@ -194,7 +194,7 @@ namespace WMS.DAL
 					.Write(content)
 					.Save(path + content + ".bmp");
 
-				printMat.barcodePath = "./Barcodes/" + content + ".bmp";
+				printMat.materialcodePath = "./Barcodes/" + content + ".bmp";
 				//printMat.materialcodePath = "./assets/" + content + ".bmp";
 
 			}
