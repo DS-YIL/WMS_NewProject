@@ -155,10 +155,10 @@ namespace WMS.DAL
 					Format = BarcodeFormat.QR_CODE,
 					Options = new EncodingOptions
 					{
-						Height = 600,
-						Width = 900,
+						Height = 90,
+						Width = 100,
 						PureBarcode = false,
-						Margin = 10,
+						Margin = 1,
 					
 					},
 				};

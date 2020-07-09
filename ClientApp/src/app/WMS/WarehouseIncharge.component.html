@@ -192,18 +192,22 @@
         </div>
       </div>
       <div class="row">
-        <table>
-          <tr>
-            <th>{{printData.grnno}}</th>
-            <th><img class="images" src="{{printData.barcodePath}}" /></th>
-          </tr>
-          <tr>
-            <th>{{printData.receiveddate}}</th>
-            <th>1/{{printData.noofprint}}</th>
-          </tr>
-        </table>
-      </div>
-      <!--<div class="row">
+        <div class="col-lg-1 col-md-1 col-sm-1"></div>
+        <div class="col-lg-10 col-md-10 col-sm-10">
+          <table>
+            <tr >
+              <th style="outline: thin solid;width:950px;height:90px">GRN No. - MaterialId : {{printData.grnno}}- {{printData.materialid}}</th>
+              <th style="outline: thin solid;width:500px;height:90px;align-content:center"><img class="images" src="{{printData.barcodePath}}" /></th>
+            </tr>
+            <tr>
+              <th style="outline: thin solid;width:950px;height:30px">Received Date: {{printData.receiveddate}}</th>
+              <th style="outline: thin solid;width: 500px; height: 30px">1/{{printData.noofprint}}</th>
+            </tr>
+          </table>
+          </div>
+        </div>
+      <br/>
+        <!--<div class="row">
     <div class="col-lg-3 col-md-3 col-sm-3"></div>
     <div class="col-lg-7 col-md-7 col-sm-7">
       <img class="images" src="{{printData.barcodePath}}" />
@@ -221,13 +225,13 @@
            <label>1/{{printData.noofprint}}</label>
          </div>
        </div>-->
-      <div class="row">
-        <div class="col-lg-5 col-md-5 col-sm-5"></div>
-        <div class="col-lg-3 col-md-3 col-sm-3">
-          <button type="button" class="btn btn-primary" label="Save">Print</button>
+        <div class="row">
+          <div class="col-lg-5 col-md-5 col-sm-5"></div>
+          <div class="col-lg-3 col-md-3 col-sm-3">
+            <button type="button" class="btn btn-primary" label="Save">Print</button>
+          </div>
         </div>
-      </div>
-    </form>
+</form>
   </p-dialog>
     <p-dialog header="Put Away Location" [(visible)]="showLocationDialog" [contentStyle]="{'overflow':'visible'}" [style]="{width: '50%'}">
       <form [formGroup]="StockModelForm">
