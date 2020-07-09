@@ -37,6 +37,7 @@ export class GatePassComponent implements OnInit {
   public gpIndx: number;
   public date: Date = null;
   public approverstatus: string;
+  public mindate: Date;
 
   ngOnInit() {
     if (localStorage.getItem("Employee"))
@@ -53,6 +54,9 @@ export class GatePassComponent implements OnInit {
 
     else
       this.approverstatus = "";
+
+    //set expected date as future date
+    this.mindate = new Date(new Date().setDate(new Date().getDate() +1));
   }
 
 

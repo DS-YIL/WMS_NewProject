@@ -272,7 +272,7 @@
 
             </td>
             <td *ngIf="gatepassModel.gatepasstype=='Returnable'" class="ptable-cell" style="text-align:right">
-              <p-calendar class="mprldatepick" [(ngModel)]="rowData.expecteddate" dateFormat="dd/mm/yy" appendTo="body" [monthNavigator]="true" [yearNavigator]="true" yearRange="1900:2050"></p-calendar>
+              <p-calendar class="mprldatepick" [(ngModel)]="rowData.expecteddate" dateFormat="dd/mm/yy" [minDate]="mindate" appendTo="body" [monthNavigator]="true" [yearNavigator]="true" yearRange="1900:2050"></p-calendar>
 
               <!--<input [(ngModel)]="rowData.expecteddate" class="form-control" type="text" name="{{rowData.expecteddate | date :  constants.dateFormat}}" />-->
 
