@@ -150,8 +150,19 @@ export class GatePassComponent implements OnInit {
   getGatePassList() {
     this.wmsService.getGatePassList().subscribe(data => {
       this.totalGatePassList = data;
+      this.gatepasslist = [];
       if (this.employee.roleid == "8") {
         this.gatepasslist = this.totalGatePassList.filter(li => li.gatepasstype == 'Non Returnable' && (li.approverstatus == this.approverstatus || li.approverstatus == null));
+      }
+      else if (this.employee.roleid == "4")
+      {
+        this.totalGatePassList.forEach(item => {
+          if (item.gatepasstype == "Returnable")
+            this.gatepasslist.push(item);
+          if (item.gatepasstype == "Non Returnable" && item.approverstatus!="Approved")
+            this.gatepasslist.push(item);
+        })
+         
       }
       else {
         this.gatepasslist = this.totalGatePassList;
