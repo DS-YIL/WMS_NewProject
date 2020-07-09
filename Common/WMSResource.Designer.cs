@@ -828,8 +828,8 @@ namespace WMS.Common {
         ///   Looks up a localized string similar to select distinct bin.binnumber, rack.racknumber, loc.locatorname,mat.rackid,mat.binid,
         /// mat.storeid,stocks.itemlocation,stocks.itemid,inw.grnnumber,inw.pono,inw.invoiceno,openpo.projectname,openpo.materialqty,openpo.material,openpo.materialdescription,openpo.quotationqty,inwa.receivedqty,inwa.confirmqty,inwa.returnqty from wms.wms_securityinward inw
         ///left join wms.wms_storeinward inwa on inw.inwmasterid=inwa.inwmasterid
-        ///left join wms.wms_stock stocks on  inwa.inwmasterid=inwa.inwmasterid
-        ///inner join wms.op [rest of string was truncated]&quot;;.
+        ///left join wms.wms_stock stocks on  stocks.inwmasterid=inwa.inwmasterid
+        ///inner join wms. [rest of string was truncated]&quot;;.
         /// </summary>
         public static string queryforitemdetails {
             get {
