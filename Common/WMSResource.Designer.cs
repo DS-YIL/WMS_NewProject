@@ -807,13 +807,13 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select  max(track.enteredon) as enteredon,max(pr.projectcode)as projectcode,max(wp.pono) as pono,min(track.status)as status,max(wp.suppliername )as vendorname,max(pr.jobname) as jobname,max(&apos;&apos;)as quotationqty ,
+        ///   Looks up a localized string similar to select  max(track.enteredon) as enteredon,max(pr.projectcode)as projectcode,max(wp.pono) as pono,min(track.status)as status,max(wp.suppliername )as vendorname,max(pr.jobname) as jobname,
         ///       max(mat.materialqty) as materialqty
         ///		from wms.wms_polist wp 
         ///      left join wms.wms_trackstatus track on track.pono=wp.pono
         ///      left join wms.wms_project  pr on pr.pono =wp.pono 
         ///      left join wms.wms_pomaterials mat on  mat.pono =wp.pono 
-        ///      where projectmanager=&apos;#projectmanage [rest of string was truncated]&quot;;.
+        ///      where projectmanager=&apos;#projectmanager&apos;.
         /// </summary>
         public static string openpolist {
             get {
