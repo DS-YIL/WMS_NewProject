@@ -2,26 +2,28 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { wmsService } from '../WmsServices/wms.service';
 import { constants } from '../Models/WMSConstants';
-import { Employee, DynamicSearchResult, searchList } from '../Models/Common.Model';
+import { Employee, DynamicSearchResult, searchList, printMaterial } from '../Models/Common.Model';
 import { NgxSpinnerService } from "ngx-spinner";
 import { PoDetails, BarcodeModel, StockModel, inwardModel } from 'src/app/Models/WMS.Model';
 import { MessageService } from 'primeng/api';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-Warehouse',
-  templateUrl: './WarehouseIncharge.component.html'
+  templateUrl: './WarehouseIncharge.component.html',
+  providers: [DatePipe]
 })
 export class WarehouseInchargeComponent implements OnInit {
     binid: any;
     rackid: any;
 
-  constructor(private formBuilder: FormBuilder, private messageService: MessageService, private wmsService: wmsService, private route: ActivatedRoute, private router: Router, public constants: constants, private spinner: NgxSpinnerService) { }
+  constructor(private formBuilder: FormBuilder, private messageService: MessageService, private datePipe: DatePipe, private wmsService: wmsService, private route: ActivatedRoute, private router: Router, public constants: constants, private spinner: NgxSpinnerService) { }
 
   public store: any;
   public rack: any;
   public bin: any;
-
+  public date: Date = null;
   public formName: string;
   public txtName: string;
   public dynamicData = new DynamicSearchResult();
@@ -41,6 +43,16 @@ export class WarehouseInchargeComponent implements OnInit {
   public locationlist: any[] = [];
   public binlist: any[] = [];
   public racklist: any[] = [];
+  public showPrintDialog: boolean = false;
+  public qty: any = 1;
+  public noOfPrint: any = 1;
+  public materialCode: any;
+  public receivedDate: any;
+  public acceptedQty: any;
+  public itemNo: any;
+  public printData = new printMaterial();
+  public showPrintLabel: boolean = false;
+
   ngOnInit() {
     if (localStorage.getItem("Employee"))
       this.employee = JSON.parse(localStorage.getItem("Employee"));
@@ -62,7 +74,26 @@ export class WarehouseInchargeComponent implements OnInit {
     // this.loadStores();
   }
 
-  
+  //generate barcode -gayathri
+  generateBarcode(details:any) {
+    this.showPrintDialog = true;
+    this.materialCode = details.material;
+    this.receivedDate = this.datePipe.transform(details.receiveddate, this.constants.dateFormat)  ;
+    this.acceptedQty = details.confirmqty;
+  }
+
+  //Increase and decrease the qty based on no of prints -- gayathri
+  decreaseQty() {
+    if (this.qty > 1) {
+      this.qty = this.qty - 1;
+    }
+  }
+  increaseQty() {
+    if (this.qty < this.noOfPrint) {
+      this.qty = this.qty + 1;
+    }
+  }
+
  locationListdata() {
     this.wmsService.getlocationdata().
       subscribe(
@@ -155,6 +186,30 @@ export class WarehouseInchargeComponent implements OnInit {
     if (value == "") {
       this[model][modelparm] = "";
     }
+  }
+
+  GenerateBarcode() {
+    this.showPrintDialog = false;
+    this.showPrintLabel = true;
+    this.printData.materialid = this.materialCode;
+    this.printData.invoiceno = this.podetailsList[0].invoiceno;
+    this.printData.grnno = this.podetailsList[0].grnnumber;
+    this.printData.pono = this.podetailsList[0].pono;
+    this.printData.noofprint = this.noOfPrint;
+    this.printData.receiveddate = this.receivedDate;
+
+    //api call
+    this.wmsService.generateBarcodeMaterial(this.printData).subscribe(data => {
+      if (data) {
+        
+        this.printData = data;
+        console.log(this.printData);
+        
+      }
+      else {
+        alert("Error while generating Barcode");
+      }
+    })
   }
 
   SearchGRNNo() {

@@ -48,7 +48,7 @@ export class LocationDetailsComponent implements OnInit {
     this.grnNo = this.currentRoute.snapshot.queryParams.grnNo;
     this.pono = this.currentRoute.snapshot.queryParams.pono;
     this.poQty = this.currentRoute.snapshot.queryParams.qty;
-    this.getLocationDetails(this.materialid);
+    this.getLocationDetails(this.materialid, this.grnNo);
     this.exportColumns = this.cols.map(col => ({ title: col.header, dataKey: col.field }));
   }
 
@@ -58,10 +58,10 @@ export class LocationDetailsComponent implements OnInit {
     this.router.navigate(['/WMS/MaterialDetails'], { queryParams: { grnNo: this.grnNo, pono: this.pono, qty: this.poQty } });
   }
 
-  getLocationDetails(materialid:string) {
+  getLocationDetails(materialid:string, grnNo:string) {
     this.dynamicData = new DynamicSearchResult();
    // this.dynamicData.query = "select op.material , op.materialdescription,op.projectname, SUM(totalquantity) as Received , SUM(availableqty) as Balance ,SUM(totalquantity -availableqty ) as Issued, MAX(createddate) as createddate  from wms.wms_stock ws inner join wms.openpolistview  op on op.pono = ws.pono where ws.materialid notnull and createddate <='" + this.toDate.toDateString() + "' and createddate > '" + this.fromDate.toDateString() + "' group by  op.material , op.materialdescription,op.projectname"
-    this.wmsService.getLocationDetails(materialid).subscribe(data => {
+    this.wmsService.getLocationDetails(materialid, grnNo).subscribe(data => {
       debugger;
       this.LocationDetails = data;
       this.getTotal();

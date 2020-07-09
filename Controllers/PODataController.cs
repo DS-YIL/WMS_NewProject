@@ -58,9 +58,9 @@ namespace WMS.Controllers
 
 		//Get Location details for material
 		[HttpGet("getlocationdetailsformaterialid")]
-		public async Task<IEnumerable<LocationDetails>> getlocationdetails(string materialid)
+		public async Task<IEnumerable<LocationDetails>> getlocationdetails(string materialid, string grnnumber)
 		{
-			return await this._poService.getlocationdetails(materialid);
+			return await this._poService.getlocationdetails(materialid, grnnumber);
 		}
 
 		//Get material request details
@@ -68,6 +68,13 @@ namespace WMS.Controllers
 		public async Task<IEnumerable<ReqMatDetails>> getReqMatdetails(string materialid,string grnnumber)
 		{
 			return await this._poService.getReqMatdetails(materialid, grnnumber);
+		}
+
+		[HttpPost("generateBarcodeMaterial")]
+		public printMaterial generateBarcodeMaterial(printMaterial printMat)
+        {
+			return this._poService.generateBarcodeMaterial(printMat);
+
 		}
 
 		[HttpPost("insertbarcodeandinvoiceinfo")]
@@ -92,13 +99,13 @@ namespace WMS.Controllers
 		}
 
 		[HttpGet("Getqualitydetails")]
-		public async Task<IEnumerable<OpenPoModel>> Getqualitydetails(string pono)
+		public async Task<IEnumerable<OpenPoModel>> Getqualitydetails()
 		{
 
-			string[] ponoandinvoice = pono.Split('-');
-			string ponodata = ponoandinvoice[0];
-			string invoiceno = ponoandinvoice[1];
-			return await this._poService.Getqualitydetails(invoiceno, ponodata);
+			//string[] ponoandinvoice = pono.Split('-');
+			//string ponodata = ponoandinvoice[0];
+			//string invoiceno = ponoandinvoice[1];
+			return await this._poService.Getqualitydetails();
 		}
 
 		[HttpGet("verifythreewaymatch")]
@@ -231,6 +238,12 @@ namespace WMS.Controllers
 		{
 			return await this._poService.GetmaterialList(gatepassid);
 		}
+		[HttpGet("getGatePassApprovalHistoryList")]
+		public async Task<IEnumerable<gatepassapprovalsModel>> getGatePassApprovalHistoryList(int gatepassid)
+		{
+			return await this._poService.getGatePassApprovalHistoryList(gatepassid);
+		}
+		
 
 		[HttpPost("updateprintstatus")]
 		public int updateprintstatus(gatepassModel model)

@@ -74,6 +74,18 @@ export class SecurityHomeComponent implements OnInit {
     this.showDetails = false;
   }
 
+  getsuppliername(data: any) {
+    var pono = data.pono;
+    if (pono.startsWith("NP")) {
+      return data.npsuppliername;
+    }
+    else {
+      return data.suppliername;
+    }
+    
+
+  }
+
   //get open po's based on current date(advance shipping notification list)
   getcurrentDatePolist() {
     this.spinner.show();
@@ -172,11 +184,12 @@ export class SecurityHomeComponent implements OnInit {
       this.BarcodeModel.createdby = this.employee.employeeno;
       this.BarcodeModel.pono = this.PoDetails.pono;
       if (this.isnonpochecked) {
-        this.BarcodeModel.pono = "NP0000001";
+        this.BarcodeModel.pono = "NONPO";
       }
       this.BarcodeModel.invoiceno = this.Poinvoicedetails.invoiceno;
       this.BarcodeModel.departmentid = this.PoDetails.departmentid
       this.BarcodeModel.receivedby = this.employee.employeeno;
+      this.BarcodeModel.suppliername = this.Poinvoicedetails.vendorname;
       this.wmsService.insertbarcodeandinvoiceinfo(this.BarcodeModel).subscribe(data => {
         this.spinner.hide();
         if (data == 0) {
@@ -186,8 +199,9 @@ export class SecurityHomeComponent implements OnInit {
           this.messageService.add({ severity: 'error', summary: 'Response', detail: 'Invoice for this PO already received' });
         }
         else { //data>=1
-          this.disSaveBtn = true;
+          this.disSaveBtn = false;
           this.messageService.add({ severity: 'success', summary: 'Success Message', detail: 'Invoice Updated' });
+          this.getcurrentDateReceivedPOlist();
         }
       });
     }

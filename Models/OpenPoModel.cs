@@ -39,6 +39,19 @@ namespace WMS.Models
 		public string remarks { get; set; }
 		public string checkedby { get; set; }
 	}
+
+	public class printMaterial
+	{
+		public string materialid { get; set; }
+		public string receiveddate { get; set; }
+		public string grnno { get; set; }
+		public string pono { get; set; }
+		public string invoiceno { get; set; }
+		public int noofprint { get; set; }
+		public string barcodePath { get; set; }
+		public string errorMsg { get; set; }
+}
+
 	public class BarcodeModel
 	{
 		public int departmentid { get; set; }
@@ -56,6 +69,8 @@ namespace WMS.Models
 		public DateTime receiveddate { get; set; }
 		public string Material { get; set; }
 		public string Materialdescription { get; set; }
+
+		public string suppliername { get; set; }
 
 	}
 
@@ -528,6 +543,7 @@ namespace WMS.Models
 		public string asn { get; set; }
 
 		public string suppliername { get; set; }
+		public string npsuppliername { get; set; }
 	}
 	public class dropdownModel
 	{
@@ -538,4 +554,17 @@ namespace WMS.Models
 		public int rackid { get; set; }
 		public string racknumber { get; set; }
 	}
+}
+public class gatepassapprovalsModel
+{
+	public int historyid { get; set; }
+	public int gatepassid { get; set; }
+	public int approverid { get; set; }
+	public string approvername { get; set; }
+	public string approverstatus { get; set; }
+	public DateTime approvedon { get; set; }
+	public int label { get; set; }
+	public string remarks { get; set; }
+	public Boolean currentStatus { get; set; }
+
 }

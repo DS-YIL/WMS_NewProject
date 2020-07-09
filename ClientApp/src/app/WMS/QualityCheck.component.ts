@@ -39,35 +39,27 @@ export class QualityCheckComponent implements OnInit {
     this.inwardModel.quality = "0";
     this.inwardModel.receiveddate = new Date();
     this.inwardModel.qcdate = new Date();
+    this.getqualitydetails(this.PoDetails.pono);
   }
-  checkreceivedqty(entredvalue,confirmedqty,returnedqty, maxvalue) {
-    if (entredvalue > maxvalue) {
-      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please enter received quantity less than material quantity' });
-      (<HTMLInputElement>document.getElementById("receivedqty")).value = "";
-
-    }
-    if (entredvalue != (confirmedqty + returnedqty) && confirmedqty && returnedqty) {
-      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'received quantity must be equals to sum of return and accepted quantity.' });
-      (<HTMLInputElement>document.getElementById("receivedqty")).value = "";
-    }
-  }
-  checkconfirmqty(entredvalue, receivedqty, returnedqty, maxvalue) {
-    if (entredvalue > maxvalue) {
-      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please enter confirm quantity less than material quantity' });
+  
+  checkconfirmqty(entredvalue, receivedqty, returnedqty) {
+    debugger;
+    if (entredvalue > receivedqty) {
+      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please enter passed quantity less than or equal to received quantity' });
       (<HTMLInputElement>document.getElementById("confirmqty")).value = "";
     }
     if (entredvalue != (receivedqty - returnedqty) && receivedqty && returnedqty) {
-      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'sum of return and accepted quantity must be equal to received qty' });
+      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'sum of  quality passesed and failed must be equal to received qty' });
       (<HTMLInputElement>document.getElementById("confirmqty")).value = "";
     }
   }
-  checkreturnqty(entredvalue,receivedqty,acceptedqty, maxvalue) {
-    if (entredvalue > maxvalue) {
-      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please enter return quantity less than material quantity' });
+  checkreturnqty(entredvalue,receivedqty,acceptedqty) {
+    if (entredvalue > receivedqty) {
+      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please enter failed quantity less than or equal to received quantity' });
       (<HTMLInputElement>document.getElementById("returnqty")).value = "";
     }
     if (entredvalue != (receivedqty - acceptedqty) && receivedqty && acceptedqty) {
-      this.messageService.add({ severity: 'error', summary: 'Error Message', detail:  'sum of return and accepted quantity must be equal to received qty' });
+      this.messageService.add({ severity: 'error', summary: 'Error Message', detail:  'sum of quality passesed and failed  must be equal to received qty' });
       (<HTMLInputElement>document.getElementById("returnqty")).value = "";
     }
   }
@@ -111,13 +103,16 @@ export class QualityCheckComponent implements OnInit {
 
   getqualitydetails(data) {
     this.podetailsList = [];
-    this.wmsService.Getdataforqualitycheck(data).subscribe(data => {
+    this.wmsService.Getdataforqualitycheck().subscribe(data => {
       this.spinner.hide();
       if (data) {
         debugger;
         this.disGrnBtn = false;
         // this.PoDetails = data[0];
         this.podetailsList = data;
+        this.podetailsList = this.podetailsList.filter(function (element, index) {
+          return (element.receivedqty > '0');
+        });
         this.grnnumber = this.podetailsList[0].grnnumber;
         if (!this.grnnumber) {
           this.disGrnBtn = true;
@@ -128,7 +123,7 @@ export class QualityCheckComponent implements OnInit {
         this.showDetails = true;
       }
       else
-        this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'No data' });
+        this.messageService.add({ severity: 'eoor', summary: 'Message', detail: 'No materials for quality check' });
     })
   }
 
@@ -151,7 +146,8 @@ export class QualityCheckComponent implements OnInit {
     this.inwardModel.pendingqty = parseInt(this.PoDetails.materialqty) - this.inwardModel.confirmqty;
   }
   onsubmit() {
-    if (this.podetailsList.length > 0 && this.podetailsList[0].receivedqty>'0') {
+
+    
 
       this.spinner.show();
       // this.onVerifyDetails(this.podetailsList);
@@ -163,8 +159,10 @@ export class QualityCheckComponent implements OnInit {
       });
       this.recqty = this.podetailsList[0].confirmqty + this.podetailsList[0].returnqty;
       this.totalqty = parseInt(this.podetailsList[0].receivedqty);
-      if (this.totalqty == this.recqty) {
-        this.wmsService.insertqualitycheck(this.podetailsList).subscribe(data => {
+      var savedata = this.podetailsList.filter(function (element, index) {
+        return (element.confirmqty != 0);
+      });
+        this.wmsService.insertqualitycheck(savedata).subscribe(data => {
           this.spinner.hide();
          
           if (data != null) {
@@ -183,14 +181,8 @@ export class QualityCheckComponent implements OnInit {
           }
           this.getqualitydetails(this.PoDetails.pono);
         });
-      }
-      else {
-        this.messageService.add({ severity: 'error', summary: 'Validation', detail: 'Accept and return quantity  should be equal to  Received quantity ' });
-        this.spinner.hide();
-      }
-    }
-    else
-      this.messageService.add({ severity: 'error', summary: 'Validation', detail: 'Enter Quantity' });
+     
+  
   }
 
 

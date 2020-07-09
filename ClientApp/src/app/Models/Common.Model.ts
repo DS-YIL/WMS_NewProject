@@ -10,6 +10,7 @@ export class Employee {
   pwd: string;
   domainid: string;
   roleid: string;
+  
 }
 
 export class Login {
@@ -23,6 +24,16 @@ export class DynamicSearchResult {
   tableName: string;
   searchCondition: string;
   query: string;
+}
+
+export class printMaterial {
+  materialid: any;
+  receiveddate: any;
+  grnno: any;
+  pono: any;
+  invoiceno: any;
+  noofprint: any;
+  barcodePath: any;
 }
 
 export class searchParams {

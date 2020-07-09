@@ -1,0 +1,135 @@
+<!--<div class="ui-g" >
+  <div class="ui-g-12">
+    <p-card header="Generate Barcode" [style]="{width: '1008px','height':'500px'}" styleClass="ui-card-shadow">
+
+      <table>
+        <tr>
+          <td>PO No.</td>
+          <td><input type="text" value="" /></td>
+          <td>
+            Invoice No.
+          </td>
+
+          <td><input type="text" value="" /></td>
+
+        </tr>
+        <tr>
+          <td>Material Code</td>
+          <td><input type="text" value="" /></td>
+          <td>Received Date</td>
+          <td><input type="text" value="" /></td>
+        </tr>
+        <tr>
+          <td>Accepted Qty</td>
+          <td><input type="text" value="" /></td>
+
+        </tr>
+        <tr>
+          <td>
+            No. of prints
+          </td>
+          <td>
+            <input type="text" value="" />
+          </td>
+        </tr>
+        <tr>
+          <td><button>Generate Barcode</button></td>
+        </tr>
+      </table>
+    </p-card>
+
+
+  </div>
+
+</div>-->
+
+
+<div class="card" style="    min-height: 500px;border-radius: 10px;box-shadow: 5px 10px #888888;">
+  <div class="card-header text-center cardheadertext">
+    <span>
+      <i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;Generate BarCode
+    </span>
+  </div>
+  <div class="card-body" style="overflow-y:scroll">
+    <div class="row">
+      <div class="col-lg-3 col-md-3 col-sm-3 form-inline">
+      </div>
+      <div class="col-lg-1 col-md-1 col-sm-1 form-inline">
+        <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">PO No.</label>
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-2 form-inline">
+        <input type="text" class="form-control" value="2345678909" />
+      </div>
+      <div class="col-lg-1 col-md-1 col-sm-1 form-inline">
+        <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">Invoice No.</label>
+      </div>
+      <div class="col-lg-3 col-md-3 col-sm-3 form-inline">
+        <input type="text" class="form-control"  value="INV100" />
+      </div>
+    </div>
+    <br />
+    <div class="row">
+      <div class="col-lg-3 col-md-3 col-sm-3 form-inline">
+      </div>
+      <div class="col-lg-1 col-md-1 col-sm-1 form-inline">
+        <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">Material Code</label>
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-2 form-inline">
+        <input type="text" class="form-control" value="A13257" />
+      </div>
+      <div class="col-lg-1 col-md-1 col-sm-1 form-inline">
+        <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">Received Date</label>
+      </div>
+      <div class="col-lg-3 col-md-3 col-sm-3 form-inline">
+        <input type="text" class="form-control" value="08-07-2020" />
+      </div>
+    </div>
+    <br />
+    <div class="row">
+      <div class="col-lg-3 col-md-3 col-sm-3 form-inline">
+      </div>
+      <div class="col-lg-1 col-md-1 col-sm-1 form-inline">
+        <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">Accepted Qty</label>
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-2 form-inline">
+        <input type="text" class="form-control" value="10" />
+      </div>
+      <div class="col-lg-1 col-md-1 col-sm-1 form-inline">
+        <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">Item No.</label>
+      </div>
+      <div class="col-lg-3 col-md-3 col-sm-3 form-inline">
+        <input type="text" class="form-control" value="40" />
+      </div>
+    </div>
+    <br />
+    <div class="row">
+      <div class="col-lg-3 col-md-3 col-sm-3 form-inline">
+      </div>
+      <div class="col-lg-1 col-md-1 col-sm-1 form-inline">
+        <label class="form-label"  style="font-weight:600;font-size:14px;color:darkblue;">No. of Print</label>
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-2 form-inline">
+        <input type="text" class="form-control" [(ngModel)]="noOfPrint" />
+      </div>
+      <div class="col-lg-1 col-md-1 col-sm-1 form-inline">
+        <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">Qty</label>
+      </div>
+      <div class="col-lg-3 col-md-3 col-sm-3 form-inline">
+        <button (click)="decreaseQty()"><<</button>
+        <input type="text" class="form-control" [disabled]="true" value="{{qty}}/{{noOfPrint}}" style="width: 100px;text-align:center"/>
+        <button (click)="increaseQty()">&#62;&#62;</button>
+      </div>
+    </div>
+ 
+    <br>
+    <div class="row">
+      <div class="col-lg-5 col-md-5 col-sm-5"></div>
+      <div class="col-lg-3 col-md-3 col-sm-3">
+        <button type="button" class="btn btn-primary"  label="Save">Generate Barcode</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
