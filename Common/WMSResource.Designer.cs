@@ -807,13 +807,13 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select  max(track.enteredon) as enteredon,max(pr.projectcode)as projectcode,max(wp.pono),min(track.status)as status,max(wp.suppliername )as vendorname,max(pr.jobname) as jobname,max(&apos;&apos;)as quotationqty ,
+        ///   Looks up a localized string similar to select  max(track.enteredon) as enteredon,max(pr.projectcode)as projectcode,max(wp.pono) as pono,min(track.status)as status,max(wp.suppliername )as vendorname,max(pr.jobname) as jobname,max(&apos;&apos;)as quotationqty ,
         ///       max(mat.materialqty) as materialqty
         ///		from wms.wms_polist wp 
         ///      left join wms.wms_trackstatus track on track.pono=wp.pono
         ///      left join wms.wms_project  pr on pr.pono =wp.pono 
         ///      left join wms.wms_pomaterials mat on  mat.pono =wp.pono 
-        ///      where projectmanager=&apos;#projectmanager&apos;.
+        ///      where projectmanager=&apos;#projectmanage [rest of string was truncated]&quot;;.
         /// </summary>
         public static string openpolist {
             get {
@@ -867,15 +867,6 @@ namespace WMS.Common {
         public static string statusupdatebySecurity {
             get {
                 return ResourceManager.GetString("statusupdatebySecurity", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to .
-        /// </summary>
-        public static string string1 {
-            get {
-                return ResourceManager.GetString("string1", resourceCulture);
             }
         }
         
