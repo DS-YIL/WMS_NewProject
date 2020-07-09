@@ -237,8 +237,7 @@
             <div class="form-inline-list">
               <select class="form-control dropdown" formControlName="locatorid" [(ngModel)]="StockModel.locatorid">
                 <option selected></option>
-                <option *ngFor=" let loclist of locationlist " value={{loclist.locatorid
-            }}>
+                <option *ngFor=" let loclist of locationlist " value={{loclist.locatorid}}>
             {{loclist.locatorname}}
             </option>
             </select>

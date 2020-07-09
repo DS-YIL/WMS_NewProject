@@ -286,16 +286,20 @@ export class WarehouseInchargeComponent implements OnInit {
         this.StockModel.binid = binnumber[0].binid;
         this.StockModel.itemlocation = storelocation[0].locatorname + "." + rack[0].racknumber + '.' + binnumber[0].binnumber;
       }
+      else if (binnumber.length == 0) {
+        this.StockModel.binid = 1;
+        this.StockModel.itemlocation = storelocation[0].locatorname + "." + rack[0].racknumber;
+      }
       this.StockModel.racknumber = storelocation[0].locatorname;
-    this.StockModel.itemlocation = storelocation[0].locatorname;
+    //this.StockModel.itemlocation = storelocation[0].locatorname;
       this.StockModel.rackid = rack[0].rackid;
       this.StockModel.confirmqty = this.PoDetails.confirmqty;
       this.StockModel.itemreceivedfrom = new Date();
-    this.StockModel.itemlocation = storelocation[0].locatorname + "." + rack[0].racknumber;
+    
       //if (binnumber.length == 0)
       //  this.StockModel.itemlocation += '.' + binnumber[0].binnumber;
       if (binnumber.length == 0)
-        this.StockModel.binid = 1;
+        
       this.wmsService.InsertStock(this.StockModel).subscribe(data => {
         // if (data) {
         //this.podetailsList[this.rowIndex].itemlocation = data;
