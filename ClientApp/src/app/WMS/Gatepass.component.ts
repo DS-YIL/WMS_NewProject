@@ -6,17 +6,21 @@ import { constants } from '../Models/WMSConstants';
 import { Employee, DynamicSearchResult, searchList } from '../Models/Common.Model';
 import { NgxSpinnerService } from "ngx-spinner";
 import { MessageService } from 'primeng/api';
-import { gatepassModel, materialistModel } from '../Models/WMS.Model';
+import { gatepassModel, materialistModel, FIFOValues } from '../Models/WMS.Model';
 import { isNullOrUndefined } from 'util';
 import { DatePipe } from '@angular/common';
-
+import { ConfirmationService } from 'primeng/api';
 @Component({
   selector: 'app-GatePass',
   templateUrl: './GatePass.component.html',
   providers: [DatePipe]
 })
 export class GatePassComponent implements OnInit {
-  constructor(private formBuilder: FormBuilder, private messageService: MessageService, private datePipe: DatePipe, private wmsService: wmsService, private route: ActivatedRoute, private router: Router, public constants: constants, private spinner: NgxSpinnerService) { }
+    AddDialog: boolean;
+    id: any;
+    roindex: any;
+    Oldestdata: any;
+  constructor(private ConfirmationService: ConfirmationService,private formBuilder: FormBuilder, private messageService: MessageService, private datePipe: DatePipe, private wmsService: wmsService, private route: ActivatedRoute, private router: Router, public constants: constants, private spinner: NgxSpinnerService) { }
   todayDate = this.datePipe.transform(new Date(), 'yyyy-MM-dd');
   public formName: string;
   public txtName; GatepassTxt: string;
@@ -38,7 +42,10 @@ export class GatePassComponent implements OnInit {
   public date: Date = null;
   public approverstatus: string;
   public mindate: Date;
-
+  public showdialog: boolean = false;
+  public txtDisable: boolean = true;
+  public FIFOvalues: FIFOValues;
+  public itemlocationData: Array<any> = [];
   ngOnInit() {
     if (localStorage.getItem("Employee"))
       this.employee = JSON.parse(localStorage.getItem("Employee"));
@@ -64,7 +71,7 @@ export class GatePassComponent implements OnInit {
   addNewMaterial() {
 
     if (this.gatepassModel.materialList.length == 0 || isNullOrUndefined(this.material)) {
-      this.materialistModel = { materialid: "", gatepassmaterialid: "0", materialdescription: "", quantity: 0, materialcost: "0", remarks: " ", expecteddate: this.date, returneddate: this.date };
+      this.materialistModel = { materialid: "", gatepassmaterialid: "0", materialdescription: "", quantity: 0, materialcost: "0", remarks: " ", expecteddate: this.date, returneddate: this.date, issuedqty:0 };
       this.gatepassModel.materialList.push(this.materialistModel);
       this.material = "";
     }
@@ -98,7 +105,7 @@ export class GatePassComponent implements OnInit {
         this.wmsService.checkMaterialandQty(this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].materialid, this.materialistModel.quantity).subscribe(data => {
           if (data == "true") {
 
-            this.materialistModel = { materialid: "", gatepassmaterialid: "0", materialdescription: "", quantity: 0, materialcost: "0", remarks: " ", expecteddate: this.date, returneddate: this.date };
+            this.materialistModel = { materialid: "", gatepassmaterialid: "0", materialdescription: "", quantity: 0, materialcost: "0", remarks: " ", expecteddate: this.date, returneddate: this.date, issuedqty:0 };
             this.gatepassModel.materialList.push(this.materialistModel);
             this.material = "";
 
@@ -294,7 +301,7 @@ export class GatePassComponent implements OnInit {
     } else {
       this.gatepassModel.gatepasstype = "0";
       this.gatepassModel.reasonforgatepass = "0";
-      this.materialistModel = { materialid: "", gatepassmaterialid: "0", materialdescription: "", quantity: 0, materialcost: "0", remarks: " ", expecteddate: this.date, returneddate: this.date };
+      this.materialistModel = { materialid: "", gatepassmaterialid: "0", materialdescription: "", quantity: 0, materialcost: "0", remarks: " ", expecteddate: this.date, returneddate: this.date, issuedqty:0 };
       this.gatepassModel.materialList.push(this.materialistModel);
       this.material = "";
     }
@@ -500,5 +507,79 @@ export class GatePassComponent implements OnInit {
     this.router.navigate(['/WMS/GatePassPrint', gatepassobject.gatepassid]);
   }
 
+  //shows list of items for particular material
+  showmateriallocationList(material, id, rowindex) {
+    this.id = id;
+    this.AddDialog = true;
+    this.roindex = rowindex;
+    this.wmsService.getItemlocationListByMaterial(material).subscribe(data => {
+      this.itemlocationData = data;
+      this.showdialog = true;
+      if (data != null) {
 
+      }
+    });
+  }
+  //show alert about oldest item location
+  alertconfirm(data) {
+    var info = data;
+    this.ConfirmationService.confirm({
+      message: 'Same Material received on ' + data.createddate + ' and placed in ' + data.itemlocation + '  location, Would you like to continue?',
+      header: 'Confirmation',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+
+        this.messageService.add({ severity: 'info', summary: 'Accepted', detail: 'You have accepted' });
+      },
+      reject: () => {
+
+        this.messageService.add({ severity: 'info', summary: 'Ignored', detail: 'You have ignored' });
+      }
+    });
+  }
+  //check issued quantity
+  checkissueqty($event, entredvalue, maxvalue, material, createddate) {
+    var id = $event.target.id;
+    if (entredvalue > maxvalue) {
+      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please enter issue quantity less than Available quantity' });
+
+      (<HTMLInputElement>document.getElementById(id)).value = "";
+    }
+    else {
+
+      this.wmsService.checkoldestmaterial(material, createddate).subscribe(data => {
+        this.Oldestdata = data;
+        if (data != null) {
+          this.alertconfirm(this.Oldestdata);
+        }
+        //this.calculateTotalQty();
+        //this.calculateTotalPrice();
+        this.spinner.hide();
+      });
+    }
+  }
+ 
+  Cancel() {
+    this.AddDialog = false;
+  }
+  issuematerial(itemlocationData) {
+    var totalissuedqty = 0;
+    this.itemlocationData.forEach(item => {
+      if (item.issuedquantity != 0)
+
+        totalissuedqty = totalissuedqty + (item.issuedquantity);
+      this.FIFOvalues.issueqty = totalissuedqty;
+      item.issuedqty = this.FIFOvalues.issueqty;
+      //item.issuedquantity = totalissuedqty;
+      //item.issuedqty = totalissuedqty;
+
+    });
+
+
+    (<HTMLInputElement>document.getElementById(this.id)).value = totalissuedqty.toString();
+    this.gatepassModel.materialList[this.roindex].issuedqty = totalissuedqty;
+    this.txtDisable = true;
+    this.AddDialog = false;
+
+  }
 }

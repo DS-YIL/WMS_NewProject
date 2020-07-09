@@ -161,6 +161,7 @@ export class materialistModel {
   expecteddate: any;
   returneddate: any;
   materialcost: string;
+  issuedqty: number;
 }
 
 export class categoryValues {
