@@ -34,6 +34,7 @@ export class printMaterial {
   invoiceno: any;
   noofprint: any;
   barcodePath: any;
+  materialcodePath: any;
 }
 
 export class searchParams {

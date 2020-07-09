@@ -195,14 +195,30 @@
         <div class="col-lg-1 col-md-1 col-sm-1"></div>
         <div class="col-lg-10 col-md-10 col-sm-10">
           <table>
-            <tr >
-              <th style="outline: thin solid;width:950px;height:90px">GRN No. - MaterialId : {{printData.grnno}}- {{printData.materialid}}</th>
-              <th style="outline: thin solid;width:500px;height:90px;align-content:center"><img class="images" src="{{printData.barcodePath}}" /></th>
+            <tr>
+              <th style="outline: thin solid;width:400px;height:30px">Material Code:</th>
+              <th style="outline: thin solid;width:400px;height:30px">{{printData.materialid}}</th>
+              <th style="outline: thin solid;width:200px;height:30px" rowspan="2">
+                <img class="images" src="{{printData.materialcodePath}}" />
+              </th>
+              <!--<th style="outline: thin solid;width:400px;height:30px">{{printData.materialid}}</th>-->
             </tr>
             <tr>
-              <th style="outline: thin solid;width:950px;height:30px">Received Date: {{printData.receiveddate}}</th>
-              <th style="outline: thin solid;width: 500px; height: 30px">1/{{printData.noofprint}}</th>
+              <th style="outline: thin solid;width:400px;height:30px">Received Date:</th>
+              <th style="outline: thin solid;width:400px;height:30px">{{printData.receiveddate}}</th>
             </tr>
+          <tr>
+            <th style="outline: thin solid;width:400px;height:90px" >GRN No. - Material Code : </th>
+            <th style="outline: thin solid;width:400px;height:30px">{{printData.grnno}}- {{printData.materialid}}</th>
+            <th style="outline: thin solid; width: 200px; height: 90px; align-content: center" rowspan="2"><img class="images" src="{{printData.barcodePath}}" /></th>
+            <!--<th style="outline: thin solid;width:400px;height:30px"></th>-->
+          </tr>
+          <tr>
+            <th style="outline: thin solid;width:400px;height:30px">WMS GRN No.</th>
+            <th style="outline: thin solid;width:400px;height:30px">1/{{printData.noofprint}}</th>
+            <!--<th style="outline: thin solid; width: 500px; height: 30px">1/{{printData.noofprint}}</th>-->
+            <!--<th style="outline: thin solid;width:400px;height:30px"></th>-->
+          </tr>
           </table>
           </div>
         </div>

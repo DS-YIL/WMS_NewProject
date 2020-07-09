@@ -49,6 +49,7 @@ namespace WMS.Models
 		public string invoiceno { get; set; }
 		public int noofprint { get; set; }
 		public string barcodePath { get; set; }
+		public string materialcodePath { get; set; }
 		public string errorMsg { get; set; }
 }
 

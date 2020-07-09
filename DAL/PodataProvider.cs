@@ -148,7 +148,7 @@ namespace WMS.DAL
 				{
 					Directory.CreateDirectory(path);
 				}
-				//generate barcode
+				//generate barcode for material code and GRN No.
 				var content = printMat.grnno+"-"+printMat.materialid;
 				BarcodeWriter writer = new BarcodeWriter
 				{
@@ -170,9 +170,35 @@ namespace WMS.DAL
 					.Save(path  + content + ".bmp");
 
 				printMat.barcodePath = "./Barcodes/" + content + ".bmp";
-				
+				//printMat.barcodePath = "./assets/" + content + ".bmp";
+
+				//Barcode design for material code
+				//generate barcode for material code and GRN No.
+				 content =  printMat.materialid;
+				BarcodeWriter writerData = new BarcodeWriter
+				{
+					Format = BarcodeFormat.QR_CODE,
+					Options = new EncodingOptions
+					{
+						Height = 90,
+						Width = 100,
+						PureBarcode = false,
+						Margin = 1,
+
+					},
+				};
+				 bitmap = writerData.Write(content);
+
+				// write text and generate a 2-D barcode as a bitmap
+				writer
+					.Write(content)
+					.Save(path + content + ".bmp");
+
+				printMat.barcodePath = "./Barcodes/" + content + ".bmp";
+				//printMat.materialcodePath = "./assets/" + content + ".bmp";
+
 			}
-			catch(Exception ex)
+			catch (Exception ex)
             {
 				printMat.errorMsg = ex.Message;
 				log.ErrorMessage("PODataProvider", "InsertBarcodeInfo", ex.StackTrace.ToString());
