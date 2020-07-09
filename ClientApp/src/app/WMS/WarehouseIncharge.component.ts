@@ -198,7 +198,7 @@ export class WarehouseInchargeComponent implements OnInit {
     //this.StockModelForm.setValue({ itemlocation: details.store });
     //this.StockModelForm.setValue({ rackid: details.rack });
     //this.StockModelForm.setValue({ binid: details.bin });
-    this.StockModelForm.controls['itemlocation'].setValue(details.store);
+    //this.StockModelForm.controls['itemlocation'].setValue(details.store);
     
     //this.StockModelForm["rackid"] = details.rack;
     //this.StockModelForm["binid"] = details.bin;
@@ -217,21 +217,23 @@ export class WarehouseInchargeComponent implements OnInit {
     var binnumber: any[] = [];
     var storelocation: any[] = [];
     var rack: any[] = [];
-    binnumber = this.binlist.filter(x => x.binid == this.binid);
+      binnumber = this.binlist.filter(x => x.binid == this.StockModelForm.controls.binid.value);
     storelocation = this.locationlist.filter(x => x.locatorid == this.StockModelForm.controls.locatorid.value);
-    rack = this.racklist.filter(x => x.rackid == this.StockModelForm.controls.rackid.value);
-    this.StockModel.binnumber = binnumber[0].binnumber;
+      rack = this.racklist.filter(x => x.rackid == this.StockModelForm.controls.rackid.value);
+      if (binnumber.length != 0) {
+        this.StockModel.binnumber = binnumber[0].binnumber;
+        this.StockModel.binid = binnumber[0].binid;
+        this.StockModel.itemlocation = storelocation[0].locatorname + "." + rack[0].racknumber + '.' + binnumber[0].binnumber;
+      }
       this.StockModel.racknumber = storelocation[0].locatorname;
     this.StockModel.itemlocation = storelocation[0].locatorname;
-    this.StockModel.rackid = rack[0].rackid;
-    this.StockModel.binid = binnumber[0].binid;
+      this.StockModel.rackid = rack[0].rackid;
       this.StockModel.confirmqty = this.PoDetails.confirmqty;
-    this.StockModel.itemreceivedfrom = new Date();
-    this.StockModel.itemlocation = storelocation[0].locatorname + "." + rack[0].racknumber + '.' + binnumber[0].binnumber;
+      this.StockModel.itemreceivedfrom = new Date();
     this.StockModel.itemlocation = storelocation[0].locatorname + "." + rack[0].racknumber;
-      if (this.StockModelForm.controls.binid.value)
-        this.StockModel.itemlocation += '.' + binnumber[0].binnumber;
-      if (!this.StockModelForm.controls.binid.value)
+      //if (binnumber.length == 0)
+      //  this.StockModel.itemlocation += '.' + binnumber[0].binnumber;
+      if (binnumber.length == 0)
         this.StockModel.binid = 1;
       this.wmsService.InsertStock(this.StockModel).subscribe(data => {
         // if (data) {

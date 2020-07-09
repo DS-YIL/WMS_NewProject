@@ -17,7 +17,7 @@ import { DatePipe } from '@angular/common';
 })
 export class GatePassComponent implements OnInit {
   constructor(private formBuilder: FormBuilder, private messageService: MessageService, private datePipe: DatePipe, private wmsService: wmsService, private route: ActivatedRoute, private router: Router, public constants: constants, private spinner: NgxSpinnerService) { }
-
+  todayDate = this.datePipe.transform(new Date(), 'yyyy-MM-dd');
   public formName: string;
   public txtName; GatepassTxt: string;
   public dynamicData = new DynamicSearchResult();
