@@ -28,6 +28,7 @@ import { CalendarModule } from 'primeng/calendar';
 import { CheckboxModule } from 'primeng/checkbox';
 import { TooltipModule } from 'primeng/tooltip';
 import { AutoCompleteModule } from 'primeng/autocomplete';
+import { DropdownModule } from 'primeng/dropdown';
 
 import { DashboardComponent } from './WMS/Dashboard.component';
 import { POListComponent } from './WMS/POList.component';
@@ -147,6 +148,7 @@ import {MenubarModule} from 'primeng/menubar';
     TooltipModule,
     AutoCompleteModule,
     ConfirmDialogModule,
+    DropdownModule
     //RouterModule.forRoot([
     //  { path: '', component: LoginComponent, pathMatch: 'full' },
     // ])

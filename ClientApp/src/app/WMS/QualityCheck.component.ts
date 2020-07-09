@@ -42,25 +42,29 @@ export class QualityCheckComponent implements OnInit {
     this.getqualitydetails(this.PoDetails.pono);
   }
   
-  checkconfirmqty(entredvalue, receivedqty, returnedqty) {
+  checkconfirmqty(entredvalue, receivedqty, returnedqty,data :any) {
     debugger;
     if (entredvalue > receivedqty) {
       this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please enter passed quantity less than or equal to received quantity' });
-      (<HTMLInputElement>document.getElementById("confirmqty")).value = "";
+      data.qualitypassedqty = "";
+      //(<HTMLInputElement>document.getElementById("confirmqty")).value = "";
     }
     if (entredvalue != (receivedqty - returnedqty) && receivedqty && returnedqty) {
       this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'sum of  quality passesed and failed must be equal to received qty' });
-      (<HTMLInputElement>document.getElementById("confirmqty")).value = "";
+      //(<HTMLInputElement>document.getElementById("confirmqty")).value = "";
+      data.qualitypassedqty = "";
     }
   }
-  checkreturnqty(entredvalue,receivedqty,acceptedqty) {
+  checkreturnqty(entredvalue, receivedqty, acceptedqty, data: any) {
     if (entredvalue > receivedqty) {
       this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please enter failed quantity less than or equal to received quantity' });
-      (<HTMLInputElement>document.getElementById("returnqty")).value = "";
+      data.qualityfailedqty = "";
+      //(<HTMLInputElement>document.getElementById("returnqty")).value = "";
     }
     if (entredvalue != (receivedqty - acceptedqty) && receivedqty && acceptedqty) {
-      this.messageService.add({ severity: 'error', summary: 'Error Message', detail:  'sum of quality passesed and failed  must be equal to received qty' });
-      (<HTMLInputElement>document.getElementById("returnqty")).value = "";
+      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'sum of quality passesed and failed  must be equal to received qty' });
+      data.qualityfailedqty = "";
+      //(<HTMLInputElement>document.getElementById("returnqty")).value = "";
     }
   }
   scanBarcode() {
@@ -147,7 +151,7 @@ export class QualityCheckComponent implements OnInit {
   }
   onsubmit() {
 
-    
+    debugger;
 
       this.spinner.show();
       // this.onVerifyDetails(this.podetailsList);
@@ -159,8 +163,8 @@ export class QualityCheckComponent implements OnInit {
       });
       this.recqty = this.podetailsList[0].confirmqty + this.podetailsList[0].returnqty;
       this.totalqty = parseInt(this.podetailsList[0].receivedqty);
-      var savedata = this.podetailsList.filter(function (element, index) {
-        return (element.confirmqty != 0);
+    var savedata = this.podetailsList.filter(function (element, index) {
+      return (element.qualitypassedqty != 0);
       });
         this.wmsService.insertqualitycheck(savedata).subscribe(data => {
           this.spinner.hide();

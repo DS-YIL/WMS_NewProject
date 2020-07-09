@@ -9,6 +9,7 @@ using WMS.Common;
 using WMS.Interfaces;
 using System.Web;
 using WMS.Models;
+using System.Web;
 using Microsoft.AspNetCore.Http;
 using System.IO;
 using System.Net.Sockets;
@@ -37,7 +38,8 @@ namespace WMS.DAL
 				try
 				{
 					pgsql.Open();
-					string query = WMSResource.checkponoexists.Replace("#pono", PONO);
+					//WMSResource.checkponoexists.Replace("#pono", PONO);
+					string query = "select pono,suppliername as vendorname from wms.wms_polist where pono = '" + PONO + "'"; 
 					return pgsql.QueryFirstOrDefault<OpenPoModel>(
 					   query, null, commandType: CommandType.Text);
 				}
@@ -257,18 +259,52 @@ namespace WMS.DAL
 								int nextserial = serial + 1;
 								string nextpo = "NP" + DateTime.Now.Year.ToString().Substring(2) + nextserial.ToString().PadLeft(5, '0');
 								dataobj.pono = nextpo;
+								var q2 = "select count(*) from wms.wms_securityinward  where pono ='" + dataobj.pono + "'  and invoiceno ='" + dataobj.invoiceno + "'";
+								int count1 = int.Parse(DB.ExecuteScalar(q2, null).ToString());
+
+								if (count1 >= 1)
+								{
+									return 2; //for onvoice already exist
+								}
+								string type = "NON PO";
+								string insertpoqry = WMSResource.insertpo;
+									DB.Execute(insertpoqry, new
+									{
+										dataobj.pono,
+										dataobj.suppliername,
+										type
+										//barcodeid,
+									});
+							
+								
 							}
                             else
                             {
 								string nextpo = "NP" + DateTime.Now.Year.ToString().Substring(2) + "00001";
 								dataobj.pono = nextpo;
-								//string insertpoqry = WMSResource.insertpo;
-								//DB.Execute(insertpoqry, new
-								//{
-								//	dataobj.pono,
-								//	dataobj,
-								//	//barcodeid,
-								//});
+								var q2 = "select count(*) from wms.wms_securityinward  where pono ='" + dataobj.pono + "'  and invoiceno ='" + dataobj.invoiceno + "'";
+								int count1 = int.Parse(DB.ExecuteScalar(q2, null).ToString());
+
+								if (count1 >= 1)
+								{
+									return 2; //for onvoice already exist
+								}
+								string type = "NON PO";
+								string insertpoqry = WMSResource.insertpo;
+								try
+								{
+									DB.Execute(insertpoqry, new
+									{
+										dataobj.pono,
+										dataobj.suppliername,
+										type
+										//barcodeid,
+									});
+								}
+								catch (Exception ex)
+								{
+									string msg = ex.Message;
+								}
 
 							}
 
@@ -563,31 +599,118 @@ namespace WMS.DAL
 		/// <param name="invoiceno"></param>
 		/// <param name="pono"></param>
 		/// <returns></returns>
-		public async Task<IEnumerable<OpenPoModel>> GetDeatilsForthreeWaymatching(string invoiceno, string pono)
+		public async Task<IEnumerable<OpenPoModel>> GetDeatilsForthreeWaymatching(string invoiceno, string pono,bool isgrn, string grnno)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
 
 				try
 				{
+					inwardModel obj = new inwardModel();
 					await pgsql.OpenAsync();
-					List<OpenPoModel> datalist = new List<OpenPoModel>();
-					string query = WMSResource.Getdetailsforthreewaymatching.Replace("#pono", pono).Replace("#invoiceno", invoiceno);// + pono+"'";//li
-					var data = await pgsql.QueryAsync<OpenPoModel>(
-					   query, null, commandType: CommandType.Text);
-					if(data.Count() == 0)
+                    if (!isgrn)
                     {
-                        if (pono.StartsWith("NP"))
-                        {
-							OpenPoModel po = new OpenPoModel();
-							po.pono = pono;
-							po.invoiceno = invoiceno;
-							datalist.Add(po);
-							data = datalist;
-                        }
-                    }
+						string query1 = WMSResource.getinwmasterid.Replace("#pono", pono).Replace("#invoiceno", invoiceno);
+						obj = pgsql.QuerySingle<inwardModel>(
+						query1, null, commandType: CommandType.Text);
+					}
+                    else
+                    {
+						string query1 = WMSResource.getinwardidbygrn.Replace("#grnno", pono);
+						obj = pgsql.QuerySingle<inwardModel>(
+						query1, null, commandType: CommandType.Text);
+					}
+					
 
-					return data;
+					List<OpenPoModel> datalist = new List<OpenPoModel>();
+                    if (obj.inwmasterid != 0)
+                    {
+						string query = "";
+						if (pono.StartsWith("NP"))
+						{
+							//Replace("#pono", pono).Replace("#invoiceno", invoiceno)
+							query = WMSResource.receivequeryfornonpo;// + pono+"'";//li
+							if (isgrn)
+							{
+								query += " where sinw.grnnumber = '" + grnno + "'";
+							}
+							else
+							{
+								query += " where sinw.pono = '" + pono + "'  and sinw.invoiceno = '" + invoiceno + "'";
+							}
+
+						}
+						else
+						{
+							inwardModel objx = new inwardModel();
+                            if (!isgrn)
+                            {
+								string queryx = "select grnnumber from wms.wms_securityinward where pono = '" + pono + "' and invoiceno = '" + invoiceno + "'";
+								objx = pgsql.QuerySingle<inwardModel>(
+								 queryx, null, commandType: CommandType.Text);
+							}
+                            else
+                            {
+								string queryx = "select grnnumber from wms.wms_securityinward where grnnumber = '" + grnno + "'";
+								objx = pgsql.QuerySingle<inwardModel>(
+								queryx, null, commandType: CommandType.Text);
+							}
+							if(objx.grnnumber == null || objx.grnnumber == "")
+                            {
+								query = WMSResource.Getdetailsforthreewaymatching;
+								if (isgrn)
+								{
+									query += " where sinw.grnnumber = '" + grnno + "'";
+								}
+								else
+								{
+									query += " where mat.pono = '" + pono + "'  and sinw.invoiceno = '" + invoiceno + "'";
+								}
+							}
+                            else
+                            {
+								query = WMSResource.receivequeryfornonpo;
+								if (isgrn)
+								{
+									query += " where sinw.grnnumber = '" + grnno + "'";
+								}
+								else
+								{
+									query += " where sinw.pono = '" + pono + "'  and sinw.invoiceno = '" + invoiceno + "'";
+								}
+							}
+							
+						}
+						var data = await pgsql.QueryAsync<OpenPoModel>(
+						   query, null, commandType: CommandType.Text);
+						if (data.Count() == 0)
+						{
+							if (pono.StartsWith("NP"))
+							{
+								OpenPoModel po = new OpenPoModel();
+								po.pono = pono;
+								po.invoiceno = invoiceno;
+								datalist.Add(po);
+								data = datalist;
+							}
+						}
+						if (data.Count() > 0)
+						{
+
+							foreach (OpenPoModel po in data)
+							{
+								var fdata = datalist.Where(o => o.Material == po.Material && o.Materialdescription == po.Materialdescription).FirstOrDefault();
+								if (fdata == null)
+								{
+									datalist.Add(po);
+								}
+
+							}
+						}
+					}
+					
+
+					return datalist;
 				}
 				catch (Exception Ex)
 				{
@@ -777,26 +900,15 @@ namespace WMS.DAL
 
 						foreach (var item in datamodel)
 						{
+							item.receiveddate = System.DateTime.Now;
 							string insertforinvoicequery = WMSResource.receiveforinvoice;
 							item.deleteflag = false;
 							string materialid = item.Material;
-							string qry = "select qualitycheck from wms.\"MaterialMasterYGS\" where material = '" + materialid + "'";
-							var data = pgsql.QueryFirstOrDefault<OpenPoModel>(
-					        qry, null, commandType: CommandType.Text);
-							bool qc = data.qualitycheck;
-							int? confirmqty = null;
-							string checkedby = null;
-							DateTime? checkedon = null;
-                            if (qc)
+							bool? qualitychecked = null;
+                            if (!item.qualitycheck)
                             {
-								confirmqty = null;
-                            }
-                            else
-                            {
-								confirmqty = item.receivedqty;
-								checkedby = item.receivedby;
-								checkedon = item.receiveddate;
-                                
+								qualitychecked = true;
+
 							}
 
 							using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
@@ -807,11 +919,11 @@ namespace WMS.DAL
 										item.receiveddate,
 										item.receivedby,
 										item.receivedqty,
-										confirmqty,
 										materialid,
 										item.deleteflag,
-										checkedby,
-										checkedon
+										item.qualitycheck,
+										qualitychecked,
+										item.materialqty
 
 									});
 									inwardid = Convert.ToInt32(results);
@@ -3575,7 +3687,7 @@ namespace WMS.DAL
 					string date = dt.ToString("yyyy-MM-dd");
 					string query = WMSResource.getsecurityreceivedlist;
 					query = query + " where sl.invoicedate <= '" + date + " 23:59:59' and sl.invoicedate >= '" + date + " 00:00:00'";
-					query = query + " group by sl.pono, sl.asn ";
+					query = query + " group by sl.pono, asno.asn ";
 					await pgsql.OpenAsync();
 					return await pgsql.QueryAsync<SecurityInwardreceivedModel>(
 					   query, null, commandType: CommandType.Text);
@@ -3608,7 +3720,74 @@ namespace WMS.DAL
 					string checkedon = DateTime.Now.ToString("yyyy-MM-dd");
 					foreach (var item in datamodel)
 					{
-						string insertforquality = WMSResource.insertqualitycheck.Replace("#inwardid", item.inwardid.ToString());
+						//string insertforquality = WMSResource.insertqualitycheck.Replace("#inwardid", item.inwardid.ToString());
+						string insertforquality = WMSResource.savequalityquery;
+						string materialid = item.Material;
+						using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
+						{
+							var results = DB.ExecuteScalar(insertforquality, new
+							{
+								item.inwardid,
+								item.qualitypassedqty,
+								item.qualityfailedqty,
+								item.receivedby,
+								item.remarks
+
+							}) ;
+							string query = "UPDATE wms.wms_storeinward set  qualitychecked = True where inwardid = '" + item.inwardid + "'";
+							DB.ExecuteScalar(query);
+							//inwardid = Convert.ToInt32(results);
+							//if (inwardid != 0)
+							//{
+							//    string insertqueryforqualitycheck =WMSResource.insertqueryforqualitycheck;
+
+							//    var data = DB.ExecuteScalar(insertqueryforqualitycheck, new
+							//    {
+							//        inwardid,
+							//        datamodel.quality,
+							//        datamodel.qtype,
+							//        datamodel.qcdate,
+							//        datamodel.qcby,
+							//        datamodel.remarks,
+							//        datamodel.deleteflag,
+
+							//    });
+
+
+						}
+					}
+
+					//}
+					return "counted";
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "insertquantitycheck", Ex.StackTrace.ToString());
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+			}
+		}
+
+		public async Task<string> insertreturn(List<inwardModel> datamodel)
+		{
+
+			inwardModel obj = new inwardModel();
+			inwardModel getgrnnoforpo = new inwardModel();
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+
+				try
+				{
+					await pgsql.OpenAsync();
+
+					string checkedon = DateTime.Now.ToString("yyyy-MM-dd");
+					foreach (var item in datamodel)
+					{
+						string insertforquality = WMSResource.insertreturndata.Replace("#inwardid", item.inwardid.ToString());
 						string materialid = item.Material;
 						using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
 						{
@@ -3617,7 +3796,7 @@ namespace WMS.DAL
 								item.confirmqty,
 								item.returnqty,
 								item.receivedby,
-								item.remarks
+								item.returnremarks
 
 							});
 							//inwardid = Convert.ToInt32(results);
@@ -3663,6 +3842,7 @@ namespace WMS.DAL
 				}
 			}
 		}
+
 
 
 
@@ -3726,6 +3906,32 @@ namespace WMS.DAL
 
 					await pgsql.OpenAsync();
 					return await pgsql.QueryAsync<dropdownModel>(
+					  materialrequestquery, null, commandType: CommandType.Text);
+
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "Getlocationdata", Ex.StackTrace.ToString());
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+			}
+		}
+
+		public async Task<IEnumerable<Materials>> GetMaterialcombo()
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				try
+				{
+					string materialrequestquery = "select material,materialdescription from wms.\"MaterialMasterYGS\" limit 20";
+
+					await pgsql.OpenAsync();
+					return await pgsql.QueryAsync<Materials>(
 					  materialrequestquery, null, commandType: CommandType.Text);
 
 				}

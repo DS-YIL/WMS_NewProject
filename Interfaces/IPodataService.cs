@@ -26,7 +26,7 @@ namespace WMS.Interfaces
         printMaterial generateBarcodeMaterial(printMaterial printMat);
         int InsertBarcodeInfo(BarcodeModel dataobj);
         //int insertInvoicedetails(iwardmasterModel obj);
-        Task<IEnumerable<T>> GetDeatilsForthreeWaymatching(string invoiceno,string pono);
+        Task<IEnumerable<T>> GetDeatilsForthreeWaymatching(string invoiceno,string pono,bool isgrn, string grnno);
         Task<IEnumerable<T>> Getqualitydetails();
         Task<OpenPoModel> VerifythreeWay(string pono,string invoiceno);
         Task<string> insertquantity(List<inwardModel> datamodel);
@@ -94,5 +94,8 @@ namespace WMS.Interfaces
         Task<IEnumerable<dropdownModel>> Getbindata();
         Task<IEnumerable<dropdownModel>> Getrackdata();
 		Task<string> insertquantitycheck(List<inwardModel> datamodel);
+        Task<string> insertreturn(List<inwardModel> datamodel);
+
+        Task<IEnumerable<Materials>> GetMaterialcombo();
     }
 }

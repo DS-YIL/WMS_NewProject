@@ -171,10 +171,26 @@ where  inwmaster.pono='#pono'</value>
     <comment>getopenpono list</comment>
   </data>
   <data name="Getdetailsforthreewaymatching" xml:space="preserve">
-    <value>select distinct openpo.projectname,inwa.invoiceno,inw.checkedby,inwa.grnnumber,inwa.pono,openpo.material,openpo.materialqty,(inw.confirmqty+inw.returnqty) as receivedqty,openpo.materialdescription, openpo.quotationqty,inw.receivedqty,inw.confirmqty,inw.returnqty from wms.wms_securityinward inwa  
- left join wms.wms_storeinward inw on inw.inwmasterid=inwa.inwmasterid
- inner join wms.openpolistview openpo on openpo.pono=inwa.pono
-  where  inwa.pono='#pono'  and inwa.invoiceno= '#invoiceno'  order by inwa.grnnumber desc</value>
+    <value>select mat.pono,mat.materialid as material,ms.materialdescription,mat.materialqty,sinw.invoiceno,sinw.grnnumber,
+inw.inwardid,inw.checkedby,inw.qualitychecked,inw.returnedby,inw.returnedon,inw.returnremarks,inw.receivedqty,inw.returnremarks,
+qc.qualitypassedqty,qc.qualityfailedqty,qc.qcby as checkedby,
+ CASE
+     WHEN inw.returnedby is null THEN qc.qualitypassedqty
+     ELSE  inw.confirmqty
+  END as confirmqty,
+CASE
+     WHEN inw.returnedby is null THEN qc.qualityfailedqty
+     ELSE  inw.returnqty
+  END as returnqty,
+  CASE
+     WHEN inw.qualitycheckrequired is null THEN ms.qualitycheck
+     ELSE inw.qualitycheckrequired
+  END as qualitycheck
+from wms.wms_pomaterials mat
+left outer join wms.wms_securityinward sinw on sinw.pono = mat.pono
+left outer join wms.wms_storeinward inw on inw.inwmasterid=sinw.inwmasterid
+left outer join wms."MaterialMasterYGS" ms on ms.material = mat.materialid
+left outer join wms.wms_qualitycheck qc on qc.inwardid = inw.inwardid</value>
   </data>
   <data name="getGRNNo" xml:space="preserve">
     <value>select grnnumber from wms.wms_securityinward   where pono='#pono' and grnnumber is not null 
@@ -190,8 +206,8 @@ left join wms.wms_rd_rack rack on rack.rackid=stock.rackid
 where itemid=#itemid</value>
   </data>
   <data name="insertforinvoicequery" xml:space="preserve">
-    <value>INSERT INTO wms.wms_storeinward(inwmasterid,receiveddate,receivedby,receivedqty,returnqty,confirmqty,materialid,deleteflag)
-VALUES(@inwmasterid,@receiveddate,@receivedby,@receivedqty,@returnqty,@confirmqty,@materialid,@deleteflag)returning inwardid</value>
+    <value>INSERT INTO wms.wms_storeinward(inwmasterid,receiveddate,receivedby,receivedqty,returnqty,qualitypassedqty,confirmqty,materialid,deleteflag)
+VALUES(@inwmasterid,@receiveddate,@receivedby,@receivedqty,@returnqty,@qualitypassedqty,@confirmqty,@materialid,@deleteflag)returning inwardid</value>
   </data>
   <data name="insertqueryforlocationhistory" xml:space="preserve">
     <value>INSERT INTO wms.wms_storageallowcationhistorymaster(itemlocation,itemid,createddate,createdby)values(@itemlocation,@itemid,@createddate,@createdby)</value>
@@ -452,6 +468,9 @@ where sec.grnnumber ='#grnnumber' and sk.materialid='#materialid'</value>
     <value>select distinct(pono),quotationqty from wms.openpolistview</value>
     <comment>get list of PO Numbers</comment>
   </data>
+  <data name="string1" xml:space="preserve">
+    <value />
+  </data>
   <data name="getmaterialdetailfprrequest" xml:space="preserve">
     <value>select max(openpo.projectname)as projectname,max(sk.itemid)as itemid,sk.materialid as material,sum(sk.availableqty)as availableqty,max(openpo.materialdescription)as materialdescription,max(openpo.quotationqty)as quotationqty,max(openpo.materialqty )as materialqty,max(sk.pono) as pono from   wms.wms_stock  sk left join wms.openpolistview openpo on openpo.pono = sk.pono where sk.availableqty!=0 </value>
   </data>
@@ -463,8 +482,9 @@ where sec.grnnumber ='#grnnumber' and sk.materialid='#materialid'</value>
   group by req.requestforissueid,iss.materialissueid</value>
   </data>
   <data name="getsecurityreceivedlist" xml:space="preserve">
-    <value>select sl.pono,sl.asn,Max(emp.name) as receivedby ,Max(ol.suppliername) as suppliername,Max(sl.suppliername) as npsuppliername from wms.wms_securityinward sl 
-left outer join wms.wms_polist ol on sl.pono = ol.pono 
+    <value>select sl.pono,asno.asn,Max(emp.name) as receivedby ,Max(ol.suppliername) as suppliername from wms.wms_securityinward sl 
+left outer join wms.wms_polist ol on sl.pono = ol.pono
+left outer join wms.wms_asn asno on asno.pono = sl.pono
 left outer join wms.employee emp on sl.receivedby = emp.employeeno</value>
   </data>
   <data name="getmaterialdetailsbyreserveid" xml:space="preserve">
@@ -537,28 +557,78 @@ values(default,@pono,@itemid,@gatepassmaterialid,@itemissueddate,@itemreceiverid
     <value>select Materialdescription from wms."MaterialMasterYGS"  where Material = '#materialid'</value>
   </data>
   <data name="insertqualitycheck" xml:space="preserve">
-    <value>UPDATE  wms.wms_storeinward set  confirmqty=@confirmqty,returnqty = @returnqty,checkedby = @receivedby,checkedon=current_date,remarks=@remarks where inwardid =#inwardid</value>
+    <value>UPDATE  wms.wms_storeinward set  qualitypassedqty=@qualitypassedqty,qualityfailedqty = @qualityfailedqty,checkedby = @receivedby,checkedon=current_date,remarks=@remarks where inwardid =#inwardid</value>
   </data>
   <data name="getdataforqualitydetails" xml:space="preserve">
-    <value>select stinw.inwardid,stinw.inwmasterid,stinw.materialid as material,secinw.grnnumber,openpo.materialdescription,stinw.receivedqty,stinw.returnqty,stinw.remarks,stinw.checkedby,mat.qualitycheck,
-  CASE
-     WHEN mat.qualitycheck=True  THEN stinw.confirmqty
-     ELSE  stinw.receivedqty
-  END as confirmqty
+    <value>select stinw.inwardid,stinw.inwmasterid,stinw.materialid as material,secinw.grnnumber,mat.materialdescription,stinw.receivedqty,stinw.receiveddate,stinw.returnqty,qc.qualitypassedqty,qc.qualityfailedqty,qc.remarks,qc.qcby as checkedby
   from wms.wms_storeinward stinw
   left outer join wms.wms_securityinward secinw on secinw.inwmasterid=stinw.inwmasterid
   left outer join wms."MaterialMasterYGS" mat on mat.material = stinw.materialid
-  left outer join wms.openpolistview openpo on openpo.pono=secinw.pono
-  where stinw.checkedby is null</value>
+  left outer join wms.wms_qualitycheck qc on qc.inwardid=stinw.inwardid
+  where stinw.qualitycheckrequired = True and qc.qcby is null  order by stinw.receiveddate DESC</value>
   </data>
   <data name="receiveforinvoice" xml:space="preserve">
-    <value>INSERT INTO wms.wms_storeinward(inwmasterid,receiveddate,receivedby,receivedqty,confirmqty,materialid,deleteflag,checkedby,checkedon)
-VALUES(@inwmasterid,@receiveddate,@receivedby,@receivedqty,@confirmqty,@materialid,@deleteflag,@checkedby,@checkedon)returning inwardid</value>
+    <value>INSERT INTO wms.wms_storeinward(inwmasterid,receiveddate,receivedby,receivedqty,materialid,deleteflag,qualitycheckrequired,qualitychecked,materialqty)
+VALUES(@inwmasterid,@receiveddate,@receivedby,@receivedqty,@materialid,@deleteflag,@qualitycheck,@qualitychecked,@materialqty)returning inwardid</value>
   </data>
   <data name="getGatePassApprovalHistoryList" xml:space="preserve">
     <value>select * from wms.wms_gatepassapprovals where gatepassid =#gatepassid and currentstatus =true</value>
   </data>
   <data name="insertpo" xml:space="preserve">
-    <value>insert into wms.wms_polist(pono,deliverydate,vendorid,suppliername) values (@pono,current_date,null,@suppliername)</value>
+    <value>insert into wms.wms_polist(pono,suppliername,type) values (@pono,@suppliername,@type)</value>
+  </data>
+  <data name="getinwardidbygrn" xml:space="preserve">
+    <value>select inwmasterid from wms.wms_securityinward where grnnumber='#grnno' limit 1</value>
+  </data>
+  <data name="insertreturndata" xml:space="preserve">
+    <value>UPDATE  wms.wms_storeinward set  confirmqty=@confirmqty,returnqty = @returnqty,returnedby = @receivedby,returnedon=current_date,returnremarks=@returnremarks where inwardid =#inwardid</value>
+  </data>
+  <data name="receivequeryfornonpo" xml:space="preserve">
+    <value>select sinw.invoiceno,sinw.pono,sinw.grnnumber,inw.materialid as material,ms.materialdescription,
+ inw.inwardid,inw.checkedby,inw.qualitychecked,inw.returnedby,inw.returnedon,inw.returnremarks,inw.receivedqty,inw.returnremarks,inw.materialqty,
+ qc.qualitypassedqty,qc.qualityfailedqty,qc.qcby as checkedby,
+ CASE
+     WHEN inw.qualitycheckrequired != True and inw.returnedby is null THEN inw.receivedqty
+	 WHEN inw.qualitycheckrequired = True and inw.returnedby is null THEN qc.qualitypassedqty
+	 ELSE inw.confirmqty
+  END as confirmqty,
+CASE
+     WHEN inw.returnedby is null THEN qc.qualityfailedqty
+     ELSE  inw.returnqty
+  END as returnqty,
+   CASE
+     WHEN inw.qualitycheckrequired is null THEN ms.qualitycheck
+     ELSE inw.qualitycheckrequired
+  END as qualitycheck
+ from wms.wms_securityinward sinw
+ left outer join wms.wms_storeinward inw on inw.inwmasterid=sinw.inwmasterid
+ left outer join wms.wms_qualitycheck qc on qc.inwardid = inw.inwardid
+ left outer join wms."MaterialMasterYGS" ms on ms.material = inw.materialid</value>
+  </data>
+  <data name="receivequeryforpo" xml:space="preserve">
+    <value>select distinct openpo.projectname,inwa.invoiceno,inw.checkedby,inwa.grnnumber,inwa.pono,inw.qualitychecked,
+openpo.material,openpo.materialqty,inw.receivedqty,inw.returnedby,inw.returnedon,inw.returnremarks,
+openpo.materialdescription, openpo.quotationqty,inw.receivedqty,inw.returnqty,qc.qualitypassedqty,qc.qualityfailedqty,
+CASE
+     WHEN inw.returnedby is null THEN qc.qualitypassedqty
+     ELSE  inw.confirmqty
+  END as confirmqty,
+  CASE
+     WHEN inw.returnedby is null THEN qc.qualityfailedqty
+     ELSE  inw.returnqty
+  END as returnqty,
+  CASE
+     WHEN inw.qualitycheckrequired is null THEN ms.qualitycheck
+     ELSE inw.qualitycheckrequired
+  END as qualitycheck
+from wms.wms_securityinward inwa  
+left join wms.wms_storeinward inw on inw.inwmasterid=inwa.inwmasterid
+inner join wms.openpolistview openpo on openpo.pono=inwa.pono
+left outer join wms."MaterialMasterYGS" ms on ms.material = openpo.material
+left outer join wms.wms_qualitycheck qc on qc.inwardid = inw.inwardid</value>
+  </data>
+  <data name="savequalityquery" xml:space="preserve">
+    <value>INSERT INTO wms.wms_qualitycheck(inwardid,qualitypassedqty,qualityfailedqty,qcby,remarks)
+  VALUES(@inwardid,@qualitypassedqty,@qualityfailedqty,@receivedby,@remarks)</value>
   </data>
 </root>

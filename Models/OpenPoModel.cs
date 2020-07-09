@@ -38,6 +38,16 @@ namespace WMS.Models
 		public int inwardid { get; set; }
 		public string remarks { get; set; }
 		public string checkedby { get; set; }
+		public string returnedby { get; set; }
+		public DateTime returnedon { get; set; }
+
+		public int qualitypassedqty { get; set; }
+		public int qualityfailedqty { get; set; }
+
+		public string returnremarks { get; set; }
+
+		public bool qualitychecked { get; set; }
+
 	}
 
 	public class printMaterial
@@ -122,6 +132,13 @@ namespace WMS.Models
 		public int materialqty { get; set; }
 
 		public string asn { get; set; }
+
+		public string returnremarks { get; set; }
+
+		public int qualitypassedqty { get; set; }
+		public int qualityfailedqty { get; set; }
+
+		public bool qualitycheck { get; set; }
 	}
 	public class StockModel
 	{
@@ -555,7 +572,15 @@ namespace WMS.Models
 		public int rackid { get; set; }
 		public string racknumber { get; set; }
 	}
+
+	public class Materials
+	{ 
+		public string material { get; set; }
+		public string materialdescription { get; set; }
+	
+	}
 }
+
 public class gatepassapprovalsModel
 {
 	public int historyid { get; set; }

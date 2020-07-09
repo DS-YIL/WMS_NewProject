@@ -5,7 +5,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { constants } from '../Models/WMSConstants'
 import { Employee, Login, DynamicSearchResult, printMaterial } from '../Models/Common.Model';
-import { PoFilterParams, PoDetails, BarcodeModel, StockModel, materialRequestDetails, inwardModel, gatepassModel } from '../Models/WMS.Model';
+import { PoFilterParams, PoDetails, BarcodeModel, StockModel, materialRequestDetails, inwardModel, gatepassModel, Materials } from '../Models/WMS.Model';
 import { Text } from '@angular/compiler/src/i18n/i18n_ast';
 
 @Injectable({
@@ -121,6 +121,11 @@ export class wmsService {
   insertqualitycheck(inwardModel: inwardModel[]): Observable<any> {
     const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }), responseType: 'text' as any };
     return this.http.post<any>(this.url + 'POData/qualitycheck', inwardModel, httpOptions);
+  }
+
+  insertreturn(inwardModel: inwardModel[]): Observable<any> {
+    const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }), responseType: 'text' as any };
+    return this.http.post<any>(this.url + 'POData/insertreturn', inwardModel, httpOptions);
   }
 
   InsertStock(StockModel: StockModel): Observable<any> {
@@ -291,6 +296,9 @@ export class wmsService {
   }
   getrackdata(): Observable<any> {
     return this.http.get<any>(this.url + 'POData/getrackata/', this.httpOptions);
+  }
+  getMaterial(): Observable<Materials[]> {
+    return this.http.get<Materials[]>(this.url + 'POData/GetMaterialdata/', this.httpOptions);
   }
 }
 

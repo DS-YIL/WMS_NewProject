@@ -76,8 +76,8 @@
               <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'materialdescription', 'contains')"></th>
               <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'grnnumber', 'contains')"></th>
               <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'receivedqty', 'contains')"></th>
-              <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'confirmqty', 'contains')"></th>
-              <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'returnqty', 'contains')"></th>
+              <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'qualitypassedqty', 'contains')"></th>
+              <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'qualityfailedqty', 'contains')"></th>
               <th></th>
             </tr>
           </ng-template>
@@ -99,16 +99,16 @@
                 <span>{{rowData.receivedqty}}</span>
               </td>
               <td class="ptable-cell" style="text-align:right;width:10%;">
-                <span *ngIf="!rowData.qualitycheck || rowData.checkedby">{{rowData.confirmqty}}</span>
-                <input *ngIf="rowData.qualitycheck && !rowData.checkedby" style="text-align:right" pInputText type="number" class="form-control" (change)="checkconfirmqty(rowData.confirmqty,rowData.receivedqty,rowData.returnqty);" id="confirmqty" [(ngModel)]="rowData.confirmqty">
+                <span *ngIf="rowData.checkedby">{{rowData.qualitypassedqty}}</span>
+                <input *ngIf="!rowData.checkedby" style="text-align:right" pInputText type="number" class="form-control" (change)="checkconfirmqty(rowData.qualitypassedqty,rowData.receivedqty,rowData.qualityfailedqty,rowData);" id="confirmqty" [(ngModel)]="rowData.qualitypassedqty">
               </td>
               <td class="ptable-cell" style="text-align:right;width:10%;">
-                <span *ngIf="!rowData.qualitycheck || rowData.checkedby">{{rowData.returnqty}}</span>
-                <input *ngIf="rowData.qualitycheck && !rowData.checkedby" style="text-align:right" pInputText type="number" (change)="checkreturnqty(rowData.returnqty,rowData.receivedqty,rowData.confirmqty);" id="returnqty" class="form-control" [(ngModel)]="rowData.returnqty">
+                <span *ngIf="rowData.checkedby">{{rowData.qualityfailedqty}}</span>
+                <input *ngIf="!rowData.checkedby" style="text-align:right" pInputText type="number" (change)="checkreturnqty(rowData.qualityfailedqty,rowData.receivedqty,rowData.qualitypassedqty,rowData);" id="returnqty" class="form-control" [(ngModel)]="rowData.qualityfailedqty">
               </td>
               <td class="ptable-cell" style="text-align:right;width:15%;">
-                <span *ngIf="!rowData.qualitycheck || rowData.checkedby">{{rowData.remarks}}</span>
-                <textarea *ngIf="rowData.qualitycheck && !rowData.checkedby" style="text-align:left" pInputText   id="returnqty" class="form-control" [(ngModel)]="rowData.remarks"></textarea>
+                <span *ngIf="rowData.checkedby">{{rowData.remarks}}</span>
+                <textarea *ngIf="!rowData.checkedby" style="text-align:left" pInputText   id="returnqty" class="form-control" [(ngModel)]="rowData.remarks"></textarea>
               </td>
               <!--<td class="ptable-cell">
     <div style="text-align: center;">

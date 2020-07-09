@@ -91,11 +91,18 @@ namespace WMS.Controllers
 		[HttpGet("Getthreewaymatchingdetails")]
 		public async Task<IEnumerable<OpenPoModel>> Getdetailsforthreewaymatching(string pono)
 		{
-
+			bool isgrn = false;
+			string grn = "";
+			string po = pono;
 			string[] ponoandinvoice = pono.Split('-');
+            if (ponoandinvoice.Length > 2)
+            {
+				isgrn = true;
+				grn = po;
+            }
 			string ponodata = ponoandinvoice[0];
 			string invoiceno = ponoandinvoice[1];
-			return await this._poService.GetDeatilsForthreeWaymatching(invoiceno, ponodata);
+			return await this._poService.GetDeatilsForthreeWaymatching(invoiceno, ponodata,isgrn,grn);
 		}
 
 		[HttpGet("Getqualitydetails")]
@@ -132,6 +139,12 @@ namespace WMS.Controllers
 		public async Task<string> insertqualitycheck([FromBody] List<inwardModel> data)
 		{
 			return await this._poService.insertquantitycheck(data);
+		}
+
+		[HttpPost("insertreturn")]
+		public async Task<string> insertreturnqty([FromBody] List<inwardModel> data)
+		{
+			return await this._poService.insertreturn(data);
 		}
 
 		[HttpPost("updateitemlocation")]
@@ -449,6 +462,13 @@ namespace WMS.Controllers
 		{
 			return await this._poService.Getrackdata();
 		}
+
+		[HttpGet("GetMaterialdata")]
+		public async Task<IEnumerable<Materials>> GetMaterialcombo()
+		{
+			return await this._poService.GetMaterialcombo();
+		}
+
 		//[HttpPost("securitysendemail")]
 		//public EmailModel sendemail(EmailModel obj)
 		//{

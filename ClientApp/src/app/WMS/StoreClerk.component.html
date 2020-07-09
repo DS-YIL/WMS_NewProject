@@ -34,7 +34,7 @@
         </div>
         <div class="col-lg-2 col-md-2">
           <button type="button" class="btn btn-primary btn-sm" style="float:left" (click)="scanBarcode()" label="Save">Scan Barcode</button>
-          <button *ngIf="isnonpoentry" type="button" class="btn btn-primary btn-sm" style="float:left" (click)="addrows()" label="Save"><i class="fa fa-plus"></i></button>
+          <button *ngIf="isnonpoentry" type="button" class="btn btn-primary btn-sm" style="float:left;margin-left:10px;" (click)="addrows()" label="Save"><i class="fa fa-plus"></i></button>
         </div>
         <div class="col-lg-2 col-md-2 labelheading" *ngIf="podetailsList.length>0">
           PO No : <span class="labeltext">{{podetailsList[0].pono}}</span>
@@ -58,24 +58,31 @@
             <tr class="mprltbldata">
               <th style="text-align:center;width:5%;">Sl.No.</th>
               <!--<th>PO No</th>
-            <th>Invoice No</th>-->
-              <th style="text-align:center;width:20%;">Material</th>
+  <th>Invoice No</th>-->
+              <th style="text-align:center;width:15%;">Material</th>
               <th style="text-align:center;">Material Description</th>
-              <th style="text-align:center;width:10%;">Material Qty</th>
+              <th *ngIf="!isnonpo && !qualitychecked" style="text-align:center;width:10%;">Material Qty</th>
               <th style="text-align:center;width:10%;">Received Qty</th>
               <th *ngIf="qualitychecked" style="text-align: center;width:10%;">Accepted Qty</th>
               <th *ngIf="qualitychecked" style="text-align:center;width:10%;">Returned Qty</th>
+              <th *ngIf="qualitychecked" style="text-align:center;width:15%;">Remarks</th>
+              <th *ngIf="qualitychecked" style="text-align:center;width:10%;">status</th>
+              <th *ngIf="!qualitychecked" style="text-align:center;width:10%;">Quality Check Required</th>
+
             </tr>
             <tr>
               <th></th>
               <!--<th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'pono', 'contains')"></th>
-            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'invoiceno', 'contains')"></th>-->
+  <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'invoiceno', 'contains')"></th>-->
               <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'material', 'contains')"></th>
               <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'materialdescription', 'contains')"></th>
-              <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'materialqty', 'contains')"></th>
+              <th *ngIf="!isnonpo && !qualitychecked"> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'materialqty', 'contains')"></th>
               <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'receivedqty', 'contains')"></th>
               <th *ngIf="qualitychecked"> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'confirmqty', 'contains')"></th>
               <th *ngIf="qualitychecked"> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'returnqty', 'contains')"></th>
+              <th *ngIf="qualitychecked"></th>
+              <th *ngIf="qualitychecked"></th>
+              <th *ngIf="!qualitychecked"></th>
             </tr>
           </ng-template>
           <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
@@ -88,29 +95,41 @@
 
               <!--<td class="ptable-cell">{{rowData.pono}}</td>
   <td class="ptable-cell">{{rowData.invoiceno}}</td>-->
-              <td class="ptable-cell" style="text-align:center;width:20%;">
-                <span *ngIf="!isnonpoentry">{{rowData.material}}</span>
-                <input *ngIf="isnonpoentry" pInputText type="text" id="receivedqty" class="form-control" [(ngModel)]="rowData.material">
-              </td>
-              <td class="ptable-cell" style="text-align:center;width:20%;">
+            <td class="ptable-cell" style="text-align:center;width:15%;">
+              <span *ngIf="!isnonpoentry">{{rowData.material}}</span>
+              <!--<input *ngIf="isnonpoentry" pInputText type="text" id="receivedqty" class="form-control" [(ngModel)]="rowData.material">-->
+              <p-dropdown [options]="combomaterial" appendTo="body" *ngIf="isnonpoentry" [style]="{'width':'100%'}" (onChange)="setdescription($event,rowData)" placeholder="Select material" optionLabel="material"></p-dropdown>
+            </td>
+              <td class="ptable-cell" style="text-align:left;width:20%;">
                 <span *ngIf="!isnonpoentry">{{rowData.materialdescription}}</span>
-                <input *ngIf="isnonpoentry" pInputText type="text" id="receivedqty" class="form-control" [(ngModel)]="rowData.materialdescription">
+                <input *ngIf="isnonpoentry" pInputText type="text" readonly id="receivedqty" class="form-control" [(ngModel)]="rowData.materialdescription">
               </td>
-              <td class="ptable-cell" style="text-align:center;width:20%;">
-                <span *ngIf="!isnonpoentry">{{rowData.materialqty}}</span>
-                <input *ngIf="isnonpoentry" pInputText type="number" id="receivedqty" class="form-control" [(ngModel)]="rowData.materialqty">
+              <td class="ptable-cell" *ngIf="!isnonpo && !qualitychecked" style="text-align:center;width:20%;">
+                <span>{{rowData.materialqty}}</span>
               </td>
               <!--<td class="ptable-cell" style="text-align:left">{{rowData.materialdescription}}</td>-->
               <!--<td class="ptable-cell" style="text-align:right;width:10%;">{{rowData.materialqty}}</td>-->
               <td class="ptable-cell" style="text-align:right;width:10%;">
                 <span *ngIf="grnnumber">{{rowData.receivedqty}}</span>
-                <input *ngIf="!grnnumber" pInputText type="number" (change)="checkreceivedqty(rowData.receivedqty,rowData.confirmqty,rowData.returnqty,rowData.materialqty);" id="receivedqty" class="form-control" [(ngModel)]="rowData.receivedqty">
+                <input *ngIf="!grnnumber" pInputText type="number" (change)="checkreceivedqty(rowData.receivedqty,rowData.confirmqty,rowData.returnqty,rowData.materialqty,rowData);" id="receivedqty" class="form-control" [(ngModel)]="rowData.receivedqty">
               </td>
               <td class="ptable-cell" style="text-align:right;width:10%;" *ngIf="qualitychecked">
-                <span>{{rowData.confirmqty}}</span>
+                <span *ngIf="rowData.returnedby">{{rowData.confirmqty}}</span>
+                <input *ngIf="!rowData.returnedby" pInputText type="number" (change)="checkconfirmqty(rowData.confirmqty,rowData.receivedqty,rowData.returnqty,rowData);" id="confirmqty" class="form-control" [(ngModel)]="rowData.confirmqty">
               </td>
               <td class="ptable-cell" style="text-align:right;width:10%;" *ngIf="qualitychecked">
-                <span>{{rowData.returnqty}}</span>
+                <span *ngIf="rowData.returnedby">{{rowData.returnqty}}</span>
+                <input *ngIf="!rowData.returnedby" pInputText type="number" (change)="checkreturnqty(rowData.returnqty,rowData.receivedqty,rowData.confirmqty,rowData);" id="returnqty" class="form-control" [(ngModel)]="rowData.returnqty">
+              </td>
+              <td *ngIf="qualitychecked" style="text-align:left;width:15%;">
+                <span *ngIf="rowData.returnedby">{{rowData.returnremarks}}</span>
+                <textarea *ngIf="!rowData.returnedby" [(ngModel)]="rowData.returnremarks"></textarea>
+              </td>
+              <td style="text-align:center;width:10%;" *ngIf="qualitychecked">
+                <span [innerText]="getstatus(rowData)"></span>
+              </td>
+              <td style="text-align:center;width:10%;" *ngIf="!qualitychecked">
+                <input type="checkbox" [(ngModel)]="rowData.qualitycheck" />
               </td>
               <!--<td class="ptable-cell">
     <div style="text-align: center;">
@@ -127,7 +146,8 @@
 
     </div>
     <div class="card-footer" *ngIf="podetailsList.length">
-      <button type="button" class="btn btn-success" style="margin-left:45%" [disabled]="grnnumber" (click)="onsubmit()">Submit</button>
+      <button type="button" *ngIf="!qualitychecked" class="btn btn-success" style="margin-left:45%" [disabled]="grnnumber" (click)="onsubmit()">Submit</button>
+      <button type="button" *ngIf="qualitychecked" class="btn btn-success" style="margin-left:45%" [disabled]="returned" (click)="onreturnsubmit()">Submit</button>
     </div>
   </div>
 

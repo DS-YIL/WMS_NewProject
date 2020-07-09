@@ -89,6 +89,12 @@ export class inwardModel {
   checkedby: string;
   material: string;
   materialdescription: string;
+  returnedby: string;
+  returnedon: Date;
+  qualitypassedqty: number;
+  qualityfailedqty: number;
+  returnremarks: string;
+  qualitychecked: boolean;
 }
 
 
@@ -185,4 +191,11 @@ export class authUser {
   employeeid: number;
   roleid: number;
   createdby: string;
+}
+
+export class Materials {
+
+  material: string;
+  materialdescription: string;
+
 }
