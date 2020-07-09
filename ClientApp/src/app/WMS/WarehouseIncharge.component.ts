@@ -52,6 +52,9 @@ export class WarehouseInchargeComponent implements OnInit {
   public itemNo: any;
   public printData = new printMaterial();
   public showPrintLabel: boolean = false;
+  public pono: string;
+  public invoiceNo: string;
+  public grnNo: string;
 
   ngOnInit() {
     if (localStorage.getItem("Employee"))
@@ -80,6 +83,9 @@ export class WarehouseInchargeComponent implements OnInit {
     this.materialCode = details.material;
     this.receivedDate = this.datePipe.transform(details.receiveddate, this.constants.dateFormat)  ;
     this.acceptedQty = details.confirmqty;
+    this.pono = details.pono;
+    this.invoiceNo = details.invoiceno;
+    this.grnNo = details.grnnumber;
   }
 
   //Increase and decrease the qty based on no of prints -- gayathri

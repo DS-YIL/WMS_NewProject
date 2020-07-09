@@ -93,7 +93,7 @@
         <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">PO No.:</label>
       </div>
       <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
-        <input type="text" [disabled]="true" class="form-control" [(ngModel)]="podetailsList[0].pono" />
+        <input type="text" [disabled]="true" class="form-control" [(ngModel)]="pono" />
       </div>
       <div class="col-lg-1 col-md-1 col-sm-1 form-inline ">
       </div>
@@ -101,7 +101,7 @@
         <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">Invoice No.:</label>
       </div>
       <div class="col-lg-3 col-md-3 col-sm-3 form-inline ">
-        <input type="text" [disabled]="true" class="form-control" [(ngModel)]="podetailsList[0].invoiceno" />
+        <input type="text" [disabled]="true" class="form-control" [(ngModel)]="invoiceNo" />
       </div>
     </div>
     <br />
@@ -112,7 +112,7 @@
         <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">GRN No.:</label>
       </div>
       <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
-        <input type="text" [disabled]="true" class="form-control" [(ngModel)]="podetailsList[0].grnnumber" />
+        <input type="text" [disabled]="true" class="form-control" [(ngModel)]="grnNo" />
       </div>
       <div class="col-lg-1 col-md-1 col-sm-1 form-inline">
       </div>
@@ -192,30 +192,42 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-lg-3 col-md-3 col-sm-3"></div>
-        <div class="col-lg-7 col-md-7 col-sm-7">
-          <img class="images" src="{{printData.barcodePath}}" />
+        <table>
+          <tr>
+            <th>{{printData.grnno}}</th>
+            <th><img class="images" src="{{printData.barcodePath}}" /></th>
+          </tr>
+          <tr>
+            <th>{{printData.receiveddate}}</th>
+            <th>1/{{printData.noofprint}}</th>
+          </tr>
+        </table>
+      </div>
+      <!--<div class="row">
+    <div class="col-lg-3 col-md-3 col-sm-3"></div>
+    <div class="col-lg-7 col-md-7 col-sm-7">
+      <img class="images" src="{{printData.barcodePath}}" />
+    </div>
+  </div>
+  <br/><br/>
+       <div class="row">
+         <div class="col-lg-3 col-md-3 col-sm-3"></div>
+         <div class="col-lg-2 col-md-2 col-sm-2">
+           <label>{{printData.receiveddate}}</label>&nbsp;&nbsp;
+
+         </div>
+         <div class="col-lg-3 col-md-3 col-sm-3"></div>
+         <div class="col-lg-2 col-md-2 col-sm-2">
+           <label>1/{{printData.noofprint}}</label>
+         </div>
+       </div>-->
+      <div class="row">
+        <div class="col-lg-5 col-md-5 col-sm-5"></div>
+        <div class="col-lg-3 col-md-3 col-sm-3">
+          <button type="button" class="btn btn-primary" label="Save">Print</button>
         </div>
       </div>
-      <br/><br/>
-           <div class="row">
-             <div class="col-lg-3 col-md-3 col-sm-3"></div>
-             <div class="col-lg-2 col-md-2 col-sm-2">
-               <label>{{printData.receiveddate}}</label>&nbsp;&nbsp;
-              
-             </div>
-             <div class="col-lg-3 col-md-3 col-sm-3"></div>
-             <div class="col-lg-2 col-md-2 col-sm-2">
-               <label>1/{{printData.noofprint}}</label>
-             </div>
-           </div>
-             <div class="row">
-               <div class="col-lg-5 col-md-5 col-sm-5"></div>
-               <div class="col-lg-3 col-md-3 col-sm-3">
-                 <button type="button" class="btn btn-primary" label="Save">Print</button>
-               </div>
-             </div>
-</form>
+    </form>
   </p-dialog>
     <p-dialog header="Put Away Location" [(visible)]="showLocationDialog" [contentStyle]="{'overflow':'visible'}" [style]="{width: '50%'}">
       <form [formGroup]="StockModelForm">

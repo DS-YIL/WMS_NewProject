@@ -9,7 +9,6 @@ using WMS.Common;
 using WMS.Interfaces;
 using System.Web;
 using WMS.Models;
-using System.Web;
 using Microsoft.AspNetCore.Http;
 using System.IO;
 using System.Net.Sockets;
@@ -144,18 +143,23 @@ namespace WMS.DAL
 				string path = "";
 
 				path = Environment.CurrentDirectory + @"\Barcodes\";
-				//path = System.Web. Server.MapPath("/Images/BarCodeImages");
+				
+				if (!Directory.Exists(path))
+				{
+					Directory.CreateDirectory(path);
+				}
 				//generate barcode
-				var content = printMat.grnno + "-" + printMat.materialid;
+				var content = printMat.grnno+"-"+printMat.materialid;
 				BarcodeWriter writer = new BarcodeWriter
 				{
-					Format = BarcodeFormat.CODE_128,
+					Format = BarcodeFormat.QR_CODE,
 					Options = new EncodingOptions
 					{
-						Height = 40,
-						Width = 80,
+						Height = 600,
+						Width = 900,
 						PureBarcode = false,
 						Margin = 10,
+					
 					},
 				};
 				var bitmap = writer.Write(content);
@@ -163,15 +167,15 @@ namespace WMS.DAL
 				// write text and generate a 2-D barcode as a bitmap
 				writer
 					.Write(content)
-					.Save(path + "/" + content + ".bmp");
+					.Save(path  + content + ".bmp");
 
-				printMat.barcodePath = path + content + ".bmp";
+				printMat.barcodePath = "./Barcodes/" + content + ".bmp";
 				
 			}
 			catch(Exception ex)
             {
 				printMat.errorMsg = ex.Message;
-
+				log.ErrorMessage("PODataProvider", "InsertBarcodeInfo", ex.StackTrace.ToString());
 			}
 			return printMat;
 		}
