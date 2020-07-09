@@ -38,41 +38,41 @@ namespace WMS.Controllers
 		{
 			using (NpgsqlConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
 			{
-				try
+
+				DB.Open();
+				//var filePath = @"http://10.29.15.183:100/WMSFiles/stageTest.xlsx";
+				var filePath = @"D:\WMSFiles\stageTest.xlsx";
+				DataTable dtexcel = new DataTable();
+				bool hasHeaders = false;
+				string HDR = hasHeaders ? "Yes" : "No";
+				string strConn;
+				if (filePath.Substring(filePath.LastIndexOf('.')).ToLower() == ".xlsx")
+					strConn = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + filePath + ";Extended Properties=\"Excel 12.0;HDR=" + HDR + ";IMEX=0\"";
+				else
+					strConn = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + filePath + ";Extended Properties=\"Excel 8.0;HDR=" + HDR + ";IMEX=0\"";
+
+
+				OleDbConnection conn = new OleDbConnection(strConn);
+				conn.Open();
+				DataTable schemaTable = conn.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, new object[] { null, null, null, "TABLE" });
+
+				DataRow schemaRow = schemaTable.Rows[0];
+				string sheet = schemaRow["TABLE_NAME"].ToString();
+				if (!sheet.EndsWith("_"))
 				{
-					DB.Open();
-					//var filePath = @"http://10.29.15.183:100/WMSFiles/stageTest.xlsx";
-					var filePath = @"D:\WMSFiles\stageTest.xlsx";
-					DataTable dtexcel = new DataTable();
-					bool hasHeaders = false;
-					string HDR = hasHeaders ? "Yes" : "No";
-					string strConn;
-					if (filePath.Substring(filePath.LastIndexOf('.')).ToLower() == ".xlsx")
-						strConn = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + filePath + ";Extended Properties=\"Excel 12.0;HDR=" + HDR + ";IMEX=0\"";
-					else
-						strConn = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + filePath + ";Extended Properties=\"Excel 8.0;HDR=" + HDR + ";IMEX=0\"";
+					string query = "SELECT  * FROM [Sheet1$]";
+					OleDbDataAdapter daexcel = new OleDbDataAdapter(query, conn);
+					dtexcel.Locale = CultureInfo.CurrentCulture;
+					daexcel.Fill(dtexcel);
+				}
+
+				conn.Close();
 
 
-					OleDbConnection conn = new OleDbConnection(strConn);
-					conn.Open();
-					DataTable schemaTable = conn.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, new object[] { null, null, null, "TABLE" });
-
-					DataRow schemaRow = schemaTable.Rows[0];
-					string sheet = schemaRow["TABLE_NAME"].ToString();
-					if (!sheet.EndsWith("_"))
+				foreach (DataRow row in dtexcel.Rows)
+				{
+					try
 					{
-						string query = "SELECT  * FROM [Sheet1$]";
-						OleDbDataAdapter daexcel = new OleDbDataAdapter(query, conn);
-						dtexcel.Locale = CultureInfo.CurrentCulture;
-						daexcel.Fill(dtexcel);
-					}
-
-					conn.Close();
-
-
-					foreach (DataRow row in dtexcel.Rows)
-					{
-
 						string Error_Description = "";
 						bool dataloaderror = false;
 						var PurchDoc = "Purch.Doc.".Replace('.', '#');
@@ -99,18 +99,15 @@ namespace WMS.Controllers
 						NpgsqlCommand dbcmd = DB.CreateCommand();
 						dbcmd.CommandText = query;
 						dbcmd.ExecuteNonQuery();
-
 					}
+					catch (Exception e)
+					{
+						var res = e;
+						continue;
+					}
+				}
 
-				}
-				catch (Exception e)
-				{
-					throw;
-				}
-				finally
-				{
-					DB.Close();
-				}
+				DB.Close();
 				loadPOData();
 				return Ok(true);
 			}
@@ -129,13 +126,14 @@ namespace WMS.Controllers
 			{
 				{
 
-					try
+
+					string query = "select * from wms.stag_po_sap where purchdoc !='' and material !=''  ";
+					pgsql.Open();
+					var stagingList = pgsql.Query<StagingModel>(
+					   query, null, commandType: CommandType.Text);
+					foreach (StagingModel stag_data in stagingList)
 					{
-						string query = "select * from wms.stag_po_sap where purchdoc !='' and material !=''  ";
-						pgsql.Open();
-						var stagingList = pgsql.Query<StagingModel>(
-						   query, null, commandType: CommandType.Text);
-						foreach (StagingModel stag_data in stagingList)
+						try
 						{
 							stag_data.pono = stag_data.purchdoc;
 							stag_data.deliverydate = stag_data.itemdeliverydate;
@@ -143,7 +141,8 @@ namespace WMS.Controllers
 							stag_data.suppliername = stag_data.vendorname;
 							stag_data.projectcode = stag_data.projectdefinition;
 							stag_data.materialid = stag_data.material;
-							string materialdescquery =  WMSResource.getMateDescr.Replace("#materialid", stag_data.materialid.ToString()); 
+							stag_data.materialqty = stag_data.poquantity;
+							string materialdescquery = WMSResource.getMateDescr.Replace("#materialid", stag_data.materialid.ToString());
 							stag_data.materialdescription = pgsql.QuerySingleOrDefault<string>(
 											materialdescquery, null, commandType: CommandType.Text);
 
@@ -199,18 +198,30 @@ namespace WMS.Controllers
 									stag_data.itemdeliverydate
 								});
 							}
+							else
+							{
+								var id= pgsql.QuerySingleOrDefault<string>("Select id  from wms.wms_pomaterials where pono = '" + stag_data.purchdoc + "' and materialid='" + stag_data.material + "'", null, commandType: CommandType.Text);
+								var updateqyery = "update wms.wms_pomaterials set materialqty = @materialqty where id=" + id+"";
+								
+									var re = Convert.ToInt32(pgsql.Execute(updateqyery, new
+
+									{
+										stag_data.materialqty
+
+									}));
+									
+
+								
+							}
 						}
+						catch (Exception e)
+						{
+							var res = e;
+							continue;
+						}
+					}
+					pgsql.Close();
 
-					}
-
-					catch (Exception Ex)
-					{
-						throw Ex;
-					}
-					finally
-					{
-						pgsql.Close();
-					}
 					//throw new NotImplementedException();
 				}
 			}

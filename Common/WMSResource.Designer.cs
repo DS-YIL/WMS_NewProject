@@ -398,7 +398,11 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select itemlocation,availableqty from wms.wms_stock where materialid =&apos;#materialid&apos; and availableqty!=0.
+        ///   Looks up a localized string similar to select  sk.itemlocation ,sk.materialid, sk.availableqty
+        /// from wms.wms_securityinward sec left join wms.wms_storeinward inw on inw.inwmasterid=sec.inwmasterid
+        ///left join wms.wms_stock sk on sec.inwmasterid = sk.inwmasterid
+        ///left join wms.&quot;MaterialMasterYGS&quot;  mtmaster on mtmaster.material= sk.materialid
+        ///where sec.grnnumber =&apos;#grn&apos; and sk.materialid =&apos;#materialid&apos; and sk.availableqty!=0.
         /// </summary>
         public static string getLocationDetails {
             get {
@@ -452,11 +456,11 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select openpo.jobname, inw.confirmqty,sec.grnnumber,sec.pono,mtmaster.materialdescription,
+        ///   Looks up a localized string similar to select &apos;&apos; as jobname, inw.confirmqty,sec.grnnumber,sec.pono,mtmaster.materialdescription,
         ///sk.materialid, sk.availableqty,sk.itemid
         /// from wms.wms_securityinward sec left join wms.wms_storeinward inw on inw.inwmasterid=sec.inwmasterid
         ///left join wms.wms_stock sk on sec.inwmasterid = sk.inwmasterid
-        ///left  join wms.openpolistview openpo on sk.pono = openpo.pono
+        ///left  join wms.wms_polist openpo on sk.pono = openpo.pono
         ///left join wms.&quot;MaterialMasterYGS&quot;  mtmaster on mtmaster.material= sk.materialid 
         ///where sec.grnnumber =&apos;#grnnumber&apos; and sk.materialid=&apos;#materialid&apos;.
         /// </summary>
@@ -470,7 +474,7 @@ namespace WMS.Common {
         ///   Looks up a localized string similar to select  inw.confirmqty,sec.grnnumber,sec.pono,mtmaster.materialdescription,sk.materialid, sk.availableqty,sk.itemid
         /// from wms.wms_securityinward sec left join wms.wms_storeinward inw on inw.inwmasterid=sec.inwmasterid
         ///left join wms.wms_stock sk on sec.inwmasterid = sk.inwmasterid
-        ///left  join wms.openpolistview openpo on sk.pono = openpo.pono
+        ///left  join wms.wms_polist openpo on sk.pono = openpo.pono
         ///left join wms.&quot;MaterialMasterYGS&quot;  mtmaster on mtmaster.material= sk.materialid
         ///where sec.grnnumber =&apos;#grn&apos;.
         /// </summary>
@@ -570,14 +574,14 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select  max(op.projectname)as projectname,max(res.reserveupto)as reserveupto,res.reserveid,max(res.pono) as pono,max(op.projectname) as projectname,max(res.reservedon) as reservedon,
+        ///   Looks up a localized string similar to select  max(&apos;&apos;)as projectname,max(res.reserveupto)as reserveupto,res.reserveid,max(res.pono) as pono,max(res.reservedon) as reservedon,
         ///max(iss.approvedstatus)as approvedstatus
         ///from wms.wms_materialreserve res 
         ///left join wms.wms_stock sk on sk.materialid=res.materialid
         ///left join wms.openpolistview op on op.pono=res.pono
         ///left join wms.wms_materialissue iss on iss.reserveformaterialid=res.reserveformaterialid 
         ///where reservedby=&apos;#reservedby&apos;
-        ///group by res.re [rest of string was truncated]&quot;;.
+        ///group by res.reserveid order by res.reserveid desc.
         /// </summary>
         public static string getreservedmaterialList {
             get {
@@ -803,11 +807,13 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select  max(track.enteredon) as enteredon,max(op.projectcode)as projectcode,op.pono,min(track.status)as status,max(op.vendorname)as vendorname,max(op.jobname) as jobname,max(op.quotationqty)as quotationqty ,max(op.materialqty) as materialqty
-        ///from wms.openpolistview op
-        ///      left join wms.wms_trackstatus track on track.pono=op.pono
-        ///      where projectmanager=&apos;#projectmanager&apos; 
-        ///      .
+        ///   Looks up a localized string similar to select  max(track.enteredon) as enteredon,max(pr.projectcode)as projectcode,max(wp.pono),min(track.status)as status,max(wp.suppliername )as vendorname,max(pr.jobname) as jobname,max(&apos;&apos;)as quotationqty ,
+        ///       max(mat.materialqty) as materialqty
+        ///		from wms.wms_polist wp 
+        ///      left join wms.wms_trackstatus track on track.pono=wp.pono
+        ///      left join wms.wms_project  pr on pr.pono =wp.pono 
+        ///      left join wms.wms_pomaterials mat on  mat.pono =wp.pono 
+        ///      where projectmanager=&apos;#projectmanager&apos;.
         /// </summary>
         public static string openpolist {
             get {
@@ -826,10 +832,9 @@ namespace WMS.Common {
         
         /// <summary>
         ///   Looks up a localized string similar to select distinct bin.binnumber, rack.racknumber, loc.locatorname,mat.rackid,mat.binid,
-        /// mat.storeid,stocks.itemlocation,stocks.itemid,inw.grnnumber,inw.pono,inw.invoiceno,openpo.projectname,openpo.materialqty,openpo.material,openpo.materialdescription,openpo.quotationqty,inwa.receivedqty,inwa.confirmqty,inwa.returnqty from wms.wms_securityinward inw
+        /// mat.storeid,stocks.itemlocation,stocks.itemid,inw.grnnumber,inw.pono,inw.invoiceno,inw.receiveddate,openpo.projectname,openpo.materialqty,openpo.material,openpo.materialdescription,openpo.quotationqty,inwa.receivedqty,inwa.confirmqty,inwa.returnqty from wms.wms_securityinward inw
         ///left join wms.wms_storeinward inwa on inw.inwmasterid=inwa.inwmasterid
-        ///left join wms.wms_stock stocks on  stocks.inwmasterid=inwa.inwmasterid
-        ///inner join wms. [rest of string was truncated]&quot;;.
+        ///left join wms.wms_stock stocks on  stocks.inwmasterid=inwa.inwmasterid [rest of string was truncated]&quot;;.
         /// </summary>
         public static string queryforitemdetails {
             get {
@@ -1033,7 +1038,7 @@ namespace WMS.Common {
         
         /// <summary>
         ///   Looks up a localized string similar to select grnnumber from wms.wms_securityinward inw 
-        ///inner join wms.openpolistview openpo on inw.pono=openpo.pono 
+        ///inner join wms.wms_polist openpo on inw.pono=openpo.pono 
         ///where  inw.invoiceno=&apos;#invoiceno&apos; and openpo.pono=&apos;#pono&apos;.
         /// </summary>
         public static string verifyGRNgenerated {
@@ -1044,7 +1049,7 @@ namespace WMS.Common {
         
         /// <summary>
         ///   Looks up a localized string similar to select Count(*),grnnumber from wms.wms_securityinward inw 
-        ///inner join wms.openpolistview openpo on inw.pono=openpo.pono 
+        ///inner join wms.wms_polist openpo on inw.pono=openpo.pono 
         ///where  inw.invoiceno=&apos;#invoiceno&apos; and openpo.pono=&apos;#pono&apos; group by grnnumber.
         /// </summary>
         public static string Verifythreewaymatch {
