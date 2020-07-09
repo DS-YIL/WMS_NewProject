@@ -159,7 +159,7 @@ export class GatePassComponent implements OnInit {
         this.totalGatePassList.forEach(item => {
           if (item.gatepasstype == "Returnable")
             this.gatepasslist.push(item);
-          if (item.gatepasstype == "Non Returnable" && item.approverstatus!="Approved")
+          if (item.gatepasstype == "Non Returnable" && item.approverstatus=="Approved")
             this.gatepasslist.push(item);
         })
          
