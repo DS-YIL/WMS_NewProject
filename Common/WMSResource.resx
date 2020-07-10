@@ -243,14 +243,16 @@ VALUES(@inwmasterid,@receiveddate,@receivedby,@receivedqty,@returnqty,@qualitypa
   left join  wms.wms_materialissue issue on issue.requestforissueid=req.requestforissueid</value>
   </data>
   <data name="queryforitemdetails" xml:space="preserve">
-    <value>select distinct bin.binnumber, rack.racknumber, loc.locatorname,mat.rackid,mat.binid,
- mat.storeid,stocks.itemlocation,stocks.itemid,inw.grnnumber,inw.pono,inw.invoiceno,inw.receiveddate,openpo.projectname,openpo.materialqty,openpo.material,openpo.materialdescription,openpo.quotationqty,inwa.receivedqty,inwa.confirmqty,inwa.returnqty from wms.wms_securityinward inw
+    <value>select bin.binnumber, rack.racknumber, loc.locatorname,mat.rackid,mat.binid,
+ mat.storeid,stocks.itemlocation,stocks.itemid,inw.grnnumber,inw.pono,inw.invoiceno,inw.receiveddate,inwa.materialqty,inwa.materialid as material,mat.materialdescription,inwa.receivedqty,inwa.confirmqty,inwa.returnqty 
+ from wms.wms_securityinward inw
 left join wms.wms_storeinward inwa on inw.inwmasterid=inwa.inwmasterid
 left join wms.wms_stock stocks on  stocks.inwmasterid=inwa.inwmasterid
-inner join wms.openpolistview openpo on openpo.pono=inw.pono 
- left join wms."MaterialMasterYGS" mat on inwa.materialid=mat.material left join wms.wms_rd_locator loc on loc.locatorid=mat.storeid
+ left join wms."MaterialMasterYGS" mat on inwa.materialid=mat.material
+ left join wms.wms_rd_locator loc on loc.locatorid=mat.storeid
  left join wms.wms_rd_rack rack on rack.rackid=mat.rackid
- left join wms.wms_rd_bin bin on bin.binid=mat.binid  where inw.grnnumber='#grnnumber' limit 1</value>
+ left join wms.wms_rd_bin bin on bin.binid=mat.binid
+ where inw.grnnumber='#grnnumber'</value>
   </data>
   <data name="statusupdatebySecurity" xml:space="preserve">
     <value>INSERT INTO wms.wms_trackstatus(pono,status,enteredon)VALUES(@pono,'Security Checked',current_timestamp)</value>
