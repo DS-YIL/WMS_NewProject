@@ -103,7 +103,7 @@ export class NavMenuComponent implements OnInit {
         items: [
           { label: 'Obsolete Inventory', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-caret-right', command: () => this.router.navigateByUrl('WMS/ObsoleteInventoryMovement') },
           { label: 'Excess Inventory', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-caret-right', command: () => this.router.navigateByUrl('WMS/ExcessInventoryMovement') },
-        ]
+          ]
       });
       this.items.push({
         label: 'ABC Analysis',
@@ -131,6 +131,7 @@ export class NavMenuComponent implements OnInit {
         items: [
           { label: 'FIFO LIst', icon: 'pi pi-fw pi-bars', style: { 'width': '200px' }, command: () => this.router.navigateByUrl('WMS/FIFOList') },
           { label: 'Inventory Movement', icon: 'pi pi-fw pi-bars', style: { 'width': '200px' }, command: () => this.router.navigateByUrl('WMS/InventoryMovement') },
+         // { label: 'AssignRole', icon: 'pi pi-fw pi-bars', style: { 'width': '200px' }, command: () => this.router.navigateByUrl('WMS/AssignRole') },
         ]
       });
       //this.items.push({ label: 'BarCode', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/Barcode') });

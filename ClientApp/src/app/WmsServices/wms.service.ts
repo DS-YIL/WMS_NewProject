@@ -5,7 +5,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { constants } from '../Models/WMSConstants'
 import { Employee, Login, DynamicSearchResult, printMaterial } from '../Models/Common.Model';
-import { PoFilterParams, PoDetails, BarcodeModel, StockModel, materialRequestDetails, inwardModel, gatepassModel, Materials } from '../Models/WMS.Model';
+import { PoFilterParams, PoDetails, BarcodeModel, StockModel, materialRequestDetails, inwardModel, gatepassModel, Materials, authUser } from '../Models/WMS.Model';
 import { Text } from '@angular/compiler/src/i18n/i18n_ast';
 
 @Injectable({
@@ -268,7 +268,7 @@ export class wmsService {
     return this.http.post<any>(this.url + 'POData/updateMaterialavailabality', materialList, this.httpOptions);
   }
 
-  assignRole(authuser: any): Observable<any> {
+  assignRole(authuser: authUser): Observable<any> {
     return this.http.post<any>(this.url + 'POData/assignRole/', authuser, this.httpOptions);
   }
 

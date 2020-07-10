@@ -35,7 +35,7 @@ export class AssignRoleComponent implements OnInit {
     else
       this.router.navigateByUrl("Login");
     this.authUser = new authUser();
-    this.authUser.employeeid = 0;
+    this.authUser.employeeid = "";
     this.authUser.roleid = 0;
     this.authUser.createdby = this.employee.employeeno;
     this.getEmployees();
@@ -86,6 +86,7 @@ export class AssignRoleComponent implements OnInit {
         return false;
       }
       this.spinner.show();
+      //this.authUser.employeeid = '"' + this.authUser.employeeid + '"';
       this.wmsService.assignRole(this.authUser).subscribe(data => {
         this.spinner.hide();
         if (data) {
