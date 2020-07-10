@@ -177,6 +177,7 @@ namespace WMS.Models
 	public class POList
 	{
 		public string POno { get; set; }
+		public string qty { get; set; }
 		public int quotationqty { get; set; }
 	}
 

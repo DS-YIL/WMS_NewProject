@@ -384,47 +384,51 @@ namespace WMS.DAL
 						int totalissed = 0;
 						foreach (MaterialDetails mtData in MaterialList)
 						{
-							result = new MaterialDetails();
-							result.materialid = mtData.materialid;
-							result.materialdescription = mtData.materialdescription;
-							result.availableqty = mtData.availableqty;
-							result.grnnumber = mtData.grnnumber;
-							result.confirmqty = mtData.confirmqty;
-							//To get issued qty get data from material issue, material reserve and gatepassmaterial table
-							int issuedqty = 0;
-							int reservedqty = 0;
-							ReportModel modelobj = new ReportModel();
-							string matIssuedQuery = "select sum(issuedqty)as issuedqty from wms.wms_materialissue where itemid =" + mtData.itemid;
-							modelobj = pgsql.QuerySingleOrDefault<ReportModel>(
-											matIssuedQuery, null, commandType: CommandType.Text);
-							if (modelobj != null)
-							{
-								issuedqty = modelobj.issuedqty;
+							if(mtData.materialid!=null && mtData.materialid != "")
+                            {
+								result = new MaterialDetails();
+								result.materialid = mtData.materialid;
+								result.materialdescription = mtData.materialdescription;
+								result.availableqty = mtData.availableqty;
+								result.grnnumber = mtData.grnnumber;
+								result.confirmqty = mtData.confirmqty;
+								//To get issued qty get data from material issue, material reserve and gatepassmaterial table
+								int issuedqty = 0;
+								int reservedqty = 0;
+								ReportModel modelobj = new ReportModel();
+								string matIssuedQuery = "select sum(issuedqty)as issuedqty from wms.wms_materialissue where itemid =" + mtData.itemid;
+								modelobj = pgsql.QuerySingleOrDefault<ReportModel>(
+												matIssuedQuery, null, commandType: CommandType.Text);
+								if (modelobj != null)
+								{
+									issuedqty = modelobj.issuedqty;
+								}
+								//Get material reserved qty
+								ReserveMaterialModel modeldataobj = new ReserveMaterialModel();
+								string matReserveQuery = "select sum(reservedqty)as reservedqty from wms.wms_materialreserve where itemid =" + mtData.itemid;
+								modeldataobj = pgsql.QuerySingleOrDefault<ReserveMaterialModel>(
+												matReserveQuery, null, commandType: CommandType.Text);
+								if (modeldataobj != null)
+								{
+									reservedqty = modeldataobj.reservedqty;
+								}
+								int gatepassissuedqty = 0;
+
+								//get material in gatepass
+								gatepassModel obj = new gatepassModel();
+								string matgateQuery = "select sum(gtmat.quantity)as quantity from wms.wms_gatepassmaterial gtmat left join wms.wms_gatepass gp on gp.gatepassid = gtmat.gatepassid where materialid = '" + mtData.materialid + "' and gp.approvedon != null and gp.approverstatus!=null";
+								//IssueRequestModel obj = new IssueRequestModel();
+								//pgsql.Open();
+
+								obj = pgsql.QuerySingle<gatepassModel>(
+								   matgateQuery, null, commandType: CommandType.Text);
+
+								gatepassissuedqty = obj.quantity;
+								totalissed = Convert.ToInt32(issuedqty) + Convert.ToInt32(reservedqty) + gatepassissuedqty;
+								result.issued = totalissed;
+								objMaterial.Add(result);
 							}
-							//Get material reserved qty
-							ReserveMaterialModel modeldataobj = new ReserveMaterialModel();
-							string matReserveQuery = "select sum(reservedqty)as reservedqty from wms.wms_materialreserve where itemid =" + mtData.itemid;
-							modeldataobj = pgsql.QuerySingleOrDefault<ReserveMaterialModel>(
-											matReserveQuery, null, commandType: CommandType.Text);
-							if (modeldataobj != null)
-							{
-								reservedqty = modeldataobj.reservedqty;
-							}
-							int gatepassissuedqty = 0;
-
-							//get material in gatepass
-							gatepassModel obj = new gatepassModel();
-							string matgateQuery = "select sum(gtmat.quantity)as quantity from wms.wms_gatepassmaterial gtmat left join wms.wms_gatepass gp on gp.gatepassid = gtmat.gatepassid where materialid = '" + mtData.materialid + "' and gp.approvedon != null and gp.approverstatus!=null";
-							//IssueRequestModel obj = new IssueRequestModel();
-							//pgsql.Open();
-
-							obj = pgsql.QuerySingle<gatepassModel>(
-							   matgateQuery, null, commandType: CommandType.Text);
-
-							gatepassissuedqty = obj.quantity;
-							totalissed = Convert.ToInt32(issuedqty) + Convert.ToInt32(reservedqty) + gatepassissuedqty;
-							result.issued = totalissed;
-							objMaterial.Add(result);
+							
 						}
 					}
 
@@ -582,7 +586,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "getlocationdetails", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "getReqMatdetails", Ex.StackTrace.ToString());
 					return null;
 				}
 				finally

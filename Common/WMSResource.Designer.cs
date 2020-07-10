@@ -524,7 +524,9 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select distinct(pono),quotationqty from wms.openpolistview.
+        ///   Looks up a localized string similar to select pl.pono,sum(pomat.materialqty) as qty from wms.wms_polist pl
+        ///join wms.wms_pomaterials pomat on pl.pono= pomat.pono 
+        ///group by pl.pono.
         /// </summary>
         public static string getpolist {
             get {
