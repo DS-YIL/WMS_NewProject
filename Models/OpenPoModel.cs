@@ -179,6 +179,7 @@ namespace WMS.Models
 		public string POno { get; set; }
 		public string qty { get; set; }
 		public int quotationqty { get; set; }
+		public string status { get; set; }
 	}
 
 	//Invoice Details

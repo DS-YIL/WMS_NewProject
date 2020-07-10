@@ -106,19 +106,167 @@ namespace WMS.DAL
 			}
 		}
 
-		public async Task<IEnumerable<POList>> getPOList()
+
+		//Gayathri -get po numbers and qty
+		public async Task<IEnumerable<POList>> getPOList(string postatus)
 		{
+			
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
-
+				List<POList> objpo = null;
 				try
 				{
-					string query = WMSResource.getpolist;
+					//if(postatus=="Instock")
+					//               {
+					//	objpo = new List<POList>();
+					//	string query = WMSResource.getpolist;
+					//	await pgsql.OpenAsync();
+					//	var result= await pgsql.QueryAsync<POList>(
+					//	   query, null, commandType: CommandType.Text);
+
+					//	foreach(var podata in result)
+					//                   {
+					//		string poquery = "select count(*) from wms.wms_securityinward secinw join wms.wms_stock sk on secinw.inwmasterid = sk.inwmasterid where secinw.pono = '"+podata.POno+"'";
+
+					//		int? po = pgsql.QuerySingleOrDefault<int?>(
+					//							poquery, null, commandType: CommandType.Text);
+					//		if(po>0)
+					//                       {
+					//			podata.status = "Instock";
+					//			objpo.Add(podata);
+					//		}
+
+					//	}
+
+					//	return objpo;
+					//}
+					//else if(postatus== "SecurityCheck")
+					//               {
+					//	objpo = new List<POList>();
+					//	string query = WMSResource.getpolist;
+					//	await pgsql.OpenAsync();
+					//	var result = await pgsql.QueryAsync<POList>(
+					//	   query, null, commandType: CommandType.Text);
+
+					//	foreach (var podata in result)
+					//	{
+					//		string poquery = "select count(*) from wms.wms_securityinward secinw join wms.wms_stock sk on secinw.inwmasterid = sk.inwmasterid where secinw.pono = '" + podata.POno + "'";
+
+					//		int? po = pgsql.QuerySingleOrDefault<int?>(
+					//							poquery, null, commandType: CommandType.Text);
+
+					//		if (po == 0)
+					//		{
+					//			poquery = "select count(*) from wms.wms_securityinward secinw join wms.wms_storeinward sinw on secinw.inwmasterid = sinw.inwmasterid where secinw.pono = '" + podata.POno + "'";
+
+					//			 po = pgsql.QuerySingleOrDefault<int?>(
+					//								poquery, null, commandType: CommandType.Text);
+
+					//			if (po > 0)
+					//			{
+					//				podata.status = "Security Check";
+					//				objpo.Add(podata);
+					//			}
+					//		}
 
 
-					await pgsql.OpenAsync();
-					return await pgsql.QueryAsync<POList>(
-					   query, null, commandType: CommandType.Text);
+
+					//	}
+
+					//	return objpo;
+					//}
+					//else if(postatus== "Pending")
+					//               {
+					//	objpo = new List<POList>();
+					//	string query = WMSResource.getpolist;
+					//	await pgsql.OpenAsync();
+					//	var result = await pgsql.QueryAsync<POList>(
+					//	   query, null, commandType: CommandType.Text);
+
+					//	foreach (var podata in result)
+					//	{
+					//		string poquery = "select count(*) from wms.wms_securityinward secinw join wms.wms_stock sk on secinw.inwmasterid = sk.inwmasterid where secinw.pono = '" + podata.POno + "'";
+
+					//		int? po = pgsql.QuerySingleOrDefault<int?>(
+					//							poquery, null, commandType: CommandType.Text);
+
+					//		if (po == 0)
+					//		{
+					//			poquery = "select count(*) from wms.wms_securityinward secinw join wms.wms_storeinward sinw on secinw.inwmasterid = sinw.inwmasterid where secinw.pono = '" + podata.POno + "'";
+
+					//			po = pgsql.QuerySingleOrDefault<int?>(
+					//							   poquery, null, commandType: CommandType.Text);
+
+					//			if (po == 0)
+					//			{
+					//				 poquery = "select count(*) from wms.wms_securityinward where pono ='" + podata.POno + "'";
+
+					//				 po = pgsql.QuerySingleOrDefault<int?>(
+					//									poquery, null, commandType: CommandType.Text);
+					//				if (po == 0)
+					//				{
+					//					podata.status = "Pending";
+					//					objpo.Add(podata);
+					//				}
+					//			}
+					//		}
+					//	}
+
+					//	return objpo;
+					//}
+
+					if(postatus == "Instock")
+                    {
+						string query = "select mats.pono,SUM(mats.materialqty) as qty from wms.wms_pomaterials mats where mats.pono in (select DISTINCT sinw.pono from wms.wms_stock sinw) group by mats.pono";
+                        await pgsql.OpenAsync();
+                        var result= await pgsql.QueryAsync<POList>(
+                           query, null, commandType: CommandType.Text);
+						if(result!=null)
+                        {
+							foreach(var data in result)
+                            {
+								data.status = "Instock";
+							}
+							return result;
+                        }
+
+                    }
+					else if(postatus== "SecurityCheck")
+                    {
+						string query = "select mats.pono,SUM(mats.materialqty) as qty from wms.wms_pomaterials mats where mats.pono in (select DISTINCT sinw.pono from wms.wms_securityinward sinw where sinw.grnnumber is not null and sinw.pono not in (select  DISTINCT pono from wms.wms_stock))group by mats.pono";
+						await pgsql.OpenAsync();
+						var result = await pgsql.QueryAsync<POList>(
+						   query, null, commandType: CommandType.Text);
+
+						if (result != null)
+						{
+							foreach (var data in result)
+							{
+								data.status = "Security Check";
+							}
+							return result;
+						}
+
+					}
+					else if(postatus=="Pending")
+                    {
+						string query = "select mats.pono,SUM(mats.materialqty) as qty from wms.wms_pomaterials mats where mats.pono not in (select DISTINCT pono from wms.wms_securityinward) group by mats.pono";
+						await pgsql.OpenAsync();
+						var result = await pgsql.QueryAsync<POList>(
+						   query, null, commandType: CommandType.Text);
+						if (result != null)
+						{
+							foreach (var data in result)
+							{
+								data.status = "Pending";
+							}
+							return result;
+						}
+
+					}
+
+					return null;
+					
 
 
 				}

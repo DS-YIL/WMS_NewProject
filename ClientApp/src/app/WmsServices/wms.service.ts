@@ -64,8 +64,8 @@ export class wmsService {
     return this.http.get<any[]>(this.url + 'POData/GetOpenPoList?loginid=' + PoFilterParams.loginid + '&pono=' + PoFilterParams.PONo + '&docno=' + PoFilterParams.DocumentNo + '&vendorid=' + PoFilterParams.venderid + '', this.httpOptions);
   }
 
-  getPONumbers(): Observable<any[]> {
-    return this.http.get<any[]>(this.url + 'POData/GetPOList', this.httpOptions);
+  getPONumbers(postatus: string): Observable<any[]> {
+    return this.http.get<any[]>(this.url + 'POData/GetPOList?postatus=' + postatus, this.httpOptions);
   }
 
   //generate barcode for materials
