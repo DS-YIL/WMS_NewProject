@@ -245,8 +245,7 @@ namespace WMS.Common {
         ///  END as confirmqty,
         ///CASE
         ///     WHEN inw.returnedby is null THEN qc.qualityfailedqty
-        ///     ELSE  inw.returnqty
-        /// [rest of string was truncated]&quot;;.
+        ///     ELSE  inw.returnqty        /// [rest of string was truncated]&quot;;.
         /// </summary>
         public static string Getdetailsforthreewaymatching {
             get {
@@ -516,7 +515,9 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select distinct(pono),quotationqty from wms.openpolistview.
+        ///   Looks up a localized string similar to select pl.pono,sum(pomat.materialqty) as qty from wms.wms_polist pl
+        ///join wms.wms_pomaterials pomat on pl.pono= pomat.pono 
+        ///group by pl.pono.
         /// </summary>
         public static string getpolist {
             get {
