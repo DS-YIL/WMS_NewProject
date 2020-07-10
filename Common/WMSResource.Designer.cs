@@ -88,7 +88,12 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select distinct* from wms.openpolistview openpo left join wms.wms_securityinward inw on openpo.pono=inw.pono where openpo.pono=&apos;#pono&apos;  order by receiveddate desc limit 1.
+        ///   Looks up a localized string similar to select distinct* from wms.wms_polist openpo
+        ///        left join wms.wms_securityinward inw on openpo.pono=inw.pono 
+        ///        left join wms.wms_pomaterials pomat on pomat.pono=openpo.pono
+        ///         left join wms.wms_project pro on pro.pono=openpo.pono
+        ///        where openpo.pono=&apos;#pono&apos;  
+        ///        order by receiveddate desc limit 1.
         /// </summary>
         public static string checkponoexists {
             get {
@@ -222,12 +227,12 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select sum(iss.issuedqty) as issuedqty,op.jobname,req.requestforissueid,emp.&quot;name&quot;,req.requesteddate,sk.materialid,sk.pono,req.requestedquantity,sk.availableqty,req.requestid from wms.wms_stock sk 
-        ///      inner join wms.openpolistview op on op.pono=sk.pono
+        ///   Looks up a localized string similar to select sum(iss.issuedqty) as issuedqty,pro.jobname,req.requestforissueid,emp.&quot;name&quot;,req.requesteddate,sk.materialid,sk.pono,req.requestedquantity,sk.availableqty,req.requestid from wms.wms_stock sk 
+        ///      inner join wms.wms_polist op on op.pono=sk.pono
         ///       inner join wms.wms_materialrequest req on req.materialid=sk.materialid
         ///      inner join wms.wms_materialissue iss on iss.itemid=sk.itemid
         ///      inner join wms.employee emp on emp.employeeno=req.requesterid
-        /// where requestid=#requestid and req.de [rest of string was truncated]&quot;;.
+        ///      left join wms.wms_pomaterials pomat [rest of string was truncated]&quot;;.
         /// </summary>
         public static string GetdetailsByrequestid {
             get {
@@ -245,8 +250,7 @@ namespace WMS.Common {
         ///  END as confirmqty,
         ///CASE
         ///     WHEN inw.returnedby is null THEN qc.qualityfailedqty
-        ///     ELSE  inw.returnqty
-        /// [rest of string was truncated]&quot;;.
+        ///     ELSE  inw.returnqty        /// [rest of string was truncated]&quot;;.
         /// </summary>
         public static string Getdetailsforthreewaymatching {
             get {
@@ -377,11 +381,13 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select req.pono,req.requestid,req.requesteddate,req.requesterid,po.projectname,emp.&quot;name&quot; 
-        /// from wms.wms_materialrequest req left join wms.openpolistview po on po.pono=req.pono 
-        ///left join wms.employee emp on req.requesterid=emp.employeeno 
-        ///--where req.approverid=&apos;#approverid&apos;
-        ///group by req.requestid,req.requesteddate,req.requesterid,po.projectname,emp.&quot;name&quot;,req.pono  order by req.requestid desc.
+        ///   Looks up a localized string similar to select req.pono,req.requestid,req.requesteddate,req.requesterid,pro.projectname,emp.&quot;name&quot;
+        ///        from wms.wms_materialrequest req left join wms.wms_polist po on po.pono=req.pono 
+        ///       left join wms.employee emp on req.requesterid=emp.employeeno 
+        ///       left join wms.wms_pomaterials pomat on pomat.pono=po.pono
+        ///       left join wms.wms_project pro on pro.pono=po.pono
+        ///        --where req.approverid=&apos;#approverid&apos;
+        ///        group by req.requestid,req.requesteddate,req.requesterid,pro.projectname,emp.&quot;nam [rest of string was truncated]&quot;;.
         /// </summary>
         public static string GetListForMaterialRequestByapproverid {
             get {
@@ -456,11 +462,13 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select distinct max(res.reserveformaterialid) as reserveformaterialid, max(sk.availableqty)as availableqty,res.pono,max(res.materialid)as materialid,max(res.reserveid) as reserveid,max(op.jobname)as jobname,max(res.reservedon)as reservedon,max(res.reservedqty)as reservedqty,max(emp.&quot;name&quot;)as name from wms.wms_materialreserve res
+        ///   Looks up a localized string similar to select distinct max(res.reserveformaterialid) as reserveformaterialid, max(sk.availableqty)as availableqty,res.pono,max(res.materialid)as materialid,max(res.reserveid) as reserveid,
+        /// max(pro.jobname)as jobname,max(res.reservedon)as reservedon,max(res.reservedqty)as reservedqty,max(emp.&quot;name&quot;)as name 
+        /// from wms.wms_materialreserve res
         ///inner join wms.employee emp on emp.employeeno=res.reservedby
         ///inner join wms.wms_stock sk on sk.pono=res.pono 
-        ///left join wms.openpolistview op on op.pono=res.pono
-        ///where reserveid [rest of string was truncated]&quot;;.
+        ///left join wms.wms_polist op on op.pono=res.pono
+        ///left join wm [rest of string was truncated]&quot;;.
         /// </summary>
         public static string getmaterialdetailsbyreserveid {
             get {

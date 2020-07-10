@@ -118,24 +118,33 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="checkponoexists" xml:space="preserve">
-    <value>select distinct* from wms.openpolistview openpo left join wms.wms_securityinward inw on openpo.pono=inw.pono where openpo.pono='#pono'  order by receiveddate desc limit 1</value>
+    <value>select distinct* from wms.wms_polist openpo
+        left join wms.wms_securityinward inw on openpo.pono=inw.pono 
+        left join wms.wms_pomaterials pomat on pomat.pono=openpo.pono
+         left join wms.wms_project pro on pro.pono=openpo.pono
+        where openpo.pono='#pono'  
+        order by receiveddate desc limit 1</value>
     <comment>checkpono</comment>
   </data>
   <data name="GetdetailsByrequestid" xml:space="preserve">
-    <value>select sum(iss.issuedqty) as issuedqty,op.jobname,req.requestforissueid,emp."name",req.requesteddate,sk.materialid,sk.pono,req.requestedquantity,sk.availableqty,req.requestid from wms.wms_stock sk 
-      inner join wms.openpolistview op on op.pono=sk.pono
+    <value>select sum(iss.issuedqty) as issuedqty,pro.jobname,req.requestforissueid,emp."name",req.requesteddate,sk.materialid,sk.pono,req.requestedquantity,sk.availableqty,req.requestid from wms.wms_stock sk 
+      inner join wms.wms_polist op on op.pono=sk.pono
        inner join wms.wms_materialrequest req on req.materialid=sk.materialid
       inner join wms.wms_materialissue iss on iss.itemid=sk.itemid
       inner join wms.employee emp on emp.employeeno=req.requesterid
+      left join wms.wms_pomaterials pomat on pomat.pono=op.pono
+      left join wms.wms_project pro on pro.pono=op.pono
  where requestid=#requestid and req.deleteflag=false and sk.availableqty!=0 and sk.pono='#pono' 
- group by req.requestforissueid,sk.materialid,sk.pono,req.requestedquantity,sk.availableqty,req.requestid,emp."name",req.requesteddate,op.jobname</value>
+ group by req.requestforissueid,sk.materialid,sk.pono,req.requestedquantity,sk.availableqty,req.requestid,emp."name",req.requesteddate,pro.jobname</value>
   </data>
   <data name="GetListForMaterialRequestByapproverid" xml:space="preserve">
-    <value>select req.pono,req.requestid,req.requesteddate,req.requesterid,po.projectname,emp."name" 
- from wms.wms_materialrequest req left join wms.openpolistview po on po.pono=req.pono 
-left join wms.employee emp on req.requesterid=emp.employeeno 
---where req.approverid='#approverid'
-group by req.requestid,req.requesteddate,req.requesterid,po.projectname,emp."name",req.pono  order by req.requestid desc</value>
+    <value>select req.pono,req.requestid,req.requesteddate,req.requesterid,pro.projectname,emp."name"
+        from wms.wms_materialrequest req left join wms.wms_polist po on po.pono=req.pono 
+       left join wms.employee emp on req.requesterid=emp.employeeno 
+       left join wms.wms_pomaterials pomat on pomat.pono=po.pono
+       left join wms.wms_project pro on pro.pono=po.pono
+        --where req.approverid='#approverid'
+        group by req.requestid,req.requesteddate,req.requesterid,pro.projectname,emp."name",req.pono  order by req.requestid desc</value>
   </data>
   <data name="GetListForMaterialRequestByrequesterid" xml:space="preserve">
     <value>select * from wms.wms_materialrequest where requesterid='#requesterid'</value>
@@ -488,10 +497,14 @@ left outer join wms.wms_asn asno on asno.pono = sl.pono
 left outer join wms.employee emp on sl.receivedby = emp.employeeno</value>
   </data>
   <data name="getmaterialdetailsbyreserveid" xml:space="preserve">
-    <value>select distinct max(res.reserveformaterialid) as reserveformaterialid, max(sk.availableqty)as availableqty,res.pono,max(res.materialid)as materialid,max(res.reserveid) as reserveid,max(op.jobname)as jobname,max(res.reservedon)as reservedon,max(res.reservedqty)as reservedqty,max(emp."name")as name from wms.wms_materialreserve res
+    <value>select distinct max(res.reserveformaterialid) as reserveformaterialid, max(sk.availableqty)as availableqty,res.pono,max(res.materialid)as materialid,max(res.reserveid) as reserveid,
+ max(pro.jobname)as jobname,max(res.reservedon)as reservedon,max(res.reservedqty)as reservedqty,max(emp."name")as name 
+ from wms.wms_materialreserve res
 inner join wms.employee emp on emp.employeeno=res.reservedby
 inner join wms.wms_stock sk on sk.pono=res.pono 
-left join wms.openpolistview op on op.pono=res.pono
+left join wms.wms_polist op on op.pono=res.pono
+left join wms.wms_pomaterials pomat on pomat.pono=op.pono
+left join wms.wms_project pro on pro.pono=op.pono
 where reserveid=#reserveid and sk.availableqty&gt;0
 group by res.pono</value>
   </data>
