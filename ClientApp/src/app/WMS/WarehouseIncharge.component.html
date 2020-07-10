@@ -29,7 +29,7 @@
         <ng-template pTemplate="header">
           <tr class="mprltbldata">
             <th style="text-align:center;width:70px">Sl.No.</th>
-            <th style="width:200px;text-align:center">Project Name</th>
+            <!--<th style="width:200px;text-align:center">Project Name</th>-->
             <th style="width:100px;text-align:center">Material</th>
             <th style="width:120px;text-align:center">Material Description</th>
             <th style="width:100px;text-align:center">Material Quantity</th>
@@ -43,7 +43,7 @@
           </tr>
           <tr>
             <th></th>
-            <th> <input pInputText type="text" style="width:100%;" class="form-control" (input)="dt.filter($event.target.value, 'projectname', 'contains')"></th>
+            <!--<th> <input pInputText type="text" style="width:100%;" class="form-control" (input)="dt.filter($event.target.value, 'projectname', 'contains')"></th>-->
             <th> <input pInputText type="text" style="width:100%;" class="form-control" (input)="dt.filter($event.target.value, 'material', 'contains')"></th>
             <th> <input pInputText type="text" style="width:100%;" class="form-control" (input)="dt.filter($event.target.value, 'materialdescription', 'contains')"></th>
             <th> <input pInputText type="text" style="width:100%;" class="form-control" (input)="dt.filter($event.target.value, 'materialqty', 'contains')"></th>
@@ -59,7 +59,7 @@
         <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
           <tr>
             <td class="ptable-cell" style="text-align:right;width:70px">{{ri+1}}</td>
-            <td class="ptable-cell" style="text-align: left;width:200px;">{{rowData.projectname}}</td>
+            <!--<td class="ptable-cell" style="text-align: left;width:200px;">{{rowData.projectname}}</td>-->
             <td class="ptable-cell" style="text-align:center;width:100px;">{{rowData.material}}</td>
             <td class="ptable-cell" style="text-align:left;width:120px;">{{rowData.materialdescription}}</td>
             <td class="ptable-cell" style="text-align:right;width:100px;">{{rowData.materialqty}}</td>
