@@ -17,6 +17,7 @@ import { DatePipe } from '@angular/common';
 export class WarehouseInchargeComponent implements OnInit {
     binid: any;
     rackid: any;
+    isnonpo: boolean=false;
 
   constructor(private formBuilder: FormBuilder, private messageService: MessageService, private datePipe: DatePipe, private wmsService: wmsService, private route: ActivatedRoute, private router: Router, public constants: constants, private spinner: NgxSpinnerService) { }
 
@@ -219,7 +220,9 @@ export class WarehouseInchargeComponent implements OnInit {
   }
 
   SearchGRNNo() {
+
     if (this.PoDetails.grnnumber) {
+      this.isnonpo = false;
       this.spinner.show();
       this.podetailsList = [];
       this.wmsService.getitemdetailsbygrnno(this.PoDetails.grnnumber).subscribe(data => {
@@ -228,6 +231,10 @@ export class WarehouseInchargeComponent implements OnInit {
           //this.PoDetails = data[0];
           this.podetailsList = data;
           this.showDetails = true;
+          var ponumber = this.podetailsList[0].pono;
+          if (ponumber.startsWith("NP")) {
+            this.isnonpo = true;
+          }
         }
         else
           this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'No data for this GRN No' });
@@ -298,7 +305,7 @@ export class WarehouseInchargeComponent implements OnInit {
     
       //if (binnumber.length == 0)
       //  this.StockModel.itemlocation += '.' + binnumber[0].binnumber;
-      if (binnumber.length == 0)
+      //if (binnumber.length == 0)
         
       this.wmsService.InsertStock(this.StockModel).subscribe(data => {
         // if (data) {
