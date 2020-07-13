@@ -66,7 +66,7 @@
               <th *ngIf="qualitychecked" style="text-align: center;width:10%;">Accepted Qty</th>
               <th *ngIf="qualitychecked" style="text-align:center;width:10%;">Returned Qty</th>
               <th *ngIf="qualitychecked" style="text-align:center;width:15%;">Remarks</th>
-              <th *ngIf="qualitychecked" style="text-align:center;width:10%;">status</th>
+              <th *ngIf="qualitychecked" style="text-align:center;width:10%;">Quality status</th>
               <th *ngIf="!qualitychecked" style="text-align:center;width:10%;">Quality Check Required</th>
 
             </tr>
@@ -129,7 +129,7 @@
                 <span [innerText]="getstatus(rowData)"></span>
               </td>
               <td style="text-align:center;width:10%;" *ngIf="!qualitychecked">
-                <input type="checkbox" [(ngModel)]="rowData.qualitycheck" />
+                <input type="checkbox" [disabled]="grnnumber" [(ngModel)]="rowData.qualitycheck" />
               </td>
               <!--<td class="ptable-cell">
     <div style="text-align: center;">

@@ -620,7 +620,7 @@ namespace WMS.DAL
 					}
                     else
                     {
-						string query1 = WMSResource.getinwardidbygrn.Replace("#grnno", pono);
+						string query1 = WMSResource.getinwardidbygrn.Replace("#grnno", grnno);
 						obj = pgsql.QuerySingle<inwardModel>(
 						query1, null, commandType: CommandType.Text);
 					}

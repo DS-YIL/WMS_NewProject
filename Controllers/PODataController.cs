@@ -100,8 +100,8 @@ namespace WMS.Controllers
 				isgrn = true;
 				grn = po;
             }
-			string ponodata = ponoandinvoice[0];
-			string invoiceno = ponoandinvoice[1];
+			string ponodata = ponoandinvoice[0].Trim();
+			string invoiceno = ponoandinvoice[1].Trim();
 			return await this._poService.GetDeatilsForthreeWaymatching(invoiceno, ponodata,isgrn,grn);
 		}
 
