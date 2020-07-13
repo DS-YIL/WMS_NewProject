@@ -5,7 +5,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { constants } from '../Models/WMSConstants'
 import { Employee, Login, DynamicSearchResult, printMaterial } from '../Models/Common.Model';
-import { PoFilterParams, PoDetails, BarcodeModel, StockModel, materialRequestDetails, inwardModel, gatepassModel, Materials } from '../Models/WMS.Model';
+import { PoFilterParams, PoDetails, BarcodeModel, StockModel, materialRequestDetails, inwardModel, gatepassModel, Materials, authUser } from '../Models/WMS.Model';
 import { Text } from '@angular/compiler/src/i18n/i18n_ast';
 
 @Injectable({
@@ -64,8 +64,8 @@ export class wmsService {
     return this.http.get<any[]>(this.url + 'POData/GetOpenPoList?loginid=' + PoFilterParams.loginid + '&pono=' + PoFilterParams.PONo + '&docno=' + PoFilterParams.DocumentNo + '&vendorid=' + PoFilterParams.venderid + '', this.httpOptions);
   }
 
-  getPONumbers(): Observable<any[]> {
-    return this.http.get<any[]>(this.url + 'POData/GetPOList', this.httpOptions);
+  getPONumbers(postatus: string): Observable<any[]> {
+    return this.http.get<any[]>(this.url + 'POData/GetPOList?postatus=' + postatus, this.httpOptions);
   }
 
   //generate barcode for materials
@@ -268,7 +268,7 @@ export class wmsService {
     return this.http.post<any>(this.url + 'POData/updateMaterialavailabality', materialList, this.httpOptions);
   }
 
-  assignRole(authuser: any): Observable<any> {
+  assignRole(authuser: authUser): Observable<any> {
     return this.http.post<any>(this.url + 'POData/assignRole/', authuser, this.httpOptions);
   }
 

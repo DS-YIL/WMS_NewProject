@@ -106,19 +106,167 @@ namespace WMS.DAL
 			}
 		}
 
-		public async Task<IEnumerable<POList>> getPOList()
+
+		//Gayathri -get po numbers and qty
+		public async Task<IEnumerable<POList>> getPOList(string postatus)
 		{
+			
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
-
+				List<POList> objpo = null;
 				try
 				{
-					string query = WMSResource.getpolist;
+					//if(postatus=="Instock")
+					//               {
+					//	objpo = new List<POList>();
+					//	string query = WMSResource.getpolist;
+					//	await pgsql.OpenAsync();
+					//	var result= await pgsql.QueryAsync<POList>(
+					//	   query, null, commandType: CommandType.Text);
+
+					//	foreach(var podata in result)
+					//                   {
+					//		string poquery = "select count(*) from wms.wms_securityinward secinw join wms.wms_stock sk on secinw.inwmasterid = sk.inwmasterid where secinw.pono = '"+podata.POno+"'";
+
+					//		int? po = pgsql.QuerySingleOrDefault<int?>(
+					//							poquery, null, commandType: CommandType.Text);
+					//		if(po>0)
+					//                       {
+					//			podata.status = "Instock";
+					//			objpo.Add(podata);
+					//		}
+
+					//	}
+
+					//	return objpo;
+					//}
+					//else if(postatus== "SecurityCheck")
+					//               {
+					//	objpo = new List<POList>();
+					//	string query = WMSResource.getpolist;
+					//	await pgsql.OpenAsync();
+					//	var result = await pgsql.QueryAsync<POList>(
+					//	   query, null, commandType: CommandType.Text);
+
+					//	foreach (var podata in result)
+					//	{
+					//		string poquery = "select count(*) from wms.wms_securityinward secinw join wms.wms_stock sk on secinw.inwmasterid = sk.inwmasterid where secinw.pono = '" + podata.POno + "'";
+
+					//		int? po = pgsql.QuerySingleOrDefault<int?>(
+					//							poquery, null, commandType: CommandType.Text);
+
+					//		if (po == 0)
+					//		{
+					//			poquery = "select count(*) from wms.wms_securityinward secinw join wms.wms_storeinward sinw on secinw.inwmasterid = sinw.inwmasterid where secinw.pono = '" + podata.POno + "'";
+
+					//			 po = pgsql.QuerySingleOrDefault<int?>(
+					//								poquery, null, commandType: CommandType.Text);
+
+					//			if (po > 0)
+					//			{
+					//				podata.status = "Security Check";
+					//				objpo.Add(podata);
+					//			}
+					//		}
 
 
-					await pgsql.OpenAsync();
-					return await pgsql.QueryAsync<POList>(
-					   query, null, commandType: CommandType.Text);
+
+					//	}
+
+					//	return objpo;
+					//}
+					//else if(postatus== "Pending")
+					//               {
+					//	objpo = new List<POList>();
+					//	string query = WMSResource.getpolist;
+					//	await pgsql.OpenAsync();
+					//	var result = await pgsql.QueryAsync<POList>(
+					//	   query, null, commandType: CommandType.Text);
+
+					//	foreach (var podata in result)
+					//	{
+					//		string poquery = "select count(*) from wms.wms_securityinward secinw join wms.wms_stock sk on secinw.inwmasterid = sk.inwmasterid where secinw.pono = '" + podata.POno + "'";
+
+					//		int? po = pgsql.QuerySingleOrDefault<int?>(
+					//							poquery, null, commandType: CommandType.Text);
+
+					//		if (po == 0)
+					//		{
+					//			poquery = "select count(*) from wms.wms_securityinward secinw join wms.wms_storeinward sinw on secinw.inwmasterid = sinw.inwmasterid where secinw.pono = '" + podata.POno + "'";
+
+					//			po = pgsql.QuerySingleOrDefault<int?>(
+					//							   poquery, null, commandType: CommandType.Text);
+
+					//			if (po == 0)
+					//			{
+					//				 poquery = "select count(*) from wms.wms_securityinward where pono ='" + podata.POno + "'";
+
+					//				 po = pgsql.QuerySingleOrDefault<int?>(
+					//									poquery, null, commandType: CommandType.Text);
+					//				if (po == 0)
+					//				{
+					//					podata.status = "Pending";
+					//					objpo.Add(podata);
+					//				}
+					//			}
+					//		}
+					//	}
+
+					//	return objpo;
+					//}
+
+					if(postatus == "Instock")
+                    {
+						string query = "select mats.pono,SUM(mats.materialqty) as qty from wms.wms_pomaterials mats where mats.pono in (select DISTINCT sinw.pono from wms.wms_stock sinw) group by mats.pono";
+                        await pgsql.OpenAsync();
+                        var result= await pgsql.QueryAsync<POList>(
+                           query, null, commandType: CommandType.Text);
+						if(result!=null)
+                        {
+							foreach(var data in result)
+                            {
+								data.status = "Instock";
+							}
+							return result;
+                        }
+
+                    }
+					else if(postatus== "SecurityCheck")
+                    {
+						string query = "select mats.pono,SUM(mats.materialqty) as qty from wms.wms_pomaterials mats where mats.pono in (select DISTINCT sinw.pono from wms.wms_securityinward sinw where sinw.grnnumber is not null and sinw.pono not in (select  DISTINCT pono from wms.wms_stock))group by mats.pono";
+						await pgsql.OpenAsync();
+						var result = await pgsql.QueryAsync<POList>(
+						   query, null, commandType: CommandType.Text);
+
+						if (result != null)
+						{
+							foreach (var data in result)
+							{
+								data.status = "Security Check";
+							}
+							return result;
+						}
+
+					}
+					else if(postatus=="Pending")
+                    {
+						string query = "select mats.pono,SUM(mats.materialqty) as qty from wms.wms_pomaterials mats where mats.pono not in (select DISTINCT pono from wms.wms_securityinward) group by mats.pono";
+						await pgsql.OpenAsync();
+						var result = await pgsql.QueryAsync<POList>(
+						   query, null, commandType: CommandType.Text);
+						if (result != null)
+						{
+							foreach (var data in result)
+							{
+								data.status = "Pending";
+							}
+							return result;
+						}
+
+					}
+
+					return null;
+					
 
 
 				}
@@ -389,12 +537,19 @@ namespace WMS.DAL
 								result = new MaterialDetails();
 								result.materialid = mtData.materialid;
 								result.materialdescription = mtData.materialdescription;
-								result.availableqty = mtData.availableqty;
+								//result.availableqty = mtData.availableqty;
 								result.grnnumber = mtData.grnnumber;
 								result.confirmqty = mtData.confirmqty;
 								//To get issued qty get data from material issue, material reserve and gatepassmaterial table
 								int issuedqty = 0;
 								int reservedqty = 0;
+
+								Enquirydata enquiryobj = new Enquirydata();
+								string availableQtyqry = "select sum(availableqty) as availableqty from wms.wms_stock where materialid ='" + mtData.materialid + "' and pono='" +mtData.pono+ "' and inwmasterid ="+mtData.inwmasterid;
+								enquiryobj = pgsql.QuerySingleOrDefault<Enquirydata>(
+												availableQtyqry, null, commandType: CommandType.Text);
+								result.availableqty = enquiryobj.availableqty;
+
 								ReportModel modelobj = new ReportModel();
 								string matIssuedQuery = "select sum(issuedqty)as issuedqty from wms.wms_materialissue where itemid =" + mtData.itemid;
 								modelobj = pgsql.QuerySingleOrDefault<ReportModel>(
@@ -416,7 +571,8 @@ namespace WMS.DAL
 
 								//get material in gatepass
 								gatepassModel obj = new gatepassModel();
-								string matgateQuery = "select sum(gtmat.quantity)as quantity from wms.wms_gatepassmaterial gtmat left join wms.wms_gatepass gp on gp.gatepassid = gtmat.gatepassid where materialid = '" + mtData.materialid + "' and gp.approvedon != null and gp.approverstatus!=null";
+								//string matgateQuery = "select sum(gtmat.quantity)as quantity from wms.wms_gatepassmaterial gtmat left join wms.wms_gatepass gp on gp.gatepassid = gtmat.gatepassid where materialid = '" + mtData.materialid + "' and gp.approvedon != null and gp.approverstatus!=null";
+								string matgateQuery = "select sum(gtmat.quantity)as quantity from wms.wms_gatepassmaterial gtmat left join wms.wms_gatepass gp on gp.gatepassid = gtmat.gatepassid left join wms.wms_materialissue matiss on matiss.itemid = '" + mtData.itemid + "'where materialid = '" + mtData.materialid + "' and gp.approvedon != null and gp.approverstatus != null and matiss.gatepassmaterialid = gtmat.gatepassmaterialid";
 								//IssueRequestModel obj = new IssueRequestModel();
 								//pgsql.Open();
 
@@ -565,7 +721,8 @@ namespace WMS.DAL
 					objs.approvername = data1.approvername;
 					objs.acknowledge = data1.requestername;
 					listobj.Add(objs);
-					string gatepassquery = " select max(gate.gatepasstype)as gatepasstype,sum(mat.quantity)as quantity,max(gate.approvedon) as issuedon,max(emp.name) as requestername,max(emp1.name) as approvername from wms.wms_gatepass gate  inner join wms.wms_gatepassmaterial mat on mat.gatepassid = gate.gatepassid  left join wms.employee emp on emp.employeeno = gate.requestedby left join wms.employee emp1 on emp1.employeeno = gate.approvedby where mat.materialid = '" + obj.materialid + "' and gate.approvedon != null and gate.approverstatus!=null";
+					//string gatepassquery = " select max(gate.gatepasstype)as gatepasstype,sum(mat.quantity)as quantity,max(gate.approvedon) as issuedon,max(emp.name) as requestername,max(emp1.name) as approvername from wms.wms_gatepass gate  inner join wms.wms_gatepassmaterial mat on mat.gatepassid = gate.gatepassid  left join wms.employee emp on emp.employeeno = gate.requestedby left join wms.employee emp1 on emp1.employeeno = gate.approvedby where mat.materialid = '" + obj.materialid + "' and gate.approvedon != null and gate.approverstatus!=null";
+					string gatepassquery = "select max(gate.gatepasstype)as gatepasstype,sum(wmissue.issuedqty)as quantity,max(gate.approvedon) as issuedon,max(emp.name) as requestername,max(emp1.name) as approvername from wms.wms_gatepass gate  inner join wms.wms_gatepassmaterial mat on mat.gatepassid = gate.gatepassid  left join wms.employee emp on emp.employeeno = gate.requestedby left join wms.employee emp1 on emp1.employeeno = gate.approvedbyjoin wms.wms_materialissue wmissue  on mat.gatepassmaterialid = wmissue.gatepassmaterialidwhere mat.materialid = '" + obj.materialid + "' and gate.approvedon != null and gate.approverstatus != null";
 					var data2 = pgsql.QuerySingleOrDefault<ReqMatDetails>(
 				   gatepassquery, null, commandType: CommandType.Text);
 					objs = new ReqMatDetails();

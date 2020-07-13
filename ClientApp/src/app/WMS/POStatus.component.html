@@ -5,37 +5,57 @@
     </span>
   </div>
   <div class="card-body" style="overflow-y:scroll">
-    <p-table #dt [columns]="cols" [value]="poList">
-      <!--<ng-template pTemplate="caption">
+    <br/><br/>
+         <div class="row">
+           <div class="col-lg-3 col-md-3 col-sm-3 form-group"></div>
+           <div class="col-lg-1 col-md-1 col-sm-1 form-group">
+             <h4><label class="form-label">Status:</label></h4>
+           </div>
+           <div class="col-lg-3 col-md-3 col-sm-3 form-group">
+             <select placeholder="Status" name="Status" (change)="onSelectStatus($event)" class="form-control">
+               <option value="Instock"> Instock</option>
+               <option value="SecurityCheck"> Security Check</option>
+               <option value="Pending"> Pending</option>
+             </select>
+           </div>
+           <div class="col-lg-2 col-md-2 col-sm-2 form-group">
+             <button type="submit" class="btn btn-info float-left" (click)="SubmitStatus()" style=" height: 35px;">Submit</button>
+           </div>
+           </div>
+    <br/>
+           <p-table #dt [columns]="cols" [value]="poList">
+             <!--<ng-template pTemplate="caption">
       <div class="ui-helper-clearfix" style="text-align: left">
         <button type="button" pButton icon="pi pi-file-excel" iconPos="left" label="EXCEL" (click)="exportExcel()" style="margin-right: 0.5em;" class="ui-button-success"></button>
         <button type="button" pButton icon="pi pi-file-pdf" iconPos="left" label="PDF" (click)="exportPdf()" class="ui-button-warning"></button>
       </div>
     </ng-template>-->
-      <ng-template pTemplate="header" let-columns>
-        <tr class="mprltbldata">
-          <th style="text-align:center;width:70px">Sl.No.</th>
-          <th style="text-align:center;" *ngFor="let col of columns" style="text-align:center;">
-            {{col.header}}
-          </th>
-        </tr>
-        <tr>
-          <th></th>
-          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'pOno', 'contains')"></th>
-          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'qty', 'contains')"></th>
-        </tr>
-      </ng-template>
-      <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
-        <tr>
-          <td class="ptable-cell" style="text-align:center">
-            {{ri+1}}
-          </td>
-          <td class="ptable-cell" style="text-align:center"><a style="color:#36f !important" (click)="InvoiceDetails(rowData.pOno,rowData.qty)">{{rowData.pOno}}</a></td>
-          <td class="ptable-cell" style="text-align:right">{{rowData.qty}}</td>
-        </tr>
-      </ng-template>
-    </p-table>
-  </div>
+             <ng-template pTemplate="header" let-columns>
+               <tr class="mprltbldata">
+                 <th style="text-align:center;width:70px">Sl.No.</th>
+                 <th style="text-align:center;" *ngFor="let col of columns">
+                   {{col.header}}
+                 </th>
+               </tr>
+               <tr>
+                 <th></th>
+                 <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'pOno', 'contains')"></th>
+                 <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'qty', 'contains')"></th>
+                 <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'status', 'contains')"></th>
+               </tr>
+             </ng-template>
+             <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
+               <tr>
+                 <td class="ptable-cell" style="text-align:center">
+                   {{ri+1}}
+                 </td>
+                 <td class="ptable-cell" style="text-align:center"><a style="color:#36f !important" (click)="InvoiceDetails(rowData.pOno,rowData.qty)">{{rowData.pOno}}</a></td>
+                 <td class="ptable-cell" style="  text-align: right; width: 90px">{{rowData.qty}}</td>
+                 <td class="ptable-cell" style="text-align:left;width:250px">{{rowData.status}}</td>
+               </tr>
+             </ng-template>
+           </p-table>
+         </div>
   </div>
 
   

@@ -188,7 +188,7 @@ export class FIFOValues {
 
 export class authUser {
   authid: number;
-  employeeid: number;
+  employeeid: string;
   roleid: number;
   createdby: string;
 }

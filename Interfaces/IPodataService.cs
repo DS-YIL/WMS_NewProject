@@ -9,7 +9,7 @@ namespace WMS.Interfaces
     {
         Task<IEnumerable<T>> getOpenPoList(string loginid,string pono = null, string docno = null, string vendorid = null);
 
-        Task<IEnumerable<POList>> getPOList();
+        Task<IEnumerable<POList>> getPOList(string postatus);
 
         //Get invoice details for PO no
         Task<IEnumerable<InvoiceDetails>> getinvoiveforpo(string PONO);

@@ -32,9 +32,9 @@ namespace WMS.Controllers
 		}
 //Get list of PO 
         [HttpGet("GetPOList")]
-        public async Task<IEnumerable<POList>> GetPoNo()
+        public async Task<IEnumerable<POList>> GetPoNo(string postatus)
         {
-            return await this._poService.getPOList();
+            return await this._poService.getPOList(postatus);
         }
 		[HttpGet("CheckPoNoexists")]
 		public OpenPoModel CheckPo(string PONO)
