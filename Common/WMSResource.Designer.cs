@@ -703,7 +703,16 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to insert into wms.wms_gatepass(gatepassid, gatepasstype, status, referenceno, vehicleno, requestedby, requestedon,deleteflag,vendorname,print,reasonforgatepass,approverid)values(default,@gatepasstype,@status,@referenceno,@vehicleno, @requestedby,@requestedon,@deleteflag,@vendorname,&apos;true&apos;,@reasonforgatepass,@approverid)returning gatepassid.
+        ///   Looks up a localized string similar to insert into wms.wms_gatepassapprovals(historyid,gatepassid,approverid,approvername,approverstatus,&quot;label&quot;)values(default,@gatepassid,@approverid,@approvername,&apos;Pending&apos;,@label).
+        /// </summary>
+        public static string insertgatepassapprovalhistory {
+            get {
+                return ResourceManager.GetString("insertgatepassapprovalhistory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to insert into wms.wms_gatepass(gatepassid, gatepasstype, status, referenceno, vehicleno, requestedby, requestedon,deleteflag,vendorname,print,reasonforgatepass,approverid,fmapproverid)values(default,@gatepasstype,@status,@referenceno,@vehicleno, @requestedby,@requestedon,@deleteflag,@vendorname,&apos;true&apos;,@reasonforgatepass,@approverid,@fmapproverid)returning gatepassid.
         /// </summary>
         public static string insertgatepassdata {
             get {
@@ -1051,6 +1060,16 @@ namespace WMS.Common {
         public static string updategatepassapproverstatus {
             get {
                 return ResourceManager.GetString("updategatepassapproverstatus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to insert into wms.wms_gatepassapprovals(historyid,gatepassid,fmapproverid,fmapprovername,fmapproverstatus,&quot;label&quot;)
+        ///values(default,@gatepassid,@fmapproverid,@fmapprovername,&apos;Pending&apos;,@label).
+        /// </summary>
+        public static string updategatepasshistoryfornonreturn {
+            get {
+                return ResourceManager.GetString("updategatepasshistoryfornonreturn", resourceCulture);
             }
         }
         

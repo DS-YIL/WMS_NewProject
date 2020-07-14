@@ -297,7 +297,7 @@ namespace WMS.Models
     }
     public class gatepassModel
     {
-		
+		public string managername { get; set; }
 		public string pono { get; set; }
 		public int itemid { get; set; }
 		public string itemreturnable { get; set; }
@@ -337,6 +337,11 @@ namespace WMS.Models
 		public DateTime itemissueddate { get; set; }
 		public string itemreceiverid { get; set; }
 		public string approverid { get; set; }
+		public string fmapproverid { get; set; }
+		public string fmapprovedby { get; set; }
+		public string fmapproverremarks { get; set; }
+		public string fmapprovedon { get; set; }
+
 	}
 	public class materialistModel
 	{
@@ -363,6 +368,7 @@ namespace WMS.Models
 
 	public class CycleCountList
     {
+		
 		public int id { get; set; }
 		public string category { get; set; }
 		public string materialid { get; set; }

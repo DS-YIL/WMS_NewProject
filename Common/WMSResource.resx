@@ -283,7 +283,7 @@ where  inw.invoiceno='#invoiceno' and openpo.pono='#pono' group by grnnumber</va
    where gate.deleteflag=false  order by gate.gatepassid desc</value>
   </data>
   <data name="insertgatepassdata" xml:space="preserve">
-    <value>insert into wms.wms_gatepass(gatepassid, gatepasstype, status, referenceno, vehicleno, requestedby, requestedon,deleteflag,vendorname,print,reasonforgatepass,approverid)values(default,@gatepasstype,@status,@referenceno,@vehicleno, @requestedby,@requestedon,@deleteflag,@vendorname,'true',@reasonforgatepass,@approverid)returning gatepassid</value>
+    <value>insert into wms.wms_gatepass(gatepassid, gatepasstype, status, referenceno, vehicleno, requestedby, requestedon,deleteflag,vendorname,print,reasonforgatepass,approverid,fmapproverid)values(default,@gatepasstype,@status,@referenceno,@vehicleno, @requestedby,@requestedon,@deleteflag,@vendorname,'true',@reasonforgatepass,@approverid,@fmapproverid)returning gatepassid</value>
   </data>
   <data name="checkmaterial" xml:space="preserve">
     <value>select * from wms.wms_stock where materialid='#materialid' limit 1</value>
@@ -659,5 +659,12 @@ left outer join wms.wms_qualitycheck qc on qc.inwardid = inw.inwardid</value>
   <data name="getgatepassapproverdata" xml:space="preserve">
     <value>select * from wms.wms_gatepass gate 
 left join wms.employee emp on emp.employeeno=gate.requestedby  where approverid='#approverid'</value>
+  </data>
+  <data name="insertgatepassapprovalhistory" xml:space="preserve">
+    <value>insert into wms.wms_gatepassapprovals(historyid,gatepassid,approverid,approvername,approverstatus,"label")values(default,@gatepassid,@approverid,@approvername,'Pending',@label)</value>
+  </data>
+  <data name="updategatepasshistoryfornonreturn" xml:space="preserve">
+    <value>insert into wms.wms_gatepassapprovals(historyid,gatepassid,fmapproverid,fmapprovername,fmapproverstatus,"label")
+values(default,@gatepassid,@fmapproverid,@fmapprovername,'Pending',@label)</value>
   </data>
 </root>

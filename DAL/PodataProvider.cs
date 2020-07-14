@@ -1984,6 +1984,7 @@ namespace WMS.DAL
 				{
 					dataobj.requestedon = System.DateTime.Now;
 					string insertquery = WMSResource.insertgatepassdata;
+					string insertgatepasshistory = WMSResource.insertgatepassapprovalhistory;
 					dataobj.deleteflag = false;
 					using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
 					{
@@ -1999,8 +2000,52 @@ namespace WMS.DAL
 							dataobj.deleteflag,
 							dataobj.vendorname,
 							dataobj.reasonforgatepass,
-							dataobj.approverid
+							dataobj.approverid,
+							dataobj.fmapproverid,
+							
 						});
+						if (dataobj.gatepasstype == "Returnable")
+						{
+							string approvername = dataobj.managername;
+							int label = 1;
+							var gatepasshistory = DB.ExecuteScalar(insertgatepasshistory, new
+							{
+
+								dataobj.approverid,
+								approvername,
+								gatepassid,
+								label
+							});
+						}
+						else if (dataobj.gatepasstype == "Non Returnable")
+						{
+							string updategatepasshistoryfornonreturn = WMSResource.updategatepasshistoryfornonreturn;
+							{
+								string approvername = dataobj.managername;
+								int label = 1;
+								var gatepasshistory = DB.ExecuteScalar(insertgatepasshistory, new
+								{
+
+									dataobj.approverid,
+									approvername,
+									gatepassid,
+									label
+								});
+								string approverid = "400401";
+								approvername = "Lakshmi Prasanna";
+								label = 2;
+								var gatepassdata = DB.ExecuteScalar(insertgatepasshistory, new
+								{
+
+									approverid,
+									approvername,
+									gatepassid,
+									label
+								});
+							}
+						}
+						
+
 						if (dataobj.gatepassid == 0)
 							dataobj.gatepassid = Convert.ToInt32(gatepassid);
 					}
