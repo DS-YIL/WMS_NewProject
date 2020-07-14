@@ -336,8 +336,8 @@ namespace WMS.Common {
         
         /// <summary>
         ///   Looks up a localized string similar to select sinward.grnnumber,sinward.invoiceno, 
-        ///      max(storeinward .receivedqty) as receivedqty, max(storeinward.returnqty) as returnedqty,
-        ///      max(storeinward.confirmqty) as confirmedqty from wms.wms_securityinward sinward
+        ///      sum(storeinward .receivedqty) as receivedqty, sum(storeinward.returnqty) as returnedqty,
+        ///      sum(storeinward.confirmqty) as confirmedqty from wms.wms_securityinward sinward
         ///left join wms.wms_storeinward storeinward on sinward.inwmasterid = storeinward.inwmasterid 
         ///where sinward.pono = &apos;#pono&apos; group by sinward.grnnumber,sinward.invoiceno.
         /// </summary>
@@ -430,8 +430,8 @@ namespace WMS.Common {
         
         /// <summary>
         ///   Looks up a localized string similar to select  sk.itemlocation ,sk.materialid, sk.availableqty
-        /// from wms.wms_securityinward sec left join wms.wms_storeinward inw on inw.inwmasterid=sec.inwmasterid
-        ///left join wms.wms_stock sk on sec.inwmasterid = sk.inwmasterid
+        /// from wms.wms_securityinward sec 
+        /// left join wms.wms_stock sk on sec.inwmasterid = sk.inwmasterid
         ///left join wms.&quot;MaterialMasterYGS&quot;  mtmaster on mtmaster.material= sk.materialid
         ///where sec.grnnumber =&apos;#grn&apos; and sk.materialid =&apos;#materialid&apos; and sk.availableqty!=0.
         /// </summary>
@@ -504,9 +504,10 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select  inw.confirmqty,sec.grnnumber,sec.pono,mtmaster.materialdescription,sk.materialid, sk.availableqty,sk.itemid
-        /// from wms.wms_securityinward sec left join wms.wms_storeinward inw on inw.inwmasterid=sec.inwmasterid
-        ///left join wms.wms_stock sk on sec.inwmasterid = sk.inwmasterid
+        ///   Looks up a localized string similar to select  sec.inwmasterid,inw.confirmqty,sec.grnnumber,sec.pono,mtmaster.materialdescription,inw.materialid,sk.itemid
+        /// from wms.wms_securityinward sec 
+        /// left join wms.wms_stock sk on sec.inwmasterid = sk.inwmasterid
+        ///left join wms.wms_storeinward inw on inw.inwmasterid=sec.inwmasterid
         ///left  join wms.wms_polist openpo on sk.pono = openpo.pono
         ///left join wms.&quot;MaterialMasterYGS&quot;  mtmaster on mtmaster.material= sk.materialid
         ///where sec.grnnumber =&apos;#grn&apos;.

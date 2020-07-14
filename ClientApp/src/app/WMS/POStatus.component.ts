@@ -22,6 +22,7 @@ export class POStatusComponent implements OnInit {
   public dynamicData: DynamicSearchResult;
   cols: any[];
   exportColumns: any[];
+  selectedStatus: string = "Instock";
 
   ngOnInit() {
     if (localStorage.getItem("Employee"))
@@ -35,9 +36,24 @@ export class POStatusComponent implements OnInit {
     this.cols = [
       { field: 'po', header: 'PO No.' },
       { field: 'qty', header: 'Quantity' },
+      {field:'status',header:'Status'}
     ];
 
     this.exportColumns = this.cols.map(col => ({ title: col.header, dataKey: col.field }));
+  }
+
+
+  SubmitStatus() {
+    this.spinner.show();
+    this.wmsService.getPONumbers(this.selectedStatus).subscribe(data => {
+      this.spinner.hide();
+      this.poList = data;
+    });
+  }
+
+  onSelectStatus(event) {
+    this.selectedStatus = event.target.value;
+   
   }
 
   InvoiceDetails(poNo: string,qty:string)
@@ -46,10 +62,11 @@ export class POStatusComponent implements OnInit {
     }
 
   getpoList() {
+    this.spinner.show();
     this.dynamicData = new DynamicSearchResult();
    // this.dynamicData.query = "select op.material , op.materialdescription,op.projectname, SUM(totalquantity) as Received , SUM(availableqty) as Balance ,SUM(totalquantity -availableqty ) as Issued, MAX(createddate) as createddate  from wms.wms_stock ws inner join wms.openpolistview  op on op.pono = ws.pono where ws.materialid notnull and createddate <='" + this.toDate.toDateString() + "' and createddate > '" + this.fromDate.toDateString() + "' group by  op.material , op.materialdescription,op.projectname"
-    this.wmsService.getPONumbers().subscribe(data => {
-      debugger;
+    this.wmsService.getPONumbers(this.selectedStatus).subscribe(data => {
+      this.spinner.hide();
       this.poList = data;
     });
   }

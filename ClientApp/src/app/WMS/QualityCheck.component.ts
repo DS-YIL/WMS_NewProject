@@ -165,7 +165,16 @@ export class QualityCheckComponent implements OnInit {
       this.totalqty = parseInt(this.podetailsList[0].receivedqty);
     var savedata = this.podetailsList.filter(function (element, index) {
       return (element.qualitypassedqty != 0);
-      });
+    });
+    var invaliddata = savedata.filter(function (element, index) {
+      return (element.qualitypassedqty + element.qualityfailedqty != parseInt(element.receivedqty));
+    });
+    if (invaliddata.length > 0) {
+      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Sum of quality failed and passed must be equal to received quantity.' });
+      this.spinner.hide();
+      return;
+    }
+
         this.wmsService.insertqualitycheck(savedata).subscribe(data => {
           this.spinner.hide();
          

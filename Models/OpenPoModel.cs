@@ -179,6 +179,7 @@ namespace WMS.Models
 		public string POno { get; set; }
 		public string qty { get; set; }
 		public int quotationqty { get; set; }
+		public string status { get; set; }
 	}
 
 	//Invoice Details
@@ -209,6 +210,7 @@ namespace WMS.Models
 		public string materialid { get;set; } 
 		public string qtytotal { get; set; }
 		public  int confirmqty { get; set; }
+		public int inwmasterid { get; set; }
 	}
 
 	//Location Details
@@ -488,7 +490,7 @@ namespace WMS.Models
 	public class authUser
 	{
 		public int authid { get; set; }
-		public int employeeid { get; set; }
+		public string employeeid { get; set; }
 		public int roleid { get; set; }
 		public DateTime createddate { get; set; }
 		public string createdby { get; set; }

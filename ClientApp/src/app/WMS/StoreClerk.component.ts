@@ -178,7 +178,7 @@ export class StoreClerkComponent implements OnInit {
   getstatus(data: any) {
 
     if (!data.qualitycheck) {
-      return "";
+      return "N/A";
     }
     else if (data.qualitychecked) {
       return "Checked";
@@ -213,6 +213,14 @@ export class StoreClerkComponent implements OnInit {
       item.receivedby = this.employee.employeeno;
     });
     var pg = this;
+    var invaliddata = this.podetailsList.filter(function (element, index) {
+      return (element.confirmqty + element.returnqty != parseInt(element.receivedqty));
+    });
+    if (invaliddata.length > 0) {
+      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Sum of accepted and return quantity must be equal to received quantity.' });
+      this.spinner.hide();
+      return;
+    }
     setTimeout(function () {
       var data = pg.podetailsList;
       pg.wmsService.insertreturn(data).subscribe(data => {
