@@ -16,11 +16,11 @@ import { ConfirmationService } from 'primeng/api';
   providers: [DatePipe]
 })
 export class GatePassComponent implements OnInit {
-    AddDialog: boolean;
-    id: any;
-    roindex: any;
-    Oldestdata: any;
-  constructor(private ConfirmationService: ConfirmationService,private formBuilder: FormBuilder, private messageService: MessageService, private datePipe: DatePipe, private wmsService: wmsService, private route: ActivatedRoute, private router: Router, public constants: constants, private spinner: NgxSpinnerService) { }
+  AddDialog: boolean;
+  id: any;
+  roindex: any;
+  Oldestdata: any;
+  constructor(private ConfirmationService: ConfirmationService, private formBuilder: FormBuilder, private messageService: MessageService, private datePipe: DatePipe, private wmsService: wmsService, private route: ActivatedRoute, private router: Router, public constants: constants, private spinner: NgxSpinnerService) { }
   todayDate = this.datePipe.transform(new Date(), 'yyyy-MM-dd');
   public formName: string;
   public txtName; GatepassTxt: string;
@@ -63,7 +63,7 @@ export class GatePassComponent implements OnInit {
       this.approverstatus = "";
 
     //set expected date as future date
-    this.mindate = new Date(new Date().setDate(new Date().getDate() +1));
+    this.mindate = new Date(new Date().setDate(new Date().getDate() + 1));
   }
 
 
@@ -71,7 +71,7 @@ export class GatePassComponent implements OnInit {
   addNewMaterial() {
 
     if (this.gatepassModel.materialList.length == 0 || isNullOrUndefined(this.material)) {
-      this.materialistModel = { materialid: "", gatepassmaterialid: "0", materialdescription: "", quantity: 0, materialcost: "0", remarks: " ", expecteddate: this.date, returneddate: this.date, issuedqty:0 };
+      this.materialistModel = { materialid: "", gatepassmaterialid: "0", materialdescription: "", quantity: 0, materialcost: "0", remarks: " ", expecteddate: this.date, returneddate: this.date, issuedqty: 0 };
       this.gatepassModel.materialList.push(this.materialistModel);
       this.material = "";
     }
@@ -105,7 +105,7 @@ export class GatePassComponent implements OnInit {
         this.wmsService.checkMaterialandQty(this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].materialid, this.materialistModel.quantity).subscribe(data => {
           if (data == "true") {
 
-            this.materialistModel = { materialid: "", gatepassmaterialid: "0", materialdescription: "", quantity: 0, materialcost: "0", remarks: " ", expecteddate: this.date, returneddate: this.date, issuedqty:0 };
+            this.materialistModel = { materialid: "", gatepassmaterialid: "0", materialdescription: "", quantity: 0, materialcost: "0", remarks: " ", expecteddate: this.date, returneddate: this.date, issuedqty: 0 };
             this.gatepassModel.materialList.push(this.materialistModel);
             this.material = "";
 
@@ -165,15 +165,14 @@ export class GatePassComponent implements OnInit {
       if (this.employee.roleid == "8") {
         this.gatepasslist = this.totalGatePassList.filter(li => li.gatepasstype == 'Non Returnable' && (li.approverstatus == this.approverstatus || li.approverstatus == null));
       }
-      else if (this.employee.roleid == "4")
-      {
+      else if (this.employee.roleid == "4") {
         this.totalGatePassList.forEach(item => {
           if (item.gatepasstype == "Returnable")
             this.gatepasslist.push(item);
-          if (item.gatepasstype == "Non Returnable" && item.approverstatus=="Approved")
+          if (item.gatepasstype == "Non Returnable" && item.approverstatus == "Approved")
             this.gatepasslist.push(item);
         })
-         
+
       }
       else {
         this.gatepasslist = this.totalGatePassList;
@@ -186,9 +185,9 @@ export class GatePassComponent implements OnInit {
   searchGatePassList() {
     if (this.approverstatus != "0") {
       if (this.approverstatus == "Pending")
-        this.gatepasslist = this.totalGatePassList.filter(li => li.gatepasstype == 'Non Returnable' && (li.approverstatus == this.approverstatus ||  li.approverstatus == null));
-        else
-        this.gatepasslist = this.totalGatePassList.filter(li => li.gatepasstype == 'Non Returnable' &&  li.approverstatus == this.approverstatus);
+        this.gatepasslist = this.totalGatePassList.filter(li => li.gatepasstype == 'Non Returnable' && (li.approverstatus == this.approverstatus || li.approverstatus == null));
+      else
+        this.gatepasslist = this.totalGatePassList.filter(li => li.gatepasstype == 'Non Returnable' && li.approverstatus == this.approverstatus);
     }
     else
       this.gatepasslist = this.totalGatePassList.filter(li => li.gatepasstype == 'Non Returnable');
@@ -301,7 +300,7 @@ export class GatePassComponent implements OnInit {
     } else {
       this.gatepassModel.gatepasstype = "0";
       this.gatepassModel.reasonforgatepass = "0";
-      this.materialistModel = { materialid: "", gatepassmaterialid: "0", materialdescription: "", quantity: 0, materialcost: "0", remarks: " ", expecteddate: this.date, returneddate: this.date, issuedqty:0 };
+      this.materialistModel = { materialid: "", gatepassmaterialid: "0", materialdescription: "", quantity: 0, materialcost: "0", remarks: " ", expecteddate: this.date, returneddate: this.date, issuedqty: 0 };
       this.gatepassModel.materialList.push(this.materialistModel);
       this.material = "";
     }
@@ -434,7 +433,7 @@ export class GatePassComponent implements OnInit {
         this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Add Material' });
         return false;
       }
-      else if (this.gatepassModel.gatepasstype =="Returnable" && this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].expecteddate == undefined) {
+      else if (this.gatepassModel.gatepasstype == "Returnable" && this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].expecteddate == undefined) {
         this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please select Expected Date' });
         return false;
       }
@@ -558,7 +557,7 @@ export class GatePassComponent implements OnInit {
       });
     }
   }
- 
+
   Cancel() {
     this.AddDialog = false;
   }

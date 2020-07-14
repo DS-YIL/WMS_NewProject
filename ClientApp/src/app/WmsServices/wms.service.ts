@@ -300,6 +300,9 @@ export class wmsService {
   getMaterial(): Observable<Materials[]> {
     return this.http.get<Materials[]>(this.url + 'POData/GetMaterialdata/', this.httpOptions);
   }
+  getapproverdata(empid:string): Observable<any> {
+    return this.http.get<any>(this.url + 'POData/getapproverList?empid=' + empid, this.httpOptions);
+  }
 }
 
 

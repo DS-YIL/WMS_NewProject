@@ -157,6 +157,9 @@ export class gatepassModel {
   print: boolean;
   reasonforgatepass: string;
   returneddate: any;
+  employeeno: string;
+  approverid: string;
+  managername: string;
 }
 export class materialistModel {
   gatepassmaterialid: string;

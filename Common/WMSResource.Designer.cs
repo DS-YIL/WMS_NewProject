@@ -323,6 +323,18 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to select emp.name,orgdept.departmenthead  as approverid,emp1.name as managername from wms.employee  emp
+        /// inner join wms.orgdepartments orgdept on orgdept.orgdepartmentid=emp.orgdepartmentid
+        /// inner join wms.employee emp1 on emp1.employeeno=orgdept.departmenthead
+        /// where emp.employeeno=&apos;#employeeno&apos;.
+        /// </summary>
+        public static string getimmediatemnger {
+            get {
+                return ResourceManager.GetString("getimmediatemnger", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to select sinward.grnnumber,sinward.invoiceno, 
         ///      max(storeinward .receivedqty) as receivedqty, max(storeinward.returnqty) as returnedqty,
         ///      max(storeinward.confirmqty) as confirmedqty from wms.wms_securityinward sinward
@@ -680,7 +692,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to insert into wms.wms_gatepass(gatepassid, gatepasstype, status, referenceno, vehicleno, requestedby, requestedon,deleteflag,vendorname,print,reasonforgatepass)values(default,@gatepasstype,@status,@referenceno,@vehicleno, @requestedby,@requestedon,@deleteflag,@vendorname,&apos;true&apos;,@reasonforgatepass)returning gatepassid.
+        ///   Looks up a localized string similar to insert into wms.wms_gatepass(gatepassid, gatepasstype, status, referenceno, vehicleno, requestedby, requestedon,deleteflag,vendorname,print,reasonforgatepass,approverid)values(default,@gatepasstype,@status,@referenceno,@vehicleno, @requestedby,@requestedon,@deleteflag,@vendorname,&apos;true&apos;,@reasonforgatepass,@approverid)returning gatepassid.
         /// </summary>
         public static string insertgatepassdata {
             get {

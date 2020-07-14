@@ -334,6 +334,7 @@ namespace WMS.Models
 		public string approvedby { get; set; }
 		public DateTime itemissueddate { get; set; }
 		public string itemreceiverid { get; set; }
+		public string approverid { get; set; }
 	}
 	public class materialistModel
 	{
@@ -481,6 +482,8 @@ namespace WMS.Models
 	public class employeeModel
 	{
 		public string name { get; set; }
+		public string employeenoformanager { get; set; }
+		public string managername { get; set; }
 	}
 	public class authUser
 	{

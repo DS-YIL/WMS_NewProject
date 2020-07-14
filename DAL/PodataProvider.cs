@@ -1842,6 +1842,7 @@ namespace WMS.DAL
 							dataobj.deleteflag,
 							dataobj.vendorname,
 							dataobj.reasonforgatepass,
+							dataobj.approverid
 						});
 						if (dataobj.gatepassid == 0)
 							dataobj.gatepassid = Convert.ToInt32(gatepassid);
@@ -1865,6 +1866,7 @@ namespace WMS.DAL
 							dataobj.requestedby,
 							dataobj.vendorname,
 							dataobj.reasonforgatepass,
+							
 						});
 					}
 				}
@@ -3952,12 +3954,30 @@ namespace WMS.DAL
 			}
 		}
 
+		public async Task<IEnumerable<employeeModel>> getapproverList(string empid)
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				try
+				{
+					string approverlist = WMSResource.getimmediatemnger.Replace("#employeeno",empid);
 
+					await pgsql.OpenAsync();
+					return await pgsql.QueryAsync<employeeModel>(
+					  approverlist, null, commandType: CommandType.Text);
 
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "getapproverList", Ex.StackTrace.ToString());
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
 
-
-
-
-
+			}
+		}
 	}
 }

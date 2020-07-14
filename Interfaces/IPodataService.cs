@@ -97,5 +97,6 @@ namespace WMS.Interfaces
         Task<string> insertreturn(List<inwardModel> datamodel);
 
         Task<IEnumerable<Materials>> GetMaterialcombo();
+        Task<IEnumerable<employeeModel>> getapproverList(string empid);
     }
 }

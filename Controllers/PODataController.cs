@@ -469,6 +469,13 @@ namespace WMS.Controllers
 			return await this._poService.GetMaterialcombo();
 		}
 
+
+		[HttpGet("getapproverList")]
+		public async Task<IEnumerable<employeeModel>> getapproverList(string empid)
+		{
+			return await this._poService.getapproverList(empid);
+		}
+		
 		//[HttpPost("securitysendemail")]
 		//public EmailModel sendemail(EmailModel obj)
 		//{

@@ -115,7 +115,7 @@
 <br />
 <p-dialog header={{GatepassTxt}} [(visible)]="gatepassdialog" [responsive]="true" showEffect="fade" [modal]="true" [style]="{'width':'85%','overflow':'auto!important','margin-right': '0px','margin-left':'0px'}">
   <div class="row " style="margin-top:10px">
-    <div class="col-lg-3 col-md-3 col-sm-3 form-group">
+    <div class="col-lg-2 col-md-2 col-sm-2 form-group">
       <label for="itemlocation" class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">Select Type</label>
       <div class="form-inline-list">
         <select class="form-control forms-input" [(ngModel)]="gatepassModel.gatepasstype" (change)="gatePassChange()">
@@ -125,7 +125,7 @@
         </select>
       </div>
     </div>
-    <div class="col-lg-3 col-md-3 col-sm-3 form-group">
+    <div class="col-lg-2 col-md-2 col-sm-2 form-group">
       <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">Reason</label>
       <div class="form-inline-list">
         <select class="form-control forms-input" [(ngModel)]="gatepassModel.reasonforgatepass">
@@ -137,21 +137,27 @@
       </div>
     </div>
     <!--<div class="col-lg-3 col-md-3 col-sm-3 form-group">
-      <label class="form-label">Vehicle no (optional)</label>
-      <div class="form-inline-list">
-        <input type="text" class="form-control" [(ngModel)]="gatepassModel.vehicleno" />
-      </div>
-    </div>-->
-    <div class="col-lg-3 col-md-3 col-sm-3 form-group">
+    <label class="form-label">Vehicle no (optional)</label>
+    <div class="form-inline-list">
+      <input type="text" class="form-control" [(ngModel)]="gatepassModel.vehicleno" />
+    </div>
+  </div>-->
+    <div class="col-lg-2 col-md-2 col-sm-2 form-group">
       <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">Supplier</label>
       <div class="form-inline-list">
         <input type="text" class="form-control" [(ngModel)]="gatepassModel.vendorname" />
       </div>
     </div>
-    <div class="col-lg-3 col-md-3 col-sm-3 form-group">
+    <div class="col-lg-2 col-md-2 col-sm-2 form-group">
       <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">Reference No</label>
       <div class="form-inline-list">
         <input type="text" class="form-control" [(ngModel)]="gatepassModel.referenceno" />
+      </div>
+    </div>
+    <div class="col-lg-2 col-md-2 col-sm-2 form-group">
+      <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">Approver</label>
+      <div class="form-inline-list">
+        <input disabled type="text" class="form-control" [(ngModel)]="gatepassModel.managername" />
       </div>
     </div>
   </div>

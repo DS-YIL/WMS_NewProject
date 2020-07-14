@@ -283,7 +283,7 @@ where  inw.invoiceno='#invoiceno' and openpo.pono='#pono' group by grnnumber</va
    where gate.deleteflag=false  order by gate.gatepassid desc</value>
   </data>
   <data name="insertgatepassdata" xml:space="preserve">
-    <value>insert into wms.wms_gatepass(gatepassid, gatepasstype, status, referenceno, vehicleno, requestedby, requestedon,deleteflag,vendorname,print,reasonforgatepass)values(default,@gatepasstype,@status,@referenceno,@vehicleno, @requestedby,@requestedon,@deleteflag,@vendorname,'true',@reasonforgatepass)returning gatepassid</value>
+    <value>insert into wms.wms_gatepass(gatepassid, gatepasstype, status, referenceno, vehicleno, requestedby, requestedon,deleteflag,vendorname,print,reasonforgatepass,approverid)values(default,@gatepasstype,@status,@referenceno,@vehicleno, @requestedby,@requestedon,@deleteflag,@vendorname,'true',@reasonforgatepass,@approverid)returning gatepassid</value>
   </data>
   <data name="checkmaterial" xml:space="preserve">
     <value>select * from wms.wms_stock where materialid='#materialid' limit 1</value>
@@ -647,5 +647,11 @@ left outer join wms.wms_qualitycheck qc on qc.inwardid = inw.inwardid</value>
   <data name="savequalityquery" xml:space="preserve">
     <value>INSERT INTO wms.wms_qualitycheck(inwardid,qualitypassedqty,qualityfailedqty,qcby,remarks)
   VALUES(@inwardid,@qualitypassedqty,@qualityfailedqty,@receivedby,@remarks)</value>
+  </data>
+  <data name="getimmediatemnger" xml:space="preserve">
+    <value>select emp.name,orgdept.departmenthead  as approverid,emp1.name as managername from wms.employee  emp
+ inner join wms.orgdepartments orgdept on orgdept.orgdepartmentid=emp.orgdepartmentid
+ inner join wms.employee emp1 on emp1.employeeno=orgdept.departmenthead
+ where emp.employeeno='#employeeno'</value>
   </data>
 </root>
