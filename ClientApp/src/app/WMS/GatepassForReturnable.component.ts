@@ -12,10 +12,10 @@ import { DatePipe } from '@angular/common';
 import { ConfirmationService } from 'primeng/api';
 @Component({
   selector: 'app-GatePass',
-  templateUrl: './GatePass.component.html',
+  templateUrl: './GatePassForReturnable.component.html',
   providers: [DatePipe]
 })
-export class GatePassComponent implements OnInit {
+export class GatePassForReturnableComponent implements OnInit {
   AddDialog: boolean;
   id: any;
   roindex: any;
@@ -159,21 +159,21 @@ export class GatePassComponent implements OnInit {
 
   //get gatepass list
   getGatePassList() {
-    this.wmsService.getGatePassList().subscribe(data => {
+    this.wmsService.getgatepassapproverdata(this.employee.employeeno).subscribe(data => {
       this.totalGatePassList = data;
       this.gatepasslist = [];
       if (this.employee.roleid == "8") {
-        this.gatepasslist = this.totalGatePassList.filter(li => li.gatepasstype == 'Non Returnable' && (li.approverstatus == this.approverstatus || li.approverstatus == null));
+        this.gatepasslist = this.totalGatePassList.filter(li => li.gatepasstype == 'Returnable' && (li.approverstatus == this.approverstatus || li.approverstatus == null));
       }
-      else if (this.employee.roleid == "4") {
-        this.totalGatePassList.forEach(item => {
-          if (item.gatepasstype == "Returnable")
-            this.gatepasslist.push(item);
-          if (item.gatepasstype == "Non Returnable" && item.approverstatus == "Approved")
-            this.gatepasslist.push(item);
-        })
+      //else if (this.employee.roleid == "4") {
+      //  this.totalGatePassList.forEach(item => {
+      //    if (item.gatepasstype == "Returnable")
+      //      this.gatepasslist.push(item);
+      //    if (item.gatepasstype == "Non Returnable" && item.approverstatus == "Approved")
+      //      this.gatepasslist.push(item);
+      //  })
 
-      }
+      //}
       else {
         this.gatepasslist = this.totalGatePassList;
       }
@@ -185,12 +185,12 @@ export class GatePassComponent implements OnInit {
   searchGatePassList() {
     if (this.approverstatus != "0") {
       if (this.approverstatus == "Pending")
-        this.gatepasslist = this.totalGatePassList.filter(li => li.gatepasstype == 'Non Returnable' && (li.approverstatus == this.approverstatus || li.approverstatus == null));
+        this.gatepasslist = this.totalGatePassList.filter(li => li.gatepasstype == 'Returnable' && (li.approverstatus == this.approverstatus || li.approverstatus == null));
       else
-        this.gatepasslist = this.totalGatePassList.filter(li => li.gatepasstype == 'Non Returnable' && li.approverstatus == this.approverstatus);
+        this.gatepasslist = this.totalGatePassList.filter(li => li.gatepasstype == 'Returnable' && li.approverstatus == this.approverstatus);
     }
     else
-      this.gatepasslist = this.totalGatePassList.filter(li => li.gatepasstype == 'Non Returnable');
+      this.gatepasslist = this.totalGatePassList.filter(li => li.gatepasstype == 'Returnable');
     this.gatepassModelList = [];
     this.prepareGatepassList();
   }

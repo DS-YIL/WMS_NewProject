@@ -4136,5 +4136,31 @@ namespace WMS.DAL
 
 			}
 		}
+
+		public  async Task<IEnumerable<gatepassModel>> getgatepassByapproverList(string empid)
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				try
+				{
+					string approverlist = WMSResource.getgatepassapproverdata.Replace("#approverid", empid);
+
+					await pgsql.OpenAsync();
+					return await pgsql.QueryAsync<gatepassModel>(
+					  approverlist, null, commandType: CommandType.Text);
+
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "getgatepassByapproverList", Ex.StackTrace.ToString());
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+			}
+		}
 	}
 }

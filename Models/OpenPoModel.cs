@@ -298,7 +298,7 @@ namespace WMS.Models
     public class gatepassModel
     {
 		
-		public int pono { get; set; }
+		public string pono { get; set; }
 		public int itemid { get; set; }
 		public string itemreturnable { get; set; }
 		public int issuedqty { get; set; }
@@ -486,6 +486,7 @@ namespace WMS.Models
 		public string name { get; set; }
 		public string employeenoformanager { get; set; }
 		public string managername { get; set; }
+		public string approverid {get;set;}
 	}
 	public class authUser
 	{

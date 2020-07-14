@@ -278,6 +278,16 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to select * from wms.wms_gatepass gate 
+        ///left join wms.employee emp on emp.employeeno=gate.requestedby  where approverid=&apos;#approverid&apos;.
+        /// </summary>
+        public static string getgatepassapproverdata {
+            get {
+                return ResourceManager.GetString("getgatepassapproverdata", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to select ygs.materialdescription,emp.name,* from wms.wms_gatepass gate
         ///   left join wms.wms_gatepassmaterial mat on gate.gatepassid=mat.gatepassid 
         ///   left join wms.employee emp on emp.employeeno=gate.requestedby

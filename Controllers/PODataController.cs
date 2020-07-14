@@ -475,6 +475,11 @@ namespace WMS.Controllers
 		{
 			return await this._poService.getapproverList(empid);
 		}
+		[HttpGet("getgatepassByapproverList")]
+		public async Task<IEnumerable<gatepassModel>> getgatepassByapproverList(string empid)
+		{
+			return await this._poService.getgatepassByapproverList(empid);
+		}
 		
 		//[HttpPost("securitysendemail")]
 		//public EmailModel sendemail(EmailModel obj)

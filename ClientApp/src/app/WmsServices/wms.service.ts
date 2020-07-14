@@ -303,6 +303,10 @@ export class wmsService {
   getapproverdata(empid:string): Observable<any> {
     return this.http.get<any>(this.url + 'POData/getapproverList?empid=' + empid, this.httpOptions);
   }
+  getgatepassapproverdata(empid: string): Observable<any> {
+    return this.http.get<any>(this.url + 'POData/getgatepassByapproverList?empid=' + empid, this.httpOptions);
+  }
+  
 }
 
 

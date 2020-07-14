@@ -656,4 +656,8 @@ left outer join wms.wms_qualitycheck qc on qc.inwardid = inw.inwardid</value>
  inner join wms.employee emp1 on emp1.employeeno=orgdept.departmenthead
  where emp.employeeno='#employeeno'</value>
   </data>
+  <data name="getgatepassapproverdata" xml:space="preserve">
+    <value>select * from wms.wms_gatepass gate 
+left join wms.employee emp on emp.employeeno=gate.requestedby  where approverid='#approverid'</value>
+  </data>
 </root>

@@ -63,6 +63,7 @@ import { MaterialReleaseDashBoardComponent } from './WMS/MaterialReleaseDashBoar
 import { MaterialReleaseComponent } from './WMS/MaterialRelease.component';
 import { QualityCheckComponent } from './WMS/QualityCheck.component';
 import { BarcodeComponent } from './WMS/Barcode.component';
+import { GatePassForReturnableComponent } from './WMS/GatepassForReturnable.component';
 
 
 ////pages
@@ -113,7 +114,8 @@ import {MenubarModule} from 'primeng/menubar';
     MaterialReleaseDashBoardComponent,
     MaterialReleaseComponent,
     QualityCheckComponent,
-    BarcodeComponent
+    BarcodeComponent,
+    GatePassForReturnableComponent
 
 
 
