@@ -1984,6 +1984,8 @@ namespace WMS.DAL
 				{
 					dataobj.requestedon = System.DateTime.Now;
 					string insertquery = WMSResource.insertgatepassdata;
+					string fmapprovedstatus= "Pending";
+					string approverstatus = "Pending";
 					string insertgatepasshistory = WMSResource.insertgatepassapprovalhistory;
 					dataobj.deleteflag = false;
 					using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
@@ -2002,7 +2004,9 @@ namespace WMS.DAL
 							dataobj.reasonforgatepass,
 							dataobj.approverid,
 							dataobj.fmapproverid,
-							
+							fmapprovedstatus,
+							approverstatus
+
 						});
 						if (dataobj.gatepasstype == "Returnable")
 						{

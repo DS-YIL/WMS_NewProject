@@ -712,7 +712,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to insert into wms.wms_gatepass(gatepassid, gatepasstype, status, referenceno, vehicleno, requestedby, requestedon,deleteflag,vendorname,print,reasonforgatepass,approverid,fmapproverid)values(default,@gatepasstype,@status,@referenceno,@vehicleno, @requestedby,@requestedon,@deleteflag,@vendorname,&apos;true&apos;,@reasonforgatepass,@approverid,@fmapproverid)returning gatepassid.
+        ///   Looks up a localized string similar to insert into wms.wms_gatepass(gatepassid, gatepasstype, status, referenceno, vehicleno, requestedby, requestedon,deleteflag,vendorname,print,reasonforgatepass,approverid,fmapproverid,fmapprovedstatus,approverstatus)values(default,@gatepasstype,@status,@referenceno,@vehicleno, @requestedby,@requestedon,@deleteflag,@vendorname,&apos;true&apos;,@reasonforgatepass,@approverid,@fmapproverid,@fmapprovedstatus,@approverstatus)returning gatepassid.
         /// </summary>
         public static string insertgatepassdata {
             get {

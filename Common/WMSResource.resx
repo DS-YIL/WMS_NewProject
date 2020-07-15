@@ -283,7 +283,7 @@ where  inw.invoiceno='#invoiceno' and openpo.pono='#pono' group by grnnumber</va
    where gate.deleteflag=false and gate.approverstatus='Approved' or (gate.approverstatus='Approved' and gate.fmapprovedstatus='Approved')  order by gate.gatepassid desc</value>
   </data>
   <data name="insertgatepassdata" xml:space="preserve">
-    <value>insert into wms.wms_gatepass(gatepassid, gatepasstype, status, referenceno, vehicleno, requestedby, requestedon,deleteflag,vendorname,print,reasonforgatepass,approverid,fmapproverid)values(default,@gatepasstype,@status,@referenceno,@vehicleno, @requestedby,@requestedon,@deleteflag,@vendorname,'true',@reasonforgatepass,@approverid,@fmapproverid)returning gatepassid</value>
+    <value>insert into wms.wms_gatepass(gatepassid, gatepasstype, status, referenceno, vehicleno, requestedby, requestedon,deleteflag,vendorname,print,reasonforgatepass,approverid,fmapproverid,fmapprovedstatus,approverstatus)values(default,@gatepasstype,@status,@referenceno,@vehicleno, @requestedby,@requestedon,@deleteflag,@vendorname,'true',@reasonforgatepass,@approverid,@fmapproverid,@fmapprovedstatus,@approverstatus)returning gatepassid</value>
   </data>
   <data name="checkmaterial" xml:space="preserve">
     <value>select * from wms.wms_stock where materialid='#materialid' limit 1</value>
