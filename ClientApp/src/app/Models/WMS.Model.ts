@@ -160,6 +160,7 @@ export class gatepassModel {
   employeeno: string;
   approverid: string;
   managername: string;
+  categoryid: number;
 }
 export class materialistModel {
   gatepassmaterialid: string;

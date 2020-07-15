@@ -201,6 +201,9 @@ export class wmsService {
   updategatepassapproverstatus(gatepassModel: any): Observable<any> {
     return this.http.post<any>(this.url + 'POData/updategatepassapproverstatus/', gatepassModel, this.httpOptions);
   }
+  GatepassapproveByManager(gatepassModel: any): Observable<any> {
+    return this.http.post<any>(this.url + 'POData/GatepassapproveByManager/', gatepassModel, this.httpOptions);
+  }
   deleteGatepassmaterial(id: number): Observable<any> {
     return this.http.delete<any>(this.url + 'POData/deletegatepassmaterial?gatepassmaterialid=' + id + '', this.httpOptions);
   }

@@ -269,7 +269,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select * from wms.wms_gatepassapprovals where gatepassid =#gatepassid and currentstatus =true.
+        ///   Looks up a localized string similar to select * from wms.wms_gatepassapprovals where gatepassid =#gatepassid.
         /// </summary>
         public static string getGatePassApprovalHistoryList {
             get {

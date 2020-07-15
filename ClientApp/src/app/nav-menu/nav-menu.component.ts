@@ -139,10 +139,9 @@ export class NavMenuComponent implements OnInit {
       this.router.navigateByUrl('/WMS/Home');
     }
     if (this.emp.roleid == "8") {//Approver     
-      this.items.push({ label: 'Gate Pass Approval', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GatePass') });
-      this.router.navigateByUrl('WMS/GatePass');
-      this.items.push({ label: 'Gate Pass Approval For Returnable', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GatePassForReturnable') });
-      this.router.navigateByUrl('WMS/GatePassForReturnable');
+      this.items.push({ label: 'PM List', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GatePassPMList') });
+      this.items.push({ label: 'FM List', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GatePassFMList') });
+      this.router.navigateByUrl('WMS/Home');
     }
 
     let element1: HTMLDivElement = document.getElementById("menudiv") as HTMLDivElement;

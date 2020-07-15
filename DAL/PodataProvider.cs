@@ -2033,7 +2033,7 @@ namespace WMS.DAL
 									approvername,
 									gatepassid,
 									label,
-									approverstatus
+									approverstatus,
 								});
 								string approverid = "400401";
 								approvername = "Lakshmi Prasanna";
