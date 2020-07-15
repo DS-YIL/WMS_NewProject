@@ -703,7 +703,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to insert into wms.wms_gatepassapprovals(historyid,gatepassid,approverid,approvername,approverstatus,&quot;label&quot;)values(default,@gatepassid,@approverid,@approvername,&apos;Pending&apos;,@label).
+        ///   Looks up a localized string similar to insert into wms.wms_gatepassapprovals(historyid,gatepassid,approverid,approvername,approverstatus,&quot;label&quot;)values(default,@gatepassid,@approverid,@approvername,@approverstatus,@label).
         /// </summary>
         public static string insertgatepassapprovalhistory {
             get {
@@ -1013,6 +1013,24 @@ namespace WMS.Common {
         public static string updateackstatusforreserved {
             get {
                 return ResourceManager.GetString("updateackstatusforreserved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to update wms.wms_gatepass set fmapprovedstatus=&apos;#fmapprovedstatus&apos;,fmapproverremarks=@fmapproverremarks,fmapprovedon=current_timestamp where gatepassid=@gatepassid.
+        /// </summary>
+        public static string updateApprovedstatusbyFMmanager {
+            get {
+                return ResourceManager.GetString("updateApprovedstatusbyFMmanager", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to update wms.wms_gatepass set approverstatus=&apos;#approverstatus&apos;,approverremarks=@approverremarks,approvedon=current_timestamp where gatepassid=@gatepassid.
+        /// </summary>
+        public static string updateApprovedstatusbymanager {
+            get {
+                return ResourceManager.GetString("updateApprovedstatusbymanager", resourceCulture);
             }
         }
         

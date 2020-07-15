@@ -99,5 +99,6 @@ namespace WMS.Interfaces
         Task<IEnumerable<Materials>> GetMaterialcombo();
         Task<IEnumerable<employeeModel>> getapproverList(string empid);
         Task<IEnumerable<gatepassModel>> getgatepassByapproverList(string empid);
+        int GatepassapproveByManager(gatepassModel model);
     }
 }

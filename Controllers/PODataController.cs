@@ -480,7 +480,12 @@ namespace WMS.Controllers
 		{
 			return await this._poService.getgatepassByapproverList(empid);
 		}
-		
+
+		[HttpPost("GatepassapproveByManager")]
+		public int GatepassapproveByManager([FromBody] gatepassModel obj)
+		{
+			return this._poService.GatepassapproveByManager(obj);
+		}
 		//[HttpPost("securitysendemail")]
 		//public EmailModel sendemail(EmailModel obj)
 		//{

@@ -2008,28 +2008,32 @@ namespace WMS.DAL
 						{
 							string approvername = dataobj.managername;
 							int label = 1;
+							string approverstatus = "Pending";
 							var gatepasshistory = DB.ExecuteScalar(insertgatepasshistory, new
 							{
 
 								dataobj.approverid,
 								approvername,
 								gatepassid,
-								label
+								label,
+								approverstatus
 							});
 						}
 						else if (dataobj.gatepasstype == "Non Returnable")
 						{
-							string updategatepasshistoryfornonreturn = WMSResource.updategatepasshistoryfornonreturn;
+							//string updategatepasshistoryfornonreturn = WMSResource.updategatepasshistoryfornonreturn;
 							{
 								string approvername = dataobj.managername;
 								int label = 1;
+								string approverstatus = "Pending";
 								var gatepasshistory = DB.ExecuteScalar(insertgatepasshistory, new
 								{
 
 									dataobj.approverid,
 									approvername,
 									gatepassid,
-									label
+									label,
+									approverstatus
 								});
 								string approverid = "400401";
 								approvername = "Lakshmi Prasanna";
@@ -2038,9 +2042,10 @@ namespace WMS.DAL
 								{
 
 									approverid,
-									approvername,
 									gatepassid,
-									label
+									label,
+									approverstatus,
+									approvername
 								});
 							}
 						}
@@ -4205,6 +4210,86 @@ namespace WMS.DAL
 					pgsql.Close();
 				}
 
+			}
+		}
+
+		public int GatepassapproveByManager(gatepassModel model)
+		{
+			try
+			{
+				var result = 0;
+
+					string updateapproverstatus =string.Empty;
+
+				if (model.categoryid == 1)
+				{
+					updateapproverstatus = WMSResource.updateApprovedstatusbymanager.Replace("#approverstatus","Approved");
+
+					using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
+					{
+
+						result = DB.Execute(updateapproverstatus, new
+						{
+							model.approverremarks,
+							model.gatepassid
+
+						});
+						if(result==1)
+						{
+							int label = 1;
+							string approvername = model.approvedby;
+							string insertgatepasshistory = WMSResource.insertgatepassapprovalhistory;
+							string approverstatus = "Approved";
+							var gatepasshistory = DB.ExecuteScalar(insertgatepasshistory, new
+							{
+
+								model.approverid,
+								approvername,
+								model.gatepassid,
+								label,
+								approverstatus
+							});
+						}
+					}
+				}
+				else if (model.categoryid == 2)
+				{
+					updateapproverstatus = WMSResource.updateApprovedstatusbyFMmanager.Replace("#fmapprovedstatus", "Approved");
+
+					using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
+					{
+
+					var	result1 = DB.Execute(updateapproverstatus, new
+						{
+							model.fmapproverremarks,
+							model.gatepassid
+
+						});
+						if (result1 == 1)
+						{
+							int label = 2;
+							string approvername = model.approvedby;
+							string insertgatepasshistory = WMSResource.insertgatepassapprovalhistory;
+							string approverstatus = "Approved";
+							var gatepasshistory = DB.ExecuteScalar(insertgatepasshistory, new
+							{
+
+								model.approverid,
+								approvername,
+								model.gatepassid,
+								label,
+								approverstatus
+							});
+						}
+					}
+				}
+
+					return (Convert.ToInt32(result));
+			}
+			catch (Exception Ex)
+			{
+				log.ErrorMessage("PODataProvider", "GatepassapproveByManager", Ex.StackTrace.ToString());
+				return 0;
 			}
 		}
 	}

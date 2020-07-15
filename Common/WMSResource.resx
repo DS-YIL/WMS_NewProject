@@ -661,10 +661,16 @@ left outer join wms.wms_qualitycheck qc on qc.inwardid = inw.inwardid</value>
 left join wms.employee emp on emp.employeeno=gate.requestedby  where approverid='#approverid'</value>
   </data>
   <data name="insertgatepassapprovalhistory" xml:space="preserve">
-    <value>insert into wms.wms_gatepassapprovals(historyid,gatepassid,approverid,approvername,approverstatus,"label")values(default,@gatepassid,@approverid,@approvername,'Pending',@label)</value>
+    <value>insert into wms.wms_gatepassapprovals(historyid,gatepassid,approverid,approvername,approverstatus,"label")values(default,@gatepassid,@approverid,@approvername,@approverstatus,@label)</value>
   </data>
   <data name="updategatepasshistoryfornonreturn" xml:space="preserve">
     <value>insert into wms.wms_gatepassapprovals(historyid,gatepassid,fmapproverid,fmapprovername,fmapproverstatus,"label")
 values(default,@gatepassid,@fmapproverid,@fmapprovername,'Pending',@label)</value>
+  </data>
+  <data name="updateApprovedstatusbyFMmanager" xml:space="preserve">
+    <value>update wms.wms_gatepass set fmapprovedstatus='#fmapprovedstatus',fmapproverremarks=@fmapproverremarks,fmapprovedon=current_timestamp where gatepassid=@gatepassid</value>
+  </data>
+  <data name="updateApprovedstatusbymanager" xml:space="preserve">
+    <value>update wms.wms_gatepass set approverstatus='#approverstatus',approverremarks=@approverremarks,approvedon=current_timestamp where gatepassid=@gatepassid</value>
   </data>
 </root>
