@@ -341,6 +341,8 @@ namespace WMS.Models
 		public string fmapprovedby { get; set; }
 		public string fmapproverremarks { get; set; }
 		public string fmapprovedon { get; set; }
+		public int categoryid { get; set; }
+		public string fmapprovedstatus { get; set; }
 
 	}
 	public class materialistModel
