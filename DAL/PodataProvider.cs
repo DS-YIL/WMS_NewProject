@@ -2057,25 +2057,25 @@ namespace WMS.DAL
 				}
 				else
 				{
-					dataobj.requestedon = System.DateTime.Now;
-					string insertquery = WMSResource.updategatepass.Replace("#gatepassid", Convert.ToString(dataobj.gatepassid));
+					//dataobj.requestedon = System.DateTime.Now;
+					//string insertquery = WMSResource.updategatepass.Replace("#gatepassid", Convert.ToString(dataobj.gatepassid));
 
-					using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
-					{
-						var result = DB.ExecuteScalar(insertquery, new
-						{
+					//using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
+					//{
+					//	var result = DB.ExecuteScalar(insertquery, new
+					//	{
 
-							dataobj.gatepasstype,
-							dataobj.status,
-							dataobj.requestedon,
-							dataobj.referenceno,
-							dataobj.vehicleno,
-							dataobj.requestedby,
-							dataobj.vendorname,
-							dataobj.reasonforgatepass,
+					//		dataobj.gatepasstype,
+					//		dataobj.status,
+					//		dataobj.requestedon,
+					//		dataobj.referenceno,
+					//		dataobj.vehicleno,
+					//		dataobj.requestedby,
+					//		dataobj.vendorname,
+					//		dataobj.reasonforgatepass,
 							
-						});
-					}
+					//	});
+					//}
 				}
 				foreach (var item in dataobj.materialList)
 				{
