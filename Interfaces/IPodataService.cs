@@ -101,5 +101,6 @@ namespace WMS.Interfaces
         Task<IEnumerable<gatepassModel>> getgatepassByapproverList(string empid);
         int GatepassapproveByManager(gatepassModel model);
         Task<IEnumerable<safteyStockList>> getSafteyStockList();
+        Task<IEnumerable<StockModel>> GetBinList();
     }
 }

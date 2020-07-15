@@ -188,6 +188,15 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to select * from wms.wms_stock sk inner join wms.wms_rd_bin bin on bin.binid=sk.binid.
+        /// </summary>
+        public static string getbinlist {
+            get {
+                return ResourceManager.GetString("getbinlist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to select ws.unitprice,ws.materialid,op.materialdescription,
         ///    sum(availableqty) as availableqty,( SELECT wrc.categoryname
         ///           FROM wms.wms_rd_category wrc

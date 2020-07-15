@@ -4323,5 +4323,31 @@ namespace WMS.DAL
 			}
 
 		}
+
+		public async Task<IEnumerable<StockModel>> GetBinList()
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				try
+				{
+					string approverlist = WMSResource.getbinlist;
+
+					await pgsql.OpenAsync();
+					return await pgsql.QueryAsync<StockModel>(
+					  approverlist, null, commandType: CommandType.Text);
+
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "GetBinList", Ex.StackTrace.ToString());
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+			}
+		}
 	}
 }

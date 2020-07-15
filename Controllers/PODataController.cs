@@ -492,6 +492,12 @@ namespace WMS.Controllers
 		{
 			return await this._poService.getSafteyStockList();
 		}
+		[HttpGet("GetBinList")]
+		public async Task<IEnumerable<StockModel>> GetBinList()
+		{
+			return await this._poService.GetBinList();
+		}
+		
 		//[HttpPost("securitysendemail")]
 		//public EmailModel sendemail(EmailModel obj)
 		//{
