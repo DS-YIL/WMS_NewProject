@@ -28,14 +28,14 @@ namespace WMS.Controllers
 		[HttpGet("GetOpenPoList")]
 		public async Task<IEnumerable<OpenPoModel>> GetPoNodata(string loginid, string pono = null, string docno = null, string vendorid = null)
 		{
-			return await this._poService.getOpenPoList(loginid, pono, docno, vendorid); 
+			return await this._poService.getOpenPoList(loginid, pono, docno, vendorid);
 		}
-//Get list of PO 
-        [HttpGet("GetPOList")]
-        public async Task<IEnumerable<POList>> GetPoNo(string postatus)
-        {
-            return await this._poService.getPOList(postatus);
-        }
+		//Get list of PO 
+		[HttpGet("GetPOList")]
+		public async Task<IEnumerable<POList>> GetPoNo(string postatus)
+		{
+			return await this._poService.getPOList(postatus);
+		}
 		[HttpGet("CheckPoNoexists")]
 		public OpenPoModel CheckPo(string PONO)
 		{
@@ -65,14 +65,14 @@ namespace WMS.Controllers
 
 		//Get material request details
 		[HttpGet("getReqMatdetailsformaterialid")]
-		public async Task<IEnumerable<ReqMatDetails>> getReqMatdetails(string materialid,string grnnumber)
+		public async Task<IEnumerable<ReqMatDetails>> getReqMatdetails(string materialid, string grnnumber)
 		{
 			return await this._poService.getReqMatdetails(materialid, grnnumber);
 		}
 
 		[HttpPost("generateBarcodeMaterial")]
 		public printMaterial generateBarcodeMaterial(printMaterial printMat)
-        {
+		{
 			return this._poService.generateBarcodeMaterial(printMat);
 
 		}
@@ -95,14 +95,14 @@ namespace WMS.Controllers
 			string grn = "";
 			string po = pono;
 			string[] ponoandinvoice = pono.Split('-');
-            if (ponoandinvoice.Length > 2)
-            {
+			if (ponoandinvoice.Length > 2)
+			{
 				isgrn = true;
 				grn = po;
-            }
+			}
 			string ponodata = ponoandinvoice[0].Trim();
 			string invoiceno = ponoandinvoice[1].Trim();
-			return await this._poService.GetDeatilsForthreeWaymatching(invoiceno, ponodata,isgrn,grn);
+			return await this._poService.GetDeatilsForthreeWaymatching(invoiceno, ponodata, isgrn, grn);
 		}
 
 		[HttpGet("Getqualitydetails")]
@@ -199,9 +199,9 @@ namespace WMS.Controllers
 			return await this._poService.GetMaterialissueListforapprover(approverid);
 		}
 		[HttpGet("getmaterialIssueListbyrequestid")]
-		public async Task<IEnumerable<IssueRequestModel>> getmaterialrequestbyrequestid(string requestid,string pono)
+		public async Task<IEnumerable<IssueRequestModel>> getmaterialrequestbyrequestid(string requestid, string pono)
 		{
-			return await this._poService.GetmaterialdetailsByrequestid(requestid,pono);
+			return await this._poService.GetmaterialdetailsByrequestid(requestid, pono);
 		}
 
 		[HttpGet("getponodetailsBypono")]
@@ -256,7 +256,7 @@ namespace WMS.Controllers
 		{
 			return await this._poService.getGatePassApprovalHistoryList(gatepassid);
 		}
-		
+
 
 		[HttpPost("updateprintstatus")]
 		public int updateprintstatus(gatepassModel model)
@@ -375,10 +375,10 @@ namespace WMS.Controllers
 		}
 
 		[HttpGet("getuserAcessList")]
-		public async Task<IEnumerable<userAcessNamesModel>> getuserAcessList(string employeeid,string roleid)
+		public async Task<IEnumerable<userAcessNamesModel>> getuserAcessList(string employeeid, string roleid)
 		{
 
-			return await this._poService.getuserAcessList(employeeid,roleid);
+			return await this._poService.getuserAcessList(employeeid, roleid);
 		}
 
 		[HttpGet("getEnquirydata")]
@@ -395,7 +395,7 @@ namespace WMS.Controllers
 		[HttpGet("getmaterialrequestListdata")]
 		public async Task<IEnumerable<IssueRequestModel>> getmaterialrequestListdata(string pono = null, string loginid = null)
 		{
-			return await this._poService.MaterialRequestdata(pono,loginid);
+			return await this._poService.MaterialRequestdata(pono, loginid);
 		}
 		[HttpGet("getmaterialissueList")]
 		public async Task<IEnumerable<IssueRequestModel>> getmaterialissueList(int requestid)
@@ -411,7 +411,7 @@ namespace WMS.Controllers
 		[HttpPost("insertreservematerial")]
 		public int getmaterialissueList([FromBody] List<ReserveMaterialModel> datamodel)
 		{
-			return  this._poService.insertResevematerial(datamodel);
+			return this._poService.insertResevematerial(datamodel);
 		}
 		[HttpGet("GetreserveMaterilalist")]
 		public async Task<IEnumerable<ReserveMaterialModel>> GetReservedMaterialList(string reservedby)
@@ -485,6 +485,12 @@ namespace WMS.Controllers
 		public int GatepassapproveByManager([FromBody] gatepassModel obj)
 		{
 			return this._poService.GatepassapproveByManager(obj);
+		}
+
+		[HttpGet("getSafteyStockList")]
+		public async Task<IEnumerable<safteyStockList>> getSafteyStockList()
+		{
+			return await this._poService.getSafteyStockList();
 		}
 		//[HttpPost("securitysendemail")]
 		//public EmailModel sendemail(EmailModel obj)

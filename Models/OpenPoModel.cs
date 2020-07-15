@@ -609,3 +609,11 @@ public class gatepassapprovalsModel
 	public Boolean currentStatus { get; set; }
 
 }
+
+public class safteyStockList
+{
+	public string material { get; set; }
+	public string materialdescription { get; set; }
+	public int availableqty { get; set; }
+	public int safteystock { get; set; }
+}

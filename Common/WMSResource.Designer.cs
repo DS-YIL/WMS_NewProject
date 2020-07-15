@@ -636,6 +636,16 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to select distinct(mmy.material), mmy.materialdescription,st.availableqty,mmy.safteystock from wms.&quot;MaterialMasterYGS&quot; mmy  join 
+        /// wms.wms_stock st on st.materialid =mmy.material where st.availableqty &lt; mmy.safteystock.
+        /// </summary>
+        public static string getSafteyStockList {
+            get {
+                return ResourceManager.GetString("getSafteyStockList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to select sl.pono,asno.asn,Max(emp.name) as receivedby ,Max(ol.suppliername) as suppliername from wms.wms_securityinward sl 
         ///left outer join wms.wms_polist ol on sl.pono = ol.pono
         ///left outer join wms.wms_asn asno on asno.pono = sl.pono

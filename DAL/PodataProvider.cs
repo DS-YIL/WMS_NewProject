@@ -4296,5 +4296,32 @@ namespace WMS.DAL
 				return 0;
 			}
 		}
+
+		public async Task<IEnumerable<safteyStockList>>getSafteyStockList()
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				try
+				{
+					string approverlist = WMSResource.getSafteyStockList;
+
+					await pgsql.OpenAsync();
+					return await pgsql.QueryAsync<safteyStockList>(
+					  approverlist, null, commandType: CommandType.Text);
+
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "getSafteyStockList", Ex.StackTrace.ToString());
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+			}
+
+		}
 	}
 }
