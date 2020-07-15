@@ -292,7 +292,7 @@ namespace WMS.Common {
         ///   left join wms.wms_gatepassmaterial mat on gate.gatepassid=mat.gatepassid 
         ///   left join wms.employee emp on emp.employeeno=gate.requestedby
         ///   left join wms.&quot;MaterialMasterYGS&quot; ygs on ygs.material=mat.materialid and mat.deleteflag=false 
-        ///   where gate.deleteflag=false and gate.approverstatus=&apos;Approved&apos; or (gate.approverstatus=&apos;Approved&apos; and gate.fmapprovedstatus=&apos;Approved&apos;)  order by gate.gatepassid desc.
+        ///   where gate.deleteflag=false   order by gate.gatepassid desc.
         /// </summary>
         public static string getgatepasslist {
             get {

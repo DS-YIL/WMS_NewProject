@@ -2012,7 +2012,7 @@ namespace WMS.DAL
 						{
 							string approvername = dataobj.managername;
 							int label = 1;
-							string approverstatus = "Pending";
+							//string approverstatus = "Pending";
 							var gatepasshistory = DB.ExecuteScalar(insertgatepasshistory, new
 							{
 
@@ -2029,7 +2029,7 @@ namespace WMS.DAL
 							{
 								string approvername = dataobj.managername;
 								int label = 1;
-								string approverstatus = "Pending";
+								//string approverstatus = "Pending";
 								var gatepasshistory = DB.ExecuteScalar(insertgatepasshistory, new
 								{
 
