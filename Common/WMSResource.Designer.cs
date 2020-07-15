@@ -703,7 +703,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to insert into wms.wms_gatepassapprovals(historyid,gatepassid,approverid,approvername,approverstatus,&quot;label&quot;)values(default,@gatepassid,@approverid,@approvername,@approverstatus,@label).
+        ///   Looks up a localized string similar to insert into wms.wms_gatepassapprovals(historyid,gatepassid,approverid,approvername,approverstatus,&quot;label&quot;,approvedon)values(default,@gatepassid,@approverid,@approvername,@approverstatus,@label,current_timestamp).
         /// </summary>
         public static string insertgatepassapprovalhistory {
             get {

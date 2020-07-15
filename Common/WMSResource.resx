@@ -661,7 +661,7 @@ left outer join wms.wms_qualitycheck qc on qc.inwardid = inw.inwardid</value>
 left join wms.employee emp on emp.employeeno=gate.requestedby  where approverid='#approverid'</value>
   </data>
   <data name="insertgatepassapprovalhistory" xml:space="preserve">
-    <value>insert into wms.wms_gatepassapprovals(historyid,gatepassid,approverid,approvername,approverstatus,"label")values(default,@gatepassid,@approverid,@approvername,@approverstatus,@label)</value>
+    <value>insert into wms.wms_gatepassapprovals(historyid,gatepassid,approverid,approvername,approverstatus,"label",approvedon)values(default,@gatepassid,@approverid,@approvername,@approverstatus,@label,current_timestamp)</value>
   </data>
   <data name="updategatepasshistoryfornonreturn" xml:space="preserve">
     <value>insert into wms.wms_gatepassapprovals(historyid,gatepassid,fmapproverid,fmapprovername,fmapproverstatus,"label")
