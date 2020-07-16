@@ -20,6 +20,7 @@ export class BinStatusReportComponent implements OnInit {
   public fromDate: Date;
   public toDate: Date;
   public dynamicData: DynamicSearchResult;
+  public dataList: Array<any> = []
   cols: any[];
   exportColumns: any[];
   selectedStatus: string = "Instock";
@@ -34,7 +35,7 @@ export class BinStatusReportComponent implements OnInit {
     this.getBinstatusList();
 
     this.cols = [
-      { field: 'BinId', header: 'Bin Id.' },
+      { field: 'BinId', header: 'Bin' },
       { field: 'Material', header: 'Material' },
       { field: 'qty', header: 'Available Quantity' },
       { field: 'ItemLocation', header: 'Item Loaction' },
@@ -45,13 +46,11 @@ export class BinStatusReportComponent implements OnInit {
   }
 
 
-  //SubmitStatus() {
-  //  this.spinner.show();
-  //  this.wmsService.getPONumbers(this.selectedStatus).subscribe(data => {
-  //    this.spinner.hide();
-  //    this.poList = data;
-  //  });
-  //}
+  onSelectStatus(event) {
+    this.selectedStatus = event.target.value;
+
+  }
+
 
  
 
@@ -59,12 +58,19 @@ export class BinStatusReportComponent implements OnInit {
   //{
   //  this.router.navigate(['/WMS/InvoiceDetails'], { queryParams: { PONO: poNo,qty:qty} });
   //  }
-
+  SubmitBinStatus(event) {
+    if (this.selectedStatus == "empty") {
+      this.poList = this.dataList.filter(li => li.binid == 0);
+    }
+    else if (this.selectedStatus == "filled") {
+      this.poList = this.dataList.filter(li => li.binid != 0);}
+  }
   getBinstatusList() {
     this.spinner.show();
     this.wmsService.GetBinList().subscribe(data => {
       this.spinner.hide();
-      this.poList = data;
+      this.dataList = data;
+      this.poList = this.dataList.filter(li=>li.binid!=0);
     });
   }
 

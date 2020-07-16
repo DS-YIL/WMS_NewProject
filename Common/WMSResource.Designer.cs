@@ -188,8 +188,8 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select sk.binid,sk.materialid as material,sum(sk.availableqty)as availableqty,max(sk.itemlocation)as itemlocation
-        /// from wms.wms_stock sk inner join wms.wms_rd_bin bin on bin.binid=sk.binid group by sk.binid,sk.materialid.
+        ///   Looks up a localized string similar to select bin.binnumber,sk.binid,sk.materialid as material,sum(sk.availableqty)as availableqty,max(sk.itemlocation)as itemlocation
+        /// from wms.wms_rd_bin bin left join wms.wms_stock sk  on bin.binid=sk.binid group by sk.binid,sk.materialid,bin.binnumber order by sk.binid asc.
         /// </summary>
         public static string getbinlist {
             get {
@@ -471,7 +471,11 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select max(openpo.projectname)as projectname,max(sk.itemid)as itemid,sk.materialid as material,sum(sk.availableqty)as availableqty,max(openpo.materialdescription)as materialdescription,max(openpo.quotationqty)as quotationqty,max(openpo.materialqty )as materialqty,max(sk.pono) as pono from   wms.wms_stock  sk left join wms.openpolistview openpo on openpo.pono = sk.pono where sk.availableqty!=0 .
+        ///   Looks up a localized string similar to select max(pro.projectname)as projectname,max(sk.itemid)as itemid,sk.materialid as material,sum(sk.availableqty)as availableqty,max(mat.materialdescription)as materialdescription,max(mat.materialqty)as quotationqty,max(mat.materialqty)as materialqty,max(sk.pono) as pono from 
+        ///wms.wms_stock  sk left join wms.wms_polist openpo on openpo.pono = sk.pono 
+        ///left join wms.wms_pomaterials mat on mat.pono=openpo.pono
+        ///left join wms.wms_project pro on pro.pono=openpo.pono
+        ///where sk.availableqty!=0.
         /// </summary>
         public static string getmaterialdetailfprrequest {
             get {

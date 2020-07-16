@@ -3541,7 +3541,7 @@ namespace WMS.DAL
 					}
 					if (approverid != null)
 					{
-						materialrequestquery = materialrequestquery + " and openpo.projectmanager = '" + approverid + "' ";
+						materialrequestquery = materialrequestquery + " and pro.projectmanager = '" + approverid + "' ";
 					}
 					materialrequestquery = materialrequestquery + " group by sk.materialid limit 50";
 					await pgsql.OpenAsync();
