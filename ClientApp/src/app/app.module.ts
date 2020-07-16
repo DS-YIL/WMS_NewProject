@@ -64,7 +64,7 @@ import { MaterialReleaseComponent } from './WMS/MaterialRelease.component';
 import { QualityCheckComponent } from './WMS/QualityCheck.component';
 import { BarcodeComponent } from './WMS/Barcode.component';
 import { GatePassApprovalList } from './WMS/GatePassApprovalList.component';
-
+import { SafetyStockComponent } from './WMS/SafteyStock.component';
 
 ////pages
 import { LoginComponent } from './WMS/Login.component';
@@ -115,11 +115,8 @@ import {MenubarModule} from 'primeng/menubar';
     MaterialReleaseComponent,
     QualityCheckComponent,
     BarcodeComponent,
-    GatePassApprovalList
-
-
-
-
+    GatePassApprovalList,
+    SafetyStockComponent
 
   ],
   imports: [

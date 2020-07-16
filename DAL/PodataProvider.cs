@@ -4297,17 +4297,17 @@ namespace WMS.DAL
 			}
 		}
 
-		public async Task<IEnumerable<safteyStockList>>getSafteyStockList()
+		public async Task<IEnumerable<safteyStockList>> getSafteyStockList()
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
 				try
 				{
-					string approverlist = WMSResource.getSafteyStockList;
+					string query = WMSResource.getSafteyStockList;
 
 					await pgsql.OpenAsync();
 					return await pgsql.QueryAsync<safteyStockList>(
-					  approverlist, null, commandType: CommandType.Text);
+					  query, null, commandType: CommandType.Text);
 
 				}
 				catch (Exception Ex)
@@ -4323,6 +4323,7 @@ namespace WMS.DAL
 			}
 
 		}
+
 
 		public async Task<IEnumerable<StockModel>> GetBinList()
 		{

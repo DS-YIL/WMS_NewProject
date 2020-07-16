@@ -645,8 +645,8 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select distinct(mmy.material), mmy.materialdescription,st.availableqty,mmy.safteystock from wms.&quot;MaterialMasterYGS&quot; mmy  join 
-        /// wms.wms_stock st on st.materialid =mmy.material where st.availableqty &lt; mmy.safteystock.
+        ///   Looks up a localized string similar to select distinct(mmy.material), mmy.materialdescription,sum(st.availableqty) as availableqty,max(mmy.safteystock) as safteystock ,max(mmy.minorderqty) as minorderqty 
+        /// from wms.&quot;MaterialMasterYGS&quot; mmy  join wms.wms_stock st on st.materialid =mmy.material where st.availableqty &lt; mmy.safteystock.
         /// </summary>
         public static string getSafteyStockList {
             get {

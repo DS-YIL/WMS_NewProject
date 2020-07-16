@@ -36,6 +36,7 @@ import { MaterialReleaseComponent } from './WMS/MaterialRelease.component';
 import { QualityCheckComponent } from './WMS/QualityCheck.component';
 import { BarcodeComponent } from './WMS/Barcode.component';
 import { GatePassApprovalList } from './WMS/GatePassApprovalList.component';
+import { SafetyStockComponent } from './WMS/SafteyStock.component';
 
 const routes: Routes = [{
   path: 'WMS',
@@ -88,6 +89,8 @@ const routes: Routes = [{
     { path: "Barcode", component: BarcodeComponent, canActivate: [AuthGuard] },
     { path: "GatePassPMList", component: GatePassApprovalList, canActivate: [AuthGuard] },
     { path: "GatePassFMList", component: GatePassApprovalList, canActivate: [AuthGuard] },
+    { path: "SafetyStockList", component: SafetyStockComponent, canActivate: [AuthGuard] },
+    
     
   ]
 

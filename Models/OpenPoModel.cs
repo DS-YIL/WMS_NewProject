@@ -616,4 +616,5 @@ public class safteyStockList
 	public string materialdescription { get; set; }
 	public int availableqty { get; set; }
 	public int safteystock { get; set; }
+	public int minorderqty { get; set; }
 }

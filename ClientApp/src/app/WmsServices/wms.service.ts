@@ -309,7 +309,9 @@ export class wmsService {
   getgatepassapproverdata(empid: string): Observable<any> {
     return this.http.get<any>(this.url + 'POData/getgatepassByapproverList?empid=' + empid, this.httpOptions);
   }
-  
+  getSafteyStockList(): Observable<any> {
+    return this.http.get<any>(this.url + 'POData/getSafteyStockList', this.httpOptions);
+  }
 }
 
 
