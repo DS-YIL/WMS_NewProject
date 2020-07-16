@@ -6,8 +6,8 @@ import { Employee } from '../Models/Common.Model';
 import { NgxSpinnerService } from "ngx-spinner";
 
 @Component({
-  selector: 'app-safteystock',
-  templateUrl: './SafteyStock.component.html'
+  selector: 'app-safetystock',
+  templateUrl: './SafetyStock.component.html'
 })
 export class SafetyStockComponent implements OnInit {
   constructor( private wmsService: wmsService, private router: Router, public constants: constants, private spinner: NgxSpinnerService) { }

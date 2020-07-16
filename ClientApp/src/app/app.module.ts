@@ -64,7 +64,7 @@ import { MaterialReleaseComponent } from './WMS/MaterialRelease.component';
 import { QualityCheckComponent } from './WMS/QualityCheck.component';
 import { BarcodeComponent } from './WMS/Barcode.component';
 import { GatePassApprovalList } from './WMS/GatePassApprovalList.component';
-import { SafetyStockComponent } from './WMS/SafteyStock.component';
+import { SafetyStockComponent } from './WMS/SafetyStock.component';
 import { BinStatusReportComponent } from './WMS/BinStatusReport.component';
 ////pages
 import { LoginComponent } from './WMS/Login.component';
