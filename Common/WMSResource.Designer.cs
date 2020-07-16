@@ -188,7 +188,8 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select * from wms.wms_stock sk inner join wms.wms_rd_bin bin on bin.binid=sk.binid.
+        ///   Looks up a localized string similar to select sk.binid,sk.materialid as material,sum(sk.availableqty)as availableqty,max(sk.itemlocation)as itemlocation
+        /// from wms.wms_stock sk inner join wms.wms_rd_bin bin on bin.binid=sk.binid group by sk.binid,sk.materialid.
         /// </summary>
         public static string getbinlist {
             get {
@@ -645,8 +646,8 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select distinct(mmy.material), mmy.materialdescription,sum(st.availableqty) as availableqty,max(mmy.safteystock) as safteystock ,max(mmy.minorderqty) as minorderqty 
-        /// from wms.&quot;MaterialMasterYGS&quot; mmy  join wms.wms_stock st on st.materialid =mmy.material where st.availableqty &lt; mmy.safteystock.
+        ///   Looks up a localized string similar to select mmy.material, mmy.materialdescription,sum(st.availableqty) as availableqty,mmy.safteystock as safteystock ,mmy.minorderqty as minorderqty
+        ///from wms.&quot;MaterialMasterYGS&quot; mmy  join wms.wms_stock st on st.materialid =mmy.material where st.availableqty &lt; mmy.safteystock group by mmy.material.
         /// </summary>
         public static string getSafteyStockList {
             get {

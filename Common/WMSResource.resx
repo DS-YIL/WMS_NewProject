@@ -674,10 +674,11 @@ values(default,@gatepassid,@fmapproverid,@fmapprovername,'Pending',@label)</valu
     <value>update wms.wms_gatepass set approverstatus='#approverstatus',approverremarks=@approverremarks,approvedon=current_timestamp where gatepassid=@gatepassid</value>
   </data>
   <data name="getSafteyStockList" xml:space="preserve">
-    <value>select distinct(mmy.material), mmy.materialdescription,sum(st.availableqty) as availableqty,max(mmy.safteystock) as safteystock ,max(mmy.minorderqty) as minorderqty 
- from wms."MaterialMasterYGS" mmy  join wms.wms_stock st on st.materialid =mmy.material where st.availableqty &lt; mmy.safteystock</value>
+    <value>select mmy.material, mmy.materialdescription,sum(st.availableqty) as availableqty,mmy.safteystock as safteystock ,mmy.minorderqty as minorderqty
+from wms."MaterialMasterYGS" mmy  join wms.wms_stock st on st.materialid =mmy.material where st.availableqty &lt; mmy.safteystock group by mmy.material</value>
   </data>
   <data name="getbinlist" xml:space="preserve">
-    <value>select * from wms.wms_stock sk inner join wms.wms_rd_bin bin on bin.binid=sk.binid</value>
+    <value>select sk.binid,sk.materialid as material,sum(sk.availableqty)as availableqty,max(sk.itemlocation)as itemlocation
+ from wms.wms_stock sk inner join wms.wms_rd_bin bin on bin.binid=sk.binid group by sk.binid,sk.materialid</value>
   </data>
 </root>
