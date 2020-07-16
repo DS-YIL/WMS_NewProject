@@ -13,7 +13,7 @@
       </div>
       <div class="col-lg-3 col-md-3 col-sm-3 form-group">
         <select placeholder="Status" name="Status" (change)="onSelectStatus($event)" class="form-control">
-          <option value="filled"> Filled Bin</option>
+          <option  selected value="filled"> Filled Bin</option>
           <option value="empty"> Empty Bin</option>
         </select>
       </div>
@@ -44,9 +44,9 @@
           <td class="ptable-cell" style="text-align:center">
             {{ri+1}}
           </td>
-          <td class="ptable-cell" style="text-align:center">{{rowData.binnumber}}</td>
-          <td class="ptable-cell" style="  text-align: right; width: 90px">{{rowData.material}}</td>
-          <td class="ptable-cell" style="text-align:left;width:250px">{{rowData.availableqty}}</td>
+          <td class="ptable-cell" style="text-align:left">{{rowData.binnumber}}</td>
+          <td class="ptable-cell" style="  text-align: left; width: 90px">{{rowData.material}}</td>
+          <td class="ptable-cell" style="text-align:right;width:250px">{{rowData.availableqty}}</td>
           <td class="ptable-cell" style="text-align:left;width:250px">{{rowData.itemlocation}}</td>
         </tr>
       </ng-template>
