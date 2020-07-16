@@ -312,6 +312,9 @@ export class wmsService {
   getSafteyStockList(): Observable<any> {
     return this.http.get<any>(this.url + 'POData/getSafteyStockList', this.httpOptions);
   }
+  GetBinList(): Observable<any> {
+    return this.http.get<any>(this.url + 'POData/GetBinList', this.httpOptions);
+  }
 }
 
 
