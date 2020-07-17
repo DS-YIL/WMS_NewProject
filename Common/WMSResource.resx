@@ -127,7 +127,7 @@
     <comment>checkpono</comment>
   </data>
   <data name="GetdetailsByrequestid" xml:space="preserve">
-    <value>select sum(iss.issuedqty) as issuedqty,max(pro.jobname)as jobname,max(req.requestforissueid)as requestforissueid,max(emp."name")as name,req.requesteddate,sk.materialid,--sk.pono,
+    <value>select sum(iss.issuedqty) as issuedqty,max(pro.jobname)as jobname,max(req.requestforissueid)as requestforissueid,max(emp."name")as name,req.requesteddate,sk.materialid,max(sk.pono)as pono,
 req.requestedquantity,sum(sk.availableqty)as availableqty,req.requestid from wms.wms_stock sk 
       inner join wms.wms_polist op on op.pono=sk.pono
        inner join wms.wms_materialrequest req on req.materialid=sk.materialid
