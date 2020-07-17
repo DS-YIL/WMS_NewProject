@@ -4,9 +4,9 @@ import { wmsService } from '../WmsServices/wms.service';
 import { constants } from '../Models/WMSConstants';
 import { Employee, DynamicSearchResult, searchList, printMaterial } from '../Models/Common.Model';
 import { NgxSpinnerService } from "ngx-spinner";
-import { PoDetails, BarcodeModel, StockModel, inwardModel } from 'src/app/Models/WMS.Model';
+import { PoDetails, BarcodeModel, StockModel, inwardModel, locationddl, binddl, rackddl } from 'src/app/Models/WMS.Model';
 import { MessageService } from 'primeng/api';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 
 @Component({
@@ -40,10 +40,14 @@ export class WarehouseInchargeComponent implements OnInit {
   public showDetails; showLocationDialog: boolean = false;
   public StockModel: StockModel;
   public StockModelForm: FormGroup;
+  public StockModelForm1: FormGroup;
   public rowIndex: number;
   public locationlist: any[] = [];
   public binlist: any[] = [];
   public racklist: any[] = [];
+  locationlist1: locationddl[] = [];
+  binlist1: binddl[] = [];
+  racklist1: rackddl[] = [];
   public showPrintDialog: boolean = false;
   public qty: any = 1;
   public noOfPrint: any = 1;
@@ -56,6 +60,9 @@ export class WarehouseInchargeComponent implements OnInit {
   public pono: string;
   public invoiceNo: string;
   public grnNo: string;
+  matid: string = "";
+  matdescription: string = "";
+  matqty: string = "";
 
   ngOnInit() {
     if (localStorage.getItem("Employee"))
@@ -65,7 +72,13 @@ export class WarehouseInchargeComponent implements OnInit {
 
     this.PoDetails = new PoDetails();
     this.StockModel = new StockModel();
+    this.locationListdata1();
+    this.binListdata1();
+    this.rackListdata1();
     this.StockModel.shelflife = new Date();
+    //this.userForm = this.fb.group({
+    //  users: this.fb.array([])
+    //});
     this.StockModelForm = this.formBuilder.group({
       locatorid: ['', [Validators.required]],
       rackid: ['', [Validators.required]],
@@ -73,6 +86,17 @@ export class WarehouseInchargeComponent implements OnInit {
       shelflife: ['', [Validators.required]],
       binnumber: ['', [Validators.required]],
       itemlocation: ['', [Validators.required]]
+    });
+    this.StockModelForm1 = this.formBuilder.group({
+      users: this.formBuilder.array([{
+        locatorid: ['', [Validators.required]],
+        rackid: ['', [Validators.required]],
+        binid: ['', [Validators.required]],
+        shelflife: ['', [Validators.required]],
+        binnumber: ['', [Validators.required]],
+        itemlocation: ['', [Validators.required]],
+        quantity: [0, [Validators.required]],
+      }])
     });
 
     // this.loadStores();
@@ -99,6 +123,10 @@ export class WarehouseInchargeComponent implements OnInit {
     if (this.qty < this.noOfPrint) {
       this.qty = this.qty + 1;
     }
+  }
+
+  getControls() {
+    return (this.StockModelForm1.get("users") as FormArray).controls;
   }
 
  locationListdata() {
@@ -244,7 +272,7 @@ export class WarehouseInchargeComponent implements OnInit {
       this.messageService.add({ severity: 'error', summary: 'Validation', detail: 'Enter GRNNo' });
   }
 
-  showDialog(details: any, index: number) {
+  showDialog1(details: any, index: number) {
     this.showLocationDialog = true;
     this.PoDetails = details;
     this.rowIndex = index;
@@ -258,18 +286,51 @@ export class WarehouseInchargeComponent implements OnInit {
     this.locationListdata();
     this.binListdata();
     this.rackListdata();
-   // this.locationlist=
     this.rack = "";
     this.bin = "";
     this.store ="";
-  
-    //this.StockModelForm.setValue({ itemlocation: details.store });
-    //this.StockModelForm.setValue({ rackid: details.rack });
-    //this.StockModelForm.setValue({ binid: details.bin });
-    //this.StockModelForm.controls['itemlocation'].setValue(details.store);
-    
-    //this.StockModelForm["rackid"] = details.rack;
-    //this.StockModelForm["binid"] = details.bin;
+  }
+
+  showDialog(details: any, index: number) {
+    this.showLocationDialog = true;
+    this.PoDetails = details;
+    this.rowIndex = index;
+    this.binid = details.binid;
+    this.rackid = details.rackid;
+    this.matid = details.material;
+    this.matdescription = details.materialdescription;
+    this.matqty = details.receivedqty;
+    //this.StockModelForm = this.formBuilder.group({
+    //  rackid: [details.rackid],
+    //  binid: [details.binid],
+    //  locatorid: [details.storeid]
+    //});
+    //this.locationListdata();
+    //this.binListdata();
+    //this.rackListdata();
+    //this.rack = "";
+    //this.bin = "";
+    //this.store = "";
+  }
+
+  addrows() {
+    const control = <FormArray>this.StockModelForm1.get("users");
+    control.push(this.newrow());
+
+  }
+  newrow(): FormGroup {
+    debugger;
+    return this.formBuilder.group({
+      locatorid: ['', [Validators.required]],
+      rackid: ['', [Validators.required]],
+      binid: ['', [Validators.required]],
+      shelflife: ['', [Validators.required]],
+      binnumber: ['', [Validators.required]],
+      itemlocation: ['', [Validators.required]],
+      quantity: [0, [Validators.required]],
+      
+    });
+
   }
 
   onSubmitStockDetails() {
@@ -329,6 +390,31 @@ export class WarehouseInchargeComponent implements OnInit {
   dialogCancel(dialogName) {
     this[dialogName] = false;
   }
+
+  locationListdata1() {
+    this.wmsService.getlocationdata().
+      subscribe(
+        res => {
+          //this._list = res; //save posts in array
+          this.locationlist1 = res;
+        });
+  }
+  binListdata1() {
+    this.wmsService.getbindata().
+      subscribe(
+        res => {
+          //this._list = res; //save posts in array
+          this.binlist1 = res;
+        });
+  }
+  rackListdata1() {
+    this.wmsService.getrackdata().
+      subscribe(
+        res => {
+          //this._list = res; //save posts in array
+          this.racklist1 = res;
+        });
+  } 
 
 
 }

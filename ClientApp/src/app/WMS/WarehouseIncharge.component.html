@@ -259,7 +259,7 @@
         </div>
 </form>
   </p-dialog>
-    <p-dialog header="Put Away Location" [(visible)]="showLocationDialog" [contentStyle]="{'overflow':'visible'}" [style]="{width: '50%'}">
+    <p-dialog header="Put Away Location" [(visible)]="showLocationDialogxx" [contentStyle]="{'overflow':'visible'}" [style]="{width: '50%'}">
       <form [formGroup]="StockModelForm">
         <div class="row " style="margin-top:10px;">
           <div class="col-lg-4 col-md-4 col-sm-4 form-group">
@@ -271,11 +271,6 @@
             {{loclist.locatorname}}
             </option>
             </select>
-            <!--<p-autoComplete [(ngModel)]="store" [suggestions]="searchItems" formControlName="itemlocation" field="name" [dropdown]="true" (completeMethod)="bindSearchListData($event,'StockModelForm','itemlocation',StockModelForm.controls.itemlocation.value,undefined)"></p-autoComplete>-->
-            <!--<input type="text" class="form-control forms-input" formControlName="itemlocation" [value]="StockModelForm.controls.itemlocation.value" (keyup)="onsrchTxtChange('itemlocation',StockModelForm.controls.itemlocation.value,'StockModel')">
-  <div class="input-group-append">
-    <button type="button" class="btn btn-outline-secondary form-control" style="cursor:pointer" pButton icon="fa fa-list" aria-hidden="true" (click)="bindSearchListData($event,'StockModelForm','itemlocation',StockModelForm.controls.itemlocation.value,undefined)"></button>
-  </div>-->
 </div>
           </div>
           <div class="col-lg-4 col-md-4 col-sm-4 form-group">
@@ -289,11 +284,7 @@
                   {{loclist.racknumber}}
                 </option>
               </select>
-              <!--<p-autoComplete [(ngModel)]="rack" [suggestions]="searchItems" formControlName="rackid" field="name" [dropdown]="true" (completeMethod)="bindSearchListData($event,'StockModelForm','rackid',StockModelForm.controls.rackid.value,undefined)"></p-autoComplete>-->
-              <!--<input type="text" class="form-control forms-input" formControlName="rackid" [value]="StockModelForm.controls.rackid.value" (keyup)="onsrchTxtChange('rackid',StockModelForm.controls.rackid.value,'StockModel')">
-              <div class="input-group-append">
-                <button type="button" class="btn btn-outline-secondary form-control" style="cursor:pointer" pButton icon="fa fa-list" aria-hidden="true" (click)="bindSearchListData($event,'StockModelForm','rackid',StockModelForm.controls.rackid.value,undefined)"></button>
-              </div>-->
+             
             </div>
           </div>
           <div class="col-lg-4 col-md-4 col-sm-4 form-group">
@@ -306,17 +297,10 @@
                   {{loclist.binnumber}}
                 </option>
               </select>
-              <!--<p-autoComplete [(ngModel)]="bin" [suggestions]="searchItems" formControlName="binid" field="name" [dropdown]="true" (completeMethod)="bindSearchListData($event,'StockModelForm','binid',StockModelForm.controls.binid.value,undefined)"></p-autoComplete>-->
-              <!--<input type="text" class="form-control forms-input" formControlName="binid" [value]="StockModelForm.controls.binid.value" (keyup)="onsrchTxtChange('binid',StockModelForm.controls.binid.value,'StockModel')">
-              <div class="input-group-append">
-                <button type="button" class="btn btn-outline-secondary form-control" style="cursor:pointer" pButton icon="fa fa-list" aria-hidden="true" (click)="bindSearchListData($event,'StockModelForm','binid',StockModelForm.controls.binid.value,undefined)"></button>
-              </div>-->
+             
             </div>
           </div>
-          <!--<div class="col-lg-4 col-md-4 col-sm-4 form-group">
-            <label class="form-label">Shelf Life</label><br />
-            <p-calendar [(ngModel)]="StockModel.shelflife" formControlName="shelflife" [monthNavigator]="true" [yearNavigator]="true" yearRange="1900:2050"></p-calendar>
-          </div>-->
+         
         </div>
       </form>
       <p-footer>
@@ -334,6 +318,58 @@
         <div class="ui-dialog-buttonpane ui-helper-clearfix">
           <button type="button" pButton icon="fa fa-close" (click)="dialogCancel('showList')" label="Cancel"></button>
         </div>
+      </p-footer>
+    </p-dialog>
+    <p-dialog header="Put Away Location" [(visible)]="showLocationDialog" [position]="top" [modal]="true" [style]="{width: '95vw'}" [maximizable]="true" [baseZIndex]="10000"
+              [draggable]="true" [resizable]="false">
+      <div class="row">
+        <div class="col-lg-4 col-md-4 labelheading">
+          <label>Material Id :</label>&nbsp;<span><label class="labeltext">{{matid}}</label></span>
+        </div>
+        <div class="col-lg-4 col-md-4 labelheading">
+          <label>Material desc :</label>&nbsp;<span><label class="labeltext">{{matdescription}}</label></span>
+        </div>
+        <div class="col-lg-3 col-md-3 labelheading">
+          <label>Received Qty :</label>&nbsp;<span><label class="labeltext">{{matqty}}</label></span>
+        </div>
+        <div class="col-lg-1 col-md-1 labelheading">
+          <button type="button" class="btn btn-primary btn-sm" style="float:right;margin-left:10px;" (click)="addrows()" label="Save"><i class="fa fa-plus"></i></button>
+        </div>
+      </div>
+      <div>
+        <form [formGroup]="StockModelForm1">
+          <table>
+            <tbody *ngFor="let control of getControls(); let i=index" style="width: 100%">
+              <tr [formGroup]="control" style="width: 100%;padding: 0px;">
+                <td class="ptable-cell" style="text-align:right;width:5%;">{{i+1}}</td>
+                <td class="ptable-cell" style="text-align:center;width:20%;">
+                  <p-dropdown [options]="locationlist" [style]="{'width':'100%'}" appendTo="body" formControlName="locatorid" placeholder="Select location" filter="true" optionLabel="locatorname" [showClear]="true"></p-dropdown>
+                 
+                </td>
+                <td class="ptable-cell" style="text-align:left;">
+                  <p-dropdown [options]="racklist" [style]="{'width':'100%'}" formControlName="rackid"  placeholder="Select rack" filter="true" optionLabel="racknumber" [showClear]="true"></p-dropdown>
+                </td>
+
+                <td class="ptable-cell" style="text-align:right;width:15%;">
+                  <p-dropdown [options]="binlist" [style]="{'width':'100%'}" formControlName="binid"  placeholder="Select bin" filter="true" optionLabel="binnumber" [showClear]="true"></p-dropdown>
+                </td>
+                <td class="ptable-cell" style="text-align:center;width:15%;">
+                  <input pInputText type="number" style="text-align:right" class="form-control" formControlName="quantity">
+                </td>
+                <td class="ptable-cell" style="text-align:center;width:10%;">
+                  <button type="button" class="btn btn-primary btn-sm" (click)="remove(rowData)"><i class="fa fa-trash"></i></button>
+                </td>
+              </tr>
+            </tbody>
+
+          </table>
+          
+        </form>
+        
+      </div>
+
+      <p-footer>
+        <button type="button" pButton icon="pi pi-times" (click)="showLocationDialog=false" label="Close" class="ui-button-secondary"></button>
       </p-footer>
     </p-dialog>
 </div>
