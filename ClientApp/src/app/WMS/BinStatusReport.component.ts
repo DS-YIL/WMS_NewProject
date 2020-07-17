@@ -58,7 +58,7 @@ export class BinStatusReportComponent implements OnInit {
   //{
   //  this.router.navigate(['/WMS/InvoiceDetails'], { queryParams: { PONO: poNo,qty:qty} });
   //  }
-  SubmitBinStatus(event) {
+  SubmitBinStatus() {
     if (this.selectedStatus == "empty") {
       this.poList = this.dataList.filter(li => li.binid == 0);
     }
