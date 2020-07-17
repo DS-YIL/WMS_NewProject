@@ -8,14 +8,16 @@ import { NgxSpinnerService } from "ngx-spinner";
 import { materialRequestDetails, FIFOValues } from 'src/app/Models/WMS.Model';
 import { MessageService } from 'primeng/api';
 import { ConfirmationService } from 'primeng/api';
+import { DatePipe } from '@angular/common';
 @Component({
   selector: 'app-MaterialIsuue',
   templateUrl: './MaterialIssue.component.html'
 })
 export class MaterialIssueComponent implements OnInit {
     roindex: any;
+    itemreceiveddate: string;
 
-  constructor(private ConfirmationService: ConfirmationService, private formBuilder: FormBuilder, private messageService: MessageService, private wmsService: wmsService, private route: ActivatedRoute, private router: Router, public constants: constants, private spinner: NgxSpinnerService) { }
+  constructor(private datePipe: DatePipe,private ConfirmationService: ConfirmationService, private formBuilder: FormBuilder, private messageService: MessageService, private wmsService: wmsService, private route: ActivatedRoute, private router: Router, public constants: constants, private spinner: NgxSpinnerService) { }
 
   public formName: string;
   public txtName: string;
@@ -41,6 +43,7 @@ export class MaterialIssueComponent implements OnInit {
   public showdialog: boolean = false;
   public txtDisable: boolean = true;
   public FIFOvalues: FIFOValues;
+  public reqqty: number;
   ngOnInit() {
     if (localStorage.getItem("Employee"))
       this.employee = JSON.parse(localStorage.getItem("Employee"));
@@ -73,11 +76,17 @@ export class MaterialIssueComponent implements OnInit {
 
     });
 
-   
-    (<HTMLInputElement>document.getElementById(this.id)).value = totalissuedqty.toString();
-    this.materialissueList[this.roindex].issuedqty = totalissuedqty;
-    this.txtDisable = true;
-    this.AddDialog = false;
+    if (totalissuedqty > this.reqqty) {
+      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please enter issue quantity less than or eaqual to requested quantity' });
+      this.AddDialog = true;
+    }
+    else {
+      (<HTMLInputElement>document.getElementById(this.id)).value = totalissuedqty.toString();
+      this.materialissueList[this.roindex].issuedqty = totalissuedqty;
+      this.txtDisable = true;
+      this.AddDialog = false;
+    }
+  
    
   }
   Cancel() {
@@ -85,7 +94,8 @@ export class MaterialIssueComponent implements OnInit {
   }
   
   //shows list of items for particular material
-  showmateriallocationList(material, id,rowindex) {
+  showmateriallocationList(material, id, rowindex,qty) {
+    this.reqqty = qty;
     this.id = id;
     this.AddDialog = true;
     this.roindex = rowindex;
@@ -100,8 +110,9 @@ export class MaterialIssueComponent implements OnInit {
   //show alert about oldest item location
   alertconfirm(data) {
     var info = data;
+    this.itemreceiveddate = this.datePipe.transform(data.createddate, 'yyyy-MM-dd hh:mm:ss');
     this.ConfirmationService.confirm({
-      message: 'Same Material received on ' + data.createddate + ' and placed in ' + data.itemlocation + '  location, Would you like to continue?',
+      message: 'Same Material received on ' + this.itemreceiveddate + ' and placed in ' + data.itemlocation + '  location, Would you like to continue?',
       header: 'Confirmation',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
