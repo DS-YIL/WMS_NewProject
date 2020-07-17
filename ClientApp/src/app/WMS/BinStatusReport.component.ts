@@ -23,7 +23,7 @@ export class BinStatusReportComponent implements OnInit {
   public dataList: Array<any> = []
   cols: any[];
   exportColumns: any[];
-  selectedStatus: string = "Instock";
+  selectedStatus: string;
 
   ngOnInit() {
     if (localStorage.getItem("Employee"))

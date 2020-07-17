@@ -70,7 +70,8 @@ import { StockTransferComponent } from './WMS/StockTransfer.component';
 ////pages
 import { LoginComponent } from './WMS/Login.component';
 import {HomeComponent} from './WMS/Home.component';
-import {MenubarModule} from 'primeng/menubar';
+import { MenubarModule } from 'primeng/menubar';
+import { DatePipe } from '@angular/common'
 @Injectable
   ({
     providedIn: 'root',
@@ -155,7 +156,7 @@ import {MenubarModule} from 'primeng/menubar';
     //  { path: '', component: LoginComponent, pathMatch: 'full' },
     // ])
   ],
-  providers: [MessageService, ConfirmationService, HttpClientModule],
+  providers: [MessageService, ConfirmationService, HttpClientModule, DatePipe],
   entryComponents: [ConfirmationDialogComponent],
   bootstrap: [AppComponent]
 })
