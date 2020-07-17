@@ -863,6 +863,35 @@ namespace WMS.DAL
 								var fdata = datalist.Where(o => o.Material == po.Material && o.Materialdescription == po.Materialdescription).FirstOrDefault();
 								if (fdata == null)
 								{
+									string querya = "select sinw.pono,inw.materialid,Max(inw.materialqty) as materialqty,SUM(inw.confirmqty) as confirmqty from wms.wms_securityinward sinw";
+									querya += " left outer join wms.wms_storeinward inw on inw.inwmasterid = sinw.inwmasterid";
+									querya += " where sinw.pono = '"+po.pono+"' and inw.materialid = '"+po.Material+"'";
+									querya += " group by sinw.pono,inw.materialid";
+									var datax = await pgsql.QueryAsync<OpenPoModel>(
+						            querya, null, commandType: CommandType.Text);
+									if(datax.Count() > 0)
+                                    {
+										po.isreceivedpreviosly = true;
+										int pendingqty = 0;
+										if (datax.FirstOrDefault().confirmqty > 0)
+                                        {
+											pendingqty = po.materialqty - datax.FirstOrDefault().confirmqty;
+										}
+                                        else
+                                        {
+											pendingqty = po.materialqty - datax.FirstOrDefault().receivedqty;
+										}
+										
+										if(pendingqty < 0)
+                                        {
+											po.pendingqty = 0;
+                                        }
+                                        else
+                                        {
+											po.pendingqty = pendingqty;
+										}
+										
+                                    }
 									datalist.Add(po);
 								}
 
@@ -4138,7 +4167,11 @@ namespace WMS.DAL
 
 			}
 		}
-
+		/// <summary>
+		/// Get list of materials 
+		/// Ramesh Kumar 15/07/2020
+		/// </summary>
+		/// <returns></returns>
 		public async Task<IEnumerable<Materials>> GetMaterialcombo()
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -4154,7 +4187,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "Getlocationdata", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "GetMaterialcombo", Ex.StackTrace.ToString());
 					return null;
 				}
 				finally
@@ -4341,6 +4374,239 @@ namespace WMS.DAL
 				catch (Exception Ex)
 				{
 					log.ErrorMessage("PODataProvider", "GetBinList", Ex.StackTrace.ToString());
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+			}
+		}
+		
+			/// <summary>
+		/// Get list of materials for stock transfer 
+		/// Ramesh Kumar 15/07/2020
+		/// </summary>
+		/// <returns></returns>
+		public async Task<IEnumerable<Materials>> GetMaterialstockcombo()
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				try
+				{
+					string materialrequestquery = "Select distinct st.materialid as material,mat.materialdescription  from wms.wms_stock st left outer join wms.\"MaterialMasterYGS\" mat on mat.material = st.materialid";
+
+					await pgsql.OpenAsync();
+					return await pgsql.QueryAsync<Materials>(
+					  materialrequestquery, null, commandType: CommandType.Text);
+
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "GetMaterialstockcombo", Ex.StackTrace.ToString());
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+			}
+		}
+		/// <summary>
+		/// Updating location for stock
+		/// </summary>
+		/// <param name="data"></param>
+		/// <returns></returns>
+
+		public string UpdateStockTransfer(List<StockModel> data)
+		{
+			
+			
+				StockModel obj = new StockModel();
+				string loactiontext = string.Empty;
+
+				foreach(StockModel stck in data)
+                {
+				NpgsqlTransaction Trans = null;
+				stocktransferModel transfer = new stocktransferModel();
+				
+				
+				using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+					{
+					try
+					{
+						pgsql.Open();
+						Trans = pgsql.BeginTransaction();
+                        StockModel objs = new StockModel();
+                        
+                        string query = "select * from wms.wms_stock where itemid = '"+stck.itemid+"'";
+                        objs = pgsql.QueryFirstOrDefault<StockModel>(
+                           query, null, commandType: CommandType.Text);
+                       
+						if(objs != null)
+                        {
+							transfer.itemid = stck.itemid;
+							transfer.materialid = objs.materialid;
+							transfer.previousqty = objs.availableqty;
+							transfer.previouslocation = objs.itemlocation;
+							transfer.transferedon= System.DateTime.Now;
+							transfer.transferedby = stck.createdby;
+							transfer.transferedqty = stck.availableqty;
+							transfer.currentlocation = stck.itemlocation;
+							transfer.remarks = stck.remarks;
+							int decavail = objs.availableqty - stck.availableqty;
+							
+							string query1 = "UPDATE wms.wms_stock set availableqty="+ decavail + "  where itemid = '" + stck.itemid + "'";
+							pgsql.ExecuteScalar(query1);
+							StockModel objs1 = new StockModel();
+							string query2 = "select * from wms.wms_stock where pono = '"+objs.pono+"' and materialid = '"+objs.materialid+"' and itemlocation = '" + stck.itemlocation + "'";
+							objs1 = pgsql.QueryFirstOrDefault<StockModel>(
+							   query2, null, commandType: CommandType.Text);
+							if(objs1 != null)
+                            {
+								int availqty = objs1.availableqty + stck.availableqty;
+
+								string query4 = "UPDATE wms.wms_stock set availableqty=" + availqty + "  where pono = '" + objs.pono + "' and materialid = '" + objs.materialid + "' and itemlocation = '" + stck.itemlocation + "'";
+								pgsql.ExecuteScalar(query4);
+								string stockinsertqry = WMSResource.stocktransferinternal;
+								var resultsxx = pgsql.ExecuteScalar(stockinsertqry, new
+								{
+									transfer.itemid,
+									transfer.materialid,
+									transfer.previouslocation,
+									transfer.previousqty,
+									transfer.currentlocation,
+									transfer.transferedqty,
+									transfer.transferedon,
+									transfer.transferedby,
+									transfer.remarks
+
+								});
+							}
+                            else{
+								string insertqueryx = WMSResource.insertstock;
+								stck.createddate = System.DateTime.Now;
+								int itemid = 0;
+								var result = 0;
+								result = Convert.ToInt32(pgsql.ExecuteScalar(insertqueryx, new
+								{
+									objs.inwmasterid,
+									objs.pono,
+									stck.binid,
+									objs.vendorid,
+									objs.totalquantity,
+									objs.shelflife,
+									stck.availableqty,
+									objs.deleteflag,
+									//data.itemreceivedfrom,
+									stck.itemlocation,
+									stck.createddate,
+									stck.createdby,
+									objs.stockstatus,
+									objs.materialid
+								}));
+								if (result != 0)
+								{
+									itemid = Convert.ToInt32(result);
+									string insertqueryforlocationhistory = WMSResource.insertqueryforlocationhistory;
+									var results = pgsql.ExecuteScalar(insertqueryforlocationhistory, new
+									{
+										stck.itemlocation,
+										itemid,
+										stck.createddate,
+										stck.createdby,
+
+									});
+
+									string stockinsertqry = WMSResource.stocktransferinternal;
+									var resultsxx = pgsql.ExecuteScalar(stockinsertqry, new
+									{
+										transfer.itemid,
+										transfer.materialid,
+										transfer.previouslocation,
+										transfer.previousqty,
+										transfer.currentlocation,
+										transfer.transferedqty,
+										transfer.transferedon,
+										transfer.transferedby,
+										transfer.remarks
+
+									});
+
+								}
+
+							}
+
+
+
+
+						}
+						Trans.Commit();
+					}
+					catch (Exception Ex)
+					{
+						Trans.Rollback();
+						log.ErrorMessage("PODataProvider", "UpdateStockTransfer", Ex.StackTrace.ToString());
+						return null;
+					}
+				}
+				}
+
+
+				
+
+				return loactiontext;
+
+
+			
+
+		}
+
+
+		public async Task<IEnumerable<stocktransferModel>> getstocktransferdata()
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				try
+				{
+					string materialrequestquery = WMSResource.getinternalstocktransferdata;
+
+					await pgsql.OpenAsync();
+					return await pgsql.QueryAsync<stocktransferModel>(
+					  materialrequestquery, null, commandType: CommandType.Text);
+
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "getstocktransferdata", Ex.StackTrace.ToString());
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+			}
+		}
+
+		public async Task<IEnumerable<stocktransferModel>> getstocktransferdatagroup()
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				try
+				{
+					string materialrequestquery = WMSResource.Stocktransferbygroup;
+
+					await pgsql.OpenAsync();
+					return await pgsql.QueryAsync<stocktransferModel>(
+					  materialrequestquery, null, commandType: CommandType.Text);
+
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "getstocktransferdatagroup", Ex.StackTrace.ToString());
 					return null;
 				}
 				finally

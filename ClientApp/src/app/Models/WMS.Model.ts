@@ -95,6 +95,7 @@ export class inwardModel {
   qualityfailedqty: number;
   returnremarks: string;
   qualitychecked: boolean;
+  isreceivedpreviosly: boolean;
 }
 
 
@@ -115,10 +116,11 @@ export class StockModel {
   createddate: Date;
   createdby: string;
   confirmqty: number;
-material: string;
+  material: string;
   binnumber: string;
   racknumber: string;
   locatorid: number;
+  remarks: string;
 }
 
 export class materialRequestDetails {
@@ -201,5 +203,46 @@ export class Materials {
 
   material: string;
   materialdescription: string;
+
+}
+
+export class locationddl {
+
+  locatorid: any;
+  locatorname: any;
+}
+
+export class binddl {
+
+  binid: any;
+  binnumber: any;
+
+}
+export class rackddl {
+
+  rackid: string;
+  racknumber: string;
+
+}
+
+export class stocktransfermodel {
+  transferid: number;
+  itemid: number;
+  materialid: string;
+  materialdescription: string;
+  location: string;
+  availableqty: string;
+  transferqty: string;
+  transferlocation: string;
+  transferdate: Date;
+  transferby: string;
+
+  previouslocation: string;
+  previousqty: number;
+  currentlocation: string;
+  transferedqty: number;
+  transferedon: Date;
+  transferedby: string
+  remarks: string
 
 }

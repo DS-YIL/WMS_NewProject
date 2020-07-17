@@ -28,14 +28,14 @@ namespace WMS.Controllers
 		[HttpGet("GetOpenPoList")]
 		public async Task<IEnumerable<OpenPoModel>> GetPoNodata(string loginid, string pono = null, string docno = null, string vendorid = null)
 		{
-			return await this._poService.getOpenPoList(loginid, pono, docno, vendorid);
+			return await this._poService.getOpenPoList(loginid, pono, docno, vendorid); 
 		}
-		//Get list of PO 
-		[HttpGet("GetPOList")]
-		public async Task<IEnumerable<POList>> GetPoNo(string postatus)
-		{
-			return await this._poService.getPOList(postatus);
-		}
+//Get list of PO 
+        [HttpGet("GetPOList")]
+        public async Task<IEnumerable<POList>> GetPoNo(string postatus)
+        {
+            return await this._poService.getPOList(postatus);
+        }
 		[HttpGet("CheckPoNoexists")]
 		public OpenPoModel CheckPo(string PONO)
 		{
@@ -65,14 +65,14 @@ namespace WMS.Controllers
 
 		//Get material request details
 		[HttpGet("getReqMatdetailsformaterialid")]
-		public async Task<IEnumerable<ReqMatDetails>> getReqMatdetails(string materialid, string grnnumber)
+		public async Task<IEnumerable<ReqMatDetails>> getReqMatdetails(string materialid,string grnnumber)
 		{
 			return await this._poService.getReqMatdetails(materialid, grnnumber);
 		}
 
 		[HttpPost("generateBarcodeMaterial")]
 		public printMaterial generateBarcodeMaterial(printMaterial printMat)
-		{
+        {
 			return this._poService.generateBarcodeMaterial(printMat);
 
 		}
@@ -152,6 +152,13 @@ namespace WMS.Controllers
 		{
 			return this._poService.InsertStock(data);
 		}
+
+		[HttpPost("UpdateStockTransfer")]
+		public string UpdateStockTransferfunc([FromBody] List<StockModel> data)
+		{
+			return this._poService.UpdateStockTransfer(data);
+		}
+
 
 		[HttpPost("GetListItems")]
 		public IActionResult GetListItems([FromBody] DynamicSearchResult Result)
@@ -496,6 +503,23 @@ namespace WMS.Controllers
 		public async Task<IEnumerable<StockModel>> GetBinList()
 		{
 			return await this._poService.GetBinList();
+		}
+			[HttpGet("GetMaterialdatafromstock")]
+		public async Task<IEnumerable<Materials>> GetMaterialstockcombo()
+		{
+			return await this._poService.GetMaterialstockcombo();
+		}
+
+		[HttpGet("getstocktransferdata")]
+		public async Task<IEnumerable<stocktransferModel>> getstocktransferlist()
+		{
+			return await this._poService.getstocktransferdata();
+		}
+
+		[HttpGet("getstocktransferdatagroup")]
+		public async Task<IEnumerable<stocktransferModel>> getstocktransferlistgroup()
+		{
+			return await this._poService.getstocktransferdatagroup();
 		}
 		
 		//[HttpPost("securitysendemail")]

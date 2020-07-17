@@ -398,9 +398,15 @@ export class CycleconfigComponent implements OnInit {
   getCyclecountConfig() {
     this.spinner.show();
     this.wmsService.getCyclecountConfig().subscribe(data => {
-      this.configmodel = data;
-      this.setnotifydate();
-      this.spinner.hide();
+      if (data) {
+        this.configmodel = data;
+        this.setnotifydate();
+        this.spinner.hide();
+      }
+      else {
+        this.spinner.hide();
+      }
+      
     });
 
   }

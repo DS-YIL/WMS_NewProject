@@ -5,7 +5,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { constants } from '../Models/WMSConstants'
 import { Employee, Login, DynamicSearchResult, printMaterial } from '../Models/Common.Model';
-import { PoFilterParams, PoDetails, BarcodeModel, StockModel, materialRequestDetails, inwardModel, gatepassModel, Materials, authUser } from '../Models/WMS.Model';
+import { PoFilterParams, PoDetails, BarcodeModel, StockModel, materialRequestDetails, inwardModel, gatepassModel, stocktransfermodel, Materials, authUser } from '../Models/WMS.Model';
 import { Text } from '@angular/compiler/src/i18n/i18n_ast';
 
 @Injectable({
@@ -131,6 +131,11 @@ export class wmsService {
   InsertStock(StockModel: StockModel): Observable<any> {
     const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }), responseType: 'text' as any };
     return this.http.post<any>(this.url + 'POData/updateitemlocation', StockModel, httpOptions);
+  }
+
+  Stocktransfer(StockModel: StockModel[]): Observable<any> {
+    const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }), responseType: 'text' as any };
+    return this.http.post<any>(this.url + 'POData/UpdateStockTransfer', StockModel, httpOptions);
   }
 
   getMaterialRequestlist(loginid: string, pono: string): Observable<any> {
@@ -314,6 +319,15 @@ export class wmsService {
   }
   GetBinList(): Observable<any> {
     return this.http.get<any>(this.url + 'POData/GetBinList', this.httpOptions);
+  }
+   getMaterialforstocktransfer(): Observable<Materials[]> {
+    return this.http.get<Materials[]>(this.url + 'POData/GetMaterialdatafromstock/', this.httpOptions);
+  }
+  getstocktransferlist(): Observable<stocktransfermodel[]> {
+    return this.http.get<stocktransfermodel[]>(this.url + 'POData/getstocktransferdata/', this.httpOptions);
+  }
+  getstocktransferlistgroup(): Observable<stocktransfermodel[]> {
+    return this.http.get<stocktransfermodel[]>(this.url + 'POData/getstocktransferdatagroup/', this.httpOptions);
   }
 }
 

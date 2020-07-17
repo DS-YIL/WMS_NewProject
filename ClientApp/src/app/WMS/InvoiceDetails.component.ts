@@ -68,6 +68,9 @@ export class InvoiceDetailsComponent implements OnInit {
     this.wmsService.getInvoiceDetails(pono).subscribe(data => {
       this.pono = pono;
       this.invoiceDetails = data;
+      this.invoiceDetails = this.invoiceDetails.filter(function (element, index) {
+        return (element.receivedqty);
+      });
       this.getconfirmQtyTotal();
       this.pendingqty = this.poQty - this.confirmQtyTotal;
     });

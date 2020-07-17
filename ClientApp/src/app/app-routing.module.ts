@@ -38,6 +38,7 @@ import { BarcodeComponent } from './WMS/Barcode.component';
 import { GatePassApprovalList } from './WMS/GatePassApprovalList.component';
 import { SafetyStockComponent } from './WMS/SafetyStock.component';
 import { BinStatusReportComponent } from './WMS/BinStatusReport.component';
+import { StockTransferComponent } from './WMS/StockTransfer.component';
 const routes: Routes = [{
   path: 'WMS',
   children: [
@@ -91,6 +92,7 @@ const routes: Routes = [{
     { path: "GatePassFMList", component: GatePassApprovalList, canActivate: [AuthGuard] },
     { path: "SafetyStockList", component: SafetyStockComponent, canActivate: [AuthGuard] },
     { path: "BinStatusReport", component: BinStatusReportComponent, canActivate: [AuthGuard] },
+    { path: "Stocktransfer", component: StockTransferComponent, canActivate: [AuthGuard] },
     
   ]
 

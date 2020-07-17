@@ -48,6 +48,10 @@ namespace WMS.Models
 
 		public bool qualitychecked { get; set; }
 
+		public int pendingqty { get; set; }
+
+		public bool isreceivedpreviosly { get; set; }
+
 	}
 
 	public class printMaterial
@@ -163,6 +167,10 @@ namespace WMS.Models
         public string binnumber { get; set; }
         public string racknumber { get; set; }
 	  public int confirmqty { get; set; }
+
+		public string materialid { get; set; }
+
+		public string remarks { get; set; }
 
     }
 	public class trackstatusModel
@@ -617,4 +625,21 @@ public class safteyStockList
 	public int availableqty { get; set; }
 	public int safteystock { get; set; }
 	public int minorderqty { get; set; }
+}
+public class stocktransferModel
+{
+
+	public int transferid { get; set; }
+	public int itemid { get; set; }
+	public string materialid { get; set; }
+	public string materialdescription { get; set; }
+	public string previouslocation { get; set; }
+	public int previousqty { get; set; }
+	public string currentlocation { get; set; }
+	public int transferedqty { get; set; }
+	public DateTime transferedon { get; set; }
+	public string transferedby { get; set; }
+	public string remarks { get; set; }
+	
+
 }

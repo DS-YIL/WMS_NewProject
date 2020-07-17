@@ -161,9 +161,11 @@ export class CyclecountComponent implements OnInit {
     this.CyclecountPendingMaterialList = [];
     this.spinner.show();
     this.wmsService.getCyclecountPendingList().subscribe(data => {
-      this.allCyclecountMaterialList = data;
+    if(data){
+     this.allCyclecountMaterialList = data;
       this.filterbystatus();
-      this.spinner.hide();
+      } 
+          this.spinner.hide();
     });
 
   }
@@ -202,8 +204,14 @@ export class CyclecountComponent implements OnInit {
     this.CyclecountMaterialList = [];
     this.spinner.show();
     this.wmsService.getCyclecountList(limita, limitb, limitc).subscribe(data => {
-      this.CyclecountMaterialList = data;
-      this.spinner.hide();
+      if (data) {
+        this.CyclecountMaterialList = data;
+        
+      }
+      else {
+        this.spinner.hide();
+      }
+      
     });
 
   }
@@ -259,13 +267,21 @@ export class CyclecountComponent implements OnInit {
     this.CyclecountMaterialList = [];
     this.wmsService.getCyclecountConfig().subscribe(data => {
       this.configmodel = data;
-      this.showsubmitbuttonuser = true;
-      if (this.isapprover) {
-        this.showsubmitbuttonuser = false;
+      if (data) {
+        this.showsubmitbuttonuser = true;
+        if (this.isapprover) {
+          this.showsubmitbuttonuser = false;
+        }
+        this.getCyclecountMaterialList();
+        //this.showonDate();
+        this.spinner.hide();
+
       }
-      this.getCyclecountMaterialList();
-      //this.showonDate();
-      this.spinner.hide();
+      else {
+        this.spinner.hide();
+
+      }
+     
     });
 
   }

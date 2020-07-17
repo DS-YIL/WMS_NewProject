@@ -30,10 +30,12 @@ export class StoreClerkComponent implements OnInit {
   inwardemptymodel: inwardModel;
   qualitychecked: boolean = false;
   isnonpoentry: boolean = false;
+  isreceivedbefore: boolean = false;
   isnonpo: boolean = false;
   returned: boolean = false;
   combomaterial: Materials[];
   selectedmaterial: Materials;
+  isallreceived: boolean = false;
   ngOnInit() {
     if (localStorage.getItem("Employee"))
       this.employee = JSON.parse(localStorage.getItem("Employee"));
@@ -47,13 +49,31 @@ export class StoreClerkComponent implements OnInit {
     this.inwardModel.receiveddate = new Date();
     this.inwardModel.qcdate = new Date();
   }
-  checkreceivedqty(entredvalue, confirmedqty, returnedqty, maxvalue,data : any) {
-    if (entredvalue > maxvalue && !this.isnonpoentry) {
-      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please enter received quantity less than material quantity' });
+  checkreceivedqty(entredvalue, confirmedqty, returnedqty, maxvalue, data: any) {
+    debugger;
+    if (data.isreceivedpreviosly && data.pendingqty > 0) {
+      if (entredvalue > data.pendingqty && !this.isnonpoentry) {
+        this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please enter received quantity less than or equal to Pending quantity' });
+        //(<HTMLInputElement>document.getElementById("receivedqty")).value = "";
+        data.receivedqty = "";
+
+      }
+    }
+    else if (data.isreceivedpreviosly && data.pendingqty == 0 && !this.isnonpoentry) {
+      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'All materials received' });
       //(<HTMLInputElement>document.getElementById("receivedqty")).value = "";
       data.receivedqty = "";
 
     }
+    else {
+      if (entredvalue > maxvalue && !this.isnonpoentry) {
+        this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please enter received quantity less than or equal to material quantity' });
+        //(<HTMLInputElement>document.getElementById("receivedqty")).value = "";
+        data.receivedqty = "";
+
+      }
+    }
+   
   }
   checkconfirmqty(entredvalue, receivedqty, returnedqty,data : any) {
     if (entredvalue > receivedqty) {
@@ -135,6 +155,8 @@ export class StoreClerkComponent implements OnInit {
     debugger;
     this.isnonpoentry = false;
     this.qualitychecked = false;
+    this.isallreceived = false;
+    this.isreceivedbefore = false;
     this.returned = false;
     this.podetailsList = [];
     this.wmsService.Getthreewaymatchingdetails(data).subscribe(data => {
@@ -168,6 +190,25 @@ export class StoreClerkComponent implements OnInit {
         }
         else {
           this.returned = false;
+        }
+        var receiveddata = this.podetailsList.filter(function (element, index) {
+          return (element.isreceivedpreviosly && (element.pendingqty != element.materialqty));
+        });
+        if (receiveddata.length > 0) {
+          this.isreceivedbefore = true;
+        }
+        else {
+          this.isreceivedbefore = false;
+        }
+        debugger;
+        var allreceiveddata = this.podetailsList.filter(function (element, index) {
+          return (element.pendingqty == 0 && element.isreceivedpreviosly);
+        });
+        if (allreceiveddata.length > 0 && allreceiveddata.length == this.podetailsList.length) {
+          this.isallreceived = true;
+        }
+        else {
+          this.isallreceived = false;
         }
       }
       else

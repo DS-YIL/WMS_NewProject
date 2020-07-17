@@ -353,6 +353,18 @@ namespace WMS.Common {
                 return ResourceManager.GetString("getimmediatemnger", resourceCulture);
             }
         }
+		
+		/// <summary>
+        ///   Looks up a localized string similar to select st.transferid,st.itemid,st.materialid,mat.materialdescription,st.previouslocation,st.previousqty,st.currentlocation,st.transferedqty,st.transferedon,emp.name as transferedby,st.remarks 
+        ///from wms.wms_stocktransfer st 
+        ///left outer join wms.&quot;MaterialMasterYGS&quot; mat on mat.material = st.materialid
+        ///left outer join wms.employee emp on emp.employeeno = st.transferedby order by st.transferid desc.
+        /// </summary>
+        public static string getinternalstocktransferdata {
+            get {
+                return ResourceManager.GetString("getinternalstocktransferdata", resourceCulture);
+            }
+        }
         
         /// <summary>
         ///   Looks up a localized string similar to select sinward.grnnumber,sinward.invoiceno, 
@@ -1001,6 +1013,27 @@ namespace WMS.Common {
         public static string statusupdatebySecurity {
             get {
                 return ResourceManager.GetString("statusupdatebySecurity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to select st.materialid,Max(mat.materialdescription) as materialdescription,SUM(st.transferedqty) transferedqty,st.transferedon from wms.wms_stocktransfer st
+        ///left outer join wms.&quot;MaterialMasterYGS&quot; mat on st.materialid = mat.material
+        ///group by st.materialid,st.transferedon order by st.transferedon desc.
+        /// </summary>
+        public static string Stocktransferbygroup {
+            get {
+                return ResourceManager.GetString("Stocktransferbygroup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to insert into wms.wms_stocktransfer (itemid,materialid,previouslocation,previousqty,currentlocation,transferedqty,transferedon,transferedby,remarks)
+        ///values (@itemid,@materialid,@previouslocation,@previousqty,@currentlocation,@transferedqty,@transferedon,@transferedby,@remarks).
+        /// </summary>
+        public static string stocktransferinternal {
+            get {
+                return ResourceManager.GetString("stocktransferinternal", resourceCulture);
             }
         }
         

@@ -32,7 +32,9 @@ namespace WMS.Interfaces
         Task<string> insertquantity(List<inwardModel> datamodel);
         Task<string> receivequantity(List<inwardModel> datamodel);
         string InsertStock(StockModel data);
-		System.Data.DataTable GetListItems(DynamicSearchResult result);
+        string UpdateStockTransfer(List<StockModel> data);
+
+        System.Data.DataTable GetListItems(DynamicSearchResult result);
         System.Data.DataTable GetMaterialItems(DynamicSearchResult result);
         int IssueRequest(List<IssueRequestModel> reqdata);
         Task<IEnumerable<inwardModel>> getitemdeatils(string grnnumber);
@@ -102,5 +104,8 @@ namespace WMS.Interfaces
         int GatepassapproveByManager(gatepassModel model);
         Task<IEnumerable<safteyStockList>> getSafteyStockList();
         Task<IEnumerable<StockModel>> GetBinList();
+		Task<IEnumerable<Materials>> GetMaterialstockcombo();
+        Task<IEnumerable<stocktransferModel>> getstocktransferdata();
+        Task<IEnumerable<stocktransferModel>> getstocktransferdatagroup();
     }
 }
