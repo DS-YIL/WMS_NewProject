@@ -2017,6 +2017,7 @@ namespace WMS.DAL
 					string approverstatus = "Pending";
 					string insertgatepasshistory = WMSResource.insertgatepassapprovalhistory;
 					dataobj.deleteflag = false;
+					dataobj.fmapproverid = "400104";
 					using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
 					{
 						var gatepassid = DB.ExecuteScalar(insertquery, new
@@ -2068,7 +2069,7 @@ namespace WMS.DAL
 									label,
 									approverstatus,
 								});
-								string approverid = "400401";
+								string approverid = "400104";
 								approvername = "Lakshmi Prasanna";
 								label = 2;
 								var gatepassdata = DB.ExecuteScalar(insertgatepasshistory, new

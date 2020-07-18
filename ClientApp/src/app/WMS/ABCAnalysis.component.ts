@@ -50,9 +50,12 @@ export class ABCAnalysisComponent implements OnInit {
     this.spinner.show();
     this.ABCavailableqtyList = [];
     this.wmsService.getABCavailableqtyList().subscribe(data => {
-      this.ABCavailableqtyList = data;
-      this.calculateTotalQty();
-      this.calculateTotalPrice();
+      if (data) {
+        this.ABCavailableqtyList = data;
+        this.calculateTotalQty();
+        this.calculateTotalPrice();
+      }
+    
       this.spinner.hide();
     });
     

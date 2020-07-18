@@ -50,12 +50,14 @@ export class GatePassApprovalList implements OnInit {
 
   //get gatepass list
   getGatePassList() {
+    debugger;
     this.wmsService.getGatePassList().subscribe(data => {
       this.totalGatePassList = data;
       if (this.typeOfList == "GatePassPMList")
         this.gatepasslist = this.totalGatePassList.filter(li => li.approverid == this.employee.employeeno && (li.approverstatus == this.approverstatus));
       if (this.typeOfList =="GatePassFMList")
-        this.gatepasslist = this.totalGatePassList.filter(li => li.fmapproverid == this.employee.employeeno && (li.approverstatus == "Approved" && li.fmapproverstatus == this.approverstatus));
+        this.gatepasslist = this.totalGatePassList.filter(li => li.fmapproverid == this.employee.employeeno && li.approverstatus == "Approved" && li.fmapprovedstatus == this.approverstatus);
+      console.log(this.gatepasslist);
     });
   }
 
@@ -80,6 +82,7 @@ export class GatePassApprovalList implements OnInit {
 
   showApprover(gatepassid: any) {
     this.showApprovertab = true;
+    debugger;
     this.bindMaterilaDetails(gatepassid);
     this.getGatePassHistoryList(gatepassid);
   }
@@ -91,6 +94,7 @@ export class GatePassApprovalList implements OnInit {
   //get gatepass list
   bindMaterilaDetails(gatepassId: any) {
     this.wmsService.gatepassmaterialdetail(gatepassId).subscribe(data => {
+      debugger;
       this.materialList = data;
       console.log(data);
       this.gatepassModel = this.materialList[0];
