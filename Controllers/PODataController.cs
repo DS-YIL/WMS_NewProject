@@ -159,6 +159,12 @@ namespace WMS.Controllers
 			return this._poService.UpdateStockTransfer(data);
 		}
 
+		[HttpPost("UpdateStockTransfer1")]
+		public string UpdateStockTransferfunction([FromBody] invstocktransfermodel data)
+		{
+			return this._poService.InvStockTransfer(data);
+		}
+
 
 		[HttpPost("GetListItems")]
 		public IActionResult GetListItems([FromBody] DynamicSearchResult Result)
@@ -521,7 +527,19 @@ namespace WMS.Controllers
 		{
 			return await this._poService.getstocktransferdatagroup();
 		}
-		
+
+		[HttpGet("getstocktransferdatagroup1")]
+		public async Task<IEnumerable<invstocktransfermodel>> getstocktransferlistgroup1()
+		{
+			return await this._poService.getstocktransferdatagroup1();
+		}
+
+		[HttpGet("getpendingpos")]
+		public async Task<IEnumerable<ddlmodel>> getpendingreceiptslist()
+		{
+			return await this._poService.pendingreceiptslist();
+		}
+
 		//[HttpPost("securitysendemail")]
 		//public EmailModel sendemail(EmailModel obj)
 		//{

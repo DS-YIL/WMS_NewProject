@@ -206,6 +206,13 @@ export class Materials {
 
 }
 
+export class ddlmodel {
+
+  value: string;
+  text: string;
+
+}
+
 export class locationddl {
 
   locatorid: any;
@@ -243,6 +250,34 @@ export class stocktransfermodel {
   transferedqty: number;
   transferedon: Date;
   transferedby: string
-  remarks: string
+  remarks: string;
+  mlocations: string[] = [];
+  itemlocationdata : any[] = []
 
+}
+
+export class invstocktransfermodel {
+  transferid: string;
+  transferredby: string;
+  transferredon: Date;
+  transfertype: string;
+  sourceplant: string;
+  destinationplant: string;
+  remarks: string;
+  materialdata: stocktransfermateriakmodel[] = [];
+}
+
+export class stocktransfermateriakmodel {
+  id: number;
+  transferid: string;
+  itemid: number;
+  materialid: string;
+  materialdescription: string;
+  sourcelocation: string;
+  sourceitemid: number;
+  destinationlocation: string;
+  destinationitemid: number;
+  transferqty: number;
+  mlocations: string[] = [];
+  itemlocationdata: any[] = []
 }

@@ -3,7 +3,7 @@
     <div class="card" style="height:490px; width:100%;border-radius:10px; box-shadow:5px 10px #888888;">
       <div class="card-header cardheadertext text-center">
         <span><i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;Internal Stock Transfer</span>
-        <button type="button" class="btn btn-primary btn-sm" style="float:right;margin-left:10px;" *ngIf="!addprocess" (click)="Showadd()" label="Save"><i class="fa fa-plus"></i>&nbsp;&nbsp;Initiate Transfer</button>
+        <button type="button" class="btn btn-primary btn-sm" style="float:right;margin-left:10px;" *ngIf="!addprocess" (click)="Showadd()" label="Save"><i class="fa fa-plus"></i>&nbsp;&nbsp;Create Stock Transfer</button>
         <button type="button" class="btn btn-primary btn-sm" style="float:right;margin-left:10px;" *ngIf="addprocess" (click)="Showlist()" label="Save"><i class="fa fa-arrow-left"></i>&nbsp;&nbsp;Back to list</button>
         <button type="button" class="btn btn-primary btn-sm" style="float:right;margin-left:10px;" *ngIf="addprocess" (click)="addrows()" label="Save"><i class="fa fa-plus"></i>&nbsp;&nbsp;Add row</button>
 
@@ -11,10 +11,35 @@
 
       <div class="card-body" style="overflow-y:scroll">
         <div class="row" *ngIf="addprocess">
+          <div class="col-lg-2 col-md-2 form-group" style="font-weight:600;font-size:14px;color:darkblue;">
+            Source Plant:
+          </div>
+          <div class="col-lg-4 col-md-4 form-group" style="font-weight:600;font-size:14px;color:darkblue;margin-left:-100px">
+            <select class="form-control" [(ngModel)]="mainmodel.sourceplant">
+              <option value="">Select plant</option>
+              <option value="Plant1">Plant 1</option>
+              <option value="Plant2">Plant 2</option>
+            </select>
+          </div>
+          <div class="col-lg-2 col-md-2 form-group" style="font-weight:600;font-size:14px;color:darkblue;">
+            Destination Plant:
+          </div>
+          <div class="col-lg-4 col-md-4 form-group" style="font-weight:600;font-size:14px;color:darkblue;margin-left:-50px">
+            <select class="form-control" [(ngModel)]="mainmodel.destinationplant">
+              <option value="">Select plant</option>
+              <option value="Plant1">Plant 1</option>
+              <option value="Plant2">Plant 2</option>
+            </select>
+
+          </div>
+
+
+
 
 
         </div>
         <div class="row" style="max-height: 400px;max-width:100%;overflow: scroll;position: relative; margin-top:5px;margin-left:3px;" *ngIf="addprocess">
+
           <p-table #dt [value]="podetailsList" [style]="{'width':'100%','overflow':'auto!important'}"
                    [responsive]="true" [rows]="10"
                    [resizableColumns]="true"
@@ -26,41 +51,38 @@
                 <th style="text-align:center;width:5%;">Sl.No.</th>
                 <th style="text-align:center;width:15%;">Material</th>
                 <th style="text-align:center;">Material Description</th>
-                <th style="text-align:center;width:10%;">Source Location</th>
+                <th style="text-align:center;width:15%;">Source Location</th>
+                <th style="text-align:center;width:15%;">Destination Location</th>
                 <th style="text-align:center;width:10%;">Transfer Qty</th>
-                <th style="text-align:center;width:10%;">Destination Location</th>
-                <th style="text-align:center;width:15%;">Remarks</th>
               </tr>
             </ng-template>
             <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
               <tr>
                 <td class="ptable-cell" style="text-align:right;width:5%;">{{ri+1}}</td>
                 <td class="ptable-cell" style="text-align:center;width:15%;">
-                  <p-dropdown [options]="combomaterial" appendTo="body" [style]="{'width':'100%'}" (onChange)="setdescription($event,rowData)" placeholder="Select material" optionLabel="material"></p-dropdown>
+                  <p-dropdown [options]="combomaterial" appendTo="body" [style]="{'width':'100%'}" (onChange)="setdescription($event,rowData,ri)" placeholder="Select material" optionLabel="material"></p-dropdown>
                 </td>
                 <td class="ptable-cell" style="text-align:left;">
                   <span>{{rowData.materialdescription}}</span>
                 </td>
-                <td class="ptable-cell" style="text-align:center;width:10%;">
-                  <i class="fa fa-location-arrow" style="color:blue;float:right" pTooltip="set picking location" (click)="showmateriallocationList(rowData.materialid,ri+1,ri)" aria-hidden="true"></i>
+                <td class="ptable-cell" style="text-align:center;width:15%;">
+                  <p-autoComplete id="sc_{{ri+1}}" [(ngModel)]="rowData.sourcelocation" [suggestions]="matlocationsearch" placeholder="Hint: type 's'" [forceSelection]="true" (onSelect)="onSelectsource(rowData)"   appendTo="body"  (completeMethod)="search1($event,rowData,ri)"></p-autoComplete>
+                  <!--<i class="fa fa-location-arrow" style="color:blue;float:right" pTooltip="set picking location" (click)="showmateriallocationList(rowData.materialid,ri+1,ri)" aria-hidden="true"></i>-->
+                </td>
+                <td class="ptable-cell" style="text-align:center;width:15%;">
+                  <p-autoComplete id="dt_{{ri+1}}" [(ngModel)]="rowData.destinationlocation" [suggestions]="results1" placeholder="Hint: type 's'"  [forceSelection]="true" (onSelect)="onSelectdest(rowData)"   appendTo="body" (completeMethod)="search($event)"></p-autoComplete>
+                  <!--<i class="fa fa-location-arrow" style="color:blue;float:right" pTooltip="Add Location" (click)="settransferloction(rowData,ri)" aria-hidden="true"></i>-->
                 </td>
                 <td class="ptable-cell" style="text-align:right;width:10%;">
-                  <span>{{rowData.transferqty}}</span>
-                </td>
-                <td class="ptable-cell" style="text-align:center;width:10%;">
-                  <span>{{rowData.transferlocation}}</span>
-                  <i class="fa fa-location-arrow" style="color:blue;float:right" pTooltip="Add Location" (click)="settransferloction(rowData,ri)" aria-hidden="true"></i>
-                </td>
-                <td class="ptable-cell" style="text-align:right;width:15%;">
-                  <textarea [(ngModel)]="rowData.remarks" (change)="updateremark(rowData,ri);">
-
-                  </textarea>
+                  <input  pInputText type="number" style="text-align:right" class="form-control"  [(ngModel)]="rowData.transferqty" (change)="setqty(rowData)">
                 </td>
 
 
               </tr>
             </ng-template>
           </p-table>
+
+         
         </div>
         <div class="row" style="max-height: 400px;max-width:100%;overflow: scroll;position: relative; margin-top:5px;margin-left:3px;" *ngIf="!addprocess">
           <p-table #dt [value]="stocktransferlistgroup" [style]="{'width':'100%','overflow':'auto!important'}"
@@ -72,31 +94,37 @@
             <ng-template pTemplate="header">
               <tr class="mprltbldata">
                 <th style="text-align:center;width:5%;">Sl.No.</th>
-                <th style="text-align:center;width:20%;">Material</th>
-                <th style="text-align:center;">Material Description</th>
-                <th style="text-align:center;width:15%;">Transfered Qty</th>
-                <th style="text-align:center;width:15%;">Transfered On</th>
-                <th style="text-align:center;width:10%;">View Detail</th>
+                <th style="text-align:center;width:15%;">Transfer Id</th>
+                <th style="text-align:center;width:15%;">Source Plant</th>
+                <th style="text-align:center;width:15%;">Destination Plant</th>
+                <th style="text-align:center;width:15%;">Transferred By</th>
+                <th style="text-align:center;width:15%;">Transferred On</th>
+                <th style="text-align:center;width:20%;">Remarks</th>
               </tr>
             </ng-template>
             <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
               <tr>
                 <td class="ptable-cell" style="text-align:right;width:5%;">{{ri+1}}</td>
-                <td class="ptable-cell" style="text-align:center;width:20%;">
-                  {{rowData.materialid}}
-                </td>
-                <td class="ptable-cell" style="text-align:left;">
-                  {{rowData.materialdescription}}
+                <td class="ptable-cell" style="text-align:center;width:15%;">
+                  <a style="cursor:pointer;color:blue;text-decoration:underline;" (click)="showdetails(rowData)">{{rowData.transferid}}</a>
+                  
                 </td>
 
-                <td class="ptable-cell" style="text-align:right;width:15%;">
-                  <span>{{rowData.transferedqty}}</span>
+                <td class="ptable-cell" style="text-align:left;width:15%;">
+                  <span>{{rowData.sourceplant}}</span>
                 </td>
+                <td class="ptable-cell" style="text-align:left;width:15%;">
+                  <span>{{rowData.destinationplant}}</span>
+                </td>
+                <td class="ptable-cell" style="text-align:left;width:15%;">
+                  <span>{{rowData.transferredby}}</span>
+                </td>
+
                 <td class="ptable-cell" style="text-align:center;width:15%;">
-                  <span>{{rowData.transferedon | date :  constants.dateFormat}}</span>
+                  <span>{{rowData.transferredon | date :  constants.dateFormat}}</span>
                 </td>
-                <td class="ptable-cell" style="text-align:center;width:10%;">
-                  <button type="button" class="btn btn-primary btn-sm" (click)="showdetails(rowData)" label="Save"><i class="fa fa-eye"></i></button>
+                <td class="ptable-cell" style="text-align:left;width:20%;">
+                  <span>{{rowData.remarks}}</span>
                 </td>
 
 
@@ -112,7 +140,8 @@
 
       </div>
       <div class="card-footer" *ngIf="addprocess">
-        <button type="button" class="btn btn-success" style="margin-left:45%" (click)="onsubmit()">Submit</button>
+        <textarea placeholder="Remarks" class="form-control" cols="100" rows="2" [(ngModel)]="mainmodel.remarks"></textarea>
+        <button type="button" class="btn btn-success" style="margin-left:45%" (click)="onsubmit1()">Submit</button>
       </div>
     </div>
     <div style="height: 5px; overflow-y: scroll">
@@ -212,14 +241,17 @@
         </div>
       </p-footer>
     </p-dialog>
-    <p-dialog header="Stock Transfer Detail" [(visible)]="displaydetail"  [modal]="true" [style]="{width: '95vw'}" [maximizable]="true" [baseZIndex]="10000"
+    <p-dialog header="Stock Transfer Details" [(visible)]="displaydetail"  [modal]="true" [style]="{width: '95vw'}" [maximizable]="true" [baseZIndex]="10000"
               [draggable]="true" [resizable]="false">
       <div class="row  pl-0">
-        <div class="col-lg-6 col-md-6 col-sm-4 labelheading">
-          <label>Material Id :</label>&nbsp;<span><label class="labeltext">{{matid}}</label></span>
+        <div class="col-lg-4 col-md-4 labelheading">
+          <label>Transfer Id :</label>&nbsp;<span><label class="labeltext">{{matid}}</label></span>
         </div>
-        <div class="col-lg-6 col-md-6 col-sm-6 labelheading">
-          <label>Material desc :</label>&nbsp;<span><label class="labeltext">{{matdescription}}</label></span>
+        <div class="col-lg-4 col-md-4 labelheading">
+          <label>Transferred By :</label>&nbsp;<span><label class="labeltext">{{matdescription}}</label></span>
+        </div>
+        <div class="col-lg-4 col-md-4 labelheading">
+          <label>Transferred On :</label>&nbsp;<span><label class="labeltext">{{transferedon | date :  constants.dateFormat}}</label></span>
         </div>
       </div>
       <div class="row" style="max-height: 400px;max-width:100%;overflow: scroll;position: relative; margin-top:5px;margin-left:3px;">
@@ -233,41 +265,35 @@
           <ng-template pTemplate="header">
             <tr class="mprltbldata">
               <th style="text-align:center;width:5%;">Sl.No.</th>
-              <th style="text-align:center;width:10%;">Source Qty</th>
-              <th style="text-align:center;width:15%;">Source location</th>
-              <th style="text-align:center;width:10%;">Transfered Qty</th>
-              <th style="text-align:center;width:15%;">Destination Location</th>
-              <th style="text-align:center;width:10%;">Transfered On</th>
-              <th style="text-align:center;width:17%;">Transfered By</th>
-              <th style="text-align:center;width:18%;">Remarks</th>
+              <th style="text-align:center;width:15%;">Material</th>
+              <th style="text-align:center;">Material Description</th>
+              <th style="text-align:center;width:20%;">Source location</th>
+              <th style="text-align:center;width:20%;">Destination Location</th>
+              <th style="text-align:center;width:10%;">Transfer Qty</th>
             </tr>
           </ng-template>
           <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
             <tr>
               <td class="ptable-cell" style="text-align:right;width:5%;">{{ri+1}}</td>
-              <td class="ptable-cell" style="text-align:right;width:10%;">
-                <span>{{rowData.previousqty}}</span>
+              <td class="ptable-cell" style="text-align:center;width:15%;">
+                <span>{{rowData.materialid}}</span>
               </td>
-              <td class="ptable-cell" style="text-align:left;width:15%;">
-                <span>{{rowData.previouslocation}}</span>
+              <td class="ptable-cell" style="text-align:left">
+                <span>{{rowData.materialdescription}}</span>
               </td>
+
+              <td class="ptable-cell" style="text-align:left;width:20%;">
+                <span>{{rowData.sourcelocation}}</span>
+              </td>
+             
+
+              <td class="ptable-cell" style="text-align:left;width:20%;">
+                <span>{{rowData.destinationlocation}}</span>
+              </td>
+             
 
               <td class="ptable-cell" style="text-align:right;width:10%;">
-                <span>{{rowData.transferedqty}}</span>
-              </td>
-              <td class="ptable-cell" style="text-align:left;width:15%;">
-                <span>{{rowData.currentlocation}}</span>
-              </td>
-
-              <td class="ptable-cell" style="text-align:center;width:10%;">
-                <span>{{rowData.transferedon | date : 'dd/MM/yyyy'}}</span>
-              </td>
-              <td class="ptable-cell" style="text-align:left;width:17%;">
-                <span>{{rowData.transferedby}}</span>
-              </td>
-
-              <td class="ptable-cell" style="text-align:left;width:18%;">
-                <span>{{rowData.remarks}}</span>
+                <span>{{rowData.transferqty}}</span>
               </td>
 
 

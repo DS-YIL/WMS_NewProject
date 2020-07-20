@@ -353,8 +353,8 @@ namespace WMS.Common {
                 return ResourceManager.GetString("getimmediatemnger", resourceCulture);
             }
         }
-		
-		/// <summary>
+        
+        /// <summary>
         ///   Looks up a localized string similar to select st.transferid,st.itemid,st.materialid,mat.materialdescription,st.previouslocation,st.previousqty,st.currentlocation,st.transferedqty,st.transferedon,emp.name as transferedby,st.remarks 
         ///from wms.wms_stocktransfer st 
         ///left outer join wms.&quot;MaterialMasterYGS&quot; mat on mat.material = st.materialid
@@ -376,6 +376,18 @@ namespace WMS.Common {
         public static string getInvoiceDetails {
             get {
                 return ResourceManager.GetString("getInvoiceDetails", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to select inv.id,inv.transferid, inv.materialid , mat.materialdescription, inv.sourcelocation ,inv.sourceitemid, inv.destinationlocation, inv.destinationitemid,inv.transferqty
+        ///from wms.wms_invtransfermaterial inv
+        ///left outer join wms.&quot;MaterialMasterYGS&quot; mat on inv.materialid = mat.material
+        ///where inv.transferid = &apos;#tid&apos;.
+        /// </summary>
+        public static string getinvtransfermaterialdetail {
+            get {
+                return ResourceManager.GetString("getinvtransfermaterialdetail", resourceCulture);
             }
         }
         
@@ -569,6 +581,15 @@ namespace WMS.Common {
         public static string getnextreservetid {
             get {
                 return ResourceManager.GetString("getnextreservetid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to select pono||&apos;-&apos;||invoiceno as value,pono||&apos;-&apos;||invoiceno as text from wms.wms_securityinward where grnnumber is null order by inwmasterid desc.
+        /// </summary>
+        public static string getpendingreceiptslist {
+            get {
+                return ResourceManager.GetString("getpendingreceiptslist", resourceCulture);
             }
         }
         
@@ -776,6 +797,26 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to insert into wms.wms_invstocktransfer (transferid,transferredby,transferredon,transfertype,sourceplant,destinationplant,remarks)
+        ///values (@transferid,@transferredby,@transferredon,@transfertype,@sourceplant,@destinationplant,@remarks).
+        /// </summary>
+        public static string insertInvStocktransfer {
+            get {
+                return ResourceManager.GetString("insertInvStocktransfer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to insert into wms.wms_invtransfermaterial (transferid,materialid,sourcelocation,sourceitemid,destinationlocation,destinationitemid,transferqty)
+        ///values (@transferid,@materialid,@sourcelocation,@sourceitemid,@destinationlocation,@destinationitemid,@transferqty).
+        /// </summary>
+        public static string insertinvtransfermaterial {
+            get {
+                return ResourceManager.GetString("insertinvtransfermaterial", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to insert into wms.wms_polist(pono,suppliername,type) values (@pono,@suppliername,@type).
         /// </summary>
         public static string insertpo {
@@ -863,6 +904,18 @@ namespace WMS.Common {
         public static string insertstock {
             get {
                 return ResourceManager.GetString("insertstock", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to select inv.transferid,emp.name as transferredby,inv.transferredon,inv.transfertype,inv.sourceplant,inv.destinationplant,inv.remarks  
+        ///from wms.wms_invstocktransfer inv 
+        ///left outer join wms.employee emp  on emp.employeeno = inv.transferredby
+        ///order by transferredon Desc.
+        /// </summary>
+        public static string invstocktransfermainquery {
+            get {
+                return ResourceManager.GetString("invstocktransfermainquery", resourceCulture);
             }
         }
         

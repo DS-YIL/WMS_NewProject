@@ -5,7 +5,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { constants } from '../Models/WMSConstants'
 import { Employee, Login, DynamicSearchResult, printMaterial } from '../Models/Common.Model';
-import { PoFilterParams, PoDetails, BarcodeModel, StockModel, materialRequestDetails, inwardModel, gatepassModel, stocktransfermodel, Materials, authUser } from '../Models/WMS.Model';
+import { PoFilterParams, PoDetails, BarcodeModel, StockModel, materialRequestDetails, inwardModel, gatepassModel, stocktransfermodel, Materials, authUser, invstocktransfermodel, ddlmodel } from '../Models/WMS.Model';
 import { Text } from '@angular/compiler/src/i18n/i18n_ast';
 
 @Injectable({
@@ -308,6 +308,9 @@ export class wmsService {
   getMaterial(): Observable<Materials[]> {
     return this.http.get<Materials[]>(this.url + 'POData/GetMaterialdata/', this.httpOptions);
   }
+  getPendingpo(): Observable<ddlmodel[]> {
+    return this.http.get<ddlmodel[]>(this.url + 'POData/getpendingpos/', this.httpOptions);
+  }
   getapproverdata(empid:string): Observable<any> {
     return this.http.get<any>(this.url + 'POData/getapproverList?empid=' + empid, this.httpOptions);
   }
@@ -326,8 +329,16 @@ export class wmsService {
   getstocktransferlist(): Observable<stocktransfermodel[]> {
     return this.http.get<stocktransfermodel[]>(this.url + 'POData/getstocktransferdata/', this.httpOptions);
   }
-  getstocktransferlistgroup(): Observable<stocktransfermodel[]> {
-    return this.http.get<stocktransfermodel[]>(this.url + 'POData/getstocktransferdatagroup/', this.httpOptions);
+  getstocktransferlistgroup(): Observable<invstocktransfermodel[]> {
+    return this.http.get<invstocktransfermodel[]>(this.url + 'POData/getstocktransferdatagroup/', this.httpOptions);
+  }
+  getstocktransferlistgroup1(): Observable<invstocktransfermodel[]> {
+    return this.http.get<invstocktransfermodel[]>(this.url + 'POData/getstocktransferdatagroup1/', this.httpOptions);
+  }
+
+  Stocktransfer1(StockModel: invstocktransfermodel): Observable<any> {
+    const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }), responseType: 'text' as any };
+    return this.http.post<any>(this.url + 'POData/UpdateStockTransfer1', StockModel, httpOptions);
   }
 }
 

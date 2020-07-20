@@ -15,9 +15,9 @@ import { DatePipe } from '@angular/common';
   providers: [DatePipe]
 })
 export class WarehouseInchargeComponent implements OnInit {
-  binid: any;
-  rackid: any;
-  isnonpo: boolean = false;
+    binid: any;
+    rackid: any;
+    isnonpo: boolean=false;
 
   constructor(private formBuilder: FormBuilder, private messageService: MessageService, private datePipe: DatePipe, private wmsService: wmsService, private route: ActivatedRoute, private router: Router, public constants: constants, private spinner: NgxSpinnerService) { }
 
@@ -63,6 +63,8 @@ export class WarehouseInchargeComponent implements OnInit {
   matid: string = "";
   matdescription: string = "";
   matqty: string = "";
+  showLocationDialogxx: boolean = false;
+
   ngOnInit() {
     if (localStorage.getItem("Employee"))
       this.employee = JSON.parse(localStorage.getItem("Employee"));
@@ -170,12 +172,12 @@ export class WarehouseInchargeComponent implements OnInit {
           for (let i = 0; i < (res.length); i++) {
             _list.push({
               rackid: res[i].rackid,
-              racknumber: res[i].racknumber
+             racknumber: res[i].racknumber
             });
           }
           this.racklist = _list;
         });
-  }
+  } 
 
   public bindSearchListData(e: any, formName?: string, name?: string, searchTxt?: string, callback?: () => any): void {
     this.formName = formName;
@@ -235,10 +237,10 @@ export class WarehouseInchargeComponent implements OnInit {
     //api call
     this.wmsService.generateBarcodeMaterial(this.printData).subscribe(data => {
       if (data) {
-
+        
         this.printData = data;
         console.log(this.printData);
-
+        
       }
       else {
         alert("Error while generating Barcode");
@@ -287,7 +289,7 @@ export class WarehouseInchargeComponent implements OnInit {
     this.rackListdata();
     this.rack = "";
     this.bin = "";
-    this.store = "";
+    this.store ="";
   }
 
   showDialog(details: any, index: number) {
@@ -327,7 +329,7 @@ export class WarehouseInchargeComponent implements OnInit {
       binnumber: ['', [Validators.required]],
       itemlocation: ['', [Validators.required]],
       quantity: [0, [Validators.required]],
-
+      
     });
 
   }
@@ -341,12 +343,12 @@ export class WarehouseInchargeComponent implements OnInit {
       this.StockModel.vendorid = this.PoDetails.vendorid;
       this.StockModel.paitemid = this.PoDetails.paitemid;
       this.StockModel.totalquantity = this.PoDetails.materialqty;
-      this.StockModel.createdby = this.employee.employeeno;
-      var binnumber: any[] = [];
-      var storelocation: any[] = [];
-      var rack: any[] = [];
+    this.StockModel.createdby = this.employee.employeeno;
+    var binnumber: any[] = [];
+    var storelocation: any[] = [];
+    var rack: any[] = [];
       binnumber = this.binlist.filter(x => x.binid == this.StockModelForm.controls.binid.value);
-      storelocation = this.locationlist.filter(x => x.locatorid == this.StockModelForm.controls.locatorid.value);
+    storelocation = this.locationlist.filter(x => x.locatorid == this.StockModelForm.controls.locatorid.value);
       rack = this.racklist.filter(x => x.rackid == this.StockModelForm.controls.rackid.value);
       if (binnumber.length != 0) {
         this.StockModel.binnumber = binnumber[0].binnumber;
@@ -358,15 +360,15 @@ export class WarehouseInchargeComponent implements OnInit {
         this.StockModel.itemlocation = storelocation[0].locatorname + "." + rack[0].racknumber;
       }
       this.StockModel.racknumber = storelocation[0].locatorname;
-      //this.StockModel.itemlocation = storelocation[0].locatorname;
+    //this.StockModel.itemlocation = storelocation[0].locatorname;
       this.StockModel.rackid = rack[0].rackid;
       this.StockModel.confirmqty = this.PoDetails.confirmqty;
       this.StockModel.itemreceivedfrom = new Date();
-
+    
       //if (binnumber.length == 0)
       //  this.StockModel.itemlocation += '.' + binnumber[0].binnumber;
       //if (binnumber.length == 0)
-
+        
       this.wmsService.InsertStock(this.StockModel).subscribe(data => {
         // if (data) {
         //this.podetailsList[this.rowIndex].itemlocation = data;
@@ -380,7 +382,7 @@ export class WarehouseInchargeComponent implements OnInit {
       if (!this.store.name)
         this.messageService.add({ severity: 'error', summary: 'Validation', detail: 'Select Location' });
       else if (!this.rack.name)
-        this.messageService.add({ severity: 'error', summary: 'Validation', detail: 'Select Rack' });
+        this.messageService.add({ severity: 'error', summary: 'Validation', detail: 'Select Rack'});
     }
   }
 
@@ -413,7 +415,7 @@ export class WarehouseInchargeComponent implements OnInit {
           //this._list = res; //save posts in array
           this.racklist1 = res;
         });
-  }
+  } 
 
 
 }
