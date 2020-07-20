@@ -104,6 +104,8 @@ export class StoreClerkComponent implements OnInit {
       data.returnqty = "";
     }
   }
+
+ 
   scanBarcode() {
     debugger;
     if (this.PoDetails.pono) {

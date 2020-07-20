@@ -686,7 +686,7 @@ from wms."MaterialMasterYGS" mmy  join wms.wms_stock st on st.materialid =mmy.ma
     <value>select bin.binnumber,sk.binid,sk.materialid as material,sum(sk.availableqty)as availableqty,max(sk.itemlocation)as itemlocation
  from wms.wms_rd_bin bin left join wms.wms_stock sk  on bin.binid=sk.binid group by sk.binid,sk.materialid,bin.binnumber order by sk.binid asc</value>
   </data>
-   <data name="getinternalstocktransferdata" xml:space="preserve">
+  <data name="getinternalstocktransferdata" xml:space="preserve">
     <value>select st.transferid,st.itemid,st.materialid,mat.materialdescription,st.previouslocation,st.previousqty,st.currentlocation,st.transferedqty,st.transferedon,emp.name as transferedby,st.remarks 
 from wms.wms_stocktransfer st 
 left outer join wms."MaterialMasterYGS" mat on mat.material = st.materialid
