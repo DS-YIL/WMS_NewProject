@@ -28,7 +28,7 @@ export class PoDetails {
   itemid: number;
   confirmqty: number;
   materialqty: string;
-
+  inwardid: number;
 }
 
 export class BarcodeModel {
@@ -121,6 +121,7 @@ export class StockModel {
   racknumber: string;
   locatorid: number;
   remarks: string;
+  inwardid: number;
 }
 
 export class materialRequestDetails {

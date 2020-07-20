@@ -148,7 +148,7 @@ namespace WMS.Controllers
 		}
 
 		[HttpPost("updateitemlocation")]
-		public string insertitemdataTostock(StockModel data)
+		public string insertitemdataTostock([FromBody] List<StockModel> data)
 		{
 			return this._poService.InsertStock(data);
 		}
