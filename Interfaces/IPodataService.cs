@@ -34,6 +34,8 @@ namespace WMS.Interfaces
         string InsertStock(StockModel data);
         string UpdateStockTransfer(List<StockModel> data);
 
+        string InvStockTransfer(invstocktransfermodel data);
+
         System.Data.DataTable GetListItems(DynamicSearchResult result);
         System.Data.DataTable GetMaterialItems(DynamicSearchResult result);
         int IssueRequest(List<IssueRequestModel> reqdata);
@@ -107,5 +109,8 @@ namespace WMS.Interfaces
 		Task<IEnumerable<Materials>> GetMaterialstockcombo();
         Task<IEnumerable<stocktransferModel>> getstocktransferdata();
         Task<IEnumerable<stocktransferModel>> getstocktransferdatagroup();
+
+        Task<IEnumerable<invstocktransfermodel>> getstocktransferdatagroup1();
+        Task<IEnumerable<ddlmodel>> pendingreceiptslist();
     }
 }

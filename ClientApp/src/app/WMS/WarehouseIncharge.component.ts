@@ -63,6 +63,7 @@ export class WarehouseInchargeComponent implements OnInit {
   matid: string = "";
   matdescription: string = "";
   matqty: string = "";
+  showLocationDialogxx: boolean = false;
 
   ngOnInit() {
     if (localStorage.getItem("Employee"))
@@ -297,20 +298,20 @@ export class WarehouseInchargeComponent implements OnInit {
     this.rowIndex = index;
     this.binid = details.binid;
     this.rackid = details.rackid;
-    this.matid = details.material;
-    this.matdescription = details.materialdescription;
-    this.matqty = details.receivedqty;
-    //this.StockModelForm = this.formBuilder.group({
-    //  rackid: [details.rackid],
-    //  binid: [details.binid],
-    //  locatorid: [details.storeid]
-    //});
-    //this.locationListdata();
-    //this.binListdata();
-    //this.rackListdata();
-    //this.rack = "";
-    //this.bin = "";
-    //this.store = "";
+    //this.matid = details.material;
+    //this.matdescription = details.materialdescription;
+    //this.matqty = details.receivedqty;
+    this.StockModelForm = this.formBuilder.group({
+      rackid: [details.rackid],
+      binid: [details.binid],
+      locatorid: [details.storeid]
+    });
+    this.locationListdata();
+    this.binListdata();
+    this.rackListdata();
+    this.rack = "";
+    this.bin = "";
+    this.store = "";
   }
 
   addrows() {

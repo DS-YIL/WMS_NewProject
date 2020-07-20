@@ -64,6 +64,11 @@ export class GatePassApprovalList implements OnInit {
   getGatePassHistoryList(gatepassId: any) {
     this.wmsService.getGatePassApprovalHistoryList(gatepassId).subscribe(data => {
       this.gatePassApprovalList = data;
+      for (let i = 0; i < this.gatePassApprovalList.length; i++) {
+        if (this.gatePassApprovalList[i].approverid === this.employee.employeeno) {
+          this.gatePassApprovalList.splice(i--, 1);
+        }
+      }
     });
   }
 

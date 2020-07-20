@@ -701,4 +701,27 @@ values (@itemid,@materialid,@previouslocation,@previousqty,@currentlocation,@tra
 left outer join wms."MaterialMasterYGS" mat on st.materialid = mat.material
 group by st.materialid,st.transferedon order by st.transferedon desc</value>
   </data>
+  <data name="getinvtransfermaterialdetail" xml:space="preserve">
+    <value>select inv.id,inv.transferid, inv.materialid , mat.materialdescription, inv.sourcelocation ,inv.sourceitemid, inv.destinationlocation, inv.destinationitemid,inv.transferqty
+from wms.wms_invtransfermaterial inv
+left outer join wms."MaterialMasterYGS" mat on inv.materialid = mat.material
+where inv.transferid = '#tid'</value>
+  </data>
+  <data name="insertInvStocktransfer" xml:space="preserve">
+    <value>insert into wms.wms_invstocktransfer (transferid,transferredby,transferredon,transfertype,sourceplant,destinationplant,remarks)
+values (@transferid,@transferredby,@transferredon,@transfertype,@sourceplant,@destinationplant,@remarks)</value>
+  </data>
+  <data name="insertinvtransfermaterial" xml:space="preserve">
+    <value>insert into wms.wms_invtransfermaterial (transferid,materialid,sourcelocation,sourceitemid,destinationlocation,destinationitemid,transferqty)
+values (@transferid,@materialid,@sourcelocation,@sourceitemid,@destinationlocation,@destinationitemid,@transferqty)</value>
+  </data>
+  <data name="invstocktransfermainquery" xml:space="preserve">
+    <value>select inv.transferid,emp.name as transferredby,inv.transferredon,inv.transfertype,inv.sourceplant,inv.destinationplant,inv.remarks  
+from wms.wms_invstocktransfer inv 
+left outer join wms.employee emp  on emp.employeeno = inv.transferredby
+order by transferredon Desc</value>
+  </data>
+  <data name="getpendingreceiptslist" xml:space="preserve">
+    <value>select pono||'-'||invoiceno as value,pono||'-'||invoiceno as text from wms.wms_securityinward where grnnumber is null order by inwmasterid desc</value>
+  </data>
 </root>

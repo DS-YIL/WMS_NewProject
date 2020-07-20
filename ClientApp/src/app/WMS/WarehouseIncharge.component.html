@@ -36,7 +36,7 @@
             <th style="width:100px;text-align:center">Received Quantity</th>
             <th style="width:100px;text-align:center">Accepted Quantity</th>
             <th style="width:100px;text-align: center">Returned Quantity</th>
-            <th *ngIf="!isnonpo" style="width:100px;text-align:center">Pending Quantity</th>
+            <!--<th *ngIf="!isnonpo" style="width:100px;text-align:center">Pending Quantity</th>-->
             <th style="width:100px;text-align:center">Material Barcode</th>
             <th style="width:150px; text-align: center">Location</th>
 
@@ -51,7 +51,7 @@
             <th> <input pInputText type="text" style="width:100%;" class="form-control" (input)="dt.filter($event.target.value, 'receivedqty', 'contains')"></th>
             <th> <input pInputText type="text" style="width:100%;" class="form-control" (input)="dt.filter($event.target.value, 'confirmqty', 'contains')"></th>
             <th> <input pInputText type="text" style="width:100%;" class="form-control" (input)="dt.filter($event.target.value, 'returnqty', 'contains')"></th>
-            <th *ngIf="!isnonpo"></th>
+            <!--<th *ngIf="!isnonpo"></th>-->
             <th></th>
             <th> <input pInputText type="text" style="width:100%;" class="form-control" (input)="dt.filter($event.target.value, 'Location', 'contains')"></th>
 
@@ -68,7 +68,7 @@
             <td class="ptable-cell" style="text-align:right;width:100px;">{{rowData.receivedqty}}</td>
             <td class="ptable-cell" style="text-align:right;width:100px;">{{rowData.confirmqty}}</td>
             <td class="ptable-cell" style="text-align:right;width:100px;">{{rowData.returnqty}}</td>
-            <td *ngIf="!isnonpo" class="ptable-cell" style="text-align:right;width:100px;">{{rowData.materialqty-rowData.confirmqty}}</td>
+            <!--<td *ngIf="!isnonpo" class="ptable-cell" style="text-align:right;width:100px;">{{rowData.materialqty-rowData.confirmqty}}</td>-->
             <td style="text-align:center">
               <button type="button" icon="fa fa-print" pButton aria-hidden="true" (click)="generateBarcode(rowData)"></button>
             </td>
@@ -259,7 +259,7 @@
         </div>
 </form>
   </p-dialog>
-    <p-dialog header="Put Away Location" [(visible)]="showLocationDialogxx" [contentStyle]="{'overflow':'visible'}" [style]="{width: '50%'}">
+    <p-dialog header="Put Away Location" [(visible)]="showLocationDialog" [contentStyle]="{'overflow':'visible'}" [style]="{width: '50%'}">
       <form [formGroup]="StockModelForm">
         <div class="row " style="margin-top:10px;">
           <div class="col-lg-4 col-md-4 col-sm-4 form-group">
@@ -320,7 +320,7 @@
         </div>
       </p-footer>
     </p-dialog>
-    <p-dialog header="Put Away Location" [(visible)]="showLocationDialog" [position]="top" [modal]="true" [style]="{width: '95vw'}" [maximizable]="true" [baseZIndex]="10000"
+    <p-dialog header="Put Away Location" [(visible)]="showLocationDialogxx"  [modal]="true" [style]="{width: '95vw'}" [maximizable]="true" [baseZIndex]="10000"
               [draggable]="true" [resizable]="false">
       <div class="row">
         <div class="col-lg-4 col-md-4 labelheading">

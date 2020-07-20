@@ -643,3 +643,38 @@ public class stocktransferModel
 	
 
 }
+
+public class invstocktransfermodel
+{
+	public string transferid { get; set; }
+	public string transferredby { get; set; }
+	public DateTime transferredon { get; set; }
+	public string transfertype { get; set; }
+	public string sourceplant { get; set; }
+	public string destinationplant { get; set; }
+	public string remarks { get; set; }
+	public List<stocktransfermateriakmodel> materialdata { get; set; }
+}
+
+public class stocktransfermateriakmodel
+{
+   public int number { get; set; }
+   public string transferid { get; set; }
+   public int itemid { get; set; }
+   public string materialid { get; set; }
+   public string materialdescription { get; set; }
+   public string sourcelocation { get; set; }
+   public int sourceitemid { get; set; }
+	public string destinationlocation { get; set; }
+	public int destinationitemid { get; set; }
+	public int transferqty ;
+  public string[] mlocations { get; set; } 
+}
+
+public class ddlmodel
+{
+
+  public string	value { get; set; }
+  public string text { get; set; }
+
+}

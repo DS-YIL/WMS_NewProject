@@ -4,7 +4,7 @@ import { wmsService } from '../WmsServices/wms.service';
 import { constants } from '../Models/WMSConstants';
 import { Employee } from '../Models/Common.Model';
 import { NgxSpinnerService } from "ngx-spinner";
-import { PoDetails, BarcodeModel, inwardModel, Materials } from 'src/app/Models/WMS.Model';
+import { PoDetails, BarcodeModel, inwardModel, Materials, ddlmodel } from 'src/app/Models/WMS.Model';
 import { MessageService } from 'primeng/api';
 import { first } from 'rxjs/operators';
 import { isNullOrUndefined } from 'util';
@@ -36,11 +36,16 @@ export class StoreClerkComponent implements OnInit {
   combomaterial: Materials[];
   selectedmaterial: Materials;
   isallreceived: boolean = false;
+  pendingpos: ddlmodel[] = [];
+  selectedpendingpo: ddlmodel;
+  receivedmsg: string = "";
+ 
   ngOnInit() {
     if (localStorage.getItem("Employee"))
       this.employee = JSON.parse(localStorage.getItem("Employee"));
     else
       this.router.navigateByUrl("Login");
+    this.getpendingpos();
     this.getMaterials();
     this.inwardemptymodel = new inwardModel();
     this.PoDetails = new PoDetails();
@@ -100,6 +105,7 @@ export class StoreClerkComponent implements OnInit {
     }
   }
   scanBarcode() {
+    debugger;
     if (this.PoDetails.pono) {
       this.PoDetails.pono;
       this.PoDetails.invoiceno;
@@ -151,6 +157,24 @@ export class StoreClerkComponent implements OnInit {
       this.combomaterial = data;
     });
   }
+  getpendingpos() {
+    this.wmsService.getPendingpo().subscribe(data => {
+      debugger;
+      this.pendingpos = data;
+    });
+  }
+  showpodata() {
+    if (!isNullOrUndefined(this.selectedpendingpo)) {
+      this.spinner.show();
+      this.showQtyUpdateDialog = true;
+      this.PoDetails.pono = this.selectedpendingpo.value;
+      this.getponodetails(this.selectedpendingpo.value);
+    }
+    else {
+
+    }
+   
+  }
   getponodetails(data) {
     debugger;
     this.isnonpoentry = false;
@@ -161,7 +185,8 @@ export class StoreClerkComponent implements OnInit {
     this.podetailsList = [];
     this.wmsService.Getthreewaymatchingdetails(data).subscribe(data => {
       this.spinner.hide();
-      if (data) {
+      debugger;
+      if (data && data.length>0) {
         this.disGrnBtn = false;
         // this.PoDetails = data[0];
         this.podetailsList = data;
@@ -206,6 +231,7 @@ export class StoreClerkComponent implements OnInit {
         });
         if (allreceiveddata.length > 0 && allreceiveddata.length == this.podetailsList.length) {
           this.isallreceived = true;
+          this.receivedmsg = "Extra invoice : All materials already received."
         }
         else {
           this.isallreceived = false;
