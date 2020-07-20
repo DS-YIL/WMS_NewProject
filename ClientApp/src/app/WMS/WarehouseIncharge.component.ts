@@ -394,7 +394,7 @@ export class WarehouseInchargeComponent implements OnInit {
         }
         this.StockModel.racknumber = storelocation[0].locatorname;
         this.StockModel.rackid = rack[0].rackid;
-        this.StockModel.availableqty = item.quantity;
+        this.StockModel.confirmqty = item.quantity;
         this.StockModel.itemreceivedfrom = new Date();
         this.StockModelList.push(this.StockModel);
         
@@ -417,9 +417,9 @@ export class WarehouseInchargeComponent implements OnInit {
       var totalqty = 0;
       this.StockModelList.forEach(item => {
 
-        totalqty = totalqty + (item.availableqty);
+        totalqty = totalqty + (item.confirmqty);
       })
-      if (totalqty <= parseInt(this.matqty)) {
+      if (totalqty == parseInt(this.matqty)) {
         this.disSaveBtn = true;
         this.wmsService.InsertStock(this.StockModelList).subscribe(data => {
           this.podetailsList[this.rowIndex].itemlocation = this.StockModel.itemlocation;
@@ -430,7 +430,7 @@ export class WarehouseInchargeComponent implements OnInit {
       }
       else {
         this.disSaveBtn = true;
-        this.messageService.add({ severity: 'error', summary: 'Validation', detail: 'quantity is wrong' });
+        this.messageService.add({ severity: 'error', summary: 'Validation', detail: 'Confired quantity and location qty should be equal' });
         }
     }
     else {
