@@ -238,7 +238,8 @@ VALUES(@inwmasterid,@receiveddate,@receivedby,@receivedqty,@returnqty,@qualitypa
     <value>select * from  wms.wms_sequencemaster  where  enddate&gt;=current_date and id=1</value>
   </data>
   <data name="materialrequestquery" xml:space="preserve">
-    <value>select distinct  max(req.requesteddate)as requesteddate,max(issue.approvedstatus)as approvedstatus,max(issue.issuedqty) as issuedqty,max(req.requestforissueid)as requestforissueid,max(issue.approvedstatus) as approvedstatus,req.requestid,max(openpo.pono) as pono,max(openpo.projectname)as projectname,max(openpo.material)as material,max(openpo.materialdescription) as materialdescription,max(openpo.quotationqty) quotationqty,max(req.requestedquantity)as requestedquantity,max(req.ackremarks)as ackremarks 
+    <value>select distinct  max(req.requesteddate)as requesteddate,max(issue.approvedstatus)as approvedstatus,max(issue.issuedqty) as issuedqty,max(req.requestforissueid)as requestforissueid,max(issue.approvedstatus) as approvedstatus,req.requestid,max(openpo.pono) as pono,max(openpo.projectname)as projectname,max(openpo.material)as material,max(openpo.materialdescription) as materialdescription,max(openpo.quotationqty) quotationqty,max(req.requestedquantity)as requestedquantity,
+max(req.ackremarks)as ackremarks,CASE WHEN max(req.ackremarks) IS NULL THEN false ELSE true END AS status 
  from   wms.wms_stock  sk left join wms.openpolistview openpo on openpo.pono = sk.pono 
   left join wms.wms_materialrequest req on req.pono = openpo.pono
   left join  wms.wms_materialissue issue on issue.requestforissueid=req.requestforissueid</value>
