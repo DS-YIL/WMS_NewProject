@@ -495,7 +495,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select max(pro.projectname)as projectname,max(sk.itemid)as itemid,sk.materialid as material,sum(sk.availableqty)as availableqty,max(mat.materialdescription)as materialdescription,max(mat.materialqty)as quotationqty,max(mat.materialqty)as materialqty,max(sk.pono) as pono from 
+        ///   Looks up a localized string similar to select max(pro.projectname)as projectname,max(sk.itemid)as itemid,sk.materialid as material,max(sk.availableqty)as availableqty,max(mat.materialdescription)as materialdescription,max(mat.materialqty)as quotationqty,max(mat.materialqty)as materialqty,max(sk.pono) as pono from 
         ///wms.wms_stock  sk left join wms.wms_polist openpo on openpo.pono = sk.pono 
         ///left join wms.wms_pomaterials mat on mat.pono=openpo.pono
         ///left join wms.wms_project pro on pro.pono=openpo.pono
