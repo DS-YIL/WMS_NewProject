@@ -279,7 +279,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select * from wms.wms_gatepassapprovals where gatepassid =#gatepassid.
+        ///   Looks up a localized string similar to SELECT * FROM  wms.wms_gatepassapprovals where gatepassid =#gatepassid ORDER BY historyid DESC LIMIT 2.
         /// </summary>
         public static string getGatePassApprovalHistoryList {
             get {

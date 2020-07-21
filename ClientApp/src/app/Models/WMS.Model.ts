@@ -155,6 +155,7 @@ export class gatepassModel {
   materialList: Array<materialistModel> = [];
   approverremarks: string;
   approverstatus: string;
+  fmapprovedstatus: string;
   printedon: Date;
   printedby: string;
   print: boolean;
@@ -163,6 +164,7 @@ export class gatepassModel {
   employeeno: string;
   approverid: string;
   managername: string;
+  approvedby: string;
   categoryid: number;
 }
 export class materialistModel {

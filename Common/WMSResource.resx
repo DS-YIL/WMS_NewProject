@@ -596,7 +596,7 @@ values(default,@pono,@itemid,@gatepassmaterialid,@itemissueddate,@itemreceiverid
 VALUES(@inwmasterid,@receiveddate,@receivedby,@receivedqty,@materialid,@deleteflag,@qualitycheck,@qualitychecked,@materialqty)returning inwardid</value>
   </data>
   <data name="getGatePassApprovalHistoryList" xml:space="preserve">
-    <value>select * from wms.wms_gatepassapprovals where gatepassid =#gatepassid</value>
+    <value>SELECT * FROM  wms.wms_gatepassapprovals where gatepassid =#gatepassid ORDER BY historyid DESC LIMIT 2</value>
   </data>
   <data name="insertpo" xml:space="preserve">
     <value>insert into wms.wms_polist(pono,suppliername,type) values (@pono,@suppliername,@type)</value>

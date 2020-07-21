@@ -167,6 +167,7 @@ export class GatePassApproverComponent implements OnInit {
     this.AddDialog = false;
   }
   issuematerial(itemlocationData) {
+    debugger;
     var totalissuedqty = 0;
     this.itemlocationData.forEach(item => {
       if (item.issuedquantity != "0")
