@@ -3671,17 +3671,17 @@ namespace WMS.DAL
 							});
 						}
 
-						//if (result != 0)
-						//{
-						//	int availableqty = item.availableqty - item.reservedqty;
-						//	string updatequery = WMSResource.updatestock.Replace("#availableqty", Convert.ToString(availableqty)).Replace("#itemid", Convert.ToString(item.itemid));
-						//	using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
-						//	{
-						//		result = DB.Execute(updatequery, new
-						//		{
-						//		});
-						//	}
-						//}
+						if (result != 0)
+						{
+							int availableqty = item.availableqty - item.reservedqty;
+							string updatequery = WMSResource.updatestock.Replace("#availableqty", Convert.ToString(availableqty)).Replace("#itemid", Convert.ToString(item.itemid));
+							using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
+							{
+								result = DB.Execute(updatequery, new
+								{
+								});
+							}
+						}
 
 					}
 				}
