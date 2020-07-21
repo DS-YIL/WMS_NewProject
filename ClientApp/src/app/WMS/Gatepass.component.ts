@@ -161,6 +161,8 @@ export class GatePassComponent implements OnInit {
   getGatePassList() {
     this.wmsService.getGatePassList().subscribe(data => {
       this.totalGatePassList = data;
+     // debugger;
+      console.log(this.totalGatePassList);
       this.gatepasslist = [];
       if (this.employee.roleid == "8") {
         this.gatepasslist = this.totalGatePassList.filter(li => li.gatepasstype == 'Non Returnable' && (li.approverstatus == this.approverstatus || li.approverstatus == null));
@@ -175,6 +177,7 @@ export class GatePassComponent implements OnInit {
 
       }
       else {
+        //debugger;
         this.gatepasslist = this.totalGatePassList;
       }
       this.gatepassModelList = [];
@@ -195,7 +198,7 @@ export class GatePassComponent implements OnInit {
     this.prepareGatepassList();
   }
   exportPdf() {
-    debugger;
+   // debugger;
     import("jspdf").then(jsPDF => {
       import("jspdf-autotable").then(x => {
         const doc = new jsPDF.default(0, 0);
@@ -249,6 +252,7 @@ export class GatePassComponent implements OnInit {
 
   //prepare list based on gate pass id
   prepareGatepassList() {
+    //debugger;
     this.gatepasslist.forEach(item => {
       var res = this.gatepassModelList.filter(li => li.gatepassid == item.gatepassid);
       if (res.length == 0) {
@@ -402,6 +406,8 @@ export class GatePassComponent implements OnInit {
 
   //saving gatepass details
   onSubmitgatepassDetails() {
+    //debugger;
+    //alert("entered");
     if (this.gatepassModel.gatepasstype != "0") {
       this.gatepassModel.requestedby = this.employee.employeeno;
       this.wmsService.saveoreditgatepassmaterial(this.gatepassModel).subscribe(data => {

@@ -279,7 +279,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select * from wms.wms_gatepassapprovals where gatepassid =#gatepassid.
+        ///   Looks up a localized string similar to SELECT * FROM  wms.wms_gatepassapprovals where gatepassid =#gatepassid ORDER BY historyid DESC LIMIT 2.
         /// </summary>
         public static string getGatePassApprovalHistoryList {
             get {
@@ -899,7 +899,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO wms.wms_stock(inwmasterid,stockstatus,pono,binid,vendorid,totalquantity,shelflife,availableqty,deleteflag,itemlocation,createddate,createdby,materialid)VALUES(@inwmasterid,@stockstatus,@pono,@binid,@vendorid,@totalquantity,@shelflife,@availableqty,@deleteflag,@itemlocation,@createddate,@createdby,@materialid)returning itemid.
+        ///   Looks up a localized string similar to INSERT INTO wms.wms_stock(inwmasterid,stockstatus,pono,binid,vendorid,totalquantity,shelflife,availableqty,deleteflag,itemlocation,createddate,createdby,materialid,inwardid)VALUES(@inwmasterid,@stockstatus,@pono,@binid,@vendorid,@totalquantity,@shelflife,@availableqty,@deleteflag,@itemlocation,@createddate,@createdby,@materialid,@inwardid)returning itemid.
         /// </summary>
         public static string insertstock {
             get {
@@ -985,12 +985,12 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select bin.binnumber, rack.racknumber, loc.locatorname,mat.rackid,mat.binid,
+        ///   Looks up a localized string similar to select inwa.inwardid,bin.binnumber, rack.racknumber, loc.locatorname,mat.rackid,mat.binid,
         /// mat.storeid,stocks.itemlocation,stocks.itemid,inw.grnnumber,inw.pono,inw.invoiceno,inw.receiveddate,inwa.materialqty,inwa.materialid as material,mat.materialdescription,inwa.receivedqty,inwa.confirmqty,inwa.returnqty 
         /// from wms.wms_securityinward inw
         ///left join wms.wms_storeinward inwa on inw.inwmasterid=inwa.inwmasterid
-        ///left join wms.wms_stock stocks on  stocks.inwmasterid=inwa.inwmasterid
-        /// left join wms.&quot;MaterialMasterYGS&quot; m [rest of string was truncated]&quot;;.
+        ///left join wms.wms_stock stocks on  stocks.inwardid=inwa.inwardid
+        /// left join wms.&quot;MaterialMast [rest of string was truncated]&quot;;.
         /// </summary>
         public static string queryforitemdetails {
             get {

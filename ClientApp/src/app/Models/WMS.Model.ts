@@ -28,7 +28,7 @@ export class PoDetails {
   itemid: number;
   confirmqty: number;
   materialqty: string;
-
+  inwardid: number;
 }
 
 export class BarcodeModel {
@@ -121,6 +121,7 @@ export class StockModel {
   racknumber: string;
   locatorid: number;
   remarks: string;
+  inwardid: number;
 }
 
 export class materialRequestDetails {
@@ -154,6 +155,7 @@ export class gatepassModel {
   materialList: Array<materialistModel> = [];
   approverremarks: string;
   approverstatus: string;
+  fmapprovedstatus: string;
   printedon: Date;
   printedby: string;
   print: boolean;
@@ -162,6 +164,7 @@ export class gatepassModel {
   employeeno: string;
   approverid: string;
   managername: string;
+  approvedby: string;
   categoryid: number;
 }
 export class materialistModel {

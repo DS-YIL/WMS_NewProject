@@ -39,6 +39,7 @@ export class WarehouseInchargeComponent implements OnInit {
   public BarcodeModel: BarcodeModel;
   public showDetails; showLocationDialog: boolean = false;
   public StockModel: StockModel;
+  public StockModelList:Array<any> =[];;
   public StockModelForm: FormGroup;
   public StockModelForm1: FormGroup;
   public rowIndex: number;
@@ -63,14 +64,17 @@ export class WarehouseInchargeComponent implements OnInit {
   matid: string = "";
   matdescription: string = "";
   matqty: string = "";
-  showLocationDialogxx: boolean = false;
-
+  public invoiceForm: FormGroup;
+  public showLocationDialogxx: boolean = false;
+  public disSaveBtn: boolean = false;
   ngOnInit() {
     if (localStorage.getItem("Employee"))
       this.employee = JSON.parse(localStorage.getItem("Employee"));
     else
       this.router.navigateByUrl("Login");
-
+    this.invoiceForm = this.formBuilder.group({
+      itemRows: this.formBuilder.array([this.initItemRows()])
+    });
     this.PoDetails = new PoDetails();
     this.StockModel = new StockModel();
     this.locationListdata1();
@@ -80,6 +84,7 @@ export class WarehouseInchargeComponent implements OnInit {
     //this.userForm = this.fb.group({
     //  users: this.fb.array([])
     //});
+
     this.StockModelForm = this.formBuilder.group({
       locatorid: ['', [Validators.required]],
       rackid: ['', [Validators.required]],
@@ -113,7 +118,31 @@ export class WarehouseInchargeComponent implements OnInit {
     this.invoiceNo = details.invoiceno;
     this.grnNo = details.grnnumber;
   }
+  get formArr() {
+    return this.invoiceForm.get('itemRows') as FormArray;
+   // return (this.invoiceForm.get('itemRows') as FormArray).controls;
+  }
+ 
+  initItemRows() {
+    return this.formBuilder.group({
+      itemname: [''],
+      locatorid: ['', [Validators.required]],
+      rackid: ['', [Validators.required]],
+      binid: ['', [Validators.required]],
+      shelflife: ['', [Validators.required]],
+      binnumber: ['', [Validators.required]],
+      itemlocation: ['', [Validators.required]],
+      quantity: [0, [Validators.required]],
+    });
+  }
 
+  addNewRow() {
+    this.formArr.push(this.initItemRows());
+  }
+
+  deleteRow(index: number) {
+    this.formArr.removeAt(index);
+  }
   //Increase and decrease the qty based on no of prints -- gayathri
   decreaseQty() {
     if (this.qty > 1) {
@@ -279,11 +308,11 @@ export class WarehouseInchargeComponent implements OnInit {
     this.rowIndex = index;
     this.binid = details.binid;
     this.rackid = details.rackid;
-    this.StockModelForm = this.formBuilder.group({
-      rackid: [details.rackid],
-      binid: [details.binid],
-      locatorid: [details.storeid]
-    });
+    //this.StockModelForm = this.formBuilder.group({
+    //  rackid: [details.rackid],
+    //  binid: [details.binid],
+    //  locatorid: [details.storeid]
+    //});
     this.locationListdata();
     this.binListdata();
     this.rackListdata();
@@ -298,9 +327,9 @@ export class WarehouseInchargeComponent implements OnInit {
     this.rowIndex = index;
     this.binid = details.binid;
     this.rackid = details.rackid;
-    //this.matid = details.material;
-    //this.matdescription = details.materialdescription;
-    //this.matqty = details.receivedqty;
+    this.matid = details.material;
+    this.matdescription = details.materialdescription;
+    this.matqty = details.receivedqty;
     this.StockModelForm = this.formBuilder.group({
       rackid: [details.rackid],
       binid: [details.binid],
@@ -335,48 +364,74 @@ export class WarehouseInchargeComponent implements OnInit {
   }
 
   onSubmitStockDetails() {
-    if (this.StockModelForm.controls.rackid.value && this.StockModelForm.controls.locatorid.value) {
-      this.StockModel.material = this.PoDetails.material;
-      this.StockModel.itemid = this.PoDetails.itemid;
-      this.StockModel.pono = this.PoDetails.pono;
-      this.StockModel.grnnumber = this.PoDetails.grnnumber;
-      this.StockModel.vendorid = this.PoDetails.vendorid;
-      this.StockModel.paitemid = this.PoDetails.paitemid;
-      this.StockModel.totalquantity = this.PoDetails.materialqty;
-    this.StockModel.createdby = this.employee.employeeno;
+    this.StockModelList = [];
     var binnumber: any[] = [];
     var storelocation: any[] = [];
     var rack: any[] = [];
-      binnumber = this.binlist.filter(x => x.binid == this.StockModelForm.controls.binid.value);
-    storelocation = this.locationlist.filter(x => x.locatorid == this.StockModelForm.controls.locatorid.value);
-      rack = this.racklist.filter(x => x.rackid == this.StockModelForm.controls.rackid.value);
-      if (binnumber.length != 0) {
-        this.StockModel.binnumber = binnumber[0].binnumber;
-        this.StockModel.binid = binnumber[0].binid;
-        this.StockModel.itemlocation = storelocation[0].locatorname + "." + rack[0].racknumber + '.' + binnumber[0].binnumber;
-      }
-      else if (binnumber.length == 0) {
-        this.StockModel.binid = 1;
-        this.StockModel.itemlocation = storelocation[0].locatorname + "." + rack[0].racknumber;
-      }
-      this.StockModel.racknumber = storelocation[0].locatorname;
-    //this.StockModel.itemlocation = storelocation[0].locatorname;
-      this.StockModel.rackid = rack[0].rackid;
-      this.StockModel.confirmqty = this.PoDetails.confirmqty;
-      this.StockModel.itemreceivedfrom = new Date();
-    
-      //if (binnumber.length == 0)
-      //  this.StockModel.itemlocation += '.' + binnumber[0].binnumber;
-      //if (binnumber.length == 0)
+    if (this.invoiceForm.controls.itemRows.value[0].rackid && this.invoiceForm.controls.itemRows.value[0].locatorid) {
+      this.invoiceForm.controls.itemRows.value.forEach(item => {
+        this.StockModel = new StockModel();
+        this.StockModel.material = this.PoDetails.material;
+        this.StockModel.itemid = this.PoDetails.itemid;
+        this.StockModel.pono = this.PoDetails.pono;
+        this.StockModel.grnnumber = this.PoDetails.grnnumber;
+        this.StockModel.vendorid = this.PoDetails.vendorid;
+        this.StockModel.paitemid = this.PoDetails.paitemid;
+        this.StockModel.totalquantity = this.PoDetails.materialqty;
+        this.StockModel.createdby = this.employee.employeeno;
+        this.StockModel.inwardid = this.PoDetails.inwardid;
+        binnumber = this.binlist.filter(x => x.binid == item.binid);
+        storelocation = this.locationlist.filter(x => x.locatorid == item.locatorid);
+        rack = this.racklist.filter(x => x.rackid == item.rackid);
+        if (binnumber.length != 0) {
+          this.StockModel.binnumber = binnumber[0].binnumber;
+          this.StockModel.binid = binnumber[0].binid;
+          this.StockModel.itemlocation = storelocation[0].locatorname + "." + rack[0].racknumber + '.' + binnumber[0].binnumber;
+        }
+        else if (binnumber.length == 0) {
+          this.StockModel.binid = 1;
+          this.StockModel.itemlocation = storelocation[0].locatorname + "." + rack[0].racknumber;
+        }
+        this.StockModel.racknumber = storelocation[0].locatorname;
+        this.StockModel.rackid = rack[0].rackid;
+        this.StockModel.confirmqty = item.quantity;
+        this.StockModel.itemreceivedfrom = new Date();
+        this.StockModelList.push(this.StockModel);
         
-      this.wmsService.InsertStock(this.StockModel).subscribe(data => {
-        // if (data) {
-        //this.podetailsList[this.rowIndex].itemlocation = data;
-        this.podetailsList[this.rowIndex].itemlocation = this.StockModel.itemlocation;
-        this.showLocationDialog = false;
-        this.messageService.add({ severity: 'success', summary: 'Success Message', detail: 'Location Updated' });
-        // }
-      });
+        //this.StockModel.stocklist.push(this.StockModel);
+      })
+      
+      //this.StockModel.stocklist.push(this.StockModel);
+    //  binnumber = this.binlist.filter(x => x.binid == this.StockModelForm.controls.binid.value);
+    //storelocation = this.locationlist.filter(x => x.locatorid == this.StockModelForm.controls.locatorid.value);
+    //  rack = this.racklist.filter(x => x.rackid == this.StockModelForm.controls.rackid.value);
+      //if (binnumber.length != 0) {
+      //  this.StockModel.binnumber = binnumber[0].binnumber;
+      //  this.StockModel.binid = binnumber[0].binid;
+      //  this.StockModel.itemlocation = storelocation[0].locatorname + "." + rack[0].racknumber + '.' + binnumber[0].binnumber;
+      //}
+      //else if (binnumber.length == 0) {
+      //  this.StockModel.binid = 1;
+      //  this.StockModel.itemlocation = storelocation[0].locatorname + "." + rack[0].racknumber;
+      //}
+      var totalqty = 0;
+      this.StockModelList.forEach(item => {
+
+        totalqty = totalqty + (item.confirmqty);
+      })
+      if (totalqty == parseInt(this.matqty)) {
+        this.disSaveBtn = true;
+        this.wmsService.InsertStock(this.StockModelList).subscribe(data => {
+          this.podetailsList[this.rowIndex].itemlocation = this.StockModel.itemlocation;
+          this.showLocationDialog = false;
+          this.messageService.add({ severity: 'success', summary: 'Success Message', detail: 'Location Updated' });
+          // }
+        });
+      }
+      else {
+        this.disSaveBtn = true;
+        this.messageService.add({ severity: 'error', summary: 'Validation', detail: 'Confired quantity and location qty should be equal' });
+        }
     }
     else {
       if (!this.store.name)
