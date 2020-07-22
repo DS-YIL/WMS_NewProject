@@ -1353,7 +1353,13 @@ namespace WMS.DAL
 
 							});
 
-
+							EmailModel emailmodel = new EmailModel();
+							emailmodel.pono = item.pono;
+							emailmodel.ToEmailId = "shashikala.k@in.yokogawa.com";
+							emailmodel.FrmEmailId = "shashikala.k@in.yokogawa.com";
+							emailmodel.CC = "sushma.patil@in.yokogawa.com";
+							EmailUtilities emailobj = new EmailUtilities();
+							emailobj.sendEmail(emailmodel, 4);
 						}
 					}
 					//}
@@ -1652,6 +1658,15 @@ namespace WMS.DAL
 
 						});
 					}
+					if(result!=0)
+					{
+						EmailModel emailmodel = new EmailModel();
+						emailmodel.pono = item.pono;
+						emailmodel.ToEmailId = "shashikala.k@in.yokogawa.com";
+						emailmodel.FrmEmailId = "shashikala.k@in.yokogawa.com";
+						EmailUtilities emailobj = new EmailUtilities();
+						emailobj.sendEmail(emailmodel, 7);
+					}
 				}
 				return (Convert.ToInt32(result));
 			}
@@ -1863,6 +1878,16 @@ namespace WMS.DAL
 								requestid,
 								item.requestedquantity
 							});
+						}
+						if(result!=0)
+						{
+							EmailModel emailmodel = new EmailModel();
+							emailmodel.pono = item.pono;
+							emailmodel.jobcode = item.projectname;
+							emailmodel.ToEmailId = "shashikala.k@in.yokogawa.com";
+							emailmodel.FrmEmailId = "shashikala.k@in.yokogawa.com";
+							EmailUtilities emailobj = new EmailUtilities();
+							emailobj.sendEmail(emailmodel, 5);
 						}
 						//if (result != 0)
 						//{
@@ -2079,6 +2104,12 @@ namespace WMS.DAL
 								label,
 								approverstatus
 							});
+							EmailModel emailmodel = new EmailModel();
+							emailmodel.pono = dataobj.pono;
+							emailmodel.ToEmailId = "shashikala.k@in.yokogawa.com";
+							emailmodel.FrmEmailId = "shashikala.k@in.yokogawa.com";
+							EmailUtilities emailobj = new EmailUtilities();
+							emailobj.sendEmail(emailmodel, 8);
 						}
 						else if (dataobj.gatepasstype == "Non Returnable")
 						{
@@ -2109,6 +2140,12 @@ namespace WMS.DAL
 									approvername
 								});
 							}
+							EmailModel emailmodel = new EmailModel();
+							emailmodel.pono = dataobj.pono;
+							emailmodel.ToEmailId = "shashikala.k@in.yokogawa.com";
+							emailmodel.FrmEmailId = "shashikala.k@in.yokogawa.com";
+							EmailUtilities emailobj = new EmailUtilities();
+							emailobj.sendEmail(emailmodel, 9);
 						}
 						
 
