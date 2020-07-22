@@ -473,6 +473,15 @@ namespace WMS.DAL
 
                             //barcodeid,
                         });
+						if(results!=0)
+						{
+							EmailModel emailmodel = new EmailModel();
+							emailmodel.ToEmailId = "shashikala.k@in.yokogawa.com";
+							emailmodel.FrmEmailId = "shashikala.k@in.yokogawa.com";
+							EmailUtilities emailobj = new EmailUtilities();
+							emailobj.sendEmail(emailmodel, 1);
+
+						}
                         ////}
                         return (Convert.ToInt32(results));
 					}
