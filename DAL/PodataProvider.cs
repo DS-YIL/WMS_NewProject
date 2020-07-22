@@ -476,6 +476,7 @@ namespace WMS.DAL
 						if(results!=0)
 						{
 							EmailModel emailmodel = new EmailModel();
+							emailmodel.pono = dataobj.pono;
 							emailmodel.ToEmailId = "shashikala.k@in.yokogawa.com";
 							emailmodel.FrmEmailId = "shashikala.k@in.yokogawa.com";
 							EmailUtilities emailobj = new EmailUtilities();
