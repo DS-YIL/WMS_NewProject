@@ -495,7 +495,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select max(pro.projectname)as projectname,max(sk.itemid)as itemid,sk.materialid as material,sum(sk.availableqty)as availableqty,max(mat.materialdescription)as materialdescription,max(mat.materialqty)as quotationqty,max(mat.materialqty)as materialqty,max(sk.pono) as pono from 
+        ///   Looks up a localized string similar to select max(pro.projectname)as projectname,max(sk.itemid)as itemid,sk.materialid as material,max(sk.availableqty)as availableqty,max(mat.materialdescription)as materialdescription,max(mat.materialqty)as quotationqty,max(mat.materialqty)as materialqty,max(sk.pono) as pono from 
         ///wms.wms_stock  sk left join wms.wms_polist openpo on openpo.pono = sk.pono 
         ///left join wms.wms_pomaterials mat on mat.pono=openpo.pono
         ///left join wms.wms_project pro on pro.pono=openpo.pono
@@ -951,8 +951,8 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select distinct  max(req.requesteddate)as requesteddate,max(issue.approvedstatus)as approvedstatus,max(issue.issuedqty) as issuedqty,max(req.requestforissueid)as requestforissueid,max(issue.approvedstatus) as approvedstatus,req.requestid,max(openpo.pono) as pono,max(openpo.projectname)as projectname,max(openpo.material)as material,max(openpo.materialdescription) as materialdescription,max(openpo.quotationqty) quotationqty,max(req.requestedquantity)as requestedquantity,max(req.ackremarks)as ackremarks 
-        /// fro [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to select distinct  max(req.requesteddate)as requesteddate,max(issue.approvedstatus)as approvedstatus,max(issue.issuedqty) as issuedqty,max(req.requestforissueid)as requestforissueid,max(issue.approvedstatus) as approvedstatus,req.requestid,max(openpo.pono) as pono,max(openpo.projectname)as projectname,max(openpo.material)as material,max(openpo.materialdescription) as materialdescription,max(openpo.quotationqty) quotationqty,max(req.requestedquantity)as requestedquantity,
+        ///max(req.ackremarks)as ackremarks,CASE [rest of string was truncated]&quot;;.
         /// </summary>
         public static string materialrequestquery {
             get {
@@ -986,11 +986,11 @@ namespace WMS.Common {
         
         /// <summary>
         ///   Looks up a localized string similar to select inwa.inwardid,bin.binnumber, rack.racknumber, loc.locatorname,mat.rackid,mat.binid,
-        /// mat.storeid,stocks.itemlocation,stocks.itemid,inw.grnnumber,inw.pono,inw.invoiceno,inw.receiveddate,inwa.materialqty,inwa.materialid as material,mat.materialdescription,inwa.receivedqty,inwa.confirmqty,inwa.returnqty 
+        /// mat.storeid,stocks.itemlocation,stocks.availableqty,stocks.itemid,inw.grnnumber,inw.pono,inw.invoiceno,inw.receiveddate,inwa.materialqty,inwa.materialid as material,mat.materialdescription,inwa.receivedqty,inwa.confirmqty,inwa.returnqty 
         /// from wms.wms_securityinward inw
         ///left join wms.wms_storeinward inwa on inw.inwmasterid=inwa.inwmasterid
         ///left join wms.wms_stock stocks on  stocks.inwardid=inwa.inwardid
-        /// left join wms.&quot;MaterialMast [rest of string was truncated]&quot;;.
+        /// left jo [rest of string was truncated]&quot;;.
         /// </summary>
         public static string queryforitemdetails {
             get {

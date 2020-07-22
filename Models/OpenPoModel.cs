@@ -143,6 +143,7 @@ namespace WMS.Models
 		public int qualityfailedqty { get; set; }
 
 		public bool qualitycheck { get; set; }
+		public string availableqty { get; set; }
 	}
 	public class StockModel
 	{

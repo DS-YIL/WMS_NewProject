@@ -473,6 +473,16 @@ namespace WMS.DAL
 
                             //barcodeid,
                         });
+						if(results!=0)
+						{
+							EmailModel emailmodel = new EmailModel();
+							emailmodel.pono = dataobj.pono;
+							emailmodel.ToEmailId = "shashikala.k@in.yokogawa.com";
+							emailmodel.FrmEmailId = "shashikala.k@in.yokogawa.com";
+							EmailUtilities emailobj = new EmailUtilities();
+							emailobj.sendEmail(emailmodel, 1);
+
+						}
                         ////}
                         return (Convert.ToInt32(results));
 					}
@@ -3671,17 +3681,17 @@ namespace WMS.DAL
 							});
 						}
 
-						//if (result != 0)
-						//{
-						//	int availableqty = item.availableqty - item.reservedqty;
-						//	string updatequery = WMSResource.updatestock.Replace("#availableqty", Convert.ToString(availableqty)).Replace("#itemid", Convert.ToString(item.itemid));
-						//	using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
-						//	{
-						//		result = DB.Execute(updatequery, new
-						//		{
-						//		});
-						//	}
-						//}
+						if (result != 0)
+						{
+							int availableqty = item.availableqty - item.reservedqty;
+							string updatequery = WMSResource.updatestock.Replace("#availableqty", Convert.ToString(availableqty)).Replace("#itemid", Convert.ToString(item.itemid));
+							using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
+							{
+								result = DB.Execute(updatequery, new
+								{
+								});
+							}
+						}
 
 					}
 				}

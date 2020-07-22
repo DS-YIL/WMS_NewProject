@@ -45,7 +45,7 @@
           <td class="ptable-cell" style="width:200px;">
             <div *ngIf="rowData.approvedstatus=='Approved'" class="form-inline">
               <p-checkbox [(ngModel)]="rowData.status" binary="true" (click)="ackStatusChanges()"></p-checkbox> &nbsp;&nbsp;
-              <textarea type="text" style="width:140px" class="form-control" [(ngModel)]="rowData.ackremarks"></textarea>
+              <textarea type="text" style="width:140px" class="form-control" [disabled]="rowData.ackremarks==null?false:true" [(ngModel)]="rowData.ackremarks"></textarea>
             </div>
            
           </td>

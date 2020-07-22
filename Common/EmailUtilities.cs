@@ -58,6 +58,7 @@ namespace WMS.Common
 			mailMessage.IsBodyHtml = true;
 			mailMessage.BodyEncoding = Encoding.UTF8;
 			SmtpClient mailClient = new SmtpClient("10.29.15.9", 25);
+			mailClient.DeliveryMethod = SmtpDeliveryMethod.Network;
 			mailClient.EnableSsl = false;
 			mailClient.Send(mailMessage);
 			return true;

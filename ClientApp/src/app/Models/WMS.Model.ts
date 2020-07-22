@@ -64,6 +64,7 @@ export class Cyclecountconfig {
 
 
 export class inwardModel {
+  serialno: number;
   inwardid: number;
   inwmasterid: number;
   poitemid: number;
@@ -96,6 +97,7 @@ export class inwardModel {
   returnremarks: string;
   qualitychecked: boolean;
   isreceivedpreviosly: boolean;
+  availableqty: any;
 }
 
 

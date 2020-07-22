@@ -238,14 +238,15 @@ VALUES(@inwmasterid,@receiveddate,@receivedby,@receivedqty,@returnqty,@qualitypa
     <value>select * from  wms.wms_sequencemaster  where  enddate&gt;=current_date and id=1</value>
   </data>
   <data name="materialrequestquery" xml:space="preserve">
-    <value>select distinct  max(req.requesteddate)as requesteddate,max(issue.approvedstatus)as approvedstatus,max(issue.issuedqty) as issuedqty,max(req.requestforissueid)as requestforissueid,max(issue.approvedstatus) as approvedstatus,req.requestid,max(openpo.pono) as pono,max(openpo.projectname)as projectname,max(openpo.material)as material,max(openpo.materialdescription) as materialdescription,max(openpo.quotationqty) quotationqty,max(req.requestedquantity)as requestedquantity,max(req.ackremarks)as ackremarks 
+    <value>select distinct  max(req.requesteddate)as requesteddate,max(issue.approvedstatus)as approvedstatus,max(issue.issuedqty) as issuedqty,max(req.requestforissueid)as requestforissueid,max(issue.approvedstatus) as approvedstatus,req.requestid,max(openpo.pono) as pono,max(openpo.projectname)as projectname,max(openpo.material)as material,max(openpo.materialdescription) as materialdescription,max(openpo.quotationqty) quotationqty,max(req.requestedquantity)as requestedquantity,
+max(req.ackremarks)as ackremarks,CASE WHEN max(req.ackremarks) IS NULL THEN false ELSE true END AS status 
  from   wms.wms_stock  sk left join wms.openpolistview openpo on openpo.pono = sk.pono 
   left join wms.wms_materialrequest req on req.pono = openpo.pono
   left join  wms.wms_materialissue issue on issue.requestforissueid=req.requestforissueid</value>
   </data>
   <data name="queryforitemdetails" xml:space="preserve">
     <value>select inwa.inwardid,bin.binnumber, rack.racknumber, loc.locatorname,mat.rackid,mat.binid,
- mat.storeid,stocks.itemlocation,stocks.itemid,inw.grnnumber,inw.pono,inw.invoiceno,inw.receiveddate,inwa.materialqty,inwa.materialid as material,mat.materialdescription,inwa.receivedqty,inwa.confirmqty,inwa.returnqty 
+ mat.storeid,stocks.itemlocation,stocks.availableqty,stocks.itemid,inw.grnnumber,inw.pono,inw.invoiceno,inw.receiveddate,inwa.materialqty,inwa.materialid as material,mat.materialdescription,inwa.receivedqty,inwa.confirmqty,inwa.returnqty 
  from wms.wms_securityinward inw
 left join wms.wms_storeinward inwa on inw.inwmasterid=inwa.inwmasterid
 left join wms.wms_stock stocks on  stocks.inwardid=inwa.inwardid
@@ -486,7 +487,7 @@ group by pl.pono</value>
     <value />
   </data>
   <data name="getmaterialdetailfprrequest" xml:space="preserve">
-    <value>select max(pro.projectname)as projectname,max(sk.itemid)as itemid,sk.materialid as material,sum(sk.availableqty)as availableqty,max(mat.materialdescription)as materialdescription,max(mat.materialqty)as quotationqty,max(mat.materialqty)as materialqty,max(sk.pono) as pono from 
+    <value>select max(pro.projectname)as projectname,max(sk.itemid)as itemid,sk.materialid as material,max(sk.availableqty)as availableqty,max(mat.materialdescription)as materialdescription,max(mat.materialqty)as quotationqty,max(mat.materialqty)as materialqty,max(sk.pono) as pono from 
 wms.wms_stock  sk left join wms.wms_polist openpo on openpo.pono = sk.pono 
 left join wms.wms_pomaterials mat on mat.pono=openpo.pono
 left join wms.wms_project pro on pro.pono=openpo.pono
