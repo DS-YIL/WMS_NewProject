@@ -1159,7 +1159,16 @@ namespace WMS.DAL
                             }
 						}
 					}
-
+					if(inwardid!=0)
+					{
+						EmailModel emailmodel = new EmailModel();
+						emailmodel.pono =datamodel[0].pono;
+						emailmodel.jobcode = datamodel[0].projectname;
+						emailmodel.ToEmailId = "shashikala.k@in.yokogawa.com";
+						emailmodel.FrmEmailId = "shashikala.k@in.yokogawa.com";
+						EmailUtilities emailobj = new EmailUtilities();
+						emailobj.sendEmail(emailmodel, 2);
+					}
 					//}
 					return (Convert.ToString(inwardid));
 				}
@@ -4017,7 +4026,16 @@ namespace WMS.DAL
 							//        datamodel.deleteflag,
 
 							//    });
-
+							if(Convert.ToInt32(results)!=0)
+							{
+								EmailModel emailmodel = new EmailModel();
+								emailmodel.pono = item.pono;
+								emailmodel.jobcode = item.projectname;
+								emailmodel.ToEmailId = "shashikala.k@in.yokogawa.com";
+								emailmodel.FrmEmailId = "shashikala.k@in.yokogawa.com";
+								EmailUtilities emailobj = new EmailUtilities();
+								emailobj.sendEmail(emailmodel, 3);
+							}
 
 						}
 					}

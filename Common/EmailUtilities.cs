@@ -30,17 +30,42 @@ namespace WMS.Common
 			}
 			else if (subjecttype == 2)
 			{
-				mailMessage.Subject = "Request for materials - Jobcode:" + emlSndngList.jobcode;
+				mailMessage.Subject = "Received materials - Jobcode:" + emlSndngList.jobcode;
 				subbody = mailMessage.Subject;
 			}
 			else if (subjecttype == 3)
 			{
-				mailMessage.Subject = "Material Issued - Jobcode:" + emlSndngList.jobcode;
+				mailMessage.Subject = "Checked Quality for materials - Jobcode:" + emlSndngList.jobcode;
 				subbody = mailMessage.Subject;
 			}
 			else if (subjecttype == 4)
 			{
+				mailMessage.Subject = "Updated material to warehouse:" + emlSndngList.jobcode;
+				subbody = mailMessage.Subject;
+			}
+			else if (subjecttype == 5)
+			{
+				mailMessage.Subject = "Request for materials - Jobcode:" + emlSndngList.jobcode;
+				subbody = mailMessage.Subject;
+			}
+			else if (subjecttype == 6)
+			{
+				mailMessage.Subject = "Material Issued - Jobcode:" + emlSndngList.jobcode;
+				subbody = mailMessage.Subject;
+			}
+			else if (subjecttype == 7)
+			{
 				mailMessage.Subject = "Acknowledge materials - Jobcode:" + emlSndngList.jobcode;
+				subbody = mailMessage.Subject;
+			}
+			else if (subjecttype == 8)
+			{
+				mailMessage.Subject = "Gatepass materials for returnable - Jobcode:" + emlSndngList.jobcode;
+				subbody = mailMessage.Subject;
+			}
+			else if (subjecttype == 9)
+			{
+				mailMessage.Subject = "Gatepass materials for Non-returnable - Jobcode:" + emlSndngList.jobcode;
 				subbody = mailMessage.Subject;
 			}
 
