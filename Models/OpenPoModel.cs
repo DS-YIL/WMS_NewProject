@@ -258,7 +258,18 @@ namespace WMS.Models
 		public  string query { get; set; }
 
 	}
-   
+
+	public class locataionDetailsStock
+	{
+		public int rackid { get; set; }
+		public int binid { get; set; }
+		public int storeid { get; set; }
+		public string locationid { get; set; }
+		public string locationname{ get; set; }
+	public string rackname { get; set; }
+	public string binname { get; set; }
+		public string storename { get; set; }
+	}
     public class IssueRequestModel
     {
         public int requestforissueid { get; set; }

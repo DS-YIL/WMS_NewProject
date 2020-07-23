@@ -5,7 +5,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { constants } from '../Models/WMSConstants'
 import { Employee, Login, DynamicSearchResult, printMaterial } from '../Models/Common.Model';
-import { PoFilterParams, PoDetails, BarcodeModel, StockModel, materialRequestDetails, inwardModel, gatepassModel, stocktransfermodel, Materials, authUser, invstocktransfermodel, ddlmodel } from '../Models/WMS.Model';
+import { PoFilterParams, PoDetails, BarcodeModel, StockModel, materialRequestDetails, inwardModel, gatepassModel, stocktransfermodel, Materials, authUser, invstocktransfermodel, ddlmodel, locataionDetailsStock, } from '../Models/WMS.Model';
 import { Text } from '@angular/compiler/src/i18n/i18n_ast';
 
 @Injectable({
@@ -15,6 +15,7 @@ export class wmsService {
 
   public url = "";
   public httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) };
+  public httpOption = { headers: new HttpHeaders({ 'Content-Type': 'text' }) };
   private currentUserSubject: BehaviorSubject<Employee>;
   public currentUser: Observable<Employee>;
   constructor(private http: HttpClient, private constants: constants, @Inject('BASE_URL') baseUrl: string) {
@@ -46,6 +47,12 @@ export class wmsService {
 
   GetListItems(search: DynamicSearchResult): Observable<any> {
     return this.http.post<any>(this.url + 'POData/GetListItems/', search, this.httpOptions);
+  }
+
+  //get stocktype
+  getstocktype(details: locataionDetailsStock): Observable<any> {
+    const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }), responseType: 'text' as any };
+    return this.http.post<any>(this.url + 'POData/getstocktype/', details, httpOptions);
   }
 
   GetMaterialItems(search: DynamicSearchResult): Observable<any> {

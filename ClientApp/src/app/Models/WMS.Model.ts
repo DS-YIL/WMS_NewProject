@@ -28,6 +28,9 @@ export class PoDetails {
   itemid: number;
   confirmqty: number;
   materialqty: string;
+  storeid: any;
+  rackid: any;
+  binid: any;
   inwardid: number;
 }
 
@@ -113,6 +116,8 @@ export class StockModel {
   totalquantity: string;
   shelflife: Date;
   availableqty: number;
+  stocktype: any;
+  qty: any;
   itemreceivedfrom: Date;
   itemlocation: string;
   createddate: Date;
@@ -124,6 +129,17 @@ export class StockModel {
   locatorid: number;
   remarks: string;
   inwardid: number;
+}
+
+export class locataionDetailsStock {
+  rackid: number;
+  binid: number;
+  storeid: number;
+  locationid: string;
+  locationname: string;
+  rackname: string;
+  binname: string;
+  storename: string;
 }
 
 export class materialRequestDetails {

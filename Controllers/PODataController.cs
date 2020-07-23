@@ -184,6 +184,15 @@ namespace WMS.Controllers
 		{
 			return Ok(this._poService.IssueRequest(model));
 		}
+
+		//Get stocktype -gayathri
+		[HttpPost("getstocktype")]
+		public string getstocktype(locataionDetailsStock locdetails)
+        {
+			return this._poService.getstocktype(locdetails);
+
+		}
+
 		//not usinggetMaterialRequestlist
 		//list of items
 		[HttpGet("getitemdetailsbygrnno")]

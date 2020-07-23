@@ -1159,7 +1159,16 @@ namespace WMS.DAL
                             }
 						}
 					}
-
+					if(inwardid!=0)
+					{
+						EmailModel emailmodel = new EmailModel();
+						emailmodel.pono =datamodel[0].pono;
+						emailmodel.jobcode = datamodel[0].projectname;
+						emailmodel.ToEmailId = "shashikala.k@in.yokogawa.com";
+						emailmodel.FrmEmailId = "shashikala.k@in.yokogawa.com";
+						EmailUtilities emailobj = new EmailUtilities();
+						emailobj.sendEmail(emailmodel, 2);
+					}
 					//}
 					return (Convert.ToString(inwardid));
 				}
@@ -1344,7 +1353,13 @@ namespace WMS.DAL
 
 							});
 
-
+							EmailModel emailmodel = new EmailModel();
+							emailmodel.pono = item.pono;
+							emailmodel.ToEmailId = "shashikala.k@in.yokogawa.com";
+							emailmodel.FrmEmailId = "shashikala.k@in.yokogawa.com";
+							emailmodel.CC = "sushma.patil@in.yokogawa.com";
+							EmailUtilities emailobj = new EmailUtilities();
+							emailobj.sendEmail(emailmodel, 4);
 						}
 					}
 					//}
@@ -1643,6 +1658,15 @@ namespace WMS.DAL
 
 						});
 					}
+					if(result!=0)
+					{
+						EmailModel emailmodel = new EmailModel();
+						emailmodel.pono = item.pono;
+						emailmodel.ToEmailId = "shashikala.k@in.yokogawa.com";
+						emailmodel.FrmEmailId = "shashikala.k@in.yokogawa.com";
+						EmailUtilities emailobj = new EmailUtilities();
+						emailobj.sendEmail(emailmodel, 7);
+					}
 				}
 				return (Convert.ToInt32(result));
 			}
@@ -1854,6 +1878,16 @@ namespace WMS.DAL
 								requestid,
 								item.requestedquantity
 							});
+						}
+						if(result!=0)
+						{
+							EmailModel emailmodel = new EmailModel();
+							emailmodel.pono = item.pono;
+							emailmodel.jobcode = item.projectname;
+							emailmodel.ToEmailId = "shashikala.k@in.yokogawa.com";
+							emailmodel.FrmEmailId = "shashikala.k@in.yokogawa.com";
+							EmailUtilities emailobj = new EmailUtilities();
+							emailobj.sendEmail(emailmodel, 5);
 						}
 						//if (result != 0)
 						//{
@@ -2070,6 +2104,12 @@ namespace WMS.DAL
 								label,
 								approverstatus
 							});
+							EmailModel emailmodel = new EmailModel();
+							emailmodel.pono = dataobj.pono;
+							emailmodel.ToEmailId = "shashikala.k@in.yokogawa.com";
+							emailmodel.FrmEmailId = "shashikala.k@in.yokogawa.com";
+							EmailUtilities emailobj = new EmailUtilities();
+							emailobj.sendEmail(emailmodel, 8);
 						}
 						else if (dataobj.gatepasstype == "Non Returnable")
 						{
@@ -2100,6 +2140,12 @@ namespace WMS.DAL
 									approvername
 								});
 							}
+							EmailModel emailmodel = new EmailModel();
+							emailmodel.pono = dataobj.pono;
+							emailmodel.ToEmailId = "shashikala.k@in.yokogawa.com";
+							emailmodel.FrmEmailId = "shashikala.k@in.yokogawa.com";
+							EmailUtilities emailobj = new EmailUtilities();
+							emailobj.sendEmail(emailmodel, 9);
 						}
 						
 
@@ -4017,7 +4063,16 @@ namespace WMS.DAL
 							//        datamodel.deleteflag,
 
 							//    });
-
+							if(Convert.ToInt32(results)!=0)
+							{
+								EmailModel emailmodel = new EmailModel();
+								emailmodel.pono = item.pono;
+								emailmodel.jobcode = item.projectname;
+								emailmodel.ToEmailId = "shashikala.k@in.yokogawa.com";
+								emailmodel.FrmEmailId = "shashikala.k@in.yokogawa.com";
+								EmailUtilities emailobj = new EmailUtilities();
+								emailobj.sendEmail(emailmodel, 3);
+							}
 
 						}
 					}
@@ -4883,6 +4938,39 @@ namespace WMS.DAL
 				catch (Exception Ex)
 				{
 					log.ErrorMessage("PODataProvider", "pendingreceiptslist", Ex.StackTrace.ToString());
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+			}
+		}
+
+		
+		/// <summary>
+		/// get stock type
+		/// Ramesh 22/07/2020
+		/// </summary>
+		public string getstocktype(locataionDetailsStock locdetails)
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				try
+				{
+					string materialrequestquery = WMSResource.getpendingreceiptslist;
+
+					 pgsql.OpenAsync();
+					string query = WMSResource.getstocktype.Replace("#locationid",locdetails.locationid).Replace("#locationname", locdetails.locationname).Replace("#stid", Convert.ToString(locdetails.storeid)).Replace("#rkid", Convert.ToString(locdetails.rackid)).Replace("#biid", Convert.ToString(locdetails.binid));
+					string stocktype = pgsql.QueryFirstOrDefault<string>(
+					   query, null, commandType: CommandType.Text);
+					return stocktype;
+
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "getstocktype", Ex.StackTrace.ToString());
 					return null;
 				}
 				finally

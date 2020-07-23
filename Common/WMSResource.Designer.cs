@@ -705,6 +705,15 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to select stocktype from wms.stocklocation where locationid=&apos;#locationid&apos; and location=&apos;#locationname&apos; and storeid=#stid and rackid=#rkid and binid=#biid limit 1.
+        /// </summary>
+        public static string getstocktype {
+            get {
+                return ResourceManager.GetString("getstocktype", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to select * from wms.v_getAccessList where employeeid=&apos;#employeeid&apos; and roleid =#roleid.
         /// </summary>
         public static string getUserAcessNames {

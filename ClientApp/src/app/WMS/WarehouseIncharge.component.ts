@@ -4,11 +4,12 @@ import { wmsService } from '../WmsServices/wms.service';
 import { constants } from '../Models/WMSConstants';
 import { Employee, DynamicSearchResult, searchList, printMaterial } from '../Models/Common.Model';
 import { NgxSpinnerService } from "ngx-spinner";
-import { PoDetails, BarcodeModel, StockModel, inwardModel, locationddl, binddl, rackddl } from 'src/app/Models/WMS.Model';
+import { PoDetails, BarcodeModel, StockModel, inwardModel, locationddl, binddl, rackddl, locataionDetailsStock } from 'src/app/Models/WMS.Model';
 import { MessageService } from 'primeng/api';
 import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { trigger, state, style, transition, animate } from '@angular/animations';
+import { ConfirmationService } from 'primeng/api';
 
 @Component({
   selector: 'app-Warehouse',
@@ -26,14 +27,14 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
       transition('* <=> *', animate('400ms cubic-bezier(0.86, 0, 0.07, 1)'))
     ])
   ],
-  providers: [DatePipe]
+  providers: [DatePipe , ConfirmationService]
 })
 export class WarehouseInchargeComponent implements OnInit {
-    binid: any;
-    rackid: any;
-    isnonpo: boolean=false;
+  binid: any;
+  rackid: any;
+  isnonpo: boolean = false;
 
-  constructor(private formBuilder: FormBuilder, private messageService: MessageService, private datePipe: DatePipe, private wmsService: wmsService, private route: ActivatedRoute, private router: Router, public constants: constants, private spinner: NgxSpinnerService) { }
+  constructor(private ConfirmationService: ConfirmationService, private formBuilder: FormBuilder, private messageService: MessageService, private datePipe: DatePipe, private wmsService: wmsService, private route: ActivatedRoute, private router: Router, public constants: constants, private spinner: NgxSpinnerService) { }
 
   cars: Array<inwardModel> = [];
   rowGroupMetadata: any;
@@ -58,7 +59,9 @@ export class WarehouseInchargeComponent implements OnInit {
   public BarcodeModel: BarcodeModel;
   public showDetails; showLocationDialog: boolean = false;
   public StockModel: StockModel;
-  public StockModelList:Array<any> =[];;
+  public stock: StockModel[] = [];
+  public locationdetails = new locataionDetailsStock();
+  public StockModelList: Array<any> = [];;
   public StockModelForm: FormGroup;
   public StockModelForm1: FormGroup;
   public rowIndex: number;
@@ -68,7 +71,7 @@ export class WarehouseInchargeComponent implements OnInit {
   locationlist1: locationddl[] = [];
   binlist1: binddl[] = [];
   racklist1: rackddl[] = [];
-  public row:any = 0;
+  public row: any = 0;
   public showPrintDialog: boolean = false;
   public qty: any = 1;
   public noOfPrint: any = 1;
@@ -141,10 +144,10 @@ export class WarehouseInchargeComponent implements OnInit {
   }
 
   //generate barcode -gayathri
-  generateBarcode(details:any) {
+  generateBarcode(details: any) {
     this.showPrintDialog = true;
     this.materialCode = details.material;
-    this.receivedDate = this.datePipe.transform(details.receiveddate, this.constants.dateFormat)  ;
+    this.receivedDate = this.datePipe.transform(details.receiveddate, this.constants.dateFormat);
     this.acceptedQty = details.confirmqty;
     this.pono = details.pono;
     this.invoiceNo = details.invoiceno;
@@ -152,9 +155,9 @@ export class WarehouseInchargeComponent implements OnInit {
   }
   get formArr() {
     return this.invoiceForm.get('itemRows') as FormArray;
-   // return (this.invoiceForm.get('itemRows') as FormArray).controls;
+    // return (this.invoiceForm.get('itemRows') as FormArray).controls;
   }
- 
+
   initItemRows() {
     return this.formBuilder.group({
       itemname: [''],
@@ -164,56 +167,102 @@ export class WarehouseInchargeComponent implements OnInit {
       shelflife: ['', [Validators.required]],
       binnumber: ['', [Validators.required]],
       itemlocation: ['', [Validators.required]],
+      stocktype: ['', [Validators.required]],
       quantity: [0, [Validators.required]],
     });
   }
 
   addNewRow() {
-    this.onQtyClick();
-    if (this.invoiceForm.controls.itemRows.value.length > 0) {
-      debugger;
-      if (this.invoiceForm.controls.itemRows.value[this.invoiceForm.controls.itemRows.value.length - 1].locatorid == "" || this.invoiceForm.controls.itemRows.value[this.invoiceForm.controls.itemRows.value.length - 1].locatorid ==null) {
-        this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'select Location' });
-        return;
+    //this.onQtyClick();
+    if (this.stock.length > 0) {
+      if (this.stock[this.stock.length - 1].locatorid != 0 && this.stock[this.stock.length - 1].qty != 0) {
+        if (this.stock[this.stock.length - 1].locatorid == 0) {
+          this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'select Location' });
+          return;
+        }
+        if (this.stock[this.stock.length - 1].rackid == 0) {
+          this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'select Rack' });
+          return;
+        }
+        if (this.stock[this.stock.length - 1].qty == 0 || this.stock[this.stock.length - 1].qty == null) {
+          this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Enter quantity' });
+          return;
+        }
+        var stockdata = new StockModel();
+        stockdata.locatorid = this.PoDetails.storeid;
+        stockdata.rackid = this.PoDetails.rackid;
+        stockdata.binid = this.PoDetails.binid;
+        stockdata.stocktype = "";
+        this.stock.push(stockdata);
+        //this.stock.push(new StockModel());
       }
-      if (this.invoiceForm.controls.itemRows.value[this.invoiceForm.controls.itemRows.value.length - 1].rackid == "" || this.invoiceForm.controls.itemRows.value[this.invoiceForm.controls.itemRows.value.length - 1].rackid == null) {
-        this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'select Rack' });
-        return;
-      }
-      if (this.invoiceForm.controls.itemRows.value[this.invoiceForm.controls.itemRows.value.length - 1].quantity == 0 || this.invoiceForm.controls.itemRows.value[this.invoiceForm.controls.itemRows.value.length - 1].quantity == null) {
-        this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Enter quantity' });
-        return;
-      }
-      this.formArr.push(this.initItemRows());
+
     }
-   
+    else {
+      var stockdata = new StockModel();
+      stockdata.locatorid = this.PoDetails.storeid;
+      stockdata.rackid = this.PoDetails.rackid;
+      stockdata.binid = this.PoDetails.binid;
+      stockdata.stocktype = "";
+      this.stock.push(stockdata);
+      //this.stock.push(new StockModel());
+    }
   }
 
-  onQtyClick() {
+  onQtyClick(index:any) {
     debugger;
-   
-    if (this.invoiceForm.controls.itemRows.value.length > 1) {
-      for (var data=0; data<this.invoiceForm.controls.itemRows.value.length-1 ; data++) {
-        if (this.invoiceForm.controls.itemRows.value[data].locatorid == this.invoiceForm.controls.itemRows.value[this.invoiceForm.controls.itemRows.value.length - 1].locatorid) {
-          if (this.invoiceForm.controls.itemRows.value[data].rackid == this.invoiceForm.controls.itemRows.value[this.invoiceForm.controls.itemRows.value.length - 1].rackid) {
-            if (this.invoiceForm.controls.itemRows.value[data].binid == this.invoiceForm.controls.itemRows.value[this.invoiceForm.controls.itemRows.value.length - 1].binid) {
+    if (this.stock.length > 1) {
+      for (var data = 0; data < this.stock.length - 1; data++) {
+        if (this.stock[data].locatorid == this.stock[this.stock.length - 1].locatorid) {
+          if (this.stock[data].rackid == this.stock[this.stock.length - 1].rackid) {
+            if (this.stock[data].binid == this.stock[this.stock.length - 1].binid) {
               this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Location already exists' });
               return;
             }
           }
         }
-      } 
-      //if (this.invoiceForm.controls.itemRows.value.filter(x => x.locatorid == this.invoiceForm.controls.itemRows.value[this.invoiceForm.controls.itemRows.value.length - 1].locatorid &&
-      //  (x.rackid == this.invoiceForm.controls.itemRows.value[this.invoiceForm.controls.itemRows.value.length - 1].rackid) &&
-      //  (x.binid == this.invoiceForm.controls.itemRows.value[this.invoiceForm.controls.itemRows.value.length - 1].binid))) {
+      }
+
+
+
+
+      //if (this.stock.filter(li => li.locatorid == this.stock[index].locatorid && li.rackid == this.stock[index].rackid && li.binid == this.stock[index].binid).length > 0) {
       //  this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Location already exists' });
       //  return;
       //}
     }
+      //get stock type
+      this.locationdetails.storeid = this.stock[index].locatorid;
+      this.locationdetails.rackid = this.stock[index].rackid;
+      this.locationdetails.binid = this.stock[index].binid;
+      var bindetails = this.binlist.filter(x => x.binid == this.locationdetails.binid);
+      var storedetails = this.locationlist.filter(x => x.locatorid == this.locationdetails.storeid);
+      var rackdetails = this.racklist.filter(x => x.rackid == this.locationdetails.rackid);
+      this.locationdetails.storename = storedetails[0].locatorname;
+      this.locationdetails.rackname = rackdetails[0].racknumber;
+      this.locationdetails.binname = bindetails[0].binnumber;
+      this.locationdetails.locationid = this.locationdetails.storeid + '.' + this.locationdetails.rackid + '.' + this.locationdetails.binid;
+      this.locationdetails.locationname = this.locationdetails.storename + '.' + this.locationdetails.rackname + '.' + this.locationdetails.binname;
+      //service to get stock type
+      this.wmsService.getstocktype(this.locationdetails).subscribe(data => {
+        debugger;
+        if (data) {
+          this.stock[index].stocktype = data;
+          //this.invoiceForm.controls.itemRows.value[this.invoiceForm.controls.itemRows.value.length - 1].stocktype = data;
+          //this.StockModel.stocktype = data;
+
+        }
+        else {
+          this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Unable to fetch stock type' });
+        }
+      });
+
+
   }
 
   deleteRow(index: number) {
-    this.formArr.removeAt(index);
+    this.stock.splice(index,1);
+    //this.formArr.removeAt(index);
   }
   //Increase and decrease the qty based on no of prints -- gayathri
   decreaseQty() {
@@ -231,7 +280,8 @@ export class WarehouseInchargeComponent implements OnInit {
     return (this.StockModelForm1.get("users") as FormArray).controls;
   }
 
- locationListdata() {
+  locationListdata() {
+    debugger;
     this.wmsService.getlocationdata().
       subscribe(
         res => {
@@ -248,6 +298,7 @@ export class WarehouseInchargeComponent implements OnInit {
         });
   }
   binListdata() {
+    debugger;
     this.wmsService.getbindata().
       subscribe(
         res => {
@@ -264,6 +315,7 @@ export class WarehouseInchargeComponent implements OnInit {
         });
   }
   rackListdata() {
+    debugger;
     this.wmsService.getrackdata().
       subscribe(
         res => {
@@ -273,12 +325,12 @@ export class WarehouseInchargeComponent implements OnInit {
           for (let i = 0; i < (res.length); i++) {
             _list.push({
               rackid: res[i].rackid,
-             racknumber: res[i].racknumber
+              racknumber: res[i].racknumber
             });
           }
           this.racklist = _list;
         });
-  } 
+  }
 
   public bindSearchListData(e: any, formName?: string, name?: string, searchTxt?: string, callback?: () => any): void {
     this.formName = formName;
@@ -338,10 +390,10 @@ export class WarehouseInchargeComponent implements OnInit {
     //api call
     this.wmsService.generateBarcodeMaterial(this.printData).subscribe(data => {
       if (data) {
-        
+
         this.printData = data;
         console.log(this.printData);
-        
+
       }
       else {
         alert("Error while generating Barcode");
@@ -385,6 +437,8 @@ export class WarehouseInchargeComponent implements OnInit {
         let material = rowData.material;
         if (i == 0) {
           this.rowGroupMetadata[material] = { index: 0, size: 1 };
+          count = count + 1;
+          this.podetailsList[i].serialno = count;
         }
         else {
           let previousRowData = this.podetailsList[i - 1];
@@ -396,8 +450,8 @@ export class WarehouseInchargeComponent implements OnInit {
             count = count + 1;
             this.podetailsList[i].serialno = count;
           }
-            
-          
+
+
         }
       }
     }
@@ -420,16 +474,24 @@ export class WarehouseInchargeComponent implements OnInit {
     this.rackListdata();
     this.rack = "";
     this.bin = "";
-    this.store ="";
+    this.store = "";
   }
 
   showDialog(details: any, index: number) {
+    debugger;
     this.showLocationDialog = true;
     this.PoDetails = details;
     this.rowIndex = index;
     this.binid = details.binid;
     this.rackid = details.rackid;
     this.matid = details.material;
+    //this.invoiceForm.controls.itemRows.value[this.invoiceForm.controls.itemRows.value.length - 1].storeid = details.storeid;
+    //this.invoiceForm.controls.itemRows.value[this.invoiceForm.controls.itemRows.value.length - 1].rackid = details.rackid;
+    //this.invoiceForm.controls.itemRows.value[this.invoiceForm.controls.itemRows.value.length - 1].binid = details.binid;
+    //this.invoiceForm.controls.itemRows.value[this.invoiceForm.controls.itemRows.value.length - 1].stocktype = "Plantstock";
+    this.StockModel.locatorid = details.storeid;
+    this.StockModel.rackid = details.rackid;
+    this.StockModel.binid = details.binid;
     this.matdescription = details.materialdescription;
     this.matqty = details.receivedqty;
     this.StockModelForm = this.formBuilder.group({
@@ -437,6 +499,12 @@ export class WarehouseInchargeComponent implements OnInit {
       binid: [details.binid],
       locatorid: [details.storeid]
     });
+    var stockdata = new StockModel();
+    stockdata.locatorid = details.storeid;
+    stockdata.rackid = details.rackid;
+    stockdata.binid = details.binid;
+    stockdata.stocktype = "";
+    this.stock.push(stockdata);
     this.locationListdata();
     this.binListdata();
     this.rackListdata();
@@ -460,23 +528,24 @@ export class WarehouseInchargeComponent implements OnInit {
       binnumber: ['', [Validators.required]],
       itemlocation: ['', [Validators.required]],
       quantity: [0, [Validators.required]],
-      
+
     });
 
   }
 
   onSubmitStockDetails() {
-    this.onQtyClick();
-    if (this.invoiceForm.controls.itemRows.value.length > 0) {
-      if (this.invoiceForm.controls.itemRows.value[this.invoiceForm.controls.itemRows.value.length - 1].locatorid == "" || this.invoiceForm.controls.itemRows.value[this.invoiceForm.controls.itemRows.value.length - 1].locatorid == null) {
+    //this.onQtyClick();
+    if (this.stock.length > 0) {
+      debugger;
+      if (this.stock[this.stock.length - 1].locatorid == 0) {
         this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'select Location' });
         return;
       }
-      if (this.invoiceForm.controls.itemRows.value[this.invoiceForm.controls.itemRows.value.length - 1].rackid == "" || this.invoiceForm.controls.itemRows.value[this.invoiceForm.controls.itemRows.value.length - 1].rackid == null) {
+      if (this.stock[this.stock.length - 1].rackid == 0) {
         this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'select Rack' });
         return;
       }
-      if (this.invoiceForm.controls.itemRows.value[this.invoiceForm.controls.itemRows.value.length - 1].quantity == 0 || this.invoiceForm.controls.itemRows.value[this.invoiceForm.controls.itemRows.value.length - 1].quantity == null) {
+      if (this.stock[this.stock.length - 1].qty == 0 || this.stock[this.stock.length - 1].qty == null) {
         this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Enter quantity' });
         return;
       }
@@ -485,8 +554,8 @@ export class WarehouseInchargeComponent implements OnInit {
     var binnumber: any[] = [];
     var storelocation: any[] = [];
     var rack: any[] = [];
-    if (this.invoiceForm.controls.itemRows.value[0].rackid && this.invoiceForm.controls.itemRows.value[0].locatorid) {
-      this.invoiceForm.controls.itemRows.value.forEach(item => {
+    if (this.stock[0].rackid && this.stock[0].locatorid) {
+      this.stock.forEach(item => {
         this.StockModel = new StockModel();
         this.StockModel.material = this.PoDetails.material;
         this.StockModel.itemid = this.PoDetails.itemid;
@@ -511,17 +580,17 @@ export class WarehouseInchargeComponent implements OnInit {
         }
         this.StockModel.racknumber = storelocation[0].locatorname;
         this.StockModel.rackid = rack[0].rackid;
-        this.StockModel.confirmqty = item.quantity;
+        this.StockModel.confirmqty = item.qty;
         this.StockModel.itemreceivedfrom = new Date();
         this.StockModelList.push(this.StockModel);
-        
+
         //this.StockModel.stocklist.push(this.StockModel);
       })
-      
+
       //this.StockModel.stocklist.push(this.StockModel);
-    //  binnumber = this.binlist.filter(x => x.binid == this.StockModelForm.controls.binid.value);
-    //storelocation = this.locationlist.filter(x => x.locatorid == this.StockModelForm.controls.locatorid.value);
-    //  rack = this.racklist.filter(x => x.rackid == this.StockModelForm.controls.rackid.value);
+      //  binnumber = this.binlist.filter(x => x.binid == this.StockModelForm.controls.binid.value);
+      //storelocation = this.locationlist.filter(x => x.locatorid == this.StockModelForm.controls.locatorid.value);
+      //  rack = this.racklist.filter(x => x.rackid == this.StockModelForm.controls.rackid.value);
       //if (binnumber.length != 0) {
       //  this.StockModel.binnumber = binnumber[0].binnumber;
       //  this.StockModel.binid = binnumber[0].binid;
@@ -537,30 +606,76 @@ export class WarehouseInchargeComponent implements OnInit {
         totalqty = totalqty + (item.confirmqty);
       })
       if (totalqty == parseInt(this.matqty)) {
-        this.disSaveBtn = true;
-        this.wmsService.InsertStock(this.StockModelList).subscribe(data => {
-          debugger;
-          //this.podetailsList[this.rowIndex].itemlocation = this.StockModel.itemlocation;
-          this.showLocationDialog = false;
-          this.messageService.add({ severity: 'success', summary: 'Success Message', detail: 'Location Updated' });
-          this.SearchGRNNo();
-          // }
+        this.ConfirmationService.confirm({
+          message: 'Are you sure to put away material in selected stock type?',
+          accept: () => {
+            this.disSaveBtn = true;
+            this.wmsService.InsertStock(this.StockModelList).subscribe(data => {
+              debugger;
+              //this.podetailsList[this.rowIndex].itemlocation = this.StockModel.itemlocation;
+              this.showLocationDialog = false;
+              this.messageService.add({ severity: 'success', summary: 'Success Message', detail: 'Location Updated' });
+              this.stock = [];
+              this.PoDetails = null;
+              this.SearchGRNNo();
+              // }
+            });
+          },
+          reject: () => {
+
+            this.messageService.add({ severity: 'info', summary: 'Cancel', detail: 'Cancelled' });
+          }
         });
+
+
+        //var result = this.alertconfirm();
+     
+        //if (result == "success") {
+        //  this.disSaveBtn = true;
+        //  this.wmsService.InsertStock(this.StockModelList).subscribe(data => {
+        //    debugger;
+        //    //this.podetailsList[this.rowIndex].itemlocation = this.StockModel.itemlocation;
+        //    this.showLocationDialog = false;
+        //    this.messageService.add({ severity: 'success', summary: 'Success Message', detail: 'Location Updated' });
+        //    this.SearchGRNNo();
+        //    // }
+        //  });
+        //}
         
+
       }
       else {
         this.disSaveBtn = true;
         this.messageService.add({ severity: 'error', summary: 'Validation', detail: 'Confirmed quantity and location qty should be equal' });
-        }
+      }
     }
     else {
       if (!this.store.name)
         this.messageService.add({ severity: 'error', summary: 'Validation', detail: 'Select Location' });
       else if (!this.rack.name)
-        this.messageService.add({ severity: 'error', summary: 'Validation', detail: 'Select Rack'});
+        this.messageService.add({ severity: 'error', summary: 'Validation', detail: 'Select Rack' });
     }
   }
 
+  //show alert to update location details
+  //show alert about oldest item location
+ alertconfirm() {
+    
+    this.ConfirmationService.confirm({
+      message: 'Are you sure to put away material in selected stock type?',
+      header: 'Confirmation',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        return "success";
+        //this.messageService.add({ severity: 'info', summary: 'Submit', detail: 'You ha' });
+      },
+      reject: () => {
+
+        this.messageService.add({ severity: 'info', summary: 'Cancel', detail: 'Cancelled' });
+      }
+    });
+   //return "error";
+  }
 
 
   dialogCancel(dialogName) {
@@ -590,7 +705,7 @@ export class WarehouseInchargeComponent implements OnInit {
           //this._list = res; //save posts in array
           this.racklist1 = res;
         });
-  } 
+  }
 
 
 }

@@ -725,4 +725,7 @@ order by transferredon Desc</value>
   <data name="getpendingreceiptslist" xml:space="preserve">
     <value>select pono||'-'||invoiceno as value,pono||'-'||invoiceno as text from wms.wms_securityinward where grnnumber is null order by inwmasterid desc</value>
   </data>
+  <data name="getstocktype" xml:space="preserve">
+    <value>select stocktype from wms.stocklocation where locationid='#locationid' and location='#locationname' and storeid=#stid and rackid=#rkid and binid=#biid limit 1</value>
+  </data>
 </root>
