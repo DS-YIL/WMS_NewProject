@@ -27,6 +27,7 @@ export class GatePassApproverComponent implements OnInit {
   public materialList: Array<any> = [];
   public gatepassModel: gatepassModel;
   public btnDisable: boolean = false;
+  public btnDisableissue: boolean = false;
   public itemlocationData: Array<any> = [];
   public Oldestdata: FIFOValues;
   public FIFOvalues: FIFOValues;
@@ -86,6 +87,7 @@ export class GatePassApproverComponent implements OnInit {
     //})
     this.wmsService.updategatepassapproverstatus(this.materialList).subscribe(data => {
       //this.materialList = data;
+      this.btnDisableissue = true;
       this.gatepassModel.status = "Approved";
       if (this.gatepassModel.status == 'Approved')
         this.btnDisable = true;

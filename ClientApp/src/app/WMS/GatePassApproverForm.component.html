@@ -115,8 +115,10 @@
             <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex" let-rindex=0>
               <tr>
                 <td class="ptable-cell" style="text-align:center"> {{ri+1}} </td>
-                <td class="ptable-cell" style="text-align:left"> <span *ngIf="employee.roleid !='4'">{{rowData.materialid}}</span>
-                <button *ngIf="employee.roleid !='8' && employee.roleid =='4'" type="button" class="btn btn-link" (click)="showmateriallocationList(rowData.materialid,ri+1,ri,rowData.quantity);" style="padding-left:0px;">{{rowData.materialid}}</button></td>
+                <td class="ptable-cell" style="text-align:left">
+                  <span *ngIf="employee.roleid !='4'">{{rowData.materialid}}</span>
+                  <button *ngIf="employee.roleid !='8' && employee.roleid =='4'" type="button" class="btn btn-link" (click)="showmateriallocationList(rowData.materialid,ri+1,ri,rowData.quantity);" style="padding-left:0px;">{{rowData.materialid}}</button>
+                </td>
                 <td class="ptable-cell" style="text-align:left"> {{rowData.materialdescription}} </td>
                 <td class="ptable-cell" style="text-align:right"><span *ngIf="rowData.materialcost">{{rowData.materialcost}}</span></td>
                 <td class="ptable-cell" style="text-align:left"> {{rowData.remarks}} </td>
@@ -127,8 +129,15 @@
                 <td class="ptable-cell" style="text-align:center" *ngIf="employee.roleid !='8' && materialList[0].gatepasstype=='Returnable'">{{checkValiddate(rowData.expecteddate)}}</td>
                 <td *ngIf="materialList[0].gatepasstype=='Returnable' && rowData.returneddate" class="ptable-cell" style="text-align:center">{{checkValiddate(rowData.returneddate)}}</td>
 
-</ng-template>
+            </ng-template>
+
           </p-table>
+          <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+              <button [disabled]="btnDisableissue && materialList[0].gatepasstype=='Non Returnable'" type="button" class="btn btn-primary" (click)="updategatepassapproverstatus()">Submit</button>
+
+            </div>
+          </p-footer>
         </div>
         <!--</div>-->
         <div *ngIf="employee.roleid=='8'">
