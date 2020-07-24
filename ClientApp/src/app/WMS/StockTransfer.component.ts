@@ -25,7 +25,7 @@ export class StockTransferComponent implements OnInit {
   matlocationsearch: string[];
   isselected: boolean = false;
   mainmodel: invstocktransfermodel;
-  
+  selectedRow: number;
   
 
   constructor(private messageService: MessageService, private wmsService: wmsService, private route: ActivatedRoute, private router: Router, public constants: constants, private spinner: NgxSpinnerService) { }
@@ -157,6 +157,8 @@ export class StockTransferComponent implements OnInit {
   }
 
   Showadd() {
+    this.displaydetail = false;
+    this.selectedRow = null;
     this.addprocess = true;
     this.setlocationcombinations();
   }
@@ -435,8 +437,9 @@ export class StockTransferComponent implements OnInit {
       }
     });
   }
-  showdetails(data: any) {
-   
+  showdetails(data: any, index:any) {
+    debugger;
+    this.selectedRow = index;
     this.stocktransferDetaillist = data.materialdata;
     this.matid = data.transferid;
     this.matdescription = data.transferredby;

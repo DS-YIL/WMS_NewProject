@@ -1,10 +1,26 @@
+<style>
+  .ui-card-body {
+    padding: 0px !important;
+    padding-top: 0px !important;
+  }
+  .cardstyle{
+    padding-top:0px !important;
+  }
+</style>
 <div class="ui-g" *ngIf="employee.roleid!='4' && employee.roleid !='8'">
-  <div class="ui-g-12">
-    <p-card header="" [style]="{width: '238px','height':'60px'}" styleClass="ui-card-shadow">
-      <i class="fa fa-bookmark" style="font-size: 25px"></i><label style="font-size: 25px; color: rgb(96, 123, 212);"> &nbsp;&nbsp;Gate Pass</label>&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" pTooltip="Create GatePass" style="border-radius: 10em!important;background-color: white; border-color:  rgb(96, 123, 212);" rounded="true" size="lg" class="my-0" (click)="openGatepassDialog('','','gatepassdialog')"> <i class="fa fa-user-plus" style="font-size: 25px;color: green;"></i></button>
+  <!--<div class="ui-g-12" style="padding:0px !important">
+    <p-card header="" class="cardstyle" [style]="{width: '173px','height':'27px','margin-left':'5px','padding-top':'0px !important'}">
+      <i class="fa fa-bookmark" style="font-size: 15px"></i><label style="font-size: 15px;padding:0px; color: rgb(96, 123, 212);"> &nbsp;&nbsp;Gate Pass</label>&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" pTooltip="Create GatePass" style="border-radius: 10em!important;background-color: white; border-color:  rgb(96, 123, 212);" rounded="true" size="lg" class="my-0" (click)="openGatepassDialog('','','gatepassdialog')"> <i class="fa fa-user-plus" style="font-size: 15px;color: green;"></i></button>
     </p-card>
+  </div>-->
 
+  <div *ngIf="employee.roleid!='4' && employee.roleid !='8'" class="card" style=" min-height: 27px;border-radius: 10px;">
+    <div class="card-header" style="width:173px;height:27px;margin-left:5px;padding-top:0px">
+      <span>
+        <i class="fa fa-bookmark" style="font-size: 15px"></i><label style="font-size: 15px;padding:0px; color: rgb(96, 123, 212);"> &nbsp;&nbsp;Gate Pass</label>&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" pTooltip="Create GatePass" style="border-radius: 10em!important;background-color: white; border-color:  rgb(96, 123, 212);" rounded="true" size="lg" class="my-0" (click)="openGatepassDialog('','','gatepassdialog')"> <i class="fa fa-user-plus" style="font-size: 15px;color: green;"></i></button>
 
+      </span>
+    </div>
   </div>
 
 </div>
@@ -47,7 +63,7 @@
     </div>
   </div>
 </div>
-<div style="margin-left:5px;margin-right:5px;margin-top:10px;">
+<div style="margin-left:5px;margin-right:5px;margin-top:0px;">
   <p-table #dt [value]="gatepassModelList" [style]="{'width':'100%','overflow':'auto!important'}"
            [responsive]="true" [rows]="50"
            [resizableColumns]="true"
@@ -62,6 +78,7 @@
         <th style="text-align:center">Qty</th>-->
         <!--<th style="text-align:center">Status</th>-->
         <th style="text-align:center" *ngIf="employee.roleid!='8'">Type</th>
+
         <th style="text-align:center">Supplier</th>
         <!--<th style="text-align:center">Vehicle No</th>-->
         <th style="text-align:center">Reason</th>

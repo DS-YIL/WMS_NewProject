@@ -175,7 +175,7 @@ export class WarehouseInchargeComponent implements OnInit {
   addNewRow() {
     //this.onQtyClick();
     if (this.stock.length > 0) {
-      if (this.stock[this.stock.length - 1].locatorid != 0 && this.stock[this.stock.length - 1].qty != 0) {
+      if (this.stock[this.stock.length - 1].locatorid != 0 || this.stock[this.stock.length - 1].qty != 0 || this.stock[this.stock.length - 1].qty != null) {
         if (this.stock[this.stock.length - 1].locatorid == 0) {
           this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'select Location' });
           return;
@@ -410,6 +410,7 @@ export class WarehouseInchargeComponent implements OnInit {
       this.wmsService.getitemdetailsbygrnno(this.PoDetails.grnnumber).subscribe(data => {
         this.spinner.hide();
         if (data) {
+          debugger;
           //this.PoDetails = data[0];
           this.podetailsList = data;
           this.showDetails = true;
@@ -429,6 +430,7 @@ export class WarehouseInchargeComponent implements OnInit {
 
 
   updateRowGroupMetaData() {
+    debugger;
     this.rowGroupMetadata = {};
     if (this.podetailsList) {
       var count = 0;
@@ -499,12 +501,18 @@ export class WarehouseInchargeComponent implements OnInit {
       binid: [details.binid],
       locatorid: [details.storeid]
     });
-    var stockdata = new StockModel();
-    stockdata.locatorid = details.storeid;
-    stockdata.rackid = details.rackid;
-    stockdata.binid = details.binid;
-    stockdata.stocktype = "";
-    this.stock.push(stockdata);
+    debugger;
+    if (this.stock.length == 0) {
+        var stockdata = new StockModel();
+        stockdata.locatorid = details.storeid;
+        stockdata.rackid = details.rackid;
+        stockdata.binid = details.binid;
+        stockdata.stocktype = "";
+        this.stock.push(stockdata);
+      
+    }
+    
+   
     this.locationListdata();
     this.binListdata();
     this.rackListdata();
@@ -646,7 +654,7 @@ export class WarehouseInchargeComponent implements OnInit {
       }
       else {
         this.disSaveBtn = true;
-        this.messageService.add({ severity: 'error', summary: 'Validation', detail: 'Confirmed quantity and location qty should be equal' });
+        this.messageService.add({ severity: 'error', summary: 'Validation', detail: 'Putaway qty cannot exceed Accepted qty' });
       }
     }
     else {

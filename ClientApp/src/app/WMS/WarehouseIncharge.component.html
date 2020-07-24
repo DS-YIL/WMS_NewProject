@@ -22,12 +22,6 @@
   </div>
   <div class="row " style="margin-top:10px">
     <div class="col-lg-12 col-md-12 col-sm-12">
-
-
-
-
-
-
       <p-table [columns]="cols" [value]="podetailsList" dataKey="material">
         <ng-template pTemplate="header" let-columns>
           <tr>
@@ -87,9 +81,7 @@
               {{rowData.availableqty}}
             </td>
             <td style="width:180px">
-              {{
-rowData.itemlocation
-              }}
+              {{rowData.itemlocation}}
             </td>
           </tr>
         </ng-template>
@@ -500,14 +492,6 @@ rowData.itemlocation
           </p-table>
         </div>
       </div>
-
-
-
-
-
-
-
-
 
 
       <!--<form [formGroup]="invoiceForm">
