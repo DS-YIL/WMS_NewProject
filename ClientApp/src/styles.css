@@ -14,6 +14,10 @@ a {
 code {
   color: #e01a76;
 }
+hr.new1 {
+  border-top: 1px solid green !important;
+  margin-bottom : 6px !important;
+}
 
 .btn-primary {
   color: #fff;

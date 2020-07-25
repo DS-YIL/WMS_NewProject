@@ -52,6 +52,14 @@ namespace WMS.Models
 
 		public bool isreceivedpreviosly { get; set; }
 
+		public string asnno { get; set; }
+
+		public bool onhold { get; set; }
+
+		public string onholdremarks { get; set; }
+
+		public bool ispono { get; set; }
+
 	}
 
 	public class printMaterial
@@ -86,6 +94,8 @@ namespace WMS.Models
 		public string Materialdescription { get; set; }
 
 		public string suppliername { get; set; }
+		public string asnno { get; set; }
+		public string inwardremarks { get; set; }
 
 	}
 
@@ -143,6 +153,9 @@ namespace WMS.Models
 		public int qualityfailedqty { get; set; }
 
 		public bool qualitycheck { get; set; }
+public bool onhold { get; set; }
+
+		public string onholdremarks { get; set; }
 		public string availableqty { get; set; }
 	}
 	public class StockModel
@@ -594,6 +607,8 @@ namespace WMS.Models
 		public string pono { get; set; }
 		public string receivedby { get; set; }
 
+		public string invoiceno { get; set; }
+
 		public string asn { get; set; }
 
 		public string suppliername { get; set; }
@@ -689,5 +704,33 @@ public class ddlmodel
 
   public string	value { get; set; }
   public string text { get; set; }
+  public string supplier { get; set; }
 
+}
+public class updateonhold
+{
+	public string invoiceno { get; set; }
+	public string remarks { get; set; }
+	public bool onhold { get; set; }
+}
+
+public class materialistModel
+{
+	public string gatepassmaterialid { get; set; }
+	public string materialid { get; set; }
+	public string materialdescription { get; set; }
+	public int quantity { get; set; }
+	public string remarks { get; set; }
+	public DateTime expecteddate { get; set; }
+	public DateTime returneddate { get; set; }
+	public string materialcost { get; set; }
+	public int issuedqty { get; set; }
+	public DateTime outwarddate { get; set; }
+	public DateTime inwarddate { get; set; }
+
+	public string outwarddatestring { get; set; }
+	public string inwarddatestring { get; set; }
+	public string movetype { get; set; }
+
+	public string movedby { get; set; }
 }

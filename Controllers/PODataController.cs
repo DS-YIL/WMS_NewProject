@@ -135,6 +135,12 @@ namespace WMS.Controllers
 			return await this._poService.receivequantity(data);
 		}
 
+		[HttpPost("updateonholddata")]
+		public async Task<string> updateonholddt([FromBody] updateonhold data)
+		{
+			return await this._poService.updateonholdrow(data);
+		}
+
 		[HttpPost("qualitycheck")]
 		public async Task<string> insertqualitycheck([FromBody] List<inwardModel> data)
 		{
@@ -246,6 +252,12 @@ namespace WMS.Controllers
 		public async Task<IEnumerable<gatepassModel>> getgatepasslist()
 		{
 			return await this._poService.GetgatepassList();
+		}
+
+		[HttpGet("nonreturngetgatepasslist")]
+		public async Task<IEnumerable<gatepassModel>> nonreturngetgatepasslist(string type)
+		{
+			return await this._poService.NonreturnGetgatepassList(type);
 		}
 
 		[HttpPost("saveoreditgatepassmaterial")]
@@ -547,6 +559,30 @@ namespace WMS.Controllers
 		public async Task<IEnumerable<ddlmodel>> getpendingreceiptslist()
 		{
 			return await this._poService.pendingreceiptslist();
+		}
+
+		[HttpGet("getgrnforacceptance")]
+		public async Task<IEnumerable<ddlmodel>> getgrnlistforacceptance()
+		{
+			return await this._poService.getgrnlistforacceptance();
+		}
+
+		[HttpGet("getgrnforacceptanceputaway")]
+		public async Task<IEnumerable<ddlmodel>> getgrnlistforacceptanceputaway()
+		{
+			return await this._poService.getgrnlistforacceptanceputaway();
+		}
+
+		[HttpGet("getdepartment")]
+		public async Task<IEnumerable<ddlmodel>> getdepartmentdata()
+		{
+			return await this._poService.getdepartmentmasterdata();
+		}
+
+		[HttpPost("updategatepassmovement")]
+		public int updatematmovement([FromBody] List<materialistModel> obj)
+		{
+			return this._poService.updatematmovement(obj);
 		}
 
 		//[HttpPost("securitysendemail")]

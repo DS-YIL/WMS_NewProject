@@ -4,7 +4,7 @@ import { wmsService } from '../WmsServices/wms.service';
 import { constants } from '../Models/WMSConstants';
 import { Employee, DynamicSearchResult } from '../Models/Common.Model';
 import { NgxSpinnerService } from "ngx-spinner";
-import { PoDetails, BarcodeModel } from 'src/app/Models/WMS.Model';
+import { PoDetails, BarcodeModel, ddlmodel } from 'src/app/Models/WMS.Model';
 import { MessageService } from 'primeng/api';
 import { filter } from 'rxjs/operators';
 import { isNullOrUndefined } from 'util';
@@ -37,10 +37,15 @@ export class SecurityHomeComponent implements OnInit {
   todatsdate: Date;
   ispochecked: boolean = false;
   isnonpochecked: boolean = false;
+  ddldeptlist: ddlmodel[] = [];
+  selecteddept: ddlmodel;
+  searchdata: string = "";
+  nonporemarks: string = "";
 
   ngOnInit() {
 
     debugger;
+    this.searchdata = "";
     this.ispochecked = true;
     this.showtable = true;
     this.showreceivedtable = false;
@@ -64,12 +69,16 @@ export class SecurityHomeComponent implements OnInit {
     this.Poinvoicedetails = new PoDetails();
     this.getcurrentDatePolist();
     this.getcurrentDateReceivedPOlist();
+    this.getdepts();
   }
 
   //page refresh functionality
   refresh() {
     this.PoDetails = new PoDetails();
     this.Poinvoicedetails = new PoDetails();
+    this.nonporemarks = "";
+    this.searchdata = "";
+    this.selecteddept = null;
     this.disSaveBtn = false;
     this.showDetails = false;
   }
@@ -146,11 +155,18 @@ export class SecurityHomeComponent implements OnInit {
     this.isnonpochecked = true;
   }
 
+  getdepts() {
+    this.wmsService.getdepartments().subscribe(data => {
+      debugger;
+      this.ddldeptlist = data;
+    });
+  }
+
   //get details based on po no
   SearchPoNo() {
-    if (this.PoDetails.pono) {
+    if (this.searchdata) {
       this.spinner.show();
-      this.wmsService.getPoDetails(this.PoDetails.pono).subscribe(data => {
+      this.wmsService.getPoDetails(this.searchdata).subscribe(data => {
         this.spinner.hide();
         if (data) {
           this.PoDetails = data;
@@ -160,13 +176,13 @@ export class SecurityHomeComponent implements OnInit {
         }
         else {
           this.PoDetails = new PoDetails();
-          this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'No data for this PO No' });
+          this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'No data for this ASN/PO No' });
           this.showDetails = false;
         }
       })
     }
     else
-      this.messageService.add({ severity: 'error', summary: 'Validation', detail: 'Enter PO No' });
+      this.messageService.add({ severity: 'error', summary: 'Validation', detail: 'Enter ASN/PO No' });
   }
 
   printbarcode() {
@@ -176,6 +192,7 @@ export class SecurityHomeComponent implements OnInit {
   //update invoice no
   onsaveSecDetails() {
     //need to generate barcode
+    debugger;
     if (this.Poinvoicedetails.invoiceno && this.Poinvoicedetails.invoiceno.trim() != "") {
       this.spinner.show();
       this.BarcodeModel = new BarcodeModel();
@@ -183,11 +200,28 @@ export class SecurityHomeComponent implements OnInit {
       this.BarcodeModel.barcode = "testbarcodetext";
       this.BarcodeModel.createdby = this.employee.employeeno;
       this.BarcodeModel.pono = this.PoDetails.pono;
+      this.BarcodeModel.asnno = this.PoDetails.asnno;
+      this.BarcodeModel.departmentid = this.PoDetails.departmentid;
+      this.BarcodeModel.inwardremarks = this.nonporemarks;
       if (this.isnonpochecked) {
         this.BarcodeModel.pono = "NONPO";
+        if (isNullOrUndefined(this.Poinvoicedetails.vendorname) || this.Poinvoicedetails.vendorname == "") {
+          this.messageService.add({ severity: 'error', summary: 'Response', detail: 'Please enter suppliername.' });
+          this.spinner.hide();
+          return;
+        }
+        if (!isNullOrUndefined(this.selecteddept)) {
+          this.BarcodeModel.departmentid = parseInt(this.selecteddept.value);
+        }
+        else {
+          this.messageService.add({ severity: 'error', summary: 'Response', detail: 'Please select department' });
+          this.spinner.hide();
+          return;
+        }
+        
       }
       this.BarcodeModel.invoiceno = this.Poinvoicedetails.invoiceno;
-      this.BarcodeModel.departmentid = this.PoDetails.departmentid
+      
       this.BarcodeModel.receivedby = this.employee.employeeno;
       this.BarcodeModel.suppliername = this.Poinvoicedetails.vendorname;
       this.wmsService.insertbarcodeandinvoiceinfo(this.BarcodeModel).subscribe(data => {
@@ -199,7 +233,7 @@ export class SecurityHomeComponent implements OnInit {
           this.messageService.add({ severity: 'error', summary: 'Response', detail: 'Invoice for this PO already received' });
         }
         else { //data>=1
-          this.disSaveBtn = false;
+          this.disSaveBtn = true;
           this.messageService.add({ severity: 'success', summary: 'Success Message', detail: 'Invoice Updated' });
           this.getcurrentDateReceivedPOlist();
         }

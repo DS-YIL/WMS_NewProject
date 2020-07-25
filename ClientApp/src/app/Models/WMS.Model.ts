@@ -32,6 +32,7 @@ export class PoDetails {
   rackid: any;
   binid: any;
   inwardid: number;
+  asnno: string;
 }
 
 export class BarcodeModel {
@@ -48,6 +49,8 @@ export class BarcodeModel {
   invoicedate: Date;
   receivedby: string;
   suppliername: string;
+  asnno: string
+  inwardremarks: string
 }
 
 export class Cyclecountconfig {
@@ -101,6 +104,9 @@ export class inwardModel {
   qualitychecked: boolean;
   isreceivedpreviosly: boolean;
   availableqty: any;
+   onhold: boolean;
+  onholdremarks: string;
+  qcstatus: string
 }
 
 
@@ -197,6 +203,24 @@ export class materialistModel {
   issuedqty: number;
 }
 
+export class outwardmaterialistModel {
+  gatepassmaterialid: string;
+  materialid: string;
+  materialdescription: string;
+  quantity: number = 0;
+  remarks: string;
+  expecteddate: any;
+  returneddate: any;
+  materialcost: string;
+  issuedqty: number;
+  outwarddate: Date;
+  inwarddate: Date;
+  outwarddatestring: string;
+  inwarddatestring: string;
+  movetype: string;
+  movedby: string;
+}
+
 export class categoryValues {
   categoryid: number;
   categoryname: string;
@@ -231,6 +255,7 @@ export class ddlmodel {
 
   value: string;
   text: string;
+  supplier: string
 
 }
 
@@ -301,4 +326,10 @@ export class stocktransfermateriakmodel {
   transferqty: number;
   mlocations: string[] = [];
   itemlocationdata: any[] = []
+}
+
+export class updateonhold {
+  invoiceno: string;
+  remarks: string;
+  onhold: boolean;
 }

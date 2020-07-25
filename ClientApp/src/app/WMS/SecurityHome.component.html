@@ -16,6 +16,9 @@
             <div class="col-lg-6 col-md-6">
               <input type="radio" name="seccheck" (change)="nonpocheck()" /> <label class="labelheading text-dark">&nbsp;&nbsp;Non-PO</label>
             </div>
+            <div class="col-lg-3 col-md-3">
+              <button type="button" class="btn btn-primary btn-sm" style="float:left;margin-left:10px;" (click)="refresh()" label="Save"><i class="fa fa-refresh"></i></button>
+            </div>
 
 
           </div>
@@ -23,22 +26,34 @@
             <div class="row " style="margin-top:5px;">
               <div class="col-lg-12 col-md-12 col-sm-12 form-inline">
                 <label class="labelheading">PO/ASN No: </label>&nbsp;&nbsp;
-                <input class="form-control" type="text" [(ngModel)]="PoDetails.pono" id="ponoid" maxlength="10">&nbsp;&nbsp;
+                <input class="form-control" type="text" [(ngModel)]="searchdata" id="ponoid" maxlength="10">&nbsp;&nbsp;
                 <button type="button" class="btn btn-primary btn-sm" label="Save" (click)="SearchPoNo()">Search</button>
               </div>
             </div>
             <div *ngIf="showDetails">
+              <div class="row " style="margin-top:5px;" *ngIf="!PoDetails.ispono">
+                <div class="col-lg-2 col-md-2">
+                  <label class="labelheading">PONo:</label>
+                </div>
+                <div class="col-lg-10 col-md-10">
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label class="labeltext">{{PoDetails.pono}}</label>
+                </div>
+                <!--<div class="col-lg-12 col-md-12 col-sm-12 form-inline">
+      <label class="labelheading">Supplier :</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <label class="labeltext">{{PoDetails.vendorname}}</label>
+    </div>-->
+              </div>
               <div class="row " style="margin-top:5px;">
                 <div class="col-lg-2 col-md-2">
                   <label class="labelheading">Supplier:</label>
                 </div>
                 <div class="col-lg-10 col-md-10">
-                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label class="labeltext">{{PoDetails.vendorname}}</label>
+                  <label class="labeltext" style="margin-left:15px;">{{PoDetails.vendorname}}</label>
                 </div>
                 <!--<div class="col-lg-12 col-md-12 col-sm-12 form-inline">
-        <label class="labelheading">Supplier :</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <label class="labeltext">{{PoDetails.vendorname}}</label>
-      </div>-->
+      <label class="labelheading">Supplier :</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <label class="labeltext">{{PoDetails.vendorname}}</label>
+    </div>-->
               </div>
               <div class="row " style="margin-top:5px;">
                 <div class="col-lg-12 col-md-12 col-sm-12 form-inline">
@@ -46,24 +61,25 @@
                   <input class="form-control" type="text" [disabled]="disSaveBtn" [(ngModel)]="Poinvoicedetails.invoiceno">
                 </div>
               </div>
+              
               <!--<div class="row" style="margin-top:5px;">
-      <div class="col-lg-4 col-md-4 labelheading">
-        <label class="text-primary" style="float:left">Supplier : </label>
-      </div>
-      <div class="col-lg-8 col-md-8 labeltext">
-        <label class="form-label">{{PoDetails.vendorname}}</label>
-      </div>
+    <div class="col-lg-4 col-md-4 labelheading">
+      <label class="text-primary" style="float:left">Supplier : </label>
+    </div>
+    <div class="col-lg-8 col-md-8 labeltext">
+      <label class="form-label">{{PoDetails.vendorname}}</label>
+    </div>
 
-    </div>-->
+  </div>-->
               <!--<div class="row" style="margin-top:5px;">
-      <div class="col-lg-4 col-md-4 labelheading">
-        <label class="text-primary" style="float:left">Invoice No :</label>
-      </div>
-      <div class="col-lg-8 col-md-8">
-        <input class="form-control" type="text" [disabled]="disSaveBtn" [(ngModel)]="Poinvoicedetails.invoiceno">
-      </div>
+    <div class="col-lg-4 col-md-4 labelheading">
+      <label class="text-primary" style="float:left">Invoice No :</label>
+    </div>
+    <div class="col-lg-8 col-md-8">
+      <input class="form-control" type="text" [disabled]="disSaveBtn" [(ngModel)]="Poinvoicedetails.invoiceno">
+    </div>
 
-    </div>-->
+  </div>-->
               <div class="row" style="margin-top:20px;">
                 <div class="col-lg-5 col-md-5">
                   <button type="button" style="float:right" [disabled]="disSaveBtn" class="btn btn-success" (click)="onsaveSecDetails()" label="Save">Save</button>
@@ -74,31 +90,31 @@
 
               </div>
               <!--<div class="row " style="margin-top:10px;margin-left:10px">
-      <div class="col-lg-4 col-md-4 col-sm-4 form-group">
+    <div class="col-lg-4 col-md-4 col-sm-4 form-group">
 
-        <input class="form-control" type="text" readonly [(ngModel)]="PoDetails.vendorname">
-      </div>
-      <div class="col-lg-4 col-md-4 col-sm-4 form-group">
-        <label class="form-label">Quanity: </label>
-        <input class="form-control" type="text" readonly [(ngModel)]="PoDetails.quotationqty">
-      </div>
+      <input class="form-control" type="text" readonly [(ngModel)]="PoDetails.vendorname">
     </div>
-    <div class="row " style="margin-top:10px;margin-left:20px">
-      <div class="col-lg-4 col-md-4 col-sm-4 form-group">
-        <label class="form-label">Invoice No: </label>
-      </div>
+    <div class="col-lg-4 col-md-4 col-sm-4 form-group">
+      <label class="form-label">Quanity: </label>
+      <input class="form-control" type="text" readonly [(ngModel)]="PoDetails.quotationqty">
     </div>
-    <div class="row">
-      <div class="col-lg-4 col-md-4 col-sm-4"></div>
-      <div class="col-lg-4 col-md-4 col-sm-4">
-        <button type="button" [disabled]="disSaveBtn" class="btn btn-success" (click)="onsaveSecDetails()" label="Save">Save</button>&nbsp;&nbsp;&nbsp;
-        <button type="button" class="btn btn-success" (click)="onsaveSecDetails()" label="Save">Print Barcode</button>
+  </div>
+  <div class="row " style="margin-top:10px;margin-left:20px">
+    <div class="col-lg-4 col-md-4 col-sm-4 form-group">
+      <label class="form-label">Invoice No: </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-4 col-md-4 col-sm-4"></div>
+    <div class="col-lg-4 col-md-4 col-sm-4">
+      <button type="button" [disabled]="disSaveBtn" class="btn btn-success" (click)="onsaveSecDetails()" label="Save">Save</button>&nbsp;&nbsp;&nbsp;
+      <button type="button" class="btn btn-success" (click)="onsaveSecDetails()" label="Save">Print Barcode</button>
 
-      </div>
-    </div>-->
+    </div>
+  </div>-->
             </div>
 
-          </div>
+            </div>
          
           <div *ngIf="isnonpochecked">
             <div class="row " style="margin-top:5px;">
@@ -110,7 +126,20 @@
             <div class="row " style="margin-top:5px;">
               <div class="col-lg-12 col-md-12 col-sm-12 form-inline">
                 <label class="labelheading">Invoice No: </label>&nbsp;&nbsp;&nbsp;
-                <input class="form-control" type="text" [disabled]="disSaveBtn" [(ngModel)]="Poinvoicedetails.invoiceno">
+                <input class="form-control" type="text" style="width:250px;" [disabled]="disSaveBtn" [(ngModel)]="Poinvoicedetails.invoiceno">
+              </div>
+            </div>
+            <div class="row " style="margin-top:5px;">
+              <div class="col-lg-12 col-md-12 col-sm-12 form-inline">
+                <label class="labelheading">Dept: </label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <p-dropdown [options]="ddldeptlist" [disabled]="disSaveBtn" [(ngModel)]="selecteddept" [showClear]="true" [style]="{'width':'250px'}" filter="true" placeholder="Select department" optionLabel="text"></p-dropdown>
+              </div>
+
+            </div>
+            <div class="row " style="margin-top:5px;">
+              <div class="col-lg-12 col-md-12 col-sm-12 form-inline">
+                <label class="labelheading">Remarks: </label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <textarea class="form-control" type="text" style="width:250px;" [disabled]="disSaveBtn" [(ngModel)]="nonporemarks"></textarea>
               </div>
             </div>
             <div class="row" style="margin-top:20px;">
@@ -146,7 +175,7 @@
           <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12">
               <div class="row">
-                <div class="col-lg-4 col-md-4">
+                <div class="col-lg-5 col-md-5">
                   <div class="card" style="height: 108px;margin-bottom:10px;width: 100%;  background-image: url('./assets/Login.jpg');border-radius: 10px;">
                     <h5 style="color:white;margin-left:10px;margin-top:10px"><i class="fa fa-cubes"></i>&nbsp;Expected Shipments</h5>
                     <h5 style="color:white;margin-left:20px;font-weight:600;">{{deliverycount}}</h5>
@@ -154,7 +183,7 @@
                   </div>
 
                 </div>
-                <div class="col-lg-4 col-md-4">
+                <div class="col-lg-5 col-md-5">
                   <div class="card" style="height: 108px;margin-bottom:10px;width: 100%;background-image: url('./assets/Login.jpg');border-radius: 10px;">
                     <h5 style="color:white;margin-left:10px;margin-top:10px"><i class="fa fa-cubes"></i>&nbsp;Received Shipments</h5>
                     <h5 style="color:white;margin-left:20px; font-weight:600;">{{receivedcount}}</h5>
@@ -194,8 +223,9 @@
                   <ng-template pTemplate="header">
                     <tr class="sectbldata">
                       <th class="ptable-cell" style="text-align:center;width:10%;">Sl.No.</th>
-                      <th class="ptable-cell" style="text-align:center;width:20%;">ASN No</th>
-                      <th class="ptable-cell" style="text-align:center;width:20%;">PO No</th>
+                      <th class="ptable-cell" style="text-align:center;width:15%;">ASN No</th>
+                      <th class="ptable-cell" style="text-align:center;width:15%;">PO No</th>
+                      <th class="ptable-cell" style="text-align:center;width:15%;">Invoice no</th>
                       <th class="ptable-cell" style="text-align:center">Supplier Name</th>
                       <th class="ptable-cell" style="text-align:center;width:25%;">Received By</th>
                       <!--<th class="ptable-cell" style="text-align:center">Delivery Date</th>-->
@@ -204,8 +234,9 @@
                   <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex" let-rindex=0>
                     <tr>
                       <td class="ptable-cell" style="text-align:right;;width:10%;"> {{ri+1}} </td>
-                      <td class="ptable-cell" style="text-align:center;width:20%;"> {{rowData.asn}} </td>
-                      <td class="ptable-cell" style="text-align:center;width:20%;"> {{rowData.pono}} </td>
+                      <td class="ptable-cell" style="text-align:center;width:15%;"> {{rowData.asn}} </td>
+                      <td class="ptable-cell" style="text-align:center;width:15%;"> {{rowData.pono}}</td>
+                      <td class="ptable-cell" style="text-align:center;width:15%;"> {{rowData.invoiceno}} </td>
                       <td class="ptable-cell" style="text-align:left">
                         {{rowData.suppliername}}
                       </td>

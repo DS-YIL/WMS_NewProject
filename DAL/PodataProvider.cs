@@ -39,9 +39,26 @@ namespace WMS.DAL
 				{
 					pgsql.Open();
 					//WMSResource.checkponoexists.Replace("#pono", PONO);
-					string query = "select pono,suppliername as vendorname from wms.wms_polist where pono = '" + PONO + "'"; 
-					return pgsql.QueryFirstOrDefault<OpenPoModel>(
+					//string query = "select pono,suppliername as vendorname from wms.wms_polist where pono = '" + PONO + "'";
+					string query = "select asno.asn as asnno,asno.pono,pl.suppliername as vendorname from wms.wms_asn asno left outer join wms.wms_polist pl on pl.pono = asno.pono where asno.asn = '" + PONO.Trim() + "'";
+					var podata = pgsql.QueryFirstOrDefault<OpenPoModel>(
 					   query, null, commandType: CommandType.Text);
+					if(podata != null)
+                    {
+						podata.ispono = false;
+						return podata;
+                    }
+                    else
+                    {
+					    query = "select pono,suppliername as vendorname from wms.wms_polist where pono = '" + PONO.Trim() + "'";
+						var podata1 = pgsql.QueryFirstOrDefault<OpenPoModel>(
+						   query, null, commandType: CommandType.Text);
+						if(podata1 != null)
+                        {
+							podata1.ispono = true;
+						}
+						return podata1;
+					}
 				}
 				catch (Exception Ex)
 				{
@@ -351,7 +368,7 @@ namespace WMS.DAL
 			catch (Exception ex)
             {
 				printMat.errorMsg = ex.Message;
-				log.ErrorMessage("PODataProvider", "InsertBarcodeInfo", ex.StackTrace.ToString());
+				log.ErrorMessage("PODataProvider", "generateBarcodeMaterial", ex.StackTrace.ToString());
 			}
 			return printMat;
 		}
@@ -378,26 +395,13 @@ namespace WMS.DAL
 					{
 						dataobj.createddate = System.DateTime.Now;
 						string insertquery = WMSResource.insertbarcodedata;
-
 						var result = 0;
-						//var result = DB.ExecuteScalar(insertquery, new
-						//{
-
-						//    dataobj.paitemid,
-						//    dataobj.barcode,
-						//    dataobj.createddate,
-						//    dataobj.createdby,
-						//    dataobj.deleteflag,
-						//});
 						string insertqueryforinvoice = WMSResource.insertinvoicedata;
-						//int barcodeid = Convert.ToInt32(result);
 						dataobj.receiveddate = System.DateTime.Now;
-						//if (barcodeid != 0)
-						//{
 						if(dataobj.pono == "NONPO")
                         {
 							string compare = "NP"+DateTime.Now.Year.ToString().Substring(2);
-							string Query = "select pono as POno from wms.wms_securityinward where pono like '"+compare+"%' order by invoicedate desc limit 1";
+							string Query = "select pono as POno from wms.wms_securityinward where pono like '"+compare+"%' order by inwmasterid desc limit 1";
 							var data = DB.QueryFirstOrDefault<POList>(
 							Query, null, commandType: CommandType.Text);
 							if(data != null)
@@ -458,10 +462,9 @@ namespace WMS.DAL
 
 							
 						}
-						dataobj.invoicedate = System.DateTime.Now;
+						dataobj.invoicedate = DateTime.Now;
                         var results = DB.Execute(insertqueryforinvoice, new
                         {
-
                             dataobj.invoicedate,
                             dataobj.departmentid,
                             dataobj.invoiceno,
@@ -469,8 +472,9 @@ namespace WMS.DAL
                             dataobj.receivedby,
                             dataobj.pono,
                             dataobj.deleteflag,
-							dataobj.suppliername
-
+							dataobj.suppliername,
+							dataobj.asnno,
+							dataobj.inwardremarks
                             //barcodeid,
                         });
 						if(results!=0)
@@ -480,7 +484,7 @@ namespace WMS.DAL
 							emailmodel.ToEmailId = "shashikala.k@in.yokogawa.com";
 							emailmodel.FrmEmailId = "shashikala.k@in.yokogawa.com";
 							EmailUtilities emailobj = new EmailUtilities();
-							emailobj.sendEmail(emailmodel, 1);
+							//emailobj.sendEmail(emailmodel, 1);
 
 						}
                         ////}
@@ -1097,6 +1101,7 @@ namespace WMS.DAL
 					int inwardid = 0;
 					if (obj.inwmasterid != 0)
 					{
+						int loop = 0;
 
 						foreach (var item in datamodel)
 						{
@@ -1123,11 +1128,19 @@ namespace WMS.DAL
 										item.deleteflag,
 										item.qualitycheck,
 										qualitychecked,
-										item.materialqty
+										item.materialqty,
+										item.onhold
 
 									});
 									inwardid = Convert.ToInt32(results);
-								
+
+                                if (inwardid != 0 && loop == 0)
+                                {
+									string qry = "Update wms.wms_securityinward set onhold = " + item.onhold + ",onholdremarks = '"+item.onholdremarks+"' where pono = '" + item.pono + "' and invoiceno = '" + item.invoiceno + "'";
+									var results11 = DB.ExecuteScalar(qry);
+								}
+								loop++;
+
 								
                                 
 
@@ -1167,7 +1180,7 @@ namespace WMS.DAL
 						emailmodel.ToEmailId = "shashikala.k@in.yokogawa.com";
 						emailmodel.FrmEmailId = "shashikala.k@in.yokogawa.com";
 						EmailUtilities emailobj = new EmailUtilities();
-						emailobj.sendEmail(emailmodel, 2);
+						//emailobj.sendEmail(emailmodel, 2);
 					}
 					//}
 					return (Convert.ToString(inwardid));
@@ -1359,7 +1372,7 @@ namespace WMS.DAL
 							emailmodel.FrmEmailId = "shashikala.k@in.yokogawa.com";
 							emailmodel.CC = "sushma.patil@in.yokogawa.com";
 							EmailUtilities emailobj = new EmailUtilities();
-							emailobj.sendEmail(emailmodel, 4);
+							//emailobj.sendEmail(emailmodel, 4);
 						}
 					}
 					//}
@@ -1665,7 +1678,7 @@ namespace WMS.DAL
 						emailmodel.ToEmailId = "shashikala.k@in.yokogawa.com";
 						emailmodel.FrmEmailId = "shashikala.k@in.yokogawa.com";
 						EmailUtilities emailobj = new EmailUtilities();
-						emailobj.sendEmail(emailmodel, 7);
+						//emailobj.sendEmail(emailmodel, 7);
 					}
 				}
 				return (Convert.ToInt32(result));
@@ -1887,7 +1900,7 @@ namespace WMS.DAL
 							emailmodel.ToEmailId = "shashikala.k@in.yokogawa.com";
 							emailmodel.FrmEmailId = "shashikala.k@in.yokogawa.com";
 							EmailUtilities emailobj = new EmailUtilities();
-							emailobj.sendEmail(emailmodel, 5);
+							//emailobj.sendEmail(emailmodel, 5);
 						}
 						//if (result != 0)
 						//{
@@ -2050,6 +2063,47 @@ namespace WMS.DAL
 			}
 		}
 		/// <summary>
+		/// non returnable gatepass for outward entry
+		/// Ramesh 23/07/2020
+		/// </summary>
+		/// <returns></returns>
+
+		public async Task<IEnumerable<gatepassModel>> NonreturnGetgatepassList(string type)
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+
+				try
+				{
+					string query = WMSResource.getnonreturnablegatepassdata;
+
+					await pgsql.OpenAsync();
+					var data = await pgsql.QueryAsync<gatepassModel>(
+					   query, null, commandType: CommandType.Text);
+					if(type == "1")
+                    {
+						return data.Where(o => o.gatepasstype == "Returnable").ToList();
+                    }
+                    else
+                    {
+						return data.Where(o => o.gatepasstype == "Non Returnable").ToList();
+					}
+
+
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "NonreturnGetgatepassList", Ex.StackTrace.ToString());
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+			}
+		}
+		/// <summary>
 		/// insert or update gatepass info
 		/// </summary>
 		/// <param name="dataobj"></param>
@@ -2109,7 +2163,7 @@ namespace WMS.DAL
 							emailmodel.ToEmailId = "shashikala.k@in.yokogawa.com";
 							emailmodel.FrmEmailId = "shashikala.k@in.yokogawa.com";
 							EmailUtilities emailobj = new EmailUtilities();
-							emailobj.sendEmail(emailmodel, 8);
+							//emailobj.sendEmail(emailmodel, 8);
 						}
 						else if (dataobj.gatepasstype == "Non Returnable")
 						{
@@ -2145,7 +2199,7 @@ namespace WMS.DAL
 							emailmodel.ToEmailId = "shashikala.k@in.yokogawa.com";
 							emailmodel.FrmEmailId = "shashikala.k@in.yokogawa.com";
 							EmailUtilities emailobj = new EmailUtilities();
-							emailobj.sendEmail(emailmodel, 9);
+							//emailobj.sendEmail(emailmodel, 9);
 						}
 						
 
@@ -3998,7 +4052,6 @@ namespace WMS.DAL
 					string date = dt.ToString("yyyy-MM-dd");
 					string query = WMSResource.getsecurityreceivedlist;
 					query = query + " where sl.invoicedate <= '" + date + " 23:59:59' and sl.invoicedate >= '" + date + " 00:00:00'";
-					query = query + " group by sl.pono, asno.asn ";
 					await pgsql.OpenAsync();
 					return await pgsql.QueryAsync<SecurityInwardreceivedModel>(
 					   query, null, commandType: CommandType.Text);
@@ -4071,7 +4124,7 @@ namespace WMS.DAL
 								emailmodel.ToEmailId = "shashikala.k@in.yokogawa.com";
 								emailmodel.FrmEmailId = "shashikala.k@in.yokogawa.com";
 								EmailUtilities emailobj = new EmailUtilities();
-								emailobj.sendEmail(emailmodel, 3);
+								//emailobj.sendEmail(emailmodel, 3);
 							}
 
 						}
@@ -4922,6 +4975,78 @@ namespace WMS.DAL
 
 			}
 		}
+
+		
+		public async Task<IEnumerable<ddlmodel>> getgrnlistforacceptance()
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				try
+				{
+					string materialrequestquery = WMSResource.getgrnlistdata;
+
+					await pgsql.OpenAsync();
+					var data = await pgsql.QueryAsync<ddlmodel>(
+					  materialrequestquery, null, commandType: CommandType.Text);
+					//List<ddlmodel> senddata = new List<ddlmodel>();
+					//foreach(ddlmodel grn in data)
+     //               {
+					//	var qry = "select inwardid as value,inwmasterid as text from wms.wms_storeinward where qualitycheckrequired = True and (qualitychecked = False or qualitychecked is null) and inwmasterid = " + grn.value + "";
+					//	var data1 = await pgsql.QueryAsync<ddlmodel>(
+					//     qry, null, commandType: CommandType.Text);
+					//	if(data1 == null || data1.Count() == 0)
+     //                   {
+					//		ddlmodel md = new ddlmodel();
+					//		md.value = grn.text;
+					//		md.text = grn.text;
+					//		senddata.Add(md);
+     //                   }
+					//}
+					return data.OrderByDescending(o=>o.value);
+					
+
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "getgrnlistforacceptance", Ex.StackTrace.ToString());
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+			}
+		}
+
+		public async Task<IEnumerable<ddlmodel>> getgrnlistforacceptanceputaway()
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				try
+				{
+					string materialrequestquery = WMSResource.getgrnlistdataforputaway;
+
+					await pgsql.OpenAsync();
+					var data = await pgsql.QueryAsync<ddlmodel>(
+					  materialrequestquery, null, commandType: CommandType.Text);
+					return data.OrderByDescending(o => o.value);
+
+
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "getgrnlistforacceptanceputaway", Ex.StackTrace.ToString());
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+			}
+		}
+
 		public async Task<IEnumerable<ddlmodel>> pendingreceiptslist()
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -4948,7 +5073,103 @@ namespace WMS.DAL
 			}
 		}
 
-		
+			public async Task<string> updateonholdrow(updateonhold datamodel)
+		{
+			string result = "";
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				try
+				{
+
+					string pono = datamodel.invoiceno.Split('-')[0];
+					string invno = datamodel.invoiceno.Split('-')[1];
+					await pgsql.OpenAsync();
+					string qry = "Update wms.wms_securityinward set onhold = " + datamodel.onhold + ",onholdremarks = '" + datamodel.remarks + "' where pono = '" + pono + "' and invoiceno = '" + invno + "'";
+					var results11 = pgsql.ExecuteScalar(qry);
+					result = "Saved";
+
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "updateonholdrow", Ex.StackTrace.ToString());
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+			}
+			return result;
+		}
+
+			public async Task<IEnumerable<ddlmodel>> getdepartmentmasterdata()
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				try
+				{
+					string materialrequestquery = "select orgdepartmentid as value, orgdepartment as text from wms.orgdepartments";
+
+					await pgsql.OpenAsync();
+					return await pgsql.QueryAsync<ddlmodel>(
+					  materialrequestquery, null, commandType: CommandType.Text);
+
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "getdepartmentmasterdata", Ex.StackTrace.ToString());
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+			}
+		}
+		public int updatematmovement(List<materialistModel> obj)
+		{
+			
+				using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+				{
+					try
+					{
+					
+						foreach (materialistModel mat in obj)
+						{
+							pgsql.OpenAsync();
+							string query = "";
+							if (mat.movetype == "out")
+							{
+								query = "update wms.wms_gatepassmaterial set outwarddate = '" + mat.outwarddatestring + "' , outwardedby='" + mat.movedby + "',outwardremarks='" + mat.remarks + "' where gatepassmaterialid = " + mat.gatepassmaterialid + "";
+							}
+							else
+							{
+								query = "update wms.wms_gatepassmaterial set inwarddate = '" + mat.inwarddatestring + "' , inwardedby='" + mat.movedby + "',inwardremarks='" + mat.remarks + "' where gatepassmaterialid = " + mat.gatepassmaterialid + "";
+							}
+							var results11 = pgsql.ExecuteScalar(query);
+						}
+
+					return 1;
+						
+
+					}
+					catch (Exception Ex)
+					{
+						log.ErrorMessage("PODataProvider", "updateonholdrow", Ex.StackTrace.ToString());
+						return 0;
+					}
+					finally
+					{
+						pgsql.Close();
+					}
+
+				
+				
+			}
+		}
+
 		/// <summary>
 		/// get stock type
 		/// Ramesh 22/07/2020

@@ -4,12 +4,13 @@ import { wmsService } from '../WmsServices/wms.service';
 import { constants } from '../Models/WMSConstants';
 import { Employee, DynamicSearchResult, searchList, printMaterial } from '../Models/Common.Model';
 import { NgxSpinnerService } from "ngx-spinner";
-import { PoDetails, BarcodeModel, StockModel, inwardModel, locationddl, binddl, rackddl, locataionDetailsStock } from 'src/app/Models/WMS.Model';
+import { PoDetails, BarcodeModel, StockModel, inwardModel, locationddl, binddl, rackddl, locataionDetailsStock,ddlmodel } from 'src/app/Models/WMS.Model';
 import { MessageService } from 'primeng/api';
 import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { ConfirmationService } from 'primeng/api';
+import { isNullOrUndefined } from 'util';
 
 @Component({
   selector: 'app-Warehouse',
@@ -90,6 +91,10 @@ export class WarehouseInchargeComponent implements OnInit {
   public invoiceForm: FormGroup;
   public showLocationDialogxx: boolean = false;
   public disSaveBtn: boolean = false;
+  checkedgrnlist: ddlmodel[] = [];
+  selectedgrn: ddlmodel;
+  selectedgrnno: string = "";
+  filteredgrns: any[];
   ngOnInit() {
     if (localStorage.getItem("Employee"))
       this.employee = JSON.parse(localStorage.getItem("Employee"));
@@ -103,6 +108,7 @@ export class WarehouseInchargeComponent implements OnInit {
     this.locationListdata1();
     this.binListdata1();
     this.rackListdata1();
+    this.getcheckedgrn();
     this.StockModel.shelflife = new Date();
     //this.userForm = this.fb.group({
     //  users: this.fb.array([])
@@ -279,9 +285,28 @@ export class WarehouseInchargeComponent implements OnInit {
   getControls() {
     return (this.StockModelForm1.get("users") as FormArray).controls;
   }
+  getcheckedgrn() {
+    this.spinner.show();
+    this.wmsService.getcheckedgrnlistforputaway().subscribe(data => {
+      debugger;
+      this.checkedgrnlist = data;
+      this.spinner.hide();
+    });
+  }
 
-  locationListdata() {
-    debugger;
+  filtergrn(event) {
+    this.filteredgrns = [];
+    for (let i = 0; i < this.checkedgrnlist.length; i++) {
+      let brand = this.checkedgrnlist[i].supplier;
+      let pos = this.checkedgrnlist[i].text;
+      if (brand.toLowerCase().indexOf(event.query.toLowerCase()) == 0 || pos.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+        this.filteredgrns.push(pos);
+      }
+    }
+  }
+
+
+ locationListdata() {
     this.wmsService.getlocationdata().
       subscribe(
         res => {
@@ -402,15 +427,19 @@ export class WarehouseInchargeComponent implements OnInit {
   }
 
   SearchGRNNo() {
+    debugger;
+    this.podetailsList = [];
+    this.PoDetails.grnnumber = "";
+    if (isNullOrUndefined(this.selectedgrnno) || this.selectedgrnno == "") {
+      this.messageService.add({ severity: 'error', summary: 'Validation', detail: 'Enter GRNNo' });
 
-    if (this.PoDetails.grnnumber) {
+    }
+    this.PoDetails.grnnumber = this.selectedgrnno;
       this.isnonpo = false;
       this.spinner.show();
-      this.podetailsList = [];
       this.wmsService.getitemdetailsbygrnno(this.PoDetails.grnnumber).subscribe(data => {
         this.spinner.hide();
         if (data) {
-          debugger;
           //this.PoDetails = data[0];
           this.podetailsList = data;
           this.showDetails = true;
@@ -418,17 +447,15 @@ export class WarehouseInchargeComponent implements OnInit {
           if (ponumber.startsWith("NP")) {
             this.isnonpo = true;
           }
-          this.updateRowGroupMetaData();
+this.updateRowGroupMetaData();
         }
         else
           this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'No data for this GRN No' });
       })
-    }
-    else
-      this.messageService.add({ severity: 'error', summary: 'Validation', detail: 'Enter GRNNo' });
+    
+  
+     
   }
-
-
   updateRowGroupMetaData() {
     debugger;
     this.rowGroupMetadata = {};

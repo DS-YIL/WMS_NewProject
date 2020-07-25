@@ -39,6 +39,7 @@ import { GatePassApprovalList } from './WMS/GatePassApprovalList.component';
 import { SafetyStockComponent } from './WMS/SafetyStock.component';
 import { BinStatusReportComponent } from './WMS/BinStatusReport.component';
 import { StockTransferComponent } from './WMS/StockTransfer.component';
+import { GatePassoutwardComponent } from './WMS/Gatepassoutward.component';
 const routes: Routes = [{
   path: 'WMS',
   children: [
@@ -93,6 +94,7 @@ const routes: Routes = [{
     { path: "SafetyStockList", component: SafetyStockComponent, canActivate: [AuthGuard] },
     { path: "BinStatusReport", component: BinStatusReportComponent, canActivate: [AuthGuard] },
     { path: "Stocktransfer", component: StockTransferComponent, canActivate: [AuthGuard] },
+    { path: "GatePassinout/:pageid", component: GatePassoutwardComponent, canActivate: [AuthGuard] },
     
   ]
 

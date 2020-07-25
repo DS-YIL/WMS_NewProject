@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef} from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { wmsService } from '../WmsServices/wms.service';
 import { constants } from '../Models/WMSConstants';
 import { Employee } from '../Models/Common.Model';
 import { NgxSpinnerService } from "ngx-spinner";
-import { PoDetails, BarcodeModel, inwardModel, Materials, ddlmodel } from 'src/app/Models/WMS.Model';
+import { PoDetails, BarcodeModel, inwardModel, Materials, ddlmodel, updateonhold } from 'src/app/Models/WMS.Model';
 import { MessageService } from 'primeng/api';
 import { first } from 'rxjs/operators';
 import { isNullOrUndefined } from 'util';
@@ -14,7 +14,8 @@ import { isNullOrUndefined } from 'util';
   templateUrl: './StoreClerk.component.html'
 })
 export class StoreClerkComponent implements OnInit {
-
+  @ViewChild('myInput', { static: false }) ddlreceivedpo: any;
+  @ViewChild('myInput1', { static: false }) ddlgrndata: any;
   constructor(private messageService: MessageService, private wmsService: wmsService, private route: ActivatedRoute, private router: Router, public constants: constants, private spinner: NgxSpinnerService) { }
 
   public PoDetails: PoDetails;
@@ -38,7 +39,19 @@ export class StoreClerkComponent implements OnInit {
   isallreceived: boolean = false;
   pendingpos: ddlmodel[] = [];
   selectedpendingpo: ddlmodel;
+  checkedgrnlist: ddlmodel[] = [];
+  selectedgrn: ddlmodel;
   receivedmsg: string = "";
+  isacceptance: boolean = false;
+  isonHold: boolean = false;
+  isonHoldview: boolean = false;
+  onholdremarks: string = "";
+  onholdupdatedata: updateonhold;
+  filteredpos: any[];
+  selectedpendingpono: string = "";
+  selectedgrnno: string = "";
+  filteredgrns: any[];
+ 
  
   ngOnInit() {
     if (localStorage.getItem("Employee"))
@@ -46,8 +59,11 @@ export class StoreClerkComponent implements OnInit {
     else
       this.router.navigateByUrl("Login");
     this.getpendingpos();
+    this.getcheckedgrn();
     this.getMaterials();
+    this.isacceptance = false;
     this.inwardemptymodel = new inwardModel();
+    this.onholdupdatedata = new updateonhold();
     this.PoDetails = new PoDetails();
     this.inwardModel = new inwardModel();
     this.inwardModel.quality = "0";
@@ -104,6 +120,31 @@ export class StoreClerkComponent implements OnInit {
       data.returnqty = "";
     }
   }
+  filterpos(event) {
+
+    this.filteredpos = [];
+    for (let i = 0; i < this.pendingpos.length; i++) {
+      let brand = this.pendingpos[i].supplier;
+      let pos = this.pendingpos[i].value;
+      if (brand.toLowerCase().indexOf(event.query.toLowerCase()) == 0 || pos.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+        this.filteredpos.push(pos);
+      }
+    }
+  }
+
+  filtergrn(event) {
+
+    this.filteredgrns = [];
+    for (let i = 0; i < this.checkedgrnlist.length; i++) {
+      let brand = this.checkedgrnlist[i].supplier;
+      let pos = this.checkedgrnlist[i].text;
+      if (brand.toLowerCase().indexOf(event.query.toLowerCase()) == 0 || pos.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+        this.filteredgrns.push(pos);
+      }
+    }
+  }
+
+  
 
  
   scanBarcode() {
@@ -160,22 +201,68 @@ export class StoreClerkComponent implements OnInit {
     });
   }
   getpendingpos() {
+    this.spinner.show();
     this.wmsService.getPendingpo().subscribe(data => {
       debugger;
       this.pendingpos = data;
+      this.spinner.hide();
+    });
+  }
+  getcheckedgrn() {
+    this.spinner.show();
+    this.wmsService.getcheckedgrnlist().subscribe(data => {
+      debugger;
+      this.checkedgrnlist = data;
+      this.spinner.hide();
     });
   }
   showpodata() {
-    if (!isNullOrUndefined(this.selectedpendingpo)) {
+    this.isacceptance = false;
+    this.selectedgrn = null;
+    this.selectedgrnno = "";
+    if (!isNullOrUndefined(this.selectedpendingpono) && this.selectedpendingpono != "") {
       this.spinner.show();
       this.showQtyUpdateDialog = true;
-      this.PoDetails.pono = this.selectedpendingpo.value;
-      this.getponodetails(this.selectedpendingpo.value);
+      this.PoDetails.pono = this.selectedpendingpono;
+      this.getponodetails(this.selectedpendingpono);
     }
     else {
 
     }
    
+  }
+  showpodata1() {
+    this.isacceptance = true;
+    this.selectedpendingpo = null;
+    this.selectedpendingpono = "";
+    if (!isNullOrUndefined(this.selectedgrnno) && this.selectedgrnno != "") {
+      this.spinner.show();
+      this.showQtyUpdateDialog = true;
+      //this.PoDetails.pono = this.selectedgrn.value;
+      this.getponodetails(this.selectedgrnno);
+    }
+    else {
+
+    }
+
+  }
+  resetpage() {
+    this.selectedgrn = null;
+    this.selectedpendingpo = null;
+    this.selectedpendingpono = "";
+    this.selectedgrnno = "";
+    this.isnonpoentry = false;
+    this.qualitychecked = false;
+    this.isallreceived = false;
+    this.isreceivedbefore = false;
+    this.returned = false;
+    this.isnonpo = false;
+    this.isonHold = false;
+    this.isonHoldview = false;
+    this.onholdremarks = "";
+    this.podetailsList = [];
+    this.getpendingpos();
+    this.getcheckedgrn();
   }
   getponodetails(data) {
     debugger;
@@ -184,6 +271,10 @@ export class StoreClerkComponent implements OnInit {
     this.isallreceived = false;
     this.isreceivedbefore = false;
     this.returned = false;
+    this.isnonpo = false;
+    this.isonHold = false;
+    this.isonHoldview = false;
+    this.onholdremarks = "";
     this.podetailsList = [];
     this.wmsService.Getthreewaymatchingdetails(data).subscribe(data => {
       this.spinner.hide();
@@ -193,6 +284,9 @@ export class StoreClerkComponent implements OnInit {
         // this.PoDetails = data[0];
         this.podetailsList = data;
         this.grnnumber = this.podetailsList[0].grnnumber;
+        this.isonHold = this.podetailsList[0].onhold;
+        this.isonHoldview = this.podetailsList[0].onhold;
+        this.onholdremarks = this.podetailsList[0].onholdremarks;
         var pono = this.podetailsList[0].pono;
         if (pono.startsWith("NP") && !this.grnnumber) {
           this.isnonpoentry = true;
@@ -253,8 +347,31 @@ export class StoreClerkComponent implements OnInit {
       return "Checked";
     }
     else {
-      return "Not checked";
+      data.qcstatus = "Pending";
+      return "Pending";
     }
+  }
+  update() {
+    debugger
+    if (isNullOrUndefined(this.selectedpendingpono) || this.selectedpendingpono == "") {
+      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please select receipt' });
+      this.returned;
+    }
+    this.spinner.show();
+    this.onholdupdatedata = new updateonhold();
+    this.onholdupdatedata.invoiceno = this.selectedpendingpono;
+    this.onholdupdatedata.remarks = this.onholdremarks;
+    this.onholdupdatedata.onhold = this.isonHoldview;
+    this.wmsService.updateonhold(this.onholdupdatedata).subscribe(data => {
+      this.spinner.hide();
+      this.messageService.add({ severity: 'success', summary: 'Success Message', detail: 'receipt updated' });
+      //this.getponodetails(this.selectedpendingpo.value)
+      this.resetpage();
+    })
+
+
+
+   
   }
 
   onVerifyDetails(details: any) {
@@ -278,11 +395,13 @@ export class StoreClerkComponent implements OnInit {
   onreturnsubmit() {
     debugger;
     this.spinner.show();
-    this.podetailsList.forEach(item => {
-      item.receivedby = this.employee.employeeno;
-    });
+   
     var pg = this;
-    var invaliddata = this.podetailsList.filter(function (element, index) {
+    var validdata = this.podetailsList.filter(function (element, index) {
+      return (element.qcstatus != "Pending");
+    });
+   
+    var invaliddata = validdata.filter(function (element, index) {
       return (element.confirmqty + element.returnqty != parseInt(element.receivedqty));
     });
     if (invaliddata.length > 0) {
@@ -290,8 +409,11 @@ export class StoreClerkComponent implements OnInit {
       this.spinner.hide();
       return;
     }
+    this.podetailsList.forEach(item => {
+      item.receivedby = this.employee.employeeno;
+    });
     setTimeout(function () {
-      var data = pg.podetailsList;
+      var data = validdata;
       pg.wmsService.insertreturn(data).subscribe(data => {
         pg.spinner.hide();
 
@@ -304,10 +426,11 @@ export class StoreClerkComponent implements OnInit {
 
         if (data) {
 
-          pg.messageService.add({ severity: 'success', summary: 'Success Message', detail: 'return updated' });
+          pg.messageService.add({ severity: 'success', summary: 'Success Message', detail: 'materials accepted' });
 
         }
-        pg.scanBarcode();
+        pg.resetpage();
+        //pg.scanBarcode();
 
       });
      
@@ -326,18 +449,22 @@ export class StoreClerkComponent implements OnInit {
       this.inwardModel.receivedby = this.inwardModel.qcby = this.employee.employeeno;
       this.podetailsList.forEach(item => {
         item.receivedby = this.employee.employeeno;
+        item.onhold = this.isonHoldview;
+        item.onholdremarks = this.onholdremarks;
       });
         this.wmsService.insertitems(this.podetailsList).subscribe(data => {
-          this.spinner.hide();
           if (data != null) {
             this.wmsService.verifythreewaymatch(this.PoDetails.pono).subscribe(info => {
+              this.spinner.hide();
               if (info != null)
-                this.grnnumber = info.grnnumber;
-              this.scanBarcode();
+                //this.grnnumber = info.grnnumber;
+              //this.scanBarcode();
+              this.resetpage();
               //this.grnnumber = data;
             })
           }
           if (data == null) {
+            this.spinner.hide();
             this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Something went wrong' });
           }
 

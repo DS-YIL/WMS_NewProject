@@ -33,6 +33,7 @@ namespace WMS.Interfaces
         Task<OpenPoModel> VerifythreeWay(string pono,string invoiceno);
         Task<string> insertquantity(List<inwardModel> datamodel);
         Task<string> receivequantity(List<inwardModel> datamodel);
+Task<string> updateonholdrow(updateonhold datamodel);
         string InsertStock(List<StockModel> data);
         string UpdateStockTransfer(List<StockModel> data);
 
@@ -106,6 +107,8 @@ namespace WMS.Interfaces
         Task<IEnumerable<employeeModel>> getapproverList(string empid);
         Task<IEnumerable<gatepassModel>> getgatepassByapproverList(string empid);
         int GatepassapproveByManager(gatepassModel model);
+
+        int updatematmovement(List<materialistModel> obj);
         Task<IEnumerable<safteyStockList>> getSafteyStockList();
         Task<IEnumerable<StockModel>> GetBinList();
 		Task<IEnumerable<Materials>> GetMaterialstockcombo();
@@ -114,5 +117,10 @@ namespace WMS.Interfaces
 
         Task<IEnumerable<invstocktransfermodel>> getstocktransferdatagroup1();
         Task<IEnumerable<ddlmodel>> pendingreceiptslist();
+        Task<IEnumerable<ddlmodel>> getdepartmentmasterdata();
+        Task<IEnumerable<ddlmodel>> getgrnlistforacceptance();
+        Task<IEnumerable<ddlmodel>> getgrnlistforacceptanceputaway();
+        Task<IEnumerable<gatepassModel>> NonreturnGetgatepassList(string type);
+
     }
 }

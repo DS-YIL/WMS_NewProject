@@ -1,16 +1,20 @@
-
-
-<div class="card" style="height:40px; width:100%;border-radius:10px;">
+<!--<div class="card" style="height:40px; width:100%;border-radius:10px;">
   <div class="card-header cardheadertext text-center"><i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;Put Away</div>
-</div>
+</div>-->
 <div class="form-control" style="height:100%">
   <div class="row " style="margin-top:10px">
     <div class="col-lg-3 col-md-3 form-inline">
-      <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">GRN No: </label>&nbsp;&nbsp;
-      <input class="form-control" type="text" [(ngModel)]="PoDetails.grnnumber">&nbsp;&nbsp;&nbsp;&nbsp;
+      <!--<label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">GRN No: </label>&nbsp;&nbsp;-->
+      <!--<input class="form-control" type="text" [(ngModel)]="PoDetails.grnnumber">&nbsp;&nbsp;&nbsp;&nbsp;-->
+      <!--<p-dropdown [options]="checkedgrnlist" appendTo="body" [(ngModel)]="selectedgrn" [showClear]="true" [style]="{'width':'250px'}" filter="true" placeholder="Select GRN" optionLabel="text"></p-dropdown>-->
+      <p-autoComplete [(ngModel)]="selectedgrnno" appendTo="body" [suggestions]="filteredgrns" placeholder="search by supplier/GRN No" [ngModelOptions]="{standalone: true}" [forceSelection]="true" (completeMethod)="filtergrn($event)" [size]="30"
+                      [dropdown]="true">
+      </p-autoComplete>
+    </div>
+    <div class="col-lg-1 col-md-1" style="margin-left:-30px;">
       <button type="button" class="btn btn-primary btn-sm" label="Save" (click)="SearchGRNNo()">Search</button>
     </div>
-    <div class="col-md-3 col-lg-3  pt-2 labelheading" *ngIf="podetailsList.length>0">
+    <div class="col-md-2 col-lg-2  pt-2 labelheading" *ngIf="podetailsList.length>0">
       PO No : <span class="labeltext">{{podetailsList[0].pono}}</span>
     </div>
     <div class="col-md-3 col-lg-3 pt-2 labelheading" style="font-weight:600;font-size:14px;color:darkblue;" *ngIf="podetailsList.length>0">
@@ -33,7 +37,7 @@
             <th rowspan="2" style="width:70px;text-align:center">Received Quantity</th>
             <th rowspan="2" style="width:70px;text-align:center">Accepted Quantity</th>
             <th rowspan="2" style="width:70px;text-align: center">Returned Quantity</th>
-            <th rowspan="2" *ngIf="!isnonpo" style="width:70px;text-align:center">Pending Quantity</th>
+            <!--<th rowspan="2" *ngIf="!isnonpo" style="width:70px;text-align:center">Pending Quantity</th>-->
             <th rowspan="2" style="width:80px;text-align:center">Material Barcode</th>
             <th colspan="2" style="width:250px; text-align: center">Put Away</th>
           </tr>
@@ -61,7 +65,7 @@
             <td class="ptable-cell" style="text-align:right;width:100px;">{{rowData.receivedqty}}</td>
             <td class="ptable-cell" style="text-align:right;width:100px;">{{rowData.confirmqty}}</td>
             <td class="ptable-cell" style="text-align:right;width:100px;">{{rowData.returnqty}}</td>
-            <td *ngIf="!isnonpo" class="ptable-cell" style="text-align:right;width:100px;">{{rowData.materialqty-rowData.confirmqty}}</td>
+            <!--<td *ngIf="!isnonpo" class="ptable-cell" style="text-align:right;width:100px;">{{rowData.materialqty-rowData.confirmqty}}</td>-->
             <td style="text-align:center">
               <button type="button" icon="fa fa-print" pButton aria-hidden="true" (click)="generateBarcode(rowData)"></button>
             </td>

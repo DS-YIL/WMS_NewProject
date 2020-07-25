@@ -163,7 +163,7 @@ where  inwmaster.pono='#pono'</value>
     <comment>barcodedata insertion</comment>
   </data>
   <data name="insertinvoicedata" xml:space="preserve">
-    <value>INSERT INTO wms.wms_securityinward(inwmasterid,pono,invoiceno,invoicedate,receivedby,receiveddate,deleteflag,departmentid,suppliername)VALUES(default,@pono,@invoiceno,@invoicedate,@receivedby,@receiveddate,@deleteflag,@departmentid,@suppliername)</value>
+    <value>INSERT INTO wms.wms_securityinward(inwmasterid,pono,invoiceno,invoicedate,receivedby,receiveddate,deleteflag,departmentid,suppliername,asnno,inwardremarks)VALUES(default,@pono,@invoiceno,@invoicedate,@receivedby,@receiveddate,@deleteflag,@departmentid,@suppliername,@asnno,@inwardremarks)</value>
     <comment>invoice data insertion</comment>
   </data>
   <data name="materialquest" xml:space="preserve">
@@ -216,8 +216,8 @@ left join wms.wms_rd_rack rack on rack.rackid=stock.rackid
 where itemid=#itemid</value>
   </data>
   <data name="insertforinvoicequery" xml:space="preserve">
-    <value>INSERT INTO wms.wms_storeinward(inwmasterid,receiveddate,receivedby,receivedqty,returnqty,qualitypassedqty,confirmqty,materialid,deleteflag)
-VALUES(@inwmasterid,@receiveddate,@receivedby,@receivedqty,@returnqty,@qualitypassedqty,@confirmqty,@materialid,@deleteflag)returning inwardid</value>
+    <value>INSERT INTO wms.wms_storeinward(inwmasterid,receiveddate,receivedby,receivedqty,returnqty,qualitypassedqty,confirmqty,materialid,deleteflag,@onhold)
+VALUES(@inwmasterid,@receiveddate,@receivedby,@receivedqty,@returnqty,@qualitypassedqty,@confirmqty,@materialid,@deleteflag,@onhold)returning inwardid</value>
   </data>
   <data name="insertqueryforlocationhistory" xml:space="preserve">
     <value>INSERT INTO wms.wms_storageallowcationhistorymaster(itemlocation,itemid,createddate,createdby)values(@itemlocation,@itemid,@createddate,@createdby)</value>
@@ -501,9 +501,9 @@ where sk.availableqty!=0</value>
   group by req.requestforissueid,iss.materialissueid</value>
   </data>
   <data name="getsecurityreceivedlist" xml:space="preserve">
-    <value>select sl.pono,asno.asn,Max(emp.name) as receivedby ,Max(ol.suppliername) as suppliername from wms.wms_securityinward sl 
-left outer join wms.wms_polist ol on sl.pono = ol.pono
-left outer join wms.wms_asn asno on asno.pono = sl.pono
+    <value>select sl.pono,emp.name as receivedby,sl.asnno as asn,sl.invoiceno,
+(select suppliername from wms.wms_polist where pono = sl.pono limit 1) as suppliername
+from wms.wms_securityinward sl 
 left outer join wms.employee emp on sl.receivedby = emp.employeeno</value>
   </data>
   <data name="getmaterialdetailsbyreserveid" xml:space="preserve">
@@ -585,12 +585,12 @@ values(default,@pono,@itemid,@gatepassmaterialid,@itemissueddate,@itemreceiverid
     <value>UPDATE  wms.wms_storeinward set  qualitypassedqty=@qualitypassedqty,qualityfailedqty = @qualityfailedqty,checkedby = @receivedby,checkedon=current_date,remarks=@remarks where inwardid =#inwardid</value>
   </data>
   <data name="getdataforqualitydetails" xml:space="preserve">
-    <value>select stinw.inwardid,stinw.inwmasterid,stinw.materialid as material,secinw.grnnumber,mat.materialdescription,stinw.receivedqty,stinw.receiveddate,stinw.returnqty,qc.qualitypassedqty,qc.qualityfailedqty,qc.remarks,qc.qcby as checkedby
+    <value>select stinw.inwardid,stinw.inwmasterid,stinw.materialid as material,secinw.grnnumber,secinw.onhold,mat.materialdescription,stinw.receivedqty,stinw.receiveddate,stinw.returnqty,qc.qualitypassedqty,qc.qualityfailedqty,qc.remarks,qc.qcby as checkedby
   from wms.wms_storeinward stinw
   left outer join wms.wms_securityinward secinw on secinw.inwmasterid=stinw.inwmasterid
   left outer join wms."MaterialMasterYGS" mat on mat.material = stinw.materialid
   left outer join wms.wms_qualitycheck qc on qc.inwardid=stinw.inwardid
-  where stinw.qualitycheckrequired = True and qc.qcby is null  order by stinw.receiveddate DESC</value>
+  where stinw.qualitycheckrequired = True and secinw.onhold is NOT True and qc.qcby is null  order by stinw.receiveddate DESC</value>
   </data>
   <data name="receiveforinvoice" xml:space="preserve">
     <value>INSERT INTO wms.wms_storeinward(inwmasterid,receiveddate,receivedby,receivedqty,materialid,deleteflag,qualitycheckrequired,qualitychecked,materialqty)
@@ -609,7 +609,7 @@ VALUES(@inwmasterid,@receiveddate,@receivedby,@receivedqty,@materialid,@deletefl
     <value>UPDATE  wms.wms_storeinward set  confirmqty=@confirmqty,returnqty = @returnqty,returnedby = @receivedby,returnedon=current_date,returnremarks=@returnremarks where inwardid =#inwardid</value>
   </data>
   <data name="receivequeryfornonpo" xml:space="preserve">
-    <value>select sinw.invoiceno,sinw.pono,sinw.grnnumber,inw.materialid as material,ms.materialdescription,
+    <value>select sinw.invoiceno,sinw.pono,sinw.grnnumber,sinw.onhold,sinw.onholdremarks,inw.materialid as material,ms.materialdescription,
  inw.inwardid,inw.checkedby,inw.qualitychecked,inw.returnedby,inw.returnedon,inw.returnremarks,inw.receivedqty,inw.returnremarks,inw.materialqty,
  qc.qualitypassedqty,qc.qualityfailedqty,qc.qcby as checkedby,
  CASE
@@ -723,7 +723,34 @@ left outer join wms.employee emp  on emp.employeeno = inv.transferredby
 order by transferredon Desc</value>
   </data>
   <data name="getpendingreceiptslist" xml:space="preserve">
-    <value>select pono||'-'||invoiceno as value,pono||'-'||invoiceno as text from wms.wms_securityinward where grnnumber is null order by inwmasterid desc</value>
+    <value>select sl.pono||'-'||sl.invoiceno as value,sl.pono||'-'||sl.invoiceno as text,(select suppliername from wms.wms_polist where pono = sl.pono limit 1) as supplier 
+from wms.wms_securityinward sl 
+where sl.grnnumber is null or sl.onhold = True 
+order by sl.inwmasterid desc</value>
+  </data>
+   <data name="getgrnlistdata" xml:space="preserve">
+    <value>select MAX(stinw.inwardid) as value,sinw.grnnumber as text,(select suppliername from wms.wms_polist where pono = Max(sinw.pono) limit 1) as supplier 
+from wms.wms_storeinward stinw
+left outer join wms.wms_securityinward sinw on stinw.inwmasterid = sinw.inwmasterid 
+where (stinw.confirmqty is null or stinw.confirmqty = 0)  and sinw.grnnumber is not null and sinw.onhold is not True  group by stinw.inwmasterid,sinw.grnnumber</value>
+  </data>
+  <data name="getgrnlistdataforputaway" xml:space="preserve">
+    <value>select MAX(stinw.inwardid) as value,sinw.grnnumber as text,(select suppliername from wms.wms_polist where pono = Max(sinw.pono) limit 1) as supplier 
+from wms.wms_storeinward stinw 
+left outer join wms.wms_securityinward sinw on stinw.inwmasterid = sinw.inwmasterid 
+where stinw.returnedby is not null and stinw.inwmasterid not in (select distinct inwmasterid from wms.wms_stock)
+group by stinw.inwmasterid,sinw.grnnumber</value>
+  </data>
+  <data name="getnonreturnablegatepassdata" xml:space="preserve">
+    <value>select matis.gatepassmaterialid,matis.itemid,matis.itemissueddate,ygs.materialdescription,emp.name,
+matgt.gatepassid,matgt.materialid,matgt.materialcost,matgt.quantity,
+gt.gatepasstype,gt.vendorname,gt.requestedby,gt.requestedon
+from wms.wms_materialissue matis
+left outer join wms.wms_gatepassmaterial matgt on matgt.gatepassmaterialid = matis.gatepassmaterialid
+left outer join wms.wms_gatepass gt on gt.gatepassid = matgt.gatepassid
+left join wms.employee emp on emp.employeeno=gt.requestedby
+left join wms."MaterialMasterYGS" ygs on ygs.material=matgt.materialid
+where matis.gatepassmaterialid  is not null</value>
   </data>
   <data name="getstocktype" xml:space="preserve">
     <value>select stocktype from wms.stocklocation where locationid='#locationid' and location='#locationname' and storeid=#stid and rackid=#rkid and binid=#biid limit 1</value>

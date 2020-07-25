@@ -1,0 +1,174 @@
+
+
+
+<div class="card" style="height:25px; width:150px;margin-left:3px;margin-top:5px;" *ngIf="nonreturn">
+  <span><i class="fa fa-star"></i><label class="labelheading">&nbsp;Non Returnable</label></span>
+
+</div>
+<div class="card" style="height:25px; width:300px;margin-left:3px;margin-top:5px;" *ngIf="returnable">
+  <span *ngIf="isoutward"><i class="fa fa-star"></i><label class="labelheading">&nbsp;Returnable</label>&nbsp;| &nbsp;<i class="fa fa-play"></i><label class="labelheading text-danger btn-link" style=" text-decoration: underline;" (click)="getoutwarddata()">&nbsp;Outward</label>&nbsp;|&nbsp;<i class="fa fa-play"></i><label class="labelheading text-primary btn-link" (click)="getinwarddata()">&nbsp;Inward</label></span>
+  <span *ngIf="isinward"><i class="fa fa-star"></i><label class="labelheading">&nbsp;Returnable</label>&nbsp;| &nbsp;<i class="fa fa-play"></i><label class="labelheading text-primary btn-link" (click)="getoutwarddata()">&nbsp;Outward</label>&nbsp;|&nbsp;<i class="fa fa-play"></i><label class="labelheading text-danger btn-link" style=" text-decoration: underline;" (click)="getinwarddata()">&nbsp;Inward</label></span>
+</div>
+
+<div style="margin-left:5px;margin-right:5px;margin-top:10px;">
+  <p-table #dt [value]="gatepassModelList" [style]="{'width':'100%','overflow':'auto!important'}"
+           [responsive]="true" [rows]="50"
+           [resizableColumns]="true"
+           columnResizeMode="expand"
+           [paginator]="true" [rowsPerPageOptions]="[25,50,75,100]"
+           appendTo="body" dataKey="gatepassid" (onRowExpand)="onRowExpand($event)">
+    <ng-template pTemplate="header">
+      <tr class="mprltbldata">
+        <th style="text-align: center; width: 70px">Sl. No.</th>
+        <th style="text-align:center">GatePass Id</th>
+        <th style="text-align:center">Type</th>
+        <th style="text-align:center">Supplier</th>
+        <th style="text-align:center">Issued By</th>
+        <th style="text-align:center">Issued On</th>
+      </tr>
+      <tr>
+        <th></th>
+        <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'gatepassid', 'contains')"></th>
+        <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'gatepasstype', 'contains')"></th>
+        <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'vendorname', 'contains')"></th>
+        <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'name', 'contains')"></th>
+        <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'requestedon', 'contains')"></th>
+
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-rowData let-expanded="expanded" let-editing="editing" let-ri="rowIndex">
+      <tr>
+        <td>
+
+          {{ri+1}}
+
+        </td>
+        <td class="ptable-cell" style="text-align:center"> <a style="color:blue;cursor:pointer;text-decoration:underline" href="#" [pRowToggler]="rowData"> <i [ngClass]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></i>{{rowData.gatepassid}}</a></td>
+        <td class="ptable-cell" style="text-align:left" *ngIf="employee.roleid!='8'">{{rowData.gatepasstype}}</td>
+        <td class="ptable-cell" style="text-align:left">{{rowData.vendorname}}</td>
+        <td class="ptable-cell" style="text-align:left">{{rowData.name}}</td>
+        <td class="ptable-cell" style="text-align:center">{{rowData.itemissueddate | date :  constants.dateFormat}}</td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="rowexpansion" let-rowData>
+      <tr>
+        <td [attr.colspan]="6">
+          <div class="p-grid -fluid">
+            <div class="row " style="margin-top:5px">
+              <div class="col-lg-2 col-md-2 form-inline labelheading">
+                <label class="form-label"><b>GatePass Id: </b> </label>&nbsp;<label class="labeltext">{{DGgatepassid}}</label>
+              </div>
+              <div class="col-lg-4 col-md-4  form-inline labelheading">
+                <p-calendar class="mprldatepick" placeholder="Select {{datetype}}" [(ngModel)]="outindate" dateFormat="dd/mm/yy" appendTo="body" [monthNavigator]="true" [yearNavigator]="true" yearRange="2000:2050"></p-calendar>
+              </div>
+            </div>
+            <div class="p-col-12 p-md-9">
+              <div class="p-grid">
+                <p-table [value]="materialListDG" [style]="{'width':'100%','overflow':'auto!important'}" [(selection)]="selectedmats" (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)">
+
+                  <ng-template pTemplate="header">
+      <tr class="mprltbldata">
+        <th style="width: 3em">
+          <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+        </th>
+        <th class="ptable-cell" style="text-align:center;width:60px;">Sl. No.</th>
+        <th class="ptable-cell" style="text-align:center;width:150px">Material</th>
+        <th class="ptable-cell" style="text-align:center;">Material Description</th>
+        <th class="ptable-cell" style="text-align:center;width:150px">Quantity</th>
+        <th class="ptable-cell" style="text-align:center;width:150px">Price</th>
+        <th class="ptable-cell" style="text-align:center;width:200px">Remarks</th>
+
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex" let-rindex=0>
+      <tr>
+        <td>
+          <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+        </td>
+        <td class="ptable-cell" style="text-align:center;width:60px;"> {{ri+1}} </td>
+        <td class="ptable-cell" style="text-align:left;width:150px"> {{rowData.materialid}} </td>
+        <td class="ptable-cell" style="text-align:left"> {{rowData.materialdescription}} </td>
+        <td class="ptable-cell" style="text-align:right;width:150px">{{rowData.quantity}}</td>
+        <td class="ptable-cell" style="text-align:right;width:150px">{{rowData.materialcost}}</td>
+        <td class="ptable-cell" style="text-align:right;width:200px"><textarea [(ngModel)]="rowData.remarks"></textarea></td>
+      </tr>
+
+    </ng-template>
+
+  </p-table>
+
+
+</div>
+                </div>
+              </div>
+            </td>
+          </tr>
+<tr>
+  <td [attr.colspan]="6">
+    <p-footer>
+      <div class="ui-dialog-buttonpane ui-helper-clearfix">
+        <button type="button" pButton icon="fa fa-ok" (click)="updateoutinward()" label="Submit"></button>
+      </div>
+    </p-footer>
+  </td>
+</tr>
+
+
+</ng-template>
+      </p-table>
+    </div>
+
+
+
+
+<p-dialog header="Material Details" [(visible)]="showmatDialog" [responsive]="true" showEffect="fade" [modal]="true" [style]="{'width':'85%','height':'500px','overflow':'auto!important','margin-right': '0px','margin-left':'0px'}">
+  <div class="row " style="margin-top:5px">
+    <div class="col-lg-2 col-md-2 form-inline labelheading">
+      <label class="form-label"><b>GatePass Id: </b> </label>&nbsp;<label class="labeltext">{{DGgatepassid}}</label>
+    </div>
+    <div class="col-lg-3 col-md-3 form-inline labelheading">
+      <label class="form-label"><b>Type: </b> </label>&nbsp;<label class="labeltext">{{DGgatepasstype}}</label>
+    </div>
+    <div class="col-lg-3 col-md-3 form-inline labelheading">
+      <label class="form-label"><b>Supplier: </b></label>&nbsp;<label class="labeltext">{{DGvendorname}}</label>
+    </div>
+    <div class="col-lg-4 col-md-4  form-inline labelheading">
+      <p-calendar class="mprldatepick" placeholder="{{datetype}}" [(ngModel)]="outindate" dateFormat="dd/mm/yy" appendTo="body" [monthNavigator]="true" [yearNavigator]="true" yearRange="2000:2050"></p-calendar>
+    </div>
+  </div>
+  <br />
+  <div class="row " style="margin-top:5px">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+      <p-table [value]="materialListDG" [style]="{'width':'100%','height':'500px','overflow':'auto!important'}">
+        <ng-template pTemplate="header">
+          <tr class="mprltbldata">
+            <th class="ptable-cell" style="text-align:center;width:60px;">Sl. No.</th>
+            <th class="ptable-cell" style="text-align:center;width:150px">Material</th>
+            <th class="ptable-cell" style="text-align:center;">Material Description</th>
+            <th class="ptable-cell" style="text-align:center;width:150px">Quantity</th>
+            <th class="ptable-cell" style="text-align:center;width:150px">Price</th>
+            <th class="ptable-cell" style="text-align:center;width:200px">Remarks</th>
+
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex" let-rindex=0>
+          <tr>
+            <td class="ptable-cell" style="text-align:center;width:60px;"> {{ri+1}} </td>
+            <td class="ptable-cell" style="text-align:left;width:150px"> {{rowData.materialid}} </td>
+            <td class="ptable-cell" style="text-align:left"> {{rowData.materialdescription}} </td>
+            <td class="ptable-cell" style="text-align:right;width:150px">{{rowData.quantity}}</td>
+            <td class="ptable-cell" style="text-align:right;width:150px">{{rowData.materialcost}}</td>
+            <td class="ptable-cell" style="text-align:right;width:200px"><textarea [(ngModel)]="rowData.remarks"></textarea></td>
+
+        </ng-template>
+      </p-table>
+    </div>/
+  </div><br />
+  <p-footer>
+    <div class="ui-dialog-buttonpane ui-helper-clearfix">
+      <button type="button" pButton icon="fa fa-ok" label="Submit"></button>
+      <button type="button" pButton icon="fa fa-close" label="cancel" (click)="closeDG()"></button>
+    </div>
+  </p-footer>
+</p-dialog>
+
