@@ -651,7 +651,7 @@ this.updateRowGroupMetaData();
               this.showLocationDialog = false;
               this.messageService.add({ severity: 'success', summary: 'Success Message', detail: 'Location Updated' });
               this.stock = [];
-              this.PoDetails = null;
+              //this.PoDetails = null;
               this.SearchGRNNo();
               // }
             });
