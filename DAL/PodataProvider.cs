@@ -484,7 +484,7 @@ namespace WMS.DAL
 							emailmodel.ToEmailId = "shashikala.k@in.yokogawa.com";
 							emailmodel.FrmEmailId = "shashikala.k@in.yokogawa.com";
 							EmailUtilities emailobj = new EmailUtilities();
-							//emailobj.sendEmail(emailmodel, 1);
+							emailobj.sendEmail(emailmodel, 1);
 
 						}
                         ////}
@@ -596,10 +596,12 @@ namespace WMS.DAL
 								gatepassissuedqty = obj.quantity;
 								totalissed = Convert.ToInt32(issuedqty) + Convert.ToInt32(reservedqty) + gatepassissuedqty;
 								result.issued = totalissed;
-								objMaterial.Add(result);
+								
+								
 							}
 							
 						}
+						objMaterial.Add(result);
 					}
 
 
@@ -704,54 +706,65 @@ namespace WMS.DAL
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
-				ReqMatDetails obj = new ReqMatDetails();
+				//ReqMatDetails obj = new ReqMatDetails();
 				ReqMatDetails objs = null;
 				List<ReqMatDetails> listobj = new List<ReqMatDetails>();
 				try
 				{
 					string query = WMSResource.getMaterialRequestDetails.Replace("#materialid", materialid).Replace("#grnnumber", grnnumber);
-					obj = pgsql.QuerySingle<ReqMatDetails>(
+					//await pgsql.OpenAsync();
+					var obj =await pgsql.QueryAsync<ReqMatDetails>(
 					   query, null, commandType: CommandType.Text);
-					string reservequery = "select max(emp.name) as requestername,max(emp1.name)  as approvedby,max(res.reservedon) as issuedon,sum(res.reservedqty) as quantity from wms.wms_materialreserve res left join wms.employee emp on res.reservedby = emp.employeeno left join wms.employee emp1 on emp1.employeeno = res.releasedby where res.itemid=" + obj.itemid;
-					var data = pgsql.QuerySingle<ReqMatDetails>(
-					   reservequery, null, commandType: CommandType.Text);
-					objs = new ReqMatDetails();
-					objs.quantity = data.quantity;
-					objs.type = "Project Reserve";
-					objs.requestername = data.requestername;
-					objs.issuedon = data.issuedon;
-					objs.details = obj.jobname;
-					objs.approvername = data.approvername;
-					listobj.Add(objs);
-					string requstedquery = "select sum(issue.issuedqty)as quantity,max(emp.name) as requestername,max(emp1.name) as approvername from wms.wms_materialissue issue inner join wms.wms_materialrequest req on req.requestforissueid = issue.requestforissueid left join wms.employee emp on emp.employeeno = req.requesterid left join wms.employee emp1 on emp1.employeeno = req.approverid  where issue.itemid=" + obj.itemid;
-					var data1 = pgsql.QuerySingle<ReqMatDetails>(
-				   requstedquery, null, commandType: CommandType.Text);
-					objs = new ReqMatDetails();
-					objs.quantity = data1.quantity;
-					objs.type = "Project Requested";
-					objs.requestername = data1.requestername;
-					objs.issuedon = data1.issuedon;
-					objs.details = obj.jobname;
-					objs.approvername = data1.approvername;
-					objs.acknowledge = data1.requestername;
-					listobj.Add(objs);
-					//string gatepassquery = " select max(gate.gatepasstype)as gatepasstype,sum(mat.quantity)as quantity,max(gate.approvedon) as issuedon,max(emp.name) as requestername,max(emp1.name) as approvername from wms.wms_gatepass gate  inner join wms.wms_gatepassmaterial mat on mat.gatepassid = gate.gatepassid  left join wms.employee emp on emp.employeeno = gate.requestedby left join wms.employee emp1 on emp1.employeeno = gate.approvedby where mat.materialid = '" + obj.materialid + "' and gate.approvedon != null and gate.approverstatus!=null";
-					string gatepassquery = "select max(gate.gatepasstype)as gatepasstype,sum(wmissue.issuedqty)as quantity,max(gate.approvedon) as issuedon,max(emp.name) as requestername,max(emp1.name) as approvername from wms.wms_gatepass gate  inner join wms.wms_gatepassmaterial mat on mat.gatepassid = gate.gatepassid  left join wms.employee emp on emp.employeeno = gate.requestedby left join wms.employee emp1 on emp1.employeeno = gate.approvedbyjoin wms.wms_materialissue wmissue  on mat.gatepassmaterialid = wmissue.gatepassmaterialidwhere mat.materialid = '" + obj.materialid + "' and gate.approvedon != null and gate.approverstatus != null";
-					var data2 = pgsql.QuerySingleOrDefault<ReqMatDetails>(
-				   gatepassquery, null, commandType: CommandType.Text);
-					objs = new ReqMatDetails();
-					if (data2.quantity != 0)
-					{
-						objs.quantity = data2.quantity;
-						objs.type = data2.gatepasstype;
-						objs.requestername = data2.requestername;
+					foreach(var matdata in obj)
+                    {
+						string reservequery = "select max(emp.name) as requestername,max(emp1.name)  as approvedby,max(res.reservedon) as issuedon,sum(res.reservedqty) as quantity from wms.wms_materialreserve res left join wms.employee emp on res.reservedby = emp.employeeno left join wms.employee emp1 on emp1.employeeno = res.releasedby where res.itemid=" + matdata.itemid;
+						var data = pgsql.QuerySingle<ReqMatDetails>(
+						   reservequery, null, commandType: CommandType.Text);
+						objs = new ReqMatDetails();
+						objs.quantity = data.quantity;
+						objs.type = "Project Reserve";
+						objs.requestername = data.requestername;
+						objs.issuedon = data.issuedon;
+						objs.details = matdata.jobname;
+						objs.approvername = data.approvername;
+						if(objs.quantity!=0)
+                        {
+							listobj.Add(objs);
+						}
+						
+						string requstedquery = "select sum(issue.issuedqty)as quantity,max(emp.name) as requestername,max(emp1.name) as approvername from wms.wms_materialissue issue inner join wms.wms_materialrequest req on req.requestforissueid = issue.requestforissueid left join wms.employee emp on emp.employeeno = req.requesterid left join wms.employee emp1 on emp1.employeeno = req.approverid  where issue.itemid=" + matdata.itemid;
+						var data1 = pgsql.QuerySingle<ReqMatDetails>(
+					   requstedquery, null, commandType: CommandType.Text);
+						objs = new ReqMatDetails();
+						objs.quantity = data1.quantity;
+						objs.type = "Project Requested";
+						objs.requestername = data1.requestername;
 						objs.issuedon = data1.issuedon;
-						objs.details = obj.jobname;
+						objs.details = matdata.jobname;
 						objs.approvername = data1.approvername;
 						objs.acknowledge = data1.requestername;
-						listobj.Add(objs);
-					}
+						if(objs.quantity!=0)
+                        {
+							listobj.Add(objs);
+						}
+						//string gatepassquery = " select max(gate.gatepasstype)as gatepasstype,sum(mat.quantity)as quantity,max(gate.approvedon) as issuedon,max(emp.name) as requestername,max(emp1.name) as approvername from wms.wms_gatepass gate  inner join wms.wms_gatepassmaterial mat on mat.gatepassid = gate.gatepassid  left join wms.employee emp on emp.employeeno = gate.requestedby left join wms.employee emp1 on emp1.employeeno = gate.approvedby where mat.materialid = '" + obj.materialid + "' and gate.approvedon != null and gate.approverstatus!=null";
+						string gatepassquery = "select max(gate.gatepasstype)as gatepasstype,sum(wmissue.issuedqty)as quantity,max(gate.approvedon) as issuedon,max(emp.name) as requestername,max(emp1.name) as approvername from wms.wms_gatepass gate  inner join wms.wms_gatepassmaterial mat on mat.gatepassid = gate.gatepassid  left join wms.employee emp on emp.employeeno = gate.requestedby left join wms.employee emp1 on emp1.employeeno = gate.approvedby join wms.wms_materialissue wmissue  on mat.gatepassmaterialid = wmissue.gatepassmaterialid where mat.materialid = '" + matdata.materialid + "' and gate.approvedon != null and gate.approverstatus != null";
+						var data2 = pgsql.QuerySingleOrDefault<ReqMatDetails>(
+					   gatepassquery, null, commandType: CommandType.Text);
+						objs = new ReqMatDetails();
+						if (data2.quantity != 0)
+						{
+							objs.quantity = data2.quantity;
+							objs.type = data2.gatepasstype;
+							objs.requestername = data2.requestername;
+							objs.issuedon = data1.issuedon;
+							objs.details = matdata.jobname;
+							objs.approvername = data1.approvername;
+							objs.acknowledge = data1.requestername;
+							listobj.Add(objs);
+						}
 
+					}
 					return listobj;
 
 				}
@@ -1180,7 +1193,7 @@ namespace WMS.DAL
 						emailmodel.ToEmailId = "shashikala.k@in.yokogawa.com";
 						emailmodel.FrmEmailId = "shashikala.k@in.yokogawa.com";
 						EmailUtilities emailobj = new EmailUtilities();
-						//emailobj.sendEmail(emailmodel, 2);
+						emailobj.sendEmail(emailmodel, 2);
 					}
 					//}
 					return (Convert.ToString(inwardid));
@@ -1372,7 +1385,7 @@ namespace WMS.DAL
 							emailmodel.FrmEmailId = "shashikala.k@in.yokogawa.com";
 							emailmodel.CC = "sushma.patil@in.yokogawa.com";
 							EmailUtilities emailobj = new EmailUtilities();
-							//emailobj.sendEmail(emailmodel, 4);
+							emailobj.sendEmail(emailmodel, 4);
 						}
 					}
 					//}
@@ -1678,7 +1691,7 @@ namespace WMS.DAL
 						emailmodel.ToEmailId = "shashikala.k@in.yokogawa.com";
 						emailmodel.FrmEmailId = "shashikala.k@in.yokogawa.com";
 						EmailUtilities emailobj = new EmailUtilities();
-						//emailobj.sendEmail(emailmodel, 7);
+						emailobj.sendEmail(emailmodel, 7);
 					}
 				}
 				return (Convert.ToInt32(result));
@@ -1900,7 +1913,7 @@ namespace WMS.DAL
 							emailmodel.ToEmailId = "shashikala.k@in.yokogawa.com";
 							emailmodel.FrmEmailId = "shashikala.k@in.yokogawa.com";
 							EmailUtilities emailobj = new EmailUtilities();
-							//emailobj.sendEmail(emailmodel, 5);
+							emailobj.sendEmail(emailmodel, 5);
 						}
 						//if (result != 0)
 						//{
@@ -2163,7 +2176,7 @@ namespace WMS.DAL
 							emailmodel.ToEmailId = "shashikala.k@in.yokogawa.com";
 							emailmodel.FrmEmailId = "shashikala.k@in.yokogawa.com";
 							EmailUtilities emailobj = new EmailUtilities();
-							//emailobj.sendEmail(emailmodel, 8);
+							emailobj.sendEmail(emailmodel, 8);
 						}
 						else if (dataobj.gatepasstype == "Non Returnable")
 						{
@@ -2199,7 +2212,7 @@ namespace WMS.DAL
 							emailmodel.ToEmailId = "shashikala.k@in.yokogawa.com";
 							emailmodel.FrmEmailId = "shashikala.k@in.yokogawa.com";
 							EmailUtilities emailobj = new EmailUtilities();
-							//emailobj.sendEmail(emailmodel, 9);
+							emailobj.sendEmail(emailmodel, 9);
 						}
 						
 
@@ -4052,6 +4065,7 @@ namespace WMS.DAL
 					string date = dt.ToString("yyyy-MM-dd");
 					string query = WMSResource.getsecurityreceivedlist;
 					query = query + " where sl.invoicedate <= '" + date + " 23:59:59' and sl.invoicedate >= '" + date + " 00:00:00'";
+				//	query = query + " group by sl.pono, asno.asn ";
 					await pgsql.OpenAsync();
 					return await pgsql.QueryAsync<SecurityInwardreceivedModel>(
 					   query, null, commandType: CommandType.Text);
@@ -4124,7 +4138,7 @@ namespace WMS.DAL
 								emailmodel.ToEmailId = "shashikala.k@in.yokogawa.com";
 								emailmodel.FrmEmailId = "shashikala.k@in.yokogawa.com";
 								EmailUtilities emailobj = new EmailUtilities();
-								//emailobj.sendEmail(emailmodel, 3);
+								emailobj.sendEmail(emailmodel, 3);
 							}
 
 						}
