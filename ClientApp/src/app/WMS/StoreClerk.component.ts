@@ -456,11 +456,15 @@ export class StoreClerkComponent implements OnInit {
           if (data != null) {
             this.wmsService.verifythreewaymatch(this.PoDetails.pono).subscribe(info => {
               this.spinner.hide();
-              if (info != null)
-                //this.grnnumber = info.grnnumber;
-              //this.scanBarcode();
-              this.resetpage();
-              //this.grnnumber = data;
+
+              if (info != null) {
+                this.resetpage();
+                this.messageService.add({ severity: 'success', summary: 'Success Message', detail: 'Goods received' });
+              }
+              else {
+                this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Something went wrong while creating GRN' });
+              }
+               
             })
           }
           if (data == null) {
@@ -469,7 +473,7 @@ export class StoreClerkComponent implements OnInit {
           }
 
           if (data) {
-            this.messageService.add({ severity: 'success', summary: 'Success Message', detail: 'Goods received' });
+           
             
             this.showQtyUpdateDialog = false;
             this.disGrnBtn = true;

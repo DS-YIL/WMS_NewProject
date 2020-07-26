@@ -160,11 +160,11 @@ export class GatePassoutwardComponent implements OnInit {
   }
 
   onRowSelect(event) {
-    alert("Selected");
+
   }
 
   onRowUnselect(event) {
-    alert("unSelected");
+   
   }
  
 
@@ -172,11 +172,13 @@ export class GatePassoutwardComponent implements OnInit {
 
   //get gatepass list
   getGatePassList() {
+    debugger;
     this.gatepassModelList = [];
     this.gatepasslist = [];
     if (this.nonreturn) {
       this.wmsService.nonreturngetGatePassList("2").subscribe(data => {
         this.totalGatePassList = data;
+        this.totalGatePassList = this.totalGatePassList.filter(li => li.outwarddate == null);
         this.gatepasslist = [];
         this.gatepasslist = this.totalGatePassList;
         this.gatepassModelList = [];
@@ -186,7 +188,14 @@ export class GatePassoutwardComponent implements OnInit {
     }
     else if (this.returnable) {
       this.wmsService.nonreturngetGatePassList("1").subscribe(data => {
+        debugger;
         this.totalGatePassList = data;
+        if (this.isinward) {
+          this.totalGatePassList = this.totalGatePassList.filter(li => li.outwarddate != null && li.inwarddate == null);
+        }
+        else {
+          this.totalGatePassList = this.totalGatePassList.filter(li => li.outwarddate == null);
+        }
         this.gatepasslist = [];
         this.gatepasslist = this.totalGatePassList;
         this.gatepassModelList = [];
@@ -201,6 +210,10 @@ export class GatePassoutwardComponent implements OnInit {
     debugger;
     var senddata = this.selectedmats;
     this.selectedmdata = [];
+    if (isNullOrUndefined(this.outindate)) {
+      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'please select date.' });
+      return;
+    }
     senddata.forEach(item => {
       let mdata = new outwardmaterialistModel();
       mdata.gatepassmaterialid = item.gatepassmaterialid;
@@ -218,7 +231,14 @@ export class GatePassoutwardComponent implements OnInit {
       this.selectedmdata.push(mdata);
     })
     this.wmsService.updateoutinward(this.selectedmdata).subscribe(data => {
-      alert("saved");
+      if (this.isinward) {
+        this.messageService.add({ severity: 'success', summary: 'Success Message', detail: 'inwarded successfully.' });
+      }
+      else if (this.isoutward) {
+        this.messageService.add({ severity: 'success', summary: 'Success Message', detail: 'outwarded successfully.' });
+      }
+      this.resetpage();
+      
     })
 
   }

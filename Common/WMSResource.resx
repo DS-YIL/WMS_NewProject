@@ -728,7 +728,7 @@ from wms.wms_securityinward sl
 where sl.grnnumber is null or sl.onhold = True 
 order by sl.inwmasterid desc</value>
   </data>
-   <data name="getgrnlistdata" xml:space="preserve">
+  <data name="getgrnlistdata" xml:space="preserve">
     <value>select MAX(stinw.inwardid) as value,sinw.grnnumber as text,(select suppliername from wms.wms_polist where pono = Max(sinw.pono) limit 1) as supplier 
 from wms.wms_storeinward stinw
 left outer join wms.wms_securityinward sinw on stinw.inwmasterid = sinw.inwmasterid 
@@ -744,13 +744,16 @@ group by stinw.inwmasterid,sinw.grnnumber</value>
   <data name="getnonreturnablegatepassdata" xml:space="preserve">
     <value>select matis.gatepassmaterialid,matis.itemid,matis.itemissueddate,ygs.materialdescription,emp.name,
 matgt.gatepassid,matgt.materialid,matgt.materialcost,matgt.quantity,
-gt.gatepasstype,gt.vendorname,gt.requestedby,gt.requestedon
+gt.gatepasstype,gt.vendorname,gt.requestedby,gt.requestedon,
+matgt.outwarddate,emp1.name as outwardedby,matgt.outwardremarks,matgt.inwarddate,emp2.name as inwardedby,matgt.inwardremarks
 from wms.wms_materialissue matis
 left outer join wms.wms_gatepassmaterial matgt on matgt.gatepassmaterialid = matis.gatepassmaterialid
 left outer join wms.wms_gatepass gt on gt.gatepassid = matgt.gatepassid
 left join wms.employee emp on emp.employeeno=gt.requestedby
+left join wms.employee emp1 on emp1.employeeno=matgt.outwardedby
+left join wms.employee emp2 on emp2.employeeno=matgt.inwardedby
 left join wms."MaterialMasterYGS" ygs on ygs.material=matgt.materialid
-where matis.gatepassmaterialid  is not null</value>
+where matis.gatepassmaterialid  is not null and matgt.returneddate is null</value>
   </data>
   <data name="getstocktype" xml:space="preserve">
     <value>select stocktype from wms.stocklocation where locationid='#locationid' and location='#locationname' and storeid=#stid and rackid=#rkid and binid=#biid limit 1</value>

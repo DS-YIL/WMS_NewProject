@@ -378,6 +378,13 @@ public bool onhold { get; set; }
 		public int categoryid { get; set; }
 		public string fmapprovedstatus { get; set; }
 
+		public DateTime outwarddate { get; set; }
+		public string outwardedby { get; set; }
+		public string outwardremarks { get; set; }
+		public DateTime inwarddate { get; set; }
+		public string inwardedby { get; set; }
+		public string inwardremarks { get; set; }
+
 	}
 	public class materialistModel
 	{
