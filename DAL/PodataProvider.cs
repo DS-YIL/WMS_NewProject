@@ -5229,6 +5229,7 @@ namespace WMS.DAL
 				pgsql.Open();
 				string query = WMSResource.Getreservelist;
 				string updatequery = string.Empty;
+				string updatedon = WMSResource.updatedon;
 				 _listobj = pgsql.Query<ReserveMaterialModel>(
 				   query, null, commandType: CommandType.Text).ToList();
 				if(_listobj.Count!=0)
@@ -5237,11 +5238,16 @@ namespace WMS.DAL
 					{
 						var dateAndTime = DateTime.Now;
 						var date = dateAndTime.Date;
-						var reservedate = items.reservedon.Date;
+						var reservedate = items.reserveupto.Date;
 						if (reservedate == date)
 						{
 							updatequery=WMSResource.updatetostockreserveqty.Replace("@reservedqty",Convert.ToString(items.reservedqty)).Replace("@itemid", Convert.ToString(items.itemid));
 							 result = pgsql.Execute(updatequery, new
+							{
+
+							});
+							updatedon = WMSResource.updatedon;
+							result = pgsql.Execute(updatedon, new
 							{
 
 							});

@@ -1236,6 +1236,15 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to update wms.wms_materialreserve set releasedon=current_timestamp.
+        /// </summary>
+        public static string updatedon {
+            get {
+                return ResourceManager.GetString("updatedon", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to update wms.wms_gatepass set gatepasstype=@gatepasstype,status=@status,referenceno=@referenceno,vehicleno=@vehicleno,requestedby=@requestedby,vendorname=@vendorname,reasonforgatepass=@reasonforgatepass where gatepassid=#gatepassid.
         /// </summary>
         public static string updategatepass {
