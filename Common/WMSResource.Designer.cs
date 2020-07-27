@@ -728,7 +728,7 @@ namespace WMS.Common {
         /// <summary>
         ///   Looks up a localized string similar to select * from wms.wms_materialreserve reser
         ///inner join wms.employee emp on emp.employeeno=reser.reservedby
-        ///where reserveupto between current_date and current_date  + interval &apos;3 day&apos;.
+        ///where reserveupto between current_date and current_date  + interval &apos;3 day&apos; and releasedon is null.
         /// </summary>
         public static string Getreservelist {
             get {
@@ -1236,7 +1236,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to update wms.wms_materialreserve set releasedon=current_timestamp.
+        ///   Looks up a localized string similar to update wms.wms_materialreserve set releasedon=current_timestamp where reserveformaterialid=@reserveformaterialid.
         /// </summary>
         public static string updatedon {
             get {
@@ -1356,7 +1356,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to update wms.wms_stock set availableqty=@reservedqty where itemid=@itemid.
+        ///   Looks up a localized string similar to update wms.wms_stock set availableqty=availableqty+@reservedqty where itemid=@itemid.
         /// </summary>
         public static string updatetostockreserveqty {
             get {

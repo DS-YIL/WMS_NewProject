@@ -5246,7 +5246,7 @@ namespace WMS.DAL
 							{
 
 							});
-							updatedon = WMSResource.updatedon;
+							updatedon = WMSResource.updatedon.Replace("@reserveformaterialid", Convert.ToString(items.reserveformaterialid));
 							result = pgsql.Execute(updatedon, new
 							{
 
