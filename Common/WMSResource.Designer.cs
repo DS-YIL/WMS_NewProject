@@ -726,6 +726,17 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to select * from wms.wms_materialreserve reser
+        ///inner join wms.employee emp on emp.employeeno=reser.reservedby
+        ///where reserveupto between current_date and current_date  + interval &apos;3 day&apos;.
+        /// </summary>
+        public static string Getreservelist {
+            get {
+                return ResourceManager.GetString("Getreservelist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to select mmy.material, mmy.materialdescription,sum(st.availableqty) as availableqty,mmy.safteystock as safteystock ,mmy.minorderqty as minorderqty
         ///from wms.&quot;MaterialMasterYGS&quot; mmy  join wms.wms_stock st on st.materialid =mmy.material where st.availableqty &lt; mmy.safteystock group by mmy.material.
         /// </summary>

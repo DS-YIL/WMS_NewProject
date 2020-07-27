@@ -608,6 +608,7 @@ public bool onhold { get; set; }
 		public string ackremarks { get; set; }
 		public DateTime reserveupto { get; set; }
 		public string projectname { get; set; }
+		public string email { get; set; }
 	}
 		public class SecurityInwardreceivedModel
 	{

@@ -5215,5 +5215,33 @@ namespace WMS.DAL
 
 			}
 		}
+
+		public int UpdateMaterialReserve()
+		{
+			int result = 0;
+			List<ReserveMaterialModel> _listobj = new List<ReserveMaterialModel>();
+			EmailUtilities emailutil = new EmailUtilities();
+			EmailModel emailobj = new EmailModel();
+			emailobj.FrmEmailId = "shashikala.k@in.yokogawa.com";
+			emailobj.CC = "sushma.patil@in.yokogawa.com";
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				pgsql.Open();
+				string query = WMSResource.Getreservelist;
+				 _listobj = pgsql.QueryFirstOrDefault<List<ReserveMaterialModel>>(
+				   query, null, commandType: CommandType.Text);
+				if(_listobj.Count!=0)
+				{
+					foreach(var item in _listobj)
+					{
+						if(item.reservedon==System.DateTime.Now)
+						{
+							emailobj.ToEmailId=item.
+						}
+					}
+				}
+			}
+			return result;
+		}
 	}
 }
