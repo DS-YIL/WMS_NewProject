@@ -68,6 +68,11 @@ namespace WMS.Common
 				mailMessage.Subject = "Gatepass materials for Non-returnable - Jobcode:" + emlSndngList.jobcode;
 				subbody = mailMessage.Subject;
 			}
+			else if (subjecttype == 10)
+			{
+				mailMessage.Subject = "Reserve material" + emlSndngList.jobcode;
+				subbody = mailMessage.Subject;
+			}
 
 
 			if (!string.IsNullOrEmpty(emlSndngList.CC))
