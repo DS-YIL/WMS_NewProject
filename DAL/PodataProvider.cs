@@ -5239,6 +5239,14 @@ namespace WMS.DAL
 							emailobj.ToEmailId = item.email;
 							emailutil.sendEmail(emailobj,1);
 						}
+						else if(item.reservedon==System.DateTime.Now.AddDays(1))
+						{
+
+						}
+						else if (item.reservedon == System.DateTime.Now.AddDays(2))
+						{
+
+						}
 					}
 				}
 			}

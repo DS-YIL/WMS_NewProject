@@ -584,7 +584,11 @@ namespace WMS.Controllers
 		{
 			return this._poService.updatematmovement(obj);
 		}
-
+		[HttpGet("UpdateMaterialReserve")]
+		public int UpdateMaterialReserve()
+		{
+			return  this._poService.UpdateMaterialReserve();
+		}
 		//[HttpPost("securitysendemail")]
 		//public EmailModel sendemail(EmailModel obj)
 		//{

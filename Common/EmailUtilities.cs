@@ -70,7 +70,7 @@ namespace WMS.Common
 			}
 			else if (subjecttype == 10)
 			{
-				mailMessage.Subject = "Reserve material" + emlSndngList.jobcode;
+				mailMessage.Subject = "Reserve material";
 				subbody = mailMessage.Subject;
 			}
 
