@@ -5226,48 +5226,64 @@ namespace WMS.DAL
 			emailobj.CC = "sushma.patil@in.yokogawa.com";
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
-				pgsql.Open();
-				string query = WMSResource.Getreservelist;
-				string updatequery = string.Empty;
-				string updatedon = WMSResource.updatedon;
-				 _listobj = pgsql.Query<ReserveMaterialModel>(
-				   query, null, commandType: CommandType.Text).ToList();
-				if(_listobj.Count!=0)
-				{
-					foreach(var items in _listobj)
+				try {
+					pgsql.Open();
+					string query = WMSResource.Getreservelist;
+					string updatequery = string.Empty;
+					string updatedon = WMSResource.updatedon;
+					_listobj = pgsql.Query<ReserveMaterialModel>(
+					  query, null, commandType: CommandType.Text).ToList();
+					if (_listobj.Count != 0)
 					{
-						var dateAndTime = DateTime.Now;
-						var date = dateAndTime.Date;
-						var reservedate = items.reserveupto.Date;
-						if (reservedate == date)
+						foreach (var items in _listobj)
 						{
-							updatequery=WMSResource.updatetostockreserveqty.Replace("@reservedqty",Convert.ToString(items.reservedqty)).Replace("@itemid", Convert.ToString(items.itemid));
-							 result = pgsql.Execute(updatequery, new
+							var dateAndTime = DateTime.Now;
+							var date = dateAndTime.Date;
+							var reservedate = items.reserveupto.Date;
+							if (reservedate == date)
 							{
+								updatequery = WMSResource.updatetostockreserveqty.Replace("@reservedqty", Convert.ToString(items.reservedqty)).Replace("@itemid", Convert.ToString(items.itemid));
+								result = pgsql.Execute(updatequery, new
+								{
 
-							});
-							updatedon = WMSResource.updatedon.Replace("@reserveformaterialid", Convert.ToString(items.reserveformaterialid));
-							result = pgsql.Execute(updatedon, new
+								});
+								updatedon = WMSResource.updatedon.Replace("@reserveformaterialid", Convert.ToString(items.reserveformaterialid));
+								result = pgsql.Execute(updatedon, new
+								{
+
+								});
+								emailobj.ToEmailId = items.email;
+								emailutil.sendEmail(emailobj, 10);
+							}
+							else if (reservedate == date.AddDays(1))
 							{
-
-							});
-							emailobj.ToEmailId = items.email;
-							emailutil.sendEmail(emailobj,10);
-						}
-						else if(reservedate == date.AddDays(1))
-						{
-							emailobj.ToEmailId = items.email;
-							emailutil.sendEmail(emailobj, 11);
-						}
-						else if (reservedate == date.AddDays(2))
-						{
-							emailobj.ToEmailId = items.email;
-							emailutil.sendEmail(emailobj, 12);
+								emailobj.ToEmailId = items.email;
+								emailutil.sendEmail(emailobj, 11);
+							}
+							else if (reservedate == date.AddDays(2))
+							{
+								emailobj.ToEmailId = items.email;
+								emailutil.sendEmail(emailobj, 12);
+							}
 						}
 					}
 				}
-			}
+				catch(Exception ex)
+				{
+					
+					log.ErrorMessage("PODataProvider", "UpdateMaterialReserve", ex.StackTrace.ToString());
+					return 0;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+			
+				}
+
 			return result;
+			
+			
 		}
 	}
 }
