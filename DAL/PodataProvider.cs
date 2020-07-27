@@ -5228,24 +5228,35 @@ namespace WMS.DAL
 			{
 				pgsql.Open();
 				string query = WMSResource.Getreservelist;
-				 _listobj = pgsql.QueryFirstOrDefault<List<ReserveMaterialModel>>(
-				   query, null, commandType: CommandType.Text);
+				string updatequery = string.Empty;
+				 _listobj = pgsql.Query<ReserveMaterialModel>(
+				   query, null, commandType: CommandType.Text).ToList();
 				if(_listobj.Count!=0)
 				{
-					foreach(var item in _listobj)
+					foreach(var items in _listobj)
 					{
-						if(item.reservedon==System.DateTime.Now)
+						var dateAndTime = DateTime.Now;
+						var date = dateAndTime.Date;
+						var reservedate = items.reservedon.Date;
+						if (reservedate == date)
 						{
-							emailobj.ToEmailId = item.email;
-							emailutil.sendEmail(emailobj,1);
-						}
-						else if(item.reservedon==System.DateTime.Now.AddDays(1))
-						{
+							updatequery=WMSResource.updatetostockreserveqty.Replace("@reservedqty",Convert.ToString(items.reservedqty)).Replace("@itemid", Convert.ToString(items.itemid));
+							 result = pgsql.Execute(updatequery, new
+							{
 
+							});
+							emailobj.ToEmailId = items.email;
+							emailutil.sendEmail(emailobj,10);
 						}
-						else if (item.reservedon == System.DateTime.Now.AddDays(2))
+						else if(reservedate == date.AddDays(1))
 						{
-
+							emailobj.ToEmailId = items.email;
+							emailutil.sendEmail(emailobj, 11);
+						}
+						else if (reservedate == date.AddDays(2))
+						{
+							emailobj.ToEmailId = items.email;
+							emailutil.sendEmail(emailobj, 12);
 						}
 					}
 				}

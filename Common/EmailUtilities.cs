@@ -73,7 +73,16 @@ namespace WMS.Common
 				mailMessage.Subject = "Reserve material";
 				subbody = mailMessage.Subject;
 			}
-
+			else if (subjecttype == 11)
+			{
+				mailMessage.Subject = "Reserve material";
+				subbody = mailMessage.Subject;
+			}
+			else if (subjecttype == 12)
+			{
+				mailMessage.Subject = "Reserve material";
+				subbody = mailMessage.Subject;
+			}
 
 			if (!string.IsNullOrEmpty(emlSndngList.CC))
 				mailMessage.CC.Add(emlSndngList.CC);

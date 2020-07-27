@@ -1347,6 +1347,15 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to update wms.wms_stock set availableqty=@reservedqty where itemid=@itemid.
+        /// </summary>
+        public static string updatetostockreserveqty {
+            get {
+                return ResourceManager.GetString("updatetostockreserveqty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to select grnnumber from wms.wms_securityinward inw 
         ///inner join wms.wms_polist openpo on inw.pono=openpo.pono 
         ///where  inw.invoiceno=&apos;#invoiceno&apos; and openpo.pono=&apos;#pono&apos;.
