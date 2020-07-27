@@ -116,4 +116,9 @@ this.showdialog=true;
   Cancel() {
     this.AddDialog = false;
   }
+  returnqty() {
+    this.requestList;
+
+  }
+
 }
