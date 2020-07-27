@@ -5236,7 +5236,8 @@ namespace WMS.DAL
 					{
 						if(item.reservedon==System.DateTime.Now)
 						{
-							emailobj.ToEmailId=item.
+							emailobj.ToEmailId = item.email;
+							emailutil.sendEmail(emailobj,1);
 						}
 					}
 				}
