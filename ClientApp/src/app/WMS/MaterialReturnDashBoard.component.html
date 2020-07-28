@@ -1,0 +1,44 @@
+<div class="card" style="    min-height: 520px;border-radius: 10px;box-shadow: 5px 10px #888888;">
+  <div class="card-header text-center cardheadertext">
+    <span>
+      <i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;Material Issuer Dashboard
+    </span>
+  </div>
+  <div class="card-body" style="overflow-y:hidden;padding:0px;">
+    <div class="form-control" style="height:100%;">
+      <p-table #dt [value]="materialIssueList" [scrollable]="true"  scrollHeight="380px">
+        <ng-template pTemplate="header">
+          <tr class="mprltbldata">
+            <th style="text-align:center;width:70px">Sl.No.</th>
+            <th style="text-align:center;width:100px">Request Id</th>
+            <th style="text-align:center">Project Name</th>
+            <th style="text-align: center;width:150px">Requested On</th>
+            <th style="text-align:center;width:300px">Requester Name</th>
+
+          </tr>
+          <tr>
+            <th></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'requestforissueid', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'projectname', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'requesteddate', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'name', 'contains')"></th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
+          <tr>
+            <td class="ptable-cell" style="text-align:right;width:70px;">
+              {{ri+1}}
+            </td>
+            <td class="ptable-cell" style="text-align:center;width:100px;"><a *ngIf="rowData.requestid && rowData.pono" [routerLink]="['/WMS/MaterialIssue',rowData.requestid,rowData.pono]" routerLinkActive="active">{{rowData.requestid}}</a></td>
+            <td class="ptable-cell" style="text-align:left;">{{rowData.projectname}}</td>
+            <td class="ptable-cell" style="text-align:center;width:150px;">{{rowData.requesteddate  | date :  constants.dateFormat}}</td>
+            <td class="ptable-cell" style="text-align:left;width:300px;">{{rowData.name}}</td>
+
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+  </div>
+
+   

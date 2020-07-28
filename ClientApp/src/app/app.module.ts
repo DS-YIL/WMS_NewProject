@@ -68,6 +68,7 @@ import { SafetyStockComponent } from './WMS/SafetyStock.component';
 import { BinStatusReportComponent } from './WMS/BinStatusReport.component';
 import { StockTransferComponent } from './WMS/StockTransfer.component';
 import { GatePassoutwardComponent } from './WMS/Gatepassoutward.component';
+import { MaterialReturnDashBoardComponent } from './WMS/MaterialReturnDashBoard.component';
 ////pages
 import { LoginComponent } from './WMS/Login.component';
 import {HomeComponent} from './WMS/Home.component';
@@ -122,7 +123,8 @@ import { DatePipe } from '@angular/common'
     SafetyStockComponent,
     BinStatusReportComponent,
     StockTransferComponent,
-    GatePassoutwardComponent
+    GatePassoutwardComponent,
+    MaterialReturnDashBoardComponent
 
   ],
   imports: [
