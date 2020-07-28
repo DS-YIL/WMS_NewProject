@@ -51,3 +51,14 @@ export class searchList {
   name: string;
 }
 
+export class stockCardPrint {
+  pono: string;
+  projectdef: string;
+  jobname: string;
+  modelno: string;
+  description: string;
+  qty: any;
+  box: any;
+  date: Date;
+  checkedby: string;
+}

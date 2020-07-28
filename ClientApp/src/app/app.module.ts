@@ -69,6 +69,8 @@ import { BinStatusReportComponent } from './WMS/BinStatusReport.component';
 import { StockTransferComponent } from './WMS/StockTransfer.component';
 import { GatePassoutwardComponent } from './WMS/Gatepassoutward.component';
 import { MaterialReturnDashBoardComponent } from './WMS/MaterialReturnDashBoard.component';
+import { StoresReturnNotePrintComponent } from './WMS/StoresReturnNotePrint.component';
+import { StockCardPrintComponent } from './WMS/StockCardPrint.component';
 ////pages
 import { LoginComponent } from './WMS/Login.component';
 import {HomeComponent} from './WMS/Home.component';
@@ -124,7 +126,9 @@ import { DatePipe } from '@angular/common'
     BinStatusReportComponent,
     StockTransferComponent,
     GatePassoutwardComponent,
-    MaterialReturnDashBoardComponent
+    MaterialReturnDashBoardComponent,
+    StoresReturnNotePrintComponent,
+    StockCardPrintComponent
 
   ],
   imports: [

@@ -1,0 +1,100 @@
+<div id="printTemplate" style="margin-left:5px;margin-right:5px;">
+
+  <table class="col-sm-6 col-lg-6 col-md-6" border="1" style="margin-top:10px">
+    <thead>
+      <tr>
+        <td>
+          <div class="row printheader" style="margin: 0px; padding-top: 5px;">
+            <div class="col-lg-12 col-md-12 col-sm-12" style="text-align:center">
+              <span class="form-group" style="text-align:center"> <b>SALE ORDER STOCK CARD</b></span>
+            </div>
+            </div>
+        </td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <div class="printmain">
+            <div class="row" style="border-bottom: 1px solid;margin: 0px;padding-top: 5px;">
+              <div class="col-lg-3 col-md-3 col-sm-3"><b>PO No.</b></div>
+              <div class="col-lg-3 col-md-3 col-sm-3">
+              <span>{{stockprintmodel.pono}}</span>
+              </div>
+              <div class="col-lg-3 col-md-3 col-sm-3"><b>PROJECT DEFINITION:</b></div>
+              <div class="col-lg-3 col-md-3 col-sm-3">
+                <span>{{stockprintmodel.projectdef}}</span></div>
+            </div>
+            <div class="row" style="border-bottom: 1px solid;margin: 0px;padding-top: 5px;">
+              <div class="col-lg-3 col-md-3 col-sm-3 form-group">
+                <b>JOB NAME:</b>
+              </div>
+              <div class="col-lg-9 col-md-9 col-sm-9 form-group">
+                <span>{{stockprintmodel.jobname}}</span>
+            </div>
+            </div>
+            <div class="row" style="border-bottom: 1px solid;margin: 0px;padding-top: 5px;">
+              <div class="col-lg-3 col-md-3 col-sm-3 form-group">
+                <b>PART/MODEL No:</b>
+              </div>
+              <div class="col-lg-8 col-md-8 col-sm-8 form-group">
+                {{stockprintmodel.modelno}}
+              </div>
+            </div>
+            <div class="row" style="border-bottom: 1px solid;margin: 0px;padding-top: 5px;">
+              <div class="col-lg-3 col-md-3 col-sm-3 form-group">
+                <b>DESCRIPTION:</b>
+              </div>
+              <div class="col-lg-9 col-md-9 col-sm-9 form-group">
+                {{stockprintmodel.description}}
+              </div>
+            </div>
+            <div class="row" style="border-bottom: 1px solid;margin: 0px;padding-top: 5px;">
+              <div class="col-lg-3 col-md-3 col-sm-3 form-group">
+                <b>QTY:</b>
+              </div>
+              <div class="col-lg-3 col-md-3 col-sm-3 form-group">
+                {{stockprintmodel.qty}}
+              </div>
+              <div class="col-lg-3 col-md-3 col-sm-3 form-group">
+                <b>BOX</b>
+              </div>
+              <div class="col-lg-3 col-md-3 col-sm-3 form-group">
+                {{stockprintmodel.box}}
+              </div>
+              <div class="col-lg-2 col-md-2 col-sm-2 form-group">
+              </div>
+            </div>
+            <div class="row" style="border-bottom: 1px solid;margin: 0px;padding-top: 5px;">
+              <div class="col-lg-3 col-md-3 col-sm-3 form-group">
+                <b> DATE:</b>
+              </div>
+              <div class="col-lg-9 col-md-9 col-sm-9 form-group">
+                {{stockprintmodel.date | date :  constants.dateFormat}}
+              </div>
+            </div>
+            <div class="row" style="border-bottom: 1px solid;margin: 0px;padding-top: 5px;">
+              <div class="col-lg-3 col-md-3 col-sm-3 form-group">
+                <b>CHECKED BY:</b>
+              </div>
+              <div class="col-lg-8 col-md-8 col-sm-8 form-group">
+                {{stockprintmodel.checkedby}}
+              </div>
+            </div>
+            <div class="row" style="border-bottom: 1px solid;margin: 0px;padding-top: 5px;">
+              <div class="col-lg-12 col-md-12 col-sm-12 form-group">
+                <img src="assets/Yokogawa1.png" height="60" width="150" />
+              </div>
+            </div>
+          </div>
+  </td>
+  </tr>
+  </tbody>
+  </table>
+</div>
+<div style="text-align: center;margin-top:5px;bottom:0;position:fixed;margin-left:45%">
+  <button type="button" class="btn btn-primary" (click)="printStockCard()">{{prnttxt
+                }}</button>
+              </div>
+
+

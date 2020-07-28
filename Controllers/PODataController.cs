@@ -270,6 +270,13 @@ namespace WMS.Controllers
 		{
 			return this._poService.checkmaterialandqty(material, qty);
 		}
+
+		[HttpGet("getstockdetails")]
+		public stockCardPrint getstockdetails(string pono, string materialid)
+        {
+			return this._poService.getstockdetails(pono, materialid);
+
+		}
 		[HttpDelete("deletegatepassmaterial")]
 		public int deletematerial(int gatepassmaterialid)
 		{
@@ -593,11 +600,6 @@ namespace WMS.Controllers
 		public int UpdateReturnqty([FromBody] List<IssueRequestModel> obj)
 		{
 			return this._poService.UpdateReturnqty(obj);
-		}
-		[HttpPost("UpdateReturnmaterialTostock")]
-		public int UpdateReturnmaterialTostock([FromBody] List<IssueRequestModel> obj)
-		{
-			return this._poService.UpdateReturnmaterialTostock(obj);
 		}
 		//[HttpPost("securitysendemail")]
 		//public EmailModel sendemail(EmailModel obj)

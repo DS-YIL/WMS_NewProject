@@ -194,6 +194,21 @@ export class WarehouseInchargeComponent implements OnInit {
           this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Enter quantity' });
           return;
         }
+        if (this.stock.length > 1) {
+          for (var data = 0; data < this.stock.length - 1; data++) {
+            if (this.stock[data].locatorid == this.stock[this.stock.length - 1].locatorid) {
+              if (this.stock[data].rackid == this.stock[this.stock.length - 1].rackid) {
+                if (this.stock[data].binid == this.stock[this.stock.length - 1].binid) {
+                  this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Location already exists' });
+                  this.stock[this.stock.length - 1].binid = 0;
+                  this.stock[this.stock.length - 1].rackid=0;
+                  this.stock[this.stock.length - 1].locatorid = 0;
+                  return;
+                }
+              }
+            }
+          }
+        }
         var stockdata = new StockModel();
         stockdata.locatorid = this.PoDetails.storeid;
         stockdata.rackid = this.PoDetails.rackid;
@@ -223,6 +238,9 @@ export class WarehouseInchargeComponent implements OnInit {
           if (this.stock[data].rackid == this.stock[this.stock.length - 1].rackid) {
             if (this.stock[data].binid == this.stock[this.stock.length - 1].binid) {
               this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Location already exists' });
+              this.stock[this.stock.length - 1].binid = 0;
+              this.stock[this.stock.length - 1].rackid = 0;
+              this.stock[this.stock.length - 1].locatorid = 0;
               return;
             }
           }
@@ -583,6 +601,21 @@ this.updateRowGroupMetaData();
       if (this.stock[this.stock.length - 1].qty == 0 || this.stock[this.stock.length - 1].qty == null) {
         this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Enter quantity' });
         return;
+      }
+      if (this.stock.length > 1) {
+        for (var data = 0; data < this.stock.length - 1; data++) {
+          if (this.stock[data].locatorid == this.stock[this.stock.length - 1].locatorid) {
+            if (this.stock[data].rackid == this.stock[this.stock.length - 1].rackid) {
+              if (this.stock[data].binid == this.stock[this.stock.length - 1].binid) {
+                this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Location already exists' });
+                this.stock[this.stock.length - 1].binid = 0;
+                this.stock[this.stock.length - 1].rackid = 0;
+                this.stock[this.stock.length - 1].locatorid = 0;
+                return;
+              }
+            }
+          }
+        }
       }
     }
     this.StockModelList = [];
