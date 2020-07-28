@@ -494,7 +494,7 @@ left join wms.wms_project pro on pro.pono=openpo.pono
 where sk.availableqty!=0</value>
   </data>
   <data name="issuedqtydetails" xml:space="preserve">
-    <value>select max(req.requestedquantity)as requestedquantity, max(req.materialid)as materialid, max(req.requestid)as requestid,req.requestforissueid,sum(issuedqty)as issuedquantity
+    <value>select max(iss.approvedstatus)as approvedstatus,max(req.requestedquantity)as requestedquantity, max(req.materialid)as materialid, max(req.requestid)as requestid,req.requestforissueid,sum(issuedqty)as issuedquantity
  from wms.wms_materialrequest  req
  left join wms.wms_materialissue iss on req.requestforissueid=iss.requestforissueid
  where req.requestid=#requestid

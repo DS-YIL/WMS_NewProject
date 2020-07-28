@@ -983,7 +983,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select max(req.requestedquantity)as requestedquantity, max(req.materialid)as materialid, max(req.requestid)as requestid,req.requestforissueid,sum(issuedqty)as issuedquantity
+        ///   Looks up a localized string similar to select max(iss.approvedstatus)as approvedstatus,max(req.requestedquantity)as requestedquantity, max(req.materialid)as materialid, max(req.requestid)as requestid,req.requestforissueid,sum(issuedqty)as issuedquantity
         /// from wms.wms_materialrequest  req
         /// left join wms.wms_materialissue iss on req.requestforissueid=iss.requestforissueid
         /// where req.requestid=#requestid

@@ -24,7 +24,7 @@ export class MaterialRequestViewComponent implements OnInit {
   public displayItemRequestDialog; RequestDetailsSubmitted; showAck; btnDisable: boolean = false;
   public materialRequestDetails: materialRequestDetails;
   public pono: string;
-
+  public rowindex: number;
   ngOnInit() {
     if (localStorage.getItem("Employee"))
       this.employee = JSON.parse(localStorage.getItem("Employee"));
@@ -102,7 +102,8 @@ export class MaterialRequestViewComponent implements OnInit {
   backtoDashboard() {
     this.router.navigateByUrl("/WMS/Dashboard");
   }
-  showmaterialdetails(requestid) {
+  showmaterialdetails(requestid, rowindex) {
+    this.rowindex = rowindex
     this.AddDialog = true;
 this.showdialog=true;
     this.wmsService.getmaterialissueList(requestid).subscribe(data => {
@@ -117,11 +118,32 @@ this.showdialog=true;
     this.AddDialog = false;
   }
   returnqty() {
-    this.requestList;
-    this.wmsService.UpdateReturnqty(this.requestList).subscribe(data => {
-
+   
+    //this.requestList;
+    //var totalreturnqty = 0;
+    //this.materiallistData.forEach(item => {
+    //  if (item.returnqty != 0) {
+    //    totalreturnqty = totalreturnqty + (item.issuedquantity);
+    //    this.requestList[this.rowindex].returnqty = totalreturnqty;
+    //  }
+    //})
+      this.wmsService.UpdateReturnqty(this.materiallistData).subscribe(data => {
+        if (data == 1) {
+          this.btnDisable = true;
+          this.messageService.add({ severity: 'sucess', summary: 'suceess Message', detail: 'Material Returned' });
+        }
     })
 
+  }
+  returnQtyChange(issuesqty,returnqty) {
+    if (returnqty > issuesqty) {
+      this.btnDisable = true;
+      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Return Quantity should be lessthan or equal to Issued quantity' });
+
+    }
+    else {
+      this.btnDisable = false;
+    }
   }
 
 }
