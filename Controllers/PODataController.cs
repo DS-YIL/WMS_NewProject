@@ -601,6 +601,11 @@ namespace WMS.Controllers
 		{
 			return this._poService.UpdateReturnqty(obj);
 		}
+		[HttpPost("UpdateReturnmaterialTostock")]
+		public int UpdateReturnmaterialTostock([FromBody] List<IssueRequestModel> obj)
+		{
+			return this._poService.UpdateReturnmaterialTostock(obj);
+		}
 		//[HttpPost("securitysendemail")]
 		//public EmailModel sendemail(EmailModel obj)
 		//{

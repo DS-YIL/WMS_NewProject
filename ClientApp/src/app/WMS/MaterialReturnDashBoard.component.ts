@@ -17,6 +17,7 @@ export class MaterialReturnDashBoardComponent implements OnInit {
   constructor(private formBuilder: FormBuilder, private messageService: MessageService, private wmsService: wmsService, private route: ActivatedRoute, private router: Router, public constants: constants, private spinner: NgxSpinnerService) { }
   AddDialog: boolean;
   showdialog: boolean;
+  btnDisable: boolean = false;
   public materiallistData: Array<any> = [];
   public formName: string;
   public txtName: string;
@@ -57,9 +58,11 @@ export class MaterialReturnDashBoardComponent implements OnInit {
     this.showdialog = true;
     this.wmsService.getmaterialissueList(requestid).subscribe(data => {
       this.materiallistData = data;
-
-      if (data != null) {
-
+      if (this.materiallistData[0].returnqtyaccept == 'Accepted') {
+        this.btnDisable = true;
+      }
+      else {
+        this.btnDisable = false;
       }
     });
   }

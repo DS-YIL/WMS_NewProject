@@ -995,10 +995,9 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select max(sk.itemid)as itemid,max(req.returnqty)as returnqty,max(sk.itemlocation)as itemlocation, max(iss.approvedstatus)as approvedstatus,max(req.requestedquantity)as requestedquantity, max(req.materialid)as materialid, max(req.requestid)as requestid,req.requestforissueid,sum(issuedqty)as issuedquantity
+        ///   Looks up a localized string similar to select max(iss.returnqtyaccept)as returnqtyaccept,max(sk.itemid)as itemid,max(req.returnqty)as returnqty,max(sk.itemlocation)as itemlocation, max(iss.approvedstatus)as approvedstatus,max(req.requestedquantity)as requestedquantity, max(req.materialid)as materialid, max(req.requestid)as requestid,req.requestforissueid,sum(issuedqty)as issuedquantity
         /// from wms.wms_materialrequest  req
-        /// left join wms.wms_materialissue iss on req.requestforissueid=iss.requestforissueid  left join wms.wms_stock sk on sk.itemid=iss.itemid
-        /// where req.requestid=#requestid [rest of string was truncated]&quot;;.
+        /// left join wms.wms_materialissue iss on req.requestforissueid=iss.requestforissueid  left join wms.wms_stock sk on sk.itemid= [rest of string was truncated]&quot;;.
         /// </summary>
         public static string issuedqtydetails {
             get {
@@ -1340,11 +1339,29 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to update wms.wms_stock set availableqty=availableqty+@availableqty where itemid=@itemid.
+        /// </summary>
+        public static string updatereturnmaterialToStock {
+            get {
+                return ResourceManager.GetString("updatereturnmaterialToStock", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to update wms.wms_materialrequest set requesttype=&apos;return&apos;,returnqty=@returnqty,returnon=current_timestamp where requestforissueid=@requestforissueid.
         /// </summary>
         public static string UpdateReturnqty {
             get {
                 return ResourceManager.GetString("UpdateReturnqty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to update wms.wms_materialissue set issuetype=&apos;return&apos;,returnqtyaccept=&apos;Accepted&apos; where requestforissueid=@requestforissueid.
+        /// </summary>
+        public static string updatereturnqtyByInvMngr {
+            get {
+                return ResourceManager.GetString("updatereturnqtyByInvMngr", resourceCulture);
             }
         }
         

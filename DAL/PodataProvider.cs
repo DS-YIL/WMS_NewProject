@@ -5371,6 +5371,17 @@ namespace WMS.DAL
 								});
 							}
 						}
+						if(result!=0)
+						{
+							string updatereturnqtytomaterialissue = WMSResource.updatereturnqtyByInvMngr.Replace("@requestforissueid",Convert.ToString(item.requestforissueid));
+							using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
+							{
+								result = DB.Execute(updatereturnqtytomaterialissue, new
+								{
+
+								});
+							}
+						}
 					}
 					catch (Exception ex)
 					{

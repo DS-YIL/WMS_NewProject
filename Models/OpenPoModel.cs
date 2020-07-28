@@ -321,6 +321,7 @@ public bool onhold { get; set; }
 		public int returnqty { get; set; }
 		public string requesttype { get; set; }
 		public DateTime returnon { get; set; }
+		public string returnqtyaccept { get; set; }
 
 	}
     public class sequencModel
