@@ -123,5 +123,6 @@ Task<string> updateonholdrow(updateonhold datamodel);
         Task<IEnumerable<gatepassModel>> NonreturnGetgatepassList(string type);
         int UpdateMaterialReserve();
         int UpdateReturnqty(List<IssueRequestModel> _listobj);
+        int UpdateReturnmaterialTostock(List<IssueRequestModel> model);
     }
 }

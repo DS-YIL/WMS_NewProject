@@ -5310,7 +5310,39 @@ namespace WMS.DAL
 					}
 					catch(Exception ex)
 					{
+						log.ErrorMessage("PODataProvider", "UpdateReturnqty", ex.StackTrace.ToString());
+						return 0;
+					}
+				}
+			}
+			return result;
+		}
 
+		public int UpdateReturnmaterialTostock(List<IssueRequestModel> model)
+		{
+			int result = 0;
+			if (model.Count != 0)
+			{
+				foreach (var item in model)
+				{
+					try
+					{
+						if (item.returnqty != 0)
+						{
+							string updatereturnqtytostock = WMSResource.updatereturnmaterialToStock.Replace("@availableqty",Convert.ToString(item.returnqty)).Replace("@itemid",Convert.ToString(item.itemid));
+							using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
+							{
+								result = DB.Execute(updatereturnqtytostock, new
+								{
+
+								});
+							}
+						}
+					}
+					catch (Exception ex)
+					{
+						log.ErrorMessage("PODataProvider", "UpdateReturnmaterialTostock", ex.StackTrace.ToString());
+						return 0;
 					}
 				}
 			}

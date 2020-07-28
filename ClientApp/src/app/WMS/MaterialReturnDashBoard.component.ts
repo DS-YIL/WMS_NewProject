@@ -63,4 +63,13 @@ export class MaterialReturnDashBoardComponent implements OnInit {
       }
     });
   }
+  ConfirmReturnmaterial() {
+    this.wmsService.UpdateReturnmaterialTostock(this.materiallistData).subscribe(data => {
+      this.AddDialog = false;
+      if (data == 1) {
+        this.messageService.add({ severity: 'success', summary: 'success Message', detail: 'Items updated to Store' });
+      }
+
+    })
+  }
 }

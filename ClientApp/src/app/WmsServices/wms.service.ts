@@ -158,6 +158,9 @@ export class wmsService {
   materialRequestUpdate(materialRequestList: any): Observable<any> {
     return this.http.post<any>(this.url + 'POData/updaterequestedqty/', materialRequestList, this.httpOptions);
   }
+  UpdateReturnmaterialTostock(materialRequestList: any): Observable<any> {
+    return this.http.post<any>(this.url + 'POData/UpdateReturnmaterialTostock/', materialRequestList, this.httpOptions);
+  }
   materialReserveUpdate(materialRequestList: any): Observable<any> {
     return this.http.post<any>(this.url + 'POData/insertreservematerial/', materialRequestList, this.httpOptions);
   }

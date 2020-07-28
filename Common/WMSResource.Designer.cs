@@ -1328,6 +1328,15 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to update wms.wms_stock set availableqty=availableqty+@availableqty where itemid=@itemid.
+        /// </summary>
+        public static string updatereturnmaterialToStock {
+            get {
+                return ResourceManager.GetString("updatereturnmaterialToStock", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to update wms.wms_materialrequest set requesttype=&apos;return&apos;,returnqty=@returnqty,returnon=current_timestamp where requestforissueid=@requestforissueid.
         /// </summary>
         public static string UpdateReturnqty {
