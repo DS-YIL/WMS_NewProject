@@ -462,13 +462,13 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select req.pono,req.requestid,req.requesteddate,req.requesterid,pro.projectname,emp.&quot;name&quot;
+        ///   Looks up a localized string similar to select req.pono,req.requestid,req.requesteddate,req.requesterid,pro.projectname,emp.&quot;name&quot;,max(req.requesttype)as requesttype,max(req.returnon)as returnon
         ///        from wms.wms_materialrequest req left join wms.wms_polist po on po.pono=req.pono 
         ///       left join wms.employee emp on req.requesterid=emp.employeeno 
         ///       left join wms.wms_pomaterials pomat on pomat.pono=po.pono
         ///       left join wms.wms_project pro on pro.pono=po.pono
         ///        --where req.approverid=&apos;#approverid&apos;
-        ///        group by req.requestid,req.requesteddate,req.requesterid,pro.projectname,emp.&quot;nam [rest of string was truncated]&quot;;.
+        ///        group by req.requ [rest of string was truncated]&quot;;.
         /// </summary>
         public static string GetListForMaterialRequestByapproverid {
             get {
@@ -983,11 +983,10 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select max(iss.approvedstatus)as approvedstatus,max(req.requestedquantity)as requestedquantity, max(req.materialid)as materialid, max(req.requestid)as requestid,req.requestforissueid,sum(issuedqty)as issuedquantity
+        ///   Looks up a localized string similar to select max(sk.itemid)as itemid,max(req.returnqty)as returnqty,max(sk.itemlocation)as itemlocation, max(iss.approvedstatus)as approvedstatus,max(req.requestedquantity)as requestedquantity, max(req.materialid)as materialid, max(req.requestid)as requestid,req.requestforissueid,sum(issuedqty)as issuedquantity
         /// from wms.wms_materialrequest  req
-        /// left join wms.wms_materialissue iss on req.requestforissueid=iss.requestforissueid
-        /// where req.requestid=#requestid
-        ///  group by req.requestforissueid,iss.materialissueid.
+        /// left join wms.wms_materialissue iss on req.requestforissueid=iss.requestforissueid  left join wms.wms_stock sk on sk.itemid=iss.itemid
+        /// where req.requestid=#requestid [rest of string was truncated]&quot;;.
         /// </summary>
         public static string issuedqtydetails {
             get {
@@ -1329,7 +1328,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to update wms.wms_materialrequest set requesttype=&apos;return&apos;,returnqty=@returnqty where requestforissueid=@requestforissueid.
+        ///   Looks up a localized string similar to update wms.wms_materialrequest set requesttype=&apos;return&apos;,returnqty=@returnqty,returnon=current_timestamp where requestforissueid=@requestforissueid.
         /// </summary>
         public static string UpdateReturnqty {
             get {

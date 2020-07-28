@@ -319,7 +319,8 @@ public bool onhold { get; set; }
 		public string jobname { get; set; }
 		public int materialqty { get; set; }
 		public int returnqty { get; set; }
-		public string returntype { get; set; }
+		public string requesttype { get; set; }
+		public DateTime returnon { get; set; }
 
 	}
     public class sequencModel
