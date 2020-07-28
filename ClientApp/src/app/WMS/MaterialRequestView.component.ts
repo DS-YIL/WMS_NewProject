@@ -118,6 +118,9 @@ this.showdialog=true;
   }
   returnqty() {
     this.requestList;
+    this.wmsService.UpdateReturnqty(this.requestList).subscribe(data => {
+
+    })
 
   }
 

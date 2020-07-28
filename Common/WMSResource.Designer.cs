@@ -1329,6 +1329,15 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to update wms.wms_materialrequest set requesttype=&apos;return&apos;,returnqty=@returnqty where requestforissueid=@requestforissueid.
+        /// </summary>
+        public static string UpdateReturnqty {
+            get {
+                return ResourceManager.GetString("UpdateReturnqty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to update wms.wms_sequencemaster set sequencenumber=@grnnextsequence where id=@id.
         /// </summary>
         public static string updateseqnumber {

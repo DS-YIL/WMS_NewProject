@@ -122,5 +122,6 @@ Task<string> updateonholdrow(updateonhold datamodel);
         Task<IEnumerable<ddlmodel>> getgrnlistforacceptanceputaway();
         Task<IEnumerable<gatepassModel>> NonreturnGetgatepassList(string type);
         int UpdateMaterialReserve();
+        int UpdateReturnqty(List<IssueRequestModel> _listobj);
     }
 }

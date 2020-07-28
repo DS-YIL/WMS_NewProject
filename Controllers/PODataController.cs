@@ -589,6 +589,11 @@ namespace WMS.Controllers
 		{
 			return  this._poService.UpdateMaterialReserve();
 		}
+		[HttpPost("UpdateReturnqty")]
+		public int UpdateReturnqty([FromBody] List<IssueRequestModel> obj)
+		{
+			return this._poService.UpdateReturnqty(obj);
+		}
 		//[HttpPost("securitysendemail")]
 		//public EmailModel sendemail(EmailModel obj)
 		//{
