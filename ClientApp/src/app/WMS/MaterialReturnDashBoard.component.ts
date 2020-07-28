@@ -15,7 +15,9 @@ import { MessageService } from 'primeng/api';
 export class MaterialReturnDashBoardComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder, private messageService: MessageService, private wmsService: wmsService, private route: ActivatedRoute, private router: Router, public constants: constants, private spinner: NgxSpinnerService) { }
-
+  AddDialog: boolean;
+  showdialog: boolean;
+  public materiallistData: Array<any> = [];
   public formName: string;
   public txtName: string;
   public dynamicData = new DynamicSearchResult();
@@ -45,7 +47,20 @@ export class MaterialReturnDashBoardComponent implements OnInit {
   getMaterialIssueList() {
     //this.employee.employeeno = "400095";
     this.wmsService.getMaterialIssueLlist(this.employee.employeeno).subscribe(data => {
-      this.materialIssueList = data;    
+      this.materialIssueList = data.filter(li=>li.requesttype=='return');
+     
+    });
+  }
+  showmaterialdetails(requestid) {
+    //this.rowindex = rowindex
+    this.AddDialog = true;
+    this.showdialog = true;
+    this.wmsService.getmaterialissueList(requestid).subscribe(data => {
+      this.materiallistData = data;
+
+      if (data != null) {
+
+      }
     });
   }
 }

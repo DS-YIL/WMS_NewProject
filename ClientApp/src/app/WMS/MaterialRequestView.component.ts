@@ -135,6 +135,7 @@ this.showdialog=true;
       this.wmsService.UpdateReturnqty(this.materiallistData).subscribe(data => {
         if (data == 1) {
           this.btnDisable = true;
+          this.AddDialog = false;
           this.messageService.add({ severity: 'sucess', summary: 'suceess Message', detail: 'Material Returned' });
         }
     })

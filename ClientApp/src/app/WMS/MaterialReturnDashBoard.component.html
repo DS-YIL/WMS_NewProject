@@ -1,18 +1,18 @@
 <div class="card" style="    min-height: 520px;border-radius: 10px;box-shadow: 5px 10px #888888;">
   <div class="card-header text-center cardheadertext">
     <span>
-      <i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;Material Issuer Dashboard
+      <i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;Material Return Dashboard
     </span>
   </div>
   <div class="card-body" style="overflow-y:hidden;padding:0px;">
     <div class="form-control" style="height:100%;">
-      <p-table #dt [value]="materialIssueList" [scrollable]="true"  scrollHeight="380px">
+      <p-table #dt [value]="materialIssueList" [scrollable]="true" scrollHeight="380px">
         <ng-template pTemplate="header">
           <tr class="mprltbldata">
             <th style="text-align:center;width:70px">Sl.No.</th>
             <th style="text-align:center;width:100px">Request Id</th>
             <th style="text-align:center">Project Name</th>
-            <th style="text-align: center;width:150px">Requested On</th>
+            <th style="text-align: center;width:150px">Returned On</th>
             <th style="text-align:center;width:300px">Requester Name</th>
 
           </tr>
@@ -29,14 +29,68 @@
             <td class="ptable-cell" style="text-align:right;width:70px;">
               {{ri+1}}
             </td>
-            <td class="ptable-cell" style="text-align:center;width:100px;"><a *ngIf="rowData.requestid && rowData.pono" [routerLink]="['/WMS/MaterialIssue',rowData.requestid,rowData.pono]" routerLinkActive="active">{{rowData.requestid}}</a></td>
+            <td class="ptable-cell" style="text-align:center;width:100px;">
+              <button type="button" class="btn btn-link" (click)="showmaterialdetails(rowData.requestid);" style="padding-left:0px;">{{rowData.requestid}}</button>
+            </td>
             <td class="ptable-cell" style="text-align:left;">{{rowData.projectname}}</td>
-            <td class="ptable-cell" style="text-align:center;width:150px;">{{rowData.requesteddate  | date :  constants.dateFormat}}</td>
+            <td class="ptable-cell" style="text-align:center;width:150px;">{{rowData.returnon  | date :  constants.dateFormat}}</td>
             <td class="ptable-cell" style="text-align:left;width:300px;">{{rowData.name}}</td>
 
           </tr>
         </ng-template>
       </p-table>
+    </div>
+    <div style="height: 5px; overflow-y: scroll">
+
+      <p-dialog header="Material Return Details" [(visible)]="AddDialog" [contentStyle]="{'overflow-y': 'auto', 'overflow-x': 'hidden', 'max-height': '80vh','min-height':'250px'}" showEffect="fade" [modal]="true" [responsive]="true" [style]="{width: '1024px'}">
+        <div *ngIf="showdialog">
+          <div class="row  pl-0">
+            <div class="col-lg-4 col-md-4 col-sm-4 pt-2 labelheading">
+              <label>Request Id :</label>&nbsp;<span class="labeltext"><label>{{materiallistData[0].requestid}}</label></span>
+            </div>
+
+          </div>
+
+        </div>
+        <p-table #dt [value]="materiallistData">
+          <ng-template pTemplate="header">
+            <tr class="mprltbldata">
+              <th style="text-align:center;width:70px">S.No</th>
+              <th style="text-align:center">Material</th>
+              <th style="text-align:center;width:150px">Requested  Qty</th>
+              <th style="text-align:center;width:150px">Issued Qty</th>
+              <th style="text-align:center;width:150px">Return Qty</th>
+              <th style="text-align:center;width:150px">Item Loaction</th>
+            </tr>
+
+          </ng-template>
+          <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
+            <tr>
+              <td class="ptable-cell" style="text-align:right">
+                {{ri+1}}
+              </td>
+              <td class="ptable-cell" style="text-align:left">{{rowData.materialid}}</td>
+              <td class="ptable-cell" style="text-align:right">{{rowData.requestedquantity}}</td>
+              <td class="ptable-cell" style="text-align:right">
+                {{rowData.issuedquantity}}
+
+              </td>
+
+              <td class="ptable-cell" style="text-align:right">{{rowData.returnqty}}</td>
+              <td class="ptable-cell" style="text-align:right">{{rowData.itemlocation}}</td>
+              <!--<td class="ptable-cell" style="text-align:left">{{rowData.createddate | date :  constants.dateFormat}}</td>-->
+            </tr>
+          </ng-template>
+
+        </p-table>
+        <p-footer>
+          <button type="button" class="btn btn-primary" [disabled]="btnDisable" (click)="returnqty()">Confirm</button>
+          <!--<div class="ui-dialog-buttonpane ui-helper-clearfix">
+          <button type="button" pButton icon="fa fa-check" class="ui-button-success" (click)="Cancel()" label="OK"></button>
+          <button type="button" pButton icon="fa fa-close" class="ui-button-danger" (click)="Cancel()" label="Cancel"></button>
+        </div>-->
+        </p-footer>
+      </p-dialog>
     </div>
   </div>
   </div>

@@ -5334,7 +5334,7 @@ namespace WMS.DAL
 							updatereturnqty = WMSResource.UpdateReturnqty.Replace("@returnqty", Convert.ToString(item.returnqty)).Replace("@requestforissueid", Convert.ToString(item.requestforissueid));
 						using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
 						{
-							var results = DB.ExecuteScalar(updatereturnqty, new
+							 result = DB.Execute(updatereturnqty, new
 							{
 
 							});
