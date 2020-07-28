@@ -5286,6 +5286,39 @@ namespace WMS.DAL
 			
 		}
 
+	//get stock details
+		public stockCardPrint getstockdetails(string pono, string materialid)
+        {
+			stockCardPrint objstock = new stockCardPrint();
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				try
+				{
+					pgsql.Open();
+					string query = WMSResource.GetStockDetails.Replace("#pono",pono).Replace("#materialid",materialid);
+					string updatequery = string.Empty;
+					//string updatedon = WMSResource.updatedon;
+					objstock = pgsql.QuerySingle<stockCardPrint>(
+					  query, null, commandType: CommandType.Text);
+					
+				}
+				catch (Exception ex)
+				{
+
+					log.ErrorMessage("PODataProvider", "getstockdetails", ex.StackTrace.ToString());
+					return objstock;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+			}
+
+			return objstock;
+
+		}
+
 		public int UpdateReturnqty(List<IssueRequestModel> _listobj)
 		{
 			int result = 0;

@@ -24,6 +24,8 @@ namespace WMS.Interfaces
         Task<IEnumerable<ReqMatDetails>> getReqMatdetails(string materialid,string grnnumber);
         OpenPoModel CheckPoexists(string PONO);
 
+        stockCardPrint getstockdetails(string pono, string materialid);
+
         string getstocktype(locataionDetailsStock locdetails);
         printMaterial generateBarcodeMaterial(printMaterial printMat);
         int InsertBarcodeInfo(BarcodeModel dataobj);

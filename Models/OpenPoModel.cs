@@ -330,7 +330,21 @@ public bool onhold { get; set; }
         public int year { get; set; }
         public int sequencenumber { get; set; }
     }
-    public class gatepassModel
+
+	public class stockCardPrint
+    {
+	public string pono { get; set; }
+  public string projectdef { get; set; }
+  public string jobname { get; set; }
+  public string modelno { get; set; }
+	public string description { get; set; }
+	public Int64 qty { get; set; }
+		public string box { get; set; }
+		public DateTime date { get; set; }
+		public string checkedby { get; set; }
+    }
+
+	public class gatepassModel
     {
 		public string managername { get; set; }
 		public string pono { get; set; }

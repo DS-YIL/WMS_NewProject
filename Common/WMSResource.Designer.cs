@@ -759,6 +759,18 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to select polist.pono, pomat.materialid as modelno, pomat.materialdescription as description,proj.jobname as jobname,
+        /// pomat.materialqty as qty, pomat.itemdeliverydate as date from wms.wms_polist polist 
+        /// join wms.wms_pomaterials pomat on pomat.pono = polist.pono join wms.wms_project proj on proj.pono =polist .pono 
+        /// where polist.pono =&apos;#pono&apos; and pomat.materialid =&apos;#materialid&apos;.
+        /// </summary>
+        public static string GetStockDetails {
+            get {
+                return ResourceManager.GetString("GetStockDetails", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to select stocktype from wms.stocklocation where locationid=&apos;#locationid&apos; and location=&apos;#locationname&apos; and storeid=#stid and rackid=#rkid and binid=#biid limit 1.
         /// </summary>
         public static string getstocktype {
