@@ -103,7 +103,7 @@ namespace WMS.DAL
 					{
 						query = query + " and  wp.vendorid=" + vendorid;
 					}
-					query = query + " group by track.pono,wp.pono order by max(track.enteredon) desc ";
+					query = query + " group by track.pono,wp.pono order by wp.pono desc ";
 					await pgsql.OpenAsync();
 					return await pgsql.QueryAsync<OpenPoModel>(
 					   query, null, commandType: CommandType.Text);
