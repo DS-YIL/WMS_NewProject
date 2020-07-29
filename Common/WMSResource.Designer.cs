@@ -79,7 +79,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select * from wms.wms_stock where materialid=&apos;#materialid&apos; and createddate&lt;&apos;#createddate&apos;  order by createddate asc limit 1.
+        ///   Looks up a localized string similar to select * from wms.wms_stock where materialid=&apos;#materialid&apos; and createddate::date&lt;&apos;#createddate&apos;  order by createddate asc limit 1.
         /// </summary>
         public static string checkoldestmaterial {
             get {

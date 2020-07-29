@@ -65,7 +65,7 @@
     <br />
     <br />
     <div style="text-align: center;margin-top:5px;">
-      <input class="btn btn-primary" (click)="onMaterialIssueDeatilsSubmit()" type="button" value="Submit">
+      <input *ngIf="btndisable" class="btn btn-primary" (click)="onMaterialIssueDeatilsSubmit()" type="button" value="Submit">
     </div>
   </div>
 </div>
