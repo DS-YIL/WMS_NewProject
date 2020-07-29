@@ -7,17 +7,17 @@
   <div class="card-body" style="overflow-y:scroll">
     <br />
     <div class="row">
-      <div class="col-lg-3 col-md-3 col-sm-3 form-group"></div>
+      
       <div class="col-lg-1 col-md-1 col-sm-1 form-group">
         <h6><label class="form-label">Bin Status:</label></h6>
       </div>
-      <div class="col-lg-3 col-md-3 col-sm-3 form-group">
+      <div class="col-lg-2 col-md-2 col-sm-2 form-group"  style="padding-left:0px;">
         <select placeholder="Status" name="Status" (change)="onSelectStatus($event)" class="form-control">
           <option  selected value="filled"> Filled Bin</option>
           <option value="empty"> Empty Bin</option>
         </select>
       </div>
-      <div class="col-lg-2 col-md-2 col-sm-2 form-group">
+      <div class="col-lg-1 col-md-1 col-sm-1 form-group" style="padding-left:0px;">
         <button type="submit" class="btn btn-info float-left" (click)="SubmitBinStatus()" style=" height: 35px;">Submit</button>
       </div>
     </div>

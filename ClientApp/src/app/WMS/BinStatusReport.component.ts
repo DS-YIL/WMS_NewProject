@@ -60,17 +60,17 @@ export class BinStatusReportComponent implements OnInit {
   //  }
   SubmitBinStatus() {
     if (this.selectedStatus == "empty") {
-      this.poList = this.dataList.filter(li => li.binid == 0);
+      this.poList = this.dataList.filter(li => li.binid == 0 && li.binnumber != null);
     }
     else if (this.selectedStatus == "filled") {
-      this.poList = this.dataList.filter(li => li.binid != 0);}
+      this.poList = this.dataList.filter(li => li.binid != 0 && li.binnumber != null);}
   }
   getBinstatusList() {
     this.spinner.show();
     this.wmsService.GetBinList().subscribe(data => {
       this.spinner.hide();
       this.dataList = data;
-      this.poList = this.dataList.filter(li=>li.binid!=0);
+      this.poList = this.dataList.filter(li=>li.binid!=0 && li.binnumber!=null);
     });
   }
 
