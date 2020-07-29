@@ -47,7 +47,7 @@
             <th style="text-align:center;width:100px">Status</th>
             <th style="text-align:center">Vendor Name</th>
             <th style="text-align:center">Job Name</th>
-            <th style="text-align:center;width:150px">Received Date</th>
+            <!--<th style="text-align:center;width:150px">Received Date</th>-->
             <!--<th style="text-align:center">View</th>-->
             <th style="text-align:center;width:100px">Request</th>
             <th style="text-align:center;width:100px">Reserve</th>
@@ -61,7 +61,7 @@
             <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'status', 'contains')"></th>
             <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'vendorname', 'contains')"></th>
             <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'jobName', 'contains')"></th>
-            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'enteredon', 'contains')"></th>
+            <!--<th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'enteredon', 'contains')"></th>-->
             <!--<th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'quotationqty', 'contains')"></th>-->
             <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'enteredon', 'contains')"></th>
             <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'enteredon', 'contains')"></th>
@@ -76,9 +76,9 @@
             <td class="ptable-cell" style="text-align:left;width:150px">{{rowData.projectcode}}</td>
             <td class="ptable-cell" style="font-size:11px; text-align:center;width:150px">{{rowData.pono}}</td>
             <td class="ptable-cell" style="text-align:center;width:100px">{{rowData.status}}</td>
-            <td class="ptable-cell" style="text-align:center">{{rowData.vendorname}}</td>
+            <td class="ptable-cell" style="text-align:left">{{rowData.vendorname}}</td>
             <td class="ptable-cell" style="text-align:center">{{rowData.jobName}}</td>
-            <td class="ptable-cell" style="text-align:center;width:150px">{{checkValiddate(rowData.enteredon)}}</td>
+            <!--<td class="ptable-cell" style="text-align:center;width:150px">{{checkValiddate(rowData.enteredon)}}</td>-->
             <!--<td  class="ptable-cell" style="text-align:center" ><button class="btn btn-primary fa fa-eye" (click)="materialrequestedview(rowData.pono);"></button></td>-->
             <td class="ptable-cell" style="text-align:center;width:100px"><button class="btn btn-primary fa fa-plus" (click)="materialrequest(rowData.pono);"></button></td>
             <td class="ptable-cell" style="text-align:center;width:100px"><button class="btn btn-primary fa fa-reorder" (click)="materialReserve(rowData.pono);"></button></td>

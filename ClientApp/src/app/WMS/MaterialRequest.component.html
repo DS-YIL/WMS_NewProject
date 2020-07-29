@@ -82,10 +82,14 @@
       </div>
       <div class="row">
         <!--<div *ngIf="showAck" class="col-lg-2 col-md-2 col-sm-2 " style="margin-top:5px;margin-bottom:5px">
-      <button type="button" class="btn btn-primary" [disabled]="btnDisable" (click)="materialAckUpdate()">Send Acknowledge</button>
-    </div>-->
+        <button type="button" class="btn btn-primary" [disabled]="btnDisable" (click)="materialAckUpdate()">Send Acknowledge</button>
+      </div>-->
       </div>
     </div>
+    <div *ngIf="requestList.length==0">
+      <h4 style="color:red;"> No materials in stock for this PO</h4>
+    </div>
   </div>
+  
   </div>
-   
+
