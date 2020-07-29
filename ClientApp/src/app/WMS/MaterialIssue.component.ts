@@ -130,7 +130,7 @@ export class MaterialIssueComponent implements OnInit {
       },
       reject: () => {
 
-        this.messageService.add({ severity: 'info', summary: 'Ignored', detail: 'You have ignored' });
+        this.messageService.add({ severity: 'info', summary: 'Notification', detail: 'You have ignored' });
       }
     });
   }
