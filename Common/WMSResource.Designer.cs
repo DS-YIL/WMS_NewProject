@@ -789,6 +789,15 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to select distinct roleid from wms.v_getAccessList where employeeid=&apos;#employeeid&apos;.
+        /// </summary>
+        public static string getuserroles {
+            get {
+                return ResourceManager.GetString("getuserroles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to insert into wms.wms_rd_category(categoryid,categoryname,minpricevalue,maxpricevalue,createdby,createdon,deleteflag,startdate,enddate)values(default,@categoryname,@minpricevalue,@maxpricevalue,@createdby,current_date,false,@startdate,@enddate).
         /// </summary>
         public static string insertABCrange {
@@ -1072,8 +1081,8 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO wms.wms_storeinward(inwmasterid,receiveddate,receivedby,receivedqty,materialid,deleteflag,qualitycheckrequired,qualitychecked,materialqty)
-        ///VALUES(@inwmasterid,@receiveddate,@receivedby,@receivedqty,@materialid,@deleteflag,@qualitycheck,@qualitychecked,@materialqty)returning inwardid.
+        ///   Looks up a localized string similar to INSERT INTO wms.wms_storeinward(inwmasterid,receiveddate,receivedby,receivedqty,materialid,deleteflag,qualitycheckrequired,qualitychecked,materialqty,remarks)
+        ///VALUES(@inwmasterid,@receiveddate,@receivedby,@receivedqty,@materialid,@deleteflag,@qualitycheck,@qualitychecked,@materialqty,@receiveremarks)returning inwardid.
         /// </summary>
         public static string receiveforinvoice {
             get {

@@ -60,6 +60,8 @@ namespace WMS.Models
 
 		public bool ispono { get; set; }
 
+		public string receiveremarks { get; set; }
+
 	}
 
 	public class printMaterial
@@ -157,6 +159,8 @@ public bool onhold { get; set; }
 
 		public string onholdremarks { get; set; }
 		public string availableqty { get; set; }
+
+		public string receiveremarks { get; set; }
 	}
 	public class StockModel
 	{
@@ -345,6 +349,17 @@ public bool onhold { get; set; }
 		public DateTime date { get; set; }
 		public string checkedby { get; set; }
     }
+	
+		public class pageModel
+	{
+		public int id { get; set; }
+		public string pagename { get; set; }
+		public string pageurl { get; set; }
+		public int roleid { get; set; }
+		public bool isrootpage { get; set; }
+
+		public int rootpageid { get; set; }
+	}
 
 	public class gatepassModel
     {

@@ -43,6 +43,7 @@ import { GatePassoutwardComponent } from './WMS/Gatepassoutward.component';
 import { MaterialReturnDashBoardComponent } from './WMS/MaterialReturnDashBoard.component';
 import { StoresReturnNotePrintComponent } from './WMS/StoresReturnNotePrint.component';
 import { StockCardPrintComponent } from './WMS/StockCardPrint.component';
+import { MailresponseComponent } from './WMS/Mailresponse.component';
 const routes: Routes = [{
   path: 'WMS',
   children: [
@@ -100,7 +101,9 @@ const routes: Routes = [{
     { path: "GatePassinout/:pageid", component: GatePassoutwardComponent, canActivate: [AuthGuard] },
     { path: "MaterialReturn", component: MaterialReturnDashBoardComponent, canActivate: [AuthGuard] },
       { path: "StoresReturnNote", component: StoresReturnNotePrintComponent, canActivate: [AuthGuard] },
-    { path: "StockCardPrint", component: StockCardPrintComponent, canActivate: [AuthGuard] }
+    { path: "StockCardPrint", component: StockCardPrintComponent, canActivate: [AuthGuard] },
+    { path: "Mailresponse", component: MailresponseComponent, canActivate: [AuthGuard] },
+
     
   ]
 

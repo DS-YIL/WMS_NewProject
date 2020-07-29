@@ -44,6 +44,12 @@ export class QualityCheckComponent implements OnInit {
   
   checkconfirmqty(entredvalue, receivedqty, returnedqty,data :any) {
     debugger;
+    if (entredvalue < 0) {
+      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'negative number not allowed' });
+      data.qualitypassedqty = "";
+      return;
+      //(<HTMLInputElement>document.getElementById("confirmqty")).value = "";
+    }
     if (entredvalue > receivedqty) {
       this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please enter passed quantity less than or equal to received quantity' });
       data.qualitypassedqty = "";
@@ -56,6 +62,12 @@ export class QualityCheckComponent implements OnInit {
     }
   }
   checkreturnqty(entredvalue, receivedqty, acceptedqty, data: any) {
+    if (entredvalue < 0) {
+      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'negative number not allowed' });
+      data.qualityfailedqty = "";
+      return;
+      //(<HTMLInputElement>document.getElementById("confirmqty")).value = "";
+    }
     if (entredvalue > receivedqty) {
       this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please enter failed quantity less than or equal to received quantity' });
       data.qualityfailedqty = "";

@@ -72,23 +72,29 @@ export class StoreClerkComponent implements OnInit {
   }
   checkreceivedqty(entredvalue, confirmedqty, returnedqty, maxvalue, data: any) {
     debugger;
+    if (entredvalue < 0) {
+      data.receivedqty = " ";
+      this.messageService.add({ severity: 'error', summary: '', detail: 'negative value not allowed' });
+      return;
+
+    }
     if (data.isreceivedpreviosly && data.pendingqty > 0) {
       if (entredvalue > data.pendingqty && !this.isnonpoentry) {
-        this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please enter received quantity less than or equal to Pending quantity' });
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Please enter received quantity less than or equal to Pending quantity' });
         //(<HTMLInputElement>document.getElementById("receivedqty")).value = "";
         data.receivedqty = "";
 
       }
     }
     else if (data.isreceivedpreviosly && data.pendingqty == 0 && !this.isnonpoentry) {
-      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'All materials received' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'All materials received' });
       //(<HTMLInputElement>document.getElementById("receivedqty")).value = "";
       data.receivedqty = "";
 
     }
     else {
       if (entredvalue > maxvalue && !this.isnonpoentry) {
-        this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please enter received quantity less than or equal to material quantity' });
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Please enter received quantity less than or equal to material quantity' });
         //(<HTMLInputElement>document.getElementById("receivedqty")).value = "";
         data.receivedqty = "";
 
@@ -96,35 +102,47 @@ export class StoreClerkComponent implements OnInit {
     }
    
   }
-  checkconfirmqty(entredvalue, receivedqty, returnedqty,data : any) {
+  checkconfirmqty(entredvalue, receivedqty, returnedqty, data: any) {
+    if (entredvalue < 0) {
+      data.confirmqty = " ";
+      this.messageService.add({ severity: 'error', summary: '', detail: 'negative value not allowed' });
+      return;
+
+    }
     if (entredvalue > receivedqty) {
-      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please enter accepted quantity less than or equal to received quantity' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Please enter accepted quantity less than or equal to received quantity' });
       //(<HTMLInputElement>document.getElementById("confirmqty")).value = "";
       data.confirmqty = "";
     }
     if (entredvalue != (receivedqty - returnedqty) && receivedqty && returnedqty) {
-      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'sum of return and accepted quantity must be equal to received qty' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'sum of return and accepted quantity must be equal to received qty' });
      // (<HTMLInputElement>document.getElementById("confirmqty")).value = "";
       data.confirmqty = "";
     }
   }
-  checkreturnqty(entredvalue,receivedqty,acceptedqty,data: any) {
+  checkreturnqty(entredvalue, receivedqty, acceptedqty, data: any) {
+    if (entredvalue < 0) {
+      data.returnqty = " ";
+      this.messageService.add({ severity: 'error', summary: '', detail: 'negative value not allowed' });
+      return;
+
+    }
     if (entredvalue > receivedqty) {
-      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please enter return quantity less than or equal to received quantity' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Please enter return quantity less than or equal to received quantity' });
       //(<HTMLInputElement>document.getElementById("returnqty")).value = "";
       data.returnqty = "";
     }
     if (entredvalue != (receivedqty - acceptedqty) && receivedqty && acceptedqty) {
-      this.messageService.add({ severity: 'error', summary: 'Error Message', detail:  'sum of return and accepted quantity must be equal to received qty' });
+      this.messageService.add({ severity: 'error', summary: '', detail:  'sum of return and accepted quantity must be equal to received qty' });
       //(<HTMLInputElement>document.getElementById("returnqty")).value = "";
       data.returnqty = "";
     }
   }
   filterpos(event) {
-
+    debugger;
     this.filteredpos = [];
     for (let i = 0; i < this.pendingpos.length; i++) {
-      let brand = this.pendingpos[i].supplier;
+      let brand = isNullOrUndefined(this.pendingpos[i].supplier) ? "" : this.pendingpos[i].supplier;
       let pos = this.pendingpos[i].value;
       if (brand.toLowerCase().indexOf(event.query.toLowerCase()) == 0 || pos.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
         this.filteredpos.push(pos);
@@ -283,10 +301,6 @@ export class StoreClerkComponent implements OnInit {
         this.disGrnBtn = false;
         // this.PoDetails = data[0];
         this.podetailsList = data;
-        this.grnnumber = this.podetailsList[0].grnnumber;
-        this.isonHold = this.podetailsList[0].onhold;
-        this.isonHoldview = this.podetailsList[0].onhold;
-        this.onholdremarks = this.podetailsList[0].onholdremarks;
         var pono = this.podetailsList[0].pono;
         if (pono.startsWith("NP") && !this.grnnumber) {
           this.isnonpoentry = true;
@@ -294,6 +308,19 @@ export class StoreClerkComponent implements OnInit {
         if (pono.startsWith("NP")) {
           this.isnonpo = true;
         }
+        else {
+          if (!this.grnnumber) {
+            this.podetailsList = this.podetailsList.filter(function (element, index) {
+              return (element.materialqty > 0);
+            });
+          }
+        }
+        
+        this.grnnumber = this.podetailsList[0].grnnumber;
+        this.isonHold = this.podetailsList[0].onhold;
+        this.isonHoldview = this.podetailsList[0].onhold;
+        this.onholdremarks = this.podetailsList[0].onholdremarks;
+       
 
         debugger;
         this.showDetails = true;
@@ -400,6 +427,11 @@ export class StoreClerkComponent implements OnInit {
     var validdata = this.podetailsList.filter(function (element, index) {
       return (element.qcstatus != "Pending");
     });
+    if (validdata.length == 0) {
+      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Quality check pending.' });
+      this.spinner.hide();
+      return;
+    }
    
     var invaliddata = validdata.filter(function (element, index) {
       return (element.confirmqty + element.returnqty != parseInt(element.receivedqty));

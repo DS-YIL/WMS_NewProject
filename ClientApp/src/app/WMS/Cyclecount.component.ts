@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { wmsService } from '../WmsServices/wms.service';
 import { constants } from '../Models/WMSConstants';
-import { Employee, DynamicSearchResult } from '../Models/Common.Model';
+import { Employee, DynamicSearchResult, userAcessNamesModel } from '../Models/Common.Model';
 import { NgxSpinnerService } from "ngx-spinner";
 import { commonComponent } from '../WmsCommon/CommonCode';
 import { categoryValues, Cyclecountconfig } from '../Models/WMS.Model';
@@ -35,6 +35,7 @@ export class CyclecountComponent implements OnInit {
   showsubmitbuttonuser: boolean = false;
   showdays: any[] = [];
   showtouser: boolean = false;
+  userrolelist: userAcessNamesModel[] = [];
  
 
   ngOnInit() {
@@ -42,9 +43,11 @@ export class CyclecountComponent implements OnInit {
       this.employee = JSON.parse(localStorage.getItem("Employee"));
     else
       this.router.navigateByUrl("Login");
-
-
-    if (this.employee.roleid == "4") {
+    if (localStorage.getItem("userroles")) {
+      this.userrolelist = JSON.parse(localStorage.getItem("userroles")) as userAcessNamesModel[];
+    }
+    var roles = this.userrolelist.filter(li => li.roleid == 4);
+    if (this.employee.roleid == "4" || roles.length > 0) {
       this.isapprover = true;
       this.showsubmitbuttonuser = false;
       this.showsubmitbutton = true;

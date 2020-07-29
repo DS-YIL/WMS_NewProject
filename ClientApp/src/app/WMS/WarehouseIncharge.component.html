@@ -7,13 +7,13 @@
       <!--<label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">GRN No: </label>&nbsp;&nbsp;-->
       <!--<input class="form-control" type="text" [(ngModel)]="PoDetails.grnnumber">&nbsp;&nbsp;&nbsp;&nbsp;-->
       <!--<p-dropdown [options]="checkedgrnlist" appendTo="body" [(ngModel)]="selectedgrn" [showClear]="true" [style]="{'width':'250px'}" filter="true" placeholder="Select GRN" optionLabel="text"></p-dropdown>-->
-      <p-autoComplete [(ngModel)]="selectedgrnno" appendTo="body" [suggestions]="filteredgrns" placeholder="search by supplier/GRN No" [ngModelOptions]="{standalone: true}" [forceSelection]="true" (completeMethod)="filtergrn($event)" [size]="30"
+      <p-autoComplete [(ngModel)]="selectedgrnno" appendTo="body" [suggestions]="filteredgrns" placeholder="search by supplier/GRN No" [ngModelOptions]="{standalone: true}" [forceSelection]="true" (completeMethod)="filtergrn($event)" [size]="30" (onSelect)="SearchGRNNo()"
                       [dropdown]="true">
       </p-autoComplete>
     </div>
-    <div class="col-lg-1 col-md-1" style="margin-left:-30px;">
+    <!--<div class="col-lg-1 col-md-1" style="margin-left:-30px;">
       <button type="button" class="btn btn-primary btn-sm" label="Save" (click)="SearchGRNNo()">Search</button>
-    </div>
+    </div>-->
     <div class="col-md-2 col-lg-2  pt-2 labelheading" *ngIf="podetailsList.length>0">
       PO No : <span class="labeltext">{{podetailsList[0].pono}}</span>
     </div>

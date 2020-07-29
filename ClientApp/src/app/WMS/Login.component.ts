@@ -9,6 +9,7 @@ import { NgxSpinnerService } from "ngx-spinner";
 import { MessageService } from 'primeng/api';
 import { commonComponent } from '../WmsCommon/CommonCode';
 import { NavMenuComponent } from '../nav-menu/nav-menu.component'; 
+import { pageModel } from '../Models/WMS.Model';
 
 @Component({
   selector: 'app-Login',
@@ -27,6 +28,7 @@ export class LoginComponent implements OnInit {
   public dynamicData = new DynamicSearchResult();
   public roleNameModel: Array<any> = [];
   public AcessNameList: Array<any> = [];
+  pagelist: pageModel[] = [];
 
   ngOnInit() {
     if (localStorage.getItem("Employee"))
@@ -36,7 +38,7 @@ export class LoginComponent implements OnInit {
     this.LoginForm = this.formBuilder.group({
       DomainId: ['', [Validators.required]],
       Password: ['', [Validators.required]],
-      roleid: ['', [Validators.required]],
+      roleid: [''],
     });
     //this.getRoles();
     this.commonComponent.animateCSS('login', 'zoomInDown');
@@ -62,8 +64,9 @@ export class LoginComponent implements OnInit {
 
   //Login
   Login() {
+    debugger;
     this.LoginSubmitted = true;
-    if (this.LoginForm.invalid || this.LoginModel.roleid == '0') {
+    if (this.LoginForm.invalid) {
       return;
     }
     else {
@@ -76,20 +79,60 @@ export class LoginComponent implements OnInit {
           }
           if (data1.employeeno != null) {
             this.employee = data1;
-            this.wmsService.getuserAcessList(this.employee.employeeno, this.LoginForm.value.roleid).subscribe(data => {
-              if (data.length > 0) {
-                this.AcessNameList = data;
-                this.employee.roleid = this.LoginForm.value.roleid;
-                localStorage.setItem('Employee', JSON.stringify(this.employee));
-                 this.navpage.userloggedHandler(this.employee);
-                //this.router.navigateByUrl("nav"); 
-                //this.wmsService.login();
-                //this.bindMenu();
-              }
-              else {
-                this.messageService.add({ severity: 'error', summary: 'error Message', detail: 'Selected Role is not assigned to you, select Your role' });
-              }
-            })
+            var isrolebypass = "0";
+            if (this.LoginForm.value.roleid == "0") {
+              isrolebypass = "1";
+              this.wmsService.getuserroleList(this.employee.employeeno).subscribe(data => {
+                if (data.length > 0) {
+                  this.AcessNameList = data;
+                 
+                  this.employee.roleid = this.LoginForm.value.roleid;
+                  this.wmsService.getpages().subscribe(datax => {
+                    this.pagelist = datax;
+                    localStorage.setItem('pages', JSON.stringify(this.pagelist));
+                  });
+                  localStorage.setItem('Employee', JSON.stringify(this.employee));
+                  localStorage.setItem('userroles', JSON.stringify(this.AcessNameList));
+                  this.navpage.userloggedHandler(this.employee);
+                  //this.router.navigateByUrl("nav"); 
+                  //this.wmsService.login();
+                  //this.bindMenu();
+                }
+                else {
+
+                  this.messageService.add({ severity: 'error', summary: 'error Message', detail: 'There is no role assigned to you.' });
+
+
+                }
+              })
+              
+            }
+            else {
+              this.wmsService.getuserAcessList(this.employee.employeeno, this.LoginForm.value.roleid).subscribe(data => {
+                if (data.length > 0) {
+                  this.AcessNameList = data;
+                  this.employee.roleid = this.LoginForm.value.roleid;
+                  this.wmsService.getpagesbyrole(parseInt(this.employee.roleid)).subscribe(datax => {
+                    this.pagelist = datax;
+                    localStorage.setItem('pages', JSON.stringify(this.pagelist));
+                  });
+                  localStorage.setItem('Employee', JSON.stringify(this.employee));
+                  this.navpage.userloggedHandler(this.employee);
+                  //this.router.navigateByUrl("nav"); 
+                  //this.wmsService.login();
+                  //this.bindMenu();
+                }
+                else {
+                 
+                    this.messageService.add({ severity: 'error', summary: 'error Message', detail: 'Selected Role is not assigned to you, select Your role' });
+                  
+
+                }
+              })
+            
+
+            }
+            
           }
         }
         );

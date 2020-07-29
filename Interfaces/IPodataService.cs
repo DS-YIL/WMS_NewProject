@@ -88,6 +88,7 @@ Task<string> updateonholdrow(updateonhold datamodel);
         int updateissuedmaterial(List<IssueRequestModel> obj);
         int assignRole(authUser authuser);
         Task<IEnumerable<userAcessNamesModel>> getuserAcessList(string employeeid, string roleid);
+        Task<IEnumerable<userAcessNamesModel>> getuserroleList(string employeeid);
         Task<Enquirydata> GetEnquirydata(string materialid);
         Task<DashboardModel> getdashboarddata();
         Task<IEnumerable<IssueRequestModel>> getissuematerialdetails(int requestid);
@@ -126,5 +127,8 @@ Task<string> updateonholdrow(updateonhold datamodel);
         int UpdateMaterialReserve();
         int UpdateReturnqty(List<IssueRequestModel> _listobj);
         int UpdateReturnmaterialTostock(List<IssueRequestModel> model);
+		 int GatepassapproveByMail(gatepassModel model);
+        Task<IEnumerable<pageModel>> Getpagesbyroleid(int roleid);
+        Task<IEnumerable<pageModel>> Getpages();
     }
 }

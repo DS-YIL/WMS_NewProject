@@ -167,6 +167,7 @@
               <th *ngIf="!isnonpo" style="text-align:center;width:10%;">Material Qty</th>
               <th *ngIf="!isnonpo && isreceivedbefore" style="text-align:center;width:10%;">Pending Qty</th>
               <th style="text-align:center;width:10%;">Received Qty</th>
+              <th style="text-align:center;width:15%;">Remarks</th>
               <th style="text-align:center;width:10%;">QC Required</th>
 
             </tr>
@@ -177,6 +178,7 @@
               <th *ngIf="!isnonpo"> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'materialqty', 'contains')"></th>
               <th *ngIf="!isnonpo && isreceivedbefore"> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'pendingqty', 'contains')"></th>
               <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'receivedqty', 'contains')"></th>
+              <th></th>
               <th></th>
             </tr>
           </ng-template>
@@ -205,11 +207,16 @@
               <td class="ptable-cell" style="text-align:right;width:10%;">
                 <span *ngIf="!grnnumber && isallreceived">N/A</span>
                 <span *ngIf="grnnumber">{{rowData.receivedqty}}</span>
-                <input *ngIf="!grnnumber && !isallreceived" pInputText type="number" (change)="checkreceivedqty(rowData.receivedqty,rowData.confirmqty,rowData.returnqty,rowData.materialqty,rowData);" id="receivedqty" class="form-control" [(ngModel)]="rowData.receivedqty">
+                <input *ngIf="!grnnumber && !isallreceived" pInputText type="number" [min]="0" (change)="checkreceivedqty(rowData.receivedqty,rowData.confirmqty,rowData.returnqty,rowData.materialqty,rowData);" id="receivedqty" class="form-control" [(ngModel)]="rowData.receivedqty">
+              </td>
+              <td style="text-align:left;width:15%;">
+                <span *ngIf="grnnumber">{{rowData.receiveremarks}}</span>
+                <textarea *ngIf="!grnnumber" [(ngModel)]="rowData.receiveremarks"></textarea>
               </td>
               <td style="text-align:center;width:10%;">
                 <input type="checkbox" [disabled]="grnnumber || isallreceived" [(ngModel)]="rowData.qualitycheck" />
               </td>
+
 
             </tr>
           </ng-template>
@@ -272,11 +279,11 @@
               </td>
               <td class="ptable-cell" style="text-align:right;width:10%;">
                 <span *ngIf="rowData.returnedby && (getstatus(rowData) != 'Pending')">{{rowData.confirmqty}}</span>
-                <input *ngIf="!rowData.returnedby && (getstatus(rowData) != 'Pending')" pInputText type="number" (change)="checkconfirmqty(rowData.confirmqty,rowData.receivedqty,rowData.returnqty,rowData);" id="confirmqty" class="form-control" [(ngModel)]="rowData.confirmqty">
+                <input *ngIf="!rowData.returnedby && (getstatus(rowData) != 'Pending')" pInputText type="number" [min]="0" (change)="checkconfirmqty(rowData.confirmqty,rowData.receivedqty,rowData.returnqty,rowData);" id="confirmqty" class="form-control" [(ngModel)]="rowData.confirmqty">
               </td>
               <td class="ptable-cell" style="text-align:right;width:10%;">
                 <span *ngIf="rowData.returnedby && (getstatus(rowData) != 'Pending')">{{rowData.returnqty}}</span>
-                <input *ngIf="!rowData.returnedby && (getstatus(rowData) != 'Pending')" pInputText type="number" (change)="checkreturnqty(rowData.returnqty,rowData.receivedqty,rowData.confirmqty,rowData);" id="returnqty" class="form-control" [(ngModel)]="rowData.returnqty">
+                <input *ngIf="!rowData.returnedby && (getstatus(rowData) != 'Pending')" pInputText type="number" [min]="0" (change)="checkreturnqty(rowData.returnqty,rowData.receivedqty,rowData.confirmqty,rowData);" id="returnqty" class="form-control" [(ngModel)]="rowData.returnqty">
               </td>
               <td style="text-align:left;width:15%;">
                 <span *ngIf="rowData.returnedby && (getstatus(rowData) != 'Pending')">{{rowData.returnremarks}}</span>
@@ -298,7 +305,7 @@
     </div>
     <div class="card-footer" *ngIf="podetailsList.length">
       <div *ngIf="!isacceptance">
-        <textarea placeholder="onhold Remarks" class="form-control" [disabled]="grnnumber || isonHold" cols="100" rows="2" [(ngModel)]="onholdremarks"></textarea>
+        <textarea placeholder="Remarks" class="form-control" *ngIf="isonHoldview" [disabled]="grnnumber || isonHold" cols="100" rows="2" [(ngModel)]="onholdremarks"></textarea>
         <button type="button" *ngIf="grnnumber" class="btn btn-success" style="margin-left:45%" (click)="update()">Update</button>
         <button type="button" *ngIf="!grnnumber" class="btn btn-success" style="margin-left:45%" [disabled]="grnnumber || isallreceived" (click)="onsubmit()">Submit</button>
       </div>

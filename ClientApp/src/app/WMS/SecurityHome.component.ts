@@ -227,19 +227,20 @@ export class SecurityHomeComponent implements OnInit {
       this.wmsService.insertbarcodeandinvoiceinfo(this.BarcodeModel).subscribe(data => {
         this.spinner.hide();
         if (data == 0) {
-          this.messageService.add({ severity: 'error', summary: 'Response', detail: 'Something went wrong' });
+          this.messageService.add({ severity: 'error', summary: '', detail: 'Something went wrong' });
         }
         else if (data == 2) {
-          this.messageService.add({ severity: 'error', summary: 'Response', detail: 'Invoice for this PO already received' });
+          this.messageService.add({ severity: 'error', summary: '', detail: 'Invoice for this PO already received' });
         }
         else { //data>=1
           this.disSaveBtn = true;
-          this.messageService.add({ severity: 'success', summary: 'Success Message', detail: 'Invoice Updated' });
+          this.refresh();
+          this.messageService.add({ severity: 'success', summary: '', detail: 'Invoice Updated' });
           this.getcurrentDateReceivedPOlist();
         }
       });
     }
     else
-      this.messageService.add({ severity: 'error', summary: 'Validation', detail: 'Please enter invoce no' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Please enter invoce no' });
   }
 }

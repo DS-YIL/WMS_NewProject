@@ -57,6 +57,8 @@ export class StockTransferComponent implements OnInit {
       this.router.navigateByUrl("Login");
     this.stocktransferlist = [];
     this.mainmodel = new invstocktransfermodel();
+    this.mainmodel.sourceplant = "Plant1";
+    this.mainmodel.destinationplant = "Plant1";
     this.emptytransfermodel = new stocktransfermateriakmodel();
     this.selectedbin = new binddl();
     this.selectedlocation = new locationddl();
@@ -172,7 +174,7 @@ export class StockTransferComponent implements OnInit {
     debugger;
     if ((this.mainmodel.sourceplant) && (this.mainmodel.destinationplant) && (this.mainmodel.sourceplant == this.mainmodel.destinationplant) && (data.sourcelocation == data.destinationlocation)){
       this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'source and destination location can not be same for same source and destination plant.' });
-      data.sourcelocation = "";
+      data.sourcelocation = null;
       data.destinationlocation = "";
       data.transferqty = 0;
       return;
@@ -180,7 +182,7 @@ export class StockTransferComponent implements OnInit {
     var row1 = this.podetailsList.filter((dt) => dt.sourcelocation == data.sourcelocation && dt.materialid == data.materialid && dt.destinationlocation == data.destinationlocation);
     if (row1.length > 1) {
       this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'same source and destination location for this material already exists' });
-      data.sourcelocation = "";
+      data.sourcelocation = null;
       data.destinationlocation = "";
       data.transferqty = 0;
       return;
@@ -204,24 +206,29 @@ export class StockTransferComponent implements OnInit {
   onSelectdest(data: stocktransfermateriakmodel) {
     debugger;
     if ((this.mainmodel.sourceplant) && (this.mainmodel.destinationplant) && (this.mainmodel.sourceplant == this.mainmodel.destinationplant) && (data.sourcelocation == data.destinationlocation)) {
-      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'source and destination location can not be same for same source and destination plant.' });
       data.sourcelocation = "";
-      data.destinationlocation = "";
+      data.destinationlocation = null;
       data.transferqty = 0;
-      return;
+      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'source and destination location can not be same for same source and destination plant.' });
     }
     var row1 = this.podetailsList.filter((dt) => dt.sourcelocation == data.sourcelocation && dt.materialid == data.materialid && dt.destinationlocation == data.destinationlocation);
     if (row1.length > 1) {
-      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'same source and destination location for this material already exists' });
       data.sourcelocation = "";
-      data.destinationlocation = "";
+      data.destinationlocation = null;
       data.transferqty = 0;
-      return;
+      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'same source and destination location for this material already exists' });
+      
     }
    
   }
   setqty(data: any) {
     debugger;
+    if (data.transferqty < 0) {
+      data.transferqty = "0";
+      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'negative value not allowed' });
+      return;
+     
+    }
     var loc = data.sourcelocation;
     var row = data.itemlocationdata.filter((dt) => dt.itemlocation == loc);
     var toatalavailqty = 0;

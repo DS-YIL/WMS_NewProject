@@ -50,11 +50,11 @@
               </select>
 
             </div>
-            <div class="col-lg-2 col-md-2 form-group" style="font-weight:600;font-size:14px;color:darkblue;">
+            <div class="col-lg-1 col-md-1 form-group" style="font-weight:600;font-size:14px;color:darkblue;">
            
             </div>
-            <div class="col-lg-3 col-md-3 form-group" style="font-weight:600;font-size:14px;color:darkblue;padding-left:168px">
-              &nbsp;&nbsp;&nbsp;&nbsp;<i *ngIf="addprocess" class="fa fa-bookmark" style="font-size: 15px"></i><label *ngIf="addprocess" style="font-size: 15px;padding:0px; color: rgb(96, 123, 212);"> &nbsp;&nbsp;Add Row</label>&nbsp;&nbsp;&nbsp;&nbsp;<button *ngIf="addprocess" type="button" pTooltip="Add Row" style="border-radius: 10em!important;background-color: white; border-color:  rgb(96, 123, 212);" rounded="true" size="lg" class="my-0" (click)="addrows()"> <i class="fa fa-plus" style="font-size: 15px;color: green;"></i></button>
+            <div class="col-lg-4 col-md-4 form-group" style="font-weight:600;font-size:14px;color:darkblue;padding-left:168px">
+              &nbsp;&nbsp;&nbsp;&nbsp;<i *ngIf="addprocess" class="fa fa-bookmark" style="font-size: 15px"></i><label *ngIf="addprocess" style="font-size: 15px;padding:0px; color: rgb(96, 123, 212);"> &nbsp;&nbsp;Add Material</label>&nbsp;&nbsp;&nbsp;&nbsp;<button *ngIf="addprocess" type="button" pTooltip="Add marerial" style="border-radius: 10em!important;background-color: white; border-color:  rgb(96, 123, 212);" rounded="true" size="lg" class="my-0" (click)="addrows()"> <i class="fa fa-plus" style="font-size: 15px;color: green;"></i></button>
             </div>
 
 
@@ -74,8 +74,8 @@
                   <th style="text-align:center;width:5%;">Sl.No.</th>
                   <th style="text-align:center;width:15%;">Material</th>
                   <th style="text-align:center;">Material Description</th>
-                  <th style="text-align:center;width:15%;">Source Location</th>
-                  <th style="text-align:center;width:15%;">Destination Location</th>
+                  <th style="text-align:center;width:20%;">Source Location</th>
+                  <th style="text-align:center;width:20%;">Destination Location</th>
                   <th style="text-align:center;width:10%;">Transfer Qty</th>
                 </tr>
               </ng-template>
@@ -89,15 +89,15 @@
                     <span>{{rowData.materialdescription}}</span>
                   </td>
                   <td class="ptable-cell" style="text-align:center;width:15%;">
-                    <p-autoComplete id="sc_{{ri+1}}" [(ngModel)]="rowData.sourcelocation" [suggestions]="matlocationsearch" placeholder="Hint: type 's'" [forceSelection]="true" (onSelect)="onSelectsource(rowData)" appendTo="body" (completeMethod)="search1($event,rowData,ri)"></p-autoComplete>
+                    <p-autoComplete id="sc_{{ri+1}}" [(ngModel)]="rowData.sourcelocation" [suggestions]="matlocationsearch" placeholder="Hint: type 's'" [forceSelection]="true" (onSelect)="onSelectsource(rowData)" appendTo="body" (completeMethod)="search1($event,rowData,ri)" [dropdown]="true"></p-autoComplete>
                     <!--<i class="fa fa-location-arrow" style="color:blue;float:right" pTooltip="set picking location" (click)="showmateriallocationList(rowData.materialid,ri+1,ri)" aria-hidden="true"></i>-->
                   </td>
                   <td class="ptable-cell" style="text-align:center;width:15%;">
-                    <p-autoComplete id="dt_{{ri+1}}" [(ngModel)]="rowData.destinationlocation" [suggestions]="results1" placeholder="Hint: type 's'" [forceSelection]="true" (onSelect)="onSelectdest(rowData)" appendTo="body" (completeMethod)="search($event)"></p-autoComplete>
+                    <p-autoComplete id="dt_{{ri+1}}" [(ngModel)]="rowData.destinationlocation" [suggestions]="results1" placeholder="Hint: type 's'" [forceSelection]="true" (onSelect)="onSelectdest(rowData)" appendTo="body" (completeMethod)="search($event)" [dropdown]="true"></p-autoComplete>
                     <!--<i class="fa fa-location-arrow" style="color:blue;float:right" pTooltip="Add Location" (click)="settransferloction(rowData,ri)" aria-hidden="true"></i>-->
                   </td>
                   <td class="ptable-cell" style="text-align:right;width:10%;">
-                    <input pInputText type="number" style="text-align:right" class="form-control" [(ngModel)]="rowData.transferqty" (change)="setqty(rowData)">
+                    <input pInputText type="number" style="text-align:right" class="form-control" [min]="0" [(ngModel)]="rowData.transferqty" (change)="setqty(rowData)">
                   </td>
 
 

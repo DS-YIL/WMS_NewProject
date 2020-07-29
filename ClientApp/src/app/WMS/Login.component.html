@@ -9,6 +9,16 @@
       <div class="card-body">
         <form [formGroup]="LoginForm">
           <div class="row">
+            <div class="col-sm-12 col-md-12 col-lg-12 form-inline">
+              <select id="manWeeks" class="form-control forms-input" style="width:100% !important;" formControlName="roleid" [(ngModel)]="LoginModel.roleid">
+                <option value=0>Select Role</option>
+                <option *ngFor="let data of roleNameModel" [ngValue]="data.roleid">
+                  {{data.rolename}}
+                </option>
+              </select>
+            </div>
+          </div><br />
+          <div class="row">
             <div class="col-sm-12 col-md-12 col-lg-12 form-group">
               <div class="input-group form-group">
                 <div class="input-group-prepend">
@@ -30,17 +40,16 @@
               </div>
             </div>
           </div>
-          <div class="row">
+          <!--<div class="row">
             <div class="col-sm-12 col-md-12 col-lg-12 form-inline">
-              <select id="manWeeks" class="form-control forms-input" style="width:100% !important;" formControlName="roleid" [(ngModel)]="LoginModel.roleid" [ngClass]="{ 'is-invalid': LoginSubmitted &&   LoginForm.controls.roleid.value=='0'}">
+              <select id="manWeeks" class="form-control forms-input" style="width:100% !important;" formControlName="roleid" [(ngModel)]="LoginModel.roleid">
                 <option value=0>Select Role</option>
                 <option *ngFor="let data of roleNameModel" [ngValue]="data.roleid">
                   {{data.rolename}}
                 </option>
               </select>
-              <span *ngIf="LoginSubmitted && LoginForm.controls.roleid.value=='0'" class="invalid-feedback">Select Role</span>
             </div>
-          </div><br />
+          </div><br />-->
           <div class="form-group">
             <button type="submit" class="btn btn-info float-right" (click)="Login()">Login</button>
           </div><br /><br />

@@ -5,7 +5,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { constants } from '../Models/WMSConstants'
 import { Employee, Login, DynamicSearchResult, printMaterial } from '../Models/Common.Model';
-import { PoFilterParams, PoDetails, BarcodeModel, StockModel, materialRequestDetails, inwardModel, gatepassModel, stocktransfermodel, Materials, authUser, invstocktransfermodel, ddlmodel, locataionDetailsStock,updateonhold, materialistModel, outwardmaterialistModel } from '../Models/WMS.Model';
+import { PoFilterParams, PoDetails, BarcodeModel, StockModel, materialRequestDetails, inwardModel, gatepassModel, stocktransfermodel, Materials, authUser, invstocktransfermodel, ddlmodel, locataionDetailsStock,updateonhold, materialistModel, outwardmaterialistModel, pageModel } from '../Models/WMS.Model';
 import { Text } from '@angular/compiler/src/i18n/i18n_ast';
 
 @Injectable({
@@ -231,6 +231,9 @@ export class wmsService {
   GatepassapproveByManager(gatepassModel: any): Observable<any> {
     return this.http.post<any>(this.url + 'POData/GatepassapproveByManager/', gatepassModel, this.httpOptions);
   }
+  GatepassapproveByMail(gatepassModel: any): Observable<any> {
+    return this.http.post<any>(this.url + 'POData/GatepassapproveByMail/', gatepassModel, this.httpOptions);
+  }
   deleteGatepassmaterial(id: number): Observable<any> {
     return this.http.delete<any>(this.url + 'POData/deletegatepassmaterial?gatepassmaterialid=' + id + '', this.httpOptions);
   }
@@ -304,6 +307,9 @@ export class wmsService {
 
   getuserAcessList(employeeId: any, roleid: any): Observable<any> {
     return this.http.get<any>(this.url + 'POData/getuserAcessList?employeeid=' + employeeId + '&roleid=' + roleid, this.httpOptions);
+  }
+  getuserroleList(employeeId: any): Observable<any> {
+    return this.http.get<any>(this.url + 'POData/getuserroleList?employeeid=' + employeeId, this.httpOptions);
   }
   getASNPOReceivedList(): Observable<any> {
     return this.http.get<any>(this.url + 'POData/getSecurityReceivedList/', this.httpOptions);
@@ -381,6 +387,14 @@ export class wmsService {
   updateoutinward(outindata: outwardmaterialistModel[]): Observable<any> {
     const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }), responseType: 'text' as any };
     return this.http.post<any>(this.url + 'POData/updategatepassmovement/', outindata, httpOptions);
+  }
+
+  getpagesbyrole(roleid: number): Observable<pageModel[]> {
+    return this.http.get<pageModel[]>(this.url + 'POData/Getpagesbyrole/?roleid=' + roleid, this.httpOptions);
+  }
+
+  getpages(): Observable<pageModel[]> {
+    return this.http.get<pageModel[]>(this.url + 'POData/Getpages/', this.httpOptions);
   }
   
 }

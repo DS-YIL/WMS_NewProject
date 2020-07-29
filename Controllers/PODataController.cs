@@ -422,6 +422,24 @@ namespace WMS.Controllers
 			return await this._poService.getuserAcessList(employeeid, roleid);
 		}
 
+		[HttpGet("getuserroleList")]
+		public async Task<IEnumerable<userAcessNamesModel>> getuserroleList(string employeeid)
+		{
+
+			return await this._poService.getuserroleList(employeeid);
+		}
+		[HttpGet("Getpagesbyrole")]
+		public async Task<IEnumerable<pageModel>> Getpagesbyrole(int roleid)
+		{
+			return await this._poService.Getpagesbyroleid(roleid);
+		}
+
+		[HttpGet("Getpages")]
+		public async Task<IEnumerable<pageModel>> Getpages()
+		{
+			return await this._poService.Getpages();
+		}
+
 		[HttpGet("getEnquirydata")]
 		public async Task<Enquirydata> getEnquirydata(string materialid)
 		{
@@ -526,6 +544,12 @@ namespace WMS.Controllers
 		public int GatepassapproveByManager([FromBody] gatepassModel obj)
 		{
 			return this._poService.GatepassapproveByManager(obj);
+		}
+
+		[HttpPost("GatepassapproveByMail")]
+		public int GatepassapproveByMail([FromBody] gatepassModel obj)
+		{
+			return this._poService.GatepassapproveByMail(obj);
 		}
 
 		[HttpGet("getSafteyStockList")]

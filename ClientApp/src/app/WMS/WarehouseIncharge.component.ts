@@ -452,7 +452,7 @@ export class WarehouseInchargeComponent implements OnInit {
       this.messageService.add({ severity: 'error', summary: 'Validation', detail: 'Enter GRNNo' });
 
     }
-    this.PoDetails.grnnumber = this.selectedgrnno;
+      this.PoDetails.grnnumber = this.selectedgrnno;
       this.isnonpo = false;
       this.spinner.show();
       this.wmsService.getitemdetailsbygrnno(this.PoDetails.grnnumber).subscribe(data => {

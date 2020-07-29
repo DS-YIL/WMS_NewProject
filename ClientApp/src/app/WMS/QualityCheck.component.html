@@ -100,11 +100,11 @@
               </td>
               <td class="ptable-cell" style="text-align:right;width:10%;">
                 <span *ngIf="rowData.checkedby">{{rowData.qualitypassedqty}}</span>
-                <input *ngIf="!rowData.checkedby" style="text-align:right" pInputText type="number" class="form-control" (change)="checkconfirmqty(rowData.qualitypassedqty,rowData.receivedqty,rowData.qualityfailedqty,rowData);" id="confirmqty" [(ngModel)]="rowData.qualitypassedqty">
+                <input *ngIf="!rowData.checkedby" style="text-align:right" pInputText type="number" [min]="0" class="form-control" (change)="checkconfirmqty(rowData.qualitypassedqty,rowData.receivedqty,rowData.qualityfailedqty,rowData);" id="confirmqty" [(ngModel)]="rowData.qualitypassedqty">
               </td>
               <td class="ptable-cell" style="text-align:right;width:10%;">
                 <span *ngIf="rowData.checkedby">{{rowData.qualityfailedqty}}</span>
-                <input *ngIf="!rowData.checkedby" style="text-align:right" pInputText type="number" (change)="checkreturnqty(rowData.qualityfailedqty,rowData.receivedqty,rowData.qualitypassedqty,rowData);" id="returnqty" class="form-control" [(ngModel)]="rowData.qualityfailedqty">
+                <input *ngIf="!rowData.checkedby" style="text-align:right" pInputText type="number" [min]="0" (change)="checkreturnqty(rowData.qualityfailedqty,rowData.receivedqty,rowData.qualitypassedqty,rowData);" id="returnqty" class="form-control" [(ngModel)]="rowData.qualityfailedqty">
               </td>
               <td class="ptable-cell" style="text-align:right;width:15%;">
                 <span *ngIf="rowData.checkedby">{{rowData.remarks}}</span>

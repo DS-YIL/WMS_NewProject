@@ -13,6 +13,14 @@ export class Employee {
   
 }
 
+export class userAcessNamesModel {
+    authid: number;
+    employeeid: number;
+   roleid: number;
+   userid: number;
+   accessname: string
+	}
+
 export class Login {
   Username: string;
   DomainId: string;

@@ -3,7 +3,7 @@ import { FormBuilder } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { wmsService } from '../WmsServices/wms.service';
 import { constants } from '../Models/WMSConstants';
-import { Employee, DynamicSearchResult, searchList } from '../Models/Common.Model';
+import { Employee, DynamicSearchResult, searchList, userAcessNamesModel } from '../Models/Common.Model';
 import { NgxSpinnerService } from "ngx-spinner";
 import { MessageService } from 'primeng/api';
 import { gatepassModel, materialistModel, FIFOValues } from '../Models/WMS.Model';
@@ -46,6 +46,7 @@ export class GatePassComponent implements OnInit {
   public txtDisable: boolean = true;
   public FIFOvalues: FIFOValues;
   public itemlocationData: Array<any> = [];
+  userrolelist: userAcessNamesModel[] = [];
   ngOnInit() {
     if (localStorage.getItem("Employee"))
       this.employee = JSON.parse(localStorage.getItem("Employee"));
@@ -53,10 +54,16 @@ export class GatePassComponent implements OnInit {
       this.router.navigateByUrl("Login");
     this.gatepassModel = new gatepassModel();
     this.materialistModel = new materialistModel();
+    if (localStorage.getItem("userroles")) {
+      this.userrolelist = JSON.parse(localStorage.getItem("userroles")) as userAcessNamesModel[];
+    }
     this.getGatePassList();
     this.GatepassTxt = "Gate Pass - Request Materials"
 
-    if (this.employee.roleid == "8") //for approver
+
+    var roles = this.userrolelist.filter(li => li.roleid == 8);
+
+    if (this.employee.roleid == "8" || roles.length > 0) //for approver
       this.approverstatus = "Pending";
 
     else
@@ -163,11 +170,13 @@ export class GatePassComponent implements OnInit {
       this.totalGatePassList = data;
      // debugger;
       console.log(this.totalGatePassList);
+      var role8 = this.userrolelist.filter(li => li.roleid == 8);
+      var role4 = this.userrolelist.filter(li => li.roleid == 4);
       this.gatepasslist = [];
-      if (this.employee.roleid == "8") {
+      if (this.employee.roleid == "8" || role8.length > 0) {
         this.gatepasslist = this.totalGatePassList.filter(li => li.gatepasstype == 'Non Returnable' && (li.approverstatus == this.approverstatus || li.approverstatus == null));
       }
-      else if (this.employee.roleid == "4") {
+      else if (this.employee.roleid == "4" || role4.length > 0) {
         this.totalGatePassList.forEach(item => {
           if (item.gatepasstype == "Returnable")
             this.gatepasslist.push(item);

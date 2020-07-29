@@ -106,7 +106,8 @@ export class inwardModel {
   availableqty: any;
    onhold: boolean;
   onholdremarks: string;
-  qcstatus: string
+  qcstatus: string;
+  receiveremarks: string;
 }
 
 
@@ -257,6 +258,14 @@ export class ddlmodel {
   text: string;
   supplier: string
 
+}
+export class pageModel {
+  id: number
+  pagename: string
+  pageurl: string
+  roleid: number
+  isrootpage: boolean
+  rootpageid: number
 }
 
 export class locationddl {

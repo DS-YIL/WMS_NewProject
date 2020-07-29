@@ -1142,7 +1142,7 @@ namespace WMS.DAL
 										item.qualitycheck,
 										qualitychecked,
 										item.materialqty,
-										item.onhold
+										item.receiveremarks
 
 									});
 									inwardid = Convert.ToInt32(results);
@@ -3471,6 +3471,41 @@ namespace WMS.DAL
 
 			}
 		}
+		/// <summary>
+		/// Get item location list for stock transfer
+		/// Ramesh 29/07/2020
+		/// </summary>
+		/// <param name="material"></param>
+		/// <returns></returns>
+		public async Task<IEnumerable<IssueRequestModel>> GetItemlocationListforST(string material)
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+
+				try
+				{
+					string query = WMSResource.getitemlocationList.Replace("#materialid", material);
+					await pgsql.OpenAsync();
+					var data = await pgsql.QueryAsync<IssueRequestModel>(
+					  query, null, commandType: CommandType.Text);
+					data = data.OrderByDescending(o => o.createddate);
+					return data;
+
+
+
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "GetItemlocationListBymterial", Ex.StackTrace.ToString());
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+			}
+		}
 
 		public int updateissuedmaterial(List<IssueRequestModel> obj)
 		{
@@ -3581,6 +3616,35 @@ namespace WMS.DAL
 				catch (Exception Ex)
 				{
 					log.ErrorMessage("PODataProvider", "getuserAcessList", Ex.StackTrace.ToString());
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+			}
+		}
+		//Name of Function : <<getuserAcessList>>  Author :<<Ramesh>>  
+		//Date of Creation <<28-07-2020>>
+		//Purpose : <<function used to get role list based on employeeid>>
+		//Review Date :<<>>   Reviewed By :<<>>
+		public async Task<IEnumerable<userAcessNamesModel>> getuserroleList(string employeeid)
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+
+				try
+				{
+					string query = WMSResource.getuserroles.Replace("#employeeid", employeeid);
+					await pgsql.OpenAsync();
+					return await pgsql.QueryAsync<userAcessNamesModel>(
+					  query, null, commandType: CommandType.Text);
+
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "getuserroleList", Ex.StackTrace.ToString());
 					return null;
 				}
 				finally
@@ -4065,7 +4129,6 @@ namespace WMS.DAL
 					string date = dt.ToString("yyyy-MM-dd");
 					string query = WMSResource.getsecurityreceivedlist;
 					query = query + " where sl.invoicedate <= '" + date + " 23:59:59' and sl.invoicedate >= '" + date + " 00:00:00'";
-				//	query = query + " group by sl.pono, asno.asn ";
 					await pgsql.OpenAsync();
 					return await pgsql.QueryAsync<SecurityInwardreceivedModel>(
 					   query, null, commandType: CommandType.Text);
@@ -4390,6 +4453,146 @@ namespace WMS.DAL
 
 			}
 		}
+
+
+		public async Task<IEnumerable<pageModel>> Getpagesbyroleid(int roleid)
+        {
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				try
+				{
+					string approverlist = "select * from wms.wms_pages where roleid = "+roleid+"";
+
+					await pgsql.OpenAsync();
+					return await pgsql.QueryAsync<pageModel>(
+					  approverlist, null, commandType: CommandType.Text);
+
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "Getpagesbyroleid", Ex.StackTrace.ToString());
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+			}
+
+		}
+
+		public async Task<IEnumerable<pageModel>> Getpages()
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				try
+				{
+					string approverlist = "select * from wms.wms_pages";
+
+					await pgsql.OpenAsync();
+					return await pgsql.QueryAsync<pageModel>(
+					  approverlist, null, commandType: CommandType.Text);
+
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "Getpages", Ex.StackTrace.ToString());
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+			}
+
+		}
+
+		public int GatepassapproveByMail(gatepassModel model)
+		{
+			try
+			{
+				model.approverremarks = string.Empty;
+				model.fmapproverremarks = string.Empty;
+				var result = 0;
+				return result;
+
+				string updateapproverstatus = string.Empty;
+				
+
+				if (model.categoryid == 1)
+				{
+					updateapproverstatus = WMSResource.updateApprovedstatusbymanager.Replace("#approverstatus", model.approverstatus);
+
+					using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
+					{
+
+						result = DB.Execute(updateapproverstatus, new
+						{
+							model.approverremarks,
+							model.gatepassid
+
+						});
+						if (result == 1)
+						{
+							int label = 1;
+							string approvername = model.approvedby;
+							string insertgatepasshistory = WMSResource.insertgatepassapprovalhistory;
+							string approverstatus = model.approverstatus;
+							var gatepasshistory = DB.ExecuteScalar(insertgatepasshistory, new
+							{
+
+								model.approverid,
+								approvername,
+								model.gatepassid,
+								label,
+								approverstatus
+							});
+						}
+					}
+				}
+				else if (model.categoryid == 2)
+				{
+					updateapproverstatus = WMSResource.updateApprovedstatusbyFMmanager.Replace("#fmapprovedstatus", model.fmapprovedstatus);
+
+					using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
+					{
+
+						var result1 = DB.Execute(updateapproverstatus, new
+						{
+							model.fmapproverremarks,
+							model.gatepassid
+
+						});
+						if (result1 == 1)
+						{
+							int label = 2;
+							string approvername = model.approvedby;
+							string insertgatepasshistory = WMSResource.insertgatepassapprovalhistory;
+							string approverstatus = model.fmapprovedstatus;
+							var gatepasshistory = DB.ExecuteScalar(insertgatepasshistory, new
+							{
+
+								model.approverid,
+								approvername,
+								model.gatepassid,
+								label,
+								approverstatus
+							});
+						}
+					}
+				}
+
+				return (Convert.ToInt32(result));
+			}
+			catch (Exception Ex)
+			{
+				log.ErrorMessage("PODataProvider", "GatepassapproveByMail", Ex.StackTrace.ToString());
+				return 0;
+			}
+		}
+
 
 		public int GatepassapproveByManager(gatepassModel model)
 		{
@@ -4832,7 +5035,8 @@ namespace WMS.DAL
 									createddate,
 									createdby,
 									objs.stockstatus,
-									objs.materialid
+									objs.materialid,
+									objs.inwardid
 								}));
 								if (result != 0)
 								{

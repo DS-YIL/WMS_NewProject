@@ -15,6 +15,7 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { DialogModule } from 'primeng/dialog';
 import { ToastModule } from 'primeng/toast';
 import { NgxSpinnerModule } from "ngx-spinner";
+import { MatBadgeModule } from '@angular/material/badge';
 
 import { ConfirmationDialogComponent } from './WmsCommon/confirmationdialog/confirmation-dialog.component';
 import { SelectfilterPipe } from './WmsCommon/selectfilter.pipe';
@@ -29,6 +30,7 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { TooltipModule } from 'primeng/tooltip';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { DropdownModule } from 'primeng/dropdown';
+import { InputNumberModule } from 'primeng/inputnumber';
 
 import { DashboardComponent } from './WMS/Dashboard.component';
 import { POListComponent } from './WMS/POList.component';
@@ -71,6 +73,7 @@ import { GatePassoutwardComponent } from './WMS/Gatepassoutward.component';
 import { MaterialReturnDashBoardComponent } from './WMS/MaterialReturnDashBoard.component';
 import { StoresReturnNotePrintComponent } from './WMS/StoresReturnNotePrint.component';
 import { StockCardPrintComponent } from './WMS/StockCardPrint.component';
+import { MailresponseComponent } from './WMS/Mailresponse.component';
 ////pages
 import { LoginComponent } from './WMS/Login.component';
 import {HomeComponent} from './WMS/Home.component';
@@ -128,7 +131,8 @@ import { DatePipe } from '@angular/common'
     GatePassoutwardComponent,
     MaterialReturnDashBoardComponent,
     StoresReturnNotePrintComponent,
-    StockCardPrintComponent
+    StockCardPrintComponent,
+    MailresponseComponent
 
   ],
   imports: [
@@ -159,7 +163,9 @@ import { DatePipe } from '@angular/common'
     TooltipModule,
     AutoCompleteModule,
     ConfirmDialogModule,
-    DropdownModule
+    DropdownModule,
+    MatBadgeModule,
+    InputNumberModule
     //RouterModule.forRoot([
     //  { path: '', component: LoginComponent, pathMatch: 'full' },
     // ])

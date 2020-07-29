@@ -1,5 +1,5 @@
 <div class="form-control" style="height:100%;border-radius:0px;">
-  <div class="row" style="min-height:500px;">
+  <div class="row" style="min-height:500px;width:100vw">
     <div class="col-lg-4 col-md-4">
       <div class="card" style="max-height:80vh;min-height: 80vh;border-radius:10px; box-shadow:5px 10px #888888;width:100%">
         <div class="card-header cardheadertext">
@@ -16,9 +16,9 @@
             <div class="col-lg-6 col-md-6">
               <input type="radio" name="seccheck" (change)="nonpocheck()" /> <label class="labelheading text-dark">&nbsp;&nbsp;Non-PO</label>
             </div>
-            <div class="col-lg-3 col-md-3">
+            <!--<div class="col-lg-3 col-md-3">
               <button type="button" class="btn btn-primary btn-sm" style="float:left;margin-left:10px;" (click)="refresh()" label="Save"><i class="fa fa-refresh"></i></button>
-            </div>
+            </div>-->
 
 
           </div>
@@ -165,7 +165,7 @@
       <div class="card" style="min-height: 80vh; max-height: 80vh; border-radius: 10px; box-shadow: 5px 10px #888888;">
         <div class="card-header cardheadertext">
           <span class="cardheaderdata">
-            <i class="fa fa-check-circle-o"></i>&nbsp;Today's Shipment List
+            <i class="fa fa-check-circle-o"></i>&nbsp;Today's Shipments
           </span>
           <span style="float:right" class="cardheaderdata">
             <i class="pi pi-calendar"></i>&nbsp;{{todatsdate | date: 'dd/MM/yyyy'}}
@@ -176,7 +176,7 @@
             <div class="col-lg-12 col-md-12 col-sm-12">
               <div class="row">
                 <div class="col-lg-5 col-md-5">
-                  <div class="card" style="height: 108px;margin-bottom:10px;width: 100%;  background-image: url('./assets/Login.jpg');border-radius: 10px;">
+                  <div class="card" style="height: 108px;margin-bottom:10px;width: 90%;  background-image: url('./assets/Login.jpg');border-radius: 10px;">
                     <h5 style="color:white;margin-left:10px;margin-top:10px"><i class="fa fa-cubes"></i>&nbsp;Expected Shipments</h5>
                     <h5 style="color:white;margin-left:20px;font-weight:600;">{{deliverycount}}</h5>
                     <button class="btn btn-sm" style="background-color:#99CC99 !important;color:black;font-weight:600" (click)="showdevlist()">{{btntext}}</button>
@@ -184,7 +184,7 @@
 
                 </div>
                 <div class="col-lg-5 col-md-5">
-                  <div class="card" style="height: 108px;margin-bottom:10px;width: 100%;background-image: url('./assets/Login.jpg');border-radius: 10px;">
+                  <div class="card" style="height: 108px;margin-bottom:10px;width: 90%;background-image: url('./assets/Login.jpg');border-radius: 10px;">
                     <h5 style="color:white;margin-left:10px;margin-top:10px"><i class="fa fa-cubes"></i>&nbsp;Received Shipments</h5>
                     <h5 style="color:white;margin-left:20px; font-weight:600;">{{receivedcount}}</h5>
                     <button class="btn btn-light btn-sm" style="background-color:#9999FF!important;color:black;font-weight:600" (click)="showreceivedlist()">{{btnreceivetext}}</button>
@@ -225,9 +225,9 @@
                       <th class="ptable-cell" style="text-align:center;width:10%;">Sl.No.</th>
                       <th class="ptable-cell" style="text-align:center;width:15%;">ASN No</th>
                       <th class="ptable-cell" style="text-align:center;width:15%;">PO No</th>
-                      <th class="ptable-cell" style="text-align:center;width:15%;">Invoice no</th>
+                      <th class="ptable-cell" style="text-align:center;width:13%;">Invoice No</th>
                       <th class="ptable-cell" style="text-align:center">Supplier Name</th>
-                      <th class="ptable-cell" style="text-align:center;width:25%;">Received By</th>
+                      <th class="ptable-cell" style="text-align:center;width:20%;">Received By</th>
                       <!--<th class="ptable-cell" style="text-align:center">Delivery Date</th>-->
                     </tr>
                   </ng-template>
@@ -236,15 +236,15 @@
                       <td class="ptable-cell" style="text-align:right;;width:10%;"> {{ri+1}} </td>
                       <td class="ptable-cell" style="text-align:center;width:15%;"> {{rowData.asn}} </td>
                       <td class="ptable-cell" style="text-align:center;width:15%;"> {{rowData.pono}}</td>
-                      <td class="ptable-cell" style="text-align:center;width:15%;"> {{rowData.invoiceno}} </td>
+                      <td class="ptable-cell" style="text-align:center;width:13%;"> {{rowData.invoiceno}} </td>
                       <td class="ptable-cell" style="text-align:left">
                         {{rowData.suppliername}}
                       </td>
-                      <td class="ptable-cell" style="text-align:left;width:25%;">{{rowData.receivedby}}</td>
+                      <td class="ptable-cell" style="text-align:left;width:20%;">{{rowData.receivedby}}</td>
 </ng-template>
                   <ng-template pTemplate="emptymessage">
                     <tr>
-                      <td colspan="4" style="text-align:center;color:red">No received notifications for today.</td>
+                      <td colspan="6" style="text-align:center;color:red">No received notifications for today.</td>
                     </tr>
                   </ng-template>
                 </p-table>

@@ -593,8 +593,8 @@ values(default,@pono,@itemid,@gatepassmaterialid,@itemissueddate,@itemreceiverid
   where stinw.qualitycheckrequired = True and secinw.onhold is NOT True and qc.qcby is null  order by stinw.receiveddate DESC</value>
   </data>
   <data name="receiveforinvoice" xml:space="preserve">
-    <value>INSERT INTO wms.wms_storeinward(inwmasterid,receiveddate,receivedby,receivedqty,materialid,deleteflag,qualitycheckrequired,qualitychecked,materialqty)
-VALUES(@inwmasterid,@receiveddate,@receivedby,@receivedqty,@materialid,@deleteflag,@qualitycheck,@qualitychecked,@materialqty)returning inwardid</value>
+    <value>INSERT INTO wms.wms_storeinward(inwmasterid,receiveddate,receivedby,receivedqty,materialid,deleteflag,qualitycheckrequired,qualitychecked,materialqty,remarks)
+VALUES(@inwmasterid,@receiveddate,@receivedby,@receivedqty,@materialid,@deleteflag,@qualitycheck,@qualitychecked,@materialqty,@receiveremarks)returning inwardid</value>
   </data>
   <data name="getGatePassApprovalHistoryList" xml:space="preserve">
     <value>SELECT * FROM  wms.wms_gatepassapprovals where gatepassid =#gatepassid ORDER BY historyid DESC LIMIT 2</value>
@@ -757,6 +757,9 @@ where matis.gatepassmaterialid  is not null and matgt.returneddate is null</valu
   </data>
   <data name="getstocktype" xml:space="preserve">
     <value>select stocktype from wms.stocklocation where locationid='#locationid' and location='#locationname' and storeid=#stid and rackid=#rkid and binid=#biid limit 1</value>
+  </data>
+  <data name="getuserroles" xml:space="preserve">
+    <value>select distinct roleid from wms.v_getAccessList where employeeid='#employeeid'</value>
   </data>
   <data name="Getreservelist" xml:space="preserve">
     <value>select * from wms.wms_materialreserve reser
