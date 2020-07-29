@@ -44,6 +44,8 @@ export class MaterialIssueComponent implements OnInit {
   public txtDisable: boolean = true;
   public FIFOvalues: FIFOValues;
   public reqqty: number;
+  public btndisable: boolean = true;
+  public issueqtyenable: boolean = true;
   ngOnInit() {
     if (localStorage.getItem("Employee"))
       this.employee = JSON.parse(localStorage.getItem("Employee"));
@@ -77,7 +79,7 @@ export class MaterialIssueComponent implements OnInit {
     });
 
     if (totalissuedqty > this.reqqty) {
-      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please enter issue quantity less than or eaqual to requested quantity' });
+      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: ' Issue Qty cannot exceed Requested Qty' });
       this.AddDialog = true;
     }
     else {
@@ -94,12 +96,19 @@ export class MaterialIssueComponent implements OnInit {
   }
   
   //shows list of items for particular material
-  showmateriallocationList(material, id, rowindex,qty) {
+  showmateriallocationList(material, id, rowindex, qty, issuedqty) {
+    if (issuedqty <= qty) {
+      this.issueqtyenable = true;
+    }
+    else {
+      this.issueqtyenable = false;
+    }
     this.reqqty = qty;
     this.id = id;
     this.AddDialog = true;
     this.roindex = rowindex;
     this.wmsService.getItemlocationListByMaterial(material).subscribe(data => {
+
       this.itemlocationData = data;
       this.showdialog = true;
       if (data != null) {
@@ -110,18 +119,18 @@ export class MaterialIssueComponent implements OnInit {
   //show alert about oldest item location
   alertconfirm(data) {
     var info = data;
-    this.itemreceiveddate = this.datePipe.transform(data.createddate, 'yyyy-MM-dd hh:mm:ss');
+    this.itemreceiveddate = this.datePipe.transform(data.createddate, 'yyyy-MM-dd');
     this.ConfirmationService.confirm({
       message: 'Same Material received on ' + this.itemreceiveddate + ' and placed in ' + data.itemlocation + '  location, Would you like to continue?',
       header: 'Confirmation',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
 
-        this.messageService.add({ severity: 'info', summary: 'Accepted', detail: 'You have accepted' });
+        this.messageService.add({ severity: 'info', summary: 'Notification', detail: 'You have accepted' });
       },
       reject: () => {
 
-        this.messageService.add({ severity: 'info', summary: 'Ignored', detail: 'You have ignored' });
+        this.messageService.add({ severity: 'info', summary: 'Notification', detail: 'You have ignored' });
       }
     });
   }
@@ -179,6 +188,7 @@ export class MaterialIssueComponent implements OnInit {
 
     this.wmsService.UpdateMaterialqty(this.itemlocationData).subscribe(data => {
       if (data == 1) {
+        this.btndisable = false;
         this.itemlocationData.forEach(item => {
          
          // item.issuedquantity = this.itemlocationData.issuedquantity;

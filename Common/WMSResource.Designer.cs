@@ -79,7 +79,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select * from wms.wms_stock where materialid=&apos;#materialid&apos; and createddate&lt;&apos;#createddate&apos;  order by createddate asc limit 1.
+        ///   Looks up a localized string similar to select * from wms.wms_stock where materialid=&apos;#materialid&apos; and createddate::date&lt;&apos;#createddate&apos;  order by createddate asc limit 1.
         /// </summary>
         public static string checkoldestmaterial {
             get {
@@ -453,7 +453,10 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select distinct ygs.materialdescription,ygs.material,itemlocation,createddate,sk.itemid,availableqty from wms.wms_stock sk inner join wms.&quot;MaterialMasterYGS&quot; ygs on ygs.material=sk.materialid where materialid=&apos;#materialid&apos; and availableqty&gt;0 --and sk.deleteflag=false.
+        ///   Looks up a localized string similar to select distinct sum(sk.availableqty)as availableqty,sk.itemlocation,ygs.materialdescription,ygs.material,createddate::DATE
+        ///from wms.wms_stock sk inner join wms.&quot;MaterialMasterYGS&quot; ygs on ygs.material=sk.materialid where materialid=&apos;#materialid&apos;
+        ///and availableqty&gt;0 --and sk.deleteflag=false
+        ///group by sk.itemlocation,ygs.materialdescription,ygs.material,createddate::DATE,itemid.
         /// </summary>
         public static string getitemlocationList {
             get {

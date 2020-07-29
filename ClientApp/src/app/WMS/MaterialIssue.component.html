@@ -53,7 +53,7 @@
             {{ri+1}}
           </td>
           <!--<td class="ptable-cell" style="text-align:center">{{rowData.pono}}</td>-->
-          <td class="ptable-cell" style="text-align:left;width:200px;"><button type="button" class="btn btn-link" (click)="showmateriallocationList(rowData.materialid,ri+1,ri,rowData.requestedquantity);" style="padding-left:0px;">{{rowData.materialid}}</button></td>
+          <td class="ptable-cell" style="text-align:left;width:200px;"><button type="button" class="btn btn-link" (click)="showmateriallocationList(rowData.materialid,ri+1,ri,rowData.requestedquantity,rowData.issuedqty);" style="padding-left:0px;">{{rowData.materialid}}</button></td>
           <td class="ptable-cell" style="text-align:right">{{rowData.requestedquantity}}</td>
           <td class="ptable-cell" style="text-align:right">{{rowData.availableqty}}</td>
           <td class="ptable-cell">
@@ -65,7 +65,7 @@
     <br />
     <br />
     <div style="text-align: center;margin-top:5px;">
-      <input class="btn btn-primary" (click)="onMaterialIssueDeatilsSubmit()" type="button" value="Submit">
+      <input *ngIf="btndisable" class="btn btn-primary" (click)="onMaterialIssueDeatilsSubmit()" type="button" value="Submit">
     </div>
   </div>
 </div>
@@ -92,7 +92,7 @@
               <th style="text-align:center;width:70px">S.No</th>
               <th style="text-align:center">Location</th>
               <th style="text-align:center">Available Qty</th>
-              <th style="text-align:center">Issue Qty</th>
+              <th style="text-align:center" *ngIf="issueqtyenable">Issue Qty</th>
               <th style="text-align:center">Received Date</th>
 
             </tr>
@@ -105,8 +105,8 @@
               </td>
               <td class="ptable-cell" style="text-align:center">{{rowData.itemlocation}}</td>
               <td class="ptable-cell" style="text-align:right">{{rowData.availableqty}}</td>
-              <td class="ptable-cell" style="text-align:right">
-                <input id="{{ri+1}}" pInputText type="number" style="text-align:right" class="form-control" (change)="checkissueqty($event,rowData.issueqty,rowData.availableqty,rowData.material,rowData.createddate);" [(ngModel)]="rowData.issuedquantity">
+              <td class="ptable-cell" style="text-align:right" *ngIf="issueqtyenable">
+                <input id="{{ri+1}}" pInputText type="number" style="text-align:right" class="form-control"  (change)="checkissueqty($event,rowData.issueqty,rowData.availableqty,rowData.material,rowData.createddate);" [(ngModel)]="rowData.issuedquantity">
               </td>
               <td class="ptable-cell" style="text-align:center">{{rowData.createddate | date :  constants.dateFormat}}</td>
             </tr>
@@ -115,7 +115,7 @@
         </p-table>
         <p-footer>
           <div class="ui-dialog-buttonpane ui-helper-clearfix">
-            <button type="button" pButton icon="fa fa-check" class="ui-button-success" (click)="issuematerial(itemlocationData)" label="OK"></button>
+            <button type="button" pButton icon="fa fa-check" class="ui-button-success" *ngIf="issueqtyenable" (click)="issuematerial(itemlocationData)" label="OK"></button>
             <button type="button" pButton icon="fa fa-close" class="ui-button-danger" (click)="Cancel()" label="Cancel"></button>
           </div>
         </p-footer>
