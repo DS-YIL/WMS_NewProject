@@ -422,7 +422,10 @@ LINK:&lt;/p&gt;
 &lt;p style='margin-bottom:0px;'&gt;Regards,&lt;/p&gt;&lt;p&gt; #sender.&lt;/p&gt;&lt;/div&gt;&lt;/body&gt;&lt;/html&gt;</value>
   </data>
   <data name="getitemlocationList" xml:space="preserve">
-    <value>select distinct ygs.materialdescription,ygs.material,itemlocation,createddate,sk.itemid,availableqty from wms.wms_stock sk inner join wms."MaterialMasterYGS" ygs on ygs.material=sk.materialid where materialid='#materialid' and availableqty&gt;0 --and sk.deleteflag=false</value>
+    <value>select distinct sum(sk.availableqty)as availableqty,sk.itemlocation,ygs.materialdescription,ygs.material,createddate::DATE
+from wms.wms_stock sk inner join wms."MaterialMasterYGS" ygs on ygs.material=sk.materialid where materialid='#materialid'
+and availableqty&gt;0 --and sk.deleteflag=false
+group by sk.itemlocation,ygs.materialdescription,ygs.material,createddate::DATE,itemid</value>
   </data>
   <data name="insertAuthUserData" xml:space="preserve">
     <value>insert into wms.auth_users(authid,employeeid,roleid,createddate,createdby,deleteflag)values(default,@employeeid,@roleid,@createddate,@createdby,@deleteflag)returning authid</value>
