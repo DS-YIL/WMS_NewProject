@@ -45,6 +45,7 @@ export class MaterialIssueComponent implements OnInit {
   public FIFOvalues: FIFOValues;
   public reqqty: number;
   public btndisable: boolean = true;
+  public issueqtyenable: boolean = true;
   ngOnInit() {
     if (localStorage.getItem("Employee"))
       this.employee = JSON.parse(localStorage.getItem("Employee"));
@@ -95,7 +96,13 @@ export class MaterialIssueComponent implements OnInit {
   }
   
   //shows list of items for particular material
-  showmateriallocationList(material, id, rowindex,qty) {
+  showmateriallocationList(material, id, rowindex, qty, issuedqty) {
+    if (issuedqty <= qty) {
+      this.issueqtyenable = true;
+    }
+    else {
+      this.issueqtyenable = false;
+    }
     this.reqqty = qty;
     this.id = id;
     this.AddDialog = true;
@@ -119,7 +126,7 @@ export class MaterialIssueComponent implements OnInit {
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
 
-        this.messageService.add({ severity: 'info', summary: 'Accepted', detail: 'You have accepted' });
+        this.messageService.add({ severity: 'info', summary: 'Notification', detail: 'You have accepted' });
       },
       reject: () => {
 
