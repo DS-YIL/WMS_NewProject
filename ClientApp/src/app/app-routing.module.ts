@@ -44,6 +44,7 @@ import { MaterialReturnDashBoardComponent } from './WMS/MaterialReturnDashBoard.
 import { StoresReturnNotePrintComponent } from './WMS/StoresReturnNotePrint.component';
 import { StockCardPrintComponent } from './WMS/StockCardPrint.component';
 import { MailresponseComponent } from './WMS/Mailresponse.component';
+import { MaterialTransferComponent } from './WMS/MaterialTransfer.component';
 const routes: Routes = [{
   path: 'WMS',
   children: [
@@ -103,6 +104,8 @@ const routes: Routes = [{
       { path: "StoresReturnNote", component: StoresReturnNotePrintComponent, canActivate: [AuthGuard] },
     { path: "StockCardPrint", component: StockCardPrintComponent, canActivate: [AuthGuard] },
     { path: "Mailresponse", component: MailresponseComponent, canActivate: [AuthGuard] },
+    { path: "MaterialTransfer", component: MaterialTransferComponent, canActivate: [AuthGuard] },
+    
 
     
   ]
