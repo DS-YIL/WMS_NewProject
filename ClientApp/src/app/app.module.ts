@@ -74,6 +74,7 @@ import { MaterialReturnDashBoardComponent } from './WMS/MaterialReturnDashBoard.
 import { StoresReturnNotePrintComponent } from './WMS/StoresReturnNotePrint.component';
 import { StockCardPrintComponent } from './WMS/StockCardPrint.component';
 import { MailresponseComponent } from './WMS/Mailresponse.component';
+import { MaterialTransferComponent } from './WMS/MaterialTransfer.component'
 ////pages
 import { LoginComponent } from './WMS/Login.component';
 import {HomeComponent} from './WMS/Home.component';
@@ -132,7 +133,8 @@ import { DatePipe } from '@angular/common'
     MaterialReturnDashBoardComponent,
     StoresReturnNotePrintComponent,
     StockCardPrintComponent,
-    MailresponseComponent
+    MailresponseComponent,
+    MaterialTransferComponent
 
   ],
   imports: [
