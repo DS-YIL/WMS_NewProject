@@ -1,9 +1,27 @@
 
 <div class="card" style="max-height:100vh;border-radius: 10px;box-shadow: 5px 10px #888888;">
   <div class="card-header text-center cardheadertext">
-    <span>
-      <i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;Requested Material List
-    </span>
+    <div class="row">
+
+      <div class="col-lg-1 col-md-1 col-sm-1 form-group">
+        <button type="button" class="btn btn-primary" (click)="showmaterialdetails()">Return</button>
+      </div>
+      <div class="col-lg-1 col-md-1 col-sm-1 form-group" style="padding-left:0px;">
+        <button type="button" class="btn btn-primary" (click)="returnqty()">Transfer</button>
+      </div>
+      <div class="col-lg-4 col-md-4 col-sm-4 form-group" style="padding-left:0px;">
+        <i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;Requested Material List
+      </div>
+    </div>
+    <!--<span>
+    <button type="button" class="btn btn-primary" (click)="returnqty()">Return</button>
+  </span>
+  <span>
+    <button type="button" class="btn btn-primary" (click)="returnqty()">Transfer</button>
+  </span>
+  <span>
+    <i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;Requested Material List
+  </span>-->
   </div>
   <div class="card-body" style="overflow-y:visible;padding:0px;">
     <p-table #dt [value]="requestList" [style]="{'width':'100%'}" [scrollable]="true" scrollHeight="53vh">
@@ -97,7 +115,7 @@
           <ng-template pTemplate="header">
             <tr class="mprltbldata">
               <th style="text-align:center;width:70px">S.No</th>
-              <th style="text-align:center">Material</th>
+              <th style="text-align:center">Request Id</th>
               <th style="text-align:center;width:150px">Requested  Qty</th>
               <th style="text-align:center;width:150px">Issued Qty</th>
               <th style="text-align:center;width:150px">Return Qty</th>
@@ -110,7 +128,7 @@
               <td class="ptable-cell" style="text-align:right">
                 {{ri+1}}
               </td>
-              <td class="ptable-cell" style="text-align:left">{{rowData.materialid}}</td>
+              <td class="ptable-cell" style="text-align:left">{{rowData.requestid}}</td>
               <td class="ptable-cell" style="text-align:right">{{rowData.requestedquantity}}</td>
               <td class="ptable-cell" style="text-align:right">
                 {{rowData.issuedquantity}}

@@ -107,17 +107,19 @@ export class MaterialRequestViewComponent implements OnInit {
   backtoDashboard() {
     this.router.navigateByUrl("/WMS/Dashboard");
   }
-  showmaterialdetails(requestid, rowindex) {
-    this.rowindex = rowindex
-    this.AddDialog = true;
-this.showdialog=true;
-    this.wmsService.getmaterialissueList(requestid).subscribe(data => {
-      this.materiallistData = data;
-      
-      if (data != null) {
 
-      }
-    });
+  showmaterialdetails() {
+    //this.rowindex = rowindex
+    this.AddDialog = true;
+    this.showdialog = true;
+    this.materiallistData = this.requestList.filter(li => li.approvedstatus == 'Approved');
+    //this.wmsService.getmaterialissueList(requestid).subscribe(data => {
+    //  this.materiallistData = data;
+      
+    //  if (data != null) {
+
+    //  }
+    //});
   }
   Cancel() {
     this.AddDialog = false;

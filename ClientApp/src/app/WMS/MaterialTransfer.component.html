@@ -2,7 +2,7 @@
 <div class="card" style="max-height:100vh;border-radius: 10px;box-shadow: 5px 10px #888888;">
   <div class="card-header text-center cardheadertext">
     <span>
-      <i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;Requested Material List
+      <i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;Transfer Material List
     </span>
   </div>
   <div class="card-body" style="overflow-y:visible;padding:0px;">
@@ -83,7 +83,7 @@
     </div>-->
     <div style="height: 5px; overflow-y: scroll">
 
-      <p-dialog header="Material Requested Details" [(visible)]="AddDialog" [contentStyle]="{'overflow-y': 'auto', 'overflow-x': 'hidden', 'max-height': '80vh','min-height':'250px'}" showEffect="fade" [modal]="true" [responsive]="true" [style]="{width: '1024px'}">
+      <p-dialog header="Material Transfer Details" [(visible)]="AddDialog" [contentStyle]="{'overflow-y': 'auto', 'overflow-x': 'hidden', 'max-height': '80vh','min-height':'250px'}" showEffect="fade" [modal]="true" [responsive]="true" [style]="{width: '1024px'}">
         <div *ngIf="showdialog">
           <div class="row  pl-0">
             <div class="col-lg-4 col-md-4 col-sm-4 pt-2 labelheading">
@@ -100,7 +100,6 @@
               <th style="text-align:center">Material</th>
               <th style="text-align:center;width:150px">Requested  Qty</th>
               <th style="text-align:center;width:150px">Issued Qty</th>
-              <th style="text-align:center;width:150px">Return Qty</th>
               <th style="text-align:center;width:150px">Transfer Qty</th>
               <th style="text-align:center;width:150px">To Project</th>
 
@@ -121,9 +120,7 @@
               <td class="ptable-cell" style="text-align:center;width:100px;">
                 <input pInputText [disabled]="rowData.approvedstatus=='Approved'?false:true" type="number" (change)="returnQtyChange(rowData.issuedquantity,rowData.returnqty)" class="form-control" [(ngModel)]="rowData.returnqty">
               </td>
-              <td class="ptable-cell" style="text-align:center;width:100px;">
-                <input pInputText [disabled]="rowData.approvedstatus=='Approved'?false:true" type="number" (change)="returnQtyChange(rowData.issuedquantity,rowData.returnqty)" class="form-control" [(ngModel)]="rowData.returnqty">
-              </td>
+            
               <td>
                 <p-autoComplete appendTo="body"  (onSelect)="onMaterialSelected(material)" [(ngModel)]="material" type="text" [suggestions]="searchItems" field="name" [dropdown]="true" (completeMethod)="bindSearchListData($event,'ItemId')" size="8"></p-autoComplete>
               </td>
@@ -133,7 +130,6 @@
 
         </p-table>
         <p-footer>
-          <button type="button" class="btn btn-primary" [disabled]="btnDisable" (click)="returnqty()">Return Material</button>
           <button type="button" class="btn btn-primary" [disabled]="btnDisabletransfer" (click)="transferqty()">Transfer Material</button>
           <!--<div class="ui-dialog-buttonpane ui-helper-clearfix">
     <button type="button" pButton icon="fa fa-check" class="ui-button-success" (click)="Cancel()" label="OK"></button>

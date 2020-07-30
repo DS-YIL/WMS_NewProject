@@ -29,7 +29,7 @@ export class MaterialTransferComponent implements OnInit {
   public searchItems: Array<searchList> = [];
   public selectedlist: Array<searchList> = [];
   public searchresult: Array<object> = [];
-  public btnDisabletransfer: boolean = true;
+  public btnDisabletransfer: boolean = false;
   ngOnInit() {
     if (localStorage.getItem("Employee"))
       this.employee = JSON.parse(localStorage.getItem("Employee"));
