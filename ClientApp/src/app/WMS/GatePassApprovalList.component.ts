@@ -176,6 +176,7 @@ export class GatePassApprovalList implements OnInit {
     this.gatepassModel.approvedby = this.employee.name;
     this.wmsService.GatepassapproveByManager(this.gatepassModel).subscribe(data => {
       this.spinner.hide();
+      this.btnDisable = true;
       this.getGatePassHistoryList(this.materialList[0].gatepassid);
       this.gatepassModel.status = "Approved";
       if (this.gatepassModel.status == 'Approved')

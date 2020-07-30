@@ -304,7 +304,7 @@ values(default,@gatepassid,@materialid,@quantity,@deleteflag,@remarks,@materialc
     <value>update wms.wms_gatepass set gatepasstype=@gatepasstype,status=@status,referenceno=@referenceno,vehicleno=@vehicleno,requestedby=@requestedby,vendorname=@vendorname,reasonforgatepass=@reasonforgatepass where gatepassid=#gatepassid</value>
   </data>
   <data name="updategatepassmaterial" xml:space="preserve">
-    <value>update wms.wms_gatepassmaterial set gatepassid=@gatepassid,materialid=@materialid,quantity=@quantity,remarks=@remarks,materialcost=@materialcost,expecteddate=@expecteddate,returneddate=@returneddate where gatepassmaterialid=#gatepassmaterialid</value>
+    <value>update wms.wms_gatepassmaterial set gatepassid=@gatepassid,materialid=@materialid,quantity=@quantity,remarks=@remarks,materialcost=@materialcost,returneddate=@returneddate where gatepassmaterialid=#gatepassmaterialid</value>
   </data>
   <data name="deletegatepassmaterial" xml:space="preserve">
     <value>update wms.wms_gatepassmaterial set deleteflag='true' where gatepassmaterialid=#gatepassmaterialid</value>

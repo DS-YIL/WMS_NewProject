@@ -419,6 +419,13 @@ export class GatePassComponent implements OnInit {
     //alert("entered");
     if (this.gatepassModel.gatepasstype != "0") {
       this.gatepassModel.requestedby = this.employee.employeeno;
+
+      //loop all the materiallist
+      for (var i = 0; i < this.gatepassModel.materialList.length; i++) {
+        this.gatepassModel.materialList[i].expecteddate = this.gatepassModel.materialList[i].expecteddate != null ? new Date(this.gatepassModel.materialList[i].expecteddate).toLocaleDateString() : undefined;
+        this.gatepassModel.materialList[i].returneddate = this.gatepassModel.materialList[i].returneddate != null ? new Date(this.gatepassModel.materialList[i].returneddate).toLocaleDateString() : undefined;
+
+      }
       this.wmsService.saveoreditgatepassmaterial(this.gatepassModel).subscribe(data => {
         this.gatepassdialog = false;
         this.updateReturnedDateDialog = false;
@@ -577,6 +584,14 @@ export class GatePassComponent implements OnInit {
   Cancel() {
     this.AddDialog = false;
   }
+
+  parseDate(dateString: string): Date {
+    if (dateString) {
+      return new Date(dateString);
+    }
+    return null;
+  }
+
   issuematerial(itemlocationData) {
     var totalissuedqty = 0;
     this.itemlocationData.forEach(item => {

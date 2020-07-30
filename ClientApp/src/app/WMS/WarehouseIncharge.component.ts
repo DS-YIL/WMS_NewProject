@@ -452,7 +452,7 @@ export class WarehouseInchargeComponent implements OnInit {
       this.messageService.add({ severity: 'error', summary: 'Validation', detail: 'Enter GRNNo' });
 
     }
-      this.PoDetails.grnnumber = this.selectedgrnno;
+    this.PoDetails.grnnumber = this.selectedgrnno;
       this.isnonpo = false;
       this.spinner.show();
       this.wmsService.getitemdetailsbygrnno(this.PoDetails.grnnumber).subscribe(data => {
@@ -714,7 +714,7 @@ this.updateRowGroupMetaData();
       }
       else {
         this.disSaveBtn = true;
-        this.messageService.add({ severity: 'error', summary: 'Validation', detail: 'Putaway qty cannot exceed Accepted qty' });
+        this.messageService.add({ severity: 'error', summary: 'Validation', detail: 'Putaway Qty should be same as Accepted Qty' });
       }
     }
     else {

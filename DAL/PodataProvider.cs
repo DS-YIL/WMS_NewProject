@@ -2116,6 +2116,7 @@ namespace WMS.DAL
 
 			}
 		}
+
 		/// <summary>
 		/// insert or update gatepass info
 		/// </summary>
@@ -2299,7 +2300,7 @@ namespace WMS.DAL
 								item.quantity,
 								item.remarks,
 								item.materialcost,
-								item.expecteddate,
+								//item.expecteddate,
 								item.returneddate,
 
 							});
@@ -4129,6 +4130,7 @@ namespace WMS.DAL
 					string date = dt.ToString("yyyy-MM-dd");
 					string query = WMSResource.getsecurityreceivedlist;
 					query = query + " where sl.invoicedate <= '" + date + " 23:59:59' and sl.invoicedate >= '" + date + " 00:00:00'";
+				//	query = query + " group by sl.pono, asno.asn ";
 					await pgsql.OpenAsync();
 					return await pgsql.QueryAsync<SecurityInwardreceivedModel>(
 					   query, null, commandType: CommandType.Text);
