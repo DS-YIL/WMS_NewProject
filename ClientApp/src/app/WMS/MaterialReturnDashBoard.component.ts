@@ -57,7 +57,7 @@ export class MaterialReturnDashBoardComponent implements OnInit {
     //this.rowindex = rowindex
     this.AddDialog = true;
     this.showdialog = true;
-    this.wmsService.getmaterialissueList(requestid).subscribe(data => {
+    this.wmsService.getreturnmaterialListforconfirm(requestid).subscribe(data => {
       this.materiallistData = data;
       if (this.materiallistData[0].returnqtyaccept == 'Accepted') {
         this.btnDisable = true;

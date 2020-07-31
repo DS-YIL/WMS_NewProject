@@ -33,7 +33,7 @@
               <button type="button" class="btn btn-link" (click)="showmaterialdetails(rowData.requestid);" style="padding-left:0px;">{{rowData.requestid}}</button>
             </td>
             <td class="ptable-cell" style="text-align:left;">{{rowData.projectname}}</td>
-            <td class="ptable-cell" style="text-align:center;width:150px;">{{rowData.returnon  | date :  constants.dateFormat}}</td>
+            <td class="ptable-cell" style="text-align:center;width:150px;">{{rowData.createddate  | date :  constants.dateFormat}}</td>
             <td class="ptable-cell" style="text-align:left;width:300px;">{{rowData.name}}</td>
 
           </tr>

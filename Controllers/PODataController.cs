@@ -635,6 +635,11 @@ namespace WMS.Controllers
 		{
 			return await this._poService.GetReturnmaterialList();
 		}
+		[HttpGet("getreturnmaterialListforconfirm")]
+		public async Task<IEnumerable<IssueRequestModel>> GetReturnmaterialListForConfirm(string requestid)
+		{
+			return await this._poService.GetReturnmaterialListForConfirm(requestid);
+		}
 		//[HttpPost("securitysendemail")]
 		//public EmailModel sendemail(EmailModel obj)
 		//{

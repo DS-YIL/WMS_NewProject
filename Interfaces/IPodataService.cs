@@ -131,5 +131,6 @@ Task<string> updateonholdrow(updateonhold datamodel);
         Task<IEnumerable<pageModel>> Getpagesbyroleid(int roleid);
         Task<IEnumerable<pageModel>> Getpages();
         Task<IEnumerable<IssueRequestModel>> GetReturnmaterialList();
+        Task<IEnumerable<IssueRequestModel>> GetReturnmaterialListForConfirm(string requestid);
     }
 }

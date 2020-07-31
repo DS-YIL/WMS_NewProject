@@ -465,6 +465,18 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to select * from wms.wms_returntransfermaterial returnmat
+        ///   left join wms.wms_materialrequest req on req.requestforissueid=returnmat.requestforissueid
+        ///   left join wms.wms_materialissue isue on isue.materialissueid=returnmat.materialissueid
+        ///   where returnmat.requestid=#requestid and returnmat.confirmstatus is null.
+        /// </summary>
+        public static string getlistforconfirm {
+            get {
+                return ResourceManager.GetString("getlistforconfirm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to select req.pono,req.requestid,req.requesteddate,req.requesterid,pro.projectname,emp.&quot;name&quot;,max(req.requesttype)as requesttype,max(req.returnon)as returnon
         ///        from wms.wms_materialrequest req left join wms.wms_polist po on po.pono=req.pono 
         ///       left join wms.employee emp on req.requesterid=emp.employeeno 

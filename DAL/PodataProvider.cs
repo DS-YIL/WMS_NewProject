@@ -5635,5 +5635,35 @@ namespace WMS.DAL
 
 			
 		}
+
+		public async Task<IEnumerable<IssueRequestModel>> GetReturnmaterialListForConfirm(string requestid)
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				try
+				{
+					await pgsql.OpenAsync();
+					string query = WMSResource.getlistforconfirm.Replace("#requestid", requestid);
+					string updatequery = string.Empty;
+					//string updatedon = WMSResource.updatedon;
+					return await pgsql.QueryAsync<IssueRequestModel>(
+					  query, null, commandType: CommandType.Text);
+
+				}
+				catch (Exception ex)
+				{
+
+					log.ErrorMessage("PODataProvider", "GetReturnmaterialListForConfirm", ex.StackTrace.ToString());
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+			}
+
+
+		}
 	}
 }
