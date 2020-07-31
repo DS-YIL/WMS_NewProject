@@ -7,7 +7,7 @@ import { Employee, DynamicSearchResult, searchList } from '../Models/Common.Mode
 import { NgxSpinnerService } from "ngx-spinner";
 import { materialRequestDetails } from 'src/app/Models/WMS.Model';
 import { MessageService } from 'primeng/api';
-
+import { RadioButtonModule } from 'primeng/radiobutton';
 @Component({
   selector: 'app-MaterialRequest',
   templateUrl: './MaterialRequestView.component.html'
@@ -37,6 +37,8 @@ export class MaterialRequestViewComponent implements OnInit {
   public searchresult: Array<object> = [];
   public btnDisabletransfer: boolean = false;
   public locationlist: any[] = [];
+  public chkChangeshideshow: boolean = false;
+  public requestid: any;
   ngOnInit() {
     if (localStorage.getItem("Employee"))
       this.employee = JSON.parse(localStorage.getItem("Employee"));
@@ -119,33 +121,51 @@ export class MaterialRequestViewComponent implements OnInit {
   backtoDashboard() {
     this.router.navigateByUrl("/WMS/Dashboard");
   }
+  selectrow(requesid) {
+    this.requestid = requesid;
 
+  }
   showmaterialdetails() {
-    //this.rowindex = rowindex
-    this.AddDialog = true;
-    this.showdialog = true;
-    this.materiallistData = this.requestList.filter(li => li.approvedstatus == 'Approved');
-    //this.wmsService.getmaterialissueList(requestid).subscribe(data => {
-    //  this.materiallistData = data;
-      
-    //  if (data != null) {
+    if (this.requestid == undefined) {
+      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please select any Request Id' });
+      //this.router.navigateByUrl("/WMS/MaterialReqView");
+    }
+    else {
 
-    //  }
-    //});
+
+      //this.rowindex = rowindex
+      this.AddDialog = true;
+      this.showdialog = true;
+      //this.materiallistData = this.requestList.filter(li => li.approvedstatus == 'Approved');
+      this.wmsService.getmaterialissueList(this.requestid).subscribe(data => {
+        this.materiallistData = data;
+
+        if (data != null) {
+
+        }
+      });
+    }
   }
   showmaterialdetailsfortransfer() {
-    this.bindSearchListData();
-    //this.rowindex = rowindex
-    this.AddDialogfortransfer = true;
-    this.showdialogfortransfer = true;
-    this.materiallistData = this.requestList.filter(li => li.approvedstatus == 'Approved');
-    //this.wmsService.getmaterialissueList(requestid).subscribe(data => {
-    //  this.materiallistData = data;
+    if (this.requestid == undefined) {
+      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please select any Request Id' });
+      //this.router.navigateByUrl("/WMS/MaterialReqView");
+    }
+    else {
 
-    //  if (data != null) {
+      this.bindSearchListData();
+      //this.rowindex = rowindex
+      this.AddDialogfortransfer = true;
+      this.showdialogfortransfer = true;
+      //this.materiallistData = this.requestList.filter(li => li.approvedstatus == 'Approved');
+      this.wmsService.getmaterialissueList(this.requestid).subscribe(data => {
+        this.materiallistData = data;
 
-    //  }
-    //});
+        if (data != null) {
+
+        }
+      });
+    }
   }
   Cancel() {
     this.AddDialog = false;
@@ -160,6 +180,10 @@ export class MaterialRequestViewComponent implements OnInit {
     //    this.requestList[this.rowindex].returnqty = totalreturnqty;
     //  }
     //})
+    this.materiallistData.forEach(item => {
+      this.materiallistData[item].rquesttype = "return";
+    }
+    );
       this.wmsService.UpdateReturnqty(this.materiallistData).subscribe(data => {
         if (data == 1) {
           this.btnDisable = true;
@@ -211,10 +235,26 @@ export class MaterialRequestViewComponent implements OnInit {
   }
   transferqty() {
 
+    this.materiallistData.forEach(item => {
+      this.materiallistData[item].rquesttype = "transfer";
+    }
+    );
+    this.wmsService.UpdateReturnqty(this.materiallistData).subscribe(data => {
+
+    })
   }
   onChange(value, indexid:any) {
     console.log(event);
     this.materiallistData[indexid].projectname = value;
    // (<HTMLInputElement>document.getElementById(indexid)).value = event.toString();
+  }
+  toggleVisibility(e,index) {
+    if (e.checked == true) {
+      this.chkChangeshideshow = true;
+      document.getElementById(index).style.display = "block";
+    }
+    else {
+      document.getElementById(index).style.display = "none";
+    }
   }
 }

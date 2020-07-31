@@ -3,14 +3,14 @@
   <div class="card-header text-center cardheadertext">
     <div class="row">
 
-      <div class="col-lg-1 col-md-1 col-sm-1 form-group">
-        <button type="button" class="btn btn-primary" (click)="showmaterialdetails()">Return</button>
+      <div class="col-lg-1 col-md-1 col-sm-1 form-group" style="padding-right:0px;">
+        <a (click)="showmaterialdetails()" style="cursor:pointer;">Return</a>
       </div>
       <div class="col-lg-1 col-md-1 col-sm-1 form-group" style="padding-left:0px;">
-        <button type="button" class="btn btn-primary" (click)="showmaterialdetailsfortransfer()">Transfer</button>
+        <a  (click)="showmaterialdetailsfortransfer()" style="cursor:pointer;">Transfer</a>
       </div>
-      <div class="col-lg-4 col-md-4 col-sm-4 form-group" style="padding-left:0px;">
-        <i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;Requested Material List
+      <div class="col-lg-9 col-md-9 col-sm-9 form-group" style="padding-left:0px;">
+        <i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;Requested Material
       </div>
     </div>
     <!--<span>
@@ -28,9 +28,10 @@
       <ng-template pTemplate="header">
         <tr class="mprltbldata">
           <th style="text-align:center;width:70px">Sl.No.</th>
+          <th style="text-align:center;width:70px">Select</th>
           <th style="text-align:center;width:100px">Request Id</th>
           <th style="text-align:center;width:200px">PO No</th>
-          <th style="text-align:center">Project Name</th>
+          <!--<th style="text-align:center">Project Name</th>-->
           <th style="text-align:center;width:150px">Requested On</th>
           <th style="text-align:center;width:200px">PM Acknowlegment</th>
           <th style="text-align:center;width:100px">Status</th>
@@ -41,9 +42,10 @@
         </tr>
         <tr>
           <th></th>
+          <th></th>
           <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'requestid', 'contains')"></th>
           <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'pono', 'contains')"></th>
-          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'projectname', 'contains')"></th>
+          <!--<th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'projectname', 'contains')"></th>-->
           <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'material', 'contains')"></th>
           <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'materialdescription', 'contains')"></th>
           <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'requesteddate', 'contains')"></th>
@@ -56,11 +58,16 @@
       <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
         <tr>
           <td class="ptable-cell" style="text-align:right;width:70px;">{{ri+1}}</td>
-          <td class="ptable-cell" style="text-align:center;width:100px;">
+          <td style="width:70px;">
+            <p-radioButton name="group1" binary="true"  (click)="selectrow(rowData.requestid)"></p-radioButton>
+          </td>
+          <td class="ptable-cell" style="    text-align: center;
+    width: 100px;
+">
             <button type="button" class="btn btn-link" (click)="showstory(rowData.requestid)" style="padding-left:0px;">{{rowData.requestid}}</button>
           </td>
           <td class="ptable-cell" style="text-align:center;width:200px;">{{rowData.pono}}</td>
-          <td class="ptable-cell" style="text-align:left">{{rowData.projectname}}</td>
+          <!--<td class="ptable-cell" style="text-align:left">{{rowData.projectname}}</td>-->
           <td class="ptable-cell" style="text-align:center;width:150px;">{{rowData.requesteddate| date :  constants.dateFormat}}</td>
           <td class="ptable-cell" style="width:200px;">
             <div *ngIf="rowData.approvedstatus=='Approved'" class="form-inline">
@@ -191,7 +198,7 @@
               <th style="text-align:center;width:150px">Issued Qty</th>
               <th style="text-align:center;width:150px">Transfer Qty</th>
               <th style="text-align:center;width:150px">To Project</th>
-
+              <th style="text-align:center;width:150px">Other</th>
             </tr>
 
           </ng-template>
@@ -217,9 +224,16 @@
                     {{loclist.projectcode}}
                   </option>
                 </select>
-                  <!--<input *ngIf="rowData.projectcode" [(ngModel)]="rowData.projectcode" class="form-control" type="text" name="{{rowData.projectcode}}" />
+                <!--<input *ngIf="rowData.projectcode" [(ngModel)]="rowData.projectcode" class="form-control" type="text" name="{{rowData.projectcode}}" />
 
     <p-autoComplete appendTo="body" [(ngModel)]="projectcode" id="{{ri+1}}"  (onSelect)="captureId($event,ri+1)" type="text" [suggestions]="searchItems"  field="name" [dropdown]="true" (completeMethod)="bindSearchListData($event,'project')" size="8"></p-autoComplete>-->
+              </td>
+              <td class="ptable-cell" style="width:200px;">
+                <!--<div  class="form-inline">-->
+                  <p-checkbox   binary="true" (onChange)="toggleVisibility($event,ri+1)"></p-checkbox> &nbsp;&nbsp;
+                  <input pInputText id="{{ri+1}}"  class="form-control" [(ngModel)]="rowData.projectname" type="text" required style="display:none;" />
+                <!--</div>-->
+
               </td>
               <!--<td class="ptable-cell" style="text-align:left">{{rowData.createddate | date :  constants.dateFormat}}</td>-->
             </tr>

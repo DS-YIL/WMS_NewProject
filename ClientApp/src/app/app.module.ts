@@ -80,6 +80,7 @@ import { LoginComponent } from './WMS/Login.component';
 import {HomeComponent} from './WMS/Home.component';
 import { MenubarModule } from 'primeng/menubar';
 import { DatePipe } from '@angular/common'
+import {RadioButtonModule} from 'primeng/radiobutton';
 @Injectable
   ({
     providedIn: 'root',
@@ -167,7 +168,7 @@ import { DatePipe } from '@angular/common'
     ConfirmDialogModule,
     DropdownModule,
     MatBadgeModule,
-    InputNumberModule
+    InputNumberModule, RadioButtonModule
     //RouterModule.forRoot([
     //  { path: '', component: LoginComponent, pathMatch: 'full' },
     // ])
