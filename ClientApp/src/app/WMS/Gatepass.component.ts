@@ -186,7 +186,6 @@ export class GatePassComponent implements OnInit {
       this.materialList = data;
       console.log(data);
       this.gatepassModel = this.materialList[0];
-      alert(this.materialList[0].returneddate);
       console.log(this.gatepassModel);
 
     });
