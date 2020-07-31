@@ -1007,9 +1007,9 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select max(iss.returnqtyaccept)as returnqtyaccept,max(sk.itemid)as itemid,max(req.returnqty)as returnqty,max(sk.itemlocation)as itemlocation, max(iss.approvedstatus)as approvedstatus,max(req.requestedquantity)as requestedquantity, max(req.materialid)as materialid, max(req.requestid)as requestid,req.requestforissueid,sum(issuedqty)as issuedquantity
+        ///   Looks up a localized string similar to select max(iss.materialissueid)as materialissueid,max(iss.returnqtyaccept)as returnqtyaccept,max(sk.itemid)as itemid,max(req.returnqty)as returnqty,max(sk.itemlocation)as itemlocation, max(iss.approvedstatus)as approvedstatus,max(req.requestedquantity)as requestedquantity, max(req.materialid)as materialid, max(req.requestid)as requestid,req.requestforissueid,sum(issuedqty)as issuedquantity
         /// from wms.wms_materialrequest  req
-        /// left join wms.wms_materialissue iss on req.requestforissueid=iss.requestforissueid  left join wms.wms_stock sk on sk.itemid= [rest of string was truncated]&quot;;.
+        /// left join wms.wms_materialissue iss on req.requestforissueid=iss.requestforissuei [rest of string was truncated]&quot;;.
         /// </summary>
         public static string issuedqtydetails {
             get {
@@ -1359,7 +1359,8 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to update wms.wms_materialrequest set requesttype=&apos;return&apos;,returnqty=@returnqty,returnon=current_timestamp where requestforissueid=@requestforissueid.
+        ///   Looks up a localized string similar to insert into wms.wms_returntransfermaterial(returnid,materialissueid,requestforissueid,returnqty,createdby,transferqty,requesttype,createdon)values
+        ///  (default,@materialissueid,@requestforissueid,@returnqty,@createdby,@transferqty,@requesttype,current_timestamp).
         /// </summary>
         public static string UpdateReturnqty {
             get {

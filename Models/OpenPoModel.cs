@@ -326,7 +326,9 @@ public bool onhold { get; set; }
 		public string requesttype { get; set; }
 		public DateTime returnon { get; set; }
 		public string returnqtyaccept { get; set; }
-
+		public int materialissueid { get; set; }
+		public string createdby { get; set; }
+		public int transferqty { get; set; }
 	}
     public class sequencModel
     {

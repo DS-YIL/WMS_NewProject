@@ -5533,17 +5533,23 @@ namespace WMS.DAL
 				string updatereturnqty = string.Empty;
 			foreach(var item in _listobj)
 				{
+
 					try
 					{
 						if (item.returnqty != 0)
 						{ 
-							updatereturnqty = WMSResource.UpdateReturnqty.Replace("@returnqty", Convert.ToString(item.returnqty)).Replace("@requestforissueid", Convert.ToString(item.requestforissueid));
+							updatereturnqty = WMSResource.UpdateReturnqty;
 						using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
 						{
 							 result = DB.Execute(updatereturnqty, new
 							{
-
-							});
+								 item.materialissueid,
+								 item.requestforissueid,
+								 item.returnqty,
+								 item.createdby,
+								 item.requesttype,
+								 item.transferqty
+							 });
 						}
 					}
 					}

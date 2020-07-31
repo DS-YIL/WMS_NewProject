@@ -171,19 +171,12 @@ export class MaterialRequestViewComponent implements OnInit {
     this.AddDialog = false;
   }
   returnqty() {
-   
-    //this.requestList;
-    //var totalreturnqty = 0;
-    //this.materiallistData.forEach(item => {
-    //  if (item.returnqty != 0) {
-    //    totalreturnqty = totalreturnqty + (item.issuedquantity);
-    //    this.requestList[this.rowindex].returnqty = totalreturnqty;
-    //  }
-    //})
-    this.materiallistData.forEach(item => {
-      this.materiallistData[item].rquesttype = "return";
+  
+    for (var i = 0; i <= this.materiallistData.length - 1; i++) {
+    
+      this.materiallistData[i].requesttype = "return";
+      this.materiallistData[i].createdby = this.employee.employeeno;
     }
-    );
       this.wmsService.UpdateReturnqty(this.materiallistData).subscribe(data => {
         if (data == 1) {
           this.btnDisable = true;
@@ -235,12 +228,17 @@ export class MaterialRequestViewComponent implements OnInit {
   }
   transferqty() {
 
-    this.materiallistData.forEach(item => {
-      this.materiallistData[item].rquesttype = "transfer";
+    for (var i = 0; i <= this.materiallistData.length - 1; i++) {
+      this.materiallistData[i].requesttype = "transfer";
+      this.materiallistData[i].createdby = this.employee.employeeno;
+      this.materiallistData[i].returnqty = 0;
     }
-    );
     this.wmsService.UpdateReturnqty(this.materiallistData).subscribe(data => {
-
+      if (data == 1) {
+        this.btnDisabletransfer = true;
+        this.AddDialogfortransfer = false;
+        this.messageService.add({ severity: 'sucess', summary: 'suceess Message', detail: 'Material Transferred' });
+      }
     })
   }
   onChange(value, indexid:any) {
