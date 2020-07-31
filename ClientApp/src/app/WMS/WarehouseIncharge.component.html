@@ -7,13 +7,13 @@
       <!--<label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">GRN No: </label>&nbsp;&nbsp;-->
       <!--<input class="form-control" type="text" [(ngModel)]="PoDetails.grnnumber">&nbsp;&nbsp;&nbsp;&nbsp;-->
       <!--<p-dropdown [options]="checkedgrnlist" appendTo="body" [(ngModel)]="selectedgrn" [showClear]="true" [style]="{'width':'250px'}" filter="true" placeholder="Select GRN" optionLabel="text"></p-dropdown>-->
-      <p-autoComplete [(ngModel)]="selectedgrnno" appendTo="body" [suggestions]="filteredgrns" placeholder="search by supplier/GRN No" [ngModelOptions]="{standalone: true}" [forceSelection]="false" (completeMethod)="filtergrn($event)" [size]="30" (onSelect)="SearchGRNNo()" (change)="SearchGRNNo()"
+      <p-autoComplete [(ngModel)]="selectedgrnno" appendTo="body" [suggestions]="filteredgrns" (onSelect)="SearchGRNNo()" placeholder="search by supplier/GRN No" [ngModelOptions]="{standalone: true}" [forceSelection]="true" (completeMethod)="filtergrn($event)" [size]="30"
                       [dropdown]="true">
       </p-autoComplete>
     </div>
-    <!--<div class="col-lg-1 col-md-1" style="margin-left:-30px;">
-      <button type="button" class="btn btn-primary btn-sm" label="Save" (click)="SearchGRNNo()">Search</button>
-    </div>-->
+    <div class="col-lg-1 col-md-1" style="margin-left:-30px;">
+      <!--<button type="button" class="btn btn-primary btn-sm" label="Save" (click)="SearchGRNNo()">Search</button>-->
+    </div>
     <div class="col-md-2 col-lg-2  pt-2 labelheading" *ngIf="podetailsList.length>0">
       PO No : <span class="labeltext">{{podetailsList[0].pono}}</span>
     </div>
@@ -80,7 +80,8 @@
         </ng-template>
         <ng-template pTemplate="rowexpansion" let-rowData let-rowIndex="rowIndex">
           <tr>
-            <td colspan="8"></td>
+            <td *ngIf="!isnonpo" colspan="8"></td>
+            <td *ngIf="isnonpo" colspan="7"></td>
             <td style="text-align:right;width:70px">
               {{rowData.availableqty}}
             </td>
@@ -342,7 +343,7 @@
         <div class="col-lg-4 col-md-4 col-sm-4 form-group">
           <label for="itemlocation" class="form-label">Select Location</label>
           <div class="form-inline-list">
-            <select class="form-control dropdown" formControlName="locatorid" [(ngModel)]="StockModel.locatorid">
+            <select class="form-control dropdown" formControlName="locatorid" [(ngModel)]="StockModel.locatorid" >
               <option selected></option>
               <option *ngFor=" let loclist of locationlist " value={{loclist.locatorid}}>
                 {{loclist.locatorname}}
@@ -446,9 +447,9 @@
                 <td class="ptable-cell" style="text-align:center"> {{ri+1}} </td>
 
                 <td class="ptable-cell" style="text-align:left;">
-                  <select class="form-control dropdown" [(ngModel)]="rowData.locatorid">
+                  <select *ngIf="rowData.locatorid!=null ? rowData.locatorid:'Select Stock'" class="form-control dropdown" [(ngModel)]="rowData.locatorid">
 
-                    <option selected value="*ngIf=rackid"></option>
+                    <!--<option selected value="*ngIf=rackid"></option>-->
                     <option *ngFor=" let loclist of locationlist " value={{loclist.locatorid}}>
                       {{loclist.locatorname}}
                     </option>
@@ -457,7 +458,7 @@
                 <td class="ptable-cell" style="text-align:left">
                   <select class="form-control dropdown" [(ngModel)]="rowData.rackid">
 
-                    <option selected value="*ngIf=rackid"></option>
+                    <!--<option selected value="*ngIf=rackid"></option>-->
                     <option *ngFor=" let loclist of racklist " value={{loclist.rackid}}>
                       {{loclist.racknumber}}
                     </option>
@@ -466,7 +467,7 @@
                 <td class="ptable-cell" style="text-align:left">
                   <select class="form-control dropdown" [(ngModel)]="rowData.binid">
 
-                    <option selected></option>
+                    <!--<option selected></option>-->
                     <option *ngFor=" let loclist of binlist" value={{loclist.binid}}>
                       {{loclist.binnumber}}
                     </option>

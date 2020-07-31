@@ -52,7 +52,6 @@ export class GatePassApproverComponent implements OnInit {
     this.gatepassModel = new gatepassModel();
     this.gatepassModel.approverstatus = "Approved";
 
-
   }
 
 

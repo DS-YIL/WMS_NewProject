@@ -43,6 +43,7 @@ export class GatePassApprovalList implements OnInit {
     else
       this.router.navigateByUrl("Login");
     this.gatepassModel = new gatepassModel();
+    
     this.typeOfList = this.route.routeConfig.path;
     this.getGatePassList();
       this.approverstatus = "Pending";
@@ -67,7 +68,7 @@ export class GatePassApprovalList implements OnInit {
 
   //prepare list based on gate pass id
   prepareGatepassList() {
-    debugger;
+   
     this.gatepasslist = [];
     this.gatepassData.forEach(item => {
       var res = this.gatepasslist.filter(li => li.gatepassid == item.gatepassid);
@@ -104,12 +105,14 @@ export class GatePassApprovalList implements OnInit {
 
   getGatePassHistoryList(gatepassId: any) {
     this.wmsService.getGatePassApprovalHistoryList(gatepassId).subscribe(data => {
+      debugger;
       this.gatePassApprovalList = data;
-      //for (let i = 0; i < this.gatePassApprovalList.length; i++) {
-      //  if (this.gatePassApprovalList[i].approverid === this.employee.employeeno) {
-      //    this.gatePassApprovalList.splice(i--, 1);
-      //  }
-      //}
+      for (let i = 0; i < this.gatePassApprovalList.length; i++) {
+        if (this.gatePassApprovalList[i].approverid == this.employee.employeeno) {
+          this.gatePassApprovalList.splice(i, 1);
+         
+        }
+      }
     });
   }
 

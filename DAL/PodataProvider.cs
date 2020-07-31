@@ -17,6 +17,7 @@ using System.Net;
 using ZXing;
 using ZXing.Common;
 using ZXing.CoreCompat.System.Drawing;
+using System.Data.SqlClient;
 
 namespace WMS.DAL
 {
@@ -2282,7 +2283,7 @@ namespace WMS.DAL
 								item.remarks,
 								item.materialcost,
 								item.expecteddate,
-								item.returneddate,
+								//item.returneddate,
 								item.issuedqty
 							});
 
@@ -2296,19 +2297,21 @@ namespace WMS.DAL
 							});
 
 							string updatequery = WMSResource.updategatepassmaterial.Replace("#gatepassmaterialid", Convert.ToString(item.gatepassmaterialid));
+							
+								var result = DB.ExecuteScalar(updatequery, new
+								{
 
-							var result = DB.ExecuteScalar(updatequery, new
-							{
+									dataobj.gatepassid,
+									item.materialid,
+									item.quantity,
+									item.remarks,
+									item.materialcost,
+									item.expecteddate,
+									item.returneddate,
 
-								dataobj.gatepassid,
-								item.materialid,
-								item.quantity,
-								item.remarks,
-								item.materialcost,
-								//item.expecteddate,
-								item.returneddate,
-
-							});
+								});
+							
+							
 						}
 					}
 				}

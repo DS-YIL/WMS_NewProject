@@ -297,14 +297,14 @@ where  inw.invoiceno='#invoiceno' and openpo.pono='#pono' group by grnnumber</va
     <value>select * from wms.wms_stock where availableqty &gt;=#availableqty limit 1</value>
   </data>
   <data name="insertgatepassmaterial" xml:space="preserve">
-    <value>insert into wms.wms_gatepassmaterial(gatepassmaterialid,gatepassid,materialid,quantity,deleteflag,remarks,materialcost,expecteddate,returneddate,issuedqty)
-values(default,@gatepassid,@materialid,@quantity,@deleteflag,@remarks,@materialcost,@expecteddate,@returneddate,@issuedqty)</value>
+    <value>insert into wms.wms_gatepassmaterial(gatepassmaterialid,gatepassid,materialid,quantity,deleteflag,remarks,materialcost,expecteddate,issuedqty)
+values(default,@gatepassid,@materialid,@quantity,@deleteflag,@remarks,@materialcost,@expecteddate,@issuedqty)</value>
   </data>
   <data name="updategatepass" xml:space="preserve">
     <value>update wms.wms_gatepass set gatepasstype=@gatepasstype,status=@status,referenceno=@referenceno,vehicleno=@vehicleno,requestedby=@requestedby,vendorname=@vendorname,reasonforgatepass=@reasonforgatepass where gatepassid=#gatepassid</value>
   </data>
   <data name="updategatepassmaterial" xml:space="preserve">
-    <value>update wms.wms_gatepassmaterial set gatepassid=@gatepassid,materialid=@materialid,quantity=@quantity,remarks=@remarks,materialcost=@materialcost,returneddate=@returneddate where gatepassmaterialid=#gatepassmaterialid</value>
+    <value>update wms.wms_gatepassmaterial set gatepassid=@gatepassid,materialid=@materialid,quantity=@quantity,remarks=@remarks,materialcost=@materialcost,expecteddate=@expecteddate,returneddate=@returneddate where gatepassmaterialid=#gatepassmaterialid</value>
   </data>
   <data name="deletegatepassmaterial" xml:space="preserve">
     <value>update wms.wms_gatepassmaterial set deleteflag='true' where gatepassmaterialid=#gatepassmaterialid</value>

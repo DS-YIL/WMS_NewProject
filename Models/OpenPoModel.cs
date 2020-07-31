@@ -432,7 +432,7 @@ public bool onhold { get; set; }
 		public int gatepassmaterialid { get; set; }
 		public int materialcost { get; set; }
 		public DateTime expecteddate { get; set; }
-		public DateTime returneddate { get; set; }
+		public DateTime? returneddate { get; set; }
 		public int issuedqty { get; set; }
 
 	}
@@ -768,7 +768,7 @@ public class materialistModel
 	public int quantity { get; set; }
 	public string remarks { get; set; }
 	public DateTime expecteddate { get; set; }
-	public DateTime returneddate { get; set; }
+	public DateTime? returneddate { get; set; }
 	public string materialcost { get; set; }
 	public int issuedqty { get; set; }
 	public DateTime outwarddate { get; set; }

@@ -1,15 +1,17 @@
 <div *ngIf="!showApprovertab">
-  <div class="card" style=" min-height: 50px;border-radius: 10px;">
+  <div class="card" style=" min-height: 37px;border-radius: 10px;">
     <div class="card-header text-center cardheadertext">
       <span>
-        <i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;Gate Pass - List
+        <i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;Gate Pass
       </span>
     </div>
   </div>
-  <div class="row mt-4 ml-4">
-    <div class="col-lg-3 col-md-3 col-sm-3  form-inline">
-      <label class="form-label">Status:</label>&nbsp;&nbsp;
-      <div class="form-inline-list">
+    <div class="row" style="padding-top: 5px !important">
+
+      <div class="col-lg-1 col-md-1 col-sm-1 form-group">
+        <h6><label class="form-label">Status:</label></h6>
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-2 form-group" style="padding-left:0px;">
         <select class="form-control forms-input" [(ngModel)]="approverstatus">
           <option value="0">All</option>
           <option value='Pending'>Pending</option>
@@ -17,228 +19,243 @@
           <option value='Sent for Modification'>Sent for Modification</option>
         </select>
       </div>
+      <div class="col-lg-1 col-md-1 col-sm-1 form-group" style="padding-left:0px;margin-bottom:0px !important">
+        <button type="button" class="btn btn-primary" (click)="searchGatePassList()">Search</button>
+      </div>
     </div>
-    <div class="col-lg-2 col-md-2 col-sm-2 form-inline">
-      <button type="button" class="btn btn-primary" (click)="searchGatePassList()">Search</button>
+    <!--<div class="row mt-4 ml-4">
+      <div class="col-lg-3 col-md-3 col-sm-3  form-inline">
+        <label class="form-label">Status:</label>&nbsp;&nbsp;
+        <div class="form-inline-list">
+          <select class="form-control forms-input" [(ngModel)]="approverstatus">
+            <option value="0">All</option>
+            <option value='Pending'>Pending</option>
+            <option value='Approved'>Approved</option>
+            <option value='Sent for Modification'>Sent for Modification</option>
+          </select>
+        </div>
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-2 form-inline">
+        <button type="button" class="btn btn-primary" (click)="searchGatePassList()">Search</button>
+      </div>
+    </div>-->
+    <div style="margin-left:5px;margin-right:5px;margin-top:10px;">
+      <p-table #dt [value]="gatepasslist" [style]="{'width':'100%','overflow':'auto!important'}"
+               [responsive]="true" [rows]="50"
+               [resizableColumns]="true"
+               columnResizeMode="expand"
+               [paginator]="true" [rowsPerPageOptions]="[25,50,75,100]"
+               appendTo="body">
+        <ng-template pTemplate="header">
+          <tr class="mprltbldata">
+            <th style="text-align: center; width: 70px">Sl. No.</th>
+            <th style="text-align:center">GatePass Id</th>
+            <th style="text-align:center">Type</th>
+            <th style="text-align:center">Supplier</th>
+            <th style="text-align:center">Reason</th>
+            <th style="text-align:center">Status</th>
+            <th style="text-align:center">Requested By</th>
+            <th style="text-align:center">Requested On</th>
+          </tr>
+          <tr>
+            <th></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'gatepassid', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'gatepasstype', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'vendorname', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'reasonforgatepass', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'approverstatus', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'name', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'requestedon', 'contains')"></th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
+          <tr>
+            <td class="ptable-cell" style="text-align:center">
+              {{ri+1}}
+            </td>
+            <td class="ptable-cell" style="text-align:center"><button class="btn btn-link" *ngIf="rowData.gatepassid" (click)="showApprover(rowData.gatepassid)">{{rowData.gatepassid}}</button></td>
+            <td class="ptable-cell" style="text-align:left">{{rowData.gatepasstype}}</td>
+            <td class="ptable-cell" style="text-align:left">{{rowData.vendorname}}</td>
+            <td class="ptable-cell" style="text-align:left">{{rowData.reasonforgatepass}}</td>
+            <td class="ptable-cell" *ngIf="rowData.approverstatus" style="text-align:left">{{rowData.approverstatus}}</td>
+            <td class="ptable-cell" *ngIf="!rowData.approverstatus" style="text-align:left">Pending</td>
+            <td class="ptable-cell" style="text-align:left">{{rowData.name}}</td>
+            <td class="ptable-cell" style="text-align:center">{{rowData.requestedon | date :  constants.dateFormat}}</td>
+
+          </tr>
+        </ng-template>
+      </p-table>
     </div>
+
   </div>
-  <div style="margin-left:5px;margin-right:5px;margin-top:10px;">
-    <p-table #dt [value]="gatepasslist" [style]="{'width':'100%','overflow':'auto!important'}"
-             [responsive]="true" [rows]="50"
-             [resizableColumns]="true"
-             columnResizeMode="expand"
-             [paginator]="true" [rowsPerPageOptions]="[25,50,75,100]"
-             appendTo="body">
-      <ng-template pTemplate="header">
-        <tr class="mprltbldata">
-          <th style="text-align: center; width: 70px">Sl. No.</th>
-          <th style="text-align:center">GatePass Id</th>
-          <th style="text-align:center">Type</th>
-          <th style="text-align:center">Supplier</th>
-          <th style="text-align:center">Reason</th>
-          <th style="text-align:center">Status</th>
-          <th style="text-align:center">Requested By</th>
-          <th style="text-align:center">Requested On</th>
-        </tr>
-        <tr>
-          <th></th>
-          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'gatepassid', 'contains')"></th>
-          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'gatepasstype', 'contains')"></th>
-          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'vendorname', 'contains')"></th>
-          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'reasonforgatepass', 'contains')"></th>
-          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'approverstatus', 'contains')"></th>
-          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'name', 'contains')"></th>
-          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'requestedon', 'contains')"></th>
-        </tr>
-      </ng-template>
-      <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
-        <tr>
-          <td class="ptable-cell" style="text-align:center">
-            {{ri+1}}
-          </td>
-          <td class="ptable-cell" style="text-align:center"><button class="btn btn-link" *ngIf="rowData.gatepassid" (click)="showApprover(rowData.gatepassid)">{{rowData.gatepassid}}</button></td>
-          <td class="ptable-cell" style="text-align:left">{{rowData.gatepasstype}}</td>
-          <td class="ptable-cell" style="text-align:left">{{rowData.vendorname}}</td>
-          <td class="ptable-cell" style="text-align:left">{{rowData.reasonforgatepass}}</td>
-          <td class="ptable-cell" *ngIf="rowData.approverstatus" style="text-align:left">{{rowData.approverstatus}}</td>
-          <td class="ptable-cell" *ngIf="!rowData.approverstatus" style="text-align:left">Pending</td>
-          <td class="ptable-cell" style="text-align:left">{{rowData.name}}</td>
-          <td class="ptable-cell" style="text-align:center">{{rowData.requestedon | date :  constants.dateFormat}}</td>
-      
-        </tr>
-      </ng-template>
-    </p-table>
-  </div>
 
-</div>
-
-<div *ngIf="showApprovertab">
-  <div class="card" style="    min-height: 500px;border-radius: 10px;box-shadow: 5px 10px #888888;">
-    <div class="card-header text-center cardheadertext">
-      <span>
-        <i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;Gatepass Approval
-      </span>
-      <button type="button" icon="fa fa-arrow-left" pButton aria-hidden="true" pTooltip="Back" (click)="hideApprover()" style="float: left; height: 26px;"></button>
-    </div>
-    <div class="card-body" style="overflow-y:scroll">
-      <div *ngIf="materialList.length>0">
-        <div *ngIf="employee.roleid=='8' && gatepassModel.gatepasstype!='Returnable'" class="row mt-2" style="padding-left:20px;">
-          <button type="button" icon="fa fa-history" pButton aria-hidden="true" (click)="showHistoryList()" pTooltip="GatePass Approvals" style="float: left; height: 30px;width:30px"></button>
-        </div><br />
-        <div *ngIf="gatePassApprovalList.length>0 && showHistory" style="background-color:#2c898073">
-          <div class="row mt-2" style="padding-left:20px;font-weight: 600;font-size: 16px;color: #265f18;text-decoration:underline">History</div>
-          <div class="row mt-2" style="padding-left:20px;" *ngFor="let item of gatePassApprovalList">
-            <div class="col-lg-3 col-md-3 col-sm-3 form-inline" style="font-weight: 600; font-size: 14px; color: darkblue; ">
-              Name:&nbsp;<span style="color:#dc3545;">{{item.approvername}}</span>
-            </div>
-            <div class="col-lg-2 col-md-2 col-sm-2 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
-               Type:&nbsp;<span *ngIf="item.label==1" style="color:#dc3545;">project Manager</span><span *ngIf="item.label==2" style="color:#dc3545;">Finance Manager</span>
-            </div>
-            <div class="col-lg-2 col-md-2 col-sm-2 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
-              Status:&nbsp;<span style="color:#dc3545;">{{item.approverstatus}}</span>
-            </div>
-            <div class="col-lg-2 col-md-2 col-sm-2 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
-              Status Updated on:&nbsp;<span style="color:#dc3545;">{{item.approvedon  | date :  constants.dateFormat}}</span>
-            </div>
-            <div class="col-lg-3 col-md-3 col-sm-3 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
-              Remarks:&nbsp;<span style="color:#dc3545;">{{item.remarks}}</span>
-            </div>
-          </div>
-          <!--<div class="row mt-2" style="padding-left:20px;">
-            <div class="col-lg-3 col-md-3 col-sm-3 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
-              Second Approver:&nbsp;<span style="color:#dc3545;">{{gatePassApprovalList[1].approvername}}</span>
-            </div>
-            <div class="col-lg-2 col-md-2 col-sm-2 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
-              Status:&nbsp;<span style="color:#dc3545;">{{gatePassApprovalList[1].approverstatus}}</span>
-            </div>
-            <div class="col-lg-2 col-md-2 col-sm-2 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
-              Status Updated on:&nbsp;<span style="color:#dc3545;">{{gatePassApprovalList[1].approvedon  | date :  constants.dateFormat}}</span>
-            </div>
-            <div class="col-lg-4 col-md-4 col-sm-4 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
-              Remarks:&nbsp;<span style="color:#dc3545;">{{gatePassApprovalList[1].remarks}}</span>
-            </div>
-          </div>
-          <div class="row mt-2 pb-2" style="padding-left:20px;">
-            <div class="col-lg-3 col-md-3 col-sm-3 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
-              Third Approver:&nbsp;<span style="color:#dc3545;">{{gatePassApprovalList[2].approvername}}</span>
-            </div>
-            <div class="col-lg-2 col-md-2 col-sm-2 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
-              Status:&nbsp;<span style="color:#dc3545;">{{gatePassApprovalList[2].approverstatus}}</span>
-            </div>
-            <div class="col-lg-2 col-md-2 col-sm-2 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
-              Status Updated on:&nbsp;<span style="color:#dc3545;">{{gatePassApprovalList[2].approvedon  | date :  constants.dateFormat}}</span>
-            </div>
-            <div class="col-lg-4 col-md-4 col-sm-4 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
-              Remarks:&nbsp;<span style="color:#dc3545;">{{gatePassApprovalList[2].remarks}}</span>
-            </div>
-          </div>-->
-        </div><br />
-        <div class="row" style="padding-left:20px;">
-          <div class="col-lg-2 col-md-2 col-sm-2 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
-            GatePass Id:&nbsp;<span style="color:#dc3545;">{{materialList[0].gatepassid}}</span>
-          </div>
-          <div class="col-lg-2 col-md-2 col-sm-2 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
-            Requester:&nbsp;<span style="color:#dc3545;">{{materialList[0].name}}</span>
-          </div>
-          <div class="col-lg-2 col-md-2 col-sm-2 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
-            Supplier:&nbsp;<span style="color:#dc3545;">{{materialList[0].vendorname}}</span>
-          </div>
-          <div class="col-lg-2 col-md-2 col-sm-2 form-inline" *ngIf="employee.roleid!='8'" style="font-weight:600;font-size:14px;color:darkblue;">
-            Type:&nbsp;<span style="color:#dc3545;">{{materialList[0].gatepasstype}}</span>
-          </div>
-          <div class="col-lg-2 col-md-2 col-sm-2 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
-            Reason:&nbsp;<span style="color:#dc3545;">{{materialList[0].reasonforgatepass}}</span>
-          </div>
-          <div class="col-lg-2 col-md-2 col-sm-2 form-inline" *ngIf="gatepassModel.approverstatus && btnDisable" style="font-weight:600;font-size:14px;color:darkblue;">
-            <label>
-              Status:&nbsp;<span style="color:#dc3545;">{{gatepassModel.approverstatus}}</span>
-            </label>
-          </div>
-          <div class="col-lg-2 col-md-2 col-sm-2W form-inline" *ngIf="!gatepassModel.approverstatus || !btnDisable" style="font-weight:600;font-size:14px;color:darkblue;">
-            <label>
-              Status:&nbsp;<span style="color:#dc3545;">Pending</span>
-            </label>
-          </div>
-        </div>
-        <br />
-        <div class="row" style="padding-left:20px;">
-          <div class="col-lg-6 col-md-6 col-sm-6 form-inline" *ngIf="gatepassModel.approverremarks && btnDisable" style="font-weight:600;font-size:14px;color:darkblue;">
-            Remarks:&nbsp;<span style="color:#dc3545;">{{gatepassModel.approverremarks}}</span>
-          </div>
-          <!--<div class="col-lg-2 col-md-2 col-sm-2 form-inline">
-            <label class="form-label"><b>Vehicle No:</b></label>&nbsp;<span>{{materialList[0].vehicleno}}</span>
-          </div>-->
-        </div>
-        <!--<br />-->
-        <div class="row mt-4" style="margin:14px">
-          <p-table [value]="materialList" [style]="{'width':'100%','overflow':'auto!important'}"
-                   [responsive]="true" [rows]="50"
-                   [resizableColumns]="true"
-                   columnResizeMode="expand"
-                   [paginator]="true" [rowsPerPageOptions]="[25,50,75,100]"
-                   appendTo="body">
-            <ng-template pTemplate="header">
-              <tr class="mprltbldata">
-                <th class="ptable-cell" style="text-align:center;width:60px;">Sl.No.</th>
-                <th class="ptable-cell" style="text-align:center">Material</th>
-                <th class="ptable-cell" style="text-align:center;width:350px;">Material Description</th>
-                <th class="ptable-cell" style="text-align:center">Price</th>
-                <th class="ptable-cell" style="text-align:center">Remarks</th>
-                <th class="ptable-cell" style="text-align:center">Requested Qty</th>
-                <th class="ptable-cell" style="text-align:center" *ngIf="employee.roleid !='8'">Issue Qty</th>
-                <th class="ptable-cell" style="text-align:center" *ngIf="employee.roleid !='8' && materialList[0].gatepasstype=='Returnable'">Expected Date</th>
-                <th *ngIf="materialList[0].gatepasstype=='Returnable'" class="ptable-cell" style="text-align:center">Returned Date</th>
-              </tr>
-            </ng-template>
-            <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex" let-rindex=0>
-              <tr>
-                <td class="ptable-cell" style="text-align:center"> {{ri+1}} </td>
-                <td class="ptable-cell" style="text-align:left"> <span *ngIf="employee.roleid =='8'">{{rowData.materialid}}</span><button *ngIf="employee.roleid !='8'" type="button" class="btn btn-link" (click)="showmateriallocationList(rowData.materialid,ri+1,ri);" style="padding-left:0px;">{{rowData.materialid}}</button></td>
-                <td class="ptable-cell" style="text-align:left"> {{rowData.materialdescription}} </td>
-                <td class="ptable-cell" style="text-align:right"><span *ngIf="rowData.materialcost">{{rowData.materialcost}}</span></td>
-                <td class="ptable-cell" style="text-align:left"> {{rowData.remarks}} </td>
-                <td class="ptable-cell" style="text-align:right">{{rowData.quantity}}</td>
-                <td class="ptable-cell" *ngIf="employee.roleid !='8'">
-                  <input pInputText type="number" style="text-align:center" class="form-control" [disabled]="txtDisable" [(ngModel)]="rowData.issuedqty">
-                </td>
-                <td class="ptable-cell" style="text-align:center" *ngIf="employee.roleid !='8' && materialList[0].gatepasstype=='Returnable'">{{checkValiddate(rowData.expecteddate)}}</td>
-                <td *ngIf="materialList[0].gatepasstype=='Returnable' && rowData.returneddate" class="ptable-cell" style="text-align:center">{{checkValiddate(rowData.returneddate)}}</td>
-
-            </ng-template>
-          </p-table>
-        </div>
-        <!--</div>-->
-        <div *ngIf="employee.roleid=='8'">
-          <div class="row">
-            <div class="col-lg-1 col-md-1 col-sm-1"></div>
-            <div class="col-lg-3 col-md-3 col-sm-3  form-inline" *ngIf="!btnDisable">
-              <label class="form-label">Status:</label>&nbsp;&nbsp;
-              <div class="form-inline-list">
-                <select class="form-control forms-input" [(ngModel)]="gatepassModel.approverstatus">
-                  <option value='Approved'>Approved</option>
-                  <option value='Sent for Modification'>Sent for Modification</option>
-                </select>
+  <div *ngIf="showApprovertab">
+    <div class="card" style="    min-height: 500px;border-radius: 10px;box-shadow: 5px 10px #888888;">
+      <div class="card-header text-center cardheadertext">
+        <span>
+          <i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;Gatepass Approval
+        </span>
+        <button type="button" icon="fa fa-arrow-left" pButton aria-hidden="true" pTooltip="Back" (click)="hideApprover()" style="float: left; height: 26px;"></button>
+      </div>
+      <div class="card-body" style="overflow-y:scroll">
+        <div *ngIf="materialList.length>0">
+          <div *ngIf="employee.roleid=='8' && gatepassModel.gatepasstype!='Returnable'" class="row mt-2" style="padding-left:20px;">
+            <button type="button" icon="fa fa-history" pButton aria-hidden="true" (click)="showHistoryList()" pTooltip="GatePass Approvals" style="float: left; height: 30px;width:30px"></button>
+          </div><br />
+          <div *ngIf="gatePassApprovalList.length>0 && showHistory" style="background-color:#2c898073">
+            <div class="row mt-2" style="padding-left:20px;font-weight: 600;font-size: 16px;color: #265f18;text-decoration:underline">History</div>
+            <div class="row mt-2" style="padding-left:20px;" *ngFor="let item of gatePassApprovalList">
+              <div class="col-lg-2 col-md-2 col-sm-2 form-inline" style="font-weight: 600; font-size: 14px; color: darkblue; ">
+                Name:&nbsp;<span style="color:#dc3545;">{{item.approvername}}</span>
+              </div>
+              <div class="col-lg-2 col-md-2 col-sm-2 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
+                Type:&nbsp;<span *ngIf="item.label==1" style="color:#dc3545;">project Manager</span><span *ngIf="item.label==2" style="color:#dc3545;">Finance Manager</span>
+              </div>
+              <div class="col-lg-2 col-md-2 col-sm-2 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
+                Status:&nbsp;<span style="color:#dc3545;">{{item.approverstatus}}</span>
+              </div>
+              <div class="col-lg-3 col-md-3 col-sm-3 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
+                Status Updated on:&nbsp;<span style="color:#dc3545;">{{item.approvedon  | date :  constants.dateFormat}}</span>
+              </div>
+              <div class="col-lg-3 col-md-3 col-sm-3 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
+                Remarks:&nbsp;<span style="color:#dc3545;">{{item.remarks}}</span>
               </div>
             </div>
-            <div class="col-lg-3 col-md-3 col-sm-3 form-inline" *ngIf="!btnDisable">
-              <label class="form-label">Remarks:</label>&nbsp;&nbsp;
-              <div class="form-inline-list">
-                <input type="text" class="form-control" [(ngModel)]="gatepassModel.approverremarks" />
+            <!--<div class="row mt-2" style="padding-left:20px;">
+              <div class="col-lg-3 col-md-3 col-sm-3 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
+                Second Approver:&nbsp;<span style="color:#dc3545;">{{gatePassApprovalList[1].approvername}}</span>
+              </div>
+              <div class="col-lg-2 col-md-2 col-sm-2 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
+                Status:&nbsp;<span style="color:#dc3545;">{{gatePassApprovalList[1].approverstatus}}</span>
+              </div>
+              <div class="col-lg-2 col-md-2 col-sm-2 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
+                Status Updated on:&nbsp;<span style="color:#dc3545;">{{gatePassApprovalList[1].approvedon  | date :  constants.dateFormat}}</span>
+              </div>
+              <div class="col-lg-4 col-md-4 col-sm-4 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
+                Remarks:&nbsp;<span style="color:#dc3545;">{{gatePassApprovalList[1].remarks}}</span>
+              </div>
+            </div>
+            <div class="row mt-2 pb-2" style="padding-left:20px;">
+              <div class="col-lg-3 col-md-3 col-sm-3 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
+                Third Approver:&nbsp;<span style="color:#dc3545;">{{gatePassApprovalList[2].approvername}}</span>
+              </div>
+              <div class="col-lg-2 col-md-2 col-sm-2 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
+                Status:&nbsp;<span style="color:#dc3545;">{{gatePassApprovalList[2].approverstatus}}</span>
+              </div>
+              <div class="col-lg-2 col-md-2 col-sm-2 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
+                Status Updated on:&nbsp;<span style="color:#dc3545;">{{gatePassApprovalList[2].approvedon  | date :  constants.dateFormat}}</span>
+              </div>
+              <div class="col-lg-4 col-md-4 col-sm-4 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
+                Remarks:&nbsp;<span style="color:#dc3545;">{{gatePassApprovalList[2].remarks}}</span>
+              </div>
+            </div>-->
+          </div><br />
+          <div class="row" style="padding-left:20px;">
+            <div class="col-lg-2 col-md-2 col-sm-2 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
+              GatePass Id:&nbsp;<span style="color:#dc3545;">{{materialList[0].gatepassid}}</span>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-2 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
+              Requester:&nbsp;<span style="color:#dc3545;">{{materialList[0].name}}</span>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-2 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
+              Supplier:&nbsp;<span style="color:#dc3545;">{{materialList[0].vendorname}}</span>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-2 form-inline" *ngIf="employee.roleid!='8'" style="font-weight:600;font-size:14px;color:darkblue;">
+              Type:&nbsp;<span style="color:#dc3545;">{{materialList[0].gatepasstype}}</span>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-2 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
+              Reason:&nbsp;<span style="color:#dc3545;">{{materialList[0].reasonforgatepass}}</span>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-2 form-inline" *ngIf="gatepassModel.approverstatus && btnDisable" style="font-weight:600;font-size:14px;color:darkblue;">
+              <label>
+                Status:&nbsp;<span style="color:#dc3545;">{{gatepassModel.approverstatus}}</span>
+              </label>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-2W form-inline" *ngIf="!gatepassModel.approverstatus || !btnDisable" style="font-weight:600;font-size:14px;color:darkblue;">
+              <label>
+                Status:&nbsp;<span style="color:#dc3545;">Pending</span>
+              </label>
+            </div>
+          </div>
+          <br />
+          <div class="row" style="padding-left:20px;">
+            <div class="col-lg-6 col-md-6 col-sm-6 form-inline" *ngIf="gatepassModel.approverremarks && btnDisable" style="font-weight:600;font-size:14px;color:darkblue;">
+              Remarks:&nbsp;<span style="color:#dc3545;">{{gatepassModel.approverremarks}}</span>
+            </div>
+            <!--<div class="col-lg-2 col-md-2 col-sm-2 form-inline">
+              <label class="form-label"><b>Vehicle No:</b></label>&nbsp;<span>{{materialList[0].vehicleno}}</span>
+            </div>-->
+          </div>
+          <!--<br />-->
+          <div class="row mt-4" style="margin:14px">
+            <p-table [value]="materialList" [style]="{'width':'100%','overflow':'auto!important'}"
+                     [responsive]="true" [rows]="50"
+                     [resizableColumns]="true"
+                     columnResizeMode="expand"
+                     [paginator]="true" [rowsPerPageOptions]="[25,50,75,100]"
+                     appendTo="body">
+              <ng-template pTemplate="header">
+                <tr class="mprltbldata">
+                  <th class="ptable-cell" style="text-align:center;width:60px;">Sl.No.</th>
+                  <th class="ptable-cell" style="text-align:center">Material</th>
+                  <th class="ptable-cell" style="text-align:center;width:350px;">Material Description</th>
+                  <th class="ptable-cell" style="text-align:center">Price</th>
+                  <th class="ptable-cell" style="text-align:center">Remarks</th>
+                  <th class="ptable-cell" style="text-align:center">Requested Qty</th>
+                  <th class="ptable-cell" style="text-align:center" *ngIf="employee.roleid !='8'">Issue Qty</th>
+                  <th class="ptable-cell" style="text-align:center" *ngIf="employee.roleid !='8' && materialList[0].gatepasstype=='Returnable'">Expected Date</th>
+                  <th *ngIf="materialList[0].gatepasstype=='Returnable'" class="ptable-cell" style="text-align:center">Returned Date</th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex" let-rindex=0>
+                <tr>
+                  <td class="ptable-cell" style="text-align:center"> {{ri+1}} </td>
+                  <td class="ptable-cell" style="text-align:left"> <span *ngIf="employee.roleid =='8'">{{rowData.materialid}}</span><button *ngIf="employee.roleid !='8'" type="button" class="btn btn-link" (click)="showmateriallocationList(rowData.materialid,ri+1,ri);" style="padding-left:0px;">{{rowData.materialid}}</button></td>
+                  <td class="ptable-cell" style="text-align:left"> {{rowData.materialdescription}} </td>
+                  <td class="ptable-cell" style="text-align:right"><span *ngIf="rowData.materialcost">{{rowData.materialcost}}</span></td>
+                  <td class="ptable-cell" style="text-align:left"> {{rowData.remarks}} </td>
+                  <td class="ptable-cell" style="text-align:right">{{rowData.quantity}}</td>
+                  <td class="ptable-cell" *ngIf="employee.roleid !='8'">
+                    <input pInputText type="number" style="text-align:center" class="form-control" [disabled]="txtDisable" [(ngModel)]="rowData.issuedqty">
+                  </td>
+                  <td class="ptable-cell" style="text-align:center" *ngIf="employee.roleid !='8' && materialList[0].gatepasstype=='Returnable'">{{checkValiddate(rowData.expecteddate)}}</td>
+                  <td *ngIf="materialList[0].gatepasstype=='Returnable' && rowData.returneddate" class="ptable-cell" style="text-align:center">{{checkValiddate(rowData.returneddate)}}</td>
+
+              </ng-template>
+            </p-table>
+          </div>
+          <!--</div>-->
+          <div *ngIf="employee.roleid=='8'">
+            <div class="row">
+              <div class="col-lg-1 col-md-1 col-sm-1"></div>
+              <div class="col-lg-3 col-md-3 col-sm-3  form-inline" *ngIf="!btnDisable">
+                <label class="form-label">Status:</label>&nbsp;&nbsp;
+                <div class="form-inline-list">
+                  <select class="form-control forms-input" [(ngModel)]="gatepassModel.approverstatus">
+                    <option value='Approved'>Approved</option>
+                    <option value='Sent for Modification'>Sent for Modification</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-lg-3 col-md-3 col-sm-3 form-inline" *ngIf="!btnDisable">
+                <label class="form-label">Remarks:</label>&nbsp;&nbsp;
+                <div class="form-inline-list">
+                  <input type="text" class="form-control" [(ngModel)]="gatepassModel.approverremarks" />
+                </div>
+
               </div>
 
-            </div>
-
-            <div *ngIf="!btnDisable" class="col-lg-2 col-md-2 col-sm-2 form-inline">
-              <button [disabled]="btnDisable" type="button" class="btn btn-primary" (click)="updategatepassapproverstatus()">Submit</button>
+              <div *ngIf="!btnDisable && employee.roleid!='7'" class="col-lg-2 col-md-2 col-sm-2 form-inline">
+                <button [disabled]="btnDisable" type="button" class="btn btn-primary" (click)="updategatepassapproverstatus()">Submit</button>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
+
+
   </div>
-
-
-</div>
 
 
 
