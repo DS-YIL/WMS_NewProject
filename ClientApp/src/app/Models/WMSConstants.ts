@@ -17,4 +17,5 @@ export class constants {
   public binid: searchParams = { tableName: 'wms.wms_rd_bin', fieldId: 'binid', fieldName: 'binnumber', condition: "  where ", fieldAliasName: "", updateColumns: "" };
   public ItemId: searchParams = { tableName: 'wms.wms_stock', fieldId: 'materialid', fieldName: 'materialdescription', condition: " where ", fieldAliasName: "", updateColumns: "" };
   public projectcode: searchParams = { tableName: 'wms.MPRRevisions', fieldId: 'JobName', fieldName: '"JobName"', condition: " where ", fieldAliasName: "", updateColumns: "" };
+  public project: searchParams = { tableName: 'wms.wms_project', fieldId: 'projectcode', fieldName: '"projectcode"', condition: " where ", fieldAliasName: "", updateColumns: "" };
 }

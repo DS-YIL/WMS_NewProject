@@ -7,7 +7,7 @@
         <button type="button" class="btn btn-primary" (click)="showmaterialdetails()">Return</button>
       </div>
       <div class="col-lg-1 col-md-1 col-sm-1 form-group" style="padding-left:0px;">
-        <button type="button" class="btn btn-primary" (click)="returnqty()">Transfer</button>
+        <button type="button" class="btn btn-primary" (click)="showmaterialdetailsfortransfer()">Transfer</button>
       </div>
       <div class="col-lg-4 col-md-4 col-sm-4 form-group" style="padding-left:0px;">
         <i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;Requested Material List
@@ -57,14 +57,14 @@
         <tr>
           <td class="ptable-cell" style="text-align:right;width:70px;">{{ri+1}}</td>
           <td class="ptable-cell" style="text-align:center;width:100px;">
-            <button type="button" class="btn btn-link" (click)="showmaterialdetails(rowData.requestid);" style="padding-left:0px;">{{rowData.requestid}}</button>
+            <button type="button" class="btn btn-link" (click)="showstory(rowData.requestid)" style="padding-left:0px;">{{rowData.requestid}}</button>
           </td>
           <td class="ptable-cell" style="text-align:center;width:200px;">{{rowData.pono}}</td>
           <td class="ptable-cell" style="text-align:left">{{rowData.projectname}}</td>
           <td class="ptable-cell" style="text-align:center;width:150px;">{{rowData.requesteddate| date :  constants.dateFormat}}</td>
           <td class="ptable-cell" style="width:200px;">
             <div *ngIf="rowData.approvedstatus=='Approved'" class="form-inline">
-              <p-checkbox [(ngModel)]="rowData.status"  [disabled]="rowData.approvedstatus=='Approved'?true:false" binary="true" (click)="ackStatusChanges(rowData.approvedstatus)"></p-checkbox> &nbsp;&nbsp;
+              <p-checkbox [(ngModel)]="rowData.status" [disabled]="rowData.approvedstatus=='Approved'?true:false" binary="true" (click)="ackStatusChanges(rowData.approvedstatus)"></p-checkbox> &nbsp;&nbsp;
               <textarea type="text" style="width:140px" class="form-control" [disabled]="rowData.ackremarks==null?false:true" [(ngModel)]="rowData.ackremarks"></textarea>
             </div>
 
@@ -77,17 +77,17 @@
         <td class="ptable-cell" style="text-align:right">{{rowData.requestedquantity}}</td>-->
           <td class="ptable-cell" style="text-align:center;width:100px;">
 
-          {{rowData.approvedstatus}}
-          <!--<div *ngIf="rowData.approvedstatus=='approved'" class="form-inline">
+            {{rowData.approvedstatus}}
+            <!--<div *ngIf="rowData.approvedstatus=='approved'" class="form-inline">
 
-    <textarea type="text" style="width:140px" class="form-control" disabled="disabled" [(ngModel)]="rowData.approvedstatus"></textarea>
-  </div>-->
+            <textarea type="text" style="width:140px" class="form-control" disabled="disabled" [(ngModel)]="rowData.approvedstatus"></textarea>
+          </div>-->
             <span *ngIf="rowData.ackstatus=='received'">{{rowData.approvedstatus}}</span>
             <span *ngIf="rowData.approvedstatus==null">Pending</span>
           </td>
           <!--<td class="ptable-cell" style="text-align:center;width:100px;">
-            <input pInputText [disabled]="true" type="number" class="form-control" [(ngModel)]="rowData.returnqty">
-          </td>-->
+          <input pInputText [disabled]="true" type="number" class="form-control" [(ngModel)]="rowData.returnqty">
+        </td>-->
         </tr>
       </ng-template>
     </p-table>
@@ -96,9 +96,31 @@
     <div *ngIf="showAck" style="text-align: center;margin-top:0px;padding-top:0px;">
       <button type="button" class="btn btn-primary" [disabled]="btnDisable" (click)="materialAckUpdate()">Acknowledge</button>
     </div>
+    <p-table #dt *ngIf="showhistory" [value]="materiallistDataHistory" [style]="{'width':'80%'}" [scrollable]="true" scrollHeight="53vh">
+      <ng-template pTemplate="header">
+        <tr class="mprltbldata">
+          <th style="text-align:center;width:70px">Sl.No.</th>
+          <th style="text-align:center;width:200px">PO No</th>
+          <th style="text-align:center">Project Name</th>
+          <th style="text-align:center;width:150px">Requested qty</th>
+          
+        </tr>
+     
+      </ng-template>
+      <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
+        <tr>
+          <td class="ptable-cell" style="text-align:right;width:70px;">{{ri+1}}</td>
+          <td class="ptable-cell" style="text-align:center;width:200px;">{{rowData.pono}}</td>
+          <td class="ptable-cell" style="text-align:left">{{rowData.projectname}}</td>
+        
+        
+        
+        </tr>
+      </ng-template>
+    </p-table>
     <!--<div style="text-align: center;margin-top:0px;padding-top:0px;">
-      <button type="button" class="btn btn-primary" [disabled]="btnDisable" (click)="returnqty()">Return Quantity</button>
-    </div>-->
+    <button type="button" class="btn btn-primary" [disabled]="btnDisable" (click)="returnqty()">Return Quantity</button>
+  </div>-->
     <div style="height: 5px; overflow-y: scroll">
 
       <p-dialog header="Material Requested Details" [(visible)]="AddDialog" [contentStyle]="{'overflow-y': 'auto', 'overflow-x': 'hidden', 'max-height': '80vh','min-height':'250px'}" showEffect="fade" [modal]="true" [responsive]="true" [style]="{width: '1024px'}">
@@ -145,9 +167,71 @@
         <p-footer>
           <button type="button" class="btn btn-primary" [disabled]="btnDisable" (click)="returnqty()">Return Material</button>
           <!--<div class="ui-dialog-buttonpane ui-helper-clearfix">
-    <button type="button" pButton icon="fa fa-check" class="ui-button-success" (click)="Cancel()" label="OK"></button>
-    <button type="button" pButton icon="fa fa-close" class="ui-button-danger" (click)="Cancel()" label="Cancel"></button>
-  </div>-->
+          <button type="button" pButton icon="fa fa-check" class="ui-button-success" (click)="Cancel()" label="OK"></button>
+          <button type="button" pButton icon="fa fa-close" class="ui-button-danger" (click)="Cancel()" label="Cancel"></button>
+        </div>-->
+        </p-footer>
+      </p-dialog>
+      <p-dialog header="Material Transfer Details" [(visible)]="AddDialogfortransfer" [contentStyle]="{'overflow-y': 'auto', 'overflow-x': 'hidden', 'max-height': '80vh','min-height':'250px'}" showEffect="fade" [modal]="true" [responsive]="true" [style]="{width: '1024px'}">
+        <div *ngIf="showdialogfortransfer">
+          <div class="row  pl-0">
+            <div class="col-lg-4 col-md-4 col-sm-4 pt-2 labelheading">
+              <label>Request Id :</label>&nbsp;<span class="labeltext"><label>{{materiallistData[0].requestid}}</label></span>
+            </div>
+
+          </div>
+
+        </div>
+        <p-table #dt [value]="materiallistData">
+          <ng-template pTemplate="header">
+            <tr class="mprltbldata">
+              <th style="text-align:center;width:70px">S.No</th>
+              <th style="text-align:center">Request Id</th>
+              <th style="text-align:center;width:150px">Requested  Qty</th>
+              <th style="text-align:center;width:150px">Issued Qty</th>
+              <th style="text-align:center;width:150px">Transfer Qty</th>
+              <th style="text-align:center;width:150px">To Project</th>
+
+            </tr>
+
+          </ng-template>
+          <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
+            <tr>
+              <td class="ptable-cell" style="text-align:right">
+                {{ri+1}}
+              </td>
+              <td class="ptable-cell" style="text-align:left">{{rowData.requestid}}</td>
+              <td class="ptable-cell" style="text-align:right">{{rowData.requestedquantity}}</td>
+              <td class="ptable-cell" style="text-align:right">
+                {{rowData.issuedquantity}}
+
+              </td>
+              <td class="ptable-cell" style="text-align:center;width:100px;">
+                <input pInputText [disabled]="rowData.approvedstatus=='Approved'?false:true" type="number" (change)="returnQtyChange(rowData.issuedquantity,rowData.returnqty)" class="form-control" [(ngModel)]="rowData.returnqty">
+              </td>
+
+              <td>
+                <select class="form-control dropdown" #mySelect (change)="onChange(mySelect.value,ri)">
+                  <option selected></option>
+                  <option *ngFor=" let loclist of locationlist " value={{loclist.projectcode}}>
+                    {{loclist.projectcode}}
+                  </option>
+                </select>
+                  <!--<input *ngIf="rowData.projectcode" [(ngModel)]="rowData.projectcode" class="form-control" type="text" name="{{rowData.projectcode}}" />
+
+    <p-autoComplete appendTo="body" [(ngModel)]="projectcode" id="{{ri+1}}"  (onSelect)="captureId($event,ri+1)" type="text" [suggestions]="searchItems"  field="name" [dropdown]="true" (completeMethod)="bindSearchListData($event,'project')" size="8"></p-autoComplete>-->
+              </td>
+              <!--<td class="ptable-cell" style="text-align:left">{{rowData.createddate | date :  constants.dateFormat}}</td>-->
+            </tr>
+          </ng-template>
+
+        </p-table>
+        <p-footer>
+          <button type="button" class="btn btn-primary" [disabled]="btnDisabletransfer" (click)="transferqty()">Transfer Material</button>
+          <!--<div class="ui-dialog-buttonpane ui-helper-clearfix">
+          <button type="button" pButton icon="fa fa-check" class="ui-button-success" (click)="Cancel()" label="OK"></button>
+          <button type="button" pButton icon="fa fa-close" class="ui-button-danger" (click)="Cancel()" label="Cancel"></button>
+        </div>-->
         </p-footer>
       </p-dialog>
     </div>
