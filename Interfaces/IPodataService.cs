@@ -130,5 +130,6 @@ Task<string> updateonholdrow(updateonhold datamodel);
 		 int GatepassapproveByMail(gatepassModel model);
         Task<IEnumerable<pageModel>> Getpagesbyroleid(int roleid);
         Task<IEnumerable<pageModel>> Getpages();
+        Task<IEnumerable<IssueRequestModel>> GetReturnmaterialList();
     }
 }

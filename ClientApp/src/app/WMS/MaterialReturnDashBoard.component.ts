@@ -47,8 +47,9 @@ export class MaterialReturnDashBoardComponent implements OnInit {
   //get material issue list based on loginid
   getMaterialIssueList() {
     //this.employee.employeeno = "400095";
-    this.wmsService.getMaterialIssueLlist(this.employee.employeeno).subscribe(data => {
-      this.materialIssueList = data.filter(li=>li.requesttype=='return');
+    this.wmsService.GetReturnmaterialList().subscribe(data => {
+      this.materialIssueList = data;
+      //this.materialIssueList = data.filter(li=>li.requesttype=='return');
      
     });
   }

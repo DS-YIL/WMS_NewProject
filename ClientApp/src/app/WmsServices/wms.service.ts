@@ -169,6 +169,10 @@ export class wmsService {
   getMaterialIssueLlist(loginid: string): Observable<any> {
     return this.http.get<any>(this.url + 'POData/getmaterialIssueListbyapproverid?approverid=' + loginid + '', this.httpOptions);
   }
+  GetReturnmaterialList(): Observable<any> {
+    return this.http.get<any>(this.url + 'POData/GetReturnmaterialList', this.httpOptions);
+  }
+  
   GetreleasedMaterilalist(loginid: string): Observable<any> {
     return this.http.get<any>(this.url + 'POData/GetreleasedMaterilalist', this.httpOptions);
   }

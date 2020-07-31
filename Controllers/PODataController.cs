@@ -630,6 +630,11 @@ namespace WMS.Controllers
 		{
 			return this._poService.UpdateReturnmaterialTostock(obj);
 		}
+		[HttpGet("GetReturnmaterialList")]
+		public async Task<IEnumerable<IssueRequestModel>> GetReturnmaterialList()
+		{
+			return await this._poService.GetReturnmaterialList();
+		}
 		//[HttpPost("securitysendemail")]
 		//public EmailModel sendemail(EmailModel obj)
 		//{

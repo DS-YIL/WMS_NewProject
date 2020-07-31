@@ -5536,7 +5536,7 @@ namespace WMS.DAL
 
 					try
 					{
-						if (item.returnqty != 0)
+						if (item.returnqty != 0 || item.transferqty!=0)
 						{ 
 							updatereturnqty = WMSResource.UpdateReturnqty;
 						using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
@@ -5548,7 +5548,8 @@ namespace WMS.DAL
 								 item.returnqty,
 								 item.createdby,
 								 item.requesttype,
-								 item.transferqty
+								 item.transferqty,
+								 item.requestid
 							 });
 						}
 					}
@@ -5603,6 +5604,36 @@ namespace WMS.DAL
 				}
 			}
 			return result;
+		}
+
+		public  async Task<IEnumerable<IssueRequestModel>> GetReturnmaterialList()
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				try
+				{
+					await pgsql.OpenAsync();
+					string query = WMSResource.GetreturnList;
+					string updatequery = string.Empty;
+					//string updatedon = WMSResource.updatedon;
+					return await pgsql.QueryAsync<IssueRequestModel>(
+					  query, null, commandType: CommandType.Text);
+
+				}
+				catch (Exception ex)
+				{
+
+					log.ErrorMessage("PODataProvider", "GetReturnmaterialList", ex.StackTrace.ToString());
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+			}
+
+			
 		}
 	}
 }
