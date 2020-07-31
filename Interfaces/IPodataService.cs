@@ -132,5 +132,8 @@ Task<string> updateonholdrow(updateonhold datamodel);
         Task<IEnumerable<pageModel>> Getpages();
         Task<IEnumerable<IssueRequestModel>> GetReturnmaterialList();
         Task<IEnumerable<IssueRequestModel>> GetReturnmaterialListForConfirm(string requestid);
+		Task<IEnumerable<rbamaster>> getrbadetails();
+
+        Task<UserDashboardDetail> getUserDashboarddata();
     }
 }

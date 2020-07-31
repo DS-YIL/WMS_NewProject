@@ -412,12 +412,16 @@ public bool onhold { get; set; }
 		public int categoryid { get; set; }
 		public string fmapprovedstatus { get; set; }
 
-		public DateTime outwarddate { get; set; }
+		public DateTime? outwarddate { get; set; }
 		public string outwardedby { get; set; }
 		public string outwardremarks { get; set; }
-		public DateTime inwarddate { get; set; }
+		public DateTime? inwarddate { get; set; }
 		public string inwardedby { get; set; }
 		public string inwardremarks { get; set; }
+
+		public int outwardqty { get; set; }
+
+		public int inwardqty { get; set; }
 
 	}
 	public class materialistModel
@@ -775,4 +779,57 @@ public class materialistModel
 	public string movetype { get; set; }
 
 	public string movedby { get; set; }
+
+	public int outwardqty { get; set; }
+
+	public int inwardqty { get; set; }
+}
+
+public class rbamaster
+{
+	public int id { get; set; }
+	public int roleid { get; set; }
+	public bool inv_enquiry {get; set;}
+	public bool inv_reports {get; set;}
+	public bool gate_entry {get; set;}
+	public bool gate_entry_barcode {get; set;}
+	public bool inv_receipt_alert {get; set;}
+	public bool receive_material {get; set;}
+	public bool put_away {get; set;}
+	public bool material_return {get; set;}
+	public bool material_transfer {get; set;}
+	public bool gate_pass {get; set;}
+	public bool gatepass_inout {get; set;}
+	public bool gatepass_approval {get; set;}
+	public bool material_issue {get; set;}
+	public bool material_request {get; set;}
+	public bool material_reservation {get; set;}
+	public bool abc_classification {get; set;}
+	public bool cyclecount_configuration {get; set;}
+	public bool cycle_counting {get; set;}
+	public bool cyclecount_approval {get; set;}
+	public bool admin_access {get; set;}
+	public bool masterdata_creation {get; set;}
+	public bool masterdata_updation {get; set;}
+	public bool masterdata_approval {get; set;}
+	public bool printbarcodes {get; set;}
+	public bool quality_check { get; set; }
+	public bool pmdashboard_view { get; set; }
+	public DateTime? modified_on { get; set; }
+	public string modified_by { get; set; }
+}
+
+public class UserDashboardDetail
+{
+    public int pendingtooutward { get; set; }
+	public int pendingtoinward { get; set; }
+	public int pendingtoPMapproval { get; set; }
+	public int pendingtoFMapproval { get; set; }
+	public int pendingtoreceive { get; set; }
+	public int pendingtoqualitycheck { get; set; }
+	public int pendingtoaccetance { get; set; }
+	public int pendingtoputaway { get; set; }
+	public int pendingtoissue { get; set; }
+	public int pendingshipments { get; set; }
+	public int receivedshipments { get; set; }
 }

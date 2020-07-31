@@ -4,8 +4,8 @@ import { HttpHeaders } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { constants } from '../Models/WMSConstants'
-import { Employee, Login, DynamicSearchResult, printMaterial } from '../Models/Common.Model';
-import { PoFilterParams, PoDetails, BarcodeModel, StockModel, materialRequestDetails, inwardModel, gatepassModel, stocktransfermodel, Materials, authUser, invstocktransfermodel, ddlmodel, locataionDetailsStock,updateonhold, materialistModel, outwardmaterialistModel, pageModel } from '../Models/WMS.Model';
+import { Employee, Login, DynamicSearchResult, printMaterial, rbamaster } from '../Models/Common.Model';
+import { PoFilterParams, PoDetails, BarcodeModel, StockModel, materialRequestDetails, inwardModel, gatepassModel, stocktransfermodel, Materials, authUser, invstocktransfermodel, ddlmodel, locataionDetailsStock,updateonhold, materialistModel, outwardmaterialistModel, pageModel, UserDashboardDetail } from '../Models/WMS.Model';
 import { Text } from '@angular/compiler/src/i18n/i18n_ast';
 
 @Injectable({
@@ -403,6 +403,15 @@ export class wmsService {
   getpages(): Observable<pageModel[]> {
     return this.http.get<pageModel[]>(this.url + 'POData/Getpages/', this.httpOptions);
   }
+
+  getrbadata(): Observable<rbamaster[]> {
+    return this.http.get<rbamaster[]>(this.url + 'POData/getrbamasterdetail/', this.httpOptions);
+  }
+
+  getdashdata(): Observable<UserDashboardDetail> {
+    return this.http.get<UserDashboardDetail>(this.url + 'POData/getUserdashboarddata/', this.httpOptions);
+  }
+
   
 }
 

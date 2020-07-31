@@ -4,12 +4,13 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { wmsService } from '../WmsServices/wms.service';
 import { first } from 'rxjs/operators';
 import { constants } from '../Models/WMSConstants';
-import { Employee, Login, DynamicSearchResult } from '../Models/Common.Model';
+import { Employee, Login, DynamicSearchResult, rbamaster } from '../Models/Common.Model';
 import { NgxSpinnerService } from "ngx-spinner";
 import { MessageService } from 'primeng/api';
 import { commonComponent } from '../WmsCommon/CommonCode';
 import { NavMenuComponent } from '../nav-menu/nav-menu.component'; 
 import { pageModel } from '../Models/WMS.Model';
+import { isNullOrUndefined } from 'util';
 
 @Component({
   selector: 'app-Login',
@@ -18,7 +19,9 @@ import { pageModel } from '../Models/WMS.Model';
 })
 export class LoginComponent implements OnInit {
 
-  constructor(private messageService: MessageService, private navpage: NavMenuComponent,  private commonComponent: commonComponent, private formBuilder: FormBuilder, private wmsService: wmsService, private route: ActivatedRoute, private router: Router, public constants: constants, private spinner: NgxSpinnerService) { }
+  constructor(private messageService: MessageService, private navpage: NavMenuComponent, private commonComponent: commonComponent, private formBuilder: FormBuilder, private wmsService: wmsService, private route: ActivatedRoute, private router: Router, public constants: constants, private spinner: NgxSpinnerService) {
+    this.getRoles();
+  }
 
   public LoginForm: FormGroup;
   public employee: Employee;
@@ -29,11 +32,14 @@ export class LoginComponent implements OnInit {
   public roleNameModel: Array<any> = [];
   public AcessNameList: Array<any> = [];
   pagelist: pageModel[] = [];
+  rbalist: rbamaster[] = [];
 
   ngOnInit() {
     if (localStorage.getItem("Employee"))
-         this.router.navigateByUrl("Home"); 
+      this.router.navigateByUrl("Home");
+
     this.LoginModel = new Login();
+    this.rbalist = [];
     this.LoginModel.roleid = "0";
     this.LoginForm = this.formBuilder.group({
       DomainId: ['', [Validators.required]],
@@ -48,8 +54,18 @@ export class LoginComponent implements OnInit {
       var pg = this;
       setTimeout(function () {
         pg.getRoles();
-      }, 3000);
+      }, 1000);
     }
+  }
+
+  alertDG() {
+    debugger;
+    if (isNullOrUndefined(localStorage.getItem("Roles")) || localStorage.getItem("Roles") == "null" || localStorage.getItem("Roles") == null || localStorage.getItem("Roles") == "NULL") {
+      this.getRoles();
+    }
+   
+     
+   
   }
 
   //get Role list

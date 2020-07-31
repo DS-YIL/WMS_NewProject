@@ -112,6 +112,8 @@ export class GatePassoutwardComponent implements OnInit {
           this.gatepasstyp = "Non-Returnable";
           this.nonreturn = true;
           this.returnable = false;
+          this.isinward = false;
+          this.isoutward = true;
           this.getGatePassList();
         }
       }
@@ -190,6 +192,7 @@ export class GatePassoutwardComponent implements OnInit {
       this.wmsService.nonreturngetGatePassList("1").subscribe(data => {
         debugger;
         this.totalGatePassList = data;
+
         if (this.isinward) {
           this.totalGatePassList = this.totalGatePassList.filter(li => li.outwarddate != null && li.inwarddate == null);
         }
@@ -208,10 +211,14 @@ export class GatePassoutwardComponent implements OnInit {
 
   updateoutinward() {
     debugger;
-    var senddata = this.selectedmats;
+    var senddata = this.materialListDG;
     this.selectedmdata = [];
-    if (isNullOrUndefined(this.outindate)) {
-      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'please select date.' });
+    var tdate = new Date();
+    var invalidrcv = senddata.filter(function (element, index) {
+      return (element.outwardqty != 0);
+    });
+    if (invalidrcv.length == 0) {
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Please enter outward quantity' });
       return;
     }
     senddata.forEach(item => {
@@ -219,31 +226,62 @@ export class GatePassoutwardComponent implements OnInit {
       mdata.gatepassmaterialid = item.gatepassmaterialid;
       mdata.remarks = item.remarks;
       mdata.movedby = this.employee.employeeno;
-      var date = this.datePipe.transform(this.outindate, 'yyyy-MM-dd hh:mm:ss');
+      var date = this.datePipe.transform(tdate, 'yyyy-MM-dd hh:mm:ss');
       if (this.isoutward) {
         mdata.outwarddatestring = date;
         mdata.movetype = "out";
+        mdata.outwardqty = item.outwardqty;
       }
       else if (this.isinward) {
-        mdata.outwarddatestring = date;
+        mdata.inwarddatestring = date;
         mdata.movetype = "in";
+        mdata.inwardqty = item.inwardqty;
       }
       this.selectedmdata.push(mdata);
     })
     this.wmsService.updateoutinward(this.selectedmdata).subscribe(data => {
       if (this.isinward) {
-        this.messageService.add({ severity: 'success', summary: 'Success Message', detail: 'inwarded successfully.' });
+        this.messageService.add({ severity: 'success', summary: 'Success Message', detail: 'Inwarded successfully.' });
       }
       else if (this.isoutward) {
-        this.messageService.add({ severity: 'success', summary: 'Success Message', detail: 'outwarded successfully.' });
+        this.messageService.add({ severity: 'success', summary: 'Success Message', detail: 'Outwarded successfully.' });
       }
       this.resetpage();
       
     })
 
   }
+  checkoutqty(enrtered: number, qty: number, data: any) {
+    if (enrtered < 0) {
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Negative value not allowed.' });
+      data.outwardqty = 0;
+      return;
+    }
+
+    if (enrtered > qty) {
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Outward quantity cannot be greater than issued quantity.' });
+      data.outwardqty = 0;
+      return;
+    }
+    
+  }
+
+  checkinqty(enrtered: number, qty: number, data: any) {
+    if (enrtered < 0) {
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Negative value not allowed.' });
+      data.outwardqty = 0;
+      return;
+    }
+
+    if (enrtered > qty) {
+      this.messageService.add({ severity: 'error', summary: '', detail: 'intward quantity cannot be greater than outward quantity.' });
+      data.outwardqty = 0;
+      return;
+    }
+  }
 
   resetpage() {
+    this.showmatDialog = false;
     this.gatepassModelList = [];
     this.gatepasslist = [];
     this.materialListDG = [];
@@ -272,10 +310,9 @@ export class GatePassoutwardComponent implements OnInit {
           material.quantity = result[i].quantity;
           material.materialcost = result[i].materialcost;
           material.remarks = result[i].remarks;
-          //material.approverstatus = result[i].approverstatus;
+          material.outwardqty = result[i].outwardqty;
+          material.inwardqty = result[i].inwardqty; 
           material.expecteddate = new Date(result[i].expecteddate);
-         
-
           item.materialList.push(material);
         }
 

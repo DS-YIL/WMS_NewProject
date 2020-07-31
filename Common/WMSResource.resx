@@ -748,7 +748,7 @@ group by stinw.inwmasterid,sinw.grnnumber</value>
     <value>select matis.gatepassmaterialid,matis.itemid,matis.itemissueddate,ygs.materialdescription,emp.name,
 matgt.gatepassid,matgt.materialid,matgt.materialcost,matgt.quantity,
 gt.gatepasstype,gt.vendorname,gt.requestedby,gt.requestedon,
-matgt.outwarddate,emp1.name as outwardedby,matgt.outwardremarks,matgt.inwarddate,emp2.name as inwardedby,matgt.inwardremarks
+matgt.outwarddate,emp1.name as outwardedby,matgt.outwardremarks,matgt.outwardqty,matgt.inwardqty,matgt.inwarddate,emp2.name as inwardedby,matgt.inwardremarks
 from wms.wms_materialissue matis
 left outer join wms.wms_gatepassmaterial matgt on matgt.gatepassmaterialid = matis.gatepassmaterialid
 left outer join wms.wms_gatepass gt on gt.gatepassid = matgt.gatepassid

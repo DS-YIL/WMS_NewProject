@@ -70,3 +70,36 @@ export class stockCardPrint {
   date: Date;
   checkedby: string;
 }
+
+export class rbamaster {
+  id: number;
+  roleid: number;
+  inv_enquiry: boolean;
+  inv_reports: boolean;
+  gate_entry: boolean;
+  gate_entry_barcode: boolean;
+  inv_receipt_alert: boolean;
+  receive_material: boolean;
+  put_away: boolean;
+  material_return: boolean;
+  material_transfer: boolean;
+  gate_pass: boolean;
+  gatepass_inout: boolean;
+  gatepass_approval: boolean;
+  material_issue: boolean;
+  material_request: boolean;
+  material_reservation: boolean;
+  abc_classification: boolean;
+  cyclecount_configuration: boolean;
+  cycle_counting: boolean;
+  cyclecount_approval: boolean;
+  admin_access: boolean;
+  masterdata_creation: boolean;
+  masterdata_updation: boolean;
+  masterdata_approval: boolean;
+  printbarcodes: boolean;
+	quality_check: boolean;
+  pmdashboard_view: boolean;
+  modified_on: Date
+  modified_by: string
+}

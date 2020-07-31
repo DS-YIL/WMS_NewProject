@@ -714,7 +714,7 @@ this.updateRowGroupMetaData();
       }
       else {
         this.disSaveBtn = true;
-        this.messageService.add({ severity: 'error', summary: 'Validation', detail: 'Putaway Qty should be same as Accepted Qty' });
+        this.messageService.add({ severity: 'error', summary: 'Validation', detail: 'Putaway qty cannot exceed Accepted qty' });
       }
     }
     else {

@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MenuItem } from 'primeng/api/menuitem';
-import { Employee, userAcessNamesModel } from '../Models/Common.Model';
+import { Employee, userAcessNamesModel, rbamaster } from '../Models/Common.Model';
 import { Router, RouterEvent, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { wmsService } from '../WmsServices/wms.service';
@@ -35,6 +35,9 @@ export class NavMenuComponent implements OnInit {
   approverstatus: string = "";
   notifcount: number = 0;
   notif: boolean = false;
+  rbalist: rbamaster[] = [];
+  menuview: boolean = false;
+  btntext: string = "Menu"
   ngOnInit() {
     debugger;
     this.notificationitems = [];
@@ -55,7 +58,11 @@ export class NavMenuComponent implements OnInit {
       this.router.navigateByUrl("WMS/Mailresponse");
       return;
     }
-      if (localStorage.getItem("Employee")) {
+    if (localStorage.getItem("Employee")) {
+      if (localStorage.getItem("rbalist")) {
+        this.rbalist = JSON.parse(localStorage.getItem("rbalist")) as rbamaster[];
+      }
+      
         this.loggedin = true;
         let element: HTMLElement = document.getElementById("btnuser") as HTMLElement;
         element.hidden = false;
@@ -189,7 +196,7 @@ export class NavMenuComponent implements OnInit {
        
           this.items.push({ label: 'Receipts', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GRNPosting') });
           this.items.push({ label: 'Quality Check', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/QualityCheck') });
-          this.items.push({ label: '"Put Away"  Material wise', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/WarehouseIncharge') });
+          this.items.push({ label: 'Put Away', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/WarehouseIncharge') });
 
        
 
@@ -438,7 +445,7 @@ export class NavMenuComponent implements OnInit {
     if (this.emp.roleid == "3") {//inventory clerk
       this.items.push({ label: 'Receipts', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GRNPosting') });
       this.items.push({ label: 'Quality Check', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/QualityCheck') });
-      this.items.push({ label: '"Put Away"  Material wise', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/WarehouseIncharge') });
+      this.items.push({ label: 'Put Away', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/WarehouseIncharge') });
      // this.items.push({ label: 'Material Requests', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReqView') });
       //this.items.push({ label: 'Material Release', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReleaseDashboard') });
       this.router.navigateByUrl('WMS/Home');

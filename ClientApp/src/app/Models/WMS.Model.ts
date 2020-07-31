@@ -220,6 +220,8 @@ export class outwardmaterialistModel {
   inwarddatestring: string;
   movetype: string;
   movedby: string;
+  outwardqty: number;
+  inwardqty: number;
 }
 
 export class categoryValues {
@@ -341,4 +343,18 @@ export class updateonhold {
   invoiceno: string;
   remarks: string;
   onhold: boolean;
+}
+
+export class UserDashboardDetail {
+  pendingtooutward: number;
+  pendingtoinward: number;
+  pendingtoPMapproval: number;
+  pendingtoFMapproval: number;
+  pendingtoreceive: number;
+  pendingtoqualitycheck: number;
+  pendingtoaccetance: number;
+  pendingtoputaway: number;
+  pendingtoissue: number;
+  pendingshipments: number;
+  receivedshipments: number;
 }

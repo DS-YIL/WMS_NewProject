@@ -472,11 +472,43 @@ export class StoreClerkComponent implements OnInit {
   }
   onsubmit() {
     debugger;
-    if (this.podetailsList.length > 0 && this.podetailsList[0].receivedqty> '0') {
+    if (this.podetailsList.length > 0) {
+      var invaliddata = this.podetailsList.filter(function (element, index) {
+        return (isNullOrUndefined(element.material) || element.material == "");
+      });
+      if (invaliddata.length > 0) {
+        this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please select material' });
+        return;
+      }
+      this.inwardModel.pono = this.PoDetails.pono;
+      if (this.inwardModel.pono.startsWith("NP")) {
+        var invalidrcv = this.podetailsList.filter(function (element, index) {
+          return (element.receivedqty == "0");
+        });
+        if (invalidrcv.length > 0) {
+          this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please enter received quantity' });
+          return;
+        }
+      }
+      else {
+        var invalidrcv = this.podetailsList.filter(function (element, index) {
+          return (element.receivedqty != "0");
+        });
+        if (invalidrcv.length == 0) {
+          this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please enter received quantity' });
+          return;
+        }
 
+      }
+
+      this.podetailsList = this.podetailsList.filter(function (element, index) {
+        return (element.receivedqty != "0");
+      });
+
+      
       this.spinner.show();
       // this.onVerifyDetails(this.podetailsList);
-      this.inwardModel.pono = this.PoDetails.pono;
+    
       this.inwardModel.receivedqty = this.PoDetails.materialqty;
       this.inwardModel.receivedby = this.inwardModel.qcby = this.employee.employeeno;
       this.podetailsList.forEach(item => {

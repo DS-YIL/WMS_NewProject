@@ -254,6 +254,12 @@ namespace WMS.Controllers
 			return await this._poService.GetgatepassList();
 		}
 
+		[HttpGet("getUserdashboarddata")]
+		public async Task<UserDashboardDetail> getdashdata()
+		{
+			return await this._poService.getUserDashboarddata();
+		}
+
 		[HttpGet("nonreturngetgatepasslist")]
 		public async Task<IEnumerable<gatepassModel>> nonreturngetgatepasslist(string type)
 		{
@@ -608,6 +614,12 @@ namespace WMS.Controllers
 		public async Task<IEnumerable<ddlmodel>> getdepartmentdata()
 		{
 			return await this._poService.getdepartmentmasterdata();
+		}
+
+		[HttpGet("getrbamasterdetail")]
+		public async Task<IEnumerable<rbamaster>> getrbamaster()
+		{
+			return await this._poService.getrbadetails();
 		}
 
 		[HttpPost("updategatepassmovement")]

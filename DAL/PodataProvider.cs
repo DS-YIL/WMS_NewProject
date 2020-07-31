@@ -2093,14 +2093,19 @@ namespace WMS.DAL
 					await pgsql.OpenAsync();
 					var data = await pgsql.QueryAsync<gatepassModel>(
 					   query, null, commandType: CommandType.Text);
-					if(type == "1")
+					if (type == "1")
                     {
-						return data.Where(o => o.gatepasstype == "Returnable").ToList();
-                    }
+
+						var data1 = data.Where(o => o.gatepasstype == "Returnable").ToList();
+						return data1;
+
+					}
                     else
                     {
-						return data.Where(o => o.gatepasstype == "Non Returnable").ToList();
+						var data1 =  data.Where(o => o.gatepasstype == "Non Returnable").ToList();
+						return data1;
 					}
+					
 
 
 				}
@@ -3443,6 +3448,106 @@ namespace WMS.DAL
 			}
 		}
 
+		public async Task<UserDashboardDetail> getUserDashboarddata()
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+
+				try
+				{
+					UserDashboardDetail detail = new UserDashboardDetail();
+					string deliverydate = DateTime.Now.ToString("yyyy-MM-dd");
+					string query = WMSResource.getASNList;
+					query = query + " where asno.deliverydate >= '" + deliverydate + " 00:00:00' and asno.deliverydate <= '" + deliverydate + " 23:59:59'";
+					await pgsql.OpenAsync();
+					var expectedrcpts = await pgsql.QueryAsync<OpenPoModel>(
+					   query, null, commandType: CommandType.Text);
+					if(expectedrcpts != null && expectedrcpts.Count() > 0)
+                    {
+						detail.pendingshipments = expectedrcpts.Count();
+
+					}
+					string receivedlistqry = WMSResource.getsecurityreceivedlist;
+					receivedlistqry = receivedlistqry + " where sl.invoicedate <= '" + deliverydate + " 23:59:59' and sl.invoicedate >= '" + deliverydate + " 00:00:00'";
+					var receivedrcpts = await pgsql.QueryAsync<SecurityInwardreceivedModel>(
+					   receivedlistqry, null, commandType: CommandType.Text);
+					if (receivedrcpts != null && receivedrcpts.Count() > 0)
+					{
+						detail.receivedshipments = receivedrcpts.Count();
+
+					}
+					string outinquery = WMSResource.getnonreturnablegatepassdata;
+					var outindata = await pgsql.QueryAsync<gatepassModel>(
+					   outinquery, null, commandType: CommandType.Text);
+					if (outindata != null && outindata.Count() > 0)
+					{
+						var outwardata = outindata.Where(o => o.outwarddate == null);
+						var inwarddata = outindata.Where(o => o.outwarddate != null && o.inwarddate == null);
+						var countoutward = outwardata.GroupBy(item => item.gatepassid).Select(g => new { name = g.Key, count = g.Count() });
+						var countinward = inwarddata.GroupBy(item => item.gatepassid).Select(g => new { name = g.Key, count = g.Count() });
+						detail.pendingtoinward = countinward.Count();
+						detail.pendingtooutward = countoutward.Count();
+
+					}
+
+					string materialrequestquery = WMSResource.getpendingreceiptslist;
+
+					var pendingrcptsdata = await pgsql.QueryAsync<ddlmodel>(
+					  materialrequestquery, null, commandType: CommandType.Text);
+					if(pendingrcptsdata != null && pendingrcptsdata.Count() > 0)
+                    {
+						detail.pendingtoreceive = pendingrcptsdata.Count();
+
+					}
+
+					string materialacceptquery = WMSResource.getgrnlistdata;
+
+					var mataccpt = await pgsql.QueryAsync<ddlmodel>(
+					  materialacceptquery, null, commandType: CommandType.Text);
+
+					if (mataccpt != null && mataccpt.Count() > 0)
+					{
+						detail.pendingtoaccetance = mataccpt.Count();
+
+					}
+
+					string materialputawayquery = WMSResource.getgrnlistdataforputaway;
+
+					var matputaway = await pgsql.QueryAsync<ddlmodel>(
+					  materialputawayquery, null, commandType: CommandType.Text);
+					if (matputaway != null && matputaway.Count() > 0)
+					{
+						detail.pendingtoputaway = matputaway.Count();
+
+					}
+					
+					string queryqc = WMSResource.getdataforqualitydetails;// + pono+"'";//li
+					var qcdata = await pgsql.QueryAsync<OpenPoModel>(
+					   queryqc, null, commandType: CommandType.Text);
+					if (qcdata != null && qcdata.Count() > 0)
+					{
+						detail.pendingtoqualitycheck = qcdata.Count();
+
+					}
+
+
+
+
+					return detail;
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "getASNList", Ex.StackTrace.ToString());
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+			}
+		}
+
 		public async Task<IEnumerable<IssueRequestModel>> GetItemlocationListBymterial(string material)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -4130,7 +4235,6 @@ namespace WMS.DAL
 					string date = dt.ToString("yyyy-MM-dd");
 					string query = WMSResource.getsecurityreceivedlist;
 					query = query + " where sl.invoicedate <= '" + date + " 23:59:59' and sl.invoicedate >= '" + date + " 00:00:00'";
-				//	query = query + " group by sl.pono, asno.asn ";
 					await pgsql.OpenAsync();
 					return await pgsql.QueryAsync<SecurityInwardreceivedModel>(
 					   query, null, commandType: CommandType.Text);
@@ -5322,7 +5426,11 @@ namespace WMS.DAL
 			}
 			return result;
 		}
-
+		/// <summary>
+		/// get organasation dropdown
+		/// Ramesh Kumar (28/07/2020)
+		/// </summary>
+		/// <returns></returns>
 			public async Task<IEnumerable<ddlmodel>> getdepartmentmasterdata()
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -5348,6 +5456,37 @@ namespace WMS.DAL
 
 			}
 		}
+
+		/// <summary>
+		/// get rba details
+		/// Ramesh Kumar (28/07/2020)
+		/// </summary>
+		/// <returns></returns>
+		public async Task<IEnumerable<rbamaster>> getrbadetails()
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				try
+				{
+					string materialrequestquery = "select * from wms.wms_rbamaster";
+
+					await pgsql.OpenAsync();
+					return await pgsql.QueryAsync<rbamaster>(
+					  materialrequestquery, null, commandType: CommandType.Text);
+
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "getrbadetails", Ex.StackTrace.ToString());
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+			}
+		}
 		public int updatematmovement(List<materialistModel> obj)
 		{
 			
@@ -5362,11 +5501,11 @@ namespace WMS.DAL
 							string query = "";
 							if (mat.movetype == "out")
 							{
-								query = "update wms.wms_gatepassmaterial set outwarddate = '" + mat.outwarddatestring + "' , outwardedby='" + mat.movedby + "',outwardremarks='" + mat.remarks + "' where gatepassmaterialid = " + mat.gatepassmaterialid + "";
+								query = "update wms.wms_gatepassmaterial set outwardqty = "+mat.outwardqty+", outwarddate = '" + mat.outwarddatestring + "' , outwardedby='" + mat.movedby + "',outwardremarks='" + mat.remarks + "' where gatepassmaterialid = " + mat.gatepassmaterialid + "";
 							}
 							else
 							{
-								query = "update wms.wms_gatepassmaterial set inwarddate = '" + mat.inwarddatestring + "' , inwardedby='" + mat.movedby + "',inwardremarks='" + mat.remarks + "' where gatepassmaterialid = " + mat.gatepassmaterialid + "";
+								query = "update wms.wms_gatepassmaterial set inwardqty = "+mat.inwardqty+", inwarddate = '" + mat.inwarddatestring + "' , inwardedby='" + mat.movedby + "',inwardremarks='" + mat.remarks + "' where gatepassmaterialid = " + mat.gatepassmaterialid + "";
 							}
 							var results11 = pgsql.ExecuteScalar(query);
 						}

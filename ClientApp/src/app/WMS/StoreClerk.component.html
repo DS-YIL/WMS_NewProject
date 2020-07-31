@@ -4,17 +4,16 @@
     <!--<div class="card-header cardheadertext text-center"><i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;Receipt</div>-->
     <div class="card-body" style="overflow-y:scroll">
       <form class="form-inline labelheading">
-        <button type="button" class="btn btn-primary btn-sm" style="float:left" label="Save">Scan</button>&nbsp;&nbsp;
         <button *ngIf="isnonpoentry" type="button" class="btn btn-primary btn-sm" style="float:left;margin-left:10px;" (click)="addrows()" label="Save"><i class="fa fa-plus"></i></button>&nbsp;&nbsp;
         <label>Pending receipts:</label>&nbsp;&nbsp;
-        <p-autoComplete [(ngModel)]="selectedpendingpono" [suggestions]="filteredpos" [ngModelOptions]="{standalone: true}" placeholder="search by supplier/PONo" [forceSelection]="true" (onSelect)="showpodata()" (completeMethod)="filterpos($event)" [size]="30"
+        <p-autoComplete [(ngModel)]="selectedpendingpono" [suggestions]="filteredpos" [ngModelOptions]="{standalone: true}" placeholder="search by supplier/PONo" [forceSelection]="false" (onSelect)="showpodata()" (change)="showpodata()" (completeMethod)="filterpos($event)" [size]="30"
                         [dropdown]="true">
         </p-autoComplete>&nbsp;&nbsp;&nbsp;&nbsp;
         <!--<p-dropdown [options]="pendingpos" #myInput [(ngModel)]="selectedpendingpo" [ngModelOptions]="{standalone: true}" [showClear]="true" [style]="{'width':'250px'}" filter="true" placeholder="Select an invoice" optionLabel="value" (onChange)="showpodata()"></p-dropdown>&nbsp;&nbsp;-->
         <input type="checkbox" *ngIf="!isacceptance" [(ngModel)]="isonHoldview" [ngModelOptions]="{standalone: true}" />&nbsp;<span *ngIf="!isacceptance">Put On Hold</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <label class="labelheading">Pending for Acceptance:</label>&nbsp;&nbsp;
-        <p-autoComplete [(ngModel)]="selectedgrnno" [suggestions]="filteredgrns" placeholder="search by supplier/GRN No" [ngModelOptions]="{standalone: true}" [forceSelection]="true" (onSelect)="showpodata1()" (completeMethod)="filtergrn($event)" [size]="30"
+        <p-autoComplete [(ngModel)]="selectedgrnno" [suggestions]="filteredgrns" placeholder="search by supplier/GRN No" [ngModelOptions]="{standalone: true}" [forceSelection]="false" (change)="showpodata1()" (onSelect)="showpodata1()" (completeMethod)="filtergrn($event)" [size]="30"
                         [dropdown]="true">
         </p-autoComplete>
         <!--<p-dropdown [options]="checkedgrnlist" #myInput1 [(ngModel)]="selectedgrn" [ngModelOptions]="{standalone: true}" [showClear]="true" [style]="{'width':'250px'}" filter="true" placeholder="Select GRN" optionLabel="text" (onChange)="showpodata1()"></p-dropdown>-->
