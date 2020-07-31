@@ -148,7 +148,7 @@ export class MaterialRequestViewComponent implements OnInit {
   }
   showmaterialdetailsfortransfer() {
     if (this.requestid == undefined) {
-      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please select any Request Id' });
+      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please select  Request Id' });
       //this.router.navigateByUrl("/WMS/MaterialReqView");
     }
     else {

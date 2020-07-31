@@ -3,10 +3,10 @@
   <div class="card-header text-center cardheadertext">
     <div class="row">
 
-      <div class="col-lg-1 col-md-1 col-sm-1 form-group" style="padding-right:0px;">
+      <div class="col-lg-1 col-md-1 col-sm-1 form-group" style="padding-right:0px;margin-bottom:0px;padding-top:17px;">
         <a (click)="showmaterialdetails()" style="cursor:pointer;">Return</a>
       </div>
-      <div class="col-lg-1 col-md-1 col-sm-1 form-group" style="padding-left:0px;">
+      <div class="col-lg-1 col-md-1 col-sm-1 form-group" style="padding-right:0px;margin-bottom:0px;padding-top:17px;">
         <a  (click)="showmaterialdetailsfortransfer()" style="cursor:pointer;">Transfer</a>
       </div>
       <div class="col-lg-9 col-md-9 col-sm-9 form-group" style="padding-left:0px;">
@@ -27,8 +27,8 @@
     <p-table #dt [value]="requestList" [style]="{'width':'100%'}" [scrollable]="true" scrollHeight="53vh">
       <ng-template pTemplate="header">
         <tr class="mprltbldata">
-          <th style="text-align:center;width:70px">Sl.No.</th>
           <th style="text-align:center;width:70px">Select</th>
+          <th style="text-align:center;width:70px">Sl.No.</th>
           <th style="text-align:center;width:100px">Request Id</th>
           <th style="text-align:center;width:200px">PO No</th>
           <!--<th style="text-align:center">Project Name</th>-->
@@ -37,8 +37,8 @@
           <th style="text-align:center;width:100px">Status</th>
           <!--<th style="text-align:center;width:100px">Retrun qty</th>-->
           <!--<th style="text-align:center">Requested Quantity</th>
-        <th style="text-align:center">Received Quantity</th>
-        <th style="text-align:center;width:200px">Acknowledge</th>-->
+  <th style="text-align:center">Received Quantity</th>
+  <th style="text-align:center;width:200px">Acknowledge</th>-->
         </tr>
         <tr>
           <th></th>
@@ -57,14 +57,13 @@
       </ng-template>
       <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
         <tr>
-          <td class="ptable-cell" style="text-align:right;width:70px;">{{ri+1}}</td>
-          <td style="width:70px;">
-            <p-radioButton name="group1" binary="true"  (click)="selectrow(rowData.requestid)"></p-radioButton>
+          <td style="width:70px;text-align:center">
+            <p-radioButton name="select" binary="true" (click)="selectrow(rowData.requestid)"></p-radioButton>
           </td>
-          <td class="ptable-cell" style="    text-align: center;
-    width: 100px;
-">
-            <button type="button" class="btn btn-link" (click)="showstory(rowData.requestid)" style="padding-left:0px;">{{rowData.requestid}}</button>
+          <td class="ptable-cell" style="text-align:right;width:70px;">{{ri+1}}</td>
+
+          <td class="ptable-cell" style="text-align: center;width: 100px;">
+            <button type="button" class="btn btn-link" (click)="showstory(rowData.requestid)" style="padding-left:0px;text-align:center;">{{rowData.requestid}}</button>
           </td>
           <td class="ptable-cell" style="text-align:center;width:200px;">{{rowData.pono}}</td>
           <!--<td class="ptable-cell" style="text-align:left">{{rowData.projectname}}</td>-->
@@ -77,24 +76,24 @@
 
           </td>
           <!--<td class="ptable-cell" style="text-align:right">{{rowData.quotationqty}}</td>
-        <td class="ptable-cell" style="text-align:right">
-          <span *ngIf="rowData.approvedstatus=='approved'">{{rowData.requestedquantity}}</span>-->
+  <td class="ptable-cell" style="text-align:right">
+    <span *ngIf="rowData.approvedstatus=='approved'">{{rowData.requestedquantity}}</span>-->
           <!--<input *ngIf="rowData.approvedstatus!='approved'" pInputText type="number" class="form-control" [(ngModel)]="rowData.requestedquantity" (change)="reqQtyChange(rowData)">-->
           <!--</td>
-        <td class="ptable-cell" style="text-align:right">{{rowData.requestedquantity}}</td>-->
+  <td class="ptable-cell" style="text-align:right">{{rowData.requestedquantity}}</td>-->
           <td class="ptable-cell" style="text-align:center;width:100px;">
 
             {{rowData.approvedstatus}}
             <!--<div *ngIf="rowData.approvedstatus=='approved'" class="form-inline">
 
-            <textarea type="text" style="width:140px" class="form-control" disabled="disabled" [(ngModel)]="rowData.approvedstatus"></textarea>
-          </div>-->
+      <textarea type="text" style="width:140px" class="form-control" disabled="disabled" [(ngModel)]="rowData.approvedstatus"></textarea>
+    </div>-->
             <span *ngIf="rowData.ackstatus=='received'">{{rowData.approvedstatus}}</span>
             <span *ngIf="rowData.approvedstatus==null">Pending</span>
           </td>
           <!--<td class="ptable-cell" style="text-align:center;width:100px;">
-          <input pInputText [disabled]="true" type="number" class="form-control" [(ngModel)]="rowData.returnqty">
-        </td>-->
+    <input pInputText [disabled]="true" type="number" class="form-control" [(ngModel)]="rowData.returnqty">
+  </td>-->
         </tr>
       </ng-template>
     </p-table>
@@ -103,25 +102,24 @@
     <div *ngIf="showAck" style="text-align: center;margin-top:0px;padding-top:0px;">
       <button type="button" class="btn btn-primary" [disabled]="btnDisable" (click)="materialAckUpdate()">Acknowledge</button>
     </div>
-    <p-table #dt *ngIf="showhistory" [value]="materiallistDataHistory" [style]="{'width':'80%'}" [scrollable]="true" scrollHeight="53vh">
+    <br />
+    <p-table #dt *ngIf="showhistory" [value]="materiallistDataHistory" [style]="{'width':'80%','margin-left':'100px'}" [scrollable]="true" scrollHeight="53vh">
       <ng-template pTemplate="header">
         <tr class="mprltbldata">
           <th style="text-align:center;width:70px">Sl.No.</th>
-          <th style="text-align:center;width:200px">PO No</th>
-          <th style="text-align:center">Project Name</th>
+          <th style="text-align:center;width:200px">Material</th>
           <th style="text-align:center;width:150px">Requested qty</th>
-          
+          <th style="text-align:center">Returned qty</th>
         </tr>
      
       </ng-template>
       <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
         <tr>
           <td class="ptable-cell" style="text-align:right;width:70px;">{{ri+1}}</td>
-          <td class="ptable-cell" style="text-align:center;width:200px;">{{rowData.pono}}</td>
           <td class="ptable-cell" style="text-align:left">{{rowData.projectname}}</td>
-        
-        
-        
+          <td class="ptable-cell" style="text-align:center;width:200px;">{{rowData.pono}}</td>
+
+
         </tr>
       </ng-template>
     </p-table>
@@ -144,7 +142,7 @@
           <ng-template pTemplate="header">
             <tr class="mprltbldata">
               <th style="text-align:center;width:70px">S.No</th>
-              <th style="text-align:center">Request Id</th>
+              <th style="text-align:center">Material</th>
               <th style="text-align:center;width:150px">Requested  Qty</th>
               <th style="text-align:center;width:150px">Issued Qty</th>
               <th style="text-align:center;width:150px">Return Qty</th>
@@ -157,7 +155,7 @@
               <td class="ptable-cell" style="text-align:right">
                 {{ri+1}}
               </td>
-              <td class="ptable-cell" style="text-align:left">{{rowData.requestid}}</td>
+              <td class="ptable-cell" style="text-align:left">{{rowData.materialid}}</td>
               <td class="ptable-cell" style="text-align:right">{{rowData.requestedquantity}}</td>
               <td class="ptable-cell" style="text-align:right">
                 {{rowData.issuedquantity}}
@@ -193,7 +191,7 @@
           <ng-template pTemplate="header">
             <tr class="mprltbldata">
               <th style="text-align:center;width:70px">S.No</th>
-              <th style="text-align:center">Request Id</th>
+              <th style="text-align:center">Material</th>
               <th style="text-align:center;width:150px">Requested  Qty</th>
               <th style="text-align:center;width:150px">Issued Qty</th>
               <th style="text-align:center;width:150px">Transfer Qty</th>
@@ -207,7 +205,7 @@
               <td class="ptable-cell" style="text-align:right">
                 {{ri+1}}
               </td>
-              <td class="ptable-cell" style="text-align:left">{{rowData.requestid}}</td>
+              <td class="ptable-cell" style="text-align:left">{{rowData.materialid}}</td>
               <td class="ptable-cell" style="text-align:right">{{rowData.requestedquantity}}</td>
               <td class="ptable-cell" style="text-align:right">
                 {{rowData.issuedquantity}}
