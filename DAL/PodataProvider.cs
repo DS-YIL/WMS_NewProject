@@ -484,7 +484,7 @@ namespace WMS.DAL
 							emailmodel.ToEmailId = "shashikala.k@in.yokogawa.com";
 							emailmodel.FrmEmailId = "shashikala.k@in.yokogawa.com";
 							EmailUtilities emailobj = new EmailUtilities();
-							emailobj.sendEmail(emailmodel, 1);
+							//emailobj.sendEmail(emailmodel, 1);
 
 						}
                         ////}
@@ -1193,7 +1193,7 @@ namespace WMS.DAL
 						emailmodel.ToEmailId = "shashikala.k@in.yokogawa.com";
 						emailmodel.FrmEmailId = "shashikala.k@in.yokogawa.com";
 						EmailUtilities emailobj = new EmailUtilities();
-						emailobj.sendEmail(emailmodel, 2);
+						//emailobj.sendEmail(emailmodel, 2);
 					}
 					//}
 					return (Convert.ToString(inwardid));
@@ -1385,7 +1385,7 @@ namespace WMS.DAL
 							emailmodel.FrmEmailId = "shashikala.k@in.yokogawa.com";
 							emailmodel.CC = "sushma.patil@in.yokogawa.com";
 							EmailUtilities emailobj = new EmailUtilities();
-							emailobj.sendEmail(emailmodel, 4);
+							//emailobj.sendEmail(emailmodel, 4);
 						}
 					}
 					//}
@@ -1691,7 +1691,7 @@ namespace WMS.DAL
 						emailmodel.ToEmailId = "shashikala.k@in.yokogawa.com";
 						emailmodel.FrmEmailId = "shashikala.k@in.yokogawa.com";
 						EmailUtilities emailobj = new EmailUtilities();
-						emailobj.sendEmail(emailmodel, 7);
+						//emailobj.sendEmail(emailmodel, 7);
 					}
 				}
 				return (Convert.ToInt32(result));
@@ -1913,7 +1913,7 @@ namespace WMS.DAL
 							emailmodel.ToEmailId = "shashikala.k@in.yokogawa.com";
 							emailmodel.FrmEmailId = "shashikala.k@in.yokogawa.com";
 							EmailUtilities emailobj = new EmailUtilities();
-							emailobj.sendEmail(emailmodel, 5);
+							//emailobj.sendEmail(emailmodel, 5);
 						}
 						//if (result != 0)
 						//{
@@ -2182,7 +2182,7 @@ namespace WMS.DAL
 							emailmodel.ToEmailId = "shashikala.k@in.yokogawa.com";
 							emailmodel.FrmEmailId = "shashikala.k@in.yokogawa.com";
 							EmailUtilities emailobj = new EmailUtilities();
-							emailobj.sendEmail(emailmodel, 8);
+							//emailobj.sendEmail(emailmodel, 8);
 						}
 						else if (dataobj.gatepasstype == "Non Returnable")
 						{
@@ -2218,7 +2218,7 @@ namespace WMS.DAL
 							emailmodel.ToEmailId = "shashikala.k@in.yokogawa.com";
 							emailmodel.FrmEmailId = "shashikala.k@in.yokogawa.com";
 							EmailUtilities emailobj = new EmailUtilities();
-							emailobj.sendEmail(emailmodel, 9);
+							//emailobj.sendEmail(emailmodel, 9);
 						}
 						
 
@@ -4307,7 +4307,7 @@ namespace WMS.DAL
 								emailmodel.ToEmailId = "shashikala.k@in.yokogawa.com";
 								emailmodel.FrmEmailId = "shashikala.k@in.yokogawa.com";
 								EmailUtilities emailobj = new EmailUtilities();
-								emailobj.sendEmail(emailmodel, 3);
+								//emailobj.sendEmail(emailmodel, 3);
 							}
 
 						}
