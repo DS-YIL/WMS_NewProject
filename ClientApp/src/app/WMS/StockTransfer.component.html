@@ -181,13 +181,14 @@
                          [paginator]="true" [rowsPerPageOptions]="[10,20,30,40]"
                          appendTo="body">-->
                   <ng-template pTemplate="header">
-                    <tr class="mprltbldata">
-                      <th style="text-align:center;width:5%;">Sl.No.</th>
-                      <th style="text-align:center;width:15%;">Material</th>
-                      <th style="text-align:center;">Material Description</th>
-                      <th style="text-align:center;width:20%;">Source location</th>
-                      <th style="text-align:center;width:20%;">Destination Location</th>
-                      <th style="text-align:center;width:10%;">Transfer Qty</th>
+                    <tr class="mprltbldata" style="background-color: #9ba5af !important">
+                      <th style="    text-align: center; width: 5%;background-color: #9ba5af !important">Sl.No.</th>
+                      <th style="    text-align: center; width: 15%;background-color: #9ba5af !important">Material</th>
+                      <th style="    text-align: center;background-color: #9ba5af!important">Material Description</th>
+                      <th style="    text-align: center; width: 20;background-color: #9ba5af !important;">Source location</th>
+                      <th style="    text-align: center;width: 20%;background-color: #9ba5af!important">Destination Location</th>
+                      <th style="    text-align: center; width: 10%;
+    background-color: #9ba5af!important">Transfer Qty</th>
                     </tr>
                   </ng-template>
                   <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">

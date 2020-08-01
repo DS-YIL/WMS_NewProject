@@ -297,14 +297,14 @@ where  inw.invoiceno='#invoiceno' and openpo.pono='#pono' group by grnnumber</va
     <value>select * from wms.wms_stock where availableqty &gt;=#availableqty limit 1</value>
   </data>
   <data name="insertgatepassmaterial" xml:space="preserve">
-    <value>insert into wms.wms_gatepassmaterial(gatepassmaterialid,gatepassid,materialid,quantity,deleteflag,remarks,materialcost,expecteddate,returneddate,issuedqty)
-values(default,@gatepassid,@materialid,@quantity,@deleteflag,@remarks,@materialcost,@expecteddate,@returneddate,@issuedqty)</value>
+    <value>insert into wms.wms_gatepassmaterial(gatepassmaterialid,gatepassid,materialid,quantity,deleteflag,remarks,materialcost,expecteddate,issuedqty)
+values(default,@gatepassid,@materialid,@quantity,@deleteflag,@remarks,@materialcost,@expecteddate,@issuedqty)</value>
   </data>
   <data name="updategatepass" xml:space="preserve">
     <value>update wms.wms_gatepass set gatepasstype=@gatepasstype,status=@status,referenceno=@referenceno,vehicleno=@vehicleno,requestedby=@requestedby,vendorname=@vendorname,reasonforgatepass=@reasonforgatepass where gatepassid=#gatepassid</value>
   </data>
   <data name="updategatepassmaterial" xml:space="preserve">
-    <value>update wms.wms_gatepassmaterial set gatepassid=@gatepassid,materialid=@materialid,quantity=@quantity,remarks=@remarks,materialcost=@materialcost,returneddate=@returneddate where gatepassmaterialid=#gatepassmaterialid</value>
+    <value>update wms.wms_gatepassmaterial set gatepassid=@gatepassid,materialid=@materialid,quantity=@quantity,remarks=@remarks,materialcost=@materialcost,expecteddate=@expecteddate,returneddate=@returneddate where gatepassmaterialid=#gatepassmaterialid</value>
   </data>
   <data name="deletegatepassmaterial" xml:space="preserve">
     <value>update wms.wms_gatepassmaterial set deleteflag='true' where gatepassmaterialid=#gatepassmaterialid</value>
@@ -789,7 +789,7 @@ where reserveupto between current_date and current_date  + interval '3 day' and 
     <value>update wms.wms_stock set availableqty=availableqty+@availableqty where itemid=@itemid</value>
   </data>
   <data name="updatereturnqtyByInvMngr" xml:space="preserve">
-    <value>update wms.wms_materialissue set issuetype='return',returnqtyaccept='Accepted' where requestforissueid=@requestforissueid</value>
+    <value>update wms.wms_returntransfermaterial set confirmstatus='Accepted' where returnid=@returnid</value>
   </data>
   <data name="getlistforconfirm" xml:space="preserve">
     <value>select * from wms.wms_returntransfermaterial returnmat
@@ -800,6 +800,6 @@ where reserveupto between current_date and current_date  + interval '3 day' and 
   <data name="GetreturnList" xml:space="preserve">
     <value>select reqtrasnfer.requestid,sum(reqtrasnfer.returnqty)as returnqty,max(emp."name")as name,max(reqtrasnfer.projectcode)as projectcode,max(reqtrasnfer.createdon)as createddate from wms.wms_returntransfermaterial reqtrasnfer 
   left join wms.employee emp on emp.employeeno=reqtrasnfer.createdby
-  where requesttype='return' group by requestid</value>
+  where requesttype='return'  and confirmstatus is null group by requestid</value>
   </data>
 </root>
