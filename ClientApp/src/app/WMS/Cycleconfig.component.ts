@@ -114,22 +114,22 @@ export class CycleconfigComponent implements OnInit {
     var persum = this.configmodel.apercentage + this.configmodel.bpercentage + this.configmodel.cpercentage;
 
     if (persum > 100) {
-      this.messageService.add({ severity: 'error', summary: 'Validation Message', detail: 'Sum of percentage can not exceed 100' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Sum of percentage can not exceed 100' });
       return;
     }
     if (isNullOrUndefined(this.configmodel.frequency) || this.configmodel.frequency == "") {
-      this.messageService.add({ severity: 'error', summary: 'Validation Message', detail: 'Please select frequency' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Please select frequency' });
       return;
     }
     if (isNullOrUndefined(this.configmodel.cyclecount) || this.configmodel.cyclecount < 1) {
-      this.messageService.add({ severity: 'error', summary: 'Validation Message', detail: 'Please provide cycle count' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Please provide cycle count' });
       return;
     }
     if (this.configmodel.frequency == "Weekly" || this.configmodel.frequency == "Twice in a week") {
       this.configmodel.notificationtype = "Day";
       if (this.configmodel.frequency == "Weekly") {
         if (isNullOrUndefined(this.weekday1) || this.weekday1 == "") {
-          this.messageService.add({ severity: 'error', summary: 'Validation Message', detail: 'Please select day.' });
+          this.messageService.add({ severity: 'error', summary: '', detail: 'Please select day.' });
           return;
         }
         var data = {
@@ -142,11 +142,11 @@ export class CycleconfigComponent implements OnInit {
       }
       else {
         if (isNullOrUndefined(this.weekday2) || this.weekday2 == "") {
-          this.messageService.add({ severity: 'error', summary: 'Validation Message', detail: 'Please select day1.' });
+          this.messageService.add({ severity: 'error', summary: '', detail: 'Please select day1.' });
           return;
         }
         if (isNullOrUndefined(this.weekday3) || this.weekday3 == "") {
-          this.messageService.add({ severity: 'error', summary: 'Validation Message', detail: 'Please select day2.' });
+          this.messageService.add({ severity: 'error', summary: '', detail: 'Please select day2.' });
           return;
         }
         var data = {
@@ -183,7 +183,7 @@ export class CycleconfigComponent implements OnInit {
     else if (this.configmodel.frequency == "Yearly") {
       this.configmodel.notificationtype = "Date";
       if (isNullOrUndefined(this.yearlynotifdate)) {
-        this.messageService.add({ severity: 'error', summary: 'validation Message', detail: 'Please select date' });
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Please select date' });
         return;
       }
       var data = {
@@ -202,7 +202,7 @@ export class CycleconfigComponent implements OnInit {
     this.spinner.show();
     this.wmsService.updateCyclecountconfig(this.configmodel).subscribe(data => {
       console.log(data);
-      this.messageService.add({ severity: 'success', summary: 'success Message', detail: 'Configuration updated' });
+      this.messageService.add({ severity: 'success', summary: '', detail: 'Configuration updated' });
       this.getCyclecountConfig();
       this.spinner.hide();
     });

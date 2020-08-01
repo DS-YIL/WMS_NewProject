@@ -133,7 +133,7 @@ export class CyclecountComponent implements OnInit {
       this.wmsService.updateinsertCyclecount(countlist).subscribe(data => {
         this.getCyclecountMaterialList();
         this.spinner.hide();
-        this.messageService.add({ severity: 'success', summary: 'Success Message', detail: 'Saved Sucessfully' });
+        this.messageService.add({ severity: 'success', summary: '', detail: 'Saved Sucessfully' });
       });
 
     }
@@ -153,7 +153,7 @@ export class CyclecountComponent implements OnInit {
       this.wmsService.updateinsertCyclecount(countlist).subscribe(data => {
         this.getCyclecountPendingMaterialList();
         this.spinner.hide();
-        this.messageService.add({ severity: 'success', summary: 'Success Message', detail: 'Saved Sucessfully' });
+        this.messageService.add({ severity: 'success', summary: '', detail: 'Saved Sucessfully' });
       });
     }
 

@@ -74,7 +74,7 @@ export class StoreClerkComponent implements OnInit {
     debugger;
     if (entredvalue < 0) {
       data.receivedqty = " ";
-      this.messageService.add({ severity: 'error', summary: '', detail: 'negative value not allowed' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Negative value not allowed' });
       return;
 
     }
@@ -105,7 +105,7 @@ export class StoreClerkComponent implements OnInit {
   checkconfirmqty(entredvalue, receivedqty, returnedqty, data: any) {
     if (entredvalue < 0) {
       data.confirmqty = " ";
-      this.messageService.add({ severity: 'error', summary: '', detail: 'negative value not allowed' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Negative value not allowed' });
       return;
 
     }
@@ -115,7 +115,7 @@ export class StoreClerkComponent implements OnInit {
       data.confirmqty = "";
     }
     if (entredvalue != (receivedqty - returnedqty) && receivedqty && returnedqty) {
-      this.messageService.add({ severity: 'error', summary: '', detail: 'sum of return and accepted quantity must be equal to received qty' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Sum of return and accepted quantity must be equal to received qty' });
      // (<HTMLInputElement>document.getElementById("confirmqty")).value = "";
       data.confirmqty = "";
     }
@@ -123,7 +123,7 @@ export class StoreClerkComponent implements OnInit {
   checkreturnqty(entredvalue, receivedqty, acceptedqty, data: any) {
     if (entredvalue < 0) {
       data.returnqty = " ";
-      this.messageService.add({ severity: 'error', summary: '', detail: 'negative value not allowed' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Negative value not allowed' });
       return;
 
     }
@@ -133,7 +133,7 @@ export class StoreClerkComponent implements OnInit {
       data.returnqty = "";
     }
     if (entredvalue != (receivedqty - acceptedqty) && receivedqty && acceptedqty) {
-      this.messageService.add({ severity: 'error', summary: '', detail:  'sum of return and accepted quantity must be equal to received qty' });
+      this.messageService.add({ severity: 'error', summary: '', detail:  'Sum of return and accepted quantity must be equal to received qty' });
       //(<HTMLInputElement>document.getElementById("returnqty")).value = "";
       data.returnqty = "";
     }
@@ -204,7 +204,7 @@ export class StoreClerkComponent implements OnInit {
       return (element.material == event.value.material);
     });
     if (data1.length > 0) {
-      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Material already added please select different material.' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Material already added please select different material.' });
     }
     else {
       data.materialdescription = event.value.materialdescription;
@@ -361,7 +361,7 @@ export class StoreClerkComponent implements OnInit {
         }
       }
       else
-        this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'No data' });
+        this.messageService.add({ severity: 'error', summary: '', detail: 'No data' });
     })
   }
 
@@ -381,7 +381,7 @@ export class StoreClerkComponent implements OnInit {
   update() {
     debugger
     if (isNullOrUndefined(this.selectedpendingpono) || this.selectedpendingpono == "") {
-      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please select receipt' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Please select receipt' });
       this.returned;
     }
     this.spinner.show();
@@ -391,7 +391,7 @@ export class StoreClerkComponent implements OnInit {
     this.onholdupdatedata.onhold = this.isonHoldview;
     this.wmsService.updateonhold(this.onholdupdatedata).subscribe(data => {
       this.spinner.hide();
-      this.messageService.add({ severity: 'success', summary: 'Success Message', detail: 'receipt updated' });
+      this.messageService.add({ severity: 'success', summary: '', detail: 'Receipt updated' });
       //this.getponodetails(this.selectedpendingpo.value)
       this.resetpage();
     })
@@ -412,7 +412,7 @@ export class StoreClerkComponent implements OnInit {
         this.showQtyUpdateDialog = true;
       }
       else
-        this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Verification failed' });
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Verification failed' });
     })
   }
 
@@ -428,7 +428,7 @@ export class StoreClerkComponent implements OnInit {
       return (element.qcstatus != "Pending");
     });
     if (validdata.length == 0) {
-      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Quality check pending.' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Quality check pending.' });
       this.spinner.hide();
       return;
     }
@@ -437,7 +437,7 @@ export class StoreClerkComponent implements OnInit {
       return (element.confirmqty + element.returnqty != parseInt(element.receivedqty));
     });
     if (invaliddata.length > 0) {
-      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Sum of accepted and return quantity must be equal to received quantity.' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Sum of accepted and return quantity must be equal to received quantity.' });
       this.spinner.hide();
       return;
     }
@@ -477,7 +477,7 @@ export class StoreClerkComponent implements OnInit {
         return (isNullOrUndefined(element.material) || element.material == "");
       });
       if (invaliddata.length > 0) {
-        this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please select material' });
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Please select material' });
         return;
       }
       this.inwardModel.pono = this.PoDetails.pono;
@@ -486,7 +486,7 @@ export class StoreClerkComponent implements OnInit {
           return (element.receivedqty == "0");
         });
         if (invalidrcv.length > 0) {
-          this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please enter received quantity' });
+          this.messageService.add({ severity: 'error', summary: '', detail: 'Please enter received quantity' });
           return;
         }
       }
@@ -495,7 +495,7 @@ export class StoreClerkComponent implements OnInit {
           return (element.receivedqty != "0");
         });
         if (invalidrcv.length == 0) {
-          this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please enter received quantity' });
+          this.messageService.add({ severity: 'error', summary: '', detail: 'Please enter received quantity' });
           return;
         }
 
@@ -523,17 +523,17 @@ export class StoreClerkComponent implements OnInit {
 
               if (info != null) {
                 this.resetpage();
-                this.messageService.add({ severity: 'success', summary: 'Success Message', detail: 'Goods received' });
+                this.messageService.add({ severity: '', summary: '', detail: 'Goods received' });
               }
               else {
-                this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Something went wrong while creating GRN' });
+                this.messageService.add({ severity: '', summary: '', detail: 'Something went wrong while creating GRN' });
               }
                
             })
           }
           if (data == null) {
             this.spinner.hide();
-            this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Something went wrong' });
+            this.messageService.add({ severity: '', summary: '', detail: 'Something went wrong' });
           }
 
           if (data) {
@@ -545,7 +545,7 @@ export class StoreClerkComponent implements OnInit {
         });
     }
     else
-      this.messageService.add({ severity: 'error', summary: 'Validation', detail: 'Enter Quantity' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Enter Quantity' });
   }
 
 

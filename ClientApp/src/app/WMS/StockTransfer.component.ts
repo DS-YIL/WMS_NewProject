@@ -140,7 +140,7 @@ export class StockTransferComponent implements OnInit {
       });
     }
     else {
-      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please select material.' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Please select material.' });
     }
 
   }
@@ -173,7 +173,7 @@ export class StockTransferComponent implements OnInit {
   onSelectsource(data: stocktransfermateriakmodel) {
     debugger;
     if ((this.mainmodel.sourceplant) && (this.mainmodel.destinationplant) && (this.mainmodel.sourceplant == this.mainmodel.destinationplant) && (data.sourcelocation == data.destinationlocation)){
-      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'source and destination location can not be same for same source and destination plant.' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Source and destination location can not be same for same source and destination plant.' });
       data.sourcelocation = null;
       data.destinationlocation = "";
       data.transferqty = 0;
@@ -181,7 +181,7 @@ export class StockTransferComponent implements OnInit {
     }
     var row1 = this.podetailsList.filter((dt) => dt.sourcelocation == data.sourcelocation && dt.materialid == data.materialid && dt.destinationlocation == data.destinationlocation);
     if (row1.length > 1) {
-      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'same source and destination location for this material already exists' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Same source and destination location for this material already exists' });
       data.sourcelocation = null;
       data.destinationlocation = "";
       data.transferqty = 0;
@@ -216,7 +216,7 @@ export class StockTransferComponent implements OnInit {
       data.sourcelocation = "";
       data.destinationlocation = null;
       data.transferqty = 0;
-      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'same source and destination location for this material already exists' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Same source and destination location for this material already exists' });
       
     }
    
@@ -225,7 +225,7 @@ export class StockTransferComponent implements OnInit {
     debugger;
     if (data.transferqty < 0) {
       data.transferqty = "0";
-      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'negative value not allowed' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Negative value not allowed' });
       return;
      
     }
@@ -246,7 +246,7 @@ export class StockTransferComponent implements OnInit {
 
     if (transferedqty > toatalavailqty) {
       data.transferqty = "0";
-      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Transfer quantity exceeded from available quantity ' + toatalavailqty });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Transfer quantity exceeded from available quantity ' + toatalavailqty });
 
     }
    
@@ -262,7 +262,7 @@ export class StockTransferComponent implements OnInit {
     }
     else {
       data.sourcelocation = "";
-      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please select material.' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Please select material.' });
     }
     
   }
@@ -275,12 +275,12 @@ export class StockTransferComponent implements OnInit {
   checktransferqty(event: any, data: any) {
     debugger;
     if (data.issuedquantity < 0) {
-      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Invalid transfer quantity.' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Invalid transfer quantity.' });
       data.issuedquantity = "0";
       return;
     }
     if (data.issuedquantity > data.availableqty) {
-      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please enter issue quantity less than Available quantity' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Please enter issue quantity less than Available quantity' });
       data.issuedquantity = "0";
       return;
     }
@@ -327,7 +327,7 @@ export class StockTransferComponent implements OnInit {
       });
     }
      else {
-      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please Select quantity to transfer first' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Please Select quantity to transfer first' });
       datax.remarks = "";
       return;
     }
@@ -354,7 +354,7 @@ export class StockTransferComponent implements OnInit {
           var itemlocation = this.selectedlocation.locatorname + "." + this.selectedrack.racknumber + '.' + this.selectedbin.binnumber;
         }
         else {
-          this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please Select location and rack' });
+          this.messageService.add({ severity: 'error', summary: '', detail: 'Please Select location and rack' });
           return;
         }
         
@@ -366,12 +366,12 @@ export class StockTransferComponent implements OnInit {
           var itemlocation = this.selectedlocation.locatorname + "." + this.selectedrack.racknumber;
         }
         else {
-          this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please Select location' });
+          this.messageService.add({ severity: 'error', summary: '', detail: 'Please Select location' });
           return;
         }
       }
       else {
-        this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please Select bin' });
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Please Select bin' });
         return;
       }
       
@@ -386,7 +386,7 @@ export class StockTransferComponent implements OnInit {
 
     }
     else {
-      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please Select quantity to transfer first' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Please Select quantity to transfer first' });
       return;
     }
   }
@@ -470,14 +470,14 @@ export class StockTransferComponent implements OnInit {
   onsubmit1() {
     debugger;
     if (!this.mainmodel.sourceplant || !this.mainmodel.destinationplant) {
-      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please select plants.' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Please select plants.' });
       return;
     }
     var invalidrow = this.podetailsList.filter(function (element, index) {
       return (!element.sourcelocation) || (!element.destinationlocation) || (!element.transferqty) || (!element.materialid);
     });
     if (invalidrow.length > 0) {
-      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please fill all details.' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Please fill all details.' });
       return;
     }
     if ((this.mainmodel.sourceplant) && (this.mainmodel.destinationplant) && (this.mainmodel.sourceplant == this.mainmodel.destinationplant)) {
@@ -485,7 +485,7 @@ export class StockTransferComponent implements OnInit {
         return (element.sourcelocation == element.destinationlocation);
       });
       if (dataxx.length > 0) {
-        this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'source and destination location can not be same for same source and destination plant.' });
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Source and destination location can not be same for same source and destination plant.' });
         return;
 
       } 
@@ -511,7 +511,7 @@ export class StockTransferComponent implements OnInit {
     });
 
     this.wmsService.Stocktransfer1(svdata).subscribe(data => {
-      this.messageService.add({ severity: 'success', summary: 'Success Message', detail: 'Stock transferred' });
+      this.messageService.add({ severity: 'success', summary: '', detail: 'Material transferred' });
       this.savedata = [];
       this.podetailsList = [];
       this.mainmodel = new invstocktransfermodel();
@@ -527,7 +527,7 @@ export class StockTransferComponent implements OnInit {
     debugger;
     var data = this.savedata;
     this.wmsService.Stocktransfer(this.savedata).subscribe(data => {
-      this.messageService.add({ severity: 'success', summary: 'Success Message', detail: 'Stock transferred' });
+      this.messageService.add({ severity: 'success', summary: '', detail: 'Material transferred' });
       this.savedata = [];
       this.podetailsList = [];
       this.getStocktransferdata();
