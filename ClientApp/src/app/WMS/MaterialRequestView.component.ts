@@ -218,7 +218,7 @@ export class MaterialRequestViewComponent implements OnInit {
  
   showstory(requestid){
    this.showhistory = true;
-   this.wmsService.getmaterialissueList(requestid).subscribe(data => {
+    this.wmsService.getreturnmaterialListforconfirm(requestid).subscribe(data => {
      this.materiallistDataHistory = data;
 
       if (data != null) {

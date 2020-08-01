@@ -753,7 +753,7 @@ namespace WMS.Common {
         /// <summary>
         ///   Looks up a localized string similar to select reqtrasnfer.requestid,sum(reqtrasnfer.returnqty)as returnqty,max(emp.&quot;name&quot;)as name,max(reqtrasnfer.projectcode)as projectcode,max(reqtrasnfer.createdon)as createddate from wms.wms_returntransfermaterial reqtrasnfer 
         ///  left join wms.employee emp on emp.employeeno=reqtrasnfer.createdby
-        ///  where requesttype=&apos;return&apos; group by requestid.
+        ///  where requesttype=&apos;return&apos;  and confirmstatus is null group by requestid.
         /// </summary>
         public static string GetreturnList {
             get {
@@ -1391,7 +1391,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to update wms.wms_materialissue set issuetype=&apos;return&apos;,returnqtyaccept=&apos;Accepted&apos; where requestforissueid=@requestforissueid.
+        ///   Looks up a localized string similar to update wms.wms_returntransfermaterial set confirmstatus=&apos;Accepted&apos; where returnid=@returnid.
         /// </summary>
         public static string updatereturnqtyByInvMngr {
             get {

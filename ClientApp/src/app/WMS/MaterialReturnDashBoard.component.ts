@@ -59,7 +59,7 @@ export class MaterialReturnDashBoardComponent implements OnInit {
     this.showdialog = true;
     this.wmsService.getreturnmaterialListforconfirm(requestid).subscribe(data => {
       this.materiallistData = data;
-      if (this.materiallistData[0].returnqtyaccept == 'Accepted') {
+      if (this.materiallistData[0].confirmstatus == 'Accepted') {
         this.btnDisable = true;
       }
       else {
@@ -72,6 +72,7 @@ export class MaterialReturnDashBoardComponent implements OnInit {
       this.AddDialog = false;
       if (data == 1) {
         this.messageService.add({ severity: 'success', summary: 'success Message', detail: 'Items updated to Store' });
+        this.router.navigateByUrl("/WMS/MaterialReturn");
       }
 
     })

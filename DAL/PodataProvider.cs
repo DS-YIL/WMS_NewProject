@@ -5728,7 +5728,7 @@ namespace WMS.DAL
 						}
 						if(result!=0)
 						{
-							string updatereturnqtytomaterialissue = WMSResource.updatereturnqtyByInvMngr.Replace("@requestforissueid",Convert.ToString(item.requestforissueid));
+							string updatereturnqtytomaterialissue = WMSResource.updatereturnqtyByInvMngr.Replace("@returnid", Convert.ToString(item.returnid));
 							using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
 							{
 								result = DB.Execute(updatereturnqtytomaterialissue, new

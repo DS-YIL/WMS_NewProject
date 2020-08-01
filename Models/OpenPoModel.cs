@@ -289,7 +289,8 @@ public bool onhold { get; set; }
 	}
     public class IssueRequestModel
     {
-        public int requestforissueid { get; set; }
+		public int returnid { get; set; }
+		public int requestforissueid { get; set; }
         public int itemid { get; set; }
 		public Boolean itemreturnable { get;set; }
 
