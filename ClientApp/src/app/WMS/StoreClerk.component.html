@@ -4,7 +4,7 @@
     <!--<div class="card-header cardheadertext text-center"><i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;Receipt</div>-->
     <div class="card-body" style="overflow-y:scroll">
       <form class="form-inline labelheading">
-        <button *ngIf="isnonpoentry" type="button" class="btn btn-primary btn-sm" style="float:left;margin-left:10px;" (click)="addrows()" label="Save"><i class="fa fa-plus"></i></button>&nbsp;&nbsp;
+        <!--<button *ngIf="isnonpoentry" type="button" class="btn btn-primary btn-sm" style="float:left;margin-left:10px;" (click)="addrows()" label="Save"><i class="fa fa-plus"></i></button>&nbsp;&nbsp;-->
         <label>Pending receipts:</label>&nbsp;&nbsp;
         <p-autoComplete [(ngModel)]="selectedpendingpono" [suggestions]="filteredpos" [ngModelOptions]="{standalone: true}" placeholder="search by supplier/PONo" [forceSelection]="false" (onSelect)="showpodata()" (change)="showpodata()" (completeMethod)="filterpos($event)" [size]="30"
                         [dropdown]="true">
@@ -16,6 +16,9 @@
         <p-autoComplete [(ngModel)]="selectedgrnno" [suggestions]="filteredgrns" placeholder="search by supplier/GRN No" [ngModelOptions]="{standalone: true}" [forceSelection]="false" (change)="showpodata1()" (onSelect)="showpodata1()" (completeMethod)="filtergrn($event)" [size]="30"
                         [dropdown]="true">
         </p-autoComplete>
+      
+         
+      
         <!--<p-dropdown [options]="checkedgrnlist" #myInput1 [(ngModel)]="selectedgrn" [ngModelOptions]="{standalone: true}" [showClear]="true" [style]="{'width':'250px'}" filter="true" placeholder="Select GRN" optionLabel="text" (onChange)="showpodata1()"></p-dropdown>-->
 
       </form>
@@ -59,8 +62,9 @@
         <div class="col-lg-3 col-md-3 labelheading" style="font-weight:600;font-size:14px;color:darkblue;" *ngIf="podetailsList.length>0">
           <span *ngIf="grnnumber">WMS GRN No : </span><span class="labeltext">{{grnnumber}}</span>
         </div>
-        <div class="col-lg-4 col-md-4 labelheading" style="font-weight:600;font-size:14px;color:darkblue;">
-          <span class="labeltext" *ngIf="isallreceived && !isacceptance"></span>
+        <div class="col-lg-4 col-md-4 labelheading" style="font-weight:600;font-size:14px;color:darkblue;" *ngIf="isnonpoentry">
+          <!--<span class="labeltext" *ngIf="isallreceived && !isacceptance"></span>-->
+          <button *ngIf="isnonpoentry" type="button" pTooltip="Add marerial" style="border-radius: 10em!important;background-color: white;float:right; border-color: rgb(96, 123, 212);" rounded="true" size="lg" class="my-0" (click)="addrows()"> <i class="fa fa-plus" style="font-size: 15px;color: green;float:right"></i></button><label *ngIf="isnonpoentry" style="font-size: 15px;float:right;padding:0px; color: rgb(96, 123, 212);"> &nbsp;&nbsp;Add Material</label>
         </div>
 
       </div>

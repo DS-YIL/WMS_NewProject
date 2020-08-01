@@ -190,12 +190,12 @@ export class StoreClerkComponent implements OnInit {
   }
   addrows() {
     debugger;
-    this.inwardemptymodel.material = "";
-    this.inwardemptymodel.materialdescription = "";
-    this.inwardemptymodel.materialqty = 0;
-    this.inwardemptymodel.receivedqty = '0';
-
-    this.podetailsList.push(this.inwardemptymodel);
+    let empltymodel = new inwardModel();
+    empltymodel.material = "";
+    empltymodel.materialdescription = "";
+    empltymodel.materialqty = 0;
+    empltymodel.receivedqty = '0';
+    this.podetailsList.push(empltymodel);
 
   }
   setdescription(event: any,data: any) {
