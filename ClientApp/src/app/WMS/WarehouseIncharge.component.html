@@ -1,8 +1,10 @@
 <!--<div class="card" style="height:40px; width:100%;border-radius:10px;">
   <div class="card-header cardheadertext text-center"><i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;Put Away</div>
 </div>-->
-<div class="form-control" style="height:100%">
-  <div class="row " style="margin-top:10px">
+<div class="form-control" style="height:100%" >
+  <div class="row " style="    margin-top: 10px;
+    margin-left: 0px !important;
+    margin-right: 0px !important">
     <div class="col-lg-3 col-md-3 form-inline">
       <!--<label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">GRN No: </label>&nbsp;&nbsp;-->
       <!--<input class="form-control" type="text" [(ngModel)]="PoDetails.grnnumber">&nbsp;&nbsp;&nbsp;&nbsp;-->
@@ -24,7 +26,7 @@
       WMS GRN No : <span class="labeltext">{{podetailsList[0].grnnumber}}</span>
     </div>
   </div>
-  <div class="row " style="margin-top:10px">
+  <div class="row " style="    margin-top: 10px;margin-left: 0px !important;margin-right: 0px !important">
     <div class="col-lg-12 col-md-12 col-sm-12">
       <p-table [columns]="cols" [value]="podetailsList" dataKey="material">
         <ng-template pTemplate="header" let-columns>
@@ -398,16 +400,16 @@
       </div>
     </p-footer>
   </p-dialog>
-  <p-dialog header="Put Away Location" [(visible)]="showLocationDialog" [modal]="true" [style]="{width: '95vw',top: '95.7px',height:'30vw'}" [maximizable]="true" [baseZIndex]="10000"
+  <p-dialog header="Put Away Location" [(visible)]="showLocationDialog" (onHide)="close()"  [modal]="true" [style]="{width: '95vw',top: '95.7px',height:'30vw'}" [maximizable]="true" [baseZIndex]="10000"
             [draggable]="true" [resizable]="false">
     <div class="row">
       <div class="col-lg-4 col-md-4 labelheading">
         <label>Material Id :</label>&nbsp;<span><label class="labeltext">{{matid}}</label></span>
       </div>
-      <div class="col-lg-4 col-md-4 labelheading">
+      <div class="col-lg-6 col-md-6 labelheading">
         <label>Material desc :</label>&nbsp;<span><label class="labeltext">{{matdescription}}</label></span>
       </div>
-      <div class="col-lg-3 col-md-3 labelheading">
+      <div class="col-lg-2 col-md-2 labelheading">
         <label>Accepted Qty :</label>&nbsp;<span><label class="labeltext">{{matqty}}</label></span>
       </div>
       <!--<div class="col-lg-1 col-md-1 labelheading">
@@ -447,9 +449,10 @@
                 <td class="ptable-cell" style="text-align:center"> {{ri+1}} </td>
 
                 <td class="ptable-cell" style="text-align:left;">
-                  <select *ngIf="rowData.locatorid!=null ? rowData.locatorid:'Select Stock'" class="form-control dropdown" [(ngModel)]="rowData.locatorid">
+                  <select  class="form-control dropdown"  [(ngModel)]="rowData.locatorid">
 
-                    <!--<option selected value="*ngIf=rackid"></option>-->
+                    <!--<option selected value="*ngIf=rowData.locatorid!=null"></option>-->
+                    <!--*ngIf="rowData.locatorid!=null ? rowData.locatorid:'Select Stock'"-->
                     <option *ngFor=" let loclist of locationlist " value={{loclist.locatorid}}>
                       {{loclist.locatorname}}
                     </option>
@@ -458,7 +461,7 @@
                 <td class="ptable-cell" style="text-align:left">
                   <select class="form-control dropdown" [(ngModel)]="rowData.rackid">
 
-                    <!--<option selected value="*ngIf=rackid"></option>-->
+                    <!--<option selected value="*ngIf=rowData.rackid==null"></option>-->
                     <option *ngFor=" let loclist of racklist " value={{loclist.rackid}}>
                       {{loclist.racknumber}}
                     </option>
@@ -467,7 +470,7 @@
                 <td class="ptable-cell" style="text-align:left">
                   <select class="form-control dropdown" [(ngModel)]="rowData.binid">
 
-                    <!--<option selected></option>-->
+                    <!--<option selected ></option>-->
                     <option *ngFor=" let loclist of binlist" value={{loclist.binid}}>
                       {{loclist.binnumber}}
                     </option>

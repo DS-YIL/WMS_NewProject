@@ -164,6 +164,8 @@ export class WarehouseInchargeComponent implements OnInit {
     // return (this.invoiceForm.get('itemRows') as FormArray).controls;
   }
 
+
+
   initItemRows() {
     return this.formBuilder.group({
       itemname: [''],
@@ -524,6 +526,16 @@ this.updateRowGroupMetaData();
     this.store = "";
   }
 
+
+  close() {
+    //alert(this.stock.length);
+    this.stock = [];
+    this.locationlist = [];
+    this.binlist = [];
+    this.racklist = [];
+    //alert(this.stock.length);
+  }
+
   showDialog(details: any, index: number) {
     debugger;
     this.showLocationDialog = true;
@@ -541,22 +553,22 @@ this.updateRowGroupMetaData();
     this.StockModel.binid = details.binid;
     this.matdescription = details.materialdescription;
     this.matqty = details.receivedqty;
+    
     this.StockModelForm = this.formBuilder.group({
       rackid: [details.rackid],
       binid: [details.binid],
       locatorid: [details.storeid]
     });
-    debugger;
+
     if (this.stock.length == 0) {
-        var stockdata = new StockModel();
-        stockdata.locatorid = details.storeid;
-        stockdata.rackid = details.rackid;
-        stockdata.binid = details.binid;
-        stockdata.stocktype = "";
-        this.stock.push(stockdata);
-      
+      var stockdata = new StockModel();
+      stockdata.locatorid = details.storeid;
+      stockdata.rackid = details.rackid;
+      stockdata.binid = details.binid;
+      stockdata.stocktype = "";
+      this.stock.push(stockdata);
+     
     }
-    
    
     this.locationListdata();
     this.binListdata();
@@ -564,6 +576,8 @@ this.updateRowGroupMetaData();
     this.rack = "";
     this.bin = "";
     this.store = "";
+   
+  
   }
 
   addrows() {
