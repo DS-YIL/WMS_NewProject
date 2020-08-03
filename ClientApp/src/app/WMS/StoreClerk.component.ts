@@ -523,17 +523,17 @@ export class StoreClerkComponent implements OnInit {
 
               if (info != null) {
                 this.resetpage();
-                this.messageService.add({ severity: '', summary: '', detail: 'Goods received' });
+                this.messageService.add({ severity: 'success', summary: '', detail: 'Goods received' });
               }
               else {
-                this.messageService.add({ severity: '', summary: '', detail: 'Something went wrong while creating GRN' });
+                this.messageService.add({ severity: 'success', summary: '', detail: 'Something went wrong while creating GRN' });
               }
                
             })
           }
           if (data == null) {
             this.spinner.hide();
-            this.messageService.add({ severity: '', summary: '', detail: 'Something went wrong' });
+            this.messageService.add({ severity: 'error', summary: '', detail: 'Something went wrong' });
           }
 
           if (data) {

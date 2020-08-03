@@ -64,7 +64,7 @@
         </div>
         <div class="col-lg-4 col-md-4 labelheading" style="font-weight:600;font-size:14px;color:darkblue;" *ngIf="isnonpoentry">
           <!--<span class="labeltext" *ngIf="isallreceived && !isacceptance"></span>-->
-          <button *ngIf="isnonpoentry" type="button" pTooltip="Add marerial" style="border-radius: 10em!important;background-color: white;float:right; border-color: rgb(96, 123, 212);" rounded="true" size="lg" class="my-0" (click)="addrows()"> <i class="fa fa-plus" style="font-size: 15px;color: green;float:right"></i></button><label *ngIf="isnonpoentry" style="font-size: 15px;float:right;padding:0px; color: rgb(96, 123, 212);"> &nbsp;&nbsp;Add Material</label>
+          <button *ngIf="isnonpoentry && !grnnumber" type="button" pTooltip="Add marerial" style="border-radius: 10em!important;background-color: white;float:right; border-color: rgb(96, 123, 212);" rounded="true" size="lg" class="my-0" (click)="addrows()"> <i class="fa fa-plus" style="font-size: 15px;color: green;float:right"></i></button><label *ngIf="isnonpoentry" style="font-size: 15px;float:right;padding:0px; color: rgb(96, 123, 212);"> &nbsp;&nbsp;Add Material</label>
         </div>
 
       </div>
