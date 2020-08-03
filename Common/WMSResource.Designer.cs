@@ -1381,8 +1381,8 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to insert into wms.wms_returntransfermaterial(returnid,materialissueid,requestforissueid,returnqty,createdby,transferqty,requesttype,createdon,requestid)values
-        ///  (default,@materialissueid,@requestforissueid,@returnqty,@createdby,@transferqty,@requesttype,current_timestamp,@requestid).
+        ///   Looks up a localized string similar to insert into wms.wms_returnmaterial(returnid,returnqty,createdby,createdon,remarks)values
+        ///  (default,@returnqty,@createdby,current_timestamp,@remarks).
         /// </summary>
         public static string UpdateReturnqty {
             get {

@@ -340,19 +340,14 @@
                     <p-autoComplete appendTo="body" *ngIf="!rowData.materialid" (onSelect)="onMaterialSelected(material)" [(ngModel)]="material" type="text" [suggestions]="searchItems" field="name" [dropdown]="true" (completeMethod)="bindSearchListDatamaterial($event,'material')" size="8"></p-autoComplete>
                   </td>
                   <td class="ptable-cell" style="text-align:right">
-                    <input style="text-align:left" pInputText type="number" class="form-control" [(ngModel)]="rowData.quantity">
+                    <input style="text-align:left" pInputText type="number" class="form-control" [(ngModel)]="rowData.returnqty">
                   </td>
                  
                   <td class="ptable-cell" style="text-align:right">
                     <input [(ngModel)]="rowData.remarks" class="form-control" type="text" name="{{rowData.remarks}}" />
 
                   </td>
-                 
-
-
-
                   <td class="ptable-cell" style="text-align:center"><button pButton type="button" icon="fa fa-trash" class="ui-button-info" style="margin-left: 1px;" (click)="removematerial(rowData.gatepassmaterialid, ri)"></button></td>
-
 
               </ng-template>
 
@@ -363,7 +358,7 @@
 
         <p-footer>
           <div class="ui-dialog-buttonpane ui-helper-clearfix">
-            <button type="button" pButton icon="fa fa-close" (click)="onSubmitgatepassData()" label="Submit"></button>
+            <button type="button" pButton icon="fa fa-close" (click)="returnqty()" label="Submit"></button>
           </div>
         </p-footer>
       </p-dialog>

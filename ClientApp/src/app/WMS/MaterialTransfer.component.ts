@@ -330,7 +330,7 @@ export class MaterialTransferComponent implements OnInit {
   addNewMaterial() {
 
     if (this.tarnsferModel.materialList.length == 0 || isNullOrUndefined(this.material)) {
-      this.materialistModel = { materialid: "", materialdescription: "", remarks: " ", returnid: 0, returnquantity:0 };
+      this.materialistModel = { materialid: "", materialdescription: "", remarks: " ", returnid: 0, returnquantity: 0, createdby: this.employee.employeeno };
       this.tarnsferModel.materialList.push(this.materialistModel);
       this.material = "";
     }
@@ -340,7 +340,7 @@ export class MaterialTransferComponent implements OnInit {
       this.tarnsferModel.materialList[this.tarnsferModel.materialList.length - 1].materialid = this.material.code;
       this.tarnsferModel.materialList[this.tarnsferModel.materialList.length - 1].materialdescription = this.material.name;
 
-      this.materialistModel = { materialid: "", materialdescription: "", remarks: " ", returnid: 0, returnquantity: 0 };
+      this.materialistModel = { materialid: "", materialdescription: "", remarks: " ", returnid: 0, returnquantity: 0, createdby: this.employee.employeeno};
       this.tarnsferModel.materialList.push(this.materialistModel);
             this.material = "";
     }
@@ -367,7 +367,7 @@ export class MaterialTransferComponent implements OnInit {
     } else {
       //this.gatepassModel.gatepasstype = "0";
       //this.gatepassModel.reasonforgatepass = "0";
-      this.materialistModel = { materialid: "", materialdescription: "", remarks: " ", returnid: 0, returnquantity: 0 };
+      this.materialistModel = { materialid: "", materialdescription: "", remarks: " ", returnid: 0, returnquantity: 0, createdby: this.employee.employeeno };
       this.tarnsferModel.materialList.push(this.materialistModel);
       this.material = "";
     }

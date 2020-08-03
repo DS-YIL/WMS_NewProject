@@ -207,9 +207,9 @@ export class MaterialReturnComponent implements OnInit {
     for (var i = 0; i <= this.materiallistData.length - 1; i++) {
     
       this.materiallistData[i].requesttype = "return";
-      this.materiallistData[i].createdby = this.employee.employeeno;
+      this.returnModel.materialList[i].createdby = this.employee.employeeno;
     }
-      this.wmsService.UpdateReturnqty(this.materiallistData).subscribe(data => {
+    this.wmsService.UpdateReturnqty(this.returnModel.materialList).subscribe(data => {
         if (data == 1) {
           this.btnDisable = true;
           this.AddDialog = false;
@@ -330,7 +330,7 @@ export class MaterialReturnComponent implements OnInit {
   addNewMaterial() {
 
     if (this.returnModel.materialList.length == 0 || isNullOrUndefined(this.material)) {
-      this.materialistModel = { materialid: "", materialdescription: "", remarks: " ", returnid: 0, returnquantity:0 };
+      this.materialistModel = { materialid: "", materialdescription: "", remarks: " ", returnid: 0, returnquantity: 0, createdby: this.employee.employeeno };
       this.returnModel.materialList.push(this.materialistModel);
       this.material = "";
     }
@@ -343,8 +343,8 @@ export class MaterialReturnComponent implements OnInit {
       //if (this.material) {
       this.returnModel.materialList[this.returnModel.materialList.length - 1].materialid = this.material.code;
       this.returnModel.materialList[this.returnModel.materialList.length - 1].materialdescription = this.material.name;
-      
-      this.materialistModel = { materialid: "", materialdescription: "", remarks: " ", returnid: 0, returnquantity: 0 };
+
+      this.materialistModel = { materialid: "", materialdescription: "", remarks: " ", returnid: 0, returnquantity: 0, createdby:this.employee.employeeno };
       this.returnModel.materialList.push(this.materialistModel);
             this.material = "";
     }
@@ -368,7 +368,7 @@ export class MaterialReturnComponent implements OnInit {
       this.returnModel = gatepassobject;
       
     } else {
-      this.materialistModel = { materialid: "", materialdescription: "", remarks: " ", returnid: 0, returnquantity: 0 };
+      this.materialistModel = { materialid: "", materialdescription: "", remarks: " ", returnid: 0, returnquantity: 0, createdby: this.employee.employeeno };
       this.returnModel.materialList.push(this.materialistModel);
       this.material = "";
     }

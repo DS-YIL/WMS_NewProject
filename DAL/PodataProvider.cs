@@ -5686,7 +5686,7 @@ namespace WMS.DAL
 
 					try
 					{
-						if (item.returnqty != 0 || item.transferqty!=0)
+						if (item.returnqty != 0)
 						{ 
 							updatereturnqty = WMSResource.UpdateReturnqty;
 						using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
@@ -5699,7 +5699,8 @@ namespace WMS.DAL
 								 item.createdby,
 								 item.requesttype,
 								 item.transferqty,
-								 item.requestid
+								 item.requestid,
+								 item.remarks
 							 });
 						}
 					}

@@ -369,7 +369,7 @@ export class materialistModelreturn {
   returnquantity: number = 0;
   remarks: string;
   returnid: number;
-
+  createdby: string;
 }
 export class materialistModeltransfer {
   // gatepassmaterialid: string;
