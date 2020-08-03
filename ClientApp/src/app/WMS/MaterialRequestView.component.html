@@ -196,7 +196,7 @@
               <th style="text-align:center;width:150px">Issued Qty</th>
               <th style="text-align:center;width:150px">Transfer Qty</th>
               <th style="text-align:center;width:150px">To Project</th>
-              <th style="text-align:center;width:150px">Other</th>
+              <!--<th style="text-align:center;width:150px">Other</th>-->
             </tr>
 
           </ng-template>
@@ -222,17 +222,19 @@
                     {{loclist.projectcode}}
                   </option>
                 </select>
+                <br />
+                <input pInputText id="{{ri+1}}"  class="form-control" [(ngModel)]="rowData.projectname" type="text" required style="display:none;" />
                 <!--<input *ngIf="rowData.projectcode" [(ngModel)]="rowData.projectcode" class="form-control" type="text" name="{{rowData.projectcode}}" />
 
-    <p-autoComplete appendTo="body" [(ngModel)]="projectcode" id="{{ri+1}}"  (onSelect)="captureId($event,ri+1)" type="text" [suggestions]="searchItems"  field="name" [dropdown]="true" (completeMethod)="bindSearchListData($event,'project')" size="8"></p-autoComplete>-->
+  <p-autoComplete appendTo="body" [(ngModel)]="projectcode" id="{{ri+1}}"  (onSelect)="captureId($event,ri+1)" type="text" [suggestions]="searchItems"  field="name" [dropdown]="true" (completeMethod)="bindSearchListData($event,'project')" size="8"></p-autoComplete>-->
               </td>
-              <td class="ptable-cell" style="width:200px;">
-                <!--<div  class="form-inline">-->
+              <!--<td class="ptable-cell" style="width:200px;">
+               
                   <p-checkbox   binary="true" (onChange)="toggleVisibility($event,ri+1)"></p-checkbox> &nbsp;&nbsp;
                   <input pInputText id="{{ri+1}}"  class="form-control" [(ngModel)]="rowData.projectname" type="text" required style="display:none;" />
-                <!--</div>-->
+                
 
-              </td>
+              </td>-->
               <!--<td class="ptable-cell" style="text-align:left">{{rowData.createddate | date :  constants.dateFormat}}</td>-->
             </tr>
           </ng-template>
