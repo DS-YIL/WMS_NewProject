@@ -199,7 +199,7 @@ export class MaterialRequestViewComponent implements OnInit {
   //bind materials based search
   public bindSearchListData() {
     this.dynamicData.tableName ="wms.wms_project";
-   this.dynamicData.searchCondition = "";
+   this.dynamicData.searchCondition = " where projectcode is not null";
     this.wmsService.GetListItems(this.dynamicData).subscribe(res => {
 
       
@@ -243,6 +243,9 @@ export class MaterialRequestViewComponent implements OnInit {
   }
   onChange(value, indexid:any) {
     console.log(event);
+    if (value == 'other') {
+      document.getElementById(indexid+1).style.display = "block";
+    }
     this.materiallistData[indexid].projectname = value;
    // (<HTMLInputElement>document.getElementById(indexid)).value = event.toString();
   }

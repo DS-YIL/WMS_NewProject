@@ -13,7 +13,8 @@
           PO No : <span style="color:#dc3545;">{{reserveList[0].pono}}</span>
         </div>
         <div class="col-lg-6 col-md-6 pt-2" style="font-weight:600;font-size:14px;color:darkblue;">
-          Project Name : <span style="color:#dc3545;">{{reserveList[0].projectname}}</span>
+          Project Name : <span *ngIf="reserveList[0].projectname" style="color:#dc3545;">{{reserveList[0].projectname}}</span>
+          <span *ngIf="!reserveList[0].projectname" style="color:#dc3545;">-</span>
         </div>
         <div class="col-xs-4 col-sm-4  col-md-4 pt-2" style="font-weight:600;font-size:14px;color:darkblue;">
           Reserve For : <input type="date" [value]="reservedfor |  date:'yyyy-MM-dd'" min={{mindate}} max={{maxdate}} (input)="reservedfor=parseDate($event.target.value)">
@@ -88,7 +89,7 @@
       </div>
     </div>
     <div *ngIf="reserveList.length==0">
-      <h4 style="color:red;"> No materials in stock for this PO</h4>
+      <h6 style="color:red;text-align:center"> No materials in stock for this PO</h6>
     </div>
   </div>
   </div>
