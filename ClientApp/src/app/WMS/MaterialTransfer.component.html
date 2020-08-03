@@ -109,16 +109,16 @@
           <th style="text-align:center;width:70px">Sl.No.</th>
           <th style="text-align:center;width:200px">Material</th>
           <th style="text-align:center;width:150px">Requested qty</th>
-          <th style="text-align:center">Returned qty</th>
+          <th style="text-align:center;width:150px;">Returned qty</th>
         </tr>
 
       </ng-template>
       <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
         <tr>
           <td class="ptable-cell" style="text-align:right;width:70px;">{{ri+1}}</td>
-          <td class="ptable-cell" style="text-align:left">{{rowData.projectname}}</td>
-          <td class="ptable-cell" style="text-align:center;width:200px;">{{rowData.pono}}</td>
-
+          <td class="ptable-cell" style="text-align:left;width:200px">{{rowData.materialid}}</td>
+          <td class="ptable-cell" style="text-align:center;width:150px;">{{rowData.requestedqty}}</td>
+          <td class="ptable-cell" style="text-align:center;width:150px;">{{rowData.returnqty}}</td>
 
         </tr>
       </ng-template>
