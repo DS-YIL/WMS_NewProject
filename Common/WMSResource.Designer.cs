@@ -627,10 +627,10 @@ namespace WMS.Common {
         /// <summary>
         ///   Looks up a localized string similar to select matis.gatepassmaterialid,matis.itemid,matis.itemissueddate,ygs.materialdescription,emp.name,
         ///matgt.gatepassid,matgt.materialid,matgt.materialcost,matgt.quantity,
-        ///gt.gatepasstype,gt.vendorname,gt.requestedby,gt.requestedon,
+        ///gt.gatepasstype,gt.vendorname,gt.requestedby,gt.requestedon,emp3.name as mgapprover,emp4.name as fmapprover,
         ///matgt.outwarddate,emp1.name as outwardedby,matgt.outwardremarks,matgt.outwardqty,matgt.inwardqty,matgt.inwarddate,emp2.name as inwardedby,matgt.inwardremarks
         ///from wms.wms_materialissue matis
-        ///left outer join wms.wms_gatepassmaterial matgt on matgt.gatepassmaterialid = matis.gat [rest of string was truncated]&quot;;.
+        ///left outer join wms.wms_gatepassmateri [rest of string was truncated]&quot;;.
         /// </summary>
         public static string getnonreturnablegatepassdata {
             get {

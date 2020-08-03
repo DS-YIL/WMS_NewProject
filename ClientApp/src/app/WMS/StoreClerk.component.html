@@ -1,8 +1,8 @@
 
 <div style="margin:10px;">
-  <div class="card" style="min-height: 80vh; max-height: 80vh; width: 100%; border-radius: 10px; box-shadow: 5px 10px #888888;">
+  <div class="card" style="min-height: 80vh; width: 100%; border-radius: 10px; box-shadow: 5px 10px #888888;">
     <!--<div class="card-header cardheadertext text-center"><i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;Receipt</div>-->
-    <div class="card-body" style="overflow-y:scroll">
+    <div class="card-body">
       <form class="form-inline labelheading">
         <!--<button *ngIf="isnonpoentry" type="button" class="btn btn-primary btn-sm" style="float:left;margin-left:10px;" (click)="addrows()" label="Save"><i class="fa fa-plus"></i></button>&nbsp;&nbsp;-->
         <label>Pending receipts:</label>&nbsp;&nbsp;
@@ -155,12 +155,12 @@
         </p-table>
       </div>-->
 
-      <div class="row" *ngIf="!isacceptance" style="max-height: 400px;max-width:100%;overflow: scroll;position: relative; margin-top:5px;margin-left:3px;">
+      <div class="row" *ngIf="!isacceptance" style="max-width:100%;position: relative; margin-top:5px;margin-left:3px;">
         <p-table #dt [value]="podetailsList" [style]="{'width':'100%','overflow':'auto!important'}"
                  [responsive]="true" [rows]="10"
                  [resizableColumns]="true"
                  columnResizeMode="expand"
-                 [paginator]="true" [rowsPerPageOptions]="[10,20,30,40]"
+                 [scrollable]="true"  scrollHeight="40vh"
                  appendTo="body">
           <ng-template pTemplate="header">
             <tr class="mprltbldata">
@@ -174,7 +174,7 @@
               <th style="text-align:center;width:10%;">QC Required</th>
 
             </tr>
-            <tr>
+            <!--<tr>
               <th></th>
               <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'material', 'contains')"></th>
               <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'materialdescription', 'contains')"></th>
@@ -183,7 +183,7 @@
               <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'receivedqty', 'contains')"></th>
               <th></th>
               <th></th>
-            </tr>
+            </tr>-->
           </ng-template>
           <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
 
@@ -197,14 +197,14 @@
                 <span *ngIf="!isnonpoentry">{{rowData.material}}</span>
                 <p-dropdown [options]="combomaterial" appendTo="body" *ngIf="isnonpoentry" [style]="{'width':'100%'}" (onChange)="setdescription($event,rowData)" placeholder="Select material" optionLabel="material"></p-dropdown>
               </td>
-              <td class="ptable-cell" style="text-align:left;width:20%;">
+              <td class="ptable-cell" style="text-align:left;">
                 <span *ngIf="!isnonpoentry">{{rowData.materialdescription}}</span>
                 <input *ngIf="isnonpoentry" pInputText type="text" readonly id="receivedqty" class="form-control" [(ngModel)]="rowData.materialdescription">
               </td>
-              <td class="ptable-cell" *ngIf="!isnonpo && !qualitychecked" style="text-align:center;width:20%;">
+              <td class="ptable-cell" *ngIf="!isnonpo && !qualitychecked" style="text-align:center;width:10%;">
                 <span>{{rowData.materialqty}}</span>
               </td>
-              <td class="ptable-cell" *ngIf="!isnonpo && isreceivedbefore" style="text-align:center;width:20%;">
+              <td class="ptable-cell" *ngIf="!isnonpo && isreceivedbefore" style="text-align:center;width:10%;">
                 <span>{{rowData.pendingqty}}</span>
               </td>
               <td class="ptable-cell" style="text-align:right;width:10%;">
@@ -246,7 +246,7 @@
              
 
             </tr>
-            <tr>
+            <!--<tr>
               <th></th>
               <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'material', 'contains')"></th>
               <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'materialdescription', 'contains')"></th>
@@ -257,7 +257,7 @@
               <th></th>
               <th></th>
              
-            </tr>
+            </tr>-->
           </ng-template>
           <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
 
@@ -309,7 +309,7 @@
     <div class="card-footer" *ngIf="podetailsList.length">
       <div *ngIf="!isacceptance">
         <textarea placeholder="Remarks" class="form-control" *ngIf="isonHoldview" [disabled]="grnnumber || isonHold" cols="100" rows="2" [(ngModel)]="onholdremarks"></textarea>
-        <button type="button" *ngIf="grnnumber" class="btn btn-success" style="margin-left:45%" (click)="update()">Update</button>
+        <!--<button type="button" *ngIf="grnnumber" class="btn btn-success" style="margin-left:45%" (click)="update()">Update</button>-->
         <button type="button" *ngIf="!grnnumber" class="btn btn-success" style="margin-left:45%" [disabled]="grnnumber || isallreceived" (click)="onsubmit()">Submit</button>
       </div>
       <div *ngIf="isacceptance">

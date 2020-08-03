@@ -82,13 +82,13 @@ export class NavMenuComponent implements OnInit {
           this.bindMenu();
         }
         
-        if (this.emp.roleid != "8") {
-          let elementx: HTMLElement = document.getElementById("btnuser1") as HTMLElement;
-          elementx.hidden = false;
-          let elementy: HTMLElement = document.getElementById("btnuser2") as HTMLElement;
-          elementy.hidden = false;
-          this.getGatePassList();
-        }
+        //if (this.emp.roleid != "8") {
+        //  let elementx: HTMLElement = document.getElementById("btnuser1") as HTMLElement;
+        //  elementx.hidden = false;
+        //  let elementy: HTMLElement = document.getElementById("btnuser2") as HTMLElement;
+        //  elementy.hidden = false;
+        //  this.getGatePassList();
+        //}
         
       }
       else {
@@ -96,10 +96,10 @@ export class NavMenuComponent implements OnInit {
         element.hidden = true;
         let element1: HTMLDivElement = document.getElementById("menudiv") as HTMLDivElement;
         element1.hidden = true;
-        let elementx: HTMLElement = document.getElementById("btnuser1") as HTMLElement;
-        elementx.hidden = true;
-        let elementy: HTMLElement = document.getElementById("btnuser2") as HTMLElement;
-        elementy.hidden = true;
+        //let elementx: HTMLElement = document.getElementById("btnuser1") as HTMLElement;
+        //elementx.hidden = true;
+        //let elementy: HTMLElement = document.getElementById("btnuser2") as HTMLElement;
+        //elementy.hidden = true;
         this.router.navigateByUrl("WMS/Login");
       }
 
@@ -414,6 +414,7 @@ export class NavMenuComponent implements OnInit {
           { label: 'Non Returnable', style: { 'font-weight': '600', 'width': '200px' }, icon: 'pi pi-fw pi-caret-right', command: () => this.router.navigateByUrl('WMS/GatePassinout/2') },
         ]
       });
+      this.items.push({ label: 'Outbound', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars' });
       this.router.navigateByUrl('WMS/SecurityCheck');
     }
     if (this.emp.roleid == "2") {//inventory enquiry
@@ -546,10 +547,10 @@ export class NavMenuComponent implements OnInit {
     element.hidden = true;
     let element1: HTMLDivElement = document.getElementById("menudiv") as HTMLDivElement;
     element1.hidden = true;
-    let elementx: HTMLElement = document.getElementById("btnuser1") as HTMLElement;
-    elementx.hidden = true;
-    let elementy: HTMLElement = document.getElementById("btnuser2") as HTMLElement;
-    elementy.hidden = true;
+    //let elementx: HTMLElement = document.getElementById("btnuser1") as HTMLElement;
+    //elementx.hidden = true;
+    //let elementy: HTMLElement = document.getElementById("btnuser2") as HTMLElement;
+    //elementy.hidden = true;
     this.overlaymodel.hide();
     this.router.navigateByUrl("WMS/Login");
   }

@@ -25,9 +25,9 @@
   </div>
 </div>-->
 <div style="margin:10px;">
-  <div class="card" style="height:490px; width:100%;border-radius:10px; box-shadow:5px 10px #888888;">
-    <div class="card-header cardheadertext text-center"><i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;Quality Check</div>
-    <div class="card-body" style="overflow-y:scroll">
+  <div class="card" style="width:100%;border-radius:10px; box-shadow:5px 10px #888888;">
+    <!--<div class="card-header cardheadertext text-center"><i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;Quality Check</div>-->
+    <div class="card-body">
       <!--<div class="row">
         <div class="col-lg-2 col-md-2">
           <input type="text" [(ngModel)]="PoDetails.pono" class="form-control" />
@@ -46,12 +46,12 @@
         </div>
 
       </div>-->
-      <div class="row" style="max-height: 400px;max-width:100%;overflow: scroll;position: relative; margin-top:5px;margin-left:3px;">
+      <div class="row" style="max-width:100%;position: relative; margin-top:5px;margin-left:3px;">
         <p-table #dt [value]="podetailsList" [style]="{'width':'100%','overflow':'auto!important'}"
                  [responsive]="true" [rows]="10"
                  [resizableColumns]="true"
                  columnResizeMode="expand"
-                 [paginator]="true" [rowsPerPageOptions]="[10,20,30,40]"
+                 [scrollable]="true"  scrollHeight="50vh"
                  appendTo="body">
           <ng-template pTemplate="header">
             <tr class="mprltbldata">

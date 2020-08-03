@@ -1,13 +1,14 @@
 
 
 
-<div class="card" style="height:25px; width:250px;margin-left:3px;margin-top:5px;" *ngIf="nonreturn">
-  <span><i class="fa fa-star"></i><label class="labelheading">&nbsp;Non Returnable</label>&nbsp;| &nbsp;<i class="fa fa-play"></i><label class="labelheading text-danger btn-link" style=" text-decoration: underline;">&nbsp;Outward</label></span>
+  <div class="card" style="height:25px; width:300px;margin-left:3px;margin-top:5px;" *ngIf="nonreturn">
+    <span><i class="fa fa-star"></i><label class="labelheading"style="font-size:20px;">&nbsp;Non Returnable</label>&nbsp;| &nbsp;<i class="fa fa-truck"></i><label class="labelheading text-danger btn-link" style=" text-decoration: underline;">&nbsp;Outward</label></span>
 
-</div>
-<div class="card" style="height:25px; width:300px;margin-left:3px;margin-top:5px;" *ngIf="returnable">
-  <span *ngIf="isoutward"><i class="fa fa-star"></i><label class="labelheading">&nbsp;Returnable</label>&nbsp;| &nbsp;<i class="fa fa-play"></i><label class="labelheading text-danger btn-link" style=" text-decoration: underline;" (click)="getoutwarddata()">&nbsp;Outward</label>&nbsp;|&nbsp;<i class="fa fa-play"></i><label class="labelheading text-primary btn-link" (click)="getinwarddata()">&nbsp;Inward</label></span>
-  <span *ngIf="isinward"><i class="fa fa-star"></i><label class="labelheading">&nbsp;Returnable</label>&nbsp;| &nbsp;<i class="fa fa-play"></i><label class="labelheading text-primary btn-link" (click)="getoutwarddata()">&nbsp;Outward</label>&nbsp;|&nbsp;<i class="fa fa-play"></i><label class="labelheading text-danger btn-link" style=" text-decoration: underline;" (click)="getinwarddata()">&nbsp;Inward</label></span>
+  </div>
+<div class="card" style="height:25px; width:350px;margin-left:3px;margin-top:5px;" *ngIf="returnable">
+  <span *ngIf="isoutward"><i class="fa fa-star"></i><label class="labelheading" style="font-size:20px;">&nbsp;Returnable</label>&nbsp;| &nbsp;<i class="fa fa-truck"></i><label class="labelheading text-danger btn-link" style=" text-decoration: underline;" (click)="getoutwarddata()">&nbsp;Outward</label>&nbsp;|&nbsp;<i class="fa fa-truck"></i><label class="labelheading text-primary btn-link" (click)="getinwarddata()">&nbsp;Inward</label></span>
+  <span *ngIf="isinward"><i class="fa fa-star"></i><label class="labelheading" style="font-size:20px;">&nbsp;Returnable</label>&nbsp;| &nbsp;<i class="fa fa-truck"></i><label class="labelheading text-primary btn-link" (click)="getoutwarddata()">&nbsp;Outward</label>&nbsp;|&nbsp;<i class="fa fa-truck"></i><label class="labelheading text-danger btn-link" style=" text-decoration: underline;" (click)="getinwarddata()">&nbsp;Inward</label></span>
+  
 </div>
 
 <div style="margin-left:5px;margin-right:5px;margin-top:10px;">
@@ -20,21 +21,17 @@
     <ng-template pTemplate="header">
       <tr class="mprltbldata">
         <th style="text-align: center; width: 70px">Sl. No.</th>
-        <th style="text-align:center">GatePass Id</th>
-        <th style="text-align:center">Type</th>
+        <th style="text-align:center;width: 100px">GatePass Id</th>
         <th style="text-align:center">Supplier</th>
-        <th style="text-align:center">Issued By</th>
-        <th style="text-align:center">Issued On</th>
+        <th style="text-align:center;width: 300px">Approved By</th>
       </tr>
-      <tr>
+      <!--<tr>
         <th></th>
         <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'gatepassid', 'contains')"></th>
-        <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'gatepasstype', 'contains')"></th>
         <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'vendorname', 'contains')"></th>
         <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'name', 'contains')"></th>
-        <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'requestedon', 'contains')"></th>
 
-      </tr>
+      </tr>-->
     </ng-template>
     <ng-template pTemplate="body" let-rowData  let-ri="rowIndex">
       <tr>
@@ -43,10 +40,11 @@
         </td>
         <!--<td class="ptable-cell" style="text-align:center"> <a style="color:blue;cursor:pointer;text-decoration:underline" href="#" [pRowToggler]="rowData"> <i [ngClass]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></i>{{rowData.gatepassid}}</a></td>-->
         <td class="ptable-cell" style="text-align:left"><button class="btn btn-link"  (click)="showdetails(rowData)">{{rowData.gatepassid}}</button></td>
-        <td class="ptable-cell" style="text-align:left">{{rowData.gatepasstype}}</td>
         <td class="ptable-cell" style="text-align:left">{{rowData.vendorname}}</td>
-        <td class="ptable-cell" style="text-align:left">{{rowData.name}}</td>
-        <td class="ptable-cell" style="text-align:center">{{rowData.itemissueddate | date :  constants.dateFormat}}</td>
+        <td class="ptable-cell" style="text-align:left">
+          <span *ngIf="nonreturn">{{rowData.mgapprover}}</span>
+          <span *ngIf="!nonreturn">{{rowData.fmapprover}}</span>
+        </td>
       </tr>
     </ng-template>
     

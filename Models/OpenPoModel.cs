@@ -424,6 +424,10 @@ public bool onhold { get; set; }
 
 		public int inwardqty { get; set; }
 
+		public string mgapprover { get; set; }
+
+		public string fmapprover { get; set; }
+
 	}
 	public class materialistModel
 	{

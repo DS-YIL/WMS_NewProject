@@ -75,6 +75,7 @@ export class GatePassoutwardComponent implements OnInit {
   isinward: boolean = false;
   outindate: Date;
   datetype: string = "";
+  ishistorydata: boolean = false;
   cols: any[];
   ngOnInit() {
     if (localStorage.getItem("Employee"))
@@ -149,16 +150,24 @@ export class GatePassoutwardComponent implements OnInit {
   getoutwarddata() {
     this.isoutward = true;
     this.isinward = false;
+    this.ishistorydata = false;
     this.datetype = "Outward date";
     this.getGatePassList();
   }
   getinwarddata() {
     this.isoutward = false;
     this.isinward = true;
+    this.ishistorydata = false;
     this.datetype = "Inward date";
     this.gatepassModelList = [];
     this.gatepasslist = [];
     this.getGatePassList();
+  }
+  getprevdata(type: number) {
+    this.isoutward = false;
+    this.isinward = false;
+    this.ishistorydata = true;
+    alert(type);
   }
 
   onRowSelect(event) {
@@ -313,6 +322,8 @@ export class GatePassoutwardComponent implements OnInit {
           material.outwardqty = result[i].outwardqty;
           material.inwardqty = result[i].inwardqty; 
           material.expecteddate = new Date(result[i].expecteddate);
+          material.mgapprover = result[i].mgapprover;
+          material.fmapprover = result[i].fmapprover;
           item.materialList.push(material);
         }
 

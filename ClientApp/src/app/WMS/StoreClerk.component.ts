@@ -265,10 +265,11 @@ export class StoreClerkComponent implements OnInit {
 
   }
   resetpage() {
+    debugger;
     this.selectedgrn = null;
     this.selectedpendingpo = null;
-    this.selectedpendingpono = "";
-    this.selectedgrnno = "";
+    //this.selectedpendingpono = "";
+    //this.selectedgrnno = "";
     this.isnonpoentry = false;
     this.qualitychecked = false;
     this.isallreceived = false;
@@ -281,6 +282,12 @@ export class StoreClerkComponent implements OnInit {
     this.podetailsList = [];
     this.getpendingpos();
     this.getcheckedgrn();
+    if (this.isacceptance) {
+      this.showpodata1();
+    }
+    else {
+      this.showpodata();
+    }
   }
   getponodetails(data) {
     debugger;
@@ -302,6 +309,7 @@ export class StoreClerkComponent implements OnInit {
         // this.PoDetails = data[0];
         this.podetailsList = data;
         var pono = this.podetailsList[0].pono;
+        this.grnnumber = this.podetailsList[0].grnnumber;
         if (pono.startsWith("NP") && !this.grnnumber) {
           this.isnonpoentry = true;
         }
@@ -316,7 +324,7 @@ export class StoreClerkComponent implements OnInit {
           }
         }
         
-        this.grnnumber = this.podetailsList[0].grnnumber;
+       
         this.isonHold = this.podetailsList[0].onhold;
         this.isonHoldview = this.podetailsList[0].onhold;
         this.onholdremarks = this.podetailsList[0].onholdremarks;

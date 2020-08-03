@@ -747,7 +747,7 @@ group by stinw.inwmasterid,sinw.grnnumber</value>
   <data name="getnonreturnablegatepassdata" xml:space="preserve">
     <value>select matis.gatepassmaterialid,matis.itemid,matis.itemissueddate,ygs.materialdescription,emp.name,
 matgt.gatepassid,matgt.materialid,matgt.materialcost,matgt.quantity,
-gt.gatepasstype,gt.vendorname,gt.requestedby,gt.requestedon,
+gt.gatepasstype,gt.vendorname,gt.requestedby,gt.requestedon,emp3.name as mgapprover,emp4.name as fmapprover,
 matgt.outwarddate,emp1.name as outwardedby,matgt.outwardremarks,matgt.outwardqty,matgt.inwardqty,matgt.inwarddate,emp2.name as inwardedby,matgt.inwardremarks
 from wms.wms_materialissue matis
 left outer join wms.wms_gatepassmaterial matgt on matgt.gatepassmaterialid = matis.gatepassmaterialid
@@ -755,6 +755,8 @@ left outer join wms.wms_gatepass gt on gt.gatepassid = matgt.gatepassid
 left join wms.employee emp on emp.employeeno=gt.requestedby
 left join wms.employee emp1 on emp1.employeeno=matgt.outwardedby
 left join wms.employee emp2 on emp2.employeeno=matgt.inwardedby
+left join wms.employee emp3 on emp3.employeeno=gt.approvedby
+left join wms.employee emp4 on emp4.employeeno=gt.fmapproverid
 left join wms."MaterialMasterYGS" ygs on ygs.material=matgt.materialid
 where matis.gatepassmaterialid  is not null and matgt.returneddate is null</value>
   </data>
