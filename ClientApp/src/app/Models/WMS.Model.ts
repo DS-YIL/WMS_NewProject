@@ -222,8 +222,6 @@ export class outwardmaterialistModel {
   movedby: string;
   outwardqty: number;
   inwardqty: number;
-  mgapprover: string;
-  fmapprover: string;
 }
 
 export class categoryValues {
@@ -359,4 +357,10 @@ export class UserDashboardDetail {
   pendingtoissue: number;
   pendingshipments: number;
   receivedshipments: number;
+}
+export class returnmaterial {
+  returnid: number;
+  materialid: string;
+  returnqty: number;
+  remarks: string;
 }

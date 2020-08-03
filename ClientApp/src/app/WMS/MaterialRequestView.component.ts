@@ -91,12 +91,13 @@ export class MaterialRequestViewComponent implements OnInit {
 
   //app
   ackStatusChanges(status) {
-    if (status == 'Approved') {
-      this.showAck = false;
-    }
-    else {
-      this.showAck = true;
-    }
+    this.showAck = true;
+    //if (status == 'received') {
+    //  this.showAck = false;
+    //}
+    //else {
+    //  this.showAck = true;
+    //}
   }
 
   //received material acknowledgement
@@ -125,26 +126,37 @@ export class MaterialRequestViewComponent implements OnInit {
     this.requestid = requesid;
 
   }
-  showmaterialdetails() {
-    if (this.requestid == undefined) {
-      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please select any Request Id' });
-      //this.router.navigateByUrl("/WMS/MaterialReqView");
-    }
-    else {
+  //showmaterialdetails() {
+  //  if (this.requestid == undefined) {
+  //    this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please select any Request Id' });
+  //    //this.router.navigateByUrl("/WMS/MaterialReqView");
+  //  }
+  //  else {
 
 
-      //this.rowindex = rowindex
-      this.AddDialog = true;
-      this.showdialog = true;
-      //this.materiallistData = this.requestList.filter(li => li.approvedstatus == 'Approved');
-      this.wmsService.getmaterialissueList(this.requestid).subscribe(data => {
-        this.materiallistData = data;
+  //    //this.rowindex = rowindex
+  //    this.AddDialog = true;
+  //    this.showdialog = true;
+  //    //this.materiallistData = this.requestList.filter(li => li.approvedstatus == 'Approved');
+  //    this.wmsService.getmaterialissueList(this.requestid).subscribe(data => {
+  //      this.materiallistData = data;
 
-        if (data != null) {
+  //      if (data != null) {
 
-        }
-      });
-    }
+  //      }
+  //    });
+  //  }
+  //}
+  showmaterialdetails(requestid) {
+    this.AddDialog = true;
+    this.showdialog = true;
+    this.wmsService.getmaterialissueList(requestid).subscribe(data => {
+      this.materiallistData = data;
+
+      if (data != null) {
+
+      }
+    });
   }
   showmaterialdetailsfortransfer() {
     if (this.requestid == undefined) {

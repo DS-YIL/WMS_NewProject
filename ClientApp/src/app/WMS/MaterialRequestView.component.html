@@ -63,16 +63,24 @@
           <td class="ptable-cell" style="text-align:right;width:70px;">{{ri+1}}</td>
 
           <td class="ptable-cell" style="text-align: center;width: 100px;">
-            <button type="button" class="btn btn-link" (click)="showstory(rowData.requestid)" style="padding-left:0px;text-align:center;">{{rowData.requestid}}</button>
+            <button type="button" class="btn btn-link" (click)="showmaterialdetails(rowData.requestid)" style="padding-left:0px;text-align:center;">{{rowData.requestid}}</button>
           </td>
           <td class="ptable-cell" style="text-align:center;width:200px;">{{rowData.pono}}</td>
           <!--<td class="ptable-cell" style="text-align:left">{{rowData.projectname}}</td>-->
           <td class="ptable-cell" style="text-align:center;width:150px;">{{rowData.requesteddate| date :  constants.dateFormat}}</td>
           <td class="ptable-cell" style="width:200px;">
             <div *ngIf="rowData.approvedstatus=='Approved'" class="form-inline">
-              <p-checkbox [(ngModel)]="rowData.status" [disabled]="rowData.approvedstatus=='Approved'?true:false" binary="true" (click)="ackStatusChanges(rowData.approvedstatus)"></p-checkbox> &nbsp;&nbsp;
-              <textarea type="text" style="width:140px" class="form-control" [disabled]="rowData.ackremarks==null?false:true" [(ngModel)]="rowData.ackremarks"></textarea>
+              <p-checkbox *ngIf="rowData.ackstatus!='received'" [disabled]="rowData.ackstatus=='received'?true:false" [(ngModel)]="rowData.status"  binary="true" (click)="ackStatusChanges(rowData.approvedstatus)"></p-checkbox> &nbsp;&nbsp;
+              <textarea type="text" style="width:140px" class="form-control" [disabled]="rowData.ackstatus=='received'?true:false" [(ngModel)]="rowData.ackremarks"></textarea>
             </div>
+            <!--<div *ngIf="rowData.approvedstatus=='Approved' && rowData.ackstatus=='received'" class="form-inline">
+              <p-checkbox [(ngModel)]="rowData.status" [disabled]="rowData.approvedstatus=='Approved'?true:false" binary="true" (click)="ackStatusChanges(rowData.approvedstatus)"></p-checkbox> &nbsp;&nbsp;
+              <textarea type="text" style="width:140px" class="form-control" [disabled]="rowData.ackstatus=='received'?true:false" [(ngModel)]="rowData.ackremarks"></textarea>
+            </div>-->
+            <!--<div *ngIf="rowData.approvedstatus=='Approved'" class="form-inline">
+    <p-checkbox [(ngModel)]="rowData.status"  (click)="ackStatusChanges(rowData.ackstatus)"></p-checkbox> &nbsp;&nbsp;
+    <textarea type="text" style="width:140px" class="form-control"  [(ngModel)]="rowData.ackremarks"></textarea>
+  </div>-->
 
           </td>
           <!--<td class="ptable-cell" style="text-align:right">{{rowData.quotationqty}}</td>
