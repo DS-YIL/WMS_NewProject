@@ -359,8 +359,26 @@ export class UserDashboardDetail {
   receivedshipments: number;
 }
 export class returnmaterial {
-  returnid: number;
-  materialid: string;
-  returnqty: number;
-  remarks: string;
+ 
+  materialList: Array<materialistModelreturn> = [];
 }
+export class materialistModelreturn {
+ // gatepassmaterialid: string;
+  materialid: string;
+  materialdescription: string;
+  returnquantity: number = 0;
+  remarks: string;
+  returnid: number;
+
+}
+export class materialistModeltransfer {
+  // gatepassmaterialid: string;
+  materialid: string;
+  materialdescription: string;
+  transferquantity: number = 0;
+  remarks: string;
+  transfetid: number;
+  projectcode:string
+
+}
+

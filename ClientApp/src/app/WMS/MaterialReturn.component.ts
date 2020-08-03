@@ -10,10 +10,10 @@ import { MessageService } from 'primeng/api';
 import { isNullOrUndefined } from 'util';
 
 @Component({
-  selector: 'app-MaterialTransfer',
-  templateUrl: './MaterialTransfer.component.html'
+  selector: 'app-MaterialReturn',
+  templateUrl: './MaterialReturn.component.html'
 })
-export class MaterialTransferComponent implements OnInit {
+export class MaterialReturnComponent implements OnInit {
    AddDialog: boolean;
   showdialog: boolean;
 
@@ -28,7 +28,7 @@ export class MaterialTransferComponent implements OnInit {
     GatepassTxt: string;
   constructor(private formBuilder: FormBuilder, private messageService: MessageService, private wmsService: wmsService, private route: ActivatedRoute, private router: Router, public constants: constants, private spinner: NgxSpinnerService) { }
   public StockModel: StockModel;
-  public tarnsferModel: returnmaterial;
+  public returnModel: returnmaterial;
   public material: any;
   public requestList: Array<any> = [];
   public employee: Employee;
@@ -229,7 +229,7 @@ export class MaterialTransferComponent implements OnInit {
     }
   }
   onMaterialSelected(material: any) {
-    if (this.tarnsferModel.materialList.filter(li => li.materialid == material.code).length > 0) {
+    if (this.returnModel.materialList.filter(li => li.materialid == material.code).length > 0) {
       this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Material already exist' });
       return false;
     }
@@ -243,7 +243,7 @@ export class MaterialTransferComponent implements OnInit {
     this.dynamicData = new DynamicSearchResult();
     this.dynamicData.tableName = this.constants[name].tableName + " ";
     this.dynamicData.searchCondition = "" + this.constants[name].condition;
-    this.dynamicData.searchCondition += "material" + " ilike '" + searchTxt + "%'  limit 10";
+    this.dynamicData.searchCondition += "material" + " ilike '" + searchTxt + "%'  limit 100";
     //this.materialistModel.materialcost = "";
     this.wmsService.GetListItems(this.dynamicData).subscribe(data => {
       this.searchresult = data;
@@ -329,48 +329,50 @@ export class MaterialTransferComponent implements OnInit {
   //Adding new material 
   addNewMaterial() {
 
-    if (this.tarnsferModel.materialList.length == 0 || isNullOrUndefined(this.material)) {
+    if (this.returnModel.materialList.length == 0 || isNullOrUndefined(this.material)) {
       this.materialistModel = { materialid: "", materialdescription: "", remarks: " ", returnid: 0, returnquantity:0 };
-      this.tarnsferModel.materialList.push(this.materialistModel);
+      this.returnModel.materialList.push(this.materialistModel);
       this.material = "";
     }
    
     else {
-      //if (this.material) {
-      this.tarnsferModel.materialList[this.tarnsferModel.materialList.length - 1].materialid = this.material.code;
-      this.tarnsferModel.materialList[this.tarnsferModel.materialList.length - 1].materialdescription = this.material.name;
+     
 
+      debugger;
+      this.transferChange();
+      //if (this.material) {
+      this.returnModel.materialList[this.returnModel.materialList.length - 1].materialid = this.material.code;
+      this.returnModel.materialList[this.returnModel.materialList.length - 1].materialdescription = this.material.name;
+      
       this.materialistModel = { materialid: "", materialdescription: "", remarks: " ", returnid: 0, returnquantity: 0 };
-      this.tarnsferModel.materialList.push(this.materialistModel);
+      this.returnModel.materialList.push(this.materialistModel);
             this.material = "";
     }
-
-
-
   }
 
-  
+  //gatepass change
+ transferChange() {
+    //if (this.gatepassModel.gatepasstype != "0")
+      this.GatepassTxt =  " - " + "Request Materials";
+  }
   //open gate pass dialog
   openGatepassDialog(gatepassobject: any, gpIndx: any, dialog) {
     this.bindSearchListData();
     this.displaydetail = false;
     //this.approverListdata();
     this[dialog] = true;
-    this.tarnsferModel = new returnmaterial();
+    this.returnModel = new returnmaterial();
     if (gatepassobject) {
 
       this.gpIndx = gpIndx;
-      this.tarnsferModel = gatepassobject;
-      //this.materialistModel = { materialid: "", gatepassmaterialid: "0", materialdescription: "", quantity: 0, materialcost: "0", remarks: " ", expecteddate: this.date, returneddate: this.date };
-      //this.gatepassModel.materialList.push(this.materialistModel);
-      //this.material = "";
+      this.returnModel = gatepassobject;
+      
     } else {
-      //this.gatepassModel.gatepasstype = "0";
-      //this.gatepassModel.reasonforgatepass = "0";
       this.materialistModel = { materialid: "", materialdescription: "", remarks: " ", returnid: 0, returnquantity: 0 };
-      this.tarnsferModel.materialList.push(this.materialistModel);
+      this.returnModel.materialList.push(this.materialistModel);
       this.material = "";
     }
+    this.transferChange();
   }
 
   //add materials for gate pass
@@ -379,27 +381,27 @@ export class MaterialTransferComponent implements OnInit {
       this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Add Material' });
       return false;
     }
-    if (this.tarnsferModel.materialList.filter(li => li.materialid == this.material.code).length > 0) {
+    if (this.returnModel.materialList.filter(li => li.materialid == this.material.code).length > 0) {
       this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Material already exist' });
       return false;
     }
+    this.transferChange();
     this.materialistModel.materialid = this.material.code;
     this.materialistModel.materialdescription = this.material.name;
     //if (this.materialistModel.materialid && this.materialistModel.quantity) {
     //  this.wmsService.checkMaterialandQty(this.material.code, this.materialistModel.quantity).subscribe(data => {
     //    if (data == "true") {
-    this.tarnsferModel.materialList.push(this.materialistModel);
+    this.returnModel.materialList.push(this.materialistModel);
     this.materialistModel = new materialistModelreturn();
           this.material = "";
    
   }
-  //Delete material for gatepass
+  //Delete material for transfer
   removematerial(id: number, matIndex: number) {
 
-    this.tarnsferModel.materialList.splice(matIndex, 1);
+    this.returnModel.materialList.splice(matIndex, 1);
     if (id != 0) {
       this.wmsService.deleteGatepassmaterial(id).subscribe(data => {
-        //this.gatepassModelList[this.gpIndx].materialList.splice(matIndex, 1);
         this.messageService.add({ severity: 'success', summary: 'success Message', detail: 'Material Deleted' });
       });
     }

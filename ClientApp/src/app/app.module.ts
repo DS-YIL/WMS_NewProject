@@ -75,6 +75,7 @@ import { StoresReturnNotePrintComponent } from './WMS/StoresReturnNotePrint.comp
 import { StockCardPrintComponent } from './WMS/StockCardPrint.component';
 import { MailresponseComponent } from './WMS/Mailresponse.component';
 import { MaterialTransferComponent } from './WMS/MaterialTransfer.component'
+import { MaterialReturnComponent } from './WMS/MaterialReturn.component'
 ////pages
 import { LoginComponent } from './WMS/Login.component';
 import {HomeComponent} from './WMS/Home.component';
@@ -135,7 +136,8 @@ import {RadioButtonModule} from 'primeng/radiobutton';
     StoresReturnNotePrintComponent,
     StockCardPrintComponent,
     MailresponseComponent,
-    MaterialTransferComponent
+    MaterialTransferComponent,
+    MaterialReturnComponent
 
   ],
   imports: [

@@ -10,7 +10,7 @@
         <!--<a (click)="showmaterialdetailsfortransfer()" style="cursor:pointer;">Transfer</a>-->
       </div>
       <div class="col-lg-9 col-md-9 col-sm-9 form-group" style="padding-left:0px;">
-        <i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;Transfer Material
+        <i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;Return Material
       </div>
     </div>
     <!--<span>
@@ -25,7 +25,7 @@
   </div>
    <div class="card-header" style="width:173px;height:27px;margin-left:5px;padding-top:0px">
       <span>
-        <i class="fa fa-bookmark" style="font-size: 15px"></i><label style="font-size: 15px;padding:0px; color: rgb(96, 123, 212);"> &nbsp;&nbsp;Transfer</label>&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" pTooltip="Transfer Material" style="border-radius: 10em!important;background-color: white; border-color:  rgb(96, 123, 212);" rounded="true" size="lg" class="my-0" (click)="openGatepassDialog('','','gatepassdialog')"> <i class="fa fa-user-plus" style="font-size: 15px;color: green;"></i></button>
+        <i class="fa fa-bookmark" style="font-size: 15px"></i><label style="font-size: 15px;padding:0px; color: rgb(96, 123, 212);"> &nbsp;&nbsp;Return</label>&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" pTooltip="Return Material" style="border-radius: 10em!important;background-color: white; border-color:  rgb(96, 123, 212);" rounded="true" size="lg" class="my-0" (click)="openGatepassDialog('','','gatepassdialog')"> <i class="fa fa-user-plus" style="font-size: 15px;color: green;"></i></button>
 
       </span>
     </div>
@@ -180,7 +180,7 @@
 
         </p-table>
         <p-footer>
-          <button type="button" class="btn btn-primary" [disabled]="btnDisable" (click)="returnqty()">Transfer Material</button>
+          <button type="button" class="btn btn-primary" [disabled]="btnDisable" (click)="returnqty()">Return Material</button>
           <!--<div class="ui-dialog-buttonpane ui-helper-clearfix">
         <button type="button" pButton icon="fa fa-check" class="ui-button-success" (click)="Cancel()" label="OK"></button>
         <button type="button" pButton icon="fa fa-close" class="ui-button-danger" (click)="Cancel()" label="Cancel"></button>
@@ -310,7 +310,7 @@
           <div class="col-lg-12 col-md-12 col-sm-12">
 
 
-            <p-table [value]="tarnsferModel.materialList" [style]="{'width':'97%','height':'500px','overflow':'visible!important'}">
+            <p-table [value]="returnModel.materialList" [style]="{'width':'97%','height':'500px','overflow':'visible!important'}">
               <ng-template pTemplate="caption">
                 Add Material
                 <button type="button" icon="fa fa-plus" pButton aria-hidden="true" pTooltip="Add material" (click)="addNewMaterial()" style="float: right;height: 26px;"></button>
@@ -322,6 +322,7 @@
                   <th style="text-align:center" class="ptable-cell">Material</th>
                   <th style="text-align:center" class="ptable-cell">Return quantity</th>
                   <th style="text-align:center" class="ptable-cell">Remarks</th>
+                 
                   <th style="text-align:center" class="ptable-cell"></th>
                 </tr>
               </ng-template>
@@ -346,7 +347,7 @@
                     <input [(ngModel)]="rowData.remarks" class="form-control" type="text" name="{{rowData.remarks}}" />
 
                   </td>
-                
+                 
 
 
 
