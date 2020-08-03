@@ -185,15 +185,15 @@ export class WarehouseInchargeComponent implements OnInit {
     if (this.stock.length > 0) {
       if (this.stock[this.stock.length - 1].locatorid != 0 || this.stock[this.stock.length - 1].qty != 0 || this.stock[this.stock.length - 1].qty != null) {
         if (this.stock[this.stock.length - 1].locatorid == 0) {
-          this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'select Location' });
+          this.messageService.add({ severity: 'error', summary: '', detail: 'select Location' });
           return;
         }
         if (this.stock[this.stock.length - 1].rackid == 0) {
-          this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'select Rack' });
+          this.messageService.add({ severity: 'error', summary: '', detail: 'select Rack' });
           return;
         }
         if (this.stock[this.stock.length - 1].qty == 0 || this.stock[this.stock.length - 1].qty == null) {
-          this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Enter quantity' });
+          this.messageService.add({ severity: 'error', summary: '', detail: 'Enter quantity' });
           return;
         }
         if (this.stock.length > 1) {
@@ -201,7 +201,7 @@ export class WarehouseInchargeComponent implements OnInit {
             if (this.stock[data].locatorid == this.stock[this.stock.length - 1].locatorid) {
               if (this.stock[data].rackid == this.stock[this.stock.length - 1].rackid) {
                 if (this.stock[data].binid == this.stock[this.stock.length - 1].binid) {
-                  this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Location already exists' });
+                  this.messageService.add({ severity: 'error', summary: '', detail: 'Location already exists' });
                   this.stock[this.stock.length - 1].binid = 0;
                   this.stock[this.stock.length - 1].rackid=0;
                   this.stock[this.stock.length - 1].locatorid = 0;
@@ -239,7 +239,7 @@ export class WarehouseInchargeComponent implements OnInit {
         if (this.stock[data].locatorid == this.stock[this.stock.length - 1].locatorid) {
           if (this.stock[data].rackid == this.stock[this.stock.length - 1].rackid) {
             if (this.stock[data].binid == this.stock[this.stock.length - 1].binid) {
-              this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Location already exists' });
+              this.messageService.add({ severity: 'error', summary: '', detail: 'Location already exists' });
               this.stock[this.stock.length - 1].binid = 0;
               this.stock[this.stock.length - 1].rackid = 0;
               this.stock[this.stock.length - 1].locatorid = 0;
@@ -279,7 +279,7 @@ export class WarehouseInchargeComponent implements OnInit {
 
         }
         else {
-          this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Unable to fetch stock type' });
+          this.messageService.add({ severity: 'error', summary: '', detail: 'Unable to fetch stock type' });
         }
       });
 
@@ -451,7 +451,7 @@ export class WarehouseInchargeComponent implements OnInit {
     this.podetailsList = [];
     this.PoDetails.grnnumber = "";
     if (isNullOrUndefined(this.selectedgrnno) || this.selectedgrnno == "") {
-      this.messageService.add({ severity: 'error', summary: 'Validation', detail: 'Enter GRNNo' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Enter GRNNo' });
 
     }
     this.PoDetails.grnnumber = this.selectedgrnno;
@@ -470,7 +470,7 @@ export class WarehouseInchargeComponent implements OnInit {
 this.updateRowGroupMetaData();
         }
         else
-          this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'No data for this GRN No' });
+          this.messageService.add({ severity: 'error', summary: '', detail: 'No data for this GRN No' });
       })
     
   
@@ -605,15 +605,15 @@ this.updateRowGroupMetaData();
     if (this.stock.length > 0) {
       debugger;
       if (this.stock[this.stock.length - 1].locatorid == 0) {
-        this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'select Location' });
+        this.messageService.add({ severity: 'error', summary: '', detail: 'select Location' });
         return;
       }
       if (this.stock[this.stock.length - 1].rackid == 0) {
-        this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'select Rack' });
+        this.messageService.add({ severity: 'error', summary: '', detail: 'select Rack' });
         return;
       }
       if (this.stock[this.stock.length - 1].qty == 0 || this.stock[this.stock.length - 1].qty == null) {
-        this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Enter quantity' });
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Enter quantity' });
         return;
       }
       if (this.stock.length > 1) {
@@ -621,7 +621,7 @@ this.updateRowGroupMetaData();
           if (this.stock[data].locatorid == this.stock[this.stock.length - 1].locatorid) {
             if (this.stock[data].rackid == this.stock[this.stock.length - 1].rackid) {
               if (this.stock[data].binid == this.stock[this.stock.length - 1].binid) {
-                this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Location already exists' });
+                this.messageService.add({ severity: 'error', summary: '', detail: 'Location already exists' });
                 this.stock[this.stock.length - 1].binid = 0;
                 this.stock[this.stock.length - 1].rackid = 0;
                 this.stock[this.stock.length - 1].locatorid = 0;
@@ -696,7 +696,7 @@ this.updateRowGroupMetaData();
               debugger;
               //this.podetailsList[this.rowIndex].itemlocation = this.StockModel.itemlocation;
               this.showLocationDialog = false;
-              this.messageService.add({ severity: 'success', summary: 'Success Message', detail: 'Location Updated' });
+              this.messageService.add({ severity: 'success', summary: '', detail: 'Location Updated' });
               this.stock = [];
               //this.PoDetails = null;
               this.SearchGRNNo();
@@ -705,7 +705,7 @@ this.updateRowGroupMetaData();
           },
           reject: () => {
 
-            this.messageService.add({ severity: 'info', summary: 'Cancel', detail: 'Cancelled' });
+            this.messageService.add({ severity: 'info', summary: '', detail: 'Cancelled' });
           }
         });
 
@@ -728,14 +728,14 @@ this.updateRowGroupMetaData();
       }
       else {
         this.disSaveBtn = true;
-        this.messageService.add({ severity: 'error', summary: 'Validation', detail: 'Putaway Qty should be same as Accepted Qty' });
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Putaway Qty should be same as Accepted Qty' });
       }
     }
     else {
       if (!this.store.name)
-        this.messageService.add({ severity: 'error', summary: 'Validation', detail: 'Select Location' });
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Select Location' });
       else if (!this.rack.name)
-        this.messageService.add({ severity: 'error', summary: 'Validation', detail: 'Select Rack' });
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Select Rack' });
     }
   }
 
@@ -753,7 +753,7 @@ this.updateRowGroupMetaData();
       },
       reject: () => {
 
-        this.messageService.add({ severity: 'info', summary: 'Cancel', detail: 'Cancelled' });
+        this.messageService.add({ severity: 'info', summary: '', detail: 'Cancelled' });
       }
     });
    //return "error";

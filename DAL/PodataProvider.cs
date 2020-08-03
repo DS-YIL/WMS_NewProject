@@ -1455,7 +1455,15 @@ namespace WMS.DAL
 					DataTable dataTable = new DataTable();
 					IDbCommand selectCommand = pgsql.CreateCommand();
 					string query = "";
-					query = "select * from " + Result.tableName + Result.searchCondition + "";
+					if(Result.tableName== "wms.wms_project")
+					{
+						query = "select distinct projectcode,projectname from " + Result.tableName + Result.searchCondition + "";
+					}
+					else
+					{
+						query = "select * from " + Result.tableName + Result.searchCondition + "";
+					}
+					
 					if (!string.IsNullOrEmpty(Result.query))
 						query = Result.query;
 					selectCommand.CommandText = query;
