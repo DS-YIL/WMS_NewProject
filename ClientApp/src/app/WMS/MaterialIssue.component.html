@@ -13,7 +13,8 @@
           <label>Request Id :</label>&nbsp;<span><label class="labeltext">{{materialissueList[0].requestid}}</label></span>
         </div>
         <div class="col-lg-6 col-md-6 col-sm-6 pt-2 labelheading">
-          <label>Project Name :</label>&nbsp;<span><label class="labeltext">{{materialissueList[0].projectname}}</label></span>
+          <label>Project Name :</label>&nbsp;<span><label *ngIf="materialissueList[0].projectname" class="labeltext">{{materialissueList[0].projectname}}</label></span>
+          <span><label *ngIf="!materialissueList[0].projectname" class="labeltext">-</label></span>
         </div>
       </div>
       <div class="row  pl-0">

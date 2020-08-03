@@ -11,7 +11,7 @@
           <tr class="mprltbldata">
             <th style="text-align:center;width:70px">Sl.No.</th>
             <th style="text-align:center;width:100px">Request Id</th>
-            <th style="text-align:center">Project Name</th>
+            <!--<th style="text-align:center">Project Name</th>-->
             <th style="text-align: center;width:150px">Requested On</th>
             <th style="text-align:center;width:300px">Requester</th>
 
@@ -19,7 +19,7 @@
           <tr>
             <th></th>
             <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'requestforissueid', 'contains')"></th>
-            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'projectname', 'contains')"></th>
+            <!--<th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'projectname', 'contains')"></th>-->
             <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'requesteddate', 'contains')"></th>
             <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'name', 'contains')"></th>
           </tr>
@@ -30,7 +30,7 @@
               {{ri+1}}
             </td>
             <td class="ptable-cell" style="text-align:center;width:100px;"><a *ngIf="rowData.requestid && rowData.pono" [routerLink]="['/WMS/MaterialIssue',rowData.requestid,rowData.pono]" routerLinkActive="active">{{rowData.requestid}}</a></td>
-            <td class="ptable-cell" style="text-align:left;">{{rowData.projectname}}</td>
+            <!--<td class="ptable-cell" style="text-align:left;">{{rowData.projectname}}</td>-->
             <td class="ptable-cell" style="text-align:center;width:150px;">{{rowData.requesteddate  | date :  constants.dateFormat}}</td>
             <td class="ptable-cell" style="text-align:left;width:300px;">{{rowData.name}}</td>
 
