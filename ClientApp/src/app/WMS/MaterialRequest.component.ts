@@ -44,8 +44,8 @@ export class MaterialRequestComponent implements OnInit {
     this.wmsService.getMaterialRequestlistdata(this.employee.employeeno, this.pono).subscribe(data => {
       this.requestList = data;
       this.requestList.forEach(item => {
-        if (!item.requestedquantity)
-          item.requestedquantity = item.availableqty;
+        //if (!item.requestedquantity)
+        //  item.requestedquantity = item.availableqty;
       });
     });
   }

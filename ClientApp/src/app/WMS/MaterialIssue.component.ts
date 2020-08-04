@@ -158,13 +158,17 @@ export class MaterialIssueComponent implements OnInit {
   getmaterialIssueListbyrequestid() {
     this.wmsService.getmaterialIssueListbyrequestid(this.requestId,this.pono).subscribe(data => {
       this.materialissueList = data;
-      if (this.materialissueList.length != 0)
+
+      if (this.materialissueList.length != 0) 
         this.showavailableqtyList = true;
       this.materialissueList.forEach(item => {
         //if (!item.issuedquantity)
         //  item.issuedquantity = item.requestedquantity;
-        if (item.issuedqty >= item.requestedquantity)
+        if (item.issuedqty >= item.requestedquantity) {
           this.showissueqtyOKorCancel = true;
+          this.btndisable = false;
+        }
+        
         //(<HTMLInputElement>document.getElementById('footerdiv')).style.display = "none";
       });
     });

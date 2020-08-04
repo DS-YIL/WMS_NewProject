@@ -131,7 +131,7 @@
 req.requestedquantity,sum(sk.availableqty)as availableqty,req.requestid from wms.wms_stock sk 
       inner join wms.wms_polist op on op.pono=sk.pono
        inner join wms.wms_materialrequest req on req.materialid=sk.materialid
-      left join wms.wms_materialissue iss on iss.itemid=sk.itemid
+      left join wms.wms_materialissue iss  on iss.requestforissueid=req.requestforissueid
       inner join wms.employee emp on emp.employeeno=req.requesterid
       left join wms.wms_pomaterials pomat on pomat.pono=op.pono
       left join wms.wms_project pro on pro.pono=op.pono
