@@ -29,8 +29,8 @@
 
       </span>
     </div>
-  <div class="card-body" style="overflow-y:visible;padding:0px;">
-    <p-table #dt [value]="returnModel.materialList" [style]="{'width':'100%'}" [scrollable]="true" scrollHeight="53vh">
+  <div *ngIf="requestList.length>0" class="card-body" style="overflow-y:visible;padding:0px;">
+    <p-table  [value]="requestList" [style]="{'width':'100%'}" [scrollable]="true" scrollHeight="53vh">
       <ng-template pTemplate="header">
         <tr class="mprltbldata">
           <!--<th style="text-align:center;width:70px">Select</th>-->
@@ -330,7 +330,7 @@
                     <input *ngIf="rowData.materialid" [(ngModel)]="rowData.materialid" class="form-control" type="text" name="{{rowData.materialid}}" />
                     <!--<p-autoComplete *ngIf="!rowData.materialid" [(ngModel)]="material" [suggestions]="searchItems" formControlName="itemlocation" field="name" [dropdown]="true" (completeMethod)="bindSearchListData($event,'StockModelForm','itemlocation',StockModelForm.controls.itemlocation.value,undefined)"></p-autoComplete>-->
 
-                    <p-autoComplete appendTo="body" *ngIf="!rowData.materialid" (onSelect)="onMaterialSelected(material)" [(ngModel)]="material" type="text" [suggestions]="searchItems" field="name" [dropdown]="true" (completeMethod)="bindSearchListDatamaterial($event,'material')" size="8"></p-autoComplete>
+                    <p-autoComplete appendTo="body" *ngIf="!rowData.materialid" (onSelect)="onMaterialSelected(material)" [(ngModel)]="material" type="text" [suggestions]="searchItems" field="name" [dropdown]="true" (completeMethod)="bindSearchListData($event,'material')" size="8"></p-autoComplete>
                   </td>
                   <td class="ptable-cell" style="text-align:right">
                     <input style="text-align:left" pInputText type="number" class="form-control" [(ngModel)]="rowData.returnqty">

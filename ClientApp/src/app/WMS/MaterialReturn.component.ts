@@ -64,27 +64,9 @@ export class MaterialReturnComponent implements OnInit {
         this.pono = params["pono"];
       }
     });
-
+   
     this.getMaterialRequestlist();
-    this.StockModelForm = this.formBuilder.group({
-      locatorid: ['', [Validators.required]],
-      rackid: ['', [Validators.required]],
-      binid: ['', [Validators.required]],
-      shelflife: ['', [Validators.required]],
-      binnumber: ['', [Validators.required]],
-      itemlocation: ['', [Validators.required]]
-    });
-    this.StockModelForm1 = this.formBuilder.group({
-      users: this.formBuilder.array([{
-        locatorid: ['', [Validators.required]],
-        rackid: ['', [Validators.required]],
-        binid: ['', [Validators.required]],
-        shelflife: ['', [Validators.required]],
-        binnumber: ['', [Validators.required]],
-        itemlocation: ['', [Validators.required]],
-        quantity: [0, [Validators.required]],
-      }])
-    });
+   
   }
 
   //get Material Rquest based on login employee && po no
@@ -92,12 +74,13 @@ export class MaterialReturnComponent implements OnInit {
     //this.employee.employeeno = "180129";
     this.wmsService.getMaterialRequestlist(this.employee.employeeno, this.pono).subscribe(data => {
       this.requestList = data;
-      this.returnModel.materialList = data;
-      this.requestList.forEach(item => {
-        if (!item.requestedquantity)
-          item.requestedquantity = item.quotationqty;
-      });
+      
+      //this.requestList.forEach(item => {
+      //  if (!item.requestedquantity)
+      //    item.requestedquantity = item.quotationqty;
+      //});
     });
+    this.returnModel.materialList = [];
   }
 
   //check validations for requested quantity
@@ -367,22 +350,22 @@ export class MaterialReturnComponent implements OnInit {
       this.GatepassTxt =  " - " + "Request Materials";
   }
   //open gate pass dialog
-  openDialog(gatepassobject: any, gpIndx: any, dialog) {
+  openDialog( gatepassobject:any,gpIndx: any, dialog) {
     this.bindSearchListData();
     this.displaydetail = false;
     //this.approverListdata();
     this[dialog] = true;
     this.returnModel = new returnmaterial();
-    if (gatepassobject) {
+    //if (gatepassobject) {
 
-      this.gpIndx = gpIndx;
-      this.returnModel = gatepassobject;
+    //  //this.gpIndx = gpIndx;
+    //  //this.returnModel = gatepassobject;
       
-    } else {
+    //} else {
       this.materialistModel = { materialid: "", materialdescription: "", remarks: " ", returnid: 0, returnquantity: 0, createdby: this.employee.employeeno };
       this.returnModel.materialList.push(this.materialistModel);
       this.material = "";
-    }
+   // }
     this.transferChange();
   }
 
@@ -419,4 +402,5 @@ export class MaterialReturnComponent implements OnInit {
 
 
   }
+
 }

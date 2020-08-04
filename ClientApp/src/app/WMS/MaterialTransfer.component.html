@@ -320,6 +320,7 @@
                   <th class="ptable-cell" style="width:60px;text-align:center">Sl. No.</th>
                   <!--<th class="ptable-cell">Material</th>-->
                   <th style="text-align:center" class="ptable-cell">Material</th>
+                  <th style="text-align:center" class="ptable-cell">Project Code</th>
                   <th style="text-align:center" class="ptable-cell">Return quantity</th>
                   <th style="text-align:center" class="ptable-cell">Remarks</th>
                   <th style="text-align:center" class="ptable-cell"></th>
@@ -329,8 +330,15 @@
                 <tr>
                   <td class="ptable-cell" style="text-align:center"> {{ri+1}} </td>
                   <!--<td class="ptable-cell" style="text-align:right">
-                <input [(ngModel)]="field.code" class="form-control" type="text" name="{{field[i].materialid}}" />
-              </td>-->
+    <input [(ngModel)]="field.code" class="form-control" type="text" name="{{field[i].materialid}}" />
+  </td>-->
+                  <td class="ptable-cell" style="text-align:left;">
+
+                    <input *ngIf="rowData.materialid" [(ngModel)]="rowData.materialid" class="form-control" type="text" name="{{rowData.materialid}}" />
+                    <!--<p-autoComplete *ngIf="!rowData.materialid" [(ngModel)]="material" [suggestions]="searchItems" formControlName="itemlocation" field="name" [dropdown]="true" (completeMethod)="bindSearchListData($event,'StockModelForm','itemlocation',StockModelForm.controls.itemlocation.value,undefined)"></p-autoComplete>-->
+
+                    <p-autoComplete appendTo="body" *ngIf="!rowData.materialid" (onSelect)="onMaterialSelected(material)" [(ngModel)]="material" type="text" [suggestions]="searchItems" field="name" [dropdown]="true" (completeMethod)="bindSearchListDatamaterial($event,'material')" size="8"></p-autoComplete>
+                  </td>
                   <td class="ptable-cell" style="text-align:left;">
 
                     <input *ngIf="rowData.materialid" [(ngModel)]="rowData.materialid" class="form-control" type="text" name="{{rowData.materialid}}" />
@@ -341,19 +349,19 @@
                   <td class="ptable-cell" style="text-align:right">
                     <input style="text-align:left" pInputText type="number" class="form-control" [(ngModel)]="rowData.quantity">
                   </td>
-                 
+
                   <td class="ptable-cell" style="text-align:right">
                     <input [(ngModel)]="rowData.remarks" class="form-control" type="text" name="{{rowData.remarks}}" />
 
                   </td>
-                
+
 
 
 
                   <td class="ptable-cell" style="text-align:center"><button pButton type="button" icon="fa fa-trash" class="ui-button-info" style="margin-left: 1px;" (click)="removematerial(rowData.gatepassmaterialid, ri)"></button></td>
 
 
-              </ng-template>
+</ng-template>
 
 
             </p-table>
