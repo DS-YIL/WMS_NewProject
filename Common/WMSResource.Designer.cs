@@ -241,8 +241,8 @@ namespace WMS.Common {
         ///req.requestedquantity,sum(sk.availableqty)as availableqty,req.requestid from wms.wms_stock sk 
         ///      inner join wms.wms_polist op on op.pono=sk.pono
         ///       inner join wms.wms_materialrequest req on req.materialid=sk.materialid
-        ///      left join wms.wms_materialissue iss on iss.itemid=sk.itemid
-        ///      inner join wms.empl [rest of string was truncated]&quot;;.
+        ///      left join wms.wms_materialissue iss  on iss.requestforissueid=req.requestforissueid
+        ///  [rest of string was truncated]&quot;;.
         /// </summary>
         public static string GetdetailsByrequestid {
             get {
