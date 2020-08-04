@@ -28,6 +28,7 @@ export class MaterialIssueDashBoardComponent implements OnInit {
 
   public MaterialRequestForm: FormGroup
   public materialIssueList: Array<any> = [];
+  public materialIssueListnofilter: Array<any> = [];
   public employee: Employee;
   public displayItemRequestDialog; RequestDetailsSubmitted: boolean = false;
   public materialRequestDetails: materialRequestDetails;
@@ -46,7 +47,8 @@ export class MaterialIssueDashBoardComponent implements OnInit {
   getMaterialIssueList() {
     //this.employee.employeeno = "400095";
     this.wmsService.getMaterialIssueLlist(this.employee.employeeno).subscribe(data => {
-      this.materialIssueList = data.filter(li => li.approvedstatus==null);    
+      this.materialIssueListnofilter = data;
+      this.materialIssueList = this.materialIssueListnofilter.filter(li => li.approvedstatus == null);
     });
   }
   onSelectStatus(event) {
@@ -55,10 +57,10 @@ export class MaterialIssueDashBoardComponent implements OnInit {
   }
   SubmitStatus() {
     if (this.selectedStatus == "Pending") {
-      this.materialIssueList = this.materialIssueList.filter(li => li.approvedstatus == null);
+      this.materialIssueList = this.materialIssueListnofilter.filter(li => li.approvedstatus == null);
     }
     else if (this.selectedStatus == "Approved") {
-      this.materialIssueList = this.materialIssueList.filter(li => li.approvedstatus == 'Approved');
+      this.materialIssueList = this.materialIssueListnofilter.filter(li => li.approvedstatus == 'Approved');
     }
   }
 

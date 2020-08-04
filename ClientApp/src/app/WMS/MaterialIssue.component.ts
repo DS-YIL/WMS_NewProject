@@ -186,14 +186,14 @@ export class MaterialIssueComponent implements OnInit {
   onMaterialIssueDeatilsSubmit() {
     this.spinner.show();
 
-    this.wmsService.UpdateMaterialqty(this.itemlocationData).subscribe(data => {
-      if (data == 1) {
-        this.btndisable = false;
-        this.itemlocationData.forEach(item => {
+    //this.wmsService.UpdateMaterialqty(this.itemlocationData).subscribe(data => {
+    //  if (data == 1) {
+        //this.btndisable = false;
+        //this.itemlocationData.forEach(item => {
          
-         // item.issuedquantity = this.itemlocationData.issuedquantity;
+        // // item.issuedquantity = this.itemlocationData.issuedquantity;
 
-        });
+        //});
         //this.materialissueList.forEach(item => {
         //  if (item.issuedqty != 0)
 
@@ -205,6 +205,7 @@ export class MaterialIssueComponent implements OnInit {
 
         this.wmsService.approvematerialrequest(this.materialissueList).subscribe(data => {
           this.spinner.hide();
+          this.btndisable = false;
           if (data)
             this.messageService.add({ severity: 'success', summary: 'sucee Message', detail: 'Material issued.' });
           else
@@ -212,6 +213,6 @@ export class MaterialIssueComponent implements OnInit {
 
         });
       }
-    })
-  }
+    //})
+  //}
 }

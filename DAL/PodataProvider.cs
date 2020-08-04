@@ -2043,8 +2043,22 @@ namespace WMS.DAL
 							item.itemreceiverid,
 
 						});
+						int availableqty = item.availableqty - item.issuedqty;
+
+						string insertqueryforstatusforqty = WMSResource.updateqtyafterissue.Replace("#itemid", Convert.ToString(item.itemid)).Replace("#availableqty", Convert.ToString(availableqty));
+
+						var data1 = DB.ExecuteScalar(insertqueryforstatusforqty, new
+						{
+
+						});
+
 					}
-				}
+					
+
+				
+
+			}
+
 				return (Convert.ToInt32(result));
 			}
 			catch (Exception Ex)
