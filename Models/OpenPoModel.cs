@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Security.Policy;
 using System.Threading.Tasks;
@@ -98,6 +99,9 @@ namespace WMS.Models
 		public string suppliername { get; set; }
 		public string asnno { get; set; }
 		public string inwardremarks { get; set; }
+
+		public string docfile { get; set; }
+
 
 	}
 
@@ -682,6 +686,8 @@ public bool onhold { get; set; }
 	{ 
 		public string material { get; set; }
 		public string materialdescription { get; set; }
+
+		public bool qualitycheck { get; set; }
 	
 	}
 }

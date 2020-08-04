@@ -20,6 +20,7 @@ export class StoreClerkComponent implements OnInit {
 
   public PoDetails: PoDetails;
   public podetailsList: Array<inwardModel> = [];
+  public nonpovalidationList: Array<inwardModel> = [];
   public employee: Employee;
   public showDetails; showQtyUpdateDialog: boolean = false;
   public disGrnBtn: boolean = true;
@@ -50,14 +51,18 @@ export class StoreClerkComponent implements OnInit {
   filteredpos: any[];
   selectedpendingpono: string = "";
   selectedgrnno: string = "";
+  selectedmaterialauto: string = "";
+  lblpono: string = "";
+  lblinvoiceno: string = "";
   filteredgrns: any[];
+  filteredmats: any[];
  
  
   ngOnInit() {
     if (localStorage.getItem("Employee"))
       this.employee = JSON.parse(localStorage.getItem("Employee"));
     else
-      this.router.navigateByUrl("Login");
+    this.router.navigateByUrl("Login");
     this.getpendingpos();
     this.getcheckedgrn();
     this.getMaterials();
@@ -110,12 +115,12 @@ export class StoreClerkComponent implements OnInit {
 
     }
     if (entredvalue > receivedqty) {
-      this.messageService.add({ severity: 'error', summary: '', detail: 'Please enter accepted quantity less than or equal to received quantity' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Accepted quantity cannot exceed Recived quantity' });
       //(<HTMLInputElement>document.getElementById("confirmqty")).value = "";
       data.confirmqty = "";
     }
     if (entredvalue != (receivedqty - returnedqty) && receivedqty && returnedqty) {
-      this.messageService.add({ severity: 'error', summary: '', detail: 'Sum of return and accepted quantity must be equal to received qty' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Sum of Returned and Accepted quantity must be equal to received qty' });
      // (<HTMLInputElement>document.getElementById("confirmqty")).value = "";
       data.confirmqty = "";
     }
@@ -128,12 +133,12 @@ export class StoreClerkComponent implements OnInit {
 
     }
     if (entredvalue > receivedqty) {
-      this.messageService.add({ severity: 'error', summary: '', detail: 'Please enter return quantity less than or equal to received quantity' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Returned quantity cannot exceed Recived quantity' });
       //(<HTMLInputElement>document.getElementById("returnqty")).value = "";
       data.returnqty = "";
     }
     if (entredvalue != (receivedqty - acceptedqty) && receivedqty && acceptedqty) {
-      this.messageService.add({ severity: 'error', summary: '', detail:  'Sum of return and accepted quantity must be equal to received qty' });
+      this.messageService.add({ severity: 'error', summary: '', detail:  'Sum of Return and Accepted quantity must be equal to received quantity' });
       //(<HTMLInputElement>document.getElementById("returnqty")).value = "";
       data.returnqty = "";
     }
@@ -158,6 +163,17 @@ export class StoreClerkComponent implements OnInit {
       let pos = this.checkedgrnlist[i].text;
       if (brand.toLowerCase().indexOf(event.query.toLowerCase()) == 0 || pos.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
         this.filteredgrns.push(pos);
+      }
+    }
+  }
+
+  filtermats(event) {
+    this.filteredmats = [];
+    for (let i = 0; i < this.combomaterial.length; i++) {
+      let brand = this.combomaterial[i].material;
+      let pos = this.combomaterial[i].materialdescription;
+      if (brand.toLowerCase().indexOf(event.query.toLowerCase()) == 0 || pos.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+        this.filteredmats.push(brand);
       }
     }
   }
@@ -213,25 +229,33 @@ export class StoreClerkComponent implements OnInit {
   }
 
   getMaterials() {
-    this.wmsService.getMaterial().subscribe(data => {
-      debugger;
-      this.combomaterial = data;
-    });
+    this.spinner.show();
+    if (isNullOrUndefined(localStorage.getItem("materials")) || localStorage.getItem("materials") == "null" || localStorage.getItem("materials") == null || localStorage.getItem("materials") == "NULL") {
+      this.wmsService.getMaterial().subscribe(data => {
+        debugger;
+        this.combomaterial = data;
+        localStorage.setItem("materials", JSON.stringify(this.combomaterial));
+       
+      });
+    }
+    else {
+      this.spinner.hide();
+      this.combomaterial = JSON.parse(localStorage.getItem("materials")) as Materials[];
+      
+    }
+
+    
   }
   getpendingpos() {
-    this.spinner.show();
     this.wmsService.getPendingpo().subscribe(data => {
       debugger;
       this.pendingpos = data;
-      this.spinner.hide();
     });
   }
   getcheckedgrn() {
-    this.spinner.show();
     this.wmsService.getcheckedgrnlist().subscribe(data => {
       debugger;
       this.checkedgrnlist = data;
-      this.spinner.hide();
     });
   }
   showpodata() {
@@ -262,6 +286,45 @@ export class StoreClerkComponent implements OnInit {
     else {
 
     }
+
+  }
+
+  deleteRow(index: number) {
+    this.podetailsList.splice(index, 1);
+    //this.formArr.removeAt(index);
+  }
+
+  validate(data: any, ind: number) {
+    var data1 = this.podetailsList.filter(function (element, index) {
+      return (element.material == data.material && index != ind);
+    });
+    if (data1.length > 0) {
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Material already added please select different material.' });
+      data.material = "";
+      data.materialdescription = "";
+      data.qualitycheck = false;
+      return;
+    }
+  }
+
+  setmatdesc(data: any) {
+    debugger;
+    var mat = data.material;
+    this.nonpovalidationList = [];
+    var selectedm = this.combomaterial.filter(function (element, index) {
+      return (element.material == mat);
+    });
+    if (selectedm.length > 0) {
+      data.materialdescription = selectedm[0].materialdescription;
+      data.qualitycheck = selectedm[0].qualitycheck;
+    }
+    else {
+      data.materialdescription = "-";
+      data.qualitycheck = true;
+    }
+  
+   
+  
 
   }
   resetpage() {
@@ -309,6 +372,8 @@ export class StoreClerkComponent implements OnInit {
         // this.PoDetails = data[0];
         this.podetailsList = data;
         var pono = this.podetailsList[0].pono;
+        this.lblpono = this.podetailsList[0].pono;
+        this.lblinvoiceno = this.podetailsList[0].invoiceno;
         this.grnnumber = this.podetailsList[0].grnnumber;
         if (pono.startsWith("NP") && !this.grnnumber) {
           this.isnonpoentry = true;
@@ -389,7 +454,7 @@ export class StoreClerkComponent implements OnInit {
   update() {
     debugger
     if (isNullOrUndefined(this.selectedpendingpono) || this.selectedpendingpono == "") {
-      this.messageService.add({ severity: 'error', summary: '', detail: 'Please select receipt' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Please Select receipt' });
       this.returned;
     }
     this.spinner.show();
@@ -445,7 +510,7 @@ export class StoreClerkComponent implements OnInit {
       return (element.confirmqty + element.returnqty != parseInt(element.receivedqty));
     });
     if (invaliddata.length > 0) {
-      this.messageService.add({ severity: 'error', summary: '', detail: 'Sum of accepted and return quantity must be equal to received quantity.' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Sum of Returned and Accepted  quantity must be equal to received quantity.' });
       this.spinner.hide();
       return;
     }
@@ -466,7 +531,7 @@ export class StoreClerkComponent implements OnInit {
 
         if (data) {
 
-          pg.messageService.add({ severity: 'success', summary: 'Success Message', detail: 'materials accepted' });
+          pg.messageService.add({ severity: 'success', summary: 'Success Message', detail: 'Materials Accepted' });
 
         }
         pg.resetpage();
@@ -494,7 +559,7 @@ export class StoreClerkComponent implements OnInit {
           return (element.receivedqty == "0");
         });
         if (invalidrcv.length > 0) {
-          this.messageService.add({ severity: 'error', summary: '', detail: 'Please enter received quantity' });
+          this.messageService.add({ severity: 'error', summary: '', detail: 'Enter Received quantity' });
           return;
         }
       }
@@ -503,7 +568,7 @@ export class StoreClerkComponent implements OnInit {
           return (element.receivedqty != "0");
         });
         if (invalidrcv.length == 0) {
-          this.messageService.add({ severity: 'error', summary: '', detail: 'Please enter received quantity' });
+          this.messageService.add({ severity: 'error', summary: '', detail: 'Enter Received quantity' });
           return;
         }
 

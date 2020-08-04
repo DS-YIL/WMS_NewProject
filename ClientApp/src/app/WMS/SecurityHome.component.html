@@ -142,6 +142,13 @@
                 <textarea class="form-control" type="text" style="width:250px;" [disabled]="disSaveBtn" [(ngModel)]="nonporemarks"></textarea>
               </div>
             </div>
+            <div class="row " style="margin-top:5px;">
+              <div class="col-lg-12 col-md-12 col-sm-12 form-inline">
+                <label class="labelheading">File: </label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <!--<p-fileUpload mode="basic" name="demo[]"  accept="image/*,.pdf" maxFileSize="1000000" (onUpload)="onBasicUpload($event)"></p-fileUpload>-->
+                <input type="file" #fileInput (change)="onBasicUpload($event)"/>
+              </div>
+            </div>
             <div class="row" style="margin-top:20px;">
               <div class="col-lg-5 col-md-5">
                 <button type="button" style="float:right" [disabled]="disSaveBtn" class="btn btn-success" (click)="onsaveSecDetails()" label="Save">Save</button>

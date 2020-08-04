@@ -49,8 +49,9 @@ export class BarcodeModel {
   invoicedate: Date;
   receivedby: string;
   suppliername: string;
-  asnno: string
-  inwardremarks: string
+  asnno: string;
+  inwardremarks: string;
+  docfile: string
 }
 
 export class Cyclecountconfig {
@@ -253,6 +254,7 @@ export class Materials {
 
   material: string;
   materialdescription: string;
+  qualitycheck: boolean
 
 }
 

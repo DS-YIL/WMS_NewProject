@@ -10,6 +10,8 @@ using WMS.Models;
 using System.Globalization;
 using WMS.Common;
 using System.Reflection.Metadata;
+using System.IO;
+using System.Net.Http.Headers;
 
 namespace WMS.Controllers
 {
@@ -77,8 +79,42 @@ namespace WMS.Controllers
 
 		}
 
+		[HttpPost("uploaddoc"), DisableRequestSizeLimit]
+
+		public IActionResult Upload()
+		{
+			try
+			{
+				var file = Request.Form.Files[0];
+				var folderName = Path.Combine("Resources", "documents");
+				var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+
+				if (file.Length > 0)
+				{
+					var fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+					var fullPath = Path.Combine(pathToSave, fileName);
+					var dbPath = Path.Combine(folderName, fileName);
+
+					using (var stream = new FileStream(fullPath, FileMode.Create))
+					{
+						file.CopyTo(stream);
+					}
+
+					return Ok(new { dbPath });
+				}
+				else
+				{
+					return BadRequest();
+				}
+			}
+			catch (Exception ex)
+			{
+				return StatusCode(500, $"Internal server error: {ex}");
+			}
+		}
+
 		[HttpPost("insertbarcodeandinvoiceinfo")]
-		public int insertbardata(BarcodeModel data)
+		public string insertbardata(BarcodeModel data)
 		{
 			return this._poService.InsertBarcodeInfo(data);
 		}

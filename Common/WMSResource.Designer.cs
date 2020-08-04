@@ -345,11 +345,12 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select MAX(stinw.inwardid) as value,sinw.grnnumber as text,(select suppliername from wms.wms_polist where pono = Max(sinw.pono) limit 1) as supplier 
+        ///   Looks up a localized string similar to select stinw.inwardid as value,sinw.grnnumber as text,
+        ///(select suppliername from wms.wms_polist where pono = sinw.pono limit 1) as supplier
         ///from wms.wms_storeinward stinw 
         ///left outer join wms.wms_securityinward sinw on stinw.inwmasterid = sinw.inwmasterid 
-        ///where stinw.returnedby is not null and stinw.inwmasterid not in (select distinct inwmasterid from wms.wms_stock where itemlocation IS NOT NULL)
-        ///group by stinw.inwmasterid,sinw.grnnumber.
+        ///where stinw.returnedby is not null
+        ///and stinw.inwardid not in (select distinct inwardid from wms.wms_stock where inwardid is not null order by inwardid desc).
         /// </summary>
         public static string getgrnlistdataforputaway {
             get {
@@ -897,7 +898,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO wms.wms_securityinward(inwmasterid,pono,invoiceno,invoicedate,receivedby,receiveddate,deleteflag,departmentid,suppliername,asnno,inwardremarks)VALUES(default,@pono,@invoiceno,@invoicedate,@receivedby,@receiveddate,@deleteflag,@departmentid,@suppliername,@asnno,@inwardremarks).
+        ///   Looks up a localized string similar to INSERT INTO wms.wms_securityinward(inwmasterid,pono,invoiceno,invoicedate,receivedby,receiveddate,deleteflag,departmentid,suppliername,asnno,inwardremarks,filename)VALUES(default,@pono,@invoiceno,@invoicedate,@receivedby,@receiveddate,@deleteflag,@departmentid,@suppliername,@asnno,@inwardremarks,@filename).
         /// </summary>
         public static string insertinvoicedata {
             get {

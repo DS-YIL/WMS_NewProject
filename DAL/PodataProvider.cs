@@ -18,6 +18,7 @@ using ZXing;
 using ZXing.Common;
 using ZXing.CoreCompat.System.Drawing;
 using System.Data.SqlClient;
+using Microsoft.AspNetCore.Mvc;
 
 namespace WMS.DAL
 {
@@ -379,10 +380,11 @@ namespace WMS.DAL
 		/// </summary>
 		/// <param name="dataobj"></param>
 		/// <returns></returns>
-		public int InsertBarcodeInfo(BarcodeModel dataobj)
+		public string InsertBarcodeInfo(BarcodeModel dataobj)
 		{
 			try
 			{
+				//dataobj.docfile = ;
 				using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
 				{
 					var q1 = "select count(*) from wms.wms_securityinward  where pono ='" + dataobj.pono + "'  and invoiceno ='" + dataobj.invoiceno + "'";
@@ -390,13 +392,13 @@ namespace WMS.DAL
 
 					if (count >= 1)
 					{
-						return 2; //for onvoice already exist
+						return "2"; //for onvoice already exist
 					}
 					else
 					{
 						dataobj.createddate = System.DateTime.Now;
 						string insertquery = WMSResource.insertbarcodedata;
-						var result = 0;
+						var result = "0";
 						string insertqueryforinvoice = WMSResource.insertinvoicedata;
 						dataobj.receiveddate = System.DateTime.Now;
 						if(dataobj.pono == "NONPO")
@@ -417,7 +419,7 @@ namespace WMS.DAL
 
 								if (count1 >= 1)
 								{
-									return 2; //for onvoice already exist
+									return "2"; //for onvoice already exist
 								}
 								string type = "NON PO";
 								string insertpoqry = WMSResource.insertpo;
@@ -440,7 +442,7 @@ namespace WMS.DAL
 
 								if (count1 >= 1)
 								{
-									return 2; //for onvoice already exist
+									return "2"; //for onvoice already exist
 								}
 								string type = "NON PO";
 								string insertpoqry = WMSResource.insertpo;
@@ -464,7 +466,14 @@ namespace WMS.DAL
 							
 						}
 						dataobj.invoicedate = DateTime.Now;
-                        var results = DB.Execute(insertqueryforinvoice, new
+
+						string filename = "";
+                        if (dataobj.pono.StartsWith("NP"))
+                        {
+							filename = dataobj.pono + "_" + dataobj.docfile;
+						}
+
+						var results = DB.Execute(insertqueryforinvoice, new
                         {
                             dataobj.invoicedate,
                             dataobj.departmentid,
@@ -475,9 +484,10 @@ namespace WMS.DAL
                             dataobj.deleteflag,
 							dataobj.suppliername,
 							dataobj.asnno,
-							dataobj.inwardremarks
-                            //barcodeid,
-                        });
+							dataobj.inwardremarks,
+							filename
+							//barcodeid,
+						});
 						if(results!=0)
 						{
 							EmailModel emailmodel = new EmailModel();
@@ -489,7 +499,7 @@ namespace WMS.DAL
 
 						}
                         ////}
-                        return (Convert.ToInt32(results));
+                        return (dataobj.pono);
 					}
 
 				}
@@ -497,7 +507,7 @@ namespace WMS.DAL
 			catch (Exception Ex)
 			{
 				log.ErrorMessage("PODataProvider", "InsertBarcodeInfo", Ex.StackTrace.ToString());
-				return 0;
+				return "0";
 			}
 
 		}
@@ -4527,7 +4537,7 @@ namespace WMS.DAL
 			{
 				try
 				{
-					string materialrequestquery = "select material,materialdescription from wms.\"MaterialMasterYGS\" limit 20";
+					string materialrequestquery = "select material,materialdescription,qualitycheck from wms.\"MaterialMasterYGS\"";
 
 					await pgsql.OpenAsync();
 					return await pgsql.QueryAsync<Materials>(
@@ -5389,11 +5399,22 @@ namespace WMS.DAL
 				try
 				{
 					string materialrequestquery = WMSResource.getgrnlistdataforputaway;
-
+					List<ddlmodel> returnlist = new List<ddlmodel>();
 					await pgsql.OpenAsync();
 					var data = await pgsql.QueryAsync<ddlmodel>(
 					  materialrequestquery, null, commandType: CommandType.Text);
-					return data.OrderByDescending(o => o.value);
+
+					foreach(ddlmodel ddl in data)
+                    {
+						var exixtedrow = returnlist.Where(o => o.text == ddl.text).FirstOrDefault();
+						if(exixtedrow == null)
+                        {
+							returnlist.Add(ddl);
+
+						}
+
+                    }
+					return returnlist.OrderByDescending(o => o.value);
 
 
 				}

@@ -699,6 +699,7 @@ this.updateRowGroupMetaData();
               this.messageService.add({ severity: 'success', summary: '', detail: 'Location Updated' });
               this.stock = [];
               //this.PoDetails = null;
+              this.getcheckedgrn();
               this.SearchGRNNo();
               // }
             });

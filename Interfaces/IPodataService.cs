@@ -28,7 +28,7 @@ namespace WMS.Interfaces
 
         string getstocktype(locataionDetailsStock locdetails);
         printMaterial generateBarcodeMaterial(printMaterial printMat);
-        int InsertBarcodeInfo(BarcodeModel dataobj);
+        string InsertBarcodeInfo(BarcodeModel dataobj);
         //int insertInvoicedetails(iwardmasterModel obj);
         Task<IEnumerable<T>> GetDeatilsForthreeWaymatching(string invoiceno,string pono,bool isgrn, string grnno);
         Task<IEnumerable<T>> Getqualitydetails();

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject, ViewChild, ElementRef} from '@angular/core';
 import { Router, ActivatedRoute, RouterEvent, NavigationEnd } from '@angular/router';
 import { wmsService } from '../WmsServices/wms.service';
 import { constants } from '../Models/WMSConstants';
@@ -8,6 +8,7 @@ import { PoDetails, BarcodeModel, ddlmodel } from 'src/app/Models/WMS.Model';
 import { MessageService } from 'primeng/api';
 import { filter } from 'rxjs/operators';
 import { isNullOrUndefined } from 'util';
+import { HttpClient } from '@angular/common/http';
 
 
 @Component({
@@ -15,8 +16,10 @@ import { isNullOrUndefined } from 'util';
   templateUrl: './SecurityHome.component.html'
 })
 export class SecurityHomeComponent implements OnInit {
-
-  constructor(private messageService: MessageService, private wmsService: wmsService, private route: ActivatedRoute, private router: Router, public constants: constants, private spinner: NgxSpinnerService) { }
+  public url = "";
+  @ViewChild('fileInput', { static: false })
+  myInputVariable: ElementRef;
+  constructor(private messageService: MessageService, private http: HttpClient, private wmsService: wmsService, private route: ActivatedRoute, private router: Router, public constants: constants, private spinner: NgxSpinnerService, @Inject('BASE_URL') baseUrl: string) { this.url = baseUrl; }
 
   public PoDetails: PoDetails;
   public Poinvoicedetails: PoDetails;
@@ -41,6 +44,7 @@ export class SecurityHomeComponent implements OnInit {
   selecteddept: ddlmodel;
   searchdata: string = "";
   nonporemarks: string = "";
+  nonpofile: any;
 
   ngOnInit() {
 
@@ -93,6 +97,10 @@ export class SecurityHomeComponent implements OnInit {
     }
     
 
+  }
+
+  reset() {
+    this.myInputVariable.nativeElement.value = null;
   }
 
   //get open po's based on current date(advance shipping notification list)
@@ -176,16 +184,39 @@ export class SecurityHomeComponent implements OnInit {
         }
         else {
           this.PoDetails = new PoDetails();
-          this.messageService.add({ severity: 'error', summary: '', detail: 'No data for this ASN/PO No.' });
+          this.messageService.add({ severity: 'error', summary: '', detail: 'No data for this PO/ASN No' });
           this.showDetails = false;
         }
       })
     }
     else
-      this.messageService.add({ severity: 'error', summary: '', detail: 'Enter PO/ASN No.' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Enter PO/ASN No' });
   }
 
   printbarcode() {
+    
+
+  }
+  onBasicUpload(event) {
+    debugger;
+    this.nonpofile = event.target.files[0];
+  }
+
+  uploadnonpodoc(pono: string) {
+    debugger;
+    if (!isNullOrUndefined(this.nonpofile)) {
+      let file = this.nonpofile;
+      var fname = pono + "_" + file.name;
+      const formData = new FormData();
+      formData.append('file', file, fname);
+      this.http.post(this.url + 'POData/uploaddoc', formData)
+        .subscribe(event => {
+          this.reset();
+          this.nonpofile = null;
+          //this.messageService.add({ severity: 'success', summary: '', detail: 'File uploaded' });
+        });
+
+    }
 
   }
 
@@ -229,15 +260,22 @@ export class SecurityHomeComponent implements OnInit {
       
       this.BarcodeModel.receivedby = this.employee.employeeno;
       this.BarcodeModel.suppliername = this.Poinvoicedetails.vendorname;
+      if (this.isnonpochecked) {
+        let file = this.nonpofile;
+        this.BarcodeModel.docfile = file.name;
+      }
       this.wmsService.insertbarcodeandinvoiceinfo(this.BarcodeModel).subscribe(data => {
         this.spinner.hide();
-        if (data == 0) {
+        if (data == "0") {
           this.messageService.add({ severity: 'error', summary: '', detail: 'Something went wrong' });
         }
-        else if (data == 2) {
-          this.messageService.add({ severity: 'error', summary: '', detail: 'Invoice No. for this PO already received' });
+        else if (data == "2") {
+          this.messageService.add({ severity: 'error', summary: '', detail: 'Invoice for this PO already received' });
         }
         else { //data>=1
+          if (String(data).startsWith("NP")) {
+            this.uploadnonpodoc(data);
+          }
           this.disSaveBtn = true;
           this.refresh();
           this.messageService.add({ severity: 'success', summary: '', detail: 'Invoice No. Updated' });

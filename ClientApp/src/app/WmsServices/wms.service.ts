@@ -81,7 +81,8 @@ export class wmsService {
   }
 
   insertbarcodeandinvoiceinfo(BarcodeModel: BarcodeModel): Observable<any> {
-    return this.http.post<any>(this.url + 'POData/insertbarcodeandinvoiceinfo', BarcodeModel, this.httpOptions);
+    const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }), responseType: 'text' as any };
+    return this.http.post<any>(this.url + 'POData/insertbarcodeandinvoiceinfo', BarcodeModel, httpOptions);
   }
 
   insertbarcodeinfo(BarcodeModel: BarcodeModel): Observable<any> {

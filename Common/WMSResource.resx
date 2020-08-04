@@ -163,7 +163,7 @@ where  inwmaster.pono='#pono'</value>
     <comment>barcodedata insertion</comment>
   </data>
   <data name="insertinvoicedata" xml:space="preserve">
-    <value>INSERT INTO wms.wms_securityinward(inwmasterid,pono,invoiceno,invoicedate,receivedby,receiveddate,deleteflag,departmentid,suppliername,asnno,inwardremarks)VALUES(default,@pono,@invoiceno,@invoicedate,@receivedby,@receiveddate,@deleteflag,@departmentid,@suppliername,@asnno,@inwardremarks)</value>
+    <value>INSERT INTO wms.wms_securityinward(inwmasterid,pono,invoiceno,invoicedate,receivedby,receiveddate,deleteflag,departmentid,suppliername,asnno,inwardremarks,filename)VALUES(default,@pono,@invoiceno,@invoicedate,@receivedby,@receiveddate,@deleteflag,@departmentid,@suppliername,@asnno,@inwardremarks,@filename)</value>
     <comment>invoice data insertion</comment>
   </data>
   <data name="materialquest" xml:space="preserve">
@@ -738,11 +738,12 @@ left outer join wms.wms_securityinward sinw on stinw.inwmasterid = sinw.inwmaste
 where (stinw.confirmqty is null or stinw.confirmqty = 0)  and sinw.grnnumber is not null and sinw.onhold is not True  group by stinw.inwmasterid,sinw.grnnumber</value>
   </data>
   <data name="getgrnlistdataforputaway" xml:space="preserve">
-    <value>select MAX(stinw.inwardid) as value,sinw.grnnumber as text,(select suppliername from wms.wms_polist where pono = Max(sinw.pono) limit 1) as supplier 
+    <value>select stinw.inwardid as value,sinw.grnnumber as text,
+(select suppliername from wms.wms_polist where pono = sinw.pono limit 1) as supplier
 from wms.wms_storeinward stinw 
 left outer join wms.wms_securityinward sinw on stinw.inwmasterid = sinw.inwmasterid 
-where stinw.returnedby is not null and stinw.inwmasterid not in (select distinct inwmasterid from wms.wms_stock where itemlocation IS NOT NULL)
-group by stinw.inwmasterid,sinw.grnnumber</value>
+where stinw.returnedby is not null
+and stinw.inwardid not in (select distinct inwardid from wms.wms_stock where inwardid is not null order by inwardid desc)</value>
   </data>
   <data name="getnonreturnablegatepassdata" xml:space="preserve">
     <value>select matis.gatepassmaterialid,matis.itemid,matis.itemissueddate,ygs.materialdescription,emp.name,
