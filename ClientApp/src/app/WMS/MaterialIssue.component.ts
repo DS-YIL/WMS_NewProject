@@ -119,7 +119,7 @@ export class MaterialIssueComponent implements OnInit {
   //show alert about oldest item location
   alertconfirm(data) {
     var info = data;
-    this.itemreceiveddate = this.datePipe.transform(data.createddate, 'yyyy-MM-dd');
+    this.itemreceiveddate = this.datePipe.transform(data.createddate, 'dd-MM-yyyy');
     this.ConfirmationService.confirm({
       message: 'Same Material received on ' + this.itemreceiveddate + ' and placed in ' + data.itemlocation + '  location, Would you like to continue?',
       header: 'Confirmation',

@@ -25,7 +25,8 @@ export class MaterialReturnComponent implements OnInit {
     showhistory: boolean=false;
     displaydetail: boolean;
   public gpIndx: number;
-    GatepassTxt: string;
+  GatepassTxt: string;
+  public gatepassdialog: boolean = false;
   constructor(private formBuilder: FormBuilder, private messageService: MessageService, private wmsService: wmsService, private route: ActivatedRoute, private router: Router, public constants: constants, private spinner: NgxSpinnerService) { }
   public StockModel: StockModel;
   public returnModel: returnmaterial;
@@ -91,6 +92,7 @@ export class MaterialReturnComponent implements OnInit {
     //this.employee.employeeno = "180129";
     this.wmsService.getMaterialRequestlist(this.employee.employeeno, this.pono).subscribe(data => {
       this.requestList = data;
+      this.returnModel.materialList = data;
       this.requestList.forEach(item => {
         if (!item.requestedquantity)
           item.requestedquantity = item.quotationqty;
@@ -334,11 +336,20 @@ export class MaterialReturnComponent implements OnInit {
       this.returnModel.materialList.push(this.materialistModel);
       this.material = "";
     }
+    else if (!this.material && !this.returnModel.materialList[this.returnModel.materialList.length - 1].materialid) {
+      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'please Add Material' });
+      return false;
+    }
+    //else if (this.material && this.returnModel.materialList[this.returnModel.materialList.length - 1].returnquantity==0) {
+    //  this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'please add return quantity' });
+    //  return false;
+    //}
    
     else {
-     
-
-      debugger;
+      if (this.returnModel.materialList.filter(li => li.materialid == this.material.code && li.materialid != "0").length > 0) {
+        this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Material already exist' });
+        return false;
+      }
       this.transferChange();
       //if (this.material) {
       this.returnModel.materialList[this.returnModel.materialList.length - 1].materialid = this.material.code;
@@ -356,7 +367,7 @@ export class MaterialReturnComponent implements OnInit {
       this.GatepassTxt =  " - " + "Request Materials";
   }
   //open gate pass dialog
-  openGatepassDialog(gatepassobject: any, gpIndx: any, dialog) {
+  openDialog(gatepassobject: any, gpIndx: any, dialog) {
     this.bindSearchListData();
     this.displaydetail = false;
     //this.approverListdata();

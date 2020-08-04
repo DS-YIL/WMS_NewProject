@@ -50,6 +50,7 @@ export class MaterialTransferComponent implements OnInit {
   public StockModelForm: FormGroup;
   public StockModelForm1: FormGroup;
   public stock: StockModel[] = [];
+  public gatepassdialog: boolean = false;
   ngOnInit() {
     if (localStorage.getItem("Employee"))
       this.employee = JSON.parse(localStorage.getItem("Employee"));
@@ -404,6 +405,9 @@ export class MaterialTransferComponent implements OnInit {
       });
     }
 
+
+  }
+  transfermaterial() {
 
   }
 }

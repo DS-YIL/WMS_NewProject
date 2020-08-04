@@ -289,6 +289,7 @@ public bool onhold { get; set; }
 	}
     public class IssueRequestModel
     {
+		public int reserveformaterialid { get; set; }
 		public string ackstatus { get; set; }
 		public string remarks { get; set; }
 		public int returnid { get; set; }

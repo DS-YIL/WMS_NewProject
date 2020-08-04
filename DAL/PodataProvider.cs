@@ -3637,13 +3637,41 @@ namespace WMS.DAL
 						string insertforinvoicequery = WMSResource.insertFIFOdata;
 						using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
 						{
-							//var results = DB.ExecuteScalar(insertforinvoicequery, new
+							string approvedstatus = string.Empty;
+							if (item.issuedqty != 0)
+							{
+								approvedstatus = "approved";
+							}
+							//else
 							//{
-							//	item.itemid,
-							//	item.materialid,
-							//	item.pono
+							//	approvedstatus = "rejected";
+							//}
+							DateTime approvedon = System.DateTime.Now;
+							int itemid = 0;
+							int reserveformaterialid = item.reserveformaterialid;
+							string materialid = item.materialid;
+							int issuedqty = item.issuedqty;
+							DateTime itemissueddate = System.DateTime.Now;
+							string updateapproverstatus = WMSResource.updateapproverstatus;
 
-							//});
+							
+
+								var result = DB.Execute(updateapproverstatus, new
+								{
+									approvedstatus,
+									reserveformaterialid,
+									approvedon,
+									issuedqty,
+									materialid,
+									item.pono,
+									itemid,
+									item.itemreturnable,
+									item.approvedby,
+									itemissueddate,
+									item.itemreceiverid,
+
+								});
+							
 							int availableqty = item.availableqty - item.issuedquantity;
 
 							string insertqueryforstatusforqty = WMSResource.updateqtyafterissue.Replace("#itemid", Convert.ToString(item.itemid)).Replace("#availableqty", Convert.ToString(availableqty));
@@ -3652,7 +3680,7 @@ namespace WMS.DAL
 							{
 
 							});
-
+							
 						}
 					}
 

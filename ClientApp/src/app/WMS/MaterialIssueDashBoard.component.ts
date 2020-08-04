@@ -13,6 +13,7 @@ import { MessageService } from 'primeng/api';
   templateUrl: './MaterialIssueDashBoard.component.html'
 })
 export class MaterialIssueDashBoardComponent implements OnInit {
+    selectedStatus: string;
 
   constructor(private formBuilder: FormBuilder, private messageService: MessageService, private wmsService: wmsService, private route: ActivatedRoute, private router: Router, public constants: constants, private spinner: NgxSpinnerService) { }
 
@@ -45,7 +46,20 @@ export class MaterialIssueDashBoardComponent implements OnInit {
   getMaterialIssueList() {
     //this.employee.employeeno = "400095";
     this.wmsService.getMaterialIssueLlist(this.employee.employeeno).subscribe(data => {
-      this.materialIssueList = data;    
+      this.materialIssueList = data.filter(li => li.approvedstatus==null);    
     });
   }
+  onSelectStatus(event) {
+    this.selectedStatus = event.target.value;
+
+  }
+  SubmitStatus() {
+    if (this.selectedStatus == "Pending") {
+      this.materialIssueList = this.materialIssueList.filter(li => li.approvedstatus == null);
+    }
+    else if (this.selectedStatus == "Approved") {
+      this.materialIssueList = this.materialIssueList.filter(li => li.approvedstatus == 'Approved');
+    }
+  }
+
 }
