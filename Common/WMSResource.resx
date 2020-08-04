@@ -139,13 +139,14 @@ req.requestedquantity,sum(sk.availableqty)as availableqty,req.requestid from wms
  group by req.requestforissueid,sk.materialid--,sk.pono,req.requestedquantity,sk.availableqty,req.requestid,emp."name",req.requesteddate,pro.jobname</value>
   </data>
   <data name="GetListForMaterialRequestByapproverid" xml:space="preserve">
-    <value>select req.pono,req.requestid,req.requesteddate,req.requesterid,pro.projectname,emp."name",max(req.requesttype)as requesttype,max(req.returnon)as returnon
+    <value>select issue.approvedstatus,req.pono,req.requestid,req.requesteddate,req.requesterid,pro.projectname,emp."name",max(req.requesttype)as requesttype,max(req.returnon)as returnon
         from wms.wms_materialrequest req left join wms.wms_polist po on po.pono=req.pono 
        left join wms.employee emp on req.requesterid=emp.employeeno 
        left join wms.wms_pomaterials pomat on pomat.pono=po.pono
        left join wms.wms_project pro on pro.pono=po.pono
+       left join wms.wms_materialissue issue on issue.requestforissueid=req.requestforissueid
         --where req.approverid='#approverid'
-        group by req.requestid,req.requesteddate,req.requesterid,pro.projectname,emp."name",req.pono  order by req.requestid desc</value>
+        group by issue.approvedstatus,req.requestid,req.requesteddate,req.requesterid,pro.projectname,emp."name",req.pono  order by req.requestid desc</value>
   </data>
   <data name="GetListForMaterialRequestByrequesterid" xml:space="preserve">
     <value>select * from wms.wms_materialrequest where requesterid='#requesterid'</value>
