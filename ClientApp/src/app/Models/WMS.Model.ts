@@ -222,6 +222,8 @@ export class outwardmaterialistModel {
   movedby: string;
   outwardqty: number;
   inwardqty: number;
+  mgapprover: string;
+  fmapprover: string;
 }
 
 export class categoryValues {
