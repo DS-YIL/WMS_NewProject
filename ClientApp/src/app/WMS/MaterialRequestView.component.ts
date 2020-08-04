@@ -92,12 +92,12 @@ export class MaterialRequestViewComponent implements OnInit {
   //app
   ackStatusChanges(status) {
     this.showAck = true;
-    //if (status == 'received') {
-    //  this.showAck = false;
-    //}
-    //else {
-    //  this.showAck = true;
-    //}
+    if (status == 'received') {
+      this.showAck = false;
+    }
+    else {
+      this.showAck = true;
+    }
   }
 
   //received material acknowledgement

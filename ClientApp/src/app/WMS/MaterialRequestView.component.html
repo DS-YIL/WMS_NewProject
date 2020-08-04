@@ -69,9 +69,14 @@
           <!--<td class="ptable-cell" style="text-align:left">{{rowData.projectname}}</td>-->
           <td class="ptable-cell" style="text-align:center;width:150px;">{{rowData.requesteddate| date :  constants.dateFormat}}</td>
           <td class="ptable-cell" style="width:200px;">
-            <div *ngIf="rowData.approvedstatus=='Approved'" class="form-inline">
-              <p-checkbox *ngIf="rowData.ackstatus!='received'" [disabled]="rowData.ackstatus=='received'?true:false" [(ngModel)]="rowData.status"  binary="true" (click)="ackStatusChanges(rowData.approvedstatus)"></p-checkbox> &nbsp;&nbsp;
-              <textarea type="text" style="width:140px" class="form-control" [disabled]="rowData.ackstatus=='received'?true:false" [(ngModel)]="rowData.ackremarks"></textarea>
+            <div *ngIf="rowData.approvedstatus=='Approved' && rowData.ackstatus=='not received'" class="form-inline">
+             
+                <p-checkbox  [(ngModel)]="rowData.status" binary="true" (click)="ackStatusChanges($event)"></p-checkbox> &nbsp;&nbsp;
+             
+              <textarea type="text" style="width:140px" class="form-control"  [(ngModel)]="rowData.ackremarks"></textarea>
+            </div>
+            <div *ngIf="rowData.approvedstatus=='Approved' && rowData.ackstatus=='received'" class="form-inline">
+              &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; <textarea type="text" style="width:140px" class="form-control" [disabled]="true" [(ngModel)]="rowData.ackremarks"></textarea>
             </div>
             <!--<div *ngIf="rowData.approvedstatus=='Approved' && rowData.ackstatus=='received'" class="form-inline">
               <p-checkbox [(ngModel)]="rowData.status" [disabled]="rowData.approvedstatus=='Approved'?true:false" binary="true" (click)="ackStatusChanges(rowData.approvedstatus)"></p-checkbox> &nbsp;&nbsp;
