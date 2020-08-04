@@ -54,13 +54,13 @@
       <div class="row" style="margin-top:0px;">
 
         <div class="col-lg-2 col-md-2 labelheading" *ngIf="podetailsList.length>0">
-          PO No : <span class="labeltext">{{podetailsList[0].pono}}</span>
+          PO No. : <span class="labeltext">{{podetailsList[0].pono}}</span>
         </div>
         <div class="col-lg-3 col-md-3 labelheading" style="font-weight:600;font-size:14px;color:darkblue;" *ngIf="podetailsList.length>0">
-          Invoice No : <span class="labeltext">{{podetailsList[0].invoiceno}}</span>
+          Invoice No. : <span class="labeltext">{{podetailsList[0].invoiceno}}</span>
         </div>
         <div class="col-lg-3 col-md-3 labelheading" style="font-weight:600;font-size:14px;color:darkblue;" *ngIf="podetailsList.length>0">
-          <span *ngIf="grnnumber">WMS GRN No : </span><span class="labeltext">{{grnnumber}}</span>
+          <span *ngIf="grnnumber">WMS GRN No. : </span><span class="labeltext">{{grnnumber}}</span>
         </div>
         <div class="col-lg-4 col-md-4 labelheading" style="font-weight:600;font-size:14px;color:darkblue;" *ngIf="isnonpoentry">
           <!--<span class="labeltext" *ngIf="isallreceived && !isacceptance"></span>-->
@@ -191,7 +191,7 @@
             <tr>
 
 
-              <td class="ptable-cell" style="text-align:right;width:5%;">{{ri+1}}</td>
+              <td class="ptable-cell" style="text-align:center;width:5%;">{{ri+1}}</td>
 
               <td class="ptable-cell" style="text-align:center;width:15%;">
                 <span *ngIf="!isnonpoentry">{{rowData.material}}</span>

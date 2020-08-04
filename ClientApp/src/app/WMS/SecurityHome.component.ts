@@ -176,13 +176,13 @@ export class SecurityHomeComponent implements OnInit {
         }
         else {
           this.PoDetails = new PoDetails();
-          this.messageService.add({ severity: 'error', summary: '', detail: 'No data for this ASN/PO No' });
+          this.messageService.add({ severity: 'error', summary: '', detail: 'No data for this ASN/PO No.' });
           this.showDetails = false;
         }
       })
     }
     else
-      this.messageService.add({ severity: 'error', summary: '', detail: 'Enter ASN/PO No' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Enter PO/ASN No.' });
   }
 
   printbarcode() {
@@ -193,6 +193,11 @@ export class SecurityHomeComponent implements OnInit {
   onsaveSecDetails() {
     //need to generate barcode
     debugger;
+    if (isNullOrUndefined(this.Poinvoicedetails.vendorname) || this.Poinvoicedetails.vendorname == "") {
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Enter Supplier Name' });
+      this.spinner.hide();
+      return;
+    }
     if (this.Poinvoicedetails.invoiceno && this.Poinvoicedetails.invoiceno.trim() != "") {
       this.spinner.show();
       this.BarcodeModel = new BarcodeModel();
@@ -206,7 +211,7 @@ export class SecurityHomeComponent implements OnInit {
       if (this.isnonpochecked) {
         this.BarcodeModel.pono = "NONPO";
         if (isNullOrUndefined(this.Poinvoicedetails.vendorname) || this.Poinvoicedetails.vendorname == "") {
-          this.messageService.add({ severity: 'error', summary: '', detail: 'Please enter suppliername.' });
+          this.messageService.add({ severity: 'error', summary: '', detail: 'Enter Supplier Name' });
           this.spinner.hide();
           return;
         }
@@ -214,7 +219,7 @@ export class SecurityHomeComponent implements OnInit {
           this.BarcodeModel.departmentid = parseInt(this.selecteddept.value);
         }
         else {
-          this.messageService.add({ severity: 'error', summary: '', detail: 'Please select department' });
+          this.messageService.add({ severity: 'error', summary: '', detail: 'Select Department' });
           this.spinner.hide();
           return;
         }
@@ -230,17 +235,17 @@ export class SecurityHomeComponent implements OnInit {
           this.messageService.add({ severity: 'error', summary: '', detail: 'Something went wrong' });
         }
         else if (data == 2) {
-          this.messageService.add({ severity: 'error', summary: '', detail: 'Invoice for this PO already received' });
+          this.messageService.add({ severity: 'error', summary: '', detail: 'Invoice No. for this PO already received' });
         }
         else { //data>=1
           this.disSaveBtn = true;
           this.refresh();
-          this.messageService.add({ severity: 'success', summary: '', detail: 'Invoice Updated' });
+          this.messageService.add({ severity: 'success', summary: '', detail: 'Invoice No. Updated' });
           this.getcurrentDateReceivedPOlist();
         }
       });
     }
     else
-      this.messageService.add({ severity: 'error', summary: '', detail: 'Please enter invoce no' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Enter Invoice No.' });
   }
 }

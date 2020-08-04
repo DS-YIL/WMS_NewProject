@@ -398,9 +398,9 @@ export class NavMenuComponent implements OnInit {
   bindMenu() {
     debugger;
     this.items = [];
-    this.items = [
-      { label: 'Home', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-home', command: () => this.router.navigateByUrl('WMS/Home'), styleClass: 'active' }
-    ];
+    //this.items = [
+    //  { label: 'Home', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-home', command: () => this.router.navigateByUrl('WMS/Home'), styleClass: 'active' }
+    //];
     this.useritems = [
       { label: 'Log Out', icon: 'pi pi-fw pi-angle-right', command: () => this.logout() }
     ];
@@ -418,6 +418,8 @@ export class NavMenuComponent implements OnInit {
       this.router.navigateByUrl('WMS/SecurityCheck');
     }
     if (this.emp.roleid == "2") {//inventory enquiry
+      this.items = [];
+      this.items.push({ label: 'Home', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-home', command: () => this.router.navigateByUrl('WMS/Home'), styleClass:'active' });
       this.items.push({
         label: 'Inventory Ageing',
         icon: 'pi pi-fw pi-bars',
@@ -444,6 +446,8 @@ export class NavMenuComponent implements OnInit {
       this.router.navigateByUrl('WMS/Home');
     }
     if (this.emp.roleid == "3") {//inventory clerk
+      this.items = [];
+      this.items.push({ label: 'Home', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-home', command: () => this.router.navigateByUrl('WMS/Home'), styleClass:'active' });
       this.items.push({ label: 'Receipts', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GRNPosting') });
       this.items.push({ label: 'Quality Check', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/QualityCheck') });
       this.items.push({ label: 'Put Away', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/WarehouseIncharge') });
@@ -452,6 +456,8 @@ export class NavMenuComponent implements OnInit {
       this.router.navigateByUrl('WMS/Home');
     }
     if (this.emp.roleid == "4") {//inventory manager
+      this.items = [];
+      this.items.push({ label: 'Home', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-home', command: () => this.router.navigateByUrl('WMS/Home'), styleClass:'active' });
       this.items.push({ label: 'Material Issue', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialIssueDashboard') });
      // this.items.push({ label: '"Put Away"  Material wise', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/WarehouseIncharge') });
       this.items.push({ label: 'Cycle Count', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/Cyclecount') });
@@ -460,7 +466,9 @@ export class NavMenuComponent implements OnInit {
       this.router.navigateByUrl('WMS/Home');
     }
     if (this.emp.roleid == "5") {//project manager
-      this.items.push({ label: 'PM Dashboard', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-chart-bar', command: () => this.router.navigateByUrl('WMS/Dashboard') });
+      this.items = [];
+      this.items.push({ label: 'Home', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-home', command: () => this.router.navigateByUrl('WMS/Home') });
+      this.items.push({ label: 'PM Dashboard', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-chart-bar', command: () => this.router.navigateByUrl('WMS/Dashboard'), styleClass: 'active' });
       this.items.push({ label: 'Material Requests', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReqView') });
       this.items.push({ label: 'Material Reserved', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReserveView') });
       this.items.push({ label: 'Material Transfer', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialTransfer') });
@@ -468,10 +476,14 @@ export class NavMenuComponent implements OnInit {
       this.router.navigateByUrl('WMS/Dashboard');
     }
     if (this.emp.roleid == "6") {//dashboard
+      this.items = [];
+      this.items.push({ label: 'Home', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-home', command: () => this.router.navigateByUrl('WMS/Home'), styleClass: 'active' });
       this.items.push({ label: 'PM Dashboard', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-chart-bar', command: () => this.router.navigateByUrl('WMS/Dashboard') });
-      this.router.navigateByUrl('WMS/Dashboard');
+      this.router.navigateByUrl('WMS/Home');
     }
     if (this.emp.roleid == "7") {//admin
+      this.items = [];
+      this.items.push({ label: 'Home', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-home', command: () => this.router.navigateByUrl('WMS/Home'), styleClass: 'active' });
       this.items.push({ label: 'Gate Pass', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GatePass') });
       this.items.push({ label: 'Internal Stock Transfer', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/Stocktransfer') });
       this.items.push({
@@ -505,6 +517,7 @@ export class NavMenuComponent implements OnInit {
     }
     if (this.emp.roleid == "8") {//Approver     
       this.items = [];
+      this.items.push({ label: 'Home', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-home', command: () => this.router.navigateByUrl('WMS/Home'), styleClass: 'active' });
       if (localStorage.getItem("requestedpage")) {
         var page = localStorage.getItem('requestedpage');
         if (page == "GatePassPMList") {
