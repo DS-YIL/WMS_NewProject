@@ -517,7 +517,6 @@ export class NavMenuComponent implements OnInit {
     }
     if (this.emp.roleid == "8") {//Approver     
       this.items = [];
-      this.items.push({ label: 'Home', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-home', command: () => this.router.navigateByUrl('WMS/Home'), styleClass: 'active' });
       if (localStorage.getItem("requestedpage")) {
         var page = localStorage.getItem('requestedpage');
         if (page == "GatePassPMList") {
