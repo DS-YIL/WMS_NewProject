@@ -348,7 +348,7 @@ namespace WMS.Common {
         ///   Looks up a localized string similar to select MAX(stinw.inwardid) as value,sinw.grnnumber as text,(select suppliername from wms.wms_polist where pono = Max(sinw.pono) limit 1) as supplier 
         ///from wms.wms_storeinward stinw 
         ///left outer join wms.wms_securityinward sinw on stinw.inwmasterid = sinw.inwmasterid 
-        ///where stinw.returnedby is not null and stinw.inwmasterid not in (select distinct inwmasterid from wms.wms_stock)
+        ///where stinw.returnedby is not null and stinw.inwmasterid not in (select distinct inwmasterid from wms.wms_stock where itemlocation IS NOT NULL)
         ///group by stinw.inwmasterid,sinw.grnnumber.
         /// </summary>
         public static string getgrnlistdataforputaway {

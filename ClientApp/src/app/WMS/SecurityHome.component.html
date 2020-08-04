@@ -25,7 +25,7 @@
           <div *ngIf="ispochecked">
             <div class="row " style="margin-top:5px;">
               <div class="col-lg-12 col-md-12 col-sm-12 form-inline">
-                <label class="labelheading">PO/ASN No: </label>&nbsp;&nbsp;
+                <label class="labelheading">PO/ASN No.: </label>&nbsp;&nbsp;
                 <input class="form-control" type="text" [(ngModel)]="searchdata" id="ponoid" maxlength="10">&nbsp;&nbsp;
                 <button type="button" class="btn btn-primary btn-sm" label="Save" (click)="SearchPoNo()">Search</button>
               </div>
@@ -33,7 +33,7 @@
             <div *ngIf="showDetails">
               <div class="row " style="margin-top:5px;" *ngIf="!PoDetails.ispono">
                 <div class="col-lg-2 col-md-2">
-                  <label class="labelheading">PONo:</label>
+                  <label class="labelheading">PO No.:</label>
                 </div>
                 <div class="col-lg-10 col-md-10">
                   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label class="labeltext">{{PoDetails.pono}}</label>
@@ -57,7 +57,7 @@
               </div>
               <div class="row " style="margin-top:5px;">
                 <div class="col-lg-12 col-md-12 col-sm-12 form-inline">
-                  <label class="labelheading">Invoice No: </label>&nbsp;&nbsp;&nbsp;
+                  <label class="labelheading">Invoice No.: </label>&nbsp;&nbsp;&nbsp;
                   <input class="form-control" type="text" [disabled]="disSaveBtn" [(ngModel)]="Poinvoicedetails.invoiceno">
                 </div>
               </div>
@@ -176,17 +176,17 @@
             <div class="col-lg-12 col-md-12 col-sm-12">
               <div class="row">
                 <div class="col-lg-5 col-md-5">
-                  <div class="card" style="height: 108px;margin-bottom:10px;width: 90%;  background-image: url('./assets/Login.jpg');border-radius: 10px;">
-                    <h5 style="color:white;margin-left:10px;margin-top:10px"><i class="fa fa-cubes"></i>&nbsp;Expected Shipments</h5>
-                    <h5 style="color:white;margin-left:20px;font-weight:600;">{{deliverycount}}</h5>
+                  <div class="card" style="height: 98px;margin-bottom:10px;width: 90%;  background-image: url('./assets/Login.jpg');border-radius: 10px;">
+                    <h6 style="color:white;margin-left:10px;margin-top:10px"><i class="fa fa-cubes"></i>&nbsp;Expected Shipments</h6>
+                    <h6 style="color:white;margin-left:20px;font-weight:600;">{{deliverycount}}</h6>
                     <button class="btn btn-sm" style="background-color:#99CC99 !important;color:black;font-weight:600" (click)="showdevlist()">{{btntext}}</button>
                   </div>
 
                 </div>
                 <div class="col-lg-5 col-md-5">
-                  <div class="card" style="height: 108px;margin-bottom:10px;width: 90%;background-image: url('./assets/Login.jpg');border-radius: 10px;">
-                    <h5 style="color:white;margin-left:10px;margin-top:10px"><i class="fa fa-cubes"></i>&nbsp;Received Shipments</h5>
-                    <h5 style="color:white;margin-left:20px; font-weight:600;">{{receivedcount}}</h5>
+                  <div class="card" style="height: 98px;margin-bottom:10px;width: 90%;background-image: url('./assets/Login.jpg');border-radius: 10px;">
+                    <h6 style="color:white;margin-left:10px;margin-top:10px"><i class="fa fa-cubes"></i>&nbsp;Received Shipments</h6>
+                    <h6 style="color:white;margin-left:20px; font-weight:600;">{{receivedcount}}</h6>
                     <button class="btn btn-light btn-sm" style="background-color:#9999FF!important;color:black;font-weight:600" (click)="showreceivedlist()">{{btnreceivetext}}</button>
                   </div>
 
@@ -199,14 +199,14 @@
                   <ng-template pTemplate="header">
                     <tr class="sectbldata1" style="background-color:aqua !important">
                       <th class="ptable-cell" style="text-align:center;width:10%;">Sl.No.</th>
-                      <th class="ptable-cell" style="text-align:center;width:20%;">ASN No</th>
-                      <th class="ptable-cell" style="text-align:center;width:20%;">PO No</th>
+                      <th class="ptable-cell" style="text-align:center;width:20%;">ASN No.</th>
+                      <th class="ptable-cell" style="text-align:center;width:20%;">PO No.</th>
                       <th class="ptable-cell" style="text-align:center;width:50%">Supplier Name</th>
                     </tr>
                   </ng-template>
                   <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex" let-rindex=0>
                     <tr>
-                      <td class="ptable-cell" style="text-align:right;width:10%;"> {{ri+1}} </td>
+                      <td class="ptable-cell" style="text-align: center;width: 10%;"> {{ri+1}} </td>
                       <td class="ptable-cell" style="text-align:center;width:20%;"> {{rowData.asn}} </td>
                       <td class="ptable-cell" style="text-align:center;width:20%;"> {{rowData.pono}} </td>
                       <td class="ptable-cell" style="text-align:left;width:70%">{{rowData.vendorname}} </td>
@@ -223,9 +223,9 @@
                   <ng-template pTemplate="header">
                     <tr class="sectbldata">
                       <th class="ptable-cell" style="text-align:center;width:10%;">Sl.No.</th>
-                      <th class="ptable-cell" style="text-align:center;width:15%;">ASN No</th>
-                      <th class="ptable-cell" style="text-align:center;width:15%;">PO No</th>
-                      <th class="ptable-cell" style="text-align:center;width:13%;">Invoice No</th>
+                      <th class="ptable-cell" style="text-align:center;width:15%;">ASN No.</th>
+                      <th class="ptable-cell" style="text-align:center;width:15%;">PO No.</th>
+                      <th class="ptable-cell" style="text-align:center;width:13%;">Invoice No.</th>
                       <th class="ptable-cell" style="text-align:center">Supplier Name</th>
                       <th class="ptable-cell" style="text-align:center;width:20%;">Received By</th>
                       <!--<th class="ptable-cell" style="text-align:center">Delivery Date</th>-->
@@ -233,10 +233,10 @@
                   </ng-template>
                   <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex" let-rindex=0>
                     <tr>
-                      <td class="ptable-cell" style="text-align:right;;width:10%;"> {{ri+1}} </td>
+                      <td class="ptable-cell" style="text-align:center;width:10%;"> {{ri+1}} </td>
                       <td class="ptable-cell" style="text-align:center;width:15%;"> {{rowData.asn}} </td>
                       <td class="ptable-cell" style="text-align:center;width:15%;"> {{rowData.pono}}</td>
-                      <td class="ptable-cell" style="text-align:center;width:13%;"> {{rowData.invoiceno}} </td>
+                      <td class="ptable-cell" style="text-align:left;width:13%;"> {{rowData.invoiceno}} </td>
                       <td class="ptable-cell" style="text-align:left">
                         {{rowData.suppliername}}
                       </td>

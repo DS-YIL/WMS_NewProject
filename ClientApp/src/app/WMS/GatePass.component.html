@@ -114,8 +114,8 @@
           </td>
 
           <td class="ptable-cell" style="text-align:center">
-            <a style="cursor:pointer;color:blue;text-decoration:underline;" *ngIf="rowData.gatepassid" (click)="showdetails(rowData,ri)">{{rowData.gatepassid}}</a>
-            <!--<a [routerLink]="['/WMS/GatePassApprover',rowData.gatepassid]" (click)="showdetails(rowData,ri)" routerLinkActive="active">{{rowData.gatepassid}}</a>-->
+            <a style="cursor:pointer;color:blue;text-decoration:underline;" *ngIf="rowData.gatepassid && employee.roleid=='7'" (click)="showdetails(rowData,ri)">{{rowData.gatepassid}}</a>
+            <a *ngIf="employee.roleid!='7'" [routerLink]="['/WMS/GatePassApprover',rowData.gatepassid]" (click)="showdetails(rowData,ri)" routerLinkActive="active">{{rowData.gatepassid}}</a>
           </td>
           <td class="ptable-cell" style="text-align:left" *ngIf="employee.roleid!='8'">{{rowData.gatepasstype}}</td>
           <td class="ptable-cell" style="text-align:left">{{rowData.vendorname}}</td>
