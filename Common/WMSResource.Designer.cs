@@ -237,12 +237,12 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select sum(iss.issuedqty) as issuedqty,max(pro.jobname)as jobname,max(req.requestforissueid)as requestforissueid,max(emp.&quot;name&quot;)as name,req.requesteddate,sk.materialid,max(sk.pono)as pono,
+        ///   Looks up a localized string similar to select iss.issuedqty as issuedqty,max(pro.jobname)as jobname,max(req.requestforissueid)as requestforissueid,max(emp.&quot;name&quot;)as name,req.requesteddate,sk.materialid,max(sk.pono)as pono,
         ///req.requestedquantity,sum(sk.availableqty)as availableqty,req.requestid from wms.wms_stock sk 
         ///      inner join wms.wms_polist op on op.pono=sk.pono
         ///       inner join wms.wms_materialrequest req on req.materialid=sk.materialid
         ///      left join wms.wms_materialissue iss  on iss.requestforissueid=req.requestforissueid
-        ///  [rest of string was truncated]&quot;;.
+        ///       [rest of string was truncated]&quot;;.
         /// </summary>
         public static string GetdetailsByrequestid {
             get {

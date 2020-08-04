@@ -127,7 +127,7 @@
     <comment>checkpono</comment>
   </data>
   <data name="GetdetailsByrequestid" xml:space="preserve">
-    <value>select sum(iss.issuedqty) as issuedqty,max(pro.jobname)as jobname,max(req.requestforissueid)as requestforissueid,max(emp."name")as name,req.requesteddate,sk.materialid,max(sk.pono)as pono,
+    <value>select iss.issuedqty as issuedqty,max(pro.jobname)as jobname,max(req.requestforissueid)as requestforissueid,max(emp."name")as name,req.requesteddate,sk.materialid,max(sk.pono)as pono,
 req.requestedquantity,sum(sk.availableqty)as availableqty,req.requestid from wms.wms_stock sk 
       inner join wms.wms_polist op on op.pono=sk.pono
        inner join wms.wms_materialrequest req on req.materialid=sk.materialid
@@ -136,7 +136,7 @@ req.requestedquantity,sum(sk.availableqty)as availableqty,req.requestid from wms
       left join wms.wms_pomaterials pomat on pomat.pono=op.pono
       left join wms.wms_project pro on pro.pono=op.pono
  where requestid=#requestid and req.deleteflag=false and sk.availableqty!=0 and sk.pono='#pono'
- group by req.requestforissueid,sk.materialid--,sk.pono,req.requestedquantity,sk.availableqty,req.requestid,emp."name",req.requesteddate,pro.jobname</value>
+ group by  iss.issuedqty, req.requestforissueid,sk.materialid--,sk.pono,req.requestedquantity,sk.availableqty,req.requestid,emp."name",req.requesteddate,pro.jobname</value>
   </data>
   <data name="GetListForMaterialRequestByapproverid" xml:space="preserve">
     <value>select issue.approvedstatus,req.pono,req.requestid,req.requesteddate,req.requesterid,pro.projectname,emp."name",max(req.requesttype)as requesttype,max(req.returnon)as returnon
