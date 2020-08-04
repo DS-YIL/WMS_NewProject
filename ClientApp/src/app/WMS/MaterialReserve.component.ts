@@ -53,8 +53,8 @@ export class MaterialReserveComponent implements OnInit {
       this.maxdate = this.datePipe.transform(maxdate, "yyyy-MM-dd");
       this.reserveList = data;
       this.reserveList.forEach(item => {
-        if (!item.requestedquantity)
-          item.reservedqty = item.availableqty;
+        //if (!item.requestedquantity)
+        //  item.reservedqty = item.availableqty;
       });
     });
   }

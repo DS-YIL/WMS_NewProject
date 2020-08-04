@@ -2034,33 +2034,36 @@ namespace WMS.DAL
 					DateTime itemissueddate = System.DateTime.Now;
 
 					string updateapproverstatus = WMSResource.updateapproverstatus;
-
-					using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
-					{
-
-						result = DB.Execute(updateapproverstatus, new
+					
+						using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
 						{
-							approvedstatus,
-							requestforissueid,
-							approvedon,
-							issuedqty,
-							materialid,
-							item.pono,
-							itemid,
-							item.itemreturnable,
-							item.approvedby,
-							itemissueddate,
-							item.itemreceiverid,
-
-						});
-						int availableqty = item.availableqty - item.issuedqty;
-
-						string insertqueryforstatusforqty = WMSResource.updateqtyafterissue.Replace("#itemid", Convert.ToString(item.itemid)).Replace("#availableqty", Convert.ToString(availableqty));
-
-						var data1 = DB.ExecuteScalar(insertqueryforstatusforqty, new
+						if (item.issuedqty > 0)
 						{
+							result = DB.Execute(updateapproverstatus, new
+							{
+								approvedstatus,
+								requestforissueid,
+								approvedon,
+								issuedqty,
+								materialid,
+								item.pono,
+								itemid,
+								item.itemreturnable,
+								item.approvedby,
+								itemissueddate,
+								item.itemreceiverid,
 
-						});
+							});
+							int availableqty = item.availableqty - item.issuedqty;
+
+							string insertqueryforstatusforqty = WMSResource.updateqtyafterissue.Replace("#itemid", Convert.ToString(item.itemid)).Replace("#availableqty", Convert.ToString(availableqty));
+
+							var data1 = DB.ExecuteScalar(insertqueryforstatusforqty, new
+							{
+
+							});
+						}
+						
 
 					}
 					
