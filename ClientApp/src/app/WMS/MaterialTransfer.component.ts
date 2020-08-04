@@ -5,7 +5,7 @@ import { wmsService } from '../WmsServices/wms.service';
 import { constants } from '../Models/WMSConstants';
 import { Employee, DynamicSearchResult, searchList } from '../Models/Common.Model';
 import { NgxSpinnerService } from "ngx-spinner";
-import { materialRequestDetails, returnmaterial, gatepassModel, materialistModel, PoDetails, StockModel, materialistModelreturn } from 'src/app/Models/WMS.Model';
+import { materialRequestDetails, returnmaterial, gatepassModel, materialistModel, PoDetails, StockModel, materialistModelreturn, materialistModeltransfer } from 'src/app/Models/WMS.Model';
 import { MessageService } from 'primeng/api';
 import { isNullOrUndefined } from 'util';
 
@@ -44,7 +44,7 @@ export class MaterialTransferComponent implements OnInit {
   public locationlist: any[] = [];
   public chkChangeshideshow: boolean = false;
   public requestid: any;
-  public materialistModel: materialistModelreturn;
+  public materialistModel: materialistModeltransfer;
   public showDetails; showLocationDialog: boolean = false;
   public PoDetails: PoDetails;
   public StockModelForm: FormGroup;
@@ -59,6 +59,8 @@ export class MaterialTransferComponent implements OnInit {
    
     this.PoDetails = new PoDetails();
     this.StockModel = new StockModel();
+    this.tarnsferModel = new returnmaterial();
+    this.tarnsferModel.materialList = [];
     this.route.params.subscribe(params => {
       if (params["pono"]) {
         this.pono = params["pono"];
@@ -90,7 +92,7 @@ export class MaterialTransferComponent implements OnInit {
   //get Material Rquest based on login employee && po no
   getMaterialRequestlist() {
     //this.employee.employeeno = "180129";
-    this.wmsService.getMaterialRequestlist(this.employee.employeeno, this.pono).subscribe(data => {
+    this.wmsService.gettransferdata().subscribe(data => {
       this.requestList = data;
       this.requestList.forEach(item => {
         if (!item.requestedquantity)
@@ -107,11 +109,11 @@ export class MaterialTransferComponent implements OnInit {
     }
   }
 
-  //requested quantity update
+  //transfer quantity update
   onMaterialRequestDeatilsSubmit() {
     this.spinner.show();
     this.btnDisable = true;
-    this.wmsService.materialRequestUpdate(this.requestList).subscribe(data => {
+    this.wmsService.Updatetransferqty(this.requestList).subscribe(data => {
       this.spinner.hide();
       if (data)
         this.messageService.add({ severity: 'success', summary: 'success Message', detail: 'Request sent' });
@@ -268,17 +270,28 @@ export class MaterialTransferComponent implements OnInit {
    this.dynamicData.searchCondition = " where projectcode is not null";
     this.wmsService.GetListItems(this.dynamicData).subscribe(res => {
 
-      
-        //this._list = res; //save posts in array
-        this.locationlist = res;
-        let _list: any[] = [];
-        for (let i = 0; i < (res.length); i++) {
-          _list.push({
-            projectcode: res[i].projectcode,
-           // projectcode: res[i].projectcode
-          });
-        }
-        this.locationlist = _list;
+      this.searchresult = res;
+      this.searchItems = [];
+      var fName = "";
+      this.searchresult.forEach(item => {
+        fName = 'projectcode';
+        //if (name == "ItemId")
+        //fName = item[this.constants[name].fieldName] + " - " + item[this.constants[name].fieldId];
+        fName = item['projectcode'];
+        var value = { listName: name, name: fName, code: item['projectcode'] };
+        //this.materialistModel.materialcost = data[0].materialcost;
+        this.searchItems.push(value);
+      });
+        ////this._list = res; //save posts in array
+        //this.locationlist = res;
+        //let _list: any[] = [];
+        //for (let i = 0; i < (res.length); i++) {
+        //  _list.push({
+        //    projectcode: res[i].projectcode,
+        //   // projectcode: res[i].projectcode
+        //  });
+        //}
+        //this.locationlist = _list;
       });
   }
  
@@ -331,8 +344,8 @@ export class MaterialTransferComponent implements OnInit {
   addNewMaterial() {
 
     if (this.tarnsferModel.materialList.length == 0 || isNullOrUndefined(this.material)) {
-      this.materialistModel = { materialid: "", materialdescription: "", remarks: " ", returnid: 0, returnquantity: 0, createdby: this.employee.employeeno };
-      this.tarnsferModel.materialList.push(this.materialistModel);
+      this.materialistModel = { materialid: "", materialdescription: "", remarks: " ", transfetid: 0, transferqty: 0, createdby: this.employee.employeeno, projectcode: "" };
+      this.tarnsferModel.materialLists.push(this.materialistModel);
       this.material = "";
     }
    
@@ -341,8 +354,8 @@ export class MaterialTransferComponent implements OnInit {
       this.tarnsferModel.materialList[this.tarnsferModel.materialList.length - 1].materialid = this.material.code;
       this.tarnsferModel.materialList[this.tarnsferModel.materialList.length - 1].materialdescription = this.material.name;
 
-      this.materialistModel = { materialid: "", materialdescription: "", remarks: " ", returnid: 0, returnquantity: 0, createdby: this.employee.employeeno};
-      this.tarnsferModel.materialList.push(this.materialistModel);
+      this.materialistModel = { materialid: "", materialdescription: "", remarks: " ", transfetid: 0, transferqty: 0, createdby: this.employee.employeeno, projectcode: "" };
+      this.tarnsferModel.materialLists.push(this.materialistModel);
             this.material = "";
     }
 
@@ -368,10 +381,11 @@ export class MaterialTransferComponent implements OnInit {
     } else {
       //this.gatepassModel.gatepasstype = "0";
       //this.gatepassModel.reasonforgatepass = "0";
-      this.materialistModel = { materialid: "", materialdescription: "", remarks: " ", returnid: 0, returnquantity: 0, createdby: this.employee.employeeno };
-      this.tarnsferModel.materialList.push(this.materialistModel);
+      this.materialistModel = { materialid: "", materialdescription: "", remarks: " ", transfetid: 0, transferqty: 0, createdby: this.employee.employeeno, projectcode: "" };
+      this.tarnsferModel.materialLists.push(this.materialistModel);
       this.material = "";
     }
+    this.GatepassTxt = "Transfer Materials";
   }
 
   //add materials for gate pass
@@ -389,8 +403,8 @@ export class MaterialTransferComponent implements OnInit {
     //if (this.materialistModel.materialid && this.materialistModel.quantity) {
     //  this.wmsService.checkMaterialandQty(this.material.code, this.materialistModel.quantity).subscribe(data => {
     //    if (data == "true") {
-    this.tarnsferModel.materialList.push(this.materialistModel);
-    this.materialistModel = new materialistModelreturn();
+    this.tarnsferModel.materialLists.push(this.materialistModel);
+    this.materialistModel = new materialistModeltransfer();
           this.material = "";
    
   }
@@ -408,6 +422,15 @@ export class MaterialTransferComponent implements OnInit {
 
   }
   transfermaterial() {
+    this.spinner.show();
+    this.btnDisable = true;
+    this.wmsService.Updatetransferqty(this.tarnsferModel.materialLists).subscribe(data => {
+      this.spinner.hide();
+      if (data)
+        this.messageService.add({ severity: 'success', summary: 'success Message', detail: 'Material tarnsferred' });
+      else
+        this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Transfer Failed' });
 
+    });
   }
 }

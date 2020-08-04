@@ -363,7 +363,7 @@ export class UserDashboardDetail {
   receivedshipments: number;
 }
 export class returnmaterial {
- 
+  materialLists: Array<materialistModeltransfer> = [];
   materialList: Array<materialistModelreturn> = [];
 }
 export class materialistModelreturn {
@@ -379,10 +379,10 @@ export class materialistModeltransfer {
   // gatepassmaterialid: string;
   materialid: string;
   materialdescription: string;
-  transferquantity: number = 0;
+  transferqty: number = 0;
   remarks: string;
   transfetid: number;
   projectcode:string
-
+  createdby: string;
 }
 

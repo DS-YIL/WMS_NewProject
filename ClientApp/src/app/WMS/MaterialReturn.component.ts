@@ -59,6 +59,8 @@ export class MaterialReturnComponent implements OnInit {
    
     this.PoDetails = new PoDetails();
     this.StockModel = new StockModel();
+    this.returnModel = new returnmaterial();
+    this.returnModel.materialList = [];
     this.route.params.subscribe(params => {
       if (params["pono"]) {
         this.pono = params["pono"];
@@ -72,7 +74,7 @@ export class MaterialReturnComponent implements OnInit {
   //get Material Rquest based on login employee && po no
   getMaterialRequestlist() {
     //this.employee.employeeno = "180129";
-    this.wmsService.getMaterialRequestlist(this.employee.employeeno, this.pono).subscribe(data => {
+    this.wmsService.getreturndata().subscribe(data => {
       this.requestList = data;
       
       //this.requestList.forEach(item => {
@@ -80,7 +82,7 @@ export class MaterialReturnComponent implements OnInit {
       //    item.requestedquantity = item.quotationqty;
       //});
     });
-    this.returnModel.materialList = [];
+   // this.returnModel.materialList = [];
   }
 
   //check validations for requested quantity
@@ -98,7 +100,7 @@ export class MaterialReturnComponent implements OnInit {
     this.wmsService.materialRequestUpdate(this.requestList).subscribe(data => {
       this.spinner.hide();
       if (data)
-        this.messageService.add({ severity: 'success', summary: 'success Message', detail: 'Request sent' });
+        this.messageService.add({ severity: 'success', summary: 'success Message', detail: 'Material returned' });
       else
         this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Update Failed' });
 
@@ -347,7 +349,7 @@ export class MaterialReturnComponent implements OnInit {
   //gatepass change
  transferChange() {
     //if (this.gatepassModel.gatepasstype != "0")
-      this.GatepassTxt =  " - " + "Request Materials";
+      this.GatepassTxt = "Return Materials";
   }
   //open gate pass dialog
   openDialog( gatepassobject:any,gpIndx: any, dialog) {

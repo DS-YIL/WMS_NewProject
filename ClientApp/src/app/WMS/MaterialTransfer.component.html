@@ -35,12 +35,12 @@
         <tr class="mprltbldata">
           <!--<th style="text-align:center;width:70px">Select</th>-->
           <th style="text-align:center;width:70px">Sl.No.</th>
-          <th style="text-align:center;width:100px">Request Id</th>
+          <th style="text-align:center;width:100px">Transfer Id</th>
           <th style="text-align:center;width:200px">PO No</th>
           <!--<th style="text-align:center">Project Name</th>-->
-          <th style="text-align:center;width:150px">Requested On</th>
-          <th style="text-align:center;width:200px">PM Acknowlegment</th>
-          <th style="text-align:center;width:100px">Status</th>
+          <th style="text-align:center;width:150px">Transferred On</th>
+          <!--<th style="text-align:center;width:200px">PM Acknowlegment</th>
+          <th style="text-align:center;width:100px">Status</th>-->
           <!--<th style="text-align:center;width:100px">Retrun qty</th>-->
           <!--<th style="text-align:center">Requested Quantity</th>
           <th style="text-align:center">Received Quantity</th>
@@ -53,8 +53,8 @@
           <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'pono', 'contains')"></th>
           <!--<th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'projectname', 'contains')"></th>-->
           <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'material', 'contains')"></th>
-          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'materialdescription', 'contains')"></th>
-          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'requesteddate', 'contains')"></th>
+          <!--<th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'materialdescription', 'contains')"></th>
+          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'requesteddate', 'contains')"></th>-->
           <!--<th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'requestedquantity', 'contains')"></th>-->
           <!--<th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'requestedquantity', 'contains')"></th>
           <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'quotationqty', 'contains')"></th>
@@ -74,29 +74,26 @@
           <td class="ptable-cell" style="text-align:center;width:200px;">{{rowData.pono}}</td>
           <!--<td class="ptable-cell" style="text-align:left">{{rowData.projectname}}</td>-->
           <td class="ptable-cell" style="text-align:center;width:150px;">{{rowData.requesteddate| date :  constants.dateFormat}}</td>
-          <td class="ptable-cell" style="width:200px;">
+          <!--<td class="ptable-cell" style="width:200px;">
             <div *ngIf="rowData.approvedstatus=='Approved'" class="form-inline">
               <p-checkbox [(ngModel)]="rowData.status" [disabled]="rowData.approvedstatus=='Approved'?true:false" binary="true" (click)="ackStatusChanges(rowData.approvedstatus)"></p-checkbox> &nbsp;&nbsp;
               <textarea type="text" style="width:140px" class="form-control" [disabled]="rowData.ackremarks==null?false:true" [(ngModel)]="rowData.ackremarks"></textarea>
             </div>
 
-          </td>
+          </td>-->
           <!--<td class="ptable-cell" style="text-align:right">{{rowData.quotationqty}}</td>
           <td class="ptable-cell" style="text-align:right">
             <span *ngIf="rowData.approvedstatus=='approved'">{{rowData.requestedquantity}}</span>-->
           <!--<input *ngIf="rowData.approvedstatus!='approved'" pInputText type="number" class="form-control" [(ngModel)]="rowData.requestedquantity" (change)="reqQtyChange(rowData)">-->
           <!--</td>
           <td class="ptable-cell" style="text-align:right">{{rowData.requestedquantity}}</td>-->
-          <td class="ptable-cell" style="text-align:center;width:100px;">
+          <!--<td class="ptable-cell" style="text-align:center;width:100px;">
 
             {{rowData.approvedstatus}}
-            <!--<div *ngIf="rowData.approvedstatus=='approved'" class="form-inline">
-
-              <textarea type="text" style="width:140px" class="form-control" disabled="disabled" [(ngModel)]="rowData.approvedstatus"></textarea>
-            </div>-->
+           
             <span *ngIf="rowData.ackstatus=='received'">{{rowData.approvedstatus}}</span>
             <span *ngIf="rowData.approvedstatus==null">Pending</span>
-          </td>
+          </td>-->
           <!--<td class="ptable-cell" style="text-align:center;width:100px;">
             <input pInputText [disabled]="true" type="number" class="form-control" [(ngModel)]="rowData.returnqty">
           </td>-->
@@ -152,7 +149,7 @@
               <th style="text-align:center">Material</th>
               <!--<th style="text-align:center;width:150px">Requested  Qty</th>
           <th style="text-align:center;width:150px">Issued Qty</th>-->
-              <th style="text-align:center;width:150px">Return Qty</th>
+              <th style="text-align:center;width:150px">Transfer Qty</th>
               <th style="text-align:center;width:150px">Remarks</th>
             </tr>
 
@@ -310,9 +307,9 @@
           <div class="col-lg-12 col-md-12 col-sm-12">
 
 
-            <p-table [value]="tarnsferModel.materialList" [style]="{'width':'97%','height':'500px','overflow':'visible!important'}">
+            <p-table [value]="tarnsferModel.materialLists" [style]="{'width':'97%','height':'500px','overflow':'visible!important'}">
               <ng-template pTemplate="caption">
-                Add Material
+                
                 <button type="button" icon="fa fa-plus" pButton aria-hidden="true" pTooltip="Add material" (click)="addNewMaterial()" style="float: right;height: 26px;"></button>
               </ng-template>
               <ng-template pTemplate="header">
@@ -344,10 +341,10 @@
                     <input *ngIf="rowData.materialid" [(ngModel)]="rowData.materialid" class="form-control" type="text" name="{{rowData.materialid}}" />
                     <!--<p-autoComplete *ngIf="!rowData.materialid" [(ngModel)]="material" [suggestions]="searchItems" formControlName="itemlocation" field="name" [dropdown]="true" (completeMethod)="bindSearchListData($event,'StockModelForm','itemlocation',StockModelForm.controls.itemlocation.value,undefined)"></p-autoComplete>-->
 
-                    <p-autoComplete appendTo="body" *ngIf="!rowData.materialid" (onSelect)="onMaterialSelected(material)" [(ngModel)]="material" type="text" [suggestions]="searchItems" field="name" [dropdown]="true" (completeMethod)="bindSearchListDatamaterial($event,'material')" size="8"></p-autoComplete>
+                    <p-autoComplete appendTo="body" *ngIf="!rowData.projectcode" (onSelect)="onMaterialSelected(projectcode)" [(ngModel)]="projectcode" type="text" [suggestions]="searchItems" field="name" [dropdown]="true" (completeMethod)="bindSearchListData()" size="8"></p-autoComplete>
                   </td>
                   <td class="ptable-cell" style="text-align:right">
-                    <input style="text-align:left" pInputText type="number" class="form-control" [(ngModel)]="rowData.quantity">
+                    <input style="text-align:left" pInputText type="number" class="form-control" [(ngModel)]="rowData.transferqty">
                   </td>
 
                   <td class="ptable-cell" style="text-align:right">

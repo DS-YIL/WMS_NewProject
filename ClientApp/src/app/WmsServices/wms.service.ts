@@ -149,6 +149,12 @@ export class wmsService {
   getMaterialRequestlist(loginid: string, pono: string): Observable<any> {
     return this.http.get<any>(this.url + 'POData/getmaterialrequestList?PONO=' + pono + '&loginid=' + loginid + '', this.httpOptions);
   }
+  getreturndata(): Observable<any> {
+    return this.http.get<any>(this.url + 'POData/getreturndata', this.httpOptions);
+  }
+  gettransferdata(): Observable<any> {
+    return this.http.get<any>(this.url + 'POData/gettransferdata', this.httpOptions);
+  }
   getMaterialReservelist(loginid: string): Observable<any> {
     return this.http.get<any>(this.url + 'POData/GetreserveMaterilalist?reservedby=' + loginid + '', this.httpOptions);
   }
@@ -158,6 +164,9 @@ export class wmsService {
 
   materialRequestUpdate(materialRequestList: any): Observable<any> {
     return this.http.post<any>(this.url + 'POData/updaterequestedqty/', materialRequestList, this.httpOptions);
+  }
+  Updatetransferqty(materialRequestList: any): Observable<any> {
+    return this.http.post<any>(this.url + 'POData/Updatetransferqty/', materialRequestList, this.httpOptions);
   }
   UpdateReturnmaterialTostock(materialRequestList: any): Observable<any> {
     return this.http.post<any>(this.url + 'POData/UpdateReturnmaterialTostock/', materialRequestList, this.httpOptions);

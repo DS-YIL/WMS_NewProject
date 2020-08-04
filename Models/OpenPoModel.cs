@@ -337,6 +337,7 @@ public bool onhold { get; set; }
 		public int materialissueid { get; set; }
 		public string createdby { get; set; }
 		public int transferqty { get; set; }
+		public string projectcode { get; set; }
 	}
     public class sequencModel
     {

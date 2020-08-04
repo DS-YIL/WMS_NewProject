@@ -688,6 +688,21 @@ namespace WMS.Controllers
 		{
 			return await this._poService.GetReturnmaterialListForConfirm(requestid);
 		}
+		[HttpGet("getreturndata")]
+		public async Task<IEnumerable<IssueRequestModel>> getreturndata()
+		{
+			return await this._poService.getreturndata();
+		}
+		[HttpGet("gettransferdata")]
+		public async Task<IEnumerable<IssueRequestModel>> gettransferdata()
+		{
+			return await this._poService.gettransferdata();
+		}
+		[HttpPost("Updatetransferqty")]
+		public int Updatetransferqty([FromBody] List<IssueRequestModel> obj)
+		{
+			return this._poService.Updatetransferqty(obj);
+		}
 		//[HttpPost("securitysendemail")]
 		//public EmailModel sendemail(EmailModel obj)
 		//{

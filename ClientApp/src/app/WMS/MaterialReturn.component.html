@@ -29,7 +29,7 @@
 
       </span>
     </div>
-  <div *ngIf="requestList.length>0" class="card-body" style="overflow-y:visible;padding:0px;">
+  <div class="card-body" style="overflow-y:visible;padding:0px;">
     <p-table  [value]="requestList" [style]="{'width':'100%'}" [scrollable]="true" scrollHeight="53vh">
       <ng-template pTemplate="header">
         <tr class="mprltbldata">
@@ -68,7 +68,7 @@
           <td class="ptable-cell" style="text-align:right;width:70px;">{{ri+1}}</td>
 
           <td class="ptable-cell" style="text-align: center;width: 100px;">
-            <button type="button" class="btn btn-link" (click)="showstory(rowData.requestid)" style="padding-left:0px;text-align:center;">{{rowData.requestid}}</button>
+            <button type="button" class="btn btn-link" (click)="showstory(rowData.requestid)" style="padding-left:0px;text-align:center;">{{rowData.returnid}}</button>
           </td>
           <td class="ptable-cell" style="text-align:center;width:200px;">{{rowData.pono}}</td>
           <!--<td class="ptable-cell" style="text-align:left">{{rowData.projectname}}</td>-->
@@ -300,12 +300,11 @@
         <div class="row " style="margin-top:10px">
 
 
-          <div class="col-lg-12 col-md-12 col-sm-12">
+          <div *ngIf="returnModel.materialList.length>0" class="col-lg-12 col-md-12 col-sm-12">
 
 
             <p-table [value]="returnModel.materialList" [style]="{'width':'97%','height':'500px','overflow':'visible!important'}">
               <ng-template pTemplate="caption">
-                Add Material
                 <button type="button" icon="fa fa-plus" pButton aria-hidden="true" pTooltip="Add material" (click)="addNewMaterial()" style="float: right;height: 26px;"></button>
               </ng-template>
               <ng-template pTemplate="header">
@@ -330,7 +329,7 @@
                     <input *ngIf="rowData.materialid" [(ngModel)]="rowData.materialid" class="form-control" type="text" name="{{rowData.materialid}}" />
                     <!--<p-autoComplete *ngIf="!rowData.materialid" [(ngModel)]="material" [suggestions]="searchItems" formControlName="itemlocation" field="name" [dropdown]="true" (completeMethod)="bindSearchListData($event,'StockModelForm','itemlocation',StockModelForm.controls.itemlocation.value,undefined)"></p-autoComplete>-->
 
-                    <p-autoComplete appendTo="body" *ngIf="!rowData.materialid" (onSelect)="onMaterialSelected(material)" [(ngModel)]="material" type="text" [suggestions]="searchItems" field="name" [dropdown]="true" (completeMethod)="bindSearchListData($event,'material')" size="8"></p-autoComplete>
+                    <p-autoComplete appendTo="body" *ngIf="!rowData.projectcode" (onSelect)="onMaterialSelected(material)" [(ngModel)]="material" type="text" [suggestions]="searchItems" field="name" [dropdown]="true" (completeMethod)="bindSearchListData()" size="8"></p-autoComplete>
                   </td>
                   <td class="ptable-cell" style="text-align:right">
                     <input style="text-align:left" pInputText type="number" class="form-control" [(ngModel)]="rowData.returnqty">

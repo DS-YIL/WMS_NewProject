@@ -751,6 +751,15 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to select * from wms.wms_returnmaterial.
+        /// </summary>
+        public static string getreturndata {
+            get {
+                return ResourceManager.GetString("getreturndata", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to select reqtrasnfer.requestid,sum(reqtrasnfer.returnqty)as returnqty,max(emp.&quot;name&quot;)as name,max(reqtrasnfer.projectcode)as projectcode,max(reqtrasnfer.createdon)as createddate from wms.wms_returntransfermaterial reqtrasnfer 
         ///  left join wms.employee emp on emp.employeeno=reqtrasnfer.createdby
         ///  where requesttype=&apos;return&apos;  and confirmstatus is null group by requestid.
@@ -801,6 +810,15 @@ namespace WMS.Common {
         public static string getstocktype {
             get {
                 return ResourceManager.GetString("getstocktype", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to select * from wms.wms_transfermaterial.
+        /// </summary>
+        public static string gettransferdata {
+            get {
+                return ResourceManager.GetString("gettransferdata", resourceCulture);
             }
         }
         
@@ -1432,6 +1450,16 @@ namespace WMS.Common {
         public static string updatetostockreserveqty {
             get {
                 return ResourceManager.GetString("updatetostockreserveqty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to insert into wms.wms_transfermaterial(transferid,transferqty,createdby,createdon,remarks,projectcode)values
+        ///        (default,@transferqty,@createdby,current_timestamp,@remarks,@projectcode).
+        /// </summary>
+        public static string updatetransferdata {
+            get {
+                return ResourceManager.GetString("updatetransferdata", resourceCulture);
             }
         }
         
