@@ -5754,6 +5754,7 @@ namespace WMS.DAL
 					{
 						if (item.returnqty != 0)
 						{
+							item.materialid = item.Material;
 							updatereturnqty = WMSResource.UpdateReturnqty;
 							using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
 							{
@@ -5766,7 +5767,8 @@ namespace WMS.DAL
 									item.requesttype,
 									item.transferqty,
 									item.requestid,
-									item.remarks
+									item.remarks,
+									item.materialid
 								});
 							}
 						}
@@ -5960,7 +5962,7 @@ namespace WMS.DAL
 									item.createdby,
 									item.remarks,
 									item.projectcode,
-
+									item.materialid
 								});
 							}
 						}

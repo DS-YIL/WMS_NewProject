@@ -293,6 +293,7 @@ public bool onhold { get; set; }
 	}
     public class IssueRequestModel
     {
+		public int transferid { get; set; }
 		public int reserveformaterialid { get; set; }
 		public string ackstatus { get; set; }
 		public string remarks { get; set; }
@@ -338,6 +339,7 @@ public bool onhold { get; set; }
 		public string createdby { get; set; }
 		public int transferqty { get; set; }
 		public string projectcode { get; set; }
+		public DateTime createdon { get; set; }
 	}
     public class sequencModel
     {

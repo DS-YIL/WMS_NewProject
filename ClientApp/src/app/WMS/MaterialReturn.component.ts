@@ -172,7 +172,7 @@ export class MaterialReturnComponent implements OnInit {
     }
     else {
 
-      this.bindSearchListData();
+      //this.bindSearchListData();
       //this.rowindex = rowindex
       this.AddDialogfortransfer = true;
       this.showdialogfortransfer = true;
@@ -196,6 +196,9 @@ export class MaterialReturnComponent implements OnInit {
       this.materiallistData[i].requesttype = "return";
       this.returnModel.materialList[i].createdby = this.employee.employeeno;
     }
+    if (this.returnModel.materialList.length == 1) {
+      this.returnModel.materialList[0].material = this.material.code;
+    }
     this.wmsService.UpdateReturnqty(this.returnModel.materialList).subscribe(data => {
         if (data == 1) {
           this.btnDisable = true;
@@ -216,7 +219,7 @@ export class MaterialReturnComponent implements OnInit {
     }
   }
   onMaterialSelected(material: any) {
-    if (this.returnModel.materialList.filter(li => li.materialid == material.code).length > 0) {
+    if (this.returnModel.materialList.filter(li => li.material == material.code).length > 0) {
       this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Material already exist' });
       return false;
     }
@@ -248,25 +251,7 @@ export class MaterialReturnComponent implements OnInit {
     });
   }
 
-  //bind materials based search
-  public bindSearchListData() {
-    this.dynamicData.tableName ="wms.wms_project";
-   this.dynamicData.searchCondition = " where projectcode is not null";
-    this.wmsService.GetListItems(this.dynamicData).subscribe(res => {
-
-      
-        //this._list = res; //save posts in array
-        this.locationlist = res;
-        let _list: any[] = [];
-        for (let i = 0; i < (res.length); i++) {
-          _list.push({
-            projectcode: res[i].projectcode,
-           // projectcode: res[i].projectcode
-          });
-        }
-        this.locationlist = _list;
-      });
-  }
+  
  
   showstory(requestid){
    this.showhistory = true;
@@ -317,11 +302,11 @@ export class MaterialReturnComponent implements OnInit {
   addNewMaterial() {
 
     if (this.returnModel.materialList.length == 0 || isNullOrUndefined(this.material)) {
-      this.materialistModel = { materialid: "", materialdescription: "", remarks: " ", returnid: 0, returnquantity: 0, createdby: this.employee.employeeno };
+      this.materialistModel = { material: "", materialdescription: "", remarks: " ", returnid: 0, returnquantity: 0, createdby: this.employee.employeeno };
       this.returnModel.materialList.push(this.materialistModel);
       this.material = "";
     }
-    else if (!this.material && !this.returnModel.materialList[this.returnModel.materialList.length - 1].materialid) {
+    else if (!this.material && !this.returnModel.materialList[this.returnModel.materialList.length - 1].material) {
       this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'please Add Material' });
       return false;
     }
@@ -331,16 +316,16 @@ export class MaterialReturnComponent implements OnInit {
     //}
    
     else {
-      if (this.returnModel.materialList.filter(li => li.materialid == this.material.code && li.materialid != "0").length > 0) {
+      if (this.returnModel.materialList.filter(li => li.material == this.material.code && li.material != "0").length > 0) {
         this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Material already exist' });
         return false;
       }
       this.transferChange();
       //if (this.material) {
-      this.returnModel.materialList[this.returnModel.materialList.length - 1].materialid = this.material.code;
+      this.returnModel.materialList[this.returnModel.materialList.length - 1].material = this.material.code;
       this.returnModel.materialList[this.returnModel.materialList.length - 1].materialdescription = this.material.name;
 
-      this.materialistModel = { materialid: "", materialdescription: "", remarks: " ", returnid: 0, returnquantity: 0, createdby:this.employee.employeeno };
+      this.materialistModel = { material: "", materialdescription: "", remarks: " ", returnid: 0, returnquantity: 0, createdby:this.employee.employeeno };
       this.returnModel.materialList.push(this.materialistModel);
             this.material = "";
     }
@@ -353,7 +338,7 @@ export class MaterialReturnComponent implements OnInit {
   }
   //open gate pass dialog
   openDialog( gatepassobject:any,gpIndx: any, dialog) {
-    this.bindSearchListData();
+   // this.bindSearchListData();
     this.displaydetail = false;
     //this.approverListdata();
     this[dialog] = true;
@@ -364,7 +349,7 @@ export class MaterialReturnComponent implements OnInit {
     //  //this.returnModel = gatepassobject;
       
     //} else {
-      this.materialistModel = { materialid: "", materialdescription: "", remarks: " ", returnid: 0, returnquantity: 0, createdby: this.employee.employeeno };
+    this.materialistModel = { material: "", materialdescription: "", remarks: " ", returnid: 0, returnquantity: 0, createdby: this.employee.employeeno };
       this.returnModel.materialList.push(this.materialistModel);
       this.material = "";
    // }
@@ -377,12 +362,12 @@ export class MaterialReturnComponent implements OnInit {
       this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Add Material' });
       return false;
     }
-    if (this.returnModel.materialList.filter(li => li.materialid == this.material.code).length > 0) {
+    if (this.returnModel.materialList.filter(li => li.material == this.material.code).length > 0) {
       this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Material already exist' });
       return false;
     }
     this.transferChange();
-    this.materialistModel.materialid = this.material.code;
+    this.materialistModel.material = this.material.code;
     this.materialistModel.materialdescription = this.material.name;
     //if (this.materialistModel.materialid && this.materialistModel.quantity) {
     //  this.wmsService.checkMaterialandQty(this.material.code, this.materialistModel.quantity).subscribe(data => {

@@ -232,7 +232,7 @@ export class MaterialTransferComponent implements OnInit {
     }
   }
   onMaterialSelected(material: any) {
-    if (this.tarnsferModel.materialList.filter(li => li.materialid == material.code).length > 0) {
+    if (this.tarnsferModel.materialList.filter(li => li.material == material.code).length > 0) {
       this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Material already exist' });
       return false;
     }
@@ -351,7 +351,7 @@ export class MaterialTransferComponent implements OnInit {
    
     else {
       //if (this.material) {
-      this.tarnsferModel.materialList[this.tarnsferModel.materialList.length - 1].materialid = this.material.code;
+      this.tarnsferModel.materialList[this.tarnsferModel.materialList.length - 1].material = this.material.code;
       this.tarnsferModel.materialList[this.tarnsferModel.materialList.length - 1].materialdescription = this.material.name;
 
       this.materialistModel = { materialid: "", materialdescription: "", remarks: " ", transfetid: 0, transferqty: 0, createdby: this.employee.employeeno, projectcode: "" };
@@ -394,7 +394,7 @@ export class MaterialTransferComponent implements OnInit {
       this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Add Material' });
       return false;
     }
-    if (this.tarnsferModel.materialList.filter(li => li.materialid == this.material.code).length > 0) {
+    if (this.tarnsferModel.materialList.filter(li => li.material == this.material.code).length > 0) {
       this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Material already exist' });
       return false;
     }
