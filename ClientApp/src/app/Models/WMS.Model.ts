@@ -370,7 +370,7 @@ export class materialistModelreturn {
  // gatepassmaterialid: string;
   material: string;
   materialdescription: string;
-  returnquantity: number = 0;
+  returnqty: number = 0;
   remarks: string;
   returnid: number;
   createdby: string;

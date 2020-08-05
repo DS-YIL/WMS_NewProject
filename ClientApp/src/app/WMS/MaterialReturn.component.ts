@@ -191,20 +191,44 @@ export class MaterialReturnComponent implements OnInit {
   }
   returnqty() {
   
-    for (var i = 0; i <= this.materiallistData.length - 1; i++) {
-    
-      this.materiallistData[i].requesttype = "return";
-      this.returnModel.materialList[i].createdby = this.employee.employeeno;
+
+    if (this.returnModel.materialList.length == 0) {
+      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please Add materials to Transfer' });
+      return false;
     }
-    //if (this.returnModel.materialList.length == 1) {
-    //  this.returnModel.materialList[0].material = this.material.code;
-    //}
+
+
+    //this.tarnsferModel.materialLists.requestedby = this.employee.employeeno;
+    else if (!this.material && !this.returnModel.materialList[this.returnModel.materialList.length - 1].material) {
+      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Add Material' });
+      return false;
+    }
+    else if (this.returnModel.materialList[this.returnModel.materialList.length - 1].returnqty == 0) {
+      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please enter return qty' });
+      this.spinner.hide();
+      return false;
+    }
+    else if (this.material) {
+      if (this.returnModel.materialList.filter(li => li.material == this.material.code).length > 0) {
+
+        this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Material already exist' });
+        return false;
+      }
+      //this.gatePassChange();
+      else if (this.returnModel.materialList[this.returnModel.materialList.length - 1].material == "" && !isNullOrUndefined(this.material.code)) {
+        this.returnModel.materialList[this.returnModel.materialList.length - 1].material = this.material.code;
+        this.returnModel.materialList[this.returnModel.materialList.length - 1].materialdescription = this.material.name;
+        //this.tarnsferModel.materialLists[this.tarnsferModel.materialLists.length - 1].expecteddate = new Date(this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].expecteddate).toLocaleDateString();
+        // this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].returneddate = this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].returneddate != null ? new Date(this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].returneddate).toLocaleDateString() : undefined;  
+      }
+    }
     this.wmsService.UpdateReturnqty(this.returnModel.materialList).subscribe(data => {
       this.AddDialog = false;
         if (data == 1) {
           this.btnDisable = true;
-         // this.AddDialog = false;
+          this.gatepassdialog = false;
           this.messageService.add({ severity: 'sucess', summary: 'suceess Message', detail: 'Material Returned' });
+          this.getMaterialRequestlist();
         }
     })
 
@@ -303,7 +327,7 @@ export class MaterialReturnComponent implements OnInit {
   addNewMaterial() {
 
     if (this.returnModel.materialList.length == 0 || isNullOrUndefined(this.material)) {
-      this.materialistModel = { material: "", materialdescription: "", remarks: " ", returnid: 0, returnquantity: 0, createdby: this.employee.employeeno };
+      this.materialistModel = { material: "", materialdescription: "", remarks: " ", returnid: 0, returnqty: 0, createdby: this.employee.employeeno };
       this.returnModel.materialList.push(this.materialistModel);
       this.material = "";
     }
@@ -326,7 +350,7 @@ export class MaterialReturnComponent implements OnInit {
       this.returnModel.materialList[this.returnModel.materialList.length - 1].material = this.material.code;
       this.returnModel.materialList[this.returnModel.materialList.length - 1].materialdescription = this.material.name;
 
-      this.materialistModel = { material: "", materialdescription: "", remarks: " ", returnid: 0, returnquantity: 0, createdby:this.employee.employeeno };
+      this.materialistModel = { material: "", materialdescription: "", remarks: " ", returnid: 0, returnqty: 0, createdby:this.employee.employeeno };
       this.returnModel.materialList.push(this.materialistModel);
             this.material = "";
     }
@@ -350,7 +374,7 @@ export class MaterialReturnComponent implements OnInit {
     //  //this.returnModel = gatepassobject;
       
     //} else {
-    this.materialistModel = { material: "", materialdescription: "", remarks: " ", returnid: 0, returnquantity: 0, createdby: this.employee.employeeno };
+    this.materialistModel = { material: "", materialdescription: "", remarks: " ", returnid: 0, returnqty: 0, createdby: this.employee.employeeno };
       this.returnModel.materialList.push(this.materialistModel);
       this.material = "";
    // }
