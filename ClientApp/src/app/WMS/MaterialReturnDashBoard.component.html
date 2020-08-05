@@ -11,7 +11,7 @@
           <tr class="mprltbldata">
             <th style="text-align:center;width:70px">Sl.No.</th>
             <th style="text-align:center;width:100px">Request Id</th>
-            <th style="text-align:center">Project Name</th>
+            <th style="text-align:center">Material</th>
             <th style="text-align: center;width:150px">Returned On</th>
             <th style="text-align:center;width:300px">Requester Name</th>
 
@@ -19,7 +19,7 @@
           <tr>
             <th></th>
             <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'requestforissueid', 'contains')"></th>
-            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'projectname', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'material', 'contains')"></th>
             <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'requesteddate', 'contains')"></th>
             <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'name', 'contains')"></th>
           </tr>
@@ -30,10 +30,10 @@
               {{ri+1}}
             </td>
             <td class="ptable-cell" style="text-align:center;width:100px;">
-              <button type="button" class="btn btn-link" (click)="showmaterialdetails(rowData.requestid);" style="padding-left:0px;">{{rowData.requestid}}</button>
+              <button type="button" class="btn btn-link" (click)="showmaterialdetails(rowData.returnid);" style="padding-left:0px;">{{rowData.returnid}}</button>
             </td>
-            <td class="ptable-cell" style="text-align:left;">{{rowData.projectname}}</td>
-            <td class="ptable-cell" style="text-align:center;width:150px;">{{rowData.createddate  | date :  constants.dateFormat}}</td>
+            <td class="ptable-cell" style="text-align:left;">{{rowData.materialid}}</td>
+            <td class="ptable-cell" style="text-align:center;width:150px;">{{rowData.createdon  | date :  constants.dateFormat}}</td>
             <td class="ptable-cell" style="text-align:left;width:300px;">{{rowData.name}}</td>
 
           </tr>
@@ -46,7 +46,7 @@
         <div *ngIf="showdialog">
           <div class="row  pl-0">
             <div class="col-lg-4 col-md-4 col-sm-4 pt-2 labelheading">
-              <label>Request Id :</label>&nbsp;<span class="labeltext"><label>{{materiallistData[0].requestid}}</label></span>
+              <label>Request Id :</label>&nbsp;<span class="labeltext"><label>{{materiallistData[0].returnid}}</label></span>
             </div>
 
           </div>
@@ -57,8 +57,8 @@
             <tr class="mprltbldata">
               <th style="text-align:center;width:70px">S.No</th>
               <th style="text-align:center">Material</th>
-              <th style="text-align:center;width:150px">Requested  Qty</th>
-              <th style="text-align:center;width:150px">Issued Qty</th>
+              <!--<th style="text-align:center;width:150px">Requested  Qty</th>
+      <th style="text-align:center;width:150px">Issued Qty</th>-->
               <th style="text-align:center;width:150px">Return Qty</th>
               <th style="text-align:center;width:150px">Item Loaction</th>
             </tr>
@@ -70,18 +70,65 @@
                 {{ri+1}}
               </td>
               <td class="ptable-cell" style="text-align:left">{{rowData.materialid}}</td>
-              <td class="ptable-cell" style="text-align:right">{{rowData.requestedquantity}}</td>
-              <td class="ptable-cell" style="text-align:right">
-                {{rowData.issuedqty}}
+              <!--<td class="ptable-cell" style="text-align:right">{{rowData.requestedquantity}}</td>
+    <td class="ptable-cell" style="text-align:right">
+      {{rowData.issuedqty}}
 
-              </td>
+    </td>-->
 
               <td class="ptable-cell" style="text-align:right">{{rowData.returnqty}}</td>
-              <td class="ptable-cell" style="text-align:right">{{rowData.itemlocation}}</td>
-              <!--<td class="ptable-cell" style="text-align:left">{{rowData.createddate | date :  constants.dateFormat}}</td>-->
+              <td>
+                <select class="form-control dropdown" #mySelect (change)="onChange(mySelect.value,ri)">
+                  <option></option>
+                  <option value="other">other</option>
+                  <option *ngFor=" let loclist of locationlist" value={{loclist.itemlocation}}>
+                    {{loclist.itemlocation}}
+                  </option>
+                </select>
+                <br />
+
+              </td>
+              <!--<td class="ptable-cell" style="text-align:right">{{rowData.itemlocation}}</td>-->
+            </tr>
+            <tr id="nodefaultloaction" style="margin-top:10px;display:none;padding-left:300px;">
+             
+              <td class="ptable-cell" style="text-align:right;width:100px">
+                <label for="itemlocation" class="form-label">Select Location</label>
+
+                <select style="width:100px;" class="form-control dropdown" [(ngModel)]="StockModel.locatorid">
+                  <option selected></option>
+                  <option *ngFor=" let loclist of locationlists " value={{loclist.locatorid}}>
+                    {{loclist.locatorname}}
+                  </option>
+                </select>
+              </td>
+              
+              <td class="ptable-cell" style="text-align:right;width:100px">
+                <label for="rackid" class="form-label">Select Rack</label>
+
+
+                <select style="width:100px;" class="form-control dropdown" [(ngModel)]="StockModel.rackid">
+
+                  <option selected value="*ngIf=rackid"></option>
+                  <option *ngFor=" let loclist of racklist " value={{loclist.rackid}}>
+                    {{loclist.racknumber}}
+                  </option>
+                </select>
+              </td>
+              <td class="ptable-cell" style="text-align:right;width:100px">
+                <label for="rackid" class="form-label">Select Bin</label>
+                <select style="width:100px;" class="form-control dropdown" [(ngModel)]="StockModel.binid">
+
+                  <option selected></option>
+                  <option *ngFor=" let loclist of binlist" value={{loclist.binid}}>
+                    {{loclist.binnumber}}
+                  </option>
+                </select>
+              </td>
             </tr>
           </ng-template>
-
+         
+        
         </p-table>
         <p-footer>
           <button type="button" class="btn btn-primary" [disabled]="btnDisable" (click)="ConfirmReturnmaterial()">Confirm</button>

@@ -466,10 +466,8 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select * from wms.wms_returntransfermaterial returnmat
-        ///   left join wms.wms_materialrequest req on req.requestforissueid=returnmat.requestforissueid
-        ///   left join wms.wms_materialissue isue on isue.materialissueid=returnmat.materialissueid
-        ///   where returnmat.requestid=#requestid and returnmat.confirmstatus is null.
+        ///   Looks up a localized string similar to select * from wms.wms_returnmaterial returnmat
+        ///   where returnmat.returnid=#returnid and returnmat.confirmstatus is null.
         /// </summary>
         public static string getlistforconfirm {
             get {
@@ -760,9 +758,9 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select reqtrasnfer.requestid,sum(reqtrasnfer.returnqty)as returnqty,max(emp.&quot;name&quot;)as name,max(reqtrasnfer.projectcode)as projectcode,max(reqtrasnfer.createdon)as createddate from wms.wms_returntransfermaterial reqtrasnfer 
+        ///   Looks up a localized string similar to select * from wms.wms_returnmaterial reqtrasnfer 
         ///  left join wms.employee emp on emp.employeeno=reqtrasnfer.createdby
-        ///  where requesttype=&apos;return&apos;  and confirmstatus is null group by requestid.
+        ///  where   confirmstatus is null.
         /// </summary>
         public static string GetreturnList {
             get {

@@ -5862,7 +5862,7 @@ namespace WMS.DAL
 				try
 				{
 					await pgsql.OpenAsync();
-					string query = WMSResource.getlistforconfirm.Replace("#requestid", requestid);
+					string query = WMSResource.getlistforconfirm.Replace("#returnid", requestid);
 					string updatequery = string.Empty;
 					//string updatedon = WMSResource.updatedon;
 					return await pgsql.QueryAsync<IssueRequestModel>(
