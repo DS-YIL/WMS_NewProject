@@ -5952,6 +5952,7 @@ namespace WMS.DAL
 					{
 						if (item.transferqty != 0)
 						{
+							item.materialid = item.Material;
 							updatereturnqty = WMSResource.updatetransferdata;
 							using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
 							{

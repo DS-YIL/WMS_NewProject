@@ -232,6 +232,9 @@ export class MaterialTransferComponent implements OnInit {
     }
   }
   onMaterialSelected(material: any) {
+    if (material == 'other') {
+
+    }
     if (this.tarnsferModel.materialList.filter(li => li.material == material.code).length > 0) {
       this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Material already exist' });
       return false;
@@ -270,28 +273,28 @@ export class MaterialTransferComponent implements OnInit {
    this.dynamicData.searchCondition = " where projectcode is not null";
     this.wmsService.GetListItems(this.dynamicData).subscribe(res => {
 
-      this.searchresult = res;
-      this.searchItems = [];
-      var fName = "";
-      this.searchresult.forEach(item => {
-        fName = 'projectcode';
-        //if (name == "ItemId")
-        //fName = item[this.constants[name].fieldName] + " - " + item[this.constants[name].fieldId];
-        fName = item['projectcode'];
-        var value = { listName: name, name: fName, code: item['projectcode'] };
-        //this.materialistModel.materialcost = data[0].materialcost;
-        this.searchItems.push(value);
-      });
-        ////this._list = res; //save posts in array
-        //this.locationlist = res;
-        //let _list: any[] = [];
-        //for (let i = 0; i < (res.length); i++) {
-        //  _list.push({
-        //    projectcode: res[i].projectcode,
-        //   // projectcode: res[i].projectcode
-        //  });
-        //}
-        //this.locationlist = _list;
+      //this.searchresult = res;
+      //this.searchItems = [];
+      //var fName = "";
+      //this.searchresult.forEach(item => {
+      //  fName = 'projectcode';
+      //  if (name == "ItemId")
+      //  fName = item[this.constants[name].fieldName] + " - " + item[this.constants[name].fieldId];
+      //  fName = item['projectcode'];
+      //  var value = { listName: name, name: fName, code: item['projectcode'] };
+      //  this.materialistModel.materialcost = data[0].materialcost;
+      //  this.searchItems.push(value);
+      //});
+        //this._list = res; //save posts in array
+        this.locationlist = res;
+        let _list: any[] = [];
+        for (let i = 0; i < (res.length); i++) {
+          _list.push({
+            projectcode: res[i].projectcode,
+           // projectcode: res[i].projectcode
+          });
+        }
+        this.locationlist = _list;
       });
   }
  
@@ -312,7 +315,7 @@ export class MaterialTransferComponent implements OnInit {
       this.materiallistData[i].createdby = this.employee.employeeno;
       this.materiallistData[i].returnqty = 0;
     }
-    this.wmsService.UpdateReturnqty(this.materiallistData).subscribe(data => {
+    this.wmsService.UpdateReturnqty(this.tarnsferModel.materialList).subscribe(data => {
       if (data == 1) {
         this.btnDisabletransfer = true;
         this.AddDialogfortransfer = false;
@@ -325,7 +328,7 @@ export class MaterialTransferComponent implements OnInit {
     if (value == 'other') {
       document.getElementById(indexid+1).style.display = "block";
     }
-    this.materiallistData[indexid].projectname = value;
+    this.tarnsferModel.materialLists[indexid].projectcode = value;
    // (<HTMLInputElement>document.getElementById(indexid)).value = event.toString();
   }
   toggleVisibility(e,index) {
@@ -343,25 +346,37 @@ export class MaterialTransferComponent implements OnInit {
   //Adding new material 
   addNewMaterial() {
 
-    if (this.tarnsferModel.materialList.length == 0 || isNullOrUndefined(this.material)) {
-      this.materialistModel = { materialid: "", materialdescription: "", remarks: " ", transfetid: 0, transferqty: 0, createdby: this.employee.employeeno, projectcode: "" };
+    if (this.tarnsferModel.materialLists.length == 0 || isNullOrUndefined(this.material)) {
+      this.materialistModel = { material: "", materialdescription: "", remarks: " ", transferqty: 0, createdby: this.employee.employeeno, projectcode: "", transfetid: 0 };
       this.tarnsferModel.materialLists.push(this.materialistModel);
       this.material = "";
     }
-   
-    else {
-      //if (this.material) {
-      this.tarnsferModel.materialList[this.tarnsferModel.materialList.length - 1].material = this.material.code;
-      this.tarnsferModel.materialList[this.tarnsferModel.materialList.length - 1].materialdescription = this.material.name;
-
-      this.materialistModel = { materialid: "", materialdescription: "", remarks: " ", transfetid: 0, transferqty: 0, createdby: this.employee.employeeno, projectcode: "" };
-      this.tarnsferModel.materialLists.push(this.materialistModel);
-            this.material = "";
+    else if (!this.material && !this.tarnsferModel.materialLists[this.tarnsferModel.materialLists.length - 1].material) {
+      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'please Add Material' });
+      return false;
     }
+    //else if (this.material && this.returnModel.materialList[this.returnModel.materialList.length - 1].returnquantity==0) {
+    //  this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'please add return quantity' });
+    //  return false;
+    //}
 
+    else {
+      if (this.tarnsferModel.materialLists.filter(li => li.material == this.material.code && li.material != "0").length > 0) {
+        this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Material already exist' });
+        return false;
+      }
+      //this.transferChange();
+     // if (this.material) {
+        this.tarnsferModel.materialLists[this.tarnsferModel.materialLists.length - 1].material = this.material.code;
+        this.tarnsferModel.materialLists[this.tarnsferModel.materialLists.length - 1].materialdescription = this.material.name;
 
-
+        this.materialistModel = { material: "", materialdescription: "", remarks: " ", transferqty: 0, transfetid: 0, createdby: this.employee.employeeno,projectcode:"" };
+        this.tarnsferModel.materialLists.push(this.materialistModel);
+        this.material = "";
+     // }
+    }
   }
+
 
   
   //open gate pass dialog
@@ -381,7 +396,7 @@ export class MaterialTransferComponent implements OnInit {
     } else {
       //this.gatepassModel.gatepasstype = "0";
       //this.gatepassModel.reasonforgatepass = "0";
-      this.materialistModel = { materialid: "", materialdescription: "", remarks: " ", transfetid: 0, transferqty: 0, createdby: this.employee.employeeno, projectcode: "" };
+      this.materialistModel = { material: "", materialdescription: "", remarks: " ", transfetid: 0, transferqty: 0, createdby: this.employee.employeeno, projectcode: "" };
       this.tarnsferModel.materialLists.push(this.materialistModel);
       this.material = "";
     }
@@ -398,7 +413,7 @@ export class MaterialTransferComponent implements OnInit {
       this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Material already exist' });
       return false;
     }
-    this.materialistModel.materialid = this.material.code;
+    this.materialistModel.material = this.material.code;
     this.materialistModel.materialdescription = this.material.name;
     //if (this.materialistModel.materialid && this.materialistModel.quantity) {
     //  this.wmsService.checkMaterialandQty(this.material.code, this.materialistModel.quantity).subscribe(data => {
@@ -411,7 +426,7 @@ export class MaterialTransferComponent implements OnInit {
   //Delete material for gatepass
   removematerial(id: number, matIndex: number) {
 
-    this.tarnsferModel.materialList.splice(matIndex, 1);
+    this.tarnsferModel.materialLists.splice(matIndex, 1);
     if (id != 0) {
       this.wmsService.deleteGatepassmaterial(id).subscribe(data => {
         //this.gatepassModelList[this.gpIndx].materialList.splice(matIndex, 1);

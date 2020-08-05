@@ -377,7 +377,7 @@ export class materialistModelreturn {
 }
 export class materialistModeltransfer {
   // gatepassmaterialid: string;
-  materialid: string;
+  material: string;
   materialdescription: string;
   transferqty: number = 0;
   remarks: string;

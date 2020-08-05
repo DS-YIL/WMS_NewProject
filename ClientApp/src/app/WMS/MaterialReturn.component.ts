@@ -196,13 +196,14 @@ export class MaterialReturnComponent implements OnInit {
       this.materiallistData[i].requesttype = "return";
       this.returnModel.materialList[i].createdby = this.employee.employeeno;
     }
-    if (this.returnModel.materialList.length == 1) {
-      this.returnModel.materialList[0].material = this.material.code;
-    }
+    //if (this.returnModel.materialList.length == 1) {
+    //  this.returnModel.materialList[0].material = this.material.code;
+    //}
     this.wmsService.UpdateReturnqty(this.returnModel.materialList).subscribe(data => {
+      this.AddDialog = false;
         if (data == 1) {
           this.btnDisable = true;
-          this.AddDialog = false;
+         // this.AddDialog = false;
           this.messageService.add({ severity: 'sucess', summary: 'suceess Message', detail: 'Material Returned' });
         }
     })
