@@ -793,7 +793,7 @@ where reserveupto between current_date and current_date  + interval '3 day' and 
     <value>update wms.wms_stock set availableqty=availableqty+@availableqty where itemid=@itemid</value>
   </data>
   <data name="updatereturnqtyByInvMngr" xml:space="preserve">
-    <value>update wms.wms_returntransfermaterial set confirmstatus='Accepted' where returnid=@returnid</value>
+    <value>update wms.wms_returnmaterial set confirmstatus='Accepted' where returnid=@returnid</value>
   </data>
   <data name="getlistforconfirm" xml:space="preserve">
     <value>select * from wms.wms_returnmaterial returnmat
@@ -805,10 +805,10 @@ where reserveupto between current_date and current_date  + interval '3 day' and 
   where   confirmstatus is null</value>
   </data>
   <data name="getreturndata" xml:space="preserve">
-    <value>select * from wms.wms_returnmaterial</value>
+    <value>select * from wms.wms_returnmaterial where createdby='#createdby'</value>
   </data>
   <data name="gettransferdata" xml:space="preserve">
-    <value>select * from wms.wms_transfermaterial</value>
+    <value>select * from wms.wms_transfermaterial where createdby='#createdby'</value>
   </data>
   <data name="updatetransferdata" xml:space="preserve">
     <value>insert into wms.wms_transfermaterial(transferid,transferqty,createdby,createdon,remarks,projectcode,materialid)values

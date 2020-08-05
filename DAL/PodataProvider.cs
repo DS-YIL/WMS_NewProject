@@ -1469,6 +1469,10 @@ namespace WMS.DAL
 					{
 						query = "select distinct projectcode,projectname from " + Result.tableName + Result.searchCondition + "";
 					}
+					if (Result.tableName == "wms.wms_stock")
+					{
+						query = "select distinct itemlocation from " + Result.tableName + Result.searchCondition + "";
+					}
 					else
 					{
 						query = "select * from " + Result.tableName + Result.searchCondition + "";
@@ -5794,21 +5798,23 @@ namespace WMS.DAL
 					{
 						if (item.returnqty != 0)
 						{
-							string updatereturnqtytostock = WMSResource.updatereturnmaterialToStock.Replace("@availableqty", Convert.ToString(item.returnqty)).Replace("@itemid", Convert.ToString(item.itemid));
-							using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
-							{
-								result = DB.Execute(updatereturnqtytostock, new
-								{
-
-								});
-							}
-						}
-						if (result != 0)
-						{
 							string updatereturnqtytomaterialissue = WMSResource.updatereturnqtyByInvMngr.Replace("@returnid", Convert.ToString(item.returnid));
 							using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
 							{
 								result = DB.Execute(updatereturnqtytomaterialissue, new
+								{
+
+								});
+							}
+
+							
+						}
+						if (result != 0)
+						{
+							string updatereturnqtytostock = WMSResource.updatereturnmaterialToStock.Replace("@availableqty", Convert.ToString(item.returnqty)).Replace("@itemid", Convert.ToString(item.itemid));
+							using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
+							{
+								result = DB.Execute(updatereturnqtytostock, new
 								{
 
 								});
@@ -5885,14 +5891,14 @@ namespace WMS.DAL
 
 		}
 
-		public async Task<IEnumerable<IssueRequestModel>> getreturndata()
+		public async Task<IEnumerable<IssueRequestModel>> getreturndata(string empno)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
 				try
 				{
 					await pgsql.OpenAsync();
-					string query = WMSResource.getreturndata;
+					string query = WMSResource.getreturndata.Replace("#createdby", empno); ;
 					string updatequery = string.Empty;
 					//string updatedon = WMSResource.updatedon;
 					return await pgsql.QueryAsync<IssueRequestModel>(
@@ -5912,14 +5918,14 @@ namespace WMS.DAL
 			}
 		}
 
-			public async Task<IEnumerable<IssueRequestModel>> gettransferdata()
+			public async Task<IEnumerable<IssueRequestModel>> gettransferdata(string empno)
 			{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
 				try
 				{
 					await pgsql.OpenAsync();
-					string query = WMSResource.gettransferdata;
+					string query = WMSResource.gettransferdata.Replace("#createdby",empno);
 					string updatequery = string.Empty;
 					//string updatedon = WMSResource.updatedon;
 					return await pgsql.QueryAsync<IssueRequestModel>(

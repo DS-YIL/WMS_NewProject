@@ -749,7 +749,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select * from wms.wms_returnmaterial.
+        ///   Looks up a localized string similar to select * from wms.wms_returnmaterial where createdby=&apos;#createdby&apos;.
         /// </summary>
         public static string getreturndata {
             get {
@@ -812,7 +812,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select * from wms.wms_transfermaterial.
+        ///   Looks up a localized string similar to select * from wms.wms_transfermaterial where createdby=&apos;#createdby&apos;.
         /// </summary>
         public static string gettransferdata {
             get {
@@ -1407,7 +1407,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to update wms.wms_returntransfermaterial set confirmstatus=&apos;Accepted&apos; where returnid=@returnid.
+        ///   Looks up a localized string similar to update wms.wms_returnmaterial set confirmstatus=&apos;Accepted&apos; where returnid=@returnid.
         /// </summary>
         public static string updatereturnqtyByInvMngr {
             get {

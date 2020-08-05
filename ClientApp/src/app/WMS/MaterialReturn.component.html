@@ -39,11 +39,12 @@
           <th style="text-align:center;width:200px">Material</th>
           <!--<th style="text-align:center">Project Name</th>-->
           <th style="text-align:center;width:150px">Returned On</th>
+          <th style="text-align:center;width:150px">Returnqty</th>
           <th style="text-align:center;width:100px">Status</th>
           <!--<th style="text-align:center;width:100px">Retrun qty</th>-->
           <!--<th style="text-align:center">Requested Quantity</th>
-          <th style="text-align:center">Received Quantity</th>
-          <th style="text-align:center;width:200px">Acknowledge</th>-->
+  <th style="text-align:center">Received Quantity</th>
+  <th style="text-align:center;width:200px">Acknowledge</th>-->
         </tr>
         <tr>
           <!--<th></th>-->
@@ -53,47 +54,51 @@
           <!--<th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'projectname', 'contains')"></th>-->
           <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'material', 'contains')"></th>
           <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'materialdescription', 'contains')"></th>
+          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'materialdescription', 'contains')"></th>
           <!--<th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'requesteddate', 'contains')"></th>-->
           <!--<th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'requestedquantity', 'contains')"></th>-->
           <!--<th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'requestedquantity', 'contains')"></th>
-          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'quotationqty', 'contains')"></th>
-          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'ackremarks', 'contains')"></th>-->
+  <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'quotationqty', 'contains')"></th>
+  <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'ackremarks', 'contains')"></th>-->
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
         <tr>
           <!--<td style="width:70px;text-align:center">
-            <p-radioButton name="select" binary="true" (click)="selectrow(rowData.requestid)"></p-radioButton>
-          </td>-->
+    <p-radioButton name="select" binary="true" (click)="selectrow(rowData.requestid)"></p-radioButton>
+  </td>-->
           <td class="ptable-cell" style="text-align:right;width:70px;">{{ri+1}}</td>
 
           <td class="ptable-cell" style="text-align: center;width: 100px;">
-              {{rowData.returnid}}
-              <!--<button type="button" class="btn btn-link" (click)="showstory(rowData.requestid)" style="padding-left:0px;text-align:center;">{{rowData.returnid}}</button>-->
+            {{rowData.returnid}}
+            <!--<button type="button" class="btn btn-link" (click)="showstory(rowData.requestid)" style="padding-left:0px;text-align:center;">{{rowData.returnid}}</button>-->
           </td>
           <td class="ptable-cell" style="text-align:center;width:200px;">{{rowData.materialid}}</td>
           <!--<td class="ptable-cell" style="text-align:left">{{rowData.materialid}}</td>-->
-          <td class="ptable-cell" style="text-align:center;width:150px;">{{rowData.requesteddate| date :  constants.dateFormat}}</td>
-         
+          <td class="ptable-cell" style="text-align:center;width:150px;">{{rowData.createdon| date :  constants.dateFormat}}</td>
+
           <!--<td class="ptable-cell" style="text-align:right">{{rowData.quotationqty}}</td>
-          <td class="ptable-cell" style="text-align:right">
-            <span *ngIf="rowData.approvedstatus=='approved'">{{rowData.requestedquantity}}</span>-->
+  <td class="ptable-cell" style="text-align:right">
+    <span *ngIf="rowData.approvedstatus=='approved'">{{rowData.requestedquantity}}</span>-->
           <!--<input *ngIf="rowData.approvedstatus!='approved'" pInputText type="number" class="form-control" [(ngModel)]="rowData.requestedquantity" (change)="reqQtyChange(rowData)">-->
           <!--</td>
-          <td class="ptable-cell" style="text-align:right">{{rowData.requestedquantity}}</td>-->
+  <td class="ptable-cell" style="text-align:right">{{rowData.requestedquantity}}</td>-->
+        <td class="ptable-cell" style="text-align:center;width:150px;">
+          {{rowData.returnqty}}
+        </td>
           <td class="ptable-cell" style="text-align:center;width:100px;">
 
-            {{rowData.approvedstatus}}
+            <!--{{rowData.approvedstatus}}-->
             <!--<div *ngIf="rowData.approvedstatus=='approved'" class="form-inline">
 
-              <textarea type="text" style="width:140px" class="form-control" disabled="disabled" [(ngModel)]="rowData.approvedstatus"></textarea>
-            </div>-->
-            <span *ngIf="rowData.ackstatus=='received'">{{rowData.approvedstatus}}</span>
-            <span *ngIf="rowData.approvedstatus==null">Pending</span>
+      <textarea type="text" style="width:140px" class="form-control" disabled="disabled" [(ngModel)]="rowData.approvedstatus"></textarea>
+    </div>-->
+            <span *ngIf="rowData.confirmstatus=='Accepted'">{{rowData.confirmstatus}}</span>
+            <span *ngIf="rowData.confirmstatus==null">Pending</span>
           </td>
           <!--<td class="ptable-cell" style="text-align:center;width:100px;">
-            <input pInputText [disabled]="true" type="number" class="form-control" [(ngModel)]="rowData.returnqty">
-          </td>-->
+    <input pInputText [disabled]="true" type="number" class="form-control" [(ngModel)]="rowData.returnqty">
+  </td>-->
         </tr>
       </ng-template>
     </p-table>

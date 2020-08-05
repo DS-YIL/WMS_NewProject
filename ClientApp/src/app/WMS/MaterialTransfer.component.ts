@@ -67,7 +67,7 @@ export class MaterialTransferComponent implements OnInit {
       }
     });
 
-    this.getMaterialRequestlist();
+    this.getMaterialRequestlist(this.employee.employeeno);
     this.StockModelForm = this.formBuilder.group({
       locatorid: ['', [Validators.required]],
       rackid: ['', [Validators.required]],
@@ -90,9 +90,9 @@ export class MaterialTransferComponent implements OnInit {
   }
 
   //get Material Rquest based on login employee && po no
-  getMaterialRequestlist() {
+  getMaterialRequestlist(employeeno) {
     //this.employee.employeeno = "180129";
-    this.wmsService.gettransferdata().subscribe(data => {
+    this.wmsService.gettransferdata(employeeno).subscribe(data => {
       this.requestList = data;
       this.requestList.forEach(item => {
         if (!item.requestedquantity)
@@ -496,7 +496,7 @@ export class MaterialTransferComponent implements OnInit {
         this.AddDialog = false;
          this.gatepassdialog = false;
         this.messageService.add({ severity: 'success', summary: 'success Message', detail: 'Material tarnsferred' });
-        this.getMaterialRequestlist();
+        this.getMaterialRequestlist(this.employee.employeeno);
       }
 
       else {

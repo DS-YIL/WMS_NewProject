@@ -137,6 +137,7 @@ export class StockModel {
   locatorid: number;
   remarks: string;
   inwardid: number;
+  locatorname: string;
 }
 
 export class locataionDetailsStock {

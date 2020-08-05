@@ -74,7 +74,7 @@ export class MaterialReturnComponent implements OnInit {
   //get Material Rquest based on login employee && po no
   getMaterialRequestlist() {
     //this.employee.employeeno = "180129";
-    this.wmsService.getreturndata().subscribe(data => {
+    this.wmsService.getreturndata(this.employee.employeeno).subscribe(data => {
       this.requestList = data;
       
       //this.requestList.forEach(item => {

@@ -689,14 +689,14 @@ namespace WMS.Controllers
 			return await this._poService.GetReturnmaterialListForConfirm(requestid);
 		}
 		[HttpGet("getreturndata")]
-		public async Task<IEnumerable<IssueRequestModel>> getreturndata()
+		public async Task<IEnumerable<IssueRequestModel>> getreturndata(string empno)
 		{
-			return await this._poService.getreturndata();
+			return await this._poService.getreturndata(empno);
 		}
 		[HttpGet("gettransferdata")]
-		public async Task<IEnumerable<IssueRequestModel>> gettransferdata()
+		public async Task<IEnumerable<IssueRequestModel>> gettransferdata(string empno)
 		{
-			return await this._poService.gettransferdata();
+			return await this._poService.gettransferdata(empno);
 		}
 		[HttpPost("Updatetransferqty")]
 		public int Updatetransferqty([FromBody] List<IssueRequestModel> obj)

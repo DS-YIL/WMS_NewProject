@@ -80,7 +80,30 @@ export class MaterialReturnDashBoardComponent implements OnInit {
   }
   ConfirmReturnmaterial() {
     if (this.materiallistData[0].itemlocation == 'other') {
-      this.StockModel.rackid
+      if (this.StockModel.locatorid == undefined) {
+        this.messageService.add({ severity: 'error', summary: 'error Message', detail: 'Please select store' });
+        return false;
+      }
+     if (this.StockModel.rackid == undefined) {
+        this.messageService.add({ severity: 'error', summary: 'error Message', detail: 'Please select Location' });
+        return false;
+      }
+       if (this.StockModel.rackid == undefined && this.StockModel.binid == undefined) {
+        this.messageService.add({ severity: 'error', summary: 'error Message', detail: 'Please select Rack or Bin' });
+        return false;
+      }
+      if (this.StockModel.rackid != undefined || this.StockModel.rackid != undefined || this.StockModel.binid != undefined) {
+        var bindetails = this.binlist.filter(x => x.binid == this.StockModel.binid);
+        var storedetails = this.locationlists.filter(x => x.locatorid == this.StockModel.locatorid);
+        var rackdetails = this.racklist.filter(x => x.rackid == this.StockModel.rackid);
+       if (this.StockModel.binid == undefined)
+         this.materiallistData[0].itemlocation = storedetails[0].locatorname + "." + rackdetails[0].racknumber;
+       if (this.StockModel.rackid == undefined)
+         this.materiallistData[0].itemlocation = storedetails[0].locatorname + "." + bindetails[0].binnumber;
+       if (this.StockModel.binid != undefined && this.StockModel.rackid != undefined)
+         this.materiallistData[0].itemlocation = storedetails[0].locatorname + "." + rackdetails[0].racknumber + "." + bindetails[0].binnumber;
+      }
+      
     }
       this.wmsService.UpdateReturnmaterialTostock(this.materiallistData).subscribe(data => {
         this.AddDialog = false;

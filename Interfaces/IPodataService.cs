@@ -135,8 +135,8 @@ Task<string> updateonholdrow(updateonhold datamodel);
 		Task<IEnumerable<rbamaster>> getrbadetails();
 
         Task<UserDashboardDetail> getUserDashboarddata();
-        Task<IEnumerable<IssueRequestModel>> getreturndata();
-        Task<IEnumerable<IssueRequestModel>> gettransferdata();
+        Task<IEnumerable<IssueRequestModel>> getreturndata(string empno);
+        Task<IEnumerable<IssueRequestModel>> gettransferdata(string empno);
         int Updatetransferqty(List<IssueRequestModel> _listobj);
     }
 }

@@ -340,6 +340,7 @@ public bool onhold { get; set; }
 		public int transferqty { get; set; }
 		public string projectcode { get; set; }
 		public DateTime createdon { get; set; }
+		public string confirmstatus { get; set; }
 	}
     public class sequencModel
     {
