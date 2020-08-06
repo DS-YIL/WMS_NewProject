@@ -1443,6 +1443,15 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to insert into wms.wms_stock(itemid,materialid,availableqty,createddate,createdby)values(default,@materialid,@availableqty,current_timestamp,@createdby).
+        /// </summary>
+        public static string updatetostockbyinvmanger {
+            get {
+                return ResourceManager.GetString("updatetostockbyinvmanger", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to update wms.wms_stock set availableqty=availableqty+@reservedqty where itemid=@itemid.
         /// </summary>
         public static string updatetostockreserveqty {

@@ -5811,12 +5811,18 @@ namespace WMS.DAL
 						}
 						if (result != 0)
 						{
-							string updatereturnqtytostock = WMSResource.updatereturnmaterialToStock.Replace("@availableqty", Convert.ToString(item.returnqty)).Replace("@itemid", Convert.ToString(item.itemid));
+							int availableqty = item.returnqty;
+							string materialid = item.materialid;
+							string createdby = item.createdby;
+							//string updatereturnqtytostock = WMSResource.updatereturnmaterialToStock.Replace("@availableqty", Convert.ToString(item.returnqty)).Replace("@itemid", Convert.ToString(item.itemid));
+							string updatereturnqtytostock = WMSResource.updatetostockbyinvmanger;
 							using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
 							{
 								result = DB.Execute(updatereturnqtytostock, new
 								{
-
+									availableqty,
+									materialid,
+									createdby
 								});
 							}
 						}

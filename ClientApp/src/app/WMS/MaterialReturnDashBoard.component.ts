@@ -79,7 +79,12 @@ export class MaterialReturnDashBoardComponent implements OnInit {
     });
   }
   ConfirmReturnmaterial() {
-    if (this.materiallistData[0].itemlocation == 'other') {
+    if (this.materiallistData[0].itemlocation == null) {
+      this.messageService.add({ severity: 'error', summary: 'error Message', detail: 'Please select item location' });
+      return false;
+    }
+
+  else if (this.materiallistData[0].itemlocation == 'other') {
       if (this.StockModel.locatorid == undefined) {
         this.messageService.add({ severity: 'error', summary: 'error Message', detail: 'Please select store' });
         return false;
