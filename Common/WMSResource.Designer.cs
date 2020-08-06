@@ -467,7 +467,7 @@ namespace WMS.Common {
         
         /// <summary>
         ///   Looks up a localized string similar to select * from wms.wms_returnmaterial returnmat
-        ///   where returnmat.returnid=#returnid and returnmat.confirmstatus is null.
+        ///   where returnmat.returnid=#returnid .
         /// </summary>
         public static string getlistforconfirm {
             get {

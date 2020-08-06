@@ -58,7 +58,7 @@
     </div>
     <div style="height: 5px; overflow-y: scroll">
 
-      <p-dialog header="Material Return Details" [(visible)]="AddDialog" [contentStyle]="{'overflow-y': 'auto', 'overflow-x': 'hidden', 'max-height': '80vh','min-height':'250px'}" showEffect="fade" [modal]="true" [responsive]="true" [style]="{width: '1024px'}">
+      <p-dialog   *ngIf="AddDialog" header="Material Return Details" [(visible)]="AddDialog" [contentStyle]="{'overflow-y': 'auto', 'overflow-x': 'hidden', 'max-height': '80vh','min-height':'250px'}" showEffect="fade" [modal]="true" [responsive]="true" [style]="{width: '1024px'}">
         <div *ngIf="showdialog">
           <div class="row  pl-0">
             <div  class="col-lg-4 col-md-4 col-sm-4 pt-2 labelheading">
@@ -147,7 +147,7 @@
         
         </p-table>
         <p-footer>
-          <button type="button" class="btn btn-primary" [disabled]="btnDisable" (click)="ConfirmReturnmaterial()">Confirm</button>
+          <button type="button" class="btn btn-primary" *ngIf="materiallistData[0].confirmstatus==null" [disabled]="btnDisable" (click)="ConfirmReturnmaterial()">Confirm</button>
           <!--<div class="ui-dialog-buttonpane ui-helper-clearfix">
           <button type="button" pButton icon="fa fa-check" class="ui-button-success" (click)="Cancel()" label="OK"></button>
           <button type="button" pButton icon="fa fa-close" class="ui-button-danger" (click)="Cancel()" label="Cancel"></button>
