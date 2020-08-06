@@ -5641,7 +5641,10 @@ namespace WMS.DAL
 
 			}
 		}
-
+/// <summary>
+/// Updating reserve material back to stock
+/// </summary>
+/// <returns></returns>
 		public int UpdateMaterialReserve()
 		{
 			int result = 0;
@@ -5744,7 +5747,11 @@ namespace WMS.DAL
 			return objstock;
 
 		}
-
+/// <summary>
+/// inserting the data to retrunmaterial by pm
+/// </summary>
+/// <param name="_listobj"></param>
+/// <returns></returns>
 		public int UpdateReturnqty(List<IssueRequestModel> _listobj)
 		{
 			int result = 0;
@@ -5786,7 +5793,11 @@ namespace WMS.DAL
 			}
 			return result;
 		}
-
+		/// <summary>
+		/// update the status and confirm by inv manager for return matarial
+		/// </summary>
+		/// <param name="model"></param>
+		/// <returns></returns>
 		public int UpdateReturnmaterialTostock(List<IssueRequestModel> model)
 		{
 			int result = 0;
@@ -5837,7 +5848,10 @@ namespace WMS.DAL
 			}
 			return result;
 		}
-
+		/// <summary>
+		/// onload to display the returned already by PM
+		/// </summary>
+		/// <returns></returns>
 		public async Task<IEnumerable<IssueRequestModel>> GetReturnmaterialList()
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -5867,7 +5881,11 @@ namespace WMS.DAL
 
 
 		}
-
+		/// <summary>
+		/// based on request/return id we will get details for confirm
+		/// </summary>
+		/// <param name="requestid"></param>
+		/// <returns></returns>
 		public async Task<IEnumerable<IssueRequestModel>> GetReturnmaterialListForConfirm(string requestid)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -5897,7 +5915,11 @@ namespace WMS.DAL
 
 
 		}
-
+		/// <summary>
+		/// getreturn data by empno
+		/// </summary>
+		/// <param name="empno"></param>
+		/// <returns></returns>
 		public async Task<IEnumerable<IssueRequestModel>> getreturndata(string empno)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -5924,7 +5946,11 @@ namespace WMS.DAL
 				}
 			}
 		}
-
+		/// <summary>
+		/// get transferred data based on login id
+		/// </summary>
+		/// <param name="empno"></param>
+		/// <returns></returns>
 			public async Task<IEnumerable<IssueRequestModel>> gettransferdata(string empno)
 			{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -5951,7 +5977,11 @@ namespace WMS.DAL
 				}
 			}
 		}
-
+		/// <summary>
+		/// update/insert transfer material details
+		/// </summary>
+		/// <param name="_listobj"></param>
+		/// <returns></returns>
 		public int Updatetransferqty(List<IssueRequestModel> _listobj)
 		{
 			int result = 0;
