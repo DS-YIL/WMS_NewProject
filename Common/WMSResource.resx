@@ -802,7 +802,7 @@ where reserveupto between current_date and current_date  + interval '3 day' and 
   <data name="GetreturnList" xml:space="preserve">
     <value>select * from wms.wms_returnmaterial reqtrasnfer 
   left join wms.employee emp on emp.employeeno=reqtrasnfer.createdby
-  where   confirmstatus is null</value>
+  </value>
   </data>
   <data name="getreturndata" xml:space="preserve">
     <value>select * from wms.wms_returnmaterial where createdby='#createdby'</value>

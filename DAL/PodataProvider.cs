@@ -5822,7 +5822,7 @@ namespace WMS.DAL
 								{
 									availableqty,
 									materialid,
-									createdby
+									
 								});
 							}
 						}

@@ -760,7 +760,7 @@ namespace WMS.Common {
         /// <summary>
         ///   Looks up a localized string similar to select * from wms.wms_returnmaterial reqtrasnfer 
         ///  left join wms.employee emp on emp.employeeno=reqtrasnfer.createdby
-        ///  where   confirmstatus is null.
+        ///  .
         /// </summary>
         public static string GetreturnList {
             get {

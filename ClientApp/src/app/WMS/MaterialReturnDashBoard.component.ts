@@ -16,6 +16,7 @@ export class MaterialReturnDashBoardComponent implements OnInit {
   binid: any;
   rackid: any;
   locatorid: any;
+    selectedStatus: any;
   constructor(private formBuilder: FormBuilder, private messageService: MessageService, private wmsService: wmsService, private route: ActivatedRoute, private router: Router, public constants: constants, private spinner: NgxSpinnerService) { }
   AddDialog: boolean;
   showdialog: boolean;
@@ -37,6 +38,7 @@ export class MaterialReturnDashBoardComponent implements OnInit {
 
   public MaterialRequestForm: FormGroup
   public materialIssueList: Array<any> = [];
+  public materialacceptListnofilter: Array<any> = [];
   public employee: Employee;
   public displayItemRequestDialog; RequestDetailsSubmitted: boolean = false;
   public materialRequestDetails: materialRequestDetails;
@@ -55,7 +57,8 @@ export class MaterialReturnDashBoardComponent implements OnInit {
   getMaterialIssueList() {
     //this.employee.employeeno = "400095";
     this.wmsService.GetReturnmaterialList().subscribe(data => {
-      this.materialIssueList = data;
+      this.materialacceptListnofilter = data;
+      this.materialIssueList = this.materialacceptListnofilter.filter(li => li.confirmstatus==null);
       //this.materialIssueList = data.filter(li=>li.requesttype=='return');
      
     });
@@ -194,5 +197,17 @@ export class MaterialReturnDashBoardComponent implements OnInit {
     }
     this.materiallistData[indexid].itemlocation = value;
     // (<HTMLInputElement>document.getElementById(indexid)).value = event.toString();
+  }
+  onSelectStatus(event) {
+    this.selectedStatus = event.target.value;
+
+  }
+  SubmitStatus() {
+    if (this.selectedStatus == "Pending") {
+      this.materialIssueList = this.materialacceptListnofilter.filter(li => li.confirmstatus == null);
+    }
+    else if (this.selectedStatus == "Accepted") {
+      this.materialIssueList = this.materialacceptListnofilter.filter(li => li.confirmstatus == 'Accepted');
+    }
   }
 }
