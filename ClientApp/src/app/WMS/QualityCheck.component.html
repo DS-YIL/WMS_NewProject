@@ -26,6 +26,33 @@
 </div>-->
 <div style="margin:10px;">
   <div class="card" style="width:100%;border-radius:10px; box-shadow:5px 10px #888888;">
+    <div class="card-header">
+      <div class="row " style="    margin-top: 10px;
+    margin-left: 0px !important;
+    margin-right: 0px !important">
+        <div class="col-lg-5 col-md-5 form-inline">
+          <!--<label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">GRN No: </label>&nbsp;&nbsp;-->
+          <!--<input class="form-control" type="text" [(ngModel)]="PoDetails.grnnumber">&nbsp;&nbsp;&nbsp;&nbsp;-->
+          <!--<p-dropdown [options]="checkedgrnlist" appendTo="body" [(ngModel)]="selectedgrn" [showClear]="true" [style]="{'width':'250px'}" filter="true" placeholder="Select GRN" optionLabel="text"></p-dropdown>-->
+          <label class="labelheading">Pending for Quality Check:</label>&nbsp;
+          <p-autoComplete [(ngModel)]="selectedgrnno" appendTo="body" [suggestions]="filteredgrns" (onSelect)="getqualitydetails()" (change)="getqualitydetails()" placeholder="search by supplier/GRN No" [ngModelOptions]="{standalone: true}" [forceSelection]="false" (completeMethod)="filtergrn($event)" [size]="30"
+                          [dropdown]="true">
+          </p-autoComplete>
+
+        </div>
+
+        <div class="col-md-2 col-lg-2  pt-2 labelheading" *ngIf="podetailsList.length>0">
+          PO No : <span class="labeltext">{{podetailsList[0].pono}}</span>
+        </div>
+        <div class="col-md-2 col-lg-2 pt-2 labelheading" style="font-weight:600;font-size:14px;color:darkblue;" *ngIf="podetailsList.length>0">
+          Invoice No : <span class="labeltext">{{podetailsList[0].invoiceno}}</span>
+        </div>
+        <div class="col-md-3 col-lg-3 pt-2 labelheading" style="font-weight:600;font-size:14px;color:darkblue;" *ngIf="podetailsList.length>0">
+          WMS GRN No : <span class="labeltext">{{podetailsList[0].grnnumber}}</span>
+        </div>
+      </div>
+
+    </div>
     <!--<div class="card-header cardheadertext text-center"><i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;Quality Check</div>-->
     <div class="card-body">
       <!--<div class="row">
@@ -61,24 +88,23 @@
               <!--<th style="text-align:center">Project Name</th>-->
               <th style="text-align:center;width:10%;">Material</th>
               <th style="text-align:center;">Material Description</th>
-              <th style="text-align:center;width:15%;">WMS GRN No</th>
               <th style="text-align:center;width:10%;">Received Qty</th>
               <th style="text-align: center;width:10%;">Quality Passed</th>
               <th style="text-align:center;width:10%;">Quality Failed</th>
               <th style="text-align:center;width:15%;">Remarks</th>
             </tr>
             <tr>
-              <th></th>
+              <!--<th></th>-->
               <!--<th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'pono', 'contains')"></th>
             <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'invoiceno', 'contains')"></th>-->
               <!--<th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'projectname', 'contains')"></th>-->
-              <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'material', 'contains')"></th>
+              <!--<th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'material', 'contains')"></th>
               <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'materialdescription', 'contains')"></th>
               <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'grnnumber', 'contains')"></th>
               <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'receivedqty', 'contains')"></th>
               <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'qualitypassedqty', 'contains')"></th>
               <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'qualityfailedqty', 'contains')"></th>
-              <th></th>
+              <th></th>-->
             </tr>
           </ng-template>
           <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
@@ -97,7 +123,6 @@
                 <span *ngIf="rowData.materialdescription">{{rowData.materialdescription}}</span>
                 <span *ngIf="!rowData.materialdescription">-</span>
               </td>
-              <td class="ptable-cell" style="text-align:center;width:15%;">{{rowData.grnnumber}}</td>
               <td class="ptable-cell" style="text-align:right;width:10%;">
                 <span>{{rowData.receivedqty}}</span>
               </td>

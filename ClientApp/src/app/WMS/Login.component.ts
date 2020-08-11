@@ -78,6 +78,17 @@ export class LoginComponent implements OnInit {
     })
   }
 
+
+  getallroles() {
+
+    this.wmsService.getuserroleList(this.employee.employeeno).subscribe(data => {
+      if (data.length > 0) {
+        localStorage.setItem('allroles', JSON.stringify(data));
+      }
+    })
+
+  }
+
   //Login
   Login() {
     debugger;
@@ -124,6 +135,7 @@ export class LoginComponent implements OnInit {
               
             }
             else {
+              this.getallroles();
               this.wmsService.getuserAcessList(this.employee.employeeno, this.LoginForm.value.roleid).subscribe(data => {
                 if (data.length > 0) {
                   this.AcessNameList = data;

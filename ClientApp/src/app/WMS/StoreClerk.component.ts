@@ -56,6 +56,7 @@ export class StoreClerkComponent implements OnInit {
   lblinvoiceno: string = "";
   filteredgrns: any[];
   filteredmats: any[];
+  displayBasic: boolean = false;
  
  
   ngOnInit() {
@@ -352,6 +353,22 @@ export class StoreClerkComponent implements OnInit {
       this.showpodata();
     }
   }
+
+  onholdchange(event: any) {
+    debugger;
+    if (event.target.checked) {
+        this.podetailsList.forEach(item => {
+          item.receivedqty = '0';
+          item.receiveremarks = "";
+        });
+      this.displayBasic = true;
+    }
+    else {
+      this.onholdremarks = "";
+      this.displayBasic = false;
+    }
+   
+  }
   getponodetails(data) {
     debugger;
     this.isnonpoentry = false;
@@ -375,7 +392,10 @@ export class StoreClerkComponent implements OnInit {
         this.lblpono = this.podetailsList[0].pono;
         this.lblinvoiceno = this.podetailsList[0].invoiceno;
         this.grnnumber = this.podetailsList[0].grnnumber;
-        if (pono.startsWith("NP") && !this.grnnumber) {
+        this.isonHold = this.podetailsList[0].onhold;
+        this.isonHoldview = this.podetailsList[0].onhold;
+        this.onholdremarks = this.podetailsList[0].onholdremarks;
+        if (pono.startsWith("NP") && !this.grnnumber && !this.isonHold) {
           this.isnonpoentry = true;
         }
         if (pono.startsWith("NP")) {
@@ -390,9 +410,7 @@ export class StoreClerkComponent implements OnInit {
         }
         
        
-        this.isonHold = this.podetailsList[0].onhold;
-        this.isonHoldview = this.podetailsList[0].onhold;
-        this.onholdremarks = this.podetailsList[0].onholdremarks;
+       
        
 
         debugger;
@@ -526,12 +544,12 @@ export class StoreClerkComponent implements OnInit {
 
         }
         if (data == null) {
-          pg.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Something went wrong' });
+          pg.messageService.add({ severity: 'error', summary: '', detail: 'Something went wrong' });
         }
 
         if (data) {
 
-          pg.messageService.add({ severity: 'success', summary: 'Success Message', detail: 'Materials Accepted' });
+          pg.messageService.add({ severity: 'success', summary: '', detail: 'Materials Accepted' });
 
         }
         pg.resetpage();
@@ -554,31 +572,34 @@ export class StoreClerkComponent implements OnInit {
         return;
       }
       this.inwardModel.pono = this.PoDetails.pono;
-      if (this.inwardModel.pono.startsWith("NP")) {
-        var invalidrcv = this.podetailsList.filter(function (element, index) {
-          return (element.receivedqty == "0");
-        });
-        if (invalidrcv.length > 0) {
-          this.messageService.add({ severity: 'error', summary: '', detail: 'Enter Received quantity' });
-          return;
+      if (!this.isonHoldview) {
+        if (this.inwardModel.pono.startsWith("NP")) {
+          var invalidrcv = this.podetailsList.filter(function (element, index) {
+            return (element.receivedqty == "0");
+          });
+          if (invalidrcv.length > 0) {
+            this.messageService.add({ severity: 'error', summary: '', detail: 'Enter Received quantity' });
+            return;
+          }
         }
-      }
-      else {
-        var invalidrcv = this.podetailsList.filter(function (element, index) {
+        else {
+          var invalidrcv = this.podetailsList.filter(function (element, index) {
+            return (element.receivedqty != "0");
+          });
+          if (invalidrcv.length == 0) {
+            this.messageService.add({ severity: 'error', summary: '', detail: 'Enter Received quantity' });
+            return;
+          }
+
+        }
+
+        this.podetailsList = this.podetailsList.filter(function (element, index) {
           return (element.receivedqty != "0");
         });
-        if (invalidrcv.length == 0) {
-          this.messageService.add({ severity: 'error', summary: '', detail: 'Enter Received quantity' });
-          return;
-        }
+
 
       }
-
-      this.podetailsList = this.podetailsList.filter(function (element, index) {
-        return (element.receivedqty != "0");
-      });
-
-      
+     
       this.spinner.show();
       // this.onVerifyDetails(this.podetailsList);
     
@@ -589,20 +610,34 @@ export class StoreClerkComponent implements OnInit {
         item.onhold = this.isonHoldview;
         item.onholdremarks = this.onholdremarks;
       });
+
         this.wmsService.insertitems(this.podetailsList).subscribe(data => {
           if (data != null) {
-            this.wmsService.verifythreewaymatch(this.PoDetails.pono).subscribe(info => {
-              this.spinner.hide();
+            if (!this.isonHoldview) {
+              this.wmsService.verifythreewaymatch(this.PoDetails.pono).subscribe(info => {
+                this.spinner.hide();
 
-              if (info != null) {
-                this.resetpage();
-                this.messageService.add({ severity: 'success', summary: '', detail: 'Goods received' });
+                if (info != null) {
+                  this.resetpage();
+                  this.messageService.add({ severity: 'success', summary: '', detail: 'Goods received' });
+                }
+                else {
+                  this.messageService.add({ severity: 'success', summary: '', detail: 'Something went wrong while creating GRN' });
+                }
+
+              })
+
+            }
+            else {
+              this.resetpage();
+              var messaged = "Goods received";
+              if (this.isonHoldview) {
+                messaged = "Receipt on hold"
               }
-              else {
-                this.messageService.add({ severity: 'success', summary: '', detail: 'Something went wrong while creating GRN' });
-              }
-               
-            })
+              this.messageService.add({ severity: 'success', summary: '', detail: messaged });
+              this.spinner.hide();
+            }
+            
           }
           if (data == null) {
             this.spinner.hide();

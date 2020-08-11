@@ -46,6 +46,9 @@ import { StockCardPrintComponent } from './WMS/StockCardPrint.component';
 import { MailresponseComponent } from './WMS/Mailresponse.component';
 import { MaterialTransferComponent } from './WMS/MaterialTransfer.component';
 import { MaterialReturnComponent } from './WMS/MaterialReturn.component';
+import { HoldGRViewComponent } from './WMS/HoldGRView.component';
+import { MRNViewComponent } from './WMS/MRNView.component';
+import { ASNViewComponent } from './WMS/ASNView.component';
 const routes: Routes = [{
   path: 'WMS',
   children: [
@@ -107,10 +110,9 @@ const routes: Routes = [{
     { path: "Mailresponse", component: MailresponseComponent, canActivate: [AuthGuard] },
     { path: "MaterialTransfer", component: MaterialTransferComponent, canActivate: [AuthGuard] },
     { path: "MaterialReturnfromPm", component: MaterialReturnComponent, canActivate: [AuthGuard] },
-    
-    
-
-    
+    { path: "HoldGRView", component: HoldGRViewComponent, canActivate: [AuthGuard] },
+    { path: "MRNView", component: MRNViewComponent, canActivate: [AuthGuard] },
+    { path: "ASNView", component: ASNViewComponent, canActivate: [AuthGuard] },  
   ]
 
 },

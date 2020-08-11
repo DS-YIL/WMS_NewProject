@@ -1,0 +1,174 @@
+
+<div style="margin:10px;">
+  <div class="card" style="width:100%;border-radius:10px; box-shadow:5px 10px #888888;">
+    <div class="card-header">
+      <label class="labelheading">Status :</label>&nbsp;&nbsp;
+      <select [(ngModel)]="grstatus" (change)="getholdgrdetails()">
+        <option value="hold" selected="selected">On hold</option>
+        <option value="accepted">Accepted</option>
+        <option value="returned">Returned</option>
+      </select>
+
+    </div>
+    <!--<div class="card-header">
+      <div class="row " style="    margin-top: 10px;
+    margin-left: 0px !important;
+    margin-right: 0px !important">
+        <div class="col-lg-5 col-md-5 form-inline">
+          <label class="labelheading">Holded GR's:</label>&nbsp;
+          <p-autoComplete [(ngModel)]="selectedgrnno" appendTo="body" [suggestions]="filteredgrns" (onSelect)="getholdgrdetails()" (change)="getholdgrdetails()" placeholder="search by supplier/GRN No" [ngModelOptions]="{standalone: true}" [forceSelection]="false" (completeMethod)="filtergrn($event)" [size]="30"
+                          [dropdown]="true">
+          </p-autoComplete>
+
+        </div>
+
+        <div class="col-md-2 col-lg-2  pt-2 labelheading" *ngIf="podetailsList.length>0">
+          PO No : <span class="labeltext">{{podetailsList[0].pono}}</span>
+        </div>
+        <div class="col-md-2 col-lg-2 pt-2 labelheading" style="font-weight:600;font-size:14px;color:darkblue;" *ngIf="podetailsList.length>0">
+          Invoice No : <span class="labeltext">{{podetailsList[0].invoiceno}}</span>
+        </div>
+        <div class="col-md-3 col-lg-3 pt-2 labelheading" style="font-weight:600;font-size:14px;color:darkblue;" *ngIf="podetailsList.length>0">
+           Remarks : <span class="labeltext">{{podetailsList[0].onholdremarks}}</span>
+        </div>
+      </div>
+
+    </div>-->
+    <div class="card-body">
+
+      <div class="row" style="max-width:100%;position: relative; margin-top:5px;margin-left:3px;">
+        <p-table #dt [value]="filteredpodetailsList" [style]="{'width':'100%','overflow':'auto!important'}"
+                 [responsive]="true" [rows]="10"
+                 [resizableColumns]="true"
+                 columnResizeMode="expand"
+                 [scrollable]="true" scrollHeight="50vh"
+                 appendTo="body">
+          <ng-template pTemplate="header">
+            <tr class="mprltbldata">
+              <th style="text-align:center;width:5%;">Sl.No.</th>
+              <th style="text-align:center;width:15%;">PONo</th>
+              <th style="text-align:center;;width:15%;">Invoice No</th>
+              <th style="text-align:center;width:30%;">Supplier</th>
+              <th style="text-align:center;width:20%;" *ngIf="grstatus === 'hold'">Received By</th>
+              <th style="text-align:center;width:15%;" *ngIf="grstatus === 'hold'">Received On</th>
+              <th style="text-align:center;width:20%;" *ngIf="grstatus != 'hold'">{{tempcol1}}</th>
+              <th style="text-align:center;width:15%;" *ngIf="grstatus != 'hold'">{{tempcol2}}</th>
+            </tr>
+            <tr>
+              <th></th>
+              <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'pono', 'startsWith')"></th>
+              <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'invoiceno', 'startsWith')"></th>
+              <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'vendorname', 'startsWith')"></th>
+              <th *ngIf="grstatus === 'hold'"> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'receivedby', 'contains')"></th>
+              <th *ngIf="grstatus === 'hold'"> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'receiveddate', 'contains')"></th>
+              <th *ngIf="grstatus != 'hold'"> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'unholdedby', 'contains')"></th>
+              <th *ngIf="grstatus != 'hold'"> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'unholdedon', 'contains')"></th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
+            <tr>
+              <td class="ptable-cell" style="text-align:right;width:5%;">{{ri+1}}</td>
+              <td class="ptable-cell" style="text-align:center;width:15%;">
+                <span class="text-primary" style="text-decoration:underline" (click)="showgrdetail(rowData)">{{rowData.pono}}</span>
+              </td>
+              <td class="ptable-cell" style="text-align:center;width:15%;">
+                {{rowData.invoiceno}}
+              </td>
+              <td class="ptable-cell" style="text-align:left;width:30%;">
+                <span>{{rowData.vendorname}}</span>
+              </td>
+              <td class="ptable-cell" style="text-align:left;width:20%;" *ngIf="grstatus === 'hold'">
+                <span>{{rowData.receivedby}}</span>
+              </td>
+              <td class="ptable-cell" style="text-align:center;width:15%;" *ngIf="grstatus === 'hold'">
+                <span>{{rowData.receiveddate | date : 'dd/MM/yy'}}</span>
+              </td>
+              <td class="ptable-cell" style="text-align:left;width:20%;" *ngIf="grstatus != 'hold'">
+                <span>{{rowData.unholdedby}}</span>
+              </td>
+              <td class="ptable-cell" style="text-align:center;width:15%;" *ngIf="grstatus != 'hold'">
+                <span>{{rowData.unholdedon | date : 'dd/MM/yy'}}</span>
+              </td>
+
+
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+
+
+
+
+    </div>
+    <!--<div class="card-footer" *ngIf="podetailsList.length">
+      <button type="button" class="btn btn-success" style="margin-left:45%">Submit</button>
+    </div>-->
+  </div>
+
+</div>
+<p-dialog header="Material Details" [(visible)]="showdetail" (onHide)="hideDG()" [modal]="true" [style]="{width: '80vw'}" [maximizable]="true" [baseZIndex]="10000"
+          [draggable]="true" [resizable]="false">
+  <div class="row  pl-0">
+    <div class="col-lg-2 col-md-2 labelheading">
+      <label>PO No :</label>&nbsp;<span><label class="labeltext">{{dtpono}}</label></span>
+    </div>
+    <div class="col-lg-2 col-md-2 labelheading">
+      <label>Invoice No :</label>&nbsp;<span><label class="labeltext">{{dtinvoiceno}}</label></span>
+    </div>
+    <div class="col-lg-5 col-md-5 labelheading form-inline">
+      <label>Supplier :</label>&nbsp;<span><label class="labeltext">{{dtvendorname}}</label></span>
+    </div>
+    <div class="col-lg-3 col-md-3 labelheading" *ngIf="grstatus === 'hold'">
+      <div class="ui-g" style="width:100%;">
+        <div class="ui-g-6"><p-radioButton name="group1" value="1" label="Accept" [(ngModel)]="graction" inputId="opt1"></p-radioButton></div>
+        <div class="ui-g-6"><p-radioButton name="group1" value="0" label="Return" [(ngModel)]="graction" inputId="opt1"></p-radioButton></div>
+      </div>
+    </div>
+
+
+  </div>
+  <div class="row  pl-0" *ngIf="grstatus === 'hold'">
+    <div class="col-lg-4 col-md-4 labelheading" >
+      <textarea placeholder="Remarks" style="width:100%" [(ngModel)]="unholdremarks"></textarea>
+    </div>
+    
+
+
+  </div>
+
+  <p-table #dt [value]="filteredpomatdetailsList" [style]="{'width':'100%','overflow':'auto!important'}"
+           [responsive]="true" [rows]="10"
+           [resizableColumns]="true"
+           appendTo="body">
+    <ng-template pTemplate="header">
+      <tr class="mprltbldata">
+        <th style="text-align:center;width:5%;">Sl.No.</th>
+        <th style="text-align:center;width:20%;">Material</th>
+        <th style="text-align:center;">Material Description</th>
+       
+      </tr>
+
+    </ng-template>
+    <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
+      <tr>
+        <td class="ptable-cell" style="text-align:right;width:5%;">{{ri+1}}</td>
+        <td class="ptable-cell" style="text-align:center;width:20%;">
+          {{rowData.material}}
+        </td>
+        <td class="ptable-cell" style="text-align:left;">
+          {{rowData.materialdescription}}
+        </td>
+      
+
+      </tr>
+    </ng-template>
+  </p-table>
+
+
+  <p-footer>
+    <button type="button" *ngIf="grstatus === 'hold'" pButton icon="pi pi-check" (click)="update()" label="Submit" class="ui-button-success"></button>
+    <button type="button" pButton icon="pi pi-times" (click)="showdetail=false" label="Close" class="ui-button-danger"></button>
+  </p-footer>
+</p-dialog>
+
+

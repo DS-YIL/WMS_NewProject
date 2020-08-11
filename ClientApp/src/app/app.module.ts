@@ -76,6 +76,9 @@ import { StockCardPrintComponent } from './WMS/StockCardPrint.component';
 import { MailresponseComponent } from './WMS/Mailresponse.component';
 import { MaterialTransferComponent } from './WMS/MaterialTransfer.component'
 import { MaterialReturnComponent } from './WMS/MaterialReturn.component'
+import { HoldGRViewComponent } from './WMS/HoldGRView.component'
+import { MRNViewComponent } from './WMS/MRNView.component'
+import { ASNViewComponent } from './WMS/ASNView.component'
 ////pages
 import { LoginComponent } from './WMS/Login.component';
 import {HomeComponent} from './WMS/Home.component';
@@ -140,7 +143,10 @@ import { FileUploadModule } from 'primeng/fileupload';
     StockCardPrintComponent,
     MailresponseComponent,
     MaterialTransferComponent,
-    MaterialReturnComponent
+    MaterialReturnComponent,
+    HoldGRViewComponent,
+    MRNViewComponent,
+    ASNViewComponent
 
   ],
   imports: [

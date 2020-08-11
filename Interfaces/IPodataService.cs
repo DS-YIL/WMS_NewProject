@@ -31,7 +31,8 @@ namespace WMS.Interfaces
         string InsertBarcodeInfo(BarcodeModel dataobj);
         //int insertInvoicedetails(iwardmasterModel obj);
         Task<IEnumerable<T>> GetDeatilsForthreeWaymatching(string invoiceno,string pono,bool isgrn, string grnno);
-        Task<IEnumerable<T>> Getqualitydetails();
+        Task<IEnumerable<T>> GetDeatilsForholdgr(string status);
+        Task<IEnumerable<T>> Getqualitydetails(string grnnumber);
         Task<OpenPoModel> VerifythreeWay(string pono,string invoiceno);
         Task<string> insertquantity(List<inwardModel> datamodel);
         Task<string> receivequantity(List<inwardModel> datamodel);
@@ -84,6 +85,7 @@ Task<string> updateonholdrow(updateonhold datamodel);
         ReportModel checkloldestmaterial(string materialid,string createddate);
         int FIFOitemsupdate(List<FIFOModel> model);
         Task<IEnumerable<OpenPoModel>> getASNList(string deliverdate);
+        Task<IEnumerable<OpenPoModel>> getASNListdata();
         Task<IEnumerable<IssueRequestModel>> GetItemlocationListBymterial(string material);
         int updateissuedmaterial(List<IssueRequestModel> obj);
         int assignRole(authUser authuser);
@@ -123,11 +125,17 @@ Task<string> updateonholdrow(updateonhold datamodel);
         Task<IEnumerable<ddlmodel>> getdepartmentmasterdata();
         Task<IEnumerable<ddlmodel>> getgrnlistforacceptance();
         Task<IEnumerable<ddlmodel>> getgrnlistforacceptanceputaway();
+
+        Task<IEnumerable<ddlmodel>> getholdgrlist();
+        Task<IEnumerable<ddlmodel>> getgrnlistforacceptanceqc();
         Task<IEnumerable<gatepassModel>> NonreturnGetgatepassList(string type);
         int UpdateMaterialReserve();
         int UpdateReturnqty(List<IssueRequestModel> _listobj);
         int UpdateReturnmaterialTostock(List<IssueRequestModel> model);
-		 int GatepassapproveByMail(gatepassModel model);
+
+        int UnholdGRdata(UnholdGRModel model);
+        int mrnupdate(MRNsavemodel model);
+        int GatepassapproveByMail(gatepassModel model);
         Task<IEnumerable<pageModel>> Getpagesbyroleid(int roleid);
         Task<IEnumerable<pageModel>> Getpages();
         Task<IEnumerable<IssueRequestModel>> GetReturnmaterialList();
@@ -138,5 +146,14 @@ Task<string> updateonholdrow(updateonhold datamodel);
         Task<IEnumerable<IssueRequestModel>> getreturndata(string empno);
         Task<IEnumerable<IssueRequestModel>> gettransferdata(string empno);
         int Updatetransferqty(List<IssueRequestModel> _listobj);
+		  Task<IEnumerable<UserDashboardGraphModel>> getUserdashboardgraphdata();
+
+        Task<IEnumerable<UserDashboardGraphModel>> getWeeklyUserdashboardgraphdata();
+
+        Task<IEnumerable<UserDashboardGraphModel>> getmonthlyUserdashboardgraphdata();
+
+        string updateputawayfilename(string filename);
+
+        Task<IEnumerable<ddlmodel>> getprojectlist();
     }
 }

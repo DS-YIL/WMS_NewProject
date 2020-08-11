@@ -247,7 +247,9 @@ max(req.ackremarks)as ackremarks,CASE WHEN max(req.ackremarks) IS NULL THEN fals
   </data>
   <data name="queryforitemdetails" xml:space="preserve">
     <value>select inwa.inwardid,bin.binnumber, rack.racknumber, loc.locatorname,mat.rackid,mat.binid,
- mat.storeid,stocks.itemlocation,stocks.availableqty,stocks.itemid,inw.grnnumber,inw.pono,inw.invoiceno,inw.receiveddate,inwa.materialqty,inwa.materialid as material,mat.materialdescription,inwa.receivedqty,inwa.confirmqty,inwa.returnqty 
+ mat.storeid,stocks.itemlocation,stocks.availableqty,stocks.itemid,inw.grnnumber,inw.pono,inw.invoiceno,inw.receiveddate,
+ inw.isdirecttransferred,inw.projectcode,emp.name as mrnby,inw.mrnon,inw.mrnremarks,
+ inwa.materialqty,inwa.materialid as material,mat.materialdescription,inwa.receivedqty,inwa.confirmqty,inwa.returnqty 
  from wms.wms_securityinward inw
 left join wms.wms_storeinward inwa on inw.inwmasterid=inwa.inwmasterid
 left join wms.wms_stock stocks on  stocks.inwardid=inwa.inwardid
@@ -255,6 +257,7 @@ left join wms.wms_stock stocks on  stocks.inwardid=inwa.inwardid
  left join wms.wms_rd_locator loc on loc.locatorid=mat.storeid
  left join wms.wms_rd_rack rack on rack.rackid=mat.rackid
  left join wms.wms_rd_bin bin on bin.binid=mat.binid
+ left outer join wms.employee emp on emp.employeeno=inw.mrnby
  where inw.grnnumber='#grnnumber'</value>
   </data>
   <data name="statusupdatebySecurity" xml:space="preserve">
@@ -406,7 +409,7 @@ where stockstatus='active' and sk.deleteflag=false and availableqty!=0</value>
     <value>update wms.wms_stock set availableqty=#availableqty where itemid=#itemid</value>
   </data>
   <data name="getASNList" xml:space="preserve">
-    <value>select asno.pono, asno.asn,po.suppliername as vendorname from wms.wms_asn asno left outer join wms.wms_polist po
+    <value>select asno.pono, asno.asn,po.suppliername as vendorname,asno.deliverydate from wms.wms_asn asno left outer join wms.wms_polist po
 on asno.pono = po.pono</value>
   </data>
   <data name="updatecyclecountconfig" xml:space="preserve">
@@ -589,12 +592,12 @@ values(default,@pono,@itemid,@gatepassmaterialid,@itemissueddate,@itemreceiverid
     <value>UPDATE  wms.wms_storeinward set  qualitypassedqty=@qualitypassedqty,qualityfailedqty = @qualityfailedqty,checkedby = @receivedby,checkedon=current_date,remarks=@remarks where inwardid =#inwardid</value>
   </data>
   <data name="getdataforqualitydetails" xml:space="preserve">
-    <value>select stinw.inwardid,stinw.inwmasterid,stinw.materialid as material,secinw.grnnumber,secinw.onhold,mat.materialdescription,stinw.receivedqty,stinw.receiveddate,stinw.returnqty,qc.qualitypassedqty,qc.qualityfailedqty,qc.remarks,qc.qcby as checkedby
+    <value>select stinw.inwardid,stinw.inwmasterid,stinw.materialid as material,secinw.grnnumber,secinw.pono,secinw.invoiceno,secinw.onhold,mat.materialdescription,stinw.receivedqty,stinw.receiveddate,stinw.returnqty,qc.qualitypassedqty,qc.qualityfailedqty,qc.remarks,qc.qcby as checkedby
   from wms.wms_storeinward stinw
   left outer join wms.wms_securityinward secinw on secinw.inwmasterid=stinw.inwmasterid
   left outer join wms."MaterialMasterYGS" mat on mat.material = stinw.materialid
   left outer join wms.wms_qualitycheck qc on qc.inwardid=stinw.inwardid
-  where stinw.qualitycheckrequired = True and secinw.onhold is NOT True and qc.qcby is null  order by stinw.receiveddate DESC</value>
+  where secinw.grnnumber = '#grnno'</value>
   </data>
   <data name="receiveforinvoice" xml:space="preserve">
     <value>INSERT INTO wms.wms_storeinward(inwmasterid,receiveddate,receivedby,receivedqty,materialid,deleteflag,qualitycheckrequired,qualitychecked,materialqty,remarks)
@@ -613,7 +616,7 @@ VALUES(@inwmasterid,@receiveddate,@receivedby,@receivedqty,@materialid,@deletefl
     <value>UPDATE  wms.wms_storeinward set  confirmqty=@confirmqty,returnqty = @returnqty,returnedby = @receivedby,returnedon=current_date,returnremarks=@returnremarks where inwardid =#inwardid</value>
   </data>
   <data name="receivequeryfornonpo" xml:space="preserve">
-    <value>select sinw.invoiceno,sinw.pono,sinw.grnnumber,sinw.onhold,sinw.onholdremarks,inw.materialid as material,ms.materialdescription,
+    <value>select sinw.invoiceno,sinw.pono,sinw.grnnumber,sinw.onhold,sinw.onholdremarks,sinw.unholdedby,inw.remarks as receiveremarks,inw.materialid as material,ms.materialdescription,
  inw.inwardid,inw.checkedby,inw.qualitychecked,inw.returnedby,inw.returnedon,inw.returnremarks,inw.receivedqty,inw.returnremarks,inw.materialqty,
  qc.qualitypassedqty,qc.qualityfailedqty,qc.qcby as checkedby,
  CASE
@@ -657,8 +660,8 @@ left outer join wms."MaterialMasterYGS" ms on ms.material = openpo.material
 left outer join wms.wms_qualitycheck qc on qc.inwardid = inw.inwardid</value>
   </data>
   <data name="savequalityquery" xml:space="preserve">
-    <value>INSERT INTO wms.wms_qualitycheck(inwardid,qualitypassedqty,qualityfailedqty,qcby,remarks)
-  VALUES(@inwardid,@qualitypassedqty,@qualityfailedqty,@receivedby,@remarks)</value>
+    <value>INSERT INTO wms.wms_qualitycheck(inwardid,qualitypassedqty,qualityfailedqty,qcby,remarks,qcdate)
+  VALUES(@inwardid,@qualitypassedqty,@qualityfailedqty,@receivedby,@remarks,current_date)</value>
   </data>
   <data name="getimmediatemnger" xml:space="preserve">
     <value>select emp.name,orgdept.departmenthead  as approverid,emp1.name as managername from wms.employee  emp
@@ -729,7 +732,7 @@ order by transferredon Desc</value>
   <data name="getpendingreceiptslist" xml:space="preserve">
     <value>select sl.pono||'-'||sl.invoiceno as value,sl.pono||'-'||sl.invoiceno as text,(select suppliername from wms.wms_polist where pono = sl.pono limit 1) as supplier 
 from wms.wms_securityinward sl 
-where sl.grnnumber is null or sl.onhold = True 
+where sl.grnnumber is null and sl.onhold is NOT True and (sl.holdgrstatus is NULL or sl.holdgrstatus =  'accepted')
 order by sl.inwmasterid desc</value>
   </data>
   <data name="getgrnlistdata" xml:space="preserve">
@@ -743,7 +746,7 @@ where (stinw.confirmqty is null or stinw.confirmqty = 0)  and sinw.grnnumber is 
 (select suppliername from wms.wms_polist where pono = sinw.pono limit 1) as supplier
 from wms.wms_storeinward stinw 
 left outer join wms.wms_securityinward sinw on stinw.inwmasterid = sinw.inwmasterid 
-where stinw.returnedby is not null
+where stinw.returnedby is not null and sinw.isdirecttransferred is NOT True
 and stinw.inwardid not in (select distinct inwardid from wms.wms_stock where inwardid is not null order by inwardid desc)</value>
   </data>
   <data name="getnonreturnablegatepassdata" xml:space="preserve">
@@ -766,7 +769,9 @@ where matis.gatepassmaterialid  is not null and matgt.returneddate is null</valu
     <value>select stocktype from wms.stocklocation where locationid='#locationid' and location='#locationname' and storeid=#stid and rackid=#rkid and binid=#biid limit 1</value>
   </data>
   <data name="getuserroles" xml:space="preserve">
-    <value>select distinct roleid from wms.v_getAccessList where employeeid='#employeeid'</value>
+    <value>select distinct rl.roleid,rm.rolename as accessname from wms.v_getAccessList rl
+left outer join wms.rolemaster rm on rl.roleid = rm.roleid
+where rl.employeeid = '#employeeid'</value>
   </data>
   <data name="Getreservelist" xml:space="preserve">
     <value>select * from wms.wms_materialreserve reser
@@ -816,5 +821,41 @@ where reserveupto between current_date and current_date  + interval '3 day' and 
   </data>
   <data name="updatetostockbyinvmanger" xml:space="preserve">
     <value>insert into wms.wms_stock(itemid,materialid,availableqty,createddate,createdby)values(default,@materialid,@availableqty,current_timestamp,@createdby)</value>
+  </data>
+  <data name="getqualitycheckdropdown" xml:space="preserve">
+    <value>select distinct grnnumber as value,pono as text,supplier from (select stinw.inwardid,stinw.inwmasterid,stinw.materialid as material,secinw.grnnumber,secinw.onhold,mat.materialdescription,stinw.receivedqty,stinw.receiveddate,stinw.returnqty,qc.qualitypassedqty,qc.qualityfailedqty,qc.remarks,qc.qcby as checkedby,
+								 secinw.pono,(select suppliername from wms.wms_polist where pono = secinw.pono limit 1) as supplier
+  from wms.wms_storeinward stinw
+  left outer join wms.wms_securityinward secinw on secinw.inwmasterid=stinw.inwmasterid
+  left outer join wms."MaterialMasterYGS" mat on mat.material = stinw.materialid
+  left outer join wms.wms_qualitycheck qc on qc.inwardid=stinw.inwardid
+  where stinw.qualitycheckrequired = True and secinw.onhold is NOT True and qc.qcby is null  order by stinw.inwardid DESC) as grn order by grnnumber desc</value>
+  </data>
+  <data name="getHoldGRdetail" xml:space="preserve">
+    <value>select sinw.inwmasterid,sinw.invoiceno,sinw.pono,sinw.onhold,sinw.onholdremarks,
+sinw.receiveddate,sinw.unholdedon,sinw.unholdremarks,emp1.name as unholdedby,
+inw.materialid as material,ms.materialdescription,inw.inwardid,inw.checkedby,
+inw.qualitychecked,inw.returnedby,inw.returnedon,inw.returnremarks,inw.receivedqty,
+(select suppliername from wms.wms_polist where pono = sinw.pono limit 1) as vendorname,
+inw.returnremarks,inw.materialqty,emp.name as receivedby from wms.wms_storeinward inw 
+left outer join wms.wms_securityinward sinw on inw.inwmasterid=sinw.inwmasterid
+left outer join wms."MaterialMasterYGS" ms on ms.material = inw.materialid
+left outer join wms.employee emp on emp.employeeno = inw.receivedby 
+left outer join wms.employee emp1 on emp1.employeeno = sinw.unholdedby 
+where sinw.holdgrstatus = '#status'</value>
+  </data>
+  <data name="getHoldGRList" xml:space="preserve">
+    <value>select sl.pono||'-'||sl.invoiceno as value,sl.pono||'-'||sl.invoiceno as text,(select suppliername from wms.wms_polist where pono = sl.pono limit 1) as supplier 
+from wms.wms_securityinward sl 
+where sl.onhold = True 
+order by sl.inwmasterid desc</value>
+  </data>
+  <data name="updatereceiptunhold" xml:space="preserve">
+    <value>update wms.wms_storeinward set receiveddate=@receiveddate,receivedby=@receivedby,
+receivedqty=@receivedqty,qualitycheckrequired=@qualitycheck,qualitychecked=@qualitychecked,remarks=@receiveremarks
+where inwardid = '#inwardid'</value>
+  </data>
+  <data name="getprojectlist" xml:space="preserve">
+    <value>select projectcode as value, projectname as text from wms.wms_projectMaster</value>
   </data>
 </root>

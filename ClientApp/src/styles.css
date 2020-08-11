@@ -202,6 +202,10 @@ body .ui-widget {
   font-size: 13px;
 }
 
+.cardactive {
+  border : 5px dashed green;
+}
+
 body .ui-radiobutton .ui-radiobutton-box {
   width: 13px;
   height: 13px;
@@ -883,6 +887,18 @@ responsebody {
 
 .Blink {
   animation: blinker 1s cubic-bezier(.5, 0, 1, 1) infinite alternate;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
 }
 
 @keyframes blinker {

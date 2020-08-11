@@ -178,7 +178,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select asno.pono, asno.asn,po.suppliername as vendorname from wms.wms_asn asno left outer join wms.wms_polist po
+        ///   Looks up a localized string similar to select asno.pono, asno.asn,po.suppliername as vendorname,asno.deliverydate from wms.wms_asn asno left outer join wms.wms_polist po
         ///on asno.pono = po.pono.
         /// </summary>
         public static string getASNList {
@@ -224,11 +224,11 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select stinw.inwardid,stinw.inwmasterid,stinw.materialid as material,secinw.grnnumber,secinw.onhold,mat.materialdescription,stinw.receivedqty,stinw.receiveddate,stinw.returnqty,qc.qualitypassedqty,qc.qualityfailedqty,qc.remarks,qc.qcby as checkedby
+        ///   Looks up a localized string similar to select stinw.inwardid,stinw.inwmasterid,stinw.materialid as material,secinw.grnnumber,secinw.pono,secinw.invoiceno,secinw.onhold,mat.materialdescription,stinw.receivedqty,stinw.receiveddate,stinw.returnqty,qc.qualitypassedqty,qc.qualityfailedqty,qc.remarks,qc.qcby as checkedby
         ///  from wms.wms_storeinward stinw
         ///  left outer join wms.wms_securityinward secinw on secinw.inwmasterid=stinw.inwmasterid
         ///  left outer join wms.&quot;MaterialMasterYGS&quot; mat on mat.material = stinw.materialid
-        ///  left outer join wms.wms_qualitycheck qc on qc.inwardid= [rest of string was truncated]&quot;;.
+        ///  left outer join wms.wms_qu [rest of string was truncated]&quot;;.
         /// </summary>
         public static string getdataforqualitydetails {
             get {
@@ -349,7 +349,7 @@ namespace WMS.Common {
         ///(select suppliername from wms.wms_polist where pono = sinw.pono limit 1) as supplier
         ///from wms.wms_storeinward stinw 
         ///left outer join wms.wms_securityinward sinw on stinw.inwmasterid = sinw.inwmasterid 
-        ///where stinw.returnedby is not null
+        ///where stinw.returnedby is not null and sinw.isdirecttransferred is NOT True
         ///and stinw.inwardid not in (select distinct inwardid from wms.wms_stock where inwardid is not null order by inwardid desc).
         /// </summary>
         public static string getgrnlistdataforputaway {
@@ -365,6 +365,33 @@ namespace WMS.Common {
         public static string getGRNNo {
             get {
                 return ResourceManager.GetString("getGRNNo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to select sinw.inwmasterid,sinw.invoiceno,sinw.pono,sinw.onhold,sinw.onholdremarks,
+        ///sinw.receiveddate,sinw.unholdedon,sinw.unholdremarks,emp1.name as unholdedby,
+        ///inw.materialid as material,ms.materialdescription,inw.inwardid,inw.checkedby,
+        ///inw.qualitychecked,inw.returnedby,inw.returnedon,inw.returnremarks,inw.receivedqty,
+        ///(select suppliername from wms.wms_polist where pono = sinw.pono limit 1) as vendorname,
+        ///inw.returnremarks,inw.materialqty,emp.name as receivedby from wms.wms_storeinward inw 
+        ///left outer [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string getHoldGRdetail {
+            get {
+                return ResourceManager.GetString("getHoldGRdetail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to select sl.pono||&apos;-&apos;||sl.invoiceno as value,sl.pono||&apos;-&apos;||sl.invoiceno as text,(select suppliername from wms.wms_polist where pono = sl.pono limit 1) as supplier 
+        ///from wms.wms_securityinward sl 
+        ///where sl.onhold = True 
+        ///order by sl.inwmasterid desc.
+        /// </summary>
+        public static string getHoldGRList {
+            get {
+                return ResourceManager.GetString("getHoldGRList", resourceCulture);
             }
         }
         
@@ -639,7 +666,7 @@ namespace WMS.Common {
         /// <summary>
         ///   Looks up a localized string similar to select sl.pono||&apos;-&apos;||sl.invoiceno as value,sl.pono||&apos;-&apos;||sl.invoiceno as text,(select suppliername from wms.wms_polist where pono = sl.pono limit 1) as supplier 
         ///from wms.wms_securityinward sl 
-        ///where sl.grnnumber is null or sl.onhold = True 
+        ///where sl.grnnumber is null and sl.onhold is NOT True and (sl.holdgrstatus is NULL or sl.holdgrstatus =  &apos;accepted&apos;)
         ///order by sl.inwmasterid desc.
         /// </summary>
         public static string getpendingreceiptslist {
@@ -675,6 +702,27 @@ namespace WMS.Common {
         public static string getprintdetails {
             get {
                 return ResourceManager.GetString("getprintdetails", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to select projectcode as value, projectname as text from wms.wms_projectMaster.
+        /// </summary>
+        public static string getprojectlist {
+            get {
+                return ResourceManager.GetString("getprojectlist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to select distinct grnnumber as value,pono as text,supplier from (select stinw.inwardid,stinw.inwmasterid,stinw.materialid as material,secinw.grnnumber,secinw.onhold,mat.materialdescription,stinw.receivedqty,stinw.receiveddate,stinw.returnqty,qc.qualitypassedqty,qc.qualityfailedqty,qc.remarks,qc.qcby as checkedby,
+        ///								 secinw.pono,(select suppliername from wms.wms_polist where pono = secinw.pono limit 1) as supplier
+        ///  from wms.wms_storeinward stinw
+        ///  left outer join wms.wms_securityinward secinw on seci [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string getqualitycheckdropdown {
+            get {
+                return ResourceManager.GetString("getqualitycheckdropdown", resourceCulture);
             }
         }
         
@@ -830,7 +878,9 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select distinct roleid from wms.v_getAccessList where employeeid=&apos;#employeeid&apos;.
+        ///   Looks up a localized string similar to select distinct rl.roleid,rm.rolename as accessname from wms.v_getAccessList rl
+        ///left outer join wms.rolemaster rm on rl.roleid = rm.roleid
+        ///where rl.employeeid = &apos;#employeeid&apos;.
         /// </summary>
         public static string getuserroles {
             get {
@@ -1108,11 +1158,11 @@ namespace WMS.Common {
         
         /// <summary>
         ///   Looks up a localized string similar to select inwa.inwardid,bin.binnumber, rack.racknumber, loc.locatorname,mat.rackid,mat.binid,
-        /// mat.storeid,stocks.itemlocation,stocks.availableqty,stocks.itemid,inw.grnnumber,inw.pono,inw.invoiceno,inw.receiveddate,inwa.materialqty,inwa.materialid as material,mat.materialdescription,inwa.receivedqty,inwa.confirmqty,inwa.returnqty 
+        /// mat.storeid,stocks.itemlocation,stocks.availableqty,stocks.itemid,inw.grnnumber,inw.pono,inw.invoiceno,inw.receiveddate,
+        /// inw.isdirecttransferred,inw.projectcode,emp.name as mrnby,inw.mrnon,inw.mrnremarks,
+        /// inwa.materialqty,inwa.materialid as material,mat.materialdescription,inwa.receivedqty,inwa.confirmqty,inwa.returnqty 
         /// from wms.wms_securityinward inw
-        ///left join wms.wms_storeinward inwa on inw.inwmasterid=inwa.inwmasterid
-        ///left join wms.wms_stock stocks on  stocks.inwardid=inwa.inwardid
-        /// left jo [rest of string was truncated]&quot;;.
+        ///left join wms.wms_storeinward inwa on inw.inwmasterid=inw [rest of string was truncated]&quot;;.
         /// </summary>
         public static string queryforitemdetails {
             get {
@@ -1131,12 +1181,12 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select sinw.invoiceno,sinw.pono,sinw.grnnumber,sinw.onhold,sinw.onholdremarks,inw.materialid as material,ms.materialdescription,
+        ///   Looks up a localized string similar to select sinw.invoiceno,sinw.pono,sinw.grnnumber,sinw.onhold,sinw.onholdremarks,sinw.unholdedby,inw.remarks as receiveremarks,inw.materialid as material,ms.materialdescription,
         /// inw.inwardid,inw.checkedby,inw.qualitychecked,inw.returnedby,inw.returnedon,inw.returnremarks,inw.receivedqty,inw.returnremarks,inw.materialqty,
         /// qc.qualitypassedqty,qc.qualityfailedqty,qc.qcby as checkedby,
         /// CASE
         ///     WHEN inw.qualitycheckrequired != True and inw.returnedby is null THEN inw.receivedqty
-        ///	 WHEN inw.qualitycheckrequired = True and inw.returnedby is null THEN q [rest of string was truncated]&quot;;.
+        ///	 WHEN inw.qualitycheckreq [rest of string was truncated]&quot;;.
         /// </summary>
         public static string receivequeryfornonpo {
             get {
@@ -1172,8 +1222,8 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO wms.wms_qualitycheck(inwardid,qualitypassedqty,qualityfailedqty,qcby,remarks)
-        ///  VALUES(@inwardid,@qualitypassedqty,@qualityfailedqty,@receivedby,@remarks).
+        ///   Looks up a localized string similar to INSERT INTO wms.wms_qualitycheck(inwardid,qualitypassedqty,qualityfailedqty,qcby,remarks,qcdate)
+        ///  VALUES(@inwardid,@qualitypassedqty,@qualityfailedqty,@receivedby,@remarks,current_date).
         /// </summary>
         public static string savequalityquery {
             get {
@@ -1374,6 +1424,17 @@ namespace WMS.Common {
         public static string updateqtyafterissue {
             get {
                 return ResourceManager.GetString("updateqtyafterissue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to update wms.wms_storeinward set receiveddate=@receiveddate,receivedby=@receivedby,
+        ///receivedqty=@receivedqty,qualitycheckrequired=@qualitycheck,qualitychecked=@qualitychecked,remarks=@receiveremarks
+        ///where inwardid = &apos;#inwardid&apos;.
+        /// </summary>
+        public static string updatereceiptunhold {
+            get {
+                return ResourceManager.GetString("updatereceiptunhold", resourceCulture);
             }
         }
         

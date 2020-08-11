@@ -67,6 +67,20 @@ export class Cyclecountconfig {
   notificationtype: string;
   notificationon: string;
 }
+export class UserDashboardGraphModel {
+  smonth: string;
+  syear: string;
+   count: number;
+   graphdate: Date;
+  type: string;
+}
+
+export class UnholdGRModel {
+  inwmasterid: number;
+  unholdaction: boolean;
+  unholdedby: string;
+  unholdremarks: string
+	}
 
 
 
@@ -109,6 +123,15 @@ export class inwardModel {
   onholdremarks: string;
   qcstatus: string;
   receiveremarks: string;
+  unholdedby: string;
+  unholdedon: Date;
+  unholdremarks: string;
+  isdirecttransferred: boolean;
+  projectcode: string;
+  mrnby: string;
+  mrnon: Date;
+  mrnremarks: string;
+
 }
 
 
@@ -265,6 +288,13 @@ export class ddlmodel {
   text: string;
   supplier: string
 
+}
+
+export class MRNsavemodel {
+  grnnumber: string;
+  projectcode: string;
+  directtransferredby: string;
+  mrnremarks: string
 }
 export class pageModel {
   id: number

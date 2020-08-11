@@ -25,13 +25,12 @@
         <th style="text-align:center">Supplier</th>
         <th style="text-align:center;width: 300px">Approved By</th>
       </tr>
-      <!--<tr>
+      <tr>
         <th></th>
         <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'gatepassid', 'contains')"></th>
         <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'vendorname', 'contains')"></th>
-        <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'name', 'contains')"></th>
-
-      </tr>-->
+        <th></th>
+      </tr>
     </ng-template>
     <ng-template pTemplate="body" let-rowData  let-ri="rowIndex">
       <tr>

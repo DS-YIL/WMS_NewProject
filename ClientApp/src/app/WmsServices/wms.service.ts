@@ -5,7 +5,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { constants } from '../Models/WMSConstants'
 import { Employee, Login, DynamicSearchResult, printMaterial, rbamaster } from '../Models/Common.Model';
-import { PoFilterParams, PoDetails, BarcodeModel, StockModel, materialRequestDetails, inwardModel, gatepassModel, stocktransfermodel, Materials, authUser, invstocktransfermodel, ddlmodel, locataionDetailsStock,updateonhold, materialistModel, outwardmaterialistModel, pageModel, UserDashboardDetail } from '../Models/WMS.Model';
+import { PoFilterParams, PoDetails, BarcodeModel, StockModel, materialRequestDetails, inwardModel, gatepassModel, stocktransfermodel, Materials, authUser, invstocktransfermodel, ddlmodel, locataionDetailsStock,updateonhold, materialistModel, outwardmaterialistModel, pageModel, UserDashboardDetail, UserDashboardGraphModel, UnholdGRModel, MRNsavemodel } from '../Models/WMS.Model';
 import { Text } from '@angular/compiler/src/i18n/i18n_ast';
 
 @Injectable({
@@ -93,8 +93,16 @@ export class wmsService {
     return this.http.get<inwardModel[]>(this.url + 'POData/Getthreewaymatchingdetails?PONO=' + PoNo + '', this.httpOptions);
   }
 
-  Getdataforqualitycheck(): Observable<inwardModel[]> {
-    return this.http.get<inwardModel[]>(this.url + 'POData/Getqualitydetails', this.httpOptions);
+  Getdataforqualitycheck(grn: string): Observable<inwardModel[]> {
+    return this.http.get<inwardModel[]>(this.url + 'POData/Getqualitydetails?grnnumber='+grn, this.httpOptions);
+  }
+
+  Getdataforholdgr(status: string): Observable<inwardModel[]> {
+    return this.http.get<inwardModel[]>(this.url + 'POData/GetholdGRdetails?status=' + status, this.httpOptions);
+  }
+
+  getholdgrtbldata(): Observable<inwardModel[]> {
+    return this.http.get<inwardModel[]>(this.url + 'POData/GetholdGRmaindetails/', this.httpOptions);
   }
 
   
@@ -311,6 +319,9 @@ export class wmsService {
   getASNList(currentDate: string): Observable<any> {
     return this.http.get<any>(this.url + 'POData/getASNList?deliverydate=' + currentDate,this.httpOptions);
   }
+  getASNListData(): Observable<any> {
+    return this.http.get<any>(this.url + 'POData/getASNListdata/', this.httpOptions);
+  }
   getItemlocationListByMaterial(material: string): Observable<any> {
     return this.http.get<any>(this.url + 'POData/GetItemLocationListByMaterial?material=' + material, this.httpOptions);
   }
@@ -396,10 +407,35 @@ export class wmsService {
     return this.http.get<ddlmodel[]>(this.url + 'POData/getgrnforacceptanceputaway/', this.httpOptions);
   }
 
+  getcheckedgrnlistforqc(): Observable<ddlmodel[]> {
+    return this.http.get<ddlmodel[]>(this.url + 'POData/getgrnforacceptanceqc/', this.httpOptions);
+  }
+
+  getholdgrlist(): Observable<ddlmodel[]> {
+    return this.http.get<ddlmodel[]>(this.url + 'POData/getholdgrs/', this.httpOptions);
+  }
+
+  getprojectlist(): Observable<ddlmodel[]> {
+    return this.http.get<ddlmodel[]>(this.url + 'POData/getprojectlist/', this.httpOptions);
+  }
+
+  
+
+
   updateonhold(updaeonhold: updateonhold): Observable<any> {
     const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }), responseType: 'text' as any };
     return this.http.post<any>(this.url + 'POData/updateonholddata', updaeonhold, httpOptions);
   }
+
+  updateonholdgr(updaeonhold: UnholdGRModel): Observable<any> {
+    return this.http.post<any>(this.url + 'POData/UnholdGR', updaeonhold, this.httpOptions);
+  }
+
+  updatemrn(updaeonhold: MRNsavemodel): Observable<any> {
+    return this.http.post<any>(this.url + 'POData/mrnupdate', updaeonhold, this.httpOptions);
+  }
+
+
 
   updateoutinward(outindata: outwardmaterialistModel[]): Observable<any> {
     const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }), responseType: 'text' as any };
@@ -420,6 +456,16 @@ export class wmsService {
 
   getdashdata(): Observable<UserDashboardDetail> {
     return this.http.get<UserDashboardDetail>(this.url + 'POData/getUserdashboarddata/', this.httpOptions);
+  }
+  getdashgraphdata(): Observable<UserDashboardGraphModel[]> {
+    return this.http.get<UserDashboardGraphModel[]>(this.url + 'POData/getUserdashgraphdata/', this.httpOptions);
+  }
+
+  getmonthlydashgraphdata(): Observable<UserDashboardGraphModel[]> {
+    return this.http.get<UserDashboardGraphModel[]>(this.url + 'POData/getmonthlyUserdashgraphdata/', this.httpOptions);
+  }
+  getweeklydashgraphdata(): Observable<UserDashboardGraphModel[]> {
+    return this.http.get<UserDashboardGraphModel[]>(this.url + 'POData/getweeklyUserdashgraphdata/', this.httpOptions);
   }
 
   

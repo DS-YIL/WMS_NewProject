@@ -63,6 +63,20 @@ namespace WMS.Models
 
 		public string receiveremarks { get; set; }
 
+		public string receivedby { get; set; }
+
+		public int inwmasterid { get; set; }
+
+		public string unholdedby { get; set; }
+
+		public DateTime receiveddate { get; set; }
+
+		public DateTime unholdedon { get; set; }
+
+		public string  unholdremarks { get; set; }
+
+		public DateTime deliverydate { get; set; }
+	
 	}
 
 	public class printMaterial
@@ -165,6 +179,15 @@ public bool onhold { get; set; }
 		public string availableqty { get; set; }
 
 		public string receiveremarks { get; set; }
+
+		public string unholdedby { get; set; }
+
+		public bool isdirecttransferred { get; set; }
+
+		public string projectcode { get; set; }
+		public string mrnby { get; set; }
+		public DateTime mrnon { get; set; }
+		public string mrnremarks { get; set; }
 	}
 	public class StockModel
 	{
@@ -616,6 +639,24 @@ public bool onhold { get; set; }
 
 	}
 
+	public class UnholdGRModel
+	{
+		public int inwmasterid { get; set; }
+		public bool unholdaction  { get; set; }
+		public string unholdedby  { get; set; }
+
+		public string unholdremarks { get; set; }
+
+	}
+
+	public class MRNsavemodel
+	{
+		public string grnnumber { get; set; }
+		public string projectcode { get; set; }
+		public string directtransferredby { get; set; }
+		public string mrnremarks { get; set; }
+	}
+
 	public class DashboardModel
 	{
 		public int todayexpextedcount { get; set; }
@@ -625,6 +666,19 @@ public bool onhold { get; set; }
 		public List<DashboardGraphModel> graphdata { get; set; }
 
 	}
+
+	public class UserDashboardGraphModel
+	{
+		public string smonth { get; set; }
+		public string syear { get; set; }
+		public string sweek { get; set; }
+		public int count { get; set; }
+		public DateTime graphdate { get; set; }
+
+		public string type { get; set; }
+
+	}
+
 
 	public class DashboardGraphModel
 	{

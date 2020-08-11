@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { wmsService } from '../WmsServices/wms.service';
 import { constants } from '../Models/WMSConstants';
@@ -11,6 +11,7 @@ import { DatePipe } from '@angular/common';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { ConfirmationService } from 'primeng/api';
 import { isNullOrUndefined } from 'util';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-Warehouse',
@@ -34,8 +35,8 @@ export class WarehouseInchargeComponent implements OnInit {
   binid: any;
   rackid: any;
   isnonpo: boolean = false;
-
-  constructor(private ConfirmationService: ConfirmationService, private formBuilder: FormBuilder, private messageService: MessageService, private datePipe: DatePipe, private wmsService: wmsService, private route: ActivatedRoute, private router: Router, public constants: constants, private spinner: NgxSpinnerService) { }
+  public url = "";
+  constructor(private ConfirmationService: ConfirmationService, private http: HttpClient, private formBuilder: FormBuilder, private messageService: MessageService, private datePipe: DatePipe, private wmsService: wmsService, private route: ActivatedRoute, private router: Router, public constants: constants, private spinner: NgxSpinnerService, @Inject('BASE_URL') baseUrl: string) { this.url = baseUrl; }
 
   cars: Array<inwardModel> = [];
   rowGroupMetadata: any;
@@ -95,11 +96,19 @@ export class WarehouseInchargeComponent implements OnInit {
   selectedgrn: ddlmodel;
   selectedgrnno: string = "";
   filteredgrns: any[];
+  isallplaced: boolean = false;
+  showdocuploaddiv: boolean = false;
+  issaveprocess: boolean = false;
+  isalreadytransferred: boolean = false;
+  sendmailtofinance: boolean = false;
+ 
   ngOnInit() {
     if (localStorage.getItem("Employee"))
       this.employee = JSON.parse(localStorage.getItem("Employee"));
     else
       this.router.navigateByUrl("Login");
+    this.issaveprocess = false;
+    this.showdocuploaddiv = false;
     this.invoiceForm = this.formBuilder.group({
       itemRows: this.formBuilder.array([this.initItemRows()])
     });
@@ -164,7 +173,9 @@ export class WarehouseInchargeComponent implements OnInit {
     // return (this.invoiceForm.get('itemRows') as FormArray).controls;
   }
 
-
+  shownotifdiv() {
+    this.showdocuploaddiv = !this.showdocuploaddiv;
+  }
 
   initItemRows() {
     return this.formBuilder.group({
@@ -446,6 +457,23 @@ export class WarehouseInchargeComponent implements OnInit {
     })
   }
 
+ 
+
+  onBasicUpload(event) {
+    debugger;
+    for (let file of event.files) {
+      var fname = 'putaway_'+ this.podetailsList[0].grnnumber + "_" + file.name;
+      const formData = new FormData();
+      formData.append('file', file, fname);
+      this.http.post(this.url + 'POData/uploaddoc', formData)
+        .subscribe(event => {
+           this.messageService.add({ severity: 'success', summary: '', detail: 'File uploaded' });
+        });
+
+    }
+
+  }
+
   SearchGRNNo() {
     debugger;
     this.podetailsList = [];
@@ -460,8 +488,25 @@ export class WarehouseInchargeComponent implements OnInit {
       this.wmsService.getitemdetailsbygrnno(this.PoDetails.grnnumber).subscribe(data => {
         this.spinner.hide();
         if (data) {
+          debugger;
           //this.PoDetails = data[0];
           this.podetailsList = data;
+          this.isalreadytransferred = this.podetailsList[0].isdirecttransferred;
+          if (this.isalreadytransferred) {
+            this.podetailsList = [];
+            this.messageService.add({ severity: 'warn', summary: '', detail: 'Materials already transferred to a project' });
+            return;
+           
+          }
+          var allplacedchk = this.podetailsList.filter(function (element, index) {
+            return (!element.itemlocation);
+          });
+          if (allplacedchk.length == 0) {
+            this.isallplaced = true;
+            if (this.issaveprocess) {
+              this.showdocuploaddiv = true;
+            }
+          }
           this.showDetails = true;
           var ponumber = this.podetailsList[0].pono;
           if (ponumber.startsWith("NP")) {
@@ -476,6 +521,8 @@ this.updateRowGroupMetaData();
   
      
   }
+
+ 
   updateRowGroupMetaData() {
     debugger;
     this.rowGroupMetadata = {};
@@ -505,7 +552,9 @@ this.updateRowGroupMetaData();
       }
     }
   }
+  sendmailtofinancefn() {
 
+  }
 
   showDialog1(details: any, index: number) {
     this.showLocationDialog = true;
@@ -602,6 +651,7 @@ this.updateRowGroupMetaData();
 
   onSubmitStockDetails() {
     //this.onQtyClick();
+    
     if (this.stock.length > 0) {
       debugger;
       if (this.stock[this.stock.length - 1].locatorid == 0) {
@@ -695,6 +745,7 @@ this.updateRowGroupMetaData();
             this.wmsService.InsertStock(this.StockModelList).subscribe(data => {
               debugger;
               //this.podetailsList[this.rowIndex].itemlocation = this.StockModel.itemlocation;
+              this.issaveprocess = true;
               this.showLocationDialog = false;
               this.messageService.add({ severity: 'success', summary: '', detail: 'Location Updated' });
               this.stock = [];

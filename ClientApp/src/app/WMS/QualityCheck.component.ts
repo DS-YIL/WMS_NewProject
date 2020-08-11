@@ -4,7 +4,7 @@ import { wmsService } from '../WmsServices/wms.service';
 import { constants } from '../Models/WMSConstants';
 import { Employee } from '../Models/Common.Model';
 import { NgxSpinnerService } from "ngx-spinner";
-import { PoDetails, BarcodeModel, inwardModel } from 'src/app/Models/WMS.Model';
+import { PoDetails, BarcodeModel, inwardModel, ddlmodel } from 'src/app/Models/WMS.Model';
 import { MessageService } from 'primeng/api';
 import { first } from 'rxjs/operators';
 import { isNullOrUndefined } from 'util';
@@ -28,6 +28,9 @@ export class QualityCheckComponent implements OnInit {
   public totalqty: number;
   public recqty: number;
   qualitychecked: boolean = false;
+  selectedgrnno: string = "";
+  filteredgrns: any[];
+  checkedgrnlistqc: ddlmodel[] = [];
   ngOnInit() {
     if (localStorage.getItem("Employee"))
       this.employee = JSON.parse(localStorage.getItem("Employee"));
@@ -39,42 +42,43 @@ export class QualityCheckComponent implements OnInit {
     this.inwardModel.quality = "0";
     this.inwardModel.receiveddate = new Date();
     this.inwardModel.qcdate = new Date();
-    this.getqualitydetails(this.PoDetails.pono);
+    this.getqualitydetails();
+    this.getcheckedgrnforqc();
   }
   
   checkconfirmqty(entredvalue, receivedqty, returnedqty,data :any) {
     debugger;
     if (entredvalue < 0) {
-      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'negative number not allowed' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Negative number not allowed' });
       data.qualitypassedqty = "";
       return;
       //(<HTMLInputElement>document.getElementById("confirmqty")).value = "";
     }
     if (entredvalue > receivedqty) {
-      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please enter passed quantity less than or equal to received quantity' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Please enter passed quantity less than or equal to received quantity' });
       data.qualitypassedqty = "";
       //(<HTMLInputElement>document.getElementById("confirmqty")).value = "";
     }
     if (entredvalue != (receivedqty - returnedqty) && receivedqty && returnedqty) {
-      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'sum of  quality passesed and failed must be equal to received qty' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Sum of quality passesed and failed must be equal to received qty' });
       //(<HTMLInputElement>document.getElementById("confirmqty")).value = "";
       data.qualitypassedqty = "";
     }
   }
   checkreturnqty(entredvalue, receivedqty, acceptedqty, data: any) {
     if (entredvalue < 0) {
-      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'negative number not allowed' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Negative number not allowed' });
       data.qualityfailedqty = "";
       return;
       //(<HTMLInputElement>document.getElementById("confirmqty")).value = "";
     }
     if (entredvalue > receivedqty) {
-      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please enter failed quantity less than or equal to received quantity' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Please enter failed quantity less than or equal to received quantity' });
       data.qualityfailedqty = "";
       //(<HTMLInputElement>document.getElementById("returnqty")).value = "";
     }
     if (entredvalue != (receivedqty - acceptedqty) && receivedqty && acceptedqty) {
-      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'sum of quality passesed and failed  must be equal to received qty' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Sum of quality passesed and failed  must be equal to received qty' });
       data.qualityfailedqty = "";
       //(<HTMLInputElement>document.getElementById("returnqty")).value = "";
     }
@@ -89,7 +93,7 @@ export class QualityCheckComponent implements OnInit {
       //this.spinner.hide();
       //  if (data == true) {
       this.showQtyUpdateDialog = true;
-      this.getqualitydetails(this.PoDetails.pono);
+      this.getqualitydetails();
       // this.messageService.add({ severity: 'success', summary: 'Success Message', detail: 'GRN Posted  Sucessfully' });
       // }
       //else
@@ -100,6 +104,30 @@ export class QualityCheckComponent implements OnInit {
     }
 
 
+  }
+
+  SearchGRNNo() {
+
+  }
+
+  getcheckedgrnforqc() {
+    this.spinner.show();
+    this.wmsService.getcheckedgrnlistforqc().subscribe(data => {
+      debugger;
+      this.checkedgrnlistqc = data;
+      this.spinner.hide();
+    });
+  }
+
+  filtergrn(event) {
+    this.filteredgrns = [];
+    for (let i = 0; i < this.checkedgrnlistqc.length; i++) {
+      let brand = this.checkedgrnlistqc[i].supplier;
+      let pos = this.checkedgrnlistqc[i].value;
+      if (brand.toLowerCase().indexOf(event.query.toLowerCase()) == 0 || pos.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+        this.filteredgrns.push(pos);
+      }
+    }
   }
   getponodetails(data) {
     this.podetailsList = [];
@@ -113,13 +141,14 @@ export class QualityCheckComponent implements OnInit {
         this.showDetails = true;
       }
       else
-        this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'No data' });
+        this.messageService.add({ severity: 'error', summary: '', detail: 'No data' });
     })
   }
 
-  getqualitydetails(data) {
+  getqualitydetails() {
     this.podetailsList = [];
-    this.wmsService.Getdataforqualitycheck().subscribe(data => {
+    var grn = this.selectedgrnno;
+    this.wmsService.Getdataforqualitycheck(grn).subscribe(data => {
       this.spinner.hide();
       if (data) {
         debugger;
@@ -133,13 +162,16 @@ export class QualityCheckComponent implements OnInit {
         if (!this.grnnumber) {
           this.disGrnBtn = true;
         }
-        if (this.podetailsList[0].checkedby) {
+        var isallqc = this.podetailsList.filter(function (element, index) {
+          return (element.checkedby);
+        });
+        if (isallqc.length == this.podetailsList.length) {
           this.disGrnBtn = true;
         }
         this.showDetails = true;
       }
       else
-        this.messageService.add({ severity: 'eoor', summary: 'Message', detail: 'No materials for quality check' });
+        this.messageService.add({ severity: 'eoor', summary: '', detail: 'No materials for quality check' });
     })
   }
 
@@ -154,7 +186,7 @@ export class QualityCheckComponent implements OnInit {
         this.showQtyUpdateDialog = true;
       }
       else
-        this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Verification failed' });
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Verification failed' });
     })
   }
 
@@ -176,13 +208,13 @@ export class QualityCheckComponent implements OnInit {
       this.recqty = this.podetailsList[0].confirmqty + this.podetailsList[0].returnqty;
       this.totalqty = parseInt(this.podetailsList[0].receivedqty);
     var savedata = this.podetailsList.filter(function (element, index) {
-      return (element.qualitypassedqty != 0);
+      return (element.qualitypassedqty != 0 && !element.checkedby);
     });
     var invaliddata = savedata.filter(function (element, index) {
       return (element.qualitypassedqty + element.qualityfailedqty != parseInt(element.receivedqty));
     });
     if (invaliddata.length > 0) {
-      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Sum of quality failed and passed must be equal to received quantity.' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Sum of quality failed and passed must be equal to received quantity.' });
       this.spinner.hide();
       return;
     }
@@ -194,17 +226,17 @@ export class QualityCheckComponent implements OnInit {
            
           }
           if (data == null) {
-            this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Something went wrong' });
+            this.messageService.add({ severity: 'error', summary: '', detail: 'Something went wrong' });
           }
 
           if (data) {
             
-            this.messageService.add({ severity: 'success', summary: 'Success Message', detail: 'Quality checked' });
+            this.messageService.add({ severity: 'success', summary: '', detail: 'Quality checked' });
             this.showQtyUpdateDialog = false;
             this.disGrnBtn = true;
             
           }
-          this.getqualitydetails(this.PoDetails.pono);
+          this.getqualitydetails();
         });
      
   

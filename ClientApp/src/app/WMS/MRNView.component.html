@@ -1,0 +1,97 @@
+
+  <div class="form-control" style="height:100%">
+    <div class="row " style="    margin-top: 10px;
+    margin-left: 0px !important;
+    margin-right: 0px !important">
+      <div class="col-lg-4 col-md-4 form-inline">
+        <label class="labelheading">Accepted Receipts:</label>&nbsp;
+        <p-autoComplete [(ngModel)]="selectedgrnno" appendTo="body" [suggestions]="filteredgrns" (onSelect)="SearchGRNNo()" (change)="SearchGRNNo()" placeholder="search by supplier/GRN No" [ngModelOptions]="{standalone: true}" [forceSelection]="false" (completeMethod)="filtergrn($event)" [size]="30"
+                        [dropdown]="true">
+        </p-autoComplete>
+      </div>
+      <div class="col-lg-4 col-md-4 form-inline">
+        <label class="labelheading">Project :</label>&nbsp;
+        <p-autoComplete [(ngModel)]="selectedponomodel" [disabled]="isalreadytransferred" field="text" appendTo="body" [suggestions]="filteredpono"  placeholder="search by name/code" [ngModelOptions]="{standalone: true}" [forceSelection]="false" (completeMethod)="filterpos($event)" [size]="30"
+                        [dropdown]="true">
+        </p-autoComplete>
+      </div>
+      <div class="col-lg-4 col-md-4 form-inline">
+        <label class="labelheading">Remarks :</label>&nbsp;
+        <textarea [(ngModel)]="mrnremarks" [disabled]="isalreadytransferred" style="width:60%"></textarea>
+      </div>
+
+    </div>
+    <div class="row " *ngIf="podetailsList.length>0" style="margin-top: 10px;
+    margin-left: 0px !important;
+    margin-right: 0px !important">
+      <div class="col-md-2 col-lg-2  pt-2 labelheading" *ngIf="podetailsList.length>0">
+        PO No : <span class="labeltext">{{podetailsList[0].pono}}</span>
+      </div>
+      <div class="col-md-2 col-lg-2 pt-2 labelheading" style="font-weight:600;font-size:14px;color:darkblue;" *ngIf="podetailsList.length>0">
+        Invoice No : <span class="labeltext">{{podetailsList[0].invoiceno}}</span>
+      </div>
+      <div class="col-md-3 col-lg-3 pt-2 labelheading" style="font-weight:600;font-size:14px;color:darkblue;" *ngIf="podetailsList.length>0">
+        WMS GRN No : <span class="labeltext">{{podetailsList[0].grnnumber}}</span>
+      </div>
+      <div class="col-md-3 col-lg-3 pt-2 labelheading" style="font-weight:600;font-size:14px;color:darkblue;" *ngIf="podetailsList.length>0">
+         <span class="text-success" *ngIf="isalreadytransferred"><span class="text-primary">Status : &nbsp;</span> Transferred</span>
+      </div>
+
+    </div>
+    <div class="row " style="    margin-top: 10px;margin-left: 0px !important;margin-right: 0px !important">
+      <div class="col-lg-12 col-md-12 col-sm-12">
+        <p-table [columns]="cols" [value]="podetailsList" dataKey="material">
+          <ng-template pTemplate="header" let-columns>
+            <tr>
+              <th rowspan="2" style="width: 4em">Sl.No.</th>
+              <!--<th *ngFor="let col of columns">{{col.header}} </th>-->
+              <th rowspan="2" style="width:120px;text-align:center">Material</th>
+              <th rowspan="2" style="width: 250px; text-align: center">Material Description</th>
+              <!--<th rowspan="2" *ngIf="!isnonpo" style="width:70px;text-align:center">Material Quantity</th>
+              <th rowspan="2" style="width:70px;text-align:center">Received Quantity</th>-->
+              <th rowspan="2" style="width:70px;text-align:center">Accepted Quantity</th>
+              <th rowspan="2" style="width:100px;text-align:center" *ngIf="isalreadytransferred">Transferred By</th>
+              <th rowspan="2" style="width:70px;text-align:center" *ngIf="isalreadytransferred">Transferred On</th>
+            </tr>
+
+          </ng-template>
+          <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex" let-expanded="expanded" let-columns="columns">
+            <tr class="ui-widget-header">
+
+              <td class="ptable-cell" style="text-align:center;width:70px">{{rowIndex + 1}}</td>
+              <td class="ptable-cell" style="text-align:center;width:150px;" colspan="1">
+                {{rowData.material}}
+              </td>
+              <td class="ptable-cell" style="text-align:left;">{{rowData.materialdescription}}</td>
+              <!--<td *ngIf="!isnonpo" class="ptable-cell" style="text-align:right;width:100px;">{{rowData.materialqty}}</td>
+  <td class="ptable-cell" style="text-align:right;width:100px;">{{rowData.receivedqty}}</td>-->
+              <td class="ptable-cell" style="text-align:right;width:70px;">{{rowData.confirmqty}}</td>
+              <td class="ptable-cell" style="text-align:left;width:100px;" *ngIf="isalreadytransferred">{{rowData.mrnby}}</td>
+              <td class="ptable-cell" style="text-align:center;width:70px;" *ngIf="isalreadytransferred">{{rowData.mrnon | date: 'dd/MM/yyyy'}}</td>
+
+            </tr>
+          </ng-template>
+
+        </p-table>
+
+        <br /><br />
+
+
+
+
+
+
+
+      </div>
+    </div>
+
+    <div style="text-align: center;margin-top:5px;" *ngIf="podetailsList.length>0 && !isalreadytransferred">
+      <input class="btn btn-primary btn-sm" (click)="submitmr()" type="button" value="Submit">
+    </div>
+
+
+
+
+
+
+  </div>

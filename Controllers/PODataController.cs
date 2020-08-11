@@ -100,6 +100,13 @@ namespace WMS.Controllers
 						file.CopyTo(stream);
 					}
 
+                    if(fileName.StartsWith("putaway")){
+
+						this._poService.updateputawayfilename(fileName);
+
+
+					}
+
 					return Ok(new { dbPath });
 				}
 				else
@@ -112,6 +119,8 @@ namespace WMS.Controllers
 				return StatusCode(500, $"Internal server error: {ex}");
 			}
 		}
+
+
 
 		[HttpPost("insertbarcodeandinvoiceinfo")]
 		public string insertbardata(BarcodeModel data)
@@ -141,14 +150,22 @@ namespace WMS.Controllers
 			return await this._poService.GetDeatilsForthreeWaymatching(invoiceno, ponodata, isgrn, grn);
 		}
 
+		[HttpGet("GetholdGRdetails")]
+		public async Task<IEnumerable<OpenPoModel>> getholdgrdetails(string status)
+		{
+			
+			return await this._poService.GetDeatilsForholdgr(status);
+		}
+
+	
 		[HttpGet("Getqualitydetails")]
-		public async Task<IEnumerable<OpenPoModel>> Getqualitydetails()
+		public async Task<IEnumerable<OpenPoModel>> Getqualitydetails(string grnnumber)
 		{
 
 			//string[] ponoandinvoice = pono.Split('-');
 			//string ponodata = ponoandinvoice[0];
 			//string invoiceno = ponoandinvoice[1];
-			return await this._poService.Getqualitydetails();
+			return await this._poService.Getqualitydetails(grnnumber);
 		}
 
 		[HttpGet("verifythreewaymatch")]
@@ -437,6 +454,13 @@ namespace WMS.Controllers
 			return this._poService.getASNList(deliverydate);
 		}
 
+		[HttpGet("getASNListdata")]
+		public Task<IEnumerable<OpenPoModel>> getASNListdata()
+		{
+
+			return this._poService.getASNListdata();
+		}
+
 		[HttpGet("GetItemLocationListByMaterial")]
 		public async Task<IEnumerable<IssueRequestModel>> getitemlocationBymaterial(string material)
 		{
@@ -469,6 +493,25 @@ namespace WMS.Controllers
 		{
 
 			return await this._poService.getuserroleList(employeeid);
+		}
+
+		[HttpGet("getUserdashgraphdata")]
+		public async Task<IEnumerable<UserDashboardGraphModel>> getUserdashgraphdata(string employeeid)
+		{
+
+			return await this._poService.getUserdashboardgraphdata();
+		}
+
+		[HttpGet("getweeklyUserdashgraphdata")]
+		public async Task<IEnumerable<UserDashboardGraphModel>> getWeeklyUserdashboardgraphdata()
+		{
+			return await this._poService.getWeeklyUserdashboardgraphdata();
+		}
+		
+		[HttpGet("getmonthlyUserdashgraphdata")]
+		public async Task<IEnumerable<UserDashboardGraphModel>> getmonthlyUserdashboardgraphdata()
+		{
+			return await this._poService.getmonthlyUserdashboardgraphdata();
 		}
 		[HttpGet("Getpagesbyrole")]
 		public async Task<IEnumerable<pageModel>> Getpagesbyrole(int roleid)
@@ -634,6 +677,13 @@ namespace WMS.Controllers
 			return await this._poService.pendingreceiptslist();
 		}
 
+		[HttpGet("getprojectlist")]
+		public async Task<IEnumerable<ddlmodel>> getprojectlist()
+		{
+			return await this._poService.getprojectlist();
+		}
+
+
 		[HttpGet("getgrnforacceptance")]
 		public async Task<IEnumerable<ddlmodel>> getgrnlistforacceptance()
 		{
@@ -644,6 +694,18 @@ namespace WMS.Controllers
 		public async Task<IEnumerable<ddlmodel>> getgrnlistforacceptanceputaway()
 		{
 			return await this._poService.getgrnlistforacceptanceputaway();
+		}
+
+		[HttpGet("getholdgrs")]
+		public async Task<IEnumerable<ddlmodel>> getholdgrslist()
+		{
+			return await this._poService.getholdgrlist();
+		}
+
+		[HttpGet("getgrnforacceptanceqc")]
+		public async Task<IEnumerable<ddlmodel>> getgrnlistforacceptanceqc()
+		{
+			return await this._poService.getgrnlistforacceptanceqc();
 		}
 
 		[HttpGet("getdepartment")]
@@ -678,6 +740,19 @@ namespace WMS.Controllers
 		{
 			return this._poService.UpdateReturnmaterialTostock(obj);
 		}
+
+		[HttpPost("UnholdGR")]
+		public int UnholdGRN([FromBody] UnholdGRModel obj)
+		{
+			return this._poService.UnholdGRdata(obj);
+		}
+
+		[HttpPost("mrnupdate")]
+		public int mrnupdate([FromBody] MRNsavemodel obj)
+		{
+			return this._poService.mrnupdate(obj);
+		}
+
 		[HttpGet("GetReturnmaterialList")]
 		public async Task<IEnumerable<IssueRequestModel>> GetReturnmaterialList()
 		{
