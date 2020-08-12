@@ -20,8 +20,15 @@ namespace WMS.Interfaces
         //Location Details
         Task<IEnumerable<LocationDetails>> getlocationdetails(string materialid, string grnnumber);
 
+        //Get po details
+        Task<IEnumerable<PODetails>> getPODetails();
+
         //Get material request and issued details
         Task<IEnumerable<ReqMatDetails>> getReqMatdetails(string materialid,string grnnumber);
+
+        //Check material exists
+        string checkMatExists(string material);
+
         OpenPoModel CheckPoexists(string PONO);
 
         stockCardPrint getstockdetails(string pono, string materialid);

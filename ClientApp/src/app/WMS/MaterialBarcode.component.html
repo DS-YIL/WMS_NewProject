@@ -1,0 +1,35 @@
+<div class="card" style="    min-height: 500px;border-radius: 10px;box-shadow: 5px 10px #888888;">
+  <div class="card-header text-center cardheadertext">
+    <span>
+      <i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;Material Barcode
+    </span>
+  </div>
+  <div class="card-body" style="overflow-y:scroll">
+
+    <div class="row col-sm-12 col-mg-12 col-lg-12">
+      <div class="col-sm-2 col-mg-2 col-lg-2"></div>
+      <div class="col-sm-2 col-mg-2 col-lg-2" style="font-weight:600;font-size:14px;color:darkblue;">
+        Enter Material:
+      </div>
+      <div class="col-sm-3 col-mg-3 col-lg-3">
+        <input class="form-control" type="text" form-control placeholder="Enter Material" [(ngModel)]="material" />
+      </div>
+      <div class="col-sm-2 col-mg-2 col-lg-2">
+        <button type="button" class="btn btn-success" (click)="GenerateBarcode(material)">Generate Barcode</button>
+
+
+      </div>
+      <div class="col-sm-2 col-mg-2 col-lg-2"></div>
+    </div>
+    <div class="row col-sm-12 col-mg-12 col-lg-12">
+      <div class="col-sm-4 col-mg-4 col-lg-4"></div>
+      <div *ngIf="path" class="col-sm-4 col-mg-4 col-lg-4">
+        <img src="{{path}}" />
+      </div>
+      <div class="col-sm-4 col-mg-4 col-lg-4"></div>
+
+    </div>
+
+  </div>
+  </div>
+   

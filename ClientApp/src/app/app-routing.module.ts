@@ -49,6 +49,8 @@ import { MaterialReturnComponent } from './WMS/MaterialReturn.component';
 import { HoldGRViewComponent } from './WMS/HoldGRView.component';
 import { MRNViewComponent } from './WMS/MRNView.component';
 import { ASNViewComponent } from './WMS/ASNView.component';
+import { MaterialBarcodeComponent } from './WMS/MaterialBarcode.component';
+import { MaterialReportComponent } from './WMS/MaterialReport.component';
 const routes: Routes = [{
   path: 'WMS',
   children: [
@@ -113,6 +115,8 @@ const routes: Routes = [{
     { path: "HoldGRView", component: HoldGRViewComponent, canActivate: [AuthGuard] },
     { path: "MRNView", component: MRNViewComponent, canActivate: [AuthGuard] },
     { path: "ASNView", component: ASNViewComponent, canActivate: [AuthGuard] },  
+{ path: "PrintBarcode", component: MaterialBarcodeComponent, canActivate: [AuthGuard] },
+    { path: "MaterialReport", component: MaterialReportComponent, canActivate: [AuthGuard] }
   ]
 
 },

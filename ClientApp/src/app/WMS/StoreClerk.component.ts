@@ -2,22 +2,31 @@ import { Component, OnInit, ViewChild, ElementRef} from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { wmsService } from '../WmsServices/wms.service';
 import { constants } from '../Models/WMSConstants';
-import { Employee } from '../Models/Common.Model';
+import { Employee, printMaterial } from '../Models/Common.Model';
 import { NgxSpinnerService } from "ngx-spinner";
 import { PoDetails, BarcodeModel, inwardModel, Materials, ddlmodel, updateonhold } from 'src/app/Models/WMS.Model';
-import { MessageService } from 'primeng/api';
+import { MessageService, ConfirmationService } from 'primeng/api';
 import { first } from 'rxjs/operators';
 import { isNullOrUndefined } from 'util';
+import { DatePipe } from '@angular/common';
+import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
+import { AutoComplete } from 'primeng/autocomplete';
 
 @Component({
   selector: 'app-StoreClerk',
-  templateUrl: './StoreClerk.component.html'
+  templateUrl: './StoreClerk.component.html',
+  providers: [DatePipe, ConfirmationService]
 })
 export class StoreClerkComponent implements OnInit {
-  @ViewChild('myInput', { static: false }) ddlreceivedpo: any;
-  @ViewChild('myInput1', { static: false }) ddlgrndata: any;
-  constructor(private messageService: MessageService, private wmsService: wmsService, private route: ActivatedRoute, private router: Router, public constants: constants, private spinner: NgxSpinnerService) { }
+  @ViewChild('autoCompleteObject') private autoCompleteObject: AutoComplete;
+  @ViewChild('myInput') ddlreceivedpo: any;
+  @ViewChild('myInput1') ddlgrndata: any;
+  constructor(private messageService: MessageService, private wmsService: wmsService, private formBuilder: FormBuilder, private route: ActivatedRoute, private datePipe: DatePipe, private router: Router, public constants: constants, private spinner: NgxSpinnerService) { }
 
+  public pono: string;
+  public invoiceNo: string;
+  public grnNo: string;
+  public showPrintDialog: boolean = false;
   public PoDetails: PoDetails;
   public podetailsList: Array<inwardModel> = [];
   public nonpovalidationList: Array<inwardModel> = [];
@@ -29,6 +38,7 @@ export class StoreClerkComponent implements OnInit {
   public grnnumber: string = "";
   public totalqty: number;
   public recqty: number;
+  public noOfPrint: any = 1;
   inwardemptymodel: inwardModel;
   qualitychecked: boolean = false;
   isnonpoentry: boolean = false;
@@ -52,19 +62,29 @@ export class StoreClerkComponent implements OnInit {
   selectedpendingpono: string = "";
   selectedgrnno: string = "";
   selectedmaterialauto: string = "";
+  public invoiceForm: FormGroup;
   lblpono: string = "";
   lblinvoiceno: string = "";
   filteredgrns: any[];
   filteredmats: any[];
-  displayBasic: boolean = false;
- 
+  public materialCode: any;
+  public receivedDate: any;
+  public acceptedQty: any;
+  public itemNo: any;
+  public printData = new printMaterial();
+  public showPrintLabel: boolean = false;
+   displayBasic: boolean = false;
  
   ngOnInit() {
+    //this.autoCompleteObject.focusInput();
     if (localStorage.getItem("Employee"))
       this.employee = JSON.parse(localStorage.getItem("Employee"));
     else
     this.router.navigateByUrl("Login");
     this.getpendingpos();
+    this.invoiceForm = this.formBuilder.group({
+      itemRows: this.formBuilder.array([this.initItemRows()])
+    });
     this.getcheckedgrn();
     this.getMaterials();
     this.isacceptance = false;
@@ -76,6 +96,21 @@ export class StoreClerkComponent implements OnInit {
     this.inwardModel.receiveddate = new Date();
     this.inwardModel.qcdate = new Date();
   }
+
+  initItemRows() {
+    return this.formBuilder.group({
+      itemname: [''],
+      locatorid: ['', [Validators.required]],
+      rackid: ['', [Validators.required]],
+      binid: ['', [Validators.required]],
+      shelflife: ['', [Validators.required]],
+      binnumber: ['', [Validators.required]],
+      itemlocation: ['', [Validators.required]],
+      stocktype: ['', [Validators.required]],
+      quantity: [0, [Validators.required]],
+    });
+  }
+
   checkreceivedqty(entredvalue, confirmedqty, returnedqty, maxvalue, data: any) {
     debugger;
     if (entredvalue < 0) {
@@ -156,6 +191,11 @@ export class StoreClerkComponent implements OnInit {
     }
   }
 
+  //onAfterShow(event) {
+  //  alert(event);
+  //  this.autoCompleteObject.focusInput();
+  //}
+
   filtergrn(event) {
 
     this.filteredgrns = [];
@@ -227,6 +267,45 @@ export class StoreClerkComponent implements OnInit {
       data.materialdescription = event.value.materialdescription;
       data.material = event.value.material;
     }
+  }
+
+  //generate barcode -gayathri
+  generateBarcode(details: any) {
+    this.showPrintDialog = true;
+    this.materialCode = details.material;
+    this.receivedDate = this.datePipe.transform(details.receiveddate, this.constants.dateFormat);
+    this.acceptedQty = details.confirmqty;
+    this.pono = details.pono;
+    this.invoiceNo = details.invoiceno;
+    this.grnNo = details.grnnumber;
+  }
+  get formArr() {
+    return this.invoiceForm.get('itemRows') as FormArray;
+    // return (this.invoiceForm.get('itemRows') as FormArray).controls;
+  }
+
+  GenerateBarcode() {
+    this.showPrintDialog = false;
+    this.showPrintLabel = true;
+    this.printData.materialid = this.materialCode;
+    this.printData.invoiceno = this.podetailsList[0].invoiceno;
+    this.printData.grnno = this.podetailsList[0].grnnumber;
+    this.printData.pono = this.podetailsList[0].pono;
+    this.printData.noofprint = this.noOfPrint;
+    this.printData.receiveddate = this.receivedDate;
+
+    //api call
+    this.wmsService.generateBarcodeMaterial(this.printData).subscribe(data => {
+      if (data) {
+
+        this.printData = data;
+        console.log(this.printData);
+
+      }
+      else {
+        alert("Error while generating Barcode");
+      }
+    })
   }
 
   getMaterials() {
@@ -410,7 +489,9 @@ export class StoreClerkComponent implements OnInit {
         }
         
        
-       
+        this.isonHold = this.podetailsList[0].onhold;
+        this.isonHoldview = this.podetailsList[0].onhold;
+        this.onholdremarks = this.podetailsList[0].onholdremarks;
        
 
         debugger;

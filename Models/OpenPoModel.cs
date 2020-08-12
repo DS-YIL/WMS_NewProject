@@ -236,6 +236,14 @@ public bool onhold { get; set; }
 		public string status { get; set; }
 	}
 
+	//podetails model
+	public class PODetails
+    {
+		public string pono { get; set; }
+		public string suppliername { get; set; }
+		public string quotationqty { get; set; }
+	}
+
 	//Invoice Details
 	public class InvoiceDetails
 	{
@@ -316,7 +324,10 @@ public bool onhold { get; set; }
 	}
     public class IssueRequestModel
     {
-		public int transferid { get; set; }
+		
+			public string material { get; set; }
+		//public string materialdescription { get; set; }
+	public int transferid { get; set; }
 		public int reserveformaterialid { get; set; }
 		public string ackstatus { get; set; }
 		public string remarks { get; set; }
@@ -345,7 +356,7 @@ public bool onhold { get; set; }
         public string requesterid { get; set; }
         public string projectname { get; set; }
         public string name { get; set; }
-        public string Material { get; set; }
+        //public string Material { get; set; }
         public string ackremarks { get; set; }
         public string Materialdescription { get; set; }
 		public DateTime createddate { get; set; }
@@ -364,7 +375,10 @@ public bool onhold { get; set; }
 		public string projectcode { get; set; }
 		public DateTime createdon { get; set; }
 		public string confirmstatus { get; set; }
+		public int materialcost { get; set; }
 	}
+
+	
     public class sequencModel
     {
         public int id { get; set; }
@@ -457,7 +471,7 @@ public bool onhold { get; set; }
 		public int outwardqty { get; set; }
 
 		public int inwardqty { get; set; }
-
+		public string itemlocation { get; set; }
 		public string mgapprover { get; set; }
 
 		public string fmapprover { get; set; }
@@ -514,10 +528,22 @@ public bool onhold { get; set; }
 
 		public int todayscount { get; set; }
 
+	}
 
+
+	public class MaterialData
+	{
+		public string material { get; set; }
+		public string materialtype { get; set; }
+		public string materialdescription { get; set; }
+		public string storeid { get; set; }
+		public string rackid { get; set; }
+		public string binid { get; set; }
+		public string unitprice { get; set; }
 
 	}
-	public class ReportModel
+
+		public class ReportModel
 	{
 		public int itemid { get; set; }
 		public string materialid { get; set; }
@@ -691,6 +717,7 @@ public bool onhold { get; set; }
 	}
 	public class ReserveMaterialModel
 	{
+		public int quantity { get; set; }
 		public int issuedqty { get; set; }
 		public int reserveformaterialid { get; set; }
 		public string materialid { get; set; }

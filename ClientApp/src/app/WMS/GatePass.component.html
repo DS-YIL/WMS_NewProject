@@ -67,16 +67,31 @@
   </div>
 </div>
 <div class="card-body" style="overflow-y:hidden;padding-top:0px;">
-  <div class="row" >
-    <p-table #dt [value]="gatepassModelList" [style]="{'width':'100%'}"
+  <div *ngIf="employee.roleid=='4'" class="row">
+
+    <div class="col-lg-1 col-md-1 col-sm-1 form-group">
+      <h6><label class="form-label">Status:</label></h6>
+    </div>
+    <div class="col-lg-2 col-md-2 col-sm-2 form-group" style="padding-left:0px;">
+      <select placeholder="Status" name="Status" (change)="onSelectStatus($event)" class="form-control">
+        <option selected value="Pending"> Pending</option>
+        <option value="Issued"> Issued</option>
+      </select>
+    </div>
+    <div class="col-lg-1 col-md-1 col-sm-1 form-group" style="padding-left:0px;">
+      <button type="submit" class="btn btn-info float-left" (click)="SubmitStatus()" style=" height: 35px;">Submit</button>
+    </div>
+  </div>
+  <div class="row">
+    <p-table #dt [value]="gatepassFiltered" [style]="{'width':'100%'}"
              [responsive]="true" [rows]="10"
              [resizableColumns]="true"
              columnResizeMode="expand"
              [paginator]="true" [rowsPerPageOptions]="[10,20,30,40,50]"
-             appendTo="body" [scrollable]="true"  scrollHeight="40vh">
+             appendTo="body" [scrollable]="true" scrollHeight="40vh">
       <ng-template pTemplate="header">
         <tr class="mprltbldata">
-          <th style="text-align: center; width: 70px">Sl. No.</th>
+          <th style="text-align: center; width: 70px">Sl.No.</th>
           <th style="text-align:center">GatePass Id</th>
           <!--<th style="text-align:center">Material</th>
           <th style="text-align:center">Qty</th>-->
@@ -121,8 +136,14 @@
           <td class="ptable-cell" style="text-align:left">{{rowData.vendorname}}</td>
           <!--<td class="ptable-cell" style="text-align:center">{{rowData.vehicleno}}</td>-->
           <td class="ptable-cell" style="text-align:left">{{rowData.reasonforgatepass}}</td>
-          <td class="ptable-cell" *ngIf="rowData.approverstatus" style="text-align:left">{{rowData.approverstatus}}</td>
-          <td class="ptable-cell" *ngIf="!rowData.approverstatus" style="text-align:left">Pending</td>
+          <td class="ptable-cell" style="text-align:left">
+            <span *ngIf="rowData.approverstatus && rowData.print==true">{{rowData.approverstatus}}</span>
+            <span *ngIf="!rowData.approverstatus">Pending for Approval</span>
+            <span *ngIf="rowData.approverstatus=='Approved' && rowData.print==false && rowData.returneddate==null" style="color:red">Partial Closure</span>
+            <span *ngIf="rowData.approverstatus=='Approved' && rowData.print==false && rowData.returneddate!=null" style="color:red">Full Closure</span>
+          </td>
+       
+          <!--<td class="ptable-cell" *ngIf="!rowData.approverstatus" style="text-align:left">Pending</td>-->
           <td class="ptable-cell" style="text-align:left">{{rowData.name}}</td>
           <td class="ptable-cell" style="text-align:center">{{rowData.requestedon | date :  constants.dateFormat}}</td>
           <td class="ptable-cell" *ngIf="employee.roleid!='4' && employee.roleid !='8'" style="text-align:center"><button *ngIf="rowData.approverstatus!='Approved' && rowData.requestedby==employee.employeeno" type="button" icon="fa fa-edit" pButton aria-hidden="true" (click)="openGatepassDialog(rowData,ri,'gatepassdialog')"></button></td>
@@ -327,18 +348,20 @@
               <!--<td class="ptable-cell" style="text-align:right">
                 <input [(ngModel)]="field.code" class="form-control" type="text" name="{{field[i].materialid}}" />
               </td>-->
-              <td class="ptable-cell" style="text-align:left;">
-                
-                <input *ngIf="rowData.materialid" [(ngModel)]="rowData.materialid" class="form-control" type="text" name="{{rowData.materialid}}" />
-                <!--<p-autoComplete *ngIf="!rowData.materialid" [(ngModel)]="material" [suggestions]="searchItems" formControlName="itemlocation" field="name" [dropdown]="true" (completeMethod)="bindSearchListData($event,'StockModelForm','itemlocation',StockModelForm.controls.itemlocation.value,undefined)"></p-autoComplete>-->
+            <td class="ptable-cell" style="text-align:left;">
 
-                <p-autoComplete appendTo="body" *ngIf="!rowData.materialid" (onSelect)="onMaterialSelected(material)" [(ngModel)]="material" type="text" [suggestions]="searchItems" field="name" [dropdown]="true" (completeMethod)="bindSearchListData($event,'ItemId')" size="8"></p-autoComplete>
+              <!--<input *ngIf="rowData.materialid" [(ngModel)]="rowData.materialid" class="form-control" type="text" name="{{rowData.materialid}}" />-->
+             <p-autoComplete  [(ngModel)]="rowData.materialid" type="text" appendTo="body" [suggestions]="searchItems"  (onSelect)="onMaterialSelected(rowData.materialid,ri)"  (completeMethod)="bindSearchListData($event,'ItemId')" [size]="10"
+                  [dropdown]="true"></p-autoComplete>
+
+              <!--<p-autoComplete appendTo="body" *ngIf="!rowData.materialid" (onSelect)="onMaterialSelected(material)" [(ngModel)]="material" type="text" [suggestions]="searchItems" field="name" [dropdown]="true" (completeMethod)="bindSearchListData($event,'ItemId')" size="8"></p-autoComplete>-->
+
+            </td>
+              <td class="ptable-cell" style="text-align:right">
+                <input style="text-align:left" pInputText type="number" (blur)="onComplete(rowData.quantity , rowData.materialid,ri)"  class="form-control" [(ngModel)]="rowData.quantity">
               </td>
               <td class="ptable-cell" style="text-align:right">
-                <input style="text-align:left" pInputText type="number" class="form-control" [(ngModel)]="rowData.quantity">
-              </td>
-              <td class="ptable-cell" style="text-align:right">
-                <input [(ngModel)]="rowData.materialcost" class="form-control" type="text" name="{{rowData.materialcost}}" />
+                <input [disabled]="true" [(ngModel)]="rowData.materialcost" class="form-control" type="text" name="{{rowData.materialcost}}" />
 
               </td>
               <td class="ptable-cell" style="text-align:right">
@@ -431,7 +454,7 @@
               </td>
           </ng-template>
         </p-table>
-      </div>/
+      </div>
     </div><br />
     <p-footer>
       <div class="ui-dialog-buttonpane ui-helper-clearfix">

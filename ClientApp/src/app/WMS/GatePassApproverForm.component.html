@@ -109,7 +109,7 @@
                 <th class="ptable-cell" style="text-align:center">Requested Qty</th>
                 <th class="ptable-cell" style="text-align:center" *ngIf="employee.roleid !='8'">Issue Qty</th>
                 <th class="ptable-cell" style="text-align:center" *ngIf="employee.roleid !='8' && materialList[0].gatepasstype=='Returnable'">Expected Date</th>
-                <th *ngIf="materialList[0].gatepasstype=='Returnable'" class="ptable-cell" style="text-align:center">Returned Date</th>
+                <!--<th *ngIf="materialList[0].gatepasstype=='Returnable'" class="ptable-cell" style="text-align:center">Returned Date</th>-->
               </tr>
             </ng-template>
             <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex" let-rindex=0>
@@ -117,24 +117,25 @@
                 <td class="ptable-cell" style="text-align:center"> {{ri+1}} </td>
                 <td class="ptable-cell" style="text-align:left">
                   <span *ngIf="employee.roleid !='4'">{{rowData.materialid}}</span>
-                  <button *ngIf="employee.roleid !='8' && employee.roleid =='4'" type="button" class="btn btn-link" (click)="showmateriallocationList(rowData.materialid,ri+1,ri,rowData.quantity);" style="padding-left:0px;">{{rowData.materialid}}</button>
+                  <button *ngIf="employee.roleid !='8' && employee.roleid =='4'" type="button" class="btn btn-link" (click)="showmateriallocationList(rowData.materialid,rowData.materialdescription,ri+1,ri,rowData.quantity,rowData.issuedqty,rowData.itemlocation,rowData.itemissueddate);" style="padding-left:0px;">{{rowData.materialid}}</button>
                 </td>
                 <td class="ptable-cell" style="text-align:left"> {{rowData.materialdescription}} </td>
                 <td class="ptable-cell" style="text-align:right"><span *ngIf="rowData.materialcost">{{rowData.materialcost}}</span></td>
                 <td class="ptable-cell" style="text-align:left"> {{rowData.remarks}} </td>
                 <td class="ptable-cell" style="text-align:right">{{rowData.quantity}}</td>
+                <td class="ptable-cell" [hidden]="true" style="text-align:right">{{rowData.itemlocation}}</td>
                 <td class="ptable-cell" *ngIf="employee.roleid !='8'">
                   <input pInputText type="number" style="text-align:center" class="form-control" [disabled]="txtDisable" [(ngModel)]="rowData.issuedqty">
                 </td>
                 <td class="ptable-cell" style="text-align:center" *ngIf="employee.roleid !='8' && materialList[0].gatepasstype=='Returnable'">{{checkValiddate(rowData.expecteddate)}}</td>
-                <td *ngIf="materialList[0].gatepasstype=='Returnable' && rowData.returneddate" class="ptable-cell" style="text-align:center">{{checkValiddate(rowData.returneddate)}}</td>
+                <!--<td *ngIf="materialList[0].gatepasstype=='Returnable' && rowData.returneddate" class="ptable-cell" style="text-align:center">{{checkValiddate(rowData.returneddate)}}</td>-->
 
-            </ng-template>
+</ng-template>
 
           </p-table>
           <p-footer>
             <div *ngIf="employee.roleid!='7'" class="ui-dialog-buttonpane ui-helper-clearfix">
-              <button [disabled]="btnDisableissue && materialList[0].gatepasstype=='Non Returnable'" type="button" class="btn btn-primary" (click)="updategatepassapproverstatus()">Submit</button>
+              <button [disabled]="btnDisableissue || materialList[0].gatepasstype=='Non Returnable'" type="button" class="btn btn-primary" (click)="updategatepassapproverstatus()">Submit</button>
 
             </div>
           </p-footer>
@@ -175,10 +176,10 @@
     <div *ngIf="showdialog">
       <div class="row  pl-0">
         <div class="col-lg-4 col-md-4 col-sm-4 pt-2 labelheading">
-          <label>Material Id :</label>&nbsp;<span><label class="labeltext">{{itemlocationData[0].material}}</label></span>
+          <label>Material Id :</label>&nbsp;<span><label class="labeltext">{{material}}</label></span>
         </div>
         <div class="col-lg-6 col-md-6 col-sm-6 pt-2 labelheading">
-          <label>Material desc :</label>&nbsp;<span><label class="labeltext">{{itemlocationData[0].materialdescription}}</label></span>
+          <label>Material desc :</label>&nbsp;<span><label class="labeltext">{{matdesc}}</label></span>
         </div>
         <div class="col-lg-2 col-md-2 col-sm-2 pt-2 labelheading">
           <label>Requested qty :</label>&nbsp;<span><label class="labeltext">{{reqqty}}</label></span>
@@ -186,7 +187,33 @@
       </div>
 
     </div>
-    <p-table #dt [value]="itemlocationData">
+    <p-table #dt [value]="itemissuedloc" *ngIf="issuedqty>0">
+      <ng-template pTemplate="header">
+        <tr class="mprltbldata">
+          <th style="text-align:center;width:70px">S.No</th>
+          <th style="text-align:center">Location</th>
+          <th style="text-align:center">Issued Qty</th>
+          <th style="text-align:center">Issue Date</th>
+          <!--<th style="text-align:center">Received Date</th>-->
+        </tr>
+
+      </ng-template>
+      <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
+        <tr>
+          <td class="ptable-cell" style="text-align:right">
+            {{ri+1}}
+          </td>
+          <td class="ptable-cell" style="text-align:center">{{rowData.location}}</td>
+          <td class="ptable-cell" style="text-align:right">{{rowData.issuedqty}}</td>
+          <!--<td class="ptable-cell" style="text-align:right">
+            <input id="id_{{ri+1}}" pInputText type="number" style="text-align:right" class="form-control" (change)="checkissueqty($event,rowData.issuedquantity,rowData.availableqty,rowData.material,rowData.createddate,ri);" [(ngModel)]="rowData.issuedquantity">
+          </td>-->
+        <td class="ptable-cell" style="text-align:center">{{rowData.issueddate | date :  constants.dateFormat}}</td>
+        </tr>
+      </ng-template>
+
+    </p-table>
+    <p-table #dt [value]="itemlocationData" *ngIf="issuedqty==0">
       <ng-template pTemplate="header">
         <tr class="mprltbldata">
           <th style="text-align:center;width:70px">S.No</th>

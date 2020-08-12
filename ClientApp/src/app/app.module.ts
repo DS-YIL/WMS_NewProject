@@ -79,6 +79,8 @@ import { MaterialReturnComponent } from './WMS/MaterialReturn.component'
 import { HoldGRViewComponent } from './WMS/HoldGRView.component'
 import { MRNViewComponent } from './WMS/MRNView.component'
 import { ASNViewComponent } from './WMS/ASNView.component'
+import { MaterialBarcodeComponent } from './WMS/MaterialBarcode.component';
+import { MaterialReportComponent } from './WMS/MaterialReport.component';
 ////pages
 import { LoginComponent } from './WMS/Login.component';
 import {HomeComponent} from './WMS/Home.component';
@@ -146,7 +148,9 @@ import { FileUploadModule } from 'primeng/fileupload';
     MaterialReturnComponent,
     HoldGRViewComponent,
     MRNViewComponent,
-    ASNViewComponent
+    ASNViewComponent,
+      MaterialBarcodeComponent,
+    MaterialReportComponent
 
   ],
   imports: [

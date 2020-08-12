@@ -181,13 +181,27 @@ export class materialRequestDetails {
   pono: string = "";
 }
 
+export class requestData {
+  pono: string;
+  suppliername: string;
+  material: string;
+}
+
 export class daylist {
   description: string;
   showdate: Date;
   showday: string = "";
 }
 
+export class locationdetails {
+  issuedqty: number;
+  location: string;
+  issueddate: Date;
+  materialid: any;
+}
+
 export class gatepassModel {
+  issuedqty: number;
   issuedquantity: number;
   gatepassid: number;
   gatepasstype: string;
@@ -226,7 +240,32 @@ export class materialistModel {
   expecteddate: any;
   returneddate: any;
   materialcost: string;
+  //availableqty: number;
   issuedqty: number;
+}
+
+export class materialList {
+  material: string;
+  materialdescription: string;
+  quantity: number = 0;
+  remarks: string;
+  availableqty: number;
+  issuedqty: number;
+  materialcost: number;
+  requesterid: any;
+  
+}
+
+export class materialListforReserve {
+  material: string;
+  materialdescription: string;
+  quantity: number = 0;
+  remarks: string;
+  availableqty: number;
+  issuedqty: number;
+  materialcost: number;
+  requesterid: any;
+  ReserveUpto: any;
 }
 
 export class outwardmaterialistModel {

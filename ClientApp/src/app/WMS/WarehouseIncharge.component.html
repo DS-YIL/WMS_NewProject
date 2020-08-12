@@ -44,7 +44,7 @@
               <th rowspan="2" style="width:70px;text-align:center">Accepted Quantity</th>
               <th rowspan="2" style="width:70px;text-align: center">Returned Quantity</th>
               <!--<th rowspan="2" *ngIf="!isnonpo" style="width:70px;text-align:center">Pending Quantity</th>-->
-              <th rowspan="2" style="width:80px;text-align:center">Material Barcode</th>
+              <!--<th rowspan="2" style="width:80px;text-align:center">Material Barcode</th>-->
               <th colspan="2" style="width:250px; text-align: center">Put Away</th>
             </tr>
             <tr>
@@ -52,60 +52,63 @@
               <th style="width:150px; text-align: center">Location</th>
             </tr>
 
-          </ng-template>
-          <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex" let-expanded="expanded" let-columns="columns">
-            <tr class="ui-widget-header" *ngIf="rowGroupMetadata[rowData.material].index === rowIndex">
-              <!--<td>
-                        <a href="#" [prowtoggler]="rowdata">
-              <i [ngclass]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></i>
-            </a>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex" let-expanded="expanded" let-columns="columns">
+          <tr class="ui-widget-header" *ngIf="rowGroupMetadata[rowData.material].index === rowIndex">
+            <!--<td>
+              <a href="#" [prowtoggler]="rowdata">
+    <i [ngclass]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></i>
+  </a>
 
-                      </td>-->
+            </td>-->
 
-              <td class="ptable-cell" style="text-align:center;width:70px">{{rowData.serialno}}</td>
-              <td class="ptable-cell" style="text-align:center;width:150px;" colspan="1">
-                {{rowData.material}}
-              </td>
-              <td class="ptable-cell" style="text-align:left;">{{rowData.materialdescription}}</td>
-              <td *ngIf="!isnonpo" class="ptable-cell" style="text-align:right;width:100px;">{{rowData.materialqty}}</td>
-              <td class="ptable-cell" style="text-align:right;width:100px;">{{rowData.receivedqty}}</td>
-              <td class="ptable-cell" style="text-align:right;width:100px;">{{rowData.confirmqty}}</td>
-              <td class="ptable-cell" style="text-align:right;width:100px;">{{rowData.returnqty}}</td>
-              <!--<td *ngIf="!isnonpo" class="ptable-cell" style="text-align:right;width:100px;">{{rowData.materialqty-rowData.confirmqty}}</td>-->
-              <td style="text-align:center">
-                <button type="button" icon="fa fa-print" pButton aria-hidden="true" (click)="generateBarcode(rowData)"></button>
-              </td>
-              <td colspan="2" class="ptable-cell" style="text-align:center;width:100px;">
-                <a *ngIf="rowData.itemlocation" href="#" [pRowToggler]="rowData">
-                  <i [ngClass]="expanded ? 'pi pi-fw pi-chevron-circle-down' : 'pi pi-fw pi-chevron-circle-right'" style="    vertical-align: middle;padding-bottom: .1em;color: #20f320d6"></i>
-                </a>
-                <i *ngIf="!rowData.itemlocation && rowData.confirmqty != 0" class="fa fa-location-arrow" style="color:blue" pTooltip="Add Location" (click)="showDialog(rowData,ri)" aria-hidden="true"></i>
+            <td class="ptable-cell" style="text-align:center;width:70px">{{rowData.serialno}}</td>
+            <td class="ptable-cell" style="text-align:left;width:150px;" colspan="1">
+              {{rowData.material}}
+            </td>
+            <td class="ptable-cell" style="text-align:left;">
+              <span *ngIf="rowData.materialdescription">{{rowData.materialdescription}}</span>
+              <span *ngIf="!rowData.materialdescription">-</span>
+            </td>
+            <td *ngIf="!isnonpo" class="ptable-cell" style="text-align:right;width:100px;">{{rowData.materialqty}}</td>
+            <td class="ptable-cell" style="text-align:right;width:100px;">{{rowData.receivedqty}}</td>
+            <td class="ptable-cell" style="text-align:right;width:100px;">{{rowData.confirmqty}}</td>
+            <td class="ptable-cell" style="text-align:right;width:100px;">{{rowData.returnqty}}</td>
+            <!--<td *ngIf="!isnonpo" class="ptable-cell" style="text-align:right;width:100px;">{{rowData.materialqty-rowData.confirmqty}}</td>-->
+            <!--<td style="text-align:center">
+              <button type="button" icon="fa fa-print" pButton aria-hidden="true" (click)="generateBarcode(rowData)"></button>
+            </td>-->
+            <td colspan="2" class="ptable-cell" style="text-align:center;width:100px;">
+              <a *ngIf="rowData.itemlocation" href="#" [pRowToggler]="rowData">
+                <i [ngClass]="expanded ? 'pi pi-fw pi-chevron-circle-down' : 'pi pi-fw pi-chevron-circle-right'" style="    vertical-align: middle;padding-bottom: .1em;color: #20f320d6"></i>
+              </a>
+              <i *ngIf="!rowData.itemlocation && rowData.confirmqty != 0" class="fa fa-location-arrow" style="color:blue" pTooltip="Add Location" (click)="showDialog(rowData,ri)" aria-hidden="true"></i>
 
-              </td>
-            </tr>
-          </ng-template>
-          <ng-template pTemplate="rowexpansion" let-rowData let-rowIndex="rowIndex">
-            <tr>
-              <td *ngIf="!isnonpo" colspan="8"></td>
-              <td *ngIf="isnonpo" colspan="7"></td>
-              <td style="text-align:right;width:70px">
-                {{rowData.availableqty}}
-              </td>
-              <td style="width:180px">
-                {{rowData.itemlocation}}
-              </td>
-            </tr>
-          </ng-template>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="rowexpansion" let-rowData let-rowIndex="rowIndex">
+          <tr>
+            <td *ngIf="!isnonpo" colspan="7"></td>
+            <td *ngIf="isnonpo" colspan="6"></td>
+            <td style="text-align:right;width:70px">
+              {{rowData.availableqty}}
+            </td>
+            <td style="width:180px">
+              {{rowData.itemlocation}}
+            </td>
+          </tr>
+        </ng-template>
 
-        </p-table>
+      </p-table>
 
-        <br /><br />
-
-
+      <br /><br />
 
 
 
-        <!--<p-table #dt [value]="podetailsList" [style]="{'width':'100%','overflow':'auto!important'}"
+
+
+      <!--<p-table #dt [value]="podetailsList" [style]="{'width':'100%','overflow':'auto!important'}"
                [responsive]="true" [rows]="50"
                [resizableColumns]="true"
                columnResizeMode="expand"
@@ -176,148 +179,148 @@
 
 
 
+    </div>
+  </div>
+  <br />
+  <p-dialog header="Generate Barcode" [(visible)]="showPrintDialog" [contentStyle]="{'overflow':'visible'}" [style]="{width: '60%'}">
+    <div class="row ">
+      <div class="col-lg-1 col-md-1 col-sm-1 form-inline ">
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
+        <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">PO No.:</label>
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
+        <input type="text" [disabled]="true" class="form-control" [(ngModel)]="pono" />
+      </div>
+      <div class="col-lg-1 col-md-1 col-sm-1 form-inline ">
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
+        <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">Invoice No.:</label>
+      </div>
+      <div class="col-lg-3 col-md-3 col-sm-3 form-inline ">
+        <input type="text" [disabled]="true" class="form-control" [(ngModel)]="invoiceNo" />
       </div>
     </div>
     <br />
-    <p-dialog header="Generate Barcode" [(visible)]="showPrintDialog" [contentStyle]="{'overflow':'visible'}" [style]="{width: '60%'}">
-      <div class="row ">
-        <div class="col-lg-1 col-md-1 col-sm-1 form-inline ">
-        </div>
-        <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
-          <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">PO No.:</label>
-        </div>
-        <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
-          <input type="text" [disabled]="true" class="form-control" [(ngModel)]="pono" />
-        </div>
-        <div class="col-lg-1 col-md-1 col-sm-1 form-inline ">
-        </div>
-        <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
-          <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">Invoice No.:</label>
-        </div>
-        <div class="col-lg-3 col-md-3 col-sm-3 form-inline ">
-          <input type="text" [disabled]="true" class="form-control" [(ngModel)]="invoiceNo" />
-        </div>
+    <div class="row">
+      <div class="col-lg-1 col-md-1 col-sm-1 form-inline">
       </div>
-      <br />
-      <div class="row">
-        <div class="col-lg-1 col-md-1 col-sm-1 form-inline">
-        </div>
-        <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
-          <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">GRN No.:</label>
-        </div>
-        <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
-          <input type="text" [disabled]="true" class="form-control" [(ngModel)]="grnNo" />
-        </div>
-        <div class="col-lg-1 col-md-1 col-sm-1 form-inline">
-        </div>
-        <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
-          <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">Material Code:</label>
-        </div>
-        <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
-          <input type="text" [disabled]="true" class="form-control" [(ngModel)]="materialCode" />
-        </div>
-
+      <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
+        <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">GRN No.:</label>
       </div>
-      <br />
-      <div class="row">
-        <div class="col-lg-1 col-md-1 col-sm-1 form-inline">
-        </div>
+      <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
+        <input type="text" [disabled]="true" class="form-control" [(ngModel)]="grnNo" />
+      </div>
+      <div class="col-lg-1 col-md-1 col-sm-1 form-inline">
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
+        <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">Material Code:</label>
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
+        <input type="text" [disabled]="true" class="form-control" [(ngModel)]="materialCode" />
+      </div>
 
-        <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
-          <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">Received Date:</label>
-        </div>
-        <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
-          <input type="text" [disabled]="true" class="form-control" [(ngModel)]="receivedDate" />
-        </div>
-        <div class="col-lg-1 col-md-1 col-sm-1 form-inline">
-        </div>
-        <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
-          <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">Accepted Qty:</label>
-        </div>
-        <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
-          <input type="text" [disabled]="true" class="form-control" [(ngModel)]="acceptedQty" />
-        </div>
+    </div>
+    <br />
+    <div class="row">
+      <div class="col-lg-1 col-md-1 col-sm-1 form-inline">
+      </div>
 
-        <!--<div class="col-lg-2 col-md-2 col-sm-2 form-inline">
+      <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
+        <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">Received Date:</label>
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
+        <input type="text" [disabled]="true" class="form-control" [(ngModel)]="receivedDate" />
+      </div>
+      <div class="col-lg-1 col-md-1 col-sm-1 form-inline">
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
+        <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">Accepted Qty:</label>
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
+        <input type="text" [disabled]="true" class="form-control" [(ngModel)]="acceptedQty" />
+      </div>
+
+      <!--<div class="col-lg-2 col-md-2 col-sm-2 form-inline">
         <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">Item No.</label>
       </div>
       <div class="col-lg-3 col-md-3 col-sm-3 form-inline">
         <input type="text" class="form-control" value="40" />
       </div>-->
+    </div>
+    <br />
+    <div class="row">
+      <div class="ccol-lg-1 col-md-1 col-sm-1 form-inline">
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
+        <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">No. of Print:</label>
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
+        <input type="text" class="form-control" [(ngModel)]="noOfPrint" />
+      </div>
+      <div class="col-lg-1 col-md-1 col-sm-1 form-inline">
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
+        <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">Qty:</label>
+      </div>
+      <div class="col-lg-3 col-md-3 col-sm-3 form-inline ">
+        <button (click)="decreaseQty()"><<</button>
+        <input type="text" class="form-control" [disabled]="true" value="{{qty}}/{{noOfPrint}}" style="width: 100px;text-align:center" />
+        <button (click)="increaseQty()">&#62;&#62;</button>
+      </div>
+    </div>
+
+    <br>
+    <div class="row">
+      <div class="col-lg-5 col-md-5 col-sm-5"></div>
+      <div class="col-lg-3 col-md-3 col-sm-3">
+        <button type="button" class="btn btn-primary" (click)="GenerateBarcode()" label="Save">Generate Barcode</button>
+      </div>
+    </div>
+  </p-dialog>
+
+  <p-dialog header="Print Barcode" [(visible)]="showPrintLabel" [contentStyle]="{'overflow':'visible'}" [style]="{width: '50%'}">
+    <form>
+      <div class="row">
+        <div class="col-lg-9 col-md-9 col-sm-9"></div>
+        <div class="col-lg-3 col-md-3 col-sm-3">
+          <label><b>No. of prints:</b></label>
+          <label>{{printData.noofprint}}</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-1 col-md-1 col-sm-1"></div>
+        <div class="col-lg-10 col-md-10 col-sm-10">
+          <table>
+            <tr>
+              <th style="outline: thin solid;width:400px;height:30px">Material Code:</th>
+              <th style="outline: thin solid;width:400px;height:30px">{{printData.materialid}}</th>
+              <th style="outline: thin solid;width:200px;height:30px" rowspan="2">
+                <img class="images" src="{{printData.materialcodePath}}" />
+              </th>
+              <!--<th style="outline: thin solid;width:400px;height:30px">{{printData.materialid}}</th>-->
+            </tr>
+            <tr>
+              <th style="outline: thin solid;width:400px;height:30px">Received Date:</th>
+              <th style="outline: thin solid;width:400px;height:30px">{{printData.receiveddate}}</th>
+            </tr>
+            <tr>
+              <th style="outline: thin solid;width:400px;height:90px">GRN No. - Material Code : </th>
+              <th style="outline: thin solid;width:400px;height:30px">{{printData.grnno}}- {{printData.materialid}}</th>
+              <th style="outline: thin solid; width: 200px; height: 90px; align-content: center" rowspan="2"><img class="images" src="{{printData.barcodePath}}" /></th>
+              <!--<th style="outline: thin solid;width:400px;height:30px"></th>-->
+            </tr>
+            <tr>
+              <th style="outline: thin solid;width:400px;height:30px">WMS GRN No.</th>
+              <th style="outline: thin solid;width:400px;height:30px">1/{{printData.noofprint}}</th>
+              <!--<th style="outline: thin solid; width: 500px; height: 30px">1/{{printData.noofprint}}</th>-->
+              <!--<th style="outline: thin solid;width:400px;height:30px"></th>-->
+            </tr>
+          </table>
+        </div>
       </div>
       <br />
-      <div class="row">
-        <div class="ccol-lg-1 col-md-1 col-sm-1 form-inline">
-        </div>
-        <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
-          <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">No. of Print:</label>
-        </div>
-        <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
-          <input type="text" class="form-control" [(ngModel)]="noOfPrint" />
-        </div>
-        <div class="col-lg-1 col-md-1 col-sm-1 form-inline">
-        </div>
-        <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
-          <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">Qty:</label>
-        </div>
-        <div class="col-lg-3 col-md-3 col-sm-3 form-inline ">
-          <button (click)="decreaseQty()"><<</button>
-          <input type="text" class="form-control" [disabled]="true" value="{{qty}}/{{noOfPrint}}" style="width: 100px;text-align:center" />
-          <button (click)="increaseQty()">&#62;&#62;</button>
-        </div>
-      </div>
-
-      <br>
-      <div class="row">
-        <div class="col-lg-5 col-md-5 col-sm-5"></div>
-        <div class="col-lg-3 col-md-3 col-sm-3">
-          <button type="button" class="btn btn-primary" (click)="GenerateBarcode()" label="Save">Generate Barcode</button>
-        </div>
-      </div>
-    </p-dialog>
-
-    <p-dialog header="Print Barcode" [(visible)]="showPrintLabel" [contentStyle]="{'overflow':'visible'}" [style]="{width: '50%'}">
-      <form>
-        <div class="row">
-          <div class="col-lg-9 col-md-9 col-sm-9"></div>
-          <div class="col-lg-3 col-md-3 col-sm-3">
-            <label><b>No. of prints:</b></label>
-            <label>{{printData.noofprint}}</label>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-lg-1 col-md-1 col-sm-1"></div>
-          <div class="col-lg-10 col-md-10 col-sm-10">
-            <table>
-              <tr>
-                <th style="outline: thin solid;width:400px;height:30px">Material Code:</th>
-                <th style="outline: thin solid;width:400px;height:30px">{{printData.materialid}}</th>
-                <th style="outline: thin solid;width:200px;height:30px" rowspan="2">
-                  <img class="images" src="{{printData.materialcodePath}}" />
-                </th>
-                <!--<th style="outline: thin solid;width:400px;height:30px">{{printData.materialid}}</th>-->
-              </tr>
-              <tr>
-                <th style="outline: thin solid;width:400px;height:30px">Received Date:</th>
-                <th style="outline: thin solid;width:400px;height:30px">{{printData.receiveddate}}</th>
-              </tr>
-              <tr>
-                <th style="outline: thin solid;width:400px;height:90px">GRN No. - Material Code : </th>
-                <th style="outline: thin solid;width:400px;height:30px">{{printData.grnno}}- {{printData.materialid}}</th>
-                <th style="outline: thin solid; width: 200px; height: 90px; align-content: center" rowspan="2"><img class="images" src="{{printData.barcodePath}}" /></th>
-                <!--<th style="outline: thin solid;width:400px;height:30px"></th>-->
-              </tr>
-              <tr>
-                <th style="outline: thin solid;width:400px;height:30px">WMS GRN No.</th>
-                <th style="outline: thin solid;width:400px;height:30px">1/{{printData.noofprint}}</th>
-                <!--<th style="outline: thin solid; width: 500px; height: 30px">1/{{printData.noofprint}}</th>-->
-                <!--<th style="outline: thin solid;width:400px;height:30px"></th>-->
-              </tr>
-            </table>
-          </div>
-        </div>
-        <br />
-        <!--<div class="row">
+      <!--<div class="row">
         <div class="col-lg-3 col-md-3 col-sm-3"></div>
         <div class="col-lg-7 col-md-7 col-sm-7">
           <img class="images" src="{{printData.barcodePath}}" />
@@ -335,178 +338,181 @@
                <label>1/{{printData.noofprint}}</label>
              </div>
            </div>-->
-        <div class="row">
-          <div class="col-lg-5 col-md-5 col-sm-5"></div>
-          <div class="col-lg-3 col-md-3 col-sm-3">
-            <button type="button" class="btn btn-primary" label="Save">Print</button>
-          </div>
-        </div>
-      </form>
-    </p-dialog>
-    <p-dialog header="Put Away Location" [(visible)]="showLocationDialogxx" [contentStyle]="{'overflow':'visible'}" [style]="{width: '50%'}">
-      <form [formGroup]="StockModelForm">
-        <div class="row " style="margin-top:10px;">
-          <div class="col-lg-4 col-md-4 col-sm-4 form-group">
-            <label for="itemlocation" class="form-label">Select Location</label>
-            <div class="form-inline-list">
-              <select class="form-control dropdown" formControlName="locatorid" [(ngModel)]="StockModel.locatorid">
-                <option selected></option>
-                <option *ngFor=" let loclist of locationlist " value={{loclist.locatorid}}>
-                  {{loclist.locatorname}}
-                </option>
-              </select>
-            </div>
-          </div>
-          <div class="col-lg-4 col-md-4 col-sm-4 form-group">
-            <label for="rackid" class="form-label">Select Rack</label>
-            <div class="form-inline-list">
-
-              <select class="form-control dropdown" formControlName="rackid" [(ngModel)]="StockModel.rackid">
-
-                <option selected value="*ngIf=rackid"></option>
-                <option *ngFor=" let loclist of racklist " value={{loclist.rackid}}>
-                  {{loclist.racknumber}}
-                </option>
-              </select>
-
-            </div>
-          </div>
-          <div class="col-lg-4 col-md-4 col-sm-4 form-group">
-            <label for="binid" class="form-label">Select Bin</label>
-            <div class="form-inline-list">
-              <select class="form-control dropdown" formControlName="binid" [(ngModel)]="StockModel.binid">
-
-                <option selected></option>
-                <option *ngFor=" let loclist of binlist" value={{loclist.binid}}>
-                  {{loclist.binnumber}}
-                </option>
-              </select>
-
-            </div>
-          </div>
-
-        </div>
-      </form>
-      <p-footer>
-        <div class="ui-dialog-buttonpane ui-helper-clearfix">
-          <button type="button" pButton icon="fa fa-close" (click)="onSubmitStockDetails()" label="Submit"></button>
-        </div>
-      </p-footer>
-    </p-dialog>
-
-    <p-dialog header="List View" [(visible)]="showList" [contentStyle]="{'overflow':'visible'}">
-      <div class="ui-g ui-fluid">
-        <p-listbox [options]="searchItems" [(ngModel)]="selectedItem" optionLabel="name" (onChange)="onSelectedOptionsChange(selectedItem)"></p-listbox>
-      </div>
-      <p-footer>
-        <div class="ui-dialog-buttonpane ui-helper-clearfix">
-          <button type="button" pButton icon="fa fa-close" (click)="dialogCancel('showList')" label="Cancel"></button>
-        </div>
-      </p-footer>
-    </p-dialog>
-    <p-dialog header="Put Away Location" [(visible)]="showLocationDialog" (onHide)="close()" [modal]="true" [style]="{width: '95vw',top: '95.7px',height:'30vw'}" [maximizable]="true" [baseZIndex]="10000"
-              [draggable]="true" [resizable]="false">
       <div class="row">
-        <div class="col-lg-4 col-md-4 labelheading">
-          <label>Material Id :</label>&nbsp;<span><label class="labeltext">{{matid}}</label></span>
+        <div class="col-lg-5 col-md-5 col-sm-5"></div>
+        <div class="col-lg-3 col-md-3 col-sm-3">
+          <button type="button" class="btn btn-primary" label="Save">Print</button>
         </div>
-        <div class="col-lg-6 col-md-6 labelheading">
-          <label>Material desc :</label>&nbsp;<span><label class="labeltext">{{matdescription}}</label></span>
+      </div>
+    </form>
+  </p-dialog>
+  <p-dialog header="Put Away Location" [(visible)]="showLocationDialogxx" [contentStyle]="{'overflow':'visible'}" [style]="{width: '50%'}">
+    <form [formGroup]="StockModelForm">
+      <div class="row " style="margin-top:10px;">
+        <div class="col-lg-4 col-md-4 col-sm-4 form-group">
+          <label for="itemlocation" class="form-label">Select Location</label>
+          <div class="form-inline-list">
+            <select class="form-control dropdown" formControlName="locatorid" [(ngModel)]="StockModel.locatorid" >
+              <option selected></option>
+              <option *ngFor=" let loclist of locationlist " value={{loclist.locatorid}}>
+                {{loclist.locatorname}}
+              </option>
+            </select>
+          </div>
         </div>
-        <div class="col-lg-2 col-md-2 labelheading">
-          <label>Accepted Qty :</label>&nbsp;<span><label class="labeltext">{{matqty}}</label></span>
+        <div class="col-lg-4 col-md-4 col-sm-4 form-group">
+          <label for="rackid" class="form-label">Select Rack</label>
+          <div class="form-inline-list">
+
+            <select class="form-control dropdown" formControlName="rackid" [(ngModel)]="StockModel.rackid">
+
+              <option selected value="*ngIf=rackid"></option>
+              <option *ngFor=" let loclist of racklist " value={{loclist.rackid}}>
+                {{loclist.racknumber}}
+              </option>
+            </select>
+
+          </div>
         </div>
-        <!--<div class="col-lg-1 col-md-1 labelheading">
+        <div class="col-lg-4 col-md-4 col-sm-4 form-group">
+          <label for="binid" class="form-label">Select Bin</label>
+          <div class="form-inline-list">
+            <select class="form-control dropdown" formControlName="binid" [(ngModel)]="StockModel.binid">
+
+              <option selected></option>
+              <option *ngFor=" let loclist of binlist" value={{loclist.binid}}>
+                {{loclist.binnumber}}
+              </option>
+            </select>
+
+          </div>
+        </div>
+
+      </div>
+    </form>
+    <p-footer>
+      <div class="ui-dialog-buttonpane ui-helper-clearfix">
+        <button type="button" pButton icon="fa fa-close" (click)="onSubmitStockDetails()" label="Submit"></button>
+      </div>
+    </p-footer>
+  </p-dialog>
+
+  <p-dialog header="List View" [(visible)]="showList" [contentStyle]="{'overflow':'visible'}">
+    <div class="ui-g ui-fluid">
+      <p-listbox [options]="searchItems" [(ngModel)]="selectedItem" optionLabel="name" (onChange)="onSelectedOptionsChange(selectedItem)"></p-listbox>
+    </div>
+    <p-footer>
+      <div class="ui-dialog-buttonpane ui-helper-clearfix">
+        <button type="button" pButton icon="fa fa-close" (click)="dialogCancel('showList')" label="Cancel"></button>
+      </div>
+    </p-footer>
+  </p-dialog>
+  <p-dialog header="Put Away Location" [(visible)]="showLocationDialog" (onHide)="close()"  [modal]="true" [style]="{width: '95vw',top: '95.7px',height:'30vw'}" [maximizable]="true" [baseZIndex]="10000"
+            [draggable]="true" [resizable]="false">
+    <div class="row">
+      <div class="col-lg-4 col-md-4 labelheading">
+        <label>Material Id :</label>&nbsp;<span><label class="labeltext">{{matid}}</label></span>
+      </div>
+      <div class="col-lg-6 col-md-6 labelheading">
+        <label>Material desc :</label>&nbsp;<span>
+  <label *ngIf="matdescription" class="labeltext">{{matdescription}}</label>
+  <label *ngIf="!matdescription" class="labeltext">-</label>
+</span>
+      </div>
+      <div class="col-lg-2 col-md-2 labelheading">
+        <label>Accepted Qty :</label>&nbsp;<span><label class="labeltext">{{matqty}}</label></span>
+      </div>
+      <!--<div class="col-lg-1 col-md-1 labelheading">
         <button type="button" class="btn btn-primary btn-sm" style="float:right;margin-left:10px;" (click)="addNewRow()" label="Save"><i class="fa fa-plus"></i></button>
       </div>-->
-      </div>
-      <div>
-        <!--<button type="button" (click)="addNewRow()" class="btn btn-primary">Add new Row</button><br>-->
+    </div>
+    <div>
+      <!--<button type="button" (click)="addNewRow()" class="btn btn-primary">Add new Row</button><br>-->
 
 
 
-        <div class="row " style="margin-top:10px">
+      <div class="row " style="margin-top:10px">
 
 
-          <div class="col-lg-12 col-md-12 col-sm-12">
-            <p-confirmDialog header="Confirmation" icon="fa fa-question-circle" width="500px"></p-confirmDialog>
+        <div class="col-lg-12 col-md-12 col-sm-12">
+          <p-confirmDialog header="Confirmation" icon="fa fa-question-circle" width="500px"></p-confirmDialog>
 
-            <p-table [value]="stock" [style]="{'width':'97%','height':'500px','overflow':'visible!important'}">
-              <ng-template pTemplate="caption">
-                Put Away Location
-                <button type="button" icon="fa fa-plus" pButton aria-hidden="true" pTooltip="Add Put Away Location" (click)="addNewRow()" style="float: right;height: 26px;"></button>
-              </ng-template>
-              <ng-template pTemplate="header">
-                <tr class="mprltbldata">
-                  <th class="ptable-cell" style="width:60px;text-align:center">Sl. No.</th>
-                  <!--<th class="ptable-cell">Material</th>-->
-                  <th style="text-align:center" class="ptable-cell">Location</th>
-                  <th style="text-align:center" class="ptable-cell">Rack</th>
-                  <th style="text-align:center" class="ptable-cell">Bin</th>
-                  <th style="text-align:center" class="ptable-cell">Stock Type</th>
-                  <th style="text-align:center" class="ptable-cell">Quantity</th>
-                  <th style="text-align:center" class="ptable-cell"></th>
-                </tr>
-              </ng-template>
-              <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex" let-rindex=0>
-                <tr>
-                  <td class="ptable-cell" style="text-align:center"> {{ri+1}} </td>
+          <p-table [value]="stock" [style]="{'width':'97%','height':'500px','overflow':'visible!important'}">
+            <ng-template pTemplate="caption">
+              Put Away Location
+              <button type="button" icon="fa fa-plus" pButton aria-hidden="true" pTooltip="Add Put Away Location" (click)="addNewRow()" style="float: right;height: 26px;"></button>
+            </ng-template>
+            <ng-template pTemplate="header">
+              <tr class="mprltbldata">
+                <th class="ptable-cell" style="width:60px;text-align:center">Sl. No.</th>
+                <!--<th class="ptable-cell">Material</th>-->
+                <th style="text-align:center" class="ptable-cell">Location</th>
+                <th style="text-align:center" class="ptable-cell">Rack</th>
+                <th style="text-align:center" class="ptable-cell">Bin</th>
+                <th style="text-align:center" class="ptable-cell">Stock Type</th>
+                <th style="text-align:center" class="ptable-cell">Quantity</th>
+                <th style="text-align:center" class="ptable-cell"></th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex" let-rindex=0>
+              <tr>
+                <td class="ptable-cell" style="text-align:center"> {{ri+1}} </td>
 
-                  <td class="ptable-cell" style="text-align:left;">
-                    <select class="form-control dropdown" [(ngModel)]="rowData.locatorid">
+                <td class="ptable-cell" style="text-align:left;">
+                  <select  class="form-control dropdown"  [(ngModel)]="rowData.locatorid">
 
-                      <!--<option selected value="*ngIf=rowData.locatorid!=null"></option>-->
-                      <!--*ngIf="rowData.locatorid!=null ? rowData.locatorid:'Select Stock'"-->
-                      <option *ngFor=" let loclist of locationlist " value={{loclist.locatorid}}>
-                        {{loclist.locatorname}}
-                      </option>
-                    </select>
-                  </td>
-                  <td class="ptable-cell" style="text-align:left">
-                    <select class="form-control dropdown" [(ngModel)]="rowData.rackid">
+                    <!--<option selected value="*ngIf=rowData.locatorid!=null"></option>-->
+                    <!--*ngIf="rowData.locatorid!=null ? rowData.locatorid:'Select Stock'"-->
+                    <option *ngFor=" let loclist of locationlist " value={{loclist.locatorid}}>
+                      {{loclist.locatorname}}
+                    </option>
+                  </select>
+                </td>
+                <td class="ptable-cell" style="text-align:left">
+                  <select class="form-control dropdown" [(ngModel)]="rowData.rackid">
 
-                      <!--<option selected value="*ngIf=rowData.rackid==null"></option>-->
-                      <option *ngFor=" let loclist of racklist " value={{loclist.rackid}}>
-                        {{loclist.racknumber}}
-                      </option>
-                    </select>
-                  </td>
-                  <td class="ptable-cell" style="text-align:left">
-                    <select class="form-control dropdown" [(ngModel)]="rowData.binid">
+                    <!--<option selected value="*ngIf=rowData.rackid==null"></option>-->
+                    <option *ngFor=" let loclist of racklist " value={{loclist.rackid}}>
+                      {{loclist.racknumber}}
+                    </option>
+                  </select>
+                </td>
+                <td class="ptable-cell" style="text-align:left">
+                  <select class="form-control dropdown" [(ngModel)]="rowData.binid">
 
-                      <!--<option selected ></option>-->
-                      <option *ngFor=" let loclist of binlist" value={{loclist.binid}}>
-                        {{loclist.binnumber}}
-                      </option>
-                    </select>
+                    <!--<option selected ></option>-->
+                    <option *ngFor=" let loclist of binlist" value={{loclist.binid}}>
+                      {{loclist.binnumber}}
+                    </option>
+                  </select>
 
-                  </td>
-                  <td class="ptable-cell" style="text-align:left">
-                    <input readonly [(ngModel)]="rowData.stocktype" class="form-control" type="text" name="{{rowData.stocktype}}" />
+                </td>
+                <td class="ptable-cell" style="text-align:left">
+                  <input readonly [(ngModel)]="rowData.stocktype" class="form-control" type="text" name="{{rowData.stocktype}}" />
 
-                  </td>
-                  <td class="ptable-cell" style="text-align:right">
-                    <input (click)="onQtyClick(ri)" [(ngModel)]="rowData.qty" class="form-control" type="number" name="{{rowData.qty}}" />
+                </td>
+                <td class="ptable-cell" style="text-align:right">
+                  <input (click)="onQtyClick(ri)" [(ngModel)]="rowData.qty" class="form-control" type="number" name="{{rowData.qty}}" />
 
-                  </td>
-
-
+                </td>
 
 
-                  <td class="ptable-cell" style="text-align:center">
-                    <button (click)="deleteRow(ri)" class="btn btn-danger" style="margin-top:10%"><i class="fa fa-trash"></i></button>
-                  </td>
 
 
-              </ng-template>
+                <td class="ptable-cell" style="text-align:center">
+                  <button (click)="deleteRow(ri)" class="btn btn-danger" style="margin-top:10%"><i class="fa fa-trash"></i></button>
+                </td>
 
 
-            </p-table>
-          </div>
+            </ng-template>
+
+
+          </p-table>
         </div>
+      </div>
 
 
-        <!--<form [formGroup]="invoiceForm">
+      <!--<form [formGroup]="invoiceForm">
         <div formArrayName="itemRows">
 
           <div *ngFor="let itemrow of formArr.controls; let i=index" [formGroupName]="i">
@@ -518,7 +524,7 @@
                 <label for="itemlocation" class="form-label">Select Location</label>
                 <div class="form-inline-list">
                   <input type="text" formControlName="rackid" />
-
+                
                 </div>
               </div>
               <div class="col-lg-2 col-md-2 col-sm-2 form-group">
@@ -569,7 +575,7 @@
         </div>
 
       </form>-->
-      </div>
+    </div>
 
       <p-footer>
         <button type="button" pButton icon="fa fa-close" (click)="onSubmitStockDetails()" label="Submit"></button>

@@ -75,6 +75,17 @@ export class wmsService {
     return this.http.get<any[]>(this.url + 'POData/GetPOList?postatus=' + postatus, this.httpOptions);
   }
 
+
+  //Get PO Details
+  getPODetails(): Observable<any[]> {
+    return this.http.get<any[]>(this.url + 'POData/getPODetails' , this.httpOptions);
+  }
+
+  //Get Material Details
+  getMatDetails(): Observable<any[]> {
+    return this.http.get<any[]>(this.url + 'POData/getMatDetails', this.httpOptions);
+  }
+
   //generate barcode for materials
   generateBarcodeMaterial(printdata: printMaterial): Observable<any> {
     return this.http.post<any>(this.url + 'POData/generateBarcodeMaterial', printdata, this.httpOptions);
@@ -118,6 +129,12 @@ export class wmsService {
   //Get Material Details
   getMaterialDetails(grnno: string): Observable<any> {
     return this.http.get<any>(this.url + 'POData/getMaterialDetailsforgrn?grnNo=' + grnno, this.httpOptions);
+  }
+
+  //Check material exists
+  checkMatExists(material: string): Observable<any> {
+    const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }), responseType: 'text' as any };
+    return this.http.get<any>(this.url + 'POData/checkMatExists?material=' + material, httpOptions);
   }
 
   //Get location details
@@ -169,6 +186,10 @@ export class wmsService {
   getMaterialRequestlistdata(loginid: string, pono: string): Observable<any> {
     return this.http.get<any>(this.url + 'POData/getmaterialrequestListdata?PONO=' + pono + '&loginid=' + loginid + '', this.httpOptions);
   }
+
+  //materialRequestUpdate(materialRequestList: any): Observable<any> {
+  //  return this.http.post<any>(this.url + 'POData/updaterequestedqty/', materialRequestList, this.httpOptions);
+  //}
 
   materialRequestUpdate(materialRequestList: any): Observable<any> {
     return this.http.post<any>(this.url + 'POData/updaterequestedqty/', materialRequestList, this.httpOptions);

@@ -184,13 +184,13 @@ export class SecurityHomeComponent implements OnInit {
         }
         else {
           this.PoDetails = new PoDetails();
-          this.messageService.add({ severity: 'error', summary: '', detail: 'No data for this PO/ASN No' });
+          this.messageService.add({ severity: 'error', summary: '', detail: 'No data for this ASN/PO No.' });
           this.showDetails = false;
         }
       })
     }
     else
-      this.messageService.add({ severity: 'error', summary: '', detail: 'Enter PO/ASN No' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Enter PO/ASN No.' });
   }
 
   printbarcode() {

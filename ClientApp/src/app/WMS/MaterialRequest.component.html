@@ -3,9 +3,11 @@
     <span>
       <i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;Material Request
     </span>
+
     <button type="button" icon="fa fa-arrow-left" pButton aria-hidden="true" pTooltip="Back" (click)="backtoDashboard()" style="float: left;
     height: 26px;"></button>
   </div>
+
   <div class="card-body" style="overflow-y:scroll;">
     <div *ngIf="requestList.length>0">
       <div class="row " style="margin-top:0px">
@@ -26,7 +28,7 @@
           <th style="text-align:center;width:70px">S.No</th>
           <!--<th style="text-align:center">Request Id</th>-->
           <!--<th style="text-align:center">PO No</th>
-        <th style="text-align:center">Project Name</th>-->
+          <th style="text-align:center">Project Name</th>-->
           <th style="text-align:center;width:150px">Material</th>
           <th style="text-align:center;width:180px">Material Description</th>
           <th style="text-align:center;width:90px">Material Quantity</th>
@@ -38,7 +40,7 @@
           <th></th>
           <!--<th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'requestforissueid', 'contains')"></th>-->
           <!--<th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'pono', 'contains')"></th>
-        <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'projectname', 'contains')"></th>-->
+          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'projectname', 'contains')"></th>-->
           <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'material', 'contains')"></th>
           <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'materialdescription', 'contains')"></th>
           <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'materialqty', 'contains')"></th>
@@ -54,7 +56,7 @@
           <!--<a *ngIf="rowData.requestid" [routerLink]="['/WMS/MaterialIssue',rowData.requestid]" routerLinkActive="active">-->
           <!--<span *ngIf="rowData.requestid">{{rowData.requestid}}</span></td>-->
           <!--<td class="ptable-cell" style="text-align:center">{{rowData.pono}}</td>
-        <td class="ptable-cell" style="text-align:left">{{rowData.projectname}}</td>-->
+          <td class="ptable-cell" style="text-align:left">{{rowData.projectname}}</td>-->
           <td class="ptable-cell" style="text-align:left">{{rowData.material}}</td>
           <td class="ptable-cell" style="text-align:left">{{rowData.materialdescription}}</td>
           <td class="ptable-cell" style="text-align:right">{{rowData.materialqty}}</td>
@@ -67,12 +69,12 @@
           </td>
 
           <!--<td class="ptable-cell" style="text-align:center">
-          <div *ngIf="rowData.approvedstatus=='approved'" class="form-inline">
-            <p-checkbox [(ngModel)]="rowData.status" binary="true" (click)="ackStatusChanges()"></p-checkbox> &nbsp;&nbsp;
-            <textarea type="text" style="width:140px" class="form-control" [(ngModel)]="rowData.ackremarks"></textarea>
-          </div>
-          <span *ngIf="rowData.ackstatus=='received'">{{rowData.ackremarks}}</span>
-        </td>-->
+            <div *ngIf="rowData.approvedstatus=='approved'" class="form-inline">
+              <p-checkbox [(ngModel)]="rowData.status" binary="true" (click)="ackStatusChanges()"></p-checkbox> &nbsp;&nbsp;
+              <textarea type="text" style="width:140px" class="form-control" [(ngModel)]="rowData.ackremarks"></textarea>
+            </div>
+            <span *ngIf="rowData.ackstatus=='received'">{{rowData.ackremarks}}</span>
+          </td>-->
         </tr>
       </ng-template>
     </p-table>
@@ -83,14 +85,14 @@
       </div>
       <div class="row">
         <!--<div *ngIf="showAck" class="col-lg-2 col-md-2 col-sm-2 " style="margin-top:5px;margin-bottom:5px">
-        <button type="button" class="btn btn-primary" [disabled]="btnDisable" (click)="materialAckUpdate()">Send Acknowledge</button>
-      </div>-->
+          <button type="button" class="btn btn-primary" [disabled]="btnDisable" (click)="materialAckUpdate()">Send Acknowledge</button>
+        </div>-->
       </div>
     </div>
     <div *ngIf="requestList.length==0">
+     
       <h6 style="color:red;text-align:center"> No materials in stock for this PO</h6>
     </div>
   </div>
-  
-  </div>
+    </div>
 

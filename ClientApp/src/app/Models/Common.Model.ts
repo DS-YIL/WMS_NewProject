@@ -54,9 +54,9 @@ export class searchParams {
   updateColumns: string;
 }
 export class searchList {
-  listName: string;
+  //listName: string;
   code: string;
-  name: string;
+  //name: string;
 }
 
 export class stockCardPrint {

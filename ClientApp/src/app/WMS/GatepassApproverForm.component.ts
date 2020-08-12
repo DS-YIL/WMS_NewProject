@@ -6,7 +6,7 @@ import { constants } from '../Models/WMSConstants';
 import { Employee, DynamicSearchResult, searchList } from '../Models/Common.Model';
 import { NgxSpinnerService } from "ngx-spinner";
 import { MessageService } from 'primeng/api';
-import { gatepassModel, materialistModel, FIFOValues } from '../Models/WMS.Model';
+import { gatepassModel, materialistModel, FIFOValues, locationdetails } from '../Models/WMS.Model';
 import { DatePipe } from '@angular/common';
 import { ConfirmationService } from 'primeng/api';
 @Component({
@@ -22,18 +22,23 @@ export class GatePassApproverComponent implements OnInit {
   public AddDialog: boolean;
   public id: any;
   roindex: any;
+  public issuedqty: number;
   public showdialog: boolean;
   public employee: Employee;
   public materialList: Array<any> = [];
   public gatepassModel: gatepassModel;
+  public locdetails=new locationdetails();
   public btnDisable: boolean = false;
   public btnDisableissue: boolean = false;
   public itemlocationData: Array<any> = [];
+  public itemissuedloc: Array<any> = [];
   public Oldestdata: FIFOValues;
   public FIFOvalues: FIFOValues;
   public gatePassApprovalList: Array<any> = [];
   public showHistory: boolean = false;
   public reqqty: number;
+  public material: string = "";
+  public matdesc: string = "";
   ngOnInit() {
     if (localStorage.getItem("Employee"))
       this.employee = JSON.parse(localStorage.getItem("Employee"));
@@ -57,11 +62,16 @@ export class GatePassApproverComponent implements OnInit {
 
   //get gatepass list
   bindMaterilaDetails(gatepassId: any) {
+    debugger;
     this.wmsService.gatepassmaterialdetail(gatepassId).subscribe(data => {
       this.materialList = data;
       console.log(data);
       this.gatepassModel = this.materialList[0];
       console.log(this.gatepassModel);
+      debugger;
+      if (this.gatepassModel.issuedqty > 0) {
+        this.btnDisableissue = true;
+      }
       if (this.gatepassModel.approverstatus == 'Approved')
         this.btnDisable = true;
     });
@@ -109,18 +119,33 @@ export class GatePassApproverComponent implements OnInit {
   }
 
   //shows list of items for particular material
-  showmateriallocationList(material, id, rowindex, qty) {
+  showmateriallocationList(material,description, id, rowindex, qty,issuedqty,location,issuedDate) {
+    debugger;
     this.reqqty = qty;
     this.id = id;
+    this.material = material;
+    this.matdesc = description;
     this.AddDialog = true;
     this.roindex = rowindex;
-    this.wmsService.getItemlocationListByMaterial(material).subscribe(data => {
-      this.itemlocationData = data;
+    this.issuedqty = issuedqty;
+    if (issuedqty > 0) {
       this.showdialog = true;
-      if (data != null) {
+      //this.materialList.filter(li=>li.mater)
+      this.locdetails.issueddate = issuedDate;
+      this.locdetails.location = location;
+      this.locdetails.issuedqty = issuedqty;
+      this.itemissuedloc.push(this.locdetails);
+    }
+    else {
+      this.wmsService.getItemlocationListByMaterial(material).subscribe(data => {
+        this.itemlocationData = data;
+        this.showdialog = true;
+        if (data != null) {
 
-      }
-    });
+        }
+      });
+    }
+   
   }
   //show alert about oldest item location
   alertconfirm(data) {

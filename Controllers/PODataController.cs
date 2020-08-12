@@ -295,6 +295,14 @@ namespace WMS.Controllers
 		{
 			return this._poService.updaterequestedqty(dataobj);
 		}
+
+		[HttpGet("getPODetails")]
+		public Task<IEnumerable<PODetails>> getPODetails()
+        {
+			return this._poService.getPODetails();
+
+		}
+
 		[HttpPost("approvematerialrequest")]
 		public int approvematerial([FromBody] List<IssueRequestModel> data)
 		{
@@ -351,6 +359,14 @@ namespace WMS.Controllers
 		{
 			return await this._poService.GetmaterialList(gatepassid);
 		}
+
+		//Check material exists or not
+		[HttpGet("checkMatExists")]
+		public string checkMatExists(string material)
+        {
+			return  this._poService.checkMatExists(material);
+		}
+
 		[HttpGet("getGatePassApprovalHistoryList")]
 		public async Task<IEnumerable<gatepassapprovalsModel>> getGatePassApprovalHistoryList(int gatepassid)
 		{
@@ -677,14 +693,14 @@ namespace WMS.Controllers
 			return await this._poService.pendingreceiptslist();
 		}
 
-		[HttpGet("getprojectlist")]
-		public async Task<IEnumerable<ddlmodel>> getprojectlist()
-		{
-			return await this._poService.getprojectlist();
-		}
+        [HttpGet("getprojectlist")]
+        public async Task<IEnumerable<ddlmodel>> getprojectlist()
+        {
+            return await this._poService.getprojectlist();
+        }
 
 
-		[HttpGet("getgrnforacceptance")]
+        [HttpGet("getgrnforacceptance")]
 		public async Task<IEnumerable<ddlmodel>> getgrnlistforacceptance()
 		{
 			return await this._poService.getgrnlistforacceptance();
