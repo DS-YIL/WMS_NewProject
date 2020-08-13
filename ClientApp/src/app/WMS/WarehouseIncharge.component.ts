@@ -70,6 +70,9 @@ export class WarehouseInchargeComponent implements OnInit {
   public locationlist: any[] = [];
   public binlist: any[] = [];
   public racklist: any[] = [];
+  public locationdata: any[] = [];
+  public bindata: any[] = [];
+  public rackdata: any[] = [];
   locationlist1: locationddl[] = [];
   binlist1: binddl[] = [];
   racklist1: rackddl[] = [];
@@ -156,6 +159,40 @@ export class WarehouseInchargeComponent implements OnInit {
     });
 
     // this.loadStores();
+  }
+
+  //On selection of location updating rack
+  onlocUpdate(locationid: any) {
+    debugger;
+    if (this.rackdata.filter(li => li.locationid == locationid).length > 0) {
+      this.racklist = [];
+      console.log(this.racklist);
+      this.rackdata.forEach(item => {
+        if (item.locationid == locationid) {
+          this.racklist.push(item);
+          console.log(this.racklist);
+        }
+      })
+      
+    }
+    
+  }
+
+  //On selection of rack updating bin
+  onrackUpdate(locationid: any, rackid: any) {
+    debugger;
+    if (this.bindata.filter(li => li.locationid == locationid && li.rackid == rackid).length > 0) {
+      this.binlist = [];
+      console.log(this.binlist);
+      this.bindata.forEach(item => {
+        if (item.locationid == locationid && item.rackid == rackid) {
+          this.binlist.push(item);
+          console.log(this.binlist);
+        }
+      })
+
+    }
+
   }
 
   //generate barcode -gayathri
@@ -275,9 +312,9 @@ export class WarehouseInchargeComponent implements OnInit {
       var bindetails = this.binlist.filter(x => x.binid == this.locationdetails.binid);
       var storedetails = this.locationlist.filter(x => x.locatorid == this.locationdetails.storeid);
       var rackdetails = this.racklist.filter(x => x.rackid == this.locationdetails.rackid);
-      this.locationdetails.storename = storedetails[0].locatorname;
-      this.locationdetails.rackname = rackdetails[0].racknumber;
-      this.locationdetails.binname = bindetails[0].binnumber;
+    this.locationdetails.storename = storedetails[0].locatorname != null || storedetails[0].locatorname != "undefined" || storedetails[0].locatorname != "" ? storedetails[0].locatorname:0;
+    this.locationdetails.rackname = rackdetails[0].racknumber != null || rackdetails[0].racknumber != "undefined" || rackdetails[0].racknumber != "" ? rackdetails[0].racknumber : 0;
+    this.locationdetails.binname = bindetails[0].binnumber != null || bindetails[0].binnumber != "undefined" || bindetails[0].binnumber != "" ? bindetails[0].binnumber : 0;
       this.locationdetails.locationid = this.locationdetails.storeid + '.' + this.locationdetails.rackid + '.' + this.locationdetails.binid;
       this.locationdetails.locationname = this.locationdetails.storename + '.' + this.locationdetails.rackname + '.' + this.locationdetails.binname;
       //service to get stock type
@@ -347,10 +384,11 @@ export class WarehouseInchargeComponent implements OnInit {
           for (let i = 0; i < (res.length); i++) {
             _list.push({
               locatorid: res[i].locatorid,
-              locatorname: res[i].locatorname
+              locatorname: res[i].locatorname,
             });
           }
           this.locationlist = _list;
+          this.locationdata = _list;
         });
   }
   binListdata() {
@@ -363,11 +401,14 @@ export class WarehouseInchargeComponent implements OnInit {
           let _list: any[] = [];
           for (let i = 0; i < (res.length); i++) {
             _list.push({
+              locationid: res[i].locatorid,
               binid: res[i].binid,
+              rackid: res[i].rackid,
               binnumber: res[i].binnumber
             });
           }
           this.binlist = _list;
+          this.bindata = _list;
         });
   }
   rackListdata() {
@@ -380,11 +421,14 @@ export class WarehouseInchargeComponent implements OnInit {
           let _list: any[] = [];
           for (let i = 0; i < (res.length); i++) {
             _list.push({
+              binid: res[i].binid,
               rackid: res[i].rackid,
-              racknumber: res[i].racknumber
+              racknumber: res[i].racknumber,
+              locationid: res[i].locatorid
             });
           }
           this.racklist = _list;
+          this.rackdata = _list;
         });
   }
 

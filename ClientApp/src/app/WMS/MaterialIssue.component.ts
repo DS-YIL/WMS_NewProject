@@ -79,7 +79,7 @@ export class MaterialIssueComponent implements OnInit {
     });
 
     if (totalissuedqty > this.reqqty) {
-      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: ' Issue Qty cannot exceed Requested Qty' });
+      this.messageService.add({ severity: 'error', summary: '', detail: ' Issue Qty cannot exceed Requested Qty' });
       this.AddDialog = true;
     }
     else {
@@ -126,11 +126,11 @@ export class MaterialIssueComponent implements OnInit {
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
 
-        this.messageService.add({ severity: 'info', summary: 'Notification', detail: 'You have accepted' });
+        this.messageService.add({ severity: 'info', summary: '', detail: 'You have accepted' });
       },
       reject: () => {
 
-        this.messageService.add({ severity: 'info', summary: 'Notification', detail: 'You have ignored' });
+        this.messageService.add({ severity: 'info', summary: '', detail: 'You have ignored' });
       }
     });
   }
@@ -138,7 +138,7 @@ export class MaterialIssueComponent implements OnInit {
   checkissueqty($event, entredvalue, maxvalue, material, createddate) {
     var id = $event.target.id;
     if (entredvalue > maxvalue) {
-      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please enter issue quantity less than Available quantity' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Please enter issue quantity less than Available quantity' });
 
       (<HTMLInputElement>document.getElementById(id)).value = "";
     }
@@ -177,7 +177,7 @@ export class MaterialIssueComponent implements OnInit {
   //check validations for issuer quantity
   reqQtyChange(data: any) {
     if (data.issuedquantity > data.quantity) {
-      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'issued Quantity should be lessthan or equal to available quantity' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'issued Quantity should be lessthan or equal to available quantity' });
       data.issuedquantity = data.quantity;
     }
   }
@@ -211,9 +211,9 @@ export class MaterialIssueComponent implements OnInit {
           this.spinner.hide();
           this.btndisable = false;
           if (data)
-            this.messageService.add({ severity: 'success', summary: 'sucee Message', detail: 'Material issued.' });
+            this.messageService.add({ severity: 'success', summary: '', detail: 'Material issued.' });
           else
-            this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Material issue failed.' });
+            this.messageService.add({ severity: 'error', summary: '', detail: 'Material issue failed.' });
 
         });
       }

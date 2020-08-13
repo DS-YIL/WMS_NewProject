@@ -869,6 +869,7 @@ public class materialistModel
 	public string remarks { get; set; }
 	public DateTime expecteddate { get; set; }
 	public DateTime? returneddate { get; set; }
+	public int availableqty { get; set; }
 	public string materialcost { get; set; }
 	public int issuedqty { get; set; }
 	public DateTime outwarddate { get; set; }

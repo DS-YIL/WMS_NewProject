@@ -116,7 +116,7 @@ export class MaterialRequestViewComponent implements OnInit {
 
           }
           else
-            this.messageService.add({ severity: 'error', summary: 'Error Message', detail: data });
+            this.messageService.add({ severity: 'error', summary: '', detail: data });
           return false;
         });
       }
@@ -175,11 +175,11 @@ export class MaterialRequestViewComponent implements OnInit {
             if (data) {
               this.requestDialog = false;
               this.getMaterialRequestlist();
-              this.messageService.add({ severity: 'success', summary: 'success Message', detail: 'Request sent' });
+              this.messageService.add({ severity: 'success', summary: '', detail: 'Request sent' });
               //this.router.navigateByUrl("/WMS/MaterialReqView/" + this.pono);
             }
             else {
-              this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Error while sending Request' });
+              this.messageService.add({ severity: 'error', summary: '', detail: 'Error while sending Request' });
             }
 
           });
@@ -313,7 +313,7 @@ export class MaterialRequestViewComponent implements OnInit {
   //check validations for requested quantity
   reqQtyChange(data: any) {
     if (data.requestedquantity > data.quotationqty) {
-      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Requested Quantity should be lessthan or equal to po quantity' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Requested Quantity should be lessthan or equal to po quantity' });
       data.requestedquantity = data.quotationqty;
     }
   }
@@ -325,9 +325,9 @@ export class MaterialRequestViewComponent implements OnInit {
     this.wmsService.materialRequestUpdate(this.requestList).subscribe(data => {
       this.spinner.hide();
       if (data)
-        this.messageService.add({ severity: 'success', summary: 'success Message', detail: 'Request sent' });
+        this.messageService.add({ severity: 'success', summary: '', detail: 'Request sent' });
       else
-        this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Update Failed' });
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Update Failed' });
 
     });
   }
@@ -410,7 +410,7 @@ export class MaterialRequestViewComponent implements OnInit {
   //received material acknowledgement
   materialAckUpdate() {
     if (this.requestList.filter(li => li.status == true).length == 0) {
-      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Select atleast  one checkbox' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Select atleast  one checkbox' });
     }
     else {
       this.spinner.show();
@@ -418,9 +418,9 @@ export class MaterialRequestViewComponent implements OnInit {
       this.wmsService.ackmaterialreceived(this.requestList).subscribe(data => {
         this.spinner.hide();
         if (data)
-          this.messageService.add({ severity: 'sucess', summary: 'success Message', detail: 'acknowledged' });
+          this.messageService.add({ severity: 'sucess', summary: '', detail: 'acknowledged' });
         else
-          this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'acknowledge failed' });
+          this.messageService.add({ severity: 'error', summary: '', detail: 'acknowledge failed' });
       });
     }
   }
@@ -468,7 +468,7 @@ export class MaterialRequestViewComponent implements OnInit {
   }
   showmaterialdetailsfortransfer() {
     if (this.requestid == undefined) {
-      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please select  Request Id' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Please select  Request Id' });
       //this.router.navigateByUrl("/WMS/MaterialReqView");
     }
     else {
@@ -501,7 +501,7 @@ export class MaterialRequestViewComponent implements OnInit {
         if (data == 1) {
           this.btnDisable = true;
           this.AddDialog = false;
-          this.messageService.add({ severity: 'sucess', summary: 'suceess Message', detail: 'Material Returned' });
+          this.messageService.add({ severity: 'sucess', summary: '', detail: 'Material Returned' });
         }
     })
 
@@ -509,7 +509,7 @@ export class MaterialRequestViewComponent implements OnInit {
   returnQtyChange(issuesqty,returnqty) {
     if (returnqty > issuesqty) {
       this.btnDisable = true;
-      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Return Quantity should be lessthan or equal to Issued quantity' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Return Quantity should be lessthan or equal to Issued quantity' });
 
     }
     else {
@@ -557,7 +557,7 @@ export class MaterialRequestViewComponent implements OnInit {
       if (data == 1) {
         this.btnDisabletransfer = true;
         this.AddDialogfortransfer = false;
-        this.messageService.add({ severity: 'sucess', summary: 'suceess Message', detail: 'Material Transferred' });
+        this.messageService.add({ severity: 'sucess', summary: '', detail: 'Material Transferred' });
       }
     })
   }

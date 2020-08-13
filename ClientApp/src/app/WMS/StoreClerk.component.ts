@@ -720,12 +720,13 @@ export class StoreClerkComponent implements OnInit {
 
             }
             else {
-              this.resetpage();
+             
               var messaged = "Goods received";
               if (this.isonHoldview) {
                 messaged = "Receipt on hold"
               }
               this.messageService.add({ severity: 'success', summary: '', detail: messaged });
+              this.resetpage();
               this.spinner.hide();
             }
             

@@ -70,7 +70,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select * from wms.wms_stock where materialid=&apos;#materialid&apos; and availableqty&gt;=#availableqty limit 1.
+        ///   Looks up a localized string similar to select * from wms.wms_stock where materialid=&apos;#materialid&apos;  limit 1.
         /// </summary>
         public static string checkmaterialandqty {
             get {

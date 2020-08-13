@@ -295,7 +295,7 @@ where  inw.invoiceno='#invoiceno' and openpo.pono='#pono' group by grnnumber</va
     <value>select * from wms.wms_stock where materialid='#materialid' limit 1</value>
   </data>
   <data name="checkmaterialandqty" xml:space="preserve">
-    <value>select * from wms.wms_stock where materialid='#materialid' and availableqty&gt;=#availableqty limit 1</value>
+    <value>select * from wms.wms_stock where materialid='#materialid'  limit 1</value>
   </data>
   <data name="checkqty" xml:space="preserve">
     <value>select * from wms.wms_stock where availableqty &gt;=#availableqty limit 1</value>

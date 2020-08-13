@@ -168,7 +168,7 @@ export class MRNViewComponent implements OnInit {
     if (isNullOrUndefined(this.selectedgrnno) || this.selectedgrnno == "") {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Enter GRNNo' });
       return;
-      
+
     }
     this.PoDetails.grnnumber = this.selectedgrnno;
       this.isnonpo = false;

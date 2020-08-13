@@ -53,7 +53,12 @@ export class MaterialIssueDashBoardComponent implements OnInit {
   }
   onSelectStatus(event) {
     this.selectedStatus = event.target.value;
-
+    if (this.selectedStatus == "Pending") {
+      this.materialIssueList = this.materialIssueListnofilter.filter(li => li.approvedstatus == null);
+    }
+    else if (this.selectedStatus == "Approved") {
+      this.materialIssueList = this.materialIssueListnofilter.filter(li => li.approvedstatus == 'Approved');
+    }
   }
   SubmitStatus() {
     if (this.selectedStatus == "Pending") {

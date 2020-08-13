@@ -496,7 +496,7 @@ namespace WMS.DAL
 							emailmodel.ToEmailId = "developer1@in.yokogawa.com";
 							emailmodel.FrmEmailId = "sushma.patil@in.yokogawa.com";
 							EmailUtilities emailobj = new EmailUtilities();
-							emailobj.sendEmail(emailmodel, 1);
+							//emailobj.sendEmail(emailmodel, 1);
 
 						}
 						////}
@@ -1268,7 +1268,7 @@ namespace WMS.DAL
 						emailmodel.ToEmailId = "developer1@in.yokogawa.com";
 						emailmodel.FrmEmailId = "sushma.patil@in.yokogawa.com";
 						EmailUtilities emailobj = new EmailUtilities();
-						emailobj.sendEmail(emailmodel, 2);
+						//emailobj.sendEmail(emailmodel, 2);
 					}
 					//}
 					return (Convert.ToString(inwardid));
@@ -1460,7 +1460,7 @@ namespace WMS.DAL
 							emailmodel.FrmEmailId = "sushma.patil@in.yokogawa.com";
 							emailmodel.CC = "sushma.patil@in.yokogawa.com";
 							EmailUtilities emailobj = new EmailUtilities();
-							emailobj.sendEmail(emailmodel, 4);
+							//emailobj.sendEmail(emailmodel, 4);
 						}
 					}
 					//}
@@ -1778,7 +1778,7 @@ namespace WMS.DAL
 						emailmodel.ToEmailId = "developer1@in.yokogawa.com";
 						emailmodel.FrmEmailId = "sushma.patil@in.yokogawa.com";
 						EmailUtilities emailobj = new EmailUtilities();
-						emailobj.sendEmail(emailmodel, 7);
+						////emailobj.sendEmail(emailmodel, 7);
 					}
 				}
 				return (Convert.ToInt32(result));
@@ -2001,7 +2001,7 @@ namespace WMS.DAL
 							emailmodel.ToEmailId = "developer1@in.yokogawa.com";
 							emailmodel.FrmEmailId = "sushma.patil@in.yokogawa.com";
 							EmailUtilities emailobj = new EmailUtilities();
-							emailobj.sendEmail(emailmodel, 5);
+							////emailobj.sendEmail(emailmodel, 5);
 						}
 						//if (result != 0)
 						//{
@@ -2287,7 +2287,7 @@ namespace WMS.DAL
 							emailmodel.ToEmailId = "developer1@in.yokogawa.com";
 							emailmodel.FrmEmailId = "sushma.patil@in.yokogawa.com";
 							EmailUtilities emailobj = new EmailUtilities();
-							emailobj.sendEmail(emailmodel, 8);
+							////emailobj.sendEmail(emailmodel, 8);
 						}
 						else if (dataobj.gatepasstype == "Non Returnable")
 						{
@@ -2323,7 +2323,7 @@ namespace WMS.DAL
 							emailmodel.ToEmailId = "developer1@in.yokogawa.com";
 							emailmodel.FrmEmailId = "sushma.patil@in.yokogawa.com";
 							EmailUtilities emailobj = new EmailUtilities();
-							emailobj.sendEmail(emailmodel, 9);
+							//emailobj.sendEmail(emailmodel, 9);
 						}
 						
 
@@ -2472,16 +2472,28 @@ namespace WMS.DAL
 					}
 					else if (material != null && qty != 0)
 					{
-						string query = WMSResource.checkmaterialandqty.Replace("#availableqty", Convert.ToString(qty)).Replace("#materialid", material);
+						//string query = WMSResource.checkmaterialandqty.Replace("#availableqty", Convert.ToString(qty)).Replace("#materialid", material);
+						string query = WMSResource.checkmaterialandqty.Replace("#materialid", material);
 						obj = pgsql.QueryFirstOrDefault<materialistModel>(
 					query, null, commandType: CommandType.Text);
-						if (obj == null)
+						if (obj != null)
 						{
-							returnvalue = "material and quantity does not exists";
+							if(obj.availableqty >=qty)
+                            {
+								returnvalue = "true";
+							}
+                            else
+                            {
+								if (obj.availableqty < qty)
+								{
+									returnvalue = "Material and quantity does not exists for "+material+" available qty is "+obj.availableqty;
+								}
+							}
+							
 						}
 						else
 						{
-							returnvalue = "true";
+							returnvalue = "false";
 						}
 					}
 					return returnvalue;
@@ -4305,7 +4317,7 @@ namespace WMS.DAL
 						string itemnoquery = WMSResource.getitemiddata.Replace("#materialid", item.material);
 						if(item.pono!=null)
                         {
-							itemnoquery = itemnoquery + "and pono=" + item.pono;
+							itemnoquery = itemnoquery + "and pono='" + item.pono+"'";
                         }
 						using (var DB = new NpgsqlConnection(config.PostgresConnectionString))
 						{
@@ -4708,7 +4720,7 @@ namespace WMS.DAL
 								emailmodel.ToEmailId = "developer1@in.yokogawa.com";
 								emailmodel.FrmEmailId = "sushma.patil@in.yokogawa.com";
 								EmailUtilities emailobj = new EmailUtilities();
-								emailobj.sendEmail(emailmodel, 3);
+								//emailobj.sendEmail(emailmodel, 3);
 							}
 
 						}
@@ -4883,7 +4895,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "Getlocationdata", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "Getbindata", Ex.StackTrace.ToString());
 					return null;
 				}
 				finally
@@ -6350,7 +6362,7 @@ namespace WMS.DAL
 						emailmodel.ToEmailId = "developer1@in.yokogawa.com";
 						emailmodel.FrmEmailId = "sushma.patil@in.yokogawa.com";
 						EmailUtilities emailobj = new EmailUtilities();
-						emailobj.sendEmail(emailmodel, 13);
+						//emailobj.sendEmail(emailmodel, 13);
 					}
 					else
                     {

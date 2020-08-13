@@ -1,26 +1,26 @@
-<div class="card" style="    min-height: 520px;border-radius: 10px;box-shadow: 5px 10px #888888;">
+<div class="card" style="   min-height: 520px;border-radius: 10px;box-shadow: 5px 10px #888888;">
   <div class="card-header text-center cardheadertext">
     <span>
       <i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;Material Issuer Dashboard
     </span>
   </div>
-  <br />
-  <div class="row">
 
-    <div class="col-lg-1 col-md-1 col-sm-1 form-group">
+  <div class="row" style="margin-left:0px !important">
+
+    <div class="col-lg-1 col-md-1 col-sm-1 form-group" style=" margin-bottom: 0rem !important;">
       <h6><label class="form-label">Status:</label></h6>
     </div>
-    <div class="col-lg-2 col-md-2 col-sm-2 form-group" style="padding-left:0px;">
+    <div class="col-lg-2 col-md-2 col-sm-2 form-group" style=" padding-left: 0px; margin-bottom: 0rem !important;">
       <select placeholder="Status" name="Status" (change)="onSelectStatus($event)" class="form-control">
         <option selected value="Pending"> Pending</option>
         <option value="Approved"> Issued</option>
       </select>
     </div>
-    <div class="col-lg-1 col-md-1 col-sm-1 form-group" style="padding-left:0px;">
+    <!--<div class="col-lg-1 col-md-1 col-sm-1 form-group" style="padding-left:0px;">
       <button type="submit" class="btn btn-info float-left" (click)="SubmitStatus()" style=" height: 35px;">Submit</button>
-    </div>
+    </div>-->
   </div>
-  <br />
+
   <div class="card-body" style="overflow-y:hidden;padding:0px;">
     <div class="form-control" style="height:100%;">
       <p-table #dt [value]="materialIssueList" [scrollable]="true" scrollHeight="380px">

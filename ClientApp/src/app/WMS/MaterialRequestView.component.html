@@ -1,29 +1,11 @@
 
   <div class="card" style="max-height:100vh;border-radius: 10px;box-shadow: 5px 10px #888888;">
     <div class="card-header text-center cardheadertext">
-      <div class="row">
-
-        <div class="col-lg-1 col-md-1 col-sm-1 form-group" style="padding-right:0px;margin-bottom:0px;padding-top:17px;">
-          <!--<a (click)="showmaterialdetails()" style="cursor:pointer;">Return</a>-->
-        </div>
-        <div class="col-lg-1 col-md-1 col-sm-1 form-group" style="padding-right:0px;margin-bottom:0px;padding-top:17px;">
-          <!--<a  (click)="showmaterialdetailsfortransfer()" style="cursor:pointer;">Transfer</a>-->
-        </div>
-        <div class="col-lg-9 col-md-9 col-sm-9 form-group" style="padding-left:0px;">
-          <i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;Requested Material
-        </div>
-      </div>
-
-      <!--<span>
-      <button type="button" class="btn btn-primary" (click)="returnqty()">Return</button>
-    </span>
-    <span>
-      <button type="button" class="btn btn-primary" (click)="returnqty()">Transfer</button>
-    </span>
-    <span>
-      <i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;Requested Material List
-    </span>-->
+      <span>
+        <i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;Requested Material
+      </span>
     </div>
+    
     <div class="card-header" style="width:237px;height:27px;margin-left:5px;padding-top:0px">
       <span>
         <i class="fa fa-bookmark" style="font-size: 15px"></i><label style="font-size: 15px;padding:0px; color: rgb(96, 123, 212);"> &nbsp;&nbsp;Material Request</label>&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" pTooltip="Request Material" style="border-radius: 10em!important;background-color: white; border-color:  rgb(96, 123, 212);" rounded="true" size="lg" class="my-0" (click)="requestMaterial()"> <i class="fa fa-user-plus" style="font-size: 15px;color: green;"></i></button>
@@ -95,6 +77,7 @@
             </div>-->
 
             </td>
+
             <!--<td class="ptable-cell" style="text-align:right">{{rowData.quotationqty}}</td>
           <td class="ptable-cell" style="text-align:right">
             <span *ngIf="rowData.approvedstatus=='approved'">{{rowData.requestedquantity}}</span>-->
@@ -182,17 +165,17 @@
 
                 </td>
                 <!--<td class="ptable-cell" style="text-align:center;width:100px;">
-                  <input pInputText [disabled]="rowData.approvedstatus=='Approved'?false:true" type="number" (change)="returnQtyChange(rowData.issuedquantity,rowData.returnqty)" class="form-control" [(ngModel)]="rowData.returnqty">
-                </td>-->
+                <input pInputText [disabled]="rowData.approvedstatus=='Approved'?false:true" type="number" (change)="returnQtyChange(rowData.issuedquantity,rowData.returnqty)" class="form-control" [(ngModel)]="rowData.returnqty">
+              </td>-->
                 <!--<td class="ptable-cell" style="text-align:left">{{rowData.createddate | date :  constants.dateFormat}}</td>-->
               </tr>
             </ng-template>
 
           </p-table>
           <!--<p-footer>
-            <button type="button" class="btn btn-primary" [disabled]="btnDisable" (click)="returnqty()">Return Material</button>
-          
-          </p-footer>-->
+          <button type="button" class="btn btn-primary" [disabled]="btnDisable" (click)="returnqty()">Return Material</button>
+
+        </p-footer>-->
         </p-dialog>
         <p-dialog header="Material Transfer Details" [(visible)]="AddDialogfortransfer" [contentStyle]="{'overflow-y': 'auto', 'overflow-x': 'hidden', 'max-height': '80vh','min-height':'250px'}" showEffect="fade" [modal]="true" [responsive]="true" [style]="{width: '1024px'}">
           <div *ngIf="showdialogfortransfer">
@@ -267,7 +250,7 @@
         </p-dialog>
       </div>
     </div>
-    
+
   </div>
 
   <p-dialog header="Request Materials" [(visible)]="requestDialog" [responsive]="true" showEffect="fade" [modal]="true" (onHide)="close()" [style]="{'width':'85%','overflow':'auto!important','margin-right': '0px','margin-left':'0px'}">
