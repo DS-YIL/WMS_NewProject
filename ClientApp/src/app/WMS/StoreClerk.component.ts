@@ -18,9 +18,9 @@ import { AutoComplete } from 'primeng/autocomplete';
   providers: [DatePipe, ConfirmationService]
 })
 export class StoreClerkComponent implements OnInit {
-  @ViewChild('autoCompleteObject') private autoCompleteObject: AutoComplete;
-  @ViewChild('myInput') ddlreceivedpo: any;
-  @ViewChild('myInput1') ddlgrndata: any;
+  @ViewChild('autoCompleteObject', {static : false}) private autoCompleteObject: AutoComplete;
+  @ViewChild('myInput', { static: false }) ddlreceivedpo: any;
+  @ViewChild('myInput1', { static: false }) ddlgrndata: any;
   constructor(private messageService: MessageService, private wmsService: wmsService, private formBuilder: FormBuilder, private route: ActivatedRoute, private datePipe: DatePipe, private router: Router, public constants: constants, private spinner: NgxSpinnerService) { }
 
   public pono: string;
@@ -114,8 +114,11 @@ export class StoreClerkComponent implements OnInit {
 
   checkreceivedqty(entredvalue, confirmedqty, returnedqty, maxvalue, data: any) {
     debugger;
+    if (isNullOrUndefined(entredvalue)) {
+      data.receivedqty = "0"
+    }
     if (entredvalue < 0) {
-      data.receivedqty = " ";
+      data.receivedqty = "0";
       this.messageService.add({ severity: 'error', summary: '', detail: 'Negative value not allowed' });
       return;
 
@@ -124,21 +127,21 @@ export class StoreClerkComponent implements OnInit {
       if (entredvalue > data.pendingqty && !this.isnonpoentry) {
         this.messageService.add({ severity: 'error', summary: '', detail: 'Please enter received quantity less than or equal to Pending quantity' });
         //(<HTMLInputElement>document.getElementById("receivedqty")).value = "";
-        data.receivedqty = "";
+        data.receivedqty = "0";
 
       }
     }
     else if (data.isreceivedpreviosly && data.pendingqty == 0 && !this.isnonpoentry) {
       this.messageService.add({ severity: 'error', summary: '', detail: 'All materials received' });
       //(<HTMLInputElement>document.getElementById("receivedqty")).value = "";
-      data.receivedqty = "";
+      data.receivedqty = "0";
 
     }
     else {
       if (entredvalue > maxvalue && !this.isnonpoentry) {
         this.messageService.add({ severity: 'error', summary: '', detail: 'Please enter received quantity less than or equal to material quantity' });
         //(<HTMLInputElement>document.getElementById("receivedqty")).value = "";
-        data.receivedqty = "";
+        data.receivedqty = "0";
 
       }
     }
@@ -616,6 +619,12 @@ export class StoreClerkComponent implements OnInit {
     }
     this.podetailsList.forEach(item => {
       item.receivedby = this.employee.employeeno;
+      if (!item.confirmqty) {
+        item.confirmqty = 0;
+      }
+      if (!item.returnqty) {
+        item.returnqty = 0;
+      }
     });
     setTimeout(function () {
       var data = validdata;

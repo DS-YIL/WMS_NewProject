@@ -42,7 +42,7 @@ export class QualityCheckComponent implements OnInit {
     this.inwardModel.quality = "0";
     this.inwardModel.receiveddate = new Date();
     this.inwardModel.qcdate = new Date();
-    this.getqualitydetails();
+   // this.getqualitydetails();
     this.getcheckedgrnforqc();
   }
   
@@ -57,12 +57,14 @@ export class QualityCheckComponent implements OnInit {
     if (entredvalue > receivedqty) {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Please enter passed quantity less than or equal to received quantity' });
       data.qualitypassedqty = "";
+      return;
       //(<HTMLInputElement>document.getElementById("confirmqty")).value = "";
     }
     if (entredvalue != (receivedqty - returnedqty) && receivedqty && returnedqty) {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Sum of quality passesed and failed must be equal to received qty' });
       //(<HTMLInputElement>document.getElementById("confirmqty")).value = "";
       data.qualitypassedqty = "";
+      return;
     }
   }
   checkreturnqty(entredvalue, receivedqty, acceptedqty, data: any) {
@@ -75,11 +77,13 @@ export class QualityCheckComponent implements OnInit {
     if (entredvalue > receivedqty) {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Please enter failed quantity less than or equal to received quantity' });
       data.qualityfailedqty = "";
+      return;
       //(<HTMLInputElement>document.getElementById("returnqty")).value = "";
     }
     if (entredvalue != (receivedqty - acceptedqty) && receivedqty && acceptedqty) {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Sum of quality passesed and failed  must be equal to received qty' });
       data.qualityfailedqty = "";
+      return;
       //(<HTMLInputElement>document.getElementById("returnqty")).value = "";
     }
   }
@@ -204,12 +208,20 @@ export class QualityCheckComponent implements OnInit {
       this.inwardModel.receivedby = this.inwardModel.qcby = this.employee.employeeno;
       this.podetailsList.forEach(item => {
         item.receivedby = this.employee.employeeno;
+      if (!item.qualityfailedqty) {
+          item.qualityfailedqty = 0;
+        }
       });
       this.recqty = this.podetailsList[0].confirmqty + this.podetailsList[0].returnqty;
       this.totalqty = parseInt(this.podetailsList[0].receivedqty);
     var savedata = this.podetailsList.filter(function (element, index) {
       return (element.qualitypassedqty != 0 && !element.checkedby);
     });
+    if (savedata.length == 0) {
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Enter passed quantity.' });
+      this.spinner.hide();
+      return;
+    }
     var invaliddata = savedata.filter(function (element, index) {
       return (element.qualitypassedqty + element.qualityfailedqty != parseInt(element.receivedqty));
     });

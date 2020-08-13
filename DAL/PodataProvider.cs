@@ -3563,9 +3563,9 @@ namespace WMS.DAL
 				try
 				{
 					DateTime todayDate = DateTime.Now;
-					string currentdatestr = todayDate.ToString("yyyy-dd-MM");
+					string currentdatestr = todayDate.ToString("yyyy-MM-dd");
 					DateTime weekbeforeDate = DateTime.Now.AddDays(-7);
-					string weekbeforeDatestr = weekbeforeDate.ToString("yyyy-dd-MM");
+					string weekbeforeDatestr = weekbeforeDate.ToString("yyyy-MM-dd");
 					string query = WMSResource.getASNList;
 					query = query + " where asno.deliverydate >= '" + weekbeforeDatestr + " 00:00:00' and asno.deliverydate <= '" + currentdatestr + " 23:59:59' order by asno.deliverydate";
 					await pgsql.OpenAsync();

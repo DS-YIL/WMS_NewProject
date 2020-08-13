@@ -168,7 +168,7 @@ export class MRNViewComponent implements OnInit {
     if (isNullOrUndefined(this.selectedgrnno) || this.selectedgrnno == "") {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Enter GRNNo' });
       return;
-
+      
     }
     this.PoDetails.grnnumber = this.selectedgrnno;
       this.isnonpo = false;
@@ -179,9 +179,18 @@ export class MRNViewComponent implements OnInit {
           debugger;
           //this.PoDetails = data[0];
           this.podetailsList = data;
+          var itemlocationavailable = this.podetailsList.filter(function (element, index) {
+            return (element.itemlocation);
+          });
+          if (itemlocationavailable.length > 0) {
+            this.podetailsList = [];
+            this.messageService.add({ severity: 'warn', summary: '', detail: 'Materials already in stock for this GRN.' });
+            return;
+          }
           var ponumber = this.podetailsList[0].pono;
           this.isalreadytransferred = this.podetailsList[0].isdirecttransferred;
           if (this.isalreadytransferred) {
+            debugger;
             var dtlist = this.podetailsList;
             var datax = this.projectlists.filter(function (element, index) {
               return (element.value == dtlist[0].projectcode);

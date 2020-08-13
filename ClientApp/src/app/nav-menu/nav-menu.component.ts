@@ -13,7 +13,7 @@ import { pageModel } from '../Models/WMS.Model';
 })
 export class NavMenuComponent implements OnInit {
   constructor(private router: Router, private route: ActivatedRoute, private wmsService: wmsService) { }
-  @ViewChild('op1') overlaymodel;
+  @ViewChild('op1', {static : false}) overlaymodel;
   loggedin: boolean = false;
   items: MenuItem[];
   tempitems: MenuItem[];
