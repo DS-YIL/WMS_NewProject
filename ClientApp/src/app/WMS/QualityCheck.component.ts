@@ -55,13 +55,13 @@ export class QualityCheckComponent implements OnInit {
       //(<HTMLInputElement>document.getElementById("confirmqty")).value = "";
     }
     if (entredvalue > receivedqty) {
-      this.messageService.add({ severity: 'error', summary: '', detail: 'Please enter passed quantity less than or equal to received quantity' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Quality Passed should be less than or equal to received quantity' });
       data.qualitypassedqty = "";
       return;
       //(<HTMLInputElement>document.getElementById("confirmqty")).value = "";
     }
     if (entredvalue != (receivedqty - returnedqty) && receivedqty && returnedqty) {
-      this.messageService.add({ severity: 'error', summary: '', detail: 'Sum of quality passesed and failed must be equal to received qty' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Quality Passed & Failed should be equal to Recived Quantity' });
       //(<HTMLInputElement>document.getElementById("confirmqty")).value = "";
       data.qualitypassedqty = "";
       return;
@@ -75,13 +75,13 @@ export class QualityCheckComponent implements OnInit {
       //(<HTMLInputElement>document.getElementById("confirmqty")).value = "";
     }
     if (entredvalue > receivedqty) {
-      this.messageService.add({ severity: 'error', summary: '', detail: 'Please enter failed quantity less than or equal to received quantity' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Quality failed should be less than or equal to received quantity' });
       data.qualityfailedqty = "";
       return;
       //(<HTMLInputElement>document.getElementById("returnqty")).value = "";
     }
     if (entredvalue != (receivedqty - acceptedqty) && receivedqty && acceptedqty) {
-      this.messageService.add({ severity: 'error', summary: '', detail: 'Sum of quality passesed and failed  must be equal to received qty' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Quality Passed & Failed should be equal to Recived Quantity' });
       data.qualityfailedqty = "";
       return;
       //(<HTMLInputElement>document.getElementById("returnqty")).value = "";
@@ -226,7 +226,7 @@ export class QualityCheckComponent implements OnInit {
       return (element.qualitypassedqty + element.qualityfailedqty != parseInt(element.receivedqty));
     });
     if (invaliddata.length > 0) {
-      this.messageService.add({ severity: 'error', summary: '', detail: 'Sum of quality failed and passed must be equal to received quantity.' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Quality Passed & Failed should be equal to Recived Quantity.' });
       this.spinner.hide();
       return;
     }

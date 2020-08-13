@@ -41,6 +41,7 @@ export class HoldGRViewComponent implements OnInit {
   graction: number = 1;
   onholdupdatedata: UnholdGRModel;
   unholdremarks: string = "";
+  unholdremarksview: string = "";
   selectedrow: inwardModel;
   grstatus: string = "";
   tempcol1: string = "";
@@ -88,8 +89,9 @@ export class HoldGRViewComponent implements OnInit {
     this.filteredpomatdetailsList = [];
     this.selectedrow = data;
     this.dtpono = data.pono;
-   this.dtinvoiceno= data.invoiceno;
-   this.dtvendorname= data.vendorname;
+    this.dtinvoiceno= data.invoiceno;
+    this.dtvendorname = data.vendorname;
+    this.unholdremarksview = data.unholdremarks;
     this.filteredpomatdetailsList = this.podetailsList.filter(o => o.inwmasterid == data.inwmasterid);
     this.showdetail = true;
 
