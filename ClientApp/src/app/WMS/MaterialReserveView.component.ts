@@ -42,6 +42,8 @@ export class MaterialReserveViewComponent implements OnInit {
   public materialRequestDetails: materialRequestDetails;
   public pono: string;
   public reservedfor: Date;
+  public displaylist: boolean = false;
+  public displayDD: boolean = true;
 
   ngOnInit() {
     if (localStorage.getItem("Employee"))
@@ -81,12 +83,26 @@ export class MaterialReserveViewComponent implements OnInit {
 
   //On PO Selected event
   onPOSelected(pono: string) {
+    debugger;
     if (this.ponolist.filter(li => li.pono == pono).length > 0) {
-      var data = this.ponolist.find(li => li.pono == pono);
-      this.suppliername = data["suppliername"];
-      this.pono = pono;
-      //this.requestMatData.suppliername = data["suppliername"];
+      if (pono != "All") {
+        var data = this.ponolist.find(li => li.pono == pono);
+        this.suppliername = data["suppliername"];
+        this.pono = pono;
+        this.displayDD = false;
+        this.displaylist = true;
+        this.wmsService.getMaterialRequestlistdata(this.employee.employeeno, this.pono).subscribe(data => {
+          this.materialList = data;
+        });
+        //this.requestMatData.suppliername = data["suppliername"];
+      }
 
+    }
+    else {
+      this.requestMatData.suppliername == null;
+      this.displayDD = true;
+      this.pono = null;
+      this.displaylist = false;
     }
   }
 
@@ -95,17 +111,100 @@ export class MaterialReserveViewComponent implements OnInit {
     this.suppliername = null;
     this.ponumber = null;
     this.requestMatData = new requestData();
+    this.materialList = [];
+    this.materialmodel = [];
   }
 
   //On supplier name selected
   onsuppSelected(suppname: string) {
     debugger;
-    //if (this.ponolist.filter(li => li.suppliername == suppname).length > 0) {
-    // var data = this.ponolist.find(li => li.suppliername == suppname);
-    //this.requestMatData.pono = suppname;
-    this.ponumber = suppname;
-    this.pono = suppname;
+    if (this.ponolist.filter(li => li.pono == suppname).length > 0) {
+      if (suppname != "All") {
+      this.ponumber = suppname;
+      this.pono = suppname;
+      this.displayDD = false;
+      this.displaylist = true;
+      this.wmsService.getMaterialRequestlistdata(this.employee.employeeno, this.pono).subscribe(data => {
+        this.materialList = data;
+      });
+      }
+
+    }
+    else {
+           this.requestMatData.pono == null;
+        this.pono = null;
+        this.displayDD = true;
+        this.displaylist = false;
+    }
+
+    //if (suppname == "undefined") {
+    //  this.requestMatData.pono == null;
+    //  this.pono = null;
+    //  this.displayDD = true;
+    //  this.displaylist = false;
     //}
+    //else if (suppname != "All") {
+    //  this.ponumber = suppname;
+    //  this.pono = suppname;
+    //  this.displayDD = false;
+    //  this.displaylist = true;
+    //  this.wmsService.getMaterialRequestlistdata(this.employee.employeeno, this.pono).subscribe(data => {
+    //    this.materialList = data;
+    //  });
+    //}
+    //else {
+
+    //    this.requestMatData.pono == null;
+    //    this.pono = null;
+    //    this.displayDD = true;
+    //    this.displaylist = false;
+     
+    //}
+    //}
+  }
+
+
+  //Check for requested qty
+  onComplete(reqqty: number, avqty: number, material: any, index) {
+    if (avqty < reqqty) {
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Requested qty cannot exceed available qty' });
+      this.materialList[index].quantity = 0;
+      return false;
+    }
+  }
+
+  //add materials for gate pass
+  addNewMaterial() {
+    if (this.materialList.length <= 0) {
+      this.materialistModel = { material: "", materialdescription: "", quantity: 0, materialcost: 0, availableqty: 0, remarks: " ", issuedqty: 0, requesterid: this.employee.employeeno, ReserveUpto: this.mindate };
+      this.materialList.push(this.materialistModel);
+    }
+    else {
+      debugger;
+      if (this.materialList[this.materialList.length - 1].material == "" || this.materialList[this.materialList.length - 1].material == null) {
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Add Material' });
+        return false;
+      }
+      else if (this.materialList[this.materialList.length - 1].quantity == 0) {
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Enter Quantity' });
+        return false;
+      }
+      else if (this.materialList[this.materialList.length - 1].quantity > 0) {
+        this.wmsService.checkMaterialandQty(this.materialList[this.materialList.length - 1].material, this.materialList[this.materialList.length - 1].quantity).subscribe(data => {
+          if (data == "true") {
+            //this.materialList.push(this.materialList);
+            this.materialistModel = new materialListforReserve();
+
+          }
+          else
+            this.messageService.add({ severity: 'error', summary: 'Error Message', detail: data });
+          return false;
+        });
+      }
+      this.materialistModel = { material: "", materialdescription: "", quantity: 0, materialcost: 0, availableqty: 0, remarks: " ", issuedqty: 0, requesterid: this.employee.employeeno, ReserveUpto: this.mindate };
+      this.materialList.push(this.materialistModel);
+    }
+
   }
 
   //Check if material is already selected in material list drop down
@@ -144,8 +243,8 @@ export class MaterialReserveViewComponent implements OnInit {
           fName = item[this.constants[name].fieldId];
         // var value = { listName: name, name: fName, code: item[this.constants[name].fieldId] };
         var value = { code: item[this.constants[name].fieldId] };
-        this.materialistModel.materialcost = data[0].materialcost;
-        this.materialistModel.availableqty = data[0].availableqty;
+        //this.materialistModel.materialcost = data[0].materialcost;
+        //this.materialistModel.availableqty = data[0].availableqty;
         this.searchItems.push(item[this.constants[name].fieldId]);
       });
     });
@@ -169,6 +268,19 @@ export class MaterialReserveViewComponent implements OnInit {
   ackStatusChanges() {
     this.showAck = true;
   }
+
+  //Delate row
+  removematerial(id: number, matIndex: number) {
+    debugger;
+    this.materialList.splice(matIndex, 1);
+    //if (id != 0) {
+    //  this.wmsService.deleteGatepassmaterial(id).subscribe(data => {
+    //    //this.gatepassModelList[this.gpIndx].materialList.splice(matIndex, 1);
+    //    this.messageService.add({ severity: 'success', summary: 'success Message', detail: 'Material Deleted' });
+    //  });
+    //}
+  }
+
 
   //received material acknowledgement
   materialAckUpdate() {
@@ -266,7 +378,7 @@ this.showdialog=true;
       }
       else if (this.materialList[this.materialList.length - 1].quantity > 0) {
         if (this.materialList[this.materialList.length - 1].availableqty < this.materialList[this.materialList.length - 1].quantity) {
-          this.messageService.add({ severity: 'error', summary: '', detail: "Requested Qty cannot exceed available qty" });
+          this.messageService.add({ severity: 'error', summary: '', detail: "Reserved Qty cannot exceed available qty" });
           this.materialList[this.materialList.length - 1].quantity = 0;
           return false;
         }
@@ -284,11 +396,12 @@ this.showdialog=true;
             this.spinner.hide();
             if (data) {
               this.requestDialog = false;
-              this.messageService.add({ severity: 'success', summary: 'success Message', detail: 'Request sent' });
+              this.messageService.add({ severity: 'success', summary: 'success Message', detail: 'Reserved materials Successfully' });
+              this.getMaterialReservelist();
               //this.router.navigateByUrl("/WMS/MaterialReqView/" + this.pono);
             }
             else {
-              this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Error while sending Request' });
+              this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Error while Reserving materials' });
             }
 
           });

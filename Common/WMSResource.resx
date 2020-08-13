@@ -139,14 +139,14 @@ req.requestedquantity,sum(sk.availableqty)as availableqty,req.requestid from wms
  group by  iss.issuedqty, req.requestforissueid,sk.materialid--,sk.pono,req.requestedquantity,sk.availableqty,req.requestid,emp."name",req.requesteddate,pro.jobname</value>
   </data>
   <data name="GetListForMaterialRequestByapproverid" xml:space="preserve">
-    <value>select issue.approvedstatus,req.pono,req.requestid,req.requesteddate,req.requesterid,pro.projectname,emp."name",max(req.requesttype)as requesttype,max(req.returnon)as returnon
-        from wms.wms_materialrequest req left join wms.wms_polist po on po.pono=req.pono 
+    <value>select issue.approvedstatus,req.pono,req.requestid,req.requesteddate,req.requesterid,emp."name",max(req.requesttype)as requesttype,max(req.returnon)as returnon
+        from wms.wms_materialrequest req 
        left join wms.employee emp on req.requesterid=emp.employeeno 
-       left join wms.wms_pomaterials pomat on pomat.pono=po.pono
-       left join wms.wms_project pro on pro.pono=po.pono
+       --left join wms.wms_pomaterials pomat on pomat.pono=po.pono
+       --left join wms.wms_project pro on pro.pono=po.pono
        left join wms.wms_materialissue issue on issue.requestforissueid=req.requestforissueid
         --where req.approverid='#approverid'
-        group by issue.approvedstatus,req.requestid,req.requesteddate,req.requesterid,pro.projectname,emp."name",req.pono  order by req.requestid desc</value>
+        group by issue.approvedstatus,req.requestid,req.requesteddate,req.requesterid,emp."name",req.pono  order by req.requestid desc</value>
   </data>
   <data name="GetListForMaterialRequestByrequesterid" xml:space="preserve">
     <value>select * from wms.wms_materialrequest where requesterid='#requesterid'</value>
@@ -242,7 +242,7 @@ VALUES(@inwmasterid,@receiveddate,@receivedby,@receivedqty,@returnqty,@qualitypa
     <value>select distinct  max(req.ackstatus)as ackstatus,max(issue.issuedqty)as issuedquantity,max(req.requesteddate)as requesteddate,max(issue.approvedstatus)as approvedstatus,max(issue.issuedqty) as issuedqty,max(req.requestforissueid)as requestforissueid,max(issue.approvedstatus) as approvedstatus,req.requestid,max(openpo.pono) as pono,max(openpo.projectname)as projectname,max(openpo.material)as material,max(openpo.materialdescription) as materialdescription,max(openpo.quotationqty) quotationqty,max(req.requestedquantity)as requestedquantity,
 max(req.ackremarks)as ackremarks,CASE WHEN max(req.ackremarks) IS NULL THEN false ELSE true END AS status 
  from   wms.wms_stock  sk left join wms.openpolistview openpo on openpo.pono = sk.pono 
-  left join wms.wms_materialrequest req on req.pono = openpo.pono
+  left join wms.wms_materialrequest req on req.requesterid = '#reqid'
   left join  wms.wms_materialissue issue on issue.requestforissueid=req.requestforissueid</value>
   </data>
   <data name="queryforitemdetails" xml:space="preserve">
@@ -810,7 +810,7 @@ where reserveupto between current_date and current_date  + interval '3 day' and 
   left join wms.employee emp on emp.employeeno=reqtrasnfer.createdby
   </value>
   </data>
-   <data name="checkmatexists" xml:space="preserve">
+  <data name="checkmatexists" xml:space="preserve">
     <value>select * from wms."MaterialMasterYGS" where material='#materialid'</value>
   </data>
   <data name="getPODetails" xml:space="preserve">

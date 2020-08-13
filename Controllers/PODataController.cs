@@ -569,7 +569,7 @@ namespace WMS.Controllers
 		}
 
 		[HttpPost("insertreservematerial")]
-		public int getmaterialissueList([FromBody] List<ReserveMaterialModel> datamodel)
+		public Task<int> getmaterialissueList([FromBody] List<ReserveMaterialModel> datamodel)
 		{
 			return this._poService.insertResevematerial(datamodel);
 		}

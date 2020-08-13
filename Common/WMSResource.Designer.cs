@@ -522,12 +522,13 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select issue.approvedstatus,req.pono,req.requestid,req.requesteddate,req.requesterid,pro.projectname,emp.&quot;name&quot;,max(req.requesttype)as requesttype,max(req.returnon)as returnon
-        ///        from wms.wms_materialrequest req left join wms.wms_polist po on po.pono=req.pono 
+        ///   Looks up a localized string similar to select issue.approvedstatus,req.pono,req.requestid,req.requesteddate,req.requesterid,emp.&quot;name&quot;,max(req.requesttype)as requesttype,max(req.returnon)as returnon
+        ///        from wms.wms_materialrequest req 
         ///       left join wms.employee emp on req.requesterid=emp.employeeno 
-        ///       left join wms.wms_pomaterials pomat on pomat.pono=po.pono
-        ///       left join wms.wms_project pro on pro.pono=po.pono
-        ///       left join wms.wms_materialissue issue on is [rest of string was truncated]&quot;;.
+        ///       --left join wms.wms_pomaterials pomat on pomat.pono=po.pono
+        ///       --left join wms.wms_project pro on pro.pono=po.pono
+        ///       left join wms.wms_materialissue issue on issue.requestforissueid=req.requestforissueid
+        ///        --where [rest of string was truncated]&quot;;.
         /// </summary>
         public static string GetListForMaterialRequestByapproverid {
             get {

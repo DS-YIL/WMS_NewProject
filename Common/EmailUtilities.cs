@@ -83,6 +83,11 @@ namespace WMS.Common
 				mailMessage.Subject = "Reserve material";
 				subbody = mailMessage.Subject;
 			}
+			else if (subjecttype == 13)
+			{
+				mailMessage.Subject = "Put Away";
+				subbody = "All materials are placed for GRN :" + emlSndngList.jobcode;
+			}
 
 			if (!string.IsNullOrEmpty(emlSndngList.CC))
 				mailMessage.CC.Add(emlSndngList.CC);

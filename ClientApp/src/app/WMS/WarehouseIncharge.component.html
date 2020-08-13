@@ -26,9 +26,9 @@
         WMS GRN No : <span class="labeltext">{{podetailsList[0].grnnumber}}</span>
       </div>
     </div>
-    <div class="row" style="margin-top:5px;margin-left:20px;" *ngIf="podetailsList.length > 0 && isallplaced">
+    <!--<div class="row" style="margin-top:5px;margin-left:20px;" *ngIf="podetailsList.length > 0 && isallplaced">
       <button class="btn btn-info" (click)="shownotifdiv()">Notify to finance</button>
-    </div>
+    </div>-->
 
     <div class="row " style="    margin-top: 10px;margin-left: 0px !important;margin-right: 0px !important">
       <div class="col-lg-12 col-md-12 col-sm-12">
@@ -587,7 +587,7 @@
   <div *ngIf="showdocuploaddiv">
     <div class="row" style="margin-top:5px;margin-left:20px;">
       <div class="col-lg-2 col-md-2">
-        <span class="labelheading"><i class="fa fa-tag"></i>Notify to finace</span>
+        <span class="labelheading"><i class="fa fa-tag"></i>Notify to finance</span>
       </div>
       <div class="col-lg-1 col-md-1">
         <button class="btn btn-info btn-sm" (click)="shownotifdiv()">Back</button>

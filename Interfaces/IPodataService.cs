@@ -102,7 +102,7 @@ Task<string> updateonholdrow(updateonhold datamodel);
         Task<DashboardModel> getdashboarddata();
         Task<IEnumerable<IssueRequestModel>> getissuematerialdetails(int requestid);
         Task<IEnumerable<ReserveMaterialModel>> getissuematerialdetailsforreserved(int reservedid);
-        int insertResevematerial(List<ReserveMaterialModel> datamodel);
+        Task<int> insertResevematerial(List<ReserveMaterialModel> datamodel);
         Task<IEnumerable<ReserveMaterialModel>> GetReservedMaterialList(string reservedby);
         Task<IEnumerable<ReserveMaterialModel>> GetReleasedmaterialList();
         Task<IEnumerable<ReserveMaterialModel>> GetmaterialdetailsByreserveid(string reserveid);

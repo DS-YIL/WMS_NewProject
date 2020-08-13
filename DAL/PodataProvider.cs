@@ -496,7 +496,7 @@ namespace WMS.DAL
 							emailmodel.ToEmailId = "developer1@in.yokogawa.com";
 							emailmodel.FrmEmailId = "sushma.patil@in.yokogawa.com";
 							EmailUtilities emailobj = new EmailUtilities();
-							//emailobj.sendEmail(emailmodel, 1);
+							emailobj.sendEmail(emailmodel, 1);
 
 						}
 						////}
@@ -1268,7 +1268,7 @@ namespace WMS.DAL
 						emailmodel.ToEmailId = "developer1@in.yokogawa.com";
 						emailmodel.FrmEmailId = "sushma.patil@in.yokogawa.com";
 						EmailUtilities emailobj = new EmailUtilities();
-						//emailobj.sendEmail(emailmodel, 2);
+						emailobj.sendEmail(emailmodel, 2);
 					}
 					//}
 					return (Convert.ToString(inwardid));
@@ -1460,7 +1460,7 @@ namespace WMS.DAL
 							emailmodel.FrmEmailId = "sushma.patil@in.yokogawa.com";
 							emailmodel.CC = "sushma.patil@in.yokogawa.com";
 							EmailUtilities emailobj = new EmailUtilities();
-							//emailobj.sendEmail(emailmodel, 4);
+							emailobj.sendEmail(emailmodel, 4);
 						}
 					}
 					//}
@@ -1700,7 +1700,7 @@ namespace WMS.DAL
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
-				string materialrequestquery = WMSResource.materialrequestquery;
+				string materialrequestquery = WMSResource.materialrequestquery.Replace("#reqid", approverid);
 				//if (pono != null)
 				//{
 				//	materialrequestquery = materialrequestquery + " where openpo.pono = '" + pono + "'";
@@ -1778,7 +1778,7 @@ namespace WMS.DAL
 						emailmodel.ToEmailId = "developer1@in.yokogawa.com";
 						emailmodel.FrmEmailId = "sushma.patil@in.yokogawa.com";
 						EmailUtilities emailobj = new EmailUtilities();
-						//emailobj.sendEmail(emailmodel, 7);
+						emailobj.sendEmail(emailmodel, 7);
 					}
 				}
 				return (Convert.ToInt32(result));
@@ -2001,7 +2001,7 @@ namespace WMS.DAL
 							emailmodel.ToEmailId = "developer1@in.yokogawa.com";
 							emailmodel.FrmEmailId = "sushma.patil@in.yokogawa.com";
 							EmailUtilities emailobj = new EmailUtilities();
-							//emailobj.sendEmail(emailmodel, 5);
+							emailobj.sendEmail(emailmodel, 5);
 						}
 						//if (result != 0)
 						//{
@@ -2287,7 +2287,7 @@ namespace WMS.DAL
 							emailmodel.ToEmailId = "developer1@in.yokogawa.com";
 							emailmodel.FrmEmailId = "sushma.patil@in.yokogawa.com";
 							EmailUtilities emailobj = new EmailUtilities();
-							//emailobj.sendEmail(emailmodel, 8);
+							emailobj.sendEmail(emailmodel, 8);
 						}
 						else if (dataobj.gatepasstype == "Non Returnable")
 						{
@@ -2323,7 +2323,7 @@ namespace WMS.DAL
 							emailmodel.ToEmailId = "developer1@in.yokogawa.com";
 							emailmodel.FrmEmailId = "sushma.patil@in.yokogawa.com";
 							EmailUtilities emailobj = new EmailUtilities();
-							//emailobj.sendEmail(emailmodel, 9);
+							emailobj.sendEmail(emailmodel, 9);
 						}
 						
 
@@ -4211,11 +4211,10 @@ namespace WMS.DAL
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
 
-
 				try
 				{
 					string materialrequestquery = WMSResource.getmaterialdetailfprrequest;
-					if (pono != null && pono!="undefined")
+					if (pono != null && pono!="undefined" && pono!="null")
 					{
 						materialrequestquery = materialrequestquery + " and openpo.pono = '" + pono + "'";
 					}
@@ -4270,7 +4269,7 @@ namespace WMS.DAL
 			}
 		}
 
-		public  int insertResevematerial(List<ReserveMaterialModel> datamodel)
+		public async Task<int> insertResevematerial(List<ReserveMaterialModel> datamodel)
 		{
 			int reserveid = 0;
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -4300,40 +4299,83 @@ namespace WMS.DAL
 						
 						item.materialid = item.material;
 						item.reservedqty = item.quantity;
-					
+						item.reservedby = item.requesterid;
 
 						string insertquery = WMSResource.insertreservematerial;
-						string itemnoquery = WMSResource.getitemiddata.Replace("materialid", item.material);
-						using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
+						string itemnoquery = WMSResource.getitemiddata.Replace("#materialid", item.material);
+						if(item.pono!=null)
+                        {
+							itemnoquery = itemnoquery + "and pono=" + item.pono;
+                        }
+						using (var DB = new NpgsqlConnection(config.PostgresConnectionString))
 						{
-							DB.Open();
-							var itemdata = DB.QueryFirstAsync<StockModel>(
-					  itemnoquery, null, commandType: CommandType.Text);
-							item.itemid = 2269;
+						
+							//DB.Open();
+							await DB.OpenAsync();
+							var itemData = await DB.QueryAsync<StockModel>(
+					   itemnoquery, null, commandType: CommandType.Text);
+							int remainingqty = item.quantity;
+							itemData = itemData.OrderBy(o => o.createddate);
 							
-							result = DB.Execute(insertquery, new
-							{
-								item.materialid,
-								item.itemid,
-								item.pono,
-								item.reservedby,
-								item.reservedqty,
-								reserveid,
-								item.reserveupto
-							});
+							foreach (StockModel data in itemData)
+                            {
+								if (item.pono == null)
+								{
+									item.pono = data.pono;
+								}
+								if (data.availableqty>= remainingqty)
+                                {
+									item.itemid = data.itemid;
+									
+									result = DB.Execute(insertquery, new
+									{
+										item.materialid,
+										item.itemid,
+										item.pono,
+										item.reservedby,
+										item.reservedqty,
+										reserveid,
+										item.reserveupto
+									});
+									break;
+                                }
+                                else
+                                {
+									remainingqty = item.quantity - data.availableqty;
+									item.itemid = data.itemid;
+
+									result = DB.Execute(insertquery, new
+									{
+										item.materialid,
+										item.itemid,
+										item.pono,
+										item.reservedby,
+										item.reservedqty,
+										reserveid,
+										item.reserveupto
+									});
+
+								}
+
+								if (result != 0)
+								{
+									int availableqty = item.availableqty - item.reservedqty;
+									string updatequery = WMSResource.updatestock.Replace("#availableqty", Convert.ToString(availableqty)).Replace("#itemid", Convert.ToString(item.itemid));
+									using (IDbConnection pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+									{
+										result = pgsql.Execute(updatequery, new
+										{
+										});
+									}
+								}
+
+							}
+
+							
+							
 						}
 
-						if (result != 0)
-						{
-							int availableqty = item.availableqty - item.reservedqty;
-							string updatequery = WMSResource.updatestock.Replace("#availableqty", Convert.ToString(availableqty)).Replace("#itemid", Convert.ToString(item.itemid));
-							using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
-							{
-								result = DB.Execute(updatequery, new
-								{
-								});
-							}
-						}
+						
 
 					}
 				}
@@ -4666,7 +4708,7 @@ namespace WMS.DAL
 								emailmodel.ToEmailId = "developer1@in.yokogawa.com";
 								emailmodel.FrmEmailId = "sushma.patil@in.yokogawa.com";
 								EmailUtilities emailobj = new EmailUtilities();
-								//emailobj.sendEmail(emailmodel, 3);
+								emailobj.sendEmail(emailmodel, 3);
 							}
 
 						}
@@ -6303,8 +6345,14 @@ namespace WMS.DAL
 					            if(rslt != 0)
                     {
 						result = "saved";
-                    }
-                    else
+						EmailModel emailmodel = new EmailModel();
+						emailmodel.jobcode = grn;
+						emailmodel.ToEmailId = "developer1@in.yokogawa.com";
+						emailmodel.FrmEmailId = "sushma.patil@in.yokogawa.com";
+						EmailUtilities emailobj = new EmailUtilities();
+						emailobj.sendEmail(emailmodel, 13);
+					}
+					else
                     {
 						result = "error";
                     }

@@ -719,6 +719,7 @@ public bool onhold { get; set; }
 	{
 		public int quantity { get; set; }
 		public int issuedqty { get; set; }
+		public string requesterid { get; set; }
 		public int reserveformaterialid { get; set; }
 		public string materialid { get; set; }
 		public string material { get; set; }

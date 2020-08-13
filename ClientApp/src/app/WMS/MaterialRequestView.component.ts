@@ -48,7 +48,8 @@ export class MaterialRequestViewComponent implements OnInit {
   public gatepassModel: gatepassModel;
   public materialList: Array<materialList> = [];
   public chkChangeshideshow: boolean = false;
- 
+  public displaylist: boolean = false;
+  public displayDD: boolean = true;
   public requestid: any;
   public date: Date = null;
   ngOnInit() {
@@ -125,6 +126,20 @@ export class MaterialRequestViewComponent implements OnInit {
    
   }
 
+  //Delate row
+  removematerial(id: number, matIndex: number) {
+    debugger;
+    this.materialList.splice(matIndex, 1);
+    //if (id != 0) {
+    //  this.wmsService.deleteGatepassmaterial(id).subscribe(data => {
+    //    //this.gatepassModelList[this.gpIndx].materialList.splice(matIndex, 1);
+    //    this.messageService.add({ severity: 'success', summary: 'success Message', detail: 'Material Deleted' });
+    //  });
+    //}
+
+
+  }
+
   //Submit Requested quantity data
   onSubmitReqData() {
     if (this.materialList.length <= 0) {
@@ -159,6 +174,7 @@ export class MaterialRequestViewComponent implements OnInit {
             this.spinner.hide();
             if (data) {
               this.requestDialog = false;
+              this.getMaterialRequestlist();
               this.messageService.add({ severity: 'success', summary: 'success Message', detail: 'Request sent' });
               //this.router.navigateByUrl("/WMS/MaterialReqView/" + this.pono);
             }
@@ -175,12 +191,47 @@ export class MaterialRequestViewComponent implements OnInit {
 
   //On PO Selected event
   onPOSelected(pono: string) {
+    debugger;
     if (this.ponolist.filter(li => li.pono == pono).length > 0) {
-      var data = this.ponolist.find(li => li.pono == pono);
-      this.suppliername = data["suppliername"];
-      this.pono = pono;
-      //this.requestMatData.suppliername = data["suppliername"];
+      if (pono != "All") {
+        var data = this.ponolist.find(li => li.pono == pono);
+        this.suppliername = data["suppliername"];
+        this.pono = pono;
+        this.displayDD = false;
+        this.displaylist = true;
+        this.wmsService.getMaterialRequestlistdata(this.employee.employeeno, this.pono).subscribe(data => {
+          this.materialList = data;
+        });
+        //this.requestMatData.suppliername = data["suppliername"];
+      }
       
+    }
+    else {
+      this.requestMatData.suppliername == null;
+      this.displayDD = true;
+      this.pono = null;
+      this.displaylist = false;
+      //this.wmsService.getMaterialRequestlistdata(this.employee.employeeno, this.pono).subscribe(data => {
+
+
+      //  this.searchresult = data;
+      //  this.materialmodel = data;
+      //  this.searchItems = [];
+      //  var fName = "";
+      //  this.searchresult.forEach(item => {
+      //    debugger;
+      //    var name = "material";
+      //    fName = item[this.constants[name].fieldName];
+      //    if (name == "material")
+      //      //fName = item[this.constants[name].fieldName] + " - " + item[this.constants[name].fieldId];
+      //      fName = item[this.constants[name].fieldId];
+      //    // var value = { listName: name, name: fName, code: item[this.constants[name].fieldId] };
+      //    var value = { code: item[this.constants[name].fieldId] };
+      //    this.materialistModel.materialcost = data[0].materialcost;
+      //    this.materialistModel.availableqty = data[0].availableqty;
+      //    this.searchItems.push(item[this.constants[name].fieldId]);
+      //  });
+      //});
     }
   }
 
@@ -189,16 +240,56 @@ export class MaterialRequestViewComponent implements OnInit {
     this.suppliername = null;
     this.ponumber = null;
     this.requestMatData = new requestData();
+    this.materialList = [];
+    this.materialmodel = [];
   }
 
   //On supplier name selected
+  //On supplier name selected
   onsuppSelected(suppname: string) {
     debugger;
-    //if (this.ponolist.filter(li => li.suppliername == suppname).length > 0) {
-    // var data = this.ponolist.find(li => li.suppliername == suppname);
-    //this.requestMatData.pono = suppname;
-    this.ponumber = suppname;
-    this.pono = suppname;
+    if (this.ponolist.filter(li => li.pono == suppname).length > 0) {
+      if (suppname != "All") {
+      this.ponumber = suppname;
+      this.pono = suppname;
+      this.displayDD = false;
+      this.displaylist = true;
+      this.wmsService.getMaterialRequestlistdata(this.employee.employeeno, this.pono).subscribe(data => {
+        this.materialList = data;
+      });
+      }
+
+    }
+    else {
+           this.requestMatData.pono == null;
+        this.pono = null;
+        this.displayDD = true;
+        this.displaylist = false;
+    }
+
+    //if (suppname == "undefined") {
+    //  this.requestMatData.pono == null;
+    //  this.pono = null;
+    //  this.displayDD = true;
+    //  this.displaylist = false;
+    //}
+    //else if (suppname != "All") {
+    //  this.ponumber = suppname;
+    //  this.pono = suppname;
+    //  this.displayDD = false;
+    //  this.displaylist = true;
+    //  this.wmsService.getMaterialRequestlistdata(this.employee.employeeno, this.pono).subscribe(data => {
+    //    this.materialList = data;
+    //  });
+    //}
+    //else {
+
+    //    this.requestMatData.pono == null;
+    //    this.pono = null;
+    //    this.displayDD = true;
+    //    this.displaylist = false;
+     
+    //}
     //}
   }
 
@@ -258,7 +349,6 @@ export class MaterialRequestViewComponent implements OnInit {
 
   //bind materials based search
   public bindSearchList(event: any, name?: string) {
-    debugger;
     this.wmsService.getMaterialRequestlistdata(this.employee.employeeno, this.pono).subscribe(data => {
    
 
@@ -274,8 +364,8 @@ export class MaterialRequestViewComponent implements OnInit {
           fName = item[this.constants[name].fieldId];
         // var value = { listName: name, name: fName, code: item[this.constants[name].fieldId] };
         var value = { code: item[this.constants[name].fieldId] };
-        this.materialistModel.materialcost = data[0].materialcost;
-        this.materialistModel.availableqty = data[0].availableqty;
+        //this.materialistModel.materialcost = data[0].materialcost;
+        //this.materialistModel.availableqty = data[0].availableqty;
         this.searchItems.push(item[this.constants[name].fieldId]);
       });
     });

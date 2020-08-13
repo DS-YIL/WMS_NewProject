@@ -84,6 +84,7 @@ export class GatePassComponent implements OnInit {
   //Adding new material - Gayathri
   addNewMaterial() {
     this.gatePassChange();
+    
     if (this.gatepassModel.materialList.length > 0) {
       if (isNullOrUndefined(this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].materialid) || this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].materialid=="") {
         this.messageService.add({ severity: 'error', summary: '', detail: 'Select Material from list' });
@@ -126,8 +127,15 @@ export class GatePassComponent implements OnInit {
 
     }
     else {
-      this.messageService.add({ severity: 'error', summary: '', detail: 'Add Material to create Gate Pass' });
-      return false;
+      if (this.gatepassModel.materialList.length <= 0) {
+        this.materialistModel = { materialid: "", gatepassmaterialid: "0", materialdescription: "", quantity: 0, materialcost: "0", remarks: " ", expecteddate: this.date, returneddate: this.date, issuedqty: 0 };
+        this.gatepassModel.materialList.push(this.materialistModel);
+      }
+      else {
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Add Material to create Gate Pass' });
+        return false;
+      }
+     
     }
 
     //if (this.gatepassModel.materialList.length == 0 || isNullOrUndefined(this.material)) {

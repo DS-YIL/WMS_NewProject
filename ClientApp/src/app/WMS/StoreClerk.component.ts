@@ -25,6 +25,7 @@ export class StoreClerkComponent implements OnInit {
 
   public pono: string;
   public invoiceNo: string;
+  public qty: any = 1;
   public grnNo: string;
   public showPrintDialog: boolean = false;
   public PoDetails: PoDetails;
