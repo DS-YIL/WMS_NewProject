@@ -9,6 +9,7 @@ import { MessageService } from 'primeng/api';
 import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { trigger, state, style, transition, animate } from '@angular/animations';
+import { environment } from 'src/environments/environment'
 import { ConfirmationService } from 'primeng/api';
 import { isNullOrUndefined } from 'util';
 import { HttpClient } from '@angular/common/http';
@@ -92,7 +93,7 @@ export class PutawayNotificationComponent implements OnInit {
   issentdata: boolean = false;
   isallselected: boolean = false;
   clspan: number = 8;
-  imgurl: string = "D:/WMSProject/TEST/WMS_NewProject/Resources/documents/";
+  imgurl = environment.imgurl;
  
   ngOnInit() {
     if (localStorage.getItem("Employee"))
@@ -244,11 +245,11 @@ export class PutawayNotificationComponent implements OnInit {
   opendoc(file: any) {
     debugger;
     var picstr = file;
-    if (picstr.endsWith(".pdf")) {
-      window.open(this.url+'Resources/documents/' + picstr, "_blank");
+    if (picstr.endsWith(".pdf") || picstr.endsWith(".xlsx")) {
+      window.open(this.imgurl + picstr, "_blank");
     }
     else {
-      this.docimage = this.url + 'Resources/documents/' + picstr;
+      this.docimage = this.imgurl + picstr;
       this.displayimage = true;
     }
 
