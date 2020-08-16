@@ -331,7 +331,12 @@ export class PutawayNotificationComponent implements OnInit {
         let notif = new notifymodel();
         notif.grnnumber = item.grnnumber;
         notif.notifiedby = this.employee.employeeno;
-        notif.notifyremarks = this.notifremarks;
+        if (!isNullOrUndefined(this.notifremarks) && this.notifremarks != "") {
+          notif.notifyremarks = this.notifremarks;
+        }
+        else {
+          notif.notifyremarks = item.notifyremarks;
+        }
         this.multinotifmodel.push(notif);
       });
 
