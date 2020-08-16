@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  imgurl: "http://10.29.15.212:83/"
+  imgurl: "http://10.29.15.212:84/"
 };
 
 /*
