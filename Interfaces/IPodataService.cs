@@ -53,6 +53,7 @@ Task<string> updateonholdrow(updateonhold datamodel);
         System.Data.DataTable GetMaterialItems(DynamicSearchResult result);
         int IssueRequest(List<IssueRequestModel> reqdata);
         Task<IEnumerable<inwardModel>> getitemdeatils(string grnnumber);
+        Task<IEnumerable<inwardModel>> getitemdeatilsnotif(string grnnumber);
         Task<IEnumerable<IssueRequestModel>> MaterialRequest(string pono,string material);
         Task<IEnumerable<IssueRequestModel>> MaterialRequestdata(string pono, string material);
         int acknowledgeMaterialReceived(List<IssueRequestModel> dataobj);
@@ -133,6 +134,8 @@ Task<string> updateonholdrow(updateonhold datamodel);
         Task<IEnumerable<ddlmodel>> getgrnlistforacceptance();
         Task<IEnumerable<ddlmodel>> getgrnlistforacceptanceputaway();
 
+        Task<IEnumerable<inwardModel>> getgrnlistforacceptancenotify(string type);
+
         Task<IEnumerable<ddlmodel>> getholdgrlist();
         Task<IEnumerable<ddlmodel>> getgrnlistforacceptanceqc();
         Task<IEnumerable<gatepassModel>> NonreturnGetgatepassList(string type);
@@ -141,6 +144,7 @@ Task<string> updateonholdrow(updateonhold datamodel);
         int UpdateReturnmaterialTostock(List<IssueRequestModel> model);
 
         int UnholdGRdata(UnholdGRModel model);
+        int mattransfer(materialtransferMain model);
         int mrnupdate(MRNsavemodel model);
         int GatepassapproveByMail(gatepassModel model);
         Task<IEnumerable<pageModel>> Getpagesbyroleid(int roleid);
@@ -151,7 +155,7 @@ Task<string> updateonholdrow(updateonhold datamodel);
 
         Task<UserDashboardDetail> getUserDashboarddata();
         Task<IEnumerable<IssueRequestModel>> getreturndata(string empno);
-        Task<IEnumerable<IssueRequestModel>> gettransferdata(string empno);
+        Task<IEnumerable<materialtransferMain>> gettransferdata(string empno);
         int Updatetransferqty(List<IssueRequestModel> _listobj);
 		  Task<IEnumerable<UserDashboardGraphModel>> getUserdashboardgraphdata();
 
@@ -159,8 +163,11 @@ Task<string> updateonholdrow(updateonhold datamodel);
 
         Task<IEnumerable<UserDashboardGraphModel>> getmonthlyUserdashboardgraphdata();
 
-        string updateputawayfilename(string filename);
+        string updateputawayfilename(ddlmodel filename);
 
         Task<IEnumerable<ddlmodel>> getprojectlist();
+        Task<IEnumerable<ddlmodel>> getmatlist();
+        string notifyputaway(notifymodel data);
+        string notifymultipleputaway(List<notifymodel> data);
     }
 }

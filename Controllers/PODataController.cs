@@ -100,12 +100,9 @@ namespace WMS.Controllers
 						file.CopyTo(stream);
 					}
 
-                    if(fileName.StartsWith("putaway")){
-
-						this._poService.updateputawayfilename(fileName);
-
-
-					}
+                    //if(fileName.StartsWith("putaway")){
+					//	this._poService.updateputawayfilename(fileName);
+					//}
 
 					return Ok(new { dbPath });
 				}
@@ -118,6 +115,25 @@ namespace WMS.Controllers
 			{
 				return StatusCode(500, $"Internal server error: {ex}");
 			}
+		}
+
+
+		[HttpPost("updateputawayfilename")]
+		public string updateputawayfile(ddlmodel data)
+		{
+			return this._poService.updateputawayfilename(data);
+		}
+
+		[HttpPost("notifyputaway")]
+		public string notifyputawayfn(notifymodel data)
+		{
+			return this._poService.notifyputaway(data);
+		}
+
+		[HttpPost("notifymultipleputaway")]
+		public string notifyputawaymultiplefn(List<notifymodel> data)
+		{
+			return this._poService.notifymultipleputaway(data);
 		}
 
 
@@ -258,6 +274,12 @@ namespace WMS.Controllers
 		public async Task<IEnumerable<inwardModel>> getitemdetailsbygrnno(string grnnumber)
 		{
 			return await this._poService.getitemdeatils(grnnumber);
+		}
+
+		[HttpGet("getitemdetailsbygrnnonotif")]
+		public async Task<IEnumerable<inwardModel>> getitemdetailsbygrnnonotif(string grnnumber)
+		{
+			return await this._poService.getitemdeatilsnotif(grnnumber);
 		}
 		[HttpGet("getmaterialrequestList")]
 		public async Task<IEnumerable<IssueRequestModel>> materialissue(string pono = null, string loginid = null)
@@ -699,8 +721,14 @@ namespace WMS.Controllers
             return await this._poService.getprojectlist();
         }
 
+		[HttpGet("getmateriallistfortransfer")]
+		public async Task<IEnumerable<ddlmodel>> getmatlist()
+		{
+			return await this._poService.getmatlist();
+		}
 
-        [HttpGet("getgrnforacceptance")]
+
+		[HttpGet("getgrnforacceptance")]
 		public async Task<IEnumerable<ddlmodel>> getgrnlistforacceptance()
 		{
 			return await this._poService.getgrnlistforacceptance();
@@ -710,6 +738,12 @@ namespace WMS.Controllers
 		public async Task<IEnumerable<ddlmodel>> getgrnlistforacceptanceputaway()
 		{
 			return await this._poService.getgrnlistforacceptanceputaway();
+		}
+
+		[HttpGet("getgrnforacceptancenotify")]
+		public async Task<IEnumerable<inwardModel>> getgrnlistforacceptancenotify(string type)
+		{
+			return await this._poService.getgrnlistforacceptancenotify(type);
 		}
 
 		[HttpGet("getholdgrs")]
@@ -763,6 +797,12 @@ namespace WMS.Controllers
 			return this._poService.UnholdGRdata(obj);
 		}
 
+		[HttpPost("mattransfer")]
+		public int mattransfer([FromBody] materialtransferMain obj)
+		{
+			return this._poService.mattransfer(obj);
+		}
+
 		[HttpPost("mrnupdate")]
 		public int mrnupdate([FromBody] MRNsavemodel obj)
 		{
@@ -785,7 +825,7 @@ namespace WMS.Controllers
 			return await this._poService.getreturndata(empno);
 		}
 		[HttpGet("gettransferdata")]
-		public async Task<IEnumerable<IssueRequestModel>> gettransferdata(string empno)
+		public async Task<IEnumerable<materialtransferMain>> gettransferdata(string empno)
 		{
 			return await this._poService.gettransferdata(empno);
 		}

@@ -163,6 +163,8 @@ namespace WMS.Models
         public string Materialdescription { get; set; }
         public string itemlocation { get; set; }
 		public string invoiceno { get; set; }
+
+		public string vendorname { get; set; }
 		public int materialqty { get; set; }
 
 		public string asn { get; set; }
@@ -188,6 +190,12 @@ public bool onhold { get; set; }
 		public string mrnby { get; set; }
 		public DateTime mrnon { get; set; }
 		public string mrnremarks { get; set; }
+
+		public string notifyremarks { get; set; }
+		public string notifiedby { get; set; }
+		public bool notifiedtofinance { get; set; }
+		public DateTime notifiedon { get; set; }
+		public string putawayfilename { get; set; }
 	}
 	public class StockModel
 	{
@@ -852,6 +860,36 @@ public class ddlmodel
   public string text { get; set; }
   public string supplier { get; set; }
 
+}
+
+public class materialtransferMain
+{
+	public int transferid { get; set; }
+	public string projectcode { get; set; }
+	public int transferredqty { get; set; }
+	public string transferremarks { get; set; }
+	public string transferedby { get; set; }
+    public DateTime transferredon { get; set; }
+	public List<materialtransferTR> materialdata { get; set; }
+	
+}
+public class materialtransferTR
+{
+	public int transferid { get; set; }
+    public string materialid { get; set; }
+	public string materialdescription { get; set; }
+	public int transferredqty { get; set; }
+}
+
+public class notifymodel
+{
+
+	public string grnnumber { get; set; }
+	public string notifiedby { get; set; }
+	public string notifyremarks
+	{
+		get; set;
+	}
 }
 public class updateonhold
 {

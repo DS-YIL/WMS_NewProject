@@ -580,6 +580,11 @@ fieldset.scheduler-border {
   font-size: 12px !important;
 }
 
+.mprltbldata1 > th {
+  background: #428bca !important;
+  color: #fff !important;
+}
+
 .labelheading {
   font-weight: 600;
   font-size: 14px;
@@ -910,6 +915,8 @@ input[type=number] {
     opacity: 0;
   }
 }
+
+
 
 
 

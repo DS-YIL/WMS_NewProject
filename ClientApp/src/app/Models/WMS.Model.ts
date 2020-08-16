@@ -131,6 +131,15 @@ export class inwardModel {
   mrnby: string;
   mrnon: Date;
   mrnremarks: string;
+  notifyremarks: string;
+  notifiedby: string;
+  notifiedtofinance: boolean;
+  notifiedon: Date
+  putawayfilename: string
+  vendorname: string;
+  showtrdata: boolean = false;
+  selectedrow: boolean = false;
+  uploadedFiles: any[] = [];
 
 }
 
@@ -329,6 +338,13 @@ export class ddlmodel {
 
 }
 
+export class notifymodel {
+
+  grnnumber: string;
+  notifiedby: string;
+  notifyremarks: string;
+}
+
 export class MRNsavemodel {
   grnnumber: string;
   projectcode: string;
@@ -454,5 +470,22 @@ export class materialistModeltransfer {
   transfetid: number;
   projectcode:string
   createdby: string;
+}
+
+export class materialtransferMain {
+  transferid: number;
+  projectcode: string;
+  transferredqty: number = 0;
+  transferremarks: string;
+  transferedby: string;
+  transferredon: Date;
+  showtr: boolean;
+  materialdata: materialtransferTR[] = [];
+}
+export class materialtransferTR {
+  transferid: number;
+  materialid: string;
+  materialdescription: string;
+  transferredqty: number = 0;
 }
 

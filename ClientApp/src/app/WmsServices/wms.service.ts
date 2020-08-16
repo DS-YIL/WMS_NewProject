@@ -5,7 +5,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { constants } from '../Models/WMSConstants'
 import { Employee, Login, DynamicSearchResult, printMaterial, rbamaster } from '../Models/Common.Model';
-import { PoFilterParams, PoDetails, BarcodeModel, StockModel, materialRequestDetails, inwardModel, gatepassModel, stocktransfermodel, Materials, authUser, invstocktransfermodel, ddlmodel, locataionDetailsStock,updateonhold, materialistModel, outwardmaterialistModel, pageModel, UserDashboardDetail, UserDashboardGraphModel, UnholdGRModel, MRNsavemodel } from '../Models/WMS.Model';
+import { PoFilterParams, PoDetails, BarcodeModel, StockModel, materialRequestDetails, inwardModel, gatepassModel, stocktransfermodel, Materials, authUser, invstocktransfermodel, ddlmodel, locataionDetailsStock,updateonhold, materialistModel, outwardmaterialistModel, pageModel, UserDashboardDetail, UserDashboardGraphModel, UnholdGRModel, MRNsavemodel, notifymodel, materialtransferMain } from '../Models/WMS.Model';
 import { Text } from '@angular/compiler/src/i18n/i18n_ast';
 
 @Injectable({
@@ -64,6 +64,9 @@ export class wmsService {
   }
   getitemdetailsbygrnno(GrnNo: string): Observable<any> {
     return this.http.get<any>(this.url + 'POData/getitemdetailsbygrnno?grnnumber=' + GrnNo + '', this.httpOptions);
+  }
+  getitemdetailsbygrnnonotif(GrnNo: string): Observable<any> {
+    return this.http.get<any>(this.url + 'POData/getitemdetailsbygrnnonotif?grnnumber=' + GrnNo + '', this.httpOptions);
   }
 
   getPOList(PoFilterParams: PoFilterParams): Observable<any[]> {
@@ -417,6 +420,11 @@ export class wmsService {
     const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }), responseType: 'text' as any };
     return this.http.post<any>(this.url + 'POData/UpdateStockTransfer1', StockModel, httpOptions);
   }
+
+  Updateputawayfiles(ddlModeldt: ddlmodel): Observable<any> {
+    const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }), responseType: 'text' as any };
+    return this.http.post<any>(this.url + 'POData/updateputawayfilename', ddlModeldt, httpOptions);
+  }
   getdepartments(): Observable<ddlmodel[]> {
     return this.http.get<ddlmodel[]>(this.url + 'POData/getdepartment/', this.httpOptions);
   }
@@ -426,6 +434,9 @@ export class wmsService {
   }
   getcheckedgrnlistforputaway(): Observable<ddlmodel[]> {
     return this.http.get<ddlmodel[]>(this.url + 'POData/getgrnforacceptanceputaway/', this.httpOptions);
+  }
+  getcheckedgrnlistfornotify(type: string): Observable<inwardModel[]> {
+    return this.http.get<inwardModel[]>(this.url + 'POData/getgrnforacceptancenotify?type='+ type, this.httpOptions);
   }
 
   getcheckedgrnlistforqc(): Observable<ddlmodel[]> {
@@ -440,6 +451,9 @@ export class wmsService {
     return this.http.get<ddlmodel[]>(this.url + 'POData/getprojectlist/', this.httpOptions);
   }
 
+  getmateriallistfortransfer(): Observable<ddlmodel[]> {
+    return this.http.get<ddlmodel[]>(this.url + 'POData/getmateriallistfortransfer/', this.httpOptions);
+  }
   
 
 
@@ -454,6 +468,16 @@ export class wmsService {
 
   updatemrn(updaeonhold: MRNsavemodel): Observable<any> {
     return this.http.post<any>(this.url + 'POData/mrnupdate', updaeonhold, this.httpOptions);
+  }
+
+  notifyputawayfn(data: notifymodel): Observable<any> {
+    const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }), responseType: 'text' as any };
+    return this.http.post<any>(this.url + 'POData/notifyputaway', data, httpOptions);
+  }
+
+  notifymultipleputawayfn(data: notifymodel[]): Observable<any> {
+    const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }), responseType: 'text' as any };
+    return this.http.post<any>(this.url + 'POData/notifymultipleputaway', data, httpOptions);
   }
 
 
@@ -487,6 +511,9 @@ export class wmsService {
   }
   getweeklydashgraphdata(): Observable<UserDashboardGraphModel[]> {
     return this.http.get<UserDashboardGraphModel[]>(this.url + 'POData/getweeklyUserdashgraphdata/', this.httpOptions);
+  }
+  updatetransfermaterial(transferdata: materialtransferMain): Observable<any> {
+    return this.http.post<any>(this.url + 'POData/mattransfer', transferdata, this.httpOptions);
   }
 
   

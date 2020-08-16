@@ -51,6 +51,7 @@ import { MRNViewComponent } from './WMS/MRNView.component';
 import { ASNViewComponent } from './WMS/ASNView.component';
 import { MaterialBarcodeComponent } from './WMS/MaterialBarcode.component';
 import { MaterialReportComponent } from './WMS/MaterialReport.component';
+import { PutawayNotificationComponent } from './WMS/PutawayNotification.component';
 const routes: Routes = [{
   path: 'WMS',
   children: [
@@ -116,7 +117,8 @@ const routes: Routes = [{
     { path: "MRNView", component: MRNViewComponent, canActivate: [AuthGuard] },
     { path: "ASNView", component: ASNViewComponent, canActivate: [AuthGuard] },  
 { path: "PrintBarcode", component: MaterialBarcodeComponent, canActivate: [AuthGuard] },
-    { path: "MaterialReport", component: MaterialReportComponent, canActivate: [AuthGuard] }
+    { path: "MaterialReport", component: MaterialReportComponent, canActivate: [AuthGuard] },
+    { path: "Putawaynotify", component: PutawayNotificationComponent, canActivate: [AuthGuard] }
   ]
 
 },

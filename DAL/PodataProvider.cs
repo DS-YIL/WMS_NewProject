@@ -1690,6 +1690,37 @@ namespace WMS.DAL
 			}
 
 		}
+
+		/// <summary>
+		/// based on grnnumber will get lst of items for notification
+		/// </summary>
+		/// <param name="grnnumber"></param>
+		/// <returns></returns>
+		public async Task<IEnumerable<inwardModel>> getitemdeatilsnotif(string grnnumber)
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+
+				try
+				{
+					await pgsql.OpenAsync();
+					string queryforitemdetails = WMSResource.getitemsfornotifypage.Replace("#grnnumber", grnnumber);
+					return await pgsql.QueryAsync<inwardModel>(
+					   queryforitemdetails, null, commandType: CommandType.Text);
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "getitemdeatils", Ex.StackTrace.ToString());
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+				//throw new NotImplementedException();
+			}
+
+		}
 		/// <summary>
 		/// requesting for material
 		/// </summary>
@@ -4775,6 +4806,37 @@ namespace WMS.DAL
 			}
 		}
 
+		public async Task<IEnumerable<ddlmodel>> getmatlist()
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				try
+				{
+					string materialrequestquery = WMSResource.getmaterialfortransfer;
+
+
+					await pgsql.OpenAsync();
+					var data = await pgsql.QueryAsync<ddlmodel>(
+					  materialrequestquery, null, commandType: CommandType.Text);
+					return data;
+
+
+
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "getmatlist", Ex.StackTrace.ToString());
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+
+			}
+		}
+
 
 
 
@@ -5835,6 +5897,64 @@ namespace WMS.DAL
 			}
 		}
 
+		public async Task<IEnumerable<inwardModel>> getgrnlistforacceptancenotify(string type)
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				try
+				{
+					string materialrequestquery = "";
+					if(type == "Pending")
+                    {
+						materialrequestquery = WMSResource.grnlistfornotify;
+					}
+					else if(type == "Sent")
+                    {
+						materialrequestquery = WMSResource.getnotifiedgrnlist;
+					}
+                    else
+                    {
+						materialrequestquery = WMSResource.grnlistfornotify;
+					}
+					
+					List<inwardModel> returnlist = new List<inwardModel>();
+					await pgsql.OpenAsync();
+					var data = await pgsql.QueryAsync<inwardModel>(
+					  materialrequestquery, null, commandType: CommandType.Text);
+
+
+
+
+                    foreach (inwardModel ddl in data)
+                    {
+						string validatequery = WMSResource.validategrnlistfornotify.Replace("#inwmasterid",ddl.inwmasterid.ToString());
+						var datax = await pgsql.QueryAsync<ddlmodel>(
+					                validatequery, null, commandType: CommandType.Text);
+						if(datax == null || datax.Count() == 0)
+                        {
+							returnlist.Add(ddl);
+						}
+						
+                    
+                    }
+                    return returnlist.OrderByDescending(o => o.inwmasterid);
+
+
+                }
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "getgrnlistforacceptanceputaway", Ex.StackTrace.ToString());
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+			}
+		}
+
+
 		public async Task<IEnumerable<ddlmodel>> getholdgrlist()
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -5934,6 +6054,70 @@ namespace WMS.DAL
 					string qry = "Update wms.wms_securityinward set onhold = False,holdgrstatus='"+status+"',unholdedby = '"+ datamodel.unholdedby+ "',unholdedon = current_date,unholdremarks = '" + datamodel.unholdremarks + "' where inwmasterid = " + datamodel.inwmasterid + "";
 					var results11 = pgsql.ExecuteScalar(qry);
 					result = 1;
+
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "updateonholdrow", Ex.StackTrace.ToString());
+					return 0;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+			}
+			return result;
+		}
+		//current
+		public int mattransfer(materialtransferMain datamodel)
+		{
+			int result = 0;
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				try
+				{
+					int transferqty = 0;
+					string createdby = datamodel.transferedby;
+					string remarks = datamodel.transferremarks;
+					string materialid = "";
+					string updatereturnqty = "";
+					pgsql.OpenAsync();
+					updatereturnqty = WMSResource.updatetransferdata;
+					using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
+					{
+						var resultx = DB.ExecuteScalar(updatereturnqty, new
+						{
+
+							transferqty,
+							createdby,
+							remarks,
+							datamodel.projectcode,
+							materialid
+						});
+						int tid = Convert.ToInt32(resultx);
+                        if (tid!=0)
+                        {
+							datamodel.transferid = tid;
+							foreach (materialtransferTR trdata in datamodel.materialdata)
+							{
+								string insertqrry = WMSResource.inserttransfermaterials;
+
+								var result11 = DB.Execute(insertqrry, new
+								{
+
+									datamodel.transferid,
+									trdata.materialid,
+									trdata.transferredqty
+									
+								});
+							}
+							result = 1;
+						}
+						
+					}
+					
+					
 
 				}
 				catch (Exception Ex)
@@ -6341,7 +6525,7 @@ namespace WMS.DAL
 			return result;
 		}
 
-		public string updateputawayfilename(string file)
+		public string updateputawayfilename(ddlmodel file)
 		{
 			string result = "";
 			int rslt = 0;
@@ -6349,21 +6533,22 @@ namespace WMS.DAL
 					{
 
 
-				            string grn = file.Split("_")[1];
-				            string updateqry = "update wms.wms_securityinward set putawayfilename = '" + file + "' where grnnumber = '" + grn + "'";
+				            string grn = file.text;
+				            string filename = file.value;
+				            string updateqry = "update wms.wms_securityinward set putawayfilename = '" + filename + "' where grnnumber = '" + grn + "'";
 							using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
 							{
 								rslt = DB.Execute(updateqry);
 					            if(rslt != 0)
                     {
 						result = "saved";
-						EmailModel emailmodel = new EmailModel();
-						emailmodel.jobcode = grn;
-						emailmodel.ToEmailId = "developer1@in.yokogawa.com";
-						emailmodel.FrmEmailId = "sushma.patil@in.yokogawa.com";
-						EmailUtilities emailobj = new EmailUtilities();
-						//emailobj.sendEmail(emailmodel, 13);
-					}
+                        //EmailModel emailmodel = new EmailModel();
+                        //emailmodel.jobcode = grn;
+                        //emailmodel.ToEmailId = "developer1@in.yokogawa.com";
+                        //emailmodel.FrmEmailId = "sushma.patil@in.yokogawa.com";
+                        //EmailUtilities emailobj = new EmailUtilities();
+                        //emailobj.sendEmail(emailmodel, 13);
+                    }
 					else
                     {
 						result = "error";
@@ -6379,7 +6564,107 @@ namespace WMS.DAL
 				
 			return result;
 		}
-	/// <summary>
+
+		public string notifyputaway(notifymodel data)
+		{
+			string result = "";
+			int rslt = 0;
+			try
+			{
+				
+
+				string grn = data.grnnumber;
+				string remarks = data.notifyremarks;
+				string notifyby = data.notifiedby;
+				//inw.notifyremarks,inw.notifiedby,inw.notifiedtofinance,inw.notifiedon,inw.putawayfilename,
+				string updateqry = "update wms.wms_securityinward set notifiedtofinance = True,notifiedon = current_date,notifiedby='"+ notifyby + "', notifyremarks = '" + remarks + "' where grnnumber = '" + grn + "'";
+				using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
+				{
+					rslt = DB.Execute(updateqry);
+					if (rslt != 0)
+					{
+						result = "saved";
+						EmailModel emailmodel = new EmailModel();
+						emailmodel.jobcode = data.grnnumber;
+						emailmodel.ToEmailId = "developer1@in.yokogawa.com";
+						emailmodel.FrmEmailId = "sushma.patil@in.yokogawa.com";
+						EmailUtilities emailobj = new EmailUtilities();
+						//emailobj.sendEmail(emailmodel, 13);
+
+
+					}
+					else
+					{
+						result = "error";
+					}
+				}
+
+			}
+			catch (Exception ex)
+			{
+				log.ErrorMessage("PODataProvider", "notifyputaway", ex.StackTrace.ToString());
+				return "error";
+			}
+
+			return result;
+		}
+
+		public string notifymultipleputaway(List<notifymodel> datalst)
+		{
+			string result = "";
+			int rslt = 0;
+			try
+			{
+				string grns = "";
+				int loop = 1;
+
+				foreach(notifymodel data in datalst)
+                {
+					string grn = data.grnnumber;
+					string remarks = data.notifyremarks;
+					string notifyby = data.notifiedby;
+					//inw.notifyremarks,inw.notifiedby,inw.notifiedtofinance,inw.notifiedon,inw.putawayfilename,
+					string updateqry = "update wms.wms_securityinward set notifiedtofinance = True,notifiedon = current_date,notifiedby='" + notifyby + "', notifyremarks = '" + remarks + "' where grnnumber = '" + grn + "'";
+					using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
+					{
+						rslt = DB.Execute(updateqry);
+						if (rslt != 0)
+						{
+							result = "saved";
+							if(loop > 1)
+                            {
+								grns += ", ";
+							}
+							grns += grn;
+
+						}
+						else
+						{
+							result = "error";
+						}
+					}
+
+				}
+
+				EmailModel emailmodel = new EmailModel();
+				emailmodel.jobcode = grns;
+				emailmodel.ToEmailId = "developer1@in.yokogawa.com";
+				emailmodel.FrmEmailId = "sushma.patil@in.yokogawa.com";
+				EmailUtilities emailobj = new EmailUtilities();
+				//emailobj.sendEmail(emailmodel, 13);
+
+
+
+			}
+			catch (Exception ex)
+			{
+				log.ErrorMessage("PODataProvider", "notifyputaway", ex.StackTrace.ToString());
+				return "error";
+			}
+
+			return result;
+		}
+		/// <summary>
 		/// onload to display the returned already by PM
 		/// </summary>
 		public  async Task<IEnumerable<IssueRequestModel>> GetReturnmaterialList()
@@ -6481,7 +6766,7 @@ namespace WMS.DAL
 		/// </summary>
 		/// <param name="empno"></param>
 		/// <returns></returns>
-			public async Task<IEnumerable<IssueRequestModel>> gettransferdata(string empno)
+			public async Task<IEnumerable<materialtransferMain>> gettransferdata(string empno)
 			{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
@@ -6491,8 +6776,23 @@ namespace WMS.DAL
 					string query = WMSResource.gettransferdata.Replace("#createdby",empno);
 					string updatequery = string.Empty;
 					//string updatedon = WMSResource.updatedon;
-					return await pgsql.QueryAsync<IssueRequestModel>(
+				   var data = await pgsql.QueryAsync<materialtransferMain>(
 					  query, null, commandType: CommandType.Text);
+					if(data != null && data.Count() > 0)
+                    {
+						foreach(materialtransferMain dt in data)
+                        {
+							string query1 = WMSResource.gettransferiddetail.Replace("#tid", dt.transferid.ToString());
+							var datadetail = await pgsql.QueryAsync<materialtransferTR>(
+							   query1, null, commandType: CommandType.Text);
+
+							if (datadetail != null && datadetail.Count() > 0)
+							{
+								dt.materialdata = datadetail.ToList();
+							}
+					    }
+                    }
+					return data;
 
 				}
 				catch (Exception ex)

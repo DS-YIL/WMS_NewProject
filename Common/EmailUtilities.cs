@@ -86,7 +86,7 @@ namespace WMS.Common
 			else if (subjecttype == 13)
 			{
 				mailMessage.Subject = "Put Away";
-				subbody = "All materials are placed for GRN :" + emlSndngList.jobcode;
+				subbody = "All materials are placed for GRN(s) :" + emlSndngList.jobcode;
 			}
 
 			if (!string.IsNullOrEmpty(emlSndngList.CC))

@@ -81,6 +81,7 @@ import { MRNViewComponent } from './WMS/MRNView.component'
 import { ASNViewComponent } from './WMS/ASNView.component'
 import { MaterialBarcodeComponent } from './WMS/MaterialBarcode.component';
 import { MaterialReportComponent } from './WMS/MaterialReport.component';
+import { PutawayNotificationComponent } from './WMS/PutawayNotification.component';
 ////pages
 import { LoginComponent } from './WMS/Login.component';
 import {HomeComponent} from './WMS/Home.component';
@@ -90,6 +91,7 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 import { ToolbarModule } from 'primeng/toolbar';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { FileUploadModule } from 'primeng/fileupload';
+import { TabViewModule } from 'primeng/tabview';
 @Injectable
   ({
     providedIn: 'root',
@@ -149,8 +151,9 @@ import { FileUploadModule } from 'primeng/fileupload';
     HoldGRViewComponent,
     MRNViewComponent,
     ASNViewComponent,
-      MaterialBarcodeComponent,
-    MaterialReportComponent
+    MaterialBarcodeComponent,
+    MaterialReportComponent,
+    PutawayNotificationComponent
 
   ],
   imports: [
@@ -186,7 +189,8 @@ import { FileUploadModule } from 'primeng/fileupload';
     InputNumberModule, RadioButtonModule,
     ToolbarModule,
     SelectButtonModule,
-    FileUploadModule
+    FileUploadModule,
+    TabViewModule
     //RouterModule.forRoot([
     //  { path: '', component: LoginComponent, pathMatch: 'full' },
     // ])

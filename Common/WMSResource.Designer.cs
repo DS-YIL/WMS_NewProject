@@ -512,6 +512,19 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to select inwa.inwardid,bin.binnumber, rack.racknumber, loc.locatorname,mat.rackid,mat.binid,
+        /// mat.storeid,stocks.itemlocation,stocks.availableqty,stocks.itemid,inw.grnnumber,inw.pono,inw.invoiceno,inw.receiveddate,
+        /// inw.isdirecttransferred,inw.projectcode,emp.name as mrnby,inw.mrnon,inw.mrnremarks,
+        /// inw.notifyremarks,inw.notifiedby,inw.notifiedtofinance,inw.notifiedon,inw.putawayfilename,
+        /// inwa.materialqty,inwa.materialid as material,mat.materialdescription,inwa.receivedqty,inwa.confirmqty,inwa.returnqty  [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string getitemsfornotifypage {
+            get {
+                return ResourceManager.GetString("getitemsfornotifypage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to select * from wms.wms_returnmaterial returnmat
         ///   where returnmat.returnid=#returnid .
         /// </summary>
@@ -621,6 +634,15 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to select material as value, materialdescription as text from wms.&quot;MaterialMasterYGS&quot; limit 100.
+        /// </summary>
+        public static string getmaterialfortransfer {
+            get {
+                return ResourceManager.GetString("getmaterialfortransfer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to select &apos;&apos; as jobname, inw.confirmqty,sec.grnnumber,sec.pono,mtmaster.materialdescription,
         ///sk.materialid, sk.availableqty,sk.itemid
         /// from wms.wms_securityinward sec left join wms.wms_storeinward inw on inw.inwmasterid=sec.inwmasterid
@@ -679,6 +701,20 @@ namespace WMS.Common {
         public static string getnonreturnablegatepassdata {
             get {
                 return ResourceManager.GetString("getnonreturnablegatepassdata", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to select stk.inwmasterid,sinw.grnnumber,sinw.pono,sinw.invoiceno,(select suppliername from wms.wms_polist where pono = Max(sinw.pono) limit 1) as vendorname,
+        ///Max(sinw.notifyremarks) as notifyremarks,Max(emp.name) as notifiedby,sinw.notifiedtofinance,Max(sinw.notifiedon) as notifiedon,Max(sinw.putawayfilename) as putawayfilename
+        ///from wms.wms_stock stk
+        ///left outer join wms.wms_securityinward sinw on stk.inwmasterid = sinw.inwmasterid 
+        ///left outer join wms.employee emp on emp.employeeno=sinw.notifiedby
+        ///where  [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string getnotifiedgrnlist {
+            get {
+                return ResourceManager.GetString("getnotifiedgrnlist", resourceCulture);
             }
         }
         
@@ -890,11 +926,26 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select * from wms.wms_transfermaterial where createdby=&apos;#createdby&apos;.
+        ///   Looks up a localized string similar to select ts.transferid, ts.projectcode,ts.remarks as transferremarks,emp.name as transferedby,ts.createdon as transferredon
+        ///from wms.wms_transfermaterial ts
+        ///left outer join wms.employee emp on emp.employeeno = ts.createdby
+        ///where ts.createdby=&apos;#createdby&apos;.
         /// </summary>
         public static string gettransferdata {
             get {
                 return ResourceManager.GetString("gettransferdata", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to select tsd.transferid,tsd.materialid,tsd.transferqty as transferredqty,mat.materialdescription
+        ///from wms.wms_transfermaterialdetail tsd
+        ///left outer join wms.&quot;MaterialMasterYGS&quot; mat on mat.material = tsd.materialid
+        ///where tsd.transferid = &apos;#tid&apos;.
+        /// </summary>
+        public static string gettransferiddetail {
+            get {
+                return ResourceManager.GetString("gettransferiddetail", resourceCulture);
             }
         }
         
@@ -915,6 +966,19 @@ namespace WMS.Common {
         public static string getuserroles {
             get {
                 return ResourceManager.GetString("getuserroles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to select stk.inwmasterid,sinw.grnnumber,sinw.pono,sinw.invoiceno,(select suppliername from wms.wms_polist where pono = Max(sinw.pono) limit 1) as vendorname,
+        ///Max(sinw.notifyremarks) as notifyremarks,Max(sinw.notifiedby) as notifiedby,sinw.notifiedtofinance,Max(sinw.notifiedon) as notifiedon,Max(sinw.putawayfilename) as putawayfilename
+        ///from wms.wms_stock stk
+        ///left outer join wms.wms_securityinward sinw on stk.inwmasterid = sinw.inwmasterid 
+        ///where stk.inwmasterid is not NULL and sinw.notifiedtofinance is NOT [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string grnlistfornotify {
+            get {
+                return ResourceManager.GetString("grnlistfornotify", resourceCulture);
             }
         }
         
@@ -1109,6 +1173,16 @@ namespace WMS.Common {
         public static string insertstock {
             get {
                 return ResourceManager.GetString("insertstock", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to insert into wms.wms_transfermaterialdetail(transferid,materialid,transferqty)values
+        ///        (@transferid,@materialid,@transferredqty).
+        /// </summary>
+        public static string inserttransfermaterials {
+            get {
+                return ResourceManager.GetString("inserttransfermaterials", resourceCulture);
             }
         }
         
@@ -1552,12 +1626,23 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to insert into wms.wms_transfermaterial(transferid,transferqty,createdby,createdon,remarks,projectcode,materialid)values
-        ///        (default,@transferqty,@createdby,current_timestamp,@remarks,@projectcode,@materialid).
+        ///   Looks up a localized string similar to insert into wms.wms_transfermaterial(transferqty,createdby,createdon,remarks,projectcode,materialid)values
+        ///        (@transferqty,@createdby,current_timestamp,@remarks,@projectcode,@materialid) RETURNING transferid.
         /// </summary>
         public static string updatetransferdata {
             get {
                 return ResourceManager.GetString("updatetransferdata", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to select stinw.inwmasterid as value,stinw.inwardid as text,stk.itemlocation as supplier from wms.wms_storeinward stinw 
+        ///left outer join wms.wms_stock stk on stk.inwardid = stinw.inwardid
+        ///where stk.itemlocation is NULL and stinw.inwmasterid = &apos;#inwmasterid&apos;.
+        /// </summary>
+        public static string validategrnlistfornotify {
+            get {
+                return ResourceManager.GetString("validategrnlistfornotify", resourceCulture);
             }
         }
         
