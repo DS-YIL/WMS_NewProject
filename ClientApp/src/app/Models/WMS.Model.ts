@@ -436,6 +436,7 @@ export class updateonhold {
 }
 
 export class UserDashboardDetail {
+  inbountfortoday: number;
   pendingtooutward: number;
   pendingtoinward: number;
   pendingtoPMapproval: number;
@@ -447,6 +448,10 @@ export class UserDashboardDetail {
   pendingtoissue: number;
   pendingshipments: number;
   receivedshipments: number;
+  reservedquantityforthisweek: number;
+  pendingtoapproval: number;
+  pendingcyclecountapproval: number;
+  
 }
 export class returnmaterial {
   materialLists: Array<materialistModeltransfer> = [];

@@ -203,7 +203,9 @@ body .ui-widget {
 }
 
 .cardactive {
-  border : 5px dashed green;
+  box-shadow: 0 0 10px 5px rgba(0,255,0,1);
+  -moz-box-shadow: 0 0 10px 5px rgba(0,255,0,1);
+  -webkit-box-shadow: 0 0 10px 5px rgba(0,255,0,1);
 }
 
 body .ui-radiobutton .ui-radiobutton-box {
@@ -916,7 +918,53 @@ input[type=number] {
   }
 }
 
+.p-overlay-badge {
+  position: relative;
+  display: inline-block;
+}
 
+  .p-overlay-badge .p-badge {
+    position: absolute;
+    top: 0;
+    right: 0;
+    -ms-transform: translate(1em,-1em);
+    transform: translate(1em,-1em);
+    margin: 0;
+  }
+
+.p-badge {
+  background: #dc3545;
+  border-radius: 50%;
+  color: #ffffff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  min-width: 1.5rem;
+  height: 1.5rem;
+  line-height: 1.5rem;
+  display: inline-block;
+  text-align: center;
+}
+
+.circle {
+  height: 60px;
+  width: 60px;
+  background-color: #DDD;
+  border-radius: 50%;
+}
+.rectangle {
+  height: 6vh;
+  width: 2px;
+  background-color: #555;
+  margin-left:25px;
+}
+.triangle-down {
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 10px solid green;
+  margin-left: 21px;
+}
 
 
 

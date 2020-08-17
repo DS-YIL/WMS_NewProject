@@ -2,8 +2,248 @@
   <div class="col-xs-12 col-sm-12 col-md-12" style="background-image: url('./assets/WMShome.png');height:520px;background-repeat: no-repeat;">
   </div>
 </div>-->
-  <div style="height:85vh">
+  <!--<div style="height:85vh" *ngIf="isroleselected">
     <img src="./assets/wmshome3.png" alt="homepage image" height="100%" width="100%" />
+
+  </div>-->
+  <div style="background-image: url('./assets/dashboardbc.png');min-height:86vh;background-repeat: no-repeat;">
+    <div class="row" style="margin-left:5px;margin-right:5px;">
+      <div class="col-lg-3 col-md-3">
+        <div class="card" style="width:100%; min-height: 83vh;border-radius:10px;margin-top:10px;">
+          <!--<div class="card-header cardheadertext">
+            <span class="cardheaderdata">
+              <i class="fa fa-area-chart"></i>&nbsp;Dashboard
+            </span>
+          </div>-->
+          <div class="card-body">
+            <div class="row" style="margin-left:5px;">
+              <div class="col-md-6 col-lg-6 col-sm-6 col-xs-6">
+                <div class="circle p-overlay-badge p-mr-5"  (click)="activeCard($event,'Inbound')">
+                  <img src="./assets/inbound.png" width="40" style="margin-left:10px;margin-top:10px;">
+                  <span class="p-badge" *ngIf="issecurityoperator">{{dashboardmodel.pendingshipments}}</span>
+                </div>
+                <div>
+                  <label style="margin-bottom:0px;">Inbound</label>
+                </div>
+                <div class="rectangle"></div>
+                <div class="triangle-down"></div>
+                <div class="circle p-overlay-badge p-mr-5"   (click)="activeCard($event,'Receive')">
+                  <img src="./assets/wf_info.PNG" width="60">
+                  <span class="p-badge" *ngIf="isinventoryclerk">{{dashboardmodel.pendingtoreceive}}</span>
+                </div>
+                <div>
+                  <label style="margin-bottom:0px;">Receipts</label>
+
+                </div>
+                <div class="rectangle"></div>
+                <div class="triangle-down"></div>
+                <div class="circle p-overlay-badge p-mr-5"  (click)="activeCard($event,'Quality')">
+                  <img src="./assets/wf_Suspense.png"  width="60">
+                  <span class="p-badge" *ngIf="isqualityuser">{{dashboardmodel.pendingtoqualitycheck}}</span>
+                </div>
+                <div>
+                  <label style="margin-bottom:0px;">Quality</label>
+                </div>
+                <div class="rectangle"></div>
+                <div class="triangle-down"></div>
+                <div class="circle p-overlay-badge p-mr-5" (click)="activeCard($event,'Putaway')">
+                  <img src="./assets/wf_save.png" width="60">
+                  <span class="p-badge"  *ngIf="isinventoryclerk">{{dashboardmodel.pendingtoputaway}}</span>
+                </div>
+                <div>
+                  <label style="margin-bottom:0px;">Put away</label>
+                </div>
+
+
+              </div>
+              <div class="col-md-6 col-lg-6 col-sm-6 col-xs-6">
+                <div class="circle p-overlay-badge p-mr-5" (click)="activeCard($event,'Reserve')">
+                  <img src="./assets/wf_2.png" width="60">
+                  <span class="p-badge" *ngIf="isprojectmanager">{{dashboardmodel.reservedquantityforthisweek}}</span>
+                </div>
+                <div>
+                  <label style="margin-bottom:0px;">Reserves</label>
+
+                </div>
+                <div class="rectangle"></div>
+                <div class="triangle-down"></div>
+                <div class="circle p-overlay-badge p-mr-5" (click)="activeCard($event,'Approve')">
+                  <img src="./assets/wf_approved.png" width="60">
+                  <span class="p-badge" *ngIf="isapprover">{{notifcount}}</span>
+                </div>
+                <div>
+                  <label style="margin-bottom:0px;">Approval</label>
+                </div>
+                <div class="rectangle"></div>
+                <div class="triangle-down"></div>
+                <div class="circle p-overlay-badge p-mr-5" (click)="activeCard($event,'Issue')">
+                  <img src="./assets/wf_ReviewQuotation.PNG" width="60">
+                  <span class="p-badge" *ngIf="isinventorymanager">{{materialforissuecount}}</span>
+                </div>
+                <div>
+                  <label style="margin-bottom:0px;">Material Issue</label>
+                </div>
+                <div class="circle p-overlay-badge p-mr-5" style="margin-top:5vh;" (click)="activeCard($event,'Count')" >
+                  <img src="./assets/wf_pending.png" width="60">
+                  <span class="p-badge" *ngIf="isinventorymanager">{{dashboardmodel.pendingcyclecountapproval}}</span>
+                </div>
+                <div>
+                  <label style="margin-bottom:0px;">Cycle count</label>
+                </div>
+
+              </div>
+
+            </div>
+          
+
+            <!--<div class="row">
+    <div class="col-lg-6 col-md-6">
+      <div class="card" *ngIf="firstload" style="border-radius:60px;width:60px;border-color:dimgray;">
+
+        <div class="card-body text-center" style="padding:5px;">
+            <span><i class="fa fa-file" style="color:black;font-size:45px;margin-top:3px;"></i></span>
+        </div>
+      </div>
+      <div class="card" *ngIf="!firstload" style="border-radius:40px;width:80px;" (click)="activeCard($event,'Receive')">
+
+        <div class="card-body text-center" style="padding:5px;">
+          <div class="card" style="width:60px;height:60px;border-radius:30px;background-color:cornflowerblue;margin:0 auto;">
+            <span><i class="fa fa-file" style="color:white;font-size:45px;margin-top:3px;"></i></span>
+          </div>
+          </div>
+      </div>
+
+    </div>
+    <div class="col-lg-6 col-md-6">
+      <div class="card" style="border-radius:40px;width:80px;">
+
+        <div class="card-body text-center" style="padding:5px;">
+          <div class="card" style="width:60px;height:60px;border-radius:30px;background-color:#dc3545!important;margin:0 auto;">
+            <span><i class="fa fa-check-square-o" style="color:white;font-size:45px;margin-top:3px;"></i></span>
+          </div>
+           </div>
+      </div>
+
+    </div>
+
+  </div>
+  <div class="row" style="margin-top:50px;">
+    <div class="col-lg-6 col-md-6">
+
+      <div class="card" style="border-radius:40px;width:80px;">
+
+        <div class="card-body text-center" style="padding:5px;">
+          <div class="card" style="width:60px;height:60px;border-radius:30px;background-color:cornflowerblue!important;margin:0 auto;">
+            <span><i class="fa fa-arrows-alt" style="color:white;font-size:45px;margin-top:3px;"></i></span>
+          </div>
+         </div>
+      </div>
+
+    </div>
+    <div class="col-lg-6 col-md-6">
+      <div class="card" style="border-radius:40px;width:80px;">
+
+        <div class="card-body text-center" style="padding:5px;">
+          <div class="card" style="width:60px;height:60px;border-radius:30px;background-color:#dc3545!important;margin:0 auto;">
+            <span><i class="fa fa-send-o" style="color:white;font-size:45px;margin-top:3px;"></i></span>
+          </div>
+          </div>
+      </div>
+
+    </div>
+
+  </div>-->
+            <!--<p-organizationChart [value]="data1" selectionMode="single" [(selection)]="selectedNode" (onNodeSelect)="onNodeSelect($event)"
+                       styleClass="company">
+    <ng-template let-node pTemplate="person">
+      <div class="node-header p-corner-top">{{node.label}}</div>
+      <div class="node-content">
+        <img src="./assets/wf_pending.png" width="32">
+        <div>{{node.data.name}}</div>
+      </div>
+    </ng-template>
+    <ng-template let-node pTemplate="department">
+      {{node.label}}
+    </ng-template>
+  </p-organizationChart>-->
+            <!--<span style="font-size:larger;font-weight:600">
+    <i class="fa fa-user text-primary"></i>&nbsp;Logged In As : <span class="text-primary"> {{rolename}} </span>
+  </span>
+  <hr class="new1"/>
+  <div>
+    <span style="font-size:larger;font-weight:600">
+      <i class="fa fa-users text-primary"></i>&nbsp;Roles
+    </span>
+    <div>
+      <div *ngFor="let k of userrolelist">
+        <div class="card" style="width:100%;border-radius:5px;background-color:ghostwhite">
+          <div class="card-body" style="padding:2px;padding-top:5px;">
+            <span class="text-primary" style="font-weight:600;font-size:14px;" (click)="navigatebyrole(k.roleid)"> <i class="fa fa-user text-danger"></i>&nbsp;&nbsp;&nbsp;<label style="text-decoration:underline;cursor:pointer">{{k.accessname}}</label></span>
+          </div>
+
+        </div>
+      </div>
+
+
+    </div>
+  </div>-->
+          </div>
+
+        </div>
+
+      </div>
+      <div class="col-lg-9 col-md-9">
+        
+        <div class="card"  style="background-image: url('./assets/dashboardbc.png');min-height:80vh;background-repeat: no-repeat;margin-top:10px;border-radius:10px;min-height:82vh">
+          <div class="row">
+            <div class="col-lg-1 col-md-1 ">
+              <label class="labelheading">&nbsp;&nbsp;Roles :</label>
+            </div>
+            <div class="col-lg-4 col-md-4">
+              <select class="form-control forms-input" style="width:100% !important;" (change)="Navigatetopagefn()" [(ngModel)]="selectedrolename">
+                <option value="">Select Role</option>
+                <option *ngFor="let data of userrolelist">
+                  {{data.accessname}}
+                </option>
+              </select>
+            </div>
+            <div class="col-lg-3 col-md-3 form-inline">
+
+            </div>
+            <div class="col-lg-4 col-md-4 form-inline">
+              <label class="labeltext">Logged in as : {{rolename}}</label>
+            </div>
+
+
+
+          </div>
+            
+            <img src="./assets/wmshome3.png" alt="homepage image" style="height:75vh" />
+
+         
+          <!--<div class="card-header" style="height:30px;padding-top:2px">
+            <span class="labeltext">
+              <i class="fa fa-area-chart"></i>&nbsp;Graphical view
+            </span>
+          </div>
+          <div class="row">
+            <div class="col-lg-6 col-md-6">
+              <p-chart type="line" [data]="chartdata" [height]="450" [options]="chartoptions"></p-chart>
+            </div>
+            <div class="col-lg-6 col-md-6">
+              <p-chart type="bar" [data]="monthlychartdata" [height]="450" [options]="chartoptions1"></p-chart>
+            </div>
+
+          </div>-->
+        </div>
+
+
+      </div>
+
+    </div>
+    
+   
+
 
   </div>
 

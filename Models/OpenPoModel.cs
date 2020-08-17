@@ -960,6 +960,7 @@ public class rbamaster
 
 public class UserDashboardDetail
 {
+	public int inbountfortoday{ get; set; }
     public int pendingtooutward { get; set; }
 	public int pendingtoinward { get; set; }
 	public int pendingtoPMapproval { get; set; }
@@ -971,4 +972,7 @@ public class UserDashboardDetail
 	public int pendingtoissue { get; set; }
 	public int pendingshipments { get; set; }
 	public int receivedshipments { get; set; }
+	public int reservedquantityforthisweek { get; set; }
+	public int pendingtoapproval { get; set; }
+	public int pendingcyclecountapproval { get; set; }
 }

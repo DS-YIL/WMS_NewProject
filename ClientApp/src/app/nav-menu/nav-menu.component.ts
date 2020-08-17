@@ -592,7 +592,7 @@ export class NavMenuComponent implements OnInit {
   }
   changemenu() {
     debugger;
-    //this.bindMenu();
+    //this.ngOnInit();
     window.location.reload();
     
   }

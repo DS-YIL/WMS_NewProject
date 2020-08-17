@@ -3722,6 +3722,16 @@ namespace WMS.DAL
 						detail.pendingtoqualitycheck = qcdata.Count();
 
 					}
+					DateTime sevendaysbefore = DateTime.Now.AddDays(-7);
+					string sevendaysbeforestr = sevendaysbefore.ToString("yyyy-MM-dd");
+					string queryrsrv = "select itemid as value from wms.wms_materialreserve where reserveupto >= '" + sevendaysbeforestr + " 00:00:00' and reserveupto <= '" + deliverydate + " 23:59:59'";
+					var rsvdata = await pgsql.QueryAsync<ddlmodel>(
+					   queryrsrv, null, commandType: CommandType.Text);
+					if (rsvdata != null && rsvdata.Count() > 0)
+					{
+						detail.reservedquantityforthisweek = rsvdata.Count();
+
+					}
 
 
 
