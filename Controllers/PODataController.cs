@@ -722,9 +722,9 @@ namespace WMS.Controllers
         }
 
 		[HttpGet("getmateriallistfortransfer")]
-		public async Task<IEnumerable<ddlmodel>> getmatlist()
+		public async Task<IEnumerable<ddlmodel>> getmatlist(string empno)
 		{
-			return await this._poService.getmatlist();
+			return await this._poService.getmatlist(empno);
 		}
 
 

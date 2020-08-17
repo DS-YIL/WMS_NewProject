@@ -903,7 +903,11 @@ left outer join wms.wms_stock stk on stk.inwardid = stinw.inwardid
 where stk.itemlocation is NULL and stinw.inwmasterid = '#inwmasterid'</value>
   </data>
   <data name="getmaterialfortransfer" xml:space="preserve">
-    <value>select material as value, materialdescription as text from wms."MaterialMasterYGS" limit 100</value>
+    <value>select gtm.materialid as value,Max(mat.materialdescription) as text from wms.wms_materialissue mi
+left outer join wms.wms_materialrequest gtm on gtm.requestforissueid = mi.requestforissueid
+left outer join wms."MaterialMasterYGS" mat on mat.material = gtm.materialid
+where mi.requestforissueid is not null and gtm.requesterid = '#requestor'
+group by gtm.materialid</value>
   </data>
   <data name="getnotifiedgrnlist" xml:space="preserve">
     <value>select stk.inwmasterid,sinw.grnnumber,sinw.pono,sinw.invoiceno,(select suppliername from wms.wms_polist where pono = Max(sinw.pono) limit 1) as vendorname,

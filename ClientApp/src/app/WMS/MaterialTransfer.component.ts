@@ -170,7 +170,8 @@ export class MaterialTransferComponent implements OnInit {
   }
   getmaterials() {
     this.spinner.show();
-    this.wmsService.getmateriallistfortransfer().subscribe(data => {
+    var empno = this.employee.employeeno;
+    this.wmsService.getmateriallistfortransfer(empno).subscribe(data => {
       debugger;
       this.materiallists = data;
       this.spinner.hide();
@@ -264,6 +265,7 @@ export class MaterialTransferComponent implements OnInit {
     if (data1.length > 0) {
       this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Material already exist' });
       data.materialid = "";
+      data.materialdescription = "";
       data.transferredqty = 0;
       return false;
     }

@@ -166,7 +166,7 @@ Task<string> updateonholdrow(updateonhold datamodel);
         string updateputawayfilename(ddlmodel filename);
 
         Task<IEnumerable<ddlmodel>> getprojectlist();
-        Task<IEnumerable<ddlmodel>> getmatlist();
+        Task<IEnumerable<ddlmodel>> getmatlist(string empno);
         string notifyputaway(notifymodel data);
         string notifymultipleputaway(List<notifymodel> data);
     }

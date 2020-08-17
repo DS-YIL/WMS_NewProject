@@ -634,7 +634,11 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select material as value, materialdescription as text from wms.&quot;MaterialMasterYGS&quot; limit 100.
+        ///   Looks up a localized string similar to select gtm.materialid as value,Max(mat.materialdescription) as text from wms.wms_materialissue mi
+        ///left outer join wms.wms_materialrequest gtm on gtm.requestforissueid = mi.requestforissueid
+        ///left outer join wms.&quot;MaterialMasterYGS&quot; mat on mat.material = gtm.materialid
+        ///where mi.requestforissueid is not null and gtm.requesterid = &apos;#requestor&apos;
+        ///group by gtm.materialid.
         /// </summary>
         public static string getmaterialfortransfer {
             get {

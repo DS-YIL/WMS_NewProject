@@ -451,8 +451,8 @@ export class wmsService {
     return this.http.get<ddlmodel[]>(this.url + 'POData/getprojectlist/', this.httpOptions);
   }
 
-  getmateriallistfortransfer(): Observable<ddlmodel[]> {
-    return this.http.get<ddlmodel[]>(this.url + 'POData/getmateriallistfortransfer/', this.httpOptions);
+  getmateriallistfortransfer(empno: string): Observable<ddlmodel[]> {
+    return this.http.get<ddlmodel[]>(this.url + 'POData/getmateriallistfortransfer?empno=' + empno, this.httpOptions);
   }
   
 
