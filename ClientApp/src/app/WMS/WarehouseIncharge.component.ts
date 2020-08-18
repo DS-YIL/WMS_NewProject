@@ -310,10 +310,10 @@ export class WarehouseInchargeComponent implements OnInit {
       //get stock type
       this.locationdetails.storeid = this.stock[index].locatorid;
       this.locationdetails.rackid = this.stock[index].rackid;
-      this.locationdetails.binid = this.stock[index].binid;
-      var bindetails = this.binlist.filter(x => x.binid == this.locationdetails.binid);
-      var storedetails = this.locationlist.filter(x => x.locatorid == this.locationdetails.storeid);
-      var rackdetails = this.racklist.filter(x => x.rackid == this.locationdetails.rackid);
+    this.locationdetails.binid = this.stock[index].binid;
+    var bindetails = this.bindata.filter(x => x.binid == this.locationdetails.binid);
+    var storedetails = this.locationdata.filter(x => x.locatorid == this.locationdetails.storeid);
+    var rackdetails = this.rackdata.filter(x => x.rackid == this.locationdetails.rackid);
     this.locationdetails.storename = storedetails[0].locatorname != null || storedetails[0].locatorname != "undefined" || storedetails[0].locatorname != "" ? storedetails[0].locatorname:0;
     this.locationdetails.rackname = rackdetails[0].racknumber != null || rackdetails[0].racknumber != "undefined" || rackdetails[0].racknumber != "" ? rackdetails[0].racknumber : 0;
     this.locationdetails.binname = bindetails[0].binnumber != null || bindetails[0].binnumber != "undefined" || bindetails[0].binnumber != "" ? bindetails[0].binnumber : 0;
@@ -700,11 +700,11 @@ this.updateRowGroupMetaData();
     
     if (this.stock.length > 0) {
       debugger;
-      if (this.stock[this.stock.length - 1].locatorid == 0) {
+      if (this.stock[this.stock.length - 1].locatorid == 0 || this.stock[this.stock.length - 1].locatorid == null) {
         this.messageService.add({ severity: 'error', summary: '', detail: 'select Location' });
         return;
       }
-      if (this.stock[this.stock.length - 1].rackid == 0) {
+      if (this.stock[this.stock.length - 1].rackid == 0 || this.stock[this.stock.length - 1].rackid == 0) {
         this.messageService.add({ severity: 'error', summary: '', detail: 'select Rack' });
         return;
       }
@@ -744,9 +744,9 @@ this.updateRowGroupMetaData();
         this.StockModel.totalquantity = this.PoDetails.materialqty;
         this.StockModel.createdby = this.employee.employeeno;
         this.StockModel.inwardid = this.PoDetails.inwardid;
-        binnumber = this.binlist.filter(x => x.binid == item.binid);
-        storelocation = this.locationlist.filter(x => x.locatorid == item.locatorid);
-        rack = this.racklist.filter(x => x.rackid == item.rackid);
+        binnumber = this.bindata.filter(x => x.binid == item.binid);
+        storelocation = this.locationdata.filter(x => x.locatorid == item.locatorid);
+        rack = this.rackdata.filter(x => x.rackid == item.rackid);
         if (binnumber.length != 0) {
           this.StockModel.binnumber = binnumber[0].binnumber;
           this.StockModel.binid = binnumber[0].binid;

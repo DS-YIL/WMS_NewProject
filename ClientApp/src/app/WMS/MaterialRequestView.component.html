@@ -6,13 +6,13 @@
       </span>
     </div>
     
-    <div class="card-header" style="width:237px;height:27px;margin-left:5px;padding-top:0px">
+    <div class="card-header" style="width:237px;height:27px;margin-left:41px;padding-top:0px">
       <span>
         <i class="fa fa-bookmark" style="font-size: 15px"></i><label style="font-size: 15px;padding:0px; color: rgb(96, 123, 212);"> &nbsp;&nbsp;Material Request</label>&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" pTooltip="Request Material" style="border-radius: 10em!important;background-color: white; border-color:  rgb(96, 123, 212);" rounded="true" size="lg" class="my-0" (click)="requestMaterial()"> <i class="fa fa-user-plus" style="font-size: 15px;color: green;"></i></button>
 
       </span>
     </div>
-    <div class="card-body" style="overflow-y:visible;padding:0px;">
+    <div class="card-body" style="overflow-y:visible;padding:0px;margin-left:40px;margin-right:40px">
       <p-table #dt [value]="requestList" [style]="{'width':'100%'}" [scrollable]="true" scrollHeight="53vh">
         <ng-template pTemplate="header">
           <tr class="mprltbldata">
@@ -22,12 +22,13 @@
             <!--<th style="text-align:center;width:200px">PO No</th>-->
             <!--<th style="text-align:center">Project Name</th>-->
             <th style="text-align:center;width:150px">Requested On</th>
-            <th style="text-align:center;width:200px">PM Acknowlegment</th>
             <th style="text-align:center;width:100px">Status</th>
+            <th style="text-align:center;width:200px">PM Acknowlegment</th>
+
             <!--<th style="text-align:center;width:100px">Retrun qty</th>-->
             <!--<th style="text-align:center">Requested Quantity</th>
-          <th style="text-align:center">Received Quantity</th>
-          <th style="text-align:center;width:200px">Acknowledge</th>-->
+  <th style="text-align:center">Received Quantity</th>
+  <th style="text-align:center;width:200px">Acknowledge</th>-->
           </tr>
           <tr>
             <!--<th></th>-->
@@ -47,8 +48,8 @@
         <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
           <tr>
             <!--<td style="width:70px;text-align:center">
-            <p-radioButton name="select" binary="true" (click)="selectrow(rowData.requestid)"></p-radioButton>
-          </td>-->
+    <p-radioButton name="select" binary="true" (click)="selectrow(rowData.requestid)"></p-radioButton>
+  </td>-->
             <td class="ptable-cell" style="text-align:center;width:70px;">{{ri+1}}</td>
 
             <td class="ptable-cell" style="text-align: center;width: 100px;">
@@ -57,6 +58,16 @@
             <!--<td class="ptable-cell" style="text-align:center;width:200px;">{{rowData.pono}}</td>-->
             <!--<td class="ptable-cell" style="text-align:left">{{rowData.projectname}}</td>-->
             <td class="ptable-cell" style="text-align:center;width:150px;">{{rowData.requesteddate| date :  constants.dateFormat}}</td>
+            <td class="ptable-cell" style="text-align:left;width:100px;">
+
+              {{rowData.approvedstatus}}
+              <!--<div *ngIf="rowData.approvedstatus=='approved'" class="form-inline">
+
+      <textarea type="text" style="width:140px" class="form-control" disabled="disabled" [(ngModel)]="rowData.approvedstatus"></textarea>
+    </div>-->
+              <span *ngIf="rowData.ackstatus=='received'">{{rowData.approvedstatus}}</span>
+              <span *ngIf="rowData.approvedstatus==null">Pending</span>
+            </td>
             <td class="ptable-cell" style="width:200px;">
               <div *ngIf="rowData.approvedstatus=='Approved' && rowData.ackstatus=='not received'" class="form-inline">
 
@@ -68,35 +79,25 @@
                 &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; <textarea type="text" style="width:140px" class="form-control" [disabled]="true" [(ngModel)]="rowData.ackremarks"></textarea>
               </div>
               <!--<div *ngIf="rowData.approvedstatus=='Approved' && rowData.ackstatus=='received'" class="form-inline">
-              <p-checkbox [(ngModel)]="rowData.status" [disabled]="rowData.approvedstatus=='Approved'?true:false" binary="true" (click)="ackStatusChanges(rowData.approvedstatus)"></p-checkbox> &nbsp;&nbsp;
-              <textarea type="text" style="width:140px" class="form-control" [disabled]="rowData.ackstatus=='received'?true:false" [(ngModel)]="rowData.ackremarks"></textarea>
-            </div>-->
+      <p-checkbox [(ngModel)]="rowData.status" [disabled]="rowData.approvedstatus=='Approved'?true:false" binary="true" (click)="ackStatusChanges(rowData.approvedstatus)"></p-checkbox> &nbsp;&nbsp;
+      <textarea type="text" style="width:140px" class="form-control" [disabled]="rowData.ackstatus=='received'?true:false" [(ngModel)]="rowData.ackremarks"></textarea>
+    </div>-->
               <!--<div *ngIf="rowData.approvedstatus=='Approved'" class="form-inline">
-              <p-checkbox [(ngModel)]="rowData.status"  (click)="ackStatusChanges(rowData.ackstatus)"></p-checkbox> &nbsp;&nbsp;
-              <textarea type="text" style="width:140px" class="form-control"  [(ngModel)]="rowData.ackremarks"></textarea>
-            </div>-->
+      <p-checkbox [(ngModel)]="rowData.status"  (click)="ackStatusChanges(rowData.ackstatus)"></p-checkbox> &nbsp;&nbsp;
+      <textarea type="text" style="width:140px" class="form-control"  [(ngModel)]="rowData.ackremarks"></textarea>
+    </div>-->
 
             </td>
 
             <!--<td class="ptable-cell" style="text-align:right">{{rowData.quotationqty}}</td>
-          <td class="ptable-cell" style="text-align:right">
-            <span *ngIf="rowData.approvedstatus=='approved'">{{rowData.requestedquantity}}</span>-->
+  <td class="ptable-cell" style="text-align:right">
+    <span *ngIf="rowData.approvedstatus=='approved'">{{rowData.requestedquantity}}</span>-->
             <!--<input *ngIf="rowData.approvedstatus!='approved'" pInputText type="number" class="form-control" [(ngModel)]="rowData.requestedquantity" (change)="reqQtyChange(rowData)">-->
             <!--</td>
-          <td class="ptable-cell" style="text-align:right">{{rowData.requestedquantity}}</td>-->
-            <td class="ptable-cell" style="text-align:left;width:100px;">
-
-              {{rowData.approvedstatus}}
-              <!--<div *ngIf="rowData.approvedstatus=='approved'" class="form-inline">
-
-              <textarea type="text" style="width:140px" class="form-control" disabled="disabled" [(ngModel)]="rowData.approvedstatus"></textarea>
-            </div>-->
-              <span *ngIf="rowData.ackstatus=='received'">{{rowData.approvedstatus}}</span>
-              <span *ngIf="rowData.approvedstatus==null">Pending</span>
-            </td>
+  <td class="ptable-cell" style="text-align:right">{{rowData.requestedquantity}}</td>-->
             <!--<td class="ptable-cell" style="text-align:center;width:100px;">
-            <input pInputText [disabled]="true" type="number" class="form-control" [(ngModel)]="rowData.returnqty">
-          </td>-->
+    <input pInputText [disabled]="true" type="number" class="form-control" [(ngModel)]="rowData.returnqty">
+  </td>-->
           </tr>
         </ng-template>
       </p-table>

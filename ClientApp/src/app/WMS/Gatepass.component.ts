@@ -588,6 +588,7 @@ export class GatePassComponent implements OnInit {
         else if (this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].quantity > 0) {
           //check if for that material quanity exists or not
           this.wmsService.checkMaterialandQty(this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].materialid, this.materialistModel.quantity).subscribe(data => {
+            debugger;
             if (data == "true") {
               this.gatepassModel.requestedby = this.employee.employeeno;
               if (this.gatepassModel.gatepasstype == "Returnable" && this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].expecteddate == undefined) {

@@ -5,13 +5,16 @@
       <i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;Reserved Material List
     </span>
   </div>
-  <div class="card-header" style="width:237px;height:27px;margin-left:5px;padding-top:0px">
+  <div class="card-header" style="width:237px;height:27px;margin-left:41px;padding-top:0px">
     <span>
       <i class="fa fa-bookmark" style="font-size: 15px"></i><label style="font-size: 15px;padding:0px; color: rgb(96, 123, 212);"> &nbsp;&nbsp;Material Reserve</label>&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" pTooltip="Reserve Material" style="border-radius: 10em!important;background-color: white; border-color:  rgb(96, 123, 212);" rounded="true" size="lg" class="my-0" (click)="reserveMaterial()"> <i class="fa fa-user-plus" style="font-size: 15px;color: green;"></i></button>
 
     </span>
   </div>
-  <div class="card-body" style="overflow-y:visible;padding:0px">
+  <div class="card-body" style="    overflow-y: visible;
+    padding: 0px;
+    margin-left: 40px;
+    margin-right: 40px">
     <p-table #dt [value]="reserveList" [style]="{'width':'100%'}" [scrollable]="true" scrollHeight="55vh">
       <ng-template pTemplate="header">
         <tr class="mprltbldata">
@@ -140,7 +143,7 @@
       <div class="form-inline-list">
 
         <select *ngIf="requestMatData.suppliername==null || requestMatData.suppliername=='All'" class="form-control dropdown" (change)="onPOSelected(requestMatData.pono)" [(ngModel)]="requestMatData.pono">
-          <option [ngValue]="All" value="All" selected>ALL</option>
+          <option [ngValue]="All"  selected>ALL</option>
           <option *ngFor=" let polist of ponolist " value={{polist.pono}}>
             {{polist.pono}}
           </option>
@@ -152,7 +155,7 @@
       <label for="itemlocation" class="form-label">Supplier Name:</label>
       <div class="form-inline-list">
         <select *ngIf="requestMatData.pono==null || requestMatData.pono=='All'" (change)="onsuppSelected(requestMatData.suppliername)" class="form-control dropdown" [(ngModel)]="requestMatData.suppliername">
-          <option [ngValue]="All" value="All" selected>ALL</option>
+          <option [ngValue]="All" selected>ALL</option>
           <option *ngFor=" let polist of ponolist " value={{polist.pono}}>
             {{polist.suppliername}}
           </option>
@@ -189,6 +192,7 @@
               <td class="ptable-cell" style="text-align:left;">
 
                 <!--<input *ngIf="rowData.materialid" [(ngModel)]="rowData.materialid" class="form-control" type="text" name="{{rowData.materialid}}" />-->
+
                 <p-autoComplete [(ngModel)]="rowData.material" type="text" appendTo="body" [suggestions]="searchItems" (onSelect)="onMaterialSelected(rowData.material,ri)" (completeMethod)="bindSearchList($event,'material')" [size]="10"
                                 [dropdown]="true"></p-autoComplete>
 

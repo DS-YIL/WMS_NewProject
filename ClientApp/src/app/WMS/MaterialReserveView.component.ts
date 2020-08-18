@@ -103,6 +103,10 @@ export class MaterialReserveViewComponent implements OnInit {
       this.displayDD = true;
       this.pono = null;
       this.displaylist = false;
+      this.materialList[0].material = "";
+      this.materialList[0].issuedqty = 0;
+      this.materialList[0].materialcost = 0;
+      this.materialList[0].availableqty = 0;
     }
   }
 
@@ -134,7 +138,11 @@ export class MaterialReserveViewComponent implements OnInit {
            this.requestMatData.pono == null;
         this.pono = null;
         this.displayDD = true;
-        this.displaylist = false;
+      this.displaylist = false;
+      this.materialList[0].material = "";
+      this.materialList[0].issuedqty = 0;
+      this.materialList[0].materialcost = 0;
+      this.materialList[0].availableqty = 0;
     }
 
     //if (suppname == "undefined") {
@@ -319,7 +327,12 @@ this.showdialog=true;
     this.AddDialog = false;
   }
   reserveMaterial() {
+  
     this.requestDialog = true;
+    this.btnreq = true;
+    this.displayDD = true;
+    this.pono = null;
+    this.displaylist = false;
     var minDate = new Date();
     var maxdate = new Date(new Date().setDate(new Date().getDate() + 14));
     this.reservedfor = new Date();
@@ -396,12 +409,20 @@ this.showdialog=true;
             this.spinner.hide();
             if (data) {
               this.requestDialog = false;
+              this.btnreq = true;
+              this.suppliername = null;
+              this.ponumber = null;
+              this.requestMatData = new requestData();
+              this.materialList = [];
+              this.materialmodel = [];
               this.messageService.add({ severity: 'success', summary: 'success Message', detail: 'Reserved materials Successfully' });
               this.getMaterialReservelist();
               //this.router.navigateByUrl("/WMS/MaterialReqView/" + this.pono);
             }
             else {
+              
               this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Error while Reserving materials' });
+              this.btnreq = true;
             }
 
           });

@@ -19,13 +19,14 @@
         <i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;Return Material
       </span>
     </div>
-    <div class="card-header" style="width:173px;height:27px;margin-left:5px;padding-top:0px">
+    <div class="card-header" style="width:214px;height:27px;margin-left:41px;padding-top:0px">
       <span>
-        <i class="fa fa-bookmark" style="font-size: 15px"></i><label style="font-size: 15px;padding:0px; color: rgb(96, 123, 212);"> &nbsp;&nbsp;Return</label>&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" pTooltip="Return Material" style="border-radius: 10em!important;background-color: white; border-color:  rgb(96, 123, 212);" rounded="true" size="lg" class="my-0" (click)="openDialog('','','gatepassdialog')"> <i class="fa fa-user-plus" style="font-size: 15px;color: green;"></i></button>
+        <i class="fa fa-bookmark" style="font-size: 15px"></i><label style="font-size: 15px;padding:0px; color: rgb(96, 123, 212);"> &nbsp;&nbsp;Material Return</label>&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" pTooltip="Return Material" style="border-radius: 10em!important;background-color: white; border-color:  rgb(96, 123, 212);" rounded="true" size="lg" class="my-0" (click)="openDialog('','','gatepassdialog')"> <i class="fa fa-user-plus" style="font-size: 15px;color: green;"></i></button>
 
       </span>
     </div>
-    <div class="card-body" style="overflow-y:visible;padding:0px;">
+    <div class="card-body" style="overflow-y:visible;padding:0px;margin-left: 40px;
+    margin-right: 40px" >
       <p-table [value]="requestList" [style]="{'width':'100%'}" [scrollable]="true" scrollHeight="53vh">
         <ng-template pTemplate="header">
           <tr class="mprltbldata">
@@ -39,8 +40,8 @@
             <th style="text-align:center;width:100px">Status</th>
             <!--<th style="text-align:center;width:100px">Retrun qty</th>-->
             <!--<th style="text-align:center">Requested Quantity</th>
-          <th style="text-align:center">Received Quantity</th>
-          <th style="text-align:center;width:200px">Acknowledge</th>-->
+        <th style="text-align:center">Received Quantity</th>
+        <th style="text-align:center;width:200px">Acknowledge</th>-->
           </tr>
           <tr>
             <!--<th></th>-->
@@ -54,25 +55,28 @@
             <!--<th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'requesteddate', 'contains')"></th>-->
             <!--<th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'requestedquantity', 'contains')"></th>-->
             <!--<th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'requestedquantity', 'contains')"></th>
-          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'quotationqty', 'contains')"></th>
-          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'ackremarks', 'contains')"></th>-->
+        <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'quotationqty', 'contains')"></th>
+        <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'ackremarks', 'contains')"></th>-->
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
           <tr>
             <!--<td style="width:70px;text-align:center">
-            <p-radioButton name="select" binary="true" (click)="selectrow(rowData.requestid)"></p-radioButton>
-          </td>-->
-            <td class="ptable-cell" style="text-align:right;width:70px;">{{ri+1}}</td>
+          <p-radioButton name="select" binary="true" (click)="selectrow(rowData.requestid)"></p-radioButton>
+        </td>-->
+            <td class="ptable-cell" style="text-align:center;width:70px;">{{ri+1}}</td>
 
             <td class="ptable-cell" style="text-align: center;width: 100px;">
               <button type="button" class="btn btn-link" (click)="showmaterialdetails(rowData.matreturnid)" style="padding-left:0px;text-align:center;">{{rowData.matreturnid}}</button>
 
               <!--<button type="button" class="btn btn-link" (click)="showstory(rowData.requestid)" style="padding-left:0px;text-align:center;">{{rowData.returnid}}</button>-->
             </td>
+
             <!--<td class="ptable-cell" style="text-align:center;width:200px;">{{rowData.materialid}}</td>-->
             <!--<td class="ptable-cell" style="text-align:left">{{rowData.materialid}}</td>-->
             <td class="ptable-cell" style="text-align:center;width:150px;">{{rowData.createdon| date :  constants.dateFormat}}</td>
+
+
 
             <!--<td class="ptable-cell" style="text-align:right">{{rowData.quotationqty}}</td>
           <td class="ptable-cell" style="text-align:right">
@@ -88,14 +92,14 @@
               <!--{{rowData.approvedstatus}}-->
               <!--<div *ngIf="rowData.approvedstatus=='approved'" class="form-inline">
 
-              <textarea type="text" style="width:140px" class="form-control" disabled="disabled" [(ngModel)]="rowData.approvedstatus"></textarea>
-            </div>-->
+            <textarea type="text" style="width:140px" class="form-control" disabled="disabled" [(ngModel)]="rowData.approvedstatus"></textarea>
+          </div>-->
               <span *ngIf="rowData.confirmstatus=='Accepted'">{{rowData.confirmstatus}}</span>
               <span *ngIf="rowData.confirmstatus==null">Pending</span>
             </td>
             <!--<td class="ptable-cell" style="text-align:center;width:100px;">
-            <input pInputText [disabled]="true" type="number" class="form-control" [(ngModel)]="rowData.returnqty">
-          </td>-->
+          <input pInputText [disabled]="true" type="number" class="form-control" [(ngModel)]="rowData.returnqty">
+        </td>-->
           </tr>
         </ng-template>
       </p-table>
@@ -127,29 +131,29 @@
         </ng-template>
       </p-table>
       <!--<div style="text-align: center;margin-top:0px;padding-top:0px;">
-      <button type="button" class="btn btn-primary" [disabled]="btnDisable" (click)="returnqty()">Return Quantity</button>
-    </div>-->
+    <button type="button" class="btn btn-primary" [disabled]="btnDisable" (click)="returnqty()">Return Quantity</button>
+  </div>-->
       <div style="height: 5px; overflow-y: scroll">
 
         <p-dialog header="Returned Material Details" [(visible)]="AddDialog" [contentStyle]="{'overflow-y': 'auto', 'overflow-x': 'hidden', 'max-height': '80vh','min-height':'250px'}" showEffect="fade" [modal]="true" [responsive]="true" [style]="{width: '1024px'}">
           <!--<div *ngIf="showdialog">
-          <div class="row  pl-0">
-            <div class="col-lg-4 col-md-4 col-sm-4 pt-2 labelheading">
-              <label>Request Id :</label>&nbsp;<span class="labeltext"><label>{{materiallistData[0].requestid}}</label></span>
-            </div>
-
+        <div class="row  pl-0">
+          <div class="col-lg-4 col-md-4 col-sm-4 pt-2 labelheading">
+            <label>Request Id :</label>&nbsp;<span class="labeltext"><label>{{materiallistData[0].requestid}}</label></span>
           </div>
 
-        </div>-->
+        </div>
+
+      </div>-->
           <p-table #dt [value]="materiallistData">
             <ng-template pTemplate="header">
-               
+
               <tr class="mprltbldata">
-                 
+
                 <th style="text-align:center;width:70px">Sl.No</th>
                 <th style="text-align:center">Material</th>
                 <!--<th style="text-align:center;width:150px">Requested  Qty</th>
-              <th style="text-align:center;width:150px">Issued Qty</th>-->
+            <th style="text-align:center;width:150px">Issued Qty</th>-->
                 <th style="text-align:center;width:150px">Return Qty</th>
                 <th style="text-align:center;width:150px">Remarks</th>
               </tr>
@@ -162,13 +166,14 @@
                 </td>
                 <td class="ptable-cell" style="text-align:left">{{rowData.materialid}}</td>
                 <!--<td class="ptable-cell" style="text-align:right">{{rowData.requestedquantity}}</td>-->
+              
                 <td class="ptable-cell" style="text-align:right">
                   {{rowData.returnqty}}
 
                 </td>
                 <!--<td class="ptable-cell" style="text-align:center;width:100px;">
-    <input pInputText [disabled]="rowData.approvedstatus=='Approved'?false:true" type="number" (change)="returnQtyChange(rowData.issuedquantity,rowData.returnqty)" class="form-control" [(ngModel)]="rowData.returnqty">
-  </td>-->
+              <input pInputText [disabled]="rowData.approvedstatus=='Approved'?false:true" type="number" (change)="returnQtyChange(rowData.issuedquantity,rowData.returnqty)" class="form-control" [(ngModel)]="rowData.returnqty">
+            </td>-->
                 <td class="ptable-cell" style="text-align:center;width:100px;">
                   {{rowData.remarks}}
                 </td>
@@ -177,7 +182,7 @@
             </ng-template>
 
           </p-table>
-        
+
         </p-dialog>
         <p-dialog header="Material Transfer Details" [(visible)]="AddDialogfortransfer" [contentStyle]="{'overflow-y': 'auto', 'overflow-x': 'hidden', 'max-height': '80vh','min-height':'250px'}" showEffect="fade" [modal]="true" [responsive]="true" [style]="{width: '1024px'}">
           <div *ngIf="showdialogfortransfer">
@@ -228,17 +233,17 @@
                   <input pInputText id="{{ri+1}}" class="form-control" [(ngModel)]="rowData.projectname" type="text" required style="display:none;" />
                   <!--<input *ngIf="rowData.projectcode" [(ngModel)]="rowData.projectcode" class="form-control" type="text" name="{{rowData.projectcode}}" />
 
-                <p-autoComplete appendTo="body" [(ngModel)]="projectcode" id="{{ri+1}}"  (onSelect)="captureId($event,ri+1)" type="text" [suggestions]="searchItems"  field="name" [dropdown]="true" (completeMethod)="bindSearchListData($event,'project')" size="8"></p-autoComplete>-->
-                  
+              <p-autoComplete appendTo="body" [(ngModel)]="projectcode" id="{{ri+1}}"  (onSelect)="captureId($event,ri+1)" type="text" [suggestions]="searchItems"  field="name" [dropdown]="true" (completeMethod)="bindSearchListData($event,'project')" size="8"></p-autoComplete>-->
+
 
                 </td>
                 <!--<td class="ptable-cell" style="width:200px;">
 
-                  <p-checkbox   binary="true" (onChange)="toggleVisibility($event,ri+1)"></p-checkbox> &nbsp;&nbsp;
-                  <input pInputText id="{{ri+1}}"  class="form-control" [(ngModel)]="rowData.projectname" type="text" required style="display:none;" />
+                <p-checkbox   binary="true" (onChange)="toggleVisibility($event,ri+1)"></p-checkbox> &nbsp;&nbsp;
+                <input pInputText id="{{ri+1}}"  class="form-control" [(ngModel)]="rowData.projectname" type="text" required style="display:none;" />
 
 
-              </td>-->
+            </td>-->
                 <!--<td class="ptable-cell" style="text-align:left">{{rowData.createddate | date :  constants.dateFormat}}</td>-->
               </tr>
             </ng-template>
@@ -247,54 +252,54 @@
           <p-footer>
             <button type="button" class="btn btn-primary" [disabled]="btnDisabletransfer" (click)="transferqty()">Transfer Material</button>
             <!--<div class="ui-dialog-buttonpane ui-helper-clearfix">
-            <button type="button" pButton icon="fa fa-check" class="ui-button-success" (click)="Cancel()" label="OK"></button>
-            <button type="button" pButton icon="fa fa-close" class="ui-button-danger" (click)="Cancel()" label="Cancel"></button>
-          </div>-->
+          <button type="button" pButton icon="fa fa-check" class="ui-button-success" (click)="Cancel()" label="OK"></button>
+          <button type="button" pButton icon="fa fa-close" class="ui-button-danger" (click)="Cancel()" label="Cancel"></button>
+        </div>-->
           </p-footer>
         </p-dialog>
         <p-dialog header={{GatepassTxt}} [(visible)]="gatepassdialog" [responsive]="true" showEffect="fade" [modal]="true" [style]="{'width':'85%','overflow':'auto!important','margin-right': '0px','margin-left':'0px'}">
           <!--<div class="row " style="margin-top:10px">
-          <div class="col-lg-2 col-md-2 col-sm-2 form-group">
-            <label for="itemlocation" class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">Select Type</label>
-            <div class="form-inline-list">
-              <select class="form-control forms-input" [(ngModel)]="gatepassModel.gatepasstype" (change)="gatePassChange()">
-                <option value=0>Select</option>
-                <option value='Returnable'>Returnable</option>
-                <option value='Non Returnable'>Non Returnable</option>
-              </select>
-            </div>
+        <div class="col-lg-2 col-md-2 col-sm-2 form-group">
+          <label for="itemlocation" class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">Select Type</label>
+          <div class="form-inline-list">
+            <select class="form-control forms-input" [(ngModel)]="gatepassModel.gatepasstype" (change)="gatePassChange()">
+              <option value=0>Select</option>
+              <option value='Returnable'>Returnable</option>
+              <option value='Non Returnable'>Non Returnable</option>
+            </select>
           </div>
-          <div class="col-lg-2 col-md-2 col-sm-2 form-group">
-            <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">Reason</label>
-            <div class="form-inline-list">
-              <select class="form-control forms-input" [(ngModel)]="gatepassModel.reasonforgatepass">
-                <option value=0>Select</option>
-                <option value='Sample'>Sample</option>
-                <option value='Testing/Repair'>Testing/Repair</option>
-                <option value='Others'>Others</option>
-              </select>
-            </div>
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-2 form-group">
+          <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">Reason</label>
+          <div class="form-inline-list">
+            <select class="form-control forms-input" [(ngModel)]="gatepassModel.reasonforgatepass">
+              <option value=0>Select</option>
+              <option value='Sample'>Sample</option>
+              <option value='Testing/Repair'>Testing/Repair</option>
+              <option value='Others'>Others</option>
+            </select>
           </div>
+        </div>
 
-          <div class="col-lg-2 col-md-2 col-sm-2 form-group">
-            <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">Supplier</label>
-            <div class="form-inline-list">
-              <input type="text" class="form-control" [(ngModel)]="gatepassModel.vendorname" />
-            </div>
+        <div class="col-lg-2 col-md-2 col-sm-2 form-group">
+          <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">Supplier</label>
+          <div class="form-inline-list">
+            <input type="text" class="form-control" [(ngModel)]="gatepassModel.vendorname" />
           </div>
-          <div class="col-lg-2 col-md-2 col-sm-2 form-group">
-            <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">Reference No</label>
-            <div class="form-inline-list">
-              <input type="text" class="form-control" [(ngModel)]="gatepassModel.referenceno" />
-            </div>
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-2 form-group">
+          <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">Reference No</label>
+          <div class="form-inline-list">
+            <input type="text" class="form-control" [(ngModel)]="gatepassModel.referenceno" />
           </div>
-          <div class="col-lg-2 col-md-2 col-sm-2 form-group">
-            <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">Approver</label>
-            <div class="form-inline-list">
-              <input disabled type="text" class="form-control" [(ngModel)]="gatepassModel.managername" />
-            </div>
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-2 form-group">
+          <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">Approver</label>
+          <div class="form-inline-list">
+            <input disabled type="text" class="form-control" [(ngModel)]="gatepassModel.managername" />
           </div>
-        </div>-->
+        </div>
+      </div>-->
           <!--Add and Update materials-->
           <div class="row " style="margin-top:10px">
 
@@ -322,8 +327,8 @@
                   <tr>
                     <td class="ptable-cell" style="text-align:center"> {{ri+1}} </td>
                     <!--<td class="ptable-cell" style="text-align:right">
-                    <input [(ngModel)]="field.code" class="form-control" type="text" name="{{field[i].materialid}}" />
-                  </td>-->
+                  <input [(ngModel)]="field.code" class="form-control" type="text" name="{{field[i].materialid}}" />
+                </td>-->
                     <td class="ptable-cell" style="text-align:left;">
 
                       <input *ngIf="rowData.material" [(ngModel)]="rowData.material" class="form-control" type="text" name="{{rowData.material}}" />

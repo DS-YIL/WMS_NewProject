@@ -175,10 +175,12 @@ export class MaterialRequestViewComponent implements OnInit {
             if (data) {
               this.requestDialog = false;
               this.getMaterialRequestlist();
+              this.btnreq = true;
               this.messageService.add({ severity: 'success', summary: '', detail: 'Request sent' });
               //this.router.navigateByUrl("/WMS/MaterialReqView/" + this.pono);
             }
             else {
+              this.btnreq = true;
               this.messageService.add({ severity: 'error', summary: '', detail: 'Error while sending Request' });
             }
 
@@ -192,6 +194,7 @@ export class MaterialRequestViewComponent implements OnInit {
   //On PO Selected event
   onPOSelected(pono: string) {
     debugger;
+ 
     if (this.ponolist.filter(li => li.pono == pono).length > 0) {
       if (pono != "All") {
         var data = this.ponolist.find(li => li.pono == pono);
@@ -199,6 +202,7 @@ export class MaterialRequestViewComponent implements OnInit {
         this.pono = pono;
         this.displayDD = false;
         this.displaylist = true;
+        this.materialList = [];
         this.wmsService.getMaterialRequestlistdata(this.employee.employeeno, this.pono).subscribe(data => {
           this.materialList = data;
         });
@@ -211,6 +215,10 @@ export class MaterialRequestViewComponent implements OnInit {
       this.displayDD = true;
       this.pono = null;
       this.displaylist = false;
+      this.materialList[0].material = "";
+      this.materialList[0].issuedqty = 0;
+      this.materialList[0].materialcost = 0;
+      this.materialList[0].availableqty = 0;
       //this.wmsService.getMaterialRequestlistdata(this.employee.employeeno, this.pono).subscribe(data => {
 
 
@@ -253,7 +261,8 @@ export class MaterialRequestViewComponent implements OnInit {
       this.ponumber = suppname;
       this.pono = suppname;
       this.displayDD = false;
-      this.displaylist = true;
+        this.displaylist = true;
+        this.materialList = [];
       this.wmsService.getMaterialRequestlistdata(this.employee.employeeno, this.pono).subscribe(data => {
         this.materialList = data;
       });
@@ -264,7 +273,11 @@ export class MaterialRequestViewComponent implements OnInit {
            this.requestMatData.pono == null;
         this.pono = null;
         this.displayDD = true;
-        this.displaylist = false;
+      this.displaylist = false;
+      this.materialList[0].material = "";
+      this.materialList[0].issuedqty = 0;
+      this.materialList[0].materialcost = 0;
+      this.materialList[0].availableqty = 0;
     }
 
     //if (suppname == "undefined") {
@@ -373,6 +386,10 @@ export class MaterialRequestViewComponent implements OnInit {
 
   requestMaterial() {
     this.requestDialog = true;
+    this.btnreq = true;
+    this.displayDD = true;
+    this.pono = null;
+    this.displaylist = false;
     //Get PO number list, project list and materials available
     this.GetPONo();
     if (this.materialList.length <= 0) {

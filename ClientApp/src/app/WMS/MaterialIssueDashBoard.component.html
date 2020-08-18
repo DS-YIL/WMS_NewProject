@@ -5,7 +5,7 @@
     </span>
   </div>
 
-  <div class="row" style="margin-left:0px !important">
+  <div class="row" style="margin-left:25px !important">
 
     <div class="col-lg-1 col-md-1 col-sm-1 form-group" style=" margin-bottom: 0rem !important;">
       <h6><label class="form-label">Status:</label></h6>
@@ -16,12 +16,12 @@
         <option value="Approved"> Issued</option>
       </select>
     </div>
-    <!--<div class="col-lg-1 col-md-1 col-sm-1 form-group" style="padding-left:0px;">
+    <!--<div class="col-lg-1 col-md-1 col-sm-1 form-group" style="    padding-left: 0px;margin-bottom: 0rem;">
       <button type="submit" class="btn btn-info float-left" (click)="SubmitStatus()" style=" height: 35px;">Submit</button>
     </div>-->
   </div>
 
-  <div class="card-body" style="overflow-y:hidden;padding:0px;">
+  <div class="card-body" style="overflow-y:hidden;padding:0px;margin-left:40px;margin-right:40px">
     <div class="form-control" style="height:100%;">
       <p-table #dt [value]="materialIssueList" [scrollable]="true" scrollHeight="380px">
         <ng-template pTemplate="header">

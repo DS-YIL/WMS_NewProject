@@ -595,7 +595,12 @@ export class MaterialReturnDashBoardComponent implements OnInit {
   }
   onSelectStatus(event) {
     this.selectedStatus = event.target.value;
-
+    if (this.selectedStatus == "Pending") {
+      this.materialIssueList = this.materialacceptListnofilter.filter(li => li.confirmstatus == null);
+    }
+    else if (this.selectedStatus == "Accepted") {
+      this.materialIssueList = this.materialacceptListnofilter.filter(li => li.confirmstatus == 'Accepted');
+    }
   }
   SubmitStatus() {
     if (this.selectedStatus == "Pending") {

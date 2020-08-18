@@ -122,7 +122,11 @@ namespace WMS.Common
 					employeeModel emp = new employeeModel();
 					emp = pgsql.QueryFirstOrDefault<employeeModel>(
 					   query, null, commandType: CommandType.Text);
-					name = emp.name;
+					if(emp!=null)
+                    {
+						name = emp.name;
+						
+					}
 					return name;
 
 				}

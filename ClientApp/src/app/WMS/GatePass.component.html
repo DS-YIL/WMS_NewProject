@@ -27,7 +27,8 @@
   </div>
 
 </div>
-<div *ngIf="employee.roleid =='3'" class="card" style=" min-height: 50px;border-radius: 10px;">
+<div *ngIf="employee.roleid =='3'" class="card" style="    min-height: 36px;
+    border-radius: 10px;">
   <div class="card-header text-center cardheadertext">
     <span>
       <i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;Gate pass
@@ -69,10 +70,10 @@
 <div class="card-body" style="overflow-y:hidden;padding-top:0px;">
   <div *ngIf="employee.roleid=='3'" class="row">
 
-    <div class="col-lg-1 col-md-1 col-sm-1 form-group">
+    <div class="col-lg-1 col-md-1 col-sm-1 form-group" style="margin-bottom: 0rem;">
       <h6><label class="form-label">Status:</label></h6>
     </div>
-    <div class="col-lg-2 col-md-2 col-sm-2 form-group" style="padding-left:0px;">
+    <div class="col-lg-2 col-md-2 col-sm-2 form-group" style="    padding-left: 0px;margin-bottom: 0rem;">
       <select placeholder="Status" name="Status" (change)="onSelectStatus($event)" class="form-control">
         <option selected value="Pending"> Pending</option>
         <option value="Issued"> Issued</option>
@@ -153,7 +154,7 @@
       </ng-template>
     </p-table>
   </div>
-</div>f
+</div>
 
 <div class="card-body" style="    overflow-y: hidden;padding-top: 0px;" *ngIf="displaydetail">
   <div class="row mt-4" style="margin:14px">
