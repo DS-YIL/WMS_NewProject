@@ -338,9 +338,9 @@ namespace WMS.Controllers
 		}
 
 		[HttpGet("getUserdashboarddata")]
-		public async Task<UserDashboardDetail> getdashdata()
+		public async Task<UserDashboardDetail> getdashdata(string empno)
 		{
-			return await this._poService.getUserDashboarddata();
+			return await this._poService.getUserDashboarddata(empno);
 		}
 
 		[HttpGet("nonreturngetgatepasslist")]

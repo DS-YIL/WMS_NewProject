@@ -3628,7 +3628,7 @@ namespace WMS.DAL
 			}
 		}
 
-		public async Task<UserDashboardDetail> getUserDashboarddata()
+		public async Task<UserDashboardDetail> getUserDashboarddata(string empno)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
@@ -3724,7 +3724,7 @@ namespace WMS.DAL
 					}
 					DateTime sevendaysbefore = DateTime.Now.AddDays(-7);
 					string sevendaysbeforestr = sevendaysbefore.ToString("yyyy-MM-dd");
-					string queryrsrv = "select itemid as value from wms.wms_materialreserve where reserveupto >= '" + sevendaysbeforestr + " 00:00:00' and reserveupto <= '" + deliverydate + " 23:59:59'";
+					string queryrsrv = "select itemid as value from wms.wms_materialreserve where reservedby = '"+empno+"' and reserveupto >= '" + sevendaysbeforestr + " 00:00:00' and reserveupto <= '" + deliverydate + " 23:59:59'";
 					var rsvdata = await pgsql.QueryAsync<ddlmodel>(
 					   queryrsrv, null, commandType: CommandType.Text);
 					if (rsvdata != null && rsvdata.Count() > 0)
@@ -6552,12 +6552,6 @@ namespace WMS.DAL
 					            if(rslt != 0)
                     {
 						result = "saved";
-                        //EmailModel emailmodel = new EmailModel();
-                        //emailmodel.jobcode = grn;
-                        //emailmodel.ToEmailId = "developer1@in.yokogawa.com";
-                        //emailmodel.FrmEmailId = "sushma.patil@in.yokogawa.com";
-                        //EmailUtilities emailobj = new EmailUtilities();
-                        ////emailobj.sendEmail(emailmodel, 13);
                     }
 					else
                     {

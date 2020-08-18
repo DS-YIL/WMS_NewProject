@@ -499,8 +499,8 @@ export class wmsService {
     return this.http.get<rbamaster[]>(this.url + 'POData/getrbamasterdetail/', this.httpOptions);
   }
 
-  getdashdata(): Observable<UserDashboardDetail> {
-    return this.http.get<UserDashboardDetail>(this.url + 'POData/getUserdashboarddata/', this.httpOptions);
+  getdashdata(empno: string): Observable<UserDashboardDetail> {
+    return this.http.get<UserDashboardDetail>(this.url + 'POData/getUserdashboarddata?empno=' + empno, this.httpOptions);
   }
   getdashgraphdata(): Observable<UserDashboardGraphModel[]> {
     return this.http.get<UserDashboardGraphModel[]>(this.url + 'POData/getUserdashgraphdata/', this.httpOptions);

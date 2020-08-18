@@ -83,11 +83,13 @@ export class HomeComponent implements OnInit {
     }
     if (this.userroleid != "0") {
       var roleid = this.userroleid;
+     
       var data1 = this.userrolelist.filter(function (element, index) {
         return (element.roleid == parseInt(roleid));
       });
       if (data1.length > 0) {
         this.rolename = data1[0].accessname;
+        this.selectedrolename = this.rolename;
       }
 
     }
@@ -397,6 +399,9 @@ export class HomeComponent implements OnInit {
     this.nodes = [];
     this.nodes.push(node);
     node.classList.add("cardactive");
+    if (type != "") {
+      sessionStorage.setItem("userdashboardpage", type);
+    }
     if (type == "Inbound" && this.issecurityoperator) {
       this.navigatebyrole("1");
     }
@@ -421,6 +426,8 @@ export class HomeComponent implements OnInit {
     else if (type == "Count" && this.isinventorymanager) {
       this.navigatebyrole("4");
     }
+   
+   
     //this.setgraph(type);
     //this.setmonthlygraph(type);
 
@@ -478,6 +485,7 @@ export class HomeComponent implements OnInit {
 
   getMaterialIssueList() {
     this.wmsService.getMaterialIssueLlist(this.employee.employeeno).subscribe(data => {
+      debugger;
       this.materialIssueListnofilter = data;
       this.materialIssueList = this.materialIssueListnofilter.filter(li => li.approvedstatus == null);
       this.materialforissuecount = this.materialIssueList.length;
@@ -486,9 +494,9 @@ export class HomeComponent implements OnInit {
 
 
   getdashboarddetail() {
-
+    var empno = this.employee.employeeno;
     this.spinner.show();
-    this.wmsService.getdashdata().subscribe(data => {
+    this.wmsService.getdashdata(empno).subscribe(data => {
       if (data != null) {
 
         this.dashboardmodel = data;

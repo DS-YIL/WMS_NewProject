@@ -196,8 +196,12 @@
         
         <div class="card"  style="background-image: url('./assets/dashboardbc.png');min-height:80vh;background-repeat: no-repeat;margin-top:10px;border-radius:10px;min-height:82vh">
           <div class="row">
-            <div class="col-lg-1 col-md-1 ">
-              <label class="labelheading">&nbsp;&nbsp;Roles :</label>
+
+            <div class="col-lg-6 col-md-6">
+
+            </div>
+            <div class="col-lg-2 col-md-2 ">
+              <label class="labelheading" style="float:right">Switch Role:</label>
             </div>
             <div class="col-lg-4 col-md-4">
               <select class="form-control forms-input" style="width:100% !important;" (change)="Navigatetopagefn()" [(ngModel)]="selectedrolename">
@@ -207,13 +211,6 @@
                 </option>
               </select>
             </div>
-            <div class="col-lg-3 col-md-3 form-inline">
-
-            </div>
-            <div class="col-lg-4 col-md-4 form-inline">
-              <label class="labeltext">Logged in as : {{rolename}}</label>
-            </div>
-
 
 
           </div>
