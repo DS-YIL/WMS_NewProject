@@ -1,4 +1,4 @@
-<div class="card" style="    min-height: 520px;border-radius: 10px;box-shadow: 5px 10px #888888;">
+<div class="card" *ngIf="!AddDialog" style="  min-height: 520px;border-radius: 10px;box-shadow: 5px 10px #888888;">
   <div class="card-header text-center cardheadertext">
     <span>
       <i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;Material Return Dashboard
@@ -13,7 +13,7 @@
     <div class="col-lg-2 col-md-2 col-sm-2 form-group" style="padding-left:0px;">
       <select placeholder="Status" name="Status" (change)="onSelectStatus($event)" class="form-control">
         <option selected value="Pending"> Pending</option>
-        <option value="Accepted"> Confirmed</option>
+        <option value="Accepted"> Acknowledged</option>
       </select>
     </div>
     <div class="col-lg-1 col-md-1 col-sm-1 form-group" style="padding-left:0px;">
@@ -26,8 +26,8 @@
         <ng-template pTemplate="header">
           <tr class="mprltbldata">
             <th style="text-align:center;width:70px">Sl.No.</th>
-            <th style="text-align:center;width:100px">Request Id</th>
-            <th style="text-align:center">Material</th>
+            <th style="text-align:center;width:100px">Return Id</th>
+            <!--<th style="text-align:center">Material</th>-->
             <th style="text-align: center;width:150px">Returned On</th>
             <th style="text-align:center;width:300px">Requester Name</th>
 
@@ -35,7 +35,7 @@
           <tr>
             <th></th>
             <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'requestforissueid', 'contains')"></th>
-            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'material', 'contains')"></th>
+            <!--<th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'material', 'contains')"></th>-->
             <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'requesteddate', 'contains')"></th>
             <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'name', 'contains')"></th>
           </tr>
@@ -46,9 +46,9 @@
               {{ri+1}}
             </td>
             <td class="ptable-cell" style="text-align:center;width:100px;">
-              <button type="button" class="btn btn-link" (click)="showmaterialdetails(rowData.returnid);" style="padding-left:0px;">{{rowData.returnid}}</button>
+              <button type="button" class="btn btn-link" (click)="showmaterialdetails(rowData.matreturnid);" style="padding-left:0px;">{{rowData.matreturnid}}</button>
             </td>
-            <td class="ptable-cell" style="text-align:left;">{{rowData.materialid}}</td>
+            <!--<td class="ptable-cell" style="text-align:left;">{{rowData.materialid}}</td>-->
             <td class="ptable-cell" style="text-align:center;width:150px;">{{rowData.createdon  | date :  constants.dateFormat}}</td>
             <td class="ptable-cell" style="text-align:left;width:300px;">{{rowData.name}}</td>
 
@@ -56,106 +56,310 @@
         </ng-template>
       </p-table>
     </div>
-    <div style="height: 5px; overflow-y: scroll">
+  </div>
+</div>
+<div class="card" *ngIf="AddDialog" style=" min-height: 520px;border-radius: 10px;box-shadow: 5px 10px #888888;">
+  <div class="card-header text-center cardheadertext">
+    <span>
+      <i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;Material Return Details
+    </span>
+    <button type="button" icon="fa fa-arrow-left" pButton aria-hidden="true" pTooltip="Back" (click)="backtoreturn()" style="float: left;
+    height: 26px;"></button>
+  </div>
+  <!--<div class="card-header text-center cardheadertext">
+    <span>
+      <i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;Material Return Details
+    </span>
+  </div>-->
+  <!--<div style="height: 5px; overflow-y: scroll" *ngIf="AddDialog">-->
+  <!--<p-dialog   *ngIf="AddDialog" header="Material Return Details" [(visible)]="AddDialog" [contentStyle]="{'overflow-y': 'auto', 'overflow-x': 'hidden', 'max-height': '80vh','min-height':'250px'}" showEffect="fade" [modal]="true" [responsive]="true" [style]="{width: '1024px'}">-->
 
-      <p-dialog   *ngIf="AddDialog" header="Material Return Details" [(visible)]="AddDialog" [contentStyle]="{'overflow-y': 'auto', 'overflow-x': 'hidden', 'max-height': '80vh','min-height':'250px'}" showEffect="fade" [modal]="true" [responsive]="true" [style]="{width: '1024px'}">
-        <div *ngIf="showdialog">
-          <div class="row  pl-0">
-            <div  class="col-lg-4 col-md-4 col-sm-4 pt-2 labelheading">
-              <label>Request Id :</label>&nbsp;<span class="labeltext"><label>{{materiallistData[0].returnid}}</label></span>
-            </div>
+  <div *ngIf="showdialog">
+    <div class="row  pl-0">
+      <div class="col-lg-4 col-md-4 col-sm-4 pt-2 labelheading">
+        <label>Return Id :</label>&nbsp;<span class="labeltext"><label>{{materiallistData[0].matreturnid}}</label></span>
+      </div>
 
-          </div>
+    </div>
 
-        </div>
-        <p-table #dt [value]="materiallistData">
+  </div>
+  <p-table #dt [value]="materiallistData">
+    <ng-template pTemplate="header">
+      <tr>
+        <th rowspan="2" style="text-align:center;width:70px">Sl.No</th>
+        <th rowspan="2" style="text-align:center">Material</th>
+        <!--<th style="text-align:center;width:150px">Requested  Qty</th>
+      <th style="text-align:center;width:150px">Issued Qty</th>-->
+        <th rowspan="2" style="text-align:center;width:150px">Return Qty</th>
+        <!--<th style="text-align:center;width:150px">Item Loaction</th>-->
+        <th colspan="2" style="width:250px; text-align: center">Put Away</th>
+      </tr>
+      <tr>
+        <th style="width:150px; text-align: center">Qty</th>
+        <th style="width:150px; text-align: center">Location</th>
+
+      </tr>
+    </ng-template>
+      <ng-template pTemplate="body" let-rowData let-expanded="expanded" let-rowIndex="rowIndex" let-columns="columns">
+        <tr class="ui-widget-header" *ngIf="rowGroupMetadata[rowData.materialid].index === rowIndex">
+          <td class="ptable-cell" style="text-align:right">
+            {{rowIndex+1}}
+          </td>
+          <td class="ptable-cell" style="text-align:left">{{rowData.materialid}}</td>
+          <!--<td class="ptable-cell" style="text-align:right">{{rowData.requestedquantity}}</td>
+        <td class="ptable-cell" style="text-align:right">
+          {{rowData.issuedqty}}
+
+        </td>-->
+
+          <td class="ptable-cell" style="text-align:right">{{rowData.returnqty}}</td>
+          <!--<td>
+          <select class="form-control dropdown" #mySelect (change)="onChange(mySelect.value,ri)">
+            lu
+            io
+            <option></option>
+            <option value="other">other</option>
+            <option *ngFor=" let loclist of locationlist" value={{loclist.itemlocation}}>
+              {{loclist.itemlocation}}
+            </option>
+          </select>
+          <br />
+
+        </td>-->
+          <td colspan="2" class="ptable-cell" style="text-align:center;width:100px;">
+            <a *ngIf="rowData.itemlocation" href="#" [pRowToggler]="rowData">
+              <i [ngClass]="expanded ? 'pi pi-fw pi-chevron-circle-down' : 'pi pi-fw pi-chevron-circle-right'" style="    vertical-align: middle;padding-bottom: .1em;color: #20f320d6"></i>
+            </a>
+            <!--*ngIf="!rowData.itemlocation && rowData.confirmqty != 0"-->
+            <i *ngIf="!rowData.itemlocation" class="fa fa-location-arrow" style="color:blue" pTooltip="Add Location" (click)="showDialog(rowData,rowIndex)" aria-hidden="true"></i>
+
+          </td>
+          <!--<td class="ptable-cell" style="text-align:right">{{rowData.itemlocation}}</td>-->
+        </tr>
+        <tr id="nodefaultloaction" style="margin-top:10px;display:none;padding-left:300px;">
+
+          <td class="ptable-cell" style="text-align:right;width:100px">
+            <label for="itemlocation" class="form-label">Select Location</label>
+
+            <select style="width:100px;" class="form-control dropdown" [(ngModel)]="StockModel.locatorid">
+              <option selected></option>
+              <option *ngFor=" let loclist of locationlists " value={{loclist.locatorid}}>
+                {{loclist.locatorname}}
+              </option>
+            </select>
+          </td>
+
+          <td class="ptable-cell" style="text-align:right;width:100px">
+            <label for="rackid" class="form-label">Select Rack</label>
+
+
+            <select style="width:100px;" class="form-control dropdown" [(ngModel)]="StockModel.rackid">
+
+              <option selected value="*ngIf=rackid"></option>
+              <option *ngFor=" let loclist of racklist " value={{loclist.rackid}}>
+                {{loclist.racknumber}}
+              </option>
+            </select>
+          </td>
+          <td class="ptable-cell" style="text-align:right;width:100px">
+            <label for="rackid" class="form-label">Select Bin</label>
+            <select style="width:100px;" class="form-control dropdown" [(ngModel)]="StockModel.binid">
+
+              <option selected></option>
+              <option *ngFor=" let loclist of binlist" value={{loclist.binid}}>
+                {{loclist.binnumber}}
+              </option>
+            </select>
+          </td>
+        </tr>
+      </ng-template>
+
+
+  </p-table>
+  <p-footer>
+    <!--<button type="button" class="btn btn-primary" *ngIf="materiallistData[0].confirmstatus==null" [disabled]="btnDisable" (click)="ConfirmReturnmaterial()">Acknowledge</button>-->
+    <!--<div class="ui-dialog-buttonpane ui-helper-clearfix">
+        <button type="button" pButton icon="fa fa-check" class="ui-button-success" (click)="Cancel()" label="OK"></button>
+        <button type="button" pButton icon="fa fa-close" class="ui-button-danger" (click)="Cancel()" label="Cancel"></button>
+      </div>-->
+  </p-footer>
+  <!--</p-dialog>-->
+
+</div>
+<p-dialog header="Put Away Location" [(visible)]="showLocationDialog" (onHide)="close()" [modal]="true" [style]="{width: '95vw',top: '95.7px',height:'30vw'}" [maximizable]="true" [baseZIndex]="10000"
+          [draggable]="true" [resizable]="false">
+  <div class="row">
+    <div class="col-lg-4 col-md-4 labelheading">
+      <label>Material Id :</label>&nbsp;<span><label class="labeltext">{{matid}}</label></span>
+    </div>
+    <div class="col-lg-6 col-md-6 labelheading">
+      <label>Material desc :</label>&nbsp;<span>
+        <label *ngIf="matdescription" class="labeltext">{{matdescription}}</label>
+        <label *ngIf="!matdescription" class="labeltext">-</label>
+      </span>
+    </div>
+    <div class="col-lg-2 col-md-2 labelheading">
+      <label>Return Qty :</label>&nbsp;<span><label class="labeltext">{{matqty}}</label></span>
+    </div>
+    <!--<div class="col-lg-1 col-md-1 labelheading">
+      <button type="button" class="btn btn-primary btn-sm" style="float:right;margin-left:10px;" (click)="addNewRow()" label="Save"><i class="fa fa-plus"></i></button>
+    </div>-->
+  </div>
+  <div>
+    <!--<button type="button" (click)="addNewRow()" class="btn btn-primary">Add new Row</button><br>-->
+
+
+
+    <div class="row " style="margin-top:10px">
+
+
+      <div class="col-lg-12 col-md-12 col-sm-12">
+        <p-confirmDialog header="Confirmation" icon="fa fa-question-circle" width="500px"></p-confirmDialog>
+
+        <p-table [value]="stock" [style]="{'width':'97%','height':'500px','overflow':'visible!important'}">
+          <ng-template pTemplate="caption">
+            Put Away Location
+            <button type="button" icon="fa fa-plus" pButton aria-hidden="true" pTooltip="Add Put Away Location" (click)="addNewRow()" style="float: right;height: 26px;"></button>
+          </ng-template>
           <ng-template pTemplate="header">
             <tr class="mprltbldata">
-              <th style="text-align:center;width:70px">S.No</th>
-              <th style="text-align:center">Material</th>
-              <!--<th style="text-align:center;width:150px">Requested  Qty</th>
-      <th style="text-align:center;width:150px">Issued Qty</th>-->
-              <th style="text-align:center;width:150px">Return Qty</th>
-              <th style="text-align:center;width:150px">Item Loaction</th>
+              <th class="ptable-cell" style="width:60px;text-align:center">Sl.No.</th>
+              <!--<th class="ptable-cell">Material</th>-->
+              <th style="text-align:center" class="ptable-cell">Location</th>
+              <th style="text-align:center" class="ptable-cell">Rack</th>
+              <th style="text-align:center" class="ptable-cell">Bin</th>
+              <th style="text-align:center" class="ptable-cell">Stock Type</th>
+              <th style="text-align:center" class="ptable-cell">Quantity</th>
+              <th style="text-align:center" class="ptable-cell"></th>
             </tr>
-
           </ng-template>
-          <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
+          <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex" let-rindex=0>
             <tr>
-              <td class="ptable-cell" style="text-align:right">
-                {{ri+1}}
-              </td>
-              <td class="ptable-cell" style="text-align:left">{{rowData.materialid}}</td>
-              <!--<td class="ptable-cell" style="text-align:right">{{rowData.requestedquantity}}</td>
-    <td class="ptable-cell" style="text-align:right">
-      {{rowData.issuedqty}}
+              <td class="ptable-cell" style="text-align:center"> {{ri+1}} </td>
 
-    </td>-->
+              <td class="ptable-cell" style="text-align:left;">
+                <select class="form-control dropdown" [(ngModel)]="rowData.locatorid" (change)="onlocUpdate(rowData.locatorid)">
 
-              <td class="ptable-cell" style="text-align:right">{{rowData.returnqty}}</td>
-              <td>
-                <select class="form-control dropdown" #mySelect (change)="onChange(mySelect.value,ri)">
-                  <option></option>
-                  <option value="other">other</option>
-                  <option *ngFor=" let loclist of locationlist" value={{loclist.itemlocation}}>
-                    {{loclist.itemlocation}}
-                  </option>
-                </select>
-                <br />
-
-              </td>
-              <!--<td class="ptable-cell" style="text-align:right">{{rowData.itemlocation}}</td>-->
-            </tr>
-            <tr id="nodefaultloaction" style="margin-top:10px;display:none;padding-left:300px;">
-             
-              <td class="ptable-cell" style="text-align:right;width:100px">
-                <label for="itemlocation" class="form-label">Select Location</label>
-
-                <select style="width:100px;" class="form-control dropdown" [(ngModel)]="StockModel.locatorid">
-                  <option selected></option>
+                  <!--<option selected value="*ngIf=rowData.locatorid!=null"></option>-->
+                  <!--*ngIf="rowData.locatorid!=null ? rowData.locatorid:'Select Stock'"-->
                   <option *ngFor=" let loclist of locationlists " value={{loclist.locatorid}}>
                     {{loclist.locatorname}}
                   </option>
                 </select>
               </td>
-              
-              <td class="ptable-cell" style="text-align:right;width:100px">
-                <label for="rackid" class="form-label">Select Rack</label>
+              <td class="ptable-cell" style="text-align:left">
+                <select class="form-control dropdown" [(ngModel)]="rowData.rackid" (change)="onrackUpdate(rowData.locatorid,rowData.rackid)">
+
+                  <!--<option selected value="*ngIf=rowData.rackid==null"></option>-->
+                  <option *ngFor=" let loclist of racklist " value={{loclist.rackid}}>
+                    {{loclist.racknumber}}
+                  </option>
+                </select>
+              </td>
+              <td class="ptable-cell" style="text-align:left">
+                <select class="form-control dropdown" [(ngModel)]="rowData.binid">
+
+                  <option selected value="0"></option>
+                  <option *ngFor=" let loclist of binlist" value={{loclist.binid}}>
+                    {{loclist.binnumber}}
+                  </option>
+                </select>
+
+              </td>
+              <td class="ptable-cell" style="text-align:left">
+                <input readonly [(ngModel)]="rowData.stocktype" class="form-control" type="text" name="{{rowData.stocktype}}" />
+
+              </td>
+              <td class="ptable-cell" style="text-align:right">
+                <input (click)="onQtyClick(ri)" [(ngModel)]="rowData.qty" class="form-control" type="number" name="{{rowData.qty}}" />
+
+              </td>
 
 
-                <select style="width:100px;" class="form-control dropdown" [(ngModel)]="StockModel.rackid">
+
+
+              <td class="ptable-cell" style="text-align:center">
+                <button (click)="deleteRow(ri)" class="btn btn-danger" style="margin-top:10%"><i class="fa fa-trash"></i></button>
+              </td>
+
+
+          </ng-template>
+
+
+        </p-table>
+      </div>
+    </div>
+
+
+    <!--<form [formGroup]="invoiceForm">
+      <div formArrayName="itemRows">
+
+        <div *ngFor="let itemrow of formArr.controls; let i=index" [formGroupName]="i">
+          <div class="row " style="margin-top:10px;">
+            <div class="col-lg-1 col-md-1 col-sm-1 form-group" style="margin-top:2%">
+              {{i+1}}
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-2 form-group">
+              <label for="itemlocation" class="form-label">Select Location</label>
+              <div class="form-inline-list">
+                <input type="text" formControlName="rackid" />
+
+              </div>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-2 form-group">
+              <label for="rackid" class="form-label">Select Rack</label>
+              <div class="form-inline-list">
+
+                <select class="form-control dropdown" formControlName="rackid" [(ngModel)]="itemrow.rackid">
 
                   <option selected value="*ngIf=rackid"></option>
                   <option *ngFor=" let loclist of racklist " value={{loclist.rackid}}>
                     {{loclist.racknumber}}
                   </option>
                 </select>
-              </td>
-              <td class="ptable-cell" style="text-align:right;width:100px">
-                <label for="rackid" class="form-label">Select Bin</label>
-                <select style="width:100px;" class="form-control dropdown" [(ngModel)]="StockModel.binid">
+
+              </div>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-2 form-group">
+              <label for="binid" class="form-label">Select Bin</label>
+              <div class="form-inline-list">
+                <select class="form-control dropdown" formControlName="binid" [(ngModel)]="itemrow.binid">
 
                   <option selected></option>
                   <option *ngFor=" let loclist of binlist" value={{loclist.binid}}>
                     {{loclist.binnumber}}
                   </option>
                 </select>
-              </td>
-            </tr>
-          </ng-template>
-         
-        
-        </p-table>
-        <p-footer>
-          <button type="button" class="btn btn-primary" *ngIf="materiallistData[0].confirmstatus==null" [disabled]="btnDisable" (click)="ConfirmReturnmaterial()">Confirm</button>
-          <!--<div class="ui-dialog-buttonpane ui-helper-clearfix">
-          <button type="button" pButton icon="fa fa-check" class="ui-button-success" (click)="Cancel()" label="OK"></button>
-          <button type="button" pButton icon="fa fa-close" class="ui-button-danger" (click)="Cancel()" label="Cancel"></button>
-        </div>-->
-        </p-footer>
-      </p-dialog>
-    </div>
-  </div>
+
+              </div>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-2 form-group">
+              <label for="binid" class="form-label">Stock Type</label>
+              <div class="form-inline-list">
+                <input type="text" readonly style="text-align:left" class="form-control" formControlName="stocktype" [(ngModel)]="StockModel.stocktype">
+              </div>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-2 form-group">
+              <label for="binid" class="form-label">Item quantity</label>
+              <div class="form-inline-list">
+                <input pInputText type="number" (click)='onQtyClick()' style="text-align:right" class="form-control" formControlName="quantity">
+              </div>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-2 form-group">
+              <button *ngIf="invoiceForm.controls.itemRows.controls.length > 1" (click)="deleteRow(i)" class="btn btn-danger" style="margin-top:10%"><i class="fa fa-trash"></i></button>
+             </div>
+          </div>
+
+        </div>
+      </div>
+
+    </form>-->
   </div>
 
-   
+  <p-footer>
+    <button type="button" pButton icon="fa fa-close" (click)="onSubmitStockDetails()" label="Submit"></button>
+    <!--<button type="button" pButton icon="pi pi-times" (click)="showLocationDialog=false" label="Close" class="ui-button-secondary"></button>-->
+  </p-footer>
+</p-dialog>
+
+

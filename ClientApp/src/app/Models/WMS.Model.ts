@@ -16,6 +16,7 @@ export class PoDetails {
   vendorname: string;
   vendorid: number;
   paitemid: number;
+  returnid: number;
   ProjectName: string;
   projectcode: string;
   putawayQty: string;
@@ -23,6 +24,7 @@ export class PoDetails {
   location: string;
   rackNo: string;
   material: string;
+  materialid: any;
   materialdescription: string;
   grnnumber: string;
   itemid: number;
@@ -153,6 +155,8 @@ export class StockModel {
   binid: number;
   rackid: number;
   vendorid: number;
+  returnqty: any;
+  returnid: number;
   totalquantity: string;
   shelflife: Date;
   availableqty: number;

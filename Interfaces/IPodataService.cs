@@ -26,6 +26,9 @@ namespace WMS.Interfaces
         //Get material request and issued details
         Task<IEnumerable<ReqMatDetails>> getReqMatdetails(string materialid,string grnnumber);
 
+        //Get material requested for return
+        Task<IEnumerable<IssueRequestModel>> getmaterialreturnreqList(int matreturnid);
+
         //Check material exists
         string checkMatExists(string material);
 

@@ -63,7 +63,7 @@ export class WarehouseInchargeComponent implements OnInit {
   public StockModel: StockModel;
   public stock: StockModel[] = [];
   public locationdetails = new locataionDetailsStock();
-  public StockModelList: Array<any> = [];;
+  public StockModelList: Array<any> = [];
   public StockModelForm: FormGroup;
   public StockModelForm1: FormGroup;
   public rowIndex: number;

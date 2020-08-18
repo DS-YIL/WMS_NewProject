@@ -227,6 +227,11 @@ export class wmsService {
   getmaterialissueList(requestid: string): Observable<any> {
     return this.http.get<any>(this.url + 'POData/getmaterialissueList?requestid=' + requestid + '', this.httpOptions);
   }
+
+  getmaterialreturnreqList(matreqid: string): Observable<any> {
+    return this.http.get<any>(this.url + 'POData/getmaterialreturnreqList?matreturnid=' + matreqid + '', this.httpOptions);
+  }
+
   getreturnmaterialListforconfirm(requestid: string): Observable<any> {
     return this.http.get<any>(this.url + 'POData/GetReturnmaterialListForConfirm?requestid=' + requestid + '', this.httpOptions);
   }

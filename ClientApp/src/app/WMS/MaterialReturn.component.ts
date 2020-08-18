@@ -19,7 +19,9 @@ export class MaterialReturnComponent implements OnInit {
 
   public materiallistData: Array<any> = [];
   public materiallistDataHistory: Array<any> = [];
-    AddDialogfortransfer: boolean;
+  AddDialogfortransfer: boolean;
+  materialreturn: boolean = true;
+  MaterialDetailsDialog: boolean = false;
     showdialogfortransfer: boolean;
     projectcodes: string;
     showhistory: boolean=false;
@@ -70,6 +72,8 @@ export class MaterialReturnComponent implements OnInit {
     this.getMaterialRequestlist();
    
   }
+
+ 
 
   //get Material Rquest based on login employee && po no
   getMaterialRequestlist() {
@@ -143,20 +147,15 @@ export class MaterialReturnComponent implements OnInit {
     this.requestid = requesid;
 
   }
-  showmaterialdetails() {
-    //if (this.requestid == undefined) {
-    //  this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please select any Request Id' });
-    //  //this.router.navigateByUrl("/WMS/MaterialReqView");
-    //}
-    //else {
-
-
-      //this.rowindex = rowindex
+    //Displaying material details on select of material
+  showmaterialdetails(matreturnid:any) {
       this.AddDialog = true;
     this.showdialog = true;
+    this.materialreturn = false;
+    this.MaterialDetailsDialog = true;
     this.requestid = 7;
-      //this.materiallistData = this.requestList.filter(li => li.approvedstatus == 'Approved');
-      this.wmsService.getmaterialissueList(this.requestid).subscribe(data => {
+    //this.materiallistData = this.requestList.filter(li => li.approvedstatus == 'Approved');
+    this.wmsService.getmaterialreturnreqList(matreturnid).subscribe(data => {
         this.materiallistData = data;
 
         if (data != null) {
@@ -325,6 +324,8 @@ export class MaterialReturnComponent implements OnInit {
 
   //Adding new material 
   addNewMaterial() {
+   
+
 
     if (this.returnModel.materialList.length == 0 || isNullOrUndefined(this.material)) {
       this.materialistModel = { material: "", materialdescription: "", remarks: " ", returnid: 0, returnqty: 0, createdby: this.employee.employeeno };

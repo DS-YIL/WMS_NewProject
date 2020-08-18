@@ -579,6 +579,13 @@ namespace WMS.Controllers
 		{
 			return await this._poService.MaterialRequestdata(pono, loginid);
 		}
+
+		[HttpGet("getmaterialreturnreqList")]
+		public async Task<IEnumerable<IssueRequestModel>> getmaterialreturnreqList(int matreturnid)
+        {
+			return await this._poService.getmaterialreturnreqList(matreturnid);
+		}
+
 		[HttpGet("getmaterialissueList")]
 		public async Task<IEnumerable<IssueRequestModel>> getmaterialissueList(int requestid)
 		{

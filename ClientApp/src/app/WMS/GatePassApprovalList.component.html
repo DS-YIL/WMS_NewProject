@@ -115,7 +115,7 @@
                 Status:&nbsp;<span style="color:#dc3545;">{{item.approverstatus}}</span>
               </div>
               <div class="col-lg-3 col-md-3 col-sm-3 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
-                Status Updated on:&nbsp;<span style="color:#dc3545;">{{item.approvedon  | date :  constants.dateFormat}}</span>
+                Status Updated on:&nbsp;<span style="color:#dc3545;">{{item.approvedon  | date :  constants.dateFormat}}</span> 
               </div>
               <div class="col-lg-3 col-md-3 col-sm-3 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
                 Remarks:&nbsp;<span style="color:#dc3545;">{{item.remarks}}</span>
@@ -154,7 +154,7 @@
             <div class="col-lg-2 col-md-2 col-sm-2 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
               GatePass Id:&nbsp;<span style="color:#dc3545;">{{materialList[0].gatepassid}}</span>
             </div>
-            <div class="col-lg-2 col-md-2 col-sm-2 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
+            <div class="col-lg-4 col-md-4 col-sm-4 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
               Requester:&nbsp;<span style="color:#dc3545;">{{materialList[0].name}}</span>
             </div>
             <div class="col-lg-2 col-md-2 col-sm-2 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
@@ -204,7 +204,7 @@
                   <th class="ptable-cell" style="text-align:center">Requested Qty</th>
                   <th class="ptable-cell" style="text-align:center" *ngIf="employee.roleid !='8'">Issue Qty</th>
                   <th class="ptable-cell" style="text-align:center" *ngIf="employee.roleid !='8' && materialList[0].gatepasstype=='Returnable'">Expected Date</th>
-                  <th *ngIf="materialList[0].gatepasstype=='Returnable'" class="ptable-cell" style="text-align:center">Returned Date</th>
+                  <!--<th *ngIf="materialList[0].gatepasstype=='Returnable'" class="ptable-cell" style="text-align:center">Returned Date</th>-->
                 </tr>
               </ng-template>
               <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex" let-rindex=0>
@@ -219,7 +219,7 @@
                     <input pInputText type="number" style="text-align:center" class="form-control" [disabled]="txtDisable" [(ngModel)]="rowData.issuedqty">
                   </td>
                   <td class="ptable-cell" style="text-align:center" *ngIf="employee.roleid !='8' && materialList[0].gatepasstype=='Returnable'">{{checkValiddate(rowData.expecteddate)}}</td>
-                  <td *ngIf="materialList[0].gatepasstype=='Returnable' && rowData.returneddate" class="ptable-cell" style="text-align:center">{{checkValiddate(rowData.returneddate)}}</td>
+                  <!--<td *ngIf="materialList[0].gatepasstype=='Returnable' && rowData.returneddate" class="ptable-cell" style="text-align:center">{{checkValiddate(rowData.returneddate)}}</td>-->
 
               </ng-template>
             </p-table>

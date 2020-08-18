@@ -128,21 +128,21 @@ export class StoreClerkComponent implements OnInit {
         this.messageService.add({ severity: 'error', summary: '', detail: 'Received Quantity should be less than or equal to Pending Quantity' });
         //(<HTMLInputElement>document.getElementById("receivedqty")).value = "";
         data.receivedqty = "0";
-
+        return;
       }
     }
     else if (data.isreceivedpreviosly && data.pendingqty == 0 && !this.isnonpoentry) {
       this.messageService.add({ severity: 'error', summary: '', detail: 'All materials received' });
       //(<HTMLInputElement>document.getElementById("receivedqty")).value = "";
       data.receivedqty = "0";
-
+      return;
     }
     else {
       if (entredvalue > maxvalue && !this.isnonpoentry) {
         this.messageService.add({ severity: 'error', summary: '', detail: 'Received Quantity should be less than or equal to Material Quantity' });
         //(<HTMLInputElement>document.getElementById("receivedqty")).value = "";
         data.receivedqty = "0";
-
+        return;
       }
     }
    
@@ -158,11 +158,13 @@ export class StoreClerkComponent implements OnInit {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Accepted Quantity cannot exceed Recived Quantity' });
       //(<HTMLInputElement>document.getElementById("confirmqty")).value = "";
       data.confirmqty = "";
+      return;
     }
     if (entredvalue != (receivedqty - returnedqty) && receivedqty && returnedqty) {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Returned and Accepted quantity should be equal to received qty' });
      // (<HTMLInputElement>document.getElementById("confirmqty")).value = "";
       data.confirmqty = "";
+      return;
     }
   }
   checkreturnqty(entredvalue, receivedqty, acceptedqty, data: any) {
@@ -176,11 +178,13 @@ export class StoreClerkComponent implements OnInit {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Returned Quantity cannot exceed Recived Quantity' });
       //(<HTMLInputElement>document.getElementById("returnqty")).value = "";
       data.returnqty = "";
+      return;
     }
     if (entredvalue != (receivedqty - acceptedqty) && receivedqty && acceptedqty) {
       this.messageService.add({ severity: 'error', summary: '', detail:  'Returned and Accepted Quantity should be equal to Received Quantity' });
       //(<HTMLInputElement>document.getElementById("returnqty")).value = "";
       data.returnqty = "";
+      return;
     }
   }
   filterpos(event) {

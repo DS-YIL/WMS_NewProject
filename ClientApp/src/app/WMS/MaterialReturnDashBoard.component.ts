@@ -5,27 +5,60 @@ import { wmsService } from '../WmsServices/wms.service';
 import { constants } from '../Models/WMSConstants';
 import { Employee, DynamicSearchResult, searchList } from '../Models/Common.Model';
 import { NgxSpinnerService } from "ngx-spinner";
-import { materialRequestDetails, StockModel } from 'src/app/Models/WMS.Model';
+import { materialRequestDetails, StockModel, PoDetails, locataionDetailsStock, inwardModel } from 'src/app/Models/WMS.Model';
 import { MessageService } from 'primeng/api';
+import { ConfirmationService } from 'primeng/api';
+import { isNullOrUndefined } from 'util';
+import { trigger, state, style, transition, animate } from '@angular/animations';
 
 @Component({
   selector: 'app-MaterialReturnDashBoard',
-  templateUrl: './MaterialReturnDashBoard.component.html'
+  templateUrl: './MaterialReturnDashBoard.component.html',
+  animations: [
+    trigger('rowExpansionTrigger', [
+      state('void', style({
+        transform: 'translateX(-10%)',
+        opacity: 0
+      })),
+      state('active', style({
+        transform: 'translateX(0)',
+        opacity: 1
+      })),
+      transition('* <=> *', animate('400ms cubic-bezier(0.86, 0, 0.07, 1)'))
+    ])
+  ],
+  providers: [ConfirmationService]
 })
 export class MaterialReturnDashBoardComponent implements OnInit {
   binid: any;
   rackid: any;
   locatorid: any;
+  rowGroupMetadata: any;
+  public store: any;
+  public rack: any;
+  public locationdetails = new locataionDetailsStock();
+  public bin: any;
+  public locationdata: any[] = [];
+  public bindata: any[] = [];
+  public rackdata: any[] = [];
+  public disSaveBtn: boolean = false;
     selectedStatus: any;
-  constructor(private formBuilder: FormBuilder, private messageService: MessageService, private wmsService: wmsService, private route: ActivatedRoute, private router: Router, public constants: constants, private spinner: NgxSpinnerService) { }
+  constructor(private ConfirmationService: ConfirmationService,private formBuilder: FormBuilder, private messageService: MessageService, private wmsService: wmsService, private route: ActivatedRoute, private router: Router, public constants: constants, private spinner: NgxSpinnerService) { }
   AddDialog: boolean;
   showdialog: boolean;
   btnDisable: boolean = false;
+  public showDetails; showLocationDialog: boolean = false;
   public locationlist: any[] = [];
   public locationlists: any[] = [];
   public binlist: any[] = [];
   public racklist: any[] = [];
+  public StockModelForm: FormGroup;
   public StockModel: StockModel;
+  public stock: StockModel[] = [];
+  public StockModelList: Array<any> = [];
+  matid: string = "";
+  matdescription: string = "";
+  matqty: string = "";
   public materiallistData: Array<any> = [];
   public formName: string;
   public txtName: string;
@@ -35,14 +68,15 @@ export class MaterialReturnDashBoardComponent implements OnInit {
   public selectedlist: Array<searchList> = [];
   public selectedItem: searchList;
   public searchresult: Array<object> = [];
-
+  public PoDetails: PoDetails;
   public MaterialRequestForm: FormGroup
   public materialIssueList: Array<any> = [];
   public materialacceptListnofilter: Array<any> = [];
+  public podetailsList: Array<inwardModel> = [];
   public employee: Employee;
   public displayItemRequestDialog; RequestDetailsSubmitted: boolean = false;
   public materialRequestDetails: materialRequestDetails;
-  public StockModelForm: FormGroup;
+  public rowIndex: number;
   ngOnInit() {
     if (localStorage.getItem("Employee"))
       this.employee = JSON.parse(localStorage.getItem("Employee"));
@@ -64,23 +98,213 @@ export class MaterialReturnDashBoardComponent implements OnInit {
      
     });
   }
-  showmaterialdetails(requestid) {
-    //this.rowindex = rowindex
-    this.AddDialog = true;
-    this.showdialog = true;
+
+  backtoreturn() {
+    this.AddDialog = false;
+  }
+
+  onQtyClick(index: any) {
+    debugger;
+    if (this.stock.length > 1) {
+      for (var data = 0; data < this.stock.length - 1; data++) {
+        if (this.stock[data].locatorid == this.stock[this.stock.length - 1].locatorid) {
+          if (this.stock[data].rackid == this.stock[this.stock.length - 1].rackid) {
+            if (this.stock[data].binid == this.stock[this.stock.length - 1].binid) {
+              this.messageService.add({ severity: 'error', summary: '', detail: 'Location already exists' });
+              this.stock[this.stock.length - 1].binid = 0;
+              this.stock[this.stock.length - 1].rackid = 0;
+              this.stock[this.stock.length - 1].locatorid = 0;
+              return;
+            }
+          }
+        }
+      }
+
+
+
+
+      //if (this.stock.filter(li => li.locatorid == this.stock[index].locatorid && li.rackid == this.stock[index].rackid && li.binid == this.stock[index].binid).length > 0) {
+      //  this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Location already exists' });
+      //  return;
+      //}
+    }
+    //get stock type
+    this.locationdetails.storeid = this.stock[index].locatorid;
+    this.locationdetails.rackid = this.stock[index].rackid;
+    this.locationdetails.binid = this.stock[index].binid;
+    var bindetails = this.binlist.filter(x => x.binid == this.locationdetails.binid);
+    var storedetails = this.locationlist.filter(x => x.locatorid == this.locationdetails.storeid);
+    var rackdetails = this.racklist.filter(x => x.rackid == this.locationdetails.rackid);
+    this.locationdetails.storename = storedetails[0].locatorname != null || storedetails[0].locatorname != "undefined" || storedetails[0].locatorname != "" ? storedetails[0].locatorname : 0;
+    this.locationdetails.rackname = rackdetails[0].racknumber != null || rackdetails[0].racknumber != "undefined" || rackdetails[0].racknumber != "" ? rackdetails[0].racknumber : 0;
+    this.locationdetails.binname = bindetails[0].binnumber != null || bindetails[0].binnumber != "undefined" || bindetails[0].binnumber != "" ? bindetails[0].binnumber : 0;
+    this.locationdetails.locationid = this.locationdetails.storeid + '.' + this.locationdetails.rackid + '.' + this.locationdetails.binid;
+    this.locationdetails.locationname = this.locationdetails.storename + '.' + this.locationdetails.rackname + '.' + this.locationdetails.binname;
+    //service to get stock type
+    this.wmsService.getstocktype(this.locationdetails).subscribe(data => {
+      debugger;
+      if (data) {
+        this.stock[index].stocktype = data;
+        //this.invoiceForm.controls.itemRows.value[this.invoiceForm.controls.itemRows.value.length - 1].stocktype = data;
+        //this.StockModel.stocktype = data;
+
+      }
+      else {
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Unable to fetch stock type' });
+      }
+    });
+
+
+  }
+
+  deleteRow(index: number) {
+    this.stock.splice(index, 1);
+    //this.formArr.removeAt(index);
+  }
+  addNewRow() {
+    //this.onQtyClick();
+    debugger;
+    if (this.stock.length > 0) {
+      if (this.stock[this.stock.length - 1].locatorid != 0 || this.stock[this.stock.length - 1].qty != 0 || this.stock[this.stock.length - 1].qty != null) {
+        if (this.stock[this.stock.length - 1].locatorid == 0 || isNullOrUndefined(this.stock[this.stock.length - 1].locatorid )) {
+          this.messageService.add({ severity: 'error', summary: '', detail: 'select Location' });
+          return;
+        }
+        if (this.stock[this.stock.length - 1].rackid == 0 || isNullOrUndefined(this.stock[this.stock.length - 1].rackid)) {
+          this.messageService.add({ severity: 'error', summary: '', detail: 'select Rack' });
+          return;
+        }
+        if (this.stock[this.stock.length - 1].qty == 0 || this.stock[this.stock.length - 1].qty == null) {
+          this.messageService.add({ severity: 'error', summary: '', detail: 'Enter quantity' });
+          return;
+        }
+        if (this.stock.length > 1) {
+          for (var data = 0; data < this.stock.length - 1; data++) {
+            if (this.stock[data].locatorid == this.stock[this.stock.length - 1].locatorid) {
+              if (this.stock[data].rackid == this.stock[this.stock.length - 1].rackid) {
+                if (this.stock[data].binid == this.stock[this.stock.length - 1].binid) {
+                  this.messageService.add({ severity: 'error', summary: '', detail: 'Location already exists' });
+                  this.stock[this.stock.length - 1].binid = 0;
+                  this.stock[this.stock.length - 1].rackid = 0;
+                  this.stock[this.stock.length - 1].locatorid = 0;
+                  return;
+                }
+              }
+            }
+          }
+        }
+        var stockdata = new StockModel();
+        stockdata.locatorid = this.PoDetails.storeid;
+        stockdata.rackid = this.PoDetails.rackid;
+        stockdata.binid = this.PoDetails.binid;
+        stockdata.stocktype = "";
+        this.stock.push(stockdata);
+        //this.stock.push(new StockModel());
+      }
+
+    }
+    else {
+      var stockdata = new StockModel();
+      stockdata.locatorid = this.PoDetails.storeid;
+      stockdata.rackid = this.PoDetails.rackid;
+      stockdata.binid = this.PoDetails.binid;
+      stockdata.stocktype = "";
+      this.stock.push(stockdata);
+      //this.stock.push(new StockModel());
+    }
+  }
+
+
+  showDialog(details: any, index: number) {
+    debugger;
+    this.matqty = details.returnqty;
+    this.showLocationDialog = true;
+    this.PoDetails = details;
+    this.rowIndex = index;
+    this.binid = details.binid;
+    this.rackid = details.rackid;
+    this.matid = details.materialid;
+    //this.invoiceForm.controls.itemRows.value[this.invoiceForm.controls.itemRows.value.length - 1].storeid = details.storeid;
+    //this.invoiceForm.controls.itemRows.value[this.invoiceForm.controls.itemRows.value.length - 1].rackid = details.rackid;
+    //this.invoiceForm.controls.itemRows.value[this.invoiceForm.controls.itemRows.value.length - 1].binid = details.binid;
+    //this.invoiceForm.controls.itemRows.value[this.invoiceForm.controls.itemRows.value.length - 1].stocktype = "Plantstock";
+    this.StockModel.locatorid = details.storeid;
+    this.StockModel.rackid = details.rackid;
+    this.StockModel.binid = details.binid;
+    this.matdescription = details.materialdescription;
+    //this.matqty = details.receivedqty;
+
+    this.StockModelForm = this.formBuilder.group({
+      rackid: [details.rackid],
+      binid: [details.binid],
+      locatorid: [details.storeid]
+    });
+
+    if (this.stock.length == 0) {
+      var stockdata = new StockModel();
+      stockdata.locatorid = details.storeid;
+      stockdata.rackid = details.rackid;
+      stockdata.binid = details.binid;
+      stockdata.stocktype = "";
+      this.stock.push(stockdata);
+
+    }
+
     this.locationListdata();
     this.binListdata();
     this.rackListdata();
-    this.wmsService.getreturnmaterialListforconfirm(requestid).subscribe(data => {
-      this.materiallistData = data;
-      this.bindSearchListData(this.materiallistData[0].materialid)
-      if (this.materiallistData[0].confirmstatus == 'Accepted') {
-        this.btnDisable = true;
+    this.rack = "";
+    this.bin = "";
+    this.store = "";
+
+
+  }
+
+
+  updateRowGroupMetaData() {
+    debugger;
+    this.rowGroupMetadata = {};
+    if (this.materiallistData) {
+      var count = 0;
+      for (let i = 0; i < this.materiallistData.length; i++) {
+        let rowData = this.materiallistData[i];
+        let material = rowData.materialid;
+        if (i == 0) {
+          this.rowGroupMetadata[material] = { index: 0, size: 1 };
+          count = count + 1;
+          this.materiallistData[i].serialno = count;
+        }
+        else {
+          let previousRowData = this.materiallistData[i - 1];
+          let previousRowGroup = previousRowData.materialid;
+          if (material === previousRowGroup)
+            this.rowGroupMetadata[material].size++;
+          else {
+            this.rowGroupMetadata[material] = { index: i, size: 1 };
+            count = count + 1;
+            this.materiallistData[i].serialno = count;
+          }
+
+
+        }
       }
-      else {
-        this.btnDisable = false;
+    }
+  }
+
+  showmaterialdetails(matreturnid) {
+    //this.rowindex = rowindex
+    this.AddDialog = true;
+    this.showdialog = true;
+   
+    this.wmsService.getmaterialreturnreqList(matreturnid).subscribe(data => {
+      this.materiallistData = data;
+      debugger;
+      this.updateRowGroupMetaData();
+      if (data != null) {
+
       }
     });
+  
   }
   ConfirmReturnmaterial() {
     if (this.materiallistData[0].itemlocation == null) {
@@ -135,12 +359,16 @@ export class MaterialReturnDashBoardComponent implements OnInit {
       for (let i = 0; i < (res.length); i++) {
         _list.push({
           itemlocation: res[i].itemlocation,
+          locatorname: res[i].locatorname,
           // projectcode: res[i].projectcode
         });
       }
       this.locationlist = _list;
+      this.locationdata = _list;
     });
   }
+
+
 
   locationListdata() {
     this.wmsService.getlocationdata().
@@ -156,8 +384,46 @@ export class MaterialReturnDashBoardComponent implements OnInit {
             });
           }
           this.locationlists = _list;
+         // this.locationlist = _list;
+          this.locationdata = _list;
         });
   }
+
+  //On selection of location updating rack
+  onlocUpdate(locationid: any) {
+    debugger;
+    if (this.rackdata.filter(li => li.locationid == locationid).length > 0) {
+      this.racklist = [];
+      console.log(this.racklist);
+      this.rackdata.forEach(item => {
+        if (item.locationid == locationid) {
+          this.racklist.push(item);
+          console.log(this.racklist);
+        }
+      })
+
+    }
+
+  }
+
+  //On selection of rack updating bin
+  onrackUpdate(locationid: any, rackid: any) {
+    debugger;
+    if (this.bindata.filter(li => li.locationid == locationid && li.rackid == rackid).length > 0) {
+      this.binlist = [];
+      console.log(this.binlist);
+      this.bindata.forEach(item => {
+        if (item.locationid == locationid && item.rackid == rackid) {
+          this.binlist.push(item);
+          console.log(this.binlist);
+        }
+      })
+
+    }
+
+  }
+
+
   binListdata() {
     debugger;
     this.wmsService.getbindata().
@@ -168,11 +434,14 @@ export class MaterialReturnDashBoardComponent implements OnInit {
           let _list: any[] = [];
           for (let i = 0; i < (res.length); i++) {
             _list.push({
+              locationid: res[i].locatorid,
               binid: res[i].binid,
+              rackid: res[i].rackid,
               binnumber: res[i].binnumber
             });
           }
           this.binlist = _list;
+          this.bindata = _list;
         });
   }
   rackListdata() {
@@ -185,13 +454,133 @@ export class MaterialReturnDashBoardComponent implements OnInit {
           let _list: any[] = [];
           for (let i = 0; i < (res.length); i++) {
             _list.push({
+              binid: res[i].binid,
               rackid: res[i].rackid,
-              racknumber: res[i].racknumber
+              racknumber: res[i].racknumber,
+              locationid: res[i].locatorid
             });
           }
           this.racklist = _list;
+          this.rackdata = _list;
         });
   }
+
+  onSubmitStockDetails() {
+    if (this.stock.length > 0) {
+      debugger;
+      if (this.stock[this.stock.length - 1].locatorid == 0) {
+        this.messageService.add({ severity: 'error', summary: '', detail: 'select Location' });
+        return;
+      }
+      if (this.stock[this.stock.length - 1].rackid == 0) {
+        this.messageService.add({ severity: 'error', summary: '', detail: 'select Rack' });
+        return;
+      }
+      if (this.stock[this.stock.length - 1].qty == 0 || this.stock[this.stock.length - 1].qty == null) {
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Enter quantity' });
+        return;
+      }
+      if (this.stock.length > 1) {
+        for (var data = 0; data < this.stock.length - 1; data++) {
+          if (this.stock[data].locatorid == this.stock[this.stock.length - 1].locatorid) {
+            if (this.stock[data].rackid == this.stock[this.stock.length - 1].rackid) {
+              if (this.stock[data].binid == this.stock[this.stock.length - 1].binid) {
+                this.messageService.add({ severity: 'error', summary: '', detail: 'Location already exists' });
+                this.stock[this.stock.length - 1].binid = 0;
+                this.stock[this.stock.length - 1].rackid = 0;
+                this.stock[this.stock.length - 1].locatorid = 0;
+                return;
+              }
+            }
+          }
+        }
+      }
+    }
+    this.StockModelList = [];
+    var binnumber: any[] = [];
+    var storelocation: any[] = [];
+    var rack: any[] = [];
+    if (this.stock[0].rackid && this.stock[0].locatorid) {
+      this.stock.forEach(item => {
+        this.StockModel = new StockModel();
+        this.StockModel.material = this.PoDetails.materialid;
+        this.StockModel.itemid = this.PoDetails.itemid;
+        this.StockModel.pono = this.PoDetails.pono;
+        this.StockModel.grnnumber = this.PoDetails.grnnumber;
+        this.StockModel.vendorid = this.PoDetails.vendorid;
+        this.StockModel.paitemid = this.PoDetails.paitemid;
+        this.StockModel.totalquantity = this.PoDetails.materialqty;
+        this.StockModel.createdby = this.employee.employeeno;
+        this.StockModel.inwardid = this.PoDetails.inwardid;
+        this.StockModel.returnid = this.PoDetails.returnid;
+        this.StockModel.returnqty = this.PoDetails.returnQty;
+        debugger;
+        binnumber = this.binlist.filter(x => x.binid == item.binid);
+        storelocation = this.locationlists.filter(x => x.locatorid == item.locatorid);
+        rack = this.rackdata.filter(x => x.rackid == item.rackid);
+        if (binnumber.length != 0) {
+          this.StockModel.binnumber = binnumber[0].binnumber;
+          this.StockModel.binid = binnumber[0].binid;
+          this.StockModel.itemlocation = storelocation[0].locatorname + "." + rack[0].racknumber + '.' + binnumber[0].binnumber;
+        }
+        else if (binnumber.length == 0) {
+          this.StockModel.binid = 1;
+          this.StockModel.itemlocation = storelocation[0].locatorname + "." + rack[0].racknumber;
+        }
+        this.StockModel.racknumber = storelocation[0].locatorname;
+        this.StockModel.rackid = rack[0].rackid;
+        this.StockModel.confirmqty = item.qty;
+        this.StockModel.itemreceivedfrom = new Date();
+        this.StockModelList.push(this.StockModel);
+
+        //this.StockModel.stocklist.push(this.StockModel);
+      })
+
+  
+      var totalqty = 0;
+      this.StockModelList.forEach(item => {
+
+        totalqty = totalqty + (item.confirmqty);
+      })
+      if (totalqty == parseInt(this.matqty)) {
+        this.ConfirmationService.confirm({
+          message: 'Are you sure to put away material in selected stock type?',
+          accept: () => {
+            this.disSaveBtn = true;
+            this.wmsService.UpdateReturnmaterialTostock(this.StockModelList).subscribe(data => {
+              debugger;
+              //this.podetailsList[this.rowIndex].itemlocation = this.StockModel.itemlocation;
+              //this.issaveprocess = true;
+              this.showLocationDialog = false;
+              this.messageService.add({ severity: 'success', summary: '', detail: 'Location Updated' });
+              this.stock = [];
+              
+              //this.getcheckedgrn();
+              //this.SearchGRNNo();
+              // }
+            });
+          },
+          reject: () => {
+
+            this.messageService.add({ severity: 'info', summary: '', detail: 'Cancelled' });
+          }
+        });
+
+
+      }
+      else {
+        this.disSaveBtn = true;
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Putaway Qty should be same as Accepted Qty' });
+      }
+    }
+    else {
+      if (!this.store.name)
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Select Location' });
+      else if (!this.rack.name)
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Select Rack' });
+    }
+  }
+
   onChange(value, indexid: any) {
     if (value == 'other') {
       document.getElementById('nodefaultloaction').style.display = "block";

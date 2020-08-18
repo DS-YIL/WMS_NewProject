@@ -330,16 +330,18 @@ public bool onhold { get; set; }
 	public string binname { get; set; }
 		public string storename { get; set; }
 	}
-    public class IssueRequestModel
-    {
-		
-			public string material { get; set; }
+	public class IssueRequestModel
+	{
+
+		public string material { get; set; }
 		//public string materialdescription { get; set; }
-	public int transferid { get; set; }
+		public int transferid { get; set; }
+		public int confirmqty { get; set; }
 		public int reserveformaterialid { get; set; }
 		public string ackstatus { get; set; }
 		public string remarks { get; set; }
 		public int returnid { get; set; }
+		public int matreturnid{get;set;}
 		public int requestforissueid { get; set; }
         public int itemid { get; set; }
 		public Boolean itemreturnable { get;set; }

@@ -6447,20 +6447,30 @@ namespace WMS.DAL
 		public int UpdateReturnqty(List<IssueRequestModel> _listobj)
 		{
 			int result = 0;
-			if(_listobj.Count!=0)
+			int requestid = 0;
+			if (_listobj.Count!=0)
 			{
-				string updatereturnqty = string.Empty;
-			foreach(var item in _listobj)
+				try
 				{
-
-					try
+					using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
 					{
-						if (item.returnqty != 0)
+						IssueRequestModel obj = new IssueRequestModel();
+						DB.Open();
+						string query = WMSResource.getnxtreturnid;
+						obj = DB.QuerySingle<IssueRequestModel>(
+						   query, null, commandType: CommandType.Text);
+						requestid = obj.matreturnid + 1;
+
+						string updatereturnqty = string.Empty;
+						foreach (var item in _listobj)
 						{
-							item.materialid = item.material;
-							updatereturnqty = WMSResource.UpdateReturnqty;
-							using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
+							item.matreturnid = requestid;
+
+							if (item.returnqty != 0)
 							{
+								item.materialid = item.material;
+								updatereturnqty = WMSResource.UpdateReturnqty;
+
 								result = DB.Execute(updatereturnqty, new
 								{
 									item.materialissueid,
@@ -6471,22 +6481,24 @@ namespace WMS.DAL
 									item.transferqty,
 									item.requestid,
 									item.remarks,
-									item.materialid
+									item.materialid,
+									item.matreturnid
 								});
 							}
 						}
 					}
-					catch(Exception ex)
-					{
-						log.ErrorMessage("PODataProvider", "UpdateReturnqty", ex.StackTrace.ToString());
-						return 0;
-					}
 				}
-			}
+				catch (Exception ex)
+				{
+					log.ErrorMessage("PODataProvider", "UpdateReturnqty", ex.StackTrace.ToString());
+					return 0;
+				}
+					
+				}
+			
 			return result;
 		}
-
-		public int UpdateReturnmaterialTostock(List<IssueRequestModel> model)
+public int UpdateReturnmaterialTostock(List<IssueRequestModel> model)
 		{
 			int result = 0;
 			if (model.Count != 0)
@@ -6495,8 +6507,8 @@ namespace WMS.DAL
 				{
 					try
 					{
-						if (item.returnqty != 0)
-						{
+						//if (item.returnqty != 0)
+						//{
 							string updatereturnqtytomaterialissue = WMSResource.updatereturnqtyByInvMngr.Replace("@returnid", Convert.ToString(item.returnid));
 							using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
 							{
@@ -6505,11 +6517,11 @@ namespace WMS.DAL
 
 								});
 							}
-						}
+						//}
 						if(result!=0)
 						{
-							int availableqty = item.returnqty;
-							string materialid = item.materialid;
+							int availableqty = item.confirmqty;
+							string materialid = item.material;
 							string createdby = item.createdby;
 							//string updatereturnqtytostock = WMSResource.updatereturnmaterialToStock.Replace("@availableqty", Convert.ToString(item.returnqty)).Replace("@itemid", Convert.ToString(item.itemid));
 							string updatereturnqtytostock = WMSResource.updatetostockbyinvmanger;
@@ -6517,10 +6529,12 @@ namespace WMS.DAL
 							{
 								result = DB.Execute(updatereturnqtytostock, new
 								{
-									availableqty,
+								
 									materialid,
-									createdby
-
+									item.itemlocation,
+									availableqty,
+									createdby,
+									item.returnid
 								});
 							}
 						}
@@ -6534,6 +6548,7 @@ namespace WMS.DAL
 			}
 			return result;
 		}
+
 
 		public string updateputawayfilename(ddlmodel file)
 		{
@@ -6766,6 +6781,39 @@ namespace WMS.DAL
 				}
 			}
 		}
+	
+			/// <summary>
+			/// get materials requested for return data based on material return requested id - Gayathri -> 14/08/2020
+			/// </summary>
+			/// <param name="empno"></param>
+			/// <returns></returns>
+			public async Task<IEnumerable<IssueRequestModel>> getmaterialreturnreqList(int matreturnid)
+			{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				try
+				{
+					await pgsql.OpenAsync();
+					string query = WMSResource.getmatreturndetails.Replace("@matreid",Convert.ToString(matreturnid));
+					string updatequery = string.Empty;
+					//string updatedon = WMSResource.updatedon;
+					return await pgsql.QueryAsync<IssueRequestModel>(
+					  query, null, commandType: CommandType.Text);
+
+				}
+				catch (Exception ex)
+				{
+
+					log.ErrorMessage("PODataProvider", "gettransferdata", ex.StackTrace.ToString());
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+			}
+		}
+
 		/// <summary>
 		/// get transferred data based on login id
 		/// </summary>

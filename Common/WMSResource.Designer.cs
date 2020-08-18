@@ -677,6 +677,17 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to select sk.materialid ,sk.itemlocation,sk.itemid, sk.returnid,sk.availableqty ,* from wms.wms_returnmaterial rm
+        ///  left join wms.wms_stock sk on rm.returnid = sk.returnid
+        ///  where rm.matreturnid=@matreid.
+        /// </summary>
+        public static string getmatreturndetails {
+            get {
+                return ResourceManager.GetString("getmatreturndetails", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to select requestid from wms.wms_materialrequest order by requestid desc limit 1.
         /// </summary>
         public static string getnextrequestid {
@@ -719,6 +730,14 @@ namespace WMS.Common {
         public static string getnotifiedgrnlist {
             get {
                 return ResourceManager.GetString("getnotifiedgrnlist", resourceCulture);
+            }
+        }
+		  /// <summary>
+        ///   Looks up a localized string similar to select matreturnid from wms.wms_returnmaterial order by matreturnid desc limit 1.
+        /// </summary>
+        public static string getnxtreturnid {
+            get {
+                return ResourceManager.GetString("getnxtreturnid", resourceCulture);
             }
         }
         
@@ -867,7 +886,11 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select * from wms.wms_returnmaterial where createdby=&apos;#createdby&apos;.
+        ///   Looks up a localized string similar to select distinct max(retmat.matreturnid) as matreturnid,max(retmat.returnid ) as returnid, 
+        ///  max(retmat.materialid) as materialid,max(retmat.returnqty) as returnqty,max(retmat.createdby) as createdby,max(retmat.createdon) as createdon
+        ///  from wms.wms_returnmaterial retmat 
+        ///  where retmat.createdby=&apos;#createdby&apos;
+        ///  group by retmat.matreturnid.
         /// </summary>
         public static string getreturndata {
             get {
@@ -876,9 +899,9 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select * from wms.wms_returnmaterial reqtrasnfer 
+        ///   Looks up a localized string similar to select distinct max(matreturnid) as matreturnid ,max(materialid) as materialid,max(createdby) as createdby ,max(createdon) as createdon, max(emp.&quot;name&quot;) as name from wms.wms_returnmaterial reqtrasnfer 
         ///  left join wms.employee emp on emp.employeeno=reqtrasnfer.createdby
-        ///  .
+        ///  group by reqtrasnfer.matreturnid.
         /// </summary>
         public static string GetreturnList {
             get {
@@ -1566,8 +1589,8 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to insert into wms.wms_returnmaterial(returnid,returnqty,createdby,createdon,remarks,materialid)values
-        ///  (default,@returnqty,@createdby,current_timestamp,@remarks,@materialid).
+        ///   Looks up a localized string similar to insert into wms.wms_returnmaterial(returnid,returnqty,createdby,createdon,remarks,materialid,matreturnid)values
+        ///  (default,@returnqty,@createdby,current_timestamp,@remarks,@materialid,@matreturnid).
         /// </summary>
         public static string UpdateReturnqty {
             get {
@@ -1612,7 +1635,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to insert into wms.wms_stock(itemid,materialid,availableqty,createddate,createdby)values(default,@materialid,@availableqty,current_timestamp,@createdby).
+        ///   Looks up a localized string similar to insert into wms.wms_stock(itemid,materialid,itemlocation,availableqty,createddate,createdby,returnid)values(default,@materialid,@itemlocation,@availableqty,current_timestamp,@createdby,@returnid).
         /// </summary>
         public static string updatetostockbyinvmanger {
             get {

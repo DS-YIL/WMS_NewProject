@@ -783,8 +783,8 @@ where reserveupto between current_date and current_date  + interval '3 day' and 
     <value>update wms.wms_materialreserve set releasedon=current_timestamp where reserveformaterialid=@reserveformaterialid</value>
   </data>
   <data name="UpdateReturnqty" xml:space="preserve">
-    <value>insert into wms.wms_returnmaterial(returnid,returnqty,createdby,createdon,remarks,materialid)values
-  (default,@returnqty,@createdby,current_timestamp,@remarks,@materialid)</value>
+    <value>insert into wms.wms_returnmaterial(returnid,returnqty,createdby,createdon,remarks,materialid,matreturnid)values
+  (default,@returnqty,@createdby,current_timestamp,@remarks,@materialid,@matreturnid)</value>
   </data>
   <data name="updatetostockreserveqty" xml:space="preserve">
     <value>update wms.wms_stock set availableqty=availableqty+@reservedqty where itemid=@itemid</value>
@@ -806,9 +806,9 @@ where reserveupto between current_date and current_date  + interval '3 day' and 
    where returnmat.returnid=#returnid </value>
   </data>
   <data name="GetreturnList" xml:space="preserve">
-    <value>select * from wms.wms_returnmaterial reqtrasnfer 
+    <value>select distinct max(matreturnid) as matreturnid ,max(materialid) as materialid,max(createdby) as createdby ,max(createdon) as createdon, max(emp."name") as name from wms.wms_returnmaterial reqtrasnfer 
   left join wms.employee emp on emp.employeeno=reqtrasnfer.createdby
-  </value>
+  group by reqtrasnfer.matreturnid</value>
   </data>
   <data name="checkmatexists" xml:space="preserve">
     <value>select * from wms."MaterialMasterYGS" where material='#materialid'</value>
@@ -822,8 +822,12 @@ where availableqty &gt;0 group by sk.pono , polist.suppliername</value>
   <data name="getitemiddata" xml:space="preserve">
     <value>select * from wms.wms_stock where materialid='#materialid' </value>
   </data>
-  <data name="getreturndata" xml:space="preserve">
-    <value>select * from wms.wms_returnmaterial where createdby='#createdby'</value>
+ <data name="getreturndata" xml:space="preserve">
+    <value>select distinct max(retmat.matreturnid) as matreturnid,max(retmat.returnid ) as returnid, 
+  max(retmat.materialid) as materialid,max(retmat.returnqty) as returnqty,max(retmat.createdby) as createdby,max(retmat.createdon) as createdon
+  from wms.wms_returnmaterial retmat 
+  where retmat.createdby='#createdby'
+  group by retmat.matreturnid</value>
   </data>
   <data name="gettransferdata" xml:space="preserve">
     <value>select ts.transferid, ts.projectcode,ts.remarks as transferremarks,emp.name as transferedby,ts.createdon as transferredon
@@ -836,7 +840,7 @@ where ts.createdby='#createdby'</value>
         (@transferqty,@createdby,current_timestamp,@remarks,@projectcode,@materialid) RETURNING transferid</value>
   </data>
   <data name="updatetostockbyinvmanger" xml:space="preserve">
-    <value>insert into wms.wms_stock(itemid,materialid,availableqty,createddate,createdby)values(default,@materialid,@availableqty,current_timestamp,@createdby)</value>
+    <value>insert into wms.wms_stock(itemid,materialid,itemlocation,availableqty,createddate,createdby,returnid)values(default,@materialid,@itemlocation,@availableqty,current_timestamp,@createdby,@returnid)</value>
   </data>
   <data name="getqualitycheckdropdown" xml:space="preserve">
     <value>select distinct grnnumber as value,pono as text,supplier from (select stinw.inwardid,stinw.inwmasterid,stinw.materialid as material,secinw.grnnumber,secinw.onhold,mat.materialdescription,stinw.receivedqty,stinw.receiveddate,stinw.returnqty,qc.qualitypassedqty,qc.qualityfailedqty,qc.remarks,qc.qcby as checkedby,
@@ -927,4 +931,15 @@ from wms.wms_transfermaterialdetail tsd
 left outer join wms."MaterialMasterYGS" mat on mat.material = tsd.materialid
 where tsd.transferid = '#tid'</value>
   </data>
+  <data name="getmatreturndetails" xml:space="preserve">
+    <value>select sk.materialid ,sk.itemlocation,sk.itemid, sk.returnid,sk.availableqty ,* from wms.wms_returnmaterial rm
+  left join wms.wms_stock sk on rm.returnid = sk.returnid
+  where rm.matreturnid=@matreid</value>
+    <comment>Get material return requested details</comment>
+  </data>
+  <data name="getnxtreturnid" xml:space="preserve">
+    <value>select matreturnid from wms.wms_returnmaterial order by matreturnid desc limit 1</value>
+  </data>
+
+  
 </root>
