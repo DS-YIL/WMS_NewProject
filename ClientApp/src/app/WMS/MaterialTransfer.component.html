@@ -3,7 +3,7 @@
    
     <div class="card-header" style="width:250px;height:30px;margin-left:5px;padding-top:0px">
       <span>
-        <i class="fa fa-bookmark" style="font-size: 16px"></i><label style="font-size: 15px;padding:0px; color: rgb(96, 123, 212);"> &nbsp;&nbsp;Transfer material</label>&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" pTooltip="Transfer Material" style="border-radius: 10em!important;background-color: white; border-color:  rgb(96, 123, 212);" rounded="true" size="lg" class="my-0" (click)="openGatepassDialog('','','gatepassdialog')"> <i class="fa fa-user-plus" style="font-size: 15px;color: green;"></i></button>
+        <i class="fa fa-bookmark" style="font-size: 16px"></i><label style="font-size: 15px;padding:0px; color: rgb(96, 123, 212);"> &nbsp;&nbsp;Material transfer</label>&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" pTooltip="Transfer Material" style="border-radius: 10em!important;background-color: white; border-color:  rgb(96, 123, 212);" rounded="true" size="lg" class="my-0" (click)="openGatepassDialog('','','gatepassdialog')"> <i class="fa fa-user-plus" style="font-size: 15px;color: green;"></i></button>
 
       </span>
     </div>
@@ -119,7 +119,7 @@
                     <th style="text-align:center;width:25%" class="ptable-cell">Material</th>
                     <th style="text-align:center;width:45%" class="ptable-cell">Material Description</th>
                     <th style="text-align:center;width:15%" class="ptable-cell">Transfer quantity</th>
-                    <th style="text-align:center;width:10%" class="ptable-cell"><button type="button" class="btn btn-warning btn-sm" pTooltip="Add material" (click)="addNewMaterial()" style="float: right;height: 26px;"><i class="fa fa-plus"></i></button></th>
+                    <th style="text-align:center;width:10%" class="ptable-cell"><button type="button" class="btn btn-primary btn-sm" pTooltip="Add material" (click)="addNewMaterial()" style="float: right;height: 26px;"><i class="fa fa-plus"></i></button></th>
                   </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex" let-rindex=0>

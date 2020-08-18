@@ -63,7 +63,7 @@
           </div>
           <div class="col-lg-3 col-md-3 labelheading" style="font-weight:600;font-size:14px;color:darkblue;" *ngIf="podetailsList.length>0 || isnonpoentry">
             <span *ngIf="grnnumber">WMS GRN No : </span><span class="labeltext">{{grnnumber}}</span>
-            <span *ngIf="!grnnumber && isonHoldview">Hold GR Remarks : </span><span *ngIf="!grnnumber && isonHoldview" class="labeltext">{{onholdremarks}}&nbsp;&nbsp;<i class="btn fa fa-edit" (click)="displayBasic = true"></i></span>
+            <span *ngIf="!grnnumber && isonHoldview">Remarks: </span><span *ngIf="!grnnumber && isonHoldview" class="labeltext">{{onholdremarks}}&nbsp;&nbsp;<i class="btn fa fa-edit" (click)="displayBasic = true"></i></span>
           </div>
           <div class="col-lg-4 col-md-4 labelheading" style="font-weight:600;font-size:14px;color:darkblue;" *ngIf="isnonpoentry">
             <!--<span class="labeltext" *ngIf="isallreceived && !isacceptance"></span>-->

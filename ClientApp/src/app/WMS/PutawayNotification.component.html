@@ -77,13 +77,13 @@
 
         </tr>
         <tr *ngIf="rowData.showtrdata">
-          <td [attr.colspan]="9" style="text-align:center;">
-            <label class="labeltext">Attachments</label>
+          <td [attr.colspan]="9" style="text-align:left;">
+            <label class="labeltext"><i class="fa fa-paperclip"></i>Attachments</label>
           </td>
 
         </tr>
         <tr *ngIf="rowData.showtrdata">
-          <td [attr.colspan]="9" style="text-align:center;">
+          <td [attr.colspan]="9" style="text-align:left;">
            
               <ul *ngIf="rowData.uploadedFiles.length && issentdata">
                 <li *ngFor="let file of rowData.uploadedFiles" style="color:blue; font-weight: 600; cursor: pointer;" (click)="opendoc(file)"><u>{{file.split('_')[3]}}</u></li>

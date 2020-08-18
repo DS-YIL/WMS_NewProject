@@ -110,7 +110,7 @@
   </div>
 
 </div>
-<p-dialog header="Material Details" [(visible)]="showdetail" (onHide)="hideDG()" [modal]="true" [style]="{width: '80vw'}" [maximizable]="true" [baseZIndex]="10000"
+<p-dialog header="Material Details" [(visible)]="showdetail" (onHide)="hideDG()" [modal]="true" [style]="{width: '95vw'}" [maximizable]="true" [baseZIndex]="10000"
           [draggable]="true" [resizable]="false">
   <div class="row  pl-0">
     <div class="col-lg-2 col-md-2 labelheading">
@@ -119,13 +119,13 @@
     <div class="col-lg-2 col-md-2 labelheading">
       <label>Invoice No :</label>&nbsp;<span><label class="labeltext">{{dtinvoiceno}}</label></span>
     </div>
-    <div class="col-lg-5 col-md-5 labelheading form-inline">
+    <div class="col-lg-4 col-md-4 labelheading">
       <label>Supplier :</label>&nbsp;<span><label class="labeltext">{{dtvendorname}}</label></span>
     </div>
-    <div class="col-lg-3 col-md-3 labelheading" *ngIf="grstatus === 'hold'">
+    <div class="col-lg-4 col-md-4 labelheading" *ngIf="grstatus === 'hold'">
       <div class="ui-g" style="width:100%;">
-        <div class="ui-g-6"><p-radioButton name="group1" value="1" label="Accept" [(ngModel)]="graction" inputId="opt1"></p-radioButton></div>
-        <div class="ui-g-6"><p-radioButton name="group1" value="0" label="Return" [(ngModel)]="graction" inputId="opt1"></p-radioButton></div>
+        <div class="ui-g-6"><p-radioButton name="group1" value="1" label="Release hold" [(ngModel)]="graction" inputId="opt1"></p-radioButton></div>
+        <div class="ui-g-6"><p-radioButton name="group1" value="0" label="Return to supplier" [(ngModel)]="graction" inputId="opt1"></p-radioButton></div>
       </div>
     </div>
     <div class="col-lg-3 col-md-3 labelheading" *ngIf="grstatus != 'hold'">
