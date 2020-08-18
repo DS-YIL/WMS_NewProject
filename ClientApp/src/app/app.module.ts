@@ -82,6 +82,7 @@ import { ASNViewComponent } from './WMS/ASNView.component'
 import { MaterialBarcodeComponent } from './WMS/MaterialBarcode.component';
 import { MaterialReportComponent } from './WMS/MaterialReport.component';
 import { PutawayNotificationComponent } from './WMS/PutawayNotification.component';
+import { GatepassinwardViewComponent } from './WMS/GatepassinwardView.component';
 ////pages
 import { LoginComponent } from './WMS/Login.component';
 import {HomeComponent} from './WMS/Home.component';
@@ -153,7 +154,8 @@ import { TabViewModule } from 'primeng/tabview';
     ASNViewComponent,
     MaterialBarcodeComponent,
     MaterialReportComponent,
-    PutawayNotificationComponent
+    PutawayNotificationComponent,
+    GatepassinwardViewComponent
 
   ],
   imports: [

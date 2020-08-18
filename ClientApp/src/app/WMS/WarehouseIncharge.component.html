@@ -1,7 +1,7 @@
 <!--<div class="card" style="height:40px; width:100%;border-radius:10px;">
   <div class="card-header cardheadertext text-center"><i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;Put Away</div>
 </div>-->
-  <div class="form-control" style="height:100%" *ngIf="!showdocuploaddiv">
+  <div class="form-control" style="height:100%">
     <div class="row " style="    margin-top: 10px;
     margin-left: 0px !important;
     margin-right: 0px !important">
@@ -584,20 +584,3 @@
     </p-dialog>
   </div>
 
-  <div *ngIf="showdocuploaddiv">
-    <div class="row" style="margin-top:5px;margin-left:20px;">
-      <div class="col-lg-2 col-md-2">
-        <span class="labelheading"><i class="fa fa-tag"></i>Notify to finance</span>
-      </div>
-      <div class="col-lg-1 col-md-1">
-        <button class="btn btn-info btn-sm" (click)="shownotifdiv()">Back</button>
-      </div>
-
-
-    </div>
-    <div class="row" style="margin-top:5px;margin-left:20px;" *ngIf="podetailsList.length > 0 && isallplaced">
-      <!--<p-fileUpload mode="basic" name="demo[]" accept="image/*,.pdf,.xlsx,.csv" (onUpload)="onBasicUpload($event)"></p-fileUpload>-->
-      <label class="labelheading">Upload File :&nbsp;&nbsp;</label><p-fileUpload name="myfile[]" customUpload="true" (uploadHandler)="onBasicUpload($event)"></p-fileUpload>
-    </div>
-
-  </div>

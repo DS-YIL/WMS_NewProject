@@ -12,8 +12,8 @@ import { DatePipe } from '@angular/common';
 import { ConfirmationService } from 'primeng/api';
 import { trigger, state, transition, style, animate } from '@angular/animations';
 @Component({
-  selector: 'app-GatePassoutward',
-  templateUrl: './GatePassoutward.component.html',
+  selector: 'app-GatepassinwardView',
+  templateUrl: './GatepassinwardView.component.html',
   animations: [
     trigger('rowExpansionTrigger', [
       state('void', style({
@@ -29,7 +29,7 @@ import { trigger, state, transition, style, animate } from '@angular/animations'
   ],
   providers: [DatePipe]
 })
-export class GatePassoutwardComponent implements OnInit {
+export class GatepassinwardViewComponent implements OnInit {
   AddDialog: boolean;
   id: any;
   roindex: any;
@@ -76,7 +76,6 @@ export class GatePassoutwardComponent implements OnInit {
   outindate: Date;
   datetype: string = "";
   ishistorydata: boolean = false;
-  returntype: string = "";
   cols: any[];
   ngOnInit() {
     if (localStorage.getItem("Employee"))
@@ -90,7 +89,6 @@ export class GatePassoutwardComponent implements OnInit {
     this.mindate = new Date(new Date().setDate(new Date().getDate() + 1));
     this.nonreturn = false;
     this.returnable = false;
-    this.returntype = "out";
     this.cols = [
       { field: 'gatepassid', header: 'Vin' },
       { field: 'gatepasstype', header: 'Year' },
@@ -98,54 +96,10 @@ export class GatePassoutwardComponent implements OnInit {
       { field: 'name', header: 'Color' },
       { field: 'requestedon', header:'requestedon'}
     ];
+    this.getGatePassList();
 
-    this.route.params.subscribe(params => {
-      if (params["pageid"]) {
-        this.pageid = params["pageid"];
-        if (this.pageid == "1") {
-          this.gatepasstyp = "Returnable";
-          this.returntype = "out";
-          this.nonreturn = false;
-          this.returnable = true;
-          this.isoutward = true;
-          this.datetype = "Outward date";
-          this.getGatePassList();
-          
-        }
-        else if (this.pageid == "2") {
-          this.gatepasstyp = "Non-Returnable";
-          this.nonreturn = true;
-          this.returnable = false;
-          this.isinward = false;
-          this.isoutward = true;
-          this.getGatePassList();
-        }
-      }
-    });
+   
   }
-  onRowExpand(event: any) {
-    debugger;
-    var data = event.data;
-    this.DGgatepassid = data.gatepassid;
-    this.DGgatepasstype = data.gatepasstype;
-    this.DGvendorname = data.vendorname;
-    this.outindate = null;
-    var res = this.gatepassModelList.filter(li => li.gatepassid == data.gatepassid);
-    this.materialListDG = JSON.parse(JSON.stringify(res)) as outwardmaterialistModel[];
-    //this.showmatDialog = true;
-
-  }
-  getdata() {
-    debugger;
-    if (this.returntype == "out") {
-      this.getoutwarddata();
-
-    }
-    else if (this.returntype == "in") {
-      this.getinwarddata();
-    }
-  }
-
   showdetails(data: any) {
     this.DGgatepassid = data.gatepassid;
     this.DGgatepasstype = data.gatepasstype;
@@ -199,35 +153,19 @@ export class GatePassoutwardComponent implements OnInit {
     debugger;
     this.gatepassModelList = [];
     this.gatepasslist = [];
-    if (this.nonreturn) {
-      this.wmsService.nonreturngetGatePassList("2").subscribe(data => {
-        this.totalGatePassList = data;
-        this.totalGatePassList = this.totalGatePassList.filter(li => li.outwarddate == null);
-        this.gatepasslist = [];
-        this.gatepasslist = this.totalGatePassList;
-        this.gatepassModelList = [];
-        this.prepareGatepassList();
-      });
-
-    }
-    else if (this.returnable) {
+    
+   
       this.wmsService.nonreturngetGatePassList("1").subscribe(data => {
         debugger;
         this.totalGatePassList = data;
-
-        if (this.isinward) {
-          this.totalGatePassList = this.totalGatePassList.filter(li => li.outwarddate != null && li.inwarddate == null);
-        }
-        else {
-          this.totalGatePassList = this.totalGatePassList.filter(li => li.outwarddate == null);
-        }
+          this.totalGatePassList = this.totalGatePassList.filter(li => li.outwarddate != null && li.inwarddate != null);
         this.gatepasslist = [];
         this.gatepasslist = this.totalGatePassList;
         this.gatepassModelList = [];
         this.prepareGatepassList();
       });
 
-    }
+    
    
   }
 

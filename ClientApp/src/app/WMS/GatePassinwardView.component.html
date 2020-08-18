@@ -1,37 +1,15 @@
 
 
 
-  <div class="card" style="height:25px;margin-left:3px;margin-top:5px;" *ngIf="nonreturn">
-    <div class="card-header text-center cardheadertext">
-      <span>
-        <i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;Non Returnable Gatepass - Outward
-      </span>
-
-    </div>
-    <!--<span><i class="fa fa-star"></i><label class="labelheading"style="font-size:20px;">&nbsp;Non Returnable</label>&nbsp;| &nbsp;<i class="fa fa-truck"></i><label class="labelheading text-danger btn-link" style=" text-decoration: underline;">&nbsp;Outward</label></span>-->
+  <div class="card" style="height:25px; width:300px;margin-left:3px;margin-top:5px;" *ngIf="nonreturn">
+    <span><i class="fa fa-star"></i><label class="labelheading"style="font-size:20px;">&nbsp;Non Returnable</label>&nbsp;| &nbsp;<i class="fa fa-truck"></i><label class="labelheading text-danger btn-link" style=" text-decoration: underline;">&nbsp;Outward</label></span>
 
   </div>
-  <div class="card" style="height:25px;margin-left:3px;margin-top:5px;" *ngIf="returnable">
-    <div class="card-header text-center cardheadertext">
-      <span>
-        <i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;Returnable Gatepass
-      </span>
-
-    </div>
-    <!--<span *ngIf="isoutward"><i class="fa fa-star"></i><label class="labelheading" style="font-size:20px;">&nbsp;Returnable</label>&nbsp;| &nbsp;<i class="fa fa-truck"></i><label class="labelheading text-danger btn-link" style=" text-decoration: underline;" (click)="getoutwarddata()">&nbsp;Outward</label>&nbsp;|&nbsp;<i class="fa fa-truck"></i><label class="labelheading text-primary btn-link" (click)="getinwarddata()">&nbsp;Inward</label></span>
-    <span *ngIf="isinward"><i class="fa fa-star"></i><label class="labelheading" style="font-size:20px;">&nbsp;Returnable</label>&nbsp;| &nbsp;<i class="fa fa-truck"></i><label class="labelheading text-primary btn-link" (click)="getoutwarddata()">&nbsp;Outward</label>&nbsp;|&nbsp;<i class="fa fa-truck"></i><label class="labelheading text-danger btn-link" style=" text-decoration: underline;" (click)="getinwarddata()">&nbsp;Inward</label></span>-->
-
-  </div>
-  <div class="row form-inline" style="margin:10px;margin-top:20px" *ngIf="returnable">
-    <span class="labelheading">
-      Status :&nbsp;&nbsp;
-    </span>
-    <select style="float:left" class="form-control" [(ngModel)]="returntype" (change)="getdata()">
-      <option value="out" selected="selected">Outward</option>
-      <option value="in">Inward</option>
-    </select>
-
-  </div>
+<div class="card" style="height:25px; width:350px;margin-left:3px;margin-top:5px;" *ngIf="returnable">
+  <span *ngIf="isoutward"><i class="fa fa-star"></i><label class="labelheading" style="font-size:20px;">&nbsp;Returnable</label>&nbsp;| &nbsp;<i class="fa fa-truck"></i><label class="labelheading text-danger btn-link" style=" text-decoration: underline;" (click)="getoutwarddata()">&nbsp;Outward</label>&nbsp;|&nbsp;<i class="fa fa-truck"></i><label class="labelheading text-primary btn-link" (click)="getinwarddata()">&nbsp;Inward</label></span>
+  <span *ngIf="isinward"><i class="fa fa-star"></i><label class="labelheading" style="font-size:20px;">&nbsp;Returnable</label>&nbsp;| &nbsp;<i class="fa fa-truck"></i><label class="labelheading text-primary btn-link" (click)="getoutwarddata()">&nbsp;Outward</label>&nbsp;|&nbsp;<i class="fa fa-truck"></i><label class="labelheading text-danger btn-link" style=" text-decoration: underline;" (click)="getinwarddata()">&nbsp;Inward</label></span>
+  
+</div>
 
 <div style="margin-left:5px;margin-right:5px;margin-top:10px;">
   <p-table #dt [value]="gatepassModelList" [style]="{'width':'100%','overflow':'auto!important'}"
@@ -99,9 +77,7 @@
             <th class="ptable-cell" style="text-align:center;width:60px;">Sl. No.</th>
             <th class="ptable-cell" style="text-align:center;width:150px">Material</th>
             <th class="ptable-cell" style="text-align:center;">Material Description</th>
-            <th *ngIf="!isinward" class="ptable-cell" style="text-align:center;width:100px">Quantity</th>
-            <th class="ptable-cell" style="text-align:center;width:100px">Outward qty</th>
-            <th *ngIf="isinward" class="ptable-cell" style="text-align:center;width:100px">inward qty</th>
+            <th class="ptable-cell" style="text-align:center;width:100px">inward qty</th>
             <th class="ptable-cell" style="text-align:center;width:200px">Remarks</th>
 
           </tr>
@@ -111,15 +87,13 @@
             <td class="ptable-cell" style="text-align:center;width:60px;"> {{ri+1}} </td>
             <td class="ptable-cell" style="text-align:left;width:150px"> {{rowData.materialid}} </td>
             <td class="ptable-cell" style="text-align:left"> {{rowData.materialdescription}} </td>
-            <td *ngIf="!isinward" class="ptable-cell" style="text-align:right;width:100px">{{rowData.quantity}}</td>
             <td class="ptable-cell" style="text-align:right;width:100px">
-              <span *ngIf="isinward">{{rowData.outwardqty}}</span>
-              <input *ngIf="!isinward" pInputText type="number" [min]="0" (change)="checkoutqty(rowData.outwardqty,rowData.quantity,rowData);" class="form-control" [(ngModel)]="rowData.outwardqty">
+              {{rowData.inwardqty}}
+             
             </td>
-            <td class="ptable-cell" style="text-align:right;width:100px" *ngIf="isinward">
-              <input  pInputText type="number" [min]="0" (change)="checkinqty(rowData.inwardqty,rowData.outwardqty,rowData);" class="form-control" [(ngModel)]="rowData.inwardqty">
+            <td class="ptable-cell" style="text-align:right;width:200px">
+              {{rowData.remarks}}
             </td>
-            <td class="ptable-cell" style="text-align:right;width:200px"><textarea [(ngModel)]="rowData.remarks"></textarea></td>
           </tr>
 
 </ng-template>
