@@ -2269,13 +2269,14 @@ namespace WMS.DAL
 			{
 				//foreach(var item in dataobj._list)
 				//{
-
+				string remarks = dataobj.statusremarks;
 				if (dataobj.gatepassid == 0)
 				{
 					dataobj.requestedon = System.DateTime.Now;
 					string insertquery = WMSResource.insertgatepassdata;
 					string fmapprovedstatus= "Pending";
 					string approverstatus = "Pending";
+					
 					string insertgatepasshistory = WMSResource.insertgatepassapprovalhistory;
 					dataobj.deleteflag = false;
 					dataobj.fmapproverid = "400104";
@@ -2296,7 +2297,8 @@ namespace WMS.DAL
 							dataobj.approverid,
 							dataobj.fmapproverid,
 							fmapprovedstatus,
-							approverstatus
+							approverstatus,
+							remarks
 
 						});
 						if (dataobj.gatepasstype == "Returnable")
@@ -2364,26 +2366,27 @@ namespace WMS.DAL
 				}
 				else
 				{
-					//dataobj.requestedon = System.DateTime.Now;
-					//string insertquery = WMSResource.updategatepass.Replace("#gatepassid", Convert.ToString(dataobj.gatepassid));
+                    dataobj.requestedon = System.DateTime.Now;
+                    string insertquery = WMSResource.updategatepass.Replace("#gatepassid", Convert.ToString(dataobj.gatepassid));
 
-					//using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
-					//{
-					//	var result = DB.ExecuteScalar(insertquery, new
-					//	{
+                    using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
+                    {
+                        var result = DB.ExecuteScalar(insertquery, new
+                        {
 
-					//		dataobj.gatepasstype,
-					//		dataobj.status,
-					//		dataobj.requestedon,
-					//		dataobj.referenceno,
-					//		dataobj.vehicleno,
-					//		dataobj.requestedby,
-					//		dataobj.vendorname,
-					//		dataobj.reasonforgatepass,
-							
-					//	});
-					//}
-				}
+                            dataobj.gatepasstype,
+                            dataobj.status,
+                            dataobj.requestedon,
+                            dataobj.referenceno,
+                            dataobj.vehicleno,
+                            dataobj.requestedby,
+                            dataobj.vendorname,
+                            dataobj.reasonforgatepass,
+							remarks
+
+                        });
+                    }
+                }
 				foreach (var item in dataobj.materialList)
 				{
 					int itemid = 0;

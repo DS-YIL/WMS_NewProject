@@ -162,14 +162,15 @@ export class WarehouseInchargeComponent implements OnInit {
   }
 
   //On selection of location updating rack
-  onlocUpdate(locationid: any) {
+  onlocUpdate(locationid: any, rowData:any) {
     debugger;
+    rowData.racklist = [];
     if (this.rackdata.filter(li => li.locationid == locationid).length > 0) {
       this.racklist = [];
       console.log(this.racklist);
       this.rackdata.forEach(item => {
         if (item.locationid == locationid) {
-          this.racklist.push(item);
+          rowData.racklist.push(item);
           console.log(this.racklist);
         }
       })
@@ -179,14 +180,15 @@ export class WarehouseInchargeComponent implements OnInit {
   }
 
   //On selection of rack updating bin
-  onrackUpdate(locationid: any, rackid: any) {
+  onrackUpdate(locationid: any, rackid: any,rowData:any) {
     debugger;
+    rowData.binlist = [];
     if (this.bindata.filter(li => li.locationid == locationid && li.rackid == rackid).length > 0) {
       this.binlist = [];
       console.log(this.binlist);
       this.bindata.forEach(item => {
         if (item.locationid == locationid && item.rackid == rackid) {
-          this.binlist.push(item);
+          rowData.binlist.push(item);
           console.log(this.binlist);
         }
       })

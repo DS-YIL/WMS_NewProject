@@ -10,6 +10,7 @@ import { MessageService } from 'primeng/api';
 import { ConfirmationService } from 'primeng/api';
 import { isNullOrUndefined } from 'util';
 import { trigger, state, style, transition, animate } from '@angular/animations';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-MaterialReturnDashBoard',
@@ -27,7 +28,7 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
       transition('* <=> *', animate('400ms cubic-bezier(0.86, 0, 0.07, 1)'))
     ])
   ],
-  providers: [ConfirmationService]
+  providers: [DatePipe,ConfirmationService]
 })
 export class MaterialReturnDashBoardComponent implements OnInit {
   binid: any;
@@ -74,6 +75,7 @@ export class MaterialReturnDashBoardComponent implements OnInit {
   public materialacceptListnofilter: Array<any> = [];
   public podetailsList: Array<inwardModel> = [];
   public employee: Employee;
+  public matreturnid: any;
   public displayItemRequestDialog; RequestDetailsSubmitted: boolean = false;
   public materialRequestDetails: materialRequestDetails;
   public rowIndex: number;
@@ -132,9 +134,9 @@ export class MaterialReturnDashBoardComponent implements OnInit {
     this.locationdetails.storeid = this.stock[index].locatorid;
     this.locationdetails.rackid = this.stock[index].rackid;
     this.locationdetails.binid = this.stock[index].binid;
-    var bindetails = this.binlist.filter(x => x.binid == this.locationdetails.binid);
-    var storedetails = this.locationlist.filter(x => x.locatorid == this.locationdetails.storeid);
-    var rackdetails = this.racklist.filter(x => x.rackid == this.locationdetails.rackid);
+    var bindetails = this.bindata.filter(x => x.binid == this.locationdetails.binid);
+    var storedetails = this.locationdata.filter(x => x.locatorid == this.locationdetails.storeid);
+    var rackdetails = this.rackdata.filter(x => x.rackid == this.locationdetails.rackid);
     this.locationdetails.storename = storedetails[0].locatorname != null || storedetails[0].locatorname != "undefined" || storedetails[0].locatorname != "" ? storedetails[0].locatorname : 0;
     this.locationdetails.rackname = rackdetails[0].racknumber != null || rackdetails[0].racknumber != "undefined" || rackdetails[0].racknumber != "" ? rackdetails[0].racknumber : 0;
     this.locationdetails.binname = bindetails[0].binnumber != null || bindetails[0].binnumber != "undefined" || bindetails[0].binnumber != "" ? bindetails[0].binnumber : 0;
@@ -268,19 +270,19 @@ export class MaterialReturnDashBoardComponent implements OnInit {
       var count = 0;
       for (let i = 0; i < this.materiallistData.length; i++) {
         let rowData = this.materiallistData[i];
-        let material = rowData.materialid;
+        let materialid = rowData.materialid;
         if (i == 0) {
-          this.rowGroupMetadata[material] = { index: 0, size: 1 };
+          this.rowGroupMetadata[materialid] = { index: 0, size: 1 };
           count = count + 1;
           this.materiallistData[i].serialno = count;
         }
         else {
           let previousRowData = this.materiallistData[i - 1];
           let previousRowGroup = previousRowData.materialid;
-          if (material === previousRowGroup)
-            this.rowGroupMetadata[material].size++;
+          if (materialid === previousRowGroup)
+            this.rowGroupMetadata[materialid].size++;
           else {
-            this.rowGroupMetadata[material] = { index: i, size: 1 };
+            this.rowGroupMetadata[materialid] = { index: i, size: 1 };
             count = count + 1;
             this.materiallistData[i].serialno = count;
           }
@@ -295,7 +297,7 @@ export class MaterialReturnDashBoardComponent implements OnInit {
     //this.rowindex = rowindex
     this.AddDialog = true;
     this.showdialog = true;
-   
+    this.matreturnid = matreturnid;
     this.wmsService.getmaterialreturnreqList(matreturnid).subscribe(data => {
       this.materiallistData = data;
       debugger;
@@ -354,17 +356,17 @@ export class MaterialReturnDashBoardComponent implements OnInit {
     this.dynamicData.searchCondition = " where materialid='" + materialid+"'";
     this.wmsService.GetListItems(this.dynamicData).subscribe(res => {
 
-      this.locationlist = res;
-      let _list: any[] = [];
-      for (let i = 0; i < (res.length); i++) {
-        _list.push({
-          itemlocation: res[i].itemlocation,
-          locatorname: res[i].locatorname,
-          // projectcode: res[i].projectcode
-        });
-      }
-      this.locationlist = _list;
-      this.locationdata = _list;
+      //this.locationlist = res;
+      //let _list: any[] = [];
+      //for (let i = 0; i < (res.length); i++) {
+      //  _list.push({
+      //    itemlocation: res[i].itemlocation,
+      //    locatorname: res[i].locatorname,
+      //    // projectcode: res[i].projectcode
+      //  });
+      //}
+      //this.locationlist = _list;
+      //this.locationdata = _list;
     });
   }
 
@@ -390,14 +392,15 @@ export class MaterialReturnDashBoardComponent implements OnInit {
   }
 
   //On selection of location updating rack
-  onlocUpdate(locationid: any) {
+  onlocUpdate(locationid: any, rowData:any) {
     debugger;
+    rowData.racklist = [];
     if (this.rackdata.filter(li => li.locationid == locationid).length > 0) {
       this.racklist = [];
       console.log(this.racklist);
       this.rackdata.forEach(item => {
         if (item.locationid == locationid) {
-          this.racklist.push(item);
+          rowData.racklist.push(item);
           console.log(this.racklist);
         }
       })
@@ -407,14 +410,15 @@ export class MaterialReturnDashBoardComponent implements OnInit {
   }
 
   //On selection of rack updating bin
-  onrackUpdate(locationid: any, rackid: any) {
+  onrackUpdate(locationid: any, rackid: any, rowData:any) {
     debugger;
+    rowData.binlist = [];
     if (this.bindata.filter(li => li.locationid == locationid && li.rackid == rackid).length > 0) {
       this.binlist = [];
       console.log(this.binlist);
       this.bindata.forEach(item => {
         if (item.locationid == locationid && item.rackid == rackid) {
-          this.binlist.push(item);
+          rowData.binlist.push(item);
           console.log(this.binlist);
         }
       })
@@ -515,8 +519,8 @@ export class MaterialReturnDashBoardComponent implements OnInit {
         this.StockModel.returnid = this.PoDetails.returnid;
         this.StockModel.returnqty = this.PoDetails.returnQty;
         debugger;
-        binnumber = this.binlist.filter(x => x.binid == item.binid);
-        storelocation = this.locationlists.filter(x => x.locatorid == item.locatorid);
+        binnumber = this.bindata.filter(x => x.binid == item.binid);
+        storelocation = this.locationdata.filter(x => x.locatorid == item.locatorid);
         rack = this.rackdata.filter(x => x.rackid == item.rackid);
         if (binnumber.length != 0) {
           this.StockModel.binnumber = binnumber[0].binnumber;
@@ -554,6 +558,7 @@ export class MaterialReturnDashBoardComponent implements OnInit {
               this.showLocationDialog = false;
               this.messageService.add({ severity: 'success', summary: '', detail: 'Location Updated' });
               this.stock = [];
+              this.showmaterialdetails(this.matreturnid);
               
               //this.getcheckedgrn();
               //this.SearchGRNNo();
@@ -570,7 +575,7 @@ export class MaterialReturnDashBoardComponent implements OnInit {
       }
       else {
         this.disSaveBtn = true;
-        this.messageService.add({ severity: 'error', summary: '', detail: 'Putaway Qty should be same as Accepted Qty' });
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Putaway Qty should be same as Return Qty' });
       }
     }
     else {

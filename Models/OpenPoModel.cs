@@ -424,6 +424,7 @@ public bool onhold { get; set; }
 
 	public class gatepassModel
     {
+		public string statusremarks { get; set; }
 		public string managername { get; set; }
 		public string pono { get; set; }
 		public int itemid { get; set; }

@@ -283,15 +283,15 @@ export class GatePassComponent implements OnInit {
   getGatePassList() {
     this.wmsService.getGatePassList().subscribe(data => {
       this.totalGatePassList = data;
-     // debugger;
+     debugger;
       console.log(this.totalGatePassList);
       var role8 = this.userrolelist.filter(li => li.roleid == 8);
-      var role4 = this.userrolelist.filter(li => li.roleid == 4);
+      var role3 = this.userrolelist.filter(li => li.roleid == 3);
       this.gatepasslist = [];
       if (this.employee.roleid == "8" || role8.length > 0) {
         this.gatepasslist = this.totalGatePassList.filter(li => li.gatepasstype == 'Non Returnable' && (li.approverstatus == this.approverstatus || li.approverstatus == null));
       }
-      else if (this.employee.roleid == "4" || role4.length > 0) {
+      else if (this.employee.roleid == "3" || role3.length > 0) {
         this.totalGatePassList.forEach(item => {
           if (item.gatepasstype == "Returnable")
             this.gatepasslist.push(item);
@@ -405,7 +405,7 @@ export class GatePassComponent implements OnInit {
         }
 
         this.gatepassModelList.push(item);
-        if (this.employee.roleid == '4') {
+        if (this.employee.roleid == '3') {
           this.gatepassFiltered = this.gatepassModelList.filter(li => li.issuedqty == 0 && li.approverstatus == "Approved");
         }
         else {
@@ -963,7 +963,12 @@ export class GatePassComponent implements OnInit {
 
   onSelectStatus(event) {
     this.selectedStatus = event.target.value;
-
+    if (this.selectedStatus == "Pending") {
+      this.gatepassFiltered = this.gatepassModelList.filter(li => li.issuedqty == 0 && li.approverstatus == "Approved");
+    }
+    else if (this.selectedStatus == "Issued") {
+      this.gatepassFiltered = this.gatepassModelList.filter(li => li.issuedqty > 0);
+    }
   }
   SubmitStatus() {
     debugger;

@@ -77,14 +77,14 @@
   <div *ngIf="showdialog">
     <div class="row  pl-0">
       <div class="col-lg-4 col-md-4 col-sm-4 pt-2 labelheading">
-        <label>Return Id :</label>&nbsp;<span class="labeltext"><label>{{materiallistData[0].matreturnid}}</label></span>
+        <label>Return Id :</label>&nbsp;<span class="labeltext"><label>{{matreturnid}}</label></span>
       </div>
 
     </div>
 
   </div>
-  <p-table #dt [value]="materiallistData">
-    <ng-template pTemplate="header">
+  <p-table  [value]="materiallistData" dataKey="materialid" [columns]="cols">
+    <ng-template pTemplate="header" let-columns>
       <tr>
         <th rowspan="2" style="text-align:center;width:70px">Sl.No</th>
         <th rowspan="2" style="text-align:center">Material</th>
@@ -100,81 +100,92 @@
 
       </tr>
     </ng-template>
-      <ng-template pTemplate="body" let-rowData let-expanded="expanded" let-rowIndex="rowIndex" let-columns="columns">
-        <tr class="ui-widget-header" *ngIf="rowGroupMetadata[rowData.materialid].index === rowIndex">
-          <td class="ptable-cell" style="text-align:right">
-            {{rowIndex+1}}
-          </td>
-          <td class="ptable-cell" style="text-align:left">{{rowData.materialid}}</td>
-          <!--<td class="ptable-cell" style="text-align:right">{{rowData.requestedquantity}}</td>
+    <ng-template pTemplate="body" let-rowData let-expanded="expanded" let-rowIndex="rowIndex" let-columns="columns">
+      <tr  class="ui-widget-header" *ngIf="rowGroupMetadata[rowData.materialid].index === rowIndex">
         <td class="ptable-cell" style="text-align:right">
-          {{rowData.issuedqty}}
+          {{rowIndex+1}}
+        </td>
+        <td class="ptable-cell" style="text-align:left">{{rowData.materialid}}</td>
+        <!--<td class="ptable-cell" style="text-align:right">{{rowData.requestedquantity}}</td>
+      <td class="ptable-cell" style="text-align:right">
+        {{rowData.issuedqty}}
 
-        </td>-->
+      </td>-->
 
-          <td class="ptable-cell" style="text-align:right">{{rowData.returnqty}}</td>
-          <!--<td>
-          <select class="form-control dropdown" #mySelect (change)="onChange(mySelect.value,ri)">
-            lu
-            io
-            <option></option>
-            <option value="other">other</option>
-            <option *ngFor=" let loclist of locationlist" value={{loclist.itemlocation}}>
-              {{loclist.itemlocation}}
+        <td class="ptable-cell" style="text-align:right">{{rowData.returnqty}}</td>
+        <!--<td>
+        <select class="form-control dropdown" #mySelect (change)="onChange(mySelect.value,ri)">
+          lu
+          io
+          <option></option>
+          <option value="other">other</option>
+          <option *ngFor=" let loclist of locationlist" value={{loclist.itemlocation}}>
+            {{loclist.itemlocation}}
+          </option>
+        </select>
+        <br />
+
+      </td>-->
+        <td colspan="2" class="ptable-cell" style="text-align:center;width:100px;">
+          <a *ngIf="rowData.itemlocation" href="#" [pRowToggler]="rowData">
+            <i [ngClass]="expanded ? 'pi pi-fw pi-chevron-circle-down' : 'pi pi-fw pi-chevron-circle-right'" style="    vertical-align: middle;padding-bottom: .1em;color: #20f320d6"></i>
+          </a>
+          <!--*ngIf="!rowData.itemlocation && rowData.confirmqty != 0"-->
+          <i *ngIf="!rowData.itemlocation" class="fa fa-location-arrow" style="color:blue" pTooltip="Add Location" (click)="showDialog(rowData,rowIndex)" aria-hidden="true"></i>
+
+        </td>
+        <!--<td class="ptable-cell" style="text-align:right">{{rowData.itemlocation}}</td>-->
+      </tr>
+      <!--<tr id="nodefaultloaction" style="margin-top:10px;display:none;padding-left:300px;">
+
+        <td class="ptable-cell" style="text-align:right;width:100px">
+          <label for="itemlocation" class="form-label">Select Location</label>
+
+          <select style="width:100px;" class="form-control dropdown" [(ngModel)]="StockModel.locatorid">
+            <option selected></option>
+            <option *ngFor=" let loclist of locationlists " value={{loclist.locatorid}}>
+              {{loclist.locatorname}}
             </option>
           </select>
-          <br />
+        </td>
 
-        </td>-->
-          <td colspan="2" class="ptable-cell" style="text-align:center;width:100px;">
-            <a *ngIf="rowData.itemlocation" href="#" [pRowToggler]="rowData">
-              <i [ngClass]="expanded ? 'pi pi-fw pi-chevron-circle-down' : 'pi pi-fw pi-chevron-circle-right'" style="    vertical-align: middle;padding-bottom: .1em;color: #20f320d6"></i>
-            </a>
-            <!--*ngIf="!rowData.itemlocation && rowData.confirmqty != 0"-->
-            <i *ngIf="!rowData.itemlocation" class="fa fa-location-arrow" style="color:blue" pTooltip="Add Location" (click)="showDialog(rowData,rowIndex)" aria-hidden="true"></i>
-
-          </td>
-          <!--<td class="ptable-cell" style="text-align:right">{{rowData.itemlocation}}</td>-->
-        </tr>
-        <tr id="nodefaultloaction" style="margin-top:10px;display:none;padding-left:300px;">
-
-          <td class="ptable-cell" style="text-align:right;width:100px">
-            <label for="itemlocation" class="form-label">Select Location</label>
-
-            <select style="width:100px;" class="form-control dropdown" [(ngModel)]="StockModel.locatorid">
-              <option selected></option>
-              <option *ngFor=" let loclist of locationlists " value={{loclist.locatorid}}>
-                {{loclist.locatorname}}
-              </option>
-            </select>
-          </td>
-
-          <td class="ptable-cell" style="text-align:right;width:100px">
-            <label for="rackid" class="form-label">Select Rack</label>
+        <td class="ptable-cell" style="text-align:right;width:100px">
+          <label for="rackid" class="form-label">Select Rack</label>
 
 
-            <select style="width:100px;" class="form-control dropdown" [(ngModel)]="StockModel.rackid">
+          <select style="width:100px;" class="form-control dropdown" [(ngModel)]="StockModel.rackid">
 
-              <option selected value="*ngIf=rackid"></option>
-              <option *ngFor=" let loclist of racklist " value={{loclist.rackid}}>
-                {{loclist.racknumber}}
-              </option>
-            </select>
-          </td>
-          <td class="ptable-cell" style="text-align:right;width:100px">
-            <label for="rackid" class="form-label">Select Bin</label>
-            <select style="width:100px;" class="form-control dropdown" [(ngModel)]="StockModel.binid">
+            <option selected value="*ngIf=rackid"></option>
+            <option *ngFor=" let loclist of racklist " value={{loclist.rackid}}>
+              {{loclist.racknumber}}
+            </option>
+          </select>
+        </td>
+        <td class="ptable-cell" style="text-align:right;width:100px">
+          <label for="rackid" class="form-label">Select Bin</label>
+          <select style="width:100px;" class="form-control dropdown" [(ngModel)]="StockModel.binid">
 
-              <option selected></option>
-              <option *ngFor=" let loclist of binlist" value={{loclist.binid}}>
-                {{loclist.binnumber}}
-              </option>
-            </select>
-          </td>
-        </tr>
-      </ng-template>
+            <option selected></option>
+            <option *ngFor=" let loclist of binlist" value={{loclist.binid}}>
+              {{loclist.binnumber}}
+            </option>
+          </select>
+        </td>
+      </tr>-->
+    </ng-template>
 
-
+    <ng-template pTemplate="rowexpansion" let-rowData let-rowIndex="rowIndex">
+      <tr>
+        <td  colspan="3"></td>
+        
+        <td style="text-align:right;width:70px">
+          {{rowData.availableqty}}
+        </td>
+        <td style="width:180px">
+          {{rowData.itemlocation}}
+        </td>
+      </tr>
+    </ng-template>
   </p-table>
   <p-footer>
     <!--<button type="button" class="btn btn-primary" *ngIf="materiallistData[0].confirmstatus==null" [disabled]="btnDisable" (click)="ConfirmReturnmaterial()">Acknowledge</button>-->
@@ -238,7 +249,7 @@
               <td class="ptable-cell" style="text-align:center"> {{ri+1}} </td>
 
               <td class="ptable-cell" style="text-align:left;">
-                <select class="form-control dropdown" [(ngModel)]="rowData.locatorid" (change)="onlocUpdate(rowData.locatorid)">
+                <select class="form-control dropdown"  [(ngModel)]="rowData.locatorid" (change)="onlocUpdate(rowData.locatorid, rowData)">
 
                   <!--<option selected value="*ngIf=rowData.locatorid!=null"></option>-->
                   <!--*ngIf="rowData.locatorid!=null ? rowData.locatorid:'Select Stock'"-->
@@ -248,19 +259,19 @@
                 </select>
               </td>
               <td class="ptable-cell" style="text-align:left">
-                <select class="form-control dropdown" [(ngModel)]="rowData.rackid" (change)="onrackUpdate(rowData.locatorid,rowData.rackid)">
+                <select class="form-control dropdown"  [(ngModel)]="rowData.rackid" (change)="onrackUpdate(rowData.locatorid,rowData.rackid,rowData)">
 
                   <!--<option selected value="*ngIf=rowData.rackid==null"></option>-->
-                  <option *ngFor=" let loclist of racklist " value={{loclist.rackid}}>
+                  <option *ngFor=" let loclist of rowData.racklist "  value={{loclist.rackid}}>
                     {{loclist.racknumber}}
                   </option>
                 </select>
               </td>
               <td class="ptable-cell" style="text-align:left">
-                <select class="form-control dropdown" [(ngModel)]="rowData.binid">
+                <select class="form-control dropdown"  [(ngModel)]="rowData.binid">
 
                   <option selected value="0"></option>
-                  <option *ngFor=" let loclist of binlist" value={{loclist.binid}}>
+                  <option *ngFor=" let loclist of rowData.binlist" value={{loclist.binid}}>
                     {{loclist.binnumber}}
                   </option>
                 </select>

@@ -307,9 +307,10 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select ygs.materialdescription,emp.name,* from wms.wms_gatepass gate
+        ///   Looks up a localized string similar to select ygs.materialdescription,emp.name,iss.itemissueddate, * from wms.wms_gatepass gate
         ///   left join wms.wms_gatepassmaterial mat on gate.gatepassid=mat.gatepassid 
         ///   left join wms.employee emp on emp.employeeno=gate.requestedby
+        ///   left join wms.wms_materialissue iss on iss.gatepassmaterialid = mat.gatepassmaterialid 
         ///   left join wms.&quot;MaterialMasterYGS&quot; ygs on ygs.material=mat.materialid and mat.deleteflag=false 
         ///   where gate.deleteflag=false   order by gate.gatepassid desc.
         /// </summary>
@@ -732,7 +733,8 @@ namespace WMS.Common {
                 return ResourceManager.GetString("getnotifiedgrnlist", resourceCulture);
             }
         }
-		  /// <summary>
+        
+        /// <summary>
         ///   Looks up a localized string similar to select matreturnid from wms.wms_returnmaterial order by matreturnid desc limit 1.
         /// </summary>
         public static string getnxtreturnid {
@@ -1065,7 +1067,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to insert into wms.wms_gatepass(gatepassid, gatepasstype, status, referenceno, vehicleno, requestedby, requestedon,deleteflag,vendorname,print,reasonforgatepass,approverid,fmapproverid,fmapprovedstatus,approverstatus)values(default,@gatepasstype,@status,@referenceno,@vehicleno, @requestedby,@requestedon,@deleteflag,@vendorname,&apos;true&apos;,@reasonforgatepass,@approverid,@fmapproverid,@fmapprovedstatus,@approverstatus)returning gatepassid.
+        ///   Looks up a localized string similar to insert into wms.wms_gatepass(gatepassid, gatepasstype, status, referenceno, vehicleno, requestedby, requestedon,deleteflag,vendorname,print,reasonforgatepass,approverid,fmapproverid,fmapprovedstatus,approverstatus,remarks)values(default,@gatepasstype,@status,@referenceno,@vehicleno, @requestedby,@requestedon,@deleteflag,@vendorname,&apos;true&apos;,@reasonforgatepass,@approverid,@fmapproverid,@fmapprovedstatus,@approverstatus,@remarks)returning gatepassid.
         /// </summary>
         public static string insertgatepassdata {
             get {
@@ -1485,7 +1487,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to update wms.wms_gatepass set gatepasstype=@gatepasstype,status=@status,referenceno=@referenceno,vehicleno=@vehicleno,requestedby=@requestedby,vendorname=@vendorname,reasonforgatepass=@reasonforgatepass where gatepassid=#gatepassid.
+        ///   Looks up a localized string similar to update wms.wms_gatepass set gatepasstype=@gatepasstype,status=@status,referenceno=@referenceno,vehicleno=@vehicleno,requestedby=@requestedby,vendorname=@vendorname,reasonforgatepass=@reasonforgatepass,remarks=@remarks  where gatepassid=#gatepassid.
         /// </summary>
         public static string updategatepass {
             get {

@@ -282,14 +282,15 @@ inner join wms.wms_polist openpo on inw.pono=openpo.pono
 where  inw.invoiceno='#invoiceno' and openpo.pono='#pono' group by grnnumber</value>
   </data>
   <data name="getgatepasslist" xml:space="preserve">
-    <value>select ygs.materialdescription,emp.name,* from wms.wms_gatepass gate
+    <value>select ygs.materialdescription,emp.name,iss.itemissueddate, * from wms.wms_gatepass gate
    left join wms.wms_gatepassmaterial mat on gate.gatepassid=mat.gatepassid 
    left join wms.employee emp on emp.employeeno=gate.requestedby
+   left join wms.wms_materialissue iss on iss.gatepassmaterialid = mat.gatepassmaterialid 
    left join wms."MaterialMasterYGS" ygs on ygs.material=mat.materialid and mat.deleteflag=false 
    where gate.deleteflag=false   order by gate.gatepassid desc</value>
   </data>
   <data name="insertgatepassdata" xml:space="preserve">
-    <value>insert into wms.wms_gatepass(gatepassid, gatepasstype, status, referenceno, vehicleno, requestedby, requestedon,deleteflag,vendorname,print,reasonforgatepass,approverid,fmapproverid,fmapprovedstatus,approverstatus)values(default,@gatepasstype,@status,@referenceno,@vehicleno, @requestedby,@requestedon,@deleteflag,@vendorname,'true',@reasonforgatepass,@approverid,@fmapproverid,@fmapprovedstatus,@approverstatus)returning gatepassid</value>
+    <value>insert into wms.wms_gatepass(gatepassid, gatepasstype, status, referenceno, vehicleno, requestedby, requestedon,deleteflag,vendorname,print,reasonforgatepass,approverid,fmapproverid,fmapprovedstatus,approverstatus,remarks)values(default,@gatepasstype,@status,@referenceno,@vehicleno, @requestedby,@requestedon,@deleteflag,@vendorname,'true',@reasonforgatepass,@approverid,@fmapproverid,@fmapprovedstatus,@approverstatus,@remarks)returning gatepassid</value>
   </data>
   <data name="checkmaterial" xml:space="preserve">
     <value>select * from wms.wms_stock where materialid='#materialid' limit 1</value>
@@ -305,7 +306,7 @@ where  inw.invoiceno='#invoiceno' and openpo.pono='#pono' group by grnnumber</va
 values(default,@gatepassid,@materialid,@quantity,@deleteflag,@remarks,@materialcost,@expecteddate,@issuedqty)</value>
   </data>
   <data name="updategatepass" xml:space="preserve">
-    <value>update wms.wms_gatepass set gatepasstype=@gatepasstype,status=@status,referenceno=@referenceno,vehicleno=@vehicleno,requestedby=@requestedby,vendorname=@vendorname,reasonforgatepass=@reasonforgatepass where gatepassid=#gatepassid</value>
+    <value>update wms.wms_gatepass set gatepasstype=@gatepasstype,status=@status,referenceno=@referenceno,vehicleno=@vehicleno,requestedby=@requestedby,vendorname=@vendorname,reasonforgatepass=@reasonforgatepass,remarks=@remarks  where gatepassid=#gatepassid</value>
   </data>
   <data name="updategatepassmaterial" xml:space="preserve">
     <value>update wms.wms_gatepassmaterial set gatepassid=@gatepassid,materialid=@materialid,quantity=@quantity,remarks=@remarks,materialcost=@materialcost,expecteddate=@expecteddate,returneddate=@returneddate where gatepassmaterialid=#gatepassmaterialid</value>

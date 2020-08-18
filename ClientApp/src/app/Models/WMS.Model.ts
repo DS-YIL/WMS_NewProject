@@ -174,6 +174,9 @@ export class StockModel {
   remarks: string;
   inwardid: number;
   locatorname: string;
+locationlists: any[] = [];
+  binlist: any[] = [];
+ racklist: any[] = [];
 }
 
 export class locataionDetailsStock {
@@ -219,9 +222,11 @@ export class gatepassModel {
   gatepassid: number;
   gatepasstype: string;
   status: string;
+  remarks: string;
   referenceno: string;
   vehicleno: string;
   requestedby: string;
+  statusremarks: string;
   createddate: Date
   gatepassmaterialid: number;
   materialid: string;
