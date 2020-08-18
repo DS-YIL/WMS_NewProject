@@ -101,7 +101,7 @@ export class GatePassApproverComponent implements OnInit {
       if (this.gatepassModel.status == 'Approved')
         this.btnDisable = true;
 
-      this.messageService.add({ severity: 'success', summary: 'success Message', detail: 'Gate Pass Approved' });
+      this.messageService.add({ severity: 'success', summary: '', detail: 'Gate Pass Approved' });
     });
   }
 
@@ -170,7 +170,7 @@ export class GatePassApproverComponent implements OnInit {
     var id = $event.target.id;
     if (entredvalue > maxvalue) {
       this.itemlocationData[index].issuedquantity = 0;
-      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please enter issue quantity less than Available quantity' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Please enter issue quantity less than Available quantity' });
       // this.btnDisableformaterial = true;
       (<HTMLInputElement>document.getElementById(id)).value = "0";
       this.materialList[this.roindex].issuedqty = 0;
@@ -207,7 +207,7 @@ export class GatePassApproverComponent implements OnInit {
 
     });
     if (totalissuedqty > this.reqqty) {
-      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please enter issue quantity less than or eaqual to requested quantity' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Please enter issue quantity less than or eaqual to requested quantity' });
       this.AddDialog = true;
     }
     else {

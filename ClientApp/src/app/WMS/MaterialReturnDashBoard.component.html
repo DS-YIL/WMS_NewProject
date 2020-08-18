@@ -75,7 +75,7 @@
   <!--<p-dialog   *ngIf="AddDialog" header="Material Return Details" [(visible)]="AddDialog" [contentStyle]="{'overflow-y': 'auto', 'overflow-x': 'hidden', 'max-height': '80vh','min-height':'250px'}" showEffect="fade" [modal]="true" [responsive]="true" [style]="{width: '1024px'}">-->
 
   <div *ngIf="showdialog">
-    <div class="row  pl-0">
+    <div class="row  pl-0" style="margin-left:40px">
       <div class="col-lg-4 col-md-4 col-sm-4 pt-2 labelheading">
         <label>Return Id :</label>&nbsp;<span class="labeltext"><label>{{matreturnid}}</label></span>
       </div>
@@ -83,60 +83,65 @@
     </div>
 
   </div>
-  <p-table  [value]="materiallistData" dataKey="materialid" [columns]="cols">
-    <ng-template pTemplate="header" let-columns>
-      <tr>
-        <th rowspan="2" style="text-align:center;width:70px">Sl.No</th>
-        <th rowspan="2" style="text-align:center">Material</th>
-        <!--<th style="text-align:center;width:150px">Requested  Qty</th>
-      <th style="text-align:center;width:150px">Issued Qty</th>-->
-        <th rowspan="2" style="text-align:center;width:150px">Return Qty</th>
-        <!--<th style="text-align:center;width:150px">Item Loaction</th>-->
-        <th colspan="2" style="width:250px; text-align: center">Put Away</th>
-      </tr>
-      <tr>
-        <th style="width:150px; text-align: center">Qty</th>
-        <th style="width:150px; text-align: center">Location</th>
+  <div class="card-body" style="margin-left:40px;margin-right:40px">
+    <p-table [value]="materiallistData" dataKey="materialid" [columns]="cols">
+      <ng-template pTemplate="header" let-columns>
+        <tr>
+          <th rowspan="2" style="text-align:center;width:70px">Sl.No</th>
+          <th rowspan="2" style="    text-align: center;
+    width: 300px;">Material</th>
+          <!--<th style="text-align:center;width:150px">Requested  Qty</th>
+        <th style="text-align:center;width:150px">Issued Qty</th>-->
+          <th rowspan="2" style="text-align:center;width:150px">Return Qty</th>
+          <!--<th style="text-align:center;width:150px">Item Loaction</th>-->
+          <th colspan="2" style="width:250px; text-align: center">Put Away</th>
+        </tr>
+        <tr>
+          <th style="width:150px; text-align: center">Qty</th>
+          <th style="width:150px; text-align: center">Location</th>
 
-      </tr>
-    </ng-template>
-    <ng-template pTemplate="body" let-rowData let-expanded="expanded" let-rowIndex="rowIndex" let-columns="columns">
-      <tr  class="ui-widget-header" *ngIf="rowGroupMetadata[rowData.materialid].index === rowIndex">
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-rowData let-expanded="expanded" let-rowIndex="rowIndex" let-columns="columns">
+        <tr class="ui-widget-header" *ngIf="rowGroupMetadata[rowData.materialid].index === rowIndex">
+          <td class="ptable-cell" style="text-align:center">
+            {{rowIndex+1}}
+          </td>
+          <td class="ptable-cell" style="    text-align: left;
+    width: 300px;">
+            {{rowData.materialid}}
+          </td>
+          <!--<td class="ptable-cell" style="text-align:right">{{rowData.requestedquantity}}</td>
         <td class="ptable-cell" style="text-align:right">
-          {{rowIndex+1}}
-        </td>
-        <td class="ptable-cell" style="text-align:left">{{rowData.materialid}}</td>
-        <!--<td class="ptable-cell" style="text-align:right">{{rowData.requestedquantity}}</td>
-      <td class="ptable-cell" style="text-align:right">
-        {{rowData.issuedqty}}
+          {{rowData.issuedqty}}
 
-      </td>-->
+        </td>-->
 
-        <td class="ptable-cell" style="text-align:right">{{rowData.returnqty}}</td>
-        <!--<td>
-        <select class="form-control dropdown" #mySelect (change)="onChange(mySelect.value,ri)">
-          lu
-          io
-          <option></option>
-          <option value="other">other</option>
-          <option *ngFor=" let loclist of locationlist" value={{loclist.itemlocation}}>
-            {{loclist.itemlocation}}
-          </option>
-        </select>
-        <br />
+          <td class="ptable-cell" style="text-align:right">{{rowData.returnqty}}</td>
+          <!--<td>
+          <select class="form-control dropdown" #mySelect (change)="onChange(mySelect.value,ri)">
+            lu
+            io
+            <option></option>
+            <option value="other">other</option>
+            <option *ngFor=" let loclist of locationlist" value={{loclist.itemlocation}}>
+              {{loclist.itemlocation}}
+            </option>
+          </select>
+          <br />
 
-      </td>-->
-        <td colspan="2" class="ptable-cell" style="text-align:center;width:100px;">
-          <a *ngIf="rowData.itemlocation" href="#" [pRowToggler]="rowData">
-            <i [ngClass]="expanded ? 'pi pi-fw pi-chevron-circle-down' : 'pi pi-fw pi-chevron-circle-right'" style="    vertical-align: middle;padding-bottom: .1em;color: #20f320d6"></i>
-          </a>
-          <!--*ngIf="!rowData.itemlocation && rowData.confirmqty != 0"-->
-          <i *ngIf="!rowData.itemlocation" class="fa fa-location-arrow" style="color:blue" pTooltip="Add Location" (click)="showDialog(rowData,rowIndex)" aria-hidden="true"></i>
+        </td>-->
+          <td colspan="2" class="ptable-cell" style="text-align:center;width:100px;">
+            <a *ngIf="rowData.itemlocation" href="#" [pRowToggler]="rowData">
+              <i [ngClass]="expanded ? 'pi pi-fw pi-chevron-circle-down' : 'pi pi-fw pi-chevron-circle-right'" style="    vertical-align: middle;padding-bottom: .1em;color: #20f320d6"></i>
+            </a>
+            <!--*ngIf="!rowData.itemlocation && rowData.confirmqty != 0"-->
+            <i *ngIf="!rowData.itemlocation" class="fa fa-location-arrow" style="color:blue" pTooltip="Add Location" (click)="showDialog(rowData,rowIndex)" aria-hidden="true"></i>
 
-        </td>
-        <!--<td class="ptable-cell" style="text-align:right">{{rowData.itemlocation}}</td>-->
-      </tr>
-      <!--<tr id="nodefaultloaction" style="margin-top:10px;display:none;padding-left:300px;">
+          </td>
+          <!--<td class="ptable-cell" style="text-align:right">{{rowData.itemlocation}}</td>-->
+        </tr>
+        <!--<tr id="nodefaultloaction" style="margin-top:10px;display:none;padding-left:300px;">
 
         <td class="ptable-cell" style="text-align:right;width:100px">
           <label for="itemlocation" class="form-label">Select Location</label>
@@ -172,21 +177,23 @@
           </select>
         </td>
       </tr>-->
-    </ng-template>
+      </ng-template>
 
-    <ng-template pTemplate="rowexpansion" let-rowData let-rowIndex="rowIndex">
-      <tr>
-        <td  colspan="3"></td>
-        
-        <td style="text-align:right;width:70px">
-          {{rowData.availableqty}}
-        </td>
-        <td style="width:180px">
-          {{rowData.itemlocation}}
-        </td>
-      </tr>
-    </ng-template>
-  </p-table>
+      <ng-template pTemplate="rowexpansion" let-rowData let-rowIndex="rowIndex">
+        <tr>
+          <td colspan="3"></td>
+
+          <td style="text-align:right;width:70px">
+            {{rowData.availableqty}}
+          </td>
+          <td style="width:180px">
+            {{rowData.itemlocation}}
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+ 
   <p-footer>
     <!--<button type="button" class="btn btn-primary" *ngIf="materiallistData[0].confirmstatus==null" [disabled]="btnDisable" (click)="ConfirmReturnmaterial()">Acknowledge</button>-->
     <!--<div class="ui-dialog-buttonpane ui-helper-clearfix">

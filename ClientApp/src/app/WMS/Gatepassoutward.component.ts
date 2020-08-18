@@ -263,10 +263,10 @@ export class GatePassoutwardComponent implements OnInit {
     })
     this.wmsService.updateoutinward(this.selectedmdata).subscribe(data => {
       if (this.isinward) {
-        this.messageService.add({ severity: 'success', summary: 'Success Message', detail: 'Inwarded successfully.' });
+        this.messageService.add({ severity: 'success', summary: ' ', detail: 'Inwarded successfully.' });
       }
       else if (this.isoutward) {
-        this.messageService.add({ severity: 'success', summary: 'Success Message', detail: 'Outwarded successfully.' });
+        this.messageService.add({ severity: 'success', summary: ' ', detail: 'Outwarded successfully.' });
       }
       this.resetpage();
       

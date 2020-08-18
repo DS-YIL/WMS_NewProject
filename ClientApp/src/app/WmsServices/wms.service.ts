@@ -272,6 +272,8 @@ export class wmsService {
   }
 
   checkMaterialandQty(material, qty): Observable<any> {
+    debugger;
+    material = encodeURIComponent(material);
     const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }), responseType: 'text' as any };
     return this.http.get<any>(this.url + 'POData/checkmaterialandqty?material=' + material + '&qty=' + qty + '', httpOptions);
   }

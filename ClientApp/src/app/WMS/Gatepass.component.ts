@@ -27,6 +27,7 @@ export class GatePassComponent implements OnInit {
   public formName: string;
   public txtName; GatepassTxt: string;
   public dynamicData = new DynamicSearchResult();
+  edit: boolean = false;
   public showList: boolean = false;
   public searchItems: Array<searchList> = [];
   public selectedlist: Array<searchList> = [];
@@ -102,11 +103,16 @@ export class GatePassComponent implements OnInit {
               this.messageService.add({ severity: 'error', summary: '', detail: 'Select Expected Date' });
               return false;
             }
+            else if (this.gatepassModel.gatepasstype != "Returnable") {
+              this.materialistModel = { materialid: "", gatepassmaterialid: "0", materialdescription: "", quantity: 0, materialcost: "0", remarks: " ", expecteddate: this.date, returneddate: this.date, issuedqty: 0 };
+              this.gatepassModel.materialList.push(this.materialistModel);
+            }
             else {
               this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].expecteddate = this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].expecteddate != null ? new Date(this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].expecteddate).toLocaleDateString() : undefined;
               this.materialistModel = { materialid: "", gatepassmaterialid: "0", materialdescription: "", quantity: 0, materialcost: "0", remarks: " ", expecteddate: this.date, returneddate: this.date, issuedqty: 0 };
               this.gatepassModel.materialList.push(this.materialistModel);
             }
+           
           }
           else {
             this.messageService.add({ severity: 'error', summary: '', detail: data });
@@ -430,7 +436,7 @@ export class GatePassComponent implements OnInit {
     this[dialog] = true;
     this.gatepassModel = new gatepassModel();
     if (gatepassobject) {
-
+      this.edit = true;
       this.gpIndx = gpIndx;
       this.gatepassModel = gatepassobject;
       //this.materialistModel = { materialid: "", gatepassmaterialid: "0", materialdescription: "", quantity: 0, materialcost: "0", remarks: " ", expecteddate: this.date, returneddate: this.date };
@@ -547,7 +553,7 @@ export class GatePassComponent implements OnInit {
 
   //saving gatepass details
   onSubmitgatepassDetails() {
-    //debugger;
+    debugger;
     //alert("entered");
     if (this.gatepassModel.gatepasstype != "0") {
       this.gatepassModel.requestedby = this.employee.employeeno;
@@ -577,6 +583,12 @@ export class GatePassComponent implements OnInit {
     this.gatePassChange();
     if (this.gatepassModel.gatepasstype != "0") {
       if (this.gatepassModel.materialList.length > 0) {
+        //loop all the materiallist
+        for (var i = 0; i < this.gatepassModel.materialList.length; i++) {
+          this.gatepassModel.materialList[i].expecteddate = this.gatepassModel.materialList[i].expecteddate != null ? new Date(this.gatepassModel.materialList[i].expecteddate).toLocaleDateString() : undefined;
+          this.gatepassModel.materialList[i].returneddate = this.gatepassModel.materialList[i].returneddate != null ? new Date(this.gatepassModel.materialList[i].returneddate).toLocaleDateString() : undefined;
+
+        }
         if (isNullOrUndefined(this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].materialid) || this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].materialid == "") {
           this.messageService.add({ severity: 'error', summary: '', detail: 'Select Material from list' });
           return false;
@@ -603,8 +615,16 @@ export class GatePassComponent implements OnInit {
             this.gatepassdialog = false;
             this.updateReturnedDateDialog = false;
             this.getGatePassList();
-            if (data)
-              this.messageService.add({ severity: 'success', summary: '', detail: 'Gate Pass Created Successfully' });
+                  if (data) {
+                    if (this.edit == true) {
+                      this.messageService.add({ severity: 'success', summary: '', detail: 'Gate Pass Updated Successfully' });
+                      this.edit = false;
+                    }
+                    else {
+                      this.messageService.add({ severity: 'success', summary: '', detail: 'Gate Pass Created Successfully' });
+                    }
+                  }
+              
           })
               }
               //else {

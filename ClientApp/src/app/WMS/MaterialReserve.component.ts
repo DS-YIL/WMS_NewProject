@@ -62,7 +62,7 @@ export class MaterialReserveComponent implements OnInit {
   //check validations for requested quantity
   reqQtyChange(data: any) {
     if (data.requestedquantity > data.materialqty) {
-      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Requested Quantity should be lessthan or equal to material quantity' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Requested Quantity should be lessthan or equal to material quantity' });
       data.reservedqty = data.materialqty;
     }
   }
@@ -71,7 +71,7 @@ export class MaterialReserveComponent implements OnInit {
   onMaterialRequestDeatilsSubmit() {
     debugger;
     if (!this.reservedfor) {
-      this.messageService.add({ severity: 'error', summary: 'Validation', detail: 'Please select Reserve for' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Please select Reserve for' });
       return;
     }
     this.spinner.show();
@@ -84,11 +84,11 @@ export class MaterialReserveComponent implements OnInit {
     this.wmsService.materialReserveUpdate(this.reserveList).subscribe(data => {
       this.spinner.hide();
       if (data) {
-        this.messageService.add({ severity: 'success', summary: 'success Message', detail: 'material Reserved' });
+        this.messageService.add({ severity: 'success', summary: '', detail: 'material Reserved' });
         this.router.navigateByUrl("/WMS/MaterialReserveView");
       }
       else {
-        this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Reserve Failed' });
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Reserve Failed' });
       }
 
     });
@@ -102,7 +102,7 @@ export class MaterialReserveComponent implements OnInit {
   //received material acknowledgement
   materialAckUpdate() {
     if (this.reserveList.filter(li => li.status == true).length == 0) {
-      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Select atleast  one checkbox' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Select atleast  one checkbox' });
     }
     else {
       this.spinner.show();
@@ -111,9 +111,9 @@ export class MaterialReserveComponent implements OnInit {
       this.wmsService.ackmaterialreceived(this.reserveList).subscribe(data => {
         this.spinner.hide();
         if (data)
-          this.messageService.add({ severity: 'sucess', summary: 'sucee Message', detail: 'Status updated' });
+          this.messageService.add({ severity: 'sucess', summary: '', detail: 'Status updated' });
         else
-          this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Update Failed' });
+          this.messageService.add({ severity: 'error', summary: '', detail: 'Update Failed' });
       });
     }
   }

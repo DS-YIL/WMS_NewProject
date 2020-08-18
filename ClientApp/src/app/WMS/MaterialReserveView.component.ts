@@ -76,7 +76,7 @@ export class MaterialReserveViewComponent implements OnInit {
   //check validations for reserved quantity
   reqQtyChange(data: any) {
     if (data.requestedquantity > data.quotationqty) {
-      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Requested Quantity should be lessthan or equal to po quantity' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Requested Quantity should be lessthan or equal to po quantity' });
       data.requestedquantity = data.quotationqty;
     }
   }
@@ -205,7 +205,7 @@ export class MaterialReserveViewComponent implements OnInit {
 
           }
           else
-            this.messageService.add({ severity: 'error', summary: 'Error Message', detail: data });
+            this.messageService.add({ severity: 'error', summary: '', detail: data });
           return false;
         });
       }
@@ -265,9 +265,9 @@ export class MaterialReserveViewComponent implements OnInit {
     this.wmsService.materialRequestUpdate(this.reserveList).subscribe(data => {
       this.spinner.hide();
       if (data)
-        this.messageService.add({ severity: 'success', summary: 'success Message', detail: 'Request sent' });
+        this.messageService.add({ severity: 'success', summary: '', detail: 'Request sent' });
       else
-        this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Update Failed' });
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Update Failed' });
 
     });
   }
@@ -293,7 +293,7 @@ export class MaterialReserveViewComponent implements OnInit {
   //received material acknowledgement
   materialAckUpdate() {
     if (this.reserveList.filter(li => li.status == true).length == 0) {
-      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Select atleast  one checkbox' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Select atleast  one checkbox' });
     }
     else {
       this.spinner.show();
@@ -301,9 +301,9 @@ export class MaterialReserveViewComponent implements OnInit {
       this.wmsService.ackmaterialreceived(this.reserveList).subscribe(data => {
         this.spinner.hide();
         if (data)
-          this.messageService.add({ severity: 'sucess', summary: 'sucee Message', detail: 'Status updated' });
+          this.messageService.add({ severity: 'sucess', summary: '', detail: 'Status updated' });
         else
-          this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Update Failed' });
+          this.messageService.add({ severity: 'error', summary: '', detail: 'Update Failed' });
       });
     }
   }
@@ -415,13 +415,13 @@ this.showdialog=true;
               this.requestMatData = new requestData();
               this.materialList = [];
               this.materialmodel = [];
-              this.messageService.add({ severity: 'success', summary: 'success Message', detail: 'Reserved materials Successfully' });
+              this.messageService.add({ severity: 'success', summary: '', detail: 'Reserved materials Successfully' });
               this.getMaterialReservelist();
               //this.router.navigateByUrl("/WMS/MaterialReqView/" + this.pono);
             }
             else {
               
-              this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Error while Reserving materials' });
+              this.messageService.add({ severity: 'error', summary: '', detail: 'Error while Reserving materials' });
               this.btnreq = true;
             }
 

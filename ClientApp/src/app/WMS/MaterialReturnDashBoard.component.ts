@@ -126,7 +126,7 @@ export class MaterialReturnDashBoardComponent implements OnInit {
 
 
       //if (this.stock.filter(li => li.locatorid == this.stock[index].locatorid && li.rackid == this.stock[index].rackid && li.binid == this.stock[index].binid).length > 0) {
-      //  this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Location already exists' });
+      //  this.messageService.add({ severity: 'error', summary: ' ', detail: 'Location already exists' });
       //  return;
       //}
     }
@@ -310,21 +310,21 @@ export class MaterialReturnDashBoardComponent implements OnInit {
   }
   ConfirmReturnmaterial() {
     if (this.materiallistData[0].itemlocation == null) {
-      this.messageService.add({ severity: 'error', summary: 'error Message', detail: 'Please select item location' });
+      this.messageService.add({ severity: 'error', summary: ' ', detail: 'Please select item location' });
       return false;
     }
 
   else if (this.materiallistData[0].itemlocation == 'other') {
       if (this.StockModel.locatorid == undefined) {
-        this.messageService.add({ severity: 'error', summary: 'error Message', detail: 'Please select store' });
+        this.messageService.add({ severity: 'error', summary: ' ', detail: 'Please select store' });
         return false;
       }
      if (this.StockModel.rackid == undefined) {
-        this.messageService.add({ severity: 'error', summary: 'error Message', detail: 'Please select Location' });
+        this.messageService.add({ severity: 'error', summary: ' ', detail: 'Please select Location' });
         return false;
       }
        if (this.StockModel.rackid == undefined && this.StockModel.binid == undefined) {
-        this.messageService.add({ severity: 'error', summary: 'error Message', detail: 'Please select Rack or Bin' });
+        this.messageService.add({ severity: 'error', summary: ' ', detail: 'Please select Rack or Bin' });
         return false;
       }
       if (this.StockModel.rackid != undefined || this.StockModel.rackid != undefined || this.StockModel.binid != undefined) {
@@ -343,7 +343,7 @@ export class MaterialReturnDashBoardComponent implements OnInit {
       this.wmsService.UpdateReturnmaterialTostock(this.materiallistData).subscribe(data => {
         this.AddDialog = false;
         if (data == 1) {
-          this.messageService.add({ severity: 'success', summary: 'success Message', detail: 'Items updated to Store' });
+          this.messageService.add({ severity: 'success', summary: ' ', detail: 'Items updated to Store' });
           this.router.navigateByUrl("/WMS/MaterialReturn");
         }
 
