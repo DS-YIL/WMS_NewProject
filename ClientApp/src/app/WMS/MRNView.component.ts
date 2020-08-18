@@ -126,12 +126,13 @@ export class MRNViewComponent implements OnInit {
 
 
   submitmr() {
+    debugger;
 
     if (isNullOrUndefined(this.selectedgrnno) || this.selectedgrnno == "") {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Enter/select GRNNo' });
       return;
     }
-    if (isNullOrUndefined(this.selectedponomodel)) {
+    if (isNullOrUndefined(this.selectedponomodel.value)) {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Enter/select project' });
       return;
     }

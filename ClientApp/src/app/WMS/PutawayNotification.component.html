@@ -14,7 +14,7 @@
   <div class="card-body">
     <p-table #dt [columns]="cols" [value]="checkedgrnlist">
       <ng-template pTemplate="header">
-        <tr class="mprltbldata1">
+        <tr class="mprltbldata">
           <th rowspan="2" style="width: 5%;text-align:center" *ngIf="!issentdata">
             <input type="checkbox" (change)="selectunselectall($event)" />
           </th>

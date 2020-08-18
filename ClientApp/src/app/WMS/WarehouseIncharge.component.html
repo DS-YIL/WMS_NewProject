@@ -34,7 +34,7 @@
       <div class="col-lg-12 col-md-12 col-sm-12">
         <p-table [columns]="cols" [value]="podetailsList" dataKey="material">
           <ng-template pTemplate="header" let-columns>
-            <tr>
+            <tr class="mprltbldata">
               <th rowspan="2" style="width: 4em">Sl.No.</th>
               <!--<th *ngFor="let col of columns">{{col.header}} </th>-->
               <th rowspan="2" style="width:120px;text-align:center">Material</th>
@@ -47,7 +47,7 @@
               <!--<th rowspan="2" style="width:80px;text-align:center">Material Barcode</th>-->
               <th colspan="2" style="width:250px; text-align: center">Put Away</th>
             </tr>
-            <tr>
+            <tr class="mprltbldata">
               <th style="width:150px; text-align: center">Qty</th>
               <th style="width:150px; text-align: center">Location</th>
             </tr>
