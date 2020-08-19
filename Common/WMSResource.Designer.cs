@@ -324,9 +324,9 @@ namespace WMS.Common {
         ///   Looks up a localized string similar to select * from wms.wms_gatepassmaterial material
         ///      inner join wms.wms_gatepass pass on pass.gatepassid=material.gatepassid 
         ///      inner join wms.employee emp on pass.requestedby=emp.employeeno
-        ///      inner join wms.&quot;MaterialMasterYGS&quot; ygs on ygs.material=material.materialid left join wms.wms_materialissue wissue on wissue.gatepassmaterialid  = material.gatepassmaterialid 
+        ///      left join wms.&quot;MaterialMasterYGS&quot; ygs on ygs.material=material.materialid left join wms.wms_materialissue wissue on wissue.gatepassmaterialid  = material.gatepassmaterialid 
         ///      left join wms.wms_stock stock on stock.itemid  = wissue.itemid 
-        ///           where pass.gatepassid=#gatepassid and pass.delete [rest of string was truncated]&quot;;.
+        ///           where pass.gatepassid=#gatepassid and pass.deletef [rest of string was truncated]&quot;;.
         /// </summary>
         public static string getgatepassmaterialdetailList {
             get {
@@ -712,7 +712,7 @@ namespace WMS.Common {
         ///gt.gatepasstype,gt.vendorname,gt.requestedby,gt.requestedon,emp3.name as mgapprover,emp4.name as fmapprover,
         ///matgt.outwarddate,emp1.name as outwardedby,matgt.outwardremarks,matgt.outwardqty,matgt.inwardqty,matgt.inwarddate,emp2.name as inwardedby,matgt.inwardremarks
         ///from wms.wms_materialissue matis
-        ///left outer join wms.wms_gatepassmateri [rest of string was truncated]&quot;;.
+        ///left outer join wms.wms_gatepassmaterial ma [rest of string was truncated]&quot;;.
         /// </summary>
         public static string getnonreturnablegatepassdata {
             get {
@@ -901,10 +901,10 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select distinct max(matreturnid) as matreturnid ,max(materialid) as materialid,max(createdby) as createdby ,
-        ///  max(createdon) as createdon, max(emp.&quot;name&quot;) as name, max(confirmstatus) as confirmstatus  from wms.wms_returnmaterial reqtrasnfer 
+        ///   Looks up a localized string similar to select matreturnid,materialid,createdby ,
+        ///  createdon, max(emp.&quot;name&quot;) as name, confirmstatus from wms.wms_returnmaterial reqtrasnfer 
         ///  left join wms.employee emp on emp.employeeno=reqtrasnfer.createdby
-        ///  group by reqtrasnfer.matreturnid.
+        ///  group by reqtrasnfer.returnid.
         /// </summary>
         public static string GetreturnList {
             get {

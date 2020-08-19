@@ -441,6 +441,7 @@ export class StockTransferComponent implements OnInit {
       debugger;
       if (data) {
         this.stocktransferlistgroup = data;
+        console.log(this.stocktransferlistgroup);
       }
     });
   }

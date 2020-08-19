@@ -72,6 +72,7 @@ export class MaterialReturnDashBoardComponent implements OnInit {
   public PoDetails: PoDetails;
   public MaterialRequestForm: FormGroup
   public materialIssueList: Array<any> = [];
+  public materialIssueAccept: Array<any> = [];
   public materialacceptListnofilter: Array<any> = [];
   public podetailsList: Array<inwardModel> = [];
   public employee: Employee;
@@ -95,7 +96,20 @@ export class MaterialReturnDashBoardComponent implements OnInit {
     //this.employee.employeeno = "400095";
     this.wmsService.GetReturnmaterialList().subscribe(data => {
       this.materialacceptListnofilter = data;
-      this.materialIssueList = this.materialacceptListnofilter.filter(li => li.confirmstatus==null);
+      this.materialacceptListnofilter.forEach(i => {
+        if (i.confirmstatus == null) {
+          debugger;
+          if (this.materialIssueList.filter(li => li.matreturnid == i.matreturnid).length > 0) {
+
+          }
+          else {
+            this.materialIssueList.push(i);
+          }
+         
+        }
+
+      });
+     //// this.materialIssueList = this.materialacceptListnofilter.filter(li => li.confirmstatus==null);
       //this.materialIssueList = data.filter(li=>li.requesttype=='return');
      
     });
@@ -103,6 +117,8 @@ export class MaterialReturnDashBoardComponent implements OnInit {
 
   backtoreturn() {
     this.AddDialog = false;
+    this.getMaterialIssueList();
+    this.materialIssueList = [];
   }
 
   onQtyClick(index: any) {
@@ -594,17 +610,61 @@ export class MaterialReturnDashBoardComponent implements OnInit {
     // (<HTMLInputElement>document.getElementById(indexid)).value = event.toString();
   }
   onSelectStatus(event) {
+    this.materialIssueList = [];
     this.selectedStatus = event.target.value;
     if (this.selectedStatus == "Pending") {
-      this.materialIssueList = this.materialacceptListnofilter.filter(li => li.confirmstatus == null);
+      this.materialacceptListnofilter.forEach(i => {
+        if (i.confirmstatus == null) {
+          debugger;
+          if (this.materialIssueList.filter(li => li.matreturnid == i.matreturnid).length > 0) {
+
+          }
+          else {
+            this.materialIssueList.push(i);
+          }
+
+        }
+
+      });
+
+      //this.materialIssueList = this.materialacceptListnofilter.filter(li => li.confirmstatus == null);
     }
     else if (this.selectedStatus == "Accepted") {
-      this.materialIssueList = this.materialacceptListnofilter.filter(li => li.confirmstatus == 'Accepted');
+      this.materialIssueList = [];
+      this.materialacceptListnofilter.forEach(i => {
+        if (i.confirmstatus == null) {
+          debugger;
+          if (this.materialIssueAccept.filter(li => li.matreturnid == i.matreturnid).length > 0) {
+
+          }
+          else {
+            this.materialIssueAccept.push(i);
+          }
+
+        }
+        else {
+          if (this.materialIssueAccept.filter(li => li.matreturnid == i.matreturnid).length > 0) {
+
+          }
+          else {
+            if (this.materialIssueList.filter(li => li.matreturnid == i.matreturnid).length > 0) {
+
+            }
+            else {
+              this.materialIssueList.push(i);
+            }
+           
+          }
+        }
+
+      });
+      //this.materialIssueList = this.materialacceptListnofilter.filter(li => li.confirmstatus == 'Accepted');
     }
   }
   SubmitStatus() {
     if (this.selectedStatus == "Pending") {
-      this.materialIssueList = this.materialacceptListnofilter.filter(li => li.confirmstatus == null);
+
+      //this.materialIssueList = this.materialacceptListnofilter.filter(li => li.confirmstatus == null);
     }
     else if (this.selectedStatus == "Accepted") {
       this.materialIssueList = this.materialacceptListnofilter.filter(li => li.confirmstatus == 'Accepted');

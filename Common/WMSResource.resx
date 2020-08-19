@@ -318,7 +318,7 @@ values(default,@gatepassid,@materialid,@quantity,@deleteflag,@remarks,@materialc
     <value>select * from wms.wms_gatepassmaterial material
       inner join wms.wms_gatepass pass on pass.gatepassid=material.gatepassid 
       inner join wms.employee emp on pass.requestedby=emp.employeeno
-      inner join wms."MaterialMasterYGS" ygs on ygs.material=material.materialid left join wms.wms_materialissue wissue on wissue.gatepassmaterialid  = material.gatepassmaterialid 
+      left join wms."MaterialMasterYGS" ygs on ygs.material=material.materialid left join wms.wms_materialissue wissue on wissue.gatepassmaterialid  = material.gatepassmaterialid 
       left join wms.wms_stock stock on stock.itemid  = wissue.itemid 
            where pass.gatepassid=#gatepassid and pass.deleteflag=false and material.deleteflag=false</value>
   </data>
@@ -807,10 +807,10 @@ where reserveupto between current_date and current_date  + interval '3 day' and 
    where returnmat.returnid=#returnid </value>
   </data>
   <data name="GetreturnList" xml:space="preserve">
-    <value>select distinct max(matreturnid) as matreturnid ,max(materialid) as materialid,max(createdby) as createdby ,
-  max(createdon) as createdon, max(emp."name") as name, max(confirmstatus) as confirmstatus  from wms.wms_returnmaterial reqtrasnfer 
+    <value>select matreturnid,materialid,createdby ,
+  createdon, max(emp."name") as name, confirmstatus from wms.wms_returnmaterial reqtrasnfer 
   left join wms.employee emp on emp.employeeno=reqtrasnfer.createdby
-  group by reqtrasnfer.matreturnid</value>
+  group by reqtrasnfer.returnid</value>
   </data>
   <data name="checkmatexists" xml:space="preserve">
     <value>select * from wms."MaterialMasterYGS" where material='#materialid'</value>

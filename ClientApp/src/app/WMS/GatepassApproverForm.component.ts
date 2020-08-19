@@ -101,7 +101,7 @@ export class GatePassApproverComponent implements OnInit {
       if (this.gatepassModel.status == 'Approved')
         this.btnDisable = true;
 
-      this.messageService.add({ severity: 'success', summary: '', detail: 'Gate Pass Approved' });
+      this.messageService.add({ severity: 'success', summary: '', detail: 'Issued Materials for Gate Pass' });
     });
   }
 

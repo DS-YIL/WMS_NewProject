@@ -129,7 +129,7 @@ export class MaterialTransferComponent implements OnInit {
   //check validations for requested quantity
   reqQtyChange(data: any) {
     if (data.requestedquantity > data.quotationqty) {
-      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Requested Quantity should be lessthan or equal to po quantity' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Requested Quantity should be lessthan or equal to po quantity' });
       data.requestedquantity = data.quotationqty;
     }
   }
@@ -141,9 +141,9 @@ export class MaterialTransferComponent implements OnInit {
     this.wmsService.Updatetransferqty(this.requestList).subscribe(data => {
       this.spinner.hide();
       if (data)
-        this.messageService.add({ severity: 'success', summary: 'success Message', detail: 'Request sent' });
+        this.messageService.add({ severity: 'success', summary: '', detail: 'Request sent' });
       else
-        this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Update Failed' });
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Update Failed' });
 
     });
   }
@@ -187,7 +187,7 @@ export class MaterialTransferComponent implements OnInit {
   }
   showmaterialdetails() {
     //if (this.requestid == undefined) {
-    //  this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please select any Request Id' });
+    //  this.messageService.add({ severity: 'error', summary: '', detail: 'Please select any Request Id' });
     //  //this.router.navigateByUrl("/WMS/MaterialReqView");
     //}
     //else {
@@ -209,7 +209,7 @@ export class MaterialTransferComponent implements OnInit {
   }
   showmaterialdetailsfortransfer() {
     if (this.requestid == undefined) {
-      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please select  Request Id' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Please select  Request Id' });
       //this.router.navigateByUrl("/WMS/MaterialReqView");
     }
     else {
@@ -415,17 +415,17 @@ export class MaterialTransferComponent implements OnInit {
     //  this.material = "";
     //}
     //else if (!this.material && !this.tarnsferModel.materialLists[this.tarnsferModel.materialLists.length - 1].material) {
-    //  this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'please Add Material' });
+    //  this.messageService.add({ severity: 'error', summary: '', detail: 'please Add Material' });
     //  return false;
     //}
     //else if (this.material && this.returnModel.materialList[this.returnModel.materialList.length - 1].returnquantity==0) {
-    //  this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'please add return quantity' });
+    //  this.messageService.add({ severity: 'error', summary: '', detail: 'please add return quantity' });
     //  return false;
     //}
 
     //else {
     //  if (this.tarnsferModel.materialLists.filter(li => li.material == this.material.code && li.material != "0").length > 0) {
-    //    this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Material already exist' });
+    //    this.messageService.add({ severity: 'error', summary: '', detail: 'Material already exist' });
     //    return false;
     //  }
       //this.transferChange();
@@ -541,7 +541,7 @@ export class MaterialTransferComponent implements OnInit {
     }
   }
   transfermaterial() {
-    if (isNullOrUndefined(this.selectedproject)) {
+    if (isNullOrUndefined(this.selectedproject.value)) {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Select Project' });
       return false;
 
@@ -576,12 +576,12 @@ export class MaterialTransferComponent implements OnInit {
       if (data) {
         this.AddDialog = false;
         this.gatepassdialog = false;
-        this.messageService.add({ severity: 'success', summary: 'success Message', detail: 'Material tarnsferred' });
+        this.messageService.add({ severity: 'success', summary: '', detail: 'Material tarnsferred' });
         this.getMaterialRequestlist(this.employee.employeeno);
       }
 
       else {
-        this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Transfer Failed' });
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Transfer Failed' });
       }
     });
 
@@ -592,30 +592,30 @@ export class MaterialTransferComponent implements OnInit {
     //this.spinner.show();
    // this.btnDisable = true;
     if (this.tarnsferModel.materialLists.length == 0) {
-      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please Add materials to Transfer' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Please Add materials to Transfer' });
       return false;
     }
 
 
     //this.tarnsferModel.materialLists.requestedby = this.employee.employeeno;
     else if (!this.material && !this.tarnsferModel.materialLists[this.tarnsferModel.materialLists.length - 1].material) {
-      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Add Material' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Add Material' });
       return false;
     }
     else if (this.tarnsferModel.materialLists[this.tarnsferModel.materialLists.length - 1].transferqty == 0) {
-      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please enter transfer qty' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Please enter transfer qty' });
       this.spinner.hide();
       return false;
     }
     else if (this.tarnsferModel.materialLists[this.tarnsferModel.materialLists.length - 1].projectcode == "") {
-      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please enter project code' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Please enter project code' });
       this.spinner.hide();
       return false;
     }
     else if (this.material) {
       if (this.tarnsferModel.materialLists.filter(li => li.material == this.material.code).length > 0) {
 
-        this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Material already exist' });
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Material already exist' });
         return false;
       }
       //this.gatePassChange();
@@ -632,12 +632,12 @@ export class MaterialTransferComponent implements OnInit {
       if (data) {
         this.AddDialog = false;
          this.gatepassdialog = false;
-        this.messageService.add({ severity: 'success', summary: 'success Message', detail: 'Material tarnsferred' });
+        this.messageService.add({ severity: 'success', summary: '', detail: 'Material tarnsferred' });
         this.getMaterialRequestlist(this.employee.employeeno);
       }
 
       else {
-        this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Transfer Failed' });
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Transfer Failed' });
       }
     });
   }

@@ -647,7 +647,7 @@ this.updateRowGroupMetaData();
     this.StockModel.rackid = details.rackid;
     this.StockModel.binid = details.binid;
     this.matdescription = details.materialdescription;
-    this.matqty = details.receivedqty;
+    this.matqty = details.confirmqty;
     
     this.StockModelForm = this.formBuilder.group({
       rackid: [details.rackid],

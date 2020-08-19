@@ -299,7 +299,7 @@ export class GatePassComponent implements OnInit {
       }
       else if (this.employee.roleid == "3" || role3.length > 0) {
         this.totalGatePassList.forEach(item => {
-          if (item.gatepasstype == "Returnable")
+          if (item.gatepasstype == "Returnable" && item.approverstatus == "Approved")
             this.gatepasslist.push(item);
           if (item.gatepasstype == "Non Returnable" && item.approverstatus == "Approved")
             this.gatepasslist.push(item);
@@ -317,6 +317,7 @@ export class GatePassComponent implements OnInit {
 
   searchGatePassList() {
     if (this.approverstatus != "0") {
+      debugger;
       if (this.approverstatus == "Pending")
         this.gatepasslist = this.totalGatePassList.filter(li => li.gatepasstype == 'Non Returnable' && (li.approverstatus == this.approverstatus || li.approverstatus == null));
       else

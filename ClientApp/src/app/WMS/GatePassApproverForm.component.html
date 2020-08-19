@@ -1,7 +1,7 @@
 <div class="card" style="    min-height: 500px;border-radius: 10px;box-shadow: 5px 10px #888888;">
   <div class="card-header text-center cardheadertext">
     <span>
-      <i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;Gate Pass Approval
+      <i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;Gate Pass Material Issue
     </span>
     <button type="button" icon="fa fa-arrow-left" pButton aria-hidden="true" pTooltip="Back" (click)="backtogatepass()" style="float: left; height: 26px;"></button>
   </div>
@@ -135,7 +135,8 @@
           </p-table>
           <p-footer>
             <div *ngIf="employee.roleid!='7'" class="ui-dialog-buttonpane ui-helper-clearfix">
-              <button [disabled]="btnDisableissue || materialList[0].gatepasstype=='Non Returnable'" type="button" class="btn btn-primary" (click)="updategatepassapproverstatus()">Submit</button>
+              <!--|| materialList[0].gatepasstype=='Non Returnable'-->
+              <button [disabled]="btnDisableissue " type="button" class="btn btn-primary" (click)="updategatepassapproverstatus()">Submit</button>
 
             </div>
           </p-footer>

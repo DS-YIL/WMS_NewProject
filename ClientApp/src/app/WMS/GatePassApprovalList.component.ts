@@ -60,7 +60,7 @@ export class GatePassApprovalList implements OnInit {
         this.prepareGatepassList();
       }
       if (this.typeOfList == "GatePassFMList") {
-          this.gatepassData = this.totalGatePassList.filter(li => li.fmapproverid == this.employee.employeeno && li.approverstatus == "Approved" && li.fmapprovedstatus == this.approverstatus);
+          this.gatepassData = this.totalGatePassList.filter(li => li.fmapproverid == this.employee.employeeno && li.approverstatus == "Approved" && li.fmapprovedstatus == this.approverstatus && li.gatepasstype=="Non Returnable");
         this.prepareGatepassList();
       }
     });
@@ -128,7 +128,7 @@ export class GatePassApprovalList implements OnInit {
         this.prepareGatepassList();
       }
       if (this.typeOfList == "GatePassFMList") {
-        this.gatepassData = this.totalGatePassList.filter(li => li.fmapproverid == this.employee.employeeno && li.approverstatus == "Approved" && li.fmapprovedstatus == this.approverstatus);
+        this.gatepassData = this.totalGatePassList.filter(li => li.fmapproverid == this.employee.employeeno && li.approverstatus == "Approved" && li.fmapprovedstatus == this.approverstatus && li.gatepasstype=="Non Returnable");
         this.prepareGatepassList();
       }
     }
@@ -139,6 +139,7 @@ export class GatePassApprovalList implements OnInit {
   }
 
   showApprover(gatepassid: any) {
+    this.btnDisable = false;
     this.showApprovertab = true;
     debugger;
     this.bindMaterilaDetails(gatepassid);
