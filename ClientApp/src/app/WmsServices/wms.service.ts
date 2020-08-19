@@ -136,17 +136,20 @@ export class wmsService {
 
   //Check material exists
   checkMatExists(material: string): Observable<any> {
+    material = encodeURIComponent(material);
     const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }), responseType: 'text' as any };
     return this.http.get<any>(this.url + 'POData/checkMatExists?material=' + material, httpOptions);
   }
 
   //Get location details
-  getLocationDetails(materialid: string, gnrno:string): Observable<any> {
+  getLocationDetails(materialid: string, gnrno: string): Observable<any> {
+    materialid = encodeURIComponent(materialid);
     return this.http.get<any>(this.url + 'POData/getlocationdetailsformaterialid?materialid=' + materialid + '&grnnumber=' + gnrno, this.httpOptions);
   }
 
   //Get material request, isuued and approved details
-  getMaterialRequestDetails(materialid: string,gnrno:string): Observable<any> {
+  getMaterialRequestDetails(materialid: string, gnrno: string): Observable<any> {
+    materialid = encodeURIComponent(materialid);
     return this.http.get<any>(this.url + 'POData/getReqMatdetailsformaterialid?materialid=' + materialid + '&grnnumber=' + gnrno,this.httpOptions);
   }
 
@@ -265,6 +268,7 @@ export class wmsService {
 
   
   gatepassmaterialdetail(gatepassId): Observable<any> {
+
     return this.http.get<any>(this.url + 'POData/getmaterialdetailsbygatepassid?gatepassid=' + gatepassId + '', this.httpOptions);
   }
   getGatePassApprovalHistoryList(gatepassId): Observable<any> {
@@ -338,10 +342,12 @@ export class wmsService {
   updateinsertCyclecount(catList: any): Observable<any> {
     return this.http.post<any>(this.url + 'POData/updateinsertCyclecount/', catList, this.httpOptions);
   }
-  getFIFOList(material:any): Observable<any> {
+  getFIFOList(material: any): Observable<any> {
+    material = encodeURIComponent(material);
     return this.http.get<any>(this.url + 'POData/GetFIFOList?material=' + material, this.httpOptions);
   }
-  checkoldestmaterial(material: any, createddate:any): Observable<any> {
+  checkoldestmaterial(material: any, createddate: any): Observable<any> {
+    material = encodeURIComponent(material);
     return this.http.get<any>(this.url + 'POData/Checkoldestmaterial?material=' + material + '&createddate=' + createddate, this.httpOptions);
   }
   insertFIFOdata(materialIssueList: any): Observable<any> {
@@ -354,6 +360,7 @@ export class wmsService {
     return this.http.get<any>(this.url + 'POData/getASNListdata/', this.httpOptions);
   }
   getItemlocationListByMaterial(material: string): Observable<any> {
+    material = encodeURIComponent(material);
     return this.http.get<any>(this.url + 'POData/GetItemLocationListByMaterial?material=' + material, this.httpOptions);
   }
   UpdateMaterialqty(materialList: any): Observable<any> {

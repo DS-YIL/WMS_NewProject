@@ -146,6 +146,7 @@ export class GatePassApprovalList implements OnInit {
   }
   hideApprover() {
     this.showApprovertab = false;
+    this.getGatePassList();
   }
 
 

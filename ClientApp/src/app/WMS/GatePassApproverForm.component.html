@@ -116,8 +116,8 @@
               <tr>
                 <td class="ptable-cell" style="text-align:center"> {{ri+1}} </td>
                 <td class="ptable-cell" style="text-align:left">
-                  <span *ngIf="employee.roleid !='4'">{{rowData.materialid}}</span>
-                  <button *ngIf="employee.roleid !='8' && employee.roleid =='4'" type="button" class="btn btn-link" (click)="showmateriallocationList(rowData.materialid,rowData.materialdescription,ri+1,ri,rowData.quantity,rowData.issuedqty,rowData.itemlocation,rowData.itemissueddate);" style="padding-left:0px;">{{rowData.materialid}}</button>
+                  <span *ngIf="employee.roleid !='3'">{{rowData.materialid}}</span>
+                  <button *ngIf="employee.roleid !='8' && employee.roleid =='3'" type="button" class="btn btn-link" (click)="showmateriallocationList(rowData.materialid,rowData.materialdescription,ri+1,ri,rowData.quantity,rowData.issuedqty,rowData.itemlocation,rowData.itemissueddate);" style="padding-left:0px;">{{rowData.materialid}}</button>
                 </td>
                 <td class="ptable-cell" style="text-align:left"> {{rowData.materialdescription}} </td>
                 <td class="ptable-cell" style="text-align:right"><span *ngIf="rowData.materialcost">{{rowData.materialcost}}</span></td>

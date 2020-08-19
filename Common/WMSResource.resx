@@ -807,7 +807,8 @@ where reserveupto between current_date and current_date  + interval '3 day' and 
    where returnmat.returnid=#returnid </value>
   </data>
   <data name="GetreturnList" xml:space="preserve">
-    <value>select distinct max(matreturnid) as matreturnid ,max(materialid) as materialid,max(createdby) as createdby ,max(createdon) as createdon, max(emp."name") as name from wms.wms_returnmaterial reqtrasnfer 
+    <value>select distinct max(matreturnid) as matreturnid ,max(materialid) as materialid,max(createdby) as createdby ,
+  max(createdon) as createdon, max(emp."name") as name, max(confirmstatus) as confirmstatus  from wms.wms_returnmaterial reqtrasnfer 
   left join wms.employee emp on emp.employeeno=reqtrasnfer.createdby
   group by reqtrasnfer.matreturnid</value>
   </data>
@@ -823,7 +824,7 @@ where availableqty &gt;0 group by sk.pono , polist.suppliername</value>
   <data name="getitemiddata" xml:space="preserve">
     <value>select * from wms.wms_stock where materialid='#materialid' </value>
   </data>
- <data name="getreturndata" xml:space="preserve">
+  <data name="getreturndata" xml:space="preserve">
     <value>select distinct max(retmat.matreturnid) as matreturnid,max(retmat.returnid ) as returnid, 
   max(retmat.materialid) as materialid,max(retmat.returnqty) as returnqty,max(retmat.createdby) as createdby,max(retmat.createdon) as createdon
   from wms.wms_returnmaterial retmat 
@@ -941,6 +942,4 @@ where tsd.transferid = '#tid'</value>
   <data name="getnxtreturnid" xml:space="preserve">
     <value>select matreturnid from wms.wms_returnmaterial order by matreturnid desc limit 1</value>
   </data>
-
-  
 </root>

@@ -901,7 +901,8 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select distinct max(matreturnid) as matreturnid ,max(materialid) as materialid,max(createdby) as createdby ,max(createdon) as createdon, max(emp.&quot;name&quot;) as name from wms.wms_returnmaterial reqtrasnfer 
+        ///   Looks up a localized string similar to select distinct max(matreturnid) as matreturnid ,max(materialid) as materialid,max(createdby) as createdby ,
+        ///  max(createdon) as createdon, max(emp.&quot;name&quot;) as name, max(confirmstatus) as confirmstatus  from wms.wms_returnmaterial reqtrasnfer 
         ///  left join wms.employee emp on emp.employeeno=reqtrasnfer.createdby
         ///  group by reqtrasnfer.matreturnid.
         /// </summary>
