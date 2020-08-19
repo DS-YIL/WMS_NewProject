@@ -462,7 +462,7 @@ export class HomeComponent implements OnInit {
     });
     if (this.gatepasslist.length > 0) {
       this.notif = true;
-      this.notifcount = this.notifcount + 1;
+      this.notifcount = this.notifcount + this.gatepasslist.length;
       var count = this.gatepasslist.length;
     }
   }
@@ -477,7 +477,7 @@ export class HomeComponent implements OnInit {
     });
     if (this.gatepasslist1.length > 0) {
       this.notif = true;
-      this.notifcount = this.notifcount + 1;
+      this.notifcount = this.notifcount + this.gatepasslist1.length;
       var count = this.gatepasslist1.length;
       
     }
