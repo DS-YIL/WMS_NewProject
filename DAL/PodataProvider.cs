@@ -5548,12 +5548,13 @@ namespace WMS.DAL
 
 			StockModel obj = new StockModel();
 			string loactiontext = string.Empty;
-
+			int x = 0;
+			invstocktransfermodel transfer = new invstocktransfermodel();
 			foreach (stocktransfermateriakmodel stck in data.materialdata)
 			{
 				NpgsqlTransaction Trans = null;
-				invstocktransfermodel transfer = new invstocktransfermodel();
-				int x = 0;
+				
+				
 
 				using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 				{
@@ -5617,7 +5618,20 @@ namespace WMS.DAL
 
 						if (objs != null)
 						{
+							
 							int decavail = objs.availableqty - stck.transferqty;
+							int? inwmasterid = null;
+							int? inwardid = null;
+							if (objs.inwmasterid > 0)
+                            {
+								inwmasterid = objs.inwmasterid;
+
+							}
+							if (objs.inwmasterid > 0)
+							{
+								inwardid = objs.inwardid;
+
+							}
 
 							string query1 = "UPDATE wms.wms_stock set availableqty=" + decavail + "  where itemid = '" + stck.sourceitemid + "'";
 							pgsql.ExecuteScalar(query1);
@@ -5656,7 +5670,7 @@ namespace WMS.DAL
 								var result = 0;
 								result = Convert.ToInt32(pgsql.ExecuteScalar(insertqueryx, new
 								{
-									objs.inwmasterid,
+									inwmasterid,
 									objs.pono,
 									binid,
 									objs.vendorid,
@@ -5670,7 +5684,7 @@ namespace WMS.DAL
 									createdby,
 									objs.stockstatus,
 									objs.materialid,
-									objs.inwardid
+									inwardid
 								}));
 								if (result != 0)
 								{
@@ -5706,6 +5720,11 @@ namespace WMS.DAL
 
 
 
+						}
+                        else
+                        {
+							Trans.Rollback();
+							return null;
 						}
 						Trans.Commit();
 						x++;

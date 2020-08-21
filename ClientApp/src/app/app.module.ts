@@ -93,6 +93,8 @@ import { ToolbarModule } from 'primeng/toolbar';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { FileUploadModule } from 'primeng/fileupload';
 import { TabViewModule } from 'primeng/tabview';
+import { DataViewModule } from 'primeng/dataview';
+import { PanelModule } from 'primeng/panel';
 @Injectable
   ({
     providedIn: 'root',
@@ -192,7 +194,9 @@ import { TabViewModule } from 'primeng/tabview';
     ToolbarModule,
     SelectButtonModule,
     FileUploadModule,
-    TabViewModule
+    TabViewModule,
+    DataViewModule,
+    PanelModule
     //RouterModule.forRoot([
     //  { path: '', component: LoginComponent, pathMatch: 'full' },
     // ])

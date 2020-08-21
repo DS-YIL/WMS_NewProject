@@ -73,8 +73,19 @@ export class StockTransferComponent implements OnInit {
   }
   
   
- 
+  deleteRow(index: number) {
+    this.podetailsList.splice(index, 1);
+    //this.formArr.removeAt(index);
+  }
   addrows() {
+    var invalidrow = this.podetailsList.filter(function (element, index) {
+      return (!element.sourcelocation) || (!element.destinationlocation) || (!element.transferqty) || (!element.materialid);
+    });
+    if (invalidrow.length > 0) {
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Fill all details.' });
+      return;
+    }
+
     this.emptytransfermodel = new stocktransfermateriakmodel();
     this.podetailsList.push(this.emptytransfermodel);
   }
@@ -441,7 +452,6 @@ export class StockTransferComponent implements OnInit {
       debugger;
       if (data) {
         this.stocktransferlistgroup = data;
-        console.log(this.stocktransferlistgroup);
       }
     });
   }
@@ -470,15 +480,19 @@ export class StockTransferComponent implements OnInit {
   
   onsubmit1() {
     debugger;
+    if (this.podetailsList.length == 0) {
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Add materials.' });
+      return;
+    }
     if (!this.mainmodel.sourceplant || !this.mainmodel.destinationplant) {
-      this.messageService.add({ severity: 'error', summary: '', detail: 'Please select plants.' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Select plants.' });
       return;
     }
     var invalidrow = this.podetailsList.filter(function (element, index) {
       return (!element.sourcelocation) || (!element.destinationlocation) || (!element.transferqty) || (!element.materialid);
     });
     if (invalidrow.length > 0) {
-      this.messageService.add({ severity: 'error', summary: '', detail: 'Please fill all details.' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Fill all details.' });
       return;
     }
     if ((this.mainmodel.sourceplant) && (this.mainmodel.destinationplant) && (this.mainmodel.sourceplant == this.mainmodel.destinationplant)) {
@@ -516,6 +530,8 @@ export class StockTransferComponent implements OnInit {
       this.savedata = [];
       this.podetailsList = [];
       this.mainmodel = new invstocktransfermodel();
+      this.mainmodel.sourceplant = "Plant1";
+      this.mainmodel.destinationplant = "Plant1";
       this.getStocktransferdatagroup();
       this.addprocess = false;
       // }

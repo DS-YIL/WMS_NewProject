@@ -5,8 +5,31 @@
         <img class="" src="./assets/yokologo.png" />
         <label style="margin-left:60%;color:white;font-weight:900;font-size:larger">Warehouse Management System</label>
       </div>
-      <button id="btnuser" pButton label="&nbsp;{{username}}" style="background-color: #0099cc" icon="pi pi-user" (click)="op1.toggle($event)"></button>
+      <!--<button id="btnuser" pButton label="&nbsp;{{username}}" style="background-color: #0099cc" icon="pi pi-user" (click)="op1.toggle($event)"></button>-->
+     
+            <div  (click)="op1.toggle($event)" id="btnuser" style="cursor:pointer">
+              <table>
+                <tr>
+                  <td rowspan="2" >
+                    <img src="{{profileimage}}" alt="Image not found" width="30" style="border-radius: 50%;border:3px solid white;" onerror="this.src='./assets/usericon.png';">
+                  </td>
+                  <td style="color:white; font-size:14px;padding-left:5px">
+                   {{username}}
+                  </td>
+                </tr>
+                <tr>
+                  <td style="color:white;font-size:12px;padding-left:5px">
+                     {{loggedinas}}
+                  </td>
+                </tr>
 
+              </table>
+                
+            
+           </div>
+          
+   
+     
     </div>
   </nav>
 </header>
@@ -14,7 +37,20 @@
   <p-menubar [model]="items" [style]="{'background': 'linear-gradient(to bottom, #669999 0%, #669999 100%)','color':'white'}" (click) = "activeMenu($event)"></p-menubar>
 </div>
 <p-overlayPanel #op1>
-  <p-panelMenu [model]="useritems" [style]="{'width':'150px'}" ></p-panelMenu>
+  <!--<p-panelMenu [model]="useritems" [style]="{'width':'150px'}"></p-panelMenu>-->
+  
+  <p-panel [header]="loggedinas" [style]="{'text-align':'center'}">
+    <img src="{{profileimage}}" alt="Image not found" width="60" style="border-radius: 50%;border:3px solid white;" onerror="this.src='./assets/usericon.png';">
+    <div class="car-detail"></div>
+    <!--<select class="form-control forms-input" style="width:100% !important;" (change)="Navigatetopagefn()" [(ngModel)]="selectedrolename">
+      <option value="">Switch Role</option>
+      <option *ngFor="let data of userrolelist">
+        {{data.accessname}}
+      </option>
+    </select>-->
+    <button class="btn btn-primary" style="margin-top:5px;" (click)="logout()"><i class="fa fa-sign-out"></i>&nbsp;Logout</button>
+  </p-panel>
+
 </p-overlayPanel>
 <p-overlayPanel #op2>
   <p-panelMenu [model]="notificationitems" [style]="{'width':'250px'}"></p-panelMenu>

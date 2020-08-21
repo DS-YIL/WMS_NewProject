@@ -4,7 +4,8 @@ import { Employee, userAcessNamesModel, rbamaster } from '../Models/Common.Model
 import { Router, RouterEvent, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { wmsService } from '../WmsServices/wms.service';
-import { pageModel } from '../Models/WMS.Model';
+import { environment } from 'src/environments/environment'
+import { pageModel, ddlmodel } from '../Models/WMS.Model';
 
 @Component({
   selector: 'app-nav-menu',
@@ -16,13 +17,16 @@ export class NavMenuComponent implements OnInit {
   @ViewChild('op1', {static : false}) overlaymodel;
   loggedin: boolean = false;
   items: MenuItem[];
+  imgurl = environment.profileimgUrl;
   tempitems: MenuItem[];
   otheritems: MenuItem[];
   useritems: MenuItem[];
   pagelist: pageModel[] = [];
   notificationitems: MenuItem[];
   username: string = "";
+  cars: any[];
   emp = new Employee();
+  loggeduserdata: Employee[] = [];
   ismailurl: boolean = false;
   isapprovalurl: boolean = false;
   urlrequstedpage: string = "";
@@ -38,10 +42,19 @@ export class NavMenuComponent implements OnInit {
   rbalist: rbamaster[] = [];
   menuview: boolean = false;
   btntext: string = "Menu"
+  rolename: string = "";
+  profileimage: string = "";
+  loggedinas: string = "";
+  selectedrolename: string = "";
   ngOnInit() {
     debugger;
+    this.cars = [
+      { label: 'Newest First', value: '!year' }
+    ];
     this.notificationitems = [];
+    this.loggeduserdata = [];
     this.approverstatus = "Pending";
+    this.selectedrolename = "";
     var eurl = window.location.href;
     if (eurl.includes("/key")) {
       this.ismailurl = true;
@@ -66,7 +79,9 @@ export class NavMenuComponent implements OnInit {
         this.loggedin = true;
         let element: HTMLElement = document.getElementById("btnuser") as HTMLElement;
         element.hidden = false;
-        this.emp = JSON.parse(localStorage.getItem("Employee")) as Employee;
+      this.emp = JSON.parse(localStorage.getItem("Employee")) as Employee;
+      this.profileimage = this.imgurl + this.emp.employeeno + ".jpg";
+      this.loggeduserdata.push(this.emp);
         if (localStorage.getItem("pages")) {
           this.pagelist = JSON.parse(localStorage.getItem("pages")) as pageModel[];
         }
@@ -79,6 +94,23 @@ export class NavMenuComponent implements OnInit {
           this.bindMenuwithoutrole();
         }
       else {
+        if (localStorage.getItem("userroles")) {
+          this.userrolelist = JSON.parse(localStorage.getItem("userroles")) as userAcessNamesModel[];
+        }
+        else {
+          this.userrolelist = JSON.parse(localStorage.getItem("allroles")) as userAcessNamesModel[];
+        }
+        var rid = this.emp.roleid;
+        var data1 = this.userrolelist.filter(function (element, index) {
+          return (element.roleid == parseInt(rid));
+        });
+        if (data1.length > 0) {
+          this.rolename = data1[0].accessname;
+          if (this.rolename) {
+            this.loggedinas = "Logged in as " + this.rolename;
+          }
+          
+        }
         if (sessionStorage.getItem("userdashboardpage")) {
           this.binduserdashboardmenu();
         }
@@ -112,6 +144,35 @@ export class NavMenuComponent implements OnInit {
     
    
       
+  }
+  Navigatetopagefn() {
+    this.loggedinas = "";
+    var name = this.selectedrolename;
+    var data1 = this.userrolelist.filter(function (element, index) {
+      return (element.accessname == name);
+    });
+    if (data1.length > 0) {
+      this.emp.roleid = String(data1[0].roleid);
+      localStorage.removeItem('Employee');
+      localStorage.setItem('Employee', JSON.stringify(this.emp));
+      this.selectedrolename = "";
+      var rid = this.emp.roleid;
+      var data1 = this.userrolelist.filter(function (element, index) {
+        return (element.roleid == parseInt(rid));
+      });
+      if (data1.length > 0) {
+        this.rolename = data1[0].accessname;
+        if (this.rolename) {
+          this.loggedinas = "Logged in as " + this.rolename;
+        }
+        else {
+          this.loggedinas = "";
+        }
+
+      }
+      this.bindMenu();
+
+    }
   }
 
   bindMenuwithoutrole() {

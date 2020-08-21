@@ -220,11 +220,12 @@ public bool onhold { get; set; }
 		public string createdby { get; set; }
         public string binnumber { get; set; }
         public string racknumber { get; set; }
-	  public int confirmqty { get; set; }
-
+	    public int confirmqty { get; set; }
 		public string materialid { get; set; }
 
 		public string remarks { get; set; }
+
+		public int returnid { get; set; }
 
     }
 	public class trackstatusModel

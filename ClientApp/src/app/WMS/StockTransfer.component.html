@@ -77,6 +77,7 @@
                   <th style="text-align:center;width:20%;">Source Location</th>
                   <th style="text-align:center;width:20%;">Destination Location</th>
                   <th style="text-align:center;width:10%;">Transfer Qty</th>
+                  <th style="text-align:center;width:10%;"></th>
                 </tr>
               </ng-template>
               <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
@@ -99,7 +100,9 @@
                   <td class="ptable-cell" style="text-align:right;width:10%;">
                     <input pInputText type="number" style="text-align:right" class="form-control" [min]="0" [(ngModel)]="rowData.transferqty" (change)="setqty(rowData)">
                   </td>
-
+                  <td style="text-align:center;width:10%;">
+                    <button (click)="deleteRow(ri)" class="btn btn-danger" style="margin-top:10%"><i class="fa fa-trash"></i></button>
+                  </td>
 
                 </tr>
               </ng-template>
