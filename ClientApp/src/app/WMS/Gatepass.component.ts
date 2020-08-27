@@ -104,12 +104,12 @@ export class GatePassComponent implements OnInit {
               return false;
             }
             else if (this.gatepassModel.gatepasstype != "Returnable") {
-              this.materialistModel = { materialid: "", gatepassmaterialid: "0", materialdescription: "", quantity: 0, materialcost: "0", remarks: " ", expecteddate: this.date, returneddate: this.date, issuedqty: 0 };
+              this.materialistModel = { materialid: "", gatepassmaterialid: "0", materialdescription: "", quantity: 0, materialcost: "0", remarks: " ", expecteddate: this.date, returneddate: this.date, issuedqty: 0, showdetail: false, materiallistdata: [] };
               this.gatepassModel.materialList.push(this.materialistModel);
             }
             else {
               this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].expecteddate = this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].expecteddate != null ? new Date(this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].expecteddate).toLocaleDateString() : undefined;
-              this.materialistModel = { materialid: "", gatepassmaterialid: "0", materialdescription: "", quantity: 0, materialcost: "0", remarks: " ", expecteddate: this.date, returneddate: this.date, issuedqty: 0 };
+              this.materialistModel = { materialid: "", gatepassmaterialid: "0", materialdescription: "", quantity: 0, materialcost: "0", remarks: " ", expecteddate: this.date, returneddate: this.date, issuedqty: 0, showdetail: false, materiallistdata: [] };
               this.gatepassModel.materialList.push(this.materialistModel);
             }
            
@@ -128,14 +128,14 @@ export class GatePassComponent implements OnInit {
       }
       else {
         debugger;
-        this.materialistModel = { materialid: "", gatepassmaterialid: "0", materialdescription: "", quantity: 0, materialcost: "0", remarks: " ", expecteddate: this.date, returneddate: this.date, issuedqty: 0 };
+        this.materialistModel = { materialid: "", gatepassmaterialid: "0", materialdescription: "", quantity: 0, materialcost: "0", remarks: " ", expecteddate: this.date, returneddate: this.date, issuedqty: 0, showdetail: false, materiallistdata: [] };
          this.gatepassModel.materialList.push(this.materialistModel);
       }
 
     }
     else {
       if (this.gatepassModel.materialList.length <= 0) {
-        this.materialistModel = { materialid: "", gatepassmaterialid: "0", materialdescription: "", quantity: 0, materialcost: "0", remarks: " ", expecteddate: this.date, returneddate: this.date, issuedqty: 0 };
+        this.materialistModel = { materialid: "", gatepassmaterialid: "0", materialdescription: "", quantity: 0, materialcost: "0", remarks: " ", expecteddate: this.date, returneddate: this.date, issuedqty: 0, showdetail: false, materiallistdata: [] };
         this.gatepassModel.materialList.push(this.materialistModel);
       }
       else {
@@ -254,22 +254,49 @@ export class GatePassComponent implements OnInit {
     });
   }
 
+  getcolspan() {
+    var colspan = 7;
+    if (this.employee.roleid != '8') {
+      colspan = 8;
+    }
+    if (this.employee.roleid != '8' && this.employee.roleid != '3') {
+      colspan = 9;
+    }
+    if (this.employee.roleid != '8' && this.employee.roleid == '3') {
+      colspan = 9;
+    }
+    if (this.selectedStatus == "Issued" && this.employee.roleid == '3') {
+      colspan = colspan + 1;
+    }
+
+    return colspan;
+
+  }
+
   //Get details
   showdetails(data: any, index: any) {
+
+    debugger;
+    this.materialList = [];
     this.selectedRow = index;
     this.displaydetail = true;
-    debugger;
     var gatepassId = data.gatepassid;
     this.bindMaterilaDetails(gatepassId);
-    if (this.employee.roleid == "8") {
-      this.getGatePassHistoryList(gatepassId);
-    }
+    data.showdetail = !data.showdetail;
+    
+    //debugger;
+    
+    //if (this.employee.roleid == "8") {
+    //  this.getGatePassHistoryList(gatepassId);
+    //}
   }
 
   //get gatepass list
   bindMaterilaDetails(gatepassId: any) {
+    this.gatepassFiltered[this.selectedRow].materiallistarray = [];
     this.wmsService.gatepassmaterialdetail(gatepassId).subscribe(data => {
       this.materialList = data;
+      this.gatepassFiltered[this.selectedRow].materiallistarray = data;
       console.log(data);
       this.gatepassModel = this.materialList[0];
       console.log(this.gatepassModel);
@@ -397,10 +424,9 @@ export class GatePassComponent implements OnInit {
           material.quantity = result[i].quantity;
           material.materialcost = result[i].materialcost;
           material.remarks = result[i].remarks;
-          //material.approverstatus = result[i].approverstatus;
+          material.showdetail = false;
           material.expecteddate = new Date(result[i].expecteddate);
           if (isNullOrUndefined(result[i].returneddate)) {
-            //material.returneddate = new Date(this.date).toLocaleDateString();
             material.returneddate = this.checkValiddate(result[i].returneddate) == "" ? undefined : this.checkValiddate(result[i].returneddate);
           }
           else {
@@ -446,7 +472,7 @@ export class GatePassComponent implements OnInit {
     } else {
       this.gatepassModel.gatepasstype = "0";
       this.gatepassModel.reasonforgatepass = "0";
-      this.materialistModel = { materialid: "", gatepassmaterialid: "0", materialdescription: "", quantity: 0, materialcost: "0", remarks: " ", expecteddate: this.date, returneddate: this.date, issuedqty: 0 };
+      this.materialistModel = { materialid: "", gatepassmaterialid: "0", materialdescription: "", quantity: 0, materialcost: "0", remarks: " ", expecteddate: this.date, returneddate: this.date, issuedqty: 0, showdetail: false, materiallistdata: [] };
       this.gatepassModel.materialList.push(this.materialistModel);
       this.material = "";
     }
@@ -647,7 +673,7 @@ export class GatePassComponent implements OnInit {
         }
         else {
           debugger;
-          this.materialistModel = { materialid: "", gatepassmaterialid: "0", materialdescription: "", quantity: 0, materialcost: "0", remarks: " ", expecteddate: this.date, returneddate: this.date, issuedqty: 0 };
+          this.materialistModel = { materialid: "", gatepassmaterialid: "0", materialdescription: "", quantity: 0, materialcost: "0", remarks: " ", expecteddate: this.date, returneddate: this.date, issuedqty: 0, showdetail: false, materiallistdata: []};
           this.gatepassModel.materialList.push(this.materialistModel);
         }
 

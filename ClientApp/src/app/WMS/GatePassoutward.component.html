@@ -1,80 +1,95 @@
 
+<div class="card" style="width:98%;border-radius:10px; box-shadow:5px 10px #888888;min-height: 82vh; max-height: 82vh;margin:10px;">
+  <div class="card-header commoncardheader">
+    <div class="row text-center" *ngIf="nonreturn" style="margin-top: 10px;
+    margin-left: 0px !important;
+    margin-right: 0px !important">
+      <div class="col-lg-4 col-md-4 form-inline">
 
 
-  <div class="card" style="height:25px;margin-left:3px;margin-top:5px;" *ngIf="nonreturn">
-    <div class="card-header text-center cardheadertext">
-      <span>
-        <i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;Non Returnable Gatepass - Outward
-      </span>
+      </div>
+      <div class="col-lg-4 col-md-4 text-center">
+        <span style="color:#428bca;font-size:18px">
+          <i class="fa fa-check-circle-o" style="color:#428bca; font-size:18px;font-weight:600"></i>&nbsp;Non Returnable Gatepass - Outward
+        </span>
+      </div>
+      <div class="col-lg-4 col-md-4">
+
+      </div>
+     
+    </div>
+    <div class="row text-center" *ngIf="returnable" style="margin-top: 10px;
+    margin-left: 0px !important;
+    margin-right: 0px !important">
+      <div class="col-lg-4 col-md-4 form-inline">
+        <!--<label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">GRN No: </label>&nbsp;&nbsp;-->
+        <!--<input class="form-control" type="text" [(ngModel)]="PoDetails.grnnumber">&nbsp;&nbsp;&nbsp;&nbsp;-->
+        <!--<p-dropdown [options]="checkedgrnlist" appendTo="body" [(ngModel)]="selectedgrn" [showClear]="true" [style]="{'width':'250px'}" filter="true" placeholder="Select GRN" optionLabel="text"></p-dropdown>-->
+        <label class="labelheading">Status:</label>&nbsp;
+        <select style="float:left" class="form-control" [(ngModel)]="returntype" (change)="getdata()">
+          <option value="out" selected="selected">Outward</option>
+          <option value="in">Inward</option>
+        </select>
+
+
+      </div>
+      <div class="col-lg-4 col-md-4 text-center">
+        <span style="color:#428bca;font-size:18px">
+          <i class="fa fa-check-circle-o" style="color:#428bca; font-size:18px;font-weight:600"></i>&nbsp;Returnable Gatepass
+        </span>
+      </div>
+      <div class="col-lg-4 col-md-4">
+      
+      </div>
+
 
     </div>
-    <!--<span><i class="fa fa-star"></i><label class="labelheading"style="font-size:20px;">&nbsp;Non Returnable</label>&nbsp;| &nbsp;<i class="fa fa-truck"></i><label class="labelheading text-danger btn-link" style=" text-decoration: underline;">&nbsp;Outward</label></span>-->
 
   </div>
-  <div class="card" style="height:25px;margin-left:3px;margin-top:20px;" *ngIf="returnable">
-    <div class="card-header text-center cardheadertext">
-      <span>
-        <i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;Returnable Gatepass
-      </span>
+  <div class="card-body" style="overflow-y:scroll">
 
-    </div>
-    <!--<span *ngIf="isoutward"><i class="fa fa-star"></i><label class="labelheading" style="font-size:20px;">&nbsp;Returnable</label>&nbsp;| &nbsp;<i class="fa fa-truck"></i><label class="labelheading text-danger btn-link" style=" text-decoration: underline;" (click)="getoutwarddata()">&nbsp;Outward</label>&nbsp;|&nbsp;<i class="fa fa-truck"></i><label class="labelheading text-primary btn-link" (click)="getinwarddata()">&nbsp;Inward</label></span>
-    <span *ngIf="isinward"><i class="fa fa-star"></i><label class="labelheading" style="font-size:20px;">&nbsp;Returnable</label>&nbsp;| &nbsp;<i class="fa fa-truck"></i><label class="labelheading text-primary btn-link" (click)="getoutwarddata()">&nbsp;Outward</label>&nbsp;|&nbsp;<i class="fa fa-truck"></i><label class="labelheading text-danger btn-link" style=" text-decoration: underline;" (click)="getinwarddata()">&nbsp;Inward</label></span>-->
+    <p-table #dt [value]="gatepassModelList" [style]="{'width':'100%','overflow':'auto!important'}"
+             [responsive]="true" [rows]="50"
+             [resizableColumns]="true"
+             columnResizeMode="expand"
+             [paginator]="true" [rowsPerPageOptions]="[25,50,75,100]"
+             appendTo="body" dataKey="gatepassid">
+      <ng-template pTemplate="header">
+        <tr class="mprltbldata">
+          <th style="text-align: center; width: 70px">Sl. No.</th>
+          <th style="text-align:center;width: 100px">GatePass Id</th>
+          <th style="text-align:center">Supplier</th>
+          <th style="text-align:center;width: 300px">Approved By</th>
+        </tr>
+        <tr>
+          <th></th>
+          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'gatepassid', 'contains')"></th>
+          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'vendorname', 'contains')"></th>
+          <th></th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-rowData let-ri="rowIndex">
+        <tr>
+          <td>
+            {{ri+1}}
+          </td>
+          <!--<td class="ptable-cell" style="text-align:center"> <a style="color:blue;cursor:pointer;text-decoration:underline" href="#" [pRowToggler]="rowData"> <i [ngClass]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></i>{{rowData.gatepassid}}</a></td>-->
+          <td class="ptable-cell" style="text-align:left"><button class="btn btn-link" (click)="showdetails(rowData)">{{rowData.gatepassid}}</button></td>
+          <td class="ptable-cell" style="text-align:left">{{rowData.vendorname}}</td>
+          <td class="ptable-cell" style="text-align:left">
+            <span *ngIf="nonreturn">{{rowData.mgapprover}}</span>
+            <span *ngIf="!nonreturn">{{rowData.fmapprover}}</span>
+          </td>
+        </tr>
+      </ng-template>
 
+
+    </p-table>
   </div>
-  <div class="row form-inline" style="margin:10px;margin-top:20px" *ngIf="returnable">
-    <span class="labelheading">
-      Status :&nbsp;&nbsp;
-    </span>
-    <select style="float:left" class="form-control" [(ngModel)]="returntype" (change)="getdata()">
-      <option value="out" selected="selected">Outward</option>
-      <option value="in">Inward</option>
-    </select>
-
-  </div>
-
-<div style="margin-left:20px;margin-right:20px;margin-top:10px;">
-  <p-table #dt [value]="gatepassModelList" [style]="{'width':'100%','overflow':'auto!important'}"
-           [responsive]="true" [rows]="50"
-           [resizableColumns]="true"
-           columnResizeMode="expand"
-           [paginator]="true" [rowsPerPageOptions]="[25,50,75,100]"
-           appendTo="body" dataKey="gatepassid">
-    <ng-template pTemplate="header">
-      <tr class="mprltbldata">
-        <th style="text-align: center; width: 70px">Sl. No.</th>
-        <th style="text-align:center;width: 100px">GatePass Id</th>
-        <th style="text-align:center">Supplier</th>
-        <th style="text-align:center;width: 300px">Approved By</th>
-      </tr>
-      <tr>
-        <th></th>
-        <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'gatepassid', 'contains')"></th>
-        <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'vendorname', 'contains')"></th>
-        <th></th>
-      </tr>
-    </ng-template>
-    <ng-template pTemplate="body" let-rowData  let-ri="rowIndex">
-      <tr>
-        <td>
-          {{ri+1}}
-        </td>
-        <!--<td class="ptable-cell" style="text-align:center"> <a style="color:blue;cursor:pointer;text-decoration:underline" href="#" [pRowToggler]="rowData"> <i [ngClass]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></i>{{rowData.gatepassid}}</a></td>-->
-        <td class="ptable-cell" style="text-align:left"><button class="btn btn-link"  (click)="showdetails(rowData)">{{rowData.gatepassid}}</button></td>
-        <td class="ptable-cell" style="text-align:left">{{rowData.vendorname}}</td>
-        <td class="ptable-cell" style="text-align:left">
-          <span *ngIf="nonreturn">{{rowData.mgapprover}}</span>
-          <span *ngIf="!nonreturn">{{rowData.fmapprover}}</span>
-        </td>
-      </tr>
-    </ng-template>
-    
-
-  </p-table>
-
-
 </div>
-              
+
+
+
 
 
 
@@ -86,7 +101,7 @@
     <div class="col-lg-3 col-md-3 form-inline labelheading">
       <label class="form-label"><b>Type: </b> </label>&nbsp;<label class="labeltext">{{DGgatepasstype}}</label>
     </div>
-    <div class="col-lg-3 col-md-3 form-inline labelheading">
+    <div class="col-lg-7 col-md-7 form-inline labelheading">
       <label class="form-label"><b>Supplier: </b></label>&nbsp;<label class="labeltext">{{DGvendorname}}</label>
     </div>
   </div>
@@ -117,12 +132,12 @@
               <input *ngIf="!isinward" pInputText type="number" [min]="0" (change)="checkoutqty(rowData.outwardqty,rowData.quantity,rowData);" class="form-control" [(ngModel)]="rowData.outwardqty">
             </td>
             <td class="ptable-cell" style="text-align:right;width:100px" *ngIf="isinward">
-              <input  pInputText type="number" [min]="0" (change)="checkinqty(rowData.inwardqty,rowData.outwardqty,rowData);" class="form-control" [(ngModel)]="rowData.inwardqty">
+              <input pInputText type="number" [min]="0" (change)="checkinqty(rowData.inwardqty,rowData.outwardqty,rowData);" class="form-control" [(ngModel)]="rowData.inwardqty">
             </td>
             <td class="ptable-cell" style="text-align:right;width:200px"><textarea [(ngModel)]="rowData.remarks"></textarea></td>
           </tr>
 
-</ng-template>
+        </ng-template>
       </p-table>
     </div>/
   </div><br />

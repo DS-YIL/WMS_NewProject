@@ -1,6 +1,6 @@
 
 <div style="margin:10px;">
-  <div class="card" style="width:100%;border-radius:10px; box-shadow:5px 10px #888888;">
+  <div class="card" style="width:100%;border-radius:10px; box-shadow:5px 10px #888888;min-height: 82vh;max-height: 82vh;">
     <div class="card-header">
       <div class="form-inline">
         <label class="labelheading">Status :</label>&nbsp;&nbsp;
@@ -38,7 +38,7 @@
       </div>
 
     </div>-->
-    <div class="card-body">
+    <div class="card-body" style="overflow-y:scroll">
 
       <div class="row" style="max-width:100%;position: relative; margin-top:5px;margin-left:3px;">
         <p-table #dt [value]="filteredpodetailsList" [style]="{'width':'100%','overflow':'auto!important'}"

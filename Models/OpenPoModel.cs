@@ -387,6 +387,18 @@ public bool onhold { get; set; }
 		public DateTime createdon { get; set; }
 		public string confirmstatus { get; set; }
 		public int materialcost { get; set; }
+
+		public int storeid { get; set; }
+
+		public int rackid { get; set; }
+		public int binid { get; set; }
+
+		public int defaultstore { get; set; }
+
+		public int defaultrack { get; set; }
+		public int defaultbin { get; set; }
+
+
 	}
 
 	

@@ -1,4 +1,4 @@
-<style>
+<!--<style>
   .data-selected {
     background-color: #9ba5af !important;
   }
@@ -6,61 +6,66 @@
     padding-top: 0px !important;
     padding-bottom: 0px !important;
   }
-</style>
-  <div style="margin:0px;">
-    <div class="card" style="height:540px; width:100%;border-radius:10px; box-shadow:5px 10px #888888;">
-        <div *ngIf="!addprocess" class="card-header" style="width: 255px;
-    background-color: white;
-    margin-left: 25px;
-    height: 27px;
-    padding-top: 0px;">
-            <i *ngIf="!addprocess" class="fa fa-bookmark" style="font-size: 15px"></i><label *ngIf="!addprocess" style="font-size: 15px;padding:0px; color: rgb(96, 123, 212);"> &nbsp;&nbsp;Create Stock Transfer</label>&nbsp;&nbsp;&nbsp;&nbsp;<button *ngIf="!addprocess" type="button" pTooltip="Create Stock Transfer" style="border-radius: 10em!important;background-color: white; border-color:  rgb(96, 123, 212);" rounded="true" size="lg" class="my-0" (click)="Showadd()"> <i class="fa fa-user-plus" style="font-size: 15px;color: green;"></i></button>
+</style>-->
+  <div style="margin:10px;">
+    <div class="card" style="width:100%;border-radius:10px; box-shadow:5px 10px #888888;min-height: 81vh; max-height: 81vh;">
+      <div class="card-header">
+        <h6 class="text-center">
+          <span style="color:#428bca;font-size:16px" *ngIf="addprocess">
+            <i class="fa fa-check-circle-o" style="color:#428bca; font-size:16px;font-weight:600"></i>&nbsp;Add - Internal Stock Transfer
+          </span>
+        </h6>
+        
 
-        </div>
-        <div *ngIf="addprocess" class="card-header cardheadertext text-center">
-          <button type="button" class="btn btn-primary btn-sm" style="float:left;margin-left:0px;" *ngIf="addprocess" (click)="Showlist()" label="Save"><i class="fa fa-arrow-left"></i></button>
-          <span><i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;Add - Internal Stock Transfer</span>
-          <!--<button type="button" class="btn btn-primary btn-sm" style="float:right;margin-left:10px;" *ngIf="!addprocess" (click)="Showadd()" label="Save"><i class="fa fa-plus"></i>&nbsp;&nbsp;Create Stock Transfer</button>-->
+        <div class="row " style="    margin-top: 10px;
+    margin-left: 0px !important;
+    margin-right: 0px !important">
+          <div class="col-lg-10 col-md-10 form-inline">
+            <p-button icon="fa fa-user-plus" label="Create Stock Transfer" (click)="Showadd()" *ngIf="!addprocess"></p-button>
+            <p-button icon="fa fa-arrow-left" label="Back" (click)="Showlist()" *ngIf="addprocess"></p-button>
+            &nbsp;&nbsp;&nbsp;<label class="labelheading" *ngIf="addprocess">Source Plant:&nbsp;</label>
+            &nbsp;&nbsp;&nbsp;<select class="form-control" [(ngModel)]="mainmodel.sourceplant" *ngIf="addprocess">
+              <option value="">Select plant</option>
+              <option value="Plant1">Plant 1</option>
+              <option value="Plant2">Plant 2</option>
+            </select>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label class="labelheading" *ngIf="addprocess">Destination Plant:&nbsp;</label>
+            &nbsp;&nbsp;&nbsp;<select class="form-control" [(ngModel)]="mainmodel.destinationplant" *ngIf="addprocess">
+              <option value="">Select plant</option>
+              <option value="Plant1">Plant 1</option>
+              <option value="Plant2">Plant 2</option>
+            </select>
 
-          <!--<button type="button" class="btn btn-primary btn-sm" style="float:right;margin-left:10px;" *ngIf="addprocess" (click)="addrows()" label="Save"><i class="fa fa-plus"></i>&nbsp;&nbsp;Add row</button>-->
-
-        </div>
-
-          <div class="card-body cardstyle" style=" overflow-y: hidden;padding-top: 0px;">
-        <div class="card-body cardstyle" style="overflow-y:hidden">
-          <div class="row" *ngIf="addprocess" style="margin-top:5px !important">
-            <div class="col-lg-2 col-md-2 form-group" style="font-weight:600;font-size:14px;color:darkblue;">
-              Source Plant:
-            </div>
-            <div class="col-lg-2 col-md-2 form-group" style="font-weight:600;font-size:14px;color:darkblue;margin-left:-100px">
-              <select class="form-control" [(ngModel)]="mainmodel.sourceplant">
-                <option value="">Select plant</option>
-                <option value="Plant1">Plant 1</option>
-                <option value="Plant2">Plant 2</option>
-              </select>
-            </div>
-            <div class="col-lg-2 col-md-2 form-group" style="font-weight:600;font-size:14px;color:darkblue;">
-              Destination Plant:
-            </div>
-            <div class="col-lg-2 col-md-2 form-group" style="font-weight:600;font-size:14px;color:darkblue;margin-left:-50px">
-              <select class="form-control" [(ngModel)]="mainmodel.destinationplant">
-                <option value="">Select plant</option>
-                <option value="Plant1">Plant 1</option>
-                <option value="Plant2">Plant 2</option>
-              </select>
-
-            </div>
-            <div class="col-lg-1 col-md-1 form-group" style="font-weight:600;font-size:14px;color:darkblue;">
-           
-            </div>
-            <div class="col-lg-4 col-md-4 form-group" style="font-weight:600;font-size:14px;color:darkblue;padding-left:168px">
-              &nbsp;&nbsp;&nbsp;&nbsp;<i *ngIf="addprocess" class="fa fa-bookmark" style="font-size: 15px"></i><label *ngIf="addprocess" style="font-size: 15px;padding:0px; color: rgb(96, 123, 212);"> &nbsp;&nbsp;Add Material</label>&nbsp;&nbsp;&nbsp;&nbsp;<button *ngIf="addprocess" type="button" pTooltip="Add marerial" style="border-radius: 10em!important;background-color: white; border-color:  rgb(96, 123, 212);" rounded="true" size="lg" class="my-0" (click)="addrows()"> <i class="fa fa-plus" style="font-size: 15px;color: green;"></i></button>
-            </div>
-
-
-
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label class="labelheading" *ngIf="addprocess">Remarks:&nbsp;</label>
+            &nbsp;&nbsp;&nbsp;<textarea type="text" [(ngModel)]="mainmodel.remarks" placeholder="Remarks" style="width:20%" *ngIf="addprocess"></textarea>
+          </div>
+          <div class="col-lg-2 col-md-2 form-inline" *ngIf="addprocess">
 
           </div>
+
+          <!--<div class="col-lg-4 col-md-4 text-center">
+
+
+
+      <span style="color:#428bca;font-size:18px" *ngIf="addprocess">
+        <i class="fa fa-check-circle-o" style="color:#428bca; font-size:18px;"></i>&nbsp;Add - Internal Stock Transfer
+      </span>
+
+
+
+    </div>
+    <div class="col-lg-4 col-md-4 form-inline">
+
+    </div>-->
+
+
+        </div>
+      </div>
+      
+
+      <div class="card-body cardstyle" style=" overflow-y: hidden;padding-top: 0px; margin-top:5px;">
+       
+         
           <div class="row" style="max-height: 400px;max-width:100%;overflow: scroll;position: relative; margin-left:3px;" *ngIf="addprocess">
 
             <p-table #dt [value]="podetailsList" [style]="{'width':'100%','overflow':'auto!important'}"
@@ -74,10 +79,12 @@
                   <th style="text-align:center;width:5%;">Sl.No.</th>
                   <th style="text-align:center;width:15%;">Material</th>
                   <th style="text-align:center;">Material Description</th>
-                  <th style="text-align:center;width:20%;">Source Location</th>
-                  <th style="text-align:center;width:20%;">Destination Location</th>
-                  <th style="text-align:center;width:10%;">Transfer Qty</th>
-                  <th style="text-align:center;width:10%;"></th>
+                  <th style="text-align:center;width:18%;">Source Location</th>
+                  <th style="text-align:center;width:18%;">Destination Location</th>
+                  <th style="text-align:center;width:9%;">Transfer Qty</th>
+                  <th style="text-align:center;width:15%;">
+                    <p-button icon="fa fa-user-plus" label="Add Material" (click)="addrows()" *ngIf="addprocess"></p-button>
+                  </th>
                 </tr>
               </ng-template>
               <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
@@ -89,18 +96,18 @@
                   <td class="ptable-cell" style="text-align:left;">
                     <span>{{rowData.materialdescription}}</span>
                   </td>
-                  <td class="ptable-cell" style="text-align:center;width:15%;">
+                  <td class="ptable-cell" style="text-align:center;width:18%;">
                     <p-autoComplete id="sc_{{ri+1}}" [(ngModel)]="rowData.sourcelocation" [suggestions]="matlocationsearch" placeholder="Hint: type 's'" [forceSelection]="true" (onSelect)="onSelectsource(rowData)" appendTo="body" (completeMethod)="search1($event,rowData,ri)" [dropdown]="true"></p-autoComplete>
                     <!--<i class="fa fa-location-arrow" style="color:blue;float:right" pTooltip="set picking location" (click)="showmateriallocationList(rowData.materialid,ri+1,ri)" aria-hidden="true"></i>-->
                   </td>
-                  <td class="ptable-cell" style="text-align:center;width:15%;">
+                  <td class="ptable-cell" style="text-align:center;width:18%;">
                     <p-autoComplete id="dt_{{ri+1}}" [(ngModel)]="rowData.destinationlocation" [suggestions]="results1" placeholder="Hint: type 's'" [forceSelection]="true" (onSelect)="onSelectdest(rowData)" appendTo="body" (completeMethod)="search($event)" [dropdown]="true"></p-autoComplete>
                     <!--<i class="fa fa-location-arrow" style="color:blue;float:right" pTooltip="Add Location" (click)="settransferloction(rowData,ri)" aria-hidden="true"></i>-->
                   </td>
-                  <td class="ptable-cell" style="text-align:right;width:10%;">
+                  <td class="ptable-cell" style="text-align:right;width:9%;">
                     <input pInputText type="number" style="text-align:right" class="form-control" [min]="0" [(ngModel)]="rowData.transferqty" (change)="setqty(rowData)">
                   </td>
-                  <td style="text-align:center;width:10%;">
+                  <td style="text-align:center;width:15%;">
                     <button (click)="deleteRow(ri)" class="btn btn-danger" style="margin-top:10%"><i class="fa fa-trash"></i></button>
                   </td>
 
@@ -110,131 +117,122 @@
 
 
           </div>
-            <div class="row cardstyle" style="height:100%;border-radius:0px;" *ngIf="!addprocess">
-              <p-table #dt [value]="stocktransferlistgroup" [style]="{'width':'100%'}"
-                       [scrollable]="true" scrollHeight="60vh">
-                <!--<p-table #dt [value]="stocktransferlistgroup" [style]="{'width':'100%','overflow':'auto!important'}"
-                     [responsive]="true" [rows]="10"
-                     [resizableColumns]="true"
-                     columnResizeMode="expand"
-                     [paginator]="true" [rowsPerPageOptions]="[10,20,30,40]"
-                     appendTo="body">-->
-                <ng-template pTemplate="header">
-                  <tr class="mprltbldata">
-                    <th style="text-align:center;width:5%;">Sl.No.</th>
-                    <th style="text-align:center;width:15%;">Transfer Id</th>
-                    <th style="text-align:center;width:15%;">Source Plant</th>
-                    <th style="text-align:center;width:15%;">Destination Plant</th>
-                    <th style="text-align:center;width:15%;">Transferred By</th>
-                    <th style="text-align:center;width:15%;">Transferred On</th>
-                    <th style="text-align:center;width:20%;">Remarks</th>
-                  </tr>
-                </ng-template>
-                <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
-                  <tr [ngClass]="{'data-selected': selectedRow === ri}">
-                    <td class="ptable-cell" style="text-align:center;width:5%;">{{ri+1}}</td>
-                    <td class="ptable-cell" style="text-align:center;width:15%;">
-                      <a style="cursor:pointer;color:blue;text-decoration:underline;" (click)="showdetails(rowData,ri)">{{rowData.transferid}}</a>
-                    </td>
-                    <td class="ptable-cell" style="text-align:left;width:15%;">
-                      <span>{{rowData.sourceplant}}</span>
-                    </td>
-                    <td class="ptable-cell" style="text-align:left;width:15%;">
-                      <span>{{rowData.destinationplant}}</span>
-                    </td>
-                    <td class="ptable-cell" style="text-align:left;width:15%;">
-                      <span>{{rowData.transferredby}}</span>
-                    </td>
-                    <td class="ptable-cell" style="text-align:center;width:15%;">
-                      <span>{{rowData.transferredon | date :  constants.dateFormat}}</span>
-                    </td>
-                    <td class="ptable-cell" style="text-align:left;width:20%;">
-                      <span>{{rowData.remarks}}</span>
-                    </td>
-                  </tr>
-                </ng-template>
-              </p-table>
-            </div>
-          </div>
-          <br />
-          <!--<div class="row" style="max-height: 400px;max-width:100%;overflow: scroll;position: relative; margin-top:5px;margin-left:3px;" *ngIf="displaydetail">-->
+          <div class="row cardstyle" style="height:100%;border-radius:0px;" *ngIf="!addprocess">
+            <p-table #dt [value]="stocktransferlistgroup" [style]="{'width':'100%'}"
+                     [scrollable]="true" scrollHeight="60vh">
+              <!--<p-table #dt [value]="stocktransferlistgroup" [style]="{'width':'100%','overflow':'auto!important'}"
+     [responsive]="true" [rows]="10"
+     [resizableColumns]="true"
+     columnResizeMode="expand"
+     [paginator]="true" [rowsPerPageOptions]="[10,20,30,40]"
+     appendTo="body">-->
+              <ng-template pTemplate="header">
+                <tr class="mprltbldata">
+                  <th style="text-align:center;width:5%;">Sl.No.</th>
+                  <th style="text-align:center;width:15%;">Transfer Id</th>
+                  <th style="text-align:center;width:15%;">Source Plant</th>
+                  <th style="text-align:center;width:15%;">Destination Plant</th>
+                  <th style="text-align:center;width:15%;">Transferred By</th>
+                  <th style="text-align:center;width:15%;">Transferred On</th>
+                  <th style="text-align:center;width:20%;">Remarks</th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
+                <tr [ngClass]="{'data-selected': selectedRow === ri}">
+                  <td class="ptable-cell" style="text-align:center;width:5%;">{{ri+1}}</td>
+                  <td class="ptable-cell" style="text-align:center;width:15%;">
+                    <a style="cursor:pointer;color:blue;text-decoration:underline;" (click)="showdetails(rowData,ri)">{{rowData.transferid}}</a>
+                  </td>
+                  <td class="ptable-cell" style="text-align:left;width:15%;">
+                    <span>{{rowData.sourceplant}}</span>
+                  </td>
+                  <td class="ptable-cell" style="text-align:left;width:15%;">
+                    <span>{{rowData.destinationplant}}</span>
+                  </td>
+                  <td class="ptable-cell" style="text-align:left;width:15%;">
+                    <span>{{rowData.transferredby}}</span>
+                  </td>
+                  <td class="ptable-cell" style="text-align:center;width:15%;">
+                    <span>{{rowData.transferredon | date :  constants.dateFormat}}</span>
+                  </td>
+                  <td class="ptable-cell" style="text-align:left;width:20%;">
+                    <span>{{rowData.remarks}}</span>
+                  </td>
+                </tr>
+                <tr *ngIf="rowData.showdetail">
+                  <td [attr.colspan]="7" style="text-align:center;">
+                    <label class="labeltext">Transfer Detail</label>
+                  </td>
 
-            <!--<div class="row  pl-0">
-          <div class="col-lg-4 col-md-4 labelheading">
-            <label>Transfer Id :</label>&nbsp;<span><label class="labeltext">{{matid}}</label></span>
+                </tr>
+                <tr *ngIf="rowData.showdetail">
+                  <td [attr.colspan]="7" style="text-align:center;">
+                    <p-table #dt [value]="rowData.materialdata" [style]="{'width':'100%'}"
+                             [scrollable]="true" scrollHeight="20vh">
+                      <ng-template pTemplate="header">
+                <tr class="mprltbldata" style="background-color: #9ba5af !important">
+                  <th style="    text-align: center; width: 5%;background-color: #9ba5af !important">Sl.No.</th>
+                  <th style="    text-align: center; width: 15%;background-color: #9ba5af !important">Material</th>
+                  <th style="    text-align: center;background-color: #9ba5af!important">Material Description</th>
+                  <th style="    text-align: center; width: 20;background-color: #9ba5af !important;">Source location</th>
+                  <th style="    text-align: center;width: 20%;background-color: #9ba5af!important">Destination Location</th>
+                  <th style="    text-align: center; width: 10%;
+    background-color: #9ba5af!important">Transfer Qty</th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
+                <tr>
+                  <td class="ptable-cell" style="text-align:center;width:5%;">{{ri+1}}</td>
+                  <td class="ptable-cell" style="text-align:center;width:15%;">
+                    <span>{{rowData.materialid}}</span>
+                  </td>
+                  <td class="ptable-cell" style="text-align:left">
+                    <span>{{rowData.materialdescription}}</span>
+                  </td>
+
+                  <td class="ptable-cell" style="text-align:left;width:20%;">
+                    <span>{{rowData.sourcelocation}}</span>
+                  </td>
+
+
+                  <td class="ptable-cell" style="text-align:left;width:20%;">
+                    <span>{{rowData.destinationlocation}}</span>
+                  </td>
+
+
+                  <td class="ptable-cell" style="text-align:right;width:10%;">
+                    <span>{{rowData.transferqty}}</span>
+                  </td>
+
+
+                </tr>
+              </ng-template>
+            </p-table>
+            </td>
+
+            </tr>
+            </ng-template>
+            </p-table>
           </div>
-          <div class="col-lg-4 col-md-4 labelheading">
-            <label>Transferred By :</label>&nbsp;<span><label class="labeltext">{{matdescription}}</label></span>
-          </div>
-          <div class="col-lg-4 col-md-4 labelheading">
-            <label>Transferred On :</label>&nbsp;<span><label class="labeltext">{{transferedon | date :  constants.dateFormat}}</label></span>
+       
+       
+      
+        <!--<div class="card-body" style="    overflow-y: hidden;padding-top: 0px;" *ngIf="displaydetail">
+          <div class="row" style="height:100%;border-radius:0px;" *ngIf="!addprocess">
+           
           </div>
         </div>-->
-            <div class="card-body" style="    overflow-y: hidden;padding-top: 0px;" *ngIf="displaydetail">
-              <div class="row" style="height:100%;border-radius:0px;" *ngIf="!addprocess">
-                <p-table #dt [value]="stocktransferDetaillist" [style]="{'width':'100%'}"
-                         [scrollable]="true" scrollHeight="20vh"
-                       >
-                  <!--<div class="row" style="max-height: 400px;max-width:100%;overflow: scroll;position: relative; margin-top:5px;margin-left:3px;">
-
-                <p-table #dt [value]="stocktransferDetaillist" [style]="{'width':'100%','overflow':'auto!important'}"
-                         [responsive]="true" [rows]="10"
-                         [resizableColumns]="true"
-                         columnResizeMode="expand"
-                         [paginator]="true" [rowsPerPageOptions]="[10,20,30,40]"
-                         appendTo="body">-->
-                  <ng-template pTemplate="header">
-                    <tr class="mprltbldata" style="background-color: #9ba5af !important">
-                      <th style="    text-align: center; width: 5%;background-color: #9ba5af !important">Sl.No.</th>
-                      <th style="    text-align: center; width: 15%;background-color: #9ba5af !important">Material</th>
-                      <th style="    text-align: center;background-color: #9ba5af!important">Material Description</th>
-                      <th style="    text-align: center; width: 20;background-color: #9ba5af !important;">Source location</th>
-                      <th style="    text-align: center;width: 20%;background-color: #9ba5af!important">Destination Location</th>
-                      <th style="    text-align: center; width: 10%;
-    background-color: #9ba5af!important">Transfer Qty</th>
-                    </tr>
-                  </ng-template>
-                  <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
-                    <tr>
-                      <td class="ptable-cell" style="text-align:center;width:5%;">{{ri+1}}</td>
-                      <td class="ptable-cell" style="text-align:center;width:15%;">
-                        <span>{{rowData.materialid}}</span>
-                      </td>
-                      <td class="ptable-cell" style="text-align:left">
-                        <span>{{rowData.materialdescription}}</span>
-                      </td>
-
-                      <td class="ptable-cell" style="text-align:left;width:20%;">
-                        <span>{{rowData.sourcelocation}}</span>
-                      </td>
-
-
-                      <td class="ptable-cell" style="text-align:left;width:20%;">
-                        <span>{{rowData.destinationlocation}}</span>
-                      </td>
-
-
-                      <td class="ptable-cell" style="text-align:right;width:10%;">
-                        <span>{{rowData.transferqty}}</span>
-                      </td>
-
-
-                    </tr>
-                  </ng-template>
-                </p-table>
-              </div>
-            </div>
-          <!--</div>-->
+       
 
 
 
 
-        </div>
-        <div class="card-footer" *ngIf="addprocess">
-          <textarea placeholder="Remarks" class="form-control" cols="100" rows="2" [(ngModel)]="mainmodel.remarks"></textarea>
-          <button type="button" class="btn btn-success" style="margin-left:45%" (click)="onsubmit1()">Submit</button>
-        </div>
       </div>
+      <div class="card-footer" *ngIf="addprocess">
+        
+        <button type="button" class="btn btn-success" style="margin-left:45%" (click)="onsubmit1()">Submit</button>
+      </div>
+    </div>
       <div style="height: 5px; overflow-y: scroll">
 
         <p-dialog header="Item Location" [(visible)]="AddDialog" [contentStyle]="{'overflow-y': 'scroll', 'overflow-x': 'hidden', 'max-height': '350px','min-height':'350px'}" showEffect="fade" [modal]="true" [responsive]="true" [style]="{width: '1024px'}">

@@ -86,6 +86,9 @@ export class MaterialReturnDashBoardComponent implements OnInit {
     else
       this.router.navigateByUrl("Login");
     this.StockModel = new StockModel();
+    this.locationListdata();
+    this.binListdata();
+    this.rackListdata();
     this.getMaterialIssueList();
     
   }
@@ -212,9 +215,10 @@ export class MaterialReturnDashBoardComponent implements OnInit {
           }
         }
         var stockdata = new StockModel();
-        stockdata.locatorid = this.PoDetails.storeid;
-        stockdata.rackid = this.PoDetails.rackid;
-        stockdata.binid = this.PoDetails.binid;
+        stockdata.locationlists = this.locationlists;
+        stockdata.locatorid = null;
+        stockdata.rackid = null;
+        stockdata.binid = null;
         stockdata.stocktype = "";
         this.stock.push(stockdata);
         //this.stock.push(new StockModel());
@@ -223,9 +227,10 @@ export class MaterialReturnDashBoardComponent implements OnInit {
     }
     else {
       var stockdata = new StockModel();
-      stockdata.locatorid = this.PoDetails.storeid;
-      stockdata.rackid = this.PoDetails.rackid;
-      stockdata.binid = this.PoDetails.binid;
+      stockdata.locationlists = this.locationlists;
+      stockdata.locatorid = null;
+      stockdata.rackid = null;
+      stockdata.binid = null;
       stockdata.stocktype = "";
       this.stock.push(stockdata);
       //this.stock.push(new StockModel());
@@ -239,6 +244,9 @@ export class MaterialReturnDashBoardComponent implements OnInit {
     this.showLocationDialog = true;
     this.PoDetails = details;
     this.rowIndex = index;
+    details.binid = details.defaultbin;
+    details.rackid = details.defaultrack;
+    details.storeid = details.defaultstore;
     this.binid = details.binid;
     this.rackid = details.rackid;
     this.matid = details.materialid;
@@ -260,22 +268,38 @@ export class MaterialReturnDashBoardComponent implements OnInit {
 
     if (this.stock.length == 0) {
       var stockdata = new StockModel();
+      stockdata.locationlists = this.locationlists;
       stockdata.locatorid = details.storeid;
       stockdata.rackid = details.rackid;
       stockdata.binid = details.binid;
       stockdata.stocktype = "";
       this.stock.push(stockdata);
+      if (stockdata.locatorid) {
+        this.onlocUpdate(stockdata.locatorid, stockdata);
+      }
+      if (stockdata.locatorid && stockdata.rackid) {
+        this.onrackUpdate(stockdata.locatorid, stockdata.rackid, stockdata);
+      }
+      
+      
 
     }
 
-    this.locationListdata();
-    this.binListdata();
-    this.rackListdata();
+   
     this.rack = "";
     this.bin = "";
     this.store = "";
 
 
+  }
+
+  close() {
+    //alert(this.stock.length);
+    this.stock = [];
+    //this.locationlist = [];
+    //this.binlist = [];
+    //this.racklist = [];
+    //alert(this.stock.length);
   }
 
 
@@ -310,6 +334,7 @@ export class MaterialReturnDashBoardComponent implements OnInit {
   }
 
   showmaterialdetails(matreturnid) {
+    this.materiallistData = [];
     //this.rowindex = rowindex
     this.AddDialog = true;
     this.showdialog = true;
@@ -389,9 +414,11 @@ export class MaterialReturnDashBoardComponent implements OnInit {
 
 
   locationListdata() {
+    debugger;
     this.wmsService.getlocationdata().
       subscribe(
         res => {
+          debugger;
           //this._list = res; //save posts in array
           this.locationlists = res;
           let _list: any[] = [];

@@ -29,74 +29,86 @@
     </div>
   </div><br />
 </form>-->
-<div class="card" style="    max-height: 100vh;border-radius: 10px;box-shadow: 5px 10px #888888;">
-  <div class="card-header text-center cardheadertext">
-    <span>
-      <i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;PM Dashboard
-    </span>
-  </div>
-  <div class="card-body" style="    overflow-y: hidden; padding-top: 0px;margin-left: 40px; margin-right: 40px">
-    <div class="row" style="height:100%;border-radius:0px;">
-      <p-table #dt [value]="POList" [style]="{'width':'100%'}"
-              [scrollable]="true"  scrollHeight="60vh">
-        <ng-template pTemplate="header">
-          <tr class="mprltbldata">
-            <th style="text-align:center;width:60px">Sl.No.</th>
-            <th style="text-align:center;width:150px">Project Code</th>
-            <th style="text-align:center;width:150px">PO No</th>
-            <th style="text-align:center;width:100px">Status</th>
-            <th style="    text-align: center; width: 300px">Supplier</th>
-            <!--<th style="text-align:center">Job Name</th>-->
-            <!--<th style="text-align:center;width:150px">Received Date</th>-->
-            <!--<th style="text-align:center">View</th>-->
-            <!--<th style="text-align:center;width:100px">Request</th>
-            <th style="text-align:center;width:100px">Reserve</th>-->
-            <!--<th>Material Description</th>-->
-            <!--<th style="text-align:center">Invoice No</th>-->
-          </tr>
-          <tr>
-            <th></th>
-            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'projectcode', 'contains')"></th>
-            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'pono', 'contains')"></th>
-            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'status', 'contains')"></th>
-            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'vendorname', 'contains')"></th>
-            <!--<th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'jobName', 'contains')"></th>-->
-            <!--<th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'enteredon', 'contains')"></th>-->
-            <!--<th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'quotationqty', 'contains')"></th>-->
-            <!--<th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'enteredon', 'contains')"></th>
-            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'enteredon', 'contains')"></th>-->
-            <!--<th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'invoiceno', 'contains')"></th>-->
-          </tr>
-        </ng-template>
-        <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex" let-rindex=0>
-          <tr>
-            <td class="ptable-cell" style="text-align:right;width:60px">
-              {{ri+1}}
-            </td>
-            <td class="ptable-cell" style="text-align:center;width:150px">
-              <span *ngIf="rowData.projectcode">{{rowData.projectcode}}</span>
-              <span *ngIf="!rowData.projectcode">-</span>
-            </td>
-           
-            <td class="ptable-cell" style="font-size:14px; text-align:center;width:150px">{{rowData.pono}}</td>
-            <td class="ptable-cell" style="text-align:center;width:100px">
-              <span *ngIf="rowData.status">{{rowData.status}}</span>
-              <span *ngIf="!rowData.status">Pending</span></td>
-            <td class="ptable-cell" style="    text-align: left;width: 300px">{{rowData.vendorname}}</td>
-            <!-- <td class="ptable-cell" style="text-align:center">{{rowData.jobName}}</td>-->
-            <!--<td class="ptable-cell" style="text-align:center;width:150px">{{checkValiddate(rowData.enteredon)}}</td>-->
-            <!--<td  class="ptable-cell" style="text-align:center" ><button class="btn btn-primary fa fa-eye" (click)="materialrequestedview(rowData.pono);"></button></td>-->
-            <!--<td class="ptable-cell" style="text-align:center;width:100px"><button class="btn btn-primary fa fa-plus" (click)="materialrequest(rowData.pono);"></button></td>
-            <td class="ptable-cell" style="text-align:center;width:100px"><button class="btn btn-primary fa fa-reorder" (click)="materialReserve(rowData.pono);"></button></td>-->
-            <!--<td class="ptable-cell">{{rowData.materialdescription}}</td>-->
-            <!--<td class="ptable-cell" style="text-align:center">{{rowData.invoiceno}}</td>-->
-          </tr>
-        </ng-template>
-      </p-table><br />
+  <div style="margin:10px;">
+    <div class="card" style="max-height: 82vh;border-radius: 10px;box-shadow: 5px 10px #888888;">
+      <div class="card-header text-center cardheadertext">
+        <!--<span style="color:#428bca;font-size:18px">
+          <i class="fa fa-check-circle-o" style="color:#428bca; font-size:18px;font-weight:600"></i>&nbsp;PM Dashboard
+        </span>-->
+        <span>
+          <i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;PM Dashboard
+        </span>
+      </div>
+      <div class="card-body" style="overflow-y: hidden; padding-top: 0px;margin-left: 10px; margin-right: 10px">
+        <div class="row" style="height:100%;border-radius:0px;margin-top:5px;">
+          <p-table #dt [value]="POList" [style]="{'width':'100%'}"
+                   [scrollable]="true" scrollHeight="60vh">
+            <ng-template pTemplate="header">
+              <tr class="mprltbldata">
+                <th style="text-align:center;width:60px">Sl.No.</th>
+                <th style="text-align:center;width:100px">Project Code</th>
+                <th style="text-align:center;width:100px">PO No</th>
+                <th style="text-align:center;width:100px">PO Qty</th>
+                <th style="text-align:center;width:100px">Received Qty</th>
+                <th style="text-align:center;width:100px">Status</th>
+                <th style="    text-align: center; width: 300px">Supplier</th>
+                <!--<th style="text-align:center">Job Name</th>-->
+                <!--<th style="text-align:center;width:150px">Received Date</th>-->
+                <!--<th style="text-align:center">View</th>-->
+                <!--<th style="text-align:center;width:100px">Request</th>
+  <th style="text-align:center;width:100px">Reserve</th>-->
+                <!--<th>Material Description</th>-->
+                <!--<th style="text-align:center">Invoice No</th>-->
+              </tr>
+              <tr>
+                <th></th>
+                <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'projectcode', 'contains')"></th>
+                <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'pono', 'contains')"></th>
+                <th></th>
+                <th></th>
+                <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'status', 'contains')"></th>
+                <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'vendorname', 'contains')"></th>
+                <!--<th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'jobName', 'contains')"></th>-->
+                <!--<th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'enteredon', 'contains')"></th>-->
+                <!--<th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'quotationqty', 'contains')"></th>-->
+                <!--<th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'enteredon', 'contains')"></th>
+  <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'enteredon', 'contains')"></th>-->
+                <!--<th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'invoiceno', 'contains')"></th>-->
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex" let-rindex=0>
+              <tr>
+                <td class="ptable-cell" style="text-align:right;width:60px">
+                  {{ri+1}}
+                </td>
+                <td class="ptable-cell" style="text-align:center;width:100px">
+                  <span *ngIf="rowData.projectcode">{{rowData.projectcode}}</span>
+                  <span *ngIf="!rowData.projectcode">-</span>
+                </td>
+
+                <td class="ptable-cell" style="font-size:14px; text-align:center;width:100px">{{rowData.pono}}</td>
+                <td class="ptable-cell" style="font-size:14px; text-align:center;width:100px">{{rowData.materialqty}}</td>
+                <td class="ptable-cell" style="font-size:14px; text-align:center;width:100px">{{rowData.receivedqty}}</td>
+                <td class="ptable-cell" style="text-align:center;width:100px">
+                  <span *ngIf="rowData.status">{{rowData.status}}</span>
+                  <span *ngIf="!rowData.status">Pending</span>
+                </td>
+                <td class="ptable-cell" style="    text-align: left;width: 300px">{{rowData.vendorname}}</td>
+
+                <!-- <td class="ptable-cell" style="text-align:center">{{rowData.jobName}}</td>-->
+                <!--<td class="ptable-cell" style="text-align:center;width:150px">{{checkValiddate(rowData.enteredon)}}</td>-->
+                <!--<td  class="ptable-cell" style="text-align:center" ><button class="btn btn-primary fa fa-eye" (click)="materialrequestedview(rowData.pono);"></button></td>-->
+                <!--<td class="ptable-cell" style="text-align:center;width:100px"><button class="btn btn-primary fa fa-plus" (click)="materialrequest(rowData.pono);"></button></td>
+  <td class="ptable-cell" style="text-align:center;width:100px"><button class="btn btn-primary fa fa-reorder" (click)="materialReserve(rowData.pono);"></button></td>-->
+                <!--<td class="ptable-cell">{{rowData.materialdescription}}</td>-->
+                <!--<td class="ptable-cell" style="text-align:center">{{rowData.invoiceno}}</td>-->
+              </tr>
+            </ng-template>
+          </p-table><br />
+        </div>
+      </div>
     </div>
-  </div>
-  </div>
-   
+    </div>
     <p-dialog #dialog header="List View :" [(visible)]="showList" [contentStyle]="{'overflow':'visible'}">
       <div class="ui-g ui-fluid">
         <p-listbox [options]="searchItems" [(ngModel)]="selectedItem" optionLabel="name" (onChange)="onSelectedOptionsChange(selectedItem,null)"></p-listbox>

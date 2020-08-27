@@ -34,6 +34,7 @@ export class MaterialIssueDashBoardComponent implements OnInit {
   public materialRequestDetails: materialRequestDetails;
 
   ngOnInit() {
+    this.materialIssueList = [];
     if (localStorage.getItem("Employee"))
       this.employee = JSON.parse(localStorage.getItem("Employee"));
     else
@@ -45,6 +46,7 @@ export class MaterialIssueDashBoardComponent implements OnInit {
 
   //get material issue list based on loginid
   getMaterialIssueList() {
+    this.materialIssueList = [];
     //this.employee.employeeno = "400095";
     this.wmsService.getMaterialIssueLlist(this.employee.employeeno).subscribe(data => {
       this.materialIssueListnofilter = data;

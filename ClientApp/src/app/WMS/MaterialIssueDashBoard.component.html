@@ -42,11 +42,11 @@
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
-          <tr>
+          <tr *ngIf="materialIssueList.length > 0">
             <td class="ptable-cell" style="text-align:center;width:70px;">
               {{ri+1}}
             </td>
-            <td class="ptable-cell" style="text-align:center;width:100px;"><a *ngIf="rowData.requestid " [routerLink]="['/WMS/MaterialIssue',rowData.requestid,rowData.pono]" routerLinkActive="active">{{rowData.requestid}}</a></td>
+            <td class="ptable-cell" style="text-align:center;width:100px;"><a *ngIf="rowData.requestid" [routerLink]="['/WMS/MaterialIssue',rowData.requestid,rowData.pono]" routerLinkActive="active">{{rowData.requestid}}</a></td>
             <!--<td class="ptable-cell" style="text-align:left;">{{rowData.projectname}}</td>-->
             <td class="ptable-cell" style="text-align:center;width:150px;">{{rowData.requesteddate  | date :  constants.dateFormat}}</td>
             <td class="ptable-cell" style="text-align:left;width:150px;">{{rowData.name}}</td>

@@ -587,6 +587,11 @@ fieldset.scheduler-border {
   color: #fff !important;
 }
 
+.mprltbltddata > td {
+    padding-top:2px;
+    padding-bottom:2px;
+}
+
 .labelheading {
   font-weight: 600;
   font-size: 14px;
@@ -965,6 +970,21 @@ input[type=number] {
   border-top: 10px solid green;
   margin-left: 21px;
 }
+
+.fullheight {
+  display: flex;
+  flex-direction: column;
+}
+
+.remainingheight {
+  flex-grow: 1;
+}
+
+.commoncardheader {
+  height: 50px;
+  padding-top: 0px;
+}
+
 
 
 

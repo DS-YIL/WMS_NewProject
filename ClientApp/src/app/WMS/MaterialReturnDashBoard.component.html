@@ -46,7 +46,7 @@
               {{ri+1}}
             </td>
             <td class="ptable-cell" style="text-align:center;width:100px;">
-              <button type="button" class="btn btn-link" (click)="showmaterialdetails(rowData.matreturnid);" style="padding-left:0px;">{{rowData.matreturnid}}</button>
+              <button type="button" class="btn btn-link" (click)="showmaterialdetails(rowData.matreturnid);" style="padding-left:0px;">MATRN{{rowData.matreturnid}}</button>
             </td>
             <!--<td class="ptable-cell" style="text-align:left;">{{rowData.materialid}}</td>-->
             <td class="ptable-cell" style="text-align:center;width:150px;">{{rowData.createdon  | date :  constants.dateFormat}}</td>
@@ -77,7 +77,7 @@
   <div *ngIf="showdialog">
     <div class="row  pl-0" style="margin-left:40px">
       <div class="col-lg-4 col-md-4 col-sm-4 pt-2 labelheading">
-        <label>Return Id :</label>&nbsp;<span class="labeltext"><label>{{matreturnid}}</label></span>
+        <label>Return Id :</label>&nbsp;<span class="labeltext"><label>MATRN{{matreturnid}}</label></span>
       </div>
 
     </div>
@@ -260,7 +260,7 @@
 
                   <!--<option selected value="*ngIf=rowData.locatorid!=null"></option>-->
                   <!--*ngIf="rowData.locatorid!=null ? rowData.locatorid:'Select Stock'"-->
-                  <option *ngFor=" let loclist of locationlists " value={{loclist.locatorid}}>
+                  <option *ngFor=" let loclist of rowData.locationlists" value={{loclist.locatorid}}>
                     {{loclist.locatorname}}
                   </option>
                 </select>

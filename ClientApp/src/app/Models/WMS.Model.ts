@@ -174,7 +174,7 @@ export class StockModel {
   remarks: string;
   inwardid: number;
   locatorname: string;
-locationlists: any[] = [];
+  locationlists: any[] = [];
   binlist: any[] = [];
  racklist: any[] = [];
 }
@@ -248,6 +248,7 @@ export class gatepassModel {
   managername: string;
   approvedby: string;
   categoryid: number;
+  materiallistarray: any[] = [];
 }
 export class materialistModel {
   gatepassmaterialid: string;
@@ -260,6 +261,9 @@ export class materialistModel {
   materialcost: string;
   //availableqty: number;
   issuedqty: number;
+  showdetail: boolean;
+
+  materiallistdata: any[] = [];
 }
 
 export class materialList {
@@ -420,6 +424,7 @@ export class invstocktransfermodel {
   sourceplant: string;
   destinationplant: string;
   remarks: string;
+  showdetail: boolean = false;
   materialdata: stocktransfermateriakmodel[] = [];
 }
 

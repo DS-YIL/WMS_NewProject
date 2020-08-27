@@ -170,6 +170,8 @@ export class StockTransferComponent implements OnInit {
   }
 
   Showadd() {
+    this.mainmodel.sourceplant = "Plant1";
+    this.mainmodel.destinationplant = "Plant1";
     this.displaydetail = false;
     this.selectedRow = null;
     this.addprocess = true;
@@ -457,6 +459,7 @@ export class StockTransferComponent implements OnInit {
   }
   showdetails(data: any, index:any) {
     debugger;
+    data.showdetail = !data.showdetail;
     this.selectedRow = index;
     this.stocktransferDetaillist = data.materialdata;
     this.matid = data.transferid;

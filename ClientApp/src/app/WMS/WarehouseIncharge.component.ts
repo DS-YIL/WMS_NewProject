@@ -117,9 +117,12 @@ export class WarehouseInchargeComponent implements OnInit {
     });
     this.PoDetails = new PoDetails();
     this.StockModel = new StockModel();
-    this.locationListdata1();
-    this.binListdata1();
-    this.rackListdata1();
+    this.locationListdata();
+    this.binListdata();
+    this.rackListdata();
+    //this.locationListdata1();
+    //this.binListdata1();
+    //this.rackListdata1();
     this.getcheckedgrn();
     this.StockModel.shelflife = new Date();
     //this.userForm = this.fb.group({
@@ -162,7 +165,7 @@ export class WarehouseInchargeComponent implements OnInit {
   }
 
   //On selection of location updating rack
-  onlocUpdate(locationid: any, rowData:any) {
+  onlocUpdate(locationid: any, rowData: any, issetdefault: boolean) {
     debugger;
     rowData.racklist = [];
     if (this.rackdata.filter(li => li.locationid == locationid).length > 0) {
@@ -180,7 +183,7 @@ export class WarehouseInchargeComponent implements OnInit {
   }
 
   //On selection of rack updating bin
-  onrackUpdate(locationid: any, rackid: any,rowData:any) {
+  onrackUpdate(locationid: any, rackid: any, rowData: any, issetdefault: boolean) {
     debugger;
     rowData.binlist = [];
     if (this.bindata.filter(li => li.locationid == locationid && li.rackid == rackid).length > 0) {
@@ -262,9 +265,10 @@ export class WarehouseInchargeComponent implements OnInit {
           }
         }
         var stockdata = new StockModel();
-        stockdata.locatorid = this.PoDetails.storeid;
-        stockdata.rackid = this.PoDetails.rackid;
-        stockdata.binid = this.PoDetails.binid;
+        stockdata.locationlists = this.locationlist;
+        stockdata.locatorid = null;
+        stockdata.rackid = null;
+        stockdata.binid = null;
         stockdata.stocktype = "";
         this.stock.push(stockdata);
         //this.stock.push(new StockModel());
@@ -273,9 +277,10 @@ export class WarehouseInchargeComponent implements OnInit {
     }
     else {
       var stockdata = new StockModel();
-      stockdata.locatorid = this.PoDetails.storeid;
-      stockdata.rackid = this.PoDetails.rackid;
-      stockdata.binid = this.PoDetails.binid;
+      stockdata.locationlists = this.locationlist;
+      stockdata.locatorid = null;
+      stockdata.rackid = null;
+      stockdata.binid = null;
       stockdata.stocktype = "";
       this.stock.push(stockdata);
       //this.stock.push(new StockModel());
@@ -625,9 +630,9 @@ this.updateRowGroupMetaData();
   close() {
     //alert(this.stock.length);
     this.stock = [];
-    this.locationlist = [];
-    this.binlist = [];
-    this.racklist = [];
+    //this.locationlist = [];
+    //this.binlist = [];
+    //this.racklist = [];
     //alert(this.stock.length);
   }
 
@@ -639,6 +644,7 @@ this.updateRowGroupMetaData();
     this.binid = details.binid;
     this.rackid = details.rackid;
     this.matid = details.material;
+    
     //this.invoiceForm.controls.itemRows.value[this.invoiceForm.controls.itemRows.value.length - 1].storeid = details.storeid;
     //this.invoiceForm.controls.itemRows.value[this.invoiceForm.controls.itemRows.value.length - 1].rackid = details.rackid;
     //this.invoiceForm.controls.itemRows.value[this.invoiceForm.controls.itemRows.value.length - 1].binid = details.binid;
@@ -648,6 +654,7 @@ this.updateRowGroupMetaData();
     this.StockModel.binid = details.binid;
     this.matdescription = details.materialdescription;
     this.matqty = details.confirmqty;
+   
     
     this.StockModelForm = this.formBuilder.group({
       rackid: [details.rackid],
@@ -655,19 +662,28 @@ this.updateRowGroupMetaData();
       locatorid: [details.storeid]
     });
 
+   
+
     if (this.stock.length == 0) {
       var stockdata = new StockModel();
+      stockdata.locationlists = this.locationlist;
       stockdata.locatorid = details.storeid;
       stockdata.rackid = details.rackid;
       stockdata.binid = details.binid;
       stockdata.stocktype = "";
       this.stock.push(stockdata);
+      if (stockdata.locatorid) {
+        this.onlocUpdate(stockdata.locatorid, stockdata, true);
+      }
+      if (stockdata.locatorid && stockdata.rackid) {
+        this.onrackUpdate(stockdata.locatorid, stockdata.rackid, stockdata, true);
+      }
+    
+      
      
     }
    
-    this.locationListdata();
-    this.binListdata();
-    this.rackListdata();
+  
     this.rack = "";
     this.bin = "";
     this.store = "";

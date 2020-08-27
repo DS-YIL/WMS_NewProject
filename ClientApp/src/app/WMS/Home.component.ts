@@ -445,7 +445,7 @@ export class HomeComponent implements OnInit {
       //PM
       this.gatepassData = this.totalGatePassList.filter(li => li.approverid == this.employee.employeeno && (li.approverstatus == this.approverstatus));
       //FM
-      this.gatepassData1 = this.totalGatePassList.filter(li => li.fmapproverid == this.employee.employeeno && li.approverstatus == "Approved" && li.fmapprovedstatus == this.approverstatus);
+      this.gatepassData1 = this.totalGatePassList.filter(li => li.fmapproverid == this.employee.employeeno && li.approverstatus == "Approved" && li.fmapprovedstatus == this.approverstatus && li.gatepasstype == "Non Returnable");
       this.prepareGatepassList();
       this.prepareGatepassList1();
 

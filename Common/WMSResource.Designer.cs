@@ -261,7 +261,7 @@ namespace WMS.Common {
         
         /// <summary>
         ///   Looks up a localized string similar to select mat.pono,mat.materialid as material,ms.materialdescription,mat.materialqty,sinw.invoiceno,sinw.grnnumber,
-        ///inw.inwardid,inw.checkedby,inw.qualitychecked,inw.returnedby,inw.returnedon,inw.returnremarks,inw.receivedqty,inw.returnremarks,
+        ///inw.inwardid,inw.qualitychecked,inw.returnedby,inw.returnedon,inw.returnremarks,inw.receivedqty,inw.returnremarks,
         ///qc.qualitypassedqty,qc.qualityfailedqty,qc.qcby as checkedby,
         /// CASE
         ///     WHEN inw.returnedby is null THEN qc.qualitypassedqty
@@ -269,7 +269,8 @@ namespace WMS.Common {
         ///  END as confirmqty,
         ///CASE
         ///     WHEN inw.returnedby is null THEN qc.qualityfailedqty
-        ///     ELSE  inw.returnqty        /// [rest of string was truncated]&quot;;.
+        ///     ELSE  inw.returnqty
+        ///  END as retu [rest of string was truncated]&quot;;.
         /// </summary>
         public static string Getdetailsforthreewaymatching {
             get {
@@ -678,9 +679,10 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select sk.materialid ,sk.itemlocation,sk.itemid, sk.returnid,sk.availableqty ,* from wms.wms_returnmaterial rm
-        ///  left join wms.wms_stock sk on rm.returnid = sk.returnid
-        ///  where rm.matreturnid=@matreid.
+        ///   Looks up a localized string similar to select sk.materialid,sk.itemlocation,sk.itemid, sk.returnid,sk.availableqty,mat.storeid as defaultstore,mat.rackid as defaultrack,mat.binid as defaultbin, * from wms.wms_returnmaterial rm
+        ///left outer join wms.wms_stock sk on rm.returnid = sk.returnid
+        ///left outer join wms.&quot;MaterialMasterYGS&quot; mat on mat.material = rm.materialid
+        ///where rm.matreturnid=@matreid.
         /// </summary>
         public static string getmatreturndetails {
             get {
@@ -712,7 +714,7 @@ namespace WMS.Common {
         ///gt.gatepasstype,gt.vendorname,gt.requestedby,gt.requestedon,emp3.name as mgapprover,emp4.name as fmapprover,
         ///matgt.outwarddate,emp1.name as outwardedby,matgt.outwardremarks,matgt.outwardqty,matgt.inwardqty,matgt.inwarddate,emp2.name as inwardedby,matgt.inwardremarks
         ///from wms.wms_materialissue matis
-        ///left outer join wms.wms_gatepassmaterial ma [rest of string was truncated]&quot;;.
+        ///left outer join wms.wms_gatepassmateri [rest of string was truncated]&quot;;.
         /// </summary>
         public static string getnonreturnablegatepassdata {
             get {
@@ -1268,12 +1270,12 @@ namespace WMS.Common {
         
         /// <summary>
         ///   Looks up a localized string similar to select  max(track.enteredon) as enteredon,max(pr.projectcode)as projectcode,max(wp.pono) as pono,min(track.status)as status,max(wp.suppliername )as vendorname,max(pr.jobname) as jobname,
-        ///       max(mat.materialqty) as materialqty
-        ///		from wms.wms_polist wp 
+        ///      SUM(mat.materialqty) as materialqty,
+        ///	  (select SUM(receivedqty) from wms.wms_storeinward where inwmasterid in
+        ///	  (select inwmasterid from wms.wms_securityinward where pono = wp.pono)) as receivedqty
+        ///	  from wms.wms_polist wp 
         ///      left join wms.wms_trackstatus track on track.pono=wp.pono
-        ///      left join wms.wms_project  pr on pr.pono =wp.pono 
-        ///      left join wms.wms_pomaterials mat on  mat.pono =wp.pono 
-        ///      where projectmanager=&apos;#projectmanager&apos;.
+        ///      left join wms.wm [rest of string was truncated]&quot;;.
         /// </summary>
         public static string openpolist {
             get {
@@ -1316,11 +1318,11 @@ namespace WMS.Common {
         
         /// <summary>
         ///   Looks up a localized string similar to select sinw.invoiceno,sinw.pono,sinw.grnnumber,sinw.onhold,sinw.onholdremarks,sinw.unholdedby,inw.remarks as receiveremarks,inw.materialid as material,ms.materialdescription,
-        /// inw.inwardid,inw.checkedby,inw.qualitychecked,inw.returnedby,inw.returnedon,inw.returnremarks,inw.receivedqty,inw.returnremarks,inw.materialqty,
+        /// inw.inwardid,inw.qualitychecked,inw.returnedby,inw.returnedon,inw.returnremarks,inw.receivedqty,inw.returnremarks,inw.materialqty,
         /// qc.qualitypassedqty,qc.qualityfailedqty,qc.qcby as checkedby,
         /// CASE
         ///     WHEN inw.qualitycheckrequired != True and inw.returnedby is null THEN inw.receivedqty
-        ///	 WHEN inw.qualitycheckreq [rest of string was truncated]&quot;;.
+        ///	 WHEN inw.qualitycheckrequired = True a [rest of string was truncated]&quot;;.
         /// </summary>
         public static string receivequeryfornonpo {
             get {
