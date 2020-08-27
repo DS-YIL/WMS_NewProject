@@ -161,7 +161,7 @@ export class StoreClerkComponent implements OnInit {
       return;
     }
     if (entredvalue != (receivedqty - returnedqty) && receivedqty && returnedqty) {
-      this.messageService.add({ severity: 'error', summary: '', detail: 'Returned and Accepted quantity should be equal to received qty' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Rejected and Accepted quantity should be equal to received qty' });
      // (<HTMLInputElement>document.getElementById("confirmqty")).value = "";
       data.confirmqty = "";
       return;
@@ -175,13 +175,13 @@ export class StoreClerkComponent implements OnInit {
 
     }
     if (entredvalue > receivedqty) {
-      this.messageService.add({ severity: 'error', summary: '', detail: 'Returned Quantity cannot exceed Recived Quantity' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Rejected Quantity cannot exceed Recived Quantity' });
       //(<HTMLInputElement>document.getElementById("returnqty")).value = "";
       data.returnqty = "";
       return;
     }
     if (entredvalue != (receivedqty - acceptedqty) && receivedqty && acceptedqty) {
-      this.messageService.add({ severity: 'error', summary: '', detail:  'Returned and Accepted Quantity should be equal to Received Quantity' });
+      this.messageService.add({ severity: 'error', summary: '', detail:  'Rejected and Accepted Quantity should be equal to Received Quantity' });
       //(<HTMLInputElement>document.getElementById("returnqty")).value = "";
       data.returnqty = "";
       return;
@@ -617,7 +617,7 @@ export class StoreClerkComponent implements OnInit {
       return (element.confirmqty + element.returnqty != parseInt(element.receivedqty));
     });
     if (invaliddata.length > 0) {
-      this.messageService.add({ severity: 'error', summary: '', detail: 'Returned and Accepted quantity should be equal to Received Quantity.' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Rejected and Accepted quantity should be equal to Received Quantity.' });
       this.spinner.hide();
       return;
     }
