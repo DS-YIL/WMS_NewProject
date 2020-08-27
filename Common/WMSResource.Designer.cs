@@ -1271,11 +1271,11 @@ namespace WMS.Common {
         /// <summary>
         ///   Looks up a localized string similar to select  max(track.enteredon) as enteredon,max(pr.projectcode)as projectcode,max(wp.pono) as pono,min(track.status)as status,max(wp.suppliername )as vendorname,max(pr.jobname) as jobname,
         ///      SUM(mat.materialqty) as materialqty,
-        ///	  (select SUM(receivedqty) from wms.wms_storeinward where inwmasterid in
+        ///	  (select SUM(confirmqty) from wms.wms_storeinward where inwmasterid in
         ///	  (select inwmasterid from wms.wms_securityinward where pono = wp.pono)) as receivedqty
         ///	  from wms.wms_polist wp 
         ///      left join wms.wms_trackstatus track on track.pono=wp.pono
-        ///      left join wms.wm [rest of string was truncated]&quot;;.
+        ///      left join wms.wms [rest of string was truncated]&quot;;.
         /// </summary>
         public static string openpolist {
             get {
