@@ -1,11 +1,28 @@
-<div class="card" style="    min-height: 500px;border-radius: 10px;box-shadow: 5px 10px #888888;">
-  <div class="card-header text-center cardheadertext">
+<div class="card commoncardcss" style="margin:10px">
+  <div class="card-header text-center commoncardheader">
+    <div class="row" style="margin-top: 10px;
+    margin-left: 0px !important;
+    margin-right: 0px !important">
+      <div class="col-lg-4 col-md-4">
+        <button type="button" icon="fa fa-arrow-left" pButton aria-hidden="true" pTooltip="Back" (click)="backMaterialDetails()" style="float: left;
+    height: 26px;"></button>
+      </div>
+      <div class="col-lg-4 col-md-4 text-center">
+        <span style="color:#428bca;font-size:18px" class="commonheadertext">
+          <i class="fa fa-check-circle-o commonheadertext"></i>&nbsp;Material Request Details
+        </span>
+      </div>
+      <div class="col-lg-4 col-md-4 form-inline"></div>
+    </div>
+
+  </div>
+  <!--<div class="card-header text-center cardheadertext">
     <span>
       <i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;Material Request Details
     </span>
     <button type="button" icon="fa fa-arrow-left" pButton aria-hidden="true" pTooltip="Back" (click)="backMaterialDetails()" style="float: left;
     height: 26px;"></button>
-  </div>
+  </div>-->
 
 
   <!--<div>
@@ -13,14 +30,14 @@
     height: 26px;"></button>
     <h5 style="text-align:center">Material Request Details</h5>
   </div>-->
-  <div class="card-body" style="    overflow-y: scroll; margin-left: 40px; margin-right: 40px">
+  <div class="card-body" style="overflow-y: scroll; margin-left: 10px; margin-right: 10px">
     <p-table #dt [columns]="cols" [value]="MaterailRequestDetails">
       <!--<ng-template pTemplate="caption">
-    <div class="ui-helper-clearfix" style="text-align: left">
-      <button type="button" pButton icon="pi pi-file-excel" iconPos="left" label="EXCEL" (click)="exportExcel()" style="margin-right: 0.5em;" class="ui-button-success"></button>
-      <button type="button" pButton icon="pi pi-file-pdf" iconPos="left" label="PDF" (click)="exportPdf()" class="ui-button-warning"></button>
-    </div>
-  </ng-template>-->
+        <div class="ui-helper-clearfix" style="text-align: left">
+          <button type="button" pButton icon="pi pi-file-excel" iconPos="left" label="EXCEL" (click)="exportExcel()" style="margin-right: 0.5em;" class="ui-button-success"></button>
+          <button type="button" pButton icon="pi pi-file-pdf" iconPos="left" label="PDF" (click)="exportPdf()" class="ui-button-warning"></button>
+        </div>
+      </ng-template>-->
       <ng-template pTemplate="header" let-columns>
         <tr class="mprltbldata">
           <th style="text-align:center;width:70px">Sl. No.</th>
@@ -68,6 +85,6 @@
 
       </ng-template>
     </p-table>
-    </div>
   </div>
+</div>
     

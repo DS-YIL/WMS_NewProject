@@ -30,15 +30,26 @@
   </div><br />
 </form>-->
   <div style="margin:10px;">
-    <div class="card" style="max-height: 82vh;border-radius: 10px;box-shadow: 5px 10px #888888;">
-      <div class="card-header text-center cardheadertext">
-        <!--<span style="color:#428bca;font-size:18px">
-          <i class="fa fa-check-circle-o" style="color:#428bca; font-size:18px;font-weight:600"></i>&nbsp;PM Dashboard
-        </span>-->
+    <div class="card commoncardcss">
+      <!--<div class="card-header text-center cardheadertext">
         <span>
           <i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;PM Dashboard
         </span>
-      </div>
+      </div>-->
+      <!--<div class="card-header commoncardheader">
+        <div class="row " style="margin-top: 10px;
+    margin-left: 0px !important;
+    margin-right: 0px !important">
+          <div class="col-lg-4 col-md-4 form-inline">
+          </div>
+          <div class="col-lg-4 col-md-4 text-center">
+            <span style="color:#428bca;font-size:18px" class="commonheadertext">
+              <i class="fa fa-check-circle-o commonheadertext"></i>&nbsp;PM Dashboard
+            </span>
+          </div>
+          <div class="col-lg-4 col-md-4 form-inline"></div>
+        </div>
+      </div>-->
       <div class="card-body" style="overflow-y: hidden; padding-top: 0px;margin-left: 10px; margin-right: 10px">
         <div class="row" style="height:100%;border-radius:0px;margin-top:5px;">
           <p-table #dt [value]="POList" [style]="{'width':'100%'}"
@@ -56,7 +67,7 @@
                 <!--<th style="text-align:center;width:150px">Received Date</th>-->
                 <!--<th style="text-align:center">View</th>-->
                 <!--<th style="text-align:center;width:100px">Request</th>
-  <th style="text-align:center;width:100px">Reserve</th>-->
+            <th style="text-align:center;width:100px">Reserve</th>-->
                 <!--<th>Material Description</th>-->
                 <!--<th style="text-align:center">Invoice No</th>-->
               </tr>
@@ -72,7 +83,7 @@
                 <!--<th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'enteredon', 'contains')"></th>-->
                 <!--<th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'quotationqty', 'contains')"></th>-->
                 <!--<th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'enteredon', 'contains')"></th>
-  <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'enteredon', 'contains')"></th>-->
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'enteredon', 'contains')"></th>-->
                 <!--<th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'invoiceno', 'contains')"></th>-->
               </tr>
             </ng-template>
@@ -99,7 +110,7 @@
                 <!--<td class="ptable-cell" style="text-align:center;width:150px">{{checkValiddate(rowData.enteredon)}}</td>-->
                 <!--<td  class="ptable-cell" style="text-align:center" ><button class="btn btn-primary fa fa-eye" (click)="materialrequestedview(rowData.pono);"></button></td>-->
                 <!--<td class="ptable-cell" style="text-align:center;width:100px"><button class="btn btn-primary fa fa-plus" (click)="materialrequest(rowData.pono);"></button></td>
-  <td class="ptable-cell" style="text-align:center;width:100px"><button class="btn btn-primary fa fa-reorder" (click)="materialReserve(rowData.pono);"></button></td>-->
+            <td class="ptable-cell" style="text-align:center;width:100px"><button class="btn btn-primary fa fa-reorder" (click)="materialReserve(rowData.pono);"></button></td>-->
                 <!--<td class="ptable-cell">{{rowData.materialdescription}}</td>-->
                 <!--<td class="ptable-cell" style="text-align:center">{{rowData.invoiceno}}</td>-->
               </tr>
@@ -107,6 +118,7 @@
           </p-table><br />
         </div>
       </div>
+      
     </div>
     </div>
     <p-dialog #dialog header="List View :" [(visible)]="showList" [contentStyle]="{'overflow':'visible'}">

@@ -1,11 +1,28 @@
-<div class="card" style="    min-height: 500px;border-radius: 10px;box-shadow: 5px 10px #888888;">
-  <div class="card-header text-center cardheadertext">
+<div class="card commoncardcss" style="margin:10px">
+  <div class="card-header text-center commoncardheader">
+    <div class="row" style="margin-top: 10px;
+    margin-left: 0px !important;
+    margin-right: 0px !important">
+      <div class="col-lg-4 col-md-4">
+        <button type="button" icon="fa fa-arrow-left" pButton aria-hidden="true" pTooltip="Back" (click)="backMaterialDetails()" style="float: left;
+    height: 26px;"></button>
+      </div>
+      <div class="col-lg-4 col-md-4 text-center">
+        <span style="color:#428bca;font-size:18px" class="commonheadertext">
+          <i class="fa fa-check-circle-o commonheadertext"></i>&nbsp;Location Details
+        </span>
+      </div>
+      <div class="col-lg-4 col-md-4 form-inline"></div>
+    </div>
+
+  </div>
+  <!--<div class="card-header text-center cardheadertext">
     <span>
       <i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;Location Details
     </span>
     <button type="button" icon="fa fa-arrow-left" pButton aria-hidden="true" pTooltip="Back" (click)="backMaterialDetails()" style="float: left;
     height: 26px;"></button>
-  </div>
+  </div>-->
 
   <!--<div>
     <button type="button" icon="fa fa-arrow-left" pButton aria-hidden="true" pTooltip="Back" (click)="backMaterialDetails()" style="float: left;
@@ -29,7 +46,7 @@
       </ng-template>-->
       <ng-template pTemplate="header" let-columns>
         <tr class="mprltbldata">
-          <th style="text-align:center;width:70px">Sl. No.</th>
+          <th style="text-align:center;width:70px">thSl. No.</th>
           <th style="text-align:center;" *ngFor="let col of columns">
             {{col.header}}
           </th>

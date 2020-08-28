@@ -972,4 +972,16 @@ secinw.pono,(select suppliername from wms.wms_polist where pono = secinw.pono li
   and stinw.receiveddate &gt;= '#fromdt' and stinw.receiveddate &lt;= '#todate'
   order by stinw.inwardid DESC) as grn order by receiveddate desc</value>
   </data>
+  <data name="deletetestcurd" xml:space="preserve">
+    <value>delete from wms.testcrud where id = #id</value>
+  </data>
+  <data name="posttestcrud" xml:space="preserve">
+    <value>insert into wms.testcrud (name,ismanager) values (@name, @ismanager)</value>
+  </data>
+  <data name="puttestcurd" xml:space="preserve">
+    <value>update wms.testcrud set name = @name,ismanager= @ismanager where id = #id</value>
+  </data>
+  <data name="testcrudget" xml:space="preserve">
+    <value>select id,name,ismanager from wms.testcrud</value>
+  </data>
 </root>

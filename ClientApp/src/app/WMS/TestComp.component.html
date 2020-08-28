@@ -1,1 +1,52 @@
-xxxxxxxxxxxxxxxxxx
+<div class="row " style="margin: 20px;">
+
+  <p-table #dt [value]="getlistdata" [style]="{'overflow':'auto!important','box-shadow' : '5px 5px #888888'}"
+           [scrollable]="true" scrollHeight="65vh">
+    <ng-template pTemplate="header">
+      <tr>
+        <th class="ptable-cell" style="text-align:center;">Id</th>
+        <th class="ptable-cell" style="text-align:center;">Name</th>
+        <th class="ptable-cell" style="text-align:center;">Is Manager</th>
+        <th></th>
+        <th  class="ptable-cell" style="text-align:center;">
+          <button class="btn btn-success" (click)="showadddatamodel=true">Add</button>
+        </th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex" let-rindex=0>
+      <tr>
+        <td class="ptable-cell" style="text-align:center"> {{rowData.id}} </td>
+        <td class="ptable-cell" style="text-align:left;"> {{rowData.name}} </td>
+        <td class="ptable-cell" style="text-align:center;">{{rowData.ismanager}} </td>
+        <td class="ptable-cell" style="text-align:center;">
+          <button class="btn btn-primary" (click)="Editrow(rowData)">Edit</button>
+        </td>
+        <td class="ptable-cell" style="text-align:center;">
+          <button class="btn btn-danger" (click)="delete(rowData)">Delete</button>
+        </td>
+</ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="4" style="text-align:center;color:red">No Records.</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+<p-dialog header="Add(POST) Method" [(visible)]="showadddatamodel" (onHide)="refreshsavemodel()" [modal]="true" [style]="{width: '50vw'}" [baseZIndex]="10000"
+          [draggable]="false" [resizable]="false">
+  <div class="form-inline">
+    <label class="labelheading">Name</label>&nbsp;&nbsp;
+    <input type="text" [(ngModel)]="postmodel.name" style="width:40%" class="form-control" />
+
+  </div>
+  <div class="form-inline">
+    <label class="labelheading">is Manager</label>&nbsp;&nbsp;
+    <input type="checkbox" [(ngModel)]="postmodel.ismanager" />
+
+  </div>
+
+  <p-footer>
+    <button type="button" pButton icon="pi pi-check" (click)="post()" label="Submit"></button>
+    <button type="button" pButton icon="pi pi-times" (click)="showadddatamodel=false" label="Cancel" class="ui-button-secondary"></button>
+  </p-footer>
+</p-dialog>

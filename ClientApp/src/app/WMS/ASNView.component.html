@@ -1,58 +1,71 @@
-<div class="card" style="height:25px;margin-left:3px;margin-top:5px;">
-  <div class="card-header text-center cardheadertext">
-    <span>
-      <i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;ASN
-    </span>
-
-  </div>
-  <!--<span><i class="fa fa-star"></i><label class="labelheading"style="font-size:20px;">&nbsp;Non Returnable</label>&nbsp;| &nbsp;<i class="fa fa-truck"></i><label class="labelheading text-danger btn-link" style=" text-decoration: underline;">&nbsp;Outward</label></span>-->
-
-</div>
-  <div class="form-control" style="height:100%">
-   
-    <div class="row " style="margin-top: 10px;margin-left: 0px !important;margin-right: 0px !important">
-      <div class="col-lg-12 col-md-12 col-sm-12">
-        <p-table #dt [value]="currentDatePoList" [style]="{'overflow':'auto!important','box-shadow' : '5px 5px #888888'}"
-                 [scrollable]="true" scrollHeight="67vh">
-          <ng-template pTemplate="header">
-            <tr style="background-color:aqua !important" class="mprltbldata">
-              <th class="ptable-cell" style="text-align:center;width:5%;">Sl.No.</th>
-              <th class="ptable-cell" style="text-align:center;width:15%;">ASN No.</th>
-              <th class="ptable-cell" style="text-align:center;width:15%;">PO No.</th>
-              <th class="ptable-cell" style="text-align:center;width:45%">Supplier Name</th>
-              <th class="ptable-cell" style="text-align:center;width:20%">Delivery Date</th>
-            </tr>
-            <tr>
-              <th></th>
-              <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'asn', 'startsWith')"></th>
-              <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'pono', 'startsWith')"></th>
-              <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'vendorname', 'startsWith')"></th>
-
-              <th> <p-calendar (onSelect)="onDateSelect($event)" appendTo="body" (onClearClick)="dt.filter('', 'deliverydate', 'equals')" [showButtonBar]="true" styleClass="p-column-filter" placeholder="Delivery Date" [readonlyInput]="true" dateFormat="dd/mm/yy"></p-calendar></th>
-            </tr>
-          </ng-template>
-          <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex" let-rindex=0>
-            <tr>
-              <td class="ptable-cell" style="text-align: center;width: 5%;"> {{ri+1}} </td>
-              <td class="ptable-cell" style="text-align:center;width:15%;"> {{rowData.asn}} </td>
-              <td class="ptable-cell" style="text-align:center;width:15%;"> {{rowData.pono}} </td>
-              <td class="ptable-cell" style="text-align:left;width:45%">{{rowData.vendorname}} </td>
-              <td class="ptable-cell" style="text-align:center;width:20%">{{rowData.deliverydate | date: 'dd/MM/yyyy'}} </td>
-</ng-template>
-          <ng-template pTemplate="emptymessage">
-            <tr>
-              <td colspan="4" style="text-align:center;color:red">No Shipment notifications.</td>
-            </tr>
-          </ng-template>
-        </p-table>
+<div style="margin:10px;">
+  <div class="card commoncardcss">
+    <!--<div class="card-header commoncardheader">
+      <div class="row " style="    margin-top: 10px;
+    margin-left: 0px !important;
+    margin-right: 0px !important">
+        <div class="col-lg-4 col-md-4 form-inline">
+        </div>
+        <div class="col-lg-4 col-md-4 text-center">
+          <span style="color:#428bca;font-size:18px" class="commonheadertext">
+            <i class="fa fa-check-circle-o commonheadertext"></i>&nbsp;ASN
+          </span>
+        </div>
+        <div class="col-lg-4 col-md-4 form-inline"></div>
       </div>
+    </div>-->
+    <div class="card-body" style="overflow-y:hidden;padding:0px;margin-left:10px;margin-right:10px">
+     
+
+        <div class="row " style="margin-top: 10px;margin-left: 0px !important;margin-right: 0px !important">
+         
+            <p-table #dt [value]="currentDatePoList" [style]="{'overflow':'auto!important','box-shadow' : '5px 5px #888888'}"
+                     [scrollable]="true" scrollHeight="65vh">
+              <ng-template pTemplate="header">
+                <tr style="background-color:aqua !important" class="mprltbldata">
+                  <th class="ptable-cell" style="text-align:center;width:5%;">Sl.No.</th>
+                  <th class="ptable-cell" style="text-align:center;width:15%;">ASN No.</th>
+                  <th class="ptable-cell" style="text-align:center;width:15%;">PO No.</th>
+                  <th class="ptable-cell" style="text-align:center;width:45%">Supplier Name</th>
+                  <th class="ptable-cell" style="text-align:center;width:20%">Delivery Date</th>
+                </tr>
+                <tr>
+                  <th></th>
+                  <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'asn', 'startsWith')"></th>
+                  <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'pono', 'startsWith')"></th>
+                  <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'vendorname', 'startsWith')"></th>
+
+                  <th> <p-calendar (onSelect)="onDateSelect($event)" appendTo="body" (onClearClick)="dt.filter('', 'deliverydate', 'equals')" [showButtonBar]="true" styleClass="p-column-filter" placeholder="Delivery Date" [readonlyInput]="true" dateFormat="dd/mm/yy"></p-calendar></th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex" let-rindex=0>
+                <tr>
+                  <td class="ptable-cell" style="text-align: center;width: 5%;"> {{ri+1}} </td>
+                  <td class="ptable-cell" style="text-align:center;width:15%;"> {{rowData.asn}} </td>
+                  <td class="ptable-cell" style="text-align:center;width:15%;"> {{rowData.pono}} </td>
+                  <td class="ptable-cell" style="text-align:left;width:45%">{{rowData.vendorname}} </td>
+                  <td class="ptable-cell" style="text-align:center;width:20%">{{rowData.deliverydate | date: 'dd/MM/yyyy'}} </td>
+              </ng-template>
+              <ng-template pTemplate="emptymessage">
+                <tr>
+                  <td colspan="4" style="text-align:center;color:red">No Shipment notifications.</td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </div>
+        
+
+
+
+
+
+
+
+
+   
     </div>
 
-   
-
-
-
-
-
-
   </div>
+</div>
+
+  

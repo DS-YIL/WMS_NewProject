@@ -3405,13 +3405,13 @@ namespace WMS.DAL
 					string QueryABC1 = "select * from wms.wms_rd_category order by categoryid desc limit 3";
 					var abcdata1 = await pgsql.QueryAsync<ABCCategoryModel>(QueryABC1, null, commandType: CommandType.Text);
 					ABCCategoryModel abcconfig = new ABCCategoryModel();
-					if (abcdata1 != null)
+					if (abcdata1 != null && config != null)
 					{
 						abcconfig = abcdata1.FirstOrDefault();
 						config.startdate = abcconfig.startdate;
 						config.enddate = abcconfig.enddate;
 					}
-					if (alldata != null)
+					if (alldata != null && config != null)
 					{
 						count = alldata.Count();
 						config.countall = count;
@@ -7137,6 +7137,141 @@ namespace WMS.DAL
 					return null;
 				}
 			}
+		}
+
+		//Ramesh
+		public async Task<IEnumerable<testcrud>> gettestcrud()
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				try
+				{
+					string testgetquery = WMSResource.testcrudget;
+
+
+					await pgsql.OpenAsync();
+					var data = await pgsql.QueryAsync<testcrud>(
+					  testgetquery, null, commandType: CommandType.Text);
+					return data;
+
+
+
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "gettestcrud", Ex.StackTrace.ToString());
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+
+			}
+		}
+
+		public string posttestcrud(testcrud data)
+		{
+			string result = "";
+			int rslt = 0;
+			try
+			{
+
+
+				if(data.id == 0)
+                {
+					string insertqry = WMSResource.posttestcrud;
+					using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
+					{
+						rslt = DB.Execute(insertqry, new
+						{
+							data.name,
+							data.ismanager
+						});
+
+						if (rslt == 0)
+						{
+							result = "error";
+						}
+						else
+						{
+							result = "saved";
+						}
+
+					}
+
+
+				}
+                else
+                {
+					string insertqry = WMSResource.puttestcurd.Replace("#id",data.id.ToString());
+					using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
+					{
+						rslt = DB.Execute(insertqry, new
+						{
+							data.name,
+							data.ismanager
+						});
+
+						if (rslt == 0)
+						{
+							result = "error";
+						}
+						else
+						{
+							result = "Updated";
+						}
+
+					}
+
+				}
+				
+
+			}
+			catch (Exception ex)
+			{
+				log.ErrorMessage("PODataProvider", "notifyputaway", ex.StackTrace.ToString());
+				return "error";
+			}
+
+			return result;
+		}
+		public string deletetestcurd(int id)
+		{
+			string result = "";
+			int rslt = 0;
+			try
+			{
+
+				string deleteqry = WMSResource.deletetestcurd.Replace("#id", id.ToString());
+				using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
+				{
+					rslt = DB.Execute(deleteqry);
+
+					if (rslt == 0)
+					{
+						result = "error";
+					}
+					else
+					{
+						result = "Deleted";
+					}
+
+				}
+
+				return result;
+			}
+
+			catch (Exception ex)
+			{
+
+				Console.WriteLine(ex.Message);
+				return "error";
+				
+			}
+
+
 		}
 	}
 }

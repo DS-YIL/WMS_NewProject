@@ -849,11 +849,43 @@ namespace WMS.Controllers
 		{
 			return await this._poService.gettransferdata(empno);
 		}
+
+		
+
 		[HttpPost("Updatetransferqty")]
 		public int Updatetransferqty([FromBody] List<IssueRequestModel> obj)
 		{
 			return this._poService.Updatetransferqty(obj);
 		}
+
+		[HttpGet("gettestcrud")]
+		public async Task<IEnumerable<testcrud>> gettestcrud()
+		{
+			return await this._poService.gettestcrud();
+		}
+		[HttpPost("postputtestcrud")]
+		public string posttestcrud(testcrud data)
+		{
+			return this._poService.posttestcrud(data);
+		}
+		[HttpDelete("deletetestcurd/{id}")]
+		public string deletetestcurd(int id)
+		{
+			try
+			{
+
+				return this._poService.deletetestcurd(id);
+			}
+
+			catch (Exception ex)
+			{
+
+				Console.WriteLine(ex.Message);
+
+				return ex.Message;
+			}
+		}
+
 		//[HttpPost("securitysendemail")]
 		//public EmailModel sendemail(EmailModel obj)
 		//{

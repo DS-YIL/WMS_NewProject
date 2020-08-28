@@ -1006,3 +1006,10 @@ public class UserDashboardDetail
 	public int pendingtoapproval { get; set; }
 	public int pendingcyclecountapproval { get; set; }
 }
+
+public class testcrud
+{
+	public int id { get; set; }
+	public string name { get; set; }
+	public bool ismanager { get; set; }
+}

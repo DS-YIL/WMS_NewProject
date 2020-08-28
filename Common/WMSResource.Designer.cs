@@ -138,6 +138,15 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to delete from wms.testcrud where id = #id.
+        /// </summary>
+        public static string deletetestcurd {
+            get {
+                return ResourceManager.GetString("deletetestcurd", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &lt;html&gt;&lt;meta charset=\&quot;ISO-8859-1\&quot;&gt;&lt;head&gt;&lt;link rel =&apos;stylesheet&apos; href =&apos;https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css&apos;&gt;&lt;/head&gt;
         ///&lt;body&gt;&lt;div class=&apos;container&apos;&gt;
         ///&lt;p&gt;Dear #user,&lt;/p&gt;
@@ -1307,11 +1316,29 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to insert into wms.testcrud (name,ismanager) values (@name, @ismanager).
+        /// </summary>
+        public static string posttestcrud {
+            get {
+                return ResourceManager.GetString("posttestcrud", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to update wms.wms_gatepass set print=false,printedon=current_date,printedby=@printedby where gatepassid=#gatepassid.
         /// </summary>
         public static string printstatusupdate {
             get {
                 return ResourceManager.GetString("printstatusupdate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to update wms.testcrud set name = @name,ismanager= @ismanager where id = #id.
+        /// </summary>
+        public static string puttestcurd {
+            get {
+                return ResourceManager.GetString("puttestcurd", resourceCulture);
             }
         }
         
@@ -1426,6 +1453,15 @@ namespace WMS.Common {
         public static string string1 {
             get {
                 return ResourceManager.GetString("string1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to select id,name,ismanager from wms.testcrud.
+        /// </summary>
+        public static string testcrudget {
+            get {
+                return ResourceManager.GetString("testcrudget", resourceCulture);
             }
         }
         

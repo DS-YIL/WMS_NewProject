@@ -514,3 +514,9 @@ export class materialtransferTR {
   transferredqty: number = 0;
 }
 
+export class testcrud {
+  id: number;
+  name: string;
+  ismanager: boolean
+}
+

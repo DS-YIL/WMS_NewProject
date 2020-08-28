@@ -1,12 +1,25 @@
-<div class="card" style="    min-height: 500px;border-radius: 10px;box-shadow: 5px 10px #888888;">
-  <div class="card-header text-center cardheadertext">
-    <span>
-      <i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;FIFO List
-    </span>
+<div class="card commoncardcss" style="margin:10px">
+  <div class="card-header text-center">
+    <div class="row text-center">
+      <div class="col-lg-12 col-md-12 text-center">
+        <span style="color:#428bca;font-size:18px" class="commonheadertext">
+          <i class="fa fa-check-circle-o commonheadertext"></i>&nbsp;FIFO List
+        </span>
+      </div>
+    </div>
+    <div class="row" *ngIf="showABCavailableqtyList">
+      <div class="col-lg-12 col-md-12 col-sm-12 form-inline" >
+        <label class="labelheading">Material : &nbsp;</label>
+        <input type="text" [(ngModel)]="FIFOValues.materialid" />&nbsp;&nbsp; &nbsp;
+        <button type="button" class="btn btn-primary btn-sm" (click)="getenquiryList(FIFOValues.materialid)" label="Save">Enquiry</button>
+      </div>
+    </div>
+
+
   </div>
   <div class="card-body" style="overflow-y:scroll">
     <div *ngIf="showABCavailableqtyList">
-      <div class="form-control" style="height:100%;border-radius:0px;padding-bottom:3%;">
+      <!--<div class="form-control" style="height:100%;border-radius:0px;padding-bottom:3%;">
         <div class="row " style="margin-top:10px">
 
           <div class="col-lg-6 col-md-6 col-sm-6 form-inline">
@@ -17,8 +30,7 @@
 
         </div>
 
-      </div>
-      <br />
+      </div>-->
       <p-table #dt [columns]="cols" [value]="FIFOList" [style]="{'width':'100%','overflow':'auto!important'}"
                [responsive]="true" [rows]="25"
                [resizableColumns]="true"
@@ -28,10 +40,10 @@
         <ng-template pTemplate="header" let-columns>
           <!--<div style="text-align: center;padding-bottom:2%;">
 
-            <input type="text" placeholder="Enter Material for enquiry" [(ngModel)]="FIFOValues.materialid" />&nbsp;&nbsp; &nbsp;
-            <button type="button" class="btn btn-primary" (click)="getenquiryList(FIFOValues.materialid)" label="Save">Enquiry</button>
+              <input type="text" placeholder="Enter Material for enquiry" [(ngModel)]="FIFOValues.materialid" />&nbsp;&nbsp; &nbsp;
+              <button type="button" class="btn btn-primary" (click)="getenquiryList(FIFOValues.materialid)" label="Save">Enquiry</button>
 
-        </div>-->
+          </div>-->
 
           <tr class="mprltbldata">
             <th style="text-align:center;width:60px">Sl.No.</th>
@@ -71,14 +83,14 @@
         </ng-template>
 
         <!--<ng-template pTemplate="footer">
-        <tr>
-          <td [attr.colspan]="2" style="color: #17a2b8;">Totals</td>
-          <td style="color: #17a2b8;text-align:right"> <button type="button" class="btn btn-primary" (click)="InsertIssuedata()" label="Save">Submit</button></td>
-          <td></td>
-          <td style="color: #17a2b8;text-align:right">{{totalunitprice}}</td>
-          <td></td>
-        </tr>
-      </ng-template>-->
+          <tr>
+            <td [attr.colspan]="2" style="color: #17a2b8;">Totals</td>
+            <td style="color: #17a2b8;text-align:right"> <button type="button" class="btn btn-primary" (click)="InsertIssuedata()" label="Save">Submit</button></td>
+            <td></td>
+            <td style="color: #17a2b8;text-align:right">{{totalunitprice}}</td>
+            <td></td>
+          </tr>
+        </ng-template>-->
       </p-table>
       <br />
       <div style="padding-left:45%;">
@@ -88,37 +100,40 @@
 
       <br />
       <!--<div>
-        <h5 style="text-align:center">Inventory classification</h5>
-        <div class="row">
-          <div class="col-lg-5 col-md-5 col-sm-5 form-inline"></div>
-          <div class="col-lg-6 col-md-6 col-sm-6 form-inline">
-            <b> A </b>&nbsp;&nbsp;&nbsp;&nbsp;<span *ngIf="ABCavailableqtyList[0]">{{((ABCavailableqtyList[0].availableqty/totalQty)*100).toFixed(2)}}% if inventory with {{((ABCavailableqtyList[0].totalcost/totalunitprice)*100).toFixed(2)}}% valuation</span>
+          <h5 style="text-align:center">Inventory classification</h5>
+          <div class="row">
+            <div class="col-lg-5 col-md-5 col-sm-5 form-inline"></div>
+            <div class="col-lg-6 col-md-6 col-sm-6 form-inline">
+              <b> A </b>&nbsp;&nbsp;&nbsp;&nbsp;<span *ngIf="ABCavailableqtyList[0]">{{((ABCavailableqtyList[0].availableqty/totalQty)*100).toFixed(2)}}% if inventory with {{((ABCavailableqtyList[0].totalcost/totalunitprice)*100).toFixed(2)}}% valuation</span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-lg-5 col-md-5 col-sm-5 form-inline"></div>
+            <div class="col-lg-6 col-md-6 col-sm-6 form-inline">
+              <b> B</b> &nbsp;&nbsp;&nbsp;&nbsp;<span *ngIf="ABCavailableqtyList[1]">{{((ABCavailableqtyList[1].availableqty/totalQty)*100).toFixed(2)}}% if inventory with {{((ABCavailableqtyList[1].totalcost/totalunitprice)*100).toFixed(2)}}% valuation</span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-lg-5 col-md-5 col-sm-5 form-inline"></div>
+            <div class="col-lg-6 col-md-6 col-sm-6 form-inline">
+              <b>C </b>&nbsp;&nbsp;&nbsp;&nbsp;<span *ngIf="ABCavailableqtyList[2]">{{((ABCavailableqtyList[2].availableqty/totalQty)*100).toFixed(2)}}% if inventory with {{((ABCavailableqtyList[2].totalcost/totalunitprice)*100).toFixed(2)}}% valuation</span>
+            </div>
           </div>
         </div>
-        <div class="row">
-          <div class="col-lg-5 col-md-5 col-sm-5 form-inline"></div>
-          <div class="col-lg-6 col-md-6 col-sm-6 form-inline">
-            <b> B</b> &nbsp;&nbsp;&nbsp;&nbsp;<span *ngIf="ABCavailableqtyList[1]">{{((ABCavailableqtyList[1].availableqty/totalQty)*100).toFixed(2)}}% if inventory with {{((ABCavailableqtyList[1].totalcost/totalunitprice)*100).toFixed(2)}}% valuation</span>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-lg-5 col-md-5 col-sm-5 form-inline"></div>
-          <div class="col-lg-6 col-md-6 col-sm-6 form-inline">
-            <b>C </b>&nbsp;&nbsp;&nbsp;&nbsp;<span *ngIf="ABCavailableqtyList[2]">{{((ABCavailableqtyList[2].availableqty/totalQty)*100).toFixed(2)}}% if inventory with {{((ABCavailableqtyList[2].totalcost/totalunitprice)*100).toFixed(2)}}% valuation</span>
-          </div>
-        </div>
-      </div>
-    </div>-->
+      </div>-->
 
 
       <div *ngIf="showAbcMatList">
         <div class="row"><button class="btn btn-primary fa fa-arrow-left" (click)="showCatList();"></button></div><br />
-        k)
+k)
+         c
 
         <div class="row">
           k)
+           c
 
           <div class="col-lg-4 col-md-4 col-sm-4 form-inline">
+            d-
             -l
             be
             <label class="form-label"><b>Material:</b></label>&nbsp;&nbsp;
@@ -127,7 +142,11 @@
             </div>
           </div>
           <div class="col-lg-4 col-md-4 col-sm-4 form-inline">
-            <label class="form-label"><b>Material description:</b></label>&nbsp;&nbsp;
+            <label class="form-label"><b>Mater
+ial description:
+            s=</b></label>er
+&nbsp;&nbsp;
+            s=
             <div class="form-inline-list">
               {{matDetails.materialdescription}}
             </div>
@@ -149,7 +168,7 @@
             <tr class="mprltbldata">
               <th style="text-align:center;width:50px">S.No</th>
               <!--<th style="width:100px">GRN No</th>
-            <th style="width:100px">Received Date</th>-->
+              <th style="width:100px">Received Date</th>-->
               <th style="width:100px">Confirmed qty</th>
               <th style="width:100px">Location</th>
               <th style="width:100px">Issued qty</th>
@@ -158,7 +177,7 @@
             <tr>
               <th></th>
               <!--<th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'grnnumber', 'contains')"></th>
-            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'receiveddate', 'contains')"></th>-->
+              <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'receiveddate', 'contains')"></th>-->
               <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'totalquantity', 'contains')"></th>
               <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'itemlocation', 'contains')"></th>
               <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'issuedqty', 'contains')"></th>
@@ -172,7 +191,7 @@
                 {{ri+1}}
               </td>
               <!--<td class="ptable-cell" style="text-align:center">{{rowData.grnnumber}}</td>
-            <td class="ptable-cell" style="text-align:center">{{rowData.receiveddate | date :  constants.dateFormat}}</td>-->
+              <td class="ptable-cell" style="text-align:center">{{rowData.receiveddate | date :  constants.dateFormat}}</td>-->
               <td class="ptable-cell" style="text-align:center">{{rowData.totalquantity}}</td>
               <td class="ptable-cell" style="text-align:center">{{rowData.itemlocation}}</td>
               e-
@@ -181,13 +200,19 @@
             </tr>
           </ng-template>
           <!--<ng-template pTemplate="footer">
-          <tr>
-            <td [attr.colspan]="4" style="color: #17a2b8;">Total Qty</td>
-            <td style="color: #17a2b8;">{{calculateTotalQty()}}</td>
-          </tr>
-        </ng-template>-->
+            <tr>
+              <td [attr.colspan]="4" style="color: #17a2b8;">Total Qty</td>
+              <td style="color: #17a2b8;">{{calculateTotalQty()}}</td>
+            </tr>
+          </ng-template>-->
         </p-table>
+        bl
+        
+
       </div>
 
+      bl
+      
+
     </div>
   </div>

@@ -1,12 +1,31 @@
-<div class="card" style="    min-height: 500px;border-radius: 10px;box-shadow: 5px 10px #888888;">
-  <div class="card-header text-center cardheadertext">
-    <span>
-      <i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;PO Status
-    </span>
+<div class="card commoncardcss" style="margin:10px">
+  <div class="card-header text-center commoncardheader">
+    <div class="row" style="margin-top: 10px;
+    margin-left: 0px !important;
+    margin-right: 0px !important">
+      <div class="col-lg-4 col-md-4 form-inline">
+        <div class="form-inline">
+          <label class="labelheading">Status :</label>&nbsp;&nbsp;
+          <select placeholder="Status" name="Status" (change)="onSelectStatus($event)" class="form-control">
+            <option value="Instock"> Instock</option>
+            <option value="SecurityCheck"> Security Check</option>
+            <option value="Pending"> Pending</option>
+          </select>
+        </div>
+        &nbsp;&nbsp; <button type="submit" class="btn btn-primary btn-sm float-left" (click)="SubmitStatus()" style=" height: 35px;">Submit</button>
+      </div>
+      <div class="col-lg-4 col-md-4 text-center">
+        <span style="color:#428bca;font-size:18px" class="commonheadertext">
+          <i class="fa fa-check-circle-o commonheadertext"></i>&nbsp;PO Status
+        </span>
+      </div>
+      <div class="col-lg-4 col-md-4 form-inline"></div>
+    </div>
+
   </div>
   <div class="card-body" style="overflow-y:scroll">
-    <br />
-    <div class="row">
+   
+    <!--<div class="row">
 
       <div class="col-lg-1 col-md-1 col-sm-1 form-group">
         <h6><label class="form-label">Status:</label></h6>
@@ -21,16 +40,14 @@
       <div class="col-lg-1 col-md-1 col-sm-1 form-group" style="padding-left:0px;">
         <button type="submit" class="btn btn-info float-left" (click)="SubmitStatus()" style=" height: 35px;">Submit</button>
       </div>
-    </div>
-   
-    <br />
+    </div>-->
     <p-table #dt [columns]="cols" [value]="poList">
       <!--<ng-template pTemplate="caption">
-      <div class="ui-helper-clearfix" style="text-align: left">
-        <button type="button" pButton icon="pi pi-file-excel" iconPos="left" label="EXCEL" (click)="exportExcel()" style="margin-right: 0.5em;" class="ui-button-success"></button>
-        <button type="button" pButton icon="pi pi-file-pdf" iconPos="left" label="PDF" (click)="exportPdf()" class="ui-button-warning"></button>
-      </div>
-    </ng-template>-->
+        <div class="ui-helper-clearfix" style="text-align: left">
+          <button type="button" pButton icon="pi pi-file-excel" iconPos="left" label="EXCEL" (click)="exportExcel()" style="margin-right: 0.5em;" class="ui-button-success"></button>
+          <button type="button" pButton icon="pi pi-file-pdf" iconPos="left" label="PDF" (click)="exportPdf()" class="ui-button-warning"></button>
+        </div>
+      </ng-template>-->
       <ng-template pTemplate="header" let-columns>
         <tr class="mprltbldata">
           <th style="text-align:center;width:70px">Sl.No.</th>
@@ -57,7 +74,7 @@
       </ng-template>
     </p-table>
   </div>
-  </div>
+</div>
 
   
 

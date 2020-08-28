@@ -1,167 +1,268 @@
-<div class="card" style="width:100%;border-radius:10px; box-shadow:5px 10px #888888;">
-  <div class="card-header">
-    <div class="form-inline">
-      <label class="labelheading">Status :</label>&nbsp;&nbsp;
-      <select [(ngModel)]="grstatus" (change)="getcheckedgrn()" class="form-control" style="width:20%">
-        <option value="Pending" selected="selected">Pending</option>
-        <option value="Sent">Notified</option>
-      </select>
-      &nbsp;&nbsp;&nbsp;&nbsp;<textarea [(ngModel)]="notifremarks" placeholder="Remarks" style="width:20%" *ngIf="!issentdata">
+<div style="margin:10px;">
+  <div class="card" style="width:100%;border-radius:10px; box-shadow:5px 10px #888888;min-height:81vh">
+    <div class="card-header">
+      <div class="form-inline">
+        <label class="labelheading">Status :</label>&nbsp;&nbsp;
+        <select [(ngModel)]="grstatus" (change)="getcheckedgrn()" class="form-control" style="width:20%">
+          <option value="Pending" selected="selected">Pending</option>
+          <option value="Sent">Notified</option>
+        </select>
+        &nbsp;&nbsp;&nbsp;&nbsp;<textarea [(ngModel)]="notifremarks" placeholder="Remarks" style="width:20%" *ngIf="!issentdata">
       </textarea>
-      &nbsp;&nbsp;&nbsp;&nbsp;<button class="btn btn-success btn-sm" *ngIf="!issentdata" (click)="Notifyall()"><i class="fa fa-send"></i>Notify</button>
+        &nbsp;&nbsp;&nbsp;&nbsp;<button class="btn btn-success btn-sm" *ngIf="!issentdata" (click)="Notifyall()"><i class="fa fa-send"></i>Notify</button>
+      </div>
     </div>
-  </div>
-  <div class="card-body">
-    <p-table #dt [columns]="cols" [value]="checkedgrnlist">
-      <ng-template pTemplate="header">
-        <tr class="mprltbldata">
-          <th rowspan="2" style="width: 5%;text-align:center" *ngIf="!issentdata">
-            <input type="checkbox" (change)="selectunselectall($event)" />
-          </th>
-          <th rowspan="2" style="width: 5%">Sl.No.</th>
-          <th rowspan="2" style="width:10%;text-align:center">PO No.</th>
-          <th rowspan="2" style="width:10%; text-align: center">Invoice No</th>
-          <th rowspan="2" style="width:13%;text-align:center">WMS GRN</th>
-          <th rowspan="2" style="text-align: center">Supplier Name</th>
-          <th rowspan="2" style="width:10%;text-align: center">Attachments</th>
-          <th rowspan="2" style="width:15%;text-align: center">Remarks</th>
-          <th rowspan="2" style="width:15%;text-align: center" *ngIf="issentdata">Notified by</th>
-          <th rowspan="2" style="width:10%;text-align: center" *ngIf="issentdata">Notified on</th>
-          <th rowspan="2" style="width:10%;text-align: center" *ngIf="!issentdata">Notify</th>
+    <div class="card-body">
+      <p-table #dt [columns]="cols" [value]="checkedgrnlist">
+        <ng-template pTemplate="header">
+          <tr class="mprltbldata">
+            <th rowspan="2" style="width: 5%;text-align:center" *ngIf="!issentdata">
+              <input type="checkbox" (change)="selectunselectall($event)" />
+            </th>
+            <th rowspan="2" style="width: 5%">Sl.No.</th>
+            <th rowspan="2" style="width:10%;text-align:center">PO No.</th>
+            <th rowspan="2" style="width:10%; text-align: center">Invoice No</th>
+            <th rowspan="2" style="width:13%;text-align:center">WMS GRN</th>
+            <th rowspan="2" style="text-align: center">Supplier Name</th>
+            <th rowspan="2" style="width:10%;text-align: center">Attachments</th>
+            <th rowspan="2" style="width:15%;text-align: center">Remarks</th>
+            <th rowspan="2" style="width:15%;text-align: center" *ngIf="issentdata">Notified by</th>
+            <th rowspan="2" style="width:10%;text-align: center" *ngIf="issentdata">Notified on</th>
+            <th rowspan="2" style="width:10%;text-align: center" *ngIf="!issentdata">Notify</th>
 
-        </tr>
+          </tr>
 
-        <!--<tr>
-          <th *ngIf="!issentdata"></th>
-          <th></th>
-          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'pono', 'startsWith')"></th>
-          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'invoiceno', 'startsWith')"></th>
-          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'grnnumber', 'contains')"></th>
-          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'vendorname', 'contains')"></th>
-          <th></th>
-          <th></th>
-          <th *ngIf="issentdata"></th>
-          <th *ngIf="issentdata"></th>
-          <th *ngIf="!issentdata"></th>
-        </tr>-->
+          <!--<tr>
+            <th *ngIf="!issentdata"></th>
+            <th></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'pono', 'startsWith')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'invoiceno', 'startsWith')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'grnnumber', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'vendorname', 'contains')"></th>
+            <th></th>
+            <th></th>
+            <th *ngIf="issentdata"></th>
+            <th *ngIf="issentdata"></th>
+            <th *ngIf="!issentdata"></th>
+          </tr>-->
 
 
-      </ng-template>
-      <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
-        <tr class="ui-widget-header">
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
+          <tr class="ui-widget-header">
 
-          <td class="ptable-cell" style="text-align:center;width:5%" *ngIf="!issentdata">
-            <input type="checkbox" [(ngModel)]="rowData.selectedrow" />
-          </td>
-          <td class="ptable-cell" style="text-align:center;width:5%">{{rowIndex + 1}}</td>
-          <td class="ptable-cell" style="text-align:center;width:10%;">
-            {{rowData.pono}}
-          </td>
-          <td class="ptable-cell" style="text-align:center;width:10%;">
-            {{rowData.invoiceno}}
-          </td>
-          <td class="ptable-cell" style="text-align:center;width:13%;">{{rowData.grnnumber}}</td>
-          <td class="ptable-cell" style="text-align:left;">{{rowData.vendorname}}</td>
-          <td class="ptable-cell" style="text-align:center;width:10%;">
-            <button class="btn btn-primary btn-sm" (click)="showattachdata(rowData)"><i class="fa fa-paperclip"></i></button>
-          </td>
-          <td class="ptable-cell" style="text-align:left;width:15%;">
-            <textarea style="width:100%" *ngIf="!issentdata" [(ngModel)]="rowData.notifyremarks"></textarea>
-            <label *ngIf="issentdata">{{rowData.notifyremarks}}</label>
-          </td>
-          <td class="ptable-cell" style="text-align:center;width:15%;" *ngIf="issentdata">{{rowData.notifiedby}}</td>
-          <td class="ptable-cell" style="text-align:center;width:10%;" *ngIf="issentdata">{{rowData.notifiedon | date : 'dd/MM/yyyy'}}</td>
-          <td class="ptable-cell" style="text-align:center;width:10%;" *ngIf="!issentdata">
-            <button class="btn btn-success btn-sm" (click)="Notify(rowData)"><i class="fa fa-send"></i></button>
-          </td>
+            <td class="ptable-cell" style="text-align:center;width:5%" *ngIf="!issentdata">
+              <input type="checkbox" [(ngModel)]="rowData.selectedrow" />
+            </td>
+            <td class="ptable-cell" style="text-align:center;width:5%">{{rowIndex + 1}}</td>
+            <td class="ptable-cell" style="text-align:center;width:10%;">
+              {{rowData.pono}}
+            </td>
+            <td class="ptable-cell" style="text-align:center;width:10%;">
+              {{rowData.invoiceno}}
+            </td>
+            <td class="ptable-cell" style="text-align:center;width:13%;">{{rowData.grnnumber}}</td>
+            <td class="ptable-cell" style="text-align:left;">{{rowData.vendorname}}</td>
+            <td class="ptable-cell" style="text-align:center;width:10%;">
+              <button class="btn btn-primary btn-sm" (click)="showattachdata(rowData)"><i class="fa fa-paperclip"></i></button>
+            </td>
+            <td class="ptable-cell" style="text-align:left;width:15%;">
+              <textarea style="width:100%" *ngIf="!issentdata" [(ngModel)]="rowData.notifyremarks"></textarea>
+              <label *ngIf="issentdata">{{rowData.notifyremarks}}</label>
+            </td>
+            <td class="ptable-cell" style="text-align:center;width:15%;" *ngIf="issentdata">{{rowData.notifiedby}}</td>
+            <td class="ptable-cell" style="text-align:center;width:10%;" *ngIf="issentdata">{{rowData.notifiedon | date : 'dd/MM/yyyy'}}</td>
+            <td class="ptable-cell" style="text-align:center;width:10%;" *ngIf="!issentdata">
+              <button class="btn btn-success btn-sm" (click)="Notify(rowData)"><i class="fa fa-send"></i></button>
+            </td>
 
-        </tr>
-        <tr *ngIf="rowData.showtrdata">
-          <td [attr.colspan]="9" style="text-align:left;">
-            <label class="labeltext"><i class="fa fa-paperclip"></i>Attachments</label>
-          </td>
+          </tr>
+          <tr *ngIf="rowData.showtrdata">
+            <td [attr.colspan]="9" style="text-align:left;">
+              <label class="labeltext"><i class="fa fa-paperclip"></i>Attachments</label>
+            </td>
 
-        </tr>
-        <tr *ngIf="rowData.showtrdata">
-          <td [attr.colspan]="9" style="text-align:left;">
-           
+          </tr>
+          <tr *ngIf="rowData.showtrdata">
+            <td [attr.colspan]="9" style="text-align:left;">
+
               <ul *ngIf="rowData.uploadedFiles.length && issentdata">
                 <li *ngFor="let file of rowData.uploadedFiles" style="color:blue; font-weight: 600; cursor: pointer;" (click)="opendoc(file)"><u>{{file.split('_')[3]}}</u></li>
               </ul>
-          
-            <p-fileUpload name="myfile[]" customUpload="true" (uploadHandler)="onUpload($event,rowData)" *ngIf="!issentdata"
-                          multiple="multiple" accept="image/*,.pdf,.xlsx" maxFileSize="10000000">
-              <ng-template pTemplate="content">
+
+              <p-fileUpload name="myfile[]" customUpload="true" (uploadHandler)="onUpload($event,rowData)" *ngIf="!issentdata"
+                            multiple="multiple" accept="image/*,.pdf,.xlsx" maxFileSize="10000000">
+                <ng-template pTemplate="content">
 
 
-                <ul *ngIf="rowData.uploadedFiles.length">
-                  <li *ngFor="let file of rowData.uploadedFiles" style="color:blue; font-weight: 600; cursor: pointer;" (click)="opendoc(file)"><u>{{file.split('_')[3]}}</u></li>
-                </ul>
+                  <ul *ngIf="rowData.uploadedFiles.length">
+                    <li *ngFor="let file of rowData.uploadedFiles" style="color:blue; font-weight: 600; cursor: pointer;" (click)="opendoc(file)"><u>{{file.split('_')[3]}}</u></li>
+                  </ul>
+
+                </ng-template>
+              </p-fileUpload>
+            </td>
+
+          </tr>
+
+        </ng-template>
+
+
+      </p-table>
+      <!--<div class="row" style="margin-top: 5px;" *ngIf="podetailsList.length>0">
+        <div class="col-lg-6 col-md-6">
+          <div class="row" style="margin-left: 10px;">
+            <div class="col-lg-6 col-md-6">
+              <span class="text-success" style="font-weight: 900;font-size:18px; float: right;text-decoration:underline;margin-left:20px;"><i class="fa fa-th-list"></i>&nbsp;&nbsp;Details</span>
+            </div>
+          </div>
+          <div class="row" style="margin-left: 10px;">
+            <div class="col-lg-3 col-md-3">
+              <span class="labelheading" style="font-weight: 900;">PO No. :</span>
+            </div>
+            <div class="col-lg-6 col-md-6">
+              <label><span class="labeltext">{{podetailsList[0].pono}}</span></label>
+            </div>
+          </div>
+
+
+          <div class="row" style="margin-left: 10px;">
+            <div class="col-lg-3 col-md-3">
+              <span class="labelheading" style="font-weight: 900; ">Invoice No :</span>
+            </div>
+            <div class="col-lg-6 col-md-6">
+              <label><span class="labeltext">{{podetailsList[0].invoiceno}}</span></label>
+            </div>
+
+
+          </div>
+          <div class="row" style="margin-left: 10px;">
+            <div class="col-lg-3 col-md-3">
+              <span class="labelheading" style="font-weight: 900;">WMS GRN. :</span>
+            </div>
+            <div class="col-lg-6 col-md-6">
+              <label><span class="labeltext">{{podetailsList[0].grnnumber}}</span></label>
+            </div>
+          </div>
+          <div class="row" style="margin-left: 10px;">
+            <div class="col-lg-3 col-md-3">
+              <span class="labelheading" style="font-weight: 900;">Supplier :</span>
+            </div>
+            <div class="col-lg-6 col-md-6">
+              <label class="labeltext">{{suppliername}}</label>
+            </div>
+
+
+          </div>
+        </div>
+
+        <div class="col-lg-6 col-md-6">
+          <div class="row" style="margin-left: 10px;">
+            <div class="col-lg-6 col-md-6">
+              <span class="text-success" style="font-weight: 900;font-size:18px; float: right;text-decoration:underline;margin-left:20px;"><i class="fa fa-paperclip"></i>&nbsp;&nbsp;Attachments</span>
+            </div>
+          </div>
+
+          <p-fileUpload name="myfile[]" customUpload="true" *ngIf="isallplaced" (uploadHandler)="onUpload($event)"
+                        multiple="multiple" accept="image/*,.pdf,.xlsx" maxFileSize="1000000">
+            <ng-template pTemplate="content">
+
+
+              <ul *ngIf="uploadedFiles.length">
+                <li *ngFor="let file of uploadedFiles" style="color:blue; font-weight: 600; cursor: pointer;" (click)="opendoc(file)"><u>{{file.split('_')[3]}}</u></li>
+              </ul>
+
+            </ng-template>
+          </p-fileUpload>
+
+
+
+
+
+        </div>
+      </div>-->
+      <!--<p-tabView>
+      <p-tabPanel header="Overview" leftIcon="pi pi-key">
+
+
+
+
+
+
+      </p-tabPanel>-->
+      <!--<p-tabPanel header="Details" leftIcon="pi pi-bars">
+        <div class="row " style="    margin-top: 10px;margin-left: 0px !important;margin-right: 0px !important">
+          <div class="col-lg-12 col-md-12 col-sm-12">
+            <p-table [columns]="cols" [value]="podetailsList" dataKey="material">
+              <ng-template pTemplate="header" let-columns>
+                <tr>
+                  <th rowspan="2" style="width: 4em">Sl.No.</th>
+                  <th rowspan="2" style="width:120px;text-align:center">Material</th>
+                  <th rowspan="2" style="width: 250px; text-align: center">Material Description</th>
+                  <th rowspan="2" style="width:70px;text-align:center">Accepted Quantity</th>
+                  <th rowspan="2" style="width:70px;text-align: center">Returned Quantity</th>
+                  <th colspan="2" style="width:250px; text-align: center">Put Away</th>
+                </tr>
+                <tr>
+                  <th style="width:150px; text-align: center">Qty</th>
+                  <th style="width:150px; text-align: center">Location</th>
+                </tr>
 
               </ng-template>
-            </p-fileUpload>
-          </td>
+              <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex" let-expanded="expanded" let-columns="columns">
+                <tr class="ui-widget-header" *ngIf="rowGroupMetadata[rowData.material].index === rowIndex">
 
-        </tr>
-        
-      </ng-template>
-    
 
-    </p-table>
-    <!--<div class="row" style="margin-top: 5px;" *ngIf="podetailsList.length>0">
-      <div class="col-lg-6 col-md-6">
-        <div class="row" style="margin-left: 10px;">
-          <div class="col-lg-6 col-md-6">
-            <span class="text-success" style="font-weight: 900;font-size:18px; float: right;text-decoration:underline;margin-left:20px;"><i class="fa fa-th-list"></i>&nbsp;&nbsp;Details</span>
+                  <td class="ptable-cell" style="text-align:center;width:70px">{{rowData.serialno}}</td>
+                  <td class="ptable-cell" style="text-align:left;width:150px;" colspan="1">
+                    {{rowData.material}}
+                  </td>
+                  <td class="ptable-cell" style="text-align:left;">
+                    <span *ngIf="rowData.materialdescription">{{rowData.materialdescription}}</span>
+                    <span *ngIf="!rowData.materialdescription">-</span>
+                  </td>
+                  <td class="ptable-cell" style="text-align:right;width:100px;">{{rowData.confirmqty}}</td>
+                  <td class="ptable-cell" style="text-align:right;width:100px;">{{rowData.returnqty}}</td>
+                  <td colspan="2" class="ptable-cell" style="text-align:center;width:100px;">
+                    <a *ngIf="rowData.itemlocation" href="#" [pRowToggler]="rowData">
+                      <i [ngClass]="expanded ? 'pi pi-fw pi-chevron-circle-down' : 'pi pi-fw pi-chevron-circle-right'" style="    vertical-align: middle;padding-bottom: .1em;color: #20f320d6"></i>
+                    </a>
+
+                  </td>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="rowexpansion" let-rowData let-rowIndex="rowIndex">
+                <tr>
+                  <td *ngIf="!isnonpo" colspan="5"></td>
+                  <td *ngIf="isnonpo" colspan="5"></td>
+                  <td style="text-align:right;width:70px">
+                    {{rowData.availableqty}}
+                  </td>
+                  <td style="width:180px">
+                    {{rowData.itemlocation}}
+                  </td>
+                </tr>
+              </ng-template>
+
+            </p-table>
+
+            <br /><br />
+
+
+
+
+
+
+
+
+
+
+
+
           </div>
         </div>
-        <div class="row" style="margin-left: 10px;">
-          <div class="col-lg-3 col-md-3">
-            <span class="labelheading" style="font-weight: 900;">PO No. :</span>
-          </div>
-          <div class="col-lg-6 col-md-6">
-            <label><span class="labeltext">{{podetailsList[0].pono}}</span></label>
-          </div>
-        </div>
-
-
-        <div class="row" style="margin-left: 10px;">
-          <div class="col-lg-3 col-md-3">
-            <span class="labelheading" style="font-weight: 900; ">Invoice No :</span>
-          </div>
-          <div class="col-lg-6 col-md-6">
-            <label><span class="labeltext">{{podetailsList[0].invoiceno}}</span></label>
-          </div>
-
-
-        </div>
-        <div class="row" style="margin-left: 10px;">
-          <div class="col-lg-3 col-md-3">
-            <span class="labelheading" style="font-weight: 900;">WMS GRN. :</span>
-          </div>
-          <div class="col-lg-6 col-md-6">
-            <label><span class="labeltext">{{podetailsList[0].grnnumber}}</span></label>
-          </div>
-        </div>
-        <div class="row" style="margin-left: 10px;">
-          <div class="col-lg-3 col-md-3">
-            <span class="labelheading" style="font-weight: 900;">Supplier :</span>
-          </div>
-          <div class="col-lg-6 col-md-6">
-            <label class="labeltext">{{suppliername}}</label>
-          </div>
-
-
-        </div>
-      </div>
-
-      <div class="col-lg-6 col-md-6">
-        <div class="row" style="margin-left: 10px;">
-          <div class="col-lg-6 col-md-6">
-            <span class="text-success" style="font-weight: 900;font-size:18px; float: right;text-decoration:underline;margin-left:20px;"><i class="fa fa-paperclip"></i>&nbsp;&nbsp;Attachments</span>
-          </div>
-        </div>
-
+      </p-tabPanel>
+      <p-tabPanel header="Attachments" leftIcon="pi pi-paperclip">
         <p-fileUpload name="myfile[]" customUpload="true" *ngIf="isallplaced" (uploadHandler)="onUpload($event)"
                       multiple="multiple" accept="image/*,.pdf,.xlsx" maxFileSize="1000000">
           <ng-template pTemplate="content">
@@ -173,112 +274,12 @@
 
           </ng-template>
         </p-fileUpload>
-
-
-
-
-
-      </div>
-    </div>-->
-
-
-    <!--<p-tabView>
-    <p-tabPanel header="Overview" leftIcon="pi pi-key">
-
-
-
-
-
-
-    </p-tabPanel>-->
-    <!--<p-tabPanel header="Details" leftIcon="pi pi-bars">
-    <div class="row " style="    margin-top: 10px;margin-left: 0px !important;margin-right: 0px !important">
-      <div class="col-lg-12 col-md-12 col-sm-12">
-        <p-table [columns]="cols" [value]="podetailsList" dataKey="material">
-          <ng-template pTemplate="header" let-columns>
-            <tr>
-              <th rowspan="2" style="width: 4em">Sl.No.</th>
-              <th rowspan="2" style="width:120px;text-align:center">Material</th>
-              <th rowspan="2" style="width: 250px; text-align: center">Material Description</th>
-              <th rowspan="2" style="width:70px;text-align:center">Accepted Quantity</th>
-              <th rowspan="2" style="width:70px;text-align: center">Returned Quantity</th>
-              <th colspan="2" style="width:250px; text-align: center">Put Away</th>
-            </tr>
-            <tr>
-              <th style="width:150px; text-align: center">Qty</th>
-              <th style="width:150px; text-align: center">Location</th>
-            </tr>
-
-          </ng-template>
-          <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex" let-expanded="expanded" let-columns="columns">
-            <tr class="ui-widget-header" *ngIf="rowGroupMetadata[rowData.material].index === rowIndex">
-
-
-              <td class="ptable-cell" style="text-align:center;width:70px">{{rowData.serialno}}</td>
-              <td class="ptable-cell" style="text-align:left;width:150px;" colspan="1">
-                {{rowData.material}}
-              </td>
-              <td class="ptable-cell" style="text-align:left;">
-                <span *ngIf="rowData.materialdescription">{{rowData.materialdescription}}</span>
-                <span *ngIf="!rowData.materialdescription">-</span>
-              </td>
-              <td class="ptable-cell" style="text-align:right;width:100px;">{{rowData.confirmqty}}</td>
-              <td class="ptable-cell" style="text-align:right;width:100px;">{{rowData.returnqty}}</td>
-              <td colspan="2" class="ptable-cell" style="text-align:center;width:100px;">
-                <a *ngIf="rowData.itemlocation" href="#" [pRowToggler]="rowData">
-                  <i [ngClass]="expanded ? 'pi pi-fw pi-chevron-circle-down' : 'pi pi-fw pi-chevron-circle-right'" style="    vertical-align: middle;padding-bottom: .1em;color: #20f320d6"></i>
-                </a>
-
-              </td>
-            </tr>
-          </ng-template>
-          <ng-template pTemplate="rowexpansion" let-rowData let-rowIndex="rowIndex">
-            <tr>
-              <td *ngIf="!isnonpo" colspan="5"></td>
-              <td *ngIf="isnonpo" colspan="5"></td>
-              <td style="text-align:right;width:70px">
-                {{rowData.availableqty}}
-              </td>
-              <td style="width:180px">
-                {{rowData.itemlocation}}
-              </td>
-            </tr>
-          </ng-template>
-
-        </p-table>
-
-        <br /><br />
-
-
-
-
-
-
-
-
-
-
-
-
-      </div>
+      </p-tabPanel>-->
+      <!--</p-tabView>-->
     </div>
-  </p-tabPanel>
-  <p-tabPanel header="Attachments" leftIcon="pi pi-paperclip">
-    <p-fileUpload name="myfile[]" customUpload="true" *ngIf="isallplaced" (uploadHandler)="onUpload($event)"
-                  multiple="multiple" accept="image/*,.pdf,.xlsx" maxFileSize="1000000">
-      <ng-template pTemplate="content">
-
-
-        <ul *ngIf="uploadedFiles.length">
-          <li *ngFor="let file of uploadedFiles" style="color:blue; font-weight: 600; cursor: pointer;" (click)="opendoc(file)"><u>{{file.split('_')[3]}}</u></li>
-        </ul>
-
-      </ng-template>
-    </p-fileUpload>
-  </p-tabPanel>-->
-    <!--</p-tabView>-->
   </div>
-  </div>
+</div>
+
 
  
    

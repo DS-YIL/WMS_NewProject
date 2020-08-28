@@ -1,27 +1,49 @@
-<div class="card" style="    min-height: 500px;border-radius: 10px;box-shadow: 5px 10px #888888;">
-  <div class="card-header text-center cardheadertext">
-    <span>
-      <i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;Bin Status Report
-    </span>
+<div class="card commoncardcss" style="margin:10px">
+  <div class="card-header text-center commoncardheader">
+   
+      <div class="row" style="margin-top: 10px;
+    margin-left: 0px !important;
+    margin-right: 0px !important">
+        <div class="col-lg-4 col-md-4 form-inline">
+          <div class="form-inline">
+            <label class="labelheading">Status :</label>&nbsp;&nbsp;
+            <select placeholder="Status" name="Status" (change)="onSelectStatus($event)" class="form-control">
+              <option selected value="filled"> Filled Bin</option>
+              <option value="empty"> Empty Bin</option>
+            </select>&nbsp;&nbsp; <button type="submit" class="btn btn-primary btn-sm float-left" (click)="SubmitBinStatus()" style=" height: 35px;">Submit</button>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-4 text-center">
+          <span style="color:#428bca;font-size:18px" class="commonheadertext">
+            <i class="fa fa-check-circle-o commonheadertext"></i>&nbsp;Bin Status Report
+          </span>
+        </div>
+        <div class="col-lg-4 col-md-4 form-inline"></div>
+      </div>
+
+   
+   
+
+
   </div>
   <div class="card-body" style="overflow-y:scroll">
-    <br />
-    <div class="row">
-      
+   
+    <!--<div class="row">
+
       <div class="col-lg-1 col-md-1 col-sm-1 form-group">
         <h6><label class="form-label">Bin Status:</label></h6>
       </div>
-      <div class="col-lg-2 col-md-2 col-sm-2 form-group"  style="padding-left:0px;">
+      <div class="col-lg-2 col-md-2 col-sm-2 form-group" style="padding-left:0px;">
         <select placeholder="Status" name="Status" (change)="onSelectStatus($event)" class="form-control">
-          <option  selected value="filled"> Filled Bin</option>
+          <option selected value="filled"> Filled Bin</option>
           <option value="empty"> Empty Bin</option>
         </select>
       </div>
       <div class="col-lg-1 col-md-1 col-sm-1 form-group" style="padding-left:0px;">
         <button type="submit" class="btn btn-info float-left" (click)="SubmitBinStatus()" style=" height: 35px;">Submit</button>
       </div>
-    </div>
-    <br />
+    </div>-->
+ 
     <p-table #dt [columns]="cols" [value]="poList">
 
       <ng-template pTemplate="header" let-columns>
@@ -52,7 +74,7 @@
       </ng-template>
     </p-table>
   </div>
-  </div>
+</div>
 
   
 

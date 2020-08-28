@@ -1,10 +1,33 @@
 
-  <div class="card" style="height:490px; width:100%;border-radius:10px;">
-    <div class="card-header cardheadertext text-center">
-      <span style="color: white;padding-top: 20px;"><i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;Cycle count </span>
-      <button type="button" *ngIf="showsubmitbutton" style="border-radius: 10em!important;background-color: rgb(18, 88, 121)!important;color: #fff;float:right;margin-left: 5px;" rounded="true" size="lg" class="my-0" (click)="submit()">Submit</button>
-      <button type="button" *ngIf="showsubmitbuttonuser" style="border-radius: 10em!important;background-color: rgb(18, 88, 121)!important;color: #fff;float:right;margin-left: 5px;" rounded="true" size="lg" class="my-0" (click)="submit()">Submit</button>
+  <div class="card commoncardcss" style="margin:10px;">
+    <div class="card-header commoncardheader">
+      <div class="row " style="    margin-top: 10px;
+    margin-left: 0px !important;
+    margin-right: 0px !important">
+        <div class="col-lg-4 col-md-4 form-inline">
+          <div class="form-inline" *ngIf="isapprover">
+            <label class="labelheading">Status :</label>&nbsp;&nbsp;
+            <select [(ngModel)]="status" (change)="filterbystatus()">
+              <option value="Pending">Pending</option>
+              <option value="Approved">Approved</option>
+              <option value="Rejected">Rejected</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-4 text-center">
+          <span style="color:#428bca;font-size:18px" class="commonheadertext">
+            <i class="fa fa-check-circle-o commonheadertext"></i>&nbsp;Cycle count
+          </span>
+        </div>
+        <div class="col-lg-4 col-md-4 form-inline"></div>
+        <button type="button" *ngIf="showsubmitbutton && CyclecountPendingMaterialList.length > 0" style="border-radius: 10em!important;background-color: rgb(18, 88, 121)!important;color: #fff;float:right;margin-left: 5px;" rounded="true" size="lg" class="my-0" (click)="submit()">Submit</button>
+        <button type="button" *ngIf="showsubmitbuttonuser && CyclecountMaterialList.length > 0" style="border-radius: 10em!important;background-color: rgb(18, 88, 121)!important;color: #fff;float:right;margin-left: 5px;" rounded="true" size="lg" class="my-0" (click)="submit()">Submit</button>
+      </div>
     </div>
+    <!--<div class="card-header commoncardheader text-center">
+      <span class="commonheadertext"><i class="fa fa-check-circle-o commonheadertext" style="color:white; font-size:20px;"></i>&nbsp;Cycle count </span>
+     
+    </div>-->
     <div class="card-body" style="padding-top:5px;">
       <div class="row" *ngIf="!isapprover">
 
@@ -61,7 +84,7 @@
       <div class="row" *ngIf="isapprover">
 
         <div>
-          <div class="row">
+          <!--<div class="row">
             <div class="col-md-1 col-lg-1">
               <label style="color:brown; font-size:medium; font-weight:600">&nbsp;Status :</label>
             </div>
@@ -74,12 +97,12 @@
             </div>
 
 
-          </div>
+          </div>-->
           <p-table #dt [columns]="cols" [value]="CyclecountPendingMaterialList" [style]="{'width':'100%','overflow':'auto!important'}"
-                   [responsive]="true" [rows]="50"
+                   [scrollable]="true" scrollHeight="60vh"
+                   [responsive]="true"
                    [resizableColumns]="true"
                    columnResizeMode="expand"
-                   [paginator]="true" [rowsPerPageOptions]="[25,50,75,100]"
                    appendTo="body">
             <ng-template pTemplate="header" let-columns>
               <tr class="mprltbldata">
@@ -101,8 +124,8 @@
                   {{ri+1}}
                 </td>
                 <!--<td class="ptable-cell" style="text-align:right">
-              {{rowData.id}}
-            </td>-->
+                {{rowData.id}}
+              </td>-->
                 <td class="ptable-cell" style="text-align:center"><button type="button" class="btn btn-link">{{rowData.category}}</button></td>
                 <td class="ptable-cell" style="text-align:center">{{rowData.materialid}}</td>
 

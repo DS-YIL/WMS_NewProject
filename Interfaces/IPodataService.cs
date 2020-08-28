@@ -176,5 +176,9 @@ Task<string> updateonholdrow(updateonhold datamodel);
         Task<IEnumerable<ddlmodel>> getmatlist(string empno);
         string notifyputaway(notifymodel data);
         string notifymultipleputaway(List<notifymodel> data);
+
+        Task<IEnumerable<testcrud>> gettestcrud();
+        string posttestcrud(testcrud data);
+        string deletetestcurd(int id);
     }
 }

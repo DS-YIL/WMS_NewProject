@@ -1,61 +1,85 @@
-<div class="card" style="   min-height: 520px;border-radius: 10px;box-shadow: 5px 10px #888888;">
-  <div class="card-header text-center cardheadertext">
-    <span>
-      <i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;Material Issuer Dashboard
-    </span>
-  </div>
+<div style="margin:10px;">
 
-  <div class="row" style="margin-left:25px !important">
 
-    <div class="col-lg-1 col-md-1 col-sm-1 form-group" style=" margin-bottom: 0rem !important;">
-      <h6><label class="form-label">Status:</label></h6>
-    </div>
-    <div class="col-lg-2 col-md-2 col-sm-2 form-group" style=" padding-left: 0px; margin-bottom: 0rem !important;">
-      <select placeholder="Status" name="Status" (change)="onSelectStatus($event)" class="form-control">
-        <option selected value="Pending"> Pending</option>
-        <option value="Approved"> Issued</option>
-      </select>
-    </div>
-    <!--<div class="col-lg-1 col-md-1 col-sm-1 form-group" style="    padding-left: 0px;margin-bottom: 0rem;">
-      <button type="submit" class="btn btn-info float-left" (click)="SubmitStatus()" style=" height: 35px;">Submit</button>
+  <div class="card commoncardcss">
+    <!--<div class="card-header text-center cardheadertext">
+      <span>
+        <i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;Material Issuer Dashboard
+      </span>
     </div>-->
-  </div>
+    <div class="card-header commoncardheader">
+      <div class="row " style="    margin-top: 10px;
+    margin-left: 0px !important;
+    margin-right: 0px !important">
+        <div class="col-lg-4 col-md-4 form-inline">
+          <div class="form-inline">
+            <label class="labelheading">Status :</label>&nbsp;&nbsp;
+            <select placeholder="Status" name="Status" (change)="onSelectStatus($event)" class="form-control">
+              <option selected value="Pending"> Pending</option>
+              <option value="Approved"> Issued</option>
+            </select>
 
-  <div class="card-body" style="overflow-y:hidden;padding:0px;margin-left:40px;margin-right:40px">
-    <div class="form-control" style="height:100%;">
-      <p-table #dt [value]="materialIssueList" [scrollable]="true" scrollHeight="380px">
-        <ng-template pTemplate="header">
-          <tr class="mprltbldata">
-            <th style="text-align:center;width:70px">Sl.No.</th>
-            <th style="text-align:center;width:100px">Request Id</th>
-            <!--<th style="text-align:center">Project Name</th>-->
-            <th style="text-align: center;width:150px">Requested On</th>
-            <th style="text-align:center;width:150px">Requester</th>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-4 text-center">
+          <span style="color:#428bca;font-size:18px" class="commonheadertext">
+            <i class="fa fa-check-circle-o commonheadertext"></i>&nbsp;Material Issue Dashboard
+          </span>
+        </div>
+        <div class="col-lg-4 col-md-4 form-inline"></div>
+      </div>
+    </div>
 
-          </tr>
-          <tr>
-            <th></th>
-            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'requestforissueid', 'contains')"></th>
-            <!--<th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'projectname', 'contains')"></th>-->
-            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'requesteddate', 'contains')"></th>
-            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'name', 'contains')"></th>
-          </tr>
-        </ng-template>
-        <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
-          <tr *ngIf="materialIssueList.length > 0">
-            <td class="ptable-cell" style="text-align:center;width:70px;">
-              {{ri+1}}
-            </td>
-            <td class="ptable-cell" style="text-align:center;width:100px;"><a *ngIf="rowData.requestid" [routerLink]="['/WMS/MaterialIssue',rowData.requestid,rowData.pono]" routerLinkActive="active">{{rowData.requestid}}</a></td>
-            <!--<td class="ptable-cell" style="text-align:left;">{{rowData.projectname}}</td>-->
-            <td class="ptable-cell" style="text-align:center;width:150px;">{{rowData.requesteddate  | date :  constants.dateFormat}}</td>
-            <td class="ptable-cell" style="text-align:left;width:150px;">{{rowData.name}}</td>
 
-          </tr>
-        </ng-template>
-      </p-table>
+    <!--<div class="row" style="margin-left:25px !important">
+
+      <div class="col-lg-1 col-md-1 col-sm-1 form-group" style=" margin-bottom: 0rem !important;">
+        <h6><label class="form-label">Status:</label></h6>
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-2 form-group" style=" padding-left: 0px; margin-bottom: 0rem !important;">
+        <select placeholder="Status" name="Status" (change)="onSelectStatus($event)" class="form-control">
+          <option selected value="Pending"> Pending</option>
+          <option value="Approved"> Issued</option>
+        </select>
+      </div>
+
+    </div>-->
+
+    <div class="card-body" style="overflow-y:hidden;padding:0px;margin-left:10px;margin-right:10px">
+      <div class="form-control" style="height:100%;">
+        <p-table #dt [value]="materialIssueList" [scrollable]="true" scrollHeight="60vh">
+          <ng-template pTemplate="header">
+            <tr class="mprltbldata">
+              <th style="text-align:center;width:70px">Sl.No.</th>
+              <th style="text-align:center;width:100px">Request Id</th>
+              <!--<th style="text-align:center">Project Name</th>-->
+              <th style="text-align: center;width:150px">Requested On</th>
+              <th style="text-align:center;width:150px">Requester</th>
+
+            </tr>
+            <tr>
+              <th></th>
+              <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'requestforissueid', 'contains')"></th>
+              <!--<th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'projectname', 'contains')"></th>-->
+              <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'requesteddate', 'contains')"></th>
+              <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'name', 'contains')"></th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
+            <tr *ngIf="materialIssueList.length > 0">
+              <td class="ptable-cell" style="text-align:center;width:70px;">
+                {{ri+1}}
+              </td>
+              <td class="ptable-cell" style="text-align:center;width:100px;"><a *ngIf="rowData.requestid" [routerLink]="['/WMS/MaterialIssue',rowData.requestid,rowData.pono]" routerLinkActive="active">{{rowData.requestid}}</a></td>
+              <!--<td class="ptable-cell" style="text-align:left;">{{rowData.projectname}}</td>-->
+              <td class="ptable-cell" style="text-align:center;width:150px;">{{rowData.requesteddate  | date :  constants.dateFormat}}</td>
+              <td class="ptable-cell" style="text-align:left;width:150px;">{{rowData.name}}</td>
+
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
     </div>
   </div>
-</div>
 
-   
+</div>   

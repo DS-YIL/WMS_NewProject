@@ -11,7 +11,7 @@
   }
 </style>-->
 <div style="margin:10px;">
-  <div class="card" style="width:100%;border-radius:10px; box-shadow:5px 10px #888888;min-height: 81vh; max-height: 81vh;">
+  <div class="card commoncardcss" style="width:100%;">
     <div class="card-header commoncardheader">
       <div class="row " style="    margin-top: 10px;
     margin-left: 0px !important;
@@ -56,15 +56,15 @@
         <div class="col-lg-4 col-md-4 text-center">
 
           <div *ngIf="employee.roleid =='3'">
-            <span style="color:#428bca;font-size:18px">
-              <i class="fa fa-check-circle-o" style="color:#428bca; font-size:18px;font-weight:600"></i>&nbsp;Gate Pass
+            <span class="commonheadertext">
+              <i class="fa fa-check-circle-o commonheadertext"></i>&nbsp;Gate Pass
             </span>
 
           </div>
 
           <div *ngIf="employee.roleid =='8'">
-            <span style="color:#428bca;font-size:18px">
-              <i class="fa fa-check-circle-o" style="color:#428bca; font-size:18px;font-weight:600"></i>&nbsp;Gate Pass - Non Returnable Materials
+            <span class="commonheadertext">
+              <i class="fa fa-check-circle-o commonheadertext"></i>&nbsp;Gate Pass - Non Returnable Materials
             </span>
           
           </div>

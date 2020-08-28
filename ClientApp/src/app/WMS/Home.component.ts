@@ -77,9 +77,15 @@ export class HomeComponent implements OnInit {
     if (localStorage.getItem("userroles")) {
       this.isroleselected = false;
       this.userrolelist = JSON.parse(localStorage.getItem("userroles")) as userAcessNamesModel[];
+      this.userrolelist = this.userrolelist.filter(function (element, index) {
+        return (element.roleid != 6);
+      });
     }
     else {
       this.userrolelist = JSON.parse(localStorage.getItem("allroles")) as userAcessNamesModel[];
+      this.userrolelist = this.userrolelist.filter(function (element, index) {
+        return (element.roleid != 6);
+      });
     }
     if (this.userroleid != "0") {
       var roleid = this.userroleid;

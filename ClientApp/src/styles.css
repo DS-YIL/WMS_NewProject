@@ -980,9 +980,21 @@ input[type=number] {
   flex-grow: 1;
 }
 
+.commoncardcss {
+  min-height: 81vh;
+  max-height: 81vh;
+  border-radius: 10px;
+  box-shadow: 5px 10px #888888;
+}
+
 .commoncardheader {
   height: 50px;
   padding-top: 0px;
+}
+.commonheadertext {
+  color: #428bca;
+  font-size: 18px;
+  font-weight: 600;
 }
 
 
