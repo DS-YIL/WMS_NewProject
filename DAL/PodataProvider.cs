@@ -45,18 +45,18 @@ namespace WMS.DAL
 					string query = "select asno.asn as asnno,asno.pono,pl.suppliername as vendorname from wms.wms_asn asno left outer join wms.wms_polist pl on pl.pono = asno.pono where asno.asn = '" + PONO.Trim() + "'";
 					var podata = pgsql.QueryFirstOrDefault<OpenPoModel>(
 					   query, null, commandType: CommandType.Text);
-					if(podata != null)
-                    {
+					if (podata != null)
+					{
 						podata.ispono = false;
 						return podata;
-                    }
-                    else
-                    {
-					    query = "select pono,suppliername as vendorname from wms.wms_polist where pono = '" + PONO.Trim() + "'";
+					}
+					else
+					{
+						query = "select pono,suppliername as vendorname from wms.wms_polist where pono = '" + PONO.Trim() + "'";
 						var podata1 = pgsql.QueryFirstOrDefault<OpenPoModel>(
 						   query, null, commandType: CommandType.Text);
-						if(podata1 != null)
-                        {
+						if (podata1 != null)
+						{
 							podata1.ispono = true;
 						}
 						return podata1;
@@ -106,7 +106,7 @@ namespace WMS.DAL
 						query = query + " and  wp.vendorid=" + vendorid;
 					}
 					query = query + " group by track.pono,wp.pono order by wp.pono desc ";
-					
+
 					await pgsql.OpenAsync();
 					var data = await pgsql.QueryAsync<OpenPoModel>(
 					   query, null, commandType: CommandType.Text);
@@ -131,7 +131,7 @@ namespace WMS.DAL
 		//Gayathri -get po numbers and qty
 		public async Task<IEnumerable<POList>> getPOList(string postatus)
 		{
-			
+
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
 				List<POList> objpo = null;
@@ -236,24 +236,24 @@ namespace WMS.DAL
 					//	return objpo;
 					//}
 
-					if(postatus == "Instock")
-                    {
+					if (postatus == "Instock")
+					{
 						string query = "select mats.pono,SUM(mats.materialqty) as qty from wms.wms_pomaterials mats where mats.pono in (select DISTINCT sinw.pono from wms.wms_stock sinw) group by mats.pono";
-                        await pgsql.OpenAsync();
-                        var result= await pgsql.QueryAsync<POList>(
-                           query, null, commandType: CommandType.Text);
-						if(result!=null)
-                        {
-							foreach(var data in result)
-                            {
+						await pgsql.OpenAsync();
+						var result = await pgsql.QueryAsync<POList>(
+						   query, null, commandType: CommandType.Text);
+						if (result != null)
+						{
+							foreach (var data in result)
+							{
 								data.status = "Instock";
 							}
 							return result;
-                        }
+						}
 
-                    }
-					else if(postatus== "SecurityCheck")
-                    {
+					}
+					else if (postatus == "SecurityCheck")
+					{
 						string query = "select mats.pono,SUM(mats.materialqty) as qty from wms.wms_pomaterials mats where mats.pono in (select DISTINCT sinw.pono from wms.wms_securityinward sinw where sinw.grnnumber is not null and sinw.pono not in (select  DISTINCT pono from wms.wms_stock))group by mats.pono";
 						await pgsql.OpenAsync();
 						var result = await pgsql.QueryAsync<POList>(
@@ -269,8 +269,8 @@ namespace WMS.DAL
 						}
 
 					}
-					else if(postatus=="Pending")
-                    {
+					else if (postatus == "Pending")
+					{
 						string query = "select mats.pono,SUM(mats.materialqty) as qty from wms.wms_pomaterials mats where mats.pono not in (select DISTINCT pono from wms.wms_securityinward) group by mats.pono";
 						await pgsql.OpenAsync();
 						var result = await pgsql.QueryAsync<POList>(
@@ -287,7 +287,7 @@ namespace WMS.DAL
 					}
 
 					return null;
-					
+
 
 
 				}
@@ -308,19 +308,19 @@ namespace WMS.DAL
 		///Generating barcode
 		///</summary>
 		public printMaterial generateBarcodeMaterial(printMaterial printMat)
-        {
-            try
-            {
+		{
+			try
+			{
 				string path = "";
 
 				path = Environment.CurrentDirectory + @"\Barcodes\";
-				
+
 				if (!Directory.Exists(path))
 				{
 					Directory.CreateDirectory(path);
 				}
 				//generate barcode for material code and GRN No.
-				var content = printMat.grnno+"-"+printMat.materialid;
+				var content = printMat.grnno + "-" + printMat.materialid;
 				BarcodeWriter writer = new BarcodeWriter
 				{
 					Format = BarcodeFormat.QR_CODE,
@@ -330,7 +330,7 @@ namespace WMS.DAL
 						Width = 100,
 						PureBarcode = false,
 						Margin = 1,
-					
+
 					},
 				};
 				var bitmap = writer.Write(content);
@@ -338,14 +338,14 @@ namespace WMS.DAL
 				// write text and generate a 2-D barcode as a bitmap
 				writer
 					.Write(content)
-					.Save(path  + content + ".bmp");
+					.Save(path + content + ".bmp");
 
 				printMat.barcodePath = "./Barcodes/" + content + ".bmp";
 				//printMat.barcodePath = "./assets/" + content + ".bmp";
 
 				//Barcode design for material code
 				//generate barcode for material code and GRN No.
-				 content =  printMat.materialid;
+				content = printMat.materialid;
 				BarcodeWriter writerData = new BarcodeWriter
 				{
 					Format = BarcodeFormat.QR_CODE,
@@ -358,7 +358,7 @@ namespace WMS.DAL
 
 					},
 				};
-				 bitmap = writerData.Write(content);
+				bitmap = writerData.Write(content);
 
 				// write text and generate a 2-D barcode as a bitmap
 				writer
@@ -370,7 +370,7 @@ namespace WMS.DAL
 
 			}
 			catch (Exception ex)
-            {
+			{
 				printMat.errorMsg = ex.Message;
 				log.ErrorMessage("PODataProvider", "generateBarcodeMaterial", ex.StackTrace.ToString());
 			}
@@ -403,15 +403,15 @@ namespace WMS.DAL
 						var result = "0";
 						string insertqueryforinvoice = WMSResource.insertinvoicedata;
 						dataobj.receiveddate = System.DateTime.Now;
-						if(dataobj.pono == "NONPO")
-                        {
-							string compare = "NP"+DateTime.Now.Year.ToString().Substring(2);
+						if (dataobj.pono == "NONPO")
+						{
+							string compare = "NP" + DateTime.Now.Year.ToString().Substring(2);
 							string Query = "select Max(pono) as POno  from wms.wms_polist where pono like 'NP%'";
 							//string Query = "select pono as POno from wms.wms_securityinward where pono like '"+compare+"%' order by inwmasterid desc limit 1";
 							var data = DB.QueryFirstOrDefault<POList>(
 							Query, null, commandType: CommandType.Text);
-							if(data != null)
-                            {
+							if (data != null)
+							{
 								string[] poserial = data.POno.Split('P');
 								int serial = Convert.ToInt32(poserial[1].Substring(2));
 								int nextserial = serial + 1;
@@ -426,18 +426,18 @@ namespace WMS.DAL
 								}
 								string type = "NON PO";
 								string insertpoqry = WMSResource.insertpo;
-									DB.Execute(insertpoqry, new
-									{
-										dataobj.pono,
-										dataobj.suppliername,
-										type
-										//barcodeid,
-									});
-							
-								
+								DB.Execute(insertpoqry, new
+								{
+									dataobj.pono,
+									dataobj.suppliername,
+									type
+									//barcodeid,
+								});
+
+
 							}
-                            else
-                            {
+							else
+							{
 								string nextpo = "NP" + DateTime.Now.Year.ToString().Substring(2) + "00001";
 								dataobj.pono = nextpo;
 								var q2 = "select count(*) from wms.wms_securityinward  where pono ='" + dataobj.pono + "'  and invoiceno ='" + dataobj.invoiceno + "'";
@@ -803,7 +803,7 @@ namespace WMS.DAL
 				try
 				{
 					await pgsql.OpenAsync();
-					string query = WMSResource.getHoldGRdetail.Replace("#status",status);
+					string query = WMSResource.getHoldGRdetail.Replace("#status", status);
 					var data = await pgsql.QueryAsync<OpenPoModel>(
 						   query, null, commandType: CommandType.Text);
 					return data;
@@ -818,9 +818,9 @@ namespace WMS.DAL
 					pgsql.Close();
 				}
 			}
-	  }
+		}
 
-	
+
 
 		/// <summary>
 		/// get list of info for three way matching
@@ -828,7 +828,7 @@ namespace WMS.DAL
 		/// <param name="invoiceno"></param>
 		/// <param name="pono"></param>
 		/// <returns></returns>
-		public async Task<IEnumerable<OpenPoModel>> GetDeatilsForthreeWaymatching(string invoiceno, string pono,bool isgrn, string grnno)
+		public async Task<IEnumerable<OpenPoModel>> GetDeatilsForthreeWaymatching(string invoiceno, string pono, bool isgrn, string grnno)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
@@ -872,20 +872,20 @@ namespace WMS.DAL
 						else
 						{
 							inwardModel objx = new inwardModel();
-                            if (!isgrn)
-                            {
+							if (!isgrn)
+							{
 								string queryx = "select grnnumber,onhold,unholdedby from wms.wms_securityinward where pono = '" + pono + "' and invoiceno = '" + invoiceno + "'";
 								objx = pgsql.QuerySingle<inwardModel>(
 								 queryx, null, commandType: CommandType.Text);
 							}
-                            else
-                            {
+							else
+							{
 								string queryx = "select grnnumber,onhold,unholdedby from wms.wms_securityinward where grnnumber = '" + grnno + "'";
 								objx = pgsql.QuerySingle<inwardModel>(
 								queryx, null, commandType: CommandType.Text);
 							}
-							if((objx.grnnumber == null || objx.grnnumber == "") && !objx.onhold  && (objx.unholdedby == null || objx.unholdedby == ""))
-                            {
+							if ((objx.grnnumber == null || objx.grnnumber == "") && !objx.onhold && (objx.unholdedby == null || objx.unholdedby == ""))
+							{
 								query = WMSResource.Getdetailsforthreewaymatching;
 								if (isgrn)
 								{
@@ -896,8 +896,8 @@ namespace WMS.DAL
 									query += " where mat.pono = '" + pono + "'  and sinw.invoiceno = '" + invoiceno + "'";
 								}
 							}
-                            else
-                            {
+							else
+							{
 								query = WMSResource.receivequeryfornonpo;
 								if (isgrn)
 								{
@@ -908,7 +908,7 @@ namespace WMS.DAL
 									query += " where sinw.pono = '" + pono + "'  and sinw.invoiceno = '" + invoiceno + "' and (sinw.holdgrstatus is NULL or sinw.holdgrstatus =  'accepted' or sinw.holdgrstatus = 'hold')";
 								}
 							}
-							
+
 						}
 						var data = await pgsql.QueryAsync<OpenPoModel>(
 						   query, null, commandType: CommandType.Text);
@@ -1159,10 +1159,10 @@ namespace WMS.DAL
 						bool isupdateprocess = false;
 
 						string unholdedby = datamodel[0].unholdedby;
-						if(unholdedby != null && unholdedby != "")
-                        {
+						if (unholdedby != null && unholdedby != "")
+						{
 							isupdateprocess = true;
-                        }
+						}
 						foreach (var item in datamodel)
 						{
 							item.receiveddate = System.DateTime.Now;
@@ -1170,16 +1170,16 @@ namespace WMS.DAL
 							item.deleteflag = false;
 							string materialid = item.Material;
 							bool? qualitychecked = null;
-                            if (!item.qualitycheck)
-                            {
+							if (!item.qualitycheck)
+							{
 								qualitychecked = true;
 
 							}
 
 							using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
 							{
-                                if (!isupdateprocess)
-                                {
+								if (!isupdateprocess)
+								{
 									var results = DB.ExecuteScalar(insertforinvoicequery, new
 									{
 										obj.inwmasterid,
@@ -1198,19 +1198,19 @@ namespace WMS.DAL
 
 									if (inwardid != 0 && loop == 0)
 									{
-                                        if (item.onhold)
-                                        {
+										if (item.onhold)
+										{
 											string qry = "Update wms.wms_securityinward set onhold = " + item.onhold + ",onholdremarks = '" + item.onholdremarks + "',holdgrstatus='hold' where pono = '" + item.pono + "' and invoiceno = '" + item.invoiceno + "'";
 											var results11 = DB.ExecuteScalar(qry);
 										}
-										
+
 									}
 									loop++;
 
 								}
-                                else
-                                {
-									string qrry = WMSResource.updatereceiptunhold.Replace("#inwardid",item.inwardid.ToString());
+								else
+								{
+									string qrry = WMSResource.updatereceiptunhold.Replace("#inwardid", item.inwardid.ToString());
 									var results = DB.ExecuteScalar(qrry, new
 									{
 										item.receiveddate,
@@ -1221,7 +1221,7 @@ namespace WMS.DAL
 										item.receiveremarks
 
 									});
-									
+
 
 									if (loop == 0)
 									{
@@ -1233,7 +1233,7 @@ namespace WMS.DAL
 									}
 									loop++;
 								}
-									
+
 
 								//if (inwardid != 0)
 								//{
@@ -1804,7 +1804,7 @@ namespace WMS.DAL
 
 						});
 					}
-					if(result!=0)
+					if (result != 0)
 					{
 						EmailModel emailmodel = new EmailModel();
 						emailmodel.pono = item.pono;
@@ -2026,7 +2026,7 @@ namespace WMS.DAL
 								item.requestedquantity
 							});
 						}
-						if(result!=0)
+						if (result != 0)
 						{
 							EmailModel emailmodel = new EmailModel();
 							emailmodel.pono = item.pono;
@@ -2136,9 +2136,9 @@ namespace WMS.DAL
 					DateTime itemissueddate = System.DateTime.Now;
 
 					string updateapproverstatus = WMSResource.updateapproverstatus;
-					
-						using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
-						{
+
+					using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
+					{
 						if (item.issuedqty > 0)
 						{
 							result = DB.Execute(updateapproverstatus, new
@@ -2165,14 +2165,14 @@ namespace WMS.DAL
 
 							});
 						}
-						
+
 
 					}
-					
 
-				
 
-			}
+
+
+				}
 
 				return (Convert.ToInt32(result));
 			}
@@ -2232,18 +2232,18 @@ namespace WMS.DAL
 					var data = await pgsql.QueryAsync<gatepassModel>(
 					   query, null, commandType: CommandType.Text);
 					if (type == "1")
-                    {
+					{
 
 						var data1 = data.Where(o => o.gatepasstype == "Returnable").ToList();
 						return data1;
 
 					}
-                    else
-                    {
-						var data1 =  data.Where(o => o.gatepasstype == "Non Returnable").ToList();
+					else
+					{
+						var data1 = data.Where(o => o.gatepasstype == "Non Returnable").ToList();
 						return data1;
 					}
-					
+
 
 
 				}
@@ -2276,9 +2276,9 @@ namespace WMS.DAL
 				{
 					dataobj.requestedon = System.DateTime.Now;
 					string insertquery = WMSResource.insertgatepassdata;
-					string fmapprovedstatus= "Pending";
+					string fmapprovedstatus = "Pending";
 					string approverstatus = "Pending";
-					
+
 					string insertgatepasshistory = WMSResource.insertgatepassapprovalhistory;
 					dataobj.deleteflag = false;
 					dataobj.fmapproverid = "400104";
@@ -2360,7 +2360,7 @@ namespace WMS.DAL
 							EmailUtilities emailobj = new EmailUtilities();
 							//emailobj.sendEmail(emailmodel, 9);
 						}
-						
+
 
 						if (dataobj.gatepassid == 0)
 							dataobj.gatepassid = Convert.ToInt32(gatepassid);
@@ -2368,27 +2368,27 @@ namespace WMS.DAL
 				}
 				else
 				{
-                    dataobj.requestedon = System.DateTime.Now;
-                    string insertquery = WMSResource.updategatepass.Replace("#gatepassid", Convert.ToString(dataobj.gatepassid));
+					dataobj.requestedon = System.DateTime.Now;
+					string insertquery = WMSResource.updategatepass.Replace("#gatepassid", Convert.ToString(dataobj.gatepassid));
 
-                    using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
-                    {
-                        var result = DB.ExecuteScalar(insertquery, new
-                        {
+					using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
+					{
+						var result = DB.ExecuteScalar(insertquery, new
+						{
 
-                            dataobj.gatepasstype,
-                            dataobj.status,
-                            dataobj.requestedon,
-                            dataobj.referenceno,
-                            dataobj.vehicleno,
-                            dataobj.requestedby,
-                            dataobj.vendorname,
-                            dataobj.reasonforgatepass,
+							dataobj.gatepasstype,
+							dataobj.status,
+							dataobj.requestedon,
+							dataobj.referenceno,
+							dataobj.vehicleno,
+							dataobj.requestedby,
+							dataobj.vendorname,
+							dataobj.reasonforgatepass,
 							remarks
 
-                        });
-                    }
-                }
+						});
+					}
+				}
 				foreach (var item in dataobj.materialList)
 				{
 					int itemid = 0;
@@ -2437,21 +2437,21 @@ namespace WMS.DAL
 							});
 
 							string updatequery = WMSResource.updategatepassmaterial.Replace("#gatepassmaterialid", Convert.ToString(item.gatepassmaterialid));
-							
-								var result = DB.ExecuteScalar(updatequery, new
-								{
 
-									dataobj.gatepassid,
-									item.materialid,
-									item.quantity,
-									item.remarks,
-									item.materialcost,
-									item.expecteddate,
-									item.returneddate,
+							var result = DB.ExecuteScalar(updatequery, new
+							{
 
-								});
-							
-							
+								dataobj.gatepassid,
+								item.materialid,
+								item.quantity,
+								item.remarks,
+								item.materialcost,
+								item.expecteddate,
+								item.returneddate,
+
+							});
+
+
 						}
 					}
 				}
@@ -2514,18 +2514,18 @@ namespace WMS.DAL
 					query, null, commandType: CommandType.Text);
 						if (obj != null)
 						{
-							if(obj.availableqty >=qty)
-                            {
+							if (obj.availableqty >= qty)
+							{
 								returnvalue = "true";
 							}
-                            else
-                            {
+							else
+							{
 								if (obj.availableqty < qty)
 								{
-									returnvalue = "Material and quantity does not exists for "+material+" available qty is "+obj.availableqty;
+									returnvalue = "Material and quantity does not exists for " + material + " available qty is " + obj.availableqty;
 								}
 							}
-							
+
 						}
 						else
 						{
@@ -2708,11 +2708,11 @@ namespace WMS.DAL
 
 			}
 		}
-	/*  Name of Function : <<name>>  Author :<<Pavithran>>  
-		Date of Creation <<12-12-2019>>
-		Purpose : <<Write briefly in one line or two lines>>
-		Review Date :<<>>   Reviewed By :<<>>
-	*/
+		/*  Name of Function : <<name>>  Author :<<Pavithran>>  
+			Date of Creation <<12-12-2019>>
+			Purpose : <<Write briefly in one line or two lines>>
+			Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<gatepassapprovalsModel>> getGatePassApprovalHistoryList(int gatepassid)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -2995,17 +2995,20 @@ namespace WMS.DAL
 			{
 
 				int data = 0;
-				if (model != null)
+
+				foreach (var item in model)
 				{
-					foreach (var item in model)
+					if (item.categoryid != 0)
 					{
-						string updatequery = WMSResource.updateABCrange;
+						string updatequery = WMSResource.updateABCrange.Replace("#categoryid", item.categoryid.ToString());
 						item.updatedon = System.DateTime.Now;
+
 						using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
 						{
 							data = Convert.ToInt32(DB.Execute(updatequery, new
 
 							{
+
 								item.updatedby,
 								item.updatedon,
 
@@ -3013,35 +3016,35 @@ namespace WMS.DAL
 							returndata = Convert.ToInt32(data);
 
 						}
-						break;
+						//break;
 					}
-					if (returndata != 0)
-					{
-						foreach (var item in model)
-						{
-							item.startdate = item.startdate.AddDays(1);
-							item.enddate = item.enddate.AddDays(1);
-							string insertquery = WMSResource.insertABCrange;
-							//item.createdon = System.DateTime.Now;
-							using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
-							{
-								data = Convert.ToInt32(DB.ExecuteScalar(insertquery, new
-
-								{
-									item.categoryname,
-									item.minpricevalue,
-									item.maxpricevalue,
-									item.createdby,
-									item.startdate,
-									item.enddate
-								}));
-								returndata = Convert.ToInt32(data);
-							}
-						}
-					}
-
-
 				}
+
+				//insert ABC category data
+				foreach (var item in model)
+				{
+					if (item.categoryname == "C")
+						item.minpricevalue = 0;
+					//item.startdate = item.startdate.AddDays(1);
+					//item.enddate = item.enddate.AddDays(1);
+					string insertquery = WMSResource.insertABCrange;
+					//item.createdon = System.DateTime.Now;
+					using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
+					{
+						data = Convert.ToInt32(DB.ExecuteScalar(insertquery, new
+
+						{
+							item.categoryname,
+							item.minpricevalue,
+							item.maxpricevalue,
+							item.createdby,
+							item.startdate,
+							item.enddate
+						}));
+						returndata = Convert.ToInt32(data);
+					}
+				}
+
 				List<ReportModel> obj = new List<ReportModel>();
 				//using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 				//{
@@ -3679,8 +3682,8 @@ namespace WMS.DAL
 
 					var pendingrcptsdata = await pgsql.QueryAsync<ddlmodel>(
 					  materialrequestquery, null, commandType: CommandType.Text);
-					if(pendingrcptsdata != null && pendingrcptsdata.Count() > 0)
-                    {
+					if (pendingrcptsdata != null && pendingrcptsdata.Count() > 0)
+					{
 						detail.pendingtoreceive = pendingrcptsdata.Count();
 
 					}
@@ -3697,7 +3700,7 @@ namespace WMS.DAL
 					}
 
 
-					
+
 
 					string materialputawayquery = WMSResource.getgrnlistdataforputaway;
 					List<ddlmodel> returnlist = new List<ddlmodel>();
@@ -3718,7 +3721,7 @@ namespace WMS.DAL
 						detail.pendingtoputaway = returnlist.Count();
 
 					}
-					
+
 					string queryqc = WMSResource.getqualitycheckdropdown;// + pono+"'";//li
 					var qcdata = await pgsql.QueryAsync<ddlmodel>(
 					   queryqc, null, commandType: CommandType.Text);
@@ -3729,7 +3732,7 @@ namespace WMS.DAL
 					}
 					DateTime sevendaysbefore = DateTime.Now.AddDays(-7);
 					string sevendaysbeforestr = sevendaysbefore.ToString("yyyy-MM-dd");
-					string queryrsrv = "select itemid as value from wms.wms_materialreserve where reservedby = '"+empno+"' and reserveupto >= '" + sevendaysbeforestr + " 00:00:00' and reserveupto <= '" + deliverydate + " 23:59:59'";
+					string queryrsrv = "select itemid as value from wms.wms_materialreserve where reservedby = '" + empno + "' and reserveupto >= '" + sevendaysbeforestr + " 00:00:00' and reserveupto <= '" + deliverydate + " 23:59:59'";
 					var rsvdata = await pgsql.QueryAsync<ddlmodel>(
 					   queryrsrv, null, commandType: CommandType.Text);
 					if (rsvdata != null && rsvdata.Count() > 0)
@@ -3877,7 +3880,7 @@ namespace WMS.DAL
 							{
 
 							});
-							
+
 						}
 					}
 
@@ -4101,10 +4104,10 @@ namespace WMS.DAL
 
 				try
 				{
-					
+
 					string rcvqry = "SELECT receiveddate::date as graphdate, COUNT(*),'Receive' as type ";
 					rcvqry += " from wms.wms_storeinward";
-					rcvqry+= " WHERE receiveddate > now() - interval '7 days'";
+					rcvqry += " WHERE receiveddate > now() - interval '7 days'";
 					rcvqry += " GROUP BY receiveddate::date";
 					rcvqry += " ORDER BY receiveddate::date ASC";
 
@@ -4272,7 +4275,7 @@ namespace WMS.DAL
 				try
 				{
 					string materialrequestquery = WMSResource.getmaterialdetailfprrequest;
-					if (pono != null && pono!="undefined" && pono!="null")
+					if (pono != null && pono != "undefined" && pono != "null")
 					{
 						materialrequestquery = materialrequestquery + " and openpo.pono = '" + pono + "'";
 					}
@@ -4354,37 +4357,37 @@ namespace WMS.DAL
 
 					if (item.quantity > 0)
 					{
-						
+
 						item.materialid = item.material;
 						item.reservedqty = item.quantity;
 						item.reservedby = item.requesterid;
 
 						string insertquery = WMSResource.insertreservematerial;
 						string itemnoquery = WMSResource.getitemiddata.Replace("#materialid", item.material);
-						if(item.pono!=null)
-                        {
-							itemnoquery = itemnoquery + "and pono='" + item.pono+"'";
-                        }
+						if (item.pono != null)
+						{
+							itemnoquery = itemnoquery + "and pono='" + item.pono + "'";
+						}
 						using (var DB = new NpgsqlConnection(config.PostgresConnectionString))
 						{
-						
+
 							//DB.Open();
 							await DB.OpenAsync();
 							var itemData = await DB.QueryAsync<StockModel>(
 					   itemnoquery, null, commandType: CommandType.Text);
 							int remainingqty = item.quantity;
 							itemData = itemData.OrderBy(o => o.createddate);
-							
+
 							foreach (StockModel data in itemData)
-                            {
+							{
 								if (item.pono == null)
 								{
 									item.pono = data.pono;
 								}
-								if (data.availableqty>= remainingqty)
-                                {
+								if (data.availableqty >= remainingqty)
+								{
 									item.itemid = data.itemid;
-									
+
 									result = DB.Execute(insertquery, new
 									{
 										item.materialid,
@@ -4396,9 +4399,9 @@ namespace WMS.DAL
 										item.reserveupto
 									});
 									break;
-                                }
-                                else
-                                {
+								}
+								else
+								{
 									remainingqty = item.quantity - data.availableqty;
 									item.itemid = data.itemid;
 
@@ -4429,11 +4432,11 @@ namespace WMS.DAL
 
 							}
 
-							
-							
+
+
 						}
 
-						
+
 
 					}
 				}
@@ -4739,7 +4742,7 @@ namespace WMS.DAL
 								item.receivedby,
 								item.remarks
 
-							}) ;
+							});
 							string query = "UPDATE wms.wms_storeinward set  qualitychecked = True where inwardid = '" + item.inwardid + "'";
 							DB.ExecuteScalar(query);
 							//inwardid = Convert.ToInt32(results);
@@ -4758,7 +4761,7 @@ namespace WMS.DAL
 							//        datamodel.deleteflag,
 
 							//    });
-							if(Convert.ToInt32(results)!=0)
+							if (Convert.ToInt32(results) != 0)
 							{
 								EmailModel emailmodel = new EmailModel();
 								emailmodel.pono = item.pono;
@@ -4787,10 +4790,10 @@ namespace WMS.DAL
 			}
 		}
 
-	
+
 
 		//Ramesh
-	public async Task<IEnumerable<ddlmodel>> getprojectlist()
+		public async Task<IEnumerable<ddlmodel>> getprojectlist()
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
@@ -4827,7 +4830,7 @@ namespace WMS.DAL
 			{
 				try
 				{
-					string materialrequestquery = WMSResource.getmaterialfortransfer.Replace("#requestor",empno);
+					string materialrequestquery = WMSResource.getmaterialfortransfer.Replace("#requestor", empno);
 
 
 					await pgsql.OpenAsync();
@@ -5044,7 +5047,7 @@ namespace WMS.DAL
 			{
 				try
 				{
-					string approverlist = WMSResource.getimmediatemnger.Replace("#employeeno",empid);
+					string approverlist = WMSResource.getimmediatemnger.Replace("#employeeno", empid);
 
 					await pgsql.OpenAsync();
 					return await pgsql.QueryAsync<employeeModel>(
@@ -5064,7 +5067,7 @@ namespace WMS.DAL
 			}
 		}
 
-		public  async Task<IEnumerable<gatepassModel>> getgatepassByapproverList(string empid)
+		public async Task<IEnumerable<gatepassModel>> getgatepassByapproverList(string empid)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
@@ -5092,12 +5095,12 @@ namespace WMS.DAL
 
 
 		public async Task<IEnumerable<pageModel>> Getpagesbyroleid(int roleid)
-        {
+		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
 				try
 				{
-					string approverlist = "select * from wms.wms_pages where roleid = "+roleid+"";
+					string approverlist = "select * from wms.wms_pages where roleid = " + roleid + "";
 
 					await pgsql.OpenAsync();
 					return await pgsql.QueryAsync<pageModel>(
@@ -5155,7 +5158,7 @@ namespace WMS.DAL
 				return result;
 
 				string updateapproverstatus = string.Empty;
-				
+
 
 				if (model.categoryid == 1)
 				{
@@ -5236,11 +5239,11 @@ namespace WMS.DAL
 			{
 				var result = 0;
 
-					string updateapproverstatus =string.Empty;
+				string updateapproverstatus = string.Empty;
 
 				if (model.categoryid == 1)
 				{
-					updateapproverstatus = WMSResource.updateApprovedstatusbymanager.Replace("#approverstatus","Approved");
+					updateapproverstatus = WMSResource.updateApprovedstatusbymanager.Replace("#approverstatus", "Approved");
 
 					using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
 					{
@@ -5251,7 +5254,7 @@ namespace WMS.DAL
 							model.gatepassid
 
 						});
-						if(result==1)
+						if (result == 1)
 						{
 							int label = 1;
 							string approvername = model.approvedby;
@@ -5276,7 +5279,7 @@ namespace WMS.DAL
 					using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
 					{
 
-					var	result1 = DB.Execute(updateapproverstatus, new
+						var result1 = DB.Execute(updateapproverstatus, new
 						{
 							model.fmapproverremarks,
 							model.gatepassid
@@ -5301,7 +5304,7 @@ namespace WMS.DAL
 					}
 				}
 
-					return (Convert.ToInt32(result));
+				return (Convert.ToInt32(result));
 			}
 			catch (Exception Ex)
 			{
@@ -5363,8 +5366,8 @@ namespace WMS.DAL
 
 			}
 		}
-		
-			/// <summary>
+
+		/// <summary>
 		/// Get list of materials for stock transfer 
 		/// Ramesh Kumar 15/07/2020
 		/// </summary>
@@ -5402,50 +5405,50 @@ namespace WMS.DAL
 
 		public string UpdateStockTransfer(List<StockModel> data)
 		{
-			
-			
-				StockModel obj = new StockModel();
-				string loactiontext = string.Empty;
 
-				foreach(StockModel stck in data)
-                {
+
+			StockModel obj = new StockModel();
+			string loactiontext = string.Empty;
+
+			foreach (StockModel stck in data)
+			{
 				NpgsqlTransaction Trans = null;
 				stocktransferModel transfer = new stocktransferModel();
-				
-				
+
+
 				using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
-					{
+				{
 					try
 					{
 						pgsql.Open();
 						Trans = pgsql.BeginTransaction();
-                        StockModel objs = new StockModel();
-                        
-                        string query = "select * from wms.wms_stock where itemid = '"+stck.itemid+"'";
-                        objs = pgsql.QueryFirstOrDefault<StockModel>(
-                           query, null, commandType: CommandType.Text);
-                       
-						if(objs != null)
-                        {
+						StockModel objs = new StockModel();
+
+						string query = "select * from wms.wms_stock where itemid = '" + stck.itemid + "'";
+						objs = pgsql.QueryFirstOrDefault<StockModel>(
+						   query, null, commandType: CommandType.Text);
+
+						if (objs != null)
+						{
 							transfer.itemid = stck.itemid;
 							transfer.materialid = objs.materialid;
 							transfer.previousqty = objs.availableqty;
 							transfer.previouslocation = objs.itemlocation;
-							transfer.transferedon= System.DateTime.Now;
+							transfer.transferedon = System.DateTime.Now;
 							transfer.transferedby = stck.createdby;
 							transfer.transferedqty = stck.availableqty;
 							transfer.currentlocation = stck.itemlocation;
 							transfer.remarks = stck.remarks;
 							int decavail = objs.availableqty - stck.availableqty;
-							
-							string query1 = "UPDATE wms.wms_stock set availableqty="+ decavail + "  where itemid = '" + stck.itemid + "'";
+
+							string query1 = "UPDATE wms.wms_stock set availableqty=" + decavail + "  where itemid = '" + stck.itemid + "'";
 							pgsql.ExecuteScalar(query1);
 							StockModel objs1 = new StockModel();
-							string query2 = "select * from wms.wms_stock where pono = '"+objs.pono+"' and materialid = '"+objs.materialid+"' and itemlocation = '" + stck.itemlocation + "'";
+							string query2 = "select * from wms.wms_stock where pono = '" + objs.pono + "' and materialid = '" + objs.materialid + "' and itemlocation = '" + stck.itemlocation + "'";
 							objs1 = pgsql.QueryFirstOrDefault<StockModel>(
 							   query2, null, commandType: CommandType.Text);
-							if(objs1 != null)
-                            {
+							if (objs1 != null)
+							{
 								int availqty = objs1.availableqty + stck.availableqty;
 
 								string query4 = "UPDATE wms.wms_stock set availableqty=" + availqty + "  where pono = '" + objs.pono + "' and materialid = '" + objs.materialid + "' and itemlocation = '" + stck.itemlocation + "'";
@@ -5465,7 +5468,8 @@ namespace WMS.DAL
 
 								});
 							}
-                            else{
+							else
+							{
 								string insertqueryx = WMSResource.insertstock;
 								stck.createddate = System.DateTime.Now;
 								int itemid = 0;
@@ -5532,15 +5536,15 @@ namespace WMS.DAL
 						return null;
 					}
 				}
-				}
+			}
 
 
-				
-
-				return loactiontext;
 
 
-			
+			return loactiontext;
+
+
+
 
 		}
 
@@ -5555,8 +5559,8 @@ namespace WMS.DAL
 			foreach (stocktransfermateriakmodel stck in data.materialdata)
 			{
 				NpgsqlTransaction Trans = null;
-				
-				
+
+
 
 				using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 				{
@@ -5565,35 +5569,35 @@ namespace WMS.DAL
 						pgsql.Open();
 						Trans = pgsql.BeginTransaction();
 						StockModel objs = new StockModel();
-                        if (x == 0)
-                        {
-							
-								string compare = "ST" + DateTime.Now.Year.ToString().Substring(2);
-								string Query = "select transferid from wms.wms_invstocktransfer order by transferredon desc limit 1";
-								var rslt = pgsql.QueryFirstOrDefault<invstocktransfermodel>(
-								Query, null, commandType: CommandType.Text);
-								if (rslt != null)
-								{
-									string[] poserial = rslt.transferid.Split('T');
-									int serial = Convert.ToInt32(poserial[1].Substring(2));
-									int nextserial = serial + 1;
-									string nextid = "ST" + DateTime.Now.Year.ToString().Substring(2) + nextserial.ToString().PadLeft(6, '0');
-									transfer.transferid = nextid;
-								}
-								else
-								{
-									string nextid = "ST" + DateTime.Now.Year.ToString().Substring(2) + "000001";
-								    transfer.transferid = nextid;
-								}
+						if (x == 0)
+						{
+
+							string compare = "ST" + DateTime.Now.Year.ToString().Substring(2);
+							string Query = "select transferid from wms.wms_invstocktransfer order by transferredon desc limit 1";
+							var rslt = pgsql.QueryFirstOrDefault<invstocktransfermodel>(
+							Query, null, commandType: CommandType.Text);
+							if (rslt != null)
+							{
+								string[] poserial = rslt.transferid.Split('T');
+								int serial = Convert.ToInt32(poserial[1].Substring(2));
+								int nextserial = serial + 1;
+								string nextid = "ST" + DateTime.Now.Year.ToString().Substring(2) + nextserial.ToString().PadLeft(6, '0');
+								transfer.transferid = nextid;
+							}
+							else
+							{
+								string nextid = "ST" + DateTime.Now.Year.ToString().Substring(2) + "000001";
+								transfer.transferid = nextid;
+							}
 
 							transfer.transferredby = data.transferredby;
 							transfer.transferredon = System.DateTime.Now;
-							if(data.sourceplant == data.destinationplant)
-                            {
+							if (data.sourceplant == data.destinationplant)
+							{
 								transfer.transfertype = "interstock";
-                            }
-                            else
-                            {
+							}
+							else
+							{
 								transfer.transfertype = "intrastock";
 							}
 							transfer.sourceplant = data.sourceplant;
@@ -5620,12 +5624,12 @@ namespace WMS.DAL
 
 						if (objs != null)
 						{
-							
+
 							int decavail = objs.availableqty - stck.transferqty;
 							int? inwmasterid = null;
 							int? inwardid = null;
 							if (objs.inwmasterid > 0)
-                            {
+							{
 								inwmasterid = objs.inwmasterid;
 
 							}
@@ -5723,8 +5727,8 @@ namespace WMS.DAL
 
 
 						}
-                        else
-                        {
+						else
+						{
 							Trans.Rollback();
 							return null;
 						}
@@ -5819,19 +5823,19 @@ namespace WMS.DAL
 					await pgsql.OpenAsync();
 					var result = await pgsql.QueryAsync<invstocktransfermodel>(
 					  materialrequestquery, null, commandType: CommandType.Text);
-					if(result != null & result.Count() > 0)
-                    {
-                      foreach(invstocktransfermodel dt in result)
-                        {
+					if (result != null & result.Count() > 0)
+					{
+						foreach (invstocktransfermodel dt in result)
+						{
 							var matqry = WMSResource.getinvtransfermaterialdetail.Replace("#tid", dt.transferid);
 							var result1 = await pgsql.QueryAsync<stocktransfermateriakmodel>(
 								  matqry, null, commandType: CommandType.Text);
-							if(result1 != null & result1.Count() > 0)
-                            {
+							if (result1 != null & result1.Count() > 0)
+							{
 								dt.materialdata = result1.ToList();
-                            }
+							}
 						}
-					  
+
 					}
 					return result;
 
@@ -5849,7 +5853,7 @@ namespace WMS.DAL
 			}
 		}
 
-		
+
 		public async Task<IEnumerable<ddlmodel>> getgrnlistforacceptance()
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -5863,20 +5867,20 @@ namespace WMS.DAL
 					  materialrequestquery, null, commandType: CommandType.Text);
 					//List<ddlmodel> senddata = new List<ddlmodel>();
 					//foreach(ddlmodel grn in data)
-     //               {
+					//               {
 					//	var qry = "select inwardid as value,inwmasterid as text from wms.wms_storeinward where qualitycheckrequired = True and (qualitychecked = False or qualitychecked is null) and inwmasterid = " + grn.value + "";
 					//	var data1 = await pgsql.QueryAsync<ddlmodel>(
 					//     qry, null, commandType: CommandType.Text);
 					//	if(data1 == null || data1.Count() == 0)
-     //                   {
+					//                   {
 					//		ddlmodel md = new ddlmodel();
 					//		md.value = grn.text;
 					//		md.text = grn.text;
 					//		senddata.Add(md);
-     //                   }
+					//                   }
 					//}
-					return data.OrderByDescending(o=>o.value);
-					
+					return data.OrderByDescending(o => o.value);
+
 
 				}
 				catch (Exception Ex)
@@ -5904,16 +5908,16 @@ namespace WMS.DAL
 					var data = await pgsql.QueryAsync<ddlmodel>(
 					  materialrequestquery, null, commandType: CommandType.Text);
 
-					foreach(ddlmodel ddl in data)
-                    {
+					foreach (ddlmodel ddl in data)
+					{
 						var exixtedrow = returnlist.Where(o => o.text == ddl.text).FirstOrDefault();
-						if(exixtedrow == null)
-                        {
+						if (exixtedrow == null)
+						{
 							returnlist.Add(ddl);
 
 						}
 
-                    }
+					}
 					return returnlist.OrderByDescending(o => o.value);
 
 
@@ -5938,19 +5942,19 @@ namespace WMS.DAL
 				try
 				{
 					string materialrequestquery = "";
-					if(type == "Pending")
-                    {
+					if (type == "Pending")
+					{
 						materialrequestquery = WMSResource.grnlistfornotify;
 					}
-					else if(type == "Sent")
-                    {
+					else if (type == "Sent")
+					{
 						materialrequestquery = WMSResource.getnotifiedgrnlist;
 					}
-                    else
-                    {
+					else
+					{
 						materialrequestquery = WMSResource.grnlistfornotify;
 					}
-					
+
 					List<inwardModel> returnlist = new List<inwardModel>();
 					await pgsql.OpenAsync();
 					var data = await pgsql.QueryAsync<inwardModel>(
@@ -5959,22 +5963,22 @@ namespace WMS.DAL
 
 
 
-                    foreach (inwardModel ddl in data)
-                    {
-						string validatequery = WMSResource.validategrnlistfornotify.Replace("#inwmasterid",ddl.inwmasterid.ToString());
+					foreach (inwardModel ddl in data)
+					{
+						string validatequery = WMSResource.validategrnlistfornotify.Replace("#inwmasterid", ddl.inwmasterid.ToString());
 						var datax = await pgsql.QueryAsync<ddlmodel>(
-					                validatequery, null, commandType: CommandType.Text);
-						if(datax == null || datax.Count() == 0)
-                        {
+									validatequery, null, commandType: CommandType.Text);
+						if (datax == null || datax.Count() == 0)
+						{
 							returnlist.Add(ddl);
 						}
-						
-                    
-                    }
-                    return returnlist.OrderByDescending(o => o.inwmasterid);
 
 
-                }
+					}
+					return returnlist.OrderByDescending(o => o.inwmasterid);
+
+
+				}
 				catch (Exception Ex)
 				{
 					log.ErrorMessage("PODataProvider", "getgrnlistforacceptanceputaway", Ex.StackTrace.ToString());
@@ -6082,10 +6086,10 @@ namespace WMS.DAL
 				try
 				{
 
-					
+
 					pgsql.OpenAsync();
 					string status = datamodel.unholdaction == true ? "accepted" : "returned";
-					string qry = "Update wms.wms_securityinward set onhold = False,holdgrstatus='"+status+"',unholdedby = '"+ datamodel.unholdedby+ "',unholdedon = current_date,unholdremarks = '" + datamodel.unholdremarks + "' where inwmasterid = " + datamodel.inwmasterid + "";
+					string qry = "Update wms.wms_securityinward set onhold = False,holdgrstatus='" + status + "',unholdedby = '" + datamodel.unholdedby + "',unholdedon = current_date,unholdremarks = '" + datamodel.unholdremarks + "' where inwmasterid = " + datamodel.inwmasterid + "";
 					var results11 = pgsql.ExecuteScalar(qry);
 					result = 1;
 
@@ -6130,8 +6134,8 @@ namespace WMS.DAL
 							materialid
 						});
 						int tid = Convert.ToInt32(resultx);
-                        if (tid!=0)
-                        {
+						if (tid != 0)
+						{
 							datamodel.transferid = tid;
 							foreach (materialtransferTR trdata in datamodel.materialdata)
 							{
@@ -6143,15 +6147,15 @@ namespace WMS.DAL
 									datamodel.transferid,
 									trdata.materialid,
 									trdata.transferredqty
-									
+
 								});
 							}
 							result = 1;
 						}
-						
+
 					}
-					
-					
+
+
 
 				}
 				catch (Exception Ex)
@@ -6197,7 +6201,7 @@ namespace WMS.DAL
 			return result;
 		}
 
-			public async Task<string> updateonholdrow(updateonhold datamodel)
+		public async Task<string> updateonholdrow(updateonhold datamodel)
 		{
 			string result = "";
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -6231,7 +6235,7 @@ namespace WMS.DAL
 		/// Ramesh Kumar (28/07/2020)
 		/// </summary>
 		/// <returns></returns>
-			public async Task<IEnumerable<ddlmodel>> getdepartmentmasterdata()
+		public async Task<IEnumerable<ddlmodel>> getdepartmentmasterdata()
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
@@ -6289,43 +6293,43 @@ namespace WMS.DAL
 		}
 		public int updatematmovement(List<materialistModel> obj)
 		{
-			
-				using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				try
 				{
-					try
+
+					foreach (materialistModel mat in obj)
 					{
-					
-						foreach (materialistModel mat in obj)
+						pgsql.OpenAsync();
+						string query = "";
+						if (mat.movetype == "out")
 						{
-							pgsql.OpenAsync();
-							string query = "";
-							if (mat.movetype == "out")
-							{
-								query = "update wms.wms_gatepassmaterial set outwardqty = "+mat.outwardqty+", outwarddate = '" + mat.outwarddatestring + "' , outwardedby='" + mat.movedby + "',outwardremarks='" + mat.remarks + "' where gatepassmaterialid = " + mat.gatepassmaterialid + "";
-							}
-							else
-							{
-								query = "update wms.wms_gatepassmaterial set inwardqty = "+mat.inwardqty+", inwarddate = '" + mat.inwarddatestring + "' , inwardedby='" + mat.movedby + "',inwardremarks='" + mat.remarks + "' where gatepassmaterialid = " + mat.gatepassmaterialid + "";
-							}
-							var results11 = pgsql.ExecuteScalar(query);
+							query = "update wms.wms_gatepassmaterial set outwardqty = " + mat.outwardqty + ", outwarddate = '" + mat.outwarddatestring + "' , outwardedby='" + mat.movedby + "',outwardremarks='" + mat.remarks + "' where gatepassmaterialid = " + mat.gatepassmaterialid + "";
 						}
+						else
+						{
+							query = "update wms.wms_gatepassmaterial set inwardqty = " + mat.inwardqty + ", inwarddate = '" + mat.inwarddatestring + "' , inwardedby='" + mat.movedby + "',inwardremarks='" + mat.remarks + "' where gatepassmaterialid = " + mat.gatepassmaterialid + "";
+						}
+						var results11 = pgsql.ExecuteScalar(query);
+					}
 
 					return 1;
-						
 
-					}
-					catch (Exception Ex)
-					{
-						log.ErrorMessage("PODataProvider", "updateonholdrow", Ex.StackTrace.ToString());
-						return 0;
-					}
-					finally
-					{
-						pgsql.Close();
-					}
 
-				
-				
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "updateonholdrow", Ex.StackTrace.ToString());
+					return 0;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+
+
 			}
 		}
 
@@ -6341,8 +6345,8 @@ namespace WMS.DAL
 				{
 					string materialrequestquery = WMSResource.getpendingreceiptslist;
 
-					 pgsql.OpenAsync();
-					string query = WMSResource.getstocktype.Replace("#locationid",locdetails.locationid).Replace("#locationname", locdetails.locationname).Replace("#stid", Convert.ToString(locdetails.storeid)).Replace("#rkid", Convert.ToString(locdetails.rackid)).Replace("#biid", Convert.ToString(locdetails.binid));
+					pgsql.OpenAsync();
+					string query = WMSResource.getstocktype.Replace("#locationid", locdetails.locationid).Replace("#locationname", locdetails.locationname).Replace("#stid", Convert.ToString(locdetails.storeid)).Replace("#rkid", Convert.ToString(locdetails.rackid)).Replace("#biid", Convert.ToString(locdetails.binid));
 					string stocktype = pgsql.QueryFirstOrDefault<string>(
 					   query, null, commandType: CommandType.Text);
 					return stocktype;
@@ -6371,7 +6375,8 @@ namespace WMS.DAL
 			emailobj.CC = "sushma.patil@in.yokogawa.com";
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
-				try {
+				try
+				{
 					pgsql.Open();
 					string query = WMSResource.Getreservelist;
 					string updatequery = string.Empty;
@@ -6413,9 +6418,9 @@ namespace WMS.DAL
 						}
 					}
 				}
-				catch(Exception ex)
+				catch (Exception ex)
 				{
-					
+
 					log.ErrorMessage("PODataProvider", "UpdateMaterialReserve", ex.StackTrace.ToString());
 					return 0;
 				}
@@ -6423,29 +6428,29 @@ namespace WMS.DAL
 				{
 					pgsql.Close();
 				}
-			
-				}
+
+			}
 
 			return result;
-			
-			
+
+
 		}
 
-	//get stock details
+		//get stock details
 		public stockCardPrint getstockdetails(string pono, string materialid)
-        {
+		{
 			stockCardPrint objstock = new stockCardPrint();
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
 				try
 				{
 					pgsql.Open();
-					string query = WMSResource.GetStockDetails.Replace("#pono",pono).Replace("#materialid",materialid);
+					string query = WMSResource.GetStockDetails.Replace("#pono", pono).Replace("#materialid", materialid);
 					string updatequery = string.Empty;
 					//string updatedon = WMSResource.updatedon;
 					objstock = pgsql.QuerySingle<stockCardPrint>(
 					  query, null, commandType: CommandType.Text);
-					
+
 				}
 				catch (Exception ex)
 				{
@@ -6463,16 +6468,16 @@ namespace WMS.DAL
 			return objstock;
 
 		}
-/// <summary>
-/// inserting the data to retrunmaterial by pm
-/// </summary>
-/// <param name="_listobj"></param>
-/// <returns></returns>
+		/// <summary>
+		/// inserting the data to retrunmaterial by pm
+		/// </summary>
+		/// <param name="_listobj"></param>
+		/// <returns></returns>
 		public int UpdateReturnqty(List<IssueRequestModel> _listobj)
 		{
 			int result = 0;
 			int requestid = 0;
-			if (_listobj.Count!=0)
+			if (_listobj.Count != 0)
 			{
 				try
 				{
@@ -6517,12 +6522,12 @@ namespace WMS.DAL
 					log.ErrorMessage("PODataProvider", "UpdateReturnqty", ex.StackTrace.ToString());
 					return 0;
 				}
-					
-				}
-			
+
+			}
+
 			return result;
 		}
-public int UpdateReturnmaterialTostock(List<IssueRequestModel> model)
+		public int UpdateReturnmaterialTostock(List<IssueRequestModel> model)
 		{
 			int result = 0;
 			if (model.Count != 0)
@@ -6533,16 +6538,16 @@ public int UpdateReturnmaterialTostock(List<IssueRequestModel> model)
 					{
 						//if (item.returnqty != 0)
 						//{
-							string updatereturnqtytomaterialissue = WMSResource.updatereturnqtyByInvMngr.Replace("@returnid", Convert.ToString(item.returnid));
-							using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
+						string updatereturnqtytomaterialissue = WMSResource.updatereturnqtyByInvMngr.Replace("@returnid", Convert.ToString(item.returnid));
+						using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
+						{
+							result = DB.Execute(updatereturnqtytomaterialissue, new
 							{
-								result = DB.Execute(updatereturnqtytomaterialissue, new
-								{
 
-								});
-							}
+							});
+						}
 						//}
-						if(result!=0)
+						if (result != 0)
 						{
 							int availableqty = item.confirmqty;
 							string materialid = item.material;
@@ -6553,7 +6558,7 @@ public int UpdateReturnmaterialTostock(List<IssueRequestModel> model)
 							{
 								result = DB.Execute(updatereturnqtytostock, new
 								{
-								
+
 									materialid,
 									item.itemlocation,
 									availableqty,
@@ -6578,33 +6583,33 @@ public int UpdateReturnmaterialTostock(List<IssueRequestModel> model)
 		{
 			string result = "";
 			int rslt = 0;
-					try
+			try
+			{
+
+
+				string grn = file.text;
+				string filename = file.value;
+				string updateqry = "update wms.wms_securityinward set putawayfilename = '" + filename + "' where grnnumber = '" + grn + "'";
+				using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
+				{
+					rslt = DB.Execute(updateqry);
+					if (rslt != 0)
 					{
-
-
-				            string grn = file.text;
-				            string filename = file.value;
-				            string updateqry = "update wms.wms_securityinward set putawayfilename = '" + filename + "' where grnnumber = '" + grn + "'";
-							using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
-							{
-								rslt = DB.Execute(updateqry);
-					            if(rslt != 0)
-                    {
 						result = "saved";
-                    }
+					}
 					else
-                    {
-						result = "error";
-                    }
-							}
-						
-					}
-					catch (Exception ex)
 					{
-						log.ErrorMessage("PODataProvider", "updateputawayfilename", ex.StackTrace.ToString());
-						return "error";
+						result = "error";
 					}
-				
+				}
+
+			}
+			catch (Exception ex)
+			{
+				log.ErrorMessage("PODataProvider", "updateputawayfilename", ex.StackTrace.ToString());
+				return "error";
+			}
+
 			return result;
 		}
 
@@ -6614,13 +6619,13 @@ public int UpdateReturnmaterialTostock(List<IssueRequestModel> model)
 			int rslt = 0;
 			try
 			{
-				
+
 
 				string grn = data.grnnumber;
 				string remarks = data.notifyremarks;
 				string notifyby = data.notifiedby;
 				//inw.notifyremarks,inw.notifiedby,inw.notifiedtofinance,inw.notifiedon,inw.putawayfilename,
-				string updateqry = "update wms.wms_securityinward set notifiedtofinance = True,notifiedon = current_date,notifiedby='"+ notifyby + "', notifyremarks = '" + remarks + "' where grnnumber = '" + grn + "'";
+				string updateqry = "update wms.wms_securityinward set notifiedtofinance = True,notifiedon = current_date,notifiedby='" + notifyby + "', notifyremarks = '" + remarks + "' where grnnumber = '" + grn + "'";
 				using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
 				{
 					rslt = DB.Execute(updateqry);
@@ -6662,8 +6667,8 @@ public int UpdateReturnmaterialTostock(List<IssueRequestModel> model)
 				string grns = "";
 				int loop = 1;
 
-				foreach(notifymodel data in datalst)
-                {
+				foreach (notifymodel data in datalst)
+				{
 					string grn = data.grnnumber;
 					string remarks = data.notifyremarks;
 					string notifyby = data.notifiedby;
@@ -6675,8 +6680,8 @@ public int UpdateReturnmaterialTostock(List<IssueRequestModel> model)
 						if (rslt != 0)
 						{
 							result = "saved";
-							if(loop > 1)
-                            {
+							if (loop > 1)
+							{
 								grns += ", ";
 							}
 							grns += grn;
@@ -6711,7 +6716,7 @@ public int UpdateReturnmaterialTostock(List<IssueRequestModel> model)
 		/// <summary>
 		/// onload to display the returned already by PM
 		/// </summary>
-		public  async Task<IEnumerable<IssueRequestModel>> GetReturnmaterialList()
+		public async Task<IEnumerable<IssueRequestModel>> GetReturnmaterialList()
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
@@ -6805,20 +6810,20 @@ public int UpdateReturnmaterialTostock(List<IssueRequestModel> model)
 				}
 			}
 		}
-	
-			/// <summary>
-			/// get materials requested for return data based on material return requested id - Gayathri -> 14/08/2020
-			/// </summary>
-			/// <param name="empno"></param>
-			/// <returns></returns>
-			public async Task<IEnumerable<IssueRequestModel>> getmaterialreturnreqList(int matreturnid)
-			{
+
+		/// <summary>
+		/// get materials requested for return data based on material return requested id - Gayathri -> 14/08/2020
+		/// </summary>
+		/// <param name="empno"></param>
+		/// <returns></returns>
+		public async Task<IEnumerable<IssueRequestModel>> getmaterialreturnreqList(int matreturnid)
+		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
 				try
 				{
 					await pgsql.OpenAsync();
-					string query = WMSResource.getmatreturndetails.Replace("@matreid",Convert.ToString(matreturnid));
+					string query = WMSResource.getmatreturndetails.Replace("@matreid", Convert.ToString(matreturnid));
 					string updatequery = string.Empty;
 					//string updatedon = WMSResource.updatedon;
 					var data = await pgsql.QueryAsync<IssueRequestModel>(
@@ -6844,22 +6849,22 @@ public int UpdateReturnmaterialTostock(List<IssueRequestModel> model)
 		/// </summary>
 		/// <param name="empno"></param>
 		/// <returns></returns>
-			public async Task<IEnumerable<materialtransferMain>> gettransferdata(string empno)
-			{
+		public async Task<IEnumerable<materialtransferMain>> gettransferdata(string empno)
+		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
 				try
 				{
 					await pgsql.OpenAsync();
-					string query = WMSResource.gettransferdata.Replace("#createdby",empno);
+					string query = WMSResource.gettransferdata.Replace("#createdby", empno);
 					string updatequery = string.Empty;
 					//string updatedon = WMSResource.updatedon;
-				   var data = await pgsql.QueryAsync<materialtransferMain>(
-					  query, null, commandType: CommandType.Text);
-					if(data != null && data.Count() > 0)
-                    {
-						foreach(materialtransferMain dt in data)
-                        {
+					var data = await pgsql.QueryAsync<materialtransferMain>(
+					   query, null, commandType: CommandType.Text);
+					if (data != null && data.Count() > 0)
+					{
+						foreach (materialtransferMain dt in data)
+						{
 							string query1 = WMSResource.gettransferiddetail.Replace("#tid", dt.transferid.ToString());
 							var datadetail = await pgsql.QueryAsync<materialtransferTR>(
 							   query1, null, commandType: CommandType.Text);
@@ -6868,8 +6873,8 @@ public int UpdateReturnmaterialTostock(List<IssueRequestModel> model)
 							{
 								dt.materialdata = datadetail.ToList();
 							}
-					    }
-                    }
+						}
+					}
 					return data;
 
 				}
@@ -6909,7 +6914,7 @@ public int UpdateReturnmaterialTostock(List<IssueRequestModel> model)
 							{
 								result = DB.Execute(updatereturnqty, new
 								{
-									
+
 									item.transferqty,
 									item.createdby,
 									item.remarks,
@@ -6928,8 +6933,8 @@ public int UpdateReturnmaterialTostock(List<IssueRequestModel> model)
 			}
 			return result;
 		}
-		
-		
+
+
 		/// <summary>
 		/// checkMatExists - check whether the material exists and generate qrcode for material
 		/// Gayathri -  06/08/2020
@@ -6944,7 +6949,7 @@ public int UpdateReturnmaterialTostock(List<IssueRequestModel> model)
 				{
 					//pgsql.OpenAsync();
 					string materialrequestquery = WMSResource.checkmatexists.Replace("#materialid", Convert.ToString(material));
-					
+
 					var obj = pgsql.QueryFirstOrDefault<MaterialData>(
 				materialrequestquery, null, commandType: CommandType.Text);
 					if (obj == null)
@@ -7003,7 +7008,7 @@ public int UpdateReturnmaterialTostock(List<IssueRequestModel> model)
 
 		//Get podetails list Gayathri - 10/08/2020
 		public async Task<IEnumerable<PODetails>> getPODetails()
-        {
+		{
 			//List<PODetails> objPO = new List<PODetails>();
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
@@ -7012,7 +7017,7 @@ public int UpdateReturnmaterialTostock(List<IssueRequestModel> model)
 					await pgsql.OpenAsync();
 					string getpoquery = WMSResource.getPODetails;
 
-					var objPO =await pgsql.QueryAsync<PODetails>(
+					var objPO = await pgsql.QueryAsync<PODetails>(
 					   getpoquery, null, commandType: CommandType.Text);
 					//objPO = pgsql.QueryAsync<List<PODetails>>(
 					//			getpoquery, null, commandType: CommandType.Text);
@@ -7025,6 +7030,6 @@ public int UpdateReturnmaterialTostock(List<IssueRequestModel> model)
 					return null;
 				}
 			}
-        }
+		}
 	}
 }
