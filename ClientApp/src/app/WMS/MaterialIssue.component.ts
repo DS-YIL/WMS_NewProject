@@ -14,10 +14,10 @@ import { DatePipe } from '@angular/common';
   templateUrl: './MaterialIssue.component.html'
 })
 export class MaterialIssueComponent implements OnInit {
-    roindex: any;
-    itemreceiveddate: string;
+  roindex: any;
+  itemreceiveddate: string;
 
-  constructor(private datePipe: DatePipe,private ConfirmationService: ConfirmationService, private formBuilder: FormBuilder, private messageService: MessageService, private wmsService: wmsService, private route: ActivatedRoute, private router: Router, public constants: constants, private spinner: NgxSpinnerService) { }
+  constructor(private datePipe: DatePipe, private ConfirmationService: ConfirmationService, private formBuilder: FormBuilder, private messageService: MessageService, private wmsService: wmsService, private route: ActivatedRoute, private router: Router, public constants: constants, private spinner: NgxSpinnerService) { }
 
   public formName: string;
   public txtName: string;
@@ -44,7 +44,7 @@ export class MaterialIssueComponent implements OnInit {
   public txtDisable: boolean = true;
   public FIFOvalues: FIFOValues;
   public reqqty: number;
-  public btndisable: boolean = true;
+  public btndisable: boolean = false;
   public issueqtyenable: boolean = true;
   ngOnInit() {
     if (localStorage.getItem("Employee"))
@@ -68,11 +68,14 @@ export class MaterialIssueComponent implements OnInit {
   issuematerial(itemlocationData) {
     var totalissuedqty = 0;
     this.itemlocationData.forEach(item => {
-      if (item.issuedquantity != 0)
-        
-        totalissuedqty = totalissuedqty + (item.issuedquantity);
+      if (item.issuedqty)
+        item.requestforissueid = this.materialissueList[this.roindex].requestforissueid;
+      item.itemreturnable = this.materialissueList[this.roindex].itemreturnable;
+      item.approvedby = this.employee.employeeno;
+      item.itemreceiverid = this.materialissueList[this.roindex].itemreceiverid;
+      totalissuedqty = totalissuedqty + (item.issuedqty);
       this.FIFOvalues.issueqty = totalissuedqty;
-      item.issuedqty = this.FIFOvalues.issueqty;
+      //item.issuedqty = this.FIFOvalues.issueqty;
       //item.issuedquantity = totalissuedqty;
       //item.issuedqty = totalissuedqty;
 
@@ -88,13 +91,13 @@ export class MaterialIssueComponent implements OnInit {
       this.txtDisable = true;
       this.AddDialog = false;
     }
-  
-   
+    this.btndisable = true;
+
   }
   Cancel() {
     this.AddDialog = false;
   }
-  
+
   //shows list of items for particular material
   showmateriallocationList(material, id, rowindex, qty, issuedqty) {
     if (issuedqty <= qty) {
@@ -156,10 +159,10 @@ export class MaterialIssueComponent implements OnInit {
     }
   }
   getmaterialIssueListbyrequestid() {
-    this.wmsService.getmaterialIssueListbyrequestid(this.requestId,this.pono).subscribe(data => {
+    this.wmsService.getmaterialIssueListbyrequestid(this.requestId, this.pono).subscribe(data => {
       this.materialissueList = data;
 
-      if (this.materialissueList.length != 0) 
+      if (this.materialissueList.length != 0)
         this.showavailableqtyList = true;
       this.materialissueList.forEach(item => {
         //if (!item.issuedquantity)
@@ -168,7 +171,7 @@ export class MaterialIssueComponent implements OnInit {
           this.showissueqtyOKorCancel = true;
           this.btndisable = false;
         }
-        
+
         //(<HTMLInputElement>document.getElementById('footerdiv')).style.display = "none";
       });
     });
@@ -176,9 +179,9 @@ export class MaterialIssueComponent implements OnInit {
 
   //check validations for issuer quantity
   reqQtyChange(data: any) {
-    if (data.issuedquantity > data.quantity) {
+    if (data.issuedqty > data.quantity) {
       this.messageService.add({ severity: 'error', summary: '', detail: 'issued Quantity should be lessthan or equal to available quantity' });
-      data.issuedquantity = data.quantity;
+      data.issuedqty = data.quantity;
     }
   }
   backtoDashboard() {
@@ -192,31 +195,31 @@ export class MaterialIssueComponent implements OnInit {
 
     //this.wmsService.UpdateMaterialqty(this.itemlocationData).subscribe(data => {
     //  if (data == 1) {
-        //this.btndisable = false;
-        //this.itemlocationData.forEach(item => {
-         
-        // // item.issuedquantity = this.itemlocationData.issuedquantity;
+    //this.btndisable = false;
+    //this.itemlocationData.forEach(item => {
 
-        //});
-        //this.materialissueList.forEach(item => {
-        //  if (item.issuedqty != 0)
+    // // item.issuedquantity = this.itemlocationData.issuedquantity;
 
-        //   // totalissuedqty = totalissuedqty + (item.issuedquantity);
-        //  // this.FIFOvalues.issueqty = totalissuedqty;
-        //  item.issuedqty = this.FIFOvalues.issueqty;
+    //});
+    //this.materialissueList.forEach(item => {
+    //  if (item.issuedqty != 0)
 
-        //});
+    //   // totalissuedqty = totalissuedqty + (item.issuedquantity);
+    //  // this.FIFOvalues.issueqty = totalissuedqty;
+    //  item.issuedqty = this.FIFOvalues.issueqty;
 
-        this.wmsService.approvematerialrequest(this.materialissueList).subscribe(data => {
-          this.spinner.hide();
-          this.btndisable = false;
-          if (data)
-            this.messageService.add({ severity: 'success', summary: '', detail: 'Material issued.' });
-          else
-            this.messageService.add({ severity: 'error', summary: '', detail: 'Material issue failed.' });
+    //});
 
-        });
-      }
-    //})
+    this.wmsService.approvematerialrequest(this.itemlocationData).subscribe(data => {
+      this.spinner.hide();
+      this.btndisable = false;
+      if (data)
+        this.messageService.add({ severity: 'success', summary: '', detail: 'Material issued.' });
+      else
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Material issue failed.' });
+
+    });
+  }
+  //})
   //}
 }

@@ -110,7 +110,7 @@
               <td class="ptable-cell" style="text-align:center">{{rowData.itemlocation}}</td>
               <td class="ptable-cell" style="text-align:right">{{rowData.availableqty}}</td>
               <td class="ptable-cell" style="text-align:right" *ngIf="issueqtyenable">
-                <input id="{{ri+1}}" pInputText type="number" style="text-align:right" class="form-control"  (change)="checkissueqty($event,rowData.issueqty,rowData.availableqty,rowData.material,rowData.createddate);" [(ngModel)]="rowData.issuedquantity">
+                <input id="{{ri+1}}" pInputText type="number" style="text-align:right" class="form-control"  (change)="checkissueqty($event,rowData.issuedqty,rowData.availableqty,rowData.material,rowData.createddate);" [(ngModel)]="rowData.issuedqty">
               </td>
               <td class="ptable-cell" style="text-align:center">{{rowData.createddate | date :  constants.dateFormat}}</td>
             </tr>

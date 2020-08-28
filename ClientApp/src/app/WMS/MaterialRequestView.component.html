@@ -150,7 +150,7 @@
           <div *ngIf="showdialog">
             <div class="row  pl-0">
               <div class="col-lg-4 col-md-4 col-sm-4 pt-2 labelheading">
-                <label>Request Id :</label>&nbsp;<span class="labeltext"><label>MATRQ{{materiallistData[0].requestid}}</label></span>
+                <label>Request Id :</label>&nbsp;<span class="labeltext"><label *ngIf="materiallistData[0]" >MATRQ{{materiallistData[0].requestid}}</label></span>
               </div>
               <div class="col-lg-4 col-md-4 col-sm-4 pt-2 labelheading" *ngIf="isreservedbefore">
                 <label>Reserve Id :</label>&nbsp;<span class="labeltext"><label>{{reserveidview}}</label></span>

@@ -70,7 +70,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select * from wms.wms_stock where materialid=&apos;#materialid&apos;  limit 1.
+        ///   Looks up a localized string similar to select sum(availableqty ) as availableqty from wms.wms_stock where materialid=&apos;#materialid&apos;.
         /// </summary>
         public static string checkmaterialandqty {
             get {
@@ -255,12 +255,11 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select iss.issuedqty as issuedqty,max(pro.jobname)as jobname,max(req.requestforissueid)as requestforissueid,max(emp.&quot;name&quot;)as name,req.requesteddate,sk.materialid,max(sk.pono)as pono,
-        ///req.requestedquantity,sum(sk.availableqty)as availableqty,req.requestid from wms.wms_stock sk 
-        ///      inner join wms.wms_polist op on op.pono=sk.pono
+        ///   Looks up a localized string similar to select iss.issuedqty as issuedqty,max(iss.approvedstatus) as approvedstatus,max(pro.projectname)as projectname,max(req.requestforissueid)as requestforissueid,max(emp.&quot;name&quot;)as name,req.requesteddate,sk.materialid,max(sk.pono)as pono,
+        ///req.requestedquantity,(select sum(availableqty) from wms.wms_stock ws ) as availableqty,req.requestid 
+        ///from wms.wms_stock sk 
         ///       inner join wms.wms_materialrequest req on req.materialid=sk.materialid
-        ///      left join wms.wms_materialissue iss  on iss.requestforissueid=req.requestforissueid
-        ///       [rest of string was truncated]&quot;;.
+        ///      left join wms.wms_materialissue iss  on iss.requestforissueid=re [rest of string was truncated]&quot;;.
         /// </summary>
         public static string GetdetailsByrequestid {
             get {
@@ -511,7 +510,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select distinct sum(sk.availableqty)as availableqty,sk.itemid,sk.itemlocation,ygs.materialdescription,ygs.material,createddate::DATE
+        ///   Looks up a localized string similar to select distinct sum(sk.availableqty)as availableqty,sk.pono,sk.materialid,sk.itemid,sk.itemlocation,ygs.materialdescription,ygs.material,createddate::DATE
         ///from wms.wms_stock sk inner join wms.&quot;MaterialMasterYGS&quot; ygs on ygs.material=sk.materialid where materialid=&apos;#materialid&apos;
         ///and availableqty&gt;0 --and sk.deleteflag=false
         ///group by sk.itemlocation,ygs.materialdescription,ygs.material,createddate::DATE,itemid.
@@ -604,10 +603,10 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select max(pro.projectname)as projectname,max(sk.itemid)as itemid,sk.materialid as material,sum(sk.availableqty)as availableqty,max(mat.materialdescription)as materialdescription,max(mat.materialqty)as quotationqty,max(mtmtr.unitprice) as materialcost,max(mat.materialqty)as materialqty,max(sk.pono) as pono from
-        ///wms.wms_stock  sk left join wms.wms_polist openpo on openpo.pono = sk.pono
-        ///left join wms.wms_pomaterials mat on mat.pono=openpo.pono
-        ///left join wms.wms_project pro on pro.pono=openpo.pono left join [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to select max(sk.pono) as pono ,sk.materialid as material,(select sum(availableqty) from wms.wms_stock ws ) as availableqty,
+        ///max(mtmtr.unitprice) as materialcost from wms.wms_stock  sk 
+        ///inner join wms.&quot;MaterialMasterYGS&quot; mtmtr on mtmtr.material = sk.materialid 
+        ///where sk.availableqty!=0.
         /// </summary>
         public static string getmaterialdetailfprrequest {
             get {
@@ -1614,7 +1613,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to update wms.wms_stock set availableqty=#availableqty where itemid=#itemid.
+        ///   Looks up a localized string similar to update wms.wms_stock set availableqty=(availableqty-#issuedqty) where itemid=#itemid.
         /// </summary>
         public static string updateqtyafterissue {
             get {

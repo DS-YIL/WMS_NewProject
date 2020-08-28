@@ -2158,7 +2158,7 @@ namespace WMS.DAL
 							});
 							int availableqty = item.availableqty - item.issuedqty;
 
-							string insertqueryforstatusforqty = WMSResource.updateqtyafterissue.Replace("#itemid", Convert.ToString(item.itemid)).Replace("#availableqty", Convert.ToString(availableqty));
+							string insertqueryforstatusforqty = WMSResource.updateqtyafterissue.Replace("#itemid", Convert.ToString(item.itemid)).Replace("#issuedqty", Convert.ToString(item.issuedqty));
 
 							var data1 = DB.ExecuteScalar(insertqueryforstatusforqty, new
 							{
@@ -3553,7 +3553,7 @@ namespace WMS.DAL
 							});
 							int availableqty = item.availableqty - item.issuedqty;
 
-							string insertqueryforstatusforqty = WMSResource.updateqtyafterissue.Replace("#itemid", Convert.ToString(item.itemid)).Replace("#availableqty", Convert.ToString(availableqty));
+							string insertqueryforstatusforqty = WMSResource.updateqtyafterissue.Replace("#itemid", Convert.ToString(item.itemid)).Replace("#issuedqty", Convert.ToString(item.issuedqty));
 
 							var data1 = DB.ExecuteScalar(insertqueryforstatusforqty, new
 							{
@@ -3874,7 +3874,7 @@ namespace WMS.DAL
 
 							int availableqty = item.availableqty - item.issuedquantity;
 
-							string insertqueryforstatusforqty = WMSResource.updateqtyafterissue.Replace("#itemid", Convert.ToString(item.itemid)).Replace("#availableqty", Convert.ToString(availableqty));
+							string insertqueryforstatusforqty = WMSResource.updateqtyafterissue.Replace("#itemid", Convert.ToString(item.itemid)).Replace("#issuedqty", Convert.ToString(item.issuedqty));
 
 							var data1 = DB.ExecuteScalar(insertqueryforstatusforqty, new
 							{
@@ -4277,13 +4277,13 @@ namespace WMS.DAL
 					string materialrequestquery = WMSResource.getmaterialdetailfprrequest;
 					if (pono != null && pono != "undefined" && pono != "null")
 					{
-						materialrequestquery = materialrequestquery + " and openpo.pono = '" + pono + "'";
+						materialrequestquery = materialrequestquery + " and sk.pono = '" + pono + "'";
 					}
 					//if (approverid != null)
 					//{
 					//	materialrequestquery = materialrequestquery + " and pro.projectmanager = '" + approverid + "' ";
 					//}
-					materialrequestquery = materialrequestquery + " group by sk.materialid limit 50";
+					materialrequestquery = materialrequestquery + " group by sk.materialid";
 					await pgsql.OpenAsync();
 					return await pgsql.QueryAsync<IssueRequestModel>(
 					  materialrequestquery, null, commandType: CommandType.Text);
@@ -4301,7 +4301,6 @@ namespace WMS.DAL
 
 			}
 		}
-
 		public async Task<IEnumerable<IssueRequestModel>> getissuematerialdetails(int requestid)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
