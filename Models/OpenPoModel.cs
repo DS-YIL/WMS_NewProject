@@ -398,6 +398,8 @@ public bool onhold { get; set; }
 		public int defaultrack { get; set; }
 		public int defaultbin { get; set; }
 
+		public int reserveid { get; set; }
+
 
 	}
 
@@ -769,6 +771,11 @@ public bool onhold { get; set; }
 		public DateTime reserveupto { get; set; }
 		public string projectname { get; set; }
 		public string email { get; set; }
+
+		public string requestedby { get; set; }
+		public DateTime requestedon { get; set; }
+
+		public string chkstatus { get; set; }
 	}
 		public class SecurityInwardreceivedModel
 	{
@@ -875,6 +882,7 @@ public class ddlmodel
   public string	value { get; set; }
   public string text { get; set; }
   public string supplier { get; set; }
+  public DateTime receiveddate { get; set; }
 
 }
 
@@ -912,6 +920,12 @@ public class updateonhold
 	public string invoiceno { get; set; }
 	public string remarks { get; set; }
 	public bool onhold { get; set; }
+}
+
+public class materialReservetorequestModel
+{
+	public int reserveid { get; set; }
+	public string requestedby { get; set; }
 }
 
 public class materialistModel

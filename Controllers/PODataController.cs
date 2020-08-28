@@ -765,6 +765,12 @@ namespace WMS.Controllers
 			return await this._poService.getgrnlistforacceptanceqc();
 		}
 
+		[HttpGet("getgrnforacceptanceqcbydate")]
+		public async Task<IEnumerable<ddlmodel>> getgrnlistforacceptanceqcbydate(string fromdt,string todt)
+		{
+			return await this._poService.getgrnlistforacceptanceqcbydate(fromdt, todt);
+		}
+
 		[HttpGet("getdepartment")]
 		public async Task<IEnumerable<ddlmodel>> getdepartmentdata()
 		{
@@ -782,6 +788,13 @@ namespace WMS.Controllers
 		{
 			return this._poService.updatematmovement(obj);
 		}
+
+		[HttpPost("requestreservematerial")]
+		public int requestreserve([FromBody] materialReservetorequestModel obj)
+		{
+			return this._poService.requesttoreserve(obj);
+		}
+
 		[HttpGet("UpdateMaterialReserve")]
 		public int UpdateMaterialReserve()
 		{

@@ -197,6 +197,11 @@ export class materialRequestDetails {
   pono: string = "";
 }
 
+export class materialReservetorequestModel {
+  reserveid: number;
+  requestedby: string;
+}
+
 export class requestData {
   pono: string;
   suppliername: string;
@@ -347,7 +352,8 @@ export class ddlmodel {
 
   value: string;
   text: string;
-  supplier: string
+  supplier: string;
+  receiveddate : Date
 
 }
 

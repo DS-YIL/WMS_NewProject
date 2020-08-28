@@ -8,6 +8,7 @@ import { NgxSpinnerService } from "ngx-spinner";
 import { materialRequestDetails, gatepassModel, materialistModel, materialList, requestData } from 'src/app/Models/WMS.Model';
 import { MessageService } from 'primeng/api';
 import { RadioButtonModule } from 'primeng/radiobutton';
+import { isNullOrUndefined } from 'util';
 @Component({
   selector: 'app-MaterialRequest',
   templateUrl: './MaterialRequestView.component.html'
@@ -52,6 +53,8 @@ export class MaterialRequestViewComponent implements OnInit {
   public displayDD: boolean = true;
   public requestid: any;
   public date: Date = null;
+  isreservedbefore: boolean = false;
+  reserveidview: string = "";
   ngOnInit() {
     if (localStorage.getItem("Employee"))
       this.employee = JSON.parse(localStorage.getItem("Employee"));
@@ -471,8 +474,15 @@ export class MaterialRequestViewComponent implements OnInit {
   //    });
   //  }
   //}
-  showmaterialdetails(requestid) {
+  showmaterialdetails(requestid,data : any) {
     debugger;
+    this.materiallistData = [];
+    this.isreservedbefore = false;
+    this.reserveidview = "";
+    if (data.reserveid) {
+      this.isreservedbefore = true;
+      this.reserveidview = "MATRV" + String(data.reserveid);
+    }
     this.AddDialog = true;
     this.showdialog = true;
     this.wmsService.getmaterialissueList(requestid).subscribe(data => {

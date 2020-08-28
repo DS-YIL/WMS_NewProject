@@ -125,6 +125,7 @@ Task<string> updateonholdrow(updateonhold datamodel);
         int GatepassapproveByManager(gatepassModel model);
 
         int updatematmovement(List<materialistModel> obj);
+        int requesttoreserve(materialReservetorequestModel obj);
         Task<IEnumerable<safteyStockList>> getSafteyStockList();
         Task<IEnumerable<StockModel>> GetBinList();
 		Task<IEnumerable<Materials>> GetMaterialstockcombo();
@@ -141,6 +142,9 @@ Task<string> updateonholdrow(updateonhold datamodel);
 
         Task<IEnumerable<ddlmodel>> getholdgrlist();
         Task<IEnumerable<ddlmodel>> getgrnlistforacceptanceqc();
+
+        Task<IEnumerable<ddlmodel>> getgrnlistforacceptanceqcbydate(string fromdt, string todt);
+        
         Task<IEnumerable<gatepassModel>> NonreturnGetgatepassList(string type);
         int UpdateMaterialReserve();
         int UpdateReturnqty(List<IssueRequestModel> _listobj);

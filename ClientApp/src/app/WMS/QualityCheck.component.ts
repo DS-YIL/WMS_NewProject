@@ -8,14 +8,16 @@ import { PoDetails, BarcodeModel, inwardModel, ddlmodel } from 'src/app/Models/W
 import { MessageService } from 'primeng/api';
 import { first } from 'rxjs/operators';
 import { isNullOrUndefined } from 'util';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-QualityCheck',
-  templateUrl: './QualityCheck.component.html'
+  templateUrl: './QualityCheck.component.html',
+  providers: [DatePipe]
 })
 export class QualityCheckComponent implements OnInit {
 
-  constructor(private messageService: MessageService, private wmsService: wmsService, private route: ActivatedRoute, private router: Router, public constants: constants, private spinner: NgxSpinnerService) { }
+  constructor(private messageService: MessageService, private datePipe: DatePipe, private wmsService: wmsService, private route: ActivatedRoute, private router: Router, public constants: constants, private spinner: NgxSpinnerService) { }
 
   public PoDetails: PoDetails;
   public podetailsList: Array<inwardModel> = [];
@@ -31,6 +33,10 @@ export class QualityCheckComponent implements OnInit {
   selectedgrnno: string = "";
   filteredgrns: any[];
   checkedgrnlistqc: ddlmodel[] = [];
+  fromdateview: string = "";
+  todateview: string = "";
+  fromdateview1: string = "";
+  todateview1: string = "";
   ngOnInit() {
     if (localStorage.getItem("Employee"))
       this.employee = JSON.parse(localStorage.getItem("Employee"));
@@ -114,13 +120,60 @@ export class QualityCheckComponent implements OnInit {
 
   }
 
+  onfromSelectMethod(event) {
+    this.podetailsList = [];
+    this.selectedgrnno = "";
+    this.fromdateview1 = "";
+    if (event.toString().trim() !== '') {
+      this.fromdateview1 = this.datePipe.transform(event, 'yyyy-MM-dd');
+
+      this.fromdateview1 += " 00:00:00";
+      this.getcheckedgrnforqcbydate();
+    }
+  }
+  ontoSelectMethod(event) {
+    this.podetailsList = [];
+    this.todateview1 = "";
+    this.selectedgrnno = "";
+    if (event.toString().trim() !== '') {
+      this.todateview1 = this.datePipe.transform(event, 'yyyy-MM-dd');
+      this.todateview1 += " 11:59:59";
+      this.getcheckedgrnforqcbydate();
+
+    }
+  }
+
   getcheckedgrnforqc() {
     this.spinner.show();
+    this.checkedgrnlistqc = [];
     this.wmsService.getcheckedgrnlistforqc().subscribe(data => {
       debugger;
       this.checkedgrnlistqc = data;
+      if (this.checkedgrnlistqc.length > 0) {
+        var len = this.checkedgrnlistqc.length;
+        this.fromdateview = this.datePipe.transform(this.checkedgrnlistqc[len - 1].receiveddate, this.constants.dateFormat);
+        this.todateview = this.datePipe.transform(this.checkedgrnlistqc[0].receiveddate, this.constants.dateFormat);
+        this.fromdateview1 = this.datePipe.transform(this.checkedgrnlistqc[len - 1].receiveddate, 'yyyy-MM-dd');
+        this.fromdateview1 += " 00:00:00";
+        this.todateview1 = this.datePipe.transform(this.checkedgrnlistqc[0].receiveddate, 'yyyy-MM-dd');
+        this.todateview1 += " 11:59:59";
+      }
       this.spinner.hide();
     });
+  }
+
+  getcheckedgrnforqcbydate() {
+    if (this.fromdateview1 != "" && this.todateview1 != "") {
+      this.spinner.show();
+      this.checkedgrnlistqc = [];
+      this.wmsService.getcheckedgrnlistforqcbydate(this.fromdateview1, this.todateview1).subscribe(data => {
+        debugger;
+        this.checkedgrnlistqc = data;
+        this.spinner.hide();
+      });
+
+    }
+    
   }
 
   filtergrn(event) {

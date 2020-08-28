@@ -2051,7 +2051,7 @@ namespace WMS.DAL
 					}
 
 				}
-				return (Convert.ToInt32(result));
+				return (Convert.ToInt32(requestid));
 			}
 			catch (Exception Ex)
 			{
@@ -6046,6 +6046,34 @@ namespace WMS.DAL
 			}
 		}
 
+		public async Task<IEnumerable<ddlmodel>> getgrnlistforacceptanceqcbydate(string fromdt, string todt)
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				try
+				{
+					string materialrequestquery = WMSResource.getqcdropdownbydate.Replace("#fromdt", fromdt).Replace("#todate",todt);
+					List<ddlmodel> returnlist = new List<ddlmodel>();
+					await pgsql.OpenAsync();
+					var data = await pgsql.QueryAsync<ddlmodel>(
+					materialrequestquery, null, commandType: CommandType.Text);
+					return data;
+
+
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "getgrnlistforacceptanceqc", Ex.StackTrace.ToString());
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+			}
+		}
+
 
 		public async Task<IEnumerable<ddlmodel>> pendingreceiptslist()
 		{
@@ -6284,6 +6312,85 @@ namespace WMS.DAL
 				{
 					pgsql.Close();
 				}
+
+			}
+		}
+
+
+		public int requesttoreserve(materialReservetorequestModel obj)
+		{
+
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				NpgsqlTransaction Trans = null;
+				try
+				{
+					
+
+					pgsql.Open();
+					Trans = pgsql.BeginTransaction(); 
+					string  query = "update wms.wms_materialreserve set requestedby = '" + obj.requestedby + "', requestedon = current_date  where reserveid = " + obj.reserveid + "";
+				    var results11 = pgsql.ExecuteScalar(query);
+
+					string materialrequestquery = "select * from wms.wms_materialreserve where reserveid = "+obj.reserveid+"";
+					var datalist = pgsql.Query<ReserveMaterialModel>(
+					  materialrequestquery, null, commandType: CommandType.Text);
+
+					//result = DB.Execute(insertquery, new
+					//{
+					//	// item.paitemid,
+					//	item.quantity,
+					//	item.requesteddate,
+					//	item.approveremailid,
+					//	item.approverid,
+					//	item.pono,
+					//	item.materialid,
+					//	item.requesterid,
+					//	item.requestedquantity,
+					//	requestid,
+					//});
+					List<IssueRequestModel> reqdata = new List<IssueRequestModel>();
+					foreach (ReserveMaterialModel rv in datalist)
+                    {
+						IssueRequestModel model = new IssueRequestModel();
+						model.quantity = rv.reservedqty;
+						model.requesteddate = System.DateTime.Now;
+						model.approveremailid = null;
+						model.approverid = null;
+						model.pono = rv.pono;
+						model.material = rv.materialid;
+						model.requesterid = obj.requestedby;
+						model.requestedquantity = 0;
+						reqdata.Add(model);
+
+					}
+					int saverequest = updaterequestedqty(reqdata);
+					if(saverequest == 0)
+                    {
+						Trans.Rollback();
+						return 0;
+					}
+					string query1 = "update wms.wms_materialrequest set reserveid = " + obj.reserveid + " where requestid = " + saverequest + "";
+					var results111 = pgsql.ExecuteScalar(query1);
+
+
+					Trans.Commit();
+					return 1;
+
+
+				}
+				catch (Exception Ex)
+				{
+					Trans.Rollback();
+					log.ErrorMessage("PODataProvider", "updateonholdrow", Ex.StackTrace.ToString());
+					return 0;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+
 
 			}
 		}

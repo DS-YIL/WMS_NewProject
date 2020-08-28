@@ -83,6 +83,7 @@ import { MaterialBarcodeComponent } from './WMS/MaterialBarcode.component';
 import { MaterialReportComponent } from './WMS/MaterialReport.component';
 import { PutawayNotificationComponent } from './WMS/PutawayNotification.component';
 import { GatepassinwardViewComponent } from './WMS/GatepassinwardView.component';
+import { TestCompComponent } from './WMS/TestComp.component';
 ////pages
 import { LoginComponent } from './WMS/Login.component';
 import {HomeComponent} from './WMS/Home.component';
@@ -157,7 +158,8 @@ import { PanelModule } from 'primeng/panel';
     MaterialBarcodeComponent,
     MaterialReportComponent,
     PutawayNotificationComponent,
-    GatepassinwardViewComponent
+    GatepassinwardViewComponent,
+    TestCompComponent
 
   ],
   imports: [

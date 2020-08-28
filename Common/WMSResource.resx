@@ -242,7 +242,7 @@ VALUES(@inwmasterid,@receiveddate,@receivedby,@receivedqty,@returnqty,@qualitypa
   </data>
   <data name="materialrequestquery" xml:space="preserve">
     <value>select distinct  max(req.ackstatus)as ackstatus,max(issue.issuedqty)as issuedquantity,max(req.requesteddate)as requesteddate,max(issue.approvedstatus)as approvedstatus,max(issue.issuedqty) as issuedqty,max(req.requestforissueid)as requestforissueid,max(issue.approvedstatus) as approvedstatus,req.requestid,max(openpo.pono) as pono,max(openpo.projectname)as projectname,max(openpo.material)as material,max(openpo.materialdescription) as materialdescription,max(openpo.quotationqty) quotationqty,max(req.requestedquantity)as requestedquantity,
-max(req.ackremarks)as ackremarks,CASE WHEN max(req.ackremarks) IS NULL THEN false ELSE true END AS status 
+max(req.ackremarks)as ackremarks,max(req.reserveid)as reserveid,CASE WHEN max(req.ackremarks) IS NULL THEN false ELSE true END AS status 
  from   wms.wms_stock  sk left join wms.openpolistview openpo on openpo.pono = sk.pono 
   left join wms.wms_materialrequest req on req.requesterid = '#reqid'
   left join  wms.wms_materialissue issue on issue.requestforissueid=req.requestforissueid</value>
@@ -547,11 +547,19 @@ group by req.reserveid,req.reservedby,po.projectname,emp."name" order by req.res
   </data>
   <data name="getreservedmaterialList" xml:space="preserve">
     <value>select  max('')as projectname,max(res.reserveupto)as reserveupto,res.reserveid,max(res.pono) as pono,max(res.reservedon) as reservedon,
-max(iss.approvedstatus)as approvedstatus
+max(iss.approvedstatus)as approvedstatus,max(emp.name)as requestedby,max(res.requestedon)as requestedon,
+CASE
+     WHEN max(res.reserveupto::date) &lt; current_date THEN
+	 'Expired'
+     WHEN max(res.requestedby) is NOT NULL THEN
+	  'Requested'
+	 ELSE 'Reserved'
+  END as chkstatus
 from wms.wms_materialreserve res 
 left join wms.wms_stock sk on sk.materialid=res.materialid
 left join wms.openpolistview op on op.pono=res.pono
 left join wms.wms_materialissue iss on iss.reserveformaterialid=res.reserveformaterialid 
+left outer join wms.employee emp on emp.employeeno = res.requestedby
 where reservedby='#reservedby'
 group by res.reserveid order by res.reserveid desc</value>
   </data>
@@ -764,7 +772,7 @@ left outer join wms.wms_gatepass gt on gt.gatepassid = matgt.gatepassid
 left join wms.employee emp on emp.employeeno=gt.requestedby
 left join wms.employee emp1 on emp1.employeeno=matgt.outwardedby
 left join wms.employee emp2 on emp2.employeeno=matgt.inwardedby
-left join wms.employee emp3 on emp3.employeeno=gt.approvedby
+left join wms.employee emp3 on emp3.employeeno=gt.approverid
 left join wms.employee emp4 on emp4.employeeno=gt.fmapproverid
 left join wms."MaterialMasterYGS" ygs on ygs.material=matgt.materialid
 where matis.gatepassmaterialid  is not null and matgt.returneddate is null</value>
@@ -847,13 +855,17 @@ where ts.createdby='#createdby'</value>
     <value>insert into wms.wms_stock(itemid,materialid,itemlocation,availableqty,createddate,createdby,returnid)values(default,@materialid,@itemlocation,@availableqty,current_timestamp,@createdby,@returnid)</value>
   </data>
   <data name="getqualitycheckdropdown" xml:space="preserve">
-    <value>select distinct grnnumber as value,pono as text,supplier from (select stinw.inwardid,stinw.inwmasterid,stinw.materialid as material,secinw.grnnumber,secinw.onhold,mat.materialdescription,stinw.receivedqty,stinw.receiveddate,stinw.returnqty,qc.qualitypassedqty,qc.qualityfailedqty,qc.remarks,qc.qcby as checkedby,
-								 secinw.pono,(select suppliername from wms.wms_polist where pono = secinw.pono limit 1) as supplier
+    <value>select distinct grnnumber as value,pono as text,supplier,receiveddate from 
+(select stinw.inwardid,stinw.inwmasterid,stinw.materialid as material,
+ secinw.grnnumber,secinw.onhold,mat.materialdescription,stinw.receivedqty,
+ stinw.receiveddate,stinw.returnqty,qc.qualitypassedqty,qc.qualityfailedqty,
+ qc.remarks,qc.qcby as checkedby,
+secinw.pono,(select suppliername from wms.wms_polist where pono = secinw.pono limit 1) as supplier
   from wms.wms_storeinward stinw
   left outer join wms.wms_securityinward secinw on secinw.inwmasterid=stinw.inwmasterid
   left outer join wms."MaterialMasterYGS" mat on mat.material = stinw.materialid
   left outer join wms.wms_qualitycheck qc on qc.inwardid=stinw.inwardid
-  where stinw.qualitycheckrequired = True and secinw.onhold is NOT True and qc.qcby is null  order by stinw.inwardid DESC) as grn order by grnnumber desc</value>
+  where stinw.qualitycheckrequired = True and secinw.onhold is NOT True and qc.qcby is null  order by stinw.inwardid DESC) as grn order by receiveddate desc</value>
   </data>
   <data name="getHoldGRdetail" xml:space="preserve">
     <value>select sinw.inwmasterid,sinw.invoiceno,sinw.pono,sinw.onhold,sinw.onholdremarks,
@@ -944,5 +956,20 @@ where rm.matreturnid=@matreid</value>
   </data>
   <data name="getnxtreturnid" xml:space="preserve">
     <value>select matreturnid from wms.wms_returnmaterial order by matreturnid desc limit 1</value>
+  </data>
+  <data name="getqcdropdownbydate" xml:space="preserve">
+    <value>select distinct grnnumber as value,pono as text,supplier,receiveddate from 
+(select stinw.inwardid,stinw.inwmasterid,stinw.materialid as material,
+ secinw.grnnumber,secinw.onhold,mat.materialdescription,stinw.receivedqty,
+ stinw.receiveddate,stinw.returnqty,qc.qualitypassedqty,qc.qualityfailedqty,
+ qc.remarks,qc.qcby as checkedby,
+secinw.pono,(select suppliername from wms.wms_polist where pono = secinw.pono limit 1) as supplier
+  from wms.wms_storeinward stinw
+  left outer join wms.wms_securityinward secinw on secinw.inwmasterid=stinw.inwmasterid
+  left outer join wms."MaterialMasterYGS" mat on mat.material = stinw.materialid
+  left outer join wms.wms_qualitycheck qc on qc.inwardid=stinw.inwardid
+  where stinw.qualitycheckrequired = True and secinw.onhold is NOT True and qc.qcby is null 
+  and stinw.receiveddate &gt;= '#fromdt' and stinw.receiveddate &lt;= '#todate'
+  order by stinw.inwardid DESC) as grn order by receiveddate desc</value>
   </data>
 </root>

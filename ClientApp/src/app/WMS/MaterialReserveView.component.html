@@ -42,7 +42,7 @@
     padding: 0px;
     margin-left: 10px;
     margin-right: 10px">
-      <p-table #dt [value]="reserveList" [style]="{'width':'100%'}" [scrollable]="true" scrollHeight="55vh">
+      <p-table #dt1 [value]="reserveList" [style]="{'width':'100%'}" [scrollable]="true" scrollHeight="55vh">
         <ng-template pTemplate="header">
           <tr class="mprltbldata">
             <th style="text-align:center;width:70px">Sl.No.</th>
@@ -53,10 +53,10 @@
           </tr>
           <tr>
             <th></th>
-            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'reserveid', 'contains')"></th>
-            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'reservedon', 'contains')"></th>
-            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'reserveupto', 'contains')"></th>
-            <th></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt1.filter($event.target.value, 'reserveid', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt1.filter($event.target.value, 'reservedon', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt1.filter($event.target.value, 'reserveupto', 'contains')"></th>
+            <th><input pInputText type="text" class="form-control" (input)="dt1.filter($event.target.value, 'chkstatus', 'startsWith')"></th>
            
           </tr>
         </ng-template>
@@ -64,7 +64,7 @@
           <tr class="mprltbltddata">
             <td class="ptable-cell" style="text-align:center;width:70px">{{ri+1}}</td>
             <td class="ptable-cell" style="text-align:center;width:100px;">
-              <button type="button" class="btn btn-link" (click)="showmaterialdetails(rowData.reserveid);" style="padding-left:0px;">MATRV{{rowData.reserveid}}</button>
+              <button type="button" class="btn btn-link" (click)="showmaterialdetails(rowData.reserveid,rowData);" style="padding-left:0px;">MATRV{{rowData.reserveid}}</button>
             </td>
             <!--<td class="ptable-cell" style="text-align:center;width:150px">{{rowData.pono}}</td>
             <td class="ptable-cell" style="text-align:left">{{rowData.projectname}}</td>-->
@@ -78,14 +78,10 @@
             </td>-->
 
             <td class="ptable-cell" style="text-align:center;width:150px">
-
-              Reserved
-              <!--{{rowData.approvedstatus}}-->
-              <!--<div *ngIf="rowData.approvedstatus=='approved'" class="form-inline">
-
-              <textarea type="text" style="width:140px" class="form-control" disabled="disabled" [(ngModel)]="rowData.approvedstatus"></textarea>
-            </div>-->
-              <span *ngIf="rowData.ackstatus=='received'">{{rowData.approvedstatus}}</span>
+              <span *ngIf="rowData.chkstatus == 'Reserved'" style="color:blue" [innerText]="getstatus(rowData)"></span>
+              <span *ngIf="rowData.chkstatus == 'Requested'" style="color:green" [innerText]="getstatus(rowData)"></span>
+              <span *ngIf="rowData.chkstatus == 'Expired'" style="color:red" [innerText]="getstatus(rowData)"></span>
+              <span *ngIf="rowData.ackstatus=='received'" [innerText]="getstatus(rowData)"></span>
             </td>
           </tr>
         </ng-template>
@@ -106,11 +102,23 @@
       </div>
       <div style="height: 5px; overflow-y: scroll">
 
-        <p-dialog header="Material Reserved Details" [(visible)]="AddDialog" [contentStyle]="{'overflow-y': 'auto', 'overflow-x': 'hidden', 'max-height': '80vh','min-height':'250px'}" showEffect="fade" [modal]="true" [responsive]="true" [style]="{width: '1024px'}">
+        <p-dialog header="Material Reserved Details" [(visible)]="AddDialog" [contentStyle]="{'overflow-y': 'auto', 'overflow-x': 'hidden', 'max-height': '80vh','min-height':'250px'}" showEffect="fade" [modal]="true" [responsive]="true" [style]="{width: '80vw'}">
           <div *ngIf="showdialog">
             <div class="row  pl-0">
-              <div class="col-lg-4 col-md-4 col-sm-4 pt-2 labelheading">
-                <label>Reserved Id :</label>&nbsp;<span><label class="labeltext">MATRV{{materiallistData[0].reserveid}}</label></span>
+              <div class="col-lg-3 col-md-3 col-sm-4 pt-2 labelheading">
+                <label>Reserved Id :</label>&nbsp;<span><label class="labeltext">MATRV{{reserveidview}}</label></span>
+              </div>
+              <div class="col-lg-3 col-md-3 col-sm-4 pt-2 labelheading">
+                <label>Reserved Upto :</label>&nbsp;<span><label class="labeltext">{{checkValiddate(reserveduptoview)}}</label></span>
+              </div>
+              <div class="col-lg-3 col-md-3 col-sm-4 pt-2 labelheading" *ngIf="isrequested">
+                <label>Requested By :</label>&nbsp;<span><label class="labeltext">{{requestedbyview}}</label></span>
+              </div>
+              <div class="col-lg-3 col-md-3 col-sm-4 pt-2 labelheading" *ngIf="isrequested">
+                <label>Requested On :</label>&nbsp;<span><label class="labeltext">{{requestedonview | date : 'dd/MM/yyyy'}}</label></span>
+              </div>
+              <div class="col-lg-3 col-md-3 col-sm-4 pt-2 labelheading" *ngIf="!isrequested">
+                <label>Status :</label>&nbsp;<span><label class="labeltext">{{statusview}}</label></span>
               </div>
             </div>
           </div>
@@ -129,7 +137,7 @@
                 <td class="ptable-cell" style="text-align:right">
                   {{ri+1}}
                 </td>
-                <td class="ptable-cell" style="text-align:center">{{rowData.materialid}}</td>
+                <td class="ptable-cell" style="text-align:left">{{rowData.materialid}}</td>
                 <td class="ptable-cell" style="text-align:right">{{rowData.reservedqty}}</td>
                 <!--<td class="ptable-cell" style="text-align:left">
                   {{rowData.releasedquantity}}
@@ -140,10 +148,9 @@
 
           </p-table>
           <p-footer>
-            <!--<div class="ui-dialog-buttonpane ui-helper-clearfix">
-              <button type="button" pButton icon="fa fa-check" class="ui-button-success" (click)="Cancel()" label="OK"></button>
-              <button type="button" pButton icon="fa fa-close" class="ui-button-danger" (click)="Cancel()" label="Cancel"></button>
-            </div>-->
+            <div class="ui-dialog-buttonpane ui-helper-clearfix" *ngIf="showreservebtn">
+              <button type="button" pButton icon="fa fa-check" class="ui-button-success" (click)="Request()" label="Request"></button>
+            </div>
 
           </p-footer>
 
@@ -181,7 +188,7 @@
       </div>
     </div>
     <div class="col-xs-4 col-sm-4  col-md-4 pt-2" style="font-weight:600;font-size:14px;color:darkblue;">
-      Reserve For : <input type="date"  [value]="reservedfor |  date:'yyyy-MM-dd'" min={{mindate}} max={{maxdate}} (input)="reservedfor=parseDate($event.target.value)">
+      Reserve Upto : <input type="date"  [value]="reservedfor |  date:'yyyy-MM-dd'" min={{mindate}} max={{maxdate}} (input)="reservedfor=parseDate($event.target.value)">
     </div>
     <div class="row " style="margin-top:10px">
       <div class="col-lg-12 col-md-12 col-sm-12">

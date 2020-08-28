@@ -808,10 +808,30 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select distinct grnnumber as value,pono as text,supplier from (select stinw.inwardid,stinw.inwmasterid,stinw.materialid as material,secinw.grnnumber,secinw.onhold,mat.materialdescription,stinw.receivedqty,stinw.receiveddate,stinw.returnqty,qc.qualitypassedqty,qc.qualityfailedqty,qc.remarks,qc.qcby as checkedby,
-        ///								 secinw.pono,(select suppliername from wms.wms_polist where pono = secinw.pono limit 1) as supplier
+        ///   Looks up a localized string similar to select distinct grnnumber as value,pono as text,supplier,receiveddate from 
+        ///(select stinw.inwardid,stinw.inwmasterid,stinw.materialid as material,
+        /// secinw.grnnumber,secinw.onhold,mat.materialdescription,stinw.receivedqty,
+        /// stinw.receiveddate,stinw.returnqty,qc.qualitypassedqty,qc.qualityfailedqty,
+        /// qc.remarks,qc.qcby as checkedby,
+        ///secinw.pono,(select suppliername from wms.wms_polist where pono = secinw.pono limit 1) as supplier
         ///  from wms.wms_storeinward stinw
-        ///  left outer join wms.wms_securityinward secinw on seci [rest of string was truncated]&quot;;.
+        ///  left outer join wms.wms_securityinward [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string getqcdropdownbydate {
+            get {
+                return ResourceManager.GetString("getqcdropdownbydate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to select distinct grnnumber as value,pono as text,supplier,receiveddate from 
+        ///(select stinw.inwardid,stinw.inwmasterid,stinw.materialid as material,
+        /// secinw.grnnumber,secinw.onhold,mat.materialdescription,stinw.receivedqty,
+        /// stinw.receiveddate,stinw.returnqty,qc.qualitypassedqty,qc.qualityfailedqty,
+        /// qc.remarks,qc.qcby as checkedby,
+        ///secinw.pono,(select suppliername from wms.wms_polist where pono = secinw.pono limit 1) as supplier
+        ///  from wms.wms_storeinward stinw
+        ///  left outer join wms.wms_securityinward [rest of string was truncated]&quot;;.
         /// </summary>
         public static string getqualitycheckdropdown {
             get {
@@ -864,13 +884,16 @@ namespace WMS.Common {
         
         /// <summary>
         ///   Looks up a localized string similar to select  max(&apos;&apos;)as projectname,max(res.reserveupto)as reserveupto,res.reserveid,max(res.pono) as pono,max(res.reservedon) as reservedon,
-        ///max(iss.approvedstatus)as approvedstatus
+        ///max(iss.approvedstatus)as approvedstatus,max(emp.name)as requestedby,max(res.requestedon)as requestedon,
+        ///CASE
+        ///     WHEN max(res.reserveupto::date) &lt; current_date THEN
+        ///	 &apos;Expired&apos;
+        ///     WHEN max(res.requestedby) is NOT NULL THEN
+        ///	  &apos;Requested&apos;
+        ///	 ELSE &apos;Reserved&apos;
+        ///  END as chkstatus
         ///from wms.wms_materialreserve res 
-        ///left join wms.wms_stock sk on sk.materialid=res.materialid
-        ///left join wms.openpolistview op on op.pono=res.pono
-        ///left join wms.wms_materialissue iss on iss.reserveformaterialid=res.reserveformaterialid 
-        ///where reservedby=&apos;#reservedby&apos;
-        ///group by res.reserveid order by res.reserveid desc.
+        ///left join wms.wms_stock sk on sk.materialid=res.mater [rest of string was truncated]&quot;;.
         /// </summary>
         public static string getreservedmaterialList {
             get {

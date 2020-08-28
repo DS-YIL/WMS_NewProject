@@ -36,7 +36,7 @@
       </span>
     </div>-->
     <div class="card-body" style="overflow-y:hidden;padding:0px;margin-left:10px;margin-right:10px">
-      <p-table #dt [value]="requestList" [style]="{'width':'100%'}" [scrollable]="true" scrollHeight="53vh">
+      <p-table #dt1 [value]="requestList" [style]="{'width':'100%'}" [scrollable]="true" scrollHeight="53vh">
         <ng-template pTemplate="header">
           <tr class="mprltbldata">
             <!--<th style="text-align:center;width:70px">Select</th>-->
@@ -56,12 +56,12 @@
           <tr>
             <!--<th></th>-->
             <th></th>
-            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'requestid', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt1.filter($event.target.value, 'requestid', 'contains')"></th>
             <!--<th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'pono', 'contains')"></th>-->
             <!--<th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'projectname', 'contains')"></th>-->
-            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'material', 'contains')"></th>
-            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'materialdescription', 'contains')"></th>
-            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'requesteddate', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt1.filter($event.target.value, 'material', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt1.filter($event.target.value, 'materialdescription', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt1.filter($event.target.value, 'requesteddate', 'contains')"></th>
             <!--<th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'requestedquantity', 'contains')"></th>-->
             <!--<th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'requestedquantity', 'contains')"></th>
             <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'quotationqty', 'contains')"></th>
@@ -76,7 +76,7 @@
             <td class="ptable-cell" style="text-align:center;width:70px;">{{ri+1}}</td>
 
             <td class="ptable-cell" style="text-align: center;width: 100px;">
-              <button type="button" class="btn btn-link" (click)="showmaterialdetails(rowData.requestid)" style="padding-left:0px;text-align:center;">MATRQ{{rowData.requestid}}</button>
+              <button type="button" class="btn btn-link" (click)="showmaterialdetails(rowData.requestid,rowData)" style="padding-left:0px;text-align:center;">MATRQ{{rowData.requestid}}</button>
             </td>
 
             <!--<td class="ptable-cell" style="text-align:center;width:200px;">{{rowData.pono}}</td>-->
@@ -161,6 +161,9 @@
             <div class="row  pl-0">
               <div class="col-lg-4 col-md-4 col-sm-4 pt-2 labelheading">
                 <label>Request Id :</label>&nbsp;<span class="labeltext"><label>MATRQ{{materiallistData[0].requestid}}</label></span>
+              </div>
+              <div class="col-lg-4 col-md-4 col-sm-4 pt-2 labelheading" *ngIf="isreservedbefore">
+                <label>Reserve Id :</label>&nbsp;<span class="labeltext"><label>{{reserveidview}}</label></span>
               </div>
 
             </div>

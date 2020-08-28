@@ -53,6 +53,7 @@ import { MaterialBarcodeComponent } from './WMS/MaterialBarcode.component';
 import { MaterialReportComponent } from './WMS/MaterialReport.component';
 import { PutawayNotificationComponent } from './WMS/PutawayNotification.component';
 import { GatepassinwardViewComponent } from './WMS/GatepassinwardView.component';
+import { TestCompComponent } from './WMS/TestComp.component';
 const routes: Routes = [{
   path: 'WMS',
   children: [
@@ -120,7 +121,8 @@ const routes: Routes = [{
 { path: "PrintBarcode", component: MaterialBarcodeComponent, canActivate: [AuthGuard] },
     { path: "MaterialReport", component: MaterialReportComponent, canActivate: [AuthGuard] },
     { path: "Putawaynotify", component: PutawayNotificationComponent, canActivate: [AuthGuard] },
-    { path: "Gatepassinward", component: GatepassinwardViewComponent, canActivate: [AuthGuard] }
+    { path: "Gatepassinward", component: GatepassinwardViewComponent, canActivate: [AuthGuard] },
+    { path: "Test", component: TestCompComponent, canActivate: [AuthGuard] }
     
   ]
 

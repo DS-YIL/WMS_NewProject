@@ -5,7 +5,7 @@ import { wmsService } from '../WmsServices/wms.service';
 import { constants } from '../Models/WMSConstants';
 import { Employee, DynamicSearchResult, searchList } from '../Models/Common.Model';
 import { NgxSpinnerService } from "ngx-spinner";
-import { materialRequestDetails, materialList, requestData, materialListforReserve } from 'src/app/Models/WMS.Model';
+import { materialRequestDetails, materialList, requestData, materialListforReserve, materialReservetorequestModel } from 'src/app/Models/WMS.Model';
 import { MessageService } from 'primeng/api';
 import { commonComponent } from '../WmsCommon/CommonCode';
 import { DatePipe } from '@angular/common';
@@ -44,6 +44,15 @@ export class MaterialReserveViewComponent implements OnInit {
   public reservedfor: Date;
   public displaylist: boolean = false;
   public displayDD: boolean = true;
+  reserveduptoview: Date;
+  statusview: string = "";
+  requestedbyview: string;
+  requestedonview: Date;
+  reserveidview: string = "";
+  expired: boolean = false;
+  showreservebtn: boolean = false;
+  isrequested: boolean = false;
+  reservetorequest: materialReservetorequestModel;
 
   ngOnInit() {
     if (localStorage.getItem("Employee"))
@@ -57,7 +66,7 @@ export class MaterialReserveViewComponent implements OnInit {
     //    this.pono = params["pono"];
     //  }
     //});
-
+    this.reservetorequest = new materialReservetorequestModel();
     this.getMaterialReservelist();
   }
 
@@ -308,13 +317,59 @@ export class MaterialReserveViewComponent implements OnInit {
     }
   }
 
+  getstatus(data: any) {
+    if (data.ackstatus == 'received') {
+      data.chkstatus = "Received";
+    }
+    return data.chkstatus;
+  }
+
+  Request() {
+    let savedata = new materialReservetorequestModel();
+    savedata.reserveid = parseInt(this.reserveidview);
+    savedata.requestedby = this.employee.employeeno;
+    this.spinner.show();
+    this.wmsService.materialReservetorequest(savedata).subscribe(data => {
+      this.spinner.hide();
+      if (data) {
+        this.AddDialog = false;
+        this.showdialog = false;
+        this.messageService.add({ severity: 'success', summary: '', detail: 'Requested Successfully' });
+        this.getMaterialReservelist();
+        //this.router.navigateByUrl("/WMS/MaterialReqView/" + this.pono);
+      }
+      else {
+        this.spinner.hide();
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Error while Requesting materials' });
+        this.btnreq = true;
+      }
+
+    });
+  }
+
   //redirect to PM Dashboard
   backtoDashboard() {
     this.router.navigateByUrl("/WMS/Dashboard");
   }
-  showmaterialdetails(reservedid) {
+  showmaterialdetails(reservedid, data: any) {
+    debugger;
+    this.showreservebtn = false;
+    this.isrequested = false;
     this.AddDialog = true;
-this.showdialog=true;
+    this.showdialog = true;
+    this.reserveduptoview = data.reserveupto;
+    this.statusview = data.chkstatus; 
+    this.reserveidview = reservedid;
+    var today = new Date();
+    var rsvdate = new Date(data.reserveupto);
+    if (data.chkstatus == "Reserved" ) {
+      this.showreservebtn = true;
+    }
+    if (data.chkstatus == "Requested") {
+      this.requestedbyview = data.requestedby;
+      this.requestedonview = data.requestedon;
+      this.isrequested = true;
+    }
     this.wmsService.getmaterialissueListforreserved(reservedid).subscribe(data => {
       this.materiallistData = data;
       

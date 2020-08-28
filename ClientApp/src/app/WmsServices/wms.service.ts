@@ -5,7 +5,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { constants } from '../Models/WMSConstants'
 import { Employee, Login, DynamicSearchResult, printMaterial, rbamaster } from '../Models/Common.Model';
-import { PoFilterParams, PoDetails, BarcodeModel, StockModel, materialRequestDetails, inwardModel, gatepassModel, stocktransfermodel, Materials, authUser, invstocktransfermodel, ddlmodel, locataionDetailsStock,updateonhold, materialistModel, outwardmaterialistModel, pageModel, UserDashboardDetail, UserDashboardGraphModel, UnholdGRModel, MRNsavemodel, notifymodel, materialtransferMain } from '../Models/WMS.Model';
+import { PoFilterParams, PoDetails, BarcodeModel, StockModel, materialRequestDetails, inwardModel, gatepassModel, stocktransfermodel, Materials, authUser, invstocktransfermodel, ddlmodel, locataionDetailsStock,updateonhold, materialistModel, outwardmaterialistModel, pageModel, UserDashboardDetail, UserDashboardGraphModel, UnholdGRModel, MRNsavemodel, notifymodel, materialtransferMain, materialReservetorequestModel } from '../Models/WMS.Model';
 import { Text } from '@angular/compiler/src/i18n/i18n_ast';
 
 @Injectable({
@@ -209,6 +209,8 @@ export class wmsService {
   materialReserveUpdate(materialRequestList: any): Observable<any> {
     return this.http.post<any>(this.url + 'POData/insertreservematerial/', materialRequestList, this.httpOptions);
   }
+
+  
 
 
   getMaterialIssueLlist(loginid: string): Observable<any> {
@@ -456,6 +458,9 @@ export class wmsService {
   getcheckedgrnlistforqc(): Observable<ddlmodel[]> {
     return this.http.get<ddlmodel[]>(this.url + 'POData/getgrnforacceptanceqc/', this.httpOptions);
   }
+  getcheckedgrnlistforqcbydate(fromdt: string, todt: string): Observable<ddlmodel[]> {
+    return this.http.get<ddlmodel[]>(this.url + 'POData/getgrnforacceptanceqcbydate?fromdt=' + fromdt+'&todt='+ todt, this.httpOptions);
+  }
 
   getholdgrlist(): Observable<ddlmodel[]> {
     return this.http.get<ddlmodel[]>(this.url + 'POData/getholdgrs/', this.httpOptions);
@@ -499,6 +504,11 @@ export class wmsService {
   updateoutinward(outindata: outwardmaterialistModel[]): Observable<any> {
     const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }), responseType: 'text' as any };
     return this.http.post<any>(this.url + 'POData/updategatepassmovement/', outindata, httpOptions);
+  }
+
+  materialReservetorequest(materialrequestdt: materialReservetorequestModel): Observable<any> {
+    const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }), responseType: 'text' as any };
+    return this.http.post<any>(this.url + 'POData/requestreservematerial/', materialrequestdt, this.httpOptions);
   }
 
   getpagesbyrole(roleid: number): Observable<pageModel[]> {
