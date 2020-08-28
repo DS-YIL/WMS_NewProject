@@ -57,16 +57,21 @@ export class ABCCategoryComponent implements OnInit {
 
   getcategorydata() {
     this.wmsService.getcategorymasterdata().subscribe(data => {
-      if (data[0].startdate)
-        this.classA.startdate = new Date(data[0].startdate);
-      if (data[0].enddate)
-        this.classA.enddate = new Date(data[0].enddate);
-      this.classA.minpricevalue = data[0].minpricevalue;
-     // this.classA.maxpricevalue = data[0].maxpricevalue
-      this.classB.maxpricevalue = data[1].maxpricevalue;
-      this.classB.minpricevalue = data[1].minpricevalue;
-      this.classC.maxpricevalue = data[2].maxpricevalue;
-      this.classC.minpricevalue = data[2].minpricevalue
+      if (data) {
+        if (data[0].startdate)
+          this.classA.startdate = new Date(data[0].startdate);
+        if (data[0].enddate)
+          this.classA.enddate = new Date(data[0].enddate);
+        this.classA.categoryid = data[0].categoryid;
+        this.classA.minpricevalue = data[0].minpricevalue;
+        // this.classA.maxpricevalue = data[0].maxpricevalue
+        this.classB.categoryid = data[1].categoryid;
+        this.classB.maxpricevalue = data[1].maxpricevalue;
+        this.classB.minpricevalue = data[1].minpricevalue;
+        this.classC.categoryid = data[2].categoryid;
+        this.classC.maxpricevalue = data[2].maxpricevalue;
+        this.classC.minpricevalue = data[2].minpricevalue
+      }
     });
   }
 
@@ -84,6 +89,7 @@ export class ABCCategoryComponent implements OnInit {
     this.classA.updatedby = this.classB.updatedby = this.classC.updatedby = this.employee.employeeno;
     this.wmsService.updateABCRange(this.catList).subscribe(data => {
       this.spinner.hide();
+      this.getcategorydata();
       this.messageService.add({ severity: 'success', summary: 'Success Message', detail: 'Saved Sucessfully' });
     });
   }

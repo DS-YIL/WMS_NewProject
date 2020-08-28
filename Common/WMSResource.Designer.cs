@@ -172,11 +172,11 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select Sum(ws.unitprice*ws.availableqty) as totalcost,
+        ///   Looks up a localized string similar to select Sum(op.unitprice*ws.availableqty) as totalcost,
         ///    sum(availableqty) as availableqty,( SELECT wrc.categoryname
         ///           FROM wms.wms_rd_category wrc
-        ///          WHERE ws.unitprice ::numeric &gt;= wrc.minpricevalue::numeric and
-        ///          (ws.unitprice ::numeric &lt;= wrc.maxpricevalue::numeric or ws.unitprice ::numeric = wrc.maxpricevalue::numeric is null) and wrc.deleteflag=false
+        ///          WHERE op.unitprice ::numeric &gt;= wrc.minpricevalue::numeric and
+        ///          (op.unitprice ::numeric &lt;= wrc.maxpricevalue::numeric or op.unitprice ::numeric = wrc.maxpricevalue::numeric is null) and wrc.deleteflag=false
         ///         LIMIT 1) AS category from wms.wms_stock ws
         /// inner join wms.&quot;MaterialMasterYGS&quot; op on  ws.materialid =op.material [rest of string was truncated]&quot;;.
         /// </summary>
@@ -1430,7 +1430,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to update wms.wms_rd_category set deleteflag=true,updatedby=@updatedby,updatedon=@updatedon.
+        ///   Looks up a localized string similar to update wms.wms_rd_category set deleteflag=true,updatedby=@updatedby,updatedon=@updatedon  where categoryid=#categoryid.
         /// </summary>
         public static string updateABCrange {
             get {

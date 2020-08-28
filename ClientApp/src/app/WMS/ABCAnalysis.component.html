@@ -25,10 +25,10 @@
           <tr>
             <th></th>
             <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'category', 'contains')"></th>
-            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'materialid', 'contains')"></th>
-            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'materialdescription', 'contains')"></th>
             <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'availableqty', 'contains')"></th>
+            <th> <!--<input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'materialdescription', 'contains')">--></th>
             <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'totalcost', 'contains')"></th>
+            <th> <!--<input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'totalcost', 'contains')">--></th>
 
           </tr>
         </ng-template>
