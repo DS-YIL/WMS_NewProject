@@ -72,7 +72,7 @@ export class LoginComponent implements OnInit {
   getRoles() {
     debugger;
     this.dynamicData = new DynamicSearchResult();
-    this.dynamicData.query = "select * from wms.rolemaster where deleteflag=false and roleid != 8 order by roleid";
+    this.dynamicData.query = "select * from wms.rolemaster where deleteflag=false order by roleid";
     this.wmsService.GetListItems(this.dynamicData).subscribe(data => {
       this.roleNameModel = data;
       localStorage.setItem('Roles', JSON.stringify(this.roleNameModel));

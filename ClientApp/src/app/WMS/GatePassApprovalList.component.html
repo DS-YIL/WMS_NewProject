@@ -173,8 +173,7 @@
               </div>
             </div>-->
           </div><br />
-          ><
-          w"
+
           <div class="row" style="padding-left:20px;">
             <div class="col-lg-2 col-md-2 col-sm-2 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
               GatePass Id:&nbsp;<span style="color:#dc3545;">GTP{{materialList[0].gatepassid}}</span>
@@ -228,10 +227,9 @@
                   <th class="ptable-cell" style="text-align:center">Price</th>
                   <th class="ptable-cell" style="text-align:center">Remarks</th>
                   <th class="ptable-cell" style="text-align:center">Requested Qty</th>
-                  <th class="ptable-cell" style="text-align:center" *ngIf="employee.roleid !='8'">8'
+                  <th class="ptable-cell" style="text-align:center" *ngIf="employee.roleid !='8'">
 Issue Qty
                   </th>
-                  8'
                   <th class="ptable-cell" style="text-align:center" *ngIf="employee.roleid !='8' && materialList[0].gatepasstype=='Returnable'">Expected Date</th>
                   <!--<th *ngIf="materialList[0].gatepasstype=='Returnable'" class="ptable-cell" style="text-align:center">Returned Date</th>-->
                 </tr>
@@ -263,9 +261,9 @@ Issue Qty
                   <select class="form-control forms-input" [(ngModel)]="gatepassModel.approverstatus">
                     <option value='Approved'>Approved</option>
                     <option value='Sent for Modification'>Sent for Modification</option>
-                    on
+                  
                   </select>
-                  on
+                 
                 </div>
               </div>
               <div class="col-lg-3 col-md-3 col-sm-3 form-inline" *ngIf="!btnDisable">
@@ -276,7 +274,7 @@ Issue Qty
 
               </div>
 
-              ye
+            
 
               <div *ngIf="!btnDisable && employee.roleid!='7'" class="col-lg-2 col-md-2 col-sm-2 form-inline">
                 <button [disabled]="btnDisable" type="button" class="btn btn-primary" (click)="updategatepassapproverstatus()">Submit</button>
