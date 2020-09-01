@@ -35,7 +35,7 @@ export class MaterialIssueComponent implements OnInit {
   public displayItemRequestDialog; RequestDetailsSubmitted: boolean = false;
   public materialRequestDetails: materialRequestDetails;
   public requestId: string;
-  public pono: string;
+  public pono: string="";
   public Oldestdata: FIFOValues;
   public itemlocationData: Array<any> = [];
   public showavailableqtyList: boolean = false;

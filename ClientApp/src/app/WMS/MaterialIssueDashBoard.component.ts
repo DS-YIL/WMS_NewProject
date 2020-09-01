@@ -13,7 +13,7 @@ import { MessageService } from 'primeng/api';
   templateUrl: './MaterialIssueDashBoard.component.html'
 })
 export class MaterialIssueDashBoardComponent implements OnInit {
-    selectedStatus: string;
+  selectedStatus: string;
 
   constructor(private formBuilder: FormBuilder, private messageService: MessageService, private wmsService: wmsService, private route: ActivatedRoute, private router: Router, public constants: constants, private spinner: NgxSpinnerService) { }
 
@@ -70,5 +70,13 @@ export class MaterialIssueDashBoardComponent implements OnInit {
       this.materialIssueList = this.materialIssueListnofilter.filter(li => li.approvedstatus == 'Approved');
     }
   }
+
+  //navigate to material issue page
+  navigateToMatIssue(details: any) {
+    if (!details.pono)
+      details.pono = '';
+    this.router.navigate(["/WMS/MaterialIssue", details.requestid, details.pono]);
+  }
+
 
 }

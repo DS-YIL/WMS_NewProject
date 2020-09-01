@@ -126,9 +126,9 @@
         order by receiveddate desc limit 1</value>
     <comment>checkpono</comment>
   </data>
-  <data name="GetdetailsByrequestid" xml:space="preserve">
+  <data name="GetdetailsByrequestidWithPO" xml:space="preserve">
     <value>select iss.issuedqty as issuedqty,max(iss.approvedstatus) as approvedstatus,max(pro.projectname)as projectname,max(req.requestforissueid)as requestforissueid,max(emp."name")as name,req.requesteddate,sk.materialid,max(sk.pono)as pono,
-req.requestedquantity,(select sum(availableqty) from wms.wms_stock ws ) as availableqty,req.requestid 
+req.requestedquantity,(select sum(availableqty) from wms.wms_stock ws where materialid =sk.materialid ) as availableqty,req.requestid 
 from wms.wms_stock sk 
        inner join wms.wms_materialrequest req on req.materialid=sk.materialid
       left join wms.wms_materialissue iss  on iss.requestforissueid=req.requestforissueid
@@ -171,15 +171,7 @@ where  inwmaster.pono='#pono'</value>
     <comment>insert material request data</comment>
   </data>
   <data name="openpolist" xml:space="preserve">
-    <value>select  max(track.enteredon) as enteredon,max(pr.projectcode)as projectcode,max(wp.pono) as pono,min(track.status)as status,max(wp.suppliername )as vendorname,max(pr.jobname) as jobname,
-      SUM(mat.materialqty) as materialqty,
-	  (select SUM(confirmqty) from wms.wms_storeinward where inwmasterid in
-	  (select inwmasterid from wms.wms_securityinward where pono = wp.pono)) as receivedqty
-	  from wms.wms_polist wp 
-      left join wms.wms_trackstatus track on track.pono=wp.pono
-      left join wms.wms_project  pr on pr.pono =wp.pono 
-      left join wms.wms_pomaterials mat on  mat.pono =wp.pono
-      where projectmanager='#projectmanager'</value>
+    <value>select  max(track.enteredon) as enteredon,max(pr.projectcode)as projectcode,max(wp.pono) as pono,min(track.status)as status,max(wp.suppliername )as vendorname,max(pr.jobname) as jobname,  (select  SUM(materialqty) from wms.wms_pomaterials where pono =wp.pono )  as materialqty, (select SUM(confirmqty) from wms.wms_storeinward where inwmasterid in (select inwmasterid from wms.wms_securityinward where pono = wp.pono)) as receivedqty from wms.wms_polist wp left join wms.wms_trackstatus track on track.pono=wp.pono left join wms.wms_project  pr on pr.pono =wp.pono  where projectmanager='#projectmanager'</value>
     <comment>getopenpono list</comment>
   </data>
   <data name="Getdetailsforthreewaymatching" xml:space="preserve">
@@ -497,7 +489,7 @@ group by pl.pono</value>
     <value />
   </data>
   <data name="getmaterialdetailfprrequest" xml:space="preserve">
-    <value>select max(sk.pono) as pono ,sk.materialid as material,(select sum(availableqty) from wms.wms_stock ws ) as availableqty,
+    <value>select max(sk.pono) as pono ,sk.materialid as material,( select sum(availableqty) from wms.wms_stock ws where materialid =sk.materialid) as availableqty,
 max(mtmtr.unitprice) as materialcost from wms.wms_stock  sk 
 inner join wms."MaterialMasterYGS" mtmtr on mtmtr.material = sk.materialid 
 where sk.availableqty!=0</value>
@@ -824,7 +816,7 @@ where reserveupto between current_date and current_date  + interval '3 day' and 
     <value>select * from wms."MaterialMasterYGS" where material='#materialid'</value>
   </data>
   <data name="getPODetails" xml:space="preserve">
-    <value>select distinct(sk.pono), sum(sk.availableqty), polist.suppliername from wms.wms_stock sk
+    <value>select sk.pono, polist.suppliername from wms.wms_stock sk
 join wms.wms_polist polist on sk.pono = polist.pono 
 where availableqty &gt;0 group by sk.pono , polist.suppliername</value>
     <comment>Get PO Details</comment>
@@ -981,5 +973,16 @@ secinw.pono,(select suppliername from wms.wms_polist where pono = secinw.pono li
   </data>
   <data name="testcrudget" xml:space="preserve">
     <value>select id,name,ismanager from wms.testcrud</value>
+  </data>
+  <data name="GetdetailsByrequestidWithoutPO" xml:space="preserve">
+    <value>select iss.issuedqty as issuedqty,max(iss.approvedstatus) as approvedstatus,max(pro.projectname)as projectname,max(req.requestforissueid)as requestforissueid,max(emp."name")as name,req.requesteddate,sk.materialid,
+req.requestedquantity,(select sum(availableqty) from wms.wms_stock ws where materialid =sk.materialid ) as availableqty,req.requestid 
+from wms.wms_stock sk 
+       inner join wms.wms_materialrequest req on req.materialid=sk.materialid
+      left join wms.wms_materialissue iss  on iss.requestforissueid=req.requestforissueid
+      inner join wms.employee emp on emp.employeeno=req.requesterid
+      left join wms.wms_project pro on pro.pono=sk.pono
+ where requestid=#requestid and req.deleteflag=false and sk.availableqty!=0 
+ group by  iss.issuedqty, req.requestforissueid,sk.materialid</value>
   </data>
 </root>

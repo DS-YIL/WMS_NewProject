@@ -255,15 +255,28 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select iss.issuedqty as issuedqty,max(iss.approvedstatus) as approvedstatus,max(pro.projectname)as projectname,max(req.requestforissueid)as requestforissueid,max(emp.&quot;name&quot;)as name,req.requesteddate,sk.materialid,max(sk.pono)as pono,
-        ///req.requestedquantity,(select sum(availableqty) from wms.wms_stock ws ) as availableqty,req.requestid 
+        ///   Looks up a localized string similar to select iss.issuedqty as issuedqty,max(iss.approvedstatus) as approvedstatus,max(pro.projectname)as projectname,max(req.requestforissueid)as requestforissueid,max(emp.&quot;name&quot;)as name,req.requesteddate,sk.materialid,
+        ///req.requestedquantity,(select sum(availableqty) from wms.wms_stock ws where materialid =sk.materialid ) as availableqty,req.requestid 
         ///from wms.wms_stock sk 
         ///       inner join wms.wms_materialrequest req on req.materialid=sk.materialid
-        ///      left join wms.wms_materialissue iss  on iss.requestforissueid=re [rest of string was truncated]&quot;;.
+        ///      left join wms.wms_materialissue iss  on iss.requestf [rest of string was truncated]&quot;;.
         /// </summary>
-        public static string GetdetailsByrequestid {
+        public static string GetdetailsByrequestidWithoutPO {
             get {
-                return ResourceManager.GetString("GetdetailsByrequestid", resourceCulture);
+                return ResourceManager.GetString("GetdetailsByrequestidWithoutPO", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to select iss.issuedqty as issuedqty,max(iss.approvedstatus) as approvedstatus,max(pro.projectname)as projectname,max(req.requestforissueid)as requestforissueid,max(emp.&quot;name&quot;)as name,req.requesteddate,sk.materialid,max(sk.pono)as pono,
+        ///req.requestedquantity,(select sum(availableqty) from wms.wms_stock ws where materialid =sk.materialid ) as availableqty,req.requestid 
+        ///from wms.wms_stock sk 
+        ///       inner join wms.wms_materialrequest req on req.materialid=sk.materialid
+        ///      left join wms.wms_materialissue  [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string GetdetailsByrequestidWithPO {
+            get {
+                return ResourceManager.GetString("GetdetailsByrequestidWithPO", resourceCulture);
             }
         }
         
@@ -603,7 +616,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select max(sk.pono) as pono ,sk.materialid as material,(select sum(availableqty) from wms.wms_stock ws ) as availableqty,
+        ///   Looks up a localized string similar to select max(sk.pono) as pono ,sk.materialid as material,( select sum(availableqty) from wms.wms_stock ws where materialid =sk.materialid) as availableqty,
         ///max(mtmtr.unitprice) as materialcost from wms.wms_stock  sk 
         ///inner join wms.&quot;MaterialMasterYGS&quot; mtmtr on mtmtr.material = sk.materialid 
         ///where sk.availableqty!=0.
@@ -766,7 +779,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select distinct(sk.pono), sum(sk.availableqty), polist.suppliername from wms.wms_stock sk
+        ///   Looks up a localized string similar to select sk.pono, polist.suppliername from wms.wms_stock sk
         ///join wms.wms_polist polist on sk.pono = polist.pono 
         ///where availableqty &gt;0 group by sk.pono , polist.suppliername.
         /// </summary>
@@ -1300,13 +1313,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select  max(track.enteredon) as enteredon,max(pr.projectcode)as projectcode,max(wp.pono) as pono,min(track.status)as status,max(wp.suppliername )as vendorname,max(pr.jobname) as jobname,
-        ///      SUM(mat.materialqty) as materialqty,
-        ///	  (select SUM(confirmqty) from wms.wms_storeinward where inwmasterid in
-        ///	  (select inwmasterid from wms.wms_securityinward where pono = wp.pono)) as receivedqty
-        ///	  from wms.wms_polist wp 
-        ///      left join wms.wms_trackstatus track on track.pono=wp.pono
-        ///      left join wms.wms [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to select  max(track.enteredon) as enteredon,max(pr.projectcode)as projectcode,max(wp.pono) as pono,min(track.status)as status,max(wp.suppliername )as vendorname,max(pr.jobname) as jobname,  (select  SUM(materialqty) from wms.wms_pomaterials where pono =wp.pono )  as materialqty, (select SUM(confirmqty) from wms.wms_storeinward where inwmasterid in (select inwmasterid from wms.wms_securityinward where pono = wp.pono)) as receivedqty from wms.wms_polist wp left join wms.wms_trackstatus track on track.pono=wp.po [rest of string was truncated]&quot;;.
         /// </summary>
         public static string openpolist {
             get {
