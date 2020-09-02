@@ -79,7 +79,7 @@ export class LoginComponent implements OnInit {
     })
   }
 
-
+  ///get all roles assigned for the user
   getallroles() {
 
     this.wmsService.getuserroleList(this.employee.employeeno).subscribe(data => {

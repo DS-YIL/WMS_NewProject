@@ -71,8 +71,13 @@ export class SecurityHomeComponent implements OnInit {
 
     this.PoDetails = new PoDetails();
     this.Poinvoicedetails = new PoDetails();
+    ///get todays expected shipments
     this.getcurrentDatePolist();
+
+    ///get todays received shipments
     this.getcurrentDateReceivedPOlist();
+
+    ///get department master list
     this.getdepts();
   }
 
@@ -119,6 +124,7 @@ export class SecurityHomeComponent implements OnInit {
     });
   }
 
+  //get received POs for today
   getcurrentDateReceivedPOlist() {
     this.spinner.show();
     this.wmsService.getASNPOReceivedList().subscribe(data => {

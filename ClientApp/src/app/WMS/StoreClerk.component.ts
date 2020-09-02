@@ -334,18 +334,22 @@ export class StoreClerkComponent implements OnInit {
 
     
   }
+  //get pending for receive lisst
   getpendingpos() {
     this.wmsService.getPendingpo().subscribe(data => {
       debugger;
       this.pendingpos = data;
     });
   }
+  ////get pending to accept
   getcheckedgrn() {
     this.wmsService.getcheckedgrnlist().subscribe(data => {
       debugger;
       this.checkedgrnlist = data;
     });
   }
+
+  ///get pending for receive material list
   showpodata() {
     this.isacceptance = false;
     this.selectedgrn = null;
@@ -456,6 +460,7 @@ export class StoreClerkComponent implements OnInit {
     }
    
   }
+   ///get pending for receive material list
   getponodetails(data) {
     debugger;
     this.isnonpoentry = false;

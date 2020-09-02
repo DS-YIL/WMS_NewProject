@@ -485,6 +485,13 @@ namespace WMS.Controllers
 
 			return this._poService.FIFOitemsupdate(model);
 		}
+
+		/// <summary>
+		/// get list of todays expected shipments
+		/// Ramesh
+		/// </summary>
+		/// <param name="deliverydate"></param>
+		/// <returns></returns>
 		[HttpGet("getASNList")]
 		public Task<IEnumerable<OpenPoModel>> getASNList(string deliverydate)
 		{

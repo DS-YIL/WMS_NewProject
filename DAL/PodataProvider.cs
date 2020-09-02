@@ -389,7 +389,7 @@ namespace WMS.DAL
 				//dataobj.docfile = ;
 				using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
 				{
-					var q1 = "select count(*) from wms.wms_securityinward  where pono ='" + dataobj.pono + "'  and invoiceno ='" + dataobj.invoiceno + "'";
+					var q1 = WMSResource.getinvoiceexists.Replace("#pono", dataobj.pono).Replace("#invno", dataobj.invoiceno);
 					int count = int.Parse(DB.ExecuteScalar(q1, null).ToString());
 
 					if (count >= 1)
@@ -406,8 +406,7 @@ namespace WMS.DAL
 						if (dataobj.pono == "NONPO")
 						{
 							string compare = "NP" + DateTime.Now.Year.ToString().Substring(2);
-							string Query = "select Max(pono) as POno  from wms.wms_polist where pono like 'NP%'";
-							//string Query = "select pono as POno from wms.wms_securityinward where pono like '"+compare+"%' order by inwmasterid desc limit 1";
+							string Query = WMSResource.getmaxnonpo;
 							var data = DB.QueryFirstOrDefault<POList>(
 							Query, null, commandType: CommandType.Text);
 							if (data != null)
@@ -417,7 +416,8 @@ namespace WMS.DAL
 								int nextserial = serial + 1;
 								string nextpo = "NP" + DateTime.Now.Year.ToString().Substring(2) + nextserial.ToString().PadLeft(5, '0');
 								dataobj.pono = nextpo;
-								var q2 = "select count(*) from wms.wms_securityinward  where pono ='" + dataobj.pono + "'  and invoiceno ='" + dataobj.invoiceno + "'";
+								
+								var q2 = WMSResource.getinvoiceexists.Replace("#pono", dataobj.pono).Replace("#invno", dataobj.invoiceno); 
 								int count1 = int.Parse(DB.ExecuteScalar(q2, null).ToString());
 
 								if (count1 >= 1)
@@ -440,7 +440,7 @@ namespace WMS.DAL
 							{
 								string nextpo = "NP" + DateTime.Now.Year.ToString().Substring(2) + "00001";
 								dataobj.pono = nextpo;
-								var q2 = "select count(*) from wms.wms_securityinward  where pono ='" + dataobj.pono + "'  and invoiceno ='" + dataobj.invoiceno + "'";
+								var q2 = WMSResource.getinvoiceexists.Replace("#pono", dataobj.pono).Replace("#invno", dataobj.invoiceno);
 								int count1 = int.Parse(DB.ExecuteScalar(q2, null).ToString());
 
 								if (count1 >= 1)
@@ -874,13 +874,15 @@ namespace WMS.DAL
 							inwardModel objx = new inwardModel();
 							if (!isgrn)
 							{
-								string queryx = "select grnnumber,onhold,unholdedby from wms.wms_securityinward where pono = '" + pono + "' and invoiceno = '" + invoiceno + "'";
+								//string queryx = "select grnnumber,onhold,unholdedby from wms.wms_securityinward where pono = '" + pono + "' and invoiceno = '" + invoiceno + "'";
+								string queryx = WMSResource.isgrnexistsquerybyinvoce.Replace("#pono",pono).Replace("#invno",invoiceno);
 								objx = pgsql.QuerySingle<inwardModel>(
 								 queryx, null, commandType: CommandType.Text);
 							}
 							else
 							{
-								string queryx = "select grnnumber,onhold,unholdedby from wms.wms_securityinward where grnnumber = '" + grnno + "'";
+								//string queryx = "select grnnumber,onhold,unholdedby from wms.wms_securityinward where grnnumber = '" + grnno + "'";
+								string queryx = WMSResource.isgrnexistsbygrn.Replace("#grnno", grnno);
 								objx = pgsql.QuerySingle<inwardModel>(
 								queryx, null, commandType: CommandType.Text);
 							}
@@ -3579,7 +3581,12 @@ namespace WMS.DAL
 			}
 		}
 
-		//get open po list based on current date
+		/// <summary>
+		/// get list of todays expected shipments
+		/// Ramesh
+		/// </summary>
+		/// <param name="deliverydate"></param>
+		/// <returns></returns>
 		public async Task<IEnumerable<OpenPoModel>> getASNList(string deliverydate)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -4683,8 +4690,11 @@ namespace WMS.DAL
 			}
 
 		}
-
-		//get open po list based on current date
+		/// <summary>
+		/// Ramesh kumar
+		/// </summary>
+		/// <returns></returns>
+		//get received po list based on current date
 		public async Task<IEnumerable<SecurityInwardreceivedModel>> getSecurityreceivedList()
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -6268,7 +6278,7 @@ namespace WMS.DAL
 			{
 				try
 				{
-					string materialrequestquery = "select orgdepartmentid as value, orgdepartment as text from wms.orgdepartments";
+					string materialrequestquery = WMSResource.getdepartmentmasterdata;
 
 					await pgsql.OpenAsync();
 					return await pgsql.QueryAsync<ddlmodel>(

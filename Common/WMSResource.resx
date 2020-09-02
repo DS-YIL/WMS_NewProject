@@ -982,4 +982,20 @@ secinw.pono,(select suppliername from wms.wms_polist where pono = secinw.pono li
   <data name="testcrudget" xml:space="preserve">
     <value>select id,name,ismanager from wms.testcrud</value>
   </data>
+  <data name="getdepartmentmasterdata" xml:space="preserve">
+    <value>select orgdepartmentid as value, orgdepartment as text from wms.orgdepartments
+where boolinuse = True</value>
+  </data>
+  <data name="getinvoiceexists" xml:space="preserve">
+    <value>select count(*) from wms.wms_securityinward  where pono ='#pono'  and invoiceno ='#invno'</value>
+  </data>
+  <data name="getmaxnonpo" xml:space="preserve">
+    <value>select Max(pono) as POno  from wms.wms_polist where pono like 'NP%'</value>
+  </data>
+  <data name="isgrnexistsbygrn" xml:space="preserve">
+    <value>select grnnumber,onhold,unholdedby from wms.wms_securityinward where grnnumber = '#grnno'</value>
+  </data>
+  <data name="isgrnexistsquerybyinvoce" xml:space="preserve">
+    <value>select grnnumber,onhold,unholdedby from wms.wms_securityinward where pono = '#pono' and invoiceno = '#invno'</value>
+  </data>
 </root>

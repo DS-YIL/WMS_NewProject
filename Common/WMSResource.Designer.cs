@@ -255,6 +255,16 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to select orgdepartmentid as value, orgdepartment as text from wms.orgdepartments
+        ///where boolinuse = True.
+        /// </summary>
+        public static string getdepartmentmasterdata {
+            get {
+                return ResourceManager.GetString("getdepartmentmasterdata", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to select iss.issuedqty as issuedqty,max(iss.approvedstatus) as approvedstatus,max(pro.projectname)as projectname,max(req.requestforissueid)as requestforissueid,max(emp.&quot;name&quot;)as name,req.requesteddate,sk.materialid,max(sk.pono)as pono,
         ///req.requestedquantity,(select sum(availableqty) from wms.wms_stock ws ) as availableqty,req.requestid 
         ///from wms.wms_stock sk 
@@ -449,6 +459,15 @@ namespace WMS.Common {
         public static string getInvoiceDetails {
             get {
                 return ResourceManager.GetString("getInvoiceDetails", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to select count(*) from wms.wms_securityinward  where pono =&apos;#pono&apos;  and invoiceno =&apos;#invno&apos;.
+        /// </summary>
+        public static string getinvoiceexists {
+            get {
+                return ResourceManager.GetString("getinvoiceexists", resourceCulture);
             }
         }
         
@@ -695,6 +714,15 @@ namespace WMS.Common {
         public static string getmatreturndetails {
             get {
                 return ResourceManager.GetString("getmatreturndetails", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to select Max(pono) as POno  from wms.wms_polist where pono like &apos;NP%&apos;.
+        /// </summary>
+        public static string getmaxnonpo {
+            get {
+                return ResourceManager.GetString("getmaxnonpo", resourceCulture);
             }
         }
         
@@ -1258,6 +1286,24 @@ namespace WMS.Common {
         public static string invstocktransfermainquery {
             get {
                 return ResourceManager.GetString("invstocktransfermainquery", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to select grnnumber,onhold,unholdedby from wms.wms_securityinward where grnnumber = &apos;#grnno&apos;.
+        /// </summary>
+        public static string isgrnexistsbygrn {
+            get {
+                return ResourceManager.GetString("isgrnexistsbygrn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to select grnnumber,onhold,unholdedby from wms.wms_securityinward where pono = &apos;#pono&apos; and invoiceno = &apos;#invno&apos;.
+        /// </summary>
+        public static string isgrnexistsquerybyinvoce {
+            get {
+                return ResourceManager.GetString("isgrnexistsquerybyinvoce", resourceCulture);
             }
         }
         
