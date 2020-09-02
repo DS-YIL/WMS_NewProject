@@ -329,12 +329,12 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select ygs.materialdescription,emp.name,iss.itemissueddate, * from wms.wms_gatepass gate
+        ///   Looks up a localized string similar to select ygs.materialdescription,emp.name,iss.itemissueddate,gate.remarks as  statusremarks, * from wms.wms_gatepass gate
         ///   left join wms.wms_gatepassmaterial mat on gate.gatepassid=mat.gatepassid 
         ///   left join wms.employee emp on emp.employeeno=gate.requestedby
         ///   left join wms.wms_materialissue iss on iss.gatepassmaterialid = mat.gatepassmaterialid 
         ///   left join wms.&quot;MaterialMasterYGS&quot; ygs on ygs.material=mat.materialid and mat.deleteflag=false 
-        ///   where gate.deleteflag=false   order by gate.gatepassid desc.
+        ///   where gate.deleteflag=false   order by gate.gatepassi [rest of string was truncated]&quot;;.
         /// </summary>
         public static string getgatepasslist {
             get {
@@ -628,12 +628,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select mat.quantity as quantity,sum(req.requestedquantity)as requestedquantity,sum(res.reservedqty)as reservedqty,matiss.issuedqty as qtyissued,sec.grnnumber,openpo.material as materialid,
-        ///    max(sk.availableqty) as qtyavailable,max(sk.totalquantity ) as qtytotal
-        ///    from wms.wms_stock sk
-        ///      left  join wms.wms_materialissue matiss on matiss.itemid=sk.itemid
-        ///      left join wms.wms_materialreserve res on res.itemid=sk.itemid
-        ///      left join wms.wms_securityinward sec on sec.inwmasterid=sk.inwmasteri [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to select mat.quantity as quantity,sum(req.requestedquantity)as requestedquantity,sum(res.reservedqty)as reservedqty,matiss.issuedqty as qtyissued,sec.grnnumber,openpo.material as materialid, (select sum(availableqty) from wms.wms_stock ws where materialid =sk.materialid) as qtyavailable,max(sk.totalquantity ) as qtytotal from wms.wms_stock sk left  join wms.wms_materialissue matiss on matiss.itemid=sk.itemid left join wms.wms_materialreserve res on res.itemid=sk.itemid left join wms.wms_securityinward sec on  [rest of string was truncated]&quot;;.
         /// </summary>
         public static string getMaterialDetails {
             get {
@@ -1564,7 +1559,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to update wms.wms_gatepass set approverstatus=@approverstatus,approverremarks=@approverremarks,approvedon=@approvedon where gatepassid=#gatepassid.
+        ///   Looks up a localized string similar to update wms.wms_gatepass set  status=@status, approverstatus=@approverstatus,approverremarks=@approverremarks,approvedon=@approvedon where gatepassid=#gatepassid.
         /// </summary>
         public static string updategatepassapproverstatus {
             get {

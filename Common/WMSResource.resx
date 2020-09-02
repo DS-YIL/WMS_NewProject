@@ -275,7 +275,7 @@ inner join wms.wms_polist openpo on inw.pono=openpo.pono
 where  inw.invoiceno='#invoiceno' and openpo.pono='#pono' group by grnnumber</value>
   </data>
   <data name="getgatepasslist" xml:space="preserve">
-    <value>select ygs.materialdescription,emp.name,iss.itemissueddate, * from wms.wms_gatepass gate
+    <value>select ygs.materialdescription,emp.name,iss.itemissueddate,gate.remarks as  statusremarks, * from wms.wms_gatepass gate
    left join wms.wms_gatepassmaterial mat on gate.gatepassid=mat.gatepassid 
    left join wms.employee emp on emp.employeeno=gate.requestedby
    left join wms.wms_materialissue iss on iss.gatepassmaterialid = mat.gatepassmaterialid 
@@ -316,7 +316,7 @@ values(default,@gatepassid,@materialid,@quantity,@deleteflag,@remarks,@materialc
            where pass.gatepassid=#gatepassid and pass.deleteflag=false and material.deleteflag=false</value>
   </data>
   <data name="updategatepassapproverstatus" xml:space="preserve">
-    <value>update wms.wms_gatepass set approverstatus=@approverstatus,approverremarks=@approverremarks,approvedon=@approvedon where gatepassid=#gatepassid</value>
+    <value>update wms.wms_gatepass set  status=@status, approverstatus=@approverstatus,approverremarks=@approverremarks,approvedon=@approvedon where gatepassid=#gatepassid</value>
   </data>
   <data name="checkreprintalreadydone" xml:space="preserve">
     <value>select * from wms.wms_reprinthistory where </value>
@@ -454,19 +454,7 @@ where sec.grnnumber ='#grn' and sk.materialid ='#materialid' and sk.availableqty
     <comment>get location details for material</comment>
   </data>
   <data name="getMaterialDetails" xml:space="preserve">
-    <value>select mat.quantity as quantity,sum(req.requestedquantity)as requestedquantity,sum(res.reservedqty)as reservedqty,matiss.issuedqty as qtyissued,sec.grnnumber,openpo.material as materialid,
-    max(sk.availableqty) as qtyavailable,max(sk.totalquantity ) as qtytotal
-    from wms.wms_stock sk
-      left  join wms.wms_materialissue matiss on matiss.itemid=sk.itemid
-      left join wms.wms_materialreserve res on res.itemid=sk.itemid
-      left join wms.wms_securityinward sec on sec.inwmasterid=sk.inwmasterid
-      left  join wms.openpolistview openpo on sec.pono = openpo.pono
-      left join wms.wms_materialrequest req on req.pono=sk.pono
-      left join wms.wms_gatepassmaterial mat on mat.materialid=sk.materialid
-      where  --matiss.issuedqty is not null  and                       
-      sec.grnnumber='#grn'
-      group by sec.grnnumber,openpo.material,matiss.issuedqty,mat.quantity,
-      sk.inwmasterid</value>
+    <value>select mat.quantity as quantity,sum(req.requestedquantity)as requestedquantity,sum(res.reservedqty)as reservedqty,matiss.issuedqty as qtyissued,sec.grnnumber,openpo.material as materialid, (select sum(availableqty) from wms.wms_stock ws where materialid =sk.materialid) as qtyavailable,max(sk.totalquantity ) as qtytotal from wms.wms_stock sk left  join wms.wms_materialissue matiss on matiss.itemid=sk.itemid left join wms.wms_materialreserve res on res.itemid=sk.itemid left join wms.wms_securityinward sec on sec.inwmasterid=sk.inwmasterid left  join wms.openpolistview openpo on sec.pono = openpo.pono left join wms.wms_materialrequest req on req.pono=sk.pono left join wms.wms_gatepassmaterial mat on mat.materialid=sk.materialid where  --matiss.issuedqty is not null  and sec.grnnumber='#grn' group by sec.grnnumber,openpo.material,matiss.issuedqty,mat.quantity,sk.inwmasterid</value>
     <comment>get material details based on grn number</comment>
   </data>
   <data name="getMaterialRequestDetails" xml:space="preserve">

@@ -2645,8 +2645,9 @@ namespace WMS.DAL
 
 						});
 					}
-					int qty = gatemodel.availableqty - item.issuedqty;
-					string updatestockavailable = WMSResource.updatestockavailable.Replace("#availableqty", Convert.ToString(qty)).Replace("#itemid", Convert.ToString(item.itemid));
+					//int qty = gatemodel.availableqty - item.issuedqty;
+					//string updatestockavailable = WMSResource.updatestockavailable.Replace("#availableqty", Convert.ToString(qty)).Replace("#itemid", Convert.ToString(item.itemid));
+					string updatestockavailable = WMSResource.updateqtyafterissue.Replace("#itemid", Convert.ToString(item.itemid)).Replace("#issuedqty", Convert.ToString(item.issuedqty));
 					using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
 					{
 						var result = DB.Execute(updatestockavailable, new
@@ -2658,12 +2659,14 @@ namespace WMS.DAL
 
 				}
 				model[0].approvedon = System.DateTime.Now;
+				model[0].status = "Issued";
 				string insertquery = WMSResource.updategatepassapproverstatus.Replace("#gatepassid", Convert.ToString(model[0].gatepassid));
 				using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
 				{
 					var data = DB.Execute(insertquery, new
 
 					{
+						model[0].status,
 						model[0].approverremarks,
 						model[0].approverstatus,
 						model[0].approvedon,

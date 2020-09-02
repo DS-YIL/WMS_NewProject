@@ -44,7 +44,7 @@
           <div *ngIf="employee.roleid=='3'">
             <div class="form-inline">
               <label class="labelheading">Status :</label>&nbsp;&nbsp;
-              <select placeholder="Status" name="Status" (change)="onSelectStatus($event)" class="form-control">
+              <select placeholder="Status" name="Status" (change)="onSelectStatus()" [(ngModel)]="selectedStatus" class="form-control">
                 <option selected value="Pending"> Pending</option>
                 <option value="Issued"> Issued</option>
               </select>
@@ -130,10 +130,10 @@
               <!--<td class="ptable-cell" style="text-align:center">{{rowData.vehicleno}}</td>-->
               <td class="ptable-cell" style="text-align:left">{{rowData.reasonforgatepass}}</td>
               <td class="ptable-cell" style="text-align:left">
-                <span *ngIf="rowData.approverstatus && rowData.print==true && selectedStatus!='Issued'">{{rowData.approverstatus}}</span>
-                <span *ngIf="rowData.approverstatus && rowData.print==true && selectedStatus=='Issued'">Issued</span>
                 <span *ngIf="!rowData.approverstatus">Pending for Approval</span>
-                <span *ngIf="rowData.approverstatus=='Approved' && rowData.print==false && rowData.itemissueddate!=null" style="color:red">{{rowData.status}}</span>
+                <span *ngIf="rowData.approverstatus && selectedStatus!='Issued'">{{rowData.approverstatus}}</span>
+                <!--<span *ngIf="rowData.approverstatus && selectedStatus=='Issued'">Issued</span>-->
+                <span *ngIf="rowData.approverstatus=='Approved' && selectedStatus=='Issued'" style="color:red">{{rowData.status}}</span>
                 <!--<span *ngIf="rowData.approverstatus=='Approved' && rowData.print==false && rowData.returneddate!=null" style="color:red">Full Closure</span>-->
               </td>
 
@@ -487,7 +487,7 @@
               </select>
             </div>
             <div class="col-sm-5 col-lg-5 col-sm-5 ">
-              <input type="text" [(ngModel)]="gatepassModel.statusremarks" placeholder="remarks" style="width: 100%;" />
+              <input type="text" [(ngModel)]="gatepassModel.statusremarks" placeholder="Remarks" style="width: 100%;" />
             </div>
             <div class="col-sm-2 col-lg-2 col-sm-2">
               <button type="button" pButton icon="fa fa-close" (click)="onSubmitgatepassDetails()" label="Submit"></button>
