@@ -833,7 +833,7 @@ where ts.createdby='#createdby'</value>
     <value>insert into wms.wms_stock(itemid,materialid,itemlocation,availableqty,createddate,createdby,returnid)values(default,@materialid,@itemlocation,@availableqty,current_timestamp,@createdby,@returnid)</value>
   </data>
   <data name="getqualitycheckdropdown" xml:space="preserve">
-    <value>select distinct grnnumber as value,pono as text,supplier,receiveddate from 
+    <value>select distinct grnnumber as value,pono as text,supplier,receiveddate::date from 
 (select stinw.inwardid,stinw.inwmasterid,stinw.materialid as material,
  secinw.grnnumber,secinw.onhold,mat.materialdescription,stinw.receivedqty,
  stinw.receiveddate,stinw.returnqty,qc.qualitypassedqty,qc.qualityfailedqty,
@@ -843,7 +843,7 @@ secinw.pono,(select suppliername from wms.wms_polist where pono = secinw.pono li
   left outer join wms.wms_securityinward secinw on secinw.inwmasterid=stinw.inwmasterid
   left outer join wms."MaterialMasterYGS" mat on mat.material = stinw.materialid
   left outer join wms.wms_qualitycheck qc on qc.inwardid=stinw.inwardid
-  where stinw.qualitycheckrequired = True and secinw.onhold is NOT True and qc.qcby is null  order by stinw.inwardid DESC) as grn order by receiveddate desc</value>
+  where stinw.qualitycheckrequired = True and secinw.onhold is NOT True and qc.qcby is null  order by stinw.inwardid DESC) as grn order by receiveddate::date desc</value>
   </data>
   <data name="getHoldGRdetail" xml:space="preserve">
     <value>select sinw.inwmasterid,sinw.invoiceno,sinw.pono,sinw.onhold,sinw.onholdremarks,
@@ -936,7 +936,7 @@ where rm.matreturnid=@matreid</value>
     <value>select matreturnid from wms.wms_returnmaterial order by matreturnid desc limit 1</value>
   </data>
   <data name="getqcdropdownbydate" xml:space="preserve">
-    <value>select distinct grnnumber as value,pono as text,supplier,receiveddate from 
+    <value>select distinct grnnumber as value,pono as text,supplier,receiveddate::date from 
 (select stinw.inwardid,stinw.inwmasterid,stinw.materialid as material,
  secinw.grnnumber,secinw.onhold,mat.materialdescription,stinw.receivedqty,
  stinw.receiveddate,stinw.returnqty,qc.qualitypassedqty,qc.qualityfailedqty,
@@ -948,7 +948,7 @@ secinw.pono,(select suppliername from wms.wms_polist where pono = secinw.pono li
   left outer join wms.wms_qualitycheck qc on qc.inwardid=stinw.inwardid
   where stinw.qualitycheckrequired = True and secinw.onhold is NOT True and qc.qcby is null 
   and stinw.receiveddate &gt;= '#fromdt' and stinw.receiveddate &lt;= '#todate'
-  order by stinw.inwardid DESC) as grn order by receiveddate desc</value>
+  order by stinw.inwardid DESC) as grn order by receiveddate::date desc</value>
   </data>
   <data name="deletetestcurd" xml:space="preserve">
     <value>delete from wms.testcrud where id = #id</value>

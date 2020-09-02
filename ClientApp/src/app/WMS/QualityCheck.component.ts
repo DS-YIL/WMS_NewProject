@@ -156,7 +156,7 @@ export class QualityCheckComponent implements OnInit {
         this.fromdateview1 = this.datePipe.transform(this.checkedgrnlistqc[len - 1].receiveddate, 'yyyy-MM-dd');
         this.fromdateview1 += " 00:00:00";
         this.todateview1 = this.datePipe.transform(this.checkedgrnlistqc[0].receiveddate, 'yyyy-MM-dd');
-        this.todateview1 += " 11:59:59";
+        this.todateview1 += " 23:59:59";
       }
       this.spinner.hide();
     });
