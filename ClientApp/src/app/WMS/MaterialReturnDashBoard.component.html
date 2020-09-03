@@ -134,7 +134,7 @@
             <th style="text-align:center;width:150px">Issued Qty</th>-->
             <th rowspan="2" style="text-align:center;width:150px">Return Qty</th>
             <!--<th style="text-align:center;width:150px">Item Loaction</th>-->
-            <th colspan="2" style="width:250px; text-align: center">Put Away</th>
+            <th colspan="2" style="width:300px; text-align: center">Put Away</th>
           </tr>
           <tr>
             <th style="width:150px; text-align: center">Qty</th>
@@ -144,20 +144,14 @@
         </ng-template>
         <ng-template pTemplate="body" let-rowData let-expanded="expanded" let-rowIndex="rowIndex" let-columns="columns">
           <tr class="ui-widget-header" *ngIf="rowGroupMetadata[rowData.materialid].index === rowIndex">
-            <td class="ptable-cell" style="text-align:center">
+            <td class="ptable-cell" style="text-align:center;width:70px">
               {{rowIndex+1}}
             </td>
-            <td class="ptable-cell" style="    text-align: left;
-    width: 300px;">
+            <td class="ptable-cell" style="text-align: left; width: 300px;">
               {{rowData.materialid}}
             </td>
-            <!--<td class="ptable-cell" style="text-align:right">{{rowData.requestedquantity}}</td>
-            <td class="ptable-cell" style="text-align:right">
-              {{rowData.issuedqty}}
 
-            </td>-->
-
-            <td class="ptable-cell" style="text-align:right">{{rowData.returnqty}}</td>
+            <td class="ptable-cell" style="text-align:right;width:150px">{{rowData.returnqty}}</td>
             <!--<td>
               <select class="form-control dropdown" #mySelect (change)="onChange(mySelect.value,ri)">
                 lu
@@ -171,7 +165,7 @@
               <br />
 
             </td>-->
-            <td colspan="2" class="ptable-cell" style="text-align:center;width:100px;">
+            <td colspan="2" class="ptable-cell" style="text-align:center;width:300px;">
               <a *ngIf="rowData.itemlocation" href="#" [pRowToggler]="rowData">
                 <i [ngClass]="expanded ? 'pi pi-fw pi-chevron-circle-down' : 'pi pi-fw pi-chevron-circle-right'" style="    vertical-align: middle;padding-bottom: .1em;color: #20f320d6"></i>
               </a>
@@ -224,14 +218,14 @@
           <tr>
             <td colspan="3"></td>
 
-            <td style="text-align:right;width:70px">
+            <td style="text-align:right;width:120px">
               {{rowData.availableqty}}
             </td>
             <td style="width:180px">
               {{rowData.itemlocation}}
             </td>
           </tr>
-          at
+        
         </ng-template>
       </p-table>
       
