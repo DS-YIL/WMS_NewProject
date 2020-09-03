@@ -31,6 +31,7 @@ export class GatePassApproverComponent implements OnInit {
   public btnDisable: boolean = false;
   public btnDisableissue: boolean = false;
   public itemlocationData: Array<any> = [];
+  public issueFinalList: Array<any> = [];
   public itemissuedloc: Array<any> = [];
   public Oldestdata: FIFOValues;
   public FIFOvalues: FIFOValues;
@@ -94,7 +95,7 @@ export class GatePassApproverComponent implements OnInit {
     //this.materialList.forEach(item => {
     //  item.pono = this.gatepassModel.pono;
     //})
-    this.wmsService.updategatepassapproverstatus(this.materialList).subscribe(data => {
+    this.wmsService.updategatepassapproverstatus(this.issueFinalList).subscribe(data => {
       //this.materialList = data;
       this.btnDisableissue = true;
       this.gatepassModel.status = "Approved";
@@ -121,6 +122,7 @@ export class GatePassApproverComponent implements OnInit {
   //shows list of items for particular material
   showmateriallocationList(material,description, id, rowindex, qty,issuedqty,location,issuedDate) {
     debugger;
+    this.itemissuedloc = [];
     this.reqqty = qty;
     this.id = id;
     this.material = material;
@@ -169,7 +171,7 @@ export class GatePassApproverComponent implements OnInit {
   checkissueqty($event, entredvalue, maxvalue, material, createddate, index) {
     var id = $event.target.id;
     if (entredvalue > maxvalue) {
-      this.itemlocationData[index].issuedquantity = 0;
+      this.itemlocationData[index].issuedqty = 0;
       this.messageService.add({ severity: 'error', summary: '', detail: 'Please enter issue quantity less than Available quantity' });
       // this.btnDisableformaterial = true;
       (<HTMLInputElement>document.getElementById(id)).value = "0";
@@ -196,9 +198,22 @@ export class GatePassApproverComponent implements OnInit {
     debugger;
     var totalissuedqty = 0;
     this.itemlocationData.forEach(item => {
-      if (item.issuedquantity != "0")
-
-        totalissuedqty = totalissuedqty + (item.issuedquantity);
+      if (item.issuedqty) {
+        //if (item.issuedquantity != "0")
+        item.requestforissueid = this.materialList[this.roindex].requestforissueid;
+        item.itemreturnable = this.materialList[this.roindex].itemreturnable;
+        item.approvedby = this.employee.employeeno;
+        item.itemreceiverid = this.materialList[this.roindex].itemreceiverid;
+        item.gatepassid = this.materialList[this.roindex].gatepassid;
+        item.gatepassmaterialid = this.materialList[this.roindex].gatepassmaterialid;
+        item.gatepasstype = this.materialList[this.roindex].gatepasstype;     
+        item.approverstatus = this.materialList[this.roindex].approverstatus;
+        item.approverremarks = this.materialList[this.roindex].approverremarks;
+        item.itemreceiverid = this.materialList[this.roindex].itemreceiverid;
+        totalissuedqty = totalissuedqty + (item.issuedqty);
+        this.issueFinalList.push(item);
+      }
+        //totalissuedqty = totalissuedqty + (item.issuedquantity);
       //this.FIFOvalues.issueqty = totalissuedqty;
       //item.issuedqty = totalissuedqty;
 
@@ -216,6 +231,7 @@ export class GatePassApproverComponent implements OnInit {
       this.txtDisable = true;
 
       this.AddDialog = false;
+      
     }
 
   }

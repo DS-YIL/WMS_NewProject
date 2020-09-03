@@ -43,7 +43,7 @@ export class MaterialIssueComponent implements OnInit {
   public showdialog: boolean = false;
   public txtDisable: boolean = true;
   public FIFOvalues: FIFOValues;
-  public reqqty: number;
+  public reqqty; reservedQty: number;
   public btndisable: boolean = false;
   public issueqtyenable: boolean = true;
   ngOnInit() {
@@ -62,6 +62,7 @@ export class MaterialIssueComponent implements OnInit {
     });
 
     this.FIFOvalues = new FIFOValues();
+    this.spinner.show();
     this.getmaterialIssueListbyrequestid();
 
   }
@@ -99,7 +100,7 @@ export class MaterialIssueComponent implements OnInit {
   }
 
   //shows list of items for particular material
-  showmateriallocationList(material, id, rowindex, qty, issuedqty) {
+  showmateriallocationList(material, id, rowindex, qty, issuedqty, reservedqty) {
     if (issuedqty <= qty) {
       this.issueqtyenable = true;
     }
@@ -107,6 +108,7 @@ export class MaterialIssueComponent implements OnInit {
       this.issueqtyenable = false;
     }
     this.reqqty = qty;
+    this.reservedQty = reservedqty;
     this.id = id;
     this.AddDialog = true;
     this.roindex = rowindex;
@@ -160,6 +162,7 @@ export class MaterialIssueComponent implements OnInit {
   }
   getmaterialIssueListbyrequestid() {
     this.wmsService.getmaterialIssueListbyrequestid(this.requestId, this.pono).subscribe(data => {
+      this.spinner.hide();
       this.materialissueList = data;
 
       if (this.materialissueList.length != 0)

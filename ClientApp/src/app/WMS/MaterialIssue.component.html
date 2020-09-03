@@ -10,7 +10,7 @@
     <div *ngIf="showavailableqtyList">
       <div class="row  pl-0">
         <div class="col-lg-3 col-md-3 col-sm-3 pt-2 labelheading">
-          <label>Request Id :</label>&nbsp;<span><label class="labeltext">{{materialissueList[0].requestid}}</label></span>
+          <label>Request Id :</label>&nbsp;<span><label class="labeltext">MATRQ{{materialissueList[0].requestid}}</label></span>
         </div>
         <!--<div class="col-lg-6 col-md-6 col-sm-6 pt-2 labelheading">
           <label>Project Name :</label>&nbsp;<span><label *ngIf="materialissueList[0].projectname" class="labeltext">{{materialissueList[0].projectname}}</label></span>
@@ -46,6 +46,7 @@
           <th style="text-align:center;width:200px;">Material</th>
           <th style="text-align:center">Request Quantity</th>
           <th style="text-align:center">Available Quantity</th>
+          <th style="text-align:center">Reserved Quantity</th>
           <th style="text-align:center">Issue Quantity</th>
         </tr>
         <tr>
@@ -54,6 +55,7 @@
           <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'material', 'contains')"></th>
           <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'requestedquantity', 'contains')"></th>
           <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'quantity', 'contains')"></th>
+          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'reservedqty', 'contains')"></th>
           <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'issuedqty', 'contains')"></th>
         </tr>
       </ng-template>
@@ -63,9 +65,10 @@
             {{ri+1}}
           </td>
           <!--<td class="ptable-cell" style="text-align:center">{{rowData.pono}}</td>-->
-          <td class="ptable-cell" style="text-align:left;width:200px;"><button type="button" class="btn btn-link" (click)="showmateriallocationList(rowData.materialid,ri+1,ri,rowData.requestedquantity,rowData.issuedqty);" style="padding-left:0px;">{{rowData.materialid}}</button></td>
+          <td class="ptable-cell" style="text-align:left;width:200px;"><button type="button" class="btn btn-link" (click)="showmateriallocationList(rowData.materialid,ri+1,ri,rowData.requestedquantity,rowData.issuedqty,rowData.reservedqty);" style="padding-left:0px;">{{rowData.materialid}}</button></td>
           <td class="ptable-cell" style="text-align:right">{{rowData.requestedquantity}}</td>
           <td class="ptable-cell" style="text-align:right">{{rowData.availableqty}}</td>
+          <td class="ptable-cell" style="text-align:right">{{rowData.reservedqty}}</td>
           <td class="ptable-cell">
             <input id={{ri+1}} pInputText type="number" style="text-align:center" class="form-control" [disabled]="txtDisable" [(ngModel)]="rowData.issuedqty">
           </td>
@@ -85,13 +88,16 @@
 <div style="height: 5px; overflow-y: scroll">
 
   <p-dialog header="Item Location" [(visible)]="AddDialog" [contentStyle]="{'overflow-y': 'scroll', 'overflow-x': 'hidden', 'max-height': '350px','min-height':'350px'}" showEffect="fade" [modal]="true" [responsive]="true" [style]="{width: '1024px'}">
-    <div *ngIf="showdialog">
+    <div *ngIf="showdialog && itemlocationData">
       <div class="row  pl-0">
         <div class="col-lg-4 col-md-4 col-sm-4 pt-2 labelheading">
           <label>Material Id :</label>&nbsp;<span><label class="labeltext">{{itemlocationData[0].material}}</label></span>
         </div>
-        <div class="col-lg-6 col-md-6 col-sm-6 pt-2 labelheading">
+        <div class="col-lg-4 col-md-4 col-sm-4 pt-2 labelheading">
           <label>Material desc :</label>&nbsp;<span><label class="labeltext">{{itemlocationData[0].materialdescription}}</label></span>
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-2 pt-2 labelheading">
+          <label>Reserved qty :</label>&nbsp;<span><label class="labeltext">{{reservedQty}}</label></span>
         </div>
         <div class="col-lg-2 col-md-2 col-sm-2 pt-2 labelheading">
           <label>Requested qty :</label>&nbsp;<span><label class="labeltext">{{reqqty}}</label></span>

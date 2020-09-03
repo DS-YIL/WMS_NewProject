@@ -399,7 +399,8 @@ public bool onhold { get; set; }
 		public int defaultbin { get; set; }
 
 		public int reserveid { get; set; }
-
+		public int reservedqty { get; set; }
+		
 
 	}
 

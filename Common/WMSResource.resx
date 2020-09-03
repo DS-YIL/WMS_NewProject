@@ -128,13 +128,13 @@
   </data>
   <data name="GetdetailsByrequestidWithPO" xml:space="preserve">
     <value>select iss.issuedqty as issuedqty,max(iss.approvedstatus) as approvedstatus,max(pro.projectname)as projectname,max(req.requestforissueid)as requestforissueid,max(emp."name")as name,req.requesteddate,sk.materialid,max(sk.pono)as pono,
-req.requestedquantity,(select sum(availableqty) from wms.wms_stock ws where materialid =sk.materialid ) as availableqty,req.requestid 
+req.requestedquantity,(select sum(availableqty) from wms.wms_stock ws where materialid =sk.materialid ) as availableqty,(select sum(reservedqty) from wms.wms_materialreserve wm where wm.materialid =sk.materialid ) as reservedqty,req.requestid 
 from wms.wms_stock sk 
        inner join wms.wms_materialrequest req on req.materialid=sk.materialid
       left join wms.wms_materialissue iss  on iss.requestforissueid=req.requestforissueid
       inner join wms.employee emp on emp.employeeno=req.requesterid
       left join wms.wms_project pro on pro.pono=sk.pono
- where requestid=#requestid and req.deleteflag=false and sk.availableqty!=0 and sk.pono='#pono'
+ where requestid=#requestid and req.deleteflag=false  and sk.pono='#pono'
  group by  iss.issuedqty, req.requestforissueid,sk.materialid--,sk.pono,req.requestedquantity,sk.availableqty,req.requestid,emp."name",req.requesteddate,pro.jobname</value>
   </data>
   <data name="GetListForMaterialRequestByapproverid" xml:space="preserve">
@@ -980,13 +980,13 @@ where boolinuse = True</value>
   </data>
   <data name="GetdetailsByrequestidWithoutPO" xml:space="preserve">
     <value>select iss.issuedqty as issuedqty,max(iss.approvedstatus) as approvedstatus,max(pro.projectname)as projectname,max(req.requestforissueid)as requestforissueid,max(emp."name")as name,req.requesteddate,sk.materialid,
-req.requestedquantity,(select sum(availableqty) from wms.wms_stock ws where materialid =sk.materialid ) as availableqty,req.requestid 
+req.requestedquantity,(select sum(availableqty) from wms.wms_stock ws where materialid =sk.materialid ) as availableqty,(select sum(reservedqty) from wms.wms_materialreserve wm where wm.materialid =sk.materialid ) as reservedqty,req.requestid 
 from wms.wms_stock sk 
        inner join wms.wms_materialrequest req on req.materialid=sk.materialid
       left join wms.wms_materialissue iss  on iss.requestforissueid=req.requestforissueid
       inner join wms.employee emp on emp.employeeno=req.requesterid
       left join wms.wms_project pro on pro.pono=sk.pono
- where requestid=#requestid and req.deleteflag=false and sk.availableqty!=0 
+ where requestid=#requestid and req.deleteflag=false  
  group by  iss.issuedqty, req.requestforissueid,sk.materialid</value>
   </data>
   <data name="getnotifiedgrbydate" xml:space="preserve">

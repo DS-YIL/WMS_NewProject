@@ -266,10 +266,9 @@ namespace WMS.Common {
         
         /// <summary>
         ///   Looks up a localized string similar to select iss.issuedqty as issuedqty,max(iss.approvedstatus) as approvedstatus,max(pro.projectname)as projectname,max(req.requestforissueid)as requestforissueid,max(emp.&quot;name&quot;)as name,req.requesteddate,sk.materialid,
-        ///req.requestedquantity,(select sum(availableqty) from wms.wms_stock ws where materialid =sk.materialid ) as availableqty,req.requestid 
+        ///req.requestedquantity,(select sum(availableqty) from wms.wms_stock ws where materialid =sk.materialid ) as availableqty,(select sum(reservedqty) from wms.wms_materialreserve wm where wm.materialid =sk.materialid ) as reservedqty,req.requestid 
         ///from wms.wms_stock sk 
-        ///       inner join wms.wms_materialrequest req on req.materialid=sk.materialid
-        ///      left join wms.wms_materialissue iss  on iss.requestf [rest of string was truncated]&quot;;.
+        ///       inner join wms.wms_ma [rest of string was truncated]&quot;;.
         /// </summary>
         public static string GetdetailsByrequestidWithoutPO {
             get {
@@ -279,10 +278,9 @@ namespace WMS.Common {
         
         /// <summary>
         ///   Looks up a localized string similar to select iss.issuedqty as issuedqty,max(iss.approvedstatus) as approvedstatus,max(pro.projectname)as projectname,max(req.requestforissueid)as requestforissueid,max(emp.&quot;name&quot;)as name,req.requesteddate,sk.materialid,max(sk.pono)as pono,
-        ///req.requestedquantity,(select sum(availableqty) from wms.wms_stock ws where materialid =sk.materialid ) as availableqty,req.requestid 
+        ///req.requestedquantity,(select sum(availableqty) from wms.wms_stock ws where materialid =sk.materialid ) as availableqty,(select sum(reservedqty) from wms.wms_materialreserve wm where wm.materialid =sk.materialid ) as reservedqty,req.requestid 
         ///from wms.wms_stock sk 
-        ///       inner join wms.wms_materialrequest req on req.materialid=sk.materialid
-        ///      left join wms.wms_materialissue  [rest of string was truncated]&quot;;.
+        ///       i [rest of string was truncated]&quot;;.
         /// </summary>
         public static string GetdetailsByrequestidWithPO {
             get {

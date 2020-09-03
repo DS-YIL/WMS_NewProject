@@ -70,7 +70,7 @@
               <td class="ptable-cell" style="text-align:center;width:70px;">
                 {{ri+1}}
               </td>
-              <td class="ptable-cell" style="text-align:center;width:100px;"><button *ngIf="rowData.requestid" class="btn btn-link" (click)="navigateToMatIssue(rowData)">{{rowData.requestid}}</button></td>
+              <td class="ptable-cell" style="text-align:center;width:100px;"><button *ngIf="rowData.requestid" class="btn btn-link" (click)="navigateToMatIssue(rowData)">MATRQ{{rowData.requestid}}</button></td>
               <!--<td class="ptable-cell" style="text-align:left;">{{rowData.projectname}}</td>-->
               <td class="ptable-cell" style="text-align:center;width:150px;">{{rowData.requesteddate  | date :  constants.dateFormat}}</td>
               <td class="ptable-cell" style="text-align:left;width:150px;">{{rowData.name}}</td>

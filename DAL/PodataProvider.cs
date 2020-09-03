@@ -2608,7 +2608,7 @@ namespace WMS.DAL
 						gatemodel = pgsql.QueryFirstOrDefault<gatepassModel>(
 						  query, null, commandType: CommandType.Text);
 					}
-					item.itemid = gatemodel.itemid;
+					//item.itemid = gatemodel.itemid;
 					string updateapproverstatus = WMSResource.updategatepassmaterialissue;
 					string approvedstatus = item.approverstatus;
 					item.itemissueddate = System.DateTime.Now;
@@ -4364,7 +4364,6 @@ namespace WMS.DAL
 			}
 			try
 			{
-
 				var result = 0;
 				foreach (var item in datamodel)
 				{
@@ -4377,81 +4376,71 @@ namespace WMS.DAL
 						item.reservedby = item.requesterid;
 
 						string insertquery = WMSResource.insertreservematerial;
-						//string itemnoquery = WMSResource.getitemiddata.Replace("#materialid", item.material);
-						//if (item.pono != null)
-						//{
-						//	itemnoquery = itemnoquery + "and pono='" + item.pono + "'";
-						//}
+						string itemnoquery = WMSResource.getitemiddata.Replace("#materialid", item.material);
+						if (item.pono != null)
+						{
+							itemnoquery = itemnoquery + "and pono='" + item.pono + "'";
+						}
 						using (var DB = new NpgsqlConnection(config.PostgresConnectionString))
 						{
 
-							//	//DB.Open();
-							//	await DB.OpenAsync();
-							//	var itemData = await DB.QueryAsync<StockModel>(
-							//  itemnoquery, null, commandType: CommandType.Text);
-							//	int remainingqty = item.quantity;
-							//	itemData = itemData.OrderBy(o => o.createddate);
-
-							//	foreach (StockModel data in itemData)
-							//	{
-							//if (item.pono == null)
-							//{
-							//	item.pono = data.pono;
-							//}
-							//if (data.availableqty >= remainingqty)
-							//{
-							//item.itemid = data.itemid;
-
-							result = DB.Execute(insertquery, new
+							DB.Open();
+							//await DB.OpenAsync();
+							var itemData = await DB.QueryAsync<StockModel>(
+						  itemnoquery, null, commandType: CommandType.Text);
+							int remainingqty = item.quantity;
+							itemData = itemData.OrderBy(o => o.createddate);
+							int reservedqty = item.reservedqty;
+							int Totalreservedqty = 0;
+							foreach (StockModel data in itemData)
 							{
-								item.materialid,
-								item.itemid,
-								item.pono,
-								item.reservedby,
-								item.reservedqty,
-								reserveid,
-								item.reserveupto
-							});
-							//break;
-							//}
-							//else
-							//{
-							//remainingqty = item.quantity - data.availableqty;
-							//item.itemid = data.itemid;
+								if (item.pono == null)
+								{
+									item.pono = data.pono;
+								}
+								if (reservedqty >= 0)
+								{
+									if (reservedqty <= data.availableqty)
+										reservedqty = reservedqty;
+									else
+										reservedqty = data.availableqty;
+									item.itemid = data.itemid;
 
-							//result = DB.Execute(insertquery, new
-							//{
-							//	item.materialid,
-							//	item.itemid,
-							//	item.pono,
-							//	item.reservedby,
-							//	item.reservedqty,
-							//	reserveid,
-							//	item.reserveupto
-							//});
-
-							//}
-
-							//if (result != 0)
-							//{
-							//	int availableqty = item.availableqty - item.reservedqty;
-							//	string updatequery = WMSResource.updatestock.Replace("#availableqty", Convert.ToString(availableqty)).Replace("#itemid", Convert.ToString(item.itemid));
-							//	using (IDbConnection pgsql = new NpgsqlConnection(config.PostgresConnectionString))
-							//	{
-							//		result = pgsql.Execute(updatequery, new
-							//		{
-							//		});
-							//	}
-							//}
-
-							//}
+									result = DB.Execute(insertquery, new
+									{
+										item.materialid,
+										item.itemid,
+										item.pono,
+										item.reservedby,
+										reservedqty,
+										reserveid,
+										item.reserveupto
+									});
 
 
+									//update stock table
+									if (result != 0)
+									{
+										//int availableqty = item.availableqty - reserveQty;
+										string updatequery = WMSResource.updateqtyafterissue.Replace("#itemid", Convert.ToString(item.itemid)).Replace("#issuedqty", Convert.ToString(reservedqty));
+										//WMSResource.updatestock.Replace("#availableqty", Convert.ToString(availableqty)).Replace("#itemid", Convert.ToString(item.itemid));
+										using (IDbConnection pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+										{
+											result = pgsql.Execute(updatequery, new
+											{
+											});
+										}
+										Totalreservedqty += reservedqty;
+										reservedqty = item.reservedqty - reservedqty;
+									}
+									//break;
 
+								}
+								if (Totalreservedqty >= item.reservedqty)
+									break;
+
+							}
 						}
-
-
-
 					}
 				}
 
@@ -4463,7 +4452,6 @@ namespace WMS.DAL
 				return 0;
 			}
 		}
-
 
 		public async Task<IEnumerable<ReserveMaterialModel>> GetReservedMaterialList(string reservedby)
 		{
