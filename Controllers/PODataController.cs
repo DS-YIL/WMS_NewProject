@@ -778,6 +778,12 @@ namespace WMS.Controllers
 			return await this._poService.getgrnlistforacceptanceqcbydate(fromdt, todt);
 		}
 
+		[HttpGet("getnotifedGRbydate")]
+		public async Task<IEnumerable<inwardModel>> getnotifiedgrbydate(string fromdt, string todt)
+		{
+			return await this._poService.getnotifiedgrbydate(fromdt, todt);
+		}
+
 		[HttpGet("getdepartment")]
 		public async Task<IEnumerable<ddlmodel>> getdepartmentdata()
 		{

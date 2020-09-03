@@ -455,6 +455,10 @@ export class wmsService {
     return this.http.get<inwardModel[]>(this.url + 'POData/getgrnforacceptancenotify?type='+ type, this.httpOptions);
   }
 
+  getnotifedGRbydate(fromdt: string, todt: string): Observable<inwardModel[]> {
+    return this.http.get<inwardModel[]>(this.url + 'POData/getnotifedGRbydate?fromdt=' + fromdt + '&todt=' + todt, this.httpOptions);
+  }
+
   getcheckedgrnlistforqc(): Observable<ddlmodel[]> {
     return this.http.get<ddlmodel[]>(this.url + 'POData/getgrnforacceptanceqc/', this.httpOptions);
   }

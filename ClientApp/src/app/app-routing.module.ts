@@ -54,6 +54,7 @@ import { MaterialReportComponent } from './WMS/MaterialReport.component';
 import { PutawayNotificationComponent } from './WMS/PutawayNotification.component';
 import { GatepassinwardViewComponent } from './WMS/GatepassinwardView.component';
 import { TestCompComponent } from './WMS/TestComp.component';
+import { PutawayNotificationViewComponent } from './WMS/PutawayNotificationView.component';
 const routes: Routes = [{
   path: 'WMS',
   children: [
@@ -122,7 +123,8 @@ const routes: Routes = [{
     { path: "MaterialReport", component: MaterialReportComponent, canActivate: [AuthGuard] },
     { path: "Putawaynotify", component: PutawayNotificationComponent, canActivate: [AuthGuard] },
     { path: "Gatepassinward", component: GatepassinwardViewComponent, canActivate: [AuthGuard] },
-    { path: "Test", component: TestCompComponent, canActivate: [AuthGuard] }
+    { path: "Test", component: TestCompComponent, canActivate: [AuthGuard] },
+    { path: "GRNotification", component: PutawayNotificationViewComponent, canActivate: [AuthGuard] }
     
   ]
 

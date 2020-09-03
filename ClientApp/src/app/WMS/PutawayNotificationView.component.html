@@ -1,0 +1,132 @@
+<div style="margin:10px;">
+  <div class="card" style="width:100%;border-radius:10px; box-shadow:5px 10px #888888;min-height:81vh">
+    <div class="card-header text-center commoncardheader">
+      <div class="row text-center" style="margin-top:10px">
+        <div class="col-lg-12 col-md-12 text-center">
+          <span style="color:#428bca;font-size:18px" class="commonheadertext">
+            <i class="fa fa-check-circle-o commonheadertext"></i>&nbsp;GR-Finance Process
+          </span>
+        </div>
+
+      </div>
+     
+    </div>
+    <div class="card-body" style="padding-top:5px;">
+      <div class="row" style="margin-bottom:5px;">
+        <div class="col-md-4 col-lg-4 pt-2 form-inline">
+          <label class="labelheading">From:&nbsp;</label>
+          <p-calendar [(ngModel)]="fromdateview" [style]="{'width':'100%'}" [inputStyle]="{'width':'80%'}" [inline]="false" (onSelect)="onfromSelectMethod($event)"
+                      placeholder="Select Date" dateFormat="dd/mm/yy"></p-calendar>
+          <!--Received From : {{fromdateview}}-->
+        </div>
+        <div class="col-md-4 col-lg-4 pt-2 form-inline">
+          <label class="labelheading">To:&nbsp;</label>
+          <p-calendar [(ngModel)]="todateview" [style]="{'width':'100%'}" [inputStyle]="{'width':'80%'}" [inline]="false" (onSelect)="ontoSelectMethod($event)"
+                      placeholder="Select Date" dateFormat="dd/mm/yy"></p-calendar>
+          <!--Received To : {{todateview}}-->
+        </div>
+
+      </div>
+      <p-table #dt [columns]="cols" [value]="checkedgrnlist">
+        <ng-template pTemplate="header">
+          <tr class="mprltbldata">
+            <th rowspan="2" style="width: 5%">Sl.No.</th>
+            <th rowspan="2" style="width:10%;text-align:center">PO No.</th>
+            <th rowspan="2" style="width:10%; text-align: center">Invoice No</th>
+            <th rowspan="2" style="width:13%;text-align:center">WMS GRN</th>
+            <th rowspan="2" style="text-align: center">Supplier Name</th>
+            <th rowspan="2" style="width:10%;text-align: center">Attachments</th>
+            <th rowspan="2" style="width:15%;text-align: center">Remarks</th>
+            <th rowspan="2" style="width:15%;text-align: center">Notified by</th>
+            <th rowspan="2" style="width:10%;text-align: center">Notified on</th>
+
+
+          </tr>
+
+          <!--<tr>
+        <th *ngIf="!issentdata"></th>
+        <th></th>
+        <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'pono', 'startsWith')"></th>
+        <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'invoiceno', 'startsWith')"></th>
+        <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'grnnumber', 'contains')"></th>
+        <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'vendorname', 'contains')"></th>
+        <th></th>
+        <th></th>
+        <th *ngIf="issentdata"></th>
+        <th *ngIf="issentdata"></th>
+        <th *ngIf="!issentdata"></th>
+      </tr>-->
+
+
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
+          <tr class="ui-widget-header">
+
+            <td class="ptable-cell" style="text-align:center;width:5%">{{rowIndex + 1}}</td>
+            <td class="ptable-cell" style="text-align:center;width:10%;">
+              {{rowData.pono}}
+            </td>
+            <td class="ptable-cell" style="text-align:center;width:10%;">
+              {{rowData.invoiceno}}
+            </td>
+            <td class="ptable-cell" style="text-align:center;width:13%;">{{rowData.grnnumber}}</td>
+            <td class="ptable-cell" style="text-align:left;">{{rowData.vendorname}}</td>
+            <td class="ptable-cell" style="text-align:center;width:10%;">
+              <button class="btn btn-primary btn-sm" (click)="showattachdata(rowData)"><i class="fa fa-paperclip"></i></button>
+            </td>
+            <td class="ptable-cell" style="text-align:left;width:15%;">
+              <label>{{rowData.notifyremarks}}</label>
+            </td>
+            <td class="ptable-cell" style="text-align:center;width:15%;">{{rowData.notifiedby}}</td>
+            <td class="ptable-cell" style="text-align:center;width:10%;">{{rowData.notifiedon | date : 'dd/MM/yyyy'}}</td>
+
+
+          </tr>
+          <tr *ngIf="rowData.showtrdata">
+            <td [attr.colspan]="9" style="text-align:left;">
+              <label class="labeltext"><i class="fa fa-paperclip"></i>Attachments</label>
+            </td>
+
+          </tr>
+          <tr *ngIf="rowData.showtrdata">
+            <td [attr.colspan]="9" style="text-align:left;">
+
+              <ul *ngIf="rowData.uploadedFiles.length">
+                <li *ngFor="let file of rowData.uploadedFiles" style="color:blue; font-weight: 600; cursor: pointer;" (click)="opendoc(file)"><u>{{file.split('_')[3]}}</u></li>
+              </ul>
+            </td>
+
+          </tr>
+
+        </ng-template>
+
+
+      </p-table>
+
+    </div>
+  </div>
+</div>
+
+
+ 
+   
+
+  
+    <p-dialog header="Image Viewer" [positionTop]="30" [(visible)]="displayimage" [baseZIndex]="10000">
+      <img src="{{docimage}}" style="max-height: 500px;">
+      <p-footer>
+        <button class="btn btn-danger" (click)="displayimage=false">Close</button>
+      </p-footer>
+    </p-dialog>
+
+
+
+
+
+
+
+
+
+
+
+

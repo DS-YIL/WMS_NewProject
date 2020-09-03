@@ -6095,6 +6095,53 @@ namespace WMS.DAL
 			}
 		}
 
+		public async Task<IEnumerable<inwardModel>> getnotifiedgrbydate(string fromdt, string todt)
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				try
+				{
+					string materialrequestquery = "";
+					
+				
+				    materialrequestquery = WMSResource.getnotifiedgrbydate.Replace("#fromdate",fromdt).Replace("#todate",todt);
+					List<inwardModel> returnlist = new List<inwardModel>();
+					await pgsql.OpenAsync();
+					var data = await pgsql.QueryAsync<inwardModel>(
+					  materialrequestquery, null, commandType: CommandType.Text);
+
+
+
+
+					foreach (inwardModel ddl in data)
+					{
+						string validatequery = WMSResource.validategrnlistfornotify.Replace("#inwmasterid", ddl.inwmasterid.ToString());
+						var datax = await pgsql.QueryAsync<ddlmodel>(
+									validatequery, null, commandType: CommandType.Text);
+						if (datax == null || datax.Count() == 0)
+						{
+							returnlist.Add(ddl);
+						}
+
+
+					}
+					return returnlist.OrderByDescending(o => o.inwmasterid);
+
+
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "getnotifiedgrbydate", Ex.StackTrace.ToString());
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+			}
+		}
+
 
 		public async Task<IEnumerable<ddlmodel>> pendingreceiptslist()
 		{

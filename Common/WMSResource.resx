@@ -989,4 +989,14 @@ from wms.wms_stock sk
  where requestid=#requestid and req.deleteflag=false and sk.availableqty!=0 
  group by  iss.issuedqty, req.requestforissueid,sk.materialid</value>
   </data>
+  <data name="getnotifiedgrbydate" xml:space="preserve">
+    <value>select stk.inwmasterid,sinw.grnnumber,sinw.pono,sinw.invoiceno,(select suppliername from wms.wms_polist where pono = Max(sinw.pono) limit 1) as vendorname,
+Max(sinw.notifyremarks) as notifyremarks,Max(emp.name) as notifiedby,sinw.notifiedtofinance,Max(sinw.notifiedon) as notifiedon,Max(sinw.putawayfilename) as putawayfilename
+from wms.wms_stock stk
+left outer join wms.wms_securityinward sinw on stk.inwmasterid = sinw.inwmasterid 
+left outer join wms.employee emp on emp.employeeno=sinw.notifiedby
+where stk.inwmasterid is not NULL and sinw.notifiedtofinance is True
+and sinw.notifiedon :: date &gt;= '#fromdate' and sinw.notifiedon :: date &lt;= '#todate'
+group by stk.inwmasterid,sinw.grnnumber,sinw.pono,sinw.invoiceno,sinw.notifiedtofinance</value>
+  </data>
 </root>

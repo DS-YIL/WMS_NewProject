@@ -774,6 +774,20 @@ namespace WMS.Common {
         ///left outer join wms.employee emp on emp.employeeno=sinw.notifiedby
         ///where  [rest of string was truncated]&quot;;.
         /// </summary>
+        public static string getnotifiedgrbydate {
+            get {
+                return ResourceManager.GetString("getnotifiedgrbydate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to select stk.inwmasterid,sinw.grnnumber,sinw.pono,sinw.invoiceno,(select suppliername from wms.wms_polist where pono = Max(sinw.pono) limit 1) as vendorname,
+        ///Max(sinw.notifyremarks) as notifyremarks,Max(emp.name) as notifiedby,sinw.notifiedtofinance,Max(sinw.notifiedon) as notifiedon,Max(sinw.putawayfilename) as putawayfilename
+        ///from wms.wms_stock stk
+        ///left outer join wms.wms_securityinward sinw on stk.inwmasterid = sinw.inwmasterid 
+        ///left outer join wms.employee emp on emp.employeeno=sinw.notifiedby
+        ///where  [rest of string was truncated]&quot;;.
+        /// </summary>
         public static string getnotifiedgrnlist {
             get {
                 return ResourceManager.GetString("getnotifiedgrnlist", resourceCulture);

@@ -140,6 +140,8 @@ Task<string> updateonholdrow(updateonhold datamodel);
 
         Task<IEnumerable<inwardModel>> getgrnlistforacceptancenotify(string type);
 
+        Task<IEnumerable<inwardModel>> getnotifiedgrbydate(string fromdt, string todt);
+
         Task<IEnumerable<ddlmodel>> getholdgrlist();
         Task<IEnumerable<ddlmodel>> getgrnlistforacceptanceqc();
 
