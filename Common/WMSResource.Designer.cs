@@ -908,11 +908,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select max(req.reservedqty)as reservedqty, max(req.materialid)as materialid, max(req.reserveid)as reserveid,req.reserveformaterialid,sum(issuedqty)as releasedquantity
-        ///         from wms.wms_materialreserve  req
-        ///        left join wms.wms_materialissue iss on req.reserveformaterialid=iss.reserveformaterialid
-        ///       where req.reserveid=#reserveid and req.reservedqty&gt;0
-        ///       group by req.reserveformaterialid,iss.materialissueid.
+        ///   Looks up a localized string similar to select sum(req.reservedqty)as reservedqty, req.materialid,req.reserveid from wms.wms_materialreserve  req  where req.reserveid=#reserveid and req.reservedqty&gt;0 group by req.reserveid,req.materialid.
         /// </summary>
         public static string Getreleasedqty {
             get {
