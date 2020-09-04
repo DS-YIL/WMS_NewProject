@@ -517,11 +517,7 @@ left join wms.employee emp on req.reservedby=emp.employeeno
 group by req.reserveid,req.reservedby,po.projectname,emp."name" order by req.reserveid desc</value>
   </data>
   <data name="Getreleasedqty" xml:space="preserve">
-    <value>select max(req.reservedqty)as reservedqty, max(req.materialid)as materialid, max(req.reserveid)as reserveid,req.reserveformaterialid,sum(issuedqty)as releasedquantity
-         from wms.wms_materialreserve  req
-        left join wms.wms_materialissue iss on req.reserveformaterialid=iss.reserveformaterialid
-       where req.reserveid=#reserveid and req.reservedqty&gt;0
-       group by req.reserveformaterialid,iss.materialissueid</value>
+    <value>select sum(req.reservedqty)as reservedqty, req.materialid,req.reserveid from wms.wms_materialreserve  req  where req.reserveid=#reserveid and req.reservedqty&gt;0 group by req.reserveid,req.materialid</value>
   </data>
   <data name="getreservedmaterialList" xml:space="preserve">
     <value>select  max('')as projectname,max(res.reserveupto)as reserveupto,res.reserveid,max(res.pono) as pono,max(res.reservedon) as reservedon,
