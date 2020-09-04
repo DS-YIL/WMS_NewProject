@@ -46,15 +46,12 @@
             <p-table [columns]="cols" [scrollable]="true" scrollHeight="60vh" [value]="podetailsList" dataKey="material">
               <ng-template pTemplate="header" let-columns>
                 <tr class="mprltbldata">
-                  <th rowspan="2" style="width: 4em;text-align:center">Sl.No.</th>
-                  <!--<th *ngFor="let col of columns">{{col.header}} </th>-->
-                  <th rowspan="2" style="width:120px;text-align:center">Material</th>
-                  <th rowspan="2" style="width: 250px; text-align: center">Material Description</th>
-                  <!--<th rowspan="2" *ngIf="!isnonpo" style="width:70px;text-align:center">Material Quantity</th>
-              <th rowspan="2" style="width:70px;text-align:center">Received Quantity</th>-->
-                  <th rowspan="2" style="width:70px;text-align:center">Accepted Quantity</th>
-                  <th rowspan="2" style="width:100px;text-align:center" *ngIf="isalreadytransferred">Transferred By</th>
-                  <th rowspan="2" style="width:70px;text-align:center" *ngIf="isalreadytransferred">Transferred On</th>
+                  <th rowspan="2" style="width:70px;text-align:center">Sl.No.</th>
+                  <th rowspan="2" style="width:200px;text-align:center">Material</th>
+                  <th rowspan="2" style="text-align: center">Material Description</th>
+                  <th rowspan="2" style="width:200px;text-align:center">Accepted Qty</th>
+                  <th rowspan="2" style="width:250px;text-align:center" *ngIf="isalreadytransferred">Transferred By</th>
+                  <th rowspan="2" style="width:200px;text-align:center" *ngIf="isalreadytransferred">Transferred On</th>
                 </tr>
 
               </ng-template>
@@ -62,15 +59,13 @@
                 <tr class="ui-widget-header">
 
                   <td class="ptable-cell" style="text-align:center;width:70px">{{rowIndex + 1}}</td>
-                  <td class="ptable-cell" style="text-align:center;width:150px;" colspan="1">
+                  <td class="ptable-cell" style="text-align:center;width:200px;" colspan="1">
                     {{rowData.material}}
                   </td>
                   <td class="ptable-cell" style="text-align:left;">{{rowData.materialdescription}}</td>
-                  <!--<td *ngIf="!isnonpo" class="ptable-cell" style="text-align:right;width:100px;">{{rowData.materialqty}}</td>
-              <td class="ptable-cell" style="text-align:right;width:100px;">{{rowData.receivedqty}}</td>-->
-                  <td class="ptable-cell" style="text-align:right;width:70px;">{{rowData.confirmqty}}</td>
-                  <td class="ptable-cell" style="text-align:left;width:100px;" *ngIf="isalreadytransferred">{{rowData.mrnby}}</td>
-                  <td class="ptable-cell" style="text-align:center;width:70px;" *ngIf="isalreadytransferred">{{rowData.mrnon | date: 'dd/MM/yyyy'}}</td>
+                  <td class="ptable-cell" style="text-align:right;width:200px;">{{rowData.confirmqty}}</td>
+                  <td class="ptable-cell" style="text-align:left;width:250px;" *ngIf="isalreadytransferred">{{rowData.mrnby}}</td>
+                  <td class="ptable-cell" style="text-align:center;width:200px;" *ngIf="isalreadytransferred">{{rowData.mrnon | date: 'dd/MM/yyyy'}}</td>
 
                 </tr>
               </ng-template>
