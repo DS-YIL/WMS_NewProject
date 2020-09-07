@@ -477,10 +477,12 @@ group by pl.pono</value>
     <value />
   </data>
   <data name="getmaterialdetailfprrequest" xml:space="preserve">
-    <value>select max(sk.pono) as pono ,sk.materialid as material,( select sum(availableqty) from wms.wms_stock ws where materialid =sk.materialid) as availableqty,
+    <value>select max(sk.pono) as pono ,sk.materialid as material,Max(prj.projectmanager) as projectmanager,
+( select sum(availableqty) from wms.wms_stock ws where materialid =sk.materialid) as availableqty,
 max(mtmtr.unitprice) as materialcost from wms.wms_stock  sk 
-inner join wms."MaterialMasterYGS" mtmtr on mtmtr.material = sk.materialid 
-where sk.availableqty!=0</value>
+left outer join wms."MaterialMasterYGS" mtmtr on mtmtr.material = sk.materialid
+left outer join wms.wms_project prj on prj.pono = sk.pono 
+where sk.availableqty &gt; 0 and (prj.projectmanager = '#manager' or sk.returnid is not null)</value>
   </data>
   <data name="issuedqtydetails" xml:space="preserve">
     <value>select max(iss.materialissueid)as materialissueid,max(sk.itemid)as itemid,max(req.returnqty)as returnqty,max(sk.itemlocation)as itemlocation, max(iss.approvedstatus)as approvedstatus,max(req.requestedquantity)as requestedquantity, max(req.materialid)as materialid, max(req.requestid)as requestid,req.requestforissueid,sum(issuedqty)as issuedquantity
@@ -800,9 +802,11 @@ where reserveupto between current_date and current_date  + interval '3 day' and 
     <value>select * from wms."MaterialMasterYGS" where material='#materialid'</value>
   </data>
   <data name="getPODetails" xml:space="preserve">
-    <value>select sk.pono, polist.suppliername from wms.wms_stock sk
-join wms.wms_polist polist on sk.pono = polist.pono 
-where availableqty &gt;0 group by sk.pono , polist.suppliername</value>
+    <value>select sk.pono, polist.suppliername,prj.projectmanager from wms.wms_stock sk
+left outer join wms.wms_polist polist on sk.pono = polist.pono
+left outer join wms.wms_project prj on sk.pono = prj.pono 
+where availableqty &gt;0  and prj.projectmanager = '#manager'
+group by sk.pono, polist.suppliername,prj.projectmanager</value>
     <comment>Get PO Details</comment>
   </data>
   <data name="getitemiddata" xml:space="preserve">

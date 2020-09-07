@@ -21,7 +21,7 @@ namespace WMS.Interfaces
         Task<IEnumerable<LocationDetails>> getlocationdetails(string materialid, string grnnumber);
 
         //Get po details
-        Task<IEnumerable<PODetails>> getPODetails();
+        Task<IEnumerable<PODetails>> getPODetails(string empno);
 
         //Get material request and issued details
         Task<IEnumerable<ReqMatDetails>> getReqMatdetails(string materialid,string grnnumber);

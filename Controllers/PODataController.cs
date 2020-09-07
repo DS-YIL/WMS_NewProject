@@ -319,9 +319,9 @@ namespace WMS.Controllers
 		}
 
 		[HttpGet("getPODetails")]
-		public Task<IEnumerable<PODetails>> getPODetails()
+		public Task<IEnumerable<PODetails>> getPODetails(string empno)
         {
-			return this._poService.getPODetails();
+			return this._poService.getPODetails(empno);
 
 		}
 

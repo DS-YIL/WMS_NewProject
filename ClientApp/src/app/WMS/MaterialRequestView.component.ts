@@ -388,6 +388,7 @@ export class MaterialRequestViewComponent implements OnInit {
   }
 
   requestMaterial() {
+    debugger;
     this.requestDialog = true;
     this.btnreq = true;
     this.displayDD = true;
@@ -404,7 +405,8 @@ export class MaterialRequestViewComponent implements OnInit {
   }
 
   GetPONo() {
-    this.wmsService.getPODetails().subscribe(data => {
+
+    this.wmsService.getPODetails(this.employee.employeeno).subscribe(data => {
       this.spinner.hide();
       if (data) {
         this.ponolist = data;

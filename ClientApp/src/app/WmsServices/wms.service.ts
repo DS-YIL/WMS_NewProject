@@ -80,8 +80,8 @@ export class wmsService {
 
 
   //Get PO Details
-  getPODetails(): Observable<any[]> {
-    return this.http.get<any[]>(this.url + 'POData/getPODetails' , this.httpOptions);
+  getPODetails(empno: string): Observable<any[]> {
+    return this.http.get<any[]>(this.url + 'POData/getPODetails?empno=' + empno, this.httpOptions);
   }
 
   //Get Material Details

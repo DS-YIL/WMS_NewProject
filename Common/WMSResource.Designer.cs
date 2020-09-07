@@ -633,10 +633,12 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select max(sk.pono) as pono ,sk.materialid as material,( select sum(availableqty) from wms.wms_stock ws where materialid =sk.materialid) as availableqty,
+        ///   Looks up a localized string similar to select max(sk.pono) as pono ,sk.materialid as material,Max(prj.projectmanager) as projectmanager,
+        ///( select sum(availableqty) from wms.wms_stock ws where materialid =sk.materialid) as availableqty,
         ///max(mtmtr.unitprice) as materialcost from wms.wms_stock  sk 
-        ///inner join wms.&quot;MaterialMasterYGS&quot; mtmtr on mtmtr.material = sk.materialid 
-        ///where sk.availableqty!=0.
+        ///left outer join wms.&quot;MaterialMasterYGS&quot; mtmtr on mtmtr.material = sk.materialid
+        ///left outer join wms.wms_project prj on prj.pono = sk.pono 
+        ///where sk.availableqty &gt; 0 and (prj.projectmanager = &apos;#manager&apos; or sk.returnid is not null).
         /// </summary>
         public static string getmaterialdetailfprrequest {
             get {
@@ -814,9 +816,11 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select sk.pono, polist.suppliername from wms.wms_stock sk
-        ///join wms.wms_polist polist on sk.pono = polist.pono 
-        ///where availableqty &gt;0 group by sk.pono , polist.suppliername.
+        ///   Looks up a localized string similar to select sk.pono, polist.suppliername,prj.projectmanager from wms.wms_stock sk
+        ///left outer join wms.wms_polist polist on sk.pono = polist.pono
+        ///left outer join wms.wms_project prj on sk.pono = prj.pono 
+        ///where availableqty &gt;0  and prj.projectmanager = &apos;#manager&apos;
+        ///group by sk.pono, polist.suppliername,prj.projectmanager.
         /// </summary>
         public static string getPODetails {
             get {

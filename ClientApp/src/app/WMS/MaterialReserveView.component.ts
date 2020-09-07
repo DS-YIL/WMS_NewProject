@@ -403,7 +403,7 @@ export class MaterialReserveViewComponent implements OnInit {
 
   GetPONo() {
     debugger;
-    this.wmsService.getPODetails().subscribe(data => {
+    this.wmsService.getPODetails(this.employee.employeeno).subscribe(data => {
       this.spinner.hide();
       if (data) {
         this.ponolist = data;
