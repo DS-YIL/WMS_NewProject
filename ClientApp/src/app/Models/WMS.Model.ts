@@ -514,6 +514,24 @@ export class materialtransferTR {
   transferredqty: number = 0;
 }
 
+
+export class DirectTransferMain {
+  inwmasterid: number;
+  projectcode: string;
+  grnnumber: string;
+  mrnremarks: string;
+  mrnby: string;
+  mrnon: Date;
+  showtr: boolean = false;
+  materialdata: DirectTransferTR[] = [];
+}
+export class DirectTransferTR {
+  inwmasterid: number;
+  materialid: string;
+  materialdescription: string;
+  confirmqty: number = 0;
+}
+
 export class testcrud {
   id: number;
   name: string;

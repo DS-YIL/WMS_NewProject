@@ -906,6 +906,25 @@ public class materialtransferTR
 	public int transferredqty { get; set; }
 }
 
+public class DirectTransferMain
+{
+	public int inwmasterid { get; set; }
+	public string projectcode { get; set; }
+	public string grnnumber { get; set; }
+	public string mrnremarks { get; set; }
+	public string mrnby { get; set; }
+	public DateTime mrnon { get; set; }
+	public List<DirectTransferTR> materialdata { get; set; }
+
+}
+public class DirectTransferTR
+{
+	public int inwmasterid { get; set; }
+	public string materialid { get; set; }
+	public string materialdescription { get; set; }
+	public int confirmqty { get; set; }
+}
+
 public class notifymodel
 {
 

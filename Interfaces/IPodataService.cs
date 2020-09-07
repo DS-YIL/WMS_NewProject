@@ -23,6 +23,9 @@ namespace WMS.Interfaces
         //Get po details
         Task<IEnumerable<PODetails>> getPODetails(string empno);
 
+        //Get direct transfer data
+        Task<IEnumerable<DirectTransferMain>> getdirecttransferdata(string empno);
+
         //Get material request and issued details
         Task<IEnumerable<ReqMatDetails>> getReqMatdetails(string materialid,string grnnumber);
 

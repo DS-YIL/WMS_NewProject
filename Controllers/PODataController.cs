@@ -863,7 +863,13 @@ namespace WMS.Controllers
 			return await this._poService.gettransferdata(empno);
 		}
 
-		
+		[HttpGet("getdirecttransferdata")]
+		public async Task<IEnumerable<DirectTransferMain>> getdirecttransferdata(string empno)
+		{
+			return await this._poService.getdirecttransferdata(empno);
+		}
+
+
 
 		[HttpPost("Updatetransferqty")]
 		public int Updatetransferqty([FromBody] List<IssueRequestModel> obj)

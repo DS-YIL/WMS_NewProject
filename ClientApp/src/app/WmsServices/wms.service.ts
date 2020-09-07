@@ -186,6 +186,10 @@ export class wmsService {
   gettransferdata(empno:any): Observable<any> {
     return this.http.get<any>(this.url + 'POData/gettransferdata?empno=' + empno+'', this.httpOptions);
   }
+
+  getdirecttransferdata(empno: string): Observable<any> {
+    return this.http.get<any>(this.url + 'POData/getdirecttransferdata?empno='+empno, this.httpOptions);
+  }
   getMaterialReservelist(loginid: string): Observable<any> {
     return this.http.get<any>(this.url + 'POData/GetreserveMaterilalist?reservedby=' + loginid + '', this.httpOptions);
   }

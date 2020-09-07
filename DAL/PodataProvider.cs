@@ -7060,6 +7060,54 @@ namespace WMS.DAL
 				}
 			}
 		}
+
+		/// <summary>
+		/// get direct transferred data
+		/// </summary>
+		///
+		/// <returns></returns>
+		public async Task<IEnumerable<DirectTransferMain>> getdirecttransferdata(string empno)
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				try
+				{
+					await pgsql.OpenAsync();
+					string query = WMSResource.directtransfermainquery.Replace("#empno",empno);
+					string updatequery = string.Empty;
+					//string updatedon = WMSResource.updatedon;
+					var data = await pgsql.QueryAsync<DirectTransferMain>(
+					   query, null, commandType: CommandType.Text);
+					if (data != null && data.Count() > 0)
+					{
+						foreach (DirectTransferMain dt in data)
+						{
+							string query1 = WMSResource.directtransfertr.Replace("#inw", dt.inwmasterid.ToString());
+							var datadetail = await pgsql.QueryAsync<DirectTransferTR>(
+							   query1, null, commandType: CommandType.Text);
+
+							if (datadetail != null && datadetail.Count() > 0)
+							{
+								dt.materialdata = datadetail.ToList();
+							}
+						}
+					}
+					return data;
+
+				}
+				catch (Exception ex)
+				{
+
+					log.ErrorMessage("PODataProvider", "gettransferdata", ex.StackTrace.ToString());
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+			}
+		}
+
 		/// <summary>
 		/// update/insert transfer material details
 		/// </summary>

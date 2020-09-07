@@ -147,6 +147,30 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to select ts.inwmasterid, ts.projectcode,ts.mrnremarks ,ts.grnnumber,emp.name as mrnby,ts.mrnon
+        ///from wms.wms_securityinward ts
+        ///left outer join wms.employee emp on emp.employeeno = ts.mrnby
+        ///where ts.mrnby is not null and ts.mrnby = &apos;#empno&apos;.
+        /// </summary>
+        public static string directtransfermainquery {
+            get {
+                return ResourceManager.GetString("directtransfermainquery", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to select tsd.inwmasterid,tsd.materialid,tsd.confirmqty,mat.materialdescription
+        ///from wms.wms_storeinward tsd
+        ///left outer join wms.&quot;MaterialMasterYGS&quot; mat on mat.material = tsd.materialid
+        ///where tsd.inwmasterid = &apos;#inw&apos;.
+        /// </summary>
+        public static string directtransfertr {
+            get {
+                return ResourceManager.GetString("directtransfertr", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &lt;html&gt;&lt;meta charset=\&quot;ISO-8859-1\&quot;&gt;&lt;head&gt;&lt;link rel =&apos;stylesheet&apos; href =&apos;https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css&apos;&gt;&lt;/head&gt;
         ///&lt;body&gt;&lt;div class=&apos;container&apos;&gt;
         ///&lt;p&gt;Dear #user,&lt;/p&gt;
