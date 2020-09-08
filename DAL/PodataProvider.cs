@@ -3809,6 +3809,36 @@ namespace WMS.DAL
 
 			}
 		}
+
+		public async Task<IEnumerable<IssueRequestModel>> getItemlocationListByIssueId(string requestforissueid)
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+
+				try
+				{
+					string query = WMSResource.getitemlocationListBysIssueId.Replace("#requestforissueid", requestforissueid);
+					await pgsql.OpenAsync();
+					var data = await pgsql.QueryAsync<IssueRequestModel>(
+					  query, null, commandType: CommandType.Text);
+					data = data.OrderByDescending(o => o.createddate);
+					return data;
+
+
+
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "GetItemlocationListBymterial", Ex.StackTrace.ToString());
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+			}
+		}
 		/// <summary>
 		/// Get item location list for stock transfer
 		/// Ramesh 29/07/2020

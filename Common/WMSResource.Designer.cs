@@ -289,10 +289,8 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select iss.issuedqty as issuedqty,max(iss.approvedstatus) as approvedstatus,max(pro.projectname)as projectname,max(req.requestforissueid)as requestforissueid,max(emp.&quot;name&quot;)as name,req.requesteddate,sk.materialid,
-        ///req.requestedquantity,(select sum(availableqty) from wms.wms_stock ws where materialid =sk.materialid ) as availableqty,(select sum(reservedqty) from wms.wms_materialreserve wm where wm.materialid =sk.materialid ) as reservedqty,req.requestid 
-        ///from wms.wms_stock sk 
-        ///       inner join wms.wms_ma [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to select (select sum(issuedqty) from wms.wms_materialissue  where requestforissueid =req.requestforissueid  ) as issuedqty,max(iss.approvedstatus) as approvedstatus,max(pro.projectname)as projectname,max(req.requestforissueid)as requestforissueid,max(emp.&quot;name&quot;)as name,req.requesteddate,sk.materialid,
+        ///req.requestedquantity,(select sum(availableqty) from wms.wms_stock ws where materialid =sk.materialid ) as availableqty,(select sum(reservedqty) from wms.wms_materialreserve wm where wm.materialid =sk.materiali [rest of string was truncated]&quot;;.
         /// </summary>
         public static string GetdetailsByrequestidWithoutPO {
             get {
@@ -301,10 +299,8 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select iss.issuedqty as issuedqty,max(iss.approvedstatus) as approvedstatus,max(pro.projectname)as projectname,max(req.requestforissueid)as requestforissueid,max(emp.&quot;name&quot;)as name,req.requesteddate,sk.materialid,max(sk.pono)as pono,
-        ///req.requestedquantity,(select sum(availableqty) from wms.wms_stock ws where materialid =sk.materialid ) as availableqty,(select sum(reservedqty) from wms.wms_materialreserve wm where wm.materialid =sk.materialid ) as reservedqty,req.requestid 
-        ///from wms.wms_stock sk 
-        ///       i [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to select (select sum(issuedqty) from wms.wms_materialissue  where requestforissueid =req.requestforissueid  ) as issuedqty,max(iss.approvedstatus) as approvedstatus,max(pro.projectname)as projectname,max(req.requestforissueid)as requestforissueid,max(emp.&quot;name&quot;)as name,req.requesteddate,sk.materialid,max(sk.pono)as pono,
+        ///req.requestedquantity,(select sum(availableqty) from wms.wms_stock ws where materialid =sk.materialid ) as availableqty,(select sum(reservedqty) from wms.wms_materialreserve wm where wm.mate [rest of string was truncated]&quot;;.
         /// </summary>
         public static string GetdetailsByrequestidWithPO {
             get {
@@ -572,6 +568,21 @@ namespace WMS.Common {
         public static string getitemlocationList {
             get {
                 return ResourceManager.GetString("getitemlocationList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to select  sum(sk.availableqty)as availableqty,(select sum(issuedqty) from wms.wms_materialissue wm where itemid =sk.itemid ) as issuedqty,sk.pono,sk.materialid,sk.itemid,sk.itemlocation,ygs.materialdescription,ygs.material,createddate::DATE
+        ///from wms.wms_stock sk 
+        ///inner join wms.&quot;MaterialMasterYGS&quot; ygs on ygs.material=sk.materialid 
+        ///left join wms.wms_materialissue iss on iss.itemid =sk.itemid 
+        ///where requestforissueid=&apos;#requestforissueid&apos; and
+        ///sk.deleteflag=false
+        ///group by sk.itemlocation,ygs.materialdescri [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string getitemlocationListBysIssueId {
+            get {
+                return ResourceManager.GetString("getitemlocationListBysIssueId", resourceCulture);
             }
         }
         

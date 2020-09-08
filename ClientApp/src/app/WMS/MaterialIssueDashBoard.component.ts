@@ -40,6 +40,7 @@ export class MaterialIssueDashBoardComponent implements OnInit {
     else
       this.router.navigateByUrl("Login");
 
+    this.selectedStatus = "Pending";
     this.getMaterialIssueList();
 
   }
@@ -75,6 +76,7 @@ export class MaterialIssueDashBoardComponent implements OnInit {
   navigateToMatIssue(details: any) {
     if (!details.pono)
       details.pono = '';
+    this.constants.materialIssueType = this.selectedStatus;
     this.router.navigate(["/WMS/MaterialIssue", details.requestid, details.pono]);
   }
 

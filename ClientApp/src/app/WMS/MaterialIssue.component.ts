@@ -100,7 +100,7 @@ export class MaterialIssueComponent implements OnInit {
   }
 
   //shows list of items for particular material
-  showmateriallocationList(material, id, rowindex, qty, issuedqty, reservedqty) {
+  showmateriallocationList(material, id, rowindex, qty, issuedqty, reservedqty, requestforissueid) {
     if (issuedqty <= qty) {
       this.issueqtyenable = true;
     }
@@ -112,14 +112,20 @@ export class MaterialIssueComponent implements OnInit {
     this.id = id;
     this.AddDialog = true;
     this.roindex = rowindex;
-    this.wmsService.getItemlocationListByMaterial(material).subscribe(data => {
-
-      this.itemlocationData = data;
-      this.showdialog = true;
-      if (data != null) {
-
-      }
-    });
+    if (this.constants.materialIssueType == "Pending") {
+      this.issueqtyenable = false;
+      this.wmsService.getItemlocationListByMaterial(material).subscribe(data => {
+        this.itemlocationData = data;
+        this.showdialog = true;
+      });
+    }
+    else {
+      this.issueqtyenable = true;
+      this.wmsService.getItemlocationListByIssueId(requestforissueid).subscribe(data => {
+        this.itemlocationData = data;
+        this.showdialog = true;
+      });
+    }
   }
   //show alert about oldest item location
   alertconfirm(data) {

@@ -127,7 +127,7 @@
     <comment>checkpono</comment>
   </data>
   <data name="GetdetailsByrequestidWithPO" xml:space="preserve">
-    <value>select iss.issuedqty as issuedqty,max(iss.approvedstatus) as approvedstatus,max(pro.projectname)as projectname,max(req.requestforissueid)as requestforissueid,max(emp."name")as name,req.requesteddate,sk.materialid,max(sk.pono)as pono,
+    <value>select (select sum(issuedqty) from wms.wms_materialissue  where requestforissueid =req.requestforissueid  ) as issuedqty,max(iss.approvedstatus) as approvedstatus,max(pro.projectname)as projectname,max(req.requestforissueid)as requestforissueid,max(emp."name")as name,req.requesteddate,sk.materialid,max(sk.pono)as pono,
 req.requestedquantity,(select sum(availableqty) from wms.wms_stock ws where materialid =sk.materialid ) as availableqty,(select sum(reservedqty) from wms.wms_materialreserve wm where wm.materialid =sk.materialid ) as reservedqty,req.requestid 
 from wms.wms_stock sk 
        inner join wms.wms_materialrequest req on req.materialid=sk.materialid
@@ -135,7 +135,7 @@ from wms.wms_stock sk
       inner join wms.employee emp on emp.employeeno=req.requesterid
       left join wms.wms_project pro on pro.pono=sk.pono
  where requestid=#requestid and req.deleteflag=false  and sk.pono='#pono'
- group by  iss.issuedqty, req.requestforissueid,sk.materialid--,sk.pono,req.requestedquantity,sk.availableqty,req.requestid,emp."name",req.requesteddate,pro.jobname</value>
+ group by  req.requestforissueid,sk.materialid--,sk.pono,req.requestedquantity,sk.availableqty,req.requestid,emp."name",req.requesteddate,pro.jobname</value>
   </data>
   <data name="GetListForMaterialRequestByapproverid" xml:space="preserve">
     <value>select issue.approvedstatus,req.pono,req.requestid,req.requesteddate,req.requesterid,emp."name",max(req.requesttype)as requesttype,max(req.returnon)as returnon
@@ -979,7 +979,7 @@ where boolinuse = True</value>
     <value>select grnnumber,onhold,unholdedby from wms.wms_securityinward where pono = '#pono' and invoiceno = '#invno'</value>
   </data>
   <data name="GetdetailsByrequestidWithoutPO" xml:space="preserve">
-    <value>select iss.issuedqty as issuedqty,max(iss.approvedstatus) as approvedstatus,max(pro.projectname)as projectname,max(req.requestforissueid)as requestforissueid,max(emp."name")as name,req.requesteddate,sk.materialid,
+    <value>select (select sum(issuedqty) from wms.wms_materialissue  where requestforissueid =req.requestforissueid  ) as issuedqty,max(iss.approvedstatus) as approvedstatus,max(pro.projectname)as projectname,max(req.requestforissueid)as requestforissueid,max(emp."name")as name,req.requesteddate,sk.materialid,
 req.requestedquantity,(select sum(availableqty) from wms.wms_stock ws where materialid =sk.materialid ) as availableqty,(select sum(reservedqty) from wms.wms_materialreserve wm where wm.materialid =sk.materialid ) as reservedqty,req.requestid 
 from wms.wms_stock sk 
        inner join wms.wms_materialrequest req on req.materialid=sk.materialid
@@ -987,7 +987,7 @@ from wms.wms_stock sk
       inner join wms.employee emp on emp.employeeno=req.requesterid
       left join wms.wms_project pro on pro.pono=sk.pono
  where requestid=#requestid and req.deleteflag=false  
- group by  iss.issuedqty, req.requestforissueid,sk.materialid</value>
+ group by  req.requestforissueid,sk.materialid</value>
   </data>
   <data name="getnotifiedgrbydate" xml:space="preserve">
     <value>select stk.inwmasterid,sinw.grnnumber,sinw.pono,sinw.invoiceno,(select suppliername from wms.wms_polist where pono = Max(sinw.pono) limit 1) as vendorname,
@@ -1010,5 +1010,14 @@ where ts.mrnby is not null and ts.mrnby = '#empno'</value>
 from wms.wms_storeinward tsd
 left outer join wms."MaterialMasterYGS" mat on mat.material = tsd.materialid
 where tsd.inwmasterid = '#inw'</value>
+  </data>
+  <data name="getitemlocationListBysIssueId" xml:space="preserve">
+    <value>select  sum(sk.availableqty)as availableqty,(select sum(issuedqty) from wms.wms_materialissue wm where itemid =sk.itemid ) as issuedqty,sk.pono,sk.materialid,sk.itemid,sk.itemlocation,ygs.materialdescription,ygs.material,createddate::DATE
+from wms.wms_stock sk 
+inner join wms."MaterialMasterYGS" ygs on ygs.material=sk.materialid 
+left join wms.wms_materialissue iss on iss.itemid =sk.itemid 
+where requestforissueid='#requestforissueid' and
+sk.deleteflag=false
+group by sk.itemlocation,ygs.materialdescription,ygs.material,createddate::DATE,sk.itemid</value>
   </data>
 </root>

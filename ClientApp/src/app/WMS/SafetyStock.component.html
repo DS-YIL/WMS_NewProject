@@ -11,7 +11,7 @@
 
   </div>
   <div class="card-body" style="overflow-y:scroll">
-    <p-table [value]="safetyStockList" [style]="{'width':'100%','overflow':'auto!important'}"
+    <p-table  #dt [value]="safetyStockList" [style]="{'width':'100%','overflow':'auto!important'}"
              [responsive]="true" [rows]="25"
              [resizableColumns]="true"
              columnResizeMode="expand"
@@ -26,7 +26,7 @@
         </tr>
         <tr>
           <th></th>
-          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'materialid', 'contains')"></th>
+          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'material', 'contains')"></th>
           <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'materialdescription', 'contains')"></th>
           <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'minorderqty', 'contains')"></th>
         </tr>

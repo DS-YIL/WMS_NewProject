@@ -14,7 +14,7 @@
         <div class="col-lg-4 col-md-4 form-inline">
           <div class="form-inline">
             <label class="labelheading">Status :</label>&nbsp;&nbsp;
-            <select placeholder="Status" name="Status" (change)="onSelectStatus($event)" class="form-control">
+            <select placeholder="Status" name="Status" (change)="onSelectStatus($event)" [ngModel]="selectedStatus" class="form-control">
               <option selected value="Pending"> Pending</option>
               <option value="Approved"> Issued</option>
             </select>
@@ -59,7 +59,7 @@
             </tr>
             <tr>
               <th></th>
-              <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'requestforissueid', 'contains')"></th>
+              <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'requestid', 'contains')"></th>
               <!--<th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'projectname', 'contains')"></th>-->
               <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'requesteddate', 'contains')"></th>
               <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'name', 'contains')"></th>

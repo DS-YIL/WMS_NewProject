@@ -512,6 +512,12 @@ namespace WMS.Controllers
 
 			return await this._poService.GetItemlocationListBymterial(material);
 		}
+		[HttpGet("getItemlocationListByIssueId")]
+		public async Task<IEnumerable<IssueRequestModel>> getItemlocationListByIssueId(string requestforissueid)
+		{
+
+			return await this._poService.getItemlocationListByIssueId(requestforissueid);
+		}
 		[HttpPost("updateMaterialavailabality")]
 		public int updateMaterialavailabality([FromBody]List<IssueRequestModel> model)
 		{

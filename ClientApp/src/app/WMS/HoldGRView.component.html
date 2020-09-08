@@ -2,18 +2,15 @@
 <div style="margin:10px;">
   <div class="card commoncardcss" style="width:100%;">
     <div class="card-header commoncardheader">
-      <div class="row " style="    margin-top: 10px;
-    margin-left: 0px !important;
-    margin-right: 0px !important">
+      <div class="row " style="margin-top: 10px;margin-left: 0px !important;margin-right: 0px !important">
         <div class="col-lg-4 col-md-4 form-inline">
           <div class="form-inline">
             <label class="labelheading">Status :</label>&nbsp;&nbsp;
-            <select [(ngModel)]="grstatus" (change)="getholdgrdetails()" class="form-control" style="width:60%">
+            <select [(ngModel)]="grstatus" (change)="getholdgrdetails()" class="form-control">
               <option value="hold" selected="selected">On hold</option>
               <option value="accepted">Accepted</option>
               <option value="returned">Returned</option>
             </select>
-
           </div>
         </div>
         <div class="col-lg-4 col-md-4 text-center">
@@ -24,10 +21,10 @@
         <div class="col-lg-4 col-md-4 form-inline"></div>
       </div>
     </div>
-   
 
 
-  
+
+
     <!--<div class="card-header">
       <div class="row " style="    margin-top: 10px;
     margin-left: 0px !important;
