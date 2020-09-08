@@ -209,6 +209,7 @@ public bool onhold { get; set; }
 		public string pono { get; set; }
 		public int binid { get; set; }
 		public int rackid { get; set; }
+		public int storeid { get; set; }
 		public int vendorid { get; set; }
 		public int totalquantity { get; set; }
 		public DateTime shelflife { get; set; }

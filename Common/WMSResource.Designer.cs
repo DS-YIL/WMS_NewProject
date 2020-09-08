@@ -1314,7 +1314,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO wms.wms_stock(inwmasterid,stockstatus,pono,binid,vendorid,totalquantity,shelflife,availableqty,deleteflag,itemlocation,createddate,createdby,materialid,inwardid)VALUES(@inwmasterid,@stockstatus,@pono,@binid,@vendorid,@totalquantity,@shelflife,@availableqty,@deleteflag,@itemlocation,@createddate,@createdby,@materialid,@inwardid)returning itemid.
+        ///   Looks up a localized string similar to INSERT INTO wms.wms_stock(inwmasterid,stockstatus,pono,binid,rackid ,storeid, vendorid,totalquantity,shelflife,availableqty,deleteflag,itemlocation,createddate,createdby,materialid,inwardid)VALUES(@inwmasterid,@stockstatus,@pono,@binid,@rackid,@storeid,@vendorid,@totalquantity,@shelflife,@availableqty,@deleteflag,@itemlocation,@createddate,@createdby,@materialid,@inwardid)returning itemid.
         /// </summary>
         public static string insertstock {
             get {

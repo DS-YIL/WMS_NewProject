@@ -226,7 +226,7 @@ VALUES(@inwmasterid,@receiveddate,@receivedby,@receivedqty,@returnqty,@qualitypa
     <value>INSERT INTO wms.wms_trackstatus(pono,status,enteredon)VALUES(@pono,'In Store',current_timestamp)</value>
   </data>
   <data name="insertstock" xml:space="preserve">
-    <value>INSERT INTO wms.wms_stock(inwmasterid,stockstatus,pono,binid,vendorid,totalquantity,shelflife,availableqty,deleteflag,itemlocation,createddate,createdby,materialid,inwardid)VALUES(@inwmasterid,@stockstatus,@pono,@binid,@vendorid,@totalquantity,@shelflife,@availableqty,@deleteflag,@itemlocation,@createddate,@createdby,@materialid,@inwardid)returning itemid</value>
+    <value>INSERT INTO wms.wms_stock(inwmasterid,stockstatus,pono,binid,rackid ,storeid, vendorid,totalquantity,shelflife,availableqty,deleteflag,itemlocation,createddate,createdby,materialid,inwardid)VALUES(@inwmasterid,@stockstatus,@pono,@binid,@rackid,@storeid,@vendorid,@totalquantity,@shelflife,@availableqty,@deleteflag,@itemlocation,@createddate,@createdby,@materialid,@inwardid)returning itemid</value>
   </data>
   <data name="lastinsertedgrn" xml:space="preserve">
     <value>select * from  wms.wms_sequencemaster  where  enddate&gt;=current_date and id=1</value>

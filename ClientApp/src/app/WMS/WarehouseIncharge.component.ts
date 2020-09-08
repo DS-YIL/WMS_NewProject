@@ -774,6 +774,7 @@ this.updateRowGroupMetaData();
         }
         this.StockModel.racknumber = storelocation[0].locatorname;
         this.StockModel.rackid = rack[0].rackid;
+        this.StockModel.storeid = storelocation[0].locatorid;
         this.StockModel.confirmqty = item.qty;
         this.StockModel.itemreceivedfrom = new Date();
         this.StockModelList.push(this.StockModel);

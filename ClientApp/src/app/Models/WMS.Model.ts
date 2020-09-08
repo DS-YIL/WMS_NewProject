@@ -154,6 +154,7 @@ export class StockModel {
   grnnumber: string;
   binid: number;
   rackid: number;
+  storeid: number;
   vendorid: number;
   returnqty: any;
   returnid: number;

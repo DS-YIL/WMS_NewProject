@@ -242,6 +242,7 @@ export class SecurityHomeComponent implements OnInit {
     this.BarcodeModel.asnno = this.PoDetails.asnno;
     this.BarcodeModel.departmentid = this.PoDetails.departmentid;
     this.BarcodeModel.inwardremarks = this.nonporemarks;
+    this.BarcodeModel.suppliername = this.PoDetails.vendorname;
     if (this.isnonpochecked) {
       this.BarcodeModel.pono = "NONPO";
       if (isNullOrUndefined(this.Poinvoicedetails.vendorname) || this.Poinvoicedetails.vendorname == "") {
@@ -257,7 +258,7 @@ export class SecurityHomeComponent implements OnInit {
         this.spinner.hide();
         return;
       }
-
+      this.BarcodeModel.suppliername = this.Poinvoicedetails.vendorname;
     }
     if (this.Poinvoicedetails.invoiceno && this.Poinvoicedetails.invoiceno.trim() != "") {
     }
@@ -270,8 +271,7 @@ export class SecurityHomeComponent implements OnInit {
       
     this.BarcodeModel.invoiceno = this.Poinvoicedetails.invoiceno;
 
-    this.BarcodeModel.receivedby = this.employee.employeeno;
-    this.BarcodeModel.suppliername = this.Poinvoicedetails.vendorname;
+    this.BarcodeModel.receivedby = this.employee.employeeno;  
     if (this.isnonpochecked) {
       if (this.nonpofile) {
         let file = this.nonpofile;

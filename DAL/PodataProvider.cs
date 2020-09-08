@@ -1427,6 +1427,8 @@ namespace WMS.DAL
 							inwmasterid,
 							item.pono,
 							item.binid,
+							item.rackid,
+							item.storeid,
 							item.vendorid,
 							item.totalquantity,
 							item.shelflife,

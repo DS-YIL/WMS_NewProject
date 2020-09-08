@@ -67,6 +67,7 @@ export class DashboardComponent implements OnInit {
     this.PoFilterParams.loginid =this.employee.employeeno;
     this.wmsService.getPOList(this.PoFilterParams).subscribe(data => {
       this.POList = data;
+      this.POList = this.POList.filter(li => li.materialqty > 0);
       this.loading = false;
       this.spinner.hide();
     })
