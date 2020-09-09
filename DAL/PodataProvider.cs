@@ -416,8 +416,8 @@ namespace WMS.DAL
 								int nextserial = serial + 1;
 								string nextpo = "NP" + DateTime.Now.Year.ToString().Substring(2) + nextserial.ToString().PadLeft(5, '0');
 								dataobj.pono = nextpo;
-								
-								var q2 = WMSResource.getinvoiceexists.Replace("#pono", dataobj.pono).Replace("#invno", dataobj.invoiceno); 
+
+								var q2 = WMSResource.getinvoiceexists.Replace("#pono", dataobj.pono).Replace("#invno", dataobj.invoiceno);
 								int count1 = int.Parse(DB.ExecuteScalar(q2, null).ToString());
 
 								if (count1 >= 1)
@@ -876,7 +876,7 @@ namespace WMS.DAL
 							if (!isgrn)
 							{
 								//string queryx = "select grnnumber,onhold,unholdedby from wms.wms_securityinward where pono = '" + pono + "' and invoiceno = '" + invoiceno + "'";
-								string queryx = WMSResource.isgrnexistsquerybyinvoce.Replace("#pono",pono).Replace("#invno",invoiceno);
+								string queryx = WMSResource.isgrnexistsquerybyinvoce.Replace("#pono", pono).Replace("#invno", invoiceno);
 								objx = pgsql.QuerySingle<inwardModel>(
 								 queryx, null, commandType: CommandType.Text);
 							}
@@ -3814,6 +3814,7 @@ namespace WMS.DAL
 
 		public async Task<IEnumerable<IssueRequestModel>> getItemlocationListByIssueId(string requestforissueid)
 		{
+
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
 
@@ -3822,11 +3823,23 @@ namespace WMS.DAL
 					string query = WMSResource.getitemlocationListBysIssueId.Replace("#requestforissueid", requestforissueid);
 					await pgsql.OpenAsync();
 					var data = await pgsql.QueryAsync<IssueRequestModel>(
-					  query, null, commandType: CommandType.Text);
+					 query, null, commandType: CommandType.Text);
 					data = data.OrderByDescending(o => o.createddate);
-					return data;
 
+					IEnumerable<IssueRequestModel> result = data.GroupBy(c => new { c.itemlocation, c.createddate }).Select(t => new IssueRequestModel
+					{
 
+						availableqty = t.Sum(u => u.availableqty),
+						issuedqty =t.Sum(u => u.issuedqty),
+						pono = t.First().pono,
+						materialid = t.First().materialid,
+						itemid = t.First().itemid,						
+						Materialdescription = t.First().Materialdescription,
+						material = t.First().material,
+						itemlocation = t.Key.itemlocation,
+						createddate =t.Key.createddate
+					});
+					return result;
 
 				}
 				catch (Exception Ex)
@@ -4327,7 +4340,7 @@ namespace WMS.DAL
 
 				try
 				{
-					string materialrequestquery = WMSResource.getmaterialdetailfprrequest.Replace("#manager",approverid);
+					string materialrequestquery = WMSResource.getmaterialdetailfprrequest.Replace("#manager", approverid);
 					if (pono != null && pono != "undefined" && pono != "null")
 					{
 						materialrequestquery = materialrequestquery + " and sk.pono = '" + pono + "'";
@@ -6129,9 +6142,9 @@ namespace WMS.DAL
 				try
 				{
 					string materialrequestquery = "";
-					
-				
-				    materialrequestquery = WMSResource.getnotifiedgrbydate.Replace("#fromdate",fromdt).Replace("#todate",todt);
+
+
+					materialrequestquery = WMSResource.getnotifiedgrbydate.Replace("#fromdate", fromdt).Replace("#todate", todt);
 					List<inwardModel> returnlist = new List<inwardModel>();
 					await pgsql.OpenAsync();
 					var data = await pgsql.QueryAsync<inwardModel>(
@@ -7105,7 +7118,7 @@ namespace WMS.DAL
 				try
 				{
 					await pgsql.OpenAsync();
-					string query = WMSResource.directtransfermainquery.Replace("#empno",empno);
+					string query = WMSResource.directtransfermainquery.Replace("#empno", empno);
 					string updatequery = string.Empty;
 					//string updatedon = WMSResource.updatedon;
 					var data = await pgsql.QueryAsync<DirectTransferMain>(
@@ -7265,7 +7278,7 @@ namespace WMS.DAL
 				try
 				{
 					await pgsql.OpenAsync();
-					string getpoquery = WMSResource.getPODetails.Replace("#manager",empno);
+					string getpoquery = WMSResource.getPODetails.Replace("#manager", empno);
 
 					var objPO = await pgsql.QueryAsync<PODetails>(
 					   getpoquery, null, commandType: CommandType.Text);
