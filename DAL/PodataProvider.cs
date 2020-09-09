@@ -105,7 +105,7 @@ namespace WMS.DAL
 					{
 						query = query + " and  wp.vendorid=" + vendorid;
 					}
-					query = query + " group by track.pono,wp.pono order by wp.pono desc ";
+					query = query + " group by track.pono,wp.pono order by wp.pono asc ";
 
 					await pgsql.OpenAsync();
 					var data = await pgsql.QueryAsync<OpenPoModel>(
