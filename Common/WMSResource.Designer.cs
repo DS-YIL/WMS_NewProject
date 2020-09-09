@@ -147,10 +147,12 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select ts.inwmasterid, ts.projectcode,ts.mrnremarks ,ts.grnnumber,emp.name as mrnby,ts.mrnon
+        ///   Looks up a localized string similar to select ts.inwmasterid, ts.projectcode,ts.mrnremarks ,ts.grnnumber,emp.name as mrnby,ts.mrnon,
+        ///prj.projectmanager
         ///from wms.wms_securityinward ts
         ///left outer join wms.employee emp on emp.employeeno = ts.mrnby
-        ///where ts.mrnby is not null and ts.mrnby = &apos;#empno&apos;.
+        ///left outer join wms.wms_project prj on prj.pono = ts.pono
+        ///where ts.mrnby is not null and prj.projectmanager = &apos;#empno&apos;.
         /// </summary>
         public static string directtransfermainquery {
             get {

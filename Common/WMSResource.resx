@@ -1000,10 +1000,12 @@ and sinw.notifiedon :: date &gt;= '#fromdate' and sinw.notifiedon :: date &lt;= 
 group by stk.inwmasterid,sinw.grnnumber,sinw.pono,sinw.invoiceno,sinw.notifiedtofinance</value>
   </data>
   <data name="directtransfermainquery" xml:space="preserve">
-    <value>select ts.inwmasterid, ts.projectcode,ts.mrnremarks ,ts.grnnumber,emp.name as mrnby,ts.mrnon
+    <value>select ts.inwmasterid, ts.projectcode,ts.mrnremarks ,ts.grnnumber,emp.name as mrnby,ts.mrnon,
+prj.projectmanager
 from wms.wms_securityinward ts
 left outer join wms.employee emp on emp.employeeno = ts.mrnby
-where ts.mrnby is not null and ts.mrnby = '#empno'</value>
+left outer join wms.wms_project prj on prj.pono = ts.pono
+where ts.mrnby is not null and prj.projectmanager = '#empno'</value>
   </data>
   <data name="directtransfertr" xml:space="preserve">
     <value>select tsd.inwmasterid,tsd.materialid,tsd.confirmqty,mat.materialdescription
