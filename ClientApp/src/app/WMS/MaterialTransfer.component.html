@@ -107,7 +107,7 @@
         <p-dialog header={{GatepassTxt}} [(visible)]="gatepassdialog" [responsive]="true" showEffect="fade" [modal]="true" [style]="{'width':'95vw','overflow':'auto!important','margin-right': '0px','margin-left':'0px'}">
           <div class="row">
             <div class="col-lg-6 col-md-6 form-inline">
-              <label class="labelheading">Project :</label>&nbsp;
+              <label class="labelheading">Transfer to :</label>&nbsp;
               <p-autoComplete [(ngModel)]="selectedproject" field="text" appendTo="body" [suggestions]="filteredprojects" placeholder="search by name/code" [ngModelOptions]="{standalone: true}" [forceSelection]="false" (completeMethod)="filterprojects($event)" [size]="30"
                               [dropdown]="true">
               </p-autoComplete>
@@ -131,8 +131,8 @@
                 <ng-template pTemplate="header">
                   <tr class="mprltbldata">
                     <th class="ptable-cell" style="width: 5%; text-align: center">Sl. No.</th>
-                    <th style="text-align:center;width:25%" class="ptable-cell">Material</th>
-                    <th style="text-align:center;width:45%" class="ptable-cell">Material Description</th>
+                    <th style="text-align:center;width:28%" class="ptable-cell">Material</th>
+                    <th style="text-align:center;width:42%" class="ptable-cell">Material Description</th>
                     <th style="text-align:center;width:15%" class="ptable-cell">Transfer quantity</th>
                     <th style="text-align:center;width:10%" class="ptable-cell"><button type="button" class="btn btn-primary btn-sm" pTooltip="Add material" (click)="addNewMaterial()" style="float: right;height: 26px;"><i class="fa fa-plus"></i></button></th>
                   </tr>
