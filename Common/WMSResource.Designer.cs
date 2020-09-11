@@ -736,6 +736,17 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to select ts.transferid, ts.projectcode,ts.remarks as transferremarks,emp.name as transferedby,ts.createdon as transferredon
+        ///from wms.wms_transfermaterial ts
+        ///left outer join wms.employee emp on emp.employeeno = ts.createdby.
+        /// </summary>
+        public static string getMaterialTransferDetails {
+            get {
+                return ResourceManager.GetString("getMaterialTransferDetails", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to select  sec.inwmasterid,inw.confirmqty,sec.grnnumber,sec.pono,mtmaster.materialdescription,inw.materialid,sk.itemid
         /// from wms.wms_securityinward sec 
         /// left join wms.wms_stock sk on sec.inwmasterid = sk.inwmasterid
@@ -1312,6 +1323,15 @@ namespace WMS.Common {
         public static string insertreturndata {
             get {
                 return ResourceManager.GetString("insertreturndata", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to insert into wms.wms_reprinthistory(reprinthistoryid,inwmasterid, reprintedon,reprintedby,reprintcount,barcodeid )values(default,@inwmasterid,current_date,@reprintedby,@reprintcount,@barcodeid)returning reprinthistoryid.
+        /// </summary>
+        public static string insertSecurityPrintHistory {
+            get {
+                return ResourceManager.GetString("insertSecurityPrintHistory", resourceCulture);
             }
         }
         
