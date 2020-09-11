@@ -447,6 +447,7 @@ export class MaterialTransferComponent implements OnInit {
       data.transferredqty = 0;
       return;
     }
+
   }
   
   //open gate pass dialog

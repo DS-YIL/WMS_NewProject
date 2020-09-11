@@ -401,7 +401,6 @@ public bool onhold { get; set; }
 
 		public int reserveid { get; set; }
 		public int reservedqty { get; set; }
-		
 
 	}
 
@@ -778,6 +777,7 @@ public bool onhold { get; set; }
 		public DateTime requestedon { get; set; }
 
 		public string chkstatus { get; set; }
+		public string materialdescription { get; set; }
 	}
 		public class SecurityInwardreceivedModel
 	{

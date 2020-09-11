@@ -111,12 +111,13 @@
         <button type="button" class="btn btn-primary" [disabled]="btnDisable" (click)="materialAckUpdate()">Acknowledge</button>
       </div>
       <br />
-      <p-table #dt *ngIf="showhistory" [value]="materiallistDataHistory" [style]="{'width':'80%','margin-left':'100px'}" [scrollable]="true" scrollHeight="53vh">
+      <p-table #dt *ngIf="showhistory" [value]="materiallistDataHistory" [style]="{'width':'90%','margin-left':'100px'}" [scrollable]="true" scrollHeight="53vh">
 
         <ng-template pTemplate="header">
           <tr class="mprltbldata">
             <th style="text-align:center;width:70px">Sl.No.</th>
             <th style="text-align:center;width:200px">Material</th>
+            
             <th style="text-align:center;width:150px">Requested qty</th>
             <th style="text-align:center;width:150px;">Returned qty</th>
           </tr>
@@ -153,9 +154,10 @@
               <tr class="mprltbldata">
 
                 <th style="text-align:center;width:70px">Sl.No</th>
-                <th style="text-align:center">Material</th>
+                <th style="text-align:center;width:200px">Material</th>
+                <th style="text-align:center">Material Description</th>
                 <!--<th style="text-align:center;width:150px">Requested  Qty</th>
-              <th style="text-align:center;width:150px">Issued Qty</th>-->
+  <th style="text-align:center;width:150px">Issued Qty</th>-->
                 <th style="text-align:center;width:150px">Return Qty</th>
                 <th style="text-align:center;width:150px">Remarks</th>
               </tr>
@@ -166,7 +168,8 @@
                 <td class="ptable-cell" style="text-align:right">
                   {{ri+1}}
                 </td>
-                <td class="ptable-cell" style="text-align:left">{{rowData.materialid}}</td>
+                <td class="ptable-cell" style="text-align:left;width:200px">{{rowData.materialid}}</td>
+                <td class="ptable-cell" style="text-align:left;">{{rowData.materialdescription}}</td>
                 <!--<td class="ptable-cell" style="text-align:right">{{rowData.requestedquantity}}</td>-->
 
                 <td class="ptable-cell" style="text-align:right">
@@ -174,8 +177,8 @@
 
                 </td>
                 <!--<td class="ptable-cell" style="text-align:center;width:100px;">
-                <input pInputText [disabled]="rowData.approvedstatus=='Approved'?false:true" type="number" (change)="returnQtyChange(rowData.issuedquantity,rowData.returnqty)" class="form-control" [(ngModel)]="rowData.returnqty">
-              </td>-->
+    <input pInputText [disabled]="rowData.approvedstatus=='Approved'?false:true" type="number" (change)="returnQtyChange(rowData.issuedquantity,rowData.returnqty)" class="form-control" [(ngModel)]="rowData.returnqty">
+  </td>-->
                 <td class="ptable-cell" style="text-align:center;width:100px;">
                   {{rowData.remarks}}
                 </td>
@@ -259,7 +262,7 @@
           </div>-->
           </p-footer>
         </p-dialog>
-        <p-dialog header={{GatepassTxt}} [(visible)]="gatepassdialog" [responsive]="true" showEffect="fade" [modal]="true" [style]="{'width':'85%','overflow':'auto!important','margin-right': '0px','margin-left':'0px'}">
+        <p-dialog header={{GatepassTxt}} [(visible)]="gatepassdialog" [responsive]="true" showEffect="fade" [modal]="true" [style]="{'width':'98%','overflow':'auto!important','margin-right': '0px','margin-left':'0px'}">
           <!--<div class="row " style="margin-top:10px">
           <div class="col-lg-2 col-md-2 col-sm-2 form-group">
             <label for="itemlocation" class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">Select Type</label>
@@ -309,7 +312,7 @@
             <div *ngIf="returnModel.materialList.length>0" class="col-lg-12 col-md-12 col-sm-12">
 
 
-              <p-table [value]="returnModel.materialList" [style]="{'width':'97%','height':'500px','overflow':'visible!important'}">
+              <p-table [value]="returnModel.materialList" [style]="{'width':'100%','height':'500px','overflow':'visible!important'}">
                 <ng-template pTemplate="caption">
                   Add Material
                   <button type="button" icon="fa fa-plus" pButton aria-hidden="true" pTooltip="Add material" (click)="addNewMaterial()" style="float: right;height: 26px;"></button>
@@ -318,25 +321,28 @@
                   <tr class="mprltbldata">
                     <th class="ptable-cell" style="width:60px;text-align:center">Sl.No.</th>
                     <!--<th class="ptable-cell">Material</th>-->
-                    <th style="text-align:center" class="ptable-cell">Material</th>
-                    <th style="text-align:center" class="ptable-cell">Return quantity</th>
-                    <th style="text-align:center" class="ptable-cell">Remarks</th>
-
-                    <th style="text-align:center" class="ptable-cell"></th>
+                    <th style="text-align:center;width:250px" class="ptable-cell">Material</th>
+                    <th style="text-align:center" class="ptable-cell">Material Description</th>
+                    <th style="text-align:center;width:150px" class="ptable-cell">Return qty</th>
+                    <th style="text-align:center;width:250px" class="ptable-cell">Remarks</th>
+                    <th style="text-align:center;width:60px" class="ptable-cell"></th>
                   </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex" let-rindex=0>
                   <tr>
                     <td class="ptable-cell" style="text-align:center"> {{ri+1}} </td>
                     <!--<td class="ptable-cell" style="text-align:right">
-                    <input [(ngModel)]="field.code" class="form-control" type="text" name="{{field[i].materialid}}" />
-                  </td>-->
+    <input [(ngModel)]="field.code" class="form-control" type="text" name="{{field[i].materialid}}" />
+  </td>-->
                     <td class="ptable-cell" style="text-align:left;">
 
                       <input *ngIf="rowData.material" [(ngModel)]="rowData.material" class="form-control" type="text" name="{{rowData.material}}" />
                       <!--<p-autoComplete *ngIf="!rowData.materialid" [(ngModel)]="material" [suggestions]="searchItems" formControlName="itemlocation" field="name" [dropdown]="true" (completeMethod)="bindSearchListData($event,'StockModelForm','itemlocation',StockModelForm.controls.itemlocation.value,undefined)"></p-autoComplete>-->
 
-                      <p-autoComplete appendTo="body" *ngIf="!rowData.material" (onSelect)="onMaterialSelected(material)" [(ngModel)]="material" type="text" [suggestions]="searchItems" field="name" [dropdown]="true" (completeMethod)="bindSearchListDatamaterial($event,'material')" size="20"></p-autoComplete>
+                      <p-autoComplete appendTo="body" *ngIf="!rowData.material" placeholder="search by name/code" (onSelect)="onMaterialSelected(material,rowData,ri)" [(ngModel)]="material" type="text" [suggestions]="searchItems" field="name" [forceSelection]="true" [dropdown]="true" (completeMethod)="bindSearchListDatamaterial($event,'material')" size="20"></p-autoComplete>
+                    </td>
+                    <td class="ptable-cell" style="text-align:left">
+                      {{rowData.materialdescription}}
                     </td>
                     <td class="ptable-cell" style="text-align:right">
                       <input style="text-align:left" pInputText type="number" class="form-control" [(ngModel)]="rowData.returnqty">
@@ -348,7 +354,7 @@
                     </td>
                     <td class="ptable-cell" style="text-align:center"><button pButton type="button" icon="fa fa-trash" class="ui-button-info" style="margin-left: 1px;" (click)="removematerial(rowData.gatepassmaterialid, ri)"></button></td>
 
-                </ng-template>
+</ng-template>
 
 
               </p-table>

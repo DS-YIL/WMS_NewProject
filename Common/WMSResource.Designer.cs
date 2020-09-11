@@ -672,10 +672,10 @@ namespace WMS.Common {
         /// <summary>
         ///   Looks up a localized string similar to select max(sk.pono) as pono ,sk.materialid as material,Max(prj.projectmanager) as projectmanager,
         ///( select sum(availableqty) from wms.wms_stock ws where materialid =sk.materialid) as availableqty,
-        ///max(mtmtr.unitprice) as materialcost from wms.wms_stock  sk 
+        ///max(mtmtr.unitprice) as materialcost,max(mtmtr.materialdescription) as materialdescription from wms.wms_stock  sk 
         ///left outer join wms.&quot;MaterialMasterYGS&quot; mtmtr on mtmtr.material = sk.materialid
         ///left outer join wms.wms_project prj on prj.pono = sk.pono 
-        ///where sk.availableqty &gt; 0 and (prj.projectmanager = &apos;#manager&apos; or sk.returnid is not null).
+        ///where sk.availableqty &gt; 0 and (prj.projectmanager = &apos;#ma [rest of string was truncated]&quot;;.
         /// </summary>
         public static string getmaterialdetailfprrequest {
             get {
@@ -949,7 +949,11 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select sum(req.reservedqty)as reservedqty, req.materialid,req.reserveid from wms.wms_materialreserve  req  where req.reserveid=#reserveid and req.reservedqty&gt;0 group by req.reserveid,req.materialid.
+        ///   Looks up a localized string similar to select sum(req.reservedqty)as reservedqty, req.materialid,Max(mat.materialdescription) as materialdescription,req.reserveid 
+        ///from wms.wms_materialreserve  req
+        ///left outer join wms.&quot;MaterialMasterYGS&quot; mat on mat.material=req.materialid
+        ///where req.reserveid=#reserveid and req.reservedqty&gt;0 
+        ///group by req.reserveid,req.materialid.
         /// </summary>
         public static string Getreleasedqty {
             get {
@@ -1365,9 +1369,9 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select max(iss.materialissueid)as materialissueid,max(sk.itemid)as itemid,max(req.returnqty)as returnqty,max(sk.itemlocation)as itemlocation, max(iss.approvedstatus)as approvedstatus,max(req.requestedquantity)as requestedquantity, max(req.materialid)as materialid, max(req.requestid)as requestid,req.requestforissueid,sum(issuedqty)as issuedquantity
+        ///   Looks up a localized string similar to select max(iss.materialissueid)as materialissueid,max(sk.itemid)as itemid,max(req.returnqty)as returnqty,max(sk.itemlocation)as itemlocation, max(iss.approvedstatus)as approvedstatus,max(req.requestedquantity)as requestedquantity, max(req.materialid)as materialid,max(mat.materialdescription) as materialdescription, max(req.requestid)as requestid,req.requestforissueid,sum(issuedqty)as issuedquantity
         /// from wms.wms_materialrequest  req
-        /// left join wms.wms_materialissue iss on req.requestforissueid=iss.requestforissueid  left join wms.wms_stock sk on sk.itemid= [rest of string was truncated]&quot;;.
+        /// left join wms.wms_materialissue iss on req.requestforissueid=iss.request [rest of string was truncated]&quot;;.
         /// </summary>
         public static string issuedqtydetails {
             get {

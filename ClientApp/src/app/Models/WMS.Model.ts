@@ -354,7 +354,7 @@ export class ddlmodel {
   value: string;
   text: string;
   supplier: string;
-  receiveddate : Date
+  receiveddate: Date
 
 }
 

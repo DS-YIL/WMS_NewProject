@@ -52,7 +52,10 @@ export class MaterialReserveViewComponent implements OnInit {
   expired: boolean = false;
   showreservebtn: boolean = false;
   isrequested: boolean = false;
+  public defaultmaterials: materialList[] = [];
   reservetorequest: materialReservetorequestModel;
+  filteredmats: any[];
+  displaypos: boolean = false;
 
   ngOnInit() {
     if (localStorage.getItem("Employee"))
@@ -68,7 +71,73 @@ export class MaterialReserveViewComponent implements OnInit {
     //});
     this.reservetorequest = new materialReservetorequestModel();
     this.getMaterialReservelist();
+    this.getdefaultmaterialstoreserve();
   }
+
+  getdefaultmaterialstoreserve() {
+    this.defaultmaterials = []
+    this.wmsService.getMaterialRequestlistdata(this.employee.employeeno, null).subscribe(data => {
+      this.defaultmaterials = data;
+    });
+  }
+
+  filtermats(event) {
+    this.filteredmats = [];
+    for (let i = 0; i < this.defaultmaterials.length; i++) {
+      let brand = this.defaultmaterials[i].material;
+      let pos = this.defaultmaterials[i].materialdescription;
+      if (brand.toLowerCase().indexOf(event.query.toLowerCase()) == 0 || pos.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+        this.filteredmats.push(brand);
+      }
+    }
+  }
+  refreshdata() {
+    this.suppliername = null;
+    this.ponumber = null;
+    this.requestMatData = new requestData();
+    this.materialList = [];
+    this.materialmodel = [];
+    this.reserveMaterial(); 
+  }
+  radiochecked(e: any, data: any) {
+    var event = e.target.checked;
+    this.requestMatData.pono = data.pono;
+    this.requestMatData.suppliername = data.suppliername;
+    this.onPOSelected(this.requestMatData.pono);
+    e.target.checked = false;
+    this.displaypos = false;
+  }
+  closedg() {
+
+  }
+  showpodatabox() {
+    this.displaypos = !this.displaypos;
+  }
+  onMaterialSelected1(data: any, ind: number) {
+    debugger;
+    var data1 = this.materialList.filter(function (element, index) {
+      return (element.material == data.material && index != ind);
+    });
+    if (data1.length > 0) {
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Material already exist' });
+      this.materialList[ind].material = "";
+      this.materialList[ind].materialdescription = "";
+      this.materialList[ind].materialcost = 0;
+      this.materialList[ind].availableqty = 0;
+      this.materialList[ind].quantity = 0;
+      return false;
+    }
+    var data2 = this.defaultmaterials.filter(function (element, index) {
+      return (element.material == data.material);
+    });
+    if (data2.length > 0) {
+      data.materialdescription = data2[0].materialdescription;
+      data.materialcost = data2[0].materialcost != null ? data2[0].materialcost : 0;
+      data.availableqty = data2[0].availableqty != null ? data2[0].availableqty : 0;
+    }
+
+  }
+
 
   //get Material reserve based on login employee && po no
   getMaterialReservelist() {
