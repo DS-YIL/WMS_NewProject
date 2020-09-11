@@ -1,10 +1,10 @@
-import { Component, OnInit, Inject, ViewChild, ElementRef} from '@angular/core';
+import { Component, OnInit, Inject, ViewChild, ElementRef } from '@angular/core';
 import { Router, ActivatedRoute, RouterEvent, NavigationEnd } from '@angular/router';
 import { wmsService } from '../WmsServices/wms.service';
 import { constants } from '../Models/WMSConstants';
 import { Employee, DynamicSearchResult } from '../Models/Common.Model';
 import { NgxSpinnerService } from "ngx-spinner";
-import { PoDetails, BarcodeModel, ddlmodel } from 'src/app/Models/WMS.Model';
+import { PoDetails, BarcodeModel, ddlmodel, PrintHistoryModel } from 'src/app/Models/WMS.Model';
 import { MessageService } from 'primeng/api';
 import { filter } from 'rxjs/operators';
 import { isNullOrUndefined } from 'util';
@@ -45,6 +45,8 @@ export class SecurityHomeComponent implements OnInit {
   searchdata: string = "";
   nonporemarks: string = "";
   nonpofile: any;
+  public showPrintBtn: boolean = true;
+  public PrintHistoryModel: PrintHistoryModel;
 
   ngOnInit() {
 
@@ -100,7 +102,7 @@ export class SecurityHomeComponent implements OnInit {
     else {
       return data.suppliername;
     }
-    
+
 
   }
 
@@ -199,10 +201,7 @@ export class SecurityHomeComponent implements OnInit {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Enter PO/ASN No.' });
   }
 
-  printbarcode() {
-    
 
-  }
   onBasicUpload(event) {
     debugger;
     this.nonpofile = event.target.files[0];
@@ -229,14 +228,10 @@ export class SecurityHomeComponent implements OnInit {
   //update invoice no
   onsaveSecDetails() {
     //need to generate barcode
-    debugger;
-
-   
-
     this.spinner.show();
     this.BarcodeModel = new BarcodeModel();
     this.BarcodeModel.paitemid = 1;;
-    this.BarcodeModel.barcode = "testbarcodetext";
+    this.BarcodeModel.barcode = this.searchdata + "_" + this.Poinvoicedetails.invoiceno;
     this.BarcodeModel.createdby = this.employee.employeeno;
     this.BarcodeModel.pono = this.PoDetails.pono;
     this.BarcodeModel.asnno = this.PoDetails.asnno;
@@ -268,16 +263,16 @@ export class SecurityHomeComponent implements OnInit {
       return;
 
     }
-      
+
     this.BarcodeModel.invoiceno = this.Poinvoicedetails.invoiceno;
 
-    this.BarcodeModel.receivedby = this.employee.employeeno;  
+    this.BarcodeModel.receivedby = this.employee.employeeno;
     if (this.isnonpochecked) {
       if (this.nonpofile) {
         let file = this.nonpofile;
         this.BarcodeModel.docfile = file.name;
       }
-      
+
     }
     this.wmsService.insertbarcodeandinvoiceinfo(this.BarcodeModel).subscribe(data => {
       this.spinner.hide();
@@ -288,6 +283,8 @@ export class SecurityHomeComponent implements OnInit {
         this.messageService.add({ severity: 'error', summary: '', detail: 'Invoice for this PO already received' });
       }
       else { //data>=1
+        this.showPrintBtn = true;
+        
         if (String(data).startsWith("NP")) {
           this.uploadnonpodoc(data);
         }
@@ -298,5 +295,21 @@ export class SecurityHomeComponent implements OnInit {
       }
     });
   }
-   
+
+  printbarcode() {
+    //this.spinner.show();
+    var po_invoiceNo = this.searchdata + "_" + this.Poinvoicedetails.invoiceno;
+    this.PrintHistoryModel = new PrintHistoryModel();
+    this.PrintHistoryModel.reprintedby = this.employee.employeeno;
+    this.PrintHistoryModel.po_invoice = po_invoiceNo;
+    this.PrintHistoryModel.pono = this.searchdata;
+    this.PrintHistoryModel.invoiceNo = this.Poinvoicedetails.invoiceno;
+    this.wmsService.printBarcode(this.PrintHistoryModel).subscribe(data => {
+      this.spinner.hide();
+      //if (data)
+      //this.messageService.add({ severity: 'success', summary: '', detail: 'Invoice No. Updated' });
+    })
+
+  }
+
 }

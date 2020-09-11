@@ -40,8 +40,8 @@ namespace WMS.Controllers
 			{
 
 				DB.Open();
-				//var filePath = @"http://10.29.15.183:100/WMSFiles/stageTest.xlsx";
-				var filePath = @"D:\WMSFiles\stageTest.xlsx";
+				//var filePath = @"http://10.29.15.183:100/WMSFiles/stageTest1.xlsx";
+				var filePath = @"D:\YILProjects\WMS\WMSFiles\stageTest1.xlsx";
 				DataTable dtexcel = new DataTable();
 				bool hasHeaders = false;
 				string HDR = hasHeaders ? "Yes" : "No";
@@ -126,8 +126,7 @@ namespace WMS.Controllers
 			{
 				{
 
-
-					string query = "select * from wms.stag_po_sap where purchdoc !='' and material !=''  ";
+					string query = "select * from wms.stag_po_sap where purchdoc !='' and material !='' and poquantity !=0  ";
 					pgsql.Open();
 					var stagingList = pgsql.Query<StagingModel>(
 					   query, null, commandType: CommandType.Text);

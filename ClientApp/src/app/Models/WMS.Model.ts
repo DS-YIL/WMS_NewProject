@@ -72,8 +72,8 @@ export class Cyclecountconfig {
 export class UserDashboardGraphModel {
   smonth: string;
   syear: string;
-   count: number;
-   graphdate: Date;
+  count: number;
+  graphdate: Date;
   type: string;
 }
 
@@ -82,7 +82,7 @@ export class UnholdGRModel {
   unholdaction: boolean;
   unholdedby: string;
   unholdremarks: string
-	}
+}
 
 
 
@@ -121,7 +121,7 @@ export class inwardModel {
   qualitychecked: boolean;
   isreceivedpreviosly: boolean;
   availableqty: any;
-   onhold: boolean;
+  onhold: boolean;
   onholdremarks: string;
   qcstatus: string;
   receiveremarks: string;
@@ -177,7 +177,7 @@ export class StockModel {
   locatorname: string;
   locationlists: any[] = [];
   binlist: any[] = [];
- racklist: any[] = [];
+  racklist: any[] = [];
 }
 
 export class locataionDetailsStock {
@@ -281,7 +281,7 @@ export class materialList {
   issuedqty: number;
   materialcost: number;
   requesterid: any;
-  
+
 }
 
 export class materialListforReserve {
@@ -419,7 +419,7 @@ export class stocktransfermodel {
   transferedby: string
   remarks: string;
   mlocations: string[] = [];
-  itemlocationdata : any[] = []
+  itemlocationdata: any[] = []
 
 }
 
@@ -472,14 +472,14 @@ export class UserDashboardDetail {
   reservedquantityforthisweek: number;
   pendingtoapproval: number;
   pendingcyclecountapproval: number;
-  
+
 }
 export class returnmaterial {
   materialLists: Array<materialistModeltransfer> = [];
   materialList: Array<materialistModelreturn> = [];
 }
 export class materialistModelreturn {
- // gatepassmaterialid: string;
+  // gatepassmaterialid: string;
   material: string;
   materialdescription: string;
   returnqty: number = 0;
@@ -494,7 +494,7 @@ export class materialistModeltransfer {
   transferqty: number = 0;
   remarks: string;
   transfetid: number;
-  projectcode:string
+  projectcode: string
   createdby: string;
 }
 
@@ -539,3 +539,20 @@ export class testcrud {
   ismanager: boolean
 }
 
+export class PrintHistoryModel {
+  reprinthistoryid: number;
+  gatepassid: string
+  inwmasterid: string;
+  reprintedon: Date
+  reprintedby: string;
+  reprintcount: number;
+  barcodeid: string;
+  po_invoice: string;
+  pono: string;
+  invoiceNo: string;
+}
+
+export class materilaTrasFilterParams {
+  FromDate: string;
+  ToDate: string;
+}

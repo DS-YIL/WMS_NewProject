@@ -5,7 +5,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { constants } from '../Models/WMSConstants'
 import { Employee, Login, DynamicSearchResult, printMaterial, rbamaster } from '../Models/Common.Model';
-import { PoFilterParams, PoDetails, BarcodeModel, StockModel, materialRequestDetails, inwardModel, gatepassModel, stocktransfermodel, Materials, authUser, invstocktransfermodel, ddlmodel, locataionDetailsStock,updateonhold, materialistModel, outwardmaterialistModel, pageModel, UserDashboardDetail, UserDashboardGraphModel, UnholdGRModel, MRNsavemodel, notifymodel, materialtransferMain, materialReservetorequestModel, testcrud } from '../Models/WMS.Model';
+import { PoFilterParams, PoDetails, BarcodeModel, StockModel, materialRequestDetails, inwardModel, gatepassModel, stocktransfermodel, Materials, authUser, invstocktransfermodel, ddlmodel, locataionDetailsStock, updateonhold, materialistModel, outwardmaterialistModel, pageModel, UserDashboardDetail, UserDashboardGraphModel, UnholdGRModel, MRNsavemodel, notifymodel, materialtransferMain, materialReservetorequestModel, testcrud, PrintHistoryModel, materilaTrasFilterParams } from '../Models/WMS.Model';
 import { Text } from '@angular/compiler/src/i18n/i18n_ast';
 
 @Injectable({
@@ -108,7 +108,7 @@ export class wmsService {
   }
 
   Getdataforqualitycheck(grn: string): Observable<inwardModel[]> {
-    return this.http.get<inwardModel[]>(this.url + 'POData/Getqualitydetails?grnnumber='+grn, this.httpOptions);
+    return this.http.get<inwardModel[]>(this.url + 'POData/Getqualitydetails?grnnumber=' + grn, this.httpOptions);
   }
 
   Getdataforholdgr(status: string): Observable<inwardModel[]> {
@@ -119,7 +119,7 @@ export class wmsService {
     return this.http.get<inwardModel[]>(this.url + 'POData/GetholdGRmaindetails/', this.httpOptions);
   }
 
-  
+
 
   verifythreewaymatch(PoNo: string): Observable<any> {
     return this.http.get<any>(this.url + 'POData/verifythreewaymatch?pono=' + PoNo, this.httpOptions);
@@ -150,7 +150,7 @@ export class wmsService {
   //Get material request, isuued and approved details
   getMaterialRequestDetails(materialid: string, gnrno: string): Observable<any> {
     materialid = encodeURIComponent(materialid);
-    return this.http.get<any>(this.url + 'POData/getReqMatdetailsformaterialid?materialid=' + materialid + '&grnnumber=' + gnrno,this.httpOptions);
+    return this.http.get<any>(this.url + 'POData/getReqMatdetailsformaterialid?materialid=' + materialid + '&grnnumber=' + gnrno, this.httpOptions);
   }
 
   insertitems(inwardModel: inwardModel[]): Observable<any> {
@@ -181,14 +181,14 @@ export class wmsService {
     return this.http.get<any>(this.url + 'POData/getmaterialrequestList?PONO=' + pono + '&loginid=' + loginid + '', this.httpOptions);
   }
   getreturndata(empno: any): Observable<any> {
-    return this.http.get<any>(this.url + 'POData/getreturndata?empno=' + empno+'', this.httpOptions);
+    return this.http.get<any>(this.url + 'POData/getreturndata?empno=' + empno + '', this.httpOptions);
   }
-  gettransferdata(empno:any): Observable<any> {
-    return this.http.get<any>(this.url + 'POData/gettransferdata?empno=' + empno+'', this.httpOptions);
+  gettransferdata(empno: any): Observable<any> {
+    return this.http.get<any>(this.url + 'POData/gettransferdata?empno=' + empno + '', this.httpOptions);
   }
 
   getdirecttransferdata(empno: string): Observable<any> {
-    return this.http.get<any>(this.url + 'POData/getdirecttransferdata?empno='+empno, this.httpOptions);
+    return this.http.get<any>(this.url + 'POData/getdirecttransferdata?empno=' + empno, this.httpOptions);
   }
   getMaterialReservelist(loginid: string): Observable<any> {
     return this.http.get<any>(this.url + 'POData/GetreserveMaterilalist?reservedby=' + loginid + '', this.httpOptions);
@@ -214,7 +214,7 @@ export class wmsService {
     return this.http.post<any>(this.url + 'POData/insertreservematerial/', materialRequestList, this.httpOptions);
   }
 
-  
+
 
 
   getMaterialIssueLlist(loginid: string): Observable<any> {
@@ -223,12 +223,12 @@ export class wmsService {
   GetReturnmaterialList(): Observable<any> {
     return this.http.get<any>(this.url + 'POData/GetReturnmaterialList', this.httpOptions);
   }
-  
+
   GetreleasedMaterilalist(loginid: string): Observable<any> {
     return this.http.get<any>(this.url + 'POData/GetreleasedMaterilalist', this.httpOptions);
   }
-  getmaterialIssueListbyrequestid(requestid: string,pono:string): Observable<any> {
-    return this.http.get<any>(this.url + 'POData/getmaterialIssueListbyrequestid?requestid=' + requestid + '&pono='+pono, this.httpOptions);
+  getmaterialIssueListbyrequestid(requestid: string, pono: string): Observable<any> {
+    return this.http.get<any>(this.url + 'POData/getmaterialIssueListbyrequestid?requestid=' + requestid + '&pono=' + pono, this.httpOptions);
   }
   getmaterialIssueListbyreserveid(reserveid: string): Observable<any> {
     return this.http.get<any>(this.url + 'POData/Getmaterialdetailsbyreserveid?reserveid=' + reserveid + '', this.httpOptions);
@@ -245,7 +245,7 @@ export class wmsService {
     return this.http.get<any>(this.url + 'POData/GetReturnmaterialListForConfirm?requestid=' + requestid + '', this.httpOptions);
   }
   UpdateReturnqty(returnlist: any): Observable<any> {
-    return this.http.post<any>(this.url + 'POData/UpdateReturnqty',returnlist, this.httpOptions);
+    return this.http.post<any>(this.url + 'POData/UpdateReturnqty', returnlist, this.httpOptions);
   }
   getmaterialissueListforreserved(reservedid: string): Observable<any> {
     return this.http.get<any>(this.url + 'POData/getmaterialissueListforreserved?reservedid=' + reservedid + '', this.httpOptions);
@@ -258,7 +258,7 @@ export class wmsService {
   approvematerialrelease(materialIssueList: any): Observable<any> {
     return this.http.post<any>(this.url + 'POData/approvematerialrelease/', materialIssueList, this.httpOptions);
   }
-  
+
   ackmaterialreceived(materialAckList: any): Observable<any> {
     return this.http.post<any>(this.url + 'POData/ackmaterialreceived/', materialAckList, this.httpOptions);
   }
@@ -272,7 +272,7 @@ export class wmsService {
     return this.http.get<any>(this.url + 'POData/nonreturngetgatepasslist/?type=' + typ, this.httpOptions);
   }
 
-  
+
   gatepassmaterialdetail(gatepassId): Observable<any> {
 
     return this.http.get<any>(this.url + 'POData/getmaterialdetailsbygatepassid?gatepassid=' + gatepassId + '', this.httpOptions);
@@ -317,7 +317,7 @@ export class wmsService {
   getABCavailableqtyList(): Observable<any> {
     return this.http.get<any>(this.url + 'POData/getABCavailableqtyList/', this.httpOptions);
   }
-  
+
 
   GetABCListBycategory(category: string): Observable<any> {
     return this.http.get<any>(this.url + 'POData/GetABCListBycategory/?category=' + category + '', this.httpOptions);
@@ -332,8 +332,8 @@ export class wmsService {
   GetreportBasedCategory(): Observable<any> {
     return this.http.get<any>(this.url + 'POData/GetreportBasedCategory/', this.httpOptions);
   }
-  
-  getCyclecountList(limita: number, limitb:number, limitc : number): Observable<any> {
+
+  getCyclecountList(limita: number, limitb: number, limitc: number): Observable<any> {
     return this.http.get<any>(this.url + 'POData/getCyclecountList/?limita=' + limita + '&limitb=' + limitb + '&limitc=' + limitc, this.httpOptions);
   }
   getCyclecountPendingList(): Observable<any> {
@@ -360,7 +360,7 @@ export class wmsService {
     return this.http.post<any>(this.url + 'POData/updateFIFOIssueddata/', materialIssueList, this.httpOptions);
   }
   getASNList(currentDate: string): Observable<any> {
-    return this.http.get<any>(this.url + 'POData/getASNList?deliverydate=' + currentDate,this.httpOptions);
+    return this.http.get<any>(this.url + 'POData/getASNList?deliverydate=' + currentDate, this.httpOptions);
   }
   getASNListData(): Observable<any> {
     return this.http.get<any>(this.url + 'POData/getASNListdata/', this.httpOptions);
@@ -393,7 +393,7 @@ export class wmsService {
 
   login() {
     if (localStorage.getItem("Employee"))
-    this.currentUserSubject.next(JSON.parse(localStorage.getItem("Employee")));
+      this.currentUserSubject.next(JSON.parse(localStorage.getItem("Employee")));
   }
   logout() {
     //localStorage.removeItem('Employee');
@@ -415,7 +415,7 @@ export class wmsService {
   getPendingpo(): Observable<ddlmodel[]> {
     return this.http.get<ddlmodel[]>(this.url + 'POData/getpendingpos/', this.httpOptions);
   }
-  getapproverdata(empid:string): Observable<any> {
+  getapproverdata(empid: string): Observable<any> {
     return this.http.get<any>(this.url + 'POData/getapproverList?empid=' + empid, this.httpOptions);
   }
   getgatepassapproverdata(empid: string): Observable<any> {
@@ -427,7 +427,7 @@ export class wmsService {
   GetBinList(): Observable<any> {
     return this.http.get<any>(this.url + 'POData/GetBinList', this.httpOptions);
   }
-   getMaterialforstocktransfer(): Observable<Materials[]> {
+  getMaterialforstocktransfer(): Observable<Materials[]> {
     return this.http.get<Materials[]>(this.url + 'POData/GetMaterialdatafromstock/', this.httpOptions);
   }
   getstocktransferlist(): Observable<stocktransfermodel[]> {
@@ -460,7 +460,7 @@ export class wmsService {
     return this.http.get<ddlmodel[]>(this.url + 'POData/getgrnforacceptanceputaway/', this.httpOptions);
   }
   getcheckedgrnlistfornotify(type: string): Observable<inwardModel[]> {
-    return this.http.get<inwardModel[]>(this.url + 'POData/getgrnforacceptancenotify?type='+ type, this.httpOptions);
+    return this.http.get<inwardModel[]>(this.url + 'POData/getgrnforacceptancenotify?type=' + type, this.httpOptions);
   }
 
   getnotifedGRbydate(fromdt: string, todt: string): Observable<inwardModel[]> {
@@ -471,7 +471,7 @@ export class wmsService {
     return this.http.get<ddlmodel[]>(this.url + 'POData/getgrnforacceptanceqc/', this.httpOptions);
   }
   getcheckedgrnlistforqcbydate(fromdt: string, todt: string): Observable<ddlmodel[]> {
-    return this.http.get<ddlmodel[]>(this.url + 'POData/getgrnforacceptanceqcbydate?fromdt=' + fromdt+'&todt='+ todt, this.httpOptions);
+    return this.http.get<ddlmodel[]>(this.url + 'POData/getgrnforacceptanceqcbydate?fromdt=' + fromdt + '&todt=' + todt, this.httpOptions);
   }
 
   getholdgrlist(): Observable<ddlmodel[]> {
@@ -485,7 +485,7 @@ export class wmsService {
   getmateriallistfortransfer(empno: string): Observable<ddlmodel[]> {
     return this.http.get<ddlmodel[]>(this.url + 'POData/getmateriallistfortransfer?empno=' + empno, this.httpOptions);
   }
-  
+
 
 
   updateonhold(updaeonhold: updateonhold): Observable<any> {
@@ -565,7 +565,17 @@ export class wmsService {
     return this.http.delete<any>(this.url + 'POData/deletetestcurd/' + id, httpOptions);
   }
 
-  
+
+  //print bar code
+
+  printBarcode(PrintHistoryModel: PrintHistoryModel): Observable<pageModel[]> {
+    return this.http.post<any[]>(this.url + 'Print/printBarcode/', PrintHistoryModel, this.httpOptions);
+  }
+  //get material transfer dashboard details
+  getMaterialtransferdetails(materialTransferFilters: materilaTrasFilterParams): Observable<any> {
+    return this.http.post<any>(this.url + 'POData/getMaterialtransferdetails',materialTransferFilters, this.httpOptions);
+  }
+
 }
 
 

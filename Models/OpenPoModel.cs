@@ -27,7 +27,7 @@ namespace WMS.Models
 		public string Materialdescription { get; set; }
 		public string status { get; set; }
 		public int returnqty { get; set; }
-        public int vendorid { get; set; }
+		public int vendorid { get; set; }
 		public string grnnumber { get; set; }
 		public int confirmqty { get; set; }
 		public int receivedqty { get; set; }
@@ -73,10 +73,10 @@ namespace WMS.Models
 
 		public DateTime unholdedon { get; set; }
 
-		public string  unholdremarks { get; set; }
+		public string unholdremarks { get; set; }
 
 		public DateTime deliverydate { get; set; }
-	
+
 	}
 
 	public class printMaterial
@@ -90,7 +90,7 @@ namespace WMS.Models
 		public string barcodePath { get; set; }
 		public string materialcodePath { get; set; }
 		public string errorMsg { get; set; }
-}
+	}
 
 	public class BarcodeModel
 	{
@@ -129,7 +129,7 @@ namespace WMS.Models
 		public DateTime receiveddate { get; set; }
 		public int barcodeid { get; set; }
 		public bool deleteflag { get; set; }
-        public string grnnumber { get; set; }
+		public string grnnumber { get; set; }
 	}
 	public class inwardModel
 	{
@@ -142,9 +142,9 @@ namespace WMS.Models
 		public int itemid { get; set; }
 
 		public int vendorid { get; set; }
-        public int inwardid { get; set; }
-        public string projectname { get; set; }
-        public int inwmasterid { get; set; }
+		public int inwardid { get; set; }
+		public string projectname { get; set; }
+		public int inwmasterid { get; set; }
 		public string quotationqty { get; set; }
 		public int receivedqty { get; set; }
 		public DateTime receiveddate { get; set; }
@@ -159,9 +159,9 @@ namespace WMS.Models
 		public string qcby { get; set; }
 		public string remarks { get; set; }
 		public string Material { get; set; }
-        public string grnnumber { get; set; }
-        public string Materialdescription { get; set; }
-        public string itemlocation { get; set; }
+		public string grnnumber { get; set; }
+		public string Materialdescription { get; set; }
+		public string itemlocation { get; set; }
 		public string invoiceno { get; set; }
 
 		public string vendorname { get; set; }
@@ -175,7 +175,7 @@ namespace WMS.Models
 		public int qualityfailedqty { get; set; }
 
 		public bool qualitycheck { get; set; }
-public bool onhold { get; set; }
+		public bool onhold { get; set; }
 
 		public string onholdremarks { get; set; }
 		public string availableqty { get; set; }
@@ -219,16 +219,16 @@ public bool onhold { get; set; }
 		public string itemlocation { get; set; }
 		public DateTime createddate { get; set; }
 		public string createdby { get; set; }
-        public string binnumber { get; set; }
-        public string racknumber { get; set; }
-	    public int confirmqty { get; set; }
+		public string binnumber { get; set; }
+		public string racknumber { get; set; }
+		public int confirmqty { get; set; }
 		public string materialid { get; set; }
 
 		public string remarks { get; set; }
 
 		public int returnid { get; set; }
 
-    }
+	}
 	public class trackstatusModel
 	{
 		public int trackid { get; set; }
@@ -248,7 +248,7 @@ public bool onhold { get; set; }
 
 	//podetails model
 	public class PODetails
-    {
+	{
 		public string pono { get; set; }
 		public string suppliername { get; set; }
 		public string quotationqty { get; set; }
@@ -279,9 +279,9 @@ public bool onhold { get; set; }
 		public int availableqty { get; set; }
 		public int issued { get; set; }
 		public string qtyavailable { get; set; }
-		public string materialid { get;set; } 
+		public string materialid { get; set; }
 		public string qtytotal { get; set; }
-		public  int confirmqty { get; set; }
+		public int confirmqty { get; set; }
 		public int inwmasterid { get; set; }
 	}
 
@@ -317,7 +317,7 @@ public bool onhold { get; set; }
 	{
 		public string tableName { get; set; }
 		public string searchCondition { get; set; }
-		public  string query { get; set; }
+		public string query { get; set; }
 
 	}
 
@@ -327,9 +327,9 @@ public bool onhold { get; set; }
 		public int binid { get; set; }
 		public int storeid { get; set; }
 		public string locationid { get; set; }
-		public string locationname{ get; set; }
-	public string rackname { get; set; }
-	public string binname { get; set; }
+		public string locationname { get; set; }
+		public string rackname { get; set; }
+		public string binname { get; set; }
 		public string storename { get; set; }
 	}
 	public class IssueRequestModel
@@ -343,34 +343,34 @@ public bool onhold { get; set; }
 		public string ackstatus { get; set; }
 		public string remarks { get; set; }
 		public int returnid { get; set; }
-		public int matreturnid{get;set;}
+		public int matreturnid { get; set; }
 		public int requestforissueid { get; set; }
-        public int itemid { get; set; }
-		public Boolean itemreturnable { get;set; }
+		public int itemid { get; set; }
+		public Boolean itemreturnable { get; set; }
 
 		public int requestid { get; set; }
-        public int inwardid { get; set; }
-        public int quantity { get; set; }
-        public int quotationqty { get; set; }
-        public int requestedquantity { get; set; }
-        public int issuedquantity { get; set; }
-        public string pono { get; set; }
-        public DateTime requesteddate { get; set; }
-        public string approveremailid { get; set; }
-        public string approverid { get; set; }
+		public int inwardid { get; set; }
+		public int quantity { get; set; }
+		public int quotationqty { get; set; }
+		public int requestedquantity { get; set; }
+		public int issuedquantity { get; set; }
+		public string pono { get; set; }
+		public DateTime requesteddate { get; set; }
+		public string approveremailid { get; set; }
+		public string approverid { get; set; }
 		public string approvedby { get; set; }
 		public string itemreceiverid { get; set; }
 		public DateTime approvedon { get; set; }
-        public string approvedstatus { get; set; }
-        public bool status { get; set; }
-        public bool deleteflag { get; set; }
-        public string materialid { get; set; }
-        public string requesterid { get; set; }
-        public string projectname { get; set; }
-        public string name { get; set; }
-        //public string Material { get; set; }
-        public string ackremarks { get; set; }
-        public string Materialdescription { get; set; }
+		public string approvedstatus { get; set; }
+		public bool status { get; set; }
+		public bool deleteflag { get; set; }
+		public string materialid { get; set; }
+		public string requesterid { get; set; }
+		public string projectname { get; set; }
+		public string name { get; set; }
+		//public string Material { get; set; }
+		public string ackremarks { get; set; }
+		public string Materialdescription { get; set; }
 		public DateTime createddate { get; set; }
 		public int availableqty { get; set; }
 		public string itemlocation { get; set; }
@@ -402,32 +402,34 @@ public bool onhold { get; set; }
 		public int reserveid { get; set; }
 		public int reservedqty { get; set; }
 
+
+
 	}
 
-	
-    public class sequencModel
-    {
-        public int id { get; set; }
-        public string sequencename { get; set; }
-        public int sequenceid { get; set; }
-        public int year { get; set; }
-        public int sequencenumber { get; set; }
-    }
+
+	public class sequencModel
+	{
+		public int id { get; set; }
+		public string sequencename { get; set; }
+		public int sequenceid { get; set; }
+		public int year { get; set; }
+		public int sequencenumber { get; set; }
+	}
 
 	public class stockCardPrint
-    {
-	public string pono { get; set; }
-  public string projectdef { get; set; }
-  public string jobname { get; set; }
-  public string modelno { get; set; }
-	public string description { get; set; }
-	public Int64 qty { get; set; }
+	{
+		public string pono { get; set; }
+		public string projectdef { get; set; }
+		public string jobname { get; set; }
+		public string modelno { get; set; }
+		public string description { get; set; }
+		public Int64 qty { get; set; }
 		public string box { get; set; }
 		public DateTime date { get; set; }
 		public string checkedby { get; set; }
-    }
-	
-		public class pageModel
+	}
+
+	public class pageModel
 	{
 		public int id { get; set; }
 		public string pagename { get; set; }
@@ -439,7 +441,7 @@ public bool onhold { get; set; }
 	}
 
 	public class gatepassModel
-    {
+	{
 		public string statusremarks { get; set; }
 		public string managername { get; set; }
 		public string pono { get; set; }
@@ -449,14 +451,14 @@ public bool onhold { get; set; }
 		public string reprintedby { get; set; }
 		public int availableqty { get; set; }
 		public int gatepassid { get; set; }
-        public string gatepasstype { get; set; }
-        public string status { get; set; }
-        public string referenceno { get; set; }
-        public string vehicleno { get; set; }
-        public string requestedby{ get; set; }
-        public DateTime requestedon { get; set; }
-        public int gatepassmaterialid { get; set; }
-        public string    materialid { get; set; }
+		public string gatepasstype { get; set; }
+		public string status { get; set; }
+		public string referenceno { get; set; }
+		public string vehicleno { get; set; }
+		public string requestedby { get; set; }
+		public DateTime requestedon { get; set; }
+		public int gatepassmaterialid { get; set; }
+		public string materialid { get; set; }
 		public string materialdescription { get; set; }
 		public int quantity { get; set; }
 		public string vendorname { get; set; }
@@ -464,7 +466,7 @@ public bool onhold { get; set; }
 		public bool deleteflag { get; set; }
 		public string reasonforgatepass { get; set; }
 		public string approverstatus { get; set; }
-		
+
 		public string approverremarks { get; set; }
 		public Boolean print { get; set; }
 		public int reprintcount { get; set; }
@@ -473,7 +475,7 @@ public bool onhold { get; set; }
 		public string printedby { get; set; }
 		public DateTime printedon { get; set; }
 		public string remarks { get; set; }
-		
+
 		public int materialcost { get; set; }
 		public DateTime? expecteddate { get; set; }
 		public DateTime? returneddate { get; set; }
@@ -517,8 +519,8 @@ public bool onhold { get; set; }
 
 	}
 
-		public class reprintModel
-		{
+	public class reprintModel
+	{
 		public int reprinthistoryid { get; set; }
 		public int? gatepassid { get; set; }
 		public int? inwmasterid { get; set; }
@@ -528,8 +530,8 @@ public bool onhold { get; set; }
 	}
 
 	public class CycleCountList
-    {
-		
+	{
+
 		public int id { get; set; }
 		public string category { get; set; }
 		public string materialid { get; set; }
@@ -538,7 +540,7 @@ public bool onhold { get; set; }
 		public int physicalqty { get; set; }
 		public int difference { get; set; }
 		public bool iscountprocess { get; set; }
-		public bool iscounted  { get; set; }
+		public bool iscounted { get; set; }
 		public bool isapprovalprocess { get; set; }
 		public bool isapproved { get; set; }
 
@@ -570,7 +572,7 @@ public bool onhold { get; set; }
 
 	}
 
-		public class ReportModel
+	public class ReportModel
 	{
 		public int itemid { get; set; }
 		public string materialid { get; set; }
@@ -605,7 +607,7 @@ public bool onhold { get; set; }
 		public DateTime enddate { get; set; }
 		public DateTime startdate { get; set; }
 	}
-    	public class Cyclecountconfigmodel
+	public class Cyclecountconfigmodel
 	{
 		public int amin { get; set; }
 		public int amax { get; set; }
@@ -645,7 +647,7 @@ public bool onhold { get; set; }
 		public int availableqty { get; set; }
 		public string pono { get; set; }
 		public int itemid { get; set; }
-		public int issuedqty { get;set; }
+		public int issuedqty { get; set; }
 	}
 	public class EmailModel
 	{
@@ -665,7 +667,7 @@ public bool onhold { get; set; }
 		public string name { get; set; }
 		public string employeenoformanager { get; set; }
 		public string managername { get; set; }
-		public string approverid {get;set;}
+		public string approverid { get; set; }
 	}
 	public class authUser
 	{
@@ -695,8 +697,8 @@ public bool onhold { get; set; }
 	public class UnholdGRModel
 	{
 		public int inwmasterid { get; set; }
-		public bool unholdaction  { get; set; }
-		public string unholdedby  { get; set; }
+		public bool unholdaction { get; set; }
+		public string unholdedby { get; set; }
 
 		public string unholdremarks { get; set; }
 
@@ -779,7 +781,7 @@ public bool onhold { get; set; }
 		public string chkstatus { get; set; }
 		public string materialdescription { get; set; }
 	}
-		public class SecurityInwardreceivedModel
+	public class SecurityInwardreceivedModel
 	{
 		public string pono { get; set; }
 		public string receivedby { get; set; }
@@ -793,7 +795,7 @@ public bool onhold { get; set; }
 	}
 	public class dropdownModel
 	{
-		public int binid{get;set;}
+		public int binid { get; set; }
 		public string binnumber { get; set; }
 		public int locatorid { get; set; }
 		public string locatorname { get; set; }
@@ -802,12 +804,12 @@ public bool onhold { get; set; }
 	}
 
 	public class Materials
-	{ 
+	{
 		public string material { get; set; }
 		public string materialdescription { get; set; }
 
 		public bool qualitycheck { get; set; }
-	
+
 	}
 }
 
@@ -847,7 +849,7 @@ public class stocktransferModel
 	public DateTime transferedon { get; set; }
 	public string transferedby { get; set; }
 	public string remarks { get; set; }
-	
+
 
 }
 
@@ -865,26 +867,26 @@ public class invstocktransfermodel
 
 public class stocktransfermateriakmodel
 {
-   public int number { get; set; }
-   public string transferid { get; set; }
-   public int itemid { get; set; }
-   public string materialid { get; set; }
-   public string materialdescription { get; set; }
-   public string sourcelocation { get; set; }
-   public int sourceitemid { get; set; }
+	public int number { get; set; }
+	public string transferid { get; set; }
+	public int itemid { get; set; }
+	public string materialid { get; set; }
+	public string materialdescription { get; set; }
+	public string sourcelocation { get; set; }
+	public int sourceitemid { get; set; }
 	public string destinationlocation { get; set; }
 	public int destinationitemid { get; set; }
-	public int transferqty ;
-  public string[] mlocations { get; set; } 
+	public int transferqty;
+	public string[] mlocations { get; set; }
 }
 
 public class ddlmodel
 {
 
-  public string	value { get; set; }
-  public string text { get; set; }
-  public string supplier { get; set; }
-  public DateTime receiveddate { get; set; }
+	public string value { get; set; }
+	public string text { get; set; }
+	public string supplier { get; set; }
+	public DateTime receiveddate { get; set; }
 
 }
 
@@ -895,14 +897,14 @@ public class materialtransferMain
 	public int transferredqty { get; set; }
 	public string transferremarks { get; set; }
 	public string transferedby { get; set; }
-    public DateTime transferredon { get; set; }
+	public DateTime transferredon { get; set; }
 	public List<materialtransferTR> materialdata { get; set; }
-	
+
 }
 public class materialtransferTR
 {
 	public int transferid { get; set; }
-    public string materialid { get; set; }
+	public string materialid { get; set; }
 	public string materialdescription { get; set; }
 	public int transferredqty { get; set; }
 }
@@ -979,30 +981,30 @@ public class rbamaster
 {
 	public int id { get; set; }
 	public int roleid { get; set; }
-	public bool inv_enquiry {get; set;}
-	public bool inv_reports {get; set;}
-	public bool gate_entry {get; set;}
-	public bool gate_entry_barcode {get; set;}
-	public bool inv_receipt_alert {get; set;}
-	public bool receive_material {get; set;}
-	public bool put_away {get; set;}
-	public bool material_return {get; set;}
-	public bool material_transfer {get; set;}
-	public bool gate_pass {get; set;}
-	public bool gatepass_inout {get; set;}
-	public bool gatepass_approval {get; set;}
-	public bool material_issue {get; set;}
-	public bool material_request {get; set;}
-	public bool material_reservation {get; set;}
-	public bool abc_classification {get; set;}
-	public bool cyclecount_configuration {get; set;}
-	public bool cycle_counting {get; set;}
-	public bool cyclecount_approval {get; set;}
-	public bool admin_access {get; set;}
-	public bool masterdata_creation {get; set;}
-	public bool masterdata_updation {get; set;}
-	public bool masterdata_approval {get; set;}
-	public bool printbarcodes {get; set;}
+	public bool inv_enquiry { get; set; }
+	public bool inv_reports { get; set; }
+	public bool gate_entry { get; set; }
+	public bool gate_entry_barcode { get; set; }
+	public bool inv_receipt_alert { get; set; }
+	public bool receive_material { get; set; }
+	public bool put_away { get; set; }
+	public bool material_return { get; set; }
+	public bool material_transfer { get; set; }
+	public bool gate_pass { get; set; }
+	public bool gatepass_inout { get; set; }
+	public bool gatepass_approval { get; set; }
+	public bool material_issue { get; set; }
+	public bool material_request { get; set; }
+	public bool material_reservation { get; set; }
+	public bool abc_classification { get; set; }
+	public bool cyclecount_configuration { get; set; }
+	public bool cycle_counting { get; set; }
+	public bool cyclecount_approval { get; set; }
+	public bool admin_access { get; set; }
+	public bool masterdata_creation { get; set; }
+	public bool masterdata_updation { get; set; }
+	public bool masterdata_approval { get; set; }
+	public bool printbarcodes { get; set; }
 	public bool quality_check { get; set; }
 	public bool pmdashboard_view { get; set; }
 	public DateTime? modified_on { get; set; }
@@ -1011,8 +1013,8 @@ public class rbamaster
 
 public class UserDashboardDetail
 {
-	public int inbountfortoday{ get; set; }
-    public int pendingtooutward { get; set; }
+	public int inbountfortoday { get; set; }
+	public int pendingtooutward { get; set; }
 	public int pendingtoinward { get; set; }
 	public int pendingtoPMapproval { get; set; }
 	public int pendingtoFMapproval { get; set; }
@@ -1033,4 +1035,24 @@ public class testcrud
 	public int id { get; set; }
 	public string name { get; set; }
 	public bool ismanager { get; set; }
+}
+
+public class PrintHistoryModel
+{
+	public int reprinthistoryid { get; set; }
+	public int gatepassid { get; set; }
+	public int inwmasterid { get; set; }
+	public DateTime reprintedon { get; set; }
+	public string reprintedby { get; set; }
+	public int reprintcount { get; set; }
+	public int barcodeid { get; set; }
+	public string po_invoice { get; set; }
+	public string pono { get; set; }
+	public string invoiceNo { get; set; }
+}
+
+public class materilaTrasFilterParams
+{
+	public string FromDate { get; set; }
+	public string ToDate { get; set; }
 }
