@@ -25,32 +25,43 @@ namespace WMS.Common
 			var subbody = string.Empty;
 			if (subjecttype == 1)
 			{
-				mailMessage.Subject = "Shipment received - PONO:" + emlSndngList.pono;
-				subbody = "Materials for PONO " + emailobj.pono + " with INVOICE NO –" + emlSndngList.invoiceno + " has been received.";
+				mailMessage.Subject = "Shipment received - PoNo." + emlSndngList.pono;
+				string receivedby = this.getnamebyid(emlSndngList.employeeno);
+				subbody = "Shipment for PONO " + emlSndngList.pono + " has been received.Please find the details below. <br/> Invoice No:" + emlSndngList.invoiceno + "<br/> Received By :" + receivedby + "<br/> Received On : " + emlSndngList.receiveddate;
+					
 			}
 			else if (subjecttype == 2)
 			{
-				mailMessage.Subject = "Received materials - Jobcode:" + emlSndngList.jobcode;
-				subbody = mailMessage.Subject;
+				mailMessage.Subject = "Pending for Quality Check - GR No." + emlSndngList.grnnumber;
+				//mailMessage.Subject = "Pending for Quality Check - GR No." + emlSndngList.grnnumber + "<br/>Materials of GR No - " + emlSndngList.grnnumber + "are pending for quality check.";
+				subbody = "Materials of GR No - " + emlSndngList.grnnumber + "are pending for quality check.";
 			}
 			else if (subjecttype == 3)
 			{
-				mailMessage.Subject = "Checked Quality for materials - Jobcode:" + emlSndngList.jobcode;
-				subbody = mailMessage.Subject;
+				mailMessage.Subject = "Completed Quality Check for - GR No." + emlSndngList.grnnumber;
+				//mailMessage.Subject = "Completed Quality Check for - GR No." + emlSndngList.grnnumber + "<br/>Materials of GR No - " + emlSndngList.grnnumber + "are completed quality check.";
+				subbody = "Materials of GR No - " + emlSndngList.grnnumber + "are completed quality check.";
 			}
 			else if (subjecttype == 4)
 			{
-				mailMessage.Subject = "Updated material to warehouse:" + emlSndngList.jobcode;
+				mailMessage.Subject = "Request for Materials - ID" + emlSndngList.material;
+				string requestedby = this.getnamebyid(emlSndngList.createdby);
+				subbody = "Please find the Masterials request details below. <br/> Requested By:" +requestedby + "<br/>Requested On:" + emlSndngList.createddate;
 				subbody = mailMessage.Subject;
+
 			}
 			else if (subjecttype == 5)
 			{
-				mailMessage.Subject = "Request for materials - Jobcode:" + emlSndngList.jobcode;
+				mailMessage.Subject = "Materials Issued for Request Id" + emlSndngList.requestid ;
+				subbody = "The materials for Request Id " + emlSndngList.requestid + "has been issued.";
 				subbody = mailMessage.Subject;
 			}
 			else if (subjecttype == 6)
 			{
-				mailMessage.Subject = "Material Issued - Jobcode:" + emlSndngList.jobcode;
+				//Acknowledge for Materialed received - ID
+
+				mailMessage.Subject = "Acknowledge for Materialed received - ID" + emlSndngList.requestid;
+				subbody = "The materials recevied has been acknowdleged by < br /> Please click on below link for more details.";
 				subbody = mailMessage.Subject;
 			}
 			else if (subjecttype == 7)
@@ -107,6 +118,45 @@ namespace WMS.Common
 			mailClient.Send(mailMessage);
 			return true;
 		}
+
+		public string getnamebyid(string employeeId)
+        {
+			string name = string.Empty;
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+
+				try
+				{
+					string query = "select name from wms.employee where employeeno='" + employeeId + "'";
+
+
+					pgsql.Open();
+					employeeModel emp = new employeeModel();
+					emp = pgsql.QueryFirstOrDefault<employeeModel>(
+					   query, null, commandType: CommandType.Text);
+					if (emp != null)
+					{
+						name = emp.name;
+
+					}
+					return name;
+
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("EmailUtilities", "getname", Ex.StackTrace.ToString());
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+			}
+		
+
+	
+}
 		public string getname(string emailid)
 		{
 			string name = string.Empty;

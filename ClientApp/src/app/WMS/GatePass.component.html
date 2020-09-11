@@ -369,7 +369,7 @@
                   <td class="ptable-cell" style="text-align:left;">
 
                     <!--<input *ngIf="rowData.materialid" [(ngModel)]="rowData.materialid" class="form-control" type="text" name="{{rowData.materialid}}" />-->
-                    <p-autoComplete [(ngModel)]="rowData.materialid" type="text" appendTo="body" [suggestions]="searchItems" (onSelect)="onMaterialSelected(rowData.materialid,ri)" (completeMethod)="bindSearchListData($event,'ItemId')" [size]="10"
+                    <p-autoComplete [(ngModel)]="rowData.materialid" type="text" appendTo="body"  [size]="15"  [suggestions]="searchItems" (onSelect)="onMaterialSelected(rowData.materialid,ri)" (completeMethod)="bindSearchListData($event,'ItemId')" [size]="10"
                                     [dropdown]="true"></p-autoComplete>
 
                     <!--<p-autoComplete appendTo="body" *ngIf="!rowData.materialid" (onSelect)="onMaterialSelected(material)" [(ngModel)]="material" type="text" [suggestions]="searchItems" field="name" [dropdown]="true" (completeMethod)="bindSearchListData($event,'ItemId')" size="8"></p-autoComplete>-->

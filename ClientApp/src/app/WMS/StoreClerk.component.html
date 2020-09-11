@@ -226,7 +226,7 @@
               </td>
                 <td style="text-align:left;width:15%;" *ngIf="!isonHoldview">
                   <span *ngIf="grnnumber || isonHold">{{rowData.receiveremarks}}</span>
-                  <textarea *ngIf="!grnnumber && !isonHold" [(ngModel)]="rowData.receiveremarks"></textarea>
+                  <textarea *ngIf="!grnnumber && !isonHold" style="resize: none" [(ngModel)]="rowData.receiveremarks"></textarea>
                 </td>
                 <td style="text-align:center;width:10%;" *ngIf="!isonHoldview">
                   <input type="checkbox" [disabled]="grnnumber || isallreceived || isonHold" [(ngModel)]="rowData.qualitycheck" />
@@ -505,7 +505,7 @@
 
 </div>
   <p-dialog header="Remarks" [(visible)]="displayBasic" [modal]="true" [style]="{width: '50vw'}" [baseZIndex]="10000">
-    <textarea style="width:100%;height:100px;" [disabled]="grnnumber || isonHold" [(ngModel)]="onholdremarks">
+    <textarea style="width: 100%; height: 100px;resize: none" [disabled]="grnnumber || isonHold" [(ngModel)]="onholdremarks">
        </textarea>
     <button class="btn btn-success btn-sm" (click)="displayBasic=false" style="float:right">Ok</button>
   </p-dialog>

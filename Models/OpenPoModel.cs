@@ -94,7 +94,9 @@ namespace WMS.Models
 
 	public class BarcodeModel
 	{
-		public int departmentid { get; set; }
+        internal string grnnumber { get; set; }
+
+        public int departmentid { get; set; }
 		public int barcodeid { get; set; }
 		public int paitemid { get; set; }
 		public string barcode { get; set; }
@@ -650,6 +652,16 @@ public bool onhold { get; set; }
 	}
 	public class EmailModel
 	{
+        internal string createdby;
+
+        internal DateTime createddate;
+        internal object requestid;
+        internal int reserveid;
+        internal string name;
+        internal string employeeno;
+
+        public int materialissueid { get; set; }
+
 		public string FrmEmailId { get; set; }
 		public string ToEmailId { get; set; }
 		public string CC { get; set; }
@@ -659,7 +671,12 @@ public bool onhold { get; set; }
 		public string invoiceno { get; set; }
 		public string ToEmpName { get; set; }
 		public string sendername { get; set; }
-
+		public DateTime receiveddate { get; set; }
+		public string receivedby { get; set; }
+		public string grnnumber { get; set; }
+		public string asnno { get; set; }
+		public string suppliername { get; set; }
+		public string material { get; set; }
 	}
 	public class employeeModel
 	{

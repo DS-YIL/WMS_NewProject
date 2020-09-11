@@ -7,7 +7,7 @@
           <option value="Pending" selected="selected">Pending</option>
           <option value="Sent">Notified</option>
         </select>
-        &nbsp;&nbsp;&nbsp;&nbsp;<textarea [(ngModel)]="notifremarks" placeholder="Remarks" style="width:20%" *ngIf="!issentdata">
+        &nbsp;&nbsp;&nbsp;&nbsp;<textarea [(ngModel)]="notifremarks" placeholder="Remarks" style="width:20%;resize:none" *ngIf="!issentdata">
       </textarea>
         &nbsp;&nbsp;&nbsp;&nbsp;<button class="btn btn-success btn-sm" *ngIf="!issentdata" (click)="Notifyall()"><i class="fa fa-send"></i>Notify</button>
       </div>
@@ -67,7 +67,7 @@
               <button class="btn btn-primary btn-sm" (click)="showattachdata(rowData)"><i class="fa fa-paperclip"></i></button>
             </td>
             <td class="ptable-cell" style="text-align:left;width:15%;">
-              <textarea style="width:100%" *ngIf="!issentdata" [(ngModel)]="rowData.notifyremarks"></textarea>
+              <textarea style="width:100%;resize:none" *ngIf="!issentdata" [(ngModel)]="rowData.notifyremarks"></textarea>
               <label *ngIf="issentdata">{{rowData.notifyremarks}}</label>
             </td>
             <td class="ptable-cell" style="text-align:center;width:15%;" *ngIf="issentdata">{{rowData.notifiedby}}</td>

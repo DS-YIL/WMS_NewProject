@@ -74,6 +74,7 @@ export class MaterialIssueComponent implements OnInit {
       item.itemreturnable = this.materialissueList[this.roindex].itemreturnable;
       item.approvedby = this.employee.employeeno;
       item.itemreceiverid = this.materialissueList[this.roindex].itemreceiverid;
+      item.requestid = this.materialissueList[this.roindex].requestid;
       totalissuedqty = totalissuedqty + (item.issuedqty);
       this.FIFOvalues.issueqty = totalissuedqty;
       //item.issuedqty = this.FIFOvalues.issueqty;
@@ -218,6 +219,7 @@ export class MaterialIssueComponent implements OnInit {
     //  item.issuedqty = this.FIFOvalues.issueqty;
 
     //});
+   
 
     this.wmsService.approvematerialrequest(this.itemlocationData).subscribe(data => {
       this.spinner.hide();

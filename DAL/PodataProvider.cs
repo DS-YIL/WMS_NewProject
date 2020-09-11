@@ -488,6 +488,8 @@ namespace WMS.DAL
 							dataobj.suppliername,
 							dataobj.asnno,
 							dataobj.inwardremarks,
+							dataobj.grnnumber,
+							dataobj.createdby,
 							filename
 							//barcodeid,
 						});
@@ -495,6 +497,15 @@ namespace WMS.DAL
 						{
 							EmailModel emailmodel = new EmailModel();
 							emailmodel.pono = dataobj.pono;
+							emailmodel.invoiceno = dataobj.invoiceno;
+							emailmodel.receivedby = dataobj.receivedby;
+							emailmodel.receiveddate = dataobj.receiveddate;
+							emailmodel.asnno = dataobj.asnno;
+							emailmodel.suppliername = dataobj.suppliername;
+							emailmodel.grnnumber = dataobj.grnnumber;
+							emailmodel.employeeno = dataobj.receivedby;
+
+
 							emailmodel.ToEmailId = "ramesh.kumar@in.yokogawa.com";
 							emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
 							emailmodel.CC = "sushma.patil@in.yokogawa.com";
@@ -1115,6 +1126,19 @@ namespace WMS.DAL
 					{
 						verify.grnnumber = info.grnnumber;
 					}
+					//if (inwardid != 0)
+					
+						EmailModel emailmodel = new EmailModel();
+					//emailmodel.pono = datamodel[0].pono;
+					//emailmodel.jobcode = datamodel[0].projectname;
+					emailmodel.grnnumber = verify.grnnumber;
+
+						emailmodel.ToEmailId = "ramesh.kumar@in.yokogawa.com";
+						emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
+						emailmodel.CC = "sushma.patil@in.yokogawa.com";
+						EmailUtilities emailobj = new EmailUtilities();
+						emailobj.sendEmail(emailmodel, 2);
+					
 					return verify;
 				}
 				catch (Exception Ex)
@@ -1265,17 +1289,17 @@ namespace WMS.DAL
 							}
 						}
 					}
-					if (inwardid != 0)
-					{
-						EmailModel emailmodel = new EmailModel();
-						emailmodel.pono = datamodel[0].pono;
-						emailmodel.jobcode = datamodel[0].projectname;
-						emailmodel.ToEmailId = "ramesh.kumar@in.yokogawa.com";
-						emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
-						emailmodel.CC = "sushma.patil@in.yokogawa.com";
-						EmailUtilities emailobj = new EmailUtilities();
-						emailobj.sendEmail(emailmodel, 2);
-					}
+					//if (inwardid != 0)
+					//{
+					//	EmailModel emailmodel = new EmailModel();
+					//	emailmodel.pono = datamodel[0].pono;
+					//	emailmodel.jobcode = datamodel[0].projectname;
+					//	emailmodel.ToEmailId = "ramesh.kumar@in.yokogawa.com";
+					//	emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
+					//	emailmodel.CC = "sushma.patil@in.yokogawa.com";
+					//	EmailUtilities emailobj = new EmailUtilities();
+					//	emailobj.sendEmail(emailmodel, 2);
+					//}
 					//}
 					return (Convert.ToString(inwardid));
 				}
@@ -1773,6 +1797,7 @@ namespace WMS.DAL
 		/// </summary>
 		/// <param name="dataobj"></param>
 		/// <returns></returns>
+		/// Amulya
 		public int acknowledgeMaterialReceived(List<IssueRequestModel> dataobj)
 		{
 
@@ -1814,6 +1839,7 @@ namespace WMS.DAL
 					{
 						EmailModel emailmodel = new EmailModel();
 						emailmodel.pono = item.pono;
+						emailmodel.requestid = item.requestid;
 						emailmodel.ToEmailId = "ramesh.kumar@in.yokogawa.com";
 						emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
 						emailmodel.CC = "sushma.patil@in.yokogawa.com";
@@ -1995,6 +2021,7 @@ namespace WMS.DAL
 		/// </summary>
 		/// <param name="dataobj"></param>
 		/// <returns></returns>
+		/// Amulya
 		public int updaterequestedqty(List<IssueRequestModel> dataobj)
 		{
 
@@ -2032,7 +2059,10 @@ namespace WMS.DAL
 								item.approveremailid,
 								item.approverid,
 								item.pono,
+								item.material,
 								materialid,
+								item.createddate,
+								item.createdby,
 								item.requesterid,
 								requestid,
 								item.requestedquantity
@@ -2043,11 +2073,16 @@ namespace WMS.DAL
 							EmailModel emailmodel = new EmailModel();
 							emailmodel.pono = item.pono;
 							emailmodel.jobcode = item.projectname;
+							emailmodel.material = item.material;
+							emailmodel.createdby = item.requesterid;
+							emailmodel.createddate = item.requesteddate;
+
+
 							emailmodel.ToEmailId = "ramesh.kumar@in.yokogawa.com";
 							emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
 							emailmodel.CC = "sushma.patil@in.yokogawa.com";
 							EmailUtilities emailobj = new EmailUtilities();
-							emailobj.sendEmail(emailmodel, 5);
+							emailobj.sendEmail(emailmodel,4);
 						}
 						//if (result != 0)
 						//{
@@ -2105,6 +2140,7 @@ namespace WMS.DAL
 		/// </summary>
 		/// <param name="dataobj"></param>
 		/// <returns></returns>
+		/// Amulya
 		public int ApproveMaterialissue(List<IssueRequestModel> dataobj)
 		{
 			try
@@ -2186,6 +2222,16 @@ namespace WMS.DAL
 
 
 				}
+				EmailModel emailmodel = new EmailModel();
+				//emailmodel.pono = datamodel[0].pono;
+				//emailmodel.jobcode = datamodel[0].projectname;
+				emailmodel.materialissueid = dataobj[0].materialissueid;
+				emailmodel.requestid =dataobj[0].requestid;
+				emailmodel.ToEmailId = "ramesh.kumar@in.yokogawa.com";
+				emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
+				emailmodel.CC = "sushma.patil@in.yokogawa.com";
+				EmailUtilities emailobj = new EmailUtilities();
+				emailobj.sendEmail(emailmodel, 5);
 
 				return (Convert.ToInt32(result));
 			}
@@ -4756,7 +4802,7 @@ namespace WMS.DAL
 
 			}
 		}
-
+		//Amulya
 		public async Task<string> insertquantitycheck(List<inwardModel> datamodel)
 		{
 
@@ -4809,6 +4855,7 @@ namespace WMS.DAL
 								EmailModel emailmodel = new EmailModel();
 								emailmodel.pono = item.pono;
 								emailmodel.jobcode = item.projectname;
+								emailmodel.grnnumber = item.grnnumber;
 								emailmodel.ToEmailId = "ramesh.kumar@in.yokogawa.com";
 								emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
 								emailmodel.CC = "sushma.patil@in.yokogawa.com";
