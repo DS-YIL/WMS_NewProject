@@ -186,5 +186,8 @@ Task<string> updateonholdrow(updateonhold datamodel);
         Task<IEnumerable<testcrud>> gettestcrud();
         string posttestcrud(testcrud data);
         string deletetestcurd(int id);
+        string updateSecurityPrintHistory(PrintHistoryModel model);
+
+        Task<IEnumerable<materialtransferMain>> getMaterialtransferdetails(materilaTrasFilterParams filters);
     }
 }

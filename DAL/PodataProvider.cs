@@ -19,6 +19,7 @@ using ZXing.Common;
 using ZXing.CoreCompat.System.Drawing;
 using System.Data.SqlClient;
 using Microsoft.AspNetCore.Mvc;
+using ZXing.QrCode.Internal;
 
 namespace WMS.DAL
 {
@@ -399,7 +400,6 @@ namespace WMS.DAL
 					else
 					{
 						dataobj.createddate = System.DateTime.Now;
-						string insertquery = WMSResource.insertbarcodedata;
 						var result = "0";
 						string insertqueryforinvoice = WMSResource.insertinvoicedata;
 						dataobj.receiveddate = System.DateTime.Now;
@@ -416,8 +416,8 @@ namespace WMS.DAL
 								int nextserial = serial + 1;
 								string nextpo = "NP" + DateTime.Now.Year.ToString().Substring(2) + nextserial.ToString().PadLeft(5, '0');
 								dataobj.pono = nextpo;
-								
-								var q2 = WMSResource.getinvoiceexists.Replace("#pono", dataobj.pono).Replace("#invno", dataobj.invoiceno); 
+
+								var q2 = WMSResource.getinvoiceexists.Replace("#pono", dataobj.pono).Replace("#invno", dataobj.invoiceno);
 								int count1 = int.Parse(DB.ExecuteScalar(q2, null).ToString());
 
 								if (count1 >= 1)
@@ -493,8 +493,20 @@ namespace WMS.DAL
 							filename
 							//barcodeid,
 						});
+
 						if (results != 0)
 						{
+							//insert bar code data
+							dataobj.createddate = DateTime.Now;
+							string insertbarcodequery = WMSResource.insertbarcodedata;//to insert bar code data
+							var barcodeResult = DB.Execute(insertbarcodequery, new
+							{
+								dataobj.barcode,
+								dataobj.createdby,
+								dataobj.createddate,
+								dataobj.deleteflag,
+							});
+
 							EmailModel emailmodel = new EmailModel();
 							emailmodel.pono = dataobj.pono;
 							emailmodel.invoiceno = dataobj.invoiceno;
@@ -510,9 +522,11 @@ namespace WMS.DAL
 							emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
 							emailmodel.CC = "sushma.patil@in.yokogawa.com";
 							EmailUtilities emailobj = new EmailUtilities();
-							emailobj.sendEmail(emailmodel, 1);
+							//emailobj.sendEmail(emailmodel, 1);
 
 						}
+
+
 						////}
 						return (dataobj.pono);
 					}
@@ -887,7 +901,7 @@ namespace WMS.DAL
 							if (!isgrn)
 							{
 								//string queryx = "select grnnumber,onhold,unholdedby from wms.wms_securityinward where pono = '" + pono + "' and invoiceno = '" + invoiceno + "'";
-								string queryx = WMSResource.isgrnexistsquerybyinvoce.Replace("#pono",pono).Replace("#invno",invoiceno);
+								string queryx = WMSResource.isgrnexistsquerybyinvoce.Replace("#pono", pono).Replace("#invno", invoiceno);
 								objx = pgsql.QuerySingle<inwardModel>(
 								 queryx, null, commandType: CommandType.Text);
 							}
@@ -3860,6 +3874,7 @@ namespace WMS.DAL
 
 		public async Task<IEnumerable<IssueRequestModel>> getItemlocationListByIssueId(string requestforissueid)
 		{
+
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
 
@@ -3868,11 +3883,23 @@ namespace WMS.DAL
 					string query = WMSResource.getitemlocationListBysIssueId.Replace("#requestforissueid", requestforissueid);
 					await pgsql.OpenAsync();
 					var data = await pgsql.QueryAsync<IssueRequestModel>(
-					  query, null, commandType: CommandType.Text);
+					 query, null, commandType: CommandType.Text);
 					data = data.OrderByDescending(o => o.createddate);
-					return data;
 
+					IEnumerable<IssueRequestModel> result = data.GroupBy(c => new { c.itemlocation, c.createddate }).Select(t => new IssueRequestModel
+					{
 
+						availableqty = t.Sum(u => u.availableqty),
+						issuedqty = t.Sum(u => u.issuedqty),
+						pono = t.First().pono,
+						materialid = t.First().materialid,
+						itemid = t.First().itemid,
+						Materialdescription = t.First().Materialdescription,
+						material = t.First().material,
+						itemlocation = t.Key.itemlocation,
+						createddate = t.Key.createddate
+					});
+					return result;
 
 				}
 				catch (Exception Ex)
@@ -4373,7 +4400,7 @@ namespace WMS.DAL
 
 				try
 				{
-					string materialrequestquery = WMSResource.getmaterialdetailfprrequest.Replace("#manager",approverid);
+					string materialrequestquery = WMSResource.getmaterialdetailfprrequest.Replace("#manager", approverid);
 					if (pono != null && pono != "undefined" && pono != "null")
 					{
 						materialrequestquery = materialrequestquery + " and sk.pono = '" + pono + "'";
@@ -6176,9 +6203,9 @@ namespace WMS.DAL
 				try
 				{
 					string materialrequestquery = "";
-					
-				
-				    materialrequestquery = WMSResource.getnotifiedgrbydate.Replace("#fromdate",fromdt).Replace("#todate",todt);
+
+
+					materialrequestquery = WMSResource.getnotifiedgrbydate.Replace("#fromdate", fromdt).Replace("#todate", todt);
 					List<inwardModel> returnlist = new List<inwardModel>();
 					await pgsql.OpenAsync();
 					var data = await pgsql.QueryAsync<inwardModel>(
@@ -7152,7 +7179,7 @@ namespace WMS.DAL
 				try
 				{
 					await pgsql.OpenAsync();
-					string query = WMSResource.directtransfermainquery.Replace("#empno",empno);
+					string query = WMSResource.directtransfermainquery.Replace("#empno", empno);
 					string updatequery = string.Empty;
 					//string updatedon = WMSResource.updatedon;
 					var data = await pgsql.QueryAsync<DirectTransferMain>(
@@ -7312,7 +7339,7 @@ namespace WMS.DAL
 				try
 				{
 					await pgsql.OpenAsync();
-					string getpoquery = WMSResource.getPODetails.Replace("#manager",empno);
+					string getpoquery = WMSResource.getPODetails.Replace("#manager", empno);
 
 					var objPO = await pgsql.QueryAsync<PODetails>(
 					   getpoquery, null, commandType: CommandType.Text);
@@ -7388,7 +7415,6 @@ namespace WMS.DAL
 						{
 							result = "saved";
 						}
-
 					}
 
 
@@ -7462,6 +7488,90 @@ namespace WMS.DAL
 			}
 
 
+		}
+
+		public string updateSecurityPrintHistory(PrintHistoryModel model)
+		{
+
+
+			var data = 0;
+			model.reprintedon = DateTime.Now;
+			string insertquery = WMSResource.insertSecurityPrintHistory;
+			using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				string secquery = "select inwmasterid  from wms.wms_securityinward where pono ='" + model.pono + "' and invoiceno =" + model.invoiceNo + "";
+				var securityData = DB.QueryFirstOrDefault<inwardModel>(
+						   secquery, null, commandType: CommandType.Text);
+				string barcodequery = "select barcodeid from wms.wms_barcode where  barcode ='" + model.po_invoice + "'";
+				var barcodeData = DB.QueryFirstOrDefault<BarcodeModel>(
+						   barcodequery, null, commandType: CommandType.Text);
+				//need to update dynamically
+				model.reprintcount = 1;
+				model.inwmasterid = securityData.inwmasterid;
+				model.barcodeid = barcodeData.barcodeid;
+				data = Convert.ToInt32(DB.ExecuteScalar(insertquery, new
+				{
+					model.inwmasterid,
+					model.reprintedon,
+					model.reprintedby,
+					model.reprintcount,
+					model.barcodeid
+
+				}));
+			}
+			if (data != 0)
+				return "Sucess";
+			else
+				return "Error";
+
+
+		}
+
+
+		public async Task<IEnumerable<materialtransferMain>> getMaterialtransferdetails(materilaTrasFilterParams filterparams)
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				try
+				{
+					await pgsql.OpenAsync();
+					string query = WMSResource.getMaterialTransferDetails;
+					if (!string.IsNullOrEmpty(filterparams.ToDate))
+						query += " where ts.createdon::date <= '" + filterparams.ToDate + "'";
+					if (!string.IsNullOrEmpty(filterparams.FromDate))
+						query += "  and ts.createdon::date >= '" + filterparams.FromDate + "'";
+					query += " order by ts.transferid desc";
+					var data = await pgsql.QueryAsync<materialtransferMain>(
+					   query, null, commandType: CommandType.Text);
+
+					if (data != null && data.Count() > 0)
+					{
+						foreach (materialtransferMain dt in data)
+						{
+							string query1 = WMSResource.gettransferiddetail.Replace("#tid", dt.transferid.ToString());
+							var datadetail = await pgsql.QueryAsync<materialtransferTR>(
+							   query1, null, commandType: CommandType.Text);
+
+							if (datadetail != null && datadetail.Count() > 0)
+							{
+								dt.materialdata = datadetail.ToList();
+							}
+						}
+					}
+					return data;
+
+				}
+				catch (Exception ex)
+				{
+
+					log.ErrorMessage("PODataProvider", "gettransferdata", ex.StackTrace.ToString());
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+			}
 		}
 	}
 }

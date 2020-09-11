@@ -133,8 +133,8 @@
 
     </p-table>
     <p-footer>
-      <div class="ui-dialog-buttonpane ui-helper-clearfix">
-        <button type="button" pButton icon="fa fa-check" class="ui-button-success" [disabled]="issueqtyenable" (click)="issuematerial(itemlocationData)" label="OK"></button>
+      <div *ngIf="!issueqtyenable" class="ui-dialog-buttonpane ui-helper-clearfix">
+        <button type="button" pButton icon="fa fa-check" class="ui-button-success" (click)="issuematerial(itemlocationData)" label="OK"></button>
         <button type="button" pButton icon="fa fa-close" class="ui-button-danger" (click)="Cancel()" label="Cancel"></button>
       </div>
     </p-footer>

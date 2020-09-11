@@ -122,7 +122,7 @@
       </div>-->
       <div class="card-body" style="overflow-y:scroll">
         <div *ngIf="materialList.length>0">
-          <div *ngIf="employee.roleid=='8' && gatepassModel.gatepasstype!='Returnable'" class="row mt-2" style="padding-left:20px;">
+          <div *ngIf="employee.roleid=='8' && gatepassModel.gatepasstype!='Returnable' && this.typeOfList == 'GatePassFMList'" class="row mt-2" style="padding-left:20px;">
             <button type="button" icon="fa fa-history" pButton aria-hidden="true" (click)="showHistoryList()" pTooltip="GatePass Approvals" style="float: left; height: 30px;width:30px"></button>
           </div><br />
           <div *ngIf="gatePassApprovalList.length>0 && showHistory" style="background-color:#2c898073">
@@ -179,7 +179,6 @@
               GatePass Id:&nbsp;<span style="color:#dc3545;">GTP{{materialList[0].gatepassid}}</span>
             </div>
             <div class="col-lg-4 col-md-4 col-sm-4 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
-              rm
               Requester:&nbsp;<span style="color:#dc3545;">{{materialList[0].name}}</span>
             </div>
             <div class="col-lg-2 col-md-2 col-sm-2 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">

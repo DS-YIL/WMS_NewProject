@@ -479,15 +479,17 @@ group by pl.pono</value>
   <data name="getmaterialdetailfprrequest" xml:space="preserve">
     <value>select max(sk.pono) as pono ,sk.materialid as material,Max(prj.projectmanager) as projectmanager,
 ( select sum(availableqty) from wms.wms_stock ws where materialid =sk.materialid) as availableqty,
-max(mtmtr.unitprice) as materialcost from wms.wms_stock  sk 
+max(mtmtr.unitprice) as materialcost,max(mtmtr.materialdescription) as materialdescription from wms.wms_stock  sk 
 left outer join wms."MaterialMasterYGS" mtmtr on mtmtr.material = sk.materialid
 left outer join wms.wms_project prj on prj.pono = sk.pono 
 where sk.availableqty &gt; 0 and (prj.projectmanager = '#manager' or sk.returnid is not null)</value>
   </data>
   <data name="issuedqtydetails" xml:space="preserve">
-    <value>select max(iss.materialissueid)as materialissueid,max(sk.itemid)as itemid,max(req.returnqty)as returnqty,max(sk.itemlocation)as itemlocation, max(iss.approvedstatus)as approvedstatus,max(req.requestedquantity)as requestedquantity, max(req.materialid)as materialid, max(req.requestid)as requestid,req.requestforissueid,sum(issuedqty)as issuedquantity
+    <value>select max(iss.materialissueid)as materialissueid,max(sk.itemid)as itemid,max(req.returnqty)as returnqty,max(sk.itemlocation)as itemlocation, max(iss.approvedstatus)as approvedstatus,max(req.requestedquantity)as requestedquantity, max(req.materialid)as materialid,max(mat.materialdescription) as materialdescription, max(req.requestid)as requestid,req.requestforissueid,sum(issuedqty)as issuedquantity
  from wms.wms_materialrequest  req
- left join wms.wms_materialissue iss on req.requestforissueid=iss.requestforissueid  left join wms.wms_stock sk on sk.itemid=iss.itemid
+ left join wms.wms_materialissue iss on req.requestforissueid=iss.requestforissueid  
+ left join wms.wms_stock sk on sk.itemid=iss.itemid
+  left outer join wms."MaterialMasterYGS" mat on mat.material=req.materialid
  where req.requestid=#requestid
   group by req.requestforissueid,iss.materialissueid</value>
   </data>
@@ -519,7 +521,11 @@ left join wms.employee emp on req.reservedby=emp.employeeno
 group by req.reserveid,req.reservedby,po.projectname,emp."name" order by req.reserveid desc</value>
   </data>
   <data name="Getreleasedqty" xml:space="preserve">
-    <value>select sum(req.reservedqty)as reservedqty, req.materialid,req.reserveid from wms.wms_materialreserve  req  where req.reserveid=#reserveid and req.reservedqty&gt;0 group by req.reserveid,req.materialid</value>
+    <value>select sum(req.reservedqty)as reservedqty, req.materialid,Max(mat.materialdescription) as materialdescription,req.reserveid 
+from wms.wms_materialreserve  req
+left outer join wms."MaterialMasterYGS" mat on mat.material=req.materialid
+where req.reserveid=#reserveid and req.reservedqty&gt;0 
+group by req.reserveid,req.materialid</value>
   </data>
   <data name="getreservedmaterialList" xml:space="preserve">
     <value>select  max('')as projectname,max(res.reserveupto)as reserveupto,res.reserveid,max(res.pono) as pono,max(res.reservedon) as reservedon,
@@ -1000,10 +1006,12 @@ and sinw.notifiedon :: date &gt;= '#fromdate' and sinw.notifiedon :: date &lt;= 
 group by stk.inwmasterid,sinw.grnnumber,sinw.pono,sinw.invoiceno,sinw.notifiedtofinance</value>
   </data>
   <data name="directtransfermainquery" xml:space="preserve">
-    <value>select ts.inwmasterid, ts.projectcode,ts.mrnremarks ,ts.grnnumber,emp.name as mrnby,ts.mrnon
+    <value>select ts.inwmasterid, ts.projectcode,ts.mrnremarks ,ts.grnnumber,emp.name as mrnby,ts.mrnon,
+prj.projectmanager
 from wms.wms_securityinward ts
 left outer join wms.employee emp on emp.employeeno = ts.mrnby
-where ts.mrnby is not null and ts.mrnby = '#empno'</value>
+left outer join wms.wms_project prj on prj.pono = ts.pono
+where ts.mrnby is not null and prj.projectmanager = '#empno'</value>
   </data>
   <data name="directtransfertr" xml:space="preserve">
     <value>select tsd.inwmasterid,tsd.materialid,tsd.confirmqty,mat.materialdescription
@@ -1019,5 +1027,13 @@ left join wms.wms_materialissue iss on iss.itemid =sk.itemid
 where requestforissueid='#requestforissueid' and
 sk.deleteflag=false
 group by sk.itemlocation,ygs.materialdescription,ygs.material,createddate::DATE,sk.itemid</value>
+  </data>
+  <data name="insertSecurityPrintHistory" xml:space="preserve">
+    <value>insert into wms.wms_reprinthistory(reprinthistoryid,inwmasterid, reprintedon,reprintedby,reprintcount,barcodeid )values(default,@inwmasterid,current_date,@reprintedby,@reprintcount,@barcodeid)returning reprinthistoryid</value>
+  </data>
+  <data name="getMaterialTransferDetails" xml:space="preserve">
+    <value>select ts.transferid, ts.projectcode,ts.remarks as transferremarks,emp.name as transferedby,ts.createdon as transferredon
+from wms.wms_transfermaterial ts
+left outer join wms.employee emp on emp.employeeno = ts.createdby</value>
   </data>
 </root>

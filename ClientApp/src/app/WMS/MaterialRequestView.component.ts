@@ -46,6 +46,7 @@ export class MaterialRequestViewComponent implements OnInit {
   public ponolist: any[] = [];
   public materialistModel: materialList;
   public materialmodel: Array<materialList> = [];
+  public defaultmaterials: materialList[] = [];
   public gatepassModel: gatepassModel;
   public materialList: Array<materialList> = [];
   public chkChangeshideshow: boolean = false;
@@ -55,6 +56,7 @@ export class MaterialRequestViewComponent implements OnInit {
   public date: Date = null;
   isreservedbefore: boolean = false;
   reserveidview: string = "";
+  filteredmats: any[];
   ngOnInit() {
     if (localStorage.getItem("Employee"))
       this.employee = JSON.parse(localStorage.getItem("Employee"));
@@ -69,7 +71,15 @@ export class MaterialRequestViewComponent implements OnInit {
     });
 
     this.getMaterialRequestlist();
+    this.getdefaultmaterialstorequest();
   }
+
+  getdefaultmaterialstorequest() {
+    this.defaultmaterials = []
+    this.wmsService.getMaterialRequestlistdata(this.employee.employeeno, null).subscribe(data => {
+      this.defaultmaterials = data;
+    });
+   }
 
   //get Material Rquest based on login employee && po no
   getMaterialRequestlist() {
@@ -363,8 +373,46 @@ export class MaterialRequestViewComponent implements OnInit {
     }
   }
 
+  onMaterialSelected1(data: any, ind: number) {
+    debugger;
+    var data1 = this.materialList.filter(function (element, index) {
+      return (element.material == data.material && index != ind);
+    });
+    if (data1.length > 0) {
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Material already exist' });
+      this.materialList[ind].material = "";
+      this.materialList[ind].materialdescription = "";
+      this.materialList[ind].materialcost = 0;
+      this.materialList[ind].availableqty = 0;
+      this.materialList[ind].quantity = 0;
+      return false;
+    }
+    var data2 = this.defaultmaterials.filter(function (element, index) {
+      return (element.material == data.material);
+    });
+    if (data2.length > 0) {
+      data.materialdescription = data2[0].materialdescription;
+      data.materialcost = data2[0].materialcost != null ? data2[0].materialcost : 0;
+      data.availableqty = data2[0].availableqty != null ? data2[0].availableqty : 0;
+    }
+
+  }
+
+
+  filtermats(event) {
+    this.filteredmats = [];
+    for (let i = 0; i < this.defaultmaterials.length; i++) {
+      let brand = this.defaultmaterials[i].material;
+      let pos = this.defaultmaterials[i].materialdescription;
+      if (brand.toLowerCase().indexOf(event.query.toLowerCase()) == 0 || pos.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+        this.filteredmats.push(brand);
+      }
+    }
+  }
+
   //bind materials based search
   public bindSearchList(event: any, name?: string) {
+    debugger;
     this.wmsService.getMaterialRequestlistdata(this.employee.employeeno, this.pono).subscribe(data => {
    
 

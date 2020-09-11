@@ -91,12 +91,22 @@ export class GatePassApproverComponent implements OnInit {
     this.showHistory = !this.showHistory;
   }
   updategatepassapproverstatus() {
+    debugger;
     this.gatepassModel.gatepassid = this.materialList[0].gatepassid;
     //this.materialList.forEach(item => {
     //  item.pono = this.gatepassModel.pono;
     //})
+    var data1 = this.issueFinalList.filter(function (element, index) {
+      return (element.issuedqty > 0);
+    });
+    if (data1.length == 0) {
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Enter issue quantity.' });
+      return;
+    }
+    this.spinner.show();
     this.wmsService.updategatepassapproverstatus(this.issueFinalList).subscribe(data => {
       //this.materialList = data;
+      this.spinner.hide();
       this.btnDisableissue = true;
       this.gatepassModel.status = "Approved";
       if (this.gatepassModel.status == 'Approved')

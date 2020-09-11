@@ -911,6 +911,12 @@ namespace WMS.Controllers
 			}
 		}
 
+		[HttpPost("getMaterialtransferdetails")]
+		public async Task<IEnumerable<materialtransferMain>> getMaterialtransferdetails(materilaTrasFilterParams filters)
+		{
+			return await this._poService.getMaterialtransferdetails(filters);
+		}
+
 		//[HttpPost("securitysendemail")]
 		//public EmailModel sendemail(EmailModel obj)
 		//{
