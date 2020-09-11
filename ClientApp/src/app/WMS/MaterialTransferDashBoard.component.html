@@ -34,7 +34,6 @@
           <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'transferredon', 'contains')"></th>
           <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'transferedby', 'contains')"></th>
           <th></th>
-          <th></th>
 
         </tr>
       </ng-template>
@@ -53,13 +52,13 @@
 
         </tr>
         <tr *ngIf="rowData.showtr">
-          <td [attr.colspan]="5" style="text-align:center;">
+          <td [attr.colspan]="6" style="text-align:center;">
             <label class="labeltext">Material Detail</label>
           </td>
 
         </tr>
         <tr *ngIf="rowData.showtr">
-          <td [attr.colspan]="5" style="text-align:center;">
+          <td [attr.colspan]="6" style="text-align:center;">
 
             <p-table [value]="rowData.materialdata" [style]="{'width':'100%'}">
               <ng-template pTemplate="header">
@@ -93,6 +92,80 @@
     </p-table>
 
 
+
+    <div style="height: 5px; overflow-y: scroll">
+
+
+      <p-dialog header={{GatepassTxt}} [(visible)]="gatepassdialog" [responsive]="true" showEffect="fade" [modal]="true" [style]="{'width':'98vw','overflow':'auto!important','margin-right': '0px','margin-left':'0px'}">
+        <div class="row">
+          <div class="col-lg-6 col-md-6 form-inline">
+            <label class="labelheading">Transfer to :</label>&nbsp;
+            <p-autoComplete [(ngModel)]="selectedproject" field="text" appendTo="body" [suggestions]="filteredprojects" placeholder="search by name/code" [ngModelOptions]="{standalone: true}" [forceSelection]="false" (completeMethod)="filterprojects($event)" [size]="30"
+                            [dropdown]="true">
+            </p-autoComplete>
+          </div>
+          <div class="col-lg-6 col-md-6 form-inline">
+            <textarea [(ngModel)]="transferremarks" style="width:80%" placeholder="Remarks"></textarea>
+          </div>
+
+        </div>
+        <div class="row " style="margin-top:10px">
+
+
+          <div class="col-lg-12 col-md-12 col-sm-12">
+
+
+            <p-table [value]="materialtransferdetil" [style]="{'width':'99%','height':'500px','overflow':'visible!important'}">
+              <ng-template pTemplate="caption">
+
+
+              </ng-template>
+              <ng-template pTemplate="header">
+                <tr class="mprltbldata">
+                  <th class="ptable-cell" style="width: 7%; text-align: center">Sl. No.</th>
+                  <th style="text-align:center;width:28%" class="ptable-cell">Material</th>
+                  <th style="text-align:center;width:40%" class="ptable-cell">Material Description</th>
+                  <th style="text-align:center;width:15%" class="ptable-cell">Transfer quantity</th>
+                  <th style="text-align:center;width:10%" class="ptable-cell"><button type="button" class="btn btn-primary btn-sm" pTooltip="Add material" (click)="addNewMaterial()" style="float: right;height: 26px;"><i class="fa fa-plus"></i></button></th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex" let-rindex=0>
+                <tr>
+                  <td class="ptable-cell" style="text-align:center"> {{ri+1}} </td>
+                  <td class="ptable-cell" style="text-align:left;">
+                    <!--<input *ngIf="rowData.material" [(ngModel)]="rowData.material" class="form-control" type="text" name="{{rowData.materialid}}" />-->
+                    <p-autoComplete [(ngModel)]="rowData.materialid" (onSelect)="onMaterialSelected(rowData,ri)" appendTo="body" [suggestions]="filteredmaterial" placeholder="search by name/code" [forceSelection]="true" (completeMethod)="filtermaterials($event)" [size]="30"
+                                    [dropdown]="true"></p-autoComplete>
+                    <!--<p-autoComplete appendTo="body" [style]="{'width' : '100%'}" (onSelect)="onMaterialSelected(rowData,ri)" [(ngModel)]="rowData.materialid" type="text" [suggestions]="searchItems" field="name" [dropdown]="true" (completeMethod)="bindSearchListDatamaterial($event,'material')" size="8"></p-autoComplete>-->
+                  </td>
+                  <td class="ptable-cell" style="text-align:right">
+                    <input style="text-align:left" pInputText type="text" readonly class="form-control" [(ngModel)]="rowData.materialdescription">
+                  </td>
+                  <td class="ptable-cell" style="text-align:right">
+                    <input style="text-align:left" pInputText type="number" class="form-control" (change)="checkqty(rowData.transferredqty,rowData)" [(ngModel)]="rowData.transferredqty">
+                  </td>
+
+
+
+
+
+                  <td class="ptable-cell" style="text-align:center"><button pButton type="button" icon="fa fa-trash" class="ui-button-info" style="margin-left: 1px;" (click)="removematerial(rowData.materialid, ri)"></button></td>
+
+
+              </ng-template>
+
+
+            </p-table>
+          </div>
+        </div>
+
+        <p-footer>
+          <div class="ui-dialog-buttonpane ui-helper-clearfix">
+            <button type="button" pButton icon="fa fa-close" (click)="transfermaterial()" label="Submit"></button>
+          </div>
+        </p-footer>
+      </p-dialog>
+    </div>
   </div>
 
 </div>
