@@ -2371,6 +2371,7 @@ namespace WMS.DAL
 							dataobj.reasonforgatepass,
 							dataobj.approverid,
 							dataobj.fmapproverid,
+							dataobj.requestid,
 							fmapprovedstatus,
 							approverstatus,
 							remarks
@@ -2392,6 +2393,13 @@ namespace WMS.DAL
 							});
 							EmailModel emailmodel = new EmailModel();
 							emailmodel.pono = dataobj.pono;
+							emailmodel.requestid = dataobj.requestid;
+							emailmodel.gatepassid = dataobj.gatepassid;
+							emailmodel.gatepasstype = dataobj.gatepasstype;
+
+							emailmodel.requestedon = dataobj.requestedon;
+							emailmodel.requestedby = dataobj.requestedby;
+
 							emailmodel.ToEmailId = "ramesh.kumar@in.yokogawa.com";
 							emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
 							emailmodel.CC = "sushma.patil@in.yokogawa.com";
@@ -2429,6 +2437,11 @@ namespace WMS.DAL
 							}
 							EmailModel emailmodel = new EmailModel();
 							emailmodel.pono = dataobj.pono;
+							emailmodel.requestid = dataobj.requestid;
+							emailmodel.gatepassid = dataobj.gatepassid;
+							emailmodel.gatepasstype = dataobj.gatepasstype;
+							emailmodel.requestedon = dataobj.requestedon;
+							emailmodel.requestedby = dataobj.requestedby;
 							emailmodel.ToEmailId = "ramesh.kumar@in.yokogawa.com";
 							emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
 							emailmodel.CC = "sushma.patil@in.yokogawa.com";
