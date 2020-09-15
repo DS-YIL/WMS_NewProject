@@ -23,25 +23,33 @@ namespace WMS.Common
 			MailMessage mailMessage = new MailMessage(emlSndngList.FrmEmailId, emlSndngList.ToEmailId);
 			SmtpClient client = new SmtpClient();
 			var subbody = string.Empty;
+			//Security operator to inventory clerk
+
 			if (subjecttype == 1)
 			{
 				mailMessage.Subject = "Shipment received - PoNo." + emlSndngList.pono;
 				string receivedby = this.getnamebyid(emlSndngList.employeeno);
 				subbody = "Shipment for PONO " + emlSndngList.pono + " has been received.Please find the details below. <br/> Invoice No:" + emlSndngList.invoiceno + "<br/> Received By :" + receivedby + "<br/> Received On : " + emlSndngList.receiveddate;
-					
+
 			}
+			//Inventory Clery to Quality User
+
 			else if (subjecttype == 2)
 			{
 				mailMessage.Subject = "Pending for Quality Check - GR No." + emlSndngList.grnnumber;
 				//mailMessage.Subject = "Pending for Quality Check - GR No." + emlSndngList.grnnumber + "<br/>Materials of GR No - " + emlSndngList.grnnumber + "are pending for quality check.";
 				subbody = "Materials of GR No - " + emlSndngList.grnnumber + "are pending for quality check.";
 			}
+			//Quality user  to Inventory Clerk
+
 			else if (subjecttype == 3)
 			{
 				mailMessage.Subject = "Completed Quality Check for - GR No." + emlSndngList.grnnumber;
 				//mailMessage.Subject = "Completed Quality Check for - GR No." + emlSndngList.grnnumber + "<br/>Materials of GR No - " + emlSndngList.grnnumber + "are completed quality check.";
 				subbody = "Materials of GR No - " + emlSndngList.grnnumber + "are completed quality check.";
 			}
+			//Project Manager to Inventoty Clerk
+
 			else if (subjecttype == 4)
 			{
 				mailMessage.Subject = "Request for Materials - ID" + emlSndngList.material;
@@ -50,40 +58,61 @@ namespace WMS.Common
 				subbody = mailMessage.Subject;
 
 			}
+			//Inventory Manager to Mroject manger
+
 			else if (subjecttype == 5)
 			{
 				mailMessage.Subject = "Materials Issued for Request Id" + emlSndngList.requestid ;
 				subbody = "The materials for Request Id " + emlSndngList.requestid + "has been issued.";
 				subbody = mailMessage.Subject;
 			}
+			//Project Manager  Acknowledgement to Inventoty Clerk
+
 			else if (subjecttype == 6)
 			{
 				//Acknowledge for Materialed received - ID
 
-				mailMessage.Subject = "Acknowledge for Materialed received - ID" + emlSndngList.requestid;
+				mailMessage.Subject = "Acknowledge for Material Received - ID" + emlSndngList.requestid;
 				subbody = "The materials recevied has been acknowdleged by < br /> Please click on below link for more details.";
 				subbody = mailMessage.Subject;
 			}
 			else if (subjecttype == 7)
 			{
-				mailMessage.Subject = "Acknowledge materials - Jobcode:" + emlSndngList.jobcode;
-				subbody = mailMessage.Subject;
-			}
+                mailMessage.Subject = "Acknowledge Materials -  Request Id" + emlSndngList.requestid;
+                subbody = mailMessage.Subject;
+
+            }
+			//Admin to Approver(MA & FA)
+
 			else if (subjecttype == 8)
 			{
-				mailMessage.Subject = "Gatepass materials for returnable - Jobcode:" + emlSndngList.jobcode;
-				subbody = mailMessage.Subject;
+				//mailMessage.Subject = "Materials Issued for Request ID" + emlSndngList.requestid;
+				//subbody = "Please find the Masterials request details below. <br/> Requested By:" + emlSndngList.requestedby + "<br/>Requested On:" + emlSndngList.requestedon;
+				//subbody = mailMessage.Subject;
+
+				mailMessage.Subject = "Gatepass materials for Returnable - GatePass - ID" + emlSndngList.gatepassid;
+				string requestedby = this.getnamebyid(emlSndngList.requestedby);
+				subbody = "Please find the Returnable Masterials details below. <br/> Requested By:" + requestedby + "<br/>Requested On:" + emlSndngList.requestedon + "<br/>GatePass Type:" + emlSndngList.gatepasstype;
+				//subbody = mailMessage.Subject;
+
 			}
+			//Admin to Approver(MA)
+
 			else if (subjecttype == 9)
+
 			{
-				mailMessage.Subject = "Gatepass materials for Non-returnable - Jobcode:" + emlSndngList.jobcode;
-				subbody = mailMessage.Subject;
-			}
+
+                mailMessage.Subject = "Gatepass materials for Non-returnable - GatePass - ID" + emlSndngList.gatepassid;
+				string requestedby = this.getnamebyid(emlSndngList.requestedby);
+				subbody = "Please find the Non-returnable Masterials details below. <br/> Requested By:" + requestedby + "<br/>Requested On:" + emlSndngList.requestedon + "<br/>GatePass Type:" + emlSndngList.gatepasstype;
+                //subbody = mailMessage.Subject;
+
+            }
 			else if (subjecttype == 10)
 			{
-				mailMessage.Subject = "Reserve material";
-				subbody = mailMessage.Subject;
-			}
+                mailMessage.Subject = "Reserve material";
+                subbody = mailMessage.Subject;
+            }
 			else if (subjecttype == 11)
 			{
 				mailMessage.Subject = "Reserve material";

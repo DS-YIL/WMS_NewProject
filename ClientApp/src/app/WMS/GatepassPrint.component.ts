@@ -63,4 +63,9 @@ export class GatePassPrintComponent implements OnInit {
 
     
   }
+  //back to dashboard  page
+  navigateToGatePass() {
+    this.router.navigateByUrl('/WMS/GatePass');
+  }
+
 }

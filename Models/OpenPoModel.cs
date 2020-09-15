@@ -446,7 +446,9 @@ namespace WMS.Models
 
 	public class gatepassModel
 	{
-		public string statusremarks { get; set; }
+        internal object requestid;
+
+        public string statusremarks { get; set; }
 		public string managername { get; set; }
 		public string pono { get; set; }
 		public int itemid { get; set; }
@@ -513,7 +515,7 @@ namespace WMS.Models
 		public string securityinwardremarks { get; set; }
 
 		public string fmapprover { get; set; }
-
+		public string approvername { get; set; }
 	}
 	public class materialistModel
 	{
@@ -682,15 +684,19 @@ namespace WMS.Models
 	}
 	public class EmailModel
 	{
-        internal string createdby;
+        internal string createdby { get; set; }
 
-        internal DateTime createddate;
-        internal object requestid;
-        internal int reserveid;
-        internal string name;
-        internal string employeeno;
+		internal DateTime createddate { get; set; }
+		internal object requestid { get; set; }
+		internal int reserveid { get; set; }
+		internal string name { get; set; }
+		internal string employeeno { get; set; }
+		internal DateTime requestedon { get; set; }
+		internal string requestedby { get; set; }
+		internal int gatepassid { get; set; }
+        internal string gatepasstype { get; set; }
 
-        public int materialissueid { get; set; }
+		public int materialissueid { get; set; }
 
 		public string FrmEmailId { get; set; }
 		public string ToEmailId { get; set; }

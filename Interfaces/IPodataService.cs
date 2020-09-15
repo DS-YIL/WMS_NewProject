@@ -102,6 +102,7 @@ Task<string> updateonholdrow(updateonhold datamodel);
         Task<IEnumerable<OpenPoModel>> getASNListdata();
         Task<IEnumerable<IssueRequestModel>> GetItemlocationListBymterial(string material);
         Task<IEnumerable<IssueRequestModel>> getItemlocationListByIssueId(string requestforissueid);
+        Task<IEnumerable<IssueRequestModel>> getItemlocationListByGatepassmaterialid(string gatepassmaterialid);
         int updateissuedmaterial(List<IssueRequestModel> obj);
         int assignRole(authUser authuser);
         Task<IEnumerable<userAcessNamesModel>> getuserAcessList(string employeeid, string roleid);

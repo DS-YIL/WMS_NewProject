@@ -524,6 +524,13 @@ namespace WMS.Controllers
 
 			return await this._poService.getItemlocationListByIssueId(requestforissueid);
 		}
+
+		[HttpGet("getItemlocationListByGatepassmaterialid")]
+		public async Task<IEnumerable<IssueRequestModel>> getItemlocationListByGatepassmaterialid(string gatepassmaterialid)
+		{
+
+			return await this._poService.getItemlocationListByGatepassmaterialid(gatepassmaterialid);
+		}
 		[HttpPost("updateMaterialavailabality")]
 		public int updateMaterialavailabality([FromBody]List<IssueRequestModel> model)
 		{

@@ -51,7 +51,7 @@ export class GatePassComponent implements OnInit {
   public txtDisable: boolean = true;
   public FIFOvalues: FIFOValues;
   public gatePassApprovalList: Array<any> = [];
-  public displaydetail: boolean = false;
+  public displaydetail; disableGPBtn: boolean = false;
   public selectedRow: any;
   public itemlocationData: Array<any> = [];
   userrolelist: userAcessNamesModel[] = [];
@@ -314,12 +314,16 @@ export class GatePassComponent implements OnInit {
 
   //get gatepass list
   getGatePassList() {
+    this.spinner.show();
     this.wmsService.getGatePassList().subscribe(data => {
+      this.spinner.hide();
       this.totalGatePassList = data;
-      debugger;
-      console.log(this.totalGatePassList);
-      var role8 = this.userrolelist.filter(li => li.roleid == 8);
-      var role3 = this.userrolelist.filter(li => li.roleid == 3);
+      //filtering the based on logged in user
+      this.totalGatePassList = this.totalGatePassList.filter(li => li.requestedby == this.employee.employeeno);
+      //debugger;
+      //console.log(this.totalGatePassList);
+      //var role8 = this.userrolelist.filter(li => li.roleid == 8);
+      //var role3 = this.userrolelist.filter(li => li.roleid == 3);
       this.gatepasslist = [];
       if (this.employee.roleid == "8") {
         this.gatepasslist = this.totalGatePassList.filter(li => li.gatepasstype == 'Non Returnable' && (li.approverstatus == this.approverstatus || li.approverstatus == null));
@@ -606,8 +610,7 @@ export class GatePassComponent implements OnInit {
 
   //saving gatepass details --Gayathri
   async onSubmitgatepassData() {
-    debugger;
-
+    this.disableGPBtn = true;
     this.gatePassChange();
     if (this.gatepassModel.gatepasstype != "0") {
       if (this.gatepassModel.materialList.length > 0) {
@@ -619,27 +622,34 @@ export class GatePassComponent implements OnInit {
         }
         if (isNullOrUndefined(this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].materialid) || this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].materialid == "") {
           this.messageService.add({ severity: 'error', summary: '', detail: 'Select Material from list' });
+          this.disableGPBtn = false;
           return false;
         }
         else if (this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].quantity <= 0) {
           this.messageService.add({ severity: 'error', summary: '', detail: 'Enter Quantity' });
+          this.disableGPBtn = false;
           return false;
         }
         else if (this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].quantity > 0) {
+
+          this.spinner.show();
           //check if for that material quanity exists or not
           this.wmsService.checkMaterialandQty(this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].materialid, this.materialistModel.quantity).subscribe(data => {
-            debugger;
+            this.spinner.hide();
             if (data == "true") {
               this.gatepassModel.requestedby = this.employee.employeeno;
               if (this.gatepassModel.gatepasstype == "Returnable" && this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].expecteddate == undefined) {
                 this.messageService.add({ severity: 'error', summary: '', detail: 'Select Expected Date' });
+                this.disableGPBtn = false;
                 return false;
               }
               else {
                 this.gatepassModel.requestedby = this.employee.employeeno;
                 this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].expecteddate = this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].expecteddate != null ? new Date(this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].expecteddate).toLocaleDateString() : undefined;
-
+                this.spinner.show();
                 this.wmsService.saveoreditgatepassmaterial(this.gatepassModel).subscribe(data => {
+                  this.spinner.hide();
+                  this.disableGPBtn = false;
                   this.gatepassdialog = false;
                   this.updateReturnedDateDialog = false;
                   this.getGatePassList();
@@ -663,6 +673,7 @@ export class GatePassComponent implements OnInit {
             else {
               this.messageService.add({ severity: 'error', summary: '', detail: data });
               this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].quantity = 0;
+              this.disableGPBtn = false;
               return false;
             }
           });
@@ -670,10 +681,10 @@ export class GatePassComponent implements OnInit {
         }
         else if (this.gatepassModel.gatepasstype == "Returnable" && this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].expecteddate == undefined) {
           this.messageService.add({ severity: 'error', summary: '', detail: 'Select Expected Date' });
+          this.disableGPBtn = false;
           return false;
         }
         else {
-          debugger;
           this.materialistModel = { materialid: "", gatepassmaterialid: "0", materialdescription: "", quantity: 0, materialcost: "0", remarks: " ", expecteddate: this.date, returneddate: this.date, issuedqty: 0, showdetail: false, materiallistdata: [] };
           this.gatepassModel.materialList.push(this.materialistModel);
         }
@@ -681,12 +692,14 @@ export class GatePassComponent implements OnInit {
       }
       else {
         this.messageService.add({ severity: 'error', summary: '', detail: 'Add Material to create Gate Pass' });
+        this.disableGPBtn = false;
         return false;
       }
 
     }
     else {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Select Type' });
+      this.disableGPBtn = false;
       return false;
     }
 
@@ -1019,7 +1032,7 @@ export class GatePassComponent implements OnInit {
 
     //  this.gatepassFiltered = this.gatepassModelList;
     //}
-
+    this.constants.gatePassIssueType = this.selectedStatus;
     if (this.selectedStatus == "Pending") {
       this.gatepassFiltered = this.gatepassModelList.filter(li => li.issuedqty == 0 && li.approverstatus == "Approved");
     }

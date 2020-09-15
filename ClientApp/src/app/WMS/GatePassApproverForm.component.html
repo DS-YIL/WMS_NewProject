@@ -72,43 +72,43 @@
           </div>
         </div>
       </div><br />
-            <div class="row" style="padding-left:20px;">
-              <div class="col-lg-2 col-md-2 col-sm-2 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
-                GatePass Id:&nbsp;<span style="color:#dc3545;">GTP{{materialList[0].gatepassid}}</span>
-              </div>
-              <div class="col-lg-4 col-md-4 col-sm-4 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
-                Requester:&nbsp;<span style="color:#dc3545;">{{materialList[0].name}}</span>
-              </div>
-              <div class="col-lg-4 col-md-4 col-sm-4 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
-                Supplier:&nbsp;<span style="color:#dc3545;">{{materialList[0].vendorname}}</span>
-              </div>
-              <div class="col-lg-2 col-md-2 col-sm-2 form-inline" *ngIf="employee.roleid!='8'" style="font-weight:600;font-size:14px;color:darkblue;">
-                Type:&nbsp;<span style="color:#dc3545;">{{materialList[0].gatepasstype}}</span>
-              </div>
-              <div class="col-lg-2 col-md-2 col-sm-2 form-inline" *ngIf="gatepassModel.approverstatus && btnDisable" style="font-weight:600;font-size:14px;color:darkblue;">
-                <label>
-                  Status:&nbsp;<span style="color:#dc3545;">{{gatepassModel.approverstatus}}</span>
-                </label>
-              </div>
-              <div class="col-lg-2 col-md-2 col-sm-2 form-inline" *ngIf="!gatepassModel.approverstatus || !btnDisable" style="font-weight:600;font-size:14px;color:darkblue;">
-                <label>
-                  Status:&nbsp;<span style="color:#dc3545;">Pending</span>
-                </label>
-              </div>
-              <div class="col-lg-4 col-md-4 col-sm-4 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
-                Reason:&nbsp;<span style="color:#dc3545;">{{materialList[0].reasonforgatepass}}</span>
-              </div>
+      <div class="row" style="padding-left:20px;">
+        <div class="col-lg-2 col-md-2 col-sm-2 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
+          GatePass Id:&nbsp;<span style="color:#dc3545;">GTP{{materialList[0].gatepassid}}</span>
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-2 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
+          Requester:&nbsp;<span style="color:#dc3545;">{{materialList[0].name}}</span>
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-2 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
+          Supplier:&nbsp;<span style="color:#dc3545;">{{materialList[0].vendorname}}</span>
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-2 form-inline" *ngIf="employee.roleid!='8'" style="font-weight:600;font-size:14px;color:darkblue;">
+          Type:&nbsp;<span style="color:#dc3545;">{{materialList[0].gatepasstype}}</span>
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-2 form-inline" *ngIf="gatepassModel.approverstatus && btnDisable" style="font-weight:600;font-size:14px;color:darkblue;">
+          <label>
+            Status:&nbsp;<span style="color:#dc3545;">{{gatepassModel.approverstatus}}</span>
+          </label>
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-2 form-inline" *ngIf="!gatepassModel.approverstatus || !btnDisable" style="font-weight:600;font-size:14px;color:darkblue;">
+          <label>
+            Status:&nbsp;<span style="color:#dc3545;">Pending</span>
+          </label>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-4 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
+          Reason:&nbsp;<span style="color:#dc3545;">{{materialList[0].reasonforgatepass}}</span>
+        </div>
 
 
-            </div>
+      </div>
       <br />
       <div class="row" style="padding-left:20px;">
         <div class="col-lg-6 col-md-6 col-sm-6 form-inline" *ngIf="gatepassModel.approverremarks && btnDisable" style="font-weight:600;font-size:14px;color:darkblue;">
           Remarks:&nbsp;<span style="color:#dc3545;">{{gatepassModel.approverremarks}}</span>
         </div>
         <!--<div class="col-lg-2 col-md-2 col-sm-2 form-inline">
-          <label class="form-label"><b>Vehicle No:</b></label>&nbsp;<span>{{materialList[0].vehicleno}}</span>
-        </div>-->
+      <label class="form-label"><b>Vehicle No:</b></label>&nbsp;<span>{{materialList[0].vehicleno}}</span>
+    </div>-->
       </div>
       <!--<br />-->
       <div class="row mt-4" style="margin:14px">
@@ -124,11 +124,11 @@
               <th class="ptable-cell" style="text-align:center">Material</th>
               <th class="ptable-cell" style="text-align:center;width:350px;">Material Description</th>
               <th class="ptable-cell" style="text-align:center">Price</th>
-              <th class="ptable-cell" style="text-align:center">Remarks</th>
               <th class="ptable-cell" style="text-align:center">Requested Qty</th>
               <th class="ptable-cell" style="text-align:center" *ngIf="employee.roleid !='8'">Issue Qty</th>
               <th class="ptable-cell" style="text-align:center" *ngIf="employee.roleid !='8' && materialList[0].gatepasstype=='Returnable'">Expected Date</th>
               <!--<th *ngIf="materialList[0].gatepasstype=='Returnable'" class="ptable-cell" style="text-align:center">Returned Date</th>-->
+              <th class="ptable-cell" style="text-align:center">Remarks</th>
             </tr>
           </ng-template>
           <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex" let-rindex=0>
@@ -136,11 +136,10 @@
               <td class="ptable-cell" style="text-align:center"> {{ri+1}} </td>
               <td class="ptable-cell" style="text-align:left">
                 <span *ngIf="employee.roleid !='3'">{{rowData.materialid}}</span>
-                <button *ngIf="employee.roleid !='8' && employee.roleid =='3'" type="button" class="btn btn-link" (click)="showmateriallocationList(rowData.materialid,rowData.materialdescription,ri+1,ri,rowData.quantity,rowData.issuedqty,rowData.itemlocation,rowData.itemissueddate);" style="padding-left:0px;">{{rowData.materialid}}</button>
+                <button *ngIf="employee.roleid !='8' && employee.roleid =='3'" type="button" class="btn btn-link" (click)="showmateriallocationList(rowData.materialid,rowData.materialdescription,ri+1,ri,rowData.quantity,rowData.issuedqty,rowData.reservedqty,rowData.gatepassmaterialid);" style="padding-left:0px;">{{rowData.materialid}}</button>
               </td>
               <td class="ptable-cell" style="text-align:left"> {{rowData.materialdescription}} </td>
               <td class="ptable-cell" style="text-align:right"><span *ngIf="rowData.materialcost">{{rowData.materialcost}}</span></td>
-              <td class="ptable-cell" style="text-align:left"> {{rowData.remarks}} </td>
               <td class="ptable-cell" style="text-align:right">{{rowData.quantity}}</td>
               <td class="ptable-cell" [hidden]="true" style="text-align:right">{{rowData.itemlocation}}</td>
               <td class="ptable-cell" *ngIf="employee.roleid !='8'">
@@ -148,17 +147,21 @@
               </td>
               <td class="ptable-cell" style="text-align:center" *ngIf="employee.roleid !='8' && materialList[0].gatepasstype=='Returnable'">{{checkValiddate(rowData.expecteddate)}}</td>
               <!--<td *ngIf="materialList[0].gatepasstype=='Returnable' && rowData.returneddate" class="ptable-cell" style="text-align:center">{{checkValiddate(rowData.returneddate)}}</td>-->
-
+              <td class="ptable-cell" style="text-align:left"> {{rowData.remarks}} </td>
           </ng-template>
 
         </p-table>
-        <p-footer>
+        <!--<p-footer>
           <div *ngIf="employee.roleid!='7'" class="ui-dialog-buttonpane ui-helper-clearfix">
-            <!--|| materialList[0].gatepasstype=='Non Returnable'-->
             <button [disabled]="btnDisableissue " type="button" class="btn btn-primary" (click)="updategatepassapproverstatus()">Submit</button>
-
           </div>
-        </p-footer>
+        </p-footer>-->
+      </div>
+      <div  class="row" *ngIf="employee.roleid!='7'">
+        <!--|| materialList[0].gatepasstype=='Non Returnable'-->
+        <div class="col-lg-6 col-md-6 col-sm-6"></div>
+        <div class="col-lg-4 col-md-4 col-sm-4"><button [disabled]="btnDisableissue " type="button" class="btn btn-primary" (click)="updategatepassapproverstatus()">Submit</button></div>
+
       </div>
       <!--</div>-->
       <div *ngIf="employee.roleid=='8'">
@@ -198,42 +201,19 @@
         <div class="col-lg-4 col-md-4 col-sm-4 pt-2 labelheading">
           <label>Material Id :</label>&nbsp;<span><label class="labeltext">{{material}}</label></span>
         </div>
-        <div class="col-lg-6 col-md-6 col-sm-6 pt-2 labelheading">
-          <label>Material desc :</label>&nbsp;<span><label class="labeltext">{{matdesc}}</label></span>
+        <div class="col-lg-4 col-md-4 col-sm-4 pt-2 labelheading">
+          <label>Material Desc :</label>&nbsp;<span><label class="labeltext">{{matdesc}}</label></span>
         </div>
+        <!--<div class="col-lg-2 col-md-2 col-sm-2 pt-2 labelheading">
+        <label>Reserved qty :</label>&nbsp;<span><label class="labeltext">{{reservedQty}}</label></span>
+      </div>-->
         <div class="col-lg-2 col-md-2 col-sm-2 pt-2 labelheading">
-          <label>Requested qty :</label>&nbsp;<span><label class="labeltext">{{reqqty}}</label></span>
+          <label>Requested Qty :</label>&nbsp;<span><label class="labeltext">{{reqqty}}</label></span>
         </div>
       </div>
 
     </div>
-    <p-table #dt [value]="itemissuedloc" *ngIf="issuedqty>0">
-      <ng-template pTemplate="header">
-        <tr class="mprltbldata">
-          <th style="text-align:center;width:70px">S.No</th>
-          <th style="text-align:center">Location</th>
-          <th style="text-align:center">Issued Qty</th>
-          <th style="text-align:center">Issue Date</th>
-          <!--<th style="text-align:center">Received Date</th>-->
-        </tr>
-
-      </ng-template>
-      <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
-        <tr>
-          <td class="ptable-cell" style="text-align:right">
-            {{ri+1}}
-          </td>
-          <td class="ptable-cell" style="text-align:center">{{rowData.location}}</td>
-          <td class="ptable-cell" style="text-align:right">{{rowData.issuedqty}}</td>
-          <!--<td class="ptable-cell" style="text-align:right">
-            <input id="id_{{ri+1}}" pInputText type="number" style="text-align:right" class="form-control" (change)="checkissueqty($event,rowData.issuedquantity,rowData.availableqty,rowData.material,rowData.createddate,ri);" [(ngModel)]="rowData.issuedquantity">
-          </td>-->
-        <td class="ptable-cell" style="text-align:center">{{rowData.issueddate | date :  constants.dateFormat}}</td>
-        </tr>
-      </ng-template>
-
-    </p-table>
-    <p-table #dt [value]="itemlocationData" *ngIf="issuedqty==0">
+    <p-table #dt [value]="itemlocationData">
       <ng-template pTemplate="header">
         <tr class="mprltbldata">
           <th style="text-align:center;width:70px">S.No</th>
@@ -241,6 +221,7 @@
           <th style="text-align:center">Available Qty</th>
           <th style="text-align:center">Issue Qty</th>
           <th style="text-align:center">Received Date</th>
+
         </tr>
 
       </ng-template>
@@ -252,7 +233,7 @@
           <td class="ptable-cell" style="text-align:center">{{rowData.itemlocation}}</td>
           <td class="ptable-cell" style="text-align:right">{{rowData.availableqty}}</td>
           <td class="ptable-cell" style="text-align:right">
-            <input id="id_{{ri+1}}" pInputText type="number" style="text-align:right" class="form-control" (change)="checkissueqty($event,rowData.issuedqty,rowData.availableqty,rowData.material,rowData.createddate,ri);" [(ngModel)]="rowData.issuedqty">
+            <input id="{{ri+1}}" pInputText type="number" [disabled]="issueqtyenable" style="text-align:right" class="form-control" (change)="checkissueqty($event,rowData.issuedqty,rowData.availableqty,rowData.material,rowData.createddate);" [(ngModel)]="rowData.issuedqty">
           </td>
           <td class="ptable-cell" style="text-align:center">{{rowData.createddate | date :  constants.dateFormat}}</td>
         </tr>
@@ -260,7 +241,7 @@
 
     </p-table>
     <p-footer>
-      <div class="ui-dialog-buttonpane ui-helper-clearfix">
+      <div *ngIf="!issueqtyenable" class="ui-dialog-buttonpane ui-helper-clearfix">
         <button type="button" pButton icon="fa fa-check" class="ui-button-success" (click)="issuematerial(itemlocationData)" label="OK"></button>
         <button type="button" pButton icon="fa fa-close" class="ui-button-danger" (click)="Cancel()" label="Cancel"></button>
       </div>

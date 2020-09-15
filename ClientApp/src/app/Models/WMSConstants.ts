@@ -10,6 +10,7 @@ export class constants {
   //public url = 'http://10.29.15.183:100/';
 
   public materialIssueType: string = "";
+  public gatePassIssueType: string = "";
   public dateFormat = "dd/MM/yyyy";
   public venderid: searchParams = { tableName: 'wms.VendorMaster', fieldId: 'vendorid', fieldName: 'vendorname', condition: " where  deleteflag=true and ", fieldAliasName: "", updateColumns: "Emailid" };
   public itemlocation: searchParams = { tableName: 'wms.wms_rd_locator', fieldId: 'locatorid', fieldName: 'locatorname', condition: " where ", fieldAliasName: "", updateColumns: "" };

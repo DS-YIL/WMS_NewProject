@@ -37,9 +37,10 @@ export class GatePassApproverComponent implements OnInit {
   public FIFOvalues: FIFOValues;
   public gatePassApprovalList: Array<any> = [];
   public showHistory: boolean = false;
-  public reqqty: number;
+  public reqqty; reservedQty: number;
   public material: string = "";
   public matdesc: string = "";
+  public issueqtyenable: boolean = true;
   ngOnInit() {
     if (localStorage.getItem("Employee"))
       this.employee = JSON.parse(localStorage.getItem("Employee"));
@@ -112,7 +113,8 @@ export class GatePassApproverComponent implements OnInit {
       if (this.gatepassModel.status == 'Approved')
         this.btnDisable = true;
 
-      this.messageService.add({ severity: 'success', summary: '', detail: 'Issued Materials for Gate Pass' });
+      this.messageService.add({ severity: 'success', summary: '', detail: 'Materials Issued for Gate Pass' });
+      this.router.navigateByUrl("WMS/GatePass");
     });
   }
 
@@ -130,39 +132,50 @@ export class GatePassApproverComponent implements OnInit {
   }
 
   //shows list of items for particular material
-  showmateriallocationList(material,description, id, rowindex, qty,issuedqty,location,issuedDate) {
-    debugger;
+  showmateriallocationList(material, description, id, rowindex, qty, issuedqty, reservedqty, gatepassmaterialid) {
+    if (issuedqty <= qty) {
+      this.issueqtyenable = true;
+    }
+    else {
+      this.issueqtyenable = false;
+    }
     this.itemissuedloc = [];
-    this.reqqty = qty;
+      this.reqqty = qty;
+        this.reservedQty = reservedqty;
     this.id = id;
     this.material = material;
     this.matdesc = description;
     this.AddDialog = true;
     this.roindex = rowindex;
     this.issuedqty = issuedqty;
-    if (issuedqty > 0) {
-      this.showdialog = true;
-      //this.materialList.filter(li=>li.mater)
-      this.locdetails.issueddate = issuedDate;
-      this.locdetails.location = location;
-      this.locdetails.issuedqty = issuedqty;
-      this.itemissuedloc.push(this.locdetails);
-    }
-    else {
+    //if (issuedqty > 0) {
+    //  this.showdialog = true;
+    //  //this.materialList.filter(li=>li.mater)
+    //  this.locdetails.issueddate = issuedDate;
+    //  this.locdetails.location = location;
+    //  this.locdetails.issuedqty = issuedqty;
+    //  this.itemissuedloc.push(this.locdetails);
+    //}
+    if (this.constants.gatePassIssueType == "Pending") {
+      this.issueqtyenable = false;
       this.wmsService.getItemlocationListByMaterial(material).subscribe(data => {
         this.itemlocationData = data;
         this.showdialog = true;
-        if (data != null) {
-
-        }
       });
     }
-   
+
+    else {
+      this.issueqtyenable = true;
+      this.wmsService.getItemlocationListByGatepassmaterialid(gatepassmaterialid).subscribe(data => {
+        this.itemlocationData = data;
+        this.showdialog = true;
+      });
+    }
   }
   //show alert about oldest item location
   alertconfirm(data) {
     var info = data;
-    this.itemreceiveddate = this.datePipe.transform(data.createddate, 'yyyy-MM-dd hh:mm:ss');
+    this.itemreceiveddate = this.datePipe.transform(data.createddate, 'dd/MM/yyyy');
     this.ConfirmationService.confirm({
       message: 'Same Material received on ' + this.itemreceiveddate + ' and placed in ' + data.itemlocation + '  location, Would you like to continue?',
       header: 'Confirmation',

@@ -275,9 +275,11 @@ inner join wms.wms_polist openpo on inw.pono=openpo.pono
 where  inw.invoiceno='#invoiceno' and openpo.pono='#pono' group by grnnumber</value>
   </data>
   <data name="getgatepasslist" xml:space="preserve">
-    <value>select ygs.materialdescription,emp.name,iss.itemissueddate,gate.remarks as  statusremarks, * from wms.wms_gatepass gate
+    <value>select ygs.materialdescription,emp.name,iss.itemissueddate,gate.remarks as  statusremarks,appr."name"  as approvername,
+gate.*,mat.*,iss.*,ygs.* from wms.wms_gatepass gate
    left join wms.wms_gatepassmaterial mat on gate.gatepassid=mat.gatepassid 
    left join wms.employee emp on emp.employeeno=gate.requestedby
+    left join wms.employee appr on appr.employeeno=gate.approverid  
    left join wms.wms_materialissue iss on iss.gatepassmaterialid = mat.gatepassmaterialid 
    left join wms."MaterialMasterYGS" ygs on ygs.material=mat.materialid and mat.deleteflag=false 
    where gate.deleteflag=false   order by gate.gatepassid desc</value>
@@ -308,12 +310,20 @@ values(default,@gatepassid,@materialid,@quantity,@deleteflag,@remarks,@materialc
     <value>update wms.wms_gatepassmaterial set deleteflag='true' where gatepassmaterialid=#gatepassmaterialid</value>
   </data>
   <data name="getgatepassmaterialdetailList" xml:space="preserve">
-    <value>select * from wms.wms_gatepassmaterial material
-      inner join wms.wms_gatepass pass on pass.gatepassid=material.gatepassid 
-      inner join wms.employee emp on pass.requestedby=emp.employeeno
-      left join wms."MaterialMasterYGS" ygs on ygs.material=material.materialid left join wms.wms_materialissue wissue on wissue.gatepassmaterialid  = material.gatepassmaterialid 
-      left join wms.wms_stock stock on stock.itemid  = wissue.itemid 
-           where pass.gatepassid=#gatepassid and pass.deleteflag=false and material.deleteflag=false</value>
+    <value>select (select sum(issuedqty) from wms.wms_materialissue  where gatepassmaterialid =material.gatepassmaterialid ) as issuedqty
+,(select sum(availableqty) from wms.wms_stock ws where materialid =stock.materialid ) as availableqty,
+max(material.gatepassid ) as gatepassid, max(emp."name") as name,max(pass.vendorname) as vendorname,
+max(pass.gatepasstype) as gatepasstype,max(pass.approverstatus) as approverstatus,
+max(pass.reasonforgatepass) as reasonforgatepass,max(pass.approverremarks ) as approverremarks,
+stock.materialid, max(ygs.materialdescription )as materialdescription, max(material.materialcost )as materialcost,
+max(material.quantity ) as quantity,max(material.remarks ) as remarks from wms.wms_stock stock
+inner join wms.wms_gatepassmaterial material on material.materialid =stock.materialid 
+inner join wms.wms_gatepass pass on pass.gatepassid=material.gatepassid 
+ left join wms.wms_materialissue wissue on wissue.gatepassmaterialid  = material.gatepassmaterialid 
+ inner join wms.employee emp on pass.requestedby=emp.employeeno
+ left join wms."MaterialMasterYGS" ygs on ygs.material=material.materialid
+ where pass.gatepassid=#gatepassid and pass.deleteflag=false and material.deleteflag=false
+ group by  material.gatepassmaterialid ,stock.materialid</value>
   </data>
   <data name="updategatepassapproverstatus" xml:space="preserve">
     <value>update wms.wms_gatepass set  status=@status, approverstatus=@approverstatus,approverremarks=@approverremarks,approvedon=@approvedon where gatepassid=#gatepassid</value>
@@ -1042,6 +1052,15 @@ group by sk.itemlocation,ygs.materialdescription,ygs.material,createddate::DATE,
     <value>select ts.transferid, ts.projectcode,ts.remarks as transferremarks,emp.name as transferedby,ts.createdon as transferredon
 from wms.wms_transfermaterial ts
 left outer join wms.employee emp on emp.employeeno = ts.createdby</value>
+  </data>
+  <data name="getItemlocationListByGatepassmaterialid" xml:space="preserve">
+    <value>select  sum(sk.availableqty)as availableqty,(select sum(issuedqty) from wms.wms_materialissue wm where itemid =sk.itemid ) as issuedqty,sk.pono,sk.materialid,sk.itemid,sk.itemlocation,ygs.materialdescription,ygs.material,createddate::DATE
+from wms.wms_stock sk 
+inner join wms."MaterialMasterYGS" ygs on ygs.material=sk.materialid 
+left join wms.wms_materialissue iss on iss.itemid =sk.itemid 
+where gatepassmaterialid ='#gatepassmaterialid' and
+sk.deleteflag=false
+group by sk.itemlocation,ygs.materialdescription,ygs.material,createddate::DATE,sk.itemid</value>
   </data>
   <data name="inwardinsertquery" xml:space="preserve">
     <value>insert into wms.outwatdinward (gatepassid,gatepassmaterialid,inwarddate,inwardby,inwardremarks,inwardqty)

@@ -97,6 +97,8 @@
               <th style="text-align:center">Status</th>
               <th style="text-align:center">Requested By</th>
               <th style="text-align:center">Requested On</th>
+              <th *ngIf="selectedStatus=='Issued'" style="text-align:center">Approved By</th>
+              <th *ngIf="selectedStatus=='Issued'" style="text-align:center">Approved On</th>
               <th *ngIf="employee.roleid!='3' && employee.roleid !='8'" style="text-align:center;">Edit</th>
               <th *ngIf="employee.roleid=='3' && employee.roleid !='8'" style="text-align:center;">Print</th>
               <th *ngIf=" employee.roleid=='3' && selectedStatus=='Issued' " style="text-align:center">Returned Date</th>
@@ -133,13 +135,15 @@
                 <span *ngIf="!rowData.approverstatus">Pending for Approval</span>
                 <span *ngIf="rowData.approverstatus && selectedStatus!='Issued'">{{rowData.approverstatus}}</span>
                 <!--<span *ngIf="rowData.approverstatus && selectedStatus=='Issued'">Issued</span>-->
-                <span *ngIf="rowData.approverstatus=='Approved' && selectedStatus=='Issued'" style="color:red">{{rowData.status}}</span>
+                <span *ngIf="rowData.approverstatus=='Approved' && selectedStatus=='Issued'" [ngStyle]="{'color':rowData.status === 'Partial Closure' ? 'red' : 'black' }" style="color:red">{{rowData.status}}</span>
                 <!--<span *ngIf="rowData.approverstatus=='Approved' && rowData.print==false && rowData.returneddate!=null" style="color:red">Full Closure</span>-->
               </td>
 
               <!--<td class="ptable-cell" *ngIf="!rowData.approverstatus" style="text-align:left">Pending</td>-->
               <td class="ptable-cell" style="text-align:left">{{rowData.name}}</td>
               <td class="ptable-cell" style="text-align:center">{{rowData.requestedon | date :  constants.dateFormat}}</td>
+              <td *ngIf="selectedStatus=='Issued'" class="ptable-cell" style="text-align:left">{{rowData.approvername}}</td>
+              <td *ngIf="selectedStatus=='Issued'" class="ptable-cell" style="text-align:center">{{rowData.approvedon | date :  constants.dateFormat}}</td>
               <td class="ptable-cell" *ngIf="employee.roleid!='3' && employee.roleid !='8'" style="text-align:center"><button *ngIf="rowData.approverstatus!='Approved' && rowData.requestedby==employee.employeeno" type="button" icon="fa fa-edit" pButton aria-hidden="true" (click)="openGatepassDialog(rowData,ri,'gatepassdialog')"></button></td>
               <td class="ptable-cell" *ngIf="employee.roleid=='3' && employee.roleid !='8'" style="text-align:center"><button *ngIf="rowData.approverstatus=='Approved'" type="button" icon="fa fa-print" pButton aria-hidden="true" (click)="showprint(rowData)"></button></td>
               <td *ngIf="employee.roleid=='3' && selectedStatus=='Issued'" class="ptable-cell" style="text-align:center"><button *ngIf="rowData.gatepasstype=='Returnable' && employee.roleid=='3' && rowData.approverstatus=='Approved' " type="button" icon="fa fa-pencil" pButton aria-hidden="true" (click)="openGatepassDialog(rowData,ri,'updateReturnedDateDialog')"></button></td>
@@ -159,6 +163,7 @@
                          [paginator]="true" [rowsPerPageOptions]="[25,50,75,100]"
                          appendTo="body">
                   <ng-template pTemplate="header">
+            <tr class="mprltbldata">
             <tr class="mprltbldata">
               <th class="ptable-cell" style="    text-align: center;width: 60px;background-color: #9ba5af !important">Sl.No.</th>
               <th class="ptable-cell" style="    text-align: center;background-color: #9ba5af !important">Material</th>
@@ -379,7 +384,7 @@
                     <input style="text-align:left" pInputText type="number" (blur)="onComplete(rowData.quantity , rowData.materialid,ri)" class="form-control" [(ngModel)]="rowData.quantity">
                   </td>
                   <td class="ptable-cell" style="text-align:right">
-                    <input [disabled]="true" [(ngModel)]="rowData.materialcost" class="form-control" type="text" name="{{rowData.materialcost}}" />
+                    <input [disabled]="true" [ngModel]="rowData.materialid && rowData.materialid?rowData.materialcost:0" class="form-control" type="text" name="{{rowData.materialcost}}" />
 
                   </td>
                   <td class="ptable-cell" style="text-align:right">
@@ -413,7 +418,7 @@
 
         <p-footer>
           <div class="ui-dialog-buttonpane ui-helper-clearfix">
-            <button type="button" pButton icon="fa fa-close" (click)="onSubmitgatepassData()" label="Submit"></button>
+            <button [disabled]="disableGPBtn" type="button" pButton icon="fa fa-close" (click)="onSubmitgatepassData()" label="Submit"></button>
           </div>
         </p-footer>
       </p-dialog>
