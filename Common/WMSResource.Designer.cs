@@ -373,12 +373,11 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select * from wms.wms_gatepassmaterial material
-        ///      inner join wms.wms_gatepass pass on pass.gatepassid=material.gatepassid 
-        ///      inner join wms.employee emp on pass.requestedby=emp.employeeno
-        ///      left join wms.&quot;MaterialMasterYGS&quot; ygs on ygs.material=material.materialid left join wms.wms_materialissue wissue on wissue.gatepassmaterialid  = material.gatepassmaterialid 
-        ///      left join wms.wms_stock stock on stock.itemid  = wissue.itemid 
-        ///           where pass.gatepassid=#gatepassid and pass.deletef [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to select (select sum(issuedqty) from wms.wms_materialissue  where gatepassmaterialid =material.gatepassmaterialid ) as issuedqty
+        ///,(select sum(availableqty) from wms.wms_stock ws where materialid =stock.materialid ) as availableqty,
+        ///max(material.gatepassid ) as gatepassid, max(emp.&quot;name&quot;) as name,max(pass.vendorname) as vendorname,
+        ///max(pass.gatepasstype) as gatepasstype,max(pass.approverstatus) as approverstatus,
+        ///max(pass.reasonforgatepass) as reasonforgatepass,max(pass.approverremarks ) as approverremarks [rest of string was truncated]&quot;;.
         /// </summary>
         public static string getgatepassmaterialdetailList {
             get {
@@ -570,6 +569,21 @@ namespace WMS.Common {
         public static string getitemlocationList {
             get {
                 return ResourceManager.GetString("getitemlocationList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to select  sum(sk.availableqty)as availableqty,(select sum(issuedqty) from wms.wms_materialissue wm where itemid =sk.itemid ) as issuedqty,sk.pono,sk.materialid,sk.itemid,sk.itemlocation,ygs.materialdescription,ygs.material,createddate::DATE
+        ///from wms.wms_stock sk 
+        ///inner join wms.&quot;MaterialMasterYGS&quot; ygs on ygs.material=sk.materialid 
+        ///left join wms.wms_materialissue iss on iss.itemid =sk.itemid 
+        ///where gatepassmaterialid =&apos;#gatepassmaterialid&apos; and
+        ///sk.deleteflag=false
+        ///group by sk.itemlocation,ygs.materialdes [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string getItemlocationListByGatepassmaterialid {
+            get {
+                return ResourceManager.GetString("getItemlocationListByGatepassmaterialid", resourceCulture);
             }
         }
         

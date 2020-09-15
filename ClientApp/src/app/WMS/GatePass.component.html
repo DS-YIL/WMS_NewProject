@@ -133,7 +133,7 @@
                 <span *ngIf="!rowData.approverstatus">Pending for Approval</span>
                 <span *ngIf="rowData.approverstatus && selectedStatus!='Issued'">{{rowData.approverstatus}}</span>
                 <!--<span *ngIf="rowData.approverstatus && selectedStatus=='Issued'">Issued</span>-->
-                <span *ngIf="rowData.approverstatus=='Approved' && selectedStatus=='Issued'" style="color:red">{{rowData.status}}</span>
+                <span *ngIf="rowData.approverstatus=='Approved' && selectedStatus=='Issued'" [ngStyle]="{'color':rowData.status === 'Partial Closure' ? 'red' : 'black' }" style="color:red">{{rowData.status}}</span>
                 <!--<span *ngIf="rowData.approverstatus=='Approved' && rowData.print==false && rowData.returneddate!=null" style="color:red">Full Closure</span>-->
               </td>
 
@@ -379,7 +379,7 @@
                     <input style="text-align:left" pInputText type="number" (blur)="onComplete(rowData.quantity , rowData.materialid,ri)" class="form-control" [(ngModel)]="rowData.quantity">
                   </td>
                   <td class="ptable-cell" style="text-align:right">
-                    <input [disabled]="true" [(ngModel)]="rowData.materialcost" class="form-control" type="text" name="{{rowData.materialcost}}" />
+                    <input [disabled]="true" [ngModel]="rowData.materialid && rowData.materialid?rowData.materialcost:0" class="form-control" type="text" name="{{rowData.materialcost}}" />
 
                   </td>
                   <td class="ptable-cell" style="text-align:right">
@@ -413,7 +413,7 @@
 
         <p-footer>
           <div class="ui-dialog-buttonpane ui-helper-clearfix">
-            <button type="button" pButton icon="fa fa-close" (click)="onSubmitgatepassData()" label="Submit"></button>
+            <button [disabled]="disableGPBtn" type="button" pButton icon="fa fa-close" (click)="onSubmitgatepassData()" label="Submit"></button>
           </div>
         </p-footer>
       </p-dialog>

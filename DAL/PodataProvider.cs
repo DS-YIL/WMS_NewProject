@@ -1141,18 +1141,18 @@ namespace WMS.DAL
 						verify.grnnumber = info.grnnumber;
 					}
 					//if (inwardid != 0)
-					
-						EmailModel emailmodel = new EmailModel();
+
+					EmailModel emailmodel = new EmailModel();
 					//emailmodel.pono = datamodel[0].pono;
 					//emailmodel.jobcode = datamodel[0].projectname;
 					emailmodel.grnnumber = verify.grnnumber;
 
-						emailmodel.ToEmailId = "ramesh.kumar@in.yokogawa.com";
-						emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
-						emailmodel.CC = "sushma.patil@in.yokogawa.com";
-						EmailUtilities emailobj = new EmailUtilities();
-						emailobj.sendEmail(emailmodel, 2);
-					
+					emailmodel.ToEmailId = "ramesh.kumar@in.yokogawa.com";
+					emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
+					emailmodel.CC = "sushma.patil@in.yokogawa.com";
+					EmailUtilities emailobj = new EmailUtilities();
+					emailobj.sendEmail(emailmodel, 2);
+
 					return verify;
 				}
 				catch (Exception Ex)
@@ -2096,7 +2096,7 @@ namespace WMS.DAL
 							emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
 							emailmodel.CC = "sushma.patil@in.yokogawa.com";
 							EmailUtilities emailobj = new EmailUtilities();
-							emailobj.sendEmail(emailmodel,4);
+							emailobj.sendEmail(emailmodel, 4);
 						}
 						//if (result != 0)
 						//{
@@ -2240,7 +2240,7 @@ namespace WMS.DAL
 				//emailmodel.pono = datamodel[0].pono;
 				//emailmodel.jobcode = datamodel[0].projectname;
 				emailmodel.materialissueid = dataobj[0].materialissueid;
-				emailmodel.requestid =dataobj[0].requestid;
+				emailmodel.requestid = dataobj[0].requestid;
 				emailmodel.ToEmailId = "ramesh.kumar@in.yokogawa.com";
 				emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
 				emailmodel.CC = "sushma.patil@in.yokogawa.com";
@@ -2354,7 +2354,9 @@ namespace WMS.DAL
 
 					string insertgatepasshistory = WMSResource.insertgatepassapprovalhistory;
 					dataobj.deleteflag = false;
-					dataobj.fmapproverid = "400104";
+					dataobj.fmapproverid = null;
+					if (dataobj.gatepasstype == "Non Returnable")
+						dataobj.fmapproverid = "400104";
 					using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
 					{
 						var gatepassid = DB.ExecuteScalar(insertquery, new
@@ -2610,7 +2612,8 @@ namespace WMS.DAL
 							{
 								if (obj.availableqty < qty)
 								{
-									returnvalue = "Material and quantity does not exists for " + material + " available qty is " + obj.availableqty;
+									//returnvalue = "Material and quantity does not exists for " + material + " available qty is " + obj.availableqty;
+									returnvalue = "Available quantity for " + material + "  is " + obj.availableqty;
 								}
 							}
 
@@ -3894,6 +3897,49 @@ namespace WMS.DAL
 				try
 				{
 					string query = WMSResource.getitemlocationListBysIssueId.Replace("#requestforissueid", requestforissueid);
+					await pgsql.OpenAsync();
+					var data = await pgsql.QueryAsync<IssueRequestModel>(
+					 query, null, commandType: CommandType.Text);
+					data = data.OrderByDescending(o => o.createddate);
+
+					IEnumerable<IssueRequestModel> result = data.GroupBy(c => new { c.itemlocation, c.createddate }).Select(t => new IssueRequestModel
+					{
+
+						availableqty = t.Sum(u => u.availableqty),
+						issuedqty = t.Sum(u => u.issuedqty),
+						pono = t.First().pono,
+						materialid = t.First().materialid,
+						itemid = t.First().itemid,
+						Materialdescription = t.First().Materialdescription,
+						material = t.First().material,
+						itemlocation = t.Key.itemlocation,
+						createddate = t.Key.createddate
+					});
+					return result;
+
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "GetItemlocationListBymterial", Ex.StackTrace.ToString());
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+			}
+		}
+
+		public async Task<IEnumerable<IssueRequestModel>> getItemlocationListByGatepassmaterialid(string gatepassmaterialid)
+		{
+
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+
+				try
+				{
+					string query = WMSResource.getItemlocationListByGatepassmaterialid.Replace("#gatepassmaterialid", gatepassmaterialid);
 					await pgsql.OpenAsync();
 					var data = await pgsql.QueryAsync<IssueRequestModel>(
 					 query, null, commandType: CommandType.Text);

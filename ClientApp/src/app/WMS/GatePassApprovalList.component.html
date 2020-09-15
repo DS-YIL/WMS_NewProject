@@ -8,12 +8,12 @@
         
             <div class="form-inline">
               <label class="labelheading">Status :</label>&nbsp;&nbsp;
-              <select [(ngModel)]="approverstatus" class="form-control">
+              <select [(ngModel)]="approverstatus" class="form-control" (change)="searchGatePassList()">
                 <option value="0">All</option>
                 <option value='Pending'>Pending</option>
                 <option value='Approved'>Approved</option>
                 <option value='Sent for Modification'>Sent for Modification</option>
-              </select>&nbsp;&nbsp; <button type="submit" class="btn btn-primary btn-sm float-left" (click)="searchGatePassList()" style=" height: 35px;">Search</button>
+              </select>&nbsp;&nbsp; <!--<button type="submit" class="btn btn-primary btn-sm float-left" (click)="searchGatePassList()" style=" height: 35px;">Search</button>-->
             </div>
         
 
@@ -178,7 +178,7 @@
             <div class="col-lg-2 col-md-2 col-sm-2 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
               GatePass Id:&nbsp;<span style="color:#dc3545;">GTP{{materialList[0].gatepassid}}</span>
             </div>
-            <div class="col-lg-4 col-md-4 col-sm-4 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
+            <div class="col-lg-2 col-md-2 col-sm-2 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
               Requester:&nbsp;<span style="color:#dc3545;">{{materialList[0].name}}</span>
             </div>
             <div class="col-lg-2 col-md-2 col-sm-2 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
@@ -221,16 +221,16 @@
               <ng-template pTemplate="header">
                 <tr class="mprltbldata">
                   <th class="ptable-cell" style="text-align:center;width:60px;">Sl.No.</th>
-                  <th class="ptable-cell" style="text-align:center">"Material</th>
+                  <th class="ptable-cell" style="text-align:center">Material</th>
                   <th class="ptable-cell" style="text-align:center;width:350px;">Material Description</th>
                   <th class="ptable-cell" style="text-align:center">Price</th>
-                  <th class="ptable-cell" style="text-align:center">Remarks</th>
                   <th class="ptable-cell" style="text-align:center">Requested Qty</th>
                   <th class="ptable-cell" style="text-align:center" *ngIf="employee.roleid !='8'">
-Issue Qty
+                    Issue Qty
                   </th>
                   <th class="ptable-cell" style="text-align:center" *ngIf="employee.roleid !='8' && materialList[0].gatepasstype=='Returnable'">Expected Date</th>
                   <!--<th *ngIf="materialList[0].gatepasstype=='Returnable'" class="ptable-cell" style="text-align:center">Returned Date</th>-->
+                  <th class="ptable-cell" style="text-align:center">Remarks</th>
                 </tr>
               </ng-template>
               <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex" let-rindex=0>
@@ -239,15 +239,14 @@ Issue Qty
                   <td class="ptable-cell" style="text-align:left"> <span *ngIf="employee.roleid =='8'">{{rowData.materialid}}</span><button *ngIf="employee.roleid !='8'" type="button" class="btn btn-link" (click)="showmateriallocationList(rowData.materialid,ri+1,ri);" style="padding-left:0px;">{{rowData.materialid}}</button></td>
                   <td class="ptable-cell" style="text-align:left"> {{rowData.materialdescription}} </td>
                   <td class="ptable-cell" style="text-align:right"><span *ngIf="rowData.materialcost">{{rowData.materialcost}}</span></td>
-                  <td class="ptable-cell" style="text-align:left"> {{rowData.remarks}} </td>
                   <td class="ptable-cell" style="text-align:right">{{rowData.quantity}}</td>
                   <td class="ptable-cell" *ngIf="employee.roleid !='8'">
                     <input pInputText type="number" style="text-align:center" class="form-control" [disabled]="txtDisable" [(ngModel)]="rowData.issuedqty">
                   </td>
                   <td class="ptable-cell" style="text-align:center" *ngIf="employee.roleid !='8' && materialList[0].gatepasstype=='Returnable'">{{checkValiddate(rowData.expecteddate)}}</td>
                   <!--<td *ngIf="materialList[0].gatepasstype=='Returnable' && rowData.returneddate" class="ptable-cell" style="text-align:center">{{checkValiddate(rowData.returneddate)}}</td>-->
-
-              </ng-template>
+                  <td class="ptable-cell" style="text-align:left"> {{rowData.remarks}} </td>
+</ng-template>
             </p-table>
           </div>
           <!--</div>-->

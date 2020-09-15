@@ -20,7 +20,7 @@ export class GatePassApprovalList implements OnInit {
   id: any;
   roindex: any;
   Oldestdata: any;
-  constructor( private messageService: MessageService, private datePipe: DatePipe, private wmsService: wmsService, private route: ActivatedRoute, private router: Router, public constants: constants, private spinner: NgxSpinnerService) { }
+  constructor(private messageService: MessageService, private datePipe: DatePipe, private wmsService: wmsService, private route: ActivatedRoute, private router: Router, public constants: constants, private spinner: NgxSpinnerService) { }
 
 
   public gatepasslist: Array<any> = [];
@@ -43,24 +43,25 @@ export class GatePassApprovalList implements OnInit {
     else
       this.router.navigateByUrl("Login");
     this.gatepassModel = new gatepassModel();
-    
+
     this.typeOfList = this.route.routeConfig.path;
     this.getGatePassList();
-      this.approverstatus = "Pending";
+    this.approverstatus = "Pending";
   }
 
 
   //get gatepass list
   getGatePassList() {
-    debugger;
+    this.spinner.show();
     this.wmsService.getGatePassList().subscribe(data => {
+      this.spinner.hide();
       this.totalGatePassList = data;
       if (this.typeOfList == "GatePassPMList") {
         this.gatepassData = this.totalGatePassList.filter(li => li.approverid == this.employee.employeeno && (li.approverstatus == this.approverstatus));
         this.prepareGatepassList();
       }
       if (this.typeOfList == "GatePassFMList") {
-          this.gatepassData = this.totalGatePassList.filter(li => li.fmapproverid == this.employee.employeeno && li.approverstatus == "Approved" && li.fmapprovedstatus == this.approverstatus && li.gatepasstype=="Non Returnable");
+        this.gatepassData = this.totalGatePassList.filter(li => li.fmapproverid == this.employee.employeeno && li.approverstatus == "Approved" && li.fmapprovedstatus == this.approverstatus && li.gatepasstype == "Non Returnable");
         this.prepareGatepassList();
       }
     });
@@ -68,7 +69,7 @@ export class GatePassApprovalList implements OnInit {
 
   //prepare list based on gate pass id
   prepareGatepassList() {
-   
+
     this.gatepasslist = [];
     this.gatepassData.forEach(item => {
       var res = this.gatepasslist.filter(li => li.gatepassid == item.gatepassid);
@@ -110,25 +111,34 @@ export class GatePassApprovalList implements OnInit {
       for (let i = 0; i < this.gatePassApprovalList.length; i++) {
         if (this.gatePassApprovalList[i].approverid == this.employee.employeeno) {
           this.gatePassApprovalList.splice(i, 1);
-         
+
         }
       }
     });
   }
 
-  searchGatePassList() {  
+  searchGatePassList() {
     if (this.approverstatus != "0") {
-    //  if (this.typeOfList == "GatePassPMList")
-    //    this.gatepasslist = this.totalGatePassList.filter(li => li.approverid == this.employee.employeeno && (li.approverstatus == this.approverstatus));
-    //  if (this.typeOfList == "GatePassFMList")
-    //    this.gatepasslist = this.totalGatePassList.filter(li => li.fmapproverid == this.employee.employeeno && (li.approverstatus == "Approved" && li.fmapproverstatus == this.approverstatus));
+      //  if (this.typeOfList == "GatePassPMList")
+      //    this.gatepasslist = this.totalGatePassList.filter(li => li.approverid == this.employee.employeeno && (li.approverstatus == this.approverstatus));
+      //  if (this.typeOfList == "GatePassFMList")
+      //    this.gatepasslist = this.totalGatePassList.filter(li => li.fmapproverid == this.employee.employeeno && (li.approverstatus == "Approved" && li.fmapproverstatus == this.approverstatus));
       if (this.typeOfList == "GatePassPMList") {
-        debugger;
         this.gatepassData = this.totalGatePassList.filter(li => li.approverid == this.employee.employeeno && (li.approverstatus == this.approverstatus));
         this.prepareGatepassList();
       }
       if (this.typeOfList == "GatePassFMList") {
-        this.gatepassData = this.totalGatePassList.filter(li => li.fmapproverid == this.employee.employeeno && li.approverstatus == "Approved" && li.fmapprovedstatus == this.approverstatus && li.gatepasstype=="Non Returnable");
+        this.gatepassData = this.totalGatePassList.filter(li => li.fmapproverid == this.employee.employeeno && li.approverstatus == "Approved" && li.fmapprovedstatus == this.approverstatus && li.gatepasstype == "Non Returnable");
+        this.prepareGatepassList();
+      }
+    }
+    else {
+      if (this.approverstatus == "0") {
+        if (this.typeOfList == "GatePassPMList")
+          this.gatepassData = this.totalGatePassList.filter(li => li.approverid == this.employee.employeeno);
+        if (this.typeOfList == "GatePassFMList")
+          this.gatepassData = this.totalGatePassList.filter(li => li.fmapproverid == this.employee.employeeno && li.approverstatus == "Approved" && li.gatepasstype == "Non Returnable");
+
         this.prepareGatepassList();
       }
     }
@@ -181,6 +191,7 @@ export class GatePassApprovalList implements OnInit {
     this.gatepassModel.approvedby = this.employee.name;
     this.wmsService.GatepassapproveByManager(this.gatepassModel).subscribe(data => {
       this.spinner.hide();
+      this.hideApprover();
       this.btnDisable = true;
       this.getGatePassHistoryList(this.materialList[0].gatepassid);
       this.gatepassModel.status = "Approved";
@@ -190,7 +201,7 @@ export class GatePassApprovalList implements OnInit {
       this.messageService.add({ severity: 'success', summary: '', detail: 'Gate Pass Approved' });
     });
   }
- 
+
 
   //check date is valid or not
   checkValiddate(date: any) {

@@ -373,6 +373,12 @@ export class wmsService {
     requestforissueid = encodeURIComponent(requestforissueid);
     return this.http.get<any>(this.url + 'POData/getItemlocationListByIssueId?requestforissueid=' + requestforissueid, this.httpOptions);
   }
+  getItemlocationListByGatepassmaterialid(gatepassmaterialid: string): Observable<any> {
+    gatepassmaterialid = encodeURIComponent(gatepassmaterialid);
+    return this.http.get<any>(this.url + 'POData/getItemlocationListByGatepassmaterialid?gatepassmaterialid=' + gatepassmaterialid, this.httpOptions);
+  }
+
+
   UpdateMaterialqty(materialList: any): Observable<any> {
     return this.http.post<any>(this.url + 'POData/updateMaterialavailabality', materialList, this.httpOptions);
   }
