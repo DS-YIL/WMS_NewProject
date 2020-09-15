@@ -349,6 +349,12 @@ namespace WMS.Controllers
 			return await this._poService.NonreturnGetgatepassList(type);
 		}
 
+		[HttpGet("outwardinwardreport")]
+		public async Task<IEnumerable<outwardinwardreportModel>> getoutwardinwardreport()
+		{
+			return await this._poService.outingatepassreport();
+		}
+
 		[HttpPost("saveoreditgatepassmaterial")]
 		public int saveorupdate([FromBody] gatepassModel obj)
 		{

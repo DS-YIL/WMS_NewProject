@@ -281,6 +281,7 @@ export class materialList {
   issuedqty: number;
   materialcost: number;
   requesterid: any;
+  stocktype: string
 
 }
 
@@ -297,6 +298,7 @@ export class materialListforReserve {
 }
 
 export class outwardmaterialistModel {
+  gatepassid: number;
   gatepassmaterialid: string;
   materialid: string;
   materialdescription: string;
@@ -531,6 +533,25 @@ export class DirectTransferTR {
   materialid: string;
   materialdescription: string;
   confirmqty: number = 0;
+}
+
+export class outwardinwardreportModel {
+  gatepassid: number;
+  gatepassmaterialid: number;
+  materialid: string;
+  materialdescription: string;
+  outwarddate: Date;
+  outwardby: string;
+	outwardremarks: string;
+	outwardqty: number;
+  inwarddate: Date;
+  inwardremarks: string;
+	inwardqty: number;
+  securityinwarddate: Date;
+	securityinwardby: string;
+  securityinwardremarks: string;
+  showtr: boolean = false;
+  materialdata: outwardinwardreportModel[] = [];
 }
 
 export class testcrud {

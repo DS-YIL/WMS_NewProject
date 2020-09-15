@@ -71,7 +71,7 @@ export class GatePassComponent implements OnInit {
 
     var roles = this.userrolelist.filter(li => li.roleid == 8);
 
-    if (this.employee.roleid == "8" || roles.length > 0) //for approver
+    if (this.employee.roleid == "8") //for approver
       this.approverstatus = "Pending";
 
     else
@@ -321,10 +321,10 @@ export class GatePassComponent implements OnInit {
       var role8 = this.userrolelist.filter(li => li.roleid == 8);
       var role3 = this.userrolelist.filter(li => li.roleid == 3);
       this.gatepasslist = [];
-      if (this.employee.roleid == "8" || role8.length > 0) {
+      if (this.employee.roleid == "8") {
         this.gatepasslist = this.totalGatePassList.filter(li => li.gatepasstype == 'Non Returnable' && (li.approverstatus == this.approverstatus || li.approverstatus == null));
       }
-      else if (this.employee.roleid == "3" || role3.length > 0) {
+      else if (this.employee.roleid == "3") {
         this.totalGatePassList.forEach(item => {
           if (item.gatepasstype == "Returnable" && item.approverstatus == "Approved")
             this.gatepasslist.push(item);

@@ -131,9 +131,23 @@ export class MaterialReserveViewComponent implements OnInit {
       return (element.material == data.material);
     });
     if (data2.length > 0) {
-      data.materialdescription = data2[0].materialdescription;
-      data.materialcost = data2[0].materialcost != null ? data2[0].materialcost : 0;
-      data.availableqty = data2[0].availableqty != null ? data2[0].availableqty : 0;
+      if (data2[0].stocktype == "Plant Stock") {
+        data.materialdescription = data2[0].materialdescription;
+        data.materialcost = data2[0].materialcost != null ? data2[0].materialcost : 0;
+        data.availableqty = data2[0].availableqty != null ? data2[0].availableqty : 0;
+      }
+      else {
+        var stocktype = data2[0].stocktype;
+        this.messageService.add({ severity: 'error', summary: '', detail: stocktype +' material can not be reserved.' });
+        this.materialList[ind].material = "";
+        this.materialList[ind].materialdescription = "";
+        this.materialList[ind].materialcost = 0;
+        this.materialList[ind].availableqty = 0;
+        this.materialList[ind].quantity = 0;
+        return false;
+
+      }
+     
     }
 
   }

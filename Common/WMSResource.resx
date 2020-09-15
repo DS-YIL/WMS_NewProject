@@ -479,6 +479,7 @@ group by pl.pono</value>
   <data name="getmaterialdetailfprrequest" xml:space="preserve">
     <value>select max(sk.pono) as pono ,sk.materialid as material,Max(prj.projectmanager) as projectmanager,
 ( select sum(availableqty) from wms.wms_stock ws where materialid =sk.materialid) as availableqty,
+(select stocktype from wms.stocklocation where storeid=Max(mtmtr.storeid) and rackid=Max(mtmtr.rackid) and binid=Max(mtmtr.binid) limit 1) as stocktype,
 max(mtmtr.unitprice) as materialcost,max(mtmtr.materialdescription) as materialdescription from wms.wms_stock  sk 
 left outer join wms."MaterialMasterYGS" mtmtr on mtmtr.material = sk.materialid
 left outer join wms.wms_project prj on prj.pono = sk.pono 
@@ -744,10 +745,14 @@ where stinw.returnedby is not null and sinw.isdirecttransferred is NOT True
 and stinw.inwardid not in (select distinct inwardid from wms.wms_stock where inwardid is not null order by inwardid desc)</value>
   </data>
   <data name="getnonreturnablegatepassdata" xml:space="preserve">
-    <value>select matis.gatepassmaterialid,matis.itemid,matis.itemissueddate,ygs.materialdescription,emp.name,
-matgt.gatepassid,matgt.materialid,matgt.materialcost,matgt.quantity,
-gt.gatepasstype,gt.vendorname,gt.requestedby,gt.requestedon,emp3.name as mgapprover,emp4.name as fmapprover,
-matgt.outwarddate,emp1.name as outwardedby,matgt.outwardremarks,matgt.outwardqty,matgt.inwardqty,matgt.inwarddate,emp2.name as inwardedby,matgt.inwardremarks
+    <value>select Max(matis.gatepassmaterialid) gatepassmaterialid,Max(matis.itemid) itemid,Max(matis.itemissueddate) as itemissueddate,Max(ygs.materialdescription) as materialdescription,Max(emp.name) as name,
+Max(matgt.gatepassid) as gatepassid,Max(matgt.materialid) as materialid,Max(matgt.materialcost) as materialcost,Max(matgt.quantity) as quantity,SUM(matis.issuedqty) issuedqty,
+Max(gt.gatepasstype) gatepasstype,Max(gt.vendorname) as vendorname,Max(gt.requestedby) as requestedby,Max(gt.requestedon) as requestedon,Max(emp3.name) as mgapprover,Max(emp4.name) as fmapprover,
+(select SUM(outwardqty) from wms.outwatdinward where gatepassmaterialid = matis.gatepassmaterialid group by gatepassmaterialid) as outwardedqty,
+(select SUM(inwardqty) from wms.outwatdinward where gatepassmaterialid = matis.gatepassmaterialid group by gatepassmaterialid) as inwardedqty,
+(select Max(outwarddate) from wms.outwatdinward where gatepassid = Max(matgt.gatepassid)  group by gatepassid) as outwarddate,
+(select Max(securityinwarddate) from wms.outwatdinward where gatepassid = Max(matgt.gatepassid)  group by gatepassid) as securityinwarddate,
+(select Max(approvedon) from wms.wms_gatepassapprovals where gatepassid = Max(matgt.gatepassid)  group by gatepassid) as approvedon
 from wms.wms_materialissue matis
 left outer join wms.wms_gatepassmaterial matgt on matgt.gatepassmaterialid = matis.gatepassmaterialid
 left outer join wms.wms_gatepass gt on gt.gatepassid = matgt.gatepassid
@@ -757,7 +762,9 @@ left join wms.employee emp2 on emp2.employeeno=matgt.inwardedby
 left join wms.employee emp3 on emp3.employeeno=gt.approverid
 left join wms.employee emp4 on emp4.employeeno=gt.fmapproverid
 left join wms."MaterialMasterYGS" ygs on ygs.material=matgt.materialid
-where matis.gatepassmaterialid  is not null and matgt.returneddate is null</value>
+where matis.gatepassmaterialid  is not null and matgt.returneddate is null
+group by matis.gatepassmaterialid
+order by matis.gatepassmaterialid desc</value>
   </data>
   <data name="getstocktype" xml:space="preserve">
     <value>select stocktype from wms.stocklocation where locationid='#locationid' and location='#locationname' and storeid=#stid and rackid=#rkid and binid=#biid limit 1</value>
@@ -1035,5 +1042,26 @@ group by sk.itemlocation,ygs.materialdescription,ygs.material,createddate::DATE,
     <value>select ts.transferid, ts.projectcode,ts.remarks as transferremarks,emp.name as transferedby,ts.createdon as transferredon
 from wms.wms_transfermaterial ts
 left outer join wms.employee emp on emp.employeeno = ts.createdby</value>
+  </data>
+  <data name="inwardinsertquery" xml:space="preserve">
+    <value>insert into wms.outwatdinward (gatepassid,gatepassmaterialid,inwarddate,inwardby,inwardremarks,inwardqty)
+values (@gatepassid,@gatepassmaterialid,current_timestamp,@movedby,@remarks,@inwardqty)</value>
+  </data>
+  <data name="outwardinsertquery" xml:space="preserve">
+    <value>insert into wms.outwatdinward (gatepassid,gatepassmaterialid,outwarddate,outwardby,outwardremarks,outwardqty)
+values (@gatepassid,@gatepassmaterialid,@outwarddatestring,@movedby,@remarks,@outwardqty)</value>
+  </data>
+  <data name="outinreportquery" xml:space="preserve">
+    <value>select outin.gatepassid,outin.gatepassmaterialid,gtm.materialid,mat.materialdescription,outin.outwarddate,emp1.name as outwardby,
+outin.outwardremarks,outin.outwardqty,outin.inwarddate,emp3.name as inwardby,outin.inwardremarks,outin.inwardqty,
+outin.securityinwarddate,emp2.name as securityinwardby,outin.securityinwardremarks,
+(select SUM(issuedqty) from wms.wms_materialissue where gatepassmaterialid = outin.gatepassmaterialid group by gatepassmaterialid) as issuedqty
+from wms.outwatdinward outin 
+left outer join wms.wms_gatepassmaterial gtm on gtm.gatepassmaterialid = outin.gatepassmaterialid
+left outer join wms."MaterialMasterYGS" mat on gtm.materialid = mat.material
+left join wms.employee emp1 on emp1.employeeno=outin.outwardby
+left join wms.employee emp2 on emp2.employeeno=outin.securityinwardby
+left join wms.employee emp3 on emp3.employeeno=outin.inwardby
+order by outin.id</value>
   </data>
 </root>

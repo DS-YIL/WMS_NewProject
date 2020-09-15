@@ -672,10 +672,9 @@ namespace WMS.Common {
         /// <summary>
         ///   Looks up a localized string similar to select max(sk.pono) as pono ,sk.materialid as material,Max(prj.projectmanager) as projectmanager,
         ///( select sum(availableqty) from wms.wms_stock ws where materialid =sk.materialid) as availableqty,
+        ///(select stocktype from wms.stocklocation where storeid=Max(mtmtr.storeid) and rackid=Max(mtmtr.rackid) and binid=Max(mtmtr.binid) limit 1) as stocktype,
         ///max(mtmtr.unitprice) as materialcost,max(mtmtr.materialdescription) as materialdescription from wms.wms_stock  sk 
-        ///left outer join wms.&quot;MaterialMasterYGS&quot; mtmtr on mtmtr.material = sk.materialid
-        ///left outer join wms.wms_project prj on prj.pono = sk.pono 
-        ///where sk.availableqty &gt; 0 and (prj.projectmanager = &apos;#ma [rest of string was truncated]&quot;;.
+        ///left outer join wms.&quot;MaterialMasterYGS&quot; mtm [rest of string was truncated]&quot;;.
         /// </summary>
         public static string getmaterialdetailfprrequest {
             get {
@@ -801,12 +800,9 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select matis.gatepassmaterialid,matis.itemid,matis.itemissueddate,ygs.materialdescription,emp.name,
-        ///matgt.gatepassid,matgt.materialid,matgt.materialcost,matgt.quantity,
-        ///gt.gatepasstype,gt.vendorname,gt.requestedby,gt.requestedon,emp3.name as mgapprover,emp4.name as fmapprover,
-        ///matgt.outwarddate,emp1.name as outwardedby,matgt.outwardremarks,matgt.outwardqty,matgt.inwardqty,matgt.inwarddate,emp2.name as inwardedby,matgt.inwardremarks
-        ///from wms.wms_materialissue matis
-        ///left outer join wms.wms_gatepassmateri [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to select Max(matis.gatepassmaterialid) gatepassmaterialid,Max(matis.itemid) itemid,Max(matis.itemissueddate) as itemissueddate,Max(ygs.materialdescription) as materialdescription,Max(emp.name) as name,
+        ///Max(matgt.gatepassid) as gatepassid,Max(matgt.materialid) as materialid,Max(matgt.materialcost) as materialcost,Max(matgt.quantity) as quantity,SUM(matis.issuedqty) issuedqty,
+        ///Max(gt.gatepasstype) gatepasstype,Max(gt.vendorname) as vendorname,Max(gt.requestedby) as requestedby,Max(gt.requestedon) as requested [rest of string was truncated]&quot;;.
         /// </summary>
         public static string getnonreturnablegatepassdata {
             get {
@@ -1371,6 +1367,16 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to insert into wms.outwatdinward (gatepassid,gatepassmaterialid,inwarddate,inwardby,inwardremarks,inwardqty)
+        ///values (@gatepassid,@gatepassmaterialid,current_timestamp,@movedby,@remarks,@inwardqty).
+        /// </summary>
+        public static string inwardinsertquery {
+            get {
+                return ResourceManager.GetString("inwardinsertquery", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to select grnnumber,onhold,unholdedby from wms.wms_securityinward where grnnumber = &apos;#grnno&apos;.
         /// </summary>
         public static string isgrnexistsbygrn {
@@ -1432,6 +1438,30 @@ namespace WMS.Common {
         public static string openpolist {
             get {
                 return ResourceManager.GetString("openpolist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to select outin.gatepassid,outin.gatepassmaterialid,gtm.materialid,mat.materialdescription,outin.outwarddate,emp1.name as outwardby,
+        ///outin.outwardremarks,outin.outwardqty,outin.inwarddate,emp3.name as inwardby,outin.inwardremarks,outin.inwardqty,
+        ///outin.securityinwarddate,emp2.name as securityinwardby,outin.securityinwardremarks,
+        ///(select SUM(issuedqty) from wms.wms_materialissue where gatepassmaterialid = outin.gatepassmaterialid group by gatepassmaterialid) as issuedqty
+        ///from wms.outwatdinward outin 
+        ///left  [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string outinreportquery {
+            get {
+                return ResourceManager.GetString("outinreportquery", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to insert into wms.outwatdinward (gatepassid,gatepassmaterialid,outwarddate,outwardby,outwardremarks,outwardqty)
+        ///values (@gatepassid,@gatepassmaterialid,@outwarddatestring,@movedby,@remarks,@outwardqty).
+        /// </summary>
+        public static string outwardinsertquery {
+            get {
+                return ResourceManager.GetString("outwardinsertquery", resourceCulture);
             }
         }
         

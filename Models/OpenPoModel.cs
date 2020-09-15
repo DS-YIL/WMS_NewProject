@@ -404,6 +404,8 @@ namespace WMS.Models
 		public int reserveid { get; set; }
 		public int reservedqty { get; set; }
 
+		public string stocktype { get; set; }
+
 
 
 	}
@@ -498,12 +500,17 @@ namespace WMS.Models
 		public DateTime? inwarddate { get; set; }
 		public string inwardedby { get; set; }
 		public string inwardremarks { get; set; }
-
 		public int outwardqty { get; set; }
-
+		public int outwardedqty { get; set; }
 		public int inwardqty { get; set; }
+		public int inwardedqty { get; set; }
 		public string itemlocation { get; set; }
 		public string mgapprover { get; set; }
+
+		public DateTime? securityinwarddate { get; set; }
+
+		public string securityinwardby { get; set; }
+		public string securityinwardremarks { get; set; }
 
 		public string fmapprover { get; set; }
 
@@ -518,6 +525,28 @@ namespace WMS.Models
 		public DateTime expecteddate { get; set; }
 		public DateTime? returneddate { get; set; }
 		public int issuedqty { get; set; }
+
+	}
+
+	public class outwardinwardreportModel
+    {
+		public int gatepassid { get; set; }
+		public int gatepassmaterialid { get; set; }
+		public string materialid{ get; set; }
+		public string materialdescription{ get; set; }
+		public DateTime? outwarddate{ get; set; }
+        public string outwardby{ get; set; }
+	    public string outwardremarks{ get; set; }
+		public int outwardqty{ get; set; }
+	    public DateTime?  inwarddate { get; set; }
+	    public string inwardby{ get; set; }
+        public string inwardremarks{ get; set; }
+	    public int inwardqty{ get; set; }
+        public DateTime? securityinwarddate { get; set; }
+	    public string securityinwardby{ get; set; }
+		public string securityinwardremarks { get; set; }
+		public int issuedqty{ get; set; }
+
 
 	}
 
@@ -970,6 +999,7 @@ public class materialReservetorequestModel
 
 public class materialistModel
 {
+	public int gatepassid { get; set; }
 	public string gatepassmaterialid { get; set; }
 	public string materialid { get; set; }
 	public string materialdescription { get; set; }

@@ -12,8 +12,8 @@ import { DatePipe } from '@angular/common';
 import { ConfirmationService } from 'primeng/api';
 import { trigger, state, transition, style, animate } from '@angular/animations';
 @Component({
-  selector: 'app-GatePassoutward',
-  templateUrl: './GatePassoutward.component.html',
+  selector: 'app-Gatepassinwardreceive',
+  templateUrl: './Gatepassinwardreceive.component.html',
   animations: [
     trigger('rowExpansionTrigger', [
       state('void', style({
@@ -29,7 +29,7 @@ import { trigger, state, transition, style, animate } from '@angular/animations'
   ],
   providers: [DatePipe]
 })
-export class GatePassoutwardComponent implements OnInit {
+export class GatepassinwardreceiveComponent implements OnInit {
   AddDialog: boolean;
   id: any;
   roindex: any;
@@ -105,29 +105,14 @@ export class GatePassoutwardComponent implements OnInit {
       { field: 'requestedon', header:'requestedon'}
     ];
 
-    this.route.params.subscribe(params => {
-      if (params["pageid"]) {
-        this.pageid = params["pageid"];
-        if (this.pageid == "1") {
-          this.gatepasstyp = "Returnable";
-          this.returntype = "out";
-          this.nonreturn = false;
-          this.returnable = true;
-          this.isoutward = true;
-          this.datetype = "Outward date";
-          this.getGatePassList();
-          
-        }
-        else if (this.pageid == "2") {
-          this.gatepasstyp = "Non-Returnable";
-          this.nonreturn = true;
-          this.returnable = false;
-          this.isinward = false;
-          this.isoutward = true;
-          this.getGatePassList();
-        }
-      }
-    });
+    this.gatepasstyp = "Returnable";
+    this.returntype = "in";
+    this.nonreturn = false;
+    this.returnable = true;
+    this.isinward = true;
+    this.datetype = "Inward date";
+    this.getGatePassList();
+
   }
 
   onfromSelectMethod(event) {
@@ -160,8 +145,6 @@ export class GatePassoutwardComponent implements OnInit {
   }
 
   showdetails(data: any) {
-    var dt = new Date();
-    this.fromdateview = this.datePipe.transform(dt, this.constants.dateFormat);
     this.DGgatepassid = data.gatepassid;
     this.DGgatepasstype = data.gatepasstype;
     this.DGvendorname = data.vendorname;
@@ -214,36 +197,18 @@ export class GatePassoutwardComponent implements OnInit {
     debugger;
     this.gatepassModelList = [];
     this.gatepasslist = [];
-    if (this.nonreturn) {
-      this.wmsService.nonreturngetGatePassList("2").subscribe(data => {
-        debugger;
-        this.totalGatePassList = data;
-        this.totalGatePassList = this.totalGatePassList.filter(li => li.outwardedqty != li.issuedqty);
-        this.gatepasslist = [];
-        this.gatepasslist = this.totalGatePassList;
-        this.gatepassModelList = [];
-        this.prepareGatepassList();
-      });
-
-    }
-    else if (this.returnable) {
+  
       this.wmsService.nonreturngetGatePassList("1").subscribe(data => {
         debugger;
         this.totalGatePassList = data;
-
-        if (this.isinward) {
-          this.totalGatePassList = this.totalGatePassList.filter(li => li.outwarddate != null && li.securityinwarddate == null);
-        }
-        else {
-          this.totalGatePassList = this.totalGatePassList.filter(li => li.outwardedqty != li.issuedqty);
-        }
+          this.totalGatePassList = this.totalGatePassList.filter(li => li.outwardedqty != li.inwardedqty);
         this.gatepasslist = [];
         this.gatepasslist = this.totalGatePassList;
         this.gatepassModelList = [];
         this.prepareGatepassList();
       });
 
-    }
+    
    
   }
 
@@ -281,29 +246,20 @@ export class GatePassoutwardComponent implements OnInit {
       let mdata = new outwardmaterialistModel();
       mdata.gatepassmaterialid = item.gatepassmaterialid;
       mdata.gatepassid = parseInt(this.DGgatepassid);
-      mdata.remarks = this.pgremarks;
+      mdata.remarks = item.remarks;
       mdata.movedby = this.employee.employeeno;
       var date = this.datePipe.transform(tdate, 'yyyy-MM-dd hh:mm:ss');
-      if (this.isoutward) {
-        mdata.outwarddatestring = this.fromdateview1;
-        mdata.movetype = "out";
-        mdata.outwardqty = item.issuedqty;
-      }
-      else if (this.isinward) {
-        mdata.inwarddatestring = this.fromdateview1;
-        mdata.movetype = "in";
-        mdata.inwardqty = item.inwardqty;
-      }
+      mdata.inwarddatestring = this.fromdateview1;
+      mdata.movetype = "receive";
+      mdata.inwardqty = item.inwardqty;
+     
       this.selectedmdata.push(mdata);
     })
     this.wmsService.updateoutinward(this.selectedmdata).subscribe(data => {
       this.pgremarks = "";
-      if (this.isinward) {
-        this.messageService.add({ severity: 'success', summary: ' ', detail: 'Inwarded successfully.' });
-      }
-      else if (this.isoutward) {
-        this.messageService.add({ severity: 'success', summary: ' ', detail: 'Outwarded successfully.' });
-      }
+    
+        this.messageService.add({ severity: 'success', summary: ' ', detail: 'Received successfully.' });
+     
       this.resetpage();
       
     })
@@ -332,7 +288,7 @@ export class GatePassoutwardComponent implements OnInit {
     }
 
     if (enrtered > qty) {
-      this.messageService.add({ severity: 'error', summary: '', detail: 'Intward quantity cannot be greater than Pending quantity.' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Received quantity cannot be greater than Outward Quantity.' });
       data.outwardqty = 0;
       return;
     }

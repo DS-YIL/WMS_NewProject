@@ -5,7 +5,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { constants } from '../Models/WMSConstants'
 import { Employee, Login, DynamicSearchResult, printMaterial, rbamaster } from '../Models/Common.Model';
-import { PoFilterParams, PoDetails, BarcodeModel, StockModel, materialRequestDetails, inwardModel, gatepassModel, stocktransfermodel, Materials, authUser, invstocktransfermodel, ddlmodel, locataionDetailsStock, updateonhold, materialistModel, outwardmaterialistModel, pageModel, UserDashboardDetail, UserDashboardGraphModel, UnholdGRModel, MRNsavemodel, notifymodel, materialtransferMain, materialReservetorequestModel, testcrud, PrintHistoryModel, materilaTrasFilterParams } from '../Models/WMS.Model';
+import { PoFilterParams, PoDetails, BarcodeModel, StockModel, materialRequestDetails, inwardModel, gatepassModel, stocktransfermodel, Materials, authUser, invstocktransfermodel, ddlmodel, locataionDetailsStock, updateonhold, materialistModel, outwardmaterialistModel, pageModel, UserDashboardDetail, UserDashboardGraphModel, UnholdGRModel, MRNsavemodel, notifymodel, materialtransferMain, materialReservetorequestModel, testcrud, PrintHistoryModel, materilaTrasFilterParams, outwardinwardreportModel } from '../Models/WMS.Model';
 import { Text } from '@angular/compiler/src/i18n/i18n_ast';
 
 @Injectable({
@@ -268,8 +268,12 @@ export class wmsService {
   getGatePassList(): Observable<any> {
     return this.http.get<any>(this.url + 'POData/getgatepasslist/', this.httpOptions);
   }
-  nonreturngetGatePassList(typ: string): Observable<any> {
-    return this.http.get<any>(this.url + 'POData/nonreturngetgatepasslist/?type=' + typ, this.httpOptions);
+  nonreturngetGatePassList(typ: string): Observable<any[]> {
+    return this.http.get<any[]>(this.url + 'POData/nonreturngetgatepasslist/?type=' + typ, this.httpOptions);
+  }
+
+  outingatepassreport(): Observable<outwardinwardreportModel[]> {
+    return this.http.get<outwardinwardreportModel[]>(this.url + 'POData/outwardinwardreport/', this.httpOptions);
   }
 
 

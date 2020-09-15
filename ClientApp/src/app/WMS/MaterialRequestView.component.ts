@@ -108,7 +108,7 @@ export class MaterialRequestViewComponent implements OnInit {
   //add materials for gate pass
   addNewMaterial() {
     if (this.materialList.length <= 0) {
-      this.materialistModel = { material: "", materialdescription: "", quantity: 0, materialcost: 0, availableqty: 0, remarks: " ", issuedqty: 0, requesterid: this.employee.employeeno };
+      this.materialistModel = { material: "", materialdescription: "", quantity: 0, materialcost: 0, availableqty: 0, remarks: " ", issuedqty: 0, requesterid: this.employee.employeeno, stocktype : "" };
       this.materialList.push(this.materialistModel);
     }
     else {
@@ -133,7 +133,7 @@ export class MaterialRequestViewComponent implements OnInit {
           return false;
         });
       }
-      this.materialistModel = { material: "", materialdescription: "", quantity: 0, materialcost: 0, availableqty: 0, remarks: " ", issuedqty: 0 , requesterid: this.employee.employeeno };
+      this.materialistModel = { material: "", materialdescription: "", quantity: 0, materialcost: 0, availableqty: 0, remarks: " ", issuedqty: 0, requesterid: this.employee.employeeno, stocktype: "" };
       this.materialList.push(this.materialistModel);
     }
    
@@ -445,7 +445,7 @@ export class MaterialRequestViewComponent implements OnInit {
     //Get PO number list, project list and materials available
     this.GetPONo();
     if (this.materialList.length <= 0) {
-      this.materialistModel = { material: "", materialdescription: "", quantity: 0, materialcost: 0, remarks: " ", availableqty: 0, issuedqty: 0, requesterid: this.employee.employeeno };
+      this.materialistModel = { material: "", materialdescription: "", quantity: 0, materialcost: 0, remarks: " ", availableqty: 0, issuedqty: 0, requesterid: this.employee.employeeno, stocktype: "" };
       this.materialList.push(this.materialistModel);
     }
    

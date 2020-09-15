@@ -152,6 +152,8 @@ Task<string> updateonholdrow(updateonhold datamodel);
         Task<IEnumerable<ddlmodel>> getgrnlistforacceptanceqcbydate(string fromdt, string todt);
         
         Task<IEnumerable<gatepassModel>> NonreturnGetgatepassList(string type);
+
+        Task<IEnumerable<outwardinwardreportModel>> outingatepassreport();
         int UpdateMaterialReserve();
         int UpdateReturnqty(List<IssueRequestModel> _listobj);
         int UpdateReturnmaterialTostock(List<IssueRequestModel> model);

@@ -57,6 +57,8 @@ import { TestCompComponent } from './WMS/TestComp.component';
 import { PutawayNotificationViewComponent } from './WMS/PutawayNotificationView.component';
 import { DirectTransferComponent } from './WMS/DirectTransfer.component';
 import { MaterialTransferDashboardComponent } from './WMS/MaterialTransferDashboard.component';
+import { OutwardinwardreportComponent } from './WMS/Outwardinwardreport.component';
+import { GatepassinwardreceiveComponent } from './WMS/Gatepassinwardreceive.component';
 
 const routes: Routes = [{
   path: 'WMS',
@@ -129,8 +131,9 @@ const routes: Routes = [{
     { path: "Test", component: TestCompComponent, canActivate: [AuthGuard] },
     { path: "GRNotification", component: PutawayNotificationViewComponent, canActivate: [AuthGuard] },
     { path: "Directtransfer", component: DirectTransferComponent, canActivate: [AuthGuard] },
-     { path: "MaterialTransferDashboard", component: MaterialTransferDashboardComponent, canActivate: [AuthGuard] }
-    
+    { path: "MaterialTransferDashboard", component: MaterialTransferDashboardComponent, canActivate: [AuthGuard] },
+    { path: "outinDashboard", component: OutwardinwardreportComponent, canActivate: [AuthGuard] },
+    { path: "gatepassreceive", component: GatepassinwardreceiveComponent, canActivate: [AuthGuard] }
     
   ]
 

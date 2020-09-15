@@ -1,0 +1,121 @@
+
+  <div class="card commoncardcss" style="margin:10px">
+    <div class="card-header text-center commoncardheader">
+      <div class="row " style="    margin-top: 10px;
+    margin-left: 0px !important;
+    margin-right: 0px !important">
+        <div class="col-lg-4 col-md-4 form-inline">
+          <label class="labelheading">Status:</label>&nbsp;
+          <select style="float:left" class="form-control" [(ngModel)]="returntype" (change)="getdata()">
+            <option value="out" selected="selected">Outward</option>
+            <option value="in">Inward</option>
+          </select>
+        </div>
+        <div class="col-lg-4 col-md-4 text-center">
+          <span class="commonheadertext">
+            <i class="fa fa-check-circle-o commonheadertext"></i>&nbsp;Gatepass Outward/Inward Report
+          </span>
+        </div>
+        <div class="col-lg-4 col-md-4 form-inline">
+        </div>
+      </div>
+    </div>
+    <!--<div class="card-header" style="width:250px;height:30px;margin-left:5px;padding-top:0px">
+      <span>
+        <i class="fa fa-bookmark" style="font-size: 16px"></i><label style="font-size: 15px;padding:0px; color: rgb(96, 123, 212);"> &nbsp;&nbsp;Material transfer</label>&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" pTooltip="Transfer Material" style="border-radius: 10em!important;background-color: white; border-color:  rgb(96, 123, 212);" rounded="true" size="lg" class="my-0" (click)="openGatepassDialog('','','gatepassdialog')"> <i class="fa fa-user-plus" style="font-size: 15px;color: green;"></i></button>
+
+      </span>
+    </div>-->
+    <div class="card-body" style="overflow-y:visible;padding:0px;">
+      <p-table #dt [value]="outindatalist" [style]="{'width':'100%'}" [scrollable]="true" scrollHeight="62vh">
+        <ng-template pTemplate="header">
+          <tr class="mprltbldata">
+            <th style="text-align:center;width:70px">Sl.No.</th>
+            <th style="text-align:center;width:150px">Gatepass Id</th>
+            <th *ngIf="isoutward" style="text-align:center;width:150px">Outwarded by</th>
+            <th *ngIf="isoutward" style="text-align:center;width:100px">Outwarded On</th>
+            <th *ngIf="isoutward" style="text-align:center;width:200px">Outward Remarks</th>
+            <th *ngIf="isinward" style="text-align:center;width:150px">Inwarded by</th>
+            <th *ngIf="isinward" style="text-align:center;width:100px">Inwarded On</th>
+            <th *ngIf="isinward" style="text-align:center;width:200px">Inward Remarks</th>
+          </tr>
+          <tr>
+            <th></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'gatepassid', 'contains')"></th>
+            <th *ngIf="isoutward"> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'outwardby', 'contains')"></th>
+            <th *ngIf="isoutward"> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'outwarddate', 'contains')"></th>
+            <th *ngIf="isoutward"> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'outwardremarks', 'contains')"></th>
+            <th *ngIf="isinward"> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'securityinwardby', 'contains')"></th>
+            <th *ngIf="isinward"> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'securityinwarddate', 'contains')"></th>
+            <th *ngIf="isinward"> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'securityinwardremarks', 'contains')"></th>
+
+
+
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
+          <tr>
+            <td class="ptable-cell" style="text-align:right;width:70px;">{{ri+1}}</td>
+
+            <td class="ptable-cell" style="text-align: center;width: 150px;">
+              <span (click)="showattachdata(rowData)" class="btn btn-link">GTP{{rowData.gatepassid}}</span>
+            </td>
+            <td *ngIf="isoutward" class="ptable-cell" style="text-align:center;width:150px;">{{rowData.outwardby}}</td>
+            <td *ngIf="isoutward" class="ptable-cell" style="text-align:center;width:100px;">{{rowData.outwarddate | date :  constants.dateFormat}}</td>
+            <td *ngIf="isoutward" class="ptable-cell" style="text-align:left;width:200px;">{{rowData.outwardremarks}}</td>
+            <td *ngIf="isinward" class="ptable-cell" style="text-align:center;width:150px;">{{rowData.securityinwardby}}</td>
+            <td *ngIf="isinward" class="ptable-cell" style="text-align:center;width:100px;">{{rowData.securityinwarddate | date :  constants.dateFormat}}</td>
+            <td *ngIf="isinward" class="ptable-cell" style="text-align:left;width:200px;">{{rowData.securityinwardremarks}}</td>
+
+
+
+          </tr>
+          <tr *ngIf="rowData.showtr">
+            <td [attr.colspan]="5" style="text-align:center;">
+              <label class="labeltext">Material Detail</label>
+            </td>
+
+          </tr>
+          <tr *ngIf="rowData.showtr">
+            <td [attr.colspan]="5" style="text-align:center;">
+
+              <p-table [value]="rowData.materialdata" [style]="{'width':'100%'}">
+                <ng-template pTemplate="header">
+          <tr class="mprltbldata">
+            <th class="ptable-cell" style="width: 10%; text-align: center">Sl. No.</th>
+            <th style="text-align:center;width:30%" class="ptable-cell">Material</th>
+            <th style="text-align:center;width:50%" class="ptable-cell">Material Description</th>
+            <th *ngIf="isoutward" style="text-align:center;width:20%" class="ptable-cell">Issued Quantity</th>
+            <th *ngIf="isinward" style="text-align:center;width:20%" class="ptable-cell">Outward Quantity</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex" let-rindex=0>
+          <tr>
+            <td class="ptable-cell" style="text-align:center"> {{ri+1}} </td>
+            <td class="ptable-cell" style="text-align:center;">
+              {{rowData.materialid}}
+            </td>
+            <td class="ptable-cell" style="text-align:left">
+              {{rowData.materialdescription}}
+            </td>
+            <td class="ptable-cell" style="text-align:right">
+              <span *ngIf="isoutward">{{rowData.issuedqty}}</span>
+              <span *ngIf="isinward">{{rowData.outwardqty}}</span>
+            </td>
+        </ng-template>
+
+
+      </p-table>
+      </td>
+
+      </tr>
+      </ng-template>
+      </p-table>
+
+
+
+    
+    </div>
+  </div>
+
+

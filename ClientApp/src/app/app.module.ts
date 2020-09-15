@@ -87,6 +87,8 @@ import { TestCompComponent } from './WMS/TestComp.component';
 import { PutawayNotificationViewComponent } from './WMS/PutawayNotificationView.component';
 import { DirectTransferComponent } from './WMS/DirectTransfer.component';
 import { MaterialTransferDashboardComponent } from './WMS/MaterialTransferDashboard.component';
+import { OutwardinwardreportComponent } from './WMS/Outwardinwardreport.component';
+import { GatepassinwardreceiveComponent } from './WMS/Gatepassinwardreceive.component';
 ////pages
 import { LoginComponent } from './WMS/Login.component';
 import {HomeComponent} from './WMS/Home.component';
@@ -165,7 +167,9 @@ import { PanelModule } from 'primeng/panel';
     TestCompComponent,
     PutawayNotificationViewComponent,
     DirectTransferComponent,
-    MaterialTransferDashboardComponent
+    MaterialTransferDashboardComponent,
+    OutwardinwardreportComponent,
+    GatepassinwardreceiveComponent
 
   ],
   imports: [

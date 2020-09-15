@@ -2334,6 +2334,41 @@ namespace WMS.DAL
 		}
 
 		/// <summary>
+		/// Report (out)
+		/// Ramesh 23/07/2020
+		/// </summary>
+		/// <returns></returns>
+
+		public async Task<IEnumerable<outwardinwardreportModel>> outingatepassreport()
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+
+				try
+				{
+					string query = WMSResource.outinreportquery;
+
+					await pgsql.OpenAsync();
+					var data = await pgsql.QueryAsync<outwardinwardreportModel>(
+					   query, null, commandType: CommandType.Text);
+
+					return data;
+
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "outingatepassreport", Ex.StackTrace.ToString());
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+			}
+		}
+
+		/// <summary>
 		/// insert or update gatepass info
 		/// </summary>
 		/// <param name="dataobj"></param>
@@ -6570,20 +6605,73 @@ namespace WMS.DAL
 			{
 				try
 				{
+					pgsql.OpenAsync();
 
 					foreach (materialistModel mat in obj)
 					{
-						pgsql.OpenAsync();
+						//					gatepassid integer references wms.wms_gatepass(gatepassid) not null,
+						//gatepassmaterialid integer references wms.wms_gatepassmaterial(gatepassmaterialid) not null,
+						//outwarddate TIMESTAMP without time zone null,
+						//outwardby varchar(50) null,
+						//outwardremarks text null,
+						//outwardqty integer null,
+						//inwarddate TIMESTAMP without time zone null,
+						//inwardby varchar(50) null,
+						//intwardremarks text null,
+						//inwardqty integer null
+						int results11 = 0;
 						string query = "";
+						int gatepassmaterialid = Convert.ToInt32(mat.gatepassmaterialid);
 						if (mat.movetype == "out")
 						{
-							query = "update wms.wms_gatepassmaterial set outwardqty = " + mat.outwardqty + ", outwarddate = '" + mat.outwarddatestring + "' , outwardedby='" + mat.movedby + "',outwardremarks='" + mat.remarks + "' where gatepassmaterialid = " + mat.gatepassmaterialid + "";
+							query = "insert into wms.outwatdinward(gatepassid, gatepassmaterialid, outwarddate, outwardby, outwardremarks, outwardqty)";
+							query += " values("+mat.gatepassid+", "+gatepassmaterialid+", '"+mat.outwarddatestring+"', '"+mat.movedby+"', '"+mat.remarks+"', "+mat.outwardqty+")";
+							var resultsx = pgsql.ExecuteScalar(query);
+							//query = WMSResource.outwardinsertquery;
+							//results11 = pgsql.Execute(query, new
+							//{
+							//	mat.gatepassid,
+							//	gatepassmaterialid,
+							//	mat.outwarddatestring,
+							//	mat.movedby,
+							//	mat.remarks,
+							//	mat.outwardqty
+							//});
+
+							//query = "update wms.wms_gatepassmaterial set outwardqty = " + mat.outwardqty + ", outwarddate = '" + mat.outwarddatestring + "' , outwardedby='" + mat.movedby + "',outwardremarks='" + mat.remarks + "' where gatepassmaterialid = " + mat.gatepassmaterialid + "";
 						}
-						else
+						
+						else if(mat.movetype == "in")
 						{
-							query = "update wms.wms_gatepassmaterial set inwardqty = " + mat.inwardqty + ", inwarddate = '" + mat.inwarddatestring + "' , inwardedby='" + mat.movedby + "',inwardremarks='" + mat.remarks + "' where gatepassmaterialid = " + mat.gatepassmaterialid + "";
+							query = "insert into wms.outwatdinward(gatepassid, gatepassmaterialid, securityinwardby, securityinwarddate, securityinwardremarks)";
+							query += " values(" + mat.gatepassid + ", " + gatepassmaterialid + ",'" + mat.movedby + "', '" + mat.inwarddatestring + "', '" + mat.remarks + "')";
+							var resultsx = pgsql.ExecuteScalar(query);
+							//query = "update wms.wms_gatepassmaterial set inwardqty = " + mat.inwardqty + ", inwarddate = '" + mat.inwarddatestring + "' , inwardedby='" + mat.movedby + "',inwardremarks='" + mat.remarks + "' where gatepassmaterialid = " + mat.gatepassmaterialid + "";
+							//results11 = pgsql.ExecuteScalar(query);
+							//query = WMSResource.inwardinsertquery;
+							//results11 = pgsql.Execute(query, new
+							//{
+							//	mat.gatepassid,
+							//	gatepassmaterialid,
+							//	mat.movedby,
+							//	mat.remarks,
+							//	mat.inwardqty
+							//});
 						}
-						var results11 = pgsql.ExecuteScalar(query);
+                        else
+                        {
+                            query = WMSResource.inwardinsertquery;
+                            results11 = pgsql.Execute(query, new
+                            {
+                                mat.gatepassid,
+                                gatepassmaterialid,
+                                mat.movedby,
+                                mat.remarks,
+                                mat.inwardqty
+                            });
+
+                        }
+
 					}
 
 					return 1;
@@ -6604,6 +6692,8 @@ namespace WMS.DAL
 
 			}
 		}
+
+
 
 		/// <summary>
 		/// get stock type
