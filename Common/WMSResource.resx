@@ -275,9 +275,11 @@ inner join wms.wms_polist openpo on inw.pono=openpo.pono
 where  inw.invoiceno='#invoiceno' and openpo.pono='#pono' group by grnnumber</value>
   </data>
   <data name="getgatepasslist" xml:space="preserve">
-    <value>select ygs.materialdescription,emp.name,iss.itemissueddate,gate.remarks as  statusremarks, * from wms.wms_gatepass gate
+    <value>select ygs.materialdescription,emp.name,iss.itemissueddate,gate.remarks as  statusremarks,appr."name"  as approvername,
+gate.*,mat.*,iss.*,ygs.* from wms.wms_gatepass gate
    left join wms.wms_gatepassmaterial mat on gate.gatepassid=mat.gatepassid 
    left join wms.employee emp on emp.employeeno=gate.requestedby
+    left join wms.employee appr on appr.employeeno=gate.approverid  
    left join wms.wms_materialissue iss on iss.gatepassmaterialid = mat.gatepassmaterialid 
    left join wms."MaterialMasterYGS" ygs on ygs.material=mat.materialid and mat.deleteflag=false 
    where gate.deleteflag=false   order by gate.gatepassid desc</value>

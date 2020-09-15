@@ -508,7 +508,7 @@ namespace WMS.Models
 		public string mgapprover { get; set; }
 
 		public string fmapprover { get; set; }
-
+		public string approvername { get; set; }
 	}
 	public class materialistModel
 	{

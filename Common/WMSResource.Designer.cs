@@ -359,12 +359,13 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select ygs.materialdescription,emp.name,iss.itemissueddate,gate.remarks as  statusremarks, * from wms.wms_gatepass gate
+        ///   Looks up a localized string similar to select ygs.materialdescription,emp.name,iss.itemissueddate,gate.remarks as  statusremarks,appr.&quot;name&quot;  as approvername,
+        ///gate.*,mat.*,iss.*,ygs.* from wms.wms_gatepass gate
         ///   left join wms.wms_gatepassmaterial mat on gate.gatepassid=mat.gatepassid 
         ///   left join wms.employee emp on emp.employeeno=gate.requestedby
+        ///    left join wms.employee appr on appr.employeeno=gate.approverid  
         ///   left join wms.wms_materialissue iss on iss.gatepassmaterialid = mat.gatepassmaterialid 
-        ///   left join wms.&quot;MaterialMasterYGS&quot; ygs on ygs.material=mat.materialid and mat.deleteflag=false 
-        ///   where gate.deleteflag=false   order by gate.gatepassi [rest of string was truncated]&quot;;.
+        ///   left join wms.&quot;MaterialMaster [rest of string was truncated]&quot;;.
         /// </summary>
         public static string getgatepasslist {
             get {
