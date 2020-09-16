@@ -43,6 +43,7 @@ export class printMaterial {
   noofprint: any;
   barcodePath: any;
   materialcodePath: any;
+  printedby: any;
 }
 
 export class searchParams {

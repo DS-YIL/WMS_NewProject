@@ -94,6 +94,15 @@ export class wmsService {
     return this.http.post<any>(this.url + 'POData/generateBarcodeMaterial', printdata, this.httpOptions);
   }
 
+  //printBarcodeMaterial(printdata: printMaterial): Observable<any> {
+  //  return this.http.post<any>(this.url + 'POData/printBarcodeMaterial', printdata, this.httpOptions);
+  //}
+
+  printBarcodeMaterial(printdata: printMaterial): Observable<any> {
+    const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }), responseType: 'text' as any };
+    return this.http.post<any>(this.url + 'Print/printLabel/', printdata, httpOptions);
+  }
+
   insertbarcodeandinvoiceinfo(BarcodeModel: BarcodeModel): Observable<any> {
     const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }), responseType: 'text' as any };
     return this.http.post<any>(this.url + 'POData/insertbarcodeandinvoiceinfo', BarcodeModel, httpOptions);
@@ -578,8 +587,9 @@ export class wmsService {
 
   //print bar code
 
-  printBarcode(PrintHistoryModel: PrintHistoryModel): Observable<pageModel[]> {
-    return this.http.post<any[]>(this.url + 'Print/printBarcode/', PrintHistoryModel, this.httpOptions);
+  printBarcode(PrintHistoryModel: PrintHistoryModel): Observable<any> {
+    const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }), responseType: 'text' as any };
+    return this.http.post<any>(this.url + 'Print/printBarcode/', PrintHistoryModel, httpOptions);
   }
   //get material transfer dashboard details
   getMaterialtransferdetails(materialTransferFilters: materilaTrasFilterParams): Observable<any> {

@@ -175,7 +175,7 @@ where  inwmaster.pono='#pono'</value>
     <comment>getopenpono list</comment>
   </data>
   <data name="Getdetailsforthreewaymatching" xml:space="preserve">
-    <value>select mat.pono,mat.materialid as material,ms.materialdescription,mat.materialqty,sinw.invoiceno,sinw.grnnumber,
+    <value>select mat.pono,mat.materialid as material,ms.materialdescription,mat.materialqty,sinw.invoiceno,sinw.grnnumber,sinw.receiveddate,
 inw.inwardid,inw.qualitychecked,inw.returnedby,inw.returnedon,inw.returnremarks,inw.receivedqty,inw.returnremarks,
 qc.qualitypassedqty,qc.qualityfailedqty,qc.qcby as checkedby,
  CASE
@@ -621,7 +621,7 @@ VALUES(@inwmasterid,@receiveddate,@receivedby,@receivedqty,@materialid,@deletefl
     <value>UPDATE  wms.wms_storeinward set  confirmqty=@confirmqty,returnqty = @returnqty,returnedby = @receivedby,returnedon=current_date,returnremarks=@returnremarks where inwardid =#inwardid</value>
   </data>
   <data name="receivequeryfornonpo" xml:space="preserve">
-    <value>select sinw.invoiceno,sinw.pono,sinw.grnnumber,sinw.onhold,sinw.onholdremarks,sinw.unholdedby,inw.remarks as receiveremarks,inw.materialid as material,ms.materialdescription,
+    <value>select sinw.invoiceno,sinw.pono,sinw.grnnumber,sinw.onhold,sinw.onholdremarks,sinw.unholdedby,sinw.receiveddate,inw.remarks as receiveremarks,inw.materialid as material,ms.materialdescription,
  inw.inwardid,inw.qualitychecked,inw.returnedby,inw.returnedon,inw.returnremarks,inw.receivedqty,inw.returnremarks,inw.materialqty,
  qc.qualitypassedqty,qc.qualityfailedqty,qc.qcby as checkedby,
  CASE
@@ -996,10 +996,10 @@ where boolinuse = True</value>
     <value>select Max(pono) as POno  from wms.wms_polist where pono like 'NP%'</value>
   </data>
   <data name="isgrnexistsbygrn" xml:space="preserve">
-    <value>select grnnumber,onhold,unholdedby from wms.wms_securityinward where grnnumber = '#grnno'</value>
+    <value>select grnnumber,onhold,unholdedby,receiveddate from wms.wms_securityinward where grnnumber = '#grnno'</value>
   </data>
   <data name="isgrnexistsquerybyinvoce" xml:space="preserve">
-    <value>select grnnumber,onhold,unholdedby from wms.wms_securityinward where pono = '#pono' and invoiceno = '#invno'</value>
+    <value>select inwmasterid,grnnumber,onhold,unholdedby from wms.wms_securityinward where pono = '#pono' and invoiceno = '#invno'</value>
   </data>
   <data name="GetdetailsByrequestidWithoutPO" xml:space="preserve">
     <value>select (select sum(issuedqty) from wms.wms_materialissue  where requestforissueid =req.requestforissueid  ) as issuedqty,max(iss.approvedstatus) as approvedstatus,max(pro.projectname)as projectname,max(req.requestforissueid)as requestforissueid,max(emp."name")as name,req.requesteddate,sk.materialid,
@@ -1082,5 +1082,23 @@ left join wms.employee emp1 on emp1.employeeno=outin.outwardby
 left join wms.employee emp2 on emp2.employeeno=outin.securityinwardby
 left join wms.employee emp3 on emp3.employeeno=outin.inwardby
 order by outin.id</value>
+  </data>
+   <data name="getbarcodereprintdata" xml:space="preserve">
+    <value>select * from wms.wms_barcode bar  join wms.wms_reprinthistory wr on wr.barcodeid =bar.barcodeid where bar.barcode ='#barcode'</value>
+  </data>
+  <data name="getprintdetailsforinvoice" xml:space="preserve">
+    <value>select print  from wms.wms_securityinward  where pono ='#pono'  and invoiceno ='#invno'</value>
+    <comment>To view whether the Invoice and PO QRcode is already printed</comment>
+  </data>
+  <data name="updatereprintdata" xml:space="preserve">
+    <value>update wms.wms_reprinthistory  set reprintedon =current_date, reprintedby ='#reprintedby', reprintcount =#reprintcount where barcodeid ='#barcodeid'</value>
+    <comment>Update reprint count in reprint history table</comment>
+  </data>
+  <data name="updateSecurityinwardprint" xml:space="preserve">
+    <value>update wms.wms_securityinward set print=#print, printedby ='#printedby', printedon =current_date where pono ='#pono'  and invoiceno ='#invno'</value>
+    <comment>Update print data in security inward</comment>
+  </data>
+  <data name="updatestoreinwprint" xml:space="preserve">
+    <value>update wms.wms_storeinward set isprint=#print, printedby ='#printedby', printedon =current_date where inwmasterid=#inwmasterid  and materialid='#materialid'</value>
   </data>
 </root>

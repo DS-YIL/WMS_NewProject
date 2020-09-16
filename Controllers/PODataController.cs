@@ -79,6 +79,13 @@ namespace WMS.Controllers
 
 		}
 
+		[HttpPost("printBarcodeMaterial")]
+		public string printBarcodeMaterial(printMaterial printMat)
+		{
+			return this._poService.printBarcodeMaterial(printMat);
+
+		}
+
 		[HttpPost("uploaddoc"), DisableRequestSizeLimit]
 
 		public IActionResult Upload()

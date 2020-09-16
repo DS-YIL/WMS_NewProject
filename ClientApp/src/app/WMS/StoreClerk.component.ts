@@ -316,6 +316,39 @@ export class StoreClerkComponent implements OnInit {
     })
   }
 
+  printLabel() {
+    alert("entered");
+    this.showPrintDialog = false;
+    this.showPrintLabel = false;
+    this.printData.materialid = this.materialCode;
+    this.printData.invoiceno = this.podetailsList[0].invoiceno;
+    this.printData.grnno = this.podetailsList[0].grnnumber;
+    this.printData.pono = this.podetailsList[0].pono;
+    this.printData.noofprint = this.noOfPrint;
+    this.printData.receiveddate = this.receivedDate;
+    this.printData.printedby = this.employee.employeeno;
+    //api call
+    this.wmsService.printBarcodeMaterial(this.printData).subscribe(data => {
+      if (data) {
+        debugger;
+        this.printData = data;
+        if (data == "success") {
+          this.messageService.add({ severity: 'success', summary: '', detail: 'Label printed successfully' });
+          console.log(this.printData);
+        }
+        else {
+          this.messageService.add({ severity: 'success', summary: '', detail: 'Error while Printing Label' });
+          console.log(this.printData);
+        }
+        
+
+      }
+      else {
+        alert("Error while generating Barcode");
+      }
+    })
+  }
+
   getMaterials() {
     this.spinner.show();
     if (isNullOrUndefined(localStorage.getItem("materials")) || localStorage.getItem("materials") == "null" || localStorage.getItem("materials") == null || localStorage.getItem("materials") == "NULL") {
