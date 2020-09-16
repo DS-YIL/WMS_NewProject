@@ -286,6 +286,7 @@ export class SecurityHomeComponent implements OnInit {
       else if (data == "2") {
         this.messageService.add({ severity: 'error', summary: '', detail: 'Invoice for this PO already received' });
         this.showPrintBtn = true;
+        this.print = "Print Barcode";
       }
       else if (data == "3") {
         this.messageService.add({ severity: 'error', summary: '', detail: 'Invoice for this PO already received' });
@@ -294,13 +295,13 @@ export class SecurityHomeComponent implements OnInit {
       }
       else { //data>=1
         this.showPrintBtn = true;
-        
         if (String(data).startsWith("NP")) {
           this.uploadnonpodoc(data);
         }
         this.disSaveBtn = true;
         //this.refresh();
         this.messageService.add({ severity: 'success', summary: '', detail: 'Invoice No. Updated' });
+        this.print = "Print Barcode";
         this.showPrintBtn = true;
         this.getcurrentDateReceivedPOlist();
       }
@@ -333,12 +334,13 @@ export class SecurityHomeComponent implements OnInit {
       debugger;
       if (data == "success") {
         this.messageService.add({ severity: 'success', summary: '', detail: 'QRCode Printed Successfully' });
+        this.print = "Re-Print Barcode";
         if (this.pono.startswith("NP")) {
           this.showPrintBtn = false;
           this.refresh();
         }
         else {
-          this.print = "Re-Print Barcode";
+          
           this.refresh();
         }
         
