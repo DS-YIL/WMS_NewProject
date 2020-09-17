@@ -834,7 +834,7 @@ group by sk.pono, polist.suppliername,prj.projectmanager</value>
     <comment>Get PO Details</comment>
   </data>
   <data name="getitemiddata" xml:space="preserve">
-    <value>select * from wms.wms_stock where materialid='#materialid' </value>
+    <value>select * from wms.wms_stock where materialid='#materialid' and availableqty &gt; 0</value>
   </data>
   <data name="getreturndata" xml:space="preserve">
     <value>select distinct max(retmat.matreturnid) as matreturnid,max(retmat.returnid ) as returnid, 
