@@ -90,6 +90,8 @@ namespace WMS.Models
 		public string barcodePath { get; set; }
 		public string materialcodePath { get; set; }
 		public string errorMsg { get; set; }
+		public bool isprint { get; set; }
+		public string printedby { get; set; }
 	}
 
 	public class BarcodeModel
@@ -117,6 +119,10 @@ namespace WMS.Models
 		public string inwardremarks { get; set; }
 
 		public string docfile { get; set; }
+
+		public DateTime reprintedon { get; set; }
+		public string reprintedby { get; set; }
+		public int reprintcount { get; set; }
 
 
 	}
@@ -161,11 +167,13 @@ namespace WMS.Models
 		public string qcby { get; set; }
 		public string remarks { get; set; }
 		public string Material { get; set; }
+		public string printedby { get; set; }
+		public DateTime printedon { get; set; }
 		public string grnnumber { get; set; }
 		public string Materialdescription { get; set; }
 		public string itemlocation { get; set; }
 		public string invoiceno { get; set; }
-
+		public bool print { get; set; }
 		public string vendorname { get; set; }
 		public int materialqty { get; set; }
 
