@@ -435,7 +435,7 @@ export class MaterialTransferComponent implements OnInit {
       if (data == 1) {
         this.btnDisabletransfer = true;
         this.AddDialogfortransfer = false;
-        this.messageService.add({ severity: 'sucess', summary: '', detail: 'Material Transferred' });
+        this.messageService.add({ severity: 'sucess', summary: '', detail: 'Material Transfer Initiated' });
       }
     })
   }

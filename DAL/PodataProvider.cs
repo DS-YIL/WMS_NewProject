@@ -765,7 +765,7 @@ namespace WMS.DAL
 							emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
 							emailmodel.CC = "sushma.patil@in.yokogawa.com";
 							EmailUtilities emailobj = new EmailUtilities();
-							//emailobj.sendEmail(emailmodel, 1);
+							emailobj.sendEmail(emailmodel, 1);
 
 						}
 
@@ -4867,7 +4867,7 @@ namespace WMS.DAL
 							DB.Open();
 							//await DB.OpenAsync();
 							var itemData = await DB.QueryAsync<StockModel>(
-						  itemnoquery, null, commandType: CommandType.Text);
+						    itemnoquery, null, commandType: CommandType.Text);
 							int remainingqty = item.quantity;
 							itemData = itemData.OrderBy(o => o.createddate);
 							int reservedqty = item.reservedqty;
