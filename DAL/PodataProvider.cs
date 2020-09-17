@@ -8287,7 +8287,7 @@ namespace WMS.DAL
 					//}
 					//else
 					//   {
-					int noofprint = 0;
+					int noofprint = 1;
 
 						data = Convert.ToInt32(DB.ExecuteScalar(insertquery, new
 						{
@@ -8375,7 +8375,7 @@ namespace WMS.DAL
 					if(objx.inwmasterid !=0)
                     {
 						//check if print is true
-						string barcodequery = "select isprint from wms.wms_storeinward where  inwmasterid ='" + objx.inwmasterid + "' and materialid='"+printMat.materialid+"'";
+						string barcodequery = "select isprint from wms.wms_printstatusmaterial where  inwmasterid ='" + objx.inwmasterid + "' and materialid='"+printMat.materialid+"'";
 						var barcodeData = DB.QueryFirstOrDefault<printMaterial>(
 								   barcodequery, null, commandType: CommandType.Text);
 						if(barcodeData!=null)
@@ -8402,28 +8402,46 @@ namespace WMS.DAL
 							}
 							else
 							{
-								string updatequery = WMSResource.updatestoreinwprint.Replace("#print", Convert.ToString(true)).Replace("#printedby", Convert.ToString(printMat.printedby)).Replace("#noofprint", Convert.ToString(printMat.noofprint)).Replace("#inwmasterid", Convert.ToString(objx.inwmasterid)).Replace("#materialid", Convert.ToString(printMat.materialid));
-								bool print = true;
-								data = DB.Execute(updatequery, new
+								//Update data in print status material table -insertprintmaterial
+								string insertquery = WMSResource.insertprintmaterial;
+								int printcount = 1;
+								bool isprint = true;
+								string reprintedby = printMat.printedby;
+								data = Convert.ToInt32(DB.ExecuteScalar(insertquery, new
 								{
-									print,
+									objx.inwmasterid,
+									createddate,
 									printMat.printedby,
-									printMat.noofprint
-								});
+									printcount,
+									printMat.noofprint,
+									bar.barcodeid,
+									isprint,
+									printMat.materialid
+
+								}));
 							}
 
 						}
 
 						else
 						{
-							string updatequery = WMSResource.updatestoreinwprint.Replace("#print", Convert.ToString(true)).Replace("#printedby", Convert.ToString(printMat.printedby)).Replace("#noofprint", Convert.ToString(printMat.noofprint)).Replace("#inwmasterid", Convert.ToString(objx.inwmasterid)).Replace("#materialid", Convert.ToString(printMat.materialid));
-							bool print = true;
-							data = DB.Execute(updatequery, new
+						//Update data in print status material table -insertprintmaterial
+							string insertquery = WMSResource.insertprintmaterial;
+							int printcount = 1;
+							bool isprint = true;
+							string reprintedby = printMat.printedby;
+							data = Convert.ToInt32(DB.ExecuteScalar(insertquery, new
 							{
-								print,
+								objx.inwmasterid,
+								createddate,
 								printMat.printedby,
-								printMat.noofprint
-							});
+								printcount,
+								printMat.noofprint,
+								bar.barcodeid,
+								isprint,
+								printMat.materialid
+
+							}));
 						}
 
 

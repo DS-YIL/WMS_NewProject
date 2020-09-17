@@ -1164,4 +1164,7 @@ group by gtm.materialid</value>
   <data name="updatestoreinwprint" xml:space="preserve">
     <value>update wms.wms_storeinward set isprint=#print, printedby ='#printedby',noofprint=#noofprint, printedon =current_date where inwmasterid=#inwmasterid  and materialid='#materialid'</value>
   </data>
+  <data name="insertprintmaterial" xml:space="preserve">
+    <value>insert into wms.wms_printstatusmaterial(id,inwmasterid, printedon,printedby,printcount,noofprint,barcodeid,isprint,materialid )values(default,@inwmasterid,current_date,@printedby,@printcount,@noofprint,@barcodeid, @isprint,@materialid)returning id</value>
+  </data>
 </root>

@@ -330,10 +330,11 @@ export class StoreClerkComponent implements OnInit {
     this.wmsService.printBarcodeMaterial(this.printData).subscribe(data => {
       if (data) {
         debugger;
-        this.printData = data;
+        //this.printData = data;
         if (data == "success") {
           this.messageService.add({ severity: 'success', summary: '', detail: 'Label printed successfully' });
           console.log(this.printData);
+          this.noOfPrint = 1;
         }
         else {
           this.messageService.add({ severity: 'success', summary: '', detail: 'Error while Printing Label' });

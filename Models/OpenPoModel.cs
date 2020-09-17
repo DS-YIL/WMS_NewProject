@@ -413,7 +413,6 @@ namespace WMS.Models
 		public int reservedqty { get; set; }
 
 		public string stocktype { get; set; }
-	
 
 
 

@@ -1347,6 +1347,15 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to insert into wms.wms_printstatusmaterial(id,inwmasterid, printedon,printedby,printcount,noofprint,barcodeid,isprint,materialid )values(default,@inwmasterid,current_date,@printedby,@printcount,@noofprint,@barcodeid, @isprint,@materialid)returning id.
+        /// </summary>
+        public static string insertprintmaterial {
+            get {
+                return ResourceManager.GetString("insertprintmaterial", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to UPDATE  wms.wms_storeinward set  qualitypassedqty=@qualitypassedqty,qualityfailedqty = @qualityfailedqty,checkedby = @receivedby,checkedon=current_date,remarks=@remarks where inwardid =#inwardid.
         /// </summary>
         public static string insertqualitycheck {
