@@ -71,7 +71,7 @@ namespace WMS.Controllers
                     //tw.WriteLine("<xpml></page></xpml><xpml><end/></xpml>");
 
 
-                    tw.WriteLine("SIZE 77.5 mm, 28 mm");
+                    tw.WriteLine("SIZE 94.10 mm, 38 mm");
                     tw.WriteLine("GAP 3 mm, 0 mm");
                     tw.WriteLine("DIRECTION 0,0");
                     tw.WriteLine("REFERENCE 0,0");
@@ -143,7 +143,7 @@ namespace WMS.Controllers
 
             for(int i=1;i<=printMat.noofprint;i++)
             {
-                if (Directory.Exists(path))
+                if (System.IO.File.Exists(path))
                 {
                     fileType = FileMode.Append;
                 }
@@ -218,8 +218,8 @@ namespace WMS.Controllers
                             tw.WriteLine("TEXT 486,60,\"0\",180,13,9,\"" + printMat.noofprint + "/" + printMat.noofprint + "\"");
                             tw.WriteLine("TEXT 485,189,\"0\",180,13,11,\"" + printMat.receiveddate + "\"");
                             tw.WriteLine("BAR 172,143, 568, 3");
-                            tw.WriteLine("TEXT 731,116,\"ROMAN.TTF\",180,1,8,\"PO N0. - Invoice No.\"");
-                            tw.WriteLine("TEXT 481,116,\"0\",180,11,7,"+printMat.pono+"-"+printMat.invoiceno+"\"");
+                            tw.WriteLine("TEXT 731,116,\"ROMAN.TTF\",180,1,8,\"PO No. - Invoice No.\"");
+                            tw.WriteLine("TEXT 481,116,\"0\",180,11,7,\""+printMat.pono+"-"+printMat.invoiceno+"\"");
                             tw.WriteLine("PRINT 1,1");
                             tw.WriteLine("<xpml></page></xpml><xpml><end/></xpml>");
 

@@ -7919,21 +7919,24 @@ namespace WMS.DAL
 					//	string updatequery=WMSResource.updatereprintdata.Replace("#reprintedby", Convert.ToString(model.reprintedby)).Replace("#reprintcount", Convert.ToString(barcodereprintData.reprintcount+1)).Replace("#barcodeid", Convert.ToString(barcodereprintData.barcodeid));
 					//	data = DB.Execute(updatequery, new
 					//	{
-							
+
 					//		model.reprintedby,
 
 					//	});
 
 					//}
 					//else
-					 //   {
+					//   {
+					int noofprint = 0;
+
 						data = Convert.ToInt32(DB.ExecuteScalar(insertquery, new
 						{
 							model.inwmasterid,
 							model.reprintedon,
 							model.reprintedby,
 							model.reprintcount,
-							model.barcodeid
+							model.barcodeid,
+							noofprint
 
 						}));
 					}
