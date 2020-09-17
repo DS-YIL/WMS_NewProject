@@ -317,7 +317,6 @@ export class StoreClerkComponent implements OnInit {
   }
 
   printLabel() {
-    alert("entered");
     this.showPrintDialog = false;
     this.showPrintLabel = false;
     this.printData.materialid = this.materialCode;

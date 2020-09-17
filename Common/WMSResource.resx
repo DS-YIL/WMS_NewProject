@@ -159,7 +159,8 @@ where  inwmaster.pono='#pono'</value>
     <comment>Getponodetailsformaterialissue</comment>
   </data>
   <data name="insertbarcodedata" xml:space="preserve">
-    <value>INSERT INTO wms.wms_barcode(barcodeid,barcode,createddate,createdby,deleteflag)VALUES(DEFAULT,@barcode,@createddate,@createdby,@deleteflag)returning barcodeid</value>
+    <value>INSERT INTO wms.wms_barcode(barcodeid,barcode,createddate,createdby,deleteflag,pono,invoiceno)values
+(DEFAULT,@barcode,@createddate,@createdby,@deleteflag,@pono,@invoiceno)returning barcodeid</value>
     <comment>barcodedata insertion</comment>
   </data>
   <data name="insertinvoicedata" xml:space="preserve">
@@ -1046,7 +1047,7 @@ sk.deleteflag=false
 group by sk.itemlocation,ygs.materialdescription,ygs.material,createddate::DATE,sk.itemid</value>
   </data>
   <data name="insertSecurityPrintHistory" xml:space="preserve">
-    <value>insert into wms.wms_reprinthistory(reprinthistoryid,inwmasterid, reprintedon,reprintedby,reprintcount,barcodeid )values(default,@inwmasterid,current_date,@reprintedby,@reprintcount,@barcodeid)returning reprinthistoryid</value>
+    <value>insert into wms.wms_reprinthistory(reprinthistoryid,inwmasterid, reprintedon,reprintedby,reprintcount,barcodeid,noofprint )values(default,@inwmasterid,current_date,@reprintedby,@reprintcount,@barcodeid, @noofprint)returning reprinthistoryid</value>
   </data>
   <data name="getMaterialTransferDetails" xml:space="preserve">
     <value>select ts.transferid, ts.projectcode,ts.remarks as transferremarks,emp.name as transferedby,ts.createdon as transferredon
@@ -1083,7 +1084,7 @@ left join wms.employee emp2 on emp2.employeeno=outin.securityinwardby
 left join wms.employee emp3 on emp3.employeeno=outin.inwardby
 order by outin.id</value>
   </data>
-   <data name="getbarcodereprintdata" xml:space="preserve">
+  <data name="getbarcodereprintdata" xml:space="preserve">
     <value>select * from wms.wms_barcode bar  join wms.wms_reprinthistory wr on wr.barcodeid =bar.barcodeid where bar.barcode ='#barcode'</value>
   </data>
   <data name="getprintdetailsforinvoice" xml:space="preserve">
@@ -1095,10 +1096,10 @@ order by outin.id</value>
     <comment>Update reprint count in reprint history table</comment>
   </data>
   <data name="updateSecurityinwardprint" xml:space="preserve">
-    <value>update wms.wms_securityinward set print=#print, printedby ='#printedby', printedon =current_date where pono ='#pono'  and invoiceno ='#invno'</value>
+    <value>update wms.wms_securityinward set print=#print,  printedon =current_date, printedby ='#printedby', where pono ='#pono'  and invoiceno ='#invno'</value>
     <comment>Update print data in security inward</comment>
   </data>
   <data name="updatestoreinwprint" xml:space="preserve">
-    <value>update wms.wms_storeinward set isprint=#print, printedby ='#printedby', printedon =current_date where inwmasterid=#inwmasterid  and materialid='#materialid'</value>
+    <value>update wms.wms_storeinward set isprint=#print, printedby ='#printedby',noofprint=#noofprint, printedon =current_date where inwmasterid=#inwmasterid  and materialid='#materialid'</value>
   </data>
 </root>

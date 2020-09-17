@@ -369,6 +369,131 @@ namespace WMS.DAL
 				printMat.materialcodePath = "./Barcodes/" + content + ".bmp";
 				//printMat.materialcodePath = "./assets/" + content + ".bmp";
 
+
+				//try
+				//{
+				//	string path1 = Environment.CurrentDirectory + @"\PRNFiles\";
+				//	bool result = false;
+				//	string printResult = null;
+				//	path1 = path1 + printMat.materialid + "-" + string.Format("{0:ddMMyyyyhhmm}", DateTime.Now) + ".prn";
+				//	FileMode fileType = FileMode.OpenOrCreate;
+				//	//for (int i = 0; i < printQty; i++)
+				//	//{
+				//	// if (File.Exists(path))
+				//	if (Directory.Exists(path1))
+				//	{
+				//		fileType = FileMode.Append;
+				//	}
+
+				//	using (FileStream fs = new FileStream(path1, fileType))
+				//	{
+				//		using (TextWriter tw = new StreamWriter(fs))
+				//		{
+				//			if(printMat.grnno!=null)
+    //                        {
+				//				tw.WriteLine("<xpml><page quantity='0' pitch='33.0 mm'></xpml>SIZE 94.10 mm, 38 mm");
+				//				tw.WriteLine("GAP 3 mm, 0 mm");
+				//				tw.WriteLine("SET RIBBON ON");
+				//				tw.WriteLine("DIRECTION 0,0");
+				//				tw.WriteLine("REFERENCE 0,0");
+				//				tw.WriteLine("OFFSET 0 mm");
+				//				tw.WriteLine("SET PEEL OFF");
+				//				tw.WriteLine("SET CUTTER OFF");
+				//				tw.WriteLine("SET PARTIAL_CUTTER OFF");
+				//				tw.WriteLine("<xpml></page></xpml><xpml><page quantity='1' pitch='33.0 mm'></xpml>SET TEAR ON");
+				//				tw.WriteLine("ON");
+				//				tw.WriteLine("CLS");
+				//				tw.WriteLine("BOX 9,15,741,289,3");
+				//				tw.WriteLine("BAR 492,15, 3, 272");
+				//				tw.WriteLine("BAR 182,15, 3, 272");
+				//				tw.WriteLine("BAR 183,222, 557, 3");
+				//				tw.WriteLine("BAR 9,151, 731, 3");
+				//				tw.WriteLine("BAR 183,86, 557, 3");
+				//				tw.WriteLine("QRCODE 144,251,L,3,A,180,M2,S7,\"" + printMat.materialid + "\"");
+				//				tw.WriteLine("QRCODE 144,106,L,3,A,180,M2,S7,\"" + printMat.grnno + "-" + printMat.materialid + "\"");
+				//				tw.WriteLine("CODEPAGE 1252");
+				//				tw.WriteLine("TEXT 731,268,\"0\",180,9,9,\"Material Code: \"");
+				//				tw.WriteLine("TEXT 731,195,\"0\",180,8,9,\"Received Date: \"");
+				//				tw.WriteLine("TEXT 732,124,\"0\",180,6,6,\"WMS GRN No. - Material Code: \"");
+				//				tw.WriteLine("TEXT 704,56,\"0\",180,9,9,\"Quantity\"");
+				//				tw.WriteLine("TEXT 482,265,\"0\",180,14,9,\"" + printMat.materialid + "\"");
+				//				tw.WriteLine("TEXT 484,124,\"0\",180,9,6,\"" + printMat.grnno + "-" + printMat.materialid + "\"");
+				//				tw.WriteLine("TEXT 486,59,\"0\",180,13,9,\"" + printMat.noofprint + "/" + printMat.noofprint + "\"");
+				//				tw.WriteLine("TEXT 485,199,\"0\",180,13,11,\"" + printMat.receiveddate + "\"");
+
+				//				tw.WriteLine("PRINT 1,1");
+				//				tw.WriteLine("<xpml></page></xpml><xpml><end/></xpml>");
+
+    //                        }
+    //                        else
+    //                        {
+				//				tw.WriteLine("<xpml><page quantity='0' pitch='33.0 mm'></xpml>SIZE 94.10 mm, 38 mm");
+				//				tw.WriteLine("GAP 3 mm, 0 mm");
+				//				tw.WriteLine("SET RIBBON ON");
+				//				tw.WriteLine("DIRECTION 0,0");
+				//				tw.WriteLine("REFERENCE 0,0");
+				//				tw.WriteLine("OFFSET 0 mm");
+				//				tw.WriteLine("SET PEEL OFF");
+				//				tw.WriteLine("SET CUTTER OFF");
+				//				tw.WriteLine("SET PARTIAL_CUTTER OFF");
+				//				tw.WriteLine("<xpml></page></xpml><xpml><page quantity='1' pitch='33.0 mm'></xpml>SET TEAR ON");
+				//				tw.WriteLine("ON");
+				//				tw.WriteLine("CLS");
+				//				tw.WriteLine("BOX 9,15,741,289,3");
+				//				tw.WriteLine("BAR 492,15, 3, 272");
+				//				tw.WriteLine("BAR 182,15, 3, 272");
+				//				tw.WriteLine("BAR 183,203, 557, 3");
+				//				tw.WriteLine("BAR 183,103, 557, 3");
+				//				//tw.WriteLine("BAR 183,86, 557, 3");
+				//				tw.WriteLine("QRCODE 144,192,L,3,A,180,M2,S7,\"" + printMat.materialid + "\"");
+				//				tw.WriteLine("CODEPAGE 1252");
+				//				tw.WriteLine("TEXT 731,264,\"0\",180,9,9,\"Material Code: \"");
+				//				tw.WriteLine("TEXT 731,176,\"0\",180,8,9,\"Received Date: \"");
+				//				tw.WriteLine("TEXT 704,60,\"0\",180,9,9,\"Quantity\"");
+				//				tw.WriteLine("TEXT 482,259,\"0\",180,14,9,\"" + printMat.materialid + "\"");
+				//				tw.WriteLine("TEXT 486,60,\"0\",180,13,9,\"" + printMat.noofprint + "/" + printMat.noofprint + "\"");
+				//				tw.WriteLine("TEXT 485,179,\"0\",180,13,11,\"" + printMat.receiveddate + "\"");
+
+				//				tw.WriteLine("PRINT 1,1");
+				//				tw.WriteLine("<xpml></page></xpml><xpml><end/></xpml>");
+
+				//			}
+				//		}
+
+
+				//	}
+				//	//}
+				//	try
+				//	{
+				//		//Convert.ToString(ConfigurationManager.AppSettings["PrinterName"].ToString());
+				//		//string printerName = ConfigurationManager.AppSettings["CTMajor_AdminPrinter"].ToString();
+				//		//string printerName = "10.29.11.25";
+				//		string printerName = "10.29.2.48";
+				//		PrintUtilities objIdentification = new PrintUtilities();
+				//		printResult = "success";
+				//		printResult = objIdentification.PrintQRCode(path1, printerName);
+				//		// path =  @"D:\Transmitter\ECheckSheetAPI\ECheckSheetAPI\print\";
+				//		// result = RawPrinterHelper.SendFileToPrinter(printerName, path);
+
+
+
+				//	}
+
+				//	catch (Exception ex)
+				//	{
+				//		throw ex;
+				//	}
+
+
+
+
+
+				//}
+				//catch (Exception ex)
+				//{
+				//	printMat.errorMsg = ex.Message;
+				//	log.ErrorMessage("PODataProvider", "generateBarcodeMaterial", ex.StackTrace.ToString());
+				//}
 			}
 			catch (Exception ex)
 			{
@@ -537,7 +662,7 @@ namespace WMS.DAL
 
 								if (count1 >= 1)
 								{
-									return "2"; //for onvoice already exist
+									return "2"; //for invoice already exist
 								}
 								string type = "NON PO";
 								string insertpoqry = WMSResource.insertpo;
@@ -621,6 +746,8 @@ namespace WMS.DAL
 								dataobj.createdby,
 								dataobj.createddate,
 								dataobj.deleteflag,
+								dataobj.pono,
+								dataobj.invoiceno
 							});
 
 							EmailModel emailmodel = new EmailModel();
@@ -1257,8 +1384,8 @@ namespace WMS.DAL
 						verify.grnnumber = info.grnnumber;
 					}
 					//if (inwardid != 0)
-
-					EmailModel emailmodel = new EmailModel();
+					
+						EmailModel emailmodel = new EmailModel();
 					//emailmodel.pono = datamodel[0].pono;
 					//emailmodel.jobcode = datamodel[0].projectname;
 					emailmodel.grnnumber = verify.grnnumber;
@@ -2212,7 +2339,7 @@ namespace WMS.DAL
 							emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
 							emailmodel.CC = "sushma.patil@in.yokogawa.com";
 							EmailUtilities emailobj = new EmailUtilities();
-							emailobj.sendEmail(emailmodel, 4);
+							emailobj.sendEmail(emailmodel,4);
 						}
 						//if (result != 0)
 						//{
@@ -2356,7 +2483,7 @@ namespace WMS.DAL
 				//emailmodel.pono = datamodel[0].pono;
 				//emailmodel.jobcode = datamodel[0].projectname;
 				emailmodel.materialissueid = dataobj[0].materialissueid;
-				emailmodel.requestid = dataobj[0].requestid;
+				emailmodel.requestid =dataobj[0].requestid;
 				emailmodel.ToEmailId = "ramesh.kumar@in.yokogawa.com";
 				emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
 				emailmodel.CC = "sushma.patil@in.yokogawa.com";
@@ -7764,16 +7891,21 @@ namespace WMS.DAL
 			string insertquery = WMSResource.insertSecurityPrintHistory;
 			using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
 			{
+				//Get inwmasterid, print status from security inward table
 				string secquery = "select inwmasterid,print  from wms.wms_securityinward where pono ='" + model.pono + "' and invoiceno ='" + model.invoiceNo + "'";
 				var securityData = DB.QueryFirstOrDefault<inwardModel>(
 						   secquery, null, commandType: CommandType.Text);
+
+				//Check whether the reprint data for this PO and Invoice already exists in barcode table
 				string barcodequery = "select barcodeid from wms.wms_barcode where  barcode ='" + model.po_invoice + "'";
 				var barcodeData = DB.QueryFirstOrDefault<BarcodeModel>(
 						   barcodequery, null, commandType: CommandType.Text);
-				//need to update dynamically
+				
 				model.reprintcount = 1;
 				model.inwmasterid = securityData.inwmasterid;
 				model.barcodeid = barcodeData.barcodeid;
+
+				//If print status is true in security inward table update data in reprint history table else update print status in security inward table
 				if(securityData.print==true)
                 {
 					//updating data in reprint history table
@@ -7782,19 +7914,19 @@ namespace WMS.DAL
 					string query = WMSResource.getbarcodereprintdata.Replace("#barcode", Convert.ToString(model.po_invoice));
 					var barcodereprintData = DB.QueryFirstOrDefault<BarcodeModel>(
 						   query, null, commandType: CommandType.Text);
-					if(barcodereprintData!=null)
-                    {
-						string updatequery=WMSResource.updatereprintdata.Replace("#reprintedby", Convert.ToString(model.reprintedby)).Replace("#reprintcount", Convert.ToString(model.reprintcount+1)).Replace("#barcodeid", Convert.ToString(barcodereprintData.barcodeid));
-						data = DB.Execute(updatequery, new
-						{
+					//if(barcodereprintData!=null)
+					// {
+					//	string updatequery=WMSResource.updatereprintdata.Replace("#reprintedby", Convert.ToString(model.reprintedby)).Replace("#reprintcount", Convert.ToString(barcodereprintData.reprintcount+1)).Replace("#barcodeid", Convert.ToString(barcodereprintData.barcodeid));
+					//	data = DB.Execute(updatequery, new
+					//	{
 							
-							model.reprintedby,
+					//		model.reprintedby,
 
-						});
+					//	});
 
-					}
-					else
-                    {
+					//}
+					//else
+					 //   {
 						data = Convert.ToInt32(DB.ExecuteScalar(insertquery, new
 						{
 							model.inwmasterid,
@@ -7806,20 +7938,19 @@ namespace WMS.DAL
 						}));
 					}
 					
-				}
+				//}
                 else
                 {
 					securityData.print = true;
 					securityData.printedby = model.reprintedby;
 					securityData.printedon = model.reprintedon;
-					var printedby = model.reprintedby;
-					string updateqry = WMSResource.updateSecurityinwardprint.Replace("#print", Convert.ToString(securityData.print)).Replace("#printedby", Convert.ToString(printedby)).Replace("#pono", Convert.ToString(model.pono)).Replace("#invno", Convert.ToString(model.invoiceNo));
+					string printedby = model.reprintedby;
+					string updateqry = "update wms.wms_securityinward set print ="+ securityData.print+",  printedon = current_date, printedby = '"+ model.reprintedby + "' where pono = '"+ model.pono + "'  and invoiceno = '"+ model.invoiceNo+"'";
+						//WMSResource.updateSecurityinwardprint.Replace("#print", Convert.ToString(securityData.print)).Replace("#printedby", Convert.ToString(printedby)).Replace("#pono", Convert.ToString(model.pono)).Replace("#invno", Convert.ToString(model.invoiceNo));
 					data = DB.Execute(updateqry, new
 					{
 						securityData.print,
-						printedby,
-						
-						
+						printedby
 					});
 
 					
@@ -7844,6 +7975,37 @@ namespace WMS.DAL
 				DateTime createddate = DateTime.Now;
 				using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
 					{
+					//Once printing is successfull add data to barcode table
+					string barcode = printMat.grnno + "-" + printMat.materialid;
+
+					string barcodeqry = "select barcodeid from wms.wms_barcode where  barcode ='" + barcode + "' and pono='" + printMat.pono + "' and invoiceno='" + printMat.invoiceno + "'";
+					var bar = DB.QueryFirstOrDefault<BarcodeModel>(
+							   barcodeqry, null, commandType: CommandType.Text);
+					if(bar==null)
+                    {
+						
+							//insert bar code data
+
+							bool deleteflag = false;
+							string createdby = printMat.printedby;
+							string insertbarcodequery = WMSResource.insertbarcodedata;//to insert bar code data
+							var barcodeResult = DB.Execute(insertbarcodequery, new
+							{
+								barcode,
+								createdby,
+								createddate,
+								deleteflag,
+								printMat.pono,
+								printMat.invoiceno
+							});
+						//bar.barcodeid = barcodeResult;
+						 barcodeqry = "select barcodeid from wms.wms_barcode where  barcode ='" + barcode + "' and pono='" + printMat.pono + "' and invoiceno='" + printMat.invoiceno + "'";
+						 bar = DB.QueryFirstOrDefault<BarcodeModel>(
+								   barcodeqry, null, commandType: CommandType.Text);
+
+					}
+					
+
 					string queryx = WMSResource.isgrnexistsquerybyinvoce.Replace("#pono", printMat.pono).Replace("#invno", printMat.invoiceno);
 					var objx = DB.QuerySingle<inwardModel>(
 					 queryx, null, commandType: CommandType.Text);
@@ -7857,78 +8019,47 @@ namespace WMS.DAL
                         {
 							if (barcodeData.isprint == true)
 							{
-								string barcode = printMat.grnno + "-" + printMat.materialid;
 
-								string barcodeqry = "select barcodeid from wms.wms_barcode where  barcode ='" + barcode + "'";
-								var bar = DB.QueryFirstOrDefault<BarcodeModel>(
-										   barcodequery, null, commandType: CommandType.Text);
-								if (bar == null)
-								{
-									//insert bar code data
-
-									bool deleteflg = false;
-									string insertbarcodequery = WMSResource.insertbarcodedata;//to insert bar code data
-									var barcodeResult = DB.Execute(insertbarcodequery, new
-									{
-										barcode,
-										printMat.printedby,
-										createddate,
-										deleteflg,
-									});
-								}
-
-								//Update data in reprint history table
-								//string reprinthistorytable = "select * from wms.wms_reprinthistory where  barcodeid ='" + bar + "'";
-								//var reprintdata = DB.QueryFirstOrDefault<BarcodeModel>(
-								//		   barcodequery, null, commandType: CommandType.Text);
-								//if(reprinthistorytable!=null)
-								//                     {
-								//	string updatereprinthistory =;
-								//                     }
-
-
-
-								//Check if the data is already reprinted 
-								string query = WMSResource.getbarcodereprintdata.Replace("#barcode", Convert.ToString(barcode));
-								var barcodereprintData = DB.QueryFirstOrDefault<BarcodeModel>(
-									   query, null, commandType: CommandType.Text);
+								//Add data in reprint history table
 								string insertquery = WMSResource.insertSecurityPrintHistory;
-								if (barcodereprintData != null)
-								{
-									string updatequery = WMSResource.updatereprintdata.Replace("#reprintedby", Convert.ToString(printMat.printedby)).Replace("#reprintcount", Convert.ToString(1)).Replace("#barcodeid", Convert.ToString(barcodereprintData.barcodeid));
-									data = DB.Execute(updatequery, new
-									{
-
-										printMat.printedby,
-
-									});
-
-								}
-								else
-								{
+								int reprintcount = 1;
+									string reprintedby = printMat.printedby;
 									data = Convert.ToInt32(DB.ExecuteScalar(insertquery, new
 									{
 										objx.inwmasterid,
 										createddate,
-										printMat.printedby,
-
-										barcode
+										reprintedby,
+										reprintcount,
+										bar.barcodeid,
+										printMat.noofprint
 
 									}));
-								}
+								
 
 							}
-							
+							else
+							{
+								string updatequery = WMSResource.updatestoreinwprint.Replace("#print", Convert.ToString(true)).Replace("#printedby", Convert.ToString(printMat.printedby)).Replace("#noofprint", Convert.ToString(printMat.noofprint)).Replace("#inwmasterid", Convert.ToString(objx.inwmasterid)).Replace("#materialid", Convert.ToString(printMat.materialid));
+								bool print = true;
+								data = DB.Execute(updatequery, new
+								{
+									print,
+									printMat.printedby,
+									printMat.noofprint
+								});
+							}
+
 						}
 
 						else
 						{
-							string updatequery = WMSResource.updatestoreinwprint.Replace("#print", Convert.ToString(true)).Replace("#printedby", Convert.ToString(printMat.printedby)).Replace("#inwmasterid", Convert.ToString(objx.inwmasterid)).Replace("#materialid", Convert.ToString(printMat.materialid));
+							string updatequery = WMSResource.updatestoreinwprint.Replace("#print", Convert.ToString(true)).Replace("#printedby", Convert.ToString(printMat.printedby)).Replace("#noofprint", Convert.ToString(printMat.noofprint)).Replace("#inwmasterid", Convert.ToString(objx.inwmasterid)).Replace("#materialid", Convert.ToString(printMat.materialid));
 							bool print = true;
 							data = DB.Execute(updatequery, new
 							{
 								print,
 								printMat.printedby,
+								printMat.noofprint
 							});
 						}
 

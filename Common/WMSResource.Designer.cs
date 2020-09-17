@@ -1193,7 +1193,8 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO wms.wms_barcode(barcodeid,barcode,createddate,createdby,deleteflag)VALUES(DEFAULT,@barcode,@createddate,@createdby,@deleteflag)returning barcodeid.
+        ///   Looks up a localized string similar to INSERT INTO wms.wms_barcode(barcodeid,barcode,createddate,createdby,deleteflag,pono,invoiceno)values
+        ///(DEFAULT,@barcode,@createddate,@createdby,@deleteflag,@pono,@invoiceno)returning barcodeid.
         /// </summary>
         public static string insertbarcodedata {
             get {
@@ -1360,7 +1361,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to insert into wms.wms_reprinthistory(reprinthistoryid,inwmasterid, reprintedon,reprintedby,reprintcount,barcodeid )values(default,@inwmasterid,current_date,@reprintedby,@reprintcount,@barcodeid)returning reprinthistoryid.
+        ///   Looks up a localized string similar to insert into wms.wms_reprinthistory(reprinthistoryid,inwmasterid, reprintedon,reprintedby,reprintcount,barcodeid,noofprint )values(default,@inwmasterid,current_date,@reprintedby,@reprintcount,@barcodeid, @noofprint)returning reprinthistoryid.
         /// </summary>
         public static string insertSecurityPrintHistory {
             get {
@@ -1410,7 +1411,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select grnnumber,onhold,unholdedby from wms.wms_securityinward where grnnumber = &apos;#grnno&apos;.
+        ///   Looks up a localized string similar to select grnnumber,onhold,unholdedby,receiveddate from wms.wms_securityinward where grnnumber = &apos;#grnno&apos;.
         /// </summary>
         public static string isgrnexistsbygrn {
             get {
@@ -1864,7 +1865,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to update wms.wms_securityinward set print=#print, printedby =&apos;#printedby&apos;, printedon =current_date where pono =&apos;#pono&apos;  and invoiceno =&apos;#invno&apos;.
+        ///   Looks up a localized string similar to update wms.wms_securityinward set print=#print,  printedon =current_date, printedby =&apos;#printedby&apos;, where pono =&apos;#pono&apos;  and invoiceno =&apos;#invno&apos;.
         /// </summary>
         public static string updateSecurityinwardprint {
             get {
@@ -1900,7 +1901,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to update wms.wms_storeinward set isprint=#print, printedby =&apos;#printedby&apos;, printedon =current_date where inwmasterid=#inwmasterid  and materialid=&apos;#materialid&apos;.
+        ///   Looks up a localized string similar to update wms.wms_storeinward set isprint=#print, printedby =&apos;#printedby&apos;,noofprint=#noofprint, printedon =current_date where inwmasterid=#inwmasterid  and materialid=&apos;#materialid&apos;.
         /// </summary>
         public static string updatestoreinwprint {
             get {

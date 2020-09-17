@@ -162,6 +162,7 @@ export class SecurityHomeComponent implements OnInit {
     this.Poinvoicedetails.vendorname = "";
     this.Poinvoicedetails.invoiceno = "";
     this.ispochecked = true;
+    this.disSaveBtn = false;
     this.isnonpochecked = false;
   }
   nonpocheck() {
@@ -170,6 +171,8 @@ export class SecurityHomeComponent implements OnInit {
     this.Poinvoicedetails.invoiceno = "";
     this.ispochecked = false;
     this.isnonpochecked = true;
+    this.disSaveBtn = false;
+    this.showPrintBtn = false;
     this.print = "Print Barcode";
   }
 
@@ -183,6 +186,7 @@ export class SecurityHomeComponent implements OnInit {
   //get details based on po no
   SearchPoNo() {
     if (this.searchdata) {
+      this.disSaveBtn = false;
       this.spinner.show();
       this.wmsService.getPoDetails(this.searchdata).subscribe(data => {
         this.spinner.hide();
