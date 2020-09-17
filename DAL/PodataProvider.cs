@@ -6745,6 +6745,7 @@ namespace WMS.DAL
 							Trans.Commit();
 							EmailModel emailmodel = new EmailModel();
 							emailmodel.transferid = "MATFR"+datamodel.transferid.ToString();
+							emailmodel.transferbody = "Material Transfer request initiated for approval with Transferid :MATFR" + datamodel.transferid.ToString();
 							emailmodel.ToEmailId = "developer1@in.yokogawa.com";
 							//emailmodel.ToEmailId = mailto;
 							emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
