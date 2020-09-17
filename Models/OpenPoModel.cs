@@ -405,6 +405,7 @@ namespace WMS.Models
 		public int reservedqty { get; set; }
 
 		public string stocktype { get; set; }
+	
 
 
 
@@ -682,6 +683,14 @@ namespace WMS.Models
 		public int itemid { get; set; }
 		public int issuedqty { get; set; }
 	}
+
+	public class employeeModel1
+    {
+		public string employeeno { get; set; }
+		public string name { get; set; }
+		public string email { get; set; }
+
+	}
 	public class EmailModel
 	{
         internal string createdby { get; set; }
@@ -713,6 +722,8 @@ namespace WMS.Models
 		public string asnno { get; set; }
 		public string suppliername { get; set; }
 		public string material { get; set; }
+		public string transferid { get; set; }
+		public string transferbody { get; set; }
 	}
 	public class employeeModel
 	{
@@ -832,6 +843,8 @@ namespace WMS.Models
 
 		public string chkstatus { get; set; }
 		public string materialdescription { get; set; }
+		public string projectcode { get; set; }
+		public string remarks { get; set; }
 	}
 	public class SecurityInwardreceivedModel
 	{
@@ -938,6 +951,7 @@ public class ddlmodel
 	public string value { get; set; }
 	public string text { get; set; }
 	public string supplier { get; set; }
+	public string projectmanager { get; set; }
 	public DateTime receiveddate { get; set; }
 
 }
@@ -946,11 +960,30 @@ public class materialtransferMain
 {
 	public int transferid { get; set; }
 	public string projectcode { get; set; }
+	public string projectmanagerto { get; set; }
+	public string projectcodefrom { get; set; }
+	public string projectmanagerfrom { get; set; }
 	public int transferredqty { get; set; }
 	public string transferremarks { get; set; }
+
+	public string approvalremarks { get; set; }
+	public string approverid { get; set; }
 	public string transferedby { get; set; }
+	public string requesteremail { get; set; }
 	public DateTime transferredon { get; set; }
+	public int approvallevel { get; set; }
+	public int finalapprovallevel { get; set; }
+	public int applevel { get; set; }
+
+	public bool isapproved { get; set; }
+	public string status { get; set; }
+
+	public string requestoremail { get; set; }
 	public List<materialtransferTR> materialdata { get; set; }
+
+	public List<materialtransferapproverModel> approverdata { get; set; }
+
+
 
 }
 public class materialtransferTR
@@ -961,6 +994,16 @@ public class materialtransferTR
 	public int transferredqty { get; set; }
 }
 
+public class materialtransferapproverModel
+{
+	public string approverid { get; set; }
+	public string approvername { get; set; }
+	public string status { get; set; }
+	public DateTime? approvedon { get; set; }
+	public string remarks { get; set; }
+
+	public string approveremail { get; set; }
+}
 public class DirectTransferMain
 {
 	public int inwmasterid { get; set; }

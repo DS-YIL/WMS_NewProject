@@ -5,10 +5,11 @@ import { wmsService } from '../WmsServices/wms.service';
 import { constants } from '../Models/WMSConstants';
 import { Employee, DynamicSearchResult, searchList } from '../Models/Common.Model';
 import { NgxSpinnerService } from "ngx-spinner";
-import { materialRequestDetails, materialList, requestData, materialListforReserve, materialReservetorequestModel } from 'src/app/Models/WMS.Model';
+import { materialRequestDetails, materialList, requestData, materialListforReserve, materialReservetorequestModel, ddlmodel } from 'src/app/Models/WMS.Model';
 import { MessageService } from 'primeng/api';
 import { commonComponent } from '../WmsCommon/CommonCode';
 import { DatePipe } from '@angular/common';
+import { isNullOrUndefined } from 'util';
 
 @Component({
   selector: 'app-MaterialRequest',
@@ -56,6 +57,10 @@ export class MaterialReserveViewComponent implements OnInit {
   reservetorequest: materialReservetorequestModel;
   filteredmats: any[];
   displaypos: boolean = false;
+  projectlists: ddlmodel[] = [];
+  selectedproject: ddlmodel;
+  filteredprojects: ddlmodel[] = [];
+  reserveremarks: string = "";
 
   ngOnInit() {
     if (localStorage.getItem("Employee"))
@@ -69,15 +74,26 @@ export class MaterialReserveViewComponent implements OnInit {
     //    this.pono = params["pono"];
     //  }
     //});
+    this.filteredprojects = [];
     this.reservetorequest = new materialReservetorequestModel();
     this.getMaterialReservelist();
     this.getdefaultmaterialstoreserve();
+    this.getprojects();
   }
 
   getdefaultmaterialstoreserve() {
     this.defaultmaterials = []
     this.wmsService.getMaterialRequestlistdata(this.employee.employeeno, null).subscribe(data => {
       this.defaultmaterials = data;
+    });
+  }
+
+  getprojects() {
+    this.spinner.show();
+    this.wmsService.getprojectlistbymanager(this.employee.employeeno).subscribe(data => {
+      debugger;
+      this.projectlists = data;
+      this.spinner.hide();
     });
   }
 
@@ -91,9 +107,20 @@ export class MaterialReserveViewComponent implements OnInit {
       }
     }
   }
+  filterprojects(event) {
+    this.filteredprojects = [];
+    for (let i = 0; i < this.projectlists.length; i++) {
+      let brand = this.projectlists[i].value;
+      let pos = this.projectlists[i].projectmanager;
+      if (brand.toLowerCase().indexOf(event.query.toLowerCase()) == 0 || pos.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+        this.filteredprojects.push(this.projectlists[i]);
+      }
+    }
+  }
   refreshdata() {
     this.suppliername = null;
     this.ponumber = null;
+    this.reserveremarks = "";
     this.requestMatData = new requestData();
     this.materialList = [];
     this.materialmodel = [];
@@ -276,7 +303,7 @@ export class MaterialReserveViewComponent implements OnInit {
   //add materials for gate pass
   addNewMaterial() {
     if (this.materialList.length <= 0) {
-      this.materialistModel = { material: "", materialdescription: "", quantity: 0, materialcost: 0, availableqty: 0, remarks: " ", issuedqty: 0, requesterid: this.employee.employeeno, ReserveUpto: this.mindate };
+      this.materialistModel = { material: "", materialdescription: "", quantity: 0, materialcost: 0, availableqty: 0, remarks: " ", issuedqty: 0, requesterid: this.employee.employeeno, ReserveUpto: this.mindate, projectcode: "", };
       this.materialList.push(this.materialistModel);
     }
     else {
@@ -301,7 +328,7 @@ export class MaterialReserveViewComponent implements OnInit {
           return false;
         });
       }
-      this.materialistModel = { material: "", materialdescription: "", quantity: 0, materialcost: 0, availableqty: 0, remarks: " ", issuedqty: 0, requesterid: this.employee.employeeno, ReserveUpto: this.mindate };
+      this.materialistModel = { material: "", materialdescription: "", quantity: 0, materialcost: 0, availableqty: 0, remarks: " ", issuedqty: 0, requesterid: this.employee.employeeno, ReserveUpto: this.mindate, projectcode: "" };
       this.materialList.push(this.materialistModel);
     }
 
@@ -465,7 +492,7 @@ export class MaterialReserveViewComponent implements OnInit {
     this.AddDialog = false;
   }
   reserveMaterial() {
-  
+    this.reserveremarks = "";
     this.requestDialog = true;
     this.btnreq = true;
     this.displayDD = true;
@@ -479,7 +506,7 @@ export class MaterialReserveViewComponent implements OnInit {
     //Get PO number list, project list and materials available
     this.GetPONo();
     if (this.materialList.length <= 0) {
-      this.materialistModel = { material: "", materialdescription: "", quantity: 0, materialcost: 0, remarks: " ", availableqty: 0, issuedqty: 0, requesterid: this.employee.employeeno, ReserveUpto: this.mindate };
+      this.materialistModel = { material: "", materialdescription: "", quantity: 0, materialcost: 0, remarks: " ", availableqty: 0, issuedqty: 0, requesterid: this.employee.employeeno, ReserveUpto: this.mindate, projectcode: "" };
       this.materialList.push(this.materialistModel);
     }
   }
@@ -535,14 +562,31 @@ export class MaterialReserveViewComponent implements OnInit {
         }
         else {
           //submit requested data
+          if (isNullOrUndefined(this.selectedproject)) {
+            this.messageService.add({ severity: 'error', summary: '', detail: 'Select Project' });
+            return false;
+          }
+
           this.spinner.show();
           this.btnreq = false;
           this.materialList.forEach(item => {
             item.requesterid = this.employee.employeeno;
             item.ReserveUpto = this.reservedfor;
+            item.remarks = this.reserveremarks;
+            item.projectcode = this.selectedproject.value;
             if (item.quantity == null)
               item.quantity = 0;
           })
+          var data1 = this.materialList.filter(function (element, index) {
+            return (element.quantity > 0);
+          });
+          if (data1.length == 0) {
+            this.messageService.add({ severity: 'error', summary: '', detail: 'Enter Reserve Quantity' });
+            return false;
+          }
+          this.materialList = this.materialList.filter(function (element, index) {
+            return (element.quantity > 0);
+          });
           this.wmsService.materialReserveUpdate(this.materialList).subscribe(data => {
             this.spinner.hide();
             if (data) {

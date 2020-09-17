@@ -89,6 +89,7 @@ import { DirectTransferComponent } from './WMS/DirectTransfer.component';
 import { MaterialTransferDashboardComponent } from './WMS/MaterialTransferDashboard.component';
 import { OutwardinwardreportComponent } from './WMS/Outwardinwardreport.component';
 import { GatepassinwardreceiveComponent } from './WMS/Gatepassinwardreceive.component';
+import { MaterialTransferApprovalComponent } from './WMS/MaterialTransferApproval.component';
 ////pages
 import { LoginComponent } from './WMS/Login.component';
 import {HomeComponent} from './WMS/Home.component';
@@ -169,7 +170,8 @@ import { PanelModule } from 'primeng/panel';
     DirectTransferComponent,
     MaterialTransferDashboardComponent,
     OutwardinwardreportComponent,
-    GatepassinwardreceiveComponent
+    GatepassinwardreceiveComponent,
+    MaterialTransferApprovalComponent
 
   ],
   imports: [

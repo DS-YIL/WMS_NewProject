@@ -167,7 +167,7 @@ where  inwmaster.pono='#pono'</value>
     <comment>invoice data insertion</comment>
   </data>
   <data name="materialquest" xml:space="preserve">
-    <value>INSERT INTO wms.wms_materialrequest(requestforissueid,quantity,approveremailid,approverid,pono,materialid,requesterid,requestid,requestedquantity,requesteddate,deleteflag)VALUES(default,@quantity,@approveremailid,@approverid,@pono,@materialid,@requesterid,@requestid,@requestedquantity,current_date,false)</value>
+    <value>INSERT INTO wms.wms_materialrequest(requestforissueid,quantity,approveremailid,approverid,pono,materialid,requesterid,requestid,requestedquantity,requesteddate,deleteflag,projectcode,remarks)VALUES(default,@quantity,@approveremailid,@approverid,@pono,@materialid,@requesterid,@requestid,@requestedquantity,current_date,false,@projectcode,@remarks)</value>
     <comment>insert material request data</comment>
   </data>
   <data name="openpolist" xml:space="preserve">
@@ -233,7 +233,7 @@ VALUES(@inwmasterid,@receiveddate,@receivedby,@receivedqty,@returnqty,@qualitypa
   </data>
   <data name="materialrequestquery" xml:space="preserve">
     <value>select distinct  max(req.ackstatus)as ackstatus,max(issue.issuedqty)as issuedquantity,max(req.requesteddate)as requesteddate,max(issue.approvedstatus)as approvedstatus,max(issue.issuedqty) as issuedqty,max(req.requestforissueid)as requestforissueid,max(issue.approvedstatus) as approvedstatus,req.requestid,max(openpo.pono) as pono,max(openpo.projectname)as projectname,max(openpo.material)as material,max(openpo.materialdescription) as materialdescription,max(openpo.quotationqty) quotationqty,max(req.requestedquantity)as requestedquantity,
-max(req.ackremarks)as ackremarks,max(req.reserveid)as reserveid,CASE WHEN max(req.ackremarks) IS NULL THEN false ELSE true END AS status 
+max(req.ackremarks)as ackremarks,max(req.reserveid)as reserveid,max(req.projectcode)as projectcode,max(req.remarks)as remarks,CASE WHEN max(req.ackremarks) IS NULL THEN false ELSE true END AS status 
  from   wms.wms_stock  sk left join wms.openpolistview openpo on openpo.pono = sk.pono 
   left join wms.wms_materialrequest req on req.requesterid = '#reqid'
   left join  wms.wms_materialissue issue on issue.requestforissueid=req.requestforissueid</value>
@@ -493,7 +493,7 @@ group by pl.pono</value>
 max(mtmtr.unitprice) as materialcost,max(mtmtr.materialdescription) as materialdescription from wms.wms_stock  sk 
 left outer join wms."MaterialMasterYGS" mtmtr on mtmtr.material = sk.materialid
 left outer join wms.wms_project prj on prj.pono = sk.pono 
-where sk.availableqty &gt; 0 and (prj.projectmanager = '#manager' or sk.returnid is not null)</value>
+where (prj.projectmanager = '#manager' or sk.returnid is not null)</value>
   </data>
   <data name="issuedqtydetails" xml:space="preserve">
     <value>select max(iss.materialissueid)as materialissueid,max(sk.itemid)as itemid,max(req.returnqty)as returnqty,max(sk.itemlocation)as itemlocation, max(iss.approvedstatus)as approvedstatus,max(req.requestedquantity)as requestedquantity, max(req.materialid)as materialid,max(mat.materialdescription) as materialdescription, max(req.requestid)as requestid,req.requestforissueid,sum(issuedqty)as issuedquantity
@@ -540,7 +540,7 @@ group by req.reserveid,req.materialid</value>
   </data>
   <data name="getreservedmaterialList" xml:space="preserve">
     <value>select  max('')as projectname,max(res.reserveupto)as reserveupto,res.reserveid,max(res.pono) as pono,max(res.reservedon) as reservedon,
-max(iss.approvedstatus)as approvedstatus,max(emp.name)as requestedby,max(res.requestedon)as requestedon,
+max(iss.approvedstatus)as approvedstatus,max(res.projectcode)as projectcode,max(res.remarks)as remarks,max(emp.name)as requestedby,max(res.requestedon)as requestedon,
 CASE
      WHEN max(res.reserveupto::date) &lt; current_date THEN
 	 'Expired'
@@ -557,8 +557,8 @@ where reservedby='#reservedby'
 group by res.reserveid order by res.reserveid desc</value>
   </data>
   <data name="insertreservematerial" xml:space="preserve">
-    <value>insert into wms.wms_materialreserve(reserveformaterialid,materialid,itemid,pono,reservedon,reservedby,reservedqty,reserveid,reserveupto)
-values(default,@materialid,@itemid,@pono,current_timestamp,@reservedby,@reservedqty,@reserveid,@reserveupto)</value>
+    <value>insert into wms.wms_materialreserve(reserveformaterialid,materialid,itemid,pono,reservedon,reservedby,reservedqty,reserveid,reserveupto,projectcode,remarks)
+values(default,@materialid,@itemid,@pono,current_timestamp,@reservedby,@reservedqty,@reserveid,@reserveupto,@projectcode,@remarks)</value>
   </data>
   <data name="updateackstatusforreserved" xml:space="preserve">
     <value>update wms.wms_materialreserve set ackstatus=@ackstatus,ackremarks=@ackremarks where reserveid=@reserveid</value>
@@ -828,7 +828,7 @@ where reserveupto between current_date and current_date  + interval '3 day' and 
     <value>select sk.pono, polist.suppliername,prj.projectmanager from wms.wms_stock sk
 left outer join wms.wms_polist polist on sk.pono = polist.pono
 left outer join wms.wms_project prj on sk.pono = prj.pono 
-where availableqty &gt;0  and prj.projectmanager = '#manager'
+where prj.projectmanager = '#manager'
 group by sk.pono, polist.suppliername,prj.projectmanager</value>
     <comment>Get PO Details</comment>
   </data>
@@ -843,14 +843,25 @@ group by sk.pono, polist.suppliername,prj.projectmanager</value>
   group by retmat.matreturnid</value>
   </data>
   <data name="gettransferdata" xml:space="preserve">
-    <value>select ts.transferid, ts.projectcode,ts.remarks as transferremarks,emp.name as transferedby,ts.createdon as transferredon
+    <value>select ts.transferid, ts.projectcode,ts.approvallevel,ts.finalapprovallevel,ts.fromprojectcode as projectcodefrom,ts.remarks as transferremarks,emp.name as transferedby,ts.createdon as transferredon,
+(select emp.name as projectmanager from wms.wms_project prj 
+ left outer join wms.employee emp on prj.projectmanager = emp.employeeno
+ where prj.projectcode = ts.projectcode and prj.projectmanager is not null and prj.projectmanager &lt;&gt; '' limit 1) as projectmanagerto,
+(select emp1.name as projectmanager from wms.wms_project prj1
+ left outer join wms.employee emp1 on prj1.projectmanager = emp1.employeeno 
+ where prj1.projectcode = ts.fromprojectcode and prj1.projectmanager is not null and prj1.projectmanager &lt;&gt; '' limit 1) as projectmanagerfrom,
+CASE
+     WHEN ts.approvallevel = ts.finalapprovallevel THEN 'Approved'
+	 WHEN ts.approvallevel = 5 THEN 'Rejected'
+	 ELSE 'Pending'
+  END as status
 from wms.wms_transfermaterial ts
 left outer join wms.employee emp on emp.employeeno = ts.createdby
 where ts.createdby='#createdby'</value>
   </data>
   <data name="updatetransferdata" xml:space="preserve">
-    <value>insert into wms.wms_transfermaterial(transferqty,createdby,createdon,remarks,projectcode,materialid)values
-        (@transferqty,@createdby,current_timestamp,@remarks,@projectcode,@materialid) RETURNING transferid</value>
+    <value>insert into wms.wms_transfermaterial(transferqty,createdby,createdon,remarks,projectcode,materialid,approvallevel,finalapprovallevel,fromprojectcode) values
+        (@transferqty,@createdby,current_timestamp,@remarks,@projectcode,@materialid,@approvallevel,@finalapprovallevel,@fromprojectcode) RETURNING transferid</value>
   </data>
   <data name="updatetostockbyinvmanger" xml:space="preserve">
     <value>insert into wms.wms_stock(itemid,materialid,itemlocation,availableqty,createddate,createdby,returnid)values(default,@materialid,@itemlocation,@availableqty,current_timestamp,@createdby,@returnid)</value>
@@ -893,7 +904,9 @@ receivedqty=@receivedqty,qualitycheckrequired=@qualitycheck,qualitychecked=@qual
 where inwardid = '#inwardid'</value>
   </data>
   <data name="getprojectlist" xml:space="preserve">
-    <value>select projectcode as value, projectname as text from wms.wms_projectMaster</value>
+    <value>select prj.projectcode as value, prj.projectcode as text,
+(select projectmanager from wms.wms_project where projectcode = prj.projectcode and projectmanager is not null and projectmanager &lt;&gt; '' limit 1) as projectmanager
+from wms.wms_projectMaster prj</value>
   </data>
   <data name="getitemsfornotifypage" xml:space="preserve">
     <value>select inwa.inwardid,bin.binnumber, rack.racknumber, loc.locatorname,mat.rackid,mat.binid,
@@ -1082,5 +1095,54 @@ left join wms.employee emp1 on emp1.employeeno=outin.outwardby
 left join wms.employee emp2 on emp2.employeeno=outin.securityinwardby
 left join wms.employee emp3 on emp3.employeeno=outin.inwardby
 order by outin.id</value>
+  </data>
+  <data name="inserttransferapproval" xml:space="preserve">
+    <value>insert into wms.wms_materialtransferapproval(transferid,approverid,approvername,approveremail,approvalLevel) values
+        (@transferid,@approverid,@approvername,@approveremail,@approvallevel)</value>
+  </data>
+  <data name="getapproverdatabyid" xml:space="preserve">
+    <value>select approverid,approvername,approvaldate as approvedon,remarks,
+CASE
+     WHEN isapproved is True THEN 'Approved'
+	 WHEN isapproved is False THEN 'Rejected'
+	 ELSE 'Pending'
+  END as status
+from wms.wms_materialtransferapproval 
+where transferid = #transferid</value>
+  </data>
+  <data name="getprojectmanager" xml:space="preserve">
+    <value>select emp.name as projectmanager from wms.wms_project prj 
+ left outer join wms.employee emp on prj.projectmanager = emp.employeeno
+ where prj.projectcode = '#pcode'  and prj.projectmanager is not null and prj.projectmanager &lt;&gt; '' limit 1</value>
+  </data>
+  <data name="gettransferdataforapproval" xml:space="preserve">
+    <value>select app.transferid,app.approvallevel as applevel,app.remarks as approvalremarks,app.isapproved,ts.projectcode,ts.approvallevel,
+ts.finalapprovallevel,ts.fromprojectcode as projectcodefrom,
+ts.remarks as transferremarks,emp.email as requesteremail,
+emp.name as transferedby,ts.createdon as transferredon,
+(select emp.name as projectmanager from wms.wms_project prj 
+ left outer join wms.employee emp on prj.projectmanager = emp.employeeno
+ where prj.projectcode = ts.projectcode and prj.projectmanager is not null and prj.projectmanager &lt;&gt; '' limit 1) as projectmanagerto,
+(select emp1.name as projectmanager from wms.wms_project prj1
+ left outer join wms.employee emp1 on prj1.projectmanager = emp1.employeeno 
+ where prj1.projectcode = ts.fromprojectcode and prj1.projectmanager is not null and prj1.projectmanager &lt;&gt; '' limit 1) as projectmanagerfrom,
+ CASE
+     WHEN app.isapproved is True THEN 'Approved'
+	 WHEN app.isapproved is False THEN 'Rejected'
+	 ELSE 'Pending'
+  END as status
+from wms.wms_materialtransferapproval app
+left outer join wms.wms_transfermaterial ts on ts.transferid = app.transferid
+left outer join wms.employee emp on emp.employeeno = ts.createdby
+where (app.approvallevel = ts.approvallevel and app.isapproved is null and app.approverid = '#approver') 
+or (app.isapproved is not null and app.approverid = '#approver')</value>
+  </data>
+  <data name="getmaterialsbyprojectcode" xml:space="preserve">
+    <value>select gtm.materialid as value,Max(mat.materialdescription) as text from wms.wms_materialissue mi
+left outer join wms.wms_materialrequest gtm on gtm.requestforissueid = mi.requestforissueid
+left outer join wms."MaterialMasterYGS" mat on mat.material = gtm.materialid
+left outer join wms.wms_project prj on prj.pono = mi.pono
+where mi.requestforissueid is not null and prj.projectcode = '#projectcode'
+group by gtm.materialid</value>
   </data>
 </root>

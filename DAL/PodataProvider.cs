@@ -1692,6 +1692,8 @@ namespace WMS.DAL
 							item.requesterid,
 							item.requestedquantity,
 							requestid,
+							item.projectcode,
+							item.remarks
 						});
 					}
 
@@ -2079,7 +2081,9 @@ namespace WMS.DAL
 								item.createdby,
 								item.requesterid,
 								requestid,
-								item.requestedquantity
+								item.requestedquantity,
+								item.projectcode,
+								item.remarks
 							});
 						}
 						if (result != 0)
@@ -4521,6 +4525,34 @@ namespace WMS.DAL
 
 			}
 		}
+
+		public async Task<User> getempnamebycode(string empno)
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+
+				try
+				{
+					await pgsql.OpenAsync();
+
+					string userquery = "select  * from wms.employee where employeeno='" + empno + "'";
+					return pgsql.QuerySingle<User>(
+					   userquery, null, commandType: CommandType.Text);
+
+
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "getempnamebycode", Ex.StackTrace.ToString());
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+			}
+		}
 		public async Task<IEnumerable<IssueRequestModel>> getissuematerialdetails(int requestid)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -4619,7 +4651,9 @@ namespace WMS.DAL
 										item.reservedby,
 										reservedqty,
 										reserveid,
-										item.reserveupto
+										item.reserveupto,
+										item.projectcode,
+										item.remarks
 									});
 
 
@@ -5017,7 +5051,40 @@ namespace WMS.DAL
 					await pgsql.OpenAsync();
 					var data = await pgsql.QueryAsync<ddlmodel>(
 					  materialrequestquery, null, commandType: CommandType.Text);
-					return data;
+					var senddata = data.Where(o => o.projectmanager != null);
+					return senddata;
+
+
+
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "getprojectlist", Ex.StackTrace.ToString());
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+
+			}
+		}
+
+		public async Task<IEnumerable<ddlmodel>> getprojectlistbymanager(string empno)
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				try
+				{
+					string materialrequestquery = WMSResource.getprojectlist;
+
+
+					await pgsql.OpenAsync();
+					var data = await pgsql.QueryAsync<ddlmodel>(
+					  materialrequestquery, null, commandType: CommandType.Text);
+					var senddata = data.Where(o => o.projectmanager == empno);
+					return senddata;
 
 
 
@@ -5056,6 +5123,37 @@ namespace WMS.DAL
 				catch (Exception Ex)
 				{
 					log.ErrorMessage("PODataProvider", "getmatlist", Ex.StackTrace.ToString());
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+
+			}
+		}
+
+		public async Task<IEnumerable<ddlmodel>> getmatlistbyproject(string projectcode)
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				try
+				{
+					string materialrequestquery = WMSResource.getmaterialsbyprojectcode.Replace("#projectcode", projectcode);
+
+
+					await pgsql.OpenAsync();
+					var data = await pgsql.QueryAsync<ddlmodel>(
+					  materialrequestquery, null, commandType: CommandType.Text);
+					return data;
+
+
+
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "getmatlistbyproject", Ex.StackTrace.ToString());
 					return null;
 				}
 				finally
@@ -6400,6 +6498,7 @@ namespace WMS.DAL
 			int result = 0;
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
+				NpgsqlTransaction Trans = null;
 				try
 				{
 					int transferqty = 0;
@@ -6407,23 +6506,93 @@ namespace WMS.DAL
 					string remarks = datamodel.transferremarks;
 					string materialid = "";
 					string updatereturnqty = "";
-					pgsql.OpenAsync();
+					string fromprojectcode = datamodel.projectcodefrom;
+					string mailto = "";
+
+					pgsql.Open();
+					Trans = pgsql.BeginTransaction();
 					updatereturnqty = WMSResource.updatetransferdata;
 					using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
 					{
 						var resultx = DB.ExecuteScalar(updatereturnqty, new
 						{
-
 							transferqty,
 							createdby,
 							remarks,
 							datamodel.projectcode,
-							materialid
+							materialid,
+							datamodel.approvallevel,
+							datamodel.finalapprovallevel,
+							fromprojectcode
 						});
 						int tid = Convert.ToInt32(resultx);
 						if (tid != 0)
 						{
 							datamodel.transferid = tid;
+
+
+							string rsltqry = WMSResource.inserttransferapproval;
+							if(datamodel.finalapprovallevel > 1)
+                            {
+								for (int i = 2; i <= datamodel.finalapprovallevel; i++)
+                                {
+									if(i == 2)
+                                    {
+										string userquery = "select  * from wms.employee where employeeno='" + datamodel.projectmanagerfrom + "'";
+										User userdata = pgsql.QuerySingle<User>(
+										   userquery, null, commandType: CommandType.Text);
+										mailto = userdata.email;
+										if (datamodel != null)
+										{
+											string approverid = datamodel.projectmanagerfrom;
+											string approvername = userdata.name;
+											string approveremail = userdata.email;
+											int approvallevel = 1;
+											var resultxyy = DB.ExecuteScalar(rsltqry, new
+											{
+												datamodel.transferid,
+												approverid,
+												approvername,
+												approveremail,
+												approvallevel
+
+											});
+
+										}
+
+									}
+									if (i == 3)
+									{
+										string userquery = "select  * from wms.employee where employeeno='" + datamodel.projectmanagerto + "'";
+										User userdata = pgsql.QuerySingle<User>(
+										   userquery, null, commandType: CommandType.Text);
+										if (datamodel != null)
+										{
+											string approverid = datamodel.projectmanagerto;
+											string approvername = userdata.name;
+											string approveremail = userdata.email;
+											int approvallevel = 2;
+											var resultxyy = DB.ExecuteScalar(rsltqry, new
+											{
+												datamodel.transferid,
+												approverid,
+												approvername,
+												approveremail,
+												approvallevel
+
+											});
+
+										}
+
+									}
+
+								}
+								
+								
+
+							}
+							
+							
 							foreach (materialtransferTR trdata in datamodel.materialdata)
 							{
 								string insertqrry = WMSResource.inserttransfermaterials;
@@ -6438,6 +6607,15 @@ namespace WMS.DAL
 								});
 							}
 							result = 1;
+							Trans.Commit();
+							EmailModel emailmodel = new EmailModel();
+							emailmodel.transferid = "MATFR"+datamodel.transferid.ToString();
+							emailmodel.ToEmailId = "ramesh.kumar@in.yokogawa.com";
+							//emailmodel.ToEmailId = mailto;
+							emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
+							emailmodel.CC = "sushma.patil@in.yokogawa.com";
+							EmailUtilities emailobj = new EmailUtilities();
+							emailobj.sendEmail(emailmodel, 14);
 						}
 
 					}
@@ -6447,7 +6625,124 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
+					Trans.Rollback();
 					log.ErrorMessage("PODataProvider", "updateonholdrow", Ex.StackTrace.ToString());
+					return 0;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+			}
+			return result;
+		}
+
+
+
+		public int mattransferapprove(List<materialtransferMain> datamodel)
+		{
+			int result = 0;
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				NpgsqlTransaction Trans = null;
+				try
+				{
+
+					pgsql.Open();
+					Trans = pgsql.BeginTransaction();
+					
+					List<EmailModel> emailmodels = new List<EmailModel>();
+					foreach(materialtransferMain data in datamodel)
+                    {
+						string mailto = "";
+						DateTime todayDate = DateTime.Now;
+						string currentdatestr = todayDate.ToString("yyyy-MM-dd");
+						if (data.isapproved)
+                        {
+                            string query = "update wms.wms_materialtransferapproval set approvaldate ='" + currentdatestr + "'";
+                            query += " ,isapproved = " + data.isapproved + ", remarks = '"+data.approvalremarks+"'  where transferid = "+data.transferid+" and approverid = '"+data.approverid + "'";
+
+							var rslt = pgsql.ExecuteScalar(query);
+							int nextlevel = data.approvallevel + 1;
+							
+
+							string query1 = "update wms.wms_transfermaterial set approvallevel = " + nextlevel + " where transferid = " + data.transferid + "";
+							var rslt1 = pgsql.ExecuteScalar(query1);
+
+							string userquery = "select approveremail from wms.wms_materialtransferapproval where approvallevel = "+ nextlevel + "";
+							var nextmailobj = pgsql.Query<materialtransferapproverModel>(
+					        userquery, null, commandType: CommandType.Text).ToList();
+							if(nextmailobj!= null && nextmailobj.Count()>0)
+                            {
+								mailto = nextmailobj[0].approveremail;
+								EmailModel emailmodel1 = new EmailModel();
+								emailmodel1.transferid = "MATFR" + data.transferid.ToString();
+								emailmodel1.transferbody = "Material Transfer request initiated for approval with Transferid :MATFR" + data.transferid.ToString();
+								emailmodel1.ToEmailId = "ramesh.kumar@in.yokogawa.com";
+								//emailmodel.ToEmailId = mailto;
+								emailmodel1.FrmEmailId = "developer1@in.yokogawa.com";
+								emailmodel1.CC = "sushma.patil@in.yokogawa.com";
+								emailmodels.Add(emailmodel1);
+								
+
+							}
+                            else
+                            {
+
+								mailto = data.requesteremail;
+								EmailModel emailmodel1 = new EmailModel();
+								emailmodel1.transferid = "MATFR" + data.transferid.ToString();
+								emailmodel1.transferbody = "Material Transfer request approved with Transferid :MATFR" + data.transferid.ToString();
+								emailmodel1.ToEmailId = "ramesh.kumar@in.yokogawa.com";
+								//emailmodel.ToEmailId = mailto;
+								emailmodel1.FrmEmailId = "developer1@in.yokogawa.com";
+								emailmodel1.CC = "sushma.patil@in.yokogawa.com";
+								emailmodels.Add(emailmodel1);
+							}
+
+						}
+						else if (!data.isapproved)
+						{
+							string query = "update wms.wms_materialtransferapproval set approvaldate ='" + currentdatestr + "'";
+							query += " ,isapproved = " + data.isapproved + ", remarks = '" + data.approvalremarks + "'  where transferid = " + data.transferid + " and approverid = '" + data.approverid + "'";
+
+							var rslt = pgsql.ExecuteScalar(query);
+					
+
+
+							string query1 = "update wms.wms_transfermaterial set approvallevel = 5 where transferid = " + data.transferid + "";
+							var rslt1 = pgsql.ExecuteScalar(query1);
+							mailto = data.requesteremail;
+							EmailModel emailmodel1 = new EmailModel();
+							emailmodel1.transferid = "MATFR" + data.transferid.ToString();
+							emailmodel1.transferbody = "Material Transfer request rejected with Transferid :MATFR" + data.transferid.ToString();
+							emailmodel1.ToEmailId = "ramesh.kumar@in.yokogawa.com";
+							//emailmodel.ToEmailId = mailto;
+							emailmodel1.FrmEmailId = "developer1@in.yokogawa.com";
+							emailmodel1.CC = "sushma.patil@in.yokogawa.com";
+							emailmodels.Add(emailmodel1);
+
+						}
+					}
+					
+							result = 1;
+							Trans.Commit();
+					foreach(EmailModel mdl in emailmodels)
+                    {
+						EmailUtilities emailobj = new EmailUtilities();
+						emailobj.sendEmail(mdl, 14);
+					}
+				
+
+
+
+
+				}
+				catch (Exception Ex)
+				{
+					Trans.Rollback();
+					log.ErrorMessage("PODataProvider", "mattransferapprove", Ex.StackTrace.ToString());
 					return 0;
 				}
 				finally
@@ -7298,6 +7593,15 @@ namespace WMS.DAL
 							{
 								dt.materialdata = datadetail.ToList();
 							}
+
+							string query2 = WMSResource.getapproverdatabyid.Replace("#transferid", dt.transferid.ToString());
+							var datadetail1 = await pgsql.QueryAsync<materialtransferapproverModel>(
+							   query2, null, commandType: CommandType.Text);
+
+							if (datadetail1 != null && datadetail1.Count() > 0)
+							{
+								dt.approverdata = datadetail1.ToList();
+							}
 						}
 					}
 					return data;
@@ -7307,6 +7611,62 @@ namespace WMS.DAL
 				{
 
 					log.ErrorMessage("PODataProvider", "gettransferdata", ex.StackTrace.ToString());
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+			}
+		}
+
+		/// <summary>
+		/// get transferred data based on login id
+		/// </summary>
+		/// <param name="empno"></param>
+		/// <returns></returns>
+		public async Task<IEnumerable<materialtransferMain>> gettransferdataforapproval(string empno)
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				try
+				{
+					await pgsql.OpenAsync();
+					string query = WMSResource.gettransferdataforapproval.Replace("#approver", empno);
+					string updatequery = string.Empty;
+					//string updatedon = WMSResource.updatedon;
+					var data = await pgsql.QueryAsync<materialtransferMain>(
+					   query, null, commandType: CommandType.Text);
+					if (data != null && data.Count() > 0)
+					{
+						foreach (materialtransferMain dt in data)
+						{
+							string query1 = WMSResource.gettransferiddetail.Replace("#tid", dt.transferid.ToString());
+							var datadetail = await pgsql.QueryAsync<materialtransferTR>(
+							   query1, null, commandType: CommandType.Text);
+
+							if (datadetail != null && datadetail.Count() > 0)
+							{
+								dt.materialdata = datadetail.ToList();
+							}
+
+							string query2 = WMSResource.getapproverdatabyid.Replace("#transferid", dt.transferid.ToString());
+							var datadetail1 = await pgsql.QueryAsync<materialtransferapproverModel>(
+							   query2, null, commandType: CommandType.Text);
+
+							if (datadetail1 != null && datadetail1.Count() > 0)
+							{
+								dt.approverdata = datadetail1.ToList();
+							}
+						}
+					}
+					return data;
+
+				}
+				catch (Exception ex)
+				{
+
+					log.ErrorMessage("PODataProvider", "gettransferdataforapproval", ex.StackTrace.ToString());
 					return null;
 				}
 				finally

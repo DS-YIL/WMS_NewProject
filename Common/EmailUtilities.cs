@@ -128,6 +128,11 @@ namespace WMS.Common
 				mailMessage.Subject = "Put Away";
 				subbody = "All materials are placed for GRN(s) :" + emlSndngList.jobcode;
 			}
+			else if (subjecttype == 14)
+			{
+				mailMessage.Subject = "Material Transfer";
+				subbody = emlSndngList.transferbody;
+			}
 
 			if (!string.IsNullOrEmpty(emlSndngList.CC))
 				mailMessage.CC.Add(emlSndngList.CC);

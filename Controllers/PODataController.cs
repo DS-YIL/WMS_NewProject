@@ -606,6 +606,12 @@ namespace WMS.Controllers
 			return await this._poService.MaterialRequestdata(pono, loginid);
 		}
 
+		[HttpGet("getempnamebycode")]
+		public async Task<User> getempnamebycode(string empno)
+		{
+			return await this._poService.getempnamebycode(empno);
+		}
+
 		[HttpGet("getmaterialreturnreqList")]
 		public async Task<IEnumerable<IssueRequestModel>> getmaterialreturnreqList(int matreturnid)
         {
@@ -754,10 +760,22 @@ namespace WMS.Controllers
             return await this._poService.getprojectlist();
         }
 
+		[HttpGet("getprojectlistbymanager")]
+		public async Task<IEnumerable<ddlmodel>> getprojectlistbymanager(string empno)
+		{
+			return await this._poService.getprojectlistbymanager(empno);
+		}
+
 		[HttpGet("getmateriallistfortransfer")]
 		public async Task<IEnumerable<ddlmodel>> getmatlist(string empno)
 		{
 			return await this._poService.getmatlist(empno);
+		}
+
+		[HttpGet("getmateriallistbyproject")]
+		public async Task<IEnumerable<ddlmodel>> getmatlistbyproject(string projectcode)
+		{
+			return await this._poService.getmatlistbyproject(projectcode);
 		}
 
 
@@ -855,6 +873,12 @@ namespace WMS.Controllers
 			return this._poService.mattransfer(obj);
 		}
 
+		[HttpPost("mattransferapproval")]
+		public int mattransferapprove([FromBody] List<materialtransferMain> obj)
+		{
+			return this._poService.mattransferapprove(obj);
+		}
+
 		[HttpPost("mrnupdate")]
 		public int mrnupdate([FromBody] MRNsavemodel obj)
 		{
@@ -880,6 +904,12 @@ namespace WMS.Controllers
 		public async Task<IEnumerable<materialtransferMain>> gettransferdata(string empno)
 		{
 			return await this._poService.gettransferdata(empno);
+		}
+
+		[HttpGet("gettransferdataforapproval")]
+		public async Task<IEnumerable<materialtransferMain>> gettransferdataforapproval(string empno)
+		{
+			return await this._poService.gettransferdataforapproval(empno);
 		}
 
 		[HttpGet("getdirecttransferdata")]

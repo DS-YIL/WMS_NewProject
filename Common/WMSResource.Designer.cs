@@ -222,6 +222,22 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to select approverid,approvername,approvaldate as approvedon,remarks,
+        ///CASE
+        ///     WHEN isapproved is True THEN &apos;Approved&apos;
+        ///	 WHEN isapproved is False THEN &apos;Rejected&apos;
+        ///	 ELSE &apos;Pending&apos;
+        ///  END as status
+        ///from wms.wms_materialtransferapproval 
+        ///where transferid = #transferid.
+        /// </summary>
+        public static string getapproverdatabyid {
+            get {
+                return ResourceManager.GetString("getapproverdatabyid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to select asno.pono, asno.asn,po.suppliername as vendorname,asno.deliverydate from wms.wms_asn asno left outer join wms.wms_polist po
         ///on asno.pono = po.pono.
         /// </summary>
@@ -750,6 +766,20 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to select gtm.materialid as value,Max(mat.materialdescription) as text from wms.wms_materialissue mi
+        ///left outer join wms.wms_materialrequest gtm on gtm.requestforissueid = mi.requestforissueid
+        ///left outer join wms.&quot;MaterialMasterYGS&quot; mat on mat.material = gtm.materialid
+        ///left outer join wms.wms_project prj on prj.pono = mi.pono
+        ///where mi.requestforissueid is not null and prj.projectcode = &apos;#projectcode&apos;
+        ///group by gtm.materialid.
+        /// </summary>
+        public static string getmaterialsbyprojectcode {
+            get {
+                return ResourceManager.GetString("getmaterialsbyprojectcode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to select ts.transferid, ts.projectcode,ts.remarks as transferremarks,emp.name as transferedby,ts.createdon as transferredon
         ///from wms.wms_transfermaterial ts
         ///left outer join wms.employee emp on emp.employeeno = ts.createdby.
@@ -878,7 +908,7 @@ namespace WMS.Common {
         ///   Looks up a localized string similar to select sk.pono, polist.suppliername,prj.projectmanager from wms.wms_stock sk
         ///left outer join wms.wms_polist polist on sk.pono = polist.pono
         ///left outer join wms.wms_project prj on sk.pono = prj.pono 
-        ///where availableqty &gt;0  and prj.projectmanager = &apos;#manager&apos;
+        ///where prj.projectmanager = &apos;#manager&apos;
         ///group by sk.pono, polist.suppliername,prj.projectmanager.
         /// </summary>
         public static string getPODetails {
@@ -918,11 +948,24 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select projectcode as value, projectname as text from wms.wms_projectMaster.
+        ///   Looks up a localized string similar to select prj.projectcode as value, prj.projectcode as text,
+        ///(select projectmanager from wms.wms_project where projectcode = prj.projectcode and projectmanager is not null and projectmanager &lt;&gt; &apos;&apos; limit 1) as projectmanager
+        ///from wms.wms_projectMaster prj.
         /// </summary>
         public static string getprojectlist {
             get {
                 return ResourceManager.GetString("getprojectlist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to select emp.name as projectmanager from wms.wms_project prj 
+        /// left outer join wms.employee emp on prj.projectmanager = emp.employeeno
+        /// where prj.projectcode = &apos;#pcode&apos;  and prj.projectmanager is not null and prj.projectmanager &lt;&gt; &apos;&apos; limit 1.
+        /// </summary>
+        public static string getprojectmanager {
+            get {
+                return ResourceManager.GetString("getprojectmanager", resourceCulture);
             }
         }
         
@@ -1003,7 +1046,7 @@ namespace WMS.Common {
         
         /// <summary>
         ///   Looks up a localized string similar to select  max(&apos;&apos;)as projectname,max(res.reserveupto)as reserveupto,res.reserveid,max(res.pono) as pono,max(res.reservedon) as reservedon,
-        ///max(iss.approvedstatus)as approvedstatus,max(emp.name)as requestedby,max(res.requestedon)as requestedon,
+        ///max(iss.approvedstatus)as approvedstatus,max(res.projectcode)as projectcode,max(res.remarks)as remarks,max(emp.name)as requestedby,max(res.requestedon)as requestedon,
         ///CASE
         ///     WHEN max(res.reserveupto::date) &lt; current_date THEN
         ///	 &apos;Expired&apos;
@@ -1011,8 +1054,7 @@ namespace WMS.Common {
         ///	  &apos;Requested&apos;
         ///	 ELSE &apos;Reserved&apos;
         ///  END as chkstatus
-        ///from wms.wms_materialreserve res 
-        ///left join wms.wms_stock sk on sk.materialid=res.mater [rest of string was truncated]&quot;;.
+        ///from wms.wms_materialreser [rest of string was truncated]&quot;;.
         /// </summary>
         public static string getreservedmaterialList {
             get {
@@ -1100,14 +1142,30 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select ts.transferid, ts.projectcode,ts.remarks as transferremarks,emp.name as transferedby,ts.createdon as transferredon
-        ///from wms.wms_transfermaterial ts
-        ///left outer join wms.employee emp on emp.employeeno = ts.createdby
-        ///where ts.createdby=&apos;#createdby&apos;.
+        ///   Looks up a localized string similar to select ts.transferid, ts.projectcode,ts.approvallevel,ts.finalapprovallevel,ts.fromprojectcode as projectcodefrom,ts.remarks as transferremarks,emp.name as transferedby,ts.createdon as transferredon,
+        ///(select emp.name as projectmanager from wms.wms_project prj 
+        /// left outer join wms.employee emp on prj.projectmanager = emp.employeeno
+        /// where prj.projectcode = ts.projectcode and prj.projectmanager is not null and prj.projectmanager &lt;&gt; &apos;&apos; limit 1) as projectmanagerto,
+        ///(select emp1.name as projectmanager from [rest of string was truncated]&quot;;.
         /// </summary>
         public static string gettransferdata {
             get {
                 return ResourceManager.GetString("gettransferdata", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to select app.transferid,app.approvallevel as applevel,app.remarks as approvalremarks,app.isapproved,ts.projectcode,ts.approvallevel,
+        ///ts.finalapprovallevel,ts.fromprojectcode as projectcodefrom,
+        ///ts.remarks as transferremarks,emp.email as requesteremail,
+        ///emp.name as transferedby,ts.createdon as transferredon,
+        ///(select emp.name as projectmanager from wms.wms_project prj 
+        /// left outer join wms.employee emp on prj.projectmanager = emp.employeeno
+        /// where prj.projectcode = ts.projectcode and prj.projectmanager is [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string gettransferdataforapproval {
+            get {
+                return ResourceManager.GetString("gettransferdataforapproval", resourceCulture);
             }
         }
         
@@ -1323,8 +1381,8 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to insert into wms.wms_materialreserve(reserveformaterialid,materialid,itemid,pono,reservedon,reservedby,reservedqty,reserveid,reserveupto)
-        ///values(default,@materialid,@itemid,@pono,current_timestamp,@reservedby,@reservedqty,@reserveid,@reserveupto).
+        ///   Looks up a localized string similar to insert into wms.wms_materialreserve(reserveformaterialid,materialid,itemid,pono,reservedon,reservedby,reservedqty,reserveid,reserveupto,projectcode,remarks)
+        ///values(default,@materialid,@itemid,@pono,current_timestamp,@reservedby,@reservedqty,@reserveid,@reserveupto,@projectcode,@remarks).
         /// </summary>
         public static string insertreservematerial {
             get {
@@ -1356,6 +1414,16 @@ namespace WMS.Common {
         public static string insertstock {
             get {
                 return ResourceManager.GetString("insertstock", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to insert into wms.wms_materialtransferapproval(transferid,approverid,approvername,approveremail,approvalLevel) values
+        ///        (@transferid,@approverid,@approvername,@approveremail,@approvallevel).
+        /// </summary>
+        public static string inserttransferapproval {
+            get {
+                return ResourceManager.GetString("inserttransferapproval", resourceCulture);
             }
         }
         
@@ -1430,7 +1498,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO wms.wms_materialrequest(requestforissueid,quantity,approveremailid,approverid,pono,materialid,requesterid,requestid,requestedquantity,requesteddate,deleteflag)VALUES(default,@quantity,@approveremailid,@approverid,@pono,@materialid,@requesterid,@requestid,@requestedquantity,current_date,false).
+        ///   Looks up a localized string similar to INSERT INTO wms.wms_materialrequest(requestforissueid,quantity,approveremailid,approverid,pono,materialid,requesterid,requestid,requestedquantity,requesteddate,deleteflag,projectcode,remarks)VALUES(default,@quantity,@approveremailid,@approverid,@pono,@materialid,@requesterid,@requestid,@requestedquantity,current_date,false,@projectcode,@remarks).
         /// </summary>
         public static string materialquest {
             get {
@@ -1882,8 +1950,8 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to insert into wms.wms_transfermaterial(transferqty,createdby,createdon,remarks,projectcode,materialid)values
-        ///        (@transferqty,@createdby,current_timestamp,@remarks,@projectcode,@materialid) RETURNING transferid.
+        ///   Looks up a localized string similar to insert into wms.wms_transfermaterial(transferqty,createdby,createdon,remarks,projectcode,materialid,approvallevel,finalapprovallevel,fromprojectcode) values
+        ///        (@transferqty,@createdby,current_timestamp,@remarks,@projectcode,@materialid,@approvallevel,@finalapprovallevel,@fromprojectcode) RETURNING transferid.
         /// </summary>
         public static string updatetransferdata {
             get {
