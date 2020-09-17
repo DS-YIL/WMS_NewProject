@@ -44,6 +44,7 @@ export class printMaterial {
   barcodePath: any;
   materialcodePath: any;
   printedby: any;
+  isprint: any;
 }
 
 export class searchParams {

@@ -72,6 +72,7 @@ export class StoreClerkComponent implements OnInit {
   public receivedDate: any;
   public acceptedQty: any;
   public itemNo: any;
+  print: string = "Print";
   public printData = new printMaterial();
   public showPrintLabel: boolean = false;
    displayBasic: boolean = false;
@@ -279,6 +280,7 @@ export class StoreClerkComponent implements OnInit {
 
   //generate barcode -gayathri
   generateBarcode(details: any) {
+    debugger;
     this.showPrintDialog = true;
     this.materialCode = details.material;
     this.receivedDate = this.datePipe.transform(details.receiveddate, this.constants.dateFormat);
@@ -293,6 +295,7 @@ export class StoreClerkComponent implements OnInit {
   }
 
   GenerateBarcode() {
+    debugger;
     this.showPrintDialog = false;
     this.showPrintLabel = true;
     this.printData.materialid = this.materialCode;
@@ -307,6 +310,12 @@ export class StoreClerkComponent implements OnInit {
       if (data) {
 
         this.printData = data;
+        if (this.printData.isprint == true) {
+          this.print = "Re-Print";
+        }
+        else {
+          this.print = "Print";
+        }
         console.log(this.printData);
 
       }
