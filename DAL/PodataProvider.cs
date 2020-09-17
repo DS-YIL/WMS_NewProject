@@ -320,6 +320,21 @@ namespace WMS.DAL
 				{
 					Directory.CreateDirectory(path);
 				}
+
+				using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
+				{
+					//Check if the material is already printed
+					string query = "Select * from wms.wms_securityinward sinw join wms.wms_printstatusmaterial psmat on psmat.inwmasterid=sinw.inwmasterid where sinw.pono='" + printMat.pono + "' and sinw.invoiceno='" + printMat.invoiceno + "' and psmat.materialid='" + printMat.materialid + "'";
+					var data = Convert.ToBoolean(DB.ExecuteScalar(query, false));
+					if(data!=false)
+                    {
+						printMat.isprint = true;
+                    }
+                    else
+                    {
+						printMat.isprint = false;
+					}
+				}
 				//generate barcode for material code and GRN No.
 				var content = printMat.grnno + "-" + printMat.materialid;
 				BarcodeWriter writer = new BarcodeWriter
@@ -370,130 +385,7 @@ namespace WMS.DAL
 				//printMat.materialcodePath = "./assets/" + content + ".bmp";
 
 
-				//try
-				//{
-				//	string path1 = Environment.CurrentDirectory + @"\PRNFiles\";
-				//	bool result = false;
-				//	string printResult = null;
-				//	path1 = path1 + printMat.materialid + "-" + string.Format("{0:ddMMyyyyhhmm}", DateTime.Now) + ".prn";
-				//	FileMode fileType = FileMode.OpenOrCreate;
-				//	//for (int i = 0; i < printQty; i++)
-				//	//{
-				//	// if (File.Exists(path))
-				//	if (Directory.Exists(path1))
-				//	{
-				//		fileType = FileMode.Append;
-				//	}
-
-				//	using (FileStream fs = new FileStream(path1, fileType))
-				//	{
-				//		using (TextWriter tw = new StreamWriter(fs))
-				//		{
-				//			if(printMat.grnno!=null)
-    //                        {
-				//				tw.WriteLine("<xpml><page quantity='0' pitch='33.0 mm'></xpml>SIZE 94.10 mm, 38 mm");
-				//				tw.WriteLine("GAP 3 mm, 0 mm");
-				//				tw.WriteLine("SET RIBBON ON");
-				//				tw.WriteLine("DIRECTION 0,0");
-				//				tw.WriteLine("REFERENCE 0,0");
-				//				tw.WriteLine("OFFSET 0 mm");
-				//				tw.WriteLine("SET PEEL OFF");
-				//				tw.WriteLine("SET CUTTER OFF");
-				//				tw.WriteLine("SET PARTIAL_CUTTER OFF");
-				//				tw.WriteLine("<xpml></page></xpml><xpml><page quantity='1' pitch='33.0 mm'></xpml>SET TEAR ON");
-				//				tw.WriteLine("ON");
-				//				tw.WriteLine("CLS");
-				//				tw.WriteLine("BOX 9,15,741,289,3");
-				//				tw.WriteLine("BAR 492,15, 3, 272");
-				//				tw.WriteLine("BAR 182,15, 3, 272");
-				//				tw.WriteLine("BAR 183,222, 557, 3");
-				//				tw.WriteLine("BAR 9,151, 731, 3");
-				//				tw.WriteLine("BAR 183,86, 557, 3");
-				//				tw.WriteLine("QRCODE 144,251,L,3,A,180,M2,S7,\"" + printMat.materialid + "\"");
-				//				tw.WriteLine("QRCODE 144,106,L,3,A,180,M2,S7,\"" + printMat.grnno + "-" + printMat.materialid + "\"");
-				//				tw.WriteLine("CODEPAGE 1252");
-				//				tw.WriteLine("TEXT 731,268,\"0\",180,9,9,\"Material Code: \"");
-				//				tw.WriteLine("TEXT 731,195,\"0\",180,8,9,\"Received Date: \"");
-				//				tw.WriteLine("TEXT 732,124,\"0\",180,6,6,\"WMS GRN No. - Material Code: \"");
-				//				tw.WriteLine("TEXT 704,56,\"0\",180,9,9,\"Quantity\"");
-				//				tw.WriteLine("TEXT 482,265,\"0\",180,14,9,\"" + printMat.materialid + "\"");
-				//				tw.WriteLine("TEXT 484,124,\"0\",180,9,6,\"" + printMat.grnno + "-" + printMat.materialid + "\"");
-				//				tw.WriteLine("TEXT 486,59,\"0\",180,13,9,\"" + printMat.noofprint + "/" + printMat.noofprint + "\"");
-				//				tw.WriteLine("TEXT 485,199,\"0\",180,13,11,\"" + printMat.receiveddate + "\"");
-
-				//				tw.WriteLine("PRINT 1,1");
-				//				tw.WriteLine("<xpml></page></xpml><xpml><end/></xpml>");
-
-    //                        }
-    //                        else
-    //                        {
-				//				tw.WriteLine("<xpml><page quantity='0' pitch='33.0 mm'></xpml>SIZE 94.10 mm, 38 mm");
-				//				tw.WriteLine("GAP 3 mm, 0 mm");
-				//				tw.WriteLine("SET RIBBON ON");
-				//				tw.WriteLine("DIRECTION 0,0");
-				//				tw.WriteLine("REFERENCE 0,0");
-				//				tw.WriteLine("OFFSET 0 mm");
-				//				tw.WriteLine("SET PEEL OFF");
-				//				tw.WriteLine("SET CUTTER OFF");
-				//				tw.WriteLine("SET PARTIAL_CUTTER OFF");
-				//				tw.WriteLine("<xpml></page></xpml><xpml><page quantity='1' pitch='33.0 mm'></xpml>SET TEAR ON");
-				//				tw.WriteLine("ON");
-				//				tw.WriteLine("CLS");
-				//				tw.WriteLine("BOX 9,15,741,289,3");
-				//				tw.WriteLine("BAR 492,15, 3, 272");
-				//				tw.WriteLine("BAR 182,15, 3, 272");
-				//				tw.WriteLine("BAR 183,203, 557, 3");
-				//				tw.WriteLine("BAR 183,103, 557, 3");
-				//				//tw.WriteLine("BAR 183,86, 557, 3");
-				//				tw.WriteLine("QRCODE 144,192,L,3,A,180,M2,S7,\"" + printMat.materialid + "\"");
-				//				tw.WriteLine("CODEPAGE 1252");
-				//				tw.WriteLine("TEXT 731,264,\"0\",180,9,9,\"Material Code: \"");
-				//				tw.WriteLine("TEXT 731,176,\"0\",180,8,9,\"Received Date: \"");
-				//				tw.WriteLine("TEXT 704,60,\"0\",180,9,9,\"Quantity\"");
-				//				tw.WriteLine("TEXT 482,259,\"0\",180,14,9,\"" + printMat.materialid + "\"");
-				//				tw.WriteLine("TEXT 486,60,\"0\",180,13,9,\"" + printMat.noofprint + "/" + printMat.noofprint + "\"");
-				//				tw.WriteLine("TEXT 485,179,\"0\",180,13,11,\"" + printMat.receiveddate + "\"");
-
-				//				tw.WriteLine("PRINT 1,1");
-				//				tw.WriteLine("<xpml></page></xpml><xpml><end/></xpml>");
-
-				//			}
-				//		}
-
-
-				//	}
-				//	//}
-				//	try
-				//	{
-				//		//Convert.ToString(ConfigurationManager.AppSettings["PrinterName"].ToString());
-				//		//string printerName = ConfigurationManager.AppSettings["CTMajor_AdminPrinter"].ToString();
-				//		//string printerName = "10.29.11.25";
-				//		string printerName = "10.29.2.48";
-				//		PrintUtilities objIdentification = new PrintUtilities();
-				//		printResult = "success";
-				//		printResult = objIdentification.PrintQRCode(path1, printerName);
-				//		// path =  @"D:\Transmitter\ECheckSheetAPI\ECheckSheetAPI\print\";
-				//		// result = RawPrinterHelper.SendFileToPrinter(printerName, path);
-
-
-
-				//	}
-
-				//	catch (Exception ex)
-				//	{
-				//		throw ex;
-				//	}
-
-
-
-
-
-				//}
-				//catch (Exception ex)
-				//{
-				//	printMat.errorMsg = ex.Message;
-				//	log.ErrorMessage("PODataProvider", "generateBarcodeMaterial", ex.StackTrace.ToString());
-				//}
+				
 			}
 			catch (Exception ex)
 			{
