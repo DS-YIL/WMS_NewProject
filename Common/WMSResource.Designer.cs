@@ -345,8 +345,7 @@ namespace WMS.Common {
         ///  END as confirmqty,
         ///CASE
         ///     WHEN inw.returnedby is null THEN qc.qualityfailedqty
-        ///     ELSE  inw.returnqty
-        ///  END as retu [rest of string was truncated]&quot;;.
+        ///     ELSE  inw.return [rest of string was truncated]&quot;;.
         /// </summary>
         public static string Getdetailsforthreewaymatching {
             get {
@@ -917,7 +916,7 @@ namespace WMS.Common {
         ///   Looks up a localized string similar to select sk.pono, polist.suppliername,prj.projectmanager from wms.wms_stock sk
         ///left outer join wms.wms_polist polist on sk.pono = polist.pono
         ///left outer join wms.wms_project prj on sk.pono = prj.pono 
-        ///where prj.projectmanager = &apos;#manager&apos;
+        ///where sk.availableqty &gt; 0 and prj.projectmanager = &apos;#manager&apos;
         ///group by sk.pono, polist.suppliername,prj.projectmanager.
         /// </summary>
         public static string getPODetails {
@@ -966,7 +965,6 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select projectcode as value, projectname as text from wms.wms_projectMaster.
         ///   Looks up a localized string similar to select prj.projectcode as value, prj.projectcode as text,
         ///(select projectmanager from wms.wms_project where projectcode = prj.projectcode and projectmanager is not null and projectmanager &lt;&gt; &apos;&apos; limit 1) as projectmanager
         ///from wms.wms_projectMaster prj.
@@ -1625,7 +1623,7 @@ namespace WMS.Common {
         /// qc.qualitypassedqty,qc.qualityfailedqty,qc.qcby as checkedby,
         /// CASE
         ///     WHEN inw.qualitycheckrequired != True and inw.returnedby is null THEN inw.receivedqty
-        ///	 WHEN inw.qualitycheckrequired = True a [rest of string was truncated]&quot;;.
+        ///	 WHEN inw.qualitychec [rest of string was truncated]&quot;;.
         /// </summary>
         public static string receivequeryfornonpo {
             get {
