@@ -182,7 +182,7 @@ namespace WMS.Controllers
                             tw.WriteLine("TEXT 704,56,\"0\",180,9,9,\"Quantity\"");
                             tw.WriteLine("TEXT 482,265,\"0\",180,14,9,\"" + printMat.materialid + "\"");
                             tw.WriteLine("TEXT 484,124,\"0\",180,9,6,\"" + printMat.grnno + "-" + printMat.materialid + "\"");
-                            tw.WriteLine("TEXT 486,59,\"0\",180,13,9,\"" + printMat.noofprint + "/" + printMat.noofprint + "\"");
+                            tw.WriteLine("TEXT 486,59,\"0\",180,13,9,\"" + i + "/" + printMat.noofprint + "\"");
                             tw.WriteLine("TEXT 485,199,\"0\",180,13,11,\"" + printMat.receiveddate + "\"");
 
                             tw.WriteLine("PRINT 1,1");
@@ -215,7 +215,7 @@ namespace WMS.Controllers
                             tw.WriteLine("TEXT 731,188,\"0\",180,8,9,\"Received Date: \"");
                             tw.WriteLine("TEXT 704,60,\"0\",180,9,9,\"Quantity\"");
                             tw.WriteLine("TEXT 482,259,\"0\",180,14,9,\"" + printMat.materialid + "\"");
-                            tw.WriteLine("TEXT 486,60,\"0\",180,13,9,\"" + printMat.noofprint + "/" + printMat.noofprint + "\"");
+                            tw.WriteLine("TEXT 486,60,\"0\",180,13,9,\"" + i+ "/" + printMat.noofprint + "\"");
                             tw.WriteLine("TEXT 485,189,\"0\",180,13,11,\"" + printMat.receiveddate + "\"");
                             tw.WriteLine("BAR 172,143, 568, 3");
                             tw.WriteLine("TEXT 731,116,\"ROMAN.TTF\",180,1,8,\"PO No. - Invoice No.\"");
