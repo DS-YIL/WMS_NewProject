@@ -237,6 +237,7 @@ namespace WMS.Models
 		public string remarks { get; set; }
 
 		public int returnid { get; set; }
+		public bool initialstock { get; set; }
 
 	}
 	public class trackstatusModel
@@ -413,6 +414,7 @@ namespace WMS.Models
 		public int reservedqty { get; set; }
 
 		public string stocktype { get; set; }
+	
 
 
 
