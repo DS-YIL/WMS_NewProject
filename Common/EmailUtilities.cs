@@ -20,6 +20,7 @@ namespace WMS.Common
 		EmailModel emailobj = new EmailModel();
 		public bool sendEmail(EmailModel emlSndngList, int subjecttype)
 		{
+			string link = "";
 			MailMessage mailMessage = new MailMessage(emlSndngList.FrmEmailId, emlSndngList.ToEmailId);
 			SmtpClient client = new SmtpClient();
 			var subbody = string.Empty;
@@ -27,26 +28,27 @@ namespace WMS.Common
 
 			if (subjecttype == 1)
 			{
-				mailMessage.Subject = "Shipment received - PoNo." + emlSndngList.pono;
+				mailMessage.Subject = "Shipment Received - PoNo. :" + emlSndngList.pono;
 				string receivedby = this.getnamebyid(emlSndngList.employeeno);
-				subbody = "Shipment for PONO " + emlSndngList.pono + " has been received.Please find the details below. <br/> Invoice No:" + emlSndngList.invoiceno + "<br/> Received By :" + receivedby + "<br/> Received On : " + emlSndngList.receiveddate;
-
+				subbody = "Shipment for PONO - <b>" + emlSndngList.pono + "</b> has been received.Please find the details below. <br/> Invoice No:<b>" + emlSndngList.invoiceno + "</b><br/> Received By :<b>" + receivedby + "</b><br/> Received On : <b>" + emlSndngList.receiveddate+"</b>";
+				link = "http://10.29.15.212:82/WMS/Email/GRNPosting?pono=" + emlSndngList.pono+"-"+emlSndngList.invoiceno;
 			}
 			//Inventory Clery to Quality User
 
 			else if (subjecttype == 2)
 			{
-				mailMessage.Subject = "Pending for Quality Check - GR No." + emlSndngList.grnnumber;
+				mailMessage.Subject = "Pending for Quality Check - GRN No." + emlSndngList.grnnumber;
 				//mailMessage.Subject = "Pending for Quality Check - GR No." + emlSndngList.grnnumber + "<br/>Materials of GR No - " + emlSndngList.grnnumber + "are pending for quality check.";
 				subbody = "Materials of GR No - " + emlSndngList.grnnumber + "are pending for quality check.";
+				link = "http://10.29.15.212:82/WMS/GRNPosting?pono=" + emlSndngList.pono + "-" + emlSndngList.invoiceno;
 			}
 			//Quality user  to Inventory Clerk
 
 			else if (subjecttype == 3)
 			{
-				mailMessage.Subject = "Completed Quality Check for - GR No." + emlSndngList.grnnumber;
+				mailMessage.Subject = "Completed Quality Check for  GR No. -" + emlSndngList.grnnumber;
 				//mailMessage.Subject = "Completed Quality Check for - GR No." + emlSndngList.grnnumber + "<br/>Materials of GR No - " + emlSndngList.grnnumber + "are completed quality check.";
-				subbody = "Materials of GR No - " + emlSndngList.grnnumber + "are completed quality check.";
+				subbody = "Quality Check has completed for the Materials with  GRN No. - " + emlSndngList.grnnumber + ".";
 			}
 			//Project Manager to Inventoty Clerk
 
@@ -142,7 +144,7 @@ namespace WMS.Common
 				emlSndngList.ToEmpName = getname(emlSndngList.ToEmailId);
 			if (emlSndngList.sendername == null)
 				emlSndngList.sendername = getname(emlSndngList.FrmEmailId);
-			body = WMSResource.emailbody.Replace("#user", emlSndngList.ToEmpName).Replace("#subbody", subbody).Replace("#sender", emlSndngList.sendername);
+			body = WMSResource.emailbody.Replace("#user", emlSndngList.ToEmpName).Replace("#subbody", subbody).Replace("#sender", emlSndngList.sendername).Replace("#link",link);
 			mailMessage.Body = body;
 			mailMessage.IsBodyHtml = true;
 			mailMessage.BodyEncoding = Encoding.UTF8;

@@ -179,7 +179,7 @@ namespace WMS.Common {
         ///&lt;p&gt;#subbody&lt;/p&gt;
         ///&lt;p&gt;
         ///LINK:&lt;/p&gt;
-        ///&lt;a href=&quot;http://10.29.15.183:100/WMS/Login&quot;&gt;http://10.29.15.183:100/WMS/Login&lt;/a&gt;
+        ///&lt;a href=&quot;#link&quot;&gt;#link&lt;/a&gt;
         ///&lt;p style=&apos;margin-bottom:0px;&apos;&gt;Regards,&lt;/p&gt;&lt;p&gt; #sender.&lt;/p&gt;&lt;/div&gt;&lt;/body&gt;&lt;/html&gt;.
         /// </summary>
         public static string emailbody {
@@ -1669,7 +1669,7 @@ namespace WMS.Common {
         
         /// <summary>
         ///   Looks up a localized string similar to INSERT INTO wms.wms_qualitycheck(inwardid,qualitypassedqty,qualityfailedqty,qcby,remarks,qcdate)
-        ///  VALUES(@inwardid,@qualitypassedqty,@qualityfailedqty,@receivedby,@remarks,current_date).
+        ///  VALUES(@inwardid,@qualitypassedqty,@qualityfailedqty,@receivedby,@remarks,current_date) returning qcid.
         /// </summary>
         public static string savequalityquery {
             get {
