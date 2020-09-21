@@ -46,6 +46,8 @@ export class NavMenuComponent implements OnInit {
   profileimage: string = "";
   loggedinas: string = "";
   selectedrolename: string = "";
+  poinvoice: string = "";
+
   ngOnInit() {
     debugger;
     this.cars = [
@@ -62,6 +64,7 @@ export class NavMenuComponent implements OnInit {
       this.urlrequstedpage = urlvals[urlvals.length - 2];
       localStorage.setItem('requestedpage', this.urlrequstedpage);
     }
+   
     if (eurl.includes("/appr")) {
       this.isapprovalurl = true;
       let element: HTMLElement = document.getElementById("btnuser") as HTMLElement;
@@ -69,6 +72,27 @@ export class NavMenuComponent implements OnInit {
       let element1: HTMLDivElement = document.getElementById("menudiv") as HTMLDivElement;
       element1.hidden = true;
       this.router.navigateByUrl("WMS/Mailresponse");
+      return;
+    }
+    if (eurl.includes("/Email")) {
+      this.isapprovalurl = true;
+      this.poinvoice = this.route.snapshot.queryParams.pono;
+      this.poinvoice = eurl.split('=')[1];
+
+      let element: HTMLElement = document.getElementById("btnuser") as HTMLElement;
+      element.hidden = true;
+      let element1: HTMLDivElement = document.getElementById("menudiv") as HTMLDivElement;
+      element1.hidden = true;
+      if (eurl.includes("/Email/GRNPosting?pono"))
+       {
+        //this.poinvoice = this.route.snapshot.queryParams.pono;
+        if (this.poinvoice) {
+          //redirects to Receipts page 
+          this.bindMenuForEmail();
+        }
+        
+      }
+     
       return;
     }
     if (localStorage.getItem("Employee")) {
@@ -205,6 +229,40 @@ export class NavMenuComponent implements OnInit {
     this.items.push({ label: 'Manager Approval', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GatePassPMList') });
     this.items.push({ label: 'Finance Approval', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GatePassFMList') });
     this.router.navigateByUrl('WMS/GatePassPMList');
+  }
+  bindMenuForEmail() {
+    debugger;
+    //this.itemsrole = 2;
+    // Inventory clerk login
+    this.items = [];
+
+    this.items.push({ label: 'Home', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-home', command: () => this.router.navigateByUrl('WMS/Home'), styleClass: 'active' });
+    this.items.push({
+      label: 'Inventory Ageing',
+      icon: 'pi pi-fw pi-bars',
+      style: { 'font-weight': '600' },
+      items: [
+        { label: 'Obsolete Inventory', style: { 'font-weight': '600', 'width': '200px' }, icon: 'pi pi-fw pi-caret-right', command: () => this.router.navigateByUrl('WMS/ObsoleteInventoryMovement') },
+        { label: 'Excess Inventory', style: { 'font-weight': '600', 'width': '200px' }, icon: 'pi pi-fw pi-caret-right', command: () => this.router.navigateByUrl('WMS/ExcessInventoryMovement') },
+      ]
+    });
+    this.items.push({
+      label: 'ABC Analysis',
+      icon: 'pi pi-fw pi-bars',
+      style: { 'font-weight': '600' },
+      items: [
+        { label: 'ABC Classification', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-caret-right', command: () => this.router.navigateByUrl('WMS/ABCCategory') },
+        { label: 'ABC Analysis', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-caret-right', command: () => this.router.navigateByUrl('WMS/ABCAnalysis') },
+      ]
+    });
+    this.items.push({ label: 'Material Tracking', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/POStatus') });
+    this.items.push({ label: 'Safety Stock List', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/SafetyStockList') });
+    this.items.push({ label: 'Bin Status Report', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/BinStatusReport') });
+    this.items.push({ label: 'Outward/Inward Report', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/outinDashboard') });
+
+    //this.items.push({ label: 'GRN Posting', icon: 'pi pi-fw pi-lock', command: () => this.router.navigateByUrl('WMS/GRNPosting') })
+    this.router.navigate(['WMS/GRNPosting'], { queryParams: { pono: this.poinvoice } });
+   // this.router.navigateByUrl('WMS/GRNPosting');
   }
 
   bindDefaultMenu() {

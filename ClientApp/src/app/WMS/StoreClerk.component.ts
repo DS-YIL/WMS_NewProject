@@ -75,14 +75,23 @@ export class StoreClerkComponent implements OnInit {
   print: string = "Print";
   public printData = new printMaterial();
   public showPrintLabel: boolean = false;
-   displayBasic: boolean = false;
+  displayBasic: boolean = false;
+  poinvoice: string = "";
  
   ngOnInit() {
     //this.autoCompleteObject.focusInput();
     if (localStorage.getItem("Employee"))
       this.employee = JSON.parse(localStorage.getItem("Employee"));
     else
-    this.router.navigateByUrl("Login");
+      this.router.navigateByUrl("Login");
+    this.poinvoice = this.route.snapshot.queryParams.pono;
+    if (this.poinvoice) {
+      debugger;
+      //get material details for that PO
+      this.selectedpendingpono = this.poinvoice;
+      this.showpodata();
+
+    }
     this.getpendingpos();
     this.invoiceForm = this.formBuilder.group({
       itemRows: this.formBuilder.array([this.initItemRows()])
@@ -393,12 +402,15 @@ export class StoreClerkComponent implements OnInit {
 
   ///get pending for receive material list
   showpodata() {
+    debugger;
     this.isacceptance = false;
     this.selectedgrn = null;
     this.selectedgrnno = "";
     if (!isNullOrUndefined(this.selectedpendingpono) && this.selectedpendingpono != "") {
       this.spinner.show();
+      this.PoDetails = new PoDetails();
       this.showQtyUpdateDialog = true;
+     // alert(this.PoDetails);
       this.PoDetails.pono = this.selectedpendingpono;
       this.getponodetails(this.selectedpendingpono);
     }
@@ -509,7 +521,7 @@ export class StoreClerkComponent implements OnInit {
     this.qualitychecked = false;
     this.isallreceived = false;
     this.isreceivedbefore = false;
-    this.returned = false;
+    this.returned = false;  
     this.isnonpo = false;
     this.isonHold = false;
     this.isonHoldview = false;
