@@ -1635,13 +1635,14 @@ namespace WMS.DAL
 
 							});
 
-							EmailModel emailmodel = new EmailModel();
-							emailmodel.pono = item.pono;
-							emailmodel.ToEmailId = "developer1@in.yokogawa.com";
-							emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
-							emailmodel.CC = "sushma.patil@in.yokogawa.com";
-							EmailUtilities emailobj = new EmailUtilities();
-							emailobj.sendEmail(emailmodel, 4);
+							//Not required - mail after put away
+							//EmailModel emailmodel = new EmailModel();
+							//emailmodel.pono = item.pono;
+							//emailmodel.ToEmailId = "developer1@in.yokogawa.com";
+							//emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
+							//emailmodel.CC = "sushma.patil@in.yokogawa.com";
+							//EmailUtilities emailobj = new EmailUtilities();
+							//emailobj.sendEmail(emailmodel, 13);
 						}
 					}
 					//}
