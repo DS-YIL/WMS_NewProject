@@ -83,12 +83,12 @@
 
       <textarea type="text" style="width:140px" class="form-control" disabled="disabled" [(ngModel)]="rowData.approvedstatus"></textarea>
     </div>-->
-              <span *ngIf="rowData.ackstatus!=null">{{rowData.approvedstatus}}</span>
+              <span *ngIf="rowData.approvedstatus!=null">{{rowData.approvedstatus}}</span>
               <span *ngIf="rowData.approvedstatus==null">Pending</span>
             </td>
             <td class="ptable-cell" style="text-align:left;width:200px;">{{rowData.remarks}}</td>
             <td class="ptable-cell" style="width:200px;">
-              <div *ngIf="rowData.approvedstatus=='Approved' && rowData.ackstatus=='not received'" class="form-inline">
+              <div *ngIf="rowData.approvedstatus=='Approved' && rowData.ackstatus!='received'" class="form-inline">
 
                 <p-checkbox [(ngModel)]="rowData.status" binary="true" (click)="ackStatusChanges($event)"></p-checkbox> &nbsp;&nbsp;
 
