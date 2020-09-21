@@ -78,12 +78,12 @@
             <td class="ptable-cell" style="text-align:center;width:150px;">{{rowData.requesteddate| date :  constants.dateFormat}}</td>
             <td class="ptable-cell" style="text-align:center;width:100px;">
 
-              {{rowData.approvedstatus}}
+              <!--{{rowData.approvedstatus}}-->
               <!--<div *ngIf="rowData.approvedstatus=='approved'" class="form-inline">
 
       <textarea type="text" style="width:140px" class="form-control" disabled="disabled" [(ngModel)]="rowData.approvedstatus"></textarea>
     </div>-->
-              <span *ngIf="rowData.ackstatus=='received'">{{rowData.approvedstatus}}</span>
+              <span *ngIf="rowData.ackstatus!=null">{{rowData.approvedstatus}}</span>
               <span *ngIf="rowData.approvedstatus==null">Pending</span>
             </td>
             <td class="ptable-cell" style="text-align:left;width:200px;">{{rowData.remarks}}</td>

@@ -406,12 +406,16 @@ export class MaterialRequestViewComponent implements OnInit {
   //app
   ackStatusChanges(status) {
     this.showAck = true;
-    if (status == 'received') {
+    if (this.requestList.filter(li => li.status == true).length == 0) {
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Select atleast  one checkbox' });
       this.showAck = false;
     }
-    else {
-      this.showAck = true;
-    }
+    //if (status == 'received') {
+    //  this.showAck = false;
+    //}
+    //else {
+    //  this.showAck = true;
+    //}
   }
 
   onMaterialSelected1(data: any, ind: number) {
