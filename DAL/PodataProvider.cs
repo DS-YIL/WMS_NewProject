@@ -5688,7 +5688,7 @@ namespace WMS.DAL
 
 				if (model.categoryid == 1)
 				{
-					updateapproverstatus = WMSResource.updateApprovedstatusbymanager.Replace("#approverstatus", "Approved");
+					updateapproverstatus = WMSResource.updateApprovedstatusbymanager.Replace("#approverstatus", model.approverstatus);
 
 					using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
 					{
@@ -5704,7 +5704,7 @@ namespace WMS.DAL
 							int label = 1;
 							string approvername = model.approvedby;
 							string insertgatepasshistory = WMSResource.insertgatepassapprovalhistory;
-							string approverstatus = "Approved";
+							string approverstatus =model.approverstatus;
 							var gatepasshistory = DB.ExecuteScalar(insertgatepasshistory, new
 							{
 
@@ -5719,7 +5719,7 @@ namespace WMS.DAL
 				}
 				else if (model.categoryid == 2)
 				{
-					updateapproverstatus = WMSResource.updateApprovedstatusbyFMmanager.Replace("#fmapprovedstatus", "Approved");
+					updateapproverstatus = WMSResource.updateApprovedstatusbyFMmanager.Replace("#fmapprovedstatus", model.fmapprovedstatus);
 
 					using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
 					{
@@ -5735,7 +5735,7 @@ namespace WMS.DAL
 							int label = 2;
 							string approvername = model.approvedby;
 							string insertgatepasshistory = WMSResource.insertgatepassapprovalhistory;
-							string approverstatus = "Approved";
+							string approverstatus = model.fmapprovedstatus;
 							var gatepasshistory = DB.ExecuteScalar(insertgatepasshistory, new
 							{
 
