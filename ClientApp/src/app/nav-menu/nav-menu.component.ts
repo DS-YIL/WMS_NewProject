@@ -235,7 +235,7 @@ export class NavMenuComponent implements OnInit {
     //this.itemsrole = 2;
     // Inventory clerk login
     this.items = [];
-
+    this.emp.roleid = "2";
     this.items.push({ label: 'Home', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-home', command: () => this.router.navigateByUrl('WMS/Home'), styleClass: 'active' });
     this.items.push({
       label: 'Inventory Ageing',

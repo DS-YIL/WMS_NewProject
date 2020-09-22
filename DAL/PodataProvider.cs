@@ -2519,21 +2519,31 @@ namespace WMS.DAL
 			{
 				//foreach(var item in dataobj._list)
 				//{
+				string status = "Pending";
 				string remarks = dataobj.statusremarks;
 				if (dataobj.gatepassid == 0)
 				{
 					dataobj.requestedon = System.DateTime.Now;
 					string insertquery = WMSResource.insertgatepassdata;
-					string fmapprovedstatus = "Pending";
+					string fmapprovedstatus = "";
 					string approverstatus = "Pending";
 
 					string insertgatepasshistory = WMSResource.insertgatepassapprovalhistory;
 					dataobj.deleteflag = false;
 					dataobj.fmapproverid = null;
 					if (dataobj.gatepasstype == "Non Returnable")
+                    {
 						dataobj.fmapproverid = "400104";
+						dataobj.fmapprovedstatus = "Pending";
+
+					}
+						
+						
+
 					using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
 					{
+						dataobj.status = status;
+						dataobj.approverstatus = approverstatus;
 						var gatepassid = DB.ExecuteScalar(insertquery, new
 						{
 
@@ -2549,8 +2559,8 @@ namespace WMS.DAL
 							dataobj.approverid,
 							dataobj.fmapproverid,
 							dataobj.requestid,
-							fmapprovedstatus,
-							approverstatus,
+							dataobj.fmapprovedstatus,
+							dataobj.approverstatus,
 							remarks
 
 						});

@@ -313,7 +313,7 @@ values(default,@gatepassid,@materialid,@quantity,@deleteflag,@remarks,@materialc
   <data name="getgatepassmaterialdetailList" xml:space="preserve">
     <value>select (select sum(issuedqty) from wms.wms_materialissue  where gatepassmaterialid =material.gatepassmaterialid ) as issuedqty
 ,(select sum(availableqty) from wms.wms_stock ws where materialid =stock.materialid ) as availableqty,
-max(material.gatepassid ) as gatepassid, material.gatepassmaterialid,max(emp."name") as name,max(pass.vendorname) as vendorname,
+max(material.gatepassid ) as gatepassid,max(material.gatepassmaterialid ) as gatepassmaterialid, max(emp."name") as name,max(pass.vendorname) as vendorname,
 max(pass.gatepasstype) as gatepasstype,max(pass.approverstatus) as approverstatus,
 max(pass.reasonforgatepass) as reasonforgatepass,max(pass.approverremarks ) as approverremarks,
 stock.materialid, max(ygs.materialdescription )as materialdescription, max(material.materialcost )as materialcost,

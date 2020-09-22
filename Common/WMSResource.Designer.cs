@@ -400,7 +400,7 @@ namespace WMS.Common {
         /// <summary>
         ///   Looks up a localized string similar to select (select sum(issuedqty) from wms.wms_materialissue  where gatepassmaterialid =material.gatepassmaterialid ) as issuedqty
         ///,(select sum(availableqty) from wms.wms_stock ws where materialid =stock.materialid ) as availableqty,
-        ///max(material.gatepassid ) as gatepassid, material.gatepassmaterialid,max(emp.&quot;name&quot;) as name,max(pass.vendorname) as vendorname,
+        ///max(material.gatepassid ) as gatepassid,max(material.gatepassmaterialid ) as gatepassmaterialid, max(emp.&quot;name&quot;) as name,max(pass.vendorname) as vendorname,
         ///max(pass.gatepasstype) as gatepasstype,max(pass.approverstatus) as approverstatus,
         ///max(pass.reasonforgatepass) as reasonforgatepass,max(pass.approver [rest of string was truncated]&quot;;.
         /// </summary>
