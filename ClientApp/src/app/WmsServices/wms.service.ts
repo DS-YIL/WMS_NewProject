@@ -210,6 +210,10 @@ export class wmsService {
     return this.http.get<any>(this.url + 'POData/getmaterialrequestListdata?PONO=' + pono + '&loginid=' + loginid + '', this.httpOptions);
   }
 
+  getMaterialReservelistdata(): Observable<any> {
+    return this.http.get<any>(this.url + 'POData/getmaterialreserveListdata/', this.httpOptions);
+  }
+
   //materialRequestUpdate(materialRequestList: any): Observable<any> {
   //  return this.http.post<any>(this.url + 'POData/updaterequestedqty/', materialRequestList, this.httpOptions);
   //}

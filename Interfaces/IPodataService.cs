@@ -65,6 +65,7 @@ Task<string> updateonholdrow(updateonhold datamodel);
         Task<IEnumerable<inwardModel>> getitemdeatilsnotif(string grnnumber);
         Task<IEnumerable<IssueRequestModel>> MaterialRequest(string pono,string material);
         Task<IEnumerable<IssueRequestModel>> MaterialRequestdata(string pono, string material);
+        Task<IEnumerable<IssueRequestModel>> MaterialReservedata();
         int acknowledgeMaterialReceived(List<IssueRequestModel> dataobj);
         Task<User> getempnamebycode(string empno);
         Task<IEnumerable<IssueRequestModel>> GetMaterialissueList(string requesterid);

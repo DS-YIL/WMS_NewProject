@@ -4662,6 +4662,32 @@ namespace WMS.DAL
 			}
 		}
 
+		public async Task<IEnumerable<IssueRequestModel>> MaterialReservedata()
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+
+				try
+				{
+					string materialrequestquery = WMSResource.getmaterialstoreserve;
+					await pgsql.OpenAsync();
+					return await pgsql.QueryAsync<IssueRequestModel>(
+					  materialrequestquery, null, commandType: CommandType.Text);
+
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "MaterialRequestdata", Ex.StackTrace.ToString());
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+			}
+		}
+
 		public async Task<User> getempnamebycode(string empno)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -5219,7 +5245,7 @@ namespace WMS.DAL
 					await pgsql.OpenAsync();
 					var data = await pgsql.QueryAsync<ddlmodel>(
 					  materialrequestquery, null, commandType: CommandType.Text);
-					var senddata = data.Where(o => o.projectmanager == empno);
+					var senddata = data.Where(o => o.projectmanager == empno).OrderByDescending(o=>o.value);
 					return senddata;
 
 

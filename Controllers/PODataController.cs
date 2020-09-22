@@ -613,6 +613,12 @@ namespace WMS.Controllers
 			return await this._poService.MaterialRequestdata(pono, loginid);
 		}
 
+		[HttpGet("getmaterialreserveListdata")]
+		public async Task<IEnumerable<IssueRequestModel>> getmaterialreserveListdata()
+		{
+			return await this._poService.MaterialReservedata();
+		}
+
 		[HttpGet("getempnamebycode")]
 		public async Task<User> getempnamebycode(string empno)
 		{

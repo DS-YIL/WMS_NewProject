@@ -788,6 +788,19 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to select max(sk.pono) as pono ,sk.materialid as material,Max(prj.projectmanager) as projectmanager,
+        ///( select sum(availableqty) from wms.wms_stock ws where materialid =sk.materialid) as availableqty,
+        ///(select stocktype from wms.stocklocation where storeid=Max(mtmtr.storeid) and rackid=Max(mtmtr.rackid) and binid=Max(mtmtr.binid) limit 1) as stocktype,
+        ///max(mtmtr.unitprice) as materialcost,max(mtmtr.materialdescription) as materialdescription from wms.wms_stock  sk 
+        ///left outer join wms.&quot;MaterialMasterYGS&quot; mtm [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string getmaterialstoreserve {
+            get {
+                return ResourceManager.GetString("getmaterialstoreserve", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to select ts.transferid, ts.projectcode,ts.remarks as transferremarks,emp.name as transferedby,ts.createdon as transferredon
         ///from wms.wms_transfermaterial ts
         ///left outer join wms.employee emp on emp.employeeno = ts.createdby.

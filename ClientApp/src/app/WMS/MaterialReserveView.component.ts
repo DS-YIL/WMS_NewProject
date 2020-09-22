@@ -83,7 +83,7 @@ export class MaterialReserveViewComponent implements OnInit {
 
   getdefaultmaterialstoreserve() {
     this.defaultmaterials = []
-    this.wmsService.getMaterialRequestlistdata(this.employee.employeeno, null).subscribe(data => {
+    this.wmsService.getMaterialReservelistdata().subscribe(data => {
       this.defaultmaterials = data;
     });
   }
@@ -504,7 +504,7 @@ export class MaterialReserveViewComponent implements OnInit {
     this.mindate = this.datePipe.transform(minDate, "yyyy-MM-dd");
     this.maxdate = this.datePipe.transform(maxdate, "yyyy-MM-dd");
     //Get PO number list, project list and materials available
-    this.GetPONo();
+   // this.GetPONo();
     if (this.materialList.length <= 0) {
       this.materialistModel = { material: "", materialdescription: "", quantity: 0, materialcost: 0, remarks: " ", availableqty: 0, issuedqty: 0, requesterid: this.employee.employeeno, ReserveUpto: this.mindate, projectcode: "" };
       this.materialList.push(this.materialistModel);
