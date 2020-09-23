@@ -37,11 +37,24 @@ export class QualityCheckComponent implements OnInit {
   todateview: string = "";
   fromdateview1: string = "";
   todateview1: string = "";
+  //Email
+  grnno: string = "";
+  //podetailsList: string = "";
+
   ngOnInit() {
     if (localStorage.getItem("Employee"))
       this.employee = JSON.parse(localStorage.getItem("Employee"));
     else
       this.router.navigateByUrl("Login");
+    //Email
+    this.grnno = this.route.snapshot.queryParams.grnnumber;
+    if (this.grnno) {
+      debugger;
+      //get material details for that grnnumber
+      this.selectedgrnno = this.grnno;
+      this.getqualitydetails();
+
+    }
 
     this.PoDetails = new PoDetails();
     this.inwardModel = new inwardModel();
@@ -202,6 +215,7 @@ export class QualityCheckComponent implements OnInit {
     })
   }
 
+    //Email
   getqualitydetails() {
     this.podetailsList = [];
     var grn = this.selectedgrnno;

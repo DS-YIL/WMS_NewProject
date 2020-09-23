@@ -21,6 +21,8 @@ export class MaterialRequestComponent implements OnInit {
   public displayItemRequestDialog; RequestDetailsSubmitted; showAck; btnDisable: boolean = false;
   public materialRequestDetails: materialRequestDetails;
   public pono: string;
+  //Email
+  reqid: string=""
 
   ngOnInit() {
     if (localStorage.getItem("Employee"))
@@ -34,6 +36,16 @@ export class MaterialRequestComponent implements OnInit {
         this.pono = params["pono"];
       }
     });
+
+    //Email
+    this.reqid = this.route.snapshot.queryParams.requestid;
+    if (this.reqid) {
+      debugger;
+      //get material details for that requestid
+      this.requestList[0].material = this.reqid;
+      this.getMaterialRequestlist();
+
+    }
 
     this.getMaterialRequestlist();
   }

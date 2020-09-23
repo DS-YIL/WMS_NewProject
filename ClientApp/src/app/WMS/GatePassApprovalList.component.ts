@@ -35,7 +35,8 @@ export class GatePassApprovalList implements OnInit {
   public gatePassApprovalList: Array<any> = [];
   public typeOfList: string;
   public showHistory: boolean = false;
-
+  //Email
+  gatepassid: string = ""
 
   ngOnInit() {
     if (localStorage.getItem("Employee"))
@@ -47,6 +48,16 @@ export class GatePassApprovalList implements OnInit {
     this.typeOfList = this.route.routeConfig.path;
     this.getGatePassList();
     this.approverstatus = "Pending";
+
+    //Email
+    this.gatepassid = this.route.snapshot.queryParams.requestid;
+    if (this.gatepassid) {
+      debugger;
+      //get material details for that requestid
+      this.gatepasslist[0].material = this.gatepassid;
+      this.getGatePassList();
+
+    }
   }
 
 
