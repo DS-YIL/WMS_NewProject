@@ -85,12 +85,15 @@ import { PutawayNotificationComponent } from './WMS/PutawayNotification.componen
 import { GatepassinwardViewComponent } from './WMS/GatepassinwardView.component';
 import { TestCompComponent } from './WMS/TestComp.component';
 import { PutawayNotificationViewComponent } from './WMS/PutawayNotificationView.component';
-import { DirectTransferComponent } from './WMS/DirectTransfer.component'; 
+import { DirectTransferComponent } from './WMS/DirectTransfer.component';
 import { MaterialTransferDashboardComponent } from './WMS/MaterialTransferDashboard.component';
 import { MaterialRequestDashboardComponent } from './WMS/MaterialRequestDashboard.component';
 import { MaterialReserveDashboardComponent } from './WMS/MaterialReserveDashboard.component';
 import {MaterialsReturnDashboardComponent } from './WMS/MaterialsReturnDashboard.component';
 
+import { OutwardinwardreportComponent } from './WMS/Outwardinwardreport.component';
+import { GatepassinwardreceiveComponent } from './WMS/Gatepassinwardreceive.component';
+import { MaterialTransferApprovalComponent } from './WMS/MaterialTransferApproval.component';
 ////pages
 import { LoginComponent } from './WMS/Login.component';
 import {HomeComponent} from './WMS/Home.component';
@@ -172,7 +175,10 @@ import { PanelModule } from 'primeng/panel';
     MaterialTransferDashboardComponent,
     MaterialRequestDashboardComponent,
     MaterialReserveDashboardComponent,
-    MaterialsReturnDashboardComponent
+    MaterialsReturnDashboardComponent,
+    OutwardinwardreportComponent,
+    GatepassinwardreceiveComponent,
+    MaterialTransferApprovalComponent
 
   ],
   imports: [

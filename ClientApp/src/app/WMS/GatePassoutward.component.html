@@ -56,15 +56,17 @@
              appendTo="body" dataKey="gatepassid">
       <ng-template pTemplate="header">
         <tr class="mprltbldata">
-          <th style="text-align: center; width: 70px">Sl. No.</th>
-          <th style="text-align:center;width: 100px">GatePass Id</th>
+          <th style="text-align: center; width: 70px">Sl.No.</th>
+          <th style="text-align:center;width: 100px">Gatepass Id</th>
           <th style="text-align:center">Supplier</th>
           <th style="text-align:center;width: 300px">Approved By</th>
+          <th style="text-align:center;width: 200px">Approved On</th>
         </tr>
         <tr>
           <th></th>
           <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'gatepassid', 'contains')"></th>
           <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'vendorname', 'contains')"></th>
+          <th></th>
           <th></th>
         </tr>
       </ng-template>
@@ -74,11 +76,14 @@
             {{ri+1}}
           </td>
           <!--<td class="ptable-cell" style="text-align:center"> <a style="color:blue;cursor:pointer;text-decoration:underline" href="#" [pRowToggler]="rowData"> <i [ngClass]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></i>{{rowData.gatepassid}}</a></td>-->
-          <td class="ptable-cell" style="text-align:left"><button class="btn btn-link" (click)="showdetails(rowData)">{{rowData.gatepassid}}</button></td>
+          <td class="ptable-cell" style="text-align:left"><button class="btn btn-link" (click)="showdetails(rowData)">GTP{{rowData.gatepassid}}</button></td>
           <td class="ptable-cell" style="text-align:left">{{rowData.vendorname}}</td>
           <td class="ptable-cell" style="text-align:left">
-            <span *ngIf="nonreturn">{{rowData.mgapprover}}</span>
-            <span *ngIf="!nonreturn">{{rowData.fmapprover}}</span>
+            <span *ngIf="nonreturn">{{rowData.fmapprover}}</span>
+            <span *ngIf="!nonreturn">{{rowData.mgapprover}}</span>
+          </td>
+          <td class="ptable-cell" style="text-align:center">
+            <span>{{rowData.approvedon | date :'dd/MM/yyyy'}}</span>
           </td>
         </tr>
       </ng-template>
@@ -93,16 +98,27 @@
 
 
 
-<p-dialog header="Material Details" [(visible)]="showmatDialog" [responsive]="true" showEffect="fade" [modal]="true" [style]="{'width':'95%','height':'500px','overflow':'auto!important','margin-right': '0px','margin-left':'0px'}">
+<p-dialog header="Material Details" [(visible)]="showmatDialog" [responsive]="true" showEffect="fade" [modal]="true" [style]="{'width':'98%','height':'500px','overflow':'auto!important','margin-right': '0px','margin-left':'0px'}">
   <div class="row " style="margin-top:5px">
     <div class="col-lg-2 col-md-2 form-inline labelheading">
-      <label class="form-label"><b>GatePass Id: </b> </label>&nbsp;<label class="labeltext">{{DGgatepassid}}</label>
+      <label class="form-label"><b>GatePass Id: </b> </label>&nbsp;<label class="labeltext">GTP{{DGgatepassid}}</label>
     </div>
-    <div class="col-lg-3 col-md-3 form-inline labelheading">
+    <div class="col-lg-2 col-md-2 form-inline labelheading">
       <label class="form-label"><b>Type: </b> </label>&nbsp;<label class="labeltext">{{DGgatepasstype}}</label>
     </div>
-    <div class="col-lg-7 col-md-7 form-inline labelheading">
+    <div class="col-lg-3 col-md-3 form-inline labelheading">
       <label class="form-label"><b>Supplier: </b></label>&nbsp;<label class="labeltext">{{DGvendorname}}</label>
+    </div>
+    <div class="col-lg-3 col-md-3 form-inline labelheading">
+      <label class="form-label"><b>Remarks: </b></label>&nbsp;<textarea style="resize:none;width:60%" [(ngModel)]="pgremarks">
+</textarea>
+    </div>
+    <div class="col-md-2 col-lg-2 pt-2 form-inline">
+      <label class="labelheading" *ngIf="!isinward">Outward date:</label>
+      <label class="labelheading" *ngIf="isinward">Inward date:</label>
+      <p-calendar [(ngModel)]="fromdateview" [style]="{'width':'100%'}" [inputStyle]="{'width':'80%'}" [inline]="false" (onSelect)="onfromSelectMethod($event)"
+                  placeholder="Select Date" dateFormat="dd/mm/yy"></p-calendar>
+      <!--Received From : {{fromdateview}}-->
     </div>
   </div>
   <br />
@@ -114,10 +130,12 @@
             <th class="ptable-cell" style="text-align:center;width:60px;">Sl. No.</th>
             <th class="ptable-cell" style="text-align:center;width:150px">Material</th>
             <th class="ptable-cell" style="text-align:center;">Material Description</th>
-            <th *ngIf="!isinward" class="ptable-cell" style="text-align:center;width:100px">Quantity</th>
-            <th class="ptable-cell" style="text-align:center;width:100px">Outward qty</th>
-            <th *ngIf="isinward" class="ptable-cell" style="text-align:center;width:100px">inward qty</th>
-            <th class="ptable-cell" style="text-align:center;width:200px">Remarks</th>
+            <th *ngIf="!isinward" class="ptable-cell" style="text-align:center;width:200px">Issued Quantity</th>
+            <!--<th *ngIf="!isinward" class="ptable-cell" style="text-align:center;width:200px">Pending to Outward</th>-->
+            <th *ngIf="isinward" class="ptable-cell" style="text-align:center;width:100px">Outward qty</th>
+            <!--<th *ngIf="isinward" class="ptable-cell" style="text-align:center;width:200px">Pending to Inward</th>-->
+            <!--<th *ngIf="isinward" class="ptable-cell" style="text-align:center;width:100px">Inward qty</th>-->
+            <!--<th class="ptable-cell" style="text-align:center;width:200px">Remarks</th>-->
 
           </tr>
         </ng-template>
@@ -126,15 +144,18 @@
             <td class="ptable-cell" style="text-align:center;width:60px;"> {{ri+1}} </td>
             <td class="ptable-cell" style="text-align:left;width:150px"> {{rowData.materialid}} </td>
             <td class="ptable-cell" style="text-align:left"> {{rowData.materialdescription}} </td>
-            <td *ngIf="!isinward" class="ptable-cell" style="text-align:right;width:100px">{{rowData.quantity}}</td>
-            <td class="ptable-cell" style="text-align:right;width:100px">
-              <span *ngIf="isinward">{{rowData.outwardqty}}</span>
-              <input *ngIf="!isinward" pInputText type="number" [min]="0" (change)="checkoutqty(rowData.outwardqty,rowData.quantity,rowData);" class="form-control" [(ngModel)]="rowData.outwardqty">
+            <td *ngIf="!isinward" class="ptable-cell" style="text-align:right;width:200px">{{rowData.issuedqty}}</td>
+            <!--<td *ngIf="!isinward" class="ptable-cell" style="text-align:right;width:200px">{{rowData.issuedqty-rowData.outwardedqty}}</td>-->
+
+            <td class="ptable-cell" *ngIf="isinward" style="text-align:right;width:100px">
+              <span>{{rowData.outwardedqty}}</span>
+              <!--<input *ngIf="!isinward" pInputText type="number" [min]="0" (change)="checkoutqty(rowData.outwardqty,rowData.issuedqty,rowData.outwardedqty,rowData);" class="form-control" [(ngModel)]="rowData.outwardqty">-->
             </td>
+            <!--<td *ngIf="isinward" class="ptable-cell" style="text-align:right;width:200px">{{rowData.outwardedqty-rowData.inwardedqty}}</td>
             <td class="ptable-cell" style="text-align:right;width:100px" *ngIf="isinward">
-              <input pInputText type="number" [min]="0" (change)="checkinqty(rowData.inwardqty,rowData.outwardqty,rowData);" class="form-control" [(ngModel)]="rowData.inwardqty">
+              <input pInputText type="number" [min]="0" (change)="checkinqty(rowData.inwardqty,rowData.outwardedqty,rowData);" class="form-control" [(ngModel)]="rowData.inwardqty">
             </td>
-            <td class="ptable-cell" style="text-align:right;width:200px"><textarea [(ngModel)]="rowData.remarks"></textarea></td>
+            <td class="ptable-cell" style="text-align:right;width:200px"><textarea [(ngModel)]="rowData.remarks"></textarea></td>-->
           </tr>
 
         </ng-template>

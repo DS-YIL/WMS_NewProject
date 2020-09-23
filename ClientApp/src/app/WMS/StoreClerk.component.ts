@@ -72,16 +72,26 @@ export class StoreClerkComponent implements OnInit {
   public receivedDate: any;
   public acceptedQty: any;
   public itemNo: any;
+  print: string = "Print";
   public printData = new printMaterial();
   public showPrintLabel: boolean = false;
-   displayBasic: boolean = false;
+  displayBasic: boolean = false;
+  poinvoice: string = "";
  
   ngOnInit() {
     //this.autoCompleteObject.focusInput();
     if (localStorage.getItem("Employee"))
       this.employee = JSON.parse(localStorage.getItem("Employee"));
     else
-    this.router.navigateByUrl("Login");
+      this.router.navigateByUrl("Login");
+    this.poinvoice = this.route.snapshot.queryParams.pono;
+    if (this.poinvoice) {
+      debugger;
+      //get material details for that PO
+      this.selectedpendingpono = this.poinvoice;
+      this.showpodata();
+
+    }
     this.getpendingpos();
     this.invoiceForm = this.formBuilder.group({
       itemRows: this.formBuilder.array([this.initItemRows()])
@@ -279,6 +289,7 @@ export class StoreClerkComponent implements OnInit {
 
   //generate barcode -gayathri
   generateBarcode(details: any) {
+    debugger;
     this.showPrintDialog = true;
     this.materialCode = details.material;
     this.receivedDate = this.datePipe.transform(details.receiveddate, this.constants.dateFormat);
@@ -293,6 +304,7 @@ export class StoreClerkComponent implements OnInit {
   }
 
   GenerateBarcode() {
+    debugger;
     this.showPrintDialog = false;
     this.showPrintLabel = true;
     this.printData.materialid = this.materialCode;
@@ -307,7 +319,46 @@ export class StoreClerkComponent implements OnInit {
       if (data) {
 
         this.printData = data;
+        if (this.printData.isprint == true) {
+          this.print = "Re-Print";
+        }
+        else {
+          this.print = "Print";
+        }
         console.log(this.printData);
+
+      }
+      else {
+        alert("Error while generating Barcode");
+      }
+    })
+  }
+
+  printLabel() {
+    this.showPrintDialog = false;
+    this.showPrintLabel = false;
+    this.printData.materialid = this.materialCode;
+    this.printData.invoiceno = this.podetailsList[0].invoiceno;
+    this.printData.grnno = this.podetailsList[0].grnnumber;
+    this.printData.pono = this.podetailsList[0].pono;
+    this.printData.noofprint = this.noOfPrint;
+    this.printData.receiveddate = this.receivedDate;
+    this.printData.printedby = this.employee.employeeno;
+    //api call
+    this.wmsService.printBarcodeMaterial(this.printData).subscribe(data => {
+      if (data) {
+        debugger;
+        //this.printData = data;
+        if (data == "success") {
+          this.messageService.add({ severity: 'success', summary: '', detail: 'Label printed successfully' });
+          console.log(this.printData);
+          this.noOfPrint = 1;
+        }
+        else {
+          this.messageService.add({ severity: 'success', summary: '', detail: 'Error while Printing Label' });
+          console.log(this.printData);
+        }
+        
 
       }
       else {
@@ -351,12 +402,15 @@ export class StoreClerkComponent implements OnInit {
 
   ///get pending for receive material list
   showpodata() {
+    debugger;
     this.isacceptance = false;
     this.selectedgrn = null;
     this.selectedgrnno = "";
     if (!isNullOrUndefined(this.selectedpendingpono) && this.selectedpendingpono != "") {
       this.spinner.show();
+      this.PoDetails = new PoDetails();
       this.showQtyUpdateDialog = true;
+     // alert(this.PoDetails);
       this.PoDetails.pono = this.selectedpendingpono;
       this.getponodetails(this.selectedpendingpono);
     }
@@ -467,7 +521,7 @@ export class StoreClerkComponent implements OnInit {
     this.qualitychecked = false;
     this.isallreceived = false;
     this.isreceivedbefore = false;
-    this.returned = false;
+    this.returned = false;  
     this.isnonpo = false;
     this.isonHold = false;
     this.isonHoldview = false;

@@ -460,13 +460,15 @@
                 <th style="outline: thin solid;width:400px;height:30px">{{printData.receiveddate}}</th>
               </tr>
               <tr>
-                <th style="outline: thin solid;width:400px;height:90px">GRN No. - Material Code : </th>
-                <th style="outline: thin solid;width:400px;height:30px">{{printData.grnno}}- {{printData.materialid}}</th>
+                <th *ngIf="printData.grnno" style="outline: thin solid;width:400px;height:90px">GRN No. - Material Code : </th>
+                <th *ngIf="printData.grnno" style="outline: thin solid;width:400px;height:30px">{{printData.grnno}}- {{printData.materialid}}</th>
+                <th *ngIf="!printData.grnno" style="outline: thin solid;width:400px;height:90px">PO No. - Invoice No. : </th>
+                <th *ngIf="!printData.grnno" style="outline: thin solid;width:400px;height:30px">{{printData.pono}}- {{printData.invoiceno}}</th>
                 <th style="outline: thin solid; width: 200px; height: 90px; align-content: center" rowspan="2"><img class="images" src="{{printData.barcodePath}}" /></th>
                 <!--<th style="outline: thin solid;width:400px;height:30px"></th>-->
               </tr>
               <tr>
-                <th style="outline: thin solid;width:400px;height:30px">WMS GRN No.</th>
+                <th style="outline: thin solid;width:400px;height:30px">Quantity</th>
                 <th style="outline: thin solid;width:400px;height:30px">1/{{printData.noofprint}}</th>
                 <!--<th style="outline: thin solid; width: 500px; height: 30px">1/{{printData.noofprint}}</th>-->
                 <!--<th style="outline: thin solid;width:400px;height:30px"></th>-->
@@ -496,7 +498,7 @@
         <div class="row">
           <div class="col-lg-5 col-md-5 col-sm-5"></div>
           <div class="col-lg-3 col-md-3 col-sm-3">
-            <button type="button" class="btn btn-primary" label="Save">Print</button>
+            <button type="button" class="btn btn-primary" (click)="printLabel()" label="Save">{{print}}</button>
           </div>
         </div>
       </form>

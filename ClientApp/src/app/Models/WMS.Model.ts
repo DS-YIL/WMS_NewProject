@@ -281,6 +281,8 @@ export class materialList {
   issuedqty: number;
   materialcost: number;
   requesterid: any;
+  stocktype: string;
+  projectcode: string;
 
 }
 
@@ -294,9 +296,11 @@ export class materialListforReserve {
   materialcost: number;
   requesterid: any;
   ReserveUpto: any;
+  projectcode: string;
 }
 
 export class outwardmaterialistModel {
+  gatepassid: number;
   gatepassmaterialid: string;
   materialid: string;
   materialdescription: string;
@@ -354,6 +358,7 @@ export class ddlmodel {
   value: string;
   text: string;
   supplier: string;
+  projectmanager: string;
   receiveddate: Date
 
 }
@@ -501,12 +506,24 @@ export class materialistModeltransfer {
 export class materialtransferMain {
   transferid: number;
   projectcode: string;
+  projectmanagerto: string;
+  projectcodefrom: string;
+  projectmanagerfrom: string;
   transferredqty: number = 0;
   transferremarks: string;
+  approvalremarks: string;
+  approverid: string;
   transferedby: string;
+  requesteremail: string;
   transferredon: Date;
   showtr: boolean;
+  approvallevel: number;
+  finalapprovallevel: number;
+  status: string;
   materialdata: materialtransferTR[] = [];
+  approverdata: materialtransferapproverModel[] = [];
+  applevel: number;
+  isapproved: boolean;
 }
 
 export class materialtransferTR {
@@ -514,6 +531,14 @@ export class materialtransferTR {
   materialid: string;
   materialdescription: string;
   transferredqty: number = 0;
+}
+
+export class materialtransferapproverModel {
+  approverid: string;
+  approvername: string;
+  status: string;
+  approvedon: Date;
+  remarks: string
 }
 
 
@@ -532,6 +557,39 @@ export class DirectTransferTR {
   materialid: string;
   materialdescription: string;
   confirmqty: number = 0;
+}
+
+export class UserModel {
+  employeeno: string;
+  deptId: number;
+  FirstName: string;
+  LastName: string
+  Username: string;
+  Password: string;
+  Token: string;
+  name: string;
+  pwd: string;
+  domainid: string;
+  email: string
+}
+
+export class outwardinwardreportModel {
+  gatepassid: number;
+  gatepassmaterialid: number;
+  materialid: string;
+  materialdescription: string;
+  outwarddate: Date;
+  outwardby: string;
+	outwardremarks: string;
+	outwardqty: number;
+  inwarddate: Date;
+  inwardremarks: string;
+	inwardqty: number;
+  securityinwarddate: Date;
+	securityinwardby: string;
+  securityinwardremarks: string;
+  showtr: boolean = false;
+  materialdata: outwardinwardreportModel[] = [];
 }
 
 export class testcrud {

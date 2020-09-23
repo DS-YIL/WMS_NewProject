@@ -66,6 +66,7 @@ export class GatePassApproverComponent implements OnInit {
   bindMaterilaDetails(gatepassId: any) {
     debugger;
     this.wmsService.gatepassmaterialdetail(gatepassId).subscribe(data => {
+      debugger;
       this.materialList = data;
       console.log(data);
       this.gatepassModel = this.materialList[0];
@@ -101,7 +102,7 @@ export class GatePassApproverComponent implements OnInit {
       return (element.issuedqty > 0);
     });
     if (data1.length == 0) {
-      this.messageService.add({ severity: 'error', summary: '', detail: 'Enter issue quantity.' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Enter Issue Qty.' });
       return;
     }
     this.spinner.show();
@@ -222,6 +223,7 @@ export class GatePassApproverComponent implements OnInit {
     var totalissuedqty = 0;
     this.itemlocationData.forEach(item => {
       if (item.issuedqty) {
+        debugger;
         //if (item.issuedquantity != "0")
         item.requestforissueid = this.materialList[this.roindex].requestforissueid;
         item.itemreturnable = this.materialList[this.roindex].itemreturnable;
@@ -232,6 +234,7 @@ export class GatePassApproverComponent implements OnInit {
         item.gatepasstype = this.materialList[this.roindex].gatepasstype;     
         item.approverstatus = this.materialList[this.roindex].approverstatus;
         item.approverremarks = this.materialList[this.roindex].approverremarks;
+        item.fmapproverremarks = this.materialList[this.roindex].fmapproverremarks;
         item.itemreceiverid = this.materialList[this.roindex].itemreceiverid;
         totalissuedqty = totalissuedqty + (item.issuedqty);
         this.issueFinalList.push(item);
@@ -245,7 +248,7 @@ export class GatePassApproverComponent implements OnInit {
 
     });
     if (totalissuedqty > this.reqqty) {
-      this.messageService.add({ severity: 'error', summary: '', detail: 'Please enter issue quantity less than or eaqual to requested quantity' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Issue Qty cannot exceed Requested Qty' });
       this.AddDialog = true;
     }
     else {

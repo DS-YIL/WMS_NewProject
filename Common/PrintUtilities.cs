@@ -17,7 +17,7 @@ namespace WMS.Common
 {
 	public class PrintUtilities
 	{
-        public string PrintIdentificationTag(string path, string printerName)
+        public string PrintQRCode(string path, string printerName)
         {
             try
             {

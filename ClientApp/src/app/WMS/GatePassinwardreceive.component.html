@@ -1,0 +1,125 @@
+
+<div class="card" style="width:98%;border-radius:10px; box-shadow:5px 10px #888888;min-height: 82vh; max-height: 82vh;margin:10px;">
+  <div class="card-header commoncardheader">
+    <div class="row text-center" style="margin-top: 10px;
+    margin-left: 0px !important;
+    margin-right: 0px !important">
+      <div class="col-lg-4 col-md-4 form-inline">
+
+
+      </div>
+      <div class="col-lg-4 col-md-4 text-center">
+        <span class="commonheadertext">
+          <i class="fa fa-check-circle-o commonheadertext"></i>&nbsp;Receive Gatepass(Inward)
+        </span>
+      </div>
+      <div class="col-lg-4 col-md-4">
+
+      </div>
+     
+    </div>
+
+  </div>
+  <div class="card-body" style="overflow-y:scroll">
+
+    <p-table #dt [value]="gatepassModelList" [style]="{'width':'100%','overflow':'auto!important'}"
+             [responsive]="true" [rows]="50"
+             [resizableColumns]="true"
+             columnResizeMode="expand"
+             [paginator]="true" [rowsPerPageOptions]="[25,50,75,100]"
+             appendTo="body" dataKey="gatepassid">
+      <ng-template pTemplate="header">
+        <tr class="mprltbldata">
+          <th style="text-align: center; width: 70px">Sl.No.</th>
+          <th style="text-align:center;width: 100px">Gatepass Id</th>
+          <th style="text-align:center">Supplier</th>
+          <th style="text-align:center;width: 300px">Approved By</th>
+          <th style="text-align:center;width: 200px">Approved On</th>
+        </tr>
+        <tr>
+          <th></th>
+          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'gatepassid', 'contains')"></th>
+          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'vendorname', 'contains')"></th>
+          <th></th>
+          <th></th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-rowData let-ri="rowIndex">
+        <tr>
+          <td>
+            {{ri+1}}
+          </td>
+          <!--<td class="ptable-cell" style="text-align:center"> <a style="color:blue;cursor:pointer;text-decoration:underline" href="#" [pRowToggler]="rowData"> <i [ngClass]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></i>{{rowData.gatepassid}}</a></td>-->
+          <td class="ptable-cell" style="text-align:left"><button class="btn btn-link" (click)="showdetails(rowData)">GTP{{rowData.gatepassid}}</button></td>
+          <td class="ptable-cell" style="text-align:left">{{rowData.vendorname}}</td>
+          <td class="ptable-cell" style="text-align:left">
+            <span>{{rowData.mgapprover}}</span>
+          </td>
+          <td class="ptable-cell" style="text-align:center">
+            <span>{{rowData.approvedon | date :'dd/MM/yyyy'}}</span>
+          </td>
+        </tr>
+      </ng-template>
+
+
+    </p-table>
+  </div>
+</div>
+
+
+
+
+
+
+<p-dialog header="Material Details" [(visible)]="showmatDialog" [responsive]="true" showEffect="fade" [modal]="true" [style]="{'width':'98%','height':'500px','overflow':'auto!important','margin-right': '0px','margin-left':'0px'}">
+  <div class="row " style="margin-top:5px">
+    <div class="col-lg-2 col-md-2 form-inline labelheading">
+      <label class="form-label"><b>GatePass Id: </b> </label>&nbsp;<label class="labeltext">GTP{{DGgatepassid}}</label>
+    </div>
+    <div class="col-lg-3 col-md-3 form-inline labelheading">
+      <label class="form-label"><b>Type: </b> </label>&nbsp;<label class="labeltext">{{DGgatepasstype}}</label>
+    </div>
+    <div class="col-lg-4 col-md-4 form-inline labelheading">
+      <label class="form-label"><b>Supplier: </b></label>&nbsp;<label class="labeltext">{{DGvendorname}}</label>
+    </div>
+  </div>
+  <br />
+  <div class="row " style="margin-top:5px">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+      <p-table [value]="materialListDG" [style]="{'width':'100%','height':'500px','overflow':'auto!important'}">
+        <ng-template pTemplate="header">
+          <tr class="mprltbldata">
+            <th class="ptable-cell" style="text-align:center;width:60px;">Sl. No.</th>
+            <th class="ptable-cell" style="text-align:center;width:150px">Material</th>
+            <th class="ptable-cell" style="text-align:center;">Material Description</th>
+            <th class="ptable-cell" style="text-align:center;width:200px">Outward qty</th>
+            <th class="ptable-cell" style="text-align:center;width:200px">Pending to receive</th>
+            <th class="ptable-cell" style="text-align:center;width:200px">Receive qty</th>
+            <th class="ptable-cell" style="text-align:center;width:200px">Remarks</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex" let-rindex=0>
+          <tr>
+            <td class="ptable-cell" style="text-align:center;width:60px;"> {{ri+1}} </td>
+            <td class="ptable-cell" style="text-align:left;width:150px"> {{rowData.materialid}} </td>
+            <td class="ptable-cell" style="text-align:left"> {{rowData.materialdescription}} </td>
+            <td class="ptable-cell" style="text-align:right;width:200px">{{rowData.outwardedqty}}</td>
+            <td class="ptable-cell" style="text-align:right;width:200px">{{rowData.outwardedqty-rowData.inwardedqty}}</td>
+              <td class="ptable-cell" style="text-align:right;width:200px">
+                <input pInputText type="number" [min]="0" (change)="checkinqty(rowData.inwardqty,rowData.outwardedqty,rowData);" class="form-control" [(ngModel)]="rowData.inwardqty">
+              </td>
+              <td class="ptable-cell" style="text-align:right;width:200px"><textarea [(ngModel)]="rowData.remarks"></textarea></td>
+            </tr>
+
+          </ng-template>
+        </p-table>
+      </div>/
+    </div><br />
+    <p-footer>
+      <div class="ui-dialog-buttonpane ui-helper-clearfix">
+        <button type="button" pButton icon="fa fa-ok" label="Submit" (click)="updateoutinward()"></button>
+        <button type="button" pButton icon="fa fa-close" label="cancel" (click)="closeDG()"></button>
+      </div>
+    </p-footer>
+  </p-dialog>
+

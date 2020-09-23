@@ -20,10 +20,11 @@ export class SecurityHomeComponent implements OnInit {
   @ViewChild('fileInput', { static: false })
   myInputVariable: ElementRef;
   constructor(private messageService: MessageService, private http: HttpClient, private wmsService: wmsService, private route: ActivatedRoute, private router: Router, public constants: constants, private spinner: NgxSpinnerService, @Inject('BASE_URL') baseUrl: string) { this.url = baseUrl; }
-
+  public print: string = "Print Barcode";
   public PoDetails: PoDetails;
   public Poinvoicedetails: PoDetails;
   public employee: Employee;
+  public pono: any = "";
   public showDetails; disSaveBtn; showPoList: boolean = false;
   showreceiveList: boolean = false;
   showreceivedPoList: boolean = false;
@@ -45,7 +46,7 @@ export class SecurityHomeComponent implements OnInit {
   searchdata: string = "";
   nonporemarks: string = "";
   nonpofile: any;
-  public showPrintBtn: boolean = true;
+  public showPrintBtn: boolean = false;
   public PrintHistoryModel: PrintHistoryModel;
 
   ngOnInit() {
@@ -161,6 +162,7 @@ export class SecurityHomeComponent implements OnInit {
     this.Poinvoicedetails.vendorname = "";
     this.Poinvoicedetails.invoiceno = "";
     this.ispochecked = true;
+    this.disSaveBtn = false;
     this.isnonpochecked = false;
   }
   nonpocheck() {
@@ -169,6 +171,9 @@ export class SecurityHomeComponent implements OnInit {
     this.Poinvoicedetails.invoiceno = "";
     this.ispochecked = false;
     this.isnonpochecked = true;
+    this.disSaveBtn = false;
+    this.showPrintBtn = false;
+    this.print = "Print Barcode";
   }
 
   getdepts() {
@@ -181,6 +186,7 @@ export class SecurityHomeComponent implements OnInit {
   //get details based on po no
   SearchPoNo() {
     if (this.searchdata) {
+      this.disSaveBtn = false;
       this.spinner.show();
       this.wmsService.getPoDetails(this.searchdata).subscribe(data => {
         this.spinner.hide();
@@ -209,7 +215,9 @@ export class SecurityHomeComponent implements OnInit {
 
   uploadnonpodoc(pono: string) {
     debugger;
+    this.pono = pono;
     if (!isNullOrUndefined(this.nonpofile)) {
+      
       let file = this.nonpofile;
       var fname = pono + "_" + file.name;
       const formData = new FormData();
@@ -230,7 +238,7 @@ export class SecurityHomeComponent implements OnInit {
     //need to generate barcode
     this.spinner.show();
     this.BarcodeModel = new BarcodeModel();
-    this.BarcodeModel.paitemid = 1;;
+    this.BarcodeModel.paitemid = 1;
     this.BarcodeModel.barcode = this.searchdata + "_" + this.Poinvoicedetails.invoiceno;
     this.BarcodeModel.createdby = this.employee.employeeno;
     this.BarcodeModel.pono = this.PoDetails.pono;
@@ -281,16 +289,24 @@ export class SecurityHomeComponent implements OnInit {
       }
       else if (data == "2") {
         this.messageService.add({ severity: 'error', summary: '', detail: 'Invoice for this PO already received' });
+        this.showPrintBtn = true;
+        this.print = "Print Barcode";
+      }
+      else if (data == "3") {
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Invoice for this PO already received' });
+        this.showPrintBtn = true;
+        this.print = "Re-Print Barcode";
       }
       else { //data>=1
         this.showPrintBtn = true;
-        
         if (String(data).startsWith("NP")) {
           this.uploadnonpodoc(data);
         }
         this.disSaveBtn = true;
-        this.refresh();
+        //this.refresh();
         this.messageService.add({ severity: 'success', summary: '', detail: 'Invoice No. Updated' });
+        this.print = "Print Barcode";
+        this.showPrintBtn = true;
         this.getcurrentDateReceivedPOlist();
       }
     });
@@ -298,14 +314,45 @@ export class SecurityHomeComponent implements OnInit {
 
   printbarcode() {
     //this.spinner.show();
-    var po_invoiceNo = this.searchdata + "_" + this.Poinvoicedetails.invoiceno;
+    debugger;
+    if (this.searchdata) {
+      var po_invoiceNo = this.searchdata + "_" + this.Poinvoicedetails.invoiceno;
+    }
+    else {
+      var po_invoiceNo = this.pono + "_" + this.Poinvoicedetails.invoiceno;
+    }
+    
     this.PrintHistoryModel = new PrintHistoryModel();
     this.PrintHistoryModel.reprintedby = this.employee.employeeno;
     this.PrintHistoryModel.po_invoice = po_invoiceNo;
-    this.PrintHistoryModel.pono = this.searchdata;
+    if (this.searchdata != null && this.searchdata != "") {
+      this.PrintHistoryModel.pono = this.searchdata;
+    }
+    else {
+      this.PrintHistoryModel.pono = this.pono;
+    }
+
     this.PrintHistoryModel.invoiceNo = this.Poinvoicedetails.invoiceno;
     this.wmsService.printBarcode(this.PrintHistoryModel).subscribe(data => {
       this.spinner.hide();
+      debugger;
+      if (data == "success") {
+        this.messageService.add({ severity: 'success', summary: '', detail: 'QRCode Printed Successfully' });
+        this.print = "Re-Print Barcode";
+        if (this.pono.startswith("NP")) {
+          this.showPrintBtn = false;
+          this.refresh();
+        }
+        else {
+          
+          this.refresh();
+        }
+        
+      }
+      else {
+        this.messageService.add({ severity: 'success', summary: '', detail: 'Error while printing QRCode' });
+      }
+      
       //if (data)
       //this.messageService.add({ severity: 'success', summary: '', detail: 'Invoice No. Updated' });
     })

@@ -26,7 +26,8 @@
     <div *ngIf="materialList.length>0">
       <div *ngIf="employee.roleid=='8'" class="row mt-2" style="padding-left:20px;">
         <button type="button" icon="fa fa-history" pButton aria-hidden="true" (click)="showHistoryList()" pTooltip="GatePass Approvals" style="float: left; height: 30px;width:30px"></button>
-      </div><br />
+      </div>
+      <!--<br />-->
       <div *ngIf="employee.roleid=='8' && gatePassApprovalList.length>0 && showHistory" style="background-color:#2c898073">
         <div class="row mt-2" style="padding-left:20px;font-weight: 600;font-size: 16px;color: #265f18;text-decoration:underline">History</div>
         <div class="row mt-2" style="padding-left:20px;">
@@ -71,12 +72,13 @@
             Remarks:&nbsp;<span style="color:#dc3545;">{{gatePassApprovalList[2].remarks}}</span>
           </div>
         </div>
-      </div><br />
+      </div>
+      <!--<br />-->
       <div class="row" style="padding-left:20px;">
         <div class="col-lg-2 col-md-2 col-sm-2 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
           GatePass Id:&nbsp;<span style="color:#dc3545;">GTP{{materialList[0].gatepassid}}</span>
         </div>
-        <div class="col-lg-2 col-md-2 col-sm-2 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
+        <div class="col-lg-4 col-md-4 col-sm-4 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
           Requester:&nbsp;<span style="color:#dc3545;">{{materialList[0].name}}</span>
         </div>
         <div class="col-lg-2 col-md-2 col-sm-2 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
@@ -90,6 +92,13 @@
             Status:&nbsp;<span style="color:#dc3545;">{{gatepassModel.approverstatus}}</span>
           </label>
         </div>
+       
+       
+
+
+      </div>
+   
+      <div class="row" style="padding-left:20px;">
         <div class="col-lg-2 col-md-2 col-sm-2 form-inline" *ngIf="!gatepassModel.approverstatus || !btnDisable" style="font-weight:600;font-size:14px;color:darkblue;">
           <label>
             Status:&nbsp;<span style="color:#dc3545;">Pending</span>
@@ -98,17 +107,15 @@
         <div class="col-lg-4 col-md-4 col-sm-4 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
           Reason:&nbsp;<span style="color:#dc3545;">{{materialList[0].reasonforgatepass}}</span>
         </div>
-
-
-      </div>
-      <br />
-      <div class="row" style="padding-left:20px;">
         <div class="col-lg-6 col-md-6 col-sm-6 form-inline" *ngIf="gatepassModel.approverremarks && btnDisable" style="font-weight:600;font-size:14px;color:darkblue;">
           Remarks:&nbsp;<span style="color:#dc3545;">{{gatepassModel.approverremarks}}</span>
         </div>
+        <!--<div class="col-lg-6 col-md-6 col-sm-6 form-inline" *ngIf="gatepassModel.approverremarks && btnDisable && materialList[0].gatepasstype!='Returnable'" style="font-weight:600;font-size:14px;color:darkblue;">
+          Remarks:&nbsp;<span style="color:#dc3545;">{{gatepassModel.fmapproverremarks}}</span>
+        </div>-->
         <!--<div class="col-lg-2 col-md-2 col-sm-2 form-inline">
-      <label class="form-label"><b>Vehicle No:</b></label>&nbsp;<span>{{materialList[0].vehicleno}}</span>
-    </div>-->
+    <label class="form-label"><b>Vehicle No:</b></label>&nbsp;<span>{{materialList[0].vehicleno}}</span>
+  </div>-->
       </div>
       <!--<br />-->
       <div class="row mt-4" style="margin:14px">

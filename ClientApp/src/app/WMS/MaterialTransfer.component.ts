@@ -5,7 +5,7 @@ import { wmsService } from '../WmsServices/wms.service';
 import { constants } from '../Models/WMSConstants';
 import { Employee, DynamicSearchResult, searchList } from '../Models/Common.Model';
 import { NgxSpinnerService } from "ngx-spinner";
-import { materialtransferMain, materialtransferTR, materialRequestDetails, returnmaterial, gatepassModel, materialistModel, PoDetails, StockModel, materialistModelreturn, materialistModeltransfer, ddlmodel } from 'src/app/Models/WMS.Model';
+import { materialtransferMain, materialtransferTR, materialRequestDetails, returnmaterial, gatepassModel, materialistModel, PoDetails, StockModel, materialistModelreturn, materialistModeltransfer, ddlmodel, UserModel } from 'src/app/Models/WMS.Model';
 import { MessageService } from 'primeng/api';
 import { isNullOrUndefined } from 'util';
 
@@ -53,7 +53,9 @@ export class MaterialTransferComponent implements OnInit {
   public gatepassdialog: boolean = false;
   projectlists: ddlmodel[] = [];
   selectedproject: ddlmodel;
+  selectedprojectfrom: ddlmodel;
   filteredprojects: ddlmodel[] = [];
+  filteredprojectsfrom: ddlmodel[] = [];
   materiallists: ddlmodel[] = [];
   selectedmaterial: string = "";
   filteredmaterial: string[] = [];
@@ -61,7 +63,9 @@ export class MaterialTransferComponent implements OnInit {
   materialtransfersavelist: materialtransferMain;
   materialtransferdetil: materialtransferTR[] = [];
   transferremarks: string = "";
-
+  projectmanagerfrom: string = "";
+  projectmanagerto: string = "";
+  pmdetails: UserModel;
 
   ngOnInit() {
     if (localStorage.getItem("Employee"))
@@ -70,14 +74,16 @@ export class MaterialTransferComponent implements OnInit {
       this.router.navigateByUrl("Login");
    
     this.PoDetails = new PoDetails();
+    this.pmdetails = new UserModel();
     this.StockModel = new StockModel();
     this.tarnsferModel = new returnmaterial();
     this.tarnsferModel.materialList = [];
     this.filteredmaterial = [];
     this.requestList = [];
     this.getprojects();
-    this.getmaterials();
+    //this.getmaterials();
     this.filteredprojects = [];
+    this.filteredprojectsfrom = [];
     this.materialtransferlist = [];
     this.materialtransfersavelist = new materialtransferMain();
     this.materialtransferdetil = [];
@@ -133,6 +139,38 @@ export class MaterialTransferComponent implements OnInit {
       data.requestedquantity = data.quotationqty;
     }
   }
+  onProjectSelected() {
+    this.pmdetails = new UserModel();
+    this.projectmanagerfrom = "";
+    var pm = this.selectedprojectfrom.projectmanager;
+    this.wmsService.getuserdetailbyempno(pm).subscribe(data => {
+      debugger;
+      this.pmdetails = data;
+      this.projectmanagerfrom = "Project Manager - " + this.pmdetails.name;
+    });
+    this.getmaterialsbyprojectcode(this.selectedprojectfrom.value);
+
+  }
+
+  clearDG() {
+    this.pmdetails = new UserModel();
+    this.transferremarks = "";
+    this.projectmanagerto = "";
+    this.projectmanagerfrom = "";
+  }
+
+  onProjectSelected1() {
+    this.pmdetails = new UserModel();
+    this.projectmanagerto = "";
+    var pm = this.selectedproject.projectmanager;
+    this.wmsService.getuserdetailbyempno(pm).subscribe(data => {
+      debugger;
+      this.pmdetails = data;
+      this.projectmanagerto = "Project Manager - "+ this.pmdetails.name;
+    });
+  }
+
+
 
   //transfer quantity update
   onMaterialRequestDeatilsSubmit() {
@@ -168,12 +206,29 @@ export class MaterialTransferComponent implements OnInit {
       this.spinner.hide();
     });
   }
-  getmaterials() {
+  getmaterialsbyprojectcode(emp: string) {
     this.spinner.show();
-    var empno = this.employee.employeeno;
+    //var empno = this.employee.employeeno;
+    var empno = emp;
+    this.wmsService.getmateriallistbyproject(empno).subscribe(data => {
+      debugger;
+      this.materiallists = data;
+      if (isNullOrUndefined(this.materiallists) || this.materiallists.length == 0) {
+        this.messageService.add({ severity: 'error', summary: '', detail: 'No Material Issued' });
+      }
+      this.spinner.hide();
+    });
+  }
+  getmaterials(emp: string) {
+    this.spinner.show();
+    //var empno = this.employee.employeeno;
+    var empno = emp;
     this.wmsService.getmateriallistfortransfer(empno).subscribe(data => {
       debugger;
       this.materiallists = data;
+      if (isNullOrUndefined(this.materiallists) || this.materiallists.length == 0) {
+        this.messageService.add({ severity: 'error', summary: '', detail: 'No Material Issued' });
+      }
       this.spinner.hide();
     });
   }
@@ -380,7 +435,7 @@ export class MaterialTransferComponent implements OnInit {
       if (data == 1) {
         this.btnDisabletransfer = true;
         this.AddDialogfortransfer = false;
-        this.messageService.add({ severity: 'sucess', summary: '', detail: 'Material Transferred' });
+        this.messageService.add({ severity: 'sucess', summary: '', detail: 'Material Transfer Initiated' });
       }
     })
   }
@@ -454,6 +509,7 @@ export class MaterialTransferComponent implements OnInit {
   openGatepassDialog(gatepassobject: any, gpIndx: any, dialog) {
     this.materialtransferdetil = [];
     this.selectedproject = new ddlmodel();
+    this.selectedprojectfrom = new ddlmodel();
     this.transferremarks = "";
    // this.bindSearchListData();
     this.displaydetail = false;
@@ -523,9 +579,20 @@ export class MaterialTransferComponent implements OnInit {
     this.filteredprojects = [];
     for (let i = 0; i < this.projectlists.length; i++) {
       let brand = this.projectlists[i].value;
-      let pos = this.projectlists[i].text;
+      let pos = this.projectlists[i].projectmanager;
       if (brand.toLowerCase().indexOf(event.query.toLowerCase()) == 0 || pos.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
         this.filteredprojects.push(this.projectlists[i]);
+      }
+    }
+  }
+
+  filterprojectsfrom(event) {
+    this.filteredprojectsfrom = [];
+    for (let i = 0; i < this.projectlists.length; i++) {
+      let brand = this.projectlists[i].value;
+      let pos = this.projectlists[i].projectmanager;
+      if (brand.toLowerCase().indexOf(event.query.toLowerCase()) == 0 || pos.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+        this.filteredprojectsfrom.push(this.projectlists[i]);
       }
     }
   }
@@ -542,8 +609,18 @@ export class MaterialTransferComponent implements OnInit {
     }
   }
   transfermaterial() {
+    if (isNullOrUndefined(this.selectedprojectfrom.value)) {
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Select Project From' });
+      return false;
+
+    }
     if (isNullOrUndefined(this.selectedproject.value)) {
-      this.messageService.add({ severity: 'error', summary: '', detail: 'Select Project' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Select Project To' });
+      return false;
+
+    }
+    if (this.selectedproject.value == this.selectedprojectfrom.value) {
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Materials can not transfered to the same project.' });
       return false;
 
     }
@@ -567,9 +644,14 @@ export class MaterialTransferComponent implements OnInit {
     }
     let savemaindata = new materialtransferMain();
     savemaindata.projectcode = this.selectedproject.value;
+    savemaindata.projectmanagerto = this.selectedproject.projectmanager;
+    savemaindata.projectcodefrom = this.selectedprojectfrom.value;
+    savemaindata.projectmanagerfrom = this.selectedprojectfrom.projectmanager;
     savemaindata.transferremarks = this.transferremarks;
     savemaindata.transferedby = this.employee.employeeno;
     savemaindata.materialdata = this.materialtransferdetil;
+    savemaindata.approvallevel = 1;
+    savemaindata.finalapprovallevel = this.selectedprojectfrom.projectmanager == this.selectedproject.projectmanager ? 2 : this.selectedprojectfrom.projectmanager != this.selectedproject.projectmanager ? 3 : 1;
     this.spinner.show();
     this.wmsService.updatetransfermaterial(savemaindata).subscribe(data => {
       this.spinner.hide();

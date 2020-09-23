@@ -15,7 +15,7 @@
         <div class="col-lg-4 col-md-4 text-center">
 
           <span class="commonheadertext">
-            <i class="fa fa-check-circle-o commonheadertext"></i>&nbsp;Reserved Material
+            <i class="fa fa-check-circle-o commonheadertext"></i>&nbsp;Reserve Plant Material
           </span>
 
         </div>
@@ -47,17 +47,21 @@
           <tr class="mprltbldata">
             <th style="text-align:center;width:70px">Sl.No.</th>
             <th style="text-align:center;width:100px">Reserve Id</th>
+            <th style="text-align:center;width:100px">Project</th>
             <th style="text-align:center;width:150px">Reserved On</th>
             <th style="text-align:center;width:150px">Reserved Upto</th>
             <th style="text-align:center;width:150px">Status</th>
+            <th style="text-align:center;width:200px">Remarks</th>
           </tr>
           <tr>
             <th></th>
             <th> <input pInputText type="text" class="form-control" (input)="dt1.filter($event.target.value, 'reserveid', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt1.filter($event.target.value, 'projectcode', 'contains')"></th>
             <th> <input pInputText type="text" class="form-control" (input)="dt1.filter($event.target.value, 'reservedon', 'contains')"></th>
             <th> <input pInputText type="text" class="form-control" (input)="dt1.filter($event.target.value, 'reserveupto', 'contains')"></th>
             <th><input pInputText type="text" class="form-control" (input)="dt1.filter($event.target.value, 'chkstatus', 'startsWith')"></th>
-           
+            <th></th>
+
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
@@ -66,16 +70,16 @@
             <td class="ptable-cell" style="text-align:center;width:100px;">
               <button type="button" class="btn btn-link" (click)="showmaterialdetails(rowData.reserveid,rowData);" style="padding-left:0px;">MATRV{{rowData.reserveid}}</button>
             </td>
-            <!--<td class="ptable-cell" style="text-align:center;width:150px">{{rowData.pono}}</td>
-            <td class="ptable-cell" style="text-align:left">{{rowData.projectname}}</td>-->
+            <!--<td class="ptable-cell" style="text-align:center;width:150px">{{rowData.pono}}</td>-->
+            <td class="ptable-cell" style="text-align:center;width:100px">{{rowData.projectcode}}</td>
             <td class="ptable-cell" style="text-align:center;width:150px">{{rowData.reservedon| date :  constants.dateFormat}}</td>
             <td class="ptable-cell" style="text-align:center;width:150px">{{checkValiddate(rowData.reserveupto)}}</td>
             <!--<td class="ptable-cell">
-              <div *ngIf="rowData.approvedstatus=='approved'" class="form-inline">
-                <p-checkbox [(ngModel)]="rowData.status" binary="true" (click)="ackStatusChanges()"></p-checkbox> &nbsp;&nbsp;
-                <textarea type="text" style="width:140px" class="form-control" [(ngModel)]="rowData.ackremarks"></textarea>
-              </div>
-            </td>-->
+    <div *ngIf="rowData.approvedstatus=='approved'" class="form-inline">
+      <p-checkbox [(ngModel)]="rowData.status" binary="true" (click)="ackStatusChanges()"></p-checkbox> &nbsp;&nbsp;
+      <textarea type="text" style="width:140px" class="form-control" [(ngModel)]="rowData.ackremarks"></textarea>
+    </div>
+  </td>-->
 
             <td class="ptable-cell" style="text-align:center;width:150px">
               <span *ngIf="rowData.chkstatus == 'Reserved'" style="color:blue" [innerText]="getstatus(rowData)"></span>
@@ -83,6 +87,7 @@
               <span *ngIf="rowData.chkstatus == 'Expired'" style="color:red" [innerText]="getstatus(rowData)"></span>
               <span *ngIf="rowData.ackstatus=='received'" [innerText]="getstatus(rowData)"></span>
             </td>
+            <td class="ptable-cell" style="text-align:left;width:200px">{{rowData.remarks}}</td>
           </tr>
         </ng-template>
       </p-table>
@@ -165,31 +170,39 @@
 <p-dialog header="Reserve Materials" [(visible)]="requestDialog" [responsive]="true" showEffect="fade" [modal]="true" (onHide)="close()" [style]="{'width':'98%','overflow':'auto!important','margin-right': '0px','margin-left':'0px'}">
   <div class="row " style="margin-top:10px">
     <!--<div class="col-md-8 col-lg-8">
-      <div class="form-inline" style="margin-left:10px;">
-        <label class="labelheading">PO No.</label>&nbsp;&nbsp;
-        <input type="text" placeholder="All" readonly [(ngModel)]="requestMatData.pono" class="form-control" />&nbsp;&nbsp;
-        <i class="btn fa fa-search" (click)="showpodatabox()"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <label class="labelheading">Supplier:</label>&nbsp;&nbsp;
-        <input type="text" placeholder="All" style="width:40%" readonly [(ngModel)]="requestMatData.suppliername" class="form-control" />
-        <i class="btn fa fa-refresh" (click)="refreshdata()"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <div class="form-inline" style="margin-left:10px;">
+      <label class="labelheading">PO No.</label>&nbsp;&nbsp;
+      <input type="text" placeholder="All" readonly [(ngModel)]="requestMatData.pono" class="form-control" />&nbsp;&nbsp;
+      <i class="btn fa fa-search" (click)="showpodatabox()"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <label class="labelheading">Supplier:</label>&nbsp;&nbsp;
+      <input type="text" placeholder="All" style="width:40%" readonly [(ngModel)]="requestMatData.suppliername" class="form-control" />
+      <i class="btn fa fa-refresh" (click)="refreshdata()"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 
 
-      </div>
+    </div>
 
-    </div>-->
-   
-    <div class="col-lg-4 col-md-4 col-sm-4 form-group">
+  </div>-->
+    <div class="col-lg-4 col-md-4 form-inline">
+      <label class="labelheading">Project :</label>
+      <p-autoComplete [(ngModel)]="selectedproject" field="text" appendTo="body" [suggestions]="filteredprojects" placeholder="search by name/code" [ngModelOptions]="{standalone: true}" [forceSelection]="true" (completeMethod)="filterprojects($event)" [size]="30"
+                      [dropdown]="true"></p-autoComplete>
+    </div>
+    <div class="col-lg-4 col-md-4 form-inline">
+      <textarea [(ngModel)]="reserveremarks" style="width:80%;resize:none" placeholder="Remarks"></textarea>
+    </div>
+
+    <!--<div class="col-lg-4 col-md-4 col-sm-4 form-group">
       <label for="itemlocation" class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">PO No.:</label>
       <div class="form-inline-list">
 
         <select *ngIf="requestMatData.suppliername==null || requestMatData.suppliername=='All'" class="form-control dropdown" (change)="onPOSelected(requestMatData.pono)" [(ngModel)]="requestMatData.pono">
-          <option [ngValue]="All"  selected>ALL</option>
+          <option [ngValue]="All" selected>ALL</option>
           <option *ngFor=" let polist of ponolist " value={{polist.pono}}>
             {{polist.pono}}
           </option>
         </select>
-       
+
         <label *ngIf="requestMatData.suppliername && requestMatData.suppliername!='All'">{{ponumber}}</label>
       </div>
     </div>
@@ -204,7 +217,7 @@
         </select>
         <label *ngIf="requestMatData.pono && requestMatData.pono!='All'">{{suppliername}}</label>
       </div>
-    </div>
+    </div>-->
     <div class="col-lg-4 col-md-4 pt-2" style="font-weight:600;font-size:14px;color:darkblue;">
       Reserve Upto : <input type="date" [value]="reservedfor |  date:'yyyy-MM-dd'" min={{mindate}} max={{maxdate}} (input)="reservedfor=parseDate($event.target.value)">
     </div>
@@ -236,7 +249,7 @@
 
                 <!--<input *ngIf="rowData.materialid" [(ngModel)]="rowData.materialid" class="form-control" type="text" name="{{rowData.materialid}}" />-->
                 <!--<p-autoComplete [(ngModel)]="rowData.material" type="text" appendTo="body" [suggestions]="searchItems" (onSelect)="onMaterialSelected(rowData.material,ri)" (completeMethod)="bindSearchList($event,'material')" [size]="10"
-                    [dropdown]="true"></p-autoComplete>-->
+                [dropdown]="true"></p-autoComplete>-->
                 <p-autoComplete [(ngModel)]="rowData.material" placeholder="search by name/code" type="text" appendTo="body" [forceSelection]="true" (onSelect)="onMaterialSelected1(rowData,ri)" [suggestions]="filteredmats" (completeMethod)="filtermats($event)" [size]="20"
                                 [dropdown]="true"></p-autoComplete>
 
@@ -264,12 +277,12 @@
 
 
 
-</ng-template>
+          </ng-template>
 
 
         </p-table>
 
-        <p-table [value]="materialList" *ngIf="displaylist" [style]="{'width':'97%','height':'500px','overflow':'visible!important'}">
+        <p-table [value]="materialList" *ngIf="displaylist" [style]="{'width':'97%','overflow':'visible!important'}">
           <ng-template pTemplate="caption">
             Update Reserve quantity for Materials
             <!--<button type="button" icon="fa fa-plus" pButton aria-hidden="true" pTooltip="Add material" (click)="addNewMaterial()" style="float: right;height: 26px;"></button>-->
@@ -295,7 +308,7 @@
 
                 <!--<input *ngIf="rowData.material" [(ngModel)]="rowData.material" class="form-control" type="text" name="{{rowData.material}}" />-->
                 <!--<p-autoComplete [(ngModel)]="rowData.material" type="text" appendTo="body" [suggestions]="searchItems" (onSelect)="onMaterialSelected(rowData.material,ri)" (completeMethod)="bindSearchList($event,'material')" [size]="10"
-          [dropdown]="true"></p-autoComplete>-->
+              [dropdown]="true"></p-autoComplete>-->
 
 
               </td>
@@ -326,7 +339,9 @@
         </p-table>
       </div>
     </div>
+
   </div>
+  
 
   <p-footer>
     <div class="ui-dialog-buttonpane ui-helper-clearfix">

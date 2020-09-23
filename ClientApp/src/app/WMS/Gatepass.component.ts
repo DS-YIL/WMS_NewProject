@@ -248,7 +248,7 @@ export class GatePassComponent implements OnInit {
           fName = item[this.constants[name].fieldId];
         // var value = { listName: name, name: fName, code: item[this.constants[name].fieldId] };
         var value = { code: item[this.constants[name].fieldId] };
-        this.materialistModel.materialcost = data[0].materialcost;
+        //this.materialistModel.materialcost = data[0].materialcost;
         this.searchItems.push(item[this.constants[name].fieldId]);
       });
     });
@@ -562,7 +562,10 @@ export class GatePassComponent implements OnInit {
   onMaterialSelected(material: any, index: any) {
     debugger;
     if (this.gatepassModel.materialList.filter(li => li.materialid == material).length > 1) {
+      this.gatepassModel.materialList[index] = new materialistModel();
+      this.gatepassModel.materialList[index].materialid = "";
       this.messageService.add({ severity: 'error', summary: '', detail: 'Material already exist' });
+     
       return false;
     }
     //add material price
@@ -630,6 +633,7 @@ export class GatePassComponent implements OnInit {
           this.disableGPBtn = false;
           return false;
         }
+
         else if (this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].quantity > 0) {
 
           this.spinner.show();

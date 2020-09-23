@@ -6,6 +6,7 @@ import { map } from 'rxjs/operators';
 import { constants } from '../Models/WMSConstants'
 import { Employee, Login, DynamicSearchResult, printMaterial, rbamaster } from '../Models/Common.Model';
 import { PoFilterParams, PoDetails, BarcodeModel, StockModel, materialRequestDetails, inwardModel, gatepassModel, stocktransfermodel, Materials, authUser, invstocktransfermodel, ddlmodel, locataionDetailsStock, updateonhold, materialistModel, outwardmaterialistModel, pageModel, UserDashboardDetail, UserDashboardGraphModel, UnholdGRModel, MRNsavemodel, notifymodel, materialtransferMain, materialReservetorequestModel, testcrud, PrintHistoryModel, materilaTrasFilterParams, materialRequestFilterParams, materialResFilterParams, materialRetFilterParams} from '../Models/WMS.Model';
+import { PoFilterParams, PoDetails, BarcodeModel, StockModel, materialRequestDetails, inwardModel, gatepassModel, stocktransfermodel, Materials, authUser, invstocktransfermodel, ddlmodel, locataionDetailsStock, updateonhold, materialistModel, outwardmaterialistModel, pageModel, UserDashboardDetail, UserDashboardGraphModel, UnholdGRModel, MRNsavemodel, notifymodel, materialtransferMain, materialReservetorequestModel, testcrud, PrintHistoryModel, materilaTrasFilterParams, outwardinwardreportModel, UserModel } from '../Models/WMS.Model';
 import { Text } from '@angular/compiler/src/i18n/i18n_ast';
 
 @Injectable({
@@ -92,6 +93,15 @@ export class wmsService {
   //generate barcode for materials
   generateBarcodeMaterial(printdata: printMaterial): Observable<any> {
     return this.http.post<any>(this.url + 'POData/generateBarcodeMaterial', printdata, this.httpOptions);
+  }
+
+  //printBarcodeMaterial(printdata: printMaterial): Observable<any> {
+  //  return this.http.post<any>(this.url + 'POData/printBarcodeMaterial', printdata, this.httpOptions);
+  //}
+
+  printBarcodeMaterial(printdata: printMaterial): Observable<any> {
+    const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }), responseType: 'text' as any };
+    return this.http.post<any>(this.url + 'Print/printLabel/', printdata, httpOptions);
   }
 
   insertbarcodeandinvoiceinfo(BarcodeModel: BarcodeModel): Observable<any> {
@@ -188,6 +198,10 @@ export class wmsService {
     return this.http.get<any>(this.url + 'POData/gettransferdata?empno=' + empno + '', this.httpOptions);
   }
 
+  gettransferdataforapproval(empno: any): Observable<any> {
+    return this.http.get<any>(this.url + 'POData/gettransferdataforapproval?empno=' + empno + '', this.httpOptions);
+  }
+
   getdirecttransferdata(empno: string): Observable<any> {
     return this.http.get<any>(this.url + 'POData/getdirecttransferdata?empno=' + empno, this.httpOptions);
   }
@@ -196,6 +210,10 @@ export class wmsService {
   }
   getMaterialRequestlistdata(loginid: string, pono: string): Observable<any> {
     return this.http.get<any>(this.url + 'POData/getmaterialrequestListdata?PONO=' + pono + '&loginid=' + loginid + '', this.httpOptions);
+  }
+
+  getMaterialReservelistdata(): Observable<any> {
+    return this.http.get<any>(this.url + 'POData/getmaterialreserveListdata/', this.httpOptions);
   }
 
   //materialRequestUpdate(materialRequestList: any): Observable<any> {
@@ -269,8 +287,16 @@ export class wmsService {
   getGatePassList(): Observable<any> {
     return this.http.get<any>(this.url + 'POData/getgatepasslist/', this.httpOptions);
   }
-  nonreturngetGatePassList(typ: string): Observable<any> {
-    return this.http.get<any>(this.url + 'POData/nonreturngetgatepasslist/?type=' + typ, this.httpOptions);
+  nonreturngetGatePassList(typ: string): Observable<any[]> {
+    return this.http.get<any[]>(this.url + 'POData/nonreturngetgatepasslist/?type=' + typ, this.httpOptions);
+  }
+
+  outingatepassreport(): Observable<outwardinwardreportModel[]> {
+    return this.http.get<outwardinwardreportModel[]>(this.url + 'POData/outwardinwardreport/', this.httpOptions);
+  }
+
+  getuserdetailbyempno(empno: string): Observable<UserModel> {
+    return this.http.get<UserModel>(this.url + 'POData/getempnamebycode?empno=' + empno, this.httpOptions);
   }
 
 
@@ -483,11 +509,17 @@ export class wmsService {
     return this.http.get<ddlmodel[]>(this.url + 'POData/getprojectlist/', this.httpOptions);
   }
 
+  getprojectlistbymanager(empno: string): Observable<ddlmodel[]> {
+    return this.http.get<ddlmodel[]>(this.url + 'POData/getprojectlistbymanager?empno=' + empno, this.httpOptions);
+  }
+
   getmateriallistfortransfer(empno: string): Observable<ddlmodel[]> {
     return this.http.get<ddlmodel[]>(this.url + 'POData/getmateriallistfortransfer?empno=' + empno, this.httpOptions);
   }
 
-
+  getmateriallistbyproject(pcode: string): Observable<ddlmodel[]> {
+    return this.http.get<ddlmodel[]>(this.url + 'POData/getmateriallistbyproject?projectcode=' + pcode, this.httpOptions);
+  }
 
   updateonhold(updaeonhold: updateonhold): Observable<any> {
     const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }), responseType: 'text' as any };
@@ -552,6 +584,9 @@ export class wmsService {
   updatetransfermaterial(transferdata: materialtransferMain): Observable<any> {
     return this.http.post<any>(this.url + 'POData/mattransfer', transferdata, this.httpOptions);
   }
+  approvetransfermaterial(transferdata: materialtransferMain[]): Observable<any> {
+    return this.http.post<any>(this.url + 'POData/mattransferapproval', transferdata, this.httpOptions);
+  }
   gettestcrud(): Observable<testcrud[]> {
     return this.http.get<testcrud[]>(this.url + 'POData/gettestcrud/', this.httpOptions);
   }
@@ -569,8 +604,9 @@ export class wmsService {
 
   //print bar code
 
-  printBarcode(PrintHistoryModel: PrintHistoryModel): Observable<pageModel[]> {
-    return this.http.post<any[]>(this.url + 'Print/printBarcode/', PrintHistoryModel, this.httpOptions);
+  printBarcode(PrintHistoryModel: PrintHistoryModel): Observable<any> {
+    const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }), responseType: 'text' as any };
+    return this.http.post<any>(this.url + 'Print/printBarcode/', PrintHistoryModel, httpOptions);
   }
   //get material transfer dashboard details
   getMaterialtransferdetails(materialTransferFilters: materilaTrasFilterParams): Observable<any> {
