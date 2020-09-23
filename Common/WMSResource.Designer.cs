@@ -736,6 +736,16 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to select mr.requestid,mr.requesteddate,issue.approvedstatus as ackstatus,emp.name as requestedby from wms.wms_materialrequest mr
+        ///left outer join  wms.employee emp on emp.employeeno = mr.requesterid   left join  wms.wms_materialissue issue on issue.requestforissueid=mr.requestforissueid.
+        /// </summary>
+        public static string getMaterialRequestDashboardDetails {
+            get {
+                return ResourceManager.GetString("getMaterialRequestDashboardDetails", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to select &apos;&apos; as jobname, inw.confirmqty,sec.grnnumber,sec.pono,mtmaster.materialdescription,
         ///sk.materialid, sk.availableqty,sk.itemid
         /// from wms.wms_securityinward sec left join wms.wms_storeinward inw on inw.inwmasterid=sec.inwmasterid
@@ -747,6 +757,26 @@ namespace WMS.Common {
         public static string getMaterialRequestDetails {
             get {
                 return ResourceManager.GetString("getMaterialRequestDetails", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to select mrs.reserveid,mrs.reservedon,issue.approvedstatus as status,emp.name as reservedby from wms.wms_materialreserve mrs
+        ///left outer join  wms.employee emp on emp.employeeno = mrs.requestedby  left join  wms.wms_materialissue issue on issue.reserveformaterialid=mrs.reserveformaterialid.
+        /// </summary>
+        public static string getMaterialReserveDashboardDetails {
+            get {
+                return ResourceManager.GetString("getMaterialReserveDashboardDetails", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to select mrt.matreturnid,mrt.returnid,mrt.confirmstatus,emp.name as createdby,mrt.createdon  from wms.wms_returnmaterial mrt
+        ///left outer join  wms.employee emp on emp.employeeno = createdby.
+        /// </summary>
+        public static string getMaterialReturnDashboardDetails {
+            get {
+                return ResourceManager.GetString("getMaterialReturnDashboardDetails", resourceCulture);
             }
         }
         

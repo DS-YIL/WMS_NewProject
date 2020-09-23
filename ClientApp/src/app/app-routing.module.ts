@@ -56,7 +56,11 @@ import { GatepassinwardViewComponent } from './WMS/GatepassinwardView.component'
 import { TestCompComponent } from './WMS/TestComp.component';
 import { PutawayNotificationViewComponent } from './WMS/PutawayNotificationView.component';
 import { DirectTransferComponent } from './WMS/DirectTransfer.component';
-import { MaterialTransferDashboardComponent } from './WMS/MaterialTransferDashboard.component';
+import { MaterialTransferDashboardComponent } from './WMS/MaterialTransferDashboard.component'; 
+import { MaterialRequestDashboardComponent } from './WMS/MaterialRequestDashboard.component';
+import { MaterialReserveDashboardComponent } from './WMS/MaterialReserveDashboard.component';
+import { MaterialsReturnDashboardComponent } from './WMS/MaterialsReturnDashboard.component';
+
 
 const routes: Routes = [{
   path: 'WMS',
@@ -129,11 +133,14 @@ const routes: Routes = [{
     { path: "Test", component: TestCompComponent, canActivate: [AuthGuard] },
     { path: "GRNotification", component: PutawayNotificationViewComponent, canActivate: [AuthGuard] },
     { path: "Directtransfer", component: DirectTransferComponent, canActivate: [AuthGuard] },
-     { path: "MaterialTransferDashboard", component: MaterialTransferDashboardComponent, canActivate: [AuthGuard] }
-    
+     { path: "MaterialTransferDashboard", component: MaterialTransferDashboardComponent, canActivate: [AuthGuard] },
+    { path: "MaterialRequestDashboard", component: MaterialRequestDashboardComponent, canActivate: [AuthGuard] },
+    { path: "MaterialReserveDashboard", component: MaterialReserveDashboardComponent, canActivate: [AuthGuard] },
+    { path: "MaterialsReturnDashboard", component: MaterialsReturnDashboardComponent, canActivate: [AuthGuard] }
+
     
   ]
-
+  
 },
   {
     path: '', redirectTo: 'WMS', pathMatch: 'full'

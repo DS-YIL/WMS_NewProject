@@ -508,6 +508,7 @@ export class materialtransferMain {
   showtr: boolean;
   materialdata: materialtransferTR[] = [];
 }
+
 export class materialtransferTR {
   transferid: number;
   materialid: string;
@@ -556,3 +557,46 @@ export class materilaTrasFilterParams {
   FromDate: string;
   ToDate: string;
 }
+//Amulya
+export class materialrequestMain {
+  requestid: number;
+  requestedby: string;
+  requesteddate: Date;
+  ackstatus: string;
+  showtr: boolean;
+  materialdata: materialtransferTR[] = [];
+}
+export class materialRequestFilterParams {
+  FromDate: string;
+  ToDate: string;
+}
+//Amulya
+export class materialResFilterParams {
+  FromDate: string;
+  ToDate: string;
+}
+export class materialreserveMain {
+  reserveid: number;
+  reservedby: string;
+  reservedon: Date;
+  requestedby: string;
+  status: string;
+  showtr: boolean;
+  materialdata: materialtransferTR[] = [];
+}
+
+//Amulya
+export class materialRetFilterParams {
+  FromDate: string;
+  ToDate: string;
+}
+export class materialreturnMain {
+  matreturnid: number;
+  returnid: number;
+  createdon: Date;
+  createdby: string;
+  confirmstatus: string;
+  showtr: boolean;
+  materialdata: materialtransferTR[] = [];
+}
+

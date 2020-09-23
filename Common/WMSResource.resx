@@ -1055,4 +1055,16 @@ where gatepassmaterialid ='#gatepassmaterialid' and
 sk.deleteflag=false
 group by sk.itemlocation,ygs.materialdescription,ygs.material,createddate::DATE,sk.itemid</value>
   </data>
+  <data name="getMaterialRequestDashboardDetails" xml:space="preserve">
+    <value>select mr.requestid,mr.requesteddate,issue.approvedstatus as ackstatus,emp.name as requestedby from wms.wms_materialrequest mr
+left outer join  wms.employee emp on emp.employeeno = mr.requesterid   left join  wms.wms_materialissue issue on issue.requestforissueid=mr.requestforissueid</value>
+  </data>
+  <data name="getMaterialReserveDashboardDetails" xml:space="preserve">
+    <value>select mrs.reserveid,mrs.reservedon,issue.approvedstatus as status,emp.name as reservedby from wms.wms_materialreserve mrs
+left outer join  wms.employee emp on emp.employeeno = mrs.requestedby  left join  wms.wms_materialissue issue on issue.reserveformaterialid=mrs.reserveformaterialid</value>
+  </data>
+  <data name="getMaterialReturnDashboardDetails" xml:space="preserve">
+    <value>select mrt.matreturnid,mrt.returnid,mrt.confirmstatus,emp.name as createdby,mrt.createdon  from wms.wms_returnmaterial mrt
+left outer join  wms.employee emp on emp.employeeno = createdby</value>
+  </data>
 </root>
