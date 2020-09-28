@@ -41,6 +41,8 @@ export class GatePassApproverComponent implements OnInit {
   public material: string = "";
   public matdesc: string = "";
   public issueqtyenable: boolean = true;
+  //Email
+  gateid: string = "";
   ngOnInit() {
     if (localStorage.getItem("Employee"))
       this.employee = JSON.parse(localStorage.getItem("Employee"));
@@ -56,6 +58,17 @@ export class GatePassApproverComponent implements OnInit {
         }
       }
     });
+
+    //Email
+    this.gateid = this.route.snapshot.queryParams.grnnumber;
+    if (this.gateid) {
+      debugger;
+      //get material details for that gatepassid
+      this.materialList[0] = this.gateid;
+      this.updategatepassapproverstatus();
+
+    }
+
     this.gatepassModel = new gatepassModel();
     this.gatepassModel.approverstatus = "Approved";
 

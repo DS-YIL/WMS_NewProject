@@ -89,12 +89,12 @@ namespace WMS.Common
 				link = "http://10.29.15.212:82/WMS/Email/MaterialReqView?reqid=" + emlSndngList.requestid;
 
 			}
-			else if (subjecttype == 7)
-			{
-                mailMessage.Subject = "Acknowledge Materials -  Request Id" + emlSndngList.requestid;
-                subbody = mailMessage.Subject;
+			//else if (subjecttype == 7)
+			//{
+			//  mailMessage.Subject = "Acknowledge Materials -  Request Id" + emlSndngList.requestid;
+			 // subbody = mailMessage.Subject;
+			 // }
 
-            }
 			//Admin to Approver(MA & FA)
 
 			else if (subjecttype == 8)
@@ -103,7 +103,7 @@ namespace WMS.Common
 				//subbody = "Please find the Masterials request details below. <br/> Requested By:" + emlSndngList.requestedby + "<br/>Requested On:" + emlSndngList.requestedon;
 				//subbody = mailMessage.Subject;
 
-				mailMessage.Subject = "Gatepass materials for Returnable - GatePass - ID" + emlSndngList.gatepassid;
+				mailMessage.Subject = "Gatepass Materials for Returnable - GatePass - ID" + emlSndngList.gatepassid;
 				string requestedby = this.getnamebyid(emlSndngList.requestedby);
 				subbody = "Please find the Returnable Masterials details below. <br/> Requested By:" + requestedby + "<br/>Requested On:" + emlSndngList.requestedon + "<br/>GatePass Type:" + emlSndngList.gatepasstype;
 				//subbody = mailMessage.Subject;
@@ -111,17 +111,60 @@ namespace WMS.Common
 
 
 			}
+			// Approverfor Returnable(PM)-Inventory Clerk
+
+			else if (subjecttype == 15)
+
+			{
+
+				mailMessage.Subject = "Gate Pass Material Pending for Issue - GatePass - ID" + emlSndngList.gatepassid;
+				string requestedby = this.getnamebyid(emlSndngList.requestedby);
+				subbody = "Please find the below link for more details. <br/> Requested By:" + requestedby;
+				//subbody = mailMessage.Subject;
+				link = "http://10.29.15.212:82/WMS/Email/GatePass?gateid=" + emlSndngList.gatepassid;
+
+
+			}
+
 			//Admin to Approver(MA)
 
 			else if (subjecttype == 9)
 
 			{
 
-                mailMessage.Subject = "Gatepass materials for Non-returnable - GatePass - ID" + emlSndngList.gatepassid;
+                mailMessage.Subject = "Gatepass Materials for Non-returnable - GatePass - ID" + emlSndngList.gatepassid;
 				string requestedby = this.getnamebyid(emlSndngList.requestedby);
 				subbody = "Please find the Non-returnable Masterials details below. <br/> Requested By:" + requestedby + "<br/>Requested On:" + emlSndngList.requestedon + "<br/>GatePass Type:" + emlSndngList.gatepasstype;
 				//subbody = mailMessage.Subject;
-				link = "http://10.29.15.212:82/WMS/Email/GatePassFMList?gateid=" + emlSndngList.gatepassid;
+				link = "http://10.29.15.212:82/WMS/Email/GatePassPMList?gateid=" + emlSndngList.gatepassid;
+
+
+			}
+			// Approver(PM)-Approver(FM)
+
+			else if (subjecttype == 16)
+
+			{
+
+				mailMessage.Subject = "Gatepass Materials for Material Issue - GatePass - ID" + emlSndngList.gatepassid;
+				string requestedby = this.getnamebyid(emlSndngList.requestedby);
+				subbody = "Please find the Material Issue details below. <br/> Requested By:" + requestedby + "<br/>Requested On:" + emlSndngList.requestedon + "<br/>GatePass Type:" + emlSndngList.gatepasstype;
+				//subbody = mailMessage.Subject;
+				link = "http://10.29.15.212:82/WMS/Email/GatePass?gateid=" + emlSndngList.gatepassid;
+
+
+			}
+			// Approverfor Returnable(PM)-Inventory Clerk
+
+			else if (subjecttype == 17)
+
+			{
+
+				mailMessage.Subject = "Gate Pass Material Pending for Issue - GatePass - ID" + emlSndngList.gatepassid;
+				string requestedby = this.getnamebyid(emlSndngList.requestedby);
+				subbody = "Please find the below link for more details. <br/> Requested By:" + requestedby;
+				//subbody = mailMessage.Subject;
+				link = "http://10.29.15.212:82/WMS/Email/GatePass?gateid=" + emlSndngList.gatepassid;
 
 
 			}

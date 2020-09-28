@@ -1996,7 +1996,7 @@ namespace WMS.DAL
 						emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
 						emailmodel.CC = "sushma.patil@in.yokogawa.com";
 						EmailUtilities emailobj = new EmailUtilities();
-						emailobj.sendEmail(emailmodel, 7);
+						emailobj.sendEmail(emailmodel, 6);
 					}
 				}
 				return (Convert.ToInt32(result));
@@ -5714,7 +5714,7 @@ namespace WMS.DAL
 			}
 		}
 
-
+		//Amulya
 		public int GatepassapproveByManager(gatepassModel model)
 		{
 			try
@@ -5751,6 +5751,17 @@ namespace WMS.DAL
 								label,
 								approverstatus
 							});
+							EmailModel emailmodel = new EmailModel();
+							emailmodel.approvername = model.approvedby;
+							emailmodel.approverid = model.approverid;
+							emailmodel.gatepassid = model.gatepassid;
+							emailmodel.approverstatus = model.approverstatus;
+
+							emailmodel.ToEmailId = "developer1@in.yokogawa.com";
+							emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
+							emailmodel.CC = "sushma.patil@in.yokogawa.com";
+							EmailUtilities emailobj = new EmailUtilities();
+							emailobj.sendEmail(emailmodel, 15);
 						}
 					}
 				}
@@ -5782,6 +5793,19 @@ namespace WMS.DAL
 								label,
 								approverstatus
 							});
+							EmailModel emailmodel = new EmailModel();
+							emailmodel.approvername = model.approvedby;
+							emailmodel.approverid = model.approverid;
+							emailmodel.gatepassid = model.gatepassid;
+							emailmodel.approverstatus = model.approverstatus;
+
+							emailmodel.ToEmailId = "developer1@in.yokogawa.com";
+							emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
+							emailmodel.CC = "sushma.patil@in.yokogawa.com";
+							EmailUtilities emailobj = new EmailUtilities();
+							emailobj.sendEmail(emailmodel, 16);
+
+
 						}
 					}
 				}
