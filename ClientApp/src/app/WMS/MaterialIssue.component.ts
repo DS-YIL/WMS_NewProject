@@ -46,11 +46,23 @@ export class MaterialIssueComponent implements OnInit {
   public reqqty; reservedQty: number;
   public btndisable: boolean = false;
   public issueqtyenable: boolean = true;
+  //Email
+  reqid: string = "";
+ // materialissueList: string = "";
   ngOnInit() {
     if (localStorage.getItem("Employee"))
       this.employee = JSON.parse(localStorage.getItem("Employee"));
     else
       this.router.navigateByUrl("Login");
+    //Email
+    this.reqid = this.route.snapshot.queryParams.requestid;
+    if (this.reqid) {
+      debugger;
+      //get material details for that requestid
+     // this.materialissueList[0].requestid = this.reqid;
+      this.getmaterialIssueListbyrequestid();
+
+    }
 
     this.route.params.subscribe(params => {
       if (params["requestid"]) {
@@ -167,6 +179,7 @@ export class MaterialIssueComponent implements OnInit {
       });
     }
   }
+  //Email
   getmaterialIssueListbyrequestid() {
     this.wmsService.getmaterialIssueListbyrequestid(this.requestId, this.pono).subscribe(data => {
       this.spinner.hide();

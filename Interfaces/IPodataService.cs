@@ -107,7 +107,6 @@ Task<string> updateonholdrow(updateonhold datamodel);
         Task<IEnumerable<OpenPoModel>> getASNListdata();
         Task<IEnumerable<IssueRequestModel>> GetItemlocationListBymterial(string material);
         Task<IEnumerable<IssueRequestModel>> getItemlocationListByIssueId(string requestforissueid);
-        Task<IEnumerable<IssueRequestModel>> getItemlocationListByGatepassmaterialid(string gatepassmaterialid);
         int updateissuedmaterial(List<IssueRequestModel> obj);
         int assignRole(authUser authuser);
         Task<IEnumerable<userAcessNamesModel>> getuserAcessList(string employeeid, string roleid);
@@ -203,5 +202,13 @@ Task<string> updateonholdrow(updateonhold datamodel);
         string updateSecurityPrintHistory(PrintHistoryModel model);
 
         Task<IEnumerable<materialtransferMain>> getMaterialtransferdetails(materilaTrasFilterParams filters);
+        //Amulya
+        Task<IEnumerable<materialrequestMain>> getmaterialrequestdashboardList(materialRequestFilterParams filters);
+        //Amulya
+        Task<IEnumerable<materialreserveMain>> getmaterialreservedashboardList(materialResFilterParams filters);
+        //Amulya
+        Task<IEnumerable<materialreturnMain>> getmaterialreturndashboardlist(materialRetFilterParams filters);
+
+        Task<IEnumerable<IssueRequestModel>> getItemlocationListByGatepassmaterialid(string gatepassmaterialid);
     }
 }

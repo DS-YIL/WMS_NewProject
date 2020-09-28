@@ -61,6 +61,8 @@ export class MaterialRequestViewComponent implements OnInit {
   selectedproject: ddlmodel;
   filteredprojects: ddlmodel[] = [];
   requestremarks: string = "";
+  //Email
+  reqid: string = "";
   ngOnInit() {
     if (localStorage.getItem("Employee"))
       this.employee = JSON.parse(localStorage.getItem("Employee"));
@@ -73,6 +75,17 @@ export class MaterialRequestViewComponent implements OnInit {
         this.pono = params["pono"];
       }
     });
+
+    //Email
+    this.reqid = this.route.snapshot.queryParams.requestid;
+    if (this.reqid) {
+      debugger;
+      //get material details for that requestid
+      this.materialList[0].material = this.reqid;
+      this.getMaterialRequestlist();
+
+    }
+
 
     this.getMaterialRequestlist();
     this.getdefaultmaterialstorequest();

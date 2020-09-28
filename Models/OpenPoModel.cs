@@ -736,6 +736,13 @@ namespace WMS.Models
 		public string material { get; set; }
 		public string transferid { get; set; }
 		public string transferbody { get; set; }
+		public string approverid { get; set; }
+		public string approvername { get; set; }
+		public string approverstatus { get; set; }
+
+
+
+
 	}
 	public class employeeModel
 	{
@@ -1168,4 +1175,60 @@ public class materilaTrasFilterParams
 public class WMSHttpResponse
 {
 	public string message { get; set; }
+}
+}
+
+//Amulya
+public class materialrequestMain
+{
+	public int requestid { get; set; }
+	public string requestedby { get; set; }
+	public DateTime requesteddate { get; set; }
+
+	public string ackstatus { get; set; }
+	public List<materialtransferTR> materialdata { get; set; }
+
+
+}
+public class materialRequestFilterParams
+{
+	public string ToDate { get;  set; }
+	public string FromDate { get;  set; }
+}
+//Amulya
+public class materialreserveMain
+{
+	public int reserveid { get; set; }
+	public string reservedby { get; set; }
+	public DateTime reservedon { get; set; }
+	public string status { get; set; }
+	public string requestedby { get; set; }
+
+	public List<materialtransferTR> materialdata { get; set; }
+
+
+}
+public class materialResFilterParams
+{
+	public string ToDate { get;  set; }
+	public string FromDate { get;  set; }
+}
+
+//Amulya
+public class materialreturnMain
+{
+	public int matreturnid { get; set; }
+	public int returnid { get; set; }
+	public string createdby { get; set; }
+	public DateTime createdon { get; set; }
+	public string confirmstatus { get; set; }
+
+	public List<materialtransferTR> materialdata { get; set; }
+
+
+}
+public class materialRetFilterParams
+{
+	public string ToDate { get;  set; }
+	public string FromDate { get;  set; }
 }

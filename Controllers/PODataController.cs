@@ -532,13 +532,13 @@ namespace WMS.Controllers
 			return await this._poService.getItemlocationListByIssueId(requestforissueid);
 		}
 
-		[HttpGet("getItemlocationListByGatepassmaterialid")]
-		public async Task<IEnumerable<IssueRequestModel>> getItemlocationListByGatepassmaterialid(string gatepassmaterialid)
-		{
+        [HttpGet("getItemlocationListByGatepassmaterialid")]
+        public async Task<IEnumerable<IssueRequestModel>> getItemlocationListByGatepassmaterialid(string gatepassmaterialid)
+        {
 
-			return await this._poService.getItemlocationListByGatepassmaterialid(gatepassmaterialid);
-		}
-		[HttpPost("updateMaterialavailabality")]
+            return await this._poService.getItemlocationListByGatepassmaterialid(gatepassmaterialid);
+        }
+        [HttpPost("updateMaterialavailabality")]
 		public int updateMaterialavailabality([FromBody]List<IssueRequestModel> model)
 		{
 
@@ -986,6 +986,31 @@ namespace WMS.Controllers
 		//{
 		//    return this.emailobj.sendEmail(obj,1);
 		//}
+
+		//Amulya
+
+		[HttpPost("getmaterialrequestdashboardList")]
+		public async Task<IEnumerable<materialrequestMain>> getmaterialrequestdashboardList(materialRequestFilterParams filters)
+		{
+			return await this._poService.getmaterialrequestdashboardList(filters);
+		}
+
+		//Amulya
+
+		[HttpPost("getmaterialreservedashboardList")]
+		public async Task<IEnumerable<materialreserveMain>> getmaterialreservedashboardList(materialResFilterParams filters)
+		{
+			return await this._poService.getmaterialreservedashboardList(filters);
+		}
+
+		//Amulya
+
+		[HttpPost("getMaterialReturnDashboardlist")]
+		public async Task<IEnumerable<materialreturnMain>> getMaterialReturnDashboardlist(materialRetFilterParams filters)
+		{
+			return await this._poService.getmaterialreturndashboardlist(filters);
+		}
+
 
 	}
 }

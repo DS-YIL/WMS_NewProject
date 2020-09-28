@@ -5,7 +5,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { constants } from '../Models/WMSConstants'
 import { Employee, Login, DynamicSearchResult, printMaterial, rbamaster } from '../Models/Common.Model';
-import { PoFilterParams, PoDetails, BarcodeModel, StockModel, materialRequestDetails, inwardModel, gatepassModel, stocktransfermodel, Materials, authUser, invstocktransfermodel, ddlmodel, locataionDetailsStock, updateonhold, materialistModel, outwardmaterialistModel, pageModel, UserDashboardDetail, UserDashboardGraphModel, UnholdGRModel, MRNsavemodel, notifymodel, materialtransferMain, materialReservetorequestModel, testcrud, PrintHistoryModel, materilaTrasFilterParams, outwardinwardreportModel, UserModel, WMSHttpResponse } from '../Models/WMS.Model';
+import { PoFilterParams, PoDetails, BarcodeModel, StockModel, materialRequestDetails, inwardModel, gatepassModel, stocktransfermodel, Materials, authUser, invstocktransfermodel, ddlmodel, locataionDetailsStock, updateonhold, materialistModel, outwardmaterialistModel, pageModel, UserDashboardDetail, UserDashboardGraphModel, UnholdGRModel, MRNsavemodel, notifymodel, materialtransferMain, materialReservetorequestModel, testcrud, PrintHistoryModel, materilaTrasFilterParams, materialRequestFilterParams, materialResFilterParams, materialRetFilterParams, outwardinwardreportModel, UserModel, WMSHttpResponse} from '../Models/WMS.Model';
 import { Text } from '@angular/compiler/src/i18n/i18n_ast';
 
 @Injectable({
@@ -185,10 +185,11 @@ export class wmsService {
     const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }), responseType: 'text' as any };
     return this.http.post<any>(this.url + 'POData/UpdateStockTransfer', StockModel, httpOptions);
   }
-
+  //Amulya
   getMaterialRequestlist(loginid: string, pono: string): Observable<any> {
     return this.http.get<any>(this.url + 'POData/getmaterialrequestList?PONO=' + pono + '&loginid=' + loginid + '', this.httpOptions);
   }
+  
   getreturndata(empno: any): Observable<any> {
     return this.http.get<any>(this.url + 'POData/getreturndata?empno=' + empno + '', this.httpOptions);
   }
@@ -398,12 +399,6 @@ export class wmsService {
     requestforissueid = encodeURIComponent(requestforissueid);
     return this.http.get<any>(this.url + 'POData/getItemlocationListByIssueId?requestforissueid=' + requestforissueid, this.httpOptions);
   }
-  getItemlocationListByGatepassmaterialid(gatepassmaterialid: string): Observable<any> {
-    gatepassmaterialid = encodeURIComponent(gatepassmaterialid);
-    return this.http.get<any>(this.url + 'POData/getItemlocationListByGatepassmaterialid?gatepassmaterialid=' + gatepassmaterialid, this.httpOptions);
-  }
-
-
   UpdateMaterialqty(materialList: any): Observable<any> {
     return this.http.post<any>(this.url + 'POData/updateMaterialavailabality', materialList, this.httpOptions);
   }
@@ -628,7 +623,24 @@ export class wmsService {
   getMaterialtransferdetails(materialTransferFilters: materilaTrasFilterParams): Observable<any> {
     return this.http.post<any>(this.url + 'POData/getMaterialtransferdetails',materialTransferFilters, this.httpOptions);
   }
+  //Amulya
+  getMaterialRequestDashboardlist(materialRequestFilters: materialRequestFilterParams): Observable<any> {
+    return this.http.post<any>(this.url + 'POData/getmaterialrequestdashboardList', materialRequestFilters, this.httpOptions);
+  }
+  //Amulya
+  getMaterialReserveDashboardlist(materialReserveFilters: materialResFilterParams): Observable<any> {
+    return this.http.post<any>(this.url + 'POData/getmaterialreservedashboardList', materialReserveFilters, this.httpOptions);
+  }
+  
+  //Amulya
+  getMaterialReturnDashboardlist(materialReturnFilters: materialRetFilterParams): Observable<any> {
+    return this.http.post<any>(this.url + 'POData/getMaterialReturnDashboardlist', materialReturnFilters, this.httpOptions);
+  }
 
+  getItemlocationListByGatepassmaterialid(gatepassmaterialid: string): Observable<any> {
+    gatepassmaterialid = encodeURIComponent(gatepassmaterialid);
+    return this.http.get<any>(this.url + 'POData/getItemlocationListByGatepassmaterialid?gatepassmaterialid=' + gatepassmaterialid, this.httpOptions);
+  }
 }
 
 

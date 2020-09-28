@@ -313,7 +313,7 @@ values(default,@gatepassid,@materialid,@quantity,@deleteflag,@remarks,@materialc
   <data name="getgatepassmaterialdetailList" xml:space="preserve">
     <value>select (select sum(issuedqty) from wms.wms_materialissue  where gatepassmaterialid =material.gatepassmaterialid ) as issuedqty
 ,(select sum(availableqty) from wms.wms_stock ws where materialid =stock.materialid ) as availableqty,
-max(material.gatepassid ) as gatepassid, material.gatepassmaterialid,max(emp."name") as name,max(pass.vendorname) as vendorname,
+max(material.gatepassid ) as gatepassid,max(material.gatepassmaterialid ) as gatepassmaterialid, max(emp."name") as name,max(pass.vendorname) as vendorname,
 max(pass.gatepasstype) as gatepasstype,max(pass.approverstatus) as approverstatus,
 max(pass.reasonforgatepass) as reasonforgatepass,max(pass.approverremarks ) as approverremarks,
 stock.materialid, max(ygs.materialdescription )as materialdescription, max(material.materialcost )as materialcost,
@@ -1077,6 +1077,18 @@ left join wms.wms_materialissue iss on iss.itemid =sk.itemid
 where gatepassmaterialid ='#gatepassmaterialid' and
 sk.deleteflag=false
 group by sk.itemlocation,ygs.materialdescription,ygs.material,createddate::DATE,sk.itemid</value>
+  </data>
+  <data name="getMaterialRequestDashboardDetails" xml:space="preserve">
+    <value>select mr.requestid,mr.requesteddate,issue.approvedstatus as ackstatus,emp.name as requestedby from wms.wms_materialrequest mr
+left outer join  wms.employee emp on emp.employeeno = mr.requesterid   left join  wms.wms_materialissue issue on issue.requestforissueid=mr.requestforissueid</value>
+  </data>
+  <data name="getMaterialReserveDashboardDetails" xml:space="preserve">
+    <value>select mrs.reserveid,mrs.reservedon,issue.approvedstatus as status,emp.name as reservedby from wms.wms_materialreserve mrs
+left outer join  wms.employee emp on emp.employeeno = mrs.requestedby  left join  wms.wms_materialissue issue on issue.reserveformaterialid=mrs.reserveformaterialid</value>
+  </data>
+  <data name="getMaterialReturnDashboardDetails" xml:space="preserve">
+    <value>select mrt.matreturnid,mrt.returnid,mrt.confirmstatus,emp.name as createdby,mrt.createdon  from wms.wms_returnmaterial mrt
+left outer join  wms.employee emp on emp.employeeno = createdby</value>
   </data>
   <data name="inwardinsertquery" xml:space="preserve">
     <value>insert into wms.outwatdinward (gatepassid,gatepassmaterialid,inwarddate,inwardby,inwardremarks,inwardqty)
