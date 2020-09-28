@@ -20,6 +20,7 @@ using ZXing.CoreCompat.System.Drawing;
 using System.Data.SqlClient;
 using Microsoft.AspNetCore.Mvc;
 using ZXing.QrCode.Internal;
+using System.Data.OleDb;
 
 namespace WMS.DAL
 {
@@ -1613,7 +1614,8 @@ namespace WMS.DAL
 							item.createdby,
 							item.stockstatus,
 							materialid,
-							item.inwardid
+							item.inwardid,
+							item.stocktype
 						}));
 						if (result != 0)
 						{
@@ -3438,7 +3440,7 @@ namespace WMS.DAL
 
 					//Ramesh (08/06/2020) returns category A/B/C configuration
 
-					string QueryABC = "select * from wms.wms_rd_category order by categoryid desc limit 3";
+					string QueryABC = "select * from wms.wms_rd_category where deleteflag is false";
 					var abcdata = await pgsql.QueryAsync<ABCCategoryModel>(QueryABC, null, commandType: CommandType.Text);
 					foreach (ABCCategoryModel dt in abcdata)
 					{
@@ -3671,7 +3673,7 @@ namespace WMS.DAL
 					}
 
 					//Ramesh (08/06/2020) get ABC configuration start and end date of cycle
-					string QueryABC1 = "select * from wms.wms_rd_category order by categoryid desc limit 3";
+					string QueryABC1 = "select * from wms.wms_rd_category where deleteflag is false";
 					var abcdata1 = await pgsql.QueryAsync<ABCCategoryModel>(QueryABC1, null, commandType: CommandType.Text);
 					ABCCategoryModel abcconfig = new ABCCategoryModel();
 					if (abcdata1 != null && config != null)
@@ -7037,8 +7039,63 @@ namespace WMS.DAL
 			}
 		}
 
+		public int insertdatacsv(ddlmodel obj)
+		{
+			ddlmodel mdl = new ddlmodel();
 
-		public int requesttoreserve(materialReservetorequestModel obj)
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+                try
+                {
+					string materialrequestquery = "select material as value,materialdescription as text from  wms.\"MaterialMasterYGS\"";
+					var datalist = pgsql.Query<ddlmodel>(
+					materialrequestquery, null, commandType: CommandType.Text);
+					var filePath = @"D:\A_StagingTable\StockstagecsvTest1.xlsx";
+					//var filePath = "D:\A_StagingTable\StockstagecsvTest1.xlsx";
+					foreach (ddlmodel ddl in datalist)
+					{
+
+
+
+
+						Random rnd = new Random();
+						int str = rnd.Next(1, 3);
+						int rk = rnd.Next(1, 6);
+						int bn = rnd.Next(1, 6);
+						int qty = rnd.Next(50, 500);
+						string store = "store" + str.ToString();
+						string rack = "a" + rk.ToString();
+						string bin = "bin" + bn.ToString();
+						//making query    
+						string query = "INSERT INTO wms.testcsv (material, material_description, store,rack, bin,quantity,grn,received_date,shelf_life_expiration,date_of_Manufacture,datasource,data_entered_by,data_entered_on) ";
+						query += " VALUES('" + ddl.value + "','" + ddl.text + "','" + store + "','" + rack + "','" + bin + "'," + qty+ ",'" + string.Empty + "','22/09/2020','22/12/2020','22/05/2020','" + string.Empty + "','303268','22/05/2020')";
+						var resultsx = pgsql.ExecuteScalar(query);
+					}
+
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "insertdatacsv", Ex.StackTrace.ToString());
+					return 0;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+				
+
+
+			}
+
+
+			return 1;
+
+
+		}
+
+
+
+	   public int requesttoreserve(materialReservetorequestModel obj)
 		{
 
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -7445,7 +7502,8 @@ namespace WMS.DAL
 									item.itemlocation,
 									availableqty,
 									createdby,
-									item.returnid
+									item.returnid,
+									item.stocktype
 								});
 							}
 						}

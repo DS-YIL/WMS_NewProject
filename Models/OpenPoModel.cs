@@ -206,6 +206,7 @@ namespace WMS.Models
 		public bool notifiedtofinance { get; set; }
 		public DateTime notifiedon { get; set; }
 		public string putawayfilename { get; set; }
+		public string stocktype { get; set; }
 	}
 	public class StockModel
 	{
@@ -235,6 +236,8 @@ namespace WMS.Models
 		public string materialid { get; set; }
 
 		public string remarks { get; set; }
+
+		public string stocktype { get; set; }
 
 		public int returnid { get; set; }
 		public bool initialstock { get; set; }
@@ -1160,4 +1163,9 @@ public class materilaTrasFilterParams
 {
 	public string FromDate { get; set; }
 	public string ToDate { get; set; }
+}
+
+public class WMSHttpResponse
+{
+	public string message { get; set; }
 }

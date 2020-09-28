@@ -779,6 +779,8 @@ namespace WMS.Controllers
 			return await this._poService.getprojectlistbymanager(empno);
 		}
 
+		
+
 		[HttpGet("getmateriallistfortransfer")]
 		public async Task<IEnumerable<ddlmodel>> getmatlist(string empno)
 		{
@@ -856,6 +858,12 @@ namespace WMS.Controllers
 		public int requestreserve([FromBody] materialReservetorequestModel obj)
 		{
 			return this._poService.requesttoreserve(obj);
+		}
+
+		[HttpPost("insertdatacsv")]
+		public int insertdatacsv([FromBody] ddlmodel obj)
+		{
+			return this._poService.insertdatacsv(obj);
 		}
 
 		[HttpGet("UpdateMaterialReserve")]

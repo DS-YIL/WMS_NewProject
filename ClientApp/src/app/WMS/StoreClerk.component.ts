@@ -373,6 +373,7 @@ export class StoreClerkComponent implements OnInit {
       this.wmsService.getMaterial().subscribe(data => {
         debugger;
         this.combomaterial = data;
+        this.spinner.hide();
         localStorage.setItem("materials", JSON.stringify(this.combomaterial));
        
       });

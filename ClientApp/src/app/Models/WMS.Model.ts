@@ -142,6 +142,7 @@ export class inwardModel {
   showtrdata: boolean = false;
   selectedrow: boolean = false;
   uploadedFiles: any[] = [];
+  stocktype: string;
 
 }
 
@@ -595,6 +596,10 @@ export class testcrud {
   id: number;
   name: string;
   ismanager: boolean
+}
+
+export class WMSHttpResponse {
+  message:string
 }
 
 export class PrintHistoryModel {

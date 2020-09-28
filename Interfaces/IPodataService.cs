@@ -136,6 +136,7 @@ Task<string> updateonholdrow(updateonhold datamodel);
 
         int updatematmovement(List<materialistModel> obj);
         int requesttoreserve(materialReservetorequestModel obj);
+        int insertdatacsv(ddlmodel obj);
         Task<IEnumerable<safteyStockList>> getSafteyStockList();
         Task<IEnumerable<StockModel>> GetBinList();
 		Task<IEnumerable<Materials>> GetMaterialstockcombo();

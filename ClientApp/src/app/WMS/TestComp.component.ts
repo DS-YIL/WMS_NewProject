@@ -8,7 +8,7 @@ import { MessageService } from 'primeng/api';
 import { ConfirmationService } from 'primeng/api';
 import { isNullOrUndefined } from 'util';
 import { HttpClient } from '@angular/common/http';
-import { testcrud } from '../Models/WMS.Model';
+import { testcrud, WMSHttpResponse } from '../Models/WMS.Model';
 
 @Component({
   selector: 'app-TestComp',
@@ -23,7 +23,8 @@ export class TestCompComponent implements OnInit {
   public employee: Employee;
   getlistdata: testcrud[] = [];
   postmodel: testcrud;
-  showadddatamodel: boolean = false;  
+  showadddatamodel: boolean = false;
+  response: WMSHttpResponse;
 
 
   
@@ -34,8 +35,28 @@ export class TestCompComponent implements OnInit {
     else
       this.router.navigateByUrl("Login");
     this.postmodel = new testcrud();
+    this.response = new WMSHttpResponse();
     this.getlist();
      
+  }
+
+  adddd() {
+    debugger;
+    this.response = new WMSHttpResponse();
+    this.wmsService.insertcsv().subscribe(data => {
+      debugger;
+      this.response = data;
+      alert(this.response.message);
+    });
+
+  }
+
+  addddtostock() {
+    debugger;
+    this.wmsService.addddtostock().subscribe(data => {
+      alert("ok");
+    });
+
   }
 
   getlist() {

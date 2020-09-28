@@ -104,6 +104,7 @@ export class WarehouseInchargeComponent implements OnInit {
   issaveprocess: boolean = false;
   isalreadytransferred: boolean = false;
   sendmailtofinance: boolean = false;
+  currentstocktype: string = "";
  
   ngOnInit() {
     if (localStorage.getItem("Employee"))
@@ -269,7 +270,7 @@ export class WarehouseInchargeComponent implements OnInit {
         stockdata.locatorid = null;
         stockdata.rackid = null;
         stockdata.binid = null;
-        stockdata.stocktype = "";
+        stockdata.stocktype = this.currentstocktype;
         this.stock.push(stockdata);
         //this.stock.push(new StockModel());
       }
@@ -281,7 +282,7 @@ export class WarehouseInchargeComponent implements OnInit {
       stockdata.locatorid = null;
       stockdata.rackid = null;
       stockdata.binid = null;
-      stockdata.stocktype = "";
+      stockdata.stocktype = this.currentstocktype;
       this.stock.push(stockdata);
       //this.stock.push(new StockModel());
     }
@@ -325,18 +326,18 @@ export class WarehouseInchargeComponent implements OnInit {
       this.locationdetails.locationid = this.locationdetails.storeid + '.' + this.locationdetails.rackid + '.' + this.locationdetails.binid;
       this.locationdetails.locationname = this.locationdetails.storename + '.' + this.locationdetails.rackname + '.' + this.locationdetails.binname;
       //service to get stock type
-      this.wmsService.getstocktype(this.locationdetails).subscribe(data => {
-        debugger;
-        if (data) {
-          this.stock[index].stocktype = data;
-          //this.invoiceForm.controls.itemRows.value[this.invoiceForm.controls.itemRows.value.length - 1].stocktype = data;
-          //this.StockModel.stocktype = data;
+      //this.wmsService.getstocktype(this.locationdetails).subscribe(data => {
+      //  debugger;
+      //  if (data) {
+      //    this.stock[index].stocktype = data;
+      //    //this.invoiceForm.controls.itemRows.value[this.invoiceForm.controls.itemRows.value.length - 1].stocktype = data;
+      //    //this.StockModel.stocktype = data;
 
-        }
-        else {
-          this.messageService.add({ severity: 'error', summary: '', detail: 'Unable to fetch stock type' });
-        }
-      });
+      //  }
+      //  else {
+      //    this.messageService.add({ severity: 'error', summary: '', detail: 'Unable to fetch stock type' });
+      //  }
+      //});
 
 
   }
@@ -608,6 +609,7 @@ this.updateRowGroupMetaData();
   }
 
   showDialog1(details: any, index: number) {
+   
     this.showLocationDialog = true;
     this.PoDetails = details;
     this.rowIndex = index;
@@ -638,6 +640,7 @@ this.updateRowGroupMetaData();
 
   showDialog(details: any, index: number) {
     debugger;
+    this.currentstocktype = details.stocktype;
     this.showLocationDialog = true;
     this.PoDetails = details;
     this.rowIndex = index;
@@ -670,7 +673,7 @@ this.updateRowGroupMetaData();
       stockdata.locatorid = details.storeid;
       stockdata.rackid = details.rackid;
       stockdata.binid = details.binid;
-      stockdata.stocktype = "";
+      stockdata.stocktype = details.stocktype;
       this.stock.push(stockdata);
       if (stockdata.locatorid) {
         this.onlocUpdate(stockdata.locatorid, stockdata, true);
@@ -728,6 +731,7 @@ this.updateRowGroupMetaData();
         this.messageService.add({ severity: 'error', summary: '', detail: 'Enter quantity' });
         return;
       }
+
       if (this.stock.length > 1) {
         for (var data = 0; data < this.stock.length - 1; data++) {
           if (this.stock[data].locatorid == this.stock[this.stock.length - 1].locatorid) {
@@ -760,6 +764,8 @@ this.updateRowGroupMetaData();
         this.StockModel.totalquantity = this.PoDetails.materialqty;
         this.StockModel.createdby = this.employee.employeeno;
         this.StockModel.inwardid = this.PoDetails.inwardid;
+        this.StockModel.stocktype = item.stocktype;
+
         binnumber = this.bindata.filter(x => x.binid == item.binid);
         storelocation = this.locationdata.filter(x => x.locatorid == item.locatorid);
         rack = this.rackdata.filter(x => x.rackid == item.rackid);
@@ -800,6 +806,16 @@ this.updateRowGroupMetaData();
 
         totalqty = totalqty + (item.confirmqty);
       })
+      debugger;
+
+      var dtt = this.StockModelList.filter(function (element, index) {
+        return (element.stocktype == "");
+      });
+      if (dtt.length > 0) {
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Select Stock Type.' });
+        return;
+      }
+
       if (totalqty == parseInt(this.matqty)) {
         this.ConfirmationService.confirm({
           message: 'Are you sure to put away material in selected stock type?',

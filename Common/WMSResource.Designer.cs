@@ -629,10 +629,10 @@ namespace WMS.Common {
         
         /// <summary>
         ///   Looks up a localized string similar to select inwa.inwardid,bin.binnumber, rack.racknumber, loc.locatorname,mat.rackid,mat.binid,
-        /// mat.storeid,stocks.itemlocation,stocks.availableqty,stocks.itemid,inw.grnnumber,inw.pono,inw.invoiceno,inw.receiveddate,
+        /// mat.storeid,mat.stocktype,stocks.itemlocation,stocks.availableqty,stocks.itemid,inw.grnnumber,inw.pono,inw.invoiceno,inw.receiveddate,
         /// inw.isdirecttransferred,inw.projectcode,emp.name as mrnby,inw.mrnon,inw.mrnremarks,
         /// inw.notifyremarks,inw.notifiedby,inw.notifiedtofinance,inw.notifiedon,inw.putawayfilename,
-        /// inwa.materialqty,inwa.materialid as material,mat.materialdescription,inwa.receivedqty,inwa.confirmqty,inwa.returnqty  [rest of string was truncated]&quot;;.
+        /// inwa.materialqty,inwa.materialid as material,mat.materialdescription,inwa.receivedqty,inwa.confirmqty,i [rest of string was truncated]&quot;;.
         /// </summary>
         public static string getitemsfornotifypage {
             get {
@@ -711,9 +711,11 @@ namespace WMS.Common {
         /// <summary>
         ///   Looks up a localized string similar to select max(sk.pono) as pono ,sk.materialid as material,Max(prj.projectmanager) as projectmanager,
         ///( select sum(availableqty) from wms.wms_stock ws where materialid =sk.materialid) as availableqty,
-        ///(select stocktype from wms.stocklocation where storeid=Max(mtmtr.storeid) and rackid=Max(mtmtr.rackid) and binid=Max(mtmtr.binid) limit 1) as stocktype,
+        ///max(mtmtr.stocktype) as stocktype,
         ///max(mtmtr.unitprice) as materialcost,max(mtmtr.materialdescription) as materialdescription from wms.wms_stock  sk 
-        ///left outer join wms.&quot;MaterialMasterYGS&quot; mtm [rest of string was truncated]&quot;;.
+        ///left outer join wms.&quot;MaterialMasterYGS&quot; mtmtr on mtmtr.material = sk.materialid
+        ///left outer join wms.wms_project prj on prj.pono = sk.pono
+        ///where sk.availableqty [rest of string was truncated]&quot;;.
         /// </summary>
         public static string getmaterialdetailfprrequest {
             get {
@@ -789,10 +791,11 @@ namespace WMS.Common {
         
         /// <summary>
         ///   Looks up a localized string similar to select max(sk.pono) as pono ,sk.materialid as material,Max(prj.projectmanager) as projectmanager,
-        ///( select sum(availableqty) from wms.wms_stock ws where materialid =sk.materialid) as availableqty,
-        ///(select stocktype from wms.stocklocation where storeid=Max(mtmtr.storeid) and rackid=Max(mtmtr.rackid) and binid=Max(mtmtr.binid) limit 1) as stocktype,
+        ///( select sum(availableqty) from wms.wms_stock ws where materialid =sk.materialid) as availableqty,max(mtmtr.stocktype) as stocktype,
         ///max(mtmtr.unitprice) as materialcost,max(mtmtr.materialdescription) as materialdescription from wms.wms_stock  sk 
-        ///left outer join wms.&quot;MaterialMasterYGS&quot; mtm [rest of string was truncated]&quot;;.
+        ///left outer join wms.&quot;MaterialMasterYGS&quot; mtmtr on mtmtr.material = sk.materialid
+        ///left outer join wms.wms_project prj on prj.pono = sk.pono 
+        ///where sk.availableqty  [rest of string was truncated]&quot;;.
         /// </summary>
         public static string getmaterialstoreserve {
             get {
@@ -1118,8 +1121,10 @@ namespace WMS.Common {
         
         /// <summary>
         ///   Looks up a localized string similar to select matreturnid,materialid,createdby ,
+        ///Max(mat.materialdescription) as Materialdescription,Max(mat.stocktype) as stocktype,
         ///  createdon, max(emp.&quot;name&quot;) as name, confirmstatus from wms.wms_returnmaterial reqtrasnfer 
         ///  left join wms.employee emp on emp.employeeno=reqtrasnfer.createdby
+        ///  left join wms.&quot;MaterialMasterYGS&quot; mat on reqtrasnfer.materialid=mat.material
         ///  group by reqtrasnfer.returnid.
         /// </summary>
         public static string GetreturnList {
@@ -1449,7 +1454,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO wms.wms_stock(inwmasterid,stockstatus,pono,binid,rackid ,storeid, vendorid,totalquantity,shelflife,availableqty,deleteflag,itemlocation,createddate,createdby,materialid,inwardid)VALUES(@inwmasterid,@stockstatus,@pono,@binid,@rackid,@storeid,@vendorid,@totalquantity,@shelflife,@availableqty,@deleteflag,@itemlocation,@createddate,@createdby,@materialid,@inwardid)returning itemid.
+        ///   Looks up a localized string similar to INSERT INTO wms.wms_stock(inwmasterid,stockstatus,pono,binid,rackid ,storeid, vendorid,totalquantity,shelflife,availableqty,deleteflag,itemlocation,createddate,createdby,materialid,inwardid,stcktype)VALUES(@inwmasterid,@stockstatus,@pono,@binid,@rackid,@storeid,@vendorid,@totalquantity,@shelflife,@availableqty,@deleteflag,@itemlocation,@createddate,@createdby,@materialid,@inwardid,@stocktype)returning itemid.
         /// </summary>
         public static string insertstock {
             get {
@@ -1619,9 +1624,9 @@ namespace WMS.Common {
         ///   Looks up a localized string similar to select inwa.inwardid,bin.binnumber, rack.racknumber, loc.locatorname,mat.rackid,mat.binid,
         /// mat.storeid,stocks.itemlocation,stocks.availableqty,stocks.itemid,inw.grnnumber,inw.pono,inw.invoiceno,inw.receiveddate,
         /// inw.isdirecttransferred,inw.projectcode,emp.name as mrnby,inw.mrnon,inw.mrnremarks,
-        /// inwa.materialqty,inwa.materialid as material,mat.materialdescription,inwa.receivedqty,inwa.confirmqty,inwa.returnqty 
+        /// inwa.materialqty,inwa.materialid as material,mat.materialdescription,mat.stocktype,inwa.receivedqty,inwa.confirmqty,inwa.returnqty 
         /// from wms.wms_securityinward inw
-        ///left join wms.wms_storeinward inwa on inw.inwmasterid=inw [rest of string was truncated]&quot;;.
+        ///left join wms.wms_storeinward inwa on inw.i [rest of string was truncated]&quot;;.
         /// </summary>
         public static string queryforitemdetails {
             get {
@@ -1999,7 +2004,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to insert into wms.wms_stock(itemid,materialid,itemlocation,availableqty,createddate,createdby,returnid)values(default,@materialid,@itemlocation,@availableqty,current_timestamp,@createdby,@returnid).
+        ///   Looks up a localized string similar to insert into wms.wms_stock(itemid,materialid,itemlocation,availableqty,createddate,createdby,returnid,stcktype)values(default,@materialid,@itemlocation,@availableqty,current_timestamp,@createdby,@returnid,@stocktype).
         /// </summary>
         public static string updatetostockbyinvmanger {
             get {

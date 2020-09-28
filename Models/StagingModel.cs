@@ -24,6 +24,8 @@ namespace WMS.Models
 		public string materialdescription { get; set; }
 		public int materialqty { get; set; }
 		public int itemno { get; set; }
+
+		public int item { get; set; }
 		public int itemamount { get; set; }
 		public DateTime itemdeliverydate { get; set; }
 
@@ -45,7 +47,7 @@ namespace WMS.Models
 		public string store { get; set; }
 		public string rack { get; set; }
 		public string bin { get; set; }
-		public string quanity { get; set; }
+		public int quantity { get; set; }
 		public string grn { get; set; }
 		public DateTime receiveddate { get; set; }
 		public DateTime shelflifeexpiration { get; set; }
@@ -54,6 +56,9 @@ namespace WMS.Models
 		public string dataenteredby { get; set; }
 		public string dataenteredon { get; set; }
 		public DateTime createddate { get; set; }
+		public string stocktype { get; set; }
+		public string category { get; set; }
+		public int unitprice { get; set; }
 
 	}
 	public class LocationModel
@@ -68,6 +73,8 @@ namespace WMS.Models
 		public DateTime createdate { get; set; }
 		public int maximumcapacity { get; set; }
 		public bool isexcelupload { get; set; }
+		public string materialid { get; set; }
+		public string materialdescription { get; set; }
 	}
 }
 

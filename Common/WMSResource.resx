@@ -227,7 +227,7 @@ VALUES(@inwmasterid,@receiveddate,@receivedby,@receivedqty,@returnqty,@qualitypa
     <value>INSERT INTO wms.wms_trackstatus(pono,status,enteredon)VALUES(@pono,'In Store',current_timestamp)</value>
   </data>
   <data name="insertstock" xml:space="preserve">
-    <value>INSERT INTO wms.wms_stock(inwmasterid,stockstatus,pono,binid,rackid ,storeid, vendorid,totalquantity,shelflife,availableqty,deleteflag,itemlocation,createddate,createdby,materialid,inwardid)VALUES(@inwmasterid,@stockstatus,@pono,@binid,@rackid,@storeid,@vendorid,@totalquantity,@shelflife,@availableqty,@deleteflag,@itemlocation,@createddate,@createdby,@materialid,@inwardid)returning itemid</value>
+    <value>INSERT INTO wms.wms_stock(inwmasterid,stockstatus,pono,binid,rackid ,storeid, vendorid,totalquantity,shelflife,availableqty,deleteflag,itemlocation,createddate,createdby,materialid,inwardid,stcktype)VALUES(@inwmasterid,@stockstatus,@pono,@binid,@rackid,@storeid,@vendorid,@totalquantity,@shelflife,@availableqty,@deleteflag,@itemlocation,@createddate,@createdby,@materialid,@inwardid,@stocktype)returning itemid</value>
   </data>
   <data name="lastinsertedgrn" xml:space="preserve">
     <value>select * from  wms.wms_sequencemaster  where  enddate&gt;=current_date and id=1</value>
@@ -243,7 +243,7 @@ max(req.ackremarks)as ackremarks,max(req.reserveid)as reserveid,max(req.projectc
     <value>select inwa.inwardid,bin.binnumber, rack.racknumber, loc.locatorname,mat.rackid,mat.binid,
  mat.storeid,stocks.itemlocation,stocks.availableqty,stocks.itemid,inw.grnnumber,inw.pono,inw.invoiceno,inw.receiveddate,
  inw.isdirecttransferred,inw.projectcode,emp.name as mrnby,inw.mrnon,inw.mrnremarks,
- inwa.materialqty,inwa.materialid as material,mat.materialdescription,inwa.receivedqty,inwa.confirmqty,inwa.returnqty 
+ inwa.materialqty,inwa.materialid as material,mat.materialdescription,mat.stocktype,inwa.receivedqty,inwa.confirmqty,inwa.returnqty 
  from wms.wms_securityinward inw
 left join wms.wms_storeinward inwa on inw.inwmasterid=inwa.inwmasterid
 left join wms.wms_stock stocks on  stocks.inwardid=inwa.inwardid
@@ -490,10 +490,10 @@ group by pl.pono</value>
   <data name="getmaterialdetailfprrequest" xml:space="preserve">
     <value>select max(sk.pono) as pono ,sk.materialid as material,Max(prj.projectmanager) as projectmanager,
 ( select sum(availableqty) from wms.wms_stock ws where materialid =sk.materialid) as availableqty,
-(select stocktype from wms.stocklocation where storeid=Max(mtmtr.storeid) and rackid=Max(mtmtr.rackid) and binid=Max(mtmtr.binid) limit 1) as stocktype,
+max(mtmtr.stocktype) as stocktype,
 max(mtmtr.unitprice) as materialcost,max(mtmtr.materialdescription) as materialdescription from wms.wms_stock  sk 
 left outer join wms."MaterialMasterYGS" mtmtr on mtmtr.material = sk.materialid
-left outer join wms.wms_project prj on prj.pono = sk.pono 
+left outer join wms.wms_project prj on prj.pono = sk.pono
 where sk.availableqty &gt; 0 and (prj.projectmanager = '#manager' or sk.returnid is not null)</value>
   </data>
   <data name="issuedqtydetails" xml:space="preserve">
@@ -818,8 +818,10 @@ where reserveupto between current_date and current_date  + interval '3 day' and 
   </data>
   <data name="GetreturnList" xml:space="preserve">
     <value>select matreturnid,materialid,createdby ,
+Max(mat.materialdescription) as Materialdescription,Max(mat.stocktype) as stocktype,
   createdon, max(emp."name") as name, confirmstatus from wms.wms_returnmaterial reqtrasnfer 
   left join wms.employee emp on emp.employeeno=reqtrasnfer.createdby
+  left join wms."MaterialMasterYGS" mat on reqtrasnfer.materialid=mat.material
   group by reqtrasnfer.returnid</value>
   </data>
   <data name="checkmatexists" xml:space="preserve">
@@ -865,7 +867,7 @@ where ts.createdby='#createdby'</value>
         (@transferqty,@createdby,current_timestamp,@remarks,@projectcode,@materialid,@approvallevel,@finalapprovallevel,@fromprojectcode) RETURNING transferid</value>
   </data>
   <data name="updatetostockbyinvmanger" xml:space="preserve">
-    <value>insert into wms.wms_stock(itemid,materialid,itemlocation,availableqty,createddate,createdby,returnid)values(default,@materialid,@itemlocation,@availableqty,current_timestamp,@createdby,@returnid)</value>
+    <value>insert into wms.wms_stock(itemid,materialid,itemlocation,availableqty,createddate,createdby,returnid,stcktype)values(default,@materialid,@itemlocation,@availableqty,current_timestamp,@createdby,@returnid,@stocktype)</value>
   </data>
   <data name="getqualitycheckdropdown" xml:space="preserve">
     <value>select distinct grnnumber as value,pono as text,supplier,receiveddate::date from 
@@ -911,7 +913,7 @@ from wms.wms_projectMaster prj</value>
   </data>
   <data name="getitemsfornotifypage" xml:space="preserve">
     <value>select inwa.inwardid,bin.binnumber, rack.racknumber, loc.locatorname,mat.rackid,mat.binid,
- mat.storeid,stocks.itemlocation,stocks.availableqty,stocks.itemid,inw.grnnumber,inw.pono,inw.invoiceno,inw.receiveddate,
+ mat.storeid,mat.stocktype,stocks.itemlocation,stocks.availableqty,stocks.itemid,inw.grnnumber,inw.pono,inw.invoiceno,inw.receiveddate,
  inw.isdirecttransferred,inw.projectcode,emp.name as mrnby,inw.mrnon,inw.mrnremarks,
  inw.notifyremarks,inw.notifiedby,inw.notifiedtofinance,inw.notifiedon,inw.putawayfilename,
  inwa.materialqty,inwa.materialid as material,mat.materialdescription,inwa.receivedqty,inwa.confirmqty,inwa.returnqty 
@@ -1169,8 +1171,7 @@ group by gtm.materialid</value>
   </data>
   <data name="getmaterialstoreserve" xml:space="preserve">
     <value>select max(sk.pono) as pono ,sk.materialid as material,Max(prj.projectmanager) as projectmanager,
-( select sum(availableqty) from wms.wms_stock ws where materialid =sk.materialid) as availableqty,
-(select stocktype from wms.stocklocation where storeid=Max(mtmtr.storeid) and rackid=Max(mtmtr.rackid) and binid=Max(mtmtr.binid) limit 1) as stocktype,
+( select sum(availableqty) from wms.wms_stock ws where materialid =sk.materialid) as availableqty,max(mtmtr.stocktype) as stocktype,
 max(mtmtr.unitprice) as materialcost,max(mtmtr.materialdescription) as materialdescription from wms.wms_stock  sk 
 left outer join wms."MaterialMasterYGS" mtmtr on mtmtr.material = sk.materialid
 left outer join wms.wms_project prj on prj.pono = sk.pono 

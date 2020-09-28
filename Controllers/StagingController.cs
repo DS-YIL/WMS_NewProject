@@ -14,6 +14,8 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.OleDb;
 using System.Globalization;
+using System.IO;
+using System.Net;
 using WMS.Common;
 using WMS.Models;
 
@@ -142,6 +144,7 @@ namespace WMS.Controllers
 							stag_data.projectcode = stag_data.projectdefinition;
 							stag_data.materialid = stag_data.material;
 							stag_data.materialqty = stag_data.poquantity;
+							stag_data.itemno = stag_data.item;
 							string materialdescquery = WMSResource.getMateDescr.Replace("#materialid", stag_data.materialid.ToString());
 							stag_data.materialdescription = pgsql.QuerySingleOrDefault<string>(
 											materialdescquery, null, commandType: CommandType.Text);
@@ -230,96 +233,248 @@ namespace WMS.Controllers
 
 		}
 
-
-		/*Name of Function : <<uploadInitialStockExcel>>  Author :<<Prasanna>>  
-		Date of Creation <<16-09-2020>>
-		Purpose : <<Write briefly in one line or two lines>>
-		Review Date :<<>>   Reviewed By :<<>>
-		Sourcecode Copyright : Yokogawa India Limited
-		*/
-		[HttpGet]
-		[Route("uploadInitialStockExcel")]
-		public IActionResult uploadInitialStockExcel()
+		private DataTable GetDataTable(string sql, string connectionString)
 		{
+			DataTable dt = new DataTable();
+
+			using (OleDbConnection conn = new OleDbConnection(connectionString))
+			{
+				conn.Open();
+				using (OleDbCommand cmd = new OleDbCommand(sql, conn))
+				{
+					using (OleDbDataReader rdr = cmd.ExecuteReader())
+					{
+						dt.Load(rdr);
+						return dt;
+					}
+				}
+			}
+		}
+
+
+		[HttpGet]
+		[Route("uploadInitialStock")]
+		public IActionResult uploadInitialStock()
+		{
+			loadStockData();
+			return Ok(true);
+		}
+
+
+			/*Name of Function : <<uploadInitialStockExcel>>  Author :<<Prasanna>>  
+			Date of Creation <<16-09-2020>>
+			Purpose : <<Write briefly in one line or two lines>>
+			Review Date :<<>>   Reviewed By :<<>>
+			Sourcecode Copyright : Yokogawa India Limited
+			*/
+
+	    [HttpGet]
+		[Route("uploadInitialStockExcel")]
+		public WMSHttpResponse uploadInitialStockExcel()
+		{
+
+			WMSHttpResponse result = new WMSHttpResponse();
+
+
 			using (NpgsqlConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
 			{
 
 				DB.Open();
-				//var filePath = @"http://10.29.15.183:100/WMSFiles/stageTest1.xlsx";
-				var filePath = @"D:\YILProjects\WMS\WMSFiles\WMS_InitialStockUpload.xlsx";
-				DataTable dtexcel = new DataTable();
-				bool hasHeaders = false;
-				string HDR = hasHeaders ? "Yes" : "No";
-				string strConn;
-				if (filePath.Substring(filePath.LastIndexOf('.')).ToLower() == ".xlsx")
-					strConn = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + filePath + ";Extended Properties=\"Excel 12.0;HDR=" + HDR + ";IMEX=0\"";
-				else
-					strConn = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + filePath + ";Extended Properties=\"Excel 8.0;HDR=" + HDR + ";IMEX=0\"";
-
-
-				OleDbConnection conn = new OleDbConnection(strConn);
-				conn.Open();
-				DataTable schemaTable = conn.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, new object[] { null, null, null, "TABLE" });
-
-				DataRow schemaRow = schemaTable.Rows[0];
-				string sheet = schemaRow["TABLE_NAME"].ToString();
-				if (!sheet.EndsWith("_"))
+				string serverPath = "";
+				//Getting files from server
+				try
 				{
-					string query = "SELECT  * FROM [Sheet1$]";
-					OleDbDataAdapter daexcel = new OleDbDataAdapter(query, conn);
-					dtexcel.Locale = CultureInfo.CurrentCulture;
-					daexcel.Fill(dtexcel);
+					serverPath = @"\\ZAWMS-001\StockExcel\";
+					//serverPath = @"\\10.29.15.212:86\ExcelFile\";
+					using (new NetworkConnection(serverPath, new NetworkCredential(@"administrator", "Wms@1234*")))
+					{
+						var directory = new DirectoryInfo(serverPath);
+						DateTime from_date = DateTime.Now.AddDays(-3);
+						DateTime to_date = DateTime.Now;
+						//files = directory.GetFiles().Where(file => file.LastWriteTime >= from_date && file.LastWriteTime <= to_date).ToList();
+						//files = Directory.GetFiles(serverPath);
+						//var filePath = @"http://10.29.15.212:86/StockstagecsvTest1.xlsx";
+
+						//var filePath = @"D:\A_StagingTable\StockstagecsvTest1.xlsx";
+						var filePath = serverPath+ "StockstagecsvTest1.xlsx";
+
+
+						DataTable dtexcel = new DataTable();
+						bool hasHeaders = false;
+						string HDR = hasHeaders ? "Yes" : "No";
+						string strConn;
+						if (filePath.Substring(filePath.LastIndexOf('.')).ToLower() == ".xlsx")
+							strConn = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + filePath + ";Extended Properties=\"Excel 12.0;HDR=" + HDR + ";IMEX=0\"";
+						else
+							strConn = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + filePath + ";Extended Properties=\"Excel 8.0;HDR=" + HDR + ";IMEX=0\"";
+
+
+						OleDbConnection conn = new OleDbConnection(strConn);
+						conn.Open();
+						DataTable schemaTable = conn.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, new object[] { null, null, null, "TABLE" });
+
+						DataRow schemaRow = schemaTable.Rows[0];
+						string sheet = schemaRow["TABLE_NAME"].ToString();
+						if (!sheet.EndsWith("_"))
+						{
+
+							string query = "SELECT  * FROM [" + sheet + "]";
+							OleDbDataAdapter daexcel = new OleDbDataAdapter(query, conn);
+							dtexcel.Locale = CultureInfo.CurrentCulture;
+							daexcel.Fill(dtexcel);
+
+
+						}
+
+
+						conn.Close();
+
+
+						foreach (DataRow row in dtexcel.Rows)
+						{
+							//try
+							//{
+								string Error_Description = "";
+								bool dataloaderror = false;
+
+								if (string.IsNullOrEmpty((row["Material"].ToString())))
+									Error_Description += "There is NO Material";
+								if (string.IsNullOrEmpty(row["Material Description"].ToString()))
+									Error_Description += "No material description";
+								if (string.IsNullOrEmpty(row["Store"].ToString()))
+									Error_Description += "No Store";
+								if (string.IsNullOrEmpty(row["Rack"].ToString()))
+									Error_Description += "No Rack";
+								if (string.IsNullOrEmpty(row["Bin"].ToString()))
+									Error_Description += "No Bin";
+								if (string.IsNullOrEmpty(row["Quantity"].ToString()))
+									Error_Description += "No Quantity";
+								if (string.IsNullOrEmpty(row["Stock Type"].ToString()))
+									Error_Description += "No Stock Type";
+								if (string.IsNullOrEmpty(row["Unit Price"].ToString()))
+									Error_Description += "No Unit Price";
+								if (!string.IsNullOrEmpty(Error_Description))
+									dataloaderror = true;
+
+
+
+								string? rcvdate = Conversion.ToDate(row["Received date"].ToString(), "yyyy-MM-dd");
+								if (rcvdate == null)
+								{
+									Error_Description += "Invalid Received Date Format.";
+								}
+								string? shelflife = Conversion.ToDate(row["Shelf life expiration"].ToString(), "yyyy-MM-dd");
+								if (shelflife == null)
+								{
+
+									Error_Description += "Invalid Shelf Life Expiration Date Format.";
+								}
+								string? manufacture = Conversion.ToDate(row["Date of Manufacture"].ToString(), "yyyy-MM-dd");
+								if (manufacture == null)
+								{
+
+									Error_Description += "Invalid Date of Manufacture Format.";
+								}
+								string? enteredon = Conversion.ToDate(row["Data Entered On"].ToString(), "yyyy-MM-dd");
+								if (enteredon == null)
+								{
+									Error_Description += "Invalid Data Entered  Format.";
+								}
+								int qty = Conversion.toInt(row["Quantity"].ToString());
+								if (qty == 0)
+								{
+									Error_Description += "Invalid Quantity.";
+								}
+								int unitprice = Conversion.toInt(row["Unit Price"].ToString());
+								if (unitprice == 0)
+								{
+									Error_Description += "Invalid Unit Price.";
+								}
+
+
+
+
+
+								var query = "INSERT INTO wms.st_initialstock (material,materialdescription,store,rack,bin,quantity,grn,";
+								if (rcvdate != null)
+								{
+									query += " receiveddate,";
+
+								}
+								if (shelflife != null)
+								{
+									query += " shelflifeexpiration,";
+
+								}
+								if (manufacture != null)
+								{
+									query += " dateofmanufacture,";
+
+								}
+								if (enteredon != null)
+								{
+									query += " dataenteredon,";
+
+								}
+
+								query += " datasource,dataenteredby,createddate,DataloadErrors ,Error_Description,stocktype,category,unitprice)VALUES('" + row["Material"].ToString() + "'," +
+													  "'" + row["Material Description"].ToString() + "','" + row["Store"].ToString() + "','" + row["Rack"].ToString() + "','" + row["Bin"].ToString() + "'," + qty + ",'" + row["GRN"].ToString() + "',";
+								if (rcvdate != null)
+								{
+									query += " '" + rcvdate + "',";
+
+								}
+								if (shelflife != null)
+								{
+									query += " '" + shelflife + "',";
+
+								}
+								if (manufacture != null)
+								{
+									query += " '" + manufacture + "',";
+
+								}
+								if (enteredon != null)
+								{
+									query += " '" + enteredon + "',";
+
+								}
+								query += " '" + row["DataSource"].ToString() + "','" + row["Data Entered By"].ToString() + "'," +
+								"'" + DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss") + "'," + dataloaderror + ", '" + Error_Description + "','" + row["Stock Type"].ToString() + "','" + row["Category"].ToString() + "'," + unitprice + ")";
+								NpgsqlCommand dbcmd = DB.CreateCommand();
+								dbcmd.CommandText = query;
+								dbcmd.ExecuteNonQuery();
+							//}
+							//catch (Exception e)
+							//{
+
+							//	var res = e;
+							//	log.ErrorMessage("StagingController", "uploadInitialStockExcel", e.StackTrace.ToString());
+							//	return Ok(false);
+							//}
+						}
+
+					}
+				}
+				catch (Exception ex)
+				{
+					DB.Close();
+					result.message = ex.Message;
+					return result;
 				}
 
-				conn.Close();
+				
 
-
-				foreach (DataRow row in dtexcel.Rows)
-				{
-					try
-					{
-						string Error_Description = "";
-						bool dataloaderror = false;
-
-						if (string.IsNullOrEmpty((row["Material"].ToString())))
-							Error_Description += "There is NO Material";
-						if (string.IsNullOrEmpty(row["Material Description"].ToString()))
-							Error_Description += "No material description";
-						if (string.IsNullOrEmpty(row["Store"].ToString()))
-							Error_Description += "No Store";
-						if (string.IsNullOrEmpty(row["Rack"].ToString()))
-							Error_Description += "No Rack";
-						if (string.IsNullOrEmpty(row["Bin"].ToString()))
-							Error_Description += "No Bin";
-						if (string.IsNullOrEmpty(row["Quanity"].ToString()))
-							Error_Description += "No Quanity";
-						if (!string.IsNullOrEmpty(Error_Description))
-							dataloaderror = true;
-
-						var query = "INSERT INTO wms.st_initialstock (material,materialdescription,store,rack,bin,quanity,grn,receiveddate,shelflifeexpiration,dateofmanufacture,datasource,dataenteredby,dataenteredon,createddate,DataloadErrors ,Error_Description)VALUES('" + row["Material"].ToString() + "'," +
-							"'" + row["Material Description"].ToString() + "','" + row["Store"].ToString() + "','" + row["Rack"].ToString() + "','" + row["Bin"].ToString() + "','" + row["Quanity"].ToString() + "'," +
-							"'" + row["GRN"].ToString() + "','" + (Convert.ToDateTime(row["Received date"]).ToString("yyyy-MM-dd")) + "','" + (Convert.ToDateTime(row["Shelf life expiration"]).ToString("yyyy-MM-dd")) + "','" + (Convert.ToDateTime(row["Date of Manufacture"]).ToString("yyyy-MM-dd")) + "'," +
-							"'" + row["DataSource"].ToString() + "','" + row["Data Entered By"].ToString() + "','" + (Convert.ToDateTime(row["Data Entered On"]).ToString("yyyy-MM-dd")) + "'," +
-							"'" + DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss") + "'," + dataloaderror + ", '" + Error_Description + "')";
-						NpgsqlCommand dbcmd = DB.CreateCommand();
-						dbcmd.CommandText = query;
-						dbcmd.ExecuteNonQuery();
-					}
-					catch (Exception e)
-					{
-						var res = e;
-						log.ErrorMessage("StagingController", "uploadInitialStockExcel", e.StackTrace.ToString());
-						continue;
-					}
-				}
-
-				DB.Close();
-				loadStockData();
-				return Ok(true);
+                DB.Close();
+				result.message = "Completed";
+				return result;
+				//loadStockData();
+				//return Ok(true);
 			}
 		}
 
-		/*Name of Function : <<loadStockData>>  Author :<<Prasanna>>  
+		/*
+		function : <<loadStockData>>  Author :<<Prasanna>>  
 		Date of Creation <<16-09-2020>>
 		Purpose : <<Write briefly in one line or two lines>>
 		Review Date :<<>>   Reviewed By :<<>>
@@ -332,17 +487,23 @@ namespace WMS.Controllers
 			{
 				{
 
-					string query = "select * from wms.st_initialstock where material  !='' and materialdescription !='' and store !='' and rack !='' and bin  !='' and quanity  !='0' and dataloaderrors=false";
+					string query = "select * from wms.st_initialstock where material  !='' and materialdescription !='' and store !='' and rack !='' and quantity  !='0' and dataloaderrors=false";
 					pgsql.Open();
-					var stagingList = pgsql.Query<StagingStockModel>(
-					   query, null, commandType: CommandType.Text);
-					foreach (StagingStockModel stag_data in stagingList)
+                    var stagingList = pgsql.Query<StagingStockModel>(
+                       query, null, commandType: CommandType.Text);
+
+
+                    foreach (StagingStockModel stag_data in stagingList)
 					{
+						NpgsqlTransaction Trans = null;
 						try
 						{
 							// add master table data for store,rack,bin
 
-							//Add locator masterdata
+							
+							Trans = pgsql.BeginTransaction();
+							bool deleteflag = false;
+							//Add locator in masterdata
 							string storeQuery = "Select locatorid from wms.wms_rd_locator where locatorname = '" + stag_data.store + "'";
 							var storeId =pgsql.ExecuteScalar(storeQuery, null);
 							if (storeId == null)
@@ -352,11 +513,12 @@ namespace WMS.Controllers
 								store.createdate = DateTime.Now;
 								store.isexcelupload = true;
 								//insert wms_rd_locator ##locatorname
-								var insertStorequery = "INSERT INTO wms.wms_rd_locator(locatorid, locatorname, createdate,isexcelupload)VALUES(default, @locatorname,@createdate,@isexcelupload) returning locatorid";
+								var insertStorequery = "INSERT INTO wms.wms_rd_locator(locatorid, locatorname, createdate,deleteflag,isexcelupload)VALUES(default, @locatorname,@createdate,@deleteflag,@isexcelupload) returning locatorid";
 								var Storeresults = pgsql.ExecuteScalar(insertStorequery, new
 								{
 									store.locatorname,
 									store.createdate,
+									deleteflag,
 									store.isexcelupload
 								});
 								storeId = Convert.ToInt32(Storeresults);
@@ -373,39 +535,82 @@ namespace WMS.Controllers
 								store.createdate = DateTime.Now;
 								store.isexcelupload = true;
 								//insert wms_rd_locator ##locatorname
-								var insertRackquery = "INSERT INTO wms.wms_rd_rack(rackid,racknumber, locatorid,createdate,isexcelupload)VALUES(default,@racknumber,@locatorid,@createdate,@isexcelupload)returning rackid";
+								var insertRackquery = "INSERT INTO wms.wms_rd_rack(rackid,racknumber, locatorid,createdate,deleteflag,isexcelupload)VALUES(default,@racknumber,@locatorid,@createdate,@deleteflag,@isexcelupload)returning rackid";
 								var rackresults = pgsql.ExecuteScalar(insertRackquery, new
 								{
 									store.racknumber,
 									store.locatorid,
 									store.createdate,
+									deleteflag,
 									store.isexcelupload
 								});
 								rackId = Convert.ToInt32(rackresults);
 							}
 
 							//Add Bin masterdata if not exist
-							string binQuery = "Select binid from wms.wms_rd_bin where binnumber = '" + stag_data.bin + "' and locatorid=" + storeId + " and rackid=" + rackId + "";
-							var binId = pgsql.ExecuteScalar(binQuery, null);
-							if (binId == null)
+								string binQuery = "Select binid from wms.wms_rd_bin where binnumber = '" + stag_data.bin + "' and locatorid=" + storeId + " and rackid=" + rackId + "";
+								var binId = pgsql.ExecuteScalar(binQuery, null);
+								if (binId == null && (stag_data.bin != null && stag_data.bin != ""))
+								{
+									LocationModel store = new LocationModel();
+									store.binnumber = stag_data.bin;
+									store.locatorid = Convert.ToInt32(storeId);
+									store.rackid = Convert.ToInt32(rackId);
+									store.createdate = DateTime.Now;
+									store.isexcelupload = true;
+									//insert wms_rd_locator ##locatorname
+									var insertbinQuery = "INSERT INTO wms.wms_rd_bin(binid,binnumber, locatorid,rackid,createdate,deleteflag,isexcelupload)VALUES(default,@binnumber,@locatorid,@rackid,@createdate,@deleteflag,@isexcelupload) returning binid";
+									var binresults = pgsql.ExecuteScalar(insertbinQuery, new
+									{
+										store.binnumber,
+										store.locatorid,
+										store.rackid,
+										store.createdate,
+										deleteflag,
+										store.isexcelupload
+									});
+									binId = Convert.ToInt32(binresults);
+									
+								}
+
+							
+							
+
+
+
+							//Add material master data
+							string materialQuery = "Select material from wms.\"MaterialMasterYGS\" where material = '" + stag_data.material + "'";
+							var materialid = pgsql.ExecuteScalar(materialQuery, null);
+							if (materialid == null)
 							{
 								LocationModel store = new LocationModel();
-								store.binnumber = stag_data.bin;
+								store.materialid = stag_data.material;
+								store.materialdescription = stag_data.materialdescription;
+								store.isexcelupload = true;
 								store.locatorid = Convert.ToInt32(storeId);
 								store.rackid = Convert.ToInt32(rackId);
-								store.createdate = DateTime.Now;
-								store.isexcelupload = true;
+								int? binid = null;
+								bool qualitycheck = false;
+								if (binId != null)
+                                {
+									binid = Convert.ToInt32(binId);
+								}
 								//insert wms_rd_locator ##locatorname
-								var insertbinQuery = "INSERT INTO wms.wms_rd_bin(binid,binnumber, locatorid,rackid,createdate,isexcelupload)VALUES(default,@binnumber,@locatorid,@rackid,@createdate,@isexcelupload) returning binid";
-								var binresults = pgsql.ExecuteScalar(insertbinQuery, new
+								int rslt = 0;
+								var insertStorequery = "INSERT INTO wms.\"MaterialMasterYGS\" (material, materialdescription, storeid,rackid,binid,qualitycheck,stocktype,unitprice)VALUES(@materialid, @materialdescription,@locatorid,@rackid,@binid,@qualitycheck,@stocktype,@unitprice)";
+								rslt = pgsql.Execute(insertStorequery, new
 								{
-									store.binnumber,
+									store.materialid,
+									store.materialdescription,
 									store.locatorid,
 									store.rackid,
-									store.createdate,
-									store.isexcelupload
+									binid,
+									qualitycheck,
+									stag_data.stocktype,
+									stag_data.unitprice
+
+
 								});
-								binId = Convert.ToInt32(binresults);
 							}
 
 
@@ -413,30 +618,50 @@ namespace WMS.Controllers
 							stock.storeid = Convert.ToInt32(storeId);
 							stock.rackid = Convert.ToInt32(rackId);
 							stock.binid = Convert.ToInt32(binId);
-							stock.totalquantity = Convert.ToInt32(stag_data.quanity);
+							stock.totalquantity = stag_data.quantity;
+							stock.availableqty = stag_data.quantity;
 							stock.shelflife = stag_data.shelflifeexpiration;
 							stock.createddate = DateTime.Now;
 							stock.materialid = stag_data.material;
 							stock.initialstock = true;
+							string itemlocation = stag_data.store + "." + stag_data.rack;
+							if(stag_data.bin != "" && stag_data.bin != null)
+                            {
+								itemlocation += "." + stag_data.bin;
+
+							}
+							int? bindata = null;
+							if(stock.binid > 0)
+                            {
+								bindata = stock.binid;
+
+							}
 
 							//insert wms_stock ##storeid, binid,rackid,totalquantity,shelflife ,createddate,materialid ,initialstock
-							var insertquery = "INSERT INTO wms.wms_stock(storeid, binid,rackid,totalquantity,shelflife ,createddate,materialid ,initialstock)VALUES(@storeid, @binid,@rackid,@totalquantity,@shelflife ,@createddate,@materialid ,@initialstock)";
+							var insertquery = "INSERT INTO wms.wms_stock(storeid, binid,rackid,itemlocation,totalquantity,availableqty,shelflife ,createddate,materialid ,initialstock,stcktype,unitprice)VALUES(@storeid, @bindata,@rackid,@itemlocation,@totalquantity,@availableqty,@shelflife ,@createddate,@materialid ,@initialstock,@stocktype,@unitprice)";
 							var results = pgsql.ExecuteScalar(insertquery, new
 							{
 								stock.storeid,
-								stock.binid,
+								bindata,
 								stock.rackid,
+								itemlocation,
 								stock.totalquantity,
+								stock.availableqty,
 								stock.shelflife,
 								stock.createddate,
 								stock.materialid,
-								stock.initialstock
+								stock.initialstock,
+								stag_data.stocktype,
+								stag_data.unitprice
 							});
+
+							Trans.Commit();
 
 
 						}
 						catch (Exception e)
 						{
+							Trans.Rollback();
 							var res = e;
 							log.ErrorMessage("StagingController", "loadStockData", e.StackTrace.ToString());
 							continue;

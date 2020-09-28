@@ -5,7 +5,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { constants } from '../Models/WMSConstants'
 import { Employee, Login, DynamicSearchResult, printMaterial, rbamaster } from '../Models/Common.Model';
-import { PoFilterParams, PoDetails, BarcodeModel, StockModel, materialRequestDetails, inwardModel, gatepassModel, stocktransfermodel, Materials, authUser, invstocktransfermodel, ddlmodel, locataionDetailsStock, updateonhold, materialistModel, outwardmaterialistModel, pageModel, UserDashboardDetail, UserDashboardGraphModel, UnholdGRModel, MRNsavemodel, notifymodel, materialtransferMain, materialReservetorequestModel, testcrud, PrintHistoryModel, materilaTrasFilterParams, outwardinwardreportModel, UserModel } from '../Models/WMS.Model';
+import { PoFilterParams, PoDetails, BarcodeModel, StockModel, materialRequestDetails, inwardModel, gatepassModel, stocktransfermodel, Materials, authUser, invstocktransfermodel, ddlmodel, locataionDetailsStock, updateonhold, materialistModel, outwardmaterialistModel, pageModel, UserDashboardDetail, UserDashboardGraphModel, UnholdGRModel, MRNsavemodel, notifymodel, materialtransferMain, materialReservetorequestModel, testcrud, PrintHistoryModel, materilaTrasFilterParams, outwardinwardreportModel, UserModel, WMSHttpResponse } from '../Models/WMS.Model';
 import { Text } from '@angular/compiler/src/i18n/i18n_ast';
 
 @Injectable({
@@ -591,6 +591,18 @@ export class wmsService {
   approvetransfermaterial(transferdata: materialtransferMain[]): Observable<any> {
     return this.http.post<any>(this.url + 'POData/mattransferapproval', transferdata, this.httpOptions);
   }
+
+  insertcsv(): Observable<WMSHttpResponse> {
+    return this.http.get<WMSHttpResponse>(this.url + 'Staging/uploadInitialStockExcel', this.httpOptions);
+  }
+
+  addddtostock(): Observable<any[]> {
+    return this.http.get<any[]>(this.url + 'Staging/uploadInitialStock', this.httpOptions);
+  }
+
+ 
+ 
+
   gettestcrud(): Observable<testcrud[]> {
     return this.http.get<testcrud[]>(this.url + 'POData/gettestcrud/', this.httpOptions);
   }

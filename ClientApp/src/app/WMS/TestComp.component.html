@@ -1,4 +1,6 @@
 <div class="row " style="margin: 20px;">
+  <button class="btn btn-success" (click)="adddd()">Add excel data</button>
+  <button class="btn btn-success" (click)="addddtostock()">Add stock data</button>
 
   <p-table #dt [value]="getlistdata" [style]="{'overflow':'auto!important','box-shadow' : '5px 5px #888888'}"
            [scrollable]="true" scrollHeight="65vh">
@@ -8,7 +10,7 @@
         <th class="ptable-cell" style="text-align:center;">Name</th>
         <th class="ptable-cell" style="text-align:center;">Is Manager</th>
         <th></th>
-        <th  class="ptable-cell" style="text-align:center;">
+        <th class="ptable-cell" style="text-align:center;">
           <button class="btn btn-success" (click)="showadddatamodel=true">Add</button>
         </th>
       </tr>
@@ -24,7 +26,7 @@
         <td class="ptable-cell" style="text-align:center;">
           <button class="btn btn-danger" (click)="delete(rowData)">Delete</button>
         </td>
-</ng-template>
+    </ng-template>
     <ng-template pTemplate="emptymessage">
       <tr>
         <td colspan="4" style="text-align:center;color:red">No Records.</td>

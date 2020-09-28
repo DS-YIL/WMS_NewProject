@@ -382,7 +382,14 @@
 
                 </td>
                 <td class="ptable-cell" style="text-align:left">
-                  <input readonly [(ngModel)]="rowData.stocktype" class="form-control" type="text" name="{{rowData.stocktype}}" />
+                 
+                  <select [(ngModel)]="rowData.stocktype">
+                    <option value="" selected="selected">Select Stock Type</option>
+                    <option value="Plant Stock">Plant Stock</option>
+                    <option value="Project Stock">Project Stock</option>
+
+                  </select>
+                  <!--<input readonly [(ngModel)]="rowData.stocktype" class="form-control" type="text" name="{{rowData.stocktype}}" />-->
 
                 </td>
                 <td class="ptable-cell" style="text-align:right">

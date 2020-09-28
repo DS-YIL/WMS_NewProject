@@ -80,6 +80,7 @@ export class MaterialReturnDashBoardComponent implements OnInit {
   public displayItemRequestDialog; RequestDetailsSubmitted: boolean = false;
   public materialRequestDetails: materialRequestDetails;
   public rowIndex: number;
+  currentstocktype: string = "";
   ngOnInit() {
     if (localStorage.getItem("Employee"))
       this.employee = JSON.parse(localStorage.getItem("Employee"));
@@ -162,18 +163,18 @@ export class MaterialReturnDashBoardComponent implements OnInit {
     this.locationdetails.locationid = this.locationdetails.storeid + '.' + this.locationdetails.rackid + '.' + this.locationdetails.binid;
     this.locationdetails.locationname = this.locationdetails.storename + '.' + this.locationdetails.rackname + '.' + this.locationdetails.binname;
     //service to get stock type
-    this.wmsService.getstocktype(this.locationdetails).subscribe(data => {
-      debugger;
-      if (data) {
-        this.stock[index].stocktype = data;
-        //this.invoiceForm.controls.itemRows.value[this.invoiceForm.controls.itemRows.value.length - 1].stocktype = data;
-        //this.StockModel.stocktype = data;
+    //this.wmsService.getstocktype(this.locationdetails).subscribe(data => {
+    //  debugger;
+    //  if (data) {
+    //    this.stock[index].stocktype = data;
+    //    //this.invoiceForm.controls.itemRows.value[this.invoiceForm.controls.itemRows.value.length - 1].stocktype = data;
+    //    //this.StockModel.stocktype = data;
 
-      }
-      else {
-        this.messageService.add({ severity: 'error', summary: '', detail: 'Unable to fetch stock type' });
-      }
-    });
+    //  }
+    //  else {
+    //    this.messageService.add({ severity: 'error', summary: '', detail: 'Unable to fetch stock type' });
+    //  }
+    //});
 
 
   }
@@ -219,7 +220,7 @@ export class MaterialReturnDashBoardComponent implements OnInit {
         stockdata.locatorid = null;
         stockdata.rackid = null;
         stockdata.binid = null;
-        stockdata.stocktype = "";
+        stockdata.stocktype = this.currentstocktype;
         this.stock.push(stockdata);
         //this.stock.push(new StockModel());
       }
@@ -231,7 +232,7 @@ export class MaterialReturnDashBoardComponent implements OnInit {
       stockdata.locatorid = null;
       stockdata.rackid = null;
       stockdata.binid = null;
-      stockdata.stocktype = "";
+      stockdata.stocktype = this.currentstocktype;
       this.stock.push(stockdata);
       //this.stock.push(new StockModel());
     }
@@ -240,6 +241,7 @@ export class MaterialReturnDashBoardComponent implements OnInit {
 
   showDialog(details: any, index: number) {
     debugger;
+    this.currentstocktype = details.stocktype;
     this.matqty = details.returnqty;
     this.showLocationDialog = true;
     this.PoDetails = details;
@@ -272,7 +274,7 @@ export class MaterialReturnDashBoardComponent implements OnInit {
       stockdata.locatorid = details.storeid;
       stockdata.rackid = details.rackid;
       stockdata.binid = details.binid;
-      stockdata.stocktype = "";
+      stockdata.stocktype = details.stocktype;
       this.stock.push(stockdata);
       if (stockdata.locatorid) {
         this.onlocUpdate(stockdata.locatorid, stockdata);
@@ -561,6 +563,7 @@ export class MaterialReturnDashBoardComponent implements OnInit {
         this.StockModel.inwardid = this.PoDetails.inwardid;
         this.StockModel.returnid = this.PoDetails.returnid;
         this.StockModel.returnqty = this.PoDetails.returnQty;
+        this.StockModel.stocktype = item.stocktype;
         debugger;
         binnumber = this.bindata.filter(x => x.binid == item.binid);
         storelocation = this.locationdata.filter(x => x.locatorid == item.locatorid);
@@ -589,6 +592,13 @@ export class MaterialReturnDashBoardComponent implements OnInit {
 
         totalqty = totalqty + (item.confirmqty);
       })
+      var dtt = this.StockModelList.filter(function (element, index) {
+        return (element.stocktype == "");
+      });
+      if (dtt.length > 0) {
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Select Stock Type.' });
+        return;
+      }
       if (totalqty == parseInt(this.matqty)) {
         this.ConfirmationService.confirm({
           message: 'Are you sure to put away material in selected stock type?',
