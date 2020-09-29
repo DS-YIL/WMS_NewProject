@@ -199,6 +199,7 @@ export class GatePassApprovalList implements OnInit {
       this.gatepassModel.categoryid = 2;
     this.spinner.show();
     debugger;
+    this.gatepassModel.approverid = this.employee.employeeno;
     this.gatepassModel.approvedby = this.employee.name;
     this.wmsService.GatepassapproveByManager(this.gatepassModel).subscribe(data => {
       this.spinner.hide();
