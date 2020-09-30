@@ -16,6 +16,7 @@ using System.Data.OleDb;
 using System.Globalization;
 using System.IO;
 using System.Net;
+using System.Threading.Tasks;
 using WMS.Common;
 using WMS.Models;
 
@@ -270,7 +271,7 @@ namespace WMS.Controllers
 
 	    [HttpGet]
 		[Route("uploadInitialStockExcel")]
-		public WMSHttpResponse uploadInitialStockExcel()
+		public  WMSHttpResponse uploadInitialStockExcel()
 		{
 
 			WMSHttpResponse result = new WMSHttpResponse();
@@ -281,32 +282,27 @@ namespace WMS.Controllers
 
 				DB.Open();
 				string serverPath = "";
-				//Getting files from server
+				string rows = "";
+				int rowsinserted = 0;
 				try
 				{
 					serverPath = @"\\ZAWMS-001\StockExcel\";
-					//serverPath = @"\\10.29.15.212:86\ExcelFile\";
 					using (new NetworkConnection(serverPath, new NetworkCredential(@"administrator", "Wms@1234*")))
 					{
-						var directory = new DirectoryInfo(serverPath);
-						DateTime from_date = DateTime.Now.AddDays(-3);
-						DateTime to_date = DateTime.Now;
-						//files = directory.GetFiles().Where(file => file.LastWriteTime >= from_date && file.LastWriteTime <= to_date).ToList();
-						//files = Directory.GetFiles(serverPath);
-						//var filePath = @"http://10.29.15.212:86/StockstagecsvTest1.xlsx";
+						
 
 						//var filePath = @"D:\A_StagingTable\StockstagecsvTest1.xlsx";
 						var filePath = serverPath+ "StockstagecsvTest1.xlsx";
 
 
 						DataTable dtexcel = new DataTable();
-						bool hasHeaders = false;
+						bool hasHeaders = true;
 						string HDR = hasHeaders ? "Yes" : "No";
 						string strConn;
 						if (filePath.Substring(filePath.LastIndexOf('.')).ToLower() == ".xlsx")
-							strConn = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + filePath + ";Extended Properties=\"Excel 12.0;HDR=" + HDR + ";IMEX=0\"";
+							strConn = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + filePath + ";Extended Properties=\"Excel 12.0;HDR=" + HDR + ";IMEX=1\"";
 						else
-							strConn = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + filePath + ";Extended Properties=\"Excel 8.0;HDR=" + HDR + ";IMEX=0\"";
+							strConn = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + filePath + ";Extended Properties=\"Excel 8.0;HDR=" + HDR + ";IMEX=1\"";
 
 
 						OleDbConnection conn = new OleDbConnection(strConn);
@@ -328,31 +324,29 @@ namespace WMS.Controllers
 
 
 						conn.Close();
-
-
+						rows = dtexcel.Rows.Count.ToString();
 						foreach (DataRow row in dtexcel.Rows)
 						{
-							//try
-							//{
+							
 								string Error_Description = "";
 								bool dataloaderror = false;
 
-								if (string.IsNullOrEmpty((row["Material"].ToString())))
-									Error_Description += "There is NO Material";
+								if (string.IsNullOrEmpty(row["Material"].ToString()))
+									Error_Description += " There is NO Material";
 								if (string.IsNullOrEmpty(row["Material Description"].ToString()))
-									Error_Description += "No material description";
+									Error_Description += " No material description";
 								if (string.IsNullOrEmpty(row["Store"].ToString()))
-									Error_Description += "No Store";
+									Error_Description += " No Store";
 								if (string.IsNullOrEmpty(row["Rack"].ToString()))
-									Error_Description += "No Rack";
+									Error_Description += " No Rack";
 								if (string.IsNullOrEmpty(row["Bin"].ToString()))
-									Error_Description += "No Bin";
+									Error_Description += " No Bin";
 								if (string.IsNullOrEmpty(row["Quantity"].ToString()))
-									Error_Description += "No Quantity";
+									Error_Description += " No Quantity";
 								if (string.IsNullOrEmpty(row["Stock Type"].ToString()))
-									Error_Description += "No Stock Type";
+									Error_Description += " No Stock Type";
 								if (string.IsNullOrEmpty(row["Unit Price"].ToString()))
-									Error_Description += "No Unit Price";
+									Error_Description += " No Unit Price";
 								if (!string.IsNullOrEmpty(Error_Description))
 									dataloaderror = true;
 
@@ -361,37 +355,53 @@ namespace WMS.Controllers
 								string? rcvdate = Conversion.ToDate(row["Received date"].ToString(), "yyyy-MM-dd");
 								if (rcvdate == null)
 								{
-									Error_Description += "Invalid Received Date Format.";
+									Error_Description += " Invalid Received Date Format.";
 								}
 								string? shelflife = Conversion.ToDate(row["Shelf life expiration"].ToString(), "yyyy-MM-dd");
 								if (shelflife == null)
 								{
 
-									Error_Description += "Invalid Shelf Life Expiration Date Format.";
+									Error_Description += " Invalid Shelf Life Expiration Date Format.";
 								}
 								string? manufacture = Conversion.ToDate(row["Date of Manufacture"].ToString(), "yyyy-MM-dd");
 								if (manufacture == null)
 								{
 
-									Error_Description += "Invalid Date of Manufacture Format.";
+									Error_Description += " Invalid Date of Manufacture Format.";
 								}
 								string? enteredon = Conversion.ToDate(row["Data Entered On"].ToString(), "yyyy-MM-dd");
 								if (enteredon == null)
 								{
-									Error_Description += "Invalid Data Entered  Format.";
+									Error_Description += " Invalid Data Entered  Format.";
 								}
 								int qty = Conversion.toInt(row["Quantity"].ToString());
 								if (qty == 0)
 								{
-									Error_Description += "Invalid Quantity.";
+									Error_Description += " Invalid Quantity.";
 								}
 								int unitprice = Conversion.toInt(row["Unit Price"].ToString());
 								if (unitprice == 0)
 								{
-									Error_Description += "Invalid Unit Price.";
+									Error_Description += " Invalid Unit Price.";
 								}
 
+						//		if(Error_Description != "" || dataloaderror)
+      //                  {
+						//	StockModel stock = new StockModel();
+						//	stock.materialid = row["Material"].ToString();
+						//	stock.matrialdescription = row["Material Description"].ToString();
+						//	stock.store = row["Store"].ToString();
+						//	stock.rack = row["Rack"].ToString();
+						//	stock.bin = row["Bin"].ToString();
+						//	stock.availableqty = Conversion.toInt(row["Quantity"].ToString());
+						//	stock.stocktype = row["Stock Type"].ToString();
+						//	stock.unitprice = Conversion.toInt(row["Unit Price"].ToString());
+						//    stock.receiveddate = Conversion.ToDate(row["Received date"].ToString(), "yyyy-MM-dd");
+						//	stock.shelflifedate = Conversion.ToDate(row["Shelf life expiration"].ToString(), "yyyy-MM-dd");
+						//	stock.manufacturedate = Conversion.ToDate(row["Date of Manufacture"].ToString(), "yyyy-MM-dd");
+						//	stock.entrydate = Conversion.ToDate(row["Data Entered On"].ToString(), "yyyy-MM-dd");
 
+						//}
 
 
 
@@ -443,18 +453,19 @@ namespace WMS.Controllers
 								"'" + DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss") + "'," + dataloaderror + ", '" + Error_Description + "','" + row["Stock Type"].ToString() + "','" + row["Category"].ToString() + "'," + unitprice + ")";
 								NpgsqlCommand dbcmd = DB.CreateCommand();
 								dbcmd.CommandText = query;
-								dbcmd.ExecuteNonQuery();
-							//}
-							//catch (Exception e)
-							//{
-
-							//	var res = e;
-							//	log.ErrorMessage("StagingController", "uploadInitialStockExcel", e.StackTrace.ToString());
-							//	return Ok(false);
-							//}
+							    dbcmd.ExecuteNonQuery();
+							
+							    rowsinserted = rowsinserted + 1;
+							
 						}
 
+						DB.Close();
+						result.message = "Completed_Total_Rows_" + rows + "_Inserted_rows_" + rowsinserted.ToString();
+						return result;
+
 					}
+					
+					
 				}
 				catch (Exception ex)
 				{
@@ -465,11 +476,8 @@ namespace WMS.Controllers
 
 				
 
-                DB.Close();
-				result.message = "Completed";
-				return result;
-				//loadStockData();
-				//return Ok(true);
+              
+				
 			}
 		}
 

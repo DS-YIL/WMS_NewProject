@@ -212,6 +212,7 @@ namespace WMS.Models
 	{
 		public int inwardid { get; set; }
 		public string Material { get; set; }
+		public string matrialdescription { get; set; }
 		public string stockstatus { get; set; }
 		public int itemid { get; set; }
 		public string grnnumber { get; set; }
@@ -241,6 +242,16 @@ namespace WMS.Models
 
 		public int returnid { get; set; }
 		public bool initialstock { get; set; }
+
+		public string bin { get; set; }
+		public string rack { get; set; }
+		public string store { get; set; }
+		public int unitprice { get; set; }
+
+		public string receiveddate { get; set; }
+		public string shelflifedate { get; set; }
+		public string manufacturedate { get; set; }
+		public string entrydate { get; set; }
 
 	}
 	public class trackstatusModel
@@ -1176,7 +1187,7 @@ public class WMSHttpResponse
 {
 	public string message { get; set; }
 }
-}
+
 
 //Amulya
 public class materialrequestMain
