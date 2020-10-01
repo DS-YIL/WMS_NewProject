@@ -2675,7 +2675,7 @@ namespace WMS.DAL
 						if (item.gatepassmaterialid == 0)
 						{
 							string insertquerymaterial = WMSResource.insertgatepassmaterial;
-
+							dataobj.deleteflag = false;
 							var results = DB.ExecuteScalar(insertquerymaterial, new
 							{
 
