@@ -312,6 +312,11 @@ export class SecurityHomeComponent implements OnInit {
           this.showPrintBtn = true;
           this.print = "Re-Print Barcode";
         }
+        else if (String(data).startsWith("Error")) {
+          this.messageService.add({ severity: 'error', summary: '', detail: data });
+          this.getcurrentDateReceivedPOlist();
+
+        }
         else { //data>=1
           this.showPrintBtn = true;
           if (String(data).startsWith("NP")) {

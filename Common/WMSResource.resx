@@ -261,8 +261,8 @@ left join wms.wms_stock stocks on  stocks.inwardid=inwa.inwardid
     <value>update wms.wms_materialrequest set ackstatus=@ackstatus,ackremarks=@ackremarks where requestid=@requestid</value>
   </data>
   <data name="updateapproverstatus" xml:space="preserve">
-    <value>insert into wms.wms_materialissue(materialissueid,pono,itemid,requestforissueid,itemissueddate,itemreceiverid,deleteflag,itemreturnable,approvedby,approvedon,issuedqty,approvedstatus)
-values(default,@pono,@itemid,@requestforissueid,@itemissueddate,@itemreceiverid,false,@itemreturnable,@approvedby,@approvedon,@issuedqty,@approvedstatus)</value>
+    <value>insert into wms.wms_materialissue(materialissueid,pono,itemid,requestforissueid,itemissueddate,itemreceiverid,deleteflag,itemreturnable,approvedby,approvedon,issuedqty,approvedstatus,issuelocation)
+values(default,@pono,@itemid,@requestforissueid,@itemissueddate,@itemreceiverid,false,@itemreturnable,@approvedby,@approvedon,@issuedqty,@approvedstatus,@itemlocation)</value>
   </data>
   <data name="updategrnnumber" xml:space="preserve">
     <value>update wms.wms_securityinward set grnnumber=@grnnumber,grndate=current_date where invoiceno='#invoiceno' and pono='#pono'</value>
@@ -1192,5 +1192,13 @@ where sk.availableqty &gt; 0 group by sk.materialid</value>
   <data name="getAllprojectlist" xml:space="preserve">
     <value>select projectcode as value, projectcode as text,Max(projectmanager) as projectmanager
 from wms.wms_project  where projectmanager is not null group by projectcode</value>
+  </data>
+  <data name="getitemlocationListBysIssueId_v1" xml:space="preserve">
+    <value>select iss.issuedqty,sk.pono,sk.materialid,sk.itemid,sk.itemlocation,sk.availableqty,sk.createddate::DATE,
+ygs.materialdescription
+from wms.wms_materialissue iss 
+left outer join wms.wms_stock sk on iss.itemid =sk.itemid
+left join wms."MaterialMasterYGS" ygs on ygs.material=sk.materialid 
+where iss.requestforissueid = '#requestforissueid'</value>
   </data>
 </root>

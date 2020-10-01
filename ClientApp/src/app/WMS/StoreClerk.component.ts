@@ -368,18 +368,15 @@ export class StoreClerkComponent implements OnInit {
   }
 
   getMaterials() {
-    this.spinner.show();
     if (isNullOrUndefined(localStorage.getItem("materials")) || localStorage.getItem("materials") == "null" || localStorage.getItem("materials") == null || localStorage.getItem("materials") == "NULL") {
       this.wmsService.getMaterial().subscribe(data => {
         debugger;
         this.combomaterial = data;
-        this.spinner.hide();
         localStorage.setItem("materials", JSON.stringify(this.combomaterial));
 
       });
     }
     else {
-      this.spinner.hide();
       this.combomaterial = JSON.parse(localStorage.getItem("materials")) as Materials[];
 
     }
@@ -777,7 +774,8 @@ export class StoreClerkComponent implements OnInit {
       });
 
       this.wmsService.insertitems(this.podetailsList).subscribe(data => {
-        if (data != null) {
+        var responsestring = String(data);
+        if (responsestring.startsWith("Saved")) {
           if (!this.isonHoldview) {
             this.wmsService.verifythreewaymatch(this.PoDetails.pono).subscribe(info => {
               this.spinner.hide();
@@ -805,14 +803,19 @@ export class StoreClerkComponent implements OnInit {
           }
 
         }
-        if (data == null) {
+        else {
           this.spinner.hide();
-          this.messageService.add({ severity: 'error', summary: '', detail: 'Something went wrong' });
+          if (responsestring.includes("duplicate key")) {
+            this.messageService.add({ severity: 'error', summary: '', detail: "Receipt already received" });
+            this.resetpage();
+          }
+          else {
+            this.messageService.add({ severity: 'error', summary: '', detail: responsestring });
+          }
+          
         }
 
-        if (data) {
-
-
+        if (responsestring.startsWith("Saved")) {
           this.showQtyUpdateDialog = false;
           this.disGrnBtn = true;
         }

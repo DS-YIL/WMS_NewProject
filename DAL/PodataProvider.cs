@@ -672,7 +672,16 @@ namespace WMS.DAL
 			catch (Exception Ex)
 			{
 				log.ErrorMessage("PODataProvider", "InsertBarcodeInfo", Ex.StackTrace.ToString());
-				return "0";
+				string errorstring = Ex.Message;
+				if(errorstring.Contains("duplicate key"))
+                {
+					return "2";
+				}
+                else
+                {
+                    return "Error:"+Ex.Message;
+				}
+				
 			}
 
 		}
@@ -1280,7 +1289,7 @@ namespace WMS.DAL
 					emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
 					emailmodel.CC = "sushma.patil@in.yokogawa.com";
 					EmailUtilities emailobj = new EmailUtilities();
-					emailobj.sendEmail(emailmodel, 2);
+					//emailobj.sendEmail(emailmodel, 2);
 
 					return verify;
 				}
@@ -1433,12 +1442,12 @@ namespace WMS.DAL
 						}
 					}
 					
-					return (Convert.ToString(inwardid));
+					return "Saved"+(Convert.ToString(inwardid));
 				}
 				catch (Exception Ex)
 				{
 					log.ErrorMessage("PODataProvider", "insertquantity", Ex.StackTrace.ToString());
-					return null;
+					return Ex.Message;
 				}
 				finally
 				{
@@ -1973,7 +1982,7 @@ namespace WMS.DAL
 						emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
 						emailmodel.CC = "sushma.patil@in.yokogawa.com";
 						EmailUtilities emailobj = new EmailUtilities();
-						emailobj.sendEmail(emailmodel, 6);
+						//emailobj.sendEmail(emailmodel, 6);
 					}
 				}
 				return (Convert.ToInt32(result));
@@ -2213,7 +2222,7 @@ namespace WMS.DAL
 							emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
 							emailmodel.CC = "sushma.patil@in.yokogawa.com";
 							EmailUtilities emailobj = new EmailUtilities();
-							emailobj.sendEmail(emailmodel,4);
+							//emailobj.sendEmail(emailmodel,4);
 						}
 						//if (result != 0)
 						//{
@@ -2280,35 +2289,36 @@ namespace WMS.DAL
 				//data.createddate = System.DateTime.Now;
 				foreach (var item in dataobj)
 				{
+
+					//else
+					//{
+					//	approvedstatus = "rejected";
+					//}
+
+					//int itemid = 0;
+					//using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+					//{
+					//	IssueRequestModel obj = new IssueRequestModel();
+					//	IssueRequestModel objs = new IssueRequestModel();
+					//	pgsql.Open();
+					//	string getitemidqry = WMSResource.getitemid.Replace("#materialid", item.materialid).Replace("#pono", item.pono);
+					//	// string getmaterialidqry = WMSResource.getrequestforissueid.Replace("#materialid", item.materialid).Replace("#pono", item.pono);
+
+					//	obj = pgsql.QueryFirstOrDefault<IssueRequestModel>(
+					//	   getitemidqry, null, commandType: CommandType.Text);
+					//	itemid = obj.itemid;
+					//	//objs = pgsql.QuerySingle<IssueRequestModel>(
+					//	//getmaterialidqry, null, commandType: CommandType.Text);
+
+					//	//requestforissueid = objs.requestforissueid;
+					//}
+
 					string approvedstatus = string.Empty;
 					if (item.issuedqty != 0)
 					{
 						approvedstatus = "Approved";
 					}
-					//else
-					//{
-					//	approvedstatus = "rejected";
-					//}
 					DateTime approvedon = System.DateTime.Now;
-					int itemid = 0;
-					using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
-					{
-						IssueRequestModel obj = new IssueRequestModel();
-						IssueRequestModel objs = new IssueRequestModel();
-						pgsql.Open();
-						string getitemidqry = WMSResource.getitemid.Replace("#materialid", item.materialid).Replace("#pono", item.pono);
-						// string getmaterialidqry = WMSResource.getrequestforissueid.Replace("#materialid", item.materialid).Replace("#pono", item.pono);
-
-						obj = pgsql.QueryFirstOrDefault<IssueRequestModel>(
-						   getitemidqry, null, commandType: CommandType.Text);
-						itemid = obj.itemid;
-						//objs = pgsql.QuerySingle<IssueRequestModel>(
-						//getmaterialidqry, null, commandType: CommandType.Text);
-
-						//requestforissueid = objs.requestforissueid;
-					}
-
-
 
 					int requestforissueid = item.requestforissueid;
 					string materialid = item.materialid;
@@ -2329,11 +2339,12 @@ namespace WMS.DAL
 								issuedqty,
 								materialid,
 								item.pono,
-								itemid,
+								item.itemid,
 								item.itemreturnable,
 								item.approvedby,
 								itemissueddate,
 								item.itemreceiverid,
+								item.itemlocation
 
 							});
 							int availableqty = item.availableqty - item.issuedqty;
@@ -2362,7 +2373,7 @@ namespace WMS.DAL
 				emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
 				emailmodel.CC = "sushma.patil@in.yokogawa.com";
 				EmailUtilities emailobj = new EmailUtilities();
-				emailobj.sendEmail(emailmodel, 5);
+				//emailobj.sendEmail(emailmodel, 5);
 
 				return (Convert.ToInt32(result));
 			}
@@ -2568,7 +2579,7 @@ namespace WMS.DAL
 							emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
 							emailmodel.CC = "sushma.patil@in.yokogawa.com";
 							EmailUtilities emailobj = new EmailUtilities();
-							emailobj.sendEmail(emailmodel, 8);
+							//emailobj.sendEmail(emailmodel, 8);
 						}
 						else if (dataobj.gatepasstype == "Non Returnable")
 						{
@@ -2610,7 +2621,7 @@ namespace WMS.DAL
 							emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
 							emailmodel.CC = "sushma.patil@in.yokogawa.com";
 							EmailUtilities emailobj = new EmailUtilities();
-							emailobj.sendEmail(emailmodel, 9);
+							//emailobj.sendEmail(emailmodel, 9);
 						}
 
 
@@ -4049,7 +4060,12 @@ namespace WMS.DAL
 
 			}
 		}
-
+		/// <summary>
+		/// Get list of Material issued by issueid
+		/// </summary>
+		/// <param name="requestforissueid"></param>
+		/// Revised by Ramesh 10_01_2020
+		/// <returns></returns>
 		public async Task<IEnumerable<IssueRequestModel>> getItemlocationListByIssueId(string requestforissueid)
 		{
 
@@ -4058,7 +4074,8 @@ namespace WMS.DAL
 
 				try
 				{
-					string query = WMSResource.getitemlocationListBysIssueId.Replace("#requestforissueid", requestforissueid);
+					//string query = WMSResource.getitemlocationListBysIssueId.Replace("#requestforissueid", requestforissueid);
+					string query = WMSResource.getitemlocationListBysIssueId_v1.Replace("#requestforissueid", requestforissueid);
 					await pgsql.OpenAsync();
 					var data = await pgsql.QueryAsync<IssueRequestModel>(
 					 query, null, commandType: CommandType.Text);
@@ -5164,7 +5181,7 @@ namespace WMS.DAL
 								emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
 								emailmodel.CC = "sushma.patil@in.yokogawa.com";
 								EmailUtilities emailobj = new EmailUtilities();
-								emailobj.sendEmail(emailmodel, 3);
+								//emailobj.sendEmail(emailmodel, 3);
 							}
 
 						}
@@ -5737,7 +5754,7 @@ namespace WMS.DAL
 							emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
 							emailmodel.CC = "sushma.patil@in.yokogawa.com";
 							EmailUtilities emailobj = new EmailUtilities();
-							emailobj.sendEmail(emailmodel, 15);
+							//emailobj.sendEmail(emailmodel, 15);
 						}
 					}
 				}
@@ -5779,7 +5796,7 @@ namespace WMS.DAL
 							emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
 							emailmodel.CC = "sushma.patil@in.yokogawa.com";
 							EmailUtilities emailobj = new EmailUtilities();
-							emailobj.sendEmail(emailmodel, 16);
+							//emailobj.sendEmail(emailmodel, 16);
 
 
 						}
@@ -6788,7 +6805,7 @@ namespace WMS.DAL
 							emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
 							emailmodel.CC = "sushma.patil@in.yokogawa.com";
 							EmailUtilities emailobj = new EmailUtilities();
-							emailobj.sendEmail(emailmodel, 14);
+							//emailobj.sendEmail(emailmodel, 14);
 						}
 
 					}
@@ -6904,7 +6921,7 @@ namespace WMS.DAL
 					foreach(EmailModel mdl in emailmodels)
                     {
 						EmailUtilities emailobj = new EmailUtilities();
-						emailobj.sendEmail(mdl, 14);
+						//emailobj.sendEmail(mdl, 14);
 					}
 				
 
@@ -7586,7 +7603,7 @@ namespace WMS.DAL
 						emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
 						emailmodel.CC = "sushma.patil@in.yokogawa.com";
 						EmailUtilities emailobj = new EmailUtilities();
-						emailobj.sendEmail(emailmodel, 13);
+						//emailobj.sendEmail(emailmodel, 13);
 
 
 					}
@@ -7649,7 +7666,7 @@ namespace WMS.DAL
 				emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
 				emailmodel.CC = "sushma.patil@in.yokogawa.com";
 				EmailUtilities emailobj = new EmailUtilities();
-				emailobj.sendEmail(emailmodel, 13);
+				//emailobj.sendEmail(emailmodel, 13);
 
 
 
