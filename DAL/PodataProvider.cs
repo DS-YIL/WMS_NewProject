@@ -1215,13 +1215,6 @@ namespace WMS.DAL
 					  query, null, commandType: CommandType.Text);
 					if (info != null && info.grnnumber == null)
 					{
-						//iwardmasterModel infos = new iwardmasterModel();
-						//string queryforgrn = WMSResource.verifyGRNgenerated.Replace("#pono", pono).Replace("#invoiceno", invoiceno);
-						// infos = pgsql.QuerySingle<iwardmasterModel>(
-						//   queryforgrn, null, commandType: CommandType.Text);
-						//if (infos.grnnumber == null)
-						//{
-						//verify = s;
 						int grnnextsequence = 0;
 						string grnnumber = string.Empty;
 						obj = pgsql.QuerySingle<sequencModel>(
@@ -1439,18 +1432,7 @@ namespace WMS.DAL
 							}
 						}
 					}
-					//if (inwardid != 0)
-					//{
-					//	EmailModel emailmodel = new EmailModel();
-					//	emailmodel.pono = datamodel[0].pono;
-					//	emailmodel.jobcode = datamodel[0].projectname;
-					//	emailmodel.ToEmailId = "developer1@in.yokogawa.com";
-					//	emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
-					//	emailmodel.CC = "sushma.patil@in.yokogawa.com";
-					//	EmailUtilities emailobj = new EmailUtilities();
-					//	emailobj.sendEmail(emailmodel, 2);
-					//}
-					//}
+					
 					return (Convert.ToString(inwardid));
 				}
 				catch (Exception Ex)
@@ -1637,14 +1619,7 @@ namespace WMS.DAL
 
 							});
 
-							//Not required - mail after put away
-							//EmailModel emailmodel = new EmailModel();
-							//emailmodel.pono = item.pono;
-							//emailmodel.ToEmailId = "developer1@in.yokogawa.com";
-							//emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
-							//emailmodel.CC = "sushma.patil@in.yokogawa.com";
-							//EmailUtilities emailobj = new EmailUtilities();
-							//emailobj.sendEmail(emailmodel, 13);
+							
 						}
 					}
 					//}
@@ -4649,7 +4624,7 @@ namespace WMS.DAL
 					string materialrequestquery = WMSResource.getmaterialdetailfprrequest.Replace("#manager", approverid);
 					if (pono != null && pono != "undefined" && pono != "null")
 					{
-						materialrequestquery = materialrequestquery + " and sk.pono = '" + pono + "'";
+						materialrequestquery = materialrequestquery + " and (sk.pono = '" + pono + "' or po.suppliername = '" + pono + "')";
 					}
 					//if (approverid != null)
 					//{
@@ -5219,7 +5194,7 @@ namespace WMS.DAL
 			{
 				try
 				{
-					string materialrequestquery = WMSResource.getprojectlist;
+					string materialrequestquery = WMSResource.getAllprojectlist;
 
 
 					await pgsql.OpenAsync();
@@ -5251,14 +5226,13 @@ namespace WMS.DAL
 			{
 				try
 				{
-					string materialrequestquery = WMSResource.getprojectlist;
+					string materialrequestquery = WMSResource.getprojectlist.Replace("#manager",empno);
 
 
 					await pgsql.OpenAsync();
 					var data = await pgsql.QueryAsync<ddlmodel>(
 					  materialrequestquery, null, commandType: CommandType.Text);
-					var senddata = data.Where(o => o.projectmanager == empno).OrderByDescending(o=>o.value);
-					return senddata;
+					return data;
 
 
 

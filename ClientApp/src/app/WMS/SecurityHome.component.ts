@@ -46,6 +46,7 @@ export class SecurityHomeComponent implements OnInit {
   searchdata: string = "";
   nonporemarks: string = "";
   nonpofile: any;
+  clicked: boolean = false;
   public showPrintBtn: boolean = false;
   public PrintHistoryModel: PrintHistoryModel;
 
@@ -55,6 +56,7 @@ export class SecurityHomeComponent implements OnInit {
     this.searchdata = "";
     this.ispochecked = true;
     this.showtable = true;
+    this.clicked = false;
     this.showreceivedtable = false;
     this.btnreceivetext = "Show";
     this.btntext = "Hide";
@@ -236,80 +238,97 @@ export class SecurityHomeComponent implements OnInit {
   //update invoice no
   onsaveSecDetails() {
     //need to generate barcode
-    this.spinner.show();
-    this.BarcodeModel = new BarcodeModel();
-    this.BarcodeModel.paitemid = 1;
-    this.BarcodeModel.barcode = this.searchdata + "_" + this.Poinvoicedetails.invoiceno;
-    this.BarcodeModel.createdby = this.employee.employeeno;
-    this.BarcodeModel.pono = this.PoDetails.pono;
-    this.BarcodeModel.asnno = this.PoDetails.asnno;
-    this.BarcodeModel.departmentid = this.PoDetails.departmentid;
-    this.BarcodeModel.inwardremarks = this.nonporemarks;
-    this.BarcodeModel.suppliername = this.PoDetails.vendorname;
-    if (this.isnonpochecked) {
-      this.BarcodeModel.pono = "NONPO";
-      if (isNullOrUndefined(this.Poinvoicedetails.vendorname) || this.Poinvoicedetails.vendorname == "") {
-        this.messageService.add({ severity: 'error', summary: '', detail: 'Enter Supplier Name' });
-        this.spinner.hide();
-        return;
+    if (!this.clicked) {
+      this.clicked = true;
+      this.spinner.show();
+      this.BarcodeModel = new BarcodeModel();
+      this.BarcodeModel.paitemid = 1;
+      this.BarcodeModel.barcode = this.searchdata + "_" + this.Poinvoicedetails.invoiceno;
+      this.BarcodeModel.createdby = this.employee.employeeno;
+      this.BarcodeModel.pono = this.PoDetails.pono;
+      this.BarcodeModel.asnno = this.PoDetails.asnno;
+      this.BarcodeModel.departmentid = this.PoDetails.departmentid;
+      this.BarcodeModel.inwardremarks = this.nonporemarks;
+      this.BarcodeModel.suppliername = this.PoDetails.vendorname;
+      if (this.isnonpochecked) {
+        this.BarcodeModel.pono = "NONPO";
+        if (isNullOrUndefined(this.Poinvoicedetails.vendorname) || this.Poinvoicedetails.vendorname == "") {
+          this.messageService.add({ severity: 'error', summary: '', detail: 'Enter Supplier Name' });
+          this.spinner.hide();
+          this.clicked = false;
+          return;
+        }
+        if (!isNullOrUndefined(this.selecteddept)) {
+          this.BarcodeModel.departmentid = parseInt(this.selecteddept.value);
+        }
+        else {
+          this.messageService.add({ severity: 'error', summary: '', detail: 'Select Department' });
+          this.spinner.hide();
+          this.clicked = false;
+          return;
+        }
+        this.BarcodeModel.suppliername = this.Poinvoicedetails.vendorname;
       }
-      if (!isNullOrUndefined(this.selecteddept)) {
-        this.BarcodeModel.departmentid = parseInt(this.selecteddept.value);
+      if (this.Poinvoicedetails.invoiceno && this.Poinvoicedetails.invoiceno.trim() != "") {
       }
       else {
-        this.messageService.add({ severity: 'error', summary: '', detail: 'Select Department' });
         this.spinner.hide();
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Enter Invoice No.' });
+        this.clicked = false;
         return;
+
       }
-      this.BarcodeModel.suppliername = this.Poinvoicedetails.vendorname;
-    }
-    if (this.Poinvoicedetails.invoiceno && this.Poinvoicedetails.invoiceno.trim() != "") {
+      if (this.Poinvoicedetails.invoiceno.includes("-")) {
+        this.spinner.hide();
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Remove "-" from invoice no.' });
+        this.clicked = false;
+        return;
+
+      }
+
+      this.BarcodeModel.invoiceno = this.Poinvoicedetails.invoiceno;
+
+      this.BarcodeModel.receivedby = this.employee.employeeno;
+      if (this.isnonpochecked) {
+        if (this.nonpofile) {
+          let file = this.nonpofile;
+          this.BarcodeModel.docfile = file.name;
+        }
+
+      }
+      this.wmsService.insertbarcodeandinvoiceinfo(this.BarcodeModel).subscribe(data => {
+        this.spinner.hide();
+        this.clicked = false;
+        if (data == "0") {
+          this.messageService.add({ severity: 'error', summary: '', detail: 'Something went wrong' });
+        }
+        else if (data == "2") {
+          this.messageService.add({ severity: 'error', summary: '', detail: 'Invoice for this PO already received' });
+          this.showPrintBtn = true;
+          this.print = "Print Barcode";
+        }
+        else if (data == "3") {
+          this.messageService.add({ severity: 'error', summary: '', detail: 'Invoice for this PO already received' });
+          this.showPrintBtn = true;
+          this.print = "Re-Print Barcode";
+        }
+        else { //data>=1
+          this.showPrintBtn = true;
+          if (String(data).startsWith("NP")) {
+            this.uploadnonpodoc(data);
+          }
+          this.disSaveBtn = true;
+          //this.refresh();
+          this.messageService.add({ severity: 'success', summary: '', detail: 'Invoice No. Updated' });
+          this.print = "Print Barcode";
+          this.showPrintBtn = true;
+          this.getcurrentDateReceivedPOlist();
+        }
+      });
     }
     else {
-      this.spinner.hide();
-      this.messageService.add({ severity: 'error', summary: '', detail: 'Enter Invoice No.' });
-      return;
-
+      this.messageService.add({ severity: 'info', summary: '', detail: 'Processing' });
     }
-
-    this.BarcodeModel.invoiceno = this.Poinvoicedetails.invoiceno;
-
-    this.BarcodeModel.receivedby = this.employee.employeeno;
-    if (this.isnonpochecked) {
-      if (this.nonpofile) {
-        let file = this.nonpofile;
-        this.BarcodeModel.docfile = file.name;
-      }
-
-    }
-    this.wmsService.insertbarcodeandinvoiceinfo(this.BarcodeModel).subscribe(data => {
-      this.spinner.hide();
-      if (data == "0") {
-        this.messageService.add({ severity: 'error', summary: '', detail: 'Something went wrong' });
-      }
-      else if (data == "2") {
-        this.messageService.add({ severity: 'error', summary: '', detail: 'Invoice for this PO already received' });
-        this.showPrintBtn = true;
-        this.print = "Print Barcode";
-      }
-      else if (data == "3") {
-        this.messageService.add({ severity: 'error', summary: '', detail: 'Invoice for this PO already received' });
-        this.showPrintBtn = true;
-        this.print = "Re-Print Barcode";
-      }
-      else { //data>=1
-        this.showPrintBtn = true;
-        if (String(data).startsWith("NP")) {
-          this.uploadnonpodoc(data);
-        }
-        this.disSaveBtn = true;
-        //this.refresh();
-        this.messageService.add({ severity: 'success', summary: '', detail: 'Invoice No. Updated' });
-        this.print = "Print Barcode";
-        this.showPrintBtn = true;
-        this.getcurrentDateReceivedPOlist();
-      }
-    });
   }
 
   printbarcode() {

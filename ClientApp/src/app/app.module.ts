@@ -106,6 +106,7 @@ import { FileUploadModule } from 'primeng/fileupload';
 import { TabViewModule } from 'primeng/tabview';
 import { DataViewModule } from 'primeng/dataview';
 import { PanelModule } from 'primeng/panel';
+import { FieldsetModule } from 'primeng/fieldset';
 @Injectable
   ({
     providedIn: 'root',
@@ -217,7 +218,8 @@ import { PanelModule } from 'primeng/panel';
     FileUploadModule,
     TabViewModule,
     DataViewModule,
-    PanelModule
+    PanelModule,
+    FieldsetModule
     //RouterModule.forRoot([
     //  { path: '', component: LoginComponent, pathMatch: 'full' },
     // ])

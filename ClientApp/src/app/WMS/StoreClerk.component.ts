@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef} from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { wmsService } from '../WmsServices/wms.service';
 import { constants } from '../Models/WMSConstants';
@@ -18,7 +18,7 @@ import { AutoComplete } from 'primeng/autocomplete';
   providers: [DatePipe, ConfirmationService]
 })
 export class StoreClerkComponent implements OnInit {
-  @ViewChild('autoCompleteObject', {static : false}) private autoCompleteObject: AutoComplete;
+  @ViewChild('autoCompleteObject', { static: false }) private autoCompleteObject: AutoComplete;
   @ViewChild('myInput', { static: false }) ddlreceivedpo: any;
   @ViewChild('myInput1', { static: false }) ddlgrndata: any;
   constructor(private messageService: MessageService, private wmsService: wmsService, private formBuilder: FormBuilder, private route: ActivatedRoute, private datePipe: DatePipe, private router: Router, public constants: constants, private spinner: NgxSpinnerService) { }
@@ -77,7 +77,7 @@ export class StoreClerkComponent implements OnInit {
   public showPrintLabel: boolean = false;
   displayBasic: boolean = false;
   poinvoice: string = "";
- 
+
   ngOnInit() {
     //this.autoCompleteObject.focusInput();
     if (localStorage.getItem("Employee"))
@@ -155,7 +155,7 @@ export class StoreClerkComponent implements OnInit {
         return;
       }
     }
-   
+
   }
   checkconfirmqty(entredvalue, receivedqty, returnedqty, data: any) {
     if (entredvalue < 0) {
@@ -172,7 +172,7 @@ export class StoreClerkComponent implements OnInit {
     }
     if (entredvalue != (receivedqty - returnedqty) && receivedqty && returnedqty) {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Rejected and Accepted quantity should be equal to received qty' });
-     // (<HTMLInputElement>document.getElementById("confirmqty")).value = "";
+      // (<HTMLInputElement>document.getElementById("confirmqty")).value = "";
       data.confirmqty = "";
       return;
     }
@@ -191,7 +191,7 @@ export class StoreClerkComponent implements OnInit {
       return;
     }
     if (entredvalue != (receivedqty - acceptedqty) && receivedqty && acceptedqty) {
-      this.messageService.add({ severity: 'error', summary: '', detail:  'Rejected and Accepted Quantity should be equal to Received Quantity' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Rejected and Accepted Quantity should be equal to Received Quantity' });
       //(<HTMLInputElement>document.getElementById("returnqty")).value = "";
       data.returnqty = "";
       return;
@@ -237,9 +237,9 @@ export class StoreClerkComponent implements OnInit {
     }
   }
 
-  
 
- 
+
+
   scanBarcode() {
     debugger;
     if (this.PoDetails.pono) {
@@ -273,7 +273,7 @@ export class StoreClerkComponent implements OnInit {
     this.podetailsList.push(empltymodel);
 
   }
-  setdescription(event: any,data: any) {
+  setdescription(event: any, data: any) {
     debugger;
     var data1 = this.podetailsList.filter(function (element, index) {
       return (element.material == event.value.material);
@@ -358,7 +358,7 @@ export class StoreClerkComponent implements OnInit {
           this.messageService.add({ severity: 'success', summary: '', detail: 'Error while Printing Label' });
           console.log(this.printData);
         }
-        
+
 
       }
       else {
@@ -375,16 +375,16 @@ export class StoreClerkComponent implements OnInit {
         this.combomaterial = data;
         this.spinner.hide();
         localStorage.setItem("materials", JSON.stringify(this.combomaterial));
-       
+
       });
     }
     else {
       this.spinner.hide();
       this.combomaterial = JSON.parse(localStorage.getItem("materials")) as Materials[];
-      
+
     }
 
-    
+
   }
   //get pending for receive lisst
   getpendingpos() {
@@ -411,14 +411,14 @@ export class StoreClerkComponent implements OnInit {
       this.spinner.show();
       this.PoDetails = new PoDetails();
       this.showQtyUpdateDialog = true;
-     // alert(this.PoDetails);
+      // alert(this.PoDetails);
       this.PoDetails.pono = this.selectedpendingpono;
       this.getponodetails(this.selectedpendingpono);
     }
     else {
 
     }
-   
+
   }
   showpodata1() {
     this.isacceptance = true;
@@ -469,9 +469,9 @@ export class StoreClerkComponent implements OnInit {
       data.materialdescription = "-";
       data.qualitycheck = true;
     }
-  
-   
-  
+
+
+
 
   }
   resetpage() {
@@ -503,26 +503,26 @@ export class StoreClerkComponent implements OnInit {
   onholdchange(event: any) {
     debugger;
     if (event.target.checked) {
-        this.podetailsList.forEach(item => {
-          item.receivedqty = '0';
-          item.receiveremarks = "";
-        });
+      this.podetailsList.forEach(item => {
+        item.receivedqty = '0';
+        item.receiveremarks = "";
+      });
       this.displayBasic = true;
     }
     else {
       this.onholdremarks = "";
       this.displayBasic = false;
     }
-   
+
   }
-   ///get pending for receive material list
+  ///get pending for receive material list
   getponodetails(data) {
     debugger;
     this.isnonpoentry = false;
     this.qualitychecked = false;
     this.isallreceived = false;
     this.isreceivedbefore = false;
-    this.returned = false;  
+    this.returned = false;
     this.isnonpo = false;
     this.isonHold = false;
     this.isonHoldview = false;
@@ -531,7 +531,7 @@ export class StoreClerkComponent implements OnInit {
     this.wmsService.Getthreewaymatchingdetails(data).subscribe(data => {
       this.spinner.hide();
       debugger;
-      if (data && data.length>0) {
+      if (data && data.length > 0) {
         this.disGrnBtn = false;
         // this.PoDetails = data[0];
         this.podetailsList = data;
@@ -555,12 +555,12 @@ export class StoreClerkComponent implements OnInit {
             });
           }
         }
-        
-       
+
+
         this.isonHold = this.podetailsList[0].onhold;
         this.isonHoldview = this.podetailsList[0].onhold;
         this.onholdremarks = this.podetailsList[0].onholdremarks;
-       
+
 
         debugger;
         this.showDetails = true;
@@ -577,7 +577,17 @@ export class StoreClerkComponent implements OnInit {
           this.returned = true;
         }
         else {
-          this.returned = false;
+          //this.returned = false;
+          var data3 = data2.filter(function (element, index) {
+            return (element.qualitychecked || !element.qualitycheck);
+          });
+          if (data3.length == 0) {
+            this.returned = true;
+          }
+          else {
+            this.returned = false;
+          }
+          
         }
         var receiveddata = this.podetailsList.filter(function (element, index) {
           return (element.isreceivedpreviosly && (element.pendingqty != element.materialqty));
@@ -622,7 +632,7 @@ export class StoreClerkComponent implements OnInit {
     debugger
     if (isNullOrUndefined(this.selectedpendingpono) || this.selectedpendingpono == "") {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Please Select receipt' });
-      this.returned;
+      return;
     }
     this.spinner.show();
     this.onholdupdatedata = new updateonhold();
@@ -638,7 +648,7 @@ export class StoreClerkComponent implements OnInit {
 
 
 
-   
+
   }
 
   onVerifyDetails(details: any) {
@@ -662,7 +672,7 @@ export class StoreClerkComponent implements OnInit {
   onreturnsubmit() {
     debugger;
     this.spinner.show();
-   
+
     var pg = this;
     var validdata = this.podetailsList.filter(function (element, index) {
       return (element.qcstatus != "Pending");
@@ -672,7 +682,7 @@ export class StoreClerkComponent implements OnInit {
       this.spinner.hide();
       return;
     }
-   
+
     var invaliddata = validdata.filter(function (element, index) {
       return (element.confirmqty + element.returnqty != parseInt(element.receivedqty));
     });
@@ -711,9 +721,9 @@ export class StoreClerkComponent implements OnInit {
         //pg.scanBarcode();
 
       });
-     
+
     }, 2000);
-   
+
 
   }
   onsubmit() {
@@ -754,10 +764,10 @@ export class StoreClerkComponent implements OnInit {
 
 
       }
-     
+
       this.spinner.show();
       // this.onVerifyDetails(this.podetailsList);
-    
+
       this.inwardModel.receivedqty = this.PoDetails.materialqty;
       this.inwardModel.receivedby = this.inwardModel.qcby = this.employee.employeeno;
       this.podetailsList.forEach(item => {
@@ -766,47 +776,47 @@ export class StoreClerkComponent implements OnInit {
         item.onholdremarks = this.onholdremarks;
       });
 
-        this.wmsService.insertitems(this.podetailsList).subscribe(data => {
-          if (data != null) {
-            if (!this.isonHoldview) {
-              this.wmsService.verifythreewaymatch(this.PoDetails.pono).subscribe(info => {
-                this.spinner.hide();
-
-                if (info != null) {
-                  this.resetpage();
-                  this.messageService.add({ severity: 'success', summary: '', detail: 'Goods received' });
-                }
-                else {
-                  this.messageService.add({ severity: 'success', summary: '', detail: 'Something went wrong while creating GRN' });
-                }
-
-              })
-
-            }
-            else {
-             
-              var messaged = "Goods received";
-              if (this.isonHoldview) {
-                messaged = "Receipt on hold"
-              }
-              this.messageService.add({ severity: 'success', summary: '', detail: messaged });
-              this.resetpage();
+      this.wmsService.insertitems(this.podetailsList).subscribe(data => {
+        if (data != null) {
+          if (!this.isonHoldview) {
+            this.wmsService.verifythreewaymatch(this.PoDetails.pono).subscribe(info => {
               this.spinner.hide();
-            }
-            
+
+              if (info != null) {
+                this.resetpage();
+                this.messageService.add({ severity: 'success', summary: '', detail: 'Goods received' });
+              }
+              else {
+                this.messageService.add({ severity: 'success', summary: '', detail: 'Something went wrong while creating GRN' });
+              }
+
+            })
+
           }
-          if (data == null) {
+          else {
+
+            var messaged = "Goods received";
+            if (this.isonHoldview) {
+              messaged = "Receipt on hold"
+            }
+            this.messageService.add({ severity: 'success', summary: '', detail: messaged });
+            this.resetpage();
             this.spinner.hide();
-            this.messageService.add({ severity: 'error', summary: '', detail: 'Something went wrong' });
           }
 
-          if (data) {
-           
-            
-            this.showQtyUpdateDialog = false;
-            this.disGrnBtn = true;
-          }
-        });
+        }
+        if (data == null) {
+          this.spinner.hide();
+          this.messageService.add({ severity: 'error', summary: '', detail: 'Something went wrong' });
+        }
+
+        if (data) {
+
+
+          this.showQtyUpdateDialog = false;
+          this.disGrnBtn = true;
+        }
+      });
     }
     else
       this.messageService.add({ severity: 'error', summary: '', detail: 'Enter Quantity' });

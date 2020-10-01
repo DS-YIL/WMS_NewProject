@@ -61,6 +61,10 @@ export class MaterialRequestViewComponent implements OnInit {
   selectedproject: ddlmodel;
   filteredprojects: ddlmodel[] = [];
   requestremarks: string = "";
+  selectedpono: string = "";
+  selectedsupplier: string = "";
+  filteredpos: any[];
+  filteredsuppliers: any[];
   //Email
   reqid: string = "";
   ngOnInit() {
@@ -90,6 +94,30 @@ export class MaterialRequestViewComponent implements OnInit {
     this.getMaterialRequestlist();
     this.getdefaultmaterialstorequest();
     this.getprojects();
+  }
+
+  filterpos(event) {
+    debugger;
+    this.filteredpos = [];
+    for (let i = 0; i < this.ponolist.length; i++) {
+      let pos = this.ponolist[i].pono;
+      if (pos.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+        this.filteredpos.push(pos);
+      }
+     
+    }
+  }
+
+  filtersuppliers(event) {
+    debugger;
+    this.filteredsuppliers = [];
+    for (let i = 0; i < this.ponolist.length; i++) {
+      let brand = isNullOrUndefined(this.ponolist[i].suppliername) ? "" : this.ponolist[i].suppliername;
+      if (brand.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+        this.filteredsuppliers.push(brand);
+      }
+
+    }
   }
 
   getdefaultmaterialstorequest() {
@@ -259,22 +287,24 @@ export class MaterialRequestViewComponent implements OnInit {
 
 
   //On PO Selected event
-  onPOSelected(pono: string) {
+  onPOSelected() {
     debugger;
- 
+    this.materialList = [];
+    this.selectedsupplier = "";
+    var pono = this.selectedpono;
     if (this.ponolist.filter(li => li.pono == pono).length > 0) {
-      if (pono != "All") {
-        var data = this.ponolist.find(li => li.pono == pono);
-        this.suppliername = data["suppliername"];
+    
+        //var data = this.ponolist.find(li => li.pono == pono);
+        //this.suppliername = data["suppliername"];
         this.pono = pono;
         this.displayDD = false;
         this.displaylist = true;
-        this.materialList = [];
+      
         this.wmsService.getMaterialRequestlistdata(this.employee.employeeno, this.pono).subscribe(data => {
           this.materialList = data;
         });
-        //this.requestMatData.suppliername = data["suppliername"];
-      }
+       
+      
       
     }
     else {
@@ -282,41 +312,56 @@ export class MaterialRequestViewComponent implements OnInit {
       this.displayDD = true;
       this.pono = null;
       this.displaylist = false;
-      this.materialList[0].material = "";
-      this.materialList[0].issuedqty = 0;
-      this.materialList[0].materialcost = 0;
-      this.materialList[0].availableqty = 0;
-      //this.wmsService.getMaterialRequestlistdata(this.employee.employeeno, this.pono).subscribe(data => {
+     
+     
+    }
+  }
+
+  onSupplierSelected() {
+    debugger;
+    this.materialList = [];
+    this.selectedpono = "";
+    var pono = this.selectedsupplier;
+    if (this.ponolist.filter(li => li.suppliername == pono).length > 0) {
+      this.pono = pono;
+      this.displayDD = false;
+      this.displaylist = true;
+      this.wmsService.getMaterialRequestlistdata(this.employee.employeeno, this.pono).subscribe(data => {
+        this.materialList = data;
+      });
+
+    }
+    else {
+      this.requestMatData.suppliername == null;
+      this.displayDD = true;
+      this.pono = null;
+      this.displaylist = false;
 
 
-      //  this.searchresult = data;
-      //  this.materialmodel = data;
-      //  this.searchItems = [];
-      //  var fName = "";
-      //  this.searchresult.forEach(item => {
-      //    debugger;
-      //    var name = "material";
-      //    fName = item[this.constants[name].fieldName];
-      //    if (name == "material")
-      //      //fName = item[this.constants[name].fieldName] + " - " + item[this.constants[name].fieldId];
-      //      fName = item[this.constants[name].fieldId];
-      //    // var value = { listName: name, name: fName, code: item[this.constants[name].fieldId] };
-      //    var value = { code: item[this.constants[name].fieldId] };
-      //    this.materialistModel.materialcost = data[0].materialcost;
-      //    this.materialistModel.availableqty = data[0].availableqty;
-      //    this.searchItems.push(item[this.constants[name].fieldId]);
-      //  });
-      //});
     }
   }
 
   //On close of drop down
   close() {
     this.suppliername = null;
+    this.selectedpono = "";
+    this.selectedsupplier = "";
     this.ponumber = null;
     this.requestMatData = new requestData();
     this.materialList = [];
     this.materialmodel = [];
+  }
+
+  resetmaterial() {
+    this.suppliername = null;
+    this.selectedpono = "";
+    this.selectedsupplier = "";
+    this.ponumber = null;
+    this.requestMatData = new requestData();
+    this.materialList = [];
+    this.materialmodel = [];
+    this.displayDD = true;
+    this.displaylist = false;
   }
 
   //On supplier name selected
@@ -465,6 +510,7 @@ export class MaterialRequestViewComponent implements OnInit {
       if (brand.toLowerCase().indexOf(event.query.toLowerCase()) == 0 || pos.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
         this.filteredmats.push(brand);
       }
+      
     }
   }
 

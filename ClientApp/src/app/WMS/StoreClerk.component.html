@@ -1,31 +1,31 @@
 
-  <div style="margin:10px;">
-    <div class="card" style="min-height: 82vh; width: 100%; border-radius: 10px; box-shadow: 5px 10px #888888;">
-      <div class="card-header">
-        <form class="form-inline labelheading">
-          <!--<button *ngIf="isnonpoentry" type="button" class="btn btn-primary btn-sm" style="float:left;margin-left:10px;" (click)="addrows()" label="Save"><i class="fa fa-plus"></i></button>&nbsp;&nbsp;-->
-          <label>Pending receipts:</label>&nbsp;&nbsp;
-          <p-autoComplete [(ngModel)]="selectedpendingpono" [suggestions]="filteredpos" [ngModelOptions]="{standalone: true}" placeholder="search by supplier/PONo" [forceSelection]="false" (onSelect)="showpodata()" (change)="showpodata()" (completeMethod)="filterpos($event)" [size]="30"
-                          [dropdown]="true">
-          </p-autoComplete>&nbsp;&nbsp;&nbsp;&nbsp;
-          <!--<p-dropdown [options]="pendingpos" #myInput [(ngModel)]="selectedpendingpo" [ngModelOptions]="{standalone: true}" [showClear]="true" [style]="{'width':'250px'}" filter="true" placeholder="Select an invoice" optionLabel="value" (onChange)="showpodata()"></p-dropdown>&nbsp;&nbsp;-->
-          <input type="checkbox" (change)="onholdchange($event)" [disabled]="grnnumber || isonHold || isallreceived" *ngIf="!isacceptance && podetailsList.length>0" [(ngModel)]="isonHoldview" [ngModelOptions]="{standalone: true}" />&nbsp;<span *ngIf="!isacceptance && podetailsList.length>0">Put On Hold</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          <label class="labelheading">Pending for Acceptance:</label>&nbsp;&nbsp;
-          <p-autoComplete [(ngModel)]="selectedgrnno" [suggestions]="filteredgrns" placeholder="search by supplier/GRN No" [ngModelOptions]="{standalone: true}" [forceSelection]="false" (change)="showpodata1()" (onSelect)="showpodata1()" (completeMethod)="filtergrn($event)" [size]="30"
-                          [dropdown]="true">
-          </p-autoComplete>
+<div style="margin:10px;">
+  <div class="card" style="min-height: 82vh; width: 100%; border-radius: 10px; box-shadow: 5px 10px #888888;">
+    <div class="card-header">
+      <form class="form-inline labelheading">
+        <!--<button *ngIf="isnonpoentry" type="button" class="btn btn-primary btn-sm" style="float:left;margin-left:10px;" (click)="addrows()" label="Save"><i class="fa fa-plus"></i></button>&nbsp;&nbsp;-->
+        <label>Pending receipts:</label>&nbsp;&nbsp;
+        <p-autoComplete [(ngModel)]="selectedpendingpono" [suggestions]="filteredpos" [ngModelOptions]="{standalone: true}" placeholder="search by supplier/PONo" [forceSelection]="false" (onSelect)="showpodata()" (change)="showpodata()" (completeMethod)="filterpos($event)" [size]="30"
+                        [dropdown]="true">
+        </p-autoComplete>&nbsp;&nbsp;&nbsp;&nbsp;
+        <!--<p-dropdown [options]="pendingpos" #myInput [(ngModel)]="selectedpendingpo" [ngModelOptions]="{standalone: true}" [showClear]="true" [style]="{'width':'250px'}" filter="true" placeholder="Select an invoice" optionLabel="value" (onChange)="showpodata()"></p-dropdown>&nbsp;&nbsp;-->
+        <input type="checkbox" (change)="onholdchange($event)" [disabled]="grnnumber || isonHold || isallreceived" *ngIf="!isacceptance && podetailsList.length>0" [(ngModel)]="isonHoldview" [ngModelOptions]="{standalone: true}" />&nbsp;<span *ngIf="!isacceptance && podetailsList.length>0">Put On Hold</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <label class="labelheading">Pending for Acceptance:</label>&nbsp;&nbsp;
+        <p-autoComplete [(ngModel)]="selectedgrnno" [suggestions]="filteredgrns" placeholder="search by supplier/GRN No" [ngModelOptions]="{standalone: true}" [forceSelection]="false" (change)="showpodata1()" (onSelect)="showpodata1()" (completeMethod)="filtergrn($event)" [size]="30"
+                        [dropdown]="true">
+        </p-autoComplete>
 
 
 
         <!--<p-dropdown [options]="checkedgrnlist" #myInput1 [(ngModel)]="selectedgrn" [ngModelOptions]="{standalone: true}" [showClear]="true" [style]="{'width':'250px'}" filter="true" placeholder="Select GRN" optionLabel="text" (onChange)="showpodata1()"></p-dropdown>-->
 
-        </form>
-      </div>
-      <div class="card-body">
-       
+      </form>
+    </div>
+    <div class="card-body">
 
-        <!--<div class="row">
+
+      <!--<div class="row">
           <div class="col-lg-2 col-md-2">
         <input type="text" [(ngModel)]="PoDetails.pono" class="form-control" />
       </div>
@@ -50,28 +50,28 @@
           </div>
 
         </div>-->
-        <!--<div *ngIf="podetailsList.length>0 || isnonpoentry">
-          <hr class="new1" />
-        </div>-->
-        <div class="row" style="margin-top:0px;">
+      <!--<div *ngIf="podetailsList.length>0 || isnonpoentry">
+        <hr class="new1" />
+      </div>-->
+      <div class="row" style="margin-top:0px;">
 
-          <div class="col-lg-2 col-md-2 labelheading" *ngIf="podetailsList.length>0 || isnonpoentry">
-            PO No : <span class="labeltext">{{lblpono}}</span>
-          </div>
-          <div class="col-lg-3 col-md-3 labelheading" style="font-weight:600;font-size:14px;color:darkblue;" *ngIf="podetailsList.length>0 || isnonpoentry">
-            Invoice No : <span class="labeltext">{{lblinvoiceno}}</span>
-          </div>
-          <div class="col-lg-3 col-md-3 labelheading" style="font-weight:600;font-size:14px;color:darkblue;" *ngIf="podetailsList.length>0 || isnonpoentry">
-            <span *ngIf="grnnumber">WMS GRN No : </span><span class="labeltext">{{grnnumber}}</span>
-            <span *ngIf="!grnnumber && isonHoldview">Remarks: </span><span *ngIf="!grnnumber && isonHoldview" class="labeltext">{{onholdremarks}}&nbsp;&nbsp;<i class="btn fa fa-edit" (click)="displayBasic = true"></i></span>
-          </div>
-          <div class="col-lg-4 col-md-4 labelheading" style="font-weight:600;font-size:14px;color:darkblue;" *ngIf="isnonpoentry">
-            <!--<span class="labeltext" *ngIf="isallreceived && !isacceptance"></span>-->
-            <button *ngIf="isnonpoentry && !grnnumber" type="button" pTooltip="Add marerial" style="border-radius: 10em!important;background-color: white;float:right; border-color: rgb(96, 123, 212);" rounded="true" size="lg" class="my-0" (click)="addrows()"> <i class="fa fa-plus" style="font-size: 15px;color: green;float:right"></i></button><label *ngIf="isnonpoentry" style="font-size: 15px;float:right;padding:0px; color: rgb(96, 123, 212);"> &nbsp;&nbsp;Add Material</label>
-          </div>
-
+        <div class="col-lg-2 col-md-2 labelheading" *ngIf="podetailsList.length>0 || isnonpoentry">
+          PO No : <span class="labeltext">{{lblpono}}</span>
         </div>
-        <!--<div class="row" style="max-height: 400px;max-width:100%;overflow: scroll;position: relative; margin-top:5px;margin-left:3px;">
+        <div class="col-lg-3 col-md-3 labelheading" style="font-weight:600;font-size:14px;color:darkblue;" *ngIf="podetailsList.length>0 || isnonpoentry">
+          Invoice No : <span class="labeltext">{{lblinvoiceno}}</span>
+        </div>
+        <div class="col-lg-3 col-md-3 labelheading" style="font-weight:600;font-size:14px;color:darkblue;" *ngIf="podetailsList.length>0 || isnonpoentry">
+          <span *ngIf="grnnumber">WMS GRN No : </span><span class="labeltext">{{grnnumber}}</span>
+          <span *ngIf="!grnnumber && isonHoldview">Remarks: </span><span *ngIf="!grnnumber && isonHoldview" class="labeltext">{{onholdremarks}}&nbsp;&nbsp;<i class="btn fa fa-edit" (click)="displayBasic = true"></i></span>
+        </div>
+        <div class="col-lg-4 col-md-4 labelheading" style="font-weight:600;font-size:14px;color:darkblue;" *ngIf="isnonpoentry">
+          <!--<span class="labeltext" *ngIf="isallreceived && !isacceptance"></span>-->
+          <button *ngIf="isnonpoentry && !grnnumber" type="button" pTooltip="Add marerial" style="border-radius: 10em!important;background-color: white;float:right; border-color: rgb(96, 123, 212);" rounded="true" size="lg" class="my-0" (click)="addrows()"> <i class="fa fa-plus" style="font-size: 15px;color: green;float:right"></i></button><label *ngIf="isnonpoentry" style="font-size: 15px;float:right;padding:0px; color: rgb(96, 123, 212);"> &nbsp;&nbsp;Add Material</label>
+        </div>
+
+      </div>
+      <!--<div class="row" style="max-height: 400px;max-width:100%;overflow: scroll;position: relative; margin-top:5px;margin-left:3px;">
         <p-table #dt [value]="podetailsList" [style]="{'width':'100%','overflow':'auto!important'}"
                  [responsive]="true" [rows]="10"
                  [resizableColumns]="true"
@@ -158,28 +158,28 @@
         </p-table>
       </div>-->
 
-        <div class="row" *ngIf="!isacceptance" style="max-width:100%;position: relative; margin-top:5px;margin-left:3px;">
-          <p-table #dt [value]="podetailsList" [style]="{'width':'100%','overflow':'auto!important'}"
-                   [responsive]="true" [rows]="10"
-                   [resizableColumns]="true"
-                   columnResizeMode="expand"
-                   [scrollable]="true" scrollHeight="40vh"
-                   appendTo="body">
-            <ng-template pTemplate="header">
-              <tr class="mprltbldata">
-                <th style="text-align:center;width:5%;">Sl.No.</th>
-                <th style="text-align:center;width:20%;">Material</th>
-                <th style="text-align:center;">Material Description</th>
-                <th *ngIf="!isnonpo && !qualitychecked" style="text-align:center;width:10%;">Material Qty</th>
-                <th *ngIf="!isnonpo && isreceivedbefore" style="text-align:center;width:10%;">Pending Qty</th>
-                <th style="text-align:center;width:10%;" *ngIf="!isonHoldview">Received Qty</th>
-<th rowspan="2" style="width:10%;text-align:center">Material Barcode</th>
-                <th style="text-align:center;width:15%;" *ngIf="!isonHoldview">Remarks</th>
-                <th style="text-align:center;width:10%;" *ngIf="!isonHoldview">QC Required</th>
-                <th style="text-align:center;width:10%;" *ngIf="isnonpoentry"></th>
+      <div class="row" *ngIf="!isacceptance" style="max-width:100%;position: relative; margin-top:5px;margin-left:3px;">
+        <p-table #dt [value]="podetailsList" [style]="{'width':'100%','overflow':'auto!important'}"
+                 [responsive]="true" [rows]="10"
+                 [resizableColumns]="true"
+                 columnResizeMode="expand"
+                 [scrollable]="true" scrollHeight="40vh"
+                 appendTo="body">
+          <ng-template pTemplate="header">
+            <tr class="mprltbldata">
+              <th style="text-align:center;width:5%;">Sl.No.</th>
+              <th style="text-align:center;width:20%;">Material</th>
+              <th style="text-align:center;">Material Description</th>
+              <th *ngIf="!isnonpo && !qualitychecked" style="text-align:center;width:10%;">Material Qty</th>
+              <th *ngIf="!isnonpo && isreceivedbefore" style="text-align:center;width:10%;">Pending Qty</th>
+              <th style="text-align:center;width:10%;" *ngIf="!isonHoldview">Received Qty</th>
+              <th rowspan="2" style="width:10%;text-align:center">Material Barcode</th>
+              <th style="text-align:center;width:15%;" *ngIf="!isonHoldview">Remarks</th>
+              <th style="text-align:center;width:10%;" *ngIf="!isonHoldview">QC Required</th>
+              <th style="text-align:center;width:10%;" *ngIf="isnonpoentry"></th>
 
-              </tr>
-              <!--<tr>
+            </tr>
+            <!--<tr>
               <th></th>
               <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'material', 'contains')"></th>
               <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'materialdescription', 'contains')"></th>
@@ -189,79 +189,79 @@
               <th></th>
               <th></th>
             </tr>-->
-            </ng-template>
-            <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
+          </ng-template>
+          <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
 
 
-              <tr>
+            <tr>
 
 
-                <td class="ptable-cell" style="text-align:right;width:5%;">{{ri+1}}</td>
+              <td class="ptable-cell" style="text-align:right;width:5%;">{{ri+1}}</td>
 
-                <td class="ptable-cell" style="text-align:center;width:20%;">
-                  <span *ngIf="!isnonpoentry">{{rowData.material}}</span>
-                  <input *ngIf="isnonpoentry" pInputText type="text" (change)="setmatdesc(rowData)" (blur)="validate(rowData,ri)" class="form-control" [(ngModel)]="rowData.material">
-                  <!--<p-dropdown [options]="combomaterial" appendTo="body" *ngIf="isnonpoentry" [style]="{'width':'100%'}" (onChange)="setdescription($event,rowData)" placeholder="Select material" optionLabel="material"></p-dropdown>-->
-                  <!--<p-autoComplete *ngIf="isnonpoentry" [(ngModel)]="rowData.material" appendTo="body" [suggestions]="filteredmats" placeholder="search by material no/desc" [forceSelection]="false" (onBlur)="validate(rowData,ri)" (change)="setmatdesc(rowData)" (onSelect)="setmatdesc(rowData)" (completeMethod)="filtermats($event)" [size]="30"
-                                [dropdown]="false"></p-autoComplete>-->
-                </td>
-                <td class="ptable-cell" style="text-align:left;">
-                  <span *ngIf="!isnonpoentry && rowData.materialdescription">{{rowData.materialdescription}}</span>
-                  <span *ngIf="!isnonpoentry && !rowData.materialdescription">-</span>
-                  <input *ngIf="isnonpoentry" pInputText type="text" readonly id="receivedqty" class="form-control" [(ngModel)]="rowData.materialdescription">
-                </td>
-                <td class="ptable-cell" *ngIf="!isnonpo && !qualitychecked" style="text-align:right;width:10%;">
-                  <span>{{rowData.materialqty}}</span>
-                </td>
-                <td class="ptable-cell" *ngIf="!isnonpo && isreceivedbefore" style="text-align:right;width:10%;">
-                  <span>{{rowData.pendingqty}}</span>
-                </td>
-                <td class="ptable-cell" style="text-align:right;width:10%;" *ngIf="!isonHoldview">
-                  <span *ngIf="!grnnumber && !isnonpo && isallreceived">N/A</span>
-                  <span *ngIf="grnnumber">{{rowData.receivedqty}}</span>
-                  <input *ngIf="!grnnumber && (!isallreceived || isnonpo)" pInputText type="number" [min]="0" (change)="checkreceivedqty(rowData.receivedqty,rowData.confirmqty,rowData.returnqty,rowData.materialqty,rowData);" id="receivedqty" class="form-control" [(ngModel)]="rowData.receivedqty">
-                </td>
-<td style="    text-align: center;width: 10%;">
+              <td class="ptable-cell" style="text-align:center;width:20%;">
+                <span *ngIf="!isnonpoentry">{{rowData.material}}</span>
+                <input *ngIf="isnonpoentry" pInputText type="text" (change)="setmatdesc(rowData)" (blur)="validate(rowData,ri)" class="form-control" [(ngModel)]="rowData.material">
+                <!--<p-dropdown [options]="combomaterial" appendTo="body" *ngIf="isnonpoentry" [style]="{'width':'100%'}" (onChange)="setdescription($event,rowData)" placeholder="Select material" optionLabel="material"></p-dropdown>-->
+                <!--<p-autoComplete *ngIf="isnonpoentry" [(ngModel)]="rowData.material" appendTo="body" [suggestions]="filteredmats" placeholder="search by material no/desc" [forceSelection]="false" (onBlur)="validate(rowData,ri)" (change)="setmatdesc(rowData)" (onSelect)="setmatdesc(rowData)" (completeMethod)="filtermats($event)" [size]="30"
+                              [dropdown]="false"></p-autoComplete>-->
+              </td>
+              <td class="ptable-cell" style="text-align:left;">
+                <span *ngIf="!isnonpoentry && rowData.materialdescription">{{rowData.materialdescription}}</span>
+                <span *ngIf="!isnonpoentry && !rowData.materialdescription">-</span>
+                <input *ngIf="isnonpoentry" pInputText type="text" readonly id="receivedqty" class="form-control" [(ngModel)]="rowData.materialdescription">
+              </td>
+              <td class="ptable-cell" *ngIf="!isnonpo && !qualitychecked" style="text-align:right;width:10%;">
+                <span>{{rowData.materialqty}}</span>
+              </td>
+              <td class="ptable-cell" *ngIf="!isnonpo && isreceivedbefore" style="text-align:right;width:10%;">
+                <span>{{rowData.pendingqty}}</span>
+              </td>
+              <td class="ptable-cell" style="text-align:right;width:10%;" *ngIf="!isonHoldview">
+                <span *ngIf="!grnnumber && !isnonpo && isallreceived">N/A</span>
+                <span *ngIf="grnnumber">{{rowData.receivedqty}}</span>
+                <input *ngIf="!grnnumber && (!isallreceived || isnonpo)" pInputText type="number" [min]="0" (change)="checkreceivedqty(rowData.receivedqty,rowData.confirmqty,rowData.returnqty,rowData.materialqty,rowData);" id="receivedqty" class="form-control" [(ngModel)]="rowData.receivedqty">
+              </td>
+              <td style="    text-align: center;width: 10%;">
                 <button type="button" icon="fa fa-print" pButton aria-hidden="true" (click)="generateBarcode(rowData)"></button>
               </td>
-                <td style="text-align:left;width:15%;" *ngIf="!isonHoldview">
-                  <span *ngIf="grnnumber || isonHold">{{rowData.receiveremarks}}</span>
-                  <textarea *ngIf="!grnnumber && !isonHold" style="resize: none" [(ngModel)]="rowData.receiveremarks"></textarea>
-                </td>
-                <td style="text-align:center;width:10%;" *ngIf="!isonHoldview">
-                  <input type="checkbox" [disabled]="grnnumber || isallreceived || isonHold" [(ngModel)]="rowData.qualitycheck" />
-                </td>
-                <td style="text-align:center;width:10%;" *ngIf="isnonpoentry">
-                  <button (click)="deleteRow(ri)" class="btn btn-danger" style="margin-top:10%"><i class="fa fa-trash"></i></button>
-                </td>
+              <td style="text-align:left;width:15%;" *ngIf="!isonHoldview">
+                <span *ngIf="grnnumber || isonHold">{{rowData.receiveremarks}}</span>
+                <textarea *ngIf="!grnnumber && !isonHold" style="resize: none" [(ngModel)]="rowData.receiveremarks"></textarea>
+              </td>
+              <td style="text-align:center;width:10%;" *ngIf="!isonHoldview">
+                <input type="checkbox" [disabled]="grnnumber || isallreceived || isonHold" [(ngModel)]="rowData.qualitycheck" />
+              </td>
+              <td style="text-align:center;width:10%;" *ngIf="isnonpoentry">
+                <button (click)="deleteRow(ri)" class="btn btn-danger" style="margin-top:10%"><i class="fa fa-trash"></i></button>
+              </td>
 
 
-              </tr>
-            </ng-template>
-          </p-table>
-        </div>
-        <div class="row" *ngIf="isacceptance" style="max-height: 400px;max-width:100%;overflow: scroll;position: relative; margin-top:5px;margin-left:3px;">
-          <p-table #dt [value]="podetailsList" [style]="{'width':'100%','overflow':'auto!important'}"
-                   [responsive]="true" [rows]="10"
-                   [resizableColumns]="true"
-                   columnResizeMode="expand"
-                   [paginator]="true" [rowsPerPageOptions]="[10,20,30,40]"
-                   appendTo="body">
-            <ng-template pTemplate="header">
-              <tr class="mprltbldata">
-                <th style="text-align:center;width:5%;">Sl.No.</th>
-                <th style="text-align:center;width:15%;">Material</th>
-                <th style="text-align:center;">Material Description</th>
-                <!--<th *ngIf="isreceivedbefore" style="text-align:center;width:10%;">Pending Qty</th>-->
-                <th style="text-align:center;width:10%;">Received Qty</th>
-                <th style="text-align: center;width:10%;">Accepted Qty</th>
-                <th style="text-align:center;width:10%;">Rejected Qty</th>
-                <th style="text-align:center;width:15%;">Remarks</th>
-                <th style="text-align:center;width:10%;">Quality status</th>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+      <div class="row" *ngIf="isacceptance" style="max-height: 400px;max-width:100%;overflow: scroll;position: relative; margin-top:5px;margin-left:3px;">
+        <p-table #dt [value]="podetailsList" [style]="{'width':'100%','overflow':'auto!important'}"
+                 [responsive]="true" [rows]="10"
+                 [resizableColumns]="true"
+                 columnResizeMode="expand"
+                 [paginator]="true" [rowsPerPageOptions]="[10,20,30,40]"
+                 appendTo="body">
+          <ng-template pTemplate="header">
+            <tr class="mprltbldata">
+              <th style="text-align:center;width:5%;">Sl.No.</th>
+              <th style="text-align:center;width:15%;">Material</th>
+              <th style="text-align:center;">Material Description</th>
+              <!--<th *ngIf="isreceivedbefore" style="text-align:center;width:10%;">Pending Qty</th>-->
+              <th style="text-align:center;width:10%;">Received Qty</th>
+              <th style="text-align: center;width:10%;">Accepted Qty</th>
+              <th style="text-align:center;width:10%;">Rejected Qty</th>
+              <th style="text-align:center;width:15%;">Remarks</th>
+              <th style="text-align:center;width:10%;">Quality status</th>
 
 
-              </tr>
-              <!--<tr>
+            </tr>
+            <!--<tr>
               <th></th>
               <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'material', 'contains')"></th>
               <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'materialdescription', 'contains')"></th>
@@ -273,66 +273,65 @@
               <th></th>
 
             </tr>-->
-            </ng-template>
-            <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
+          </ng-template>
+          <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
 
 
-              <tr>
+            <tr>
 
 
-                <td class="ptable-cell" style="text-align:right;width:5%;">{{ri+1}}</td>
+              <td class="ptable-cell" style="text-align:right;width:5%;">{{ri+1}}</td>
 
-                <td class="ptable-cell" style="text-align:center;width:15%;">
-                  <span>{{rowData.material}}</span>
+              <td class="ptable-cell" style="text-align:center;width:15%;">
+                <span>{{rowData.material}}</span>
 
-                </td>
-                <td class="ptable-cell" style="text-align:left;width:20%;">
- <span *ngIf="rowData.materialdescription">{{rowData.materialdescription}}</span>
+              </td>
+              <td class="ptable-cell" style="text-align:left;width:20%;">
+                <span *ngIf="rowData.materialdescription">{{rowData.materialdescription}}</span>
                 <span *ngIf="!rowData.materialdescription">-</span>
 
-                </td>
-                <!--<td class="ptable-cell" *ngIf="isreceivedbefore" style="text-align:center;width:20%;">
-                  <span>{{rowData.pendingqty}}</span>
-                </td>-->
-                <td class="ptable-cell" style="text-align:right;width:10%;">
-                  <span>{{rowData.receivedqty}}</span>
-                </td>
-                <td class="ptable-cell" style="text-align:right;width:10%;">
-                  <span *ngIf="rowData.returnedby && (getstatus(rowData) != 'Pending')">{{rowData.confirmqty}}</span>
-                  <input *ngIf="!rowData.returnedby && (getstatus(rowData) != 'Pending')" pInputText type="number" [min]="0" (change)="checkconfirmqty(rowData.confirmqty,rowData.receivedqty,rowData.returnqty,rowData);" id="confirmqty" class="form-control" [(ngModel)]="rowData.confirmqty">
-                </td>
-                <td class="ptable-cell" style="text-align:right;width:10%;">
-                  <span *ngIf="rowData.returnedby && (getstatus(rowData) != 'Pending')">{{rowData.returnqty}}</span>
-                  <input *ngIf="!rowData.returnedby && (getstatus(rowData) != 'Pending')" pInputText type="number" [min]="0" (change)="checkreturnqty(rowData.returnqty,rowData.receivedqty,rowData.confirmqty,rowData);" id="returnqty" class="form-control" [(ngModel)]="rowData.returnqty">
-                </td>
-                <td style="text-align:left;width:15%;">
-                  <span *ngIf="rowData.returnedby && (getstatus(rowData) != 'Pending')">{{rowData.returnremarks}}</span>
-                  <textarea *ngIf="!rowData.returnedby && (getstatus(rowData) != 'Pending')" [(ngModel)]="rowData.returnremarks"></textarea>
-                </td>
-                <td style="text-align:center;width:10%;">
-                  <span [innerText]="getstatus(rowData)"></span>
-                </td>
+              </td>
+              <!--<td class="ptable-cell" *ngIf="isreceivedbefore" style="text-align:center;width:20%;">
+                <span>{{rowData.pendingqty}}</span>
+              </td>-->
+              <td class="ptable-cell" style="text-align:right;width:10%;">
+                <span>{{rowData.receivedqty}}</span>
+              </td>
+              <td class="ptable-cell" style="text-align:right;width:10%;">
+                <span *ngIf="rowData.returnedby && (getstatus(rowData) != 'Pending')">{{rowData.confirmqty}}</span>
+                <input *ngIf="!rowData.returnedby && (getstatus(rowData) != 'Pending')" pInputText type="number" [min]="0" (change)="checkconfirmqty(rowData.confirmqty,rowData.receivedqty,rowData.returnqty,rowData);" id="confirmqty" class="form-control" [(ngModel)]="rowData.confirmqty">
+              </td>
+              <td class="ptable-cell" style="text-align:right;width:10%;">
+                <span *ngIf="rowData.returnedby && (getstatus(rowData) != 'Pending')">{{rowData.returnqty}}</span>
+                <input *ngIf="!rowData.returnedby && (getstatus(rowData) != 'Pending')" pInputText type="number" [min]="0" (change)="checkreturnqty(rowData.returnqty,rowData.receivedqty,rowData.confirmqty,rowData);" id="returnqty" class="form-control" [(ngModel)]="rowData.returnqty">
+              </td>
+              <td style="text-align:left;width:15%;">
+                <span *ngIf="rowData.returnedby && (getstatus(rowData) != 'Pending')">{{rowData.returnremarks}}</span>
+                <textarea *ngIf="!rowData.returnedby && (getstatus(rowData) != 'Pending')" [(ngModel)]="rowData.returnremarks"></textarea>
+              </td>
+              <td style="text-align:center;width:10%;">
+                <span [innerText]="getstatus(rowData)"></span>
+              </td>
 
 
-              </tr>
-            </ng-template>
-          </p-table>
-        </div>
-
-
-
-
+            </tr>
+          </ng-template>
+        </p-table>
       </div>
-      <div class="card-footer" *ngIf="podetailsList.length">
-        <div *ngIf="!isacceptance">
-          <!--<h6 *ngIf="isonHoldview">On hold remarks:{{onholdremarks}}</h6>-->
-          
-          <!--<button type="button" *ngIf="grnnumber" class="btn btn-success" style="margin-left:45%" (click)="update()">Update</button>-->
-          <button type="button" *ngIf="!grnnumber" class="btn btn-success" style="margin-left:45%" [disabled]="grnnumber || (isallreceived && !isnonpo) || isonHold" (click)="onsubmit()">Submit</button>
-        </div>
-        <div *ngIf="isacceptance">
-          <button type="button" class="btn btn-success" style="margin-left:45%" [disabled]="returned" (click)="onreturnsubmit()">Submit</button>
-        </div>
+
+
+
+
+    </div>
+    <div class="card-footer" *ngIf="podetailsList.length">
+      <div *ngIf="!isacceptance">
+        <!--<h6 *ngIf="isonHoldview">On hold remarks:{{onholdremarks}}</h6>-->
+        <!--<button type="button" *ngIf="grnnumber" class="btn btn-success" style="margin-left:45%" (click)="update()">Update</button>-->
+        <button type="button" *ngIf="!grnnumber" class="btn btn-success" style="margin-left:45%" [disabled]="grnnumber || (isallreceived && !isnonpo) || isonHold" (click)="onsubmit()">Submit</button>
+      </div>
+      <div *ngIf="isacceptance">
+        <button type="button" class="btn btn-success" style="margin-left:45%" [disabled]="returned" (click)="onreturnsubmit()">Submit</button>
+      </div>
 
 
 
@@ -397,11 +396,11 @@
         </div>
 
         <!--<div class="col-lg-2 col-md-2 col-sm-2 form-inline">
-        <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">Item No.</label>
-      </div>
-      <div class="col-lg-3 col-md-3 col-sm-3 form-inline">
-        <input type="text" class="form-control" value="40" />
-      </div>-->
+          <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">Item No.</label>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-3 form-inline">
+          <input type="text" class="form-control" value="40" />
+        </div>-->
       </div>
       <br />
       <div class="row">
@@ -478,23 +477,23 @@
         </div>
         <br />
         <!--<div class="row">
-        <div class="col-lg-3 col-md-3 col-sm-3"></div>
-        <div class="col-lg-7 col-md-7 col-sm-7">
-          <img class="images" src="{{printData.barcodePath}}" />
+          <div class="col-lg-3 col-md-3 col-sm-3"></div>
+          <div class="col-lg-7 col-md-7 col-sm-7">
+            <img class="images" src="{{printData.barcodePath}}" />
+          </div>
         </div>
-      </div>
-      <br/><br/>
-           <div class="row">
-             <div class="col-lg-3 col-md-3 col-sm-3"></div>
-             <div class="col-lg-2 col-md-2 col-sm-2">
-               <label>{{printData.receiveddate}}</label>&nbsp;&nbsp;
+        <br/><br/>
+             <div class="row">
+               <div class="col-lg-3 col-md-3 col-sm-3"></div>
+               <div class="col-lg-2 col-md-2 col-sm-2">
+                 <label>{{printData.receiveddate}}</label>&nbsp;&nbsp;
 
-             </div>
-             <div class="col-lg-3 col-md-3 col-sm-3"></div>
-             <div class="col-lg-2 col-md-2 col-sm-2">
-               <label>1/{{printData.noofprint}}</label>
-             </div>
-           </div>-->
+               </div>
+               <div class="col-lg-3 col-md-3 col-sm-3"></div>
+               <div class="col-lg-2 col-md-2 col-sm-2">
+                 <label>1/{{printData.noofprint}}</label>
+               </div>
+             </div>-->
         <div class="row">
           <div class="col-lg-5 col-md-5 col-sm-5"></div>
           <div class="col-lg-3 col-md-3 col-sm-3">
@@ -506,9 +505,9 @@
   </div>
 
 </div>
-  <p-dialog header="Remarks" [(visible)]="displayBasic" [modal]="true" [style]="{width: '50vw'}" [baseZIndex]="10000">
-    <textarea style="width: 100%; height: 100px;resize: none" [disabled]="grnnumber || isonHold" [(ngModel)]="onholdremarks">
+<p-dialog header="Remarks" [(visible)]="displayBasic" [modal]="true" [style]="{width: '50vw'}" [baseZIndex]="10000">
+  <textarea style="width: 100%; height: 100px;resize: none" [disabled]="grnnumber || isonHold" [(ngModel)]="onholdremarks">
        </textarea>
-    <button class="btn btn-success btn-sm" (click)="displayBasic=false" style="float:right">Ok</button>
-  </p-dialog>
+  <button class="btn btn-success btn-sm" (click)="displayBasic=false" style="float:right">Ok</button>
+</p-dialog>
 

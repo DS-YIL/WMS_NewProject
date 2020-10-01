@@ -222,6 +222,16 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to select projectcode as value, projectcode as text,Max(projectmanager) as projectmanager
+        ///from wms.wms_project  where projectmanager is not null group by projectcode.
+        /// </summary>
+        public static string getAllprojectlist {
+            get {
+                return ResourceManager.GetString("getAllprojectlist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to select approverid,approvername,approvaldate as approvedon,remarks,
         ///CASE
         ///     WHEN isapproved is True THEN &apos;Approved&apos;
@@ -293,11 +303,11 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select stinw.inwardid,stinw.inwmasterid,stinw.materialid as material,secinw.grnnumber,secinw.pono,secinw.invoiceno,secinw.onhold,mat.materialdescription,stinw.receivedqty,stinw.receiveddate,stinw.returnqty,qc.qualitypassedqty,qc.qualityfailedqty,qc.remarks,qc.qcby as checkedby
+        ///   Looks up a localized string similar to select stinw.inwardid,stinw.inwmasterid,stinw.qualitycheckrequired,stinw.materialid as material,secinw.grnnumber,secinw.pono,secinw.invoiceno,secinw.onhold,mat.materialdescription,stinw.receivedqty,stinw.receiveddate,stinw.returnqty,qc.qualitypassedqty,qc.qualityfailedqty,qc.remarks,qc.qcby as checkedby
         ///  from wms.wms_storeinward stinw
         ///  left outer join wms.wms_securityinward secinw on secinw.inwmasterid=stinw.inwmasterid
         ///  left outer join wms.&quot;MaterialMasterYGS&quot; mat on mat.material = stinw.materialid
-        ///  left outer join wms.wms_qu [rest of string was truncated]&quot;;.
+        ///  [rest of string was truncated]&quot;;.
         /// </summary>
         public static string getdataforqualitydetails {
             get {
@@ -402,7 +412,7 @@ namespace WMS.Common {
         ///,(select sum(availableqty) from wms.wms_stock ws where materialid =stock.materialid ) as availableqty,
         ///max(material.gatepassid ) as gatepassid,max(material.gatepassmaterialid ) as gatepassmaterialid, max(emp.&quot;name&quot;) as name,max(pass.vendorname) as vendorname,
         ///max(pass.gatepasstype) as gatepasstype,max(pass.approverstatus) as approverstatus,
-        ///max(pass.reasonforgatepass) as reasonforgatepass,max(pass.approver [rest of string was truncated]&quot;;.
+        ///max(pass.reasonforgatepass) as reasonf [rest of string was truncated]&quot;;.
         /// </summary>
         public static string getgatepassmaterialdetailList {
             get {
@@ -651,13 +661,12 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select issue.approvedstatus,req.pono,req.requestid,req.requesteddate,req.requesterid,emp.&quot;name&quot;,max(req.requesttype)as requesttype,max(req.returnon)as returnon
+        ///   Looks up a localized string similar to select Max(issue.approvedstatus) as approvedstatus,req.pono,req.requestid,Max(req.requesteddate) as requesteddate,req.requesterid,emp.&quot;name&quot;,max(req.requesttype)as requesttype,max(req.returnon)as returnon
         ///        from wms.wms_materialrequest req 
         ///       left join wms.employee emp on req.requesterid=emp.employeeno 
         ///       --left join wms.wms_pomaterials pomat on pomat.pono=po.pono
         ///       --left join wms.wms_project pro on pro.pono=po.pono
-        ///       left join wms.wms_materialissue issue on issue.requestforissueid=req.requestforissueid
-        ///        --where [rest of string was truncated]&quot;;.
+        ///       left join wms.wms_materialissue issue on issue.requestfori [rest of string was truncated]&quot;;.
         /// </summary>
         public static string GetListForMaterialRequestByapproverid {
             get {
@@ -711,11 +720,10 @@ namespace WMS.Common {
         /// <summary>
         ///   Looks up a localized string similar to select max(sk.pono) as pono ,sk.materialid as material,Max(prj.projectmanager) as projectmanager,
         ///( select sum(availableqty) from wms.wms_stock ws where materialid =sk.materialid) as availableqty,
-        ///max(mtmtr.stocktype) as stocktype,
+        ///max(mtmtr.stocktype) as stocktype,max(po.suppliername) as suppliername,
         ///max(mtmtr.unitprice) as materialcost,max(mtmtr.materialdescription) as materialdescription from wms.wms_stock  sk 
         ///left outer join wms.&quot;MaterialMasterYGS&quot; mtmtr on mtmtr.material = sk.materialid
-        ///left outer join wms.wms_project prj on prj.pono = sk.pono
-        ///where sk.availableqty [rest of string was truncated]&quot;;.
+        ///left outer join wms.wms_project prj on prj. [rest of string was truncated]&quot;;.
         /// </summary>
         public static string getmaterialdetailfprrequest {
             get {
@@ -786,6 +794,26 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to select mrs.reserveid,mrs.reservedon,issue.approvedstatus as status,emp.name as reservedby from wms.wms_materialreserve mrs
+        ///left outer join  wms.employee emp on emp.employeeno = mrs.requestedby  left join  wms.wms_materialissue issue on issue.reserveformaterialid=mrs.reserveformaterialid.
+        /// </summary>
+        public static string getMaterialReserveDashboardDetails {
+            get {
+                return ResourceManager.GetString("getMaterialReserveDashboardDetails", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to select mrt.matreturnid,mrt.returnid,mrt.confirmstatus,emp.name as createdby,mrt.createdon  from wms.wms_returnmaterial mrt
+        ///left outer join  wms.employee emp on emp.employeeno = createdby.
+        /// </summary>
+        public static string getMaterialReturnDashboardDetails {
+            get {
+                return ResourceManager.GetString("getMaterialReturnDashboardDetails", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to select gtm.materialid as value,Max(mat.materialdescription) as text from wms.wms_materialissue mi
         ///left outer join wms.wms_materialrequest gtm on gtm.requestforissueid = mi.requestforissueid
         ///left outer join wms.&quot;MaterialMasterYGS&quot; mat on mat.material = gtm.materialid
@@ -810,26 +838,6 @@ namespace WMS.Common {
         public static string getmaterialstoreserve {
             get {
                 return ResourceManager.GetString("getmaterialstoreserve", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to select mrs.reserveid,mrs.reservedon,issue.approvedstatus as status,emp.name as reservedby from wms.wms_materialreserve mrs
-        ///left outer join  wms.employee emp on emp.employeeno = mrs.requestedby  left join  wms.wms_materialissue issue on issue.reserveformaterialid=mrs.reserveformaterialid.
-        /// </summary>
-        public static string getMaterialReserveDashboardDetails {
-            get {
-                return ResourceManager.GetString("getMaterialReserveDashboardDetails", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to select mrt.matreturnid,mrt.returnid,mrt.confirmstatus,emp.name as createdby,mrt.createdon  from wms.wms_returnmaterial mrt
-        ///left outer join  wms.employee emp on emp.employeeno = createdby.
-        /// </summary>
-        public static string getMaterialReturnDashboardDetails {
-            get {
-                return ResourceManager.GetString("getMaterialReturnDashboardDetails", resourceCulture);
             }
         }
         
@@ -1011,9 +1019,8 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select prj.projectcode as value, prj.projectcode as text,
-        ///(select projectmanager from wms.wms_project where projectcode = prj.projectcode and projectmanager is not null and projectmanager &lt;&gt; &apos;&apos; limit 1) as projectmanager
-        ///from wms.wms_projectMaster prj.
+        ///   Looks up a localized string similar to select projectcode as value, projectcode as text,Max(projectmanager) as projectmanager
+        ///from wms.wms_project  where projectmanager = &apos;#manager&apos; group by projectcode.
         /// </summary>
         public static string getprojectlist {
             get {

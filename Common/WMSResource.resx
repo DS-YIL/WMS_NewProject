@@ -138,14 +138,14 @@ from wms.wms_stock sk
  group by  req.requestforissueid,sk.materialid--,sk.pono,req.requestedquantity,sk.availableqty,req.requestid,emp."name",req.requesteddate,pro.jobname</value>
   </data>
   <data name="GetListForMaterialRequestByapproverid" xml:space="preserve">
-    <value>select issue.approvedstatus,req.pono,req.requestid,req.requesteddate,req.requesterid,emp."name",max(req.requesttype)as requesttype,max(req.returnon)as returnon
+    <value>select Max(issue.approvedstatus) as approvedstatus,req.pono,req.requestid,Max(req.requesteddate) as requesteddate,req.requesterid,emp."name",max(req.requesttype)as requesttype,max(req.returnon)as returnon
         from wms.wms_materialrequest req 
        left join wms.employee emp on req.requesterid=emp.employeeno 
        --left join wms.wms_pomaterials pomat on pomat.pono=po.pono
        --left join wms.wms_project pro on pro.pono=po.pono
        left join wms.wms_materialissue issue on issue.requestforissueid=req.requestforissueid
         --where req.approverid='#approverid'
-        group by issue.approvedstatus,req.requestid,req.requesteddate,req.requesterid,emp."name",req.pono  order by req.requestid desc</value>
+        group by req.requestid,req.requesterid,emp."name",req.pono  order by req.requestid desc</value>
   </data>
   <data name="GetListForMaterialRequestByrequesterid" xml:space="preserve">
     <value>select * from wms.wms_materialrequest where requesterid='#requesterid'</value>
@@ -490,10 +490,11 @@ group by pl.pono</value>
   <data name="getmaterialdetailfprrequest" xml:space="preserve">
     <value>select max(sk.pono) as pono ,sk.materialid as material,Max(prj.projectmanager) as projectmanager,
 ( select sum(availableqty) from wms.wms_stock ws where materialid =sk.materialid) as availableqty,
-max(mtmtr.stocktype) as stocktype,
+max(mtmtr.stocktype) as stocktype,max(po.suppliername) as suppliername,
 max(mtmtr.unitprice) as materialcost,max(mtmtr.materialdescription) as materialdescription from wms.wms_stock  sk 
 left outer join wms."MaterialMasterYGS" mtmtr on mtmtr.material = sk.materialid
 left outer join wms.wms_project prj on prj.pono = sk.pono
+left outer join wms.wms_polist po on po.pono = sk.pono
 where sk.availableqty &gt; 0 and (prj.projectmanager = '#manager' or sk.returnid is not null)</value>
   </data>
   <data name="issuedqtydetails" xml:space="preserve">
@@ -598,12 +599,12 @@ values(default,@pono,@itemid,@gatepassmaterialid,@itemissueddate,@itemreceiverid
     <value>UPDATE  wms.wms_storeinward set  qualitypassedqty=@qualitypassedqty,qualityfailedqty = @qualityfailedqty,checkedby = @receivedby,checkedon=current_date,remarks=@remarks where inwardid =#inwardid</value>
   </data>
   <data name="getdataforqualitydetails" xml:space="preserve">
-    <value>select stinw.inwardid,stinw.inwmasterid,stinw.materialid as material,secinw.grnnumber,secinw.pono,secinw.invoiceno,secinw.onhold,mat.materialdescription,stinw.receivedqty,stinw.receiveddate,stinw.returnqty,qc.qualitypassedqty,qc.qualityfailedqty,qc.remarks,qc.qcby as checkedby
+    <value>select stinw.inwardid,stinw.inwmasterid,stinw.qualitycheckrequired,stinw.materialid as material,secinw.grnnumber,secinw.pono,secinw.invoiceno,secinw.onhold,mat.materialdescription,stinw.receivedqty,stinw.receiveddate,stinw.returnqty,qc.qualitypassedqty,qc.qualityfailedqty,qc.remarks,qc.qcby as checkedby
   from wms.wms_storeinward stinw
   left outer join wms.wms_securityinward secinw on secinw.inwmasterid=stinw.inwmasterid
   left outer join wms."MaterialMasterYGS" mat on mat.material = stinw.materialid
   left outer join wms.wms_qualitycheck qc on qc.inwardid=stinw.inwardid
-  where secinw.grnnumber = '#grnno'</value>
+  where stinw.qualitycheckrequired is True and secinw.grnnumber = '#grnno'</value>
   </data>
   <data name="receiveforinvoice" xml:space="preserve">
     <value>INSERT INTO wms.wms_storeinward(inwmasterid,receiveddate,receivedby,receivedqty,materialid,deleteflag,qualitycheckrequired,qualitychecked,materialqty,remarks)
@@ -907,9 +908,8 @@ receivedqty=@receivedqty,qualitycheckrequired=@qualitycheck,qualitychecked=@qual
 where inwardid = '#inwardid'</value>
   </data>
   <data name="getprojectlist" xml:space="preserve">
-    <value>select prj.projectcode as value, prj.projectcode as text,
-(select projectmanager from wms.wms_project where projectcode = prj.projectcode and projectmanager is not null and projectmanager &lt;&gt; '' limit 1) as projectmanager
-from wms.wms_projectMaster prj</value>
+    <value>select projectcode as value, projectcode as text,Max(projectmanager) as projectmanager
+from wms.wms_project  where projectmanager = '#manager' group by projectcode</value>
   </data>
   <data name="getitemsfornotifypage" xml:space="preserve">
     <value>select inwa.inwardid,bin.binnumber, rack.racknumber, loc.locatorname,mat.rackid,mat.binid,
@@ -1188,5 +1188,9 @@ max(mtmtr.unitprice) as materialcost,max(mtmtr.materialdescription) as materiald
 left outer join wms."MaterialMasterYGS" mtmtr on mtmtr.material = sk.materialid
 left outer join wms.wms_project prj on prj.pono = sk.pono 
 where sk.availableqty &gt; 0 group by sk.materialid</value>
+  </data>
+  <data name="getAllprojectlist" xml:space="preserve">
+    <value>select projectcode as value, projectcode as text,Max(projectmanager) as projectmanager
+from wms.wms_project  where projectmanager is not null group by projectcode</value>
   </data>
 </root>
