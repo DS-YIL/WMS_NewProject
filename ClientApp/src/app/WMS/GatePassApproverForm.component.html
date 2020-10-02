@@ -87,32 +87,44 @@
         <div class="col-lg-2 col-md-2 col-sm-2 form-inline" *ngIf="employee.roleid!='8'" style="font-weight:600;font-size:14px;color:darkblue;">
           Type:&nbsp;<span style="color:#dc3545;">{{materialList[0].gatepasstype}}</span>
         </div>
-        <div class="col-lg-2 col-md-2 col-sm-2 form-inline" *ngIf="gatepassModel.approverstatus && btnDisable" style="font-weight:600;font-size:14px;color:darkblue;">
-          <label>
+        <div class="col-lg-2 col-md-2 col-sm-2 form-inline" *ngIf="materialList[0].gatepasstype=='Returnable'" style="font-weight:600;font-size:14px;color:darkblue;">
+          <label *ngIf="gatepassModel.approverstatus && btnDisable">
             Status:&nbsp;<span style="color:#dc3545;">{{gatepassModel.approverstatus}}</span>
           </label>
         </div>
-       
-       
+        <div class="col-lg-2 col-md-2 col-sm-2 form-inline" *ngIf="materialList[0].gatepasstype!='Returnable'" style="font-weight:600;font-size:14px;color:darkblue;">
+          <label *ngIf="gatepassModel.fmapprovedstatus && btnDisable">
+            Status:&nbsp;<span style="color:#dc3545;">{{gatepassModel.fmapprovedstatus}}</span>
+          </label>
+        </div>
+
 
 
       </div>
    
       <div class="row" style="padding-left:20px;">
-        <div class="col-lg-2 col-md-2 col-sm-2 form-inline" *ngIf="!gatepassModel.approverstatus || !btnDisable" style="font-weight:600;font-size:14px;color:darkblue;">
-          <label>
+        <div class="col-lg-2 col-md-2 col-sm-2 form-inline" *ngIf="materialList[0].gatepasstype=='Returnable'" style="font-weight:600;font-size:14px;color:darkblue;">
+          <label *ngIf="!gatepassModel.approverstatus || !btnDisable">
+            Status:&nbsp;<span style="color:#dc3545;">Pending</span>
+          </label>
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-2 form-inline" *ngIf="materialList[0].gatepasstype!='Returnable'" style="font-weight:600;font-size:14px;color:darkblue;">
+          <label *ngIf="!gatepassModel.fmapprovedstatus || !btnDisable">
             Status:&nbsp;<span style="color:#dc3545;">Pending</span>
           </label>
         </div>
         <div class="col-lg-4 col-md-4 col-sm-4 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
           Reason:&nbsp;<span style="color:#dc3545;">{{materialList[0].reasonforgatepass}}</span>
         </div>
-        <div class="col-lg-6 col-md-6 col-sm-6 form-inline" *ngIf="gatepassModel.approverremarks && btnDisable" style="font-weight:600;font-size:14px;color:darkblue;">
-          Remarks:&nbsp;<span style="color:#dc3545;">{{gatepassModel.approverremarks}}</span>
+        <div class="col-lg-6 col-md-6 col-sm-6 form-inline"  style="font-weight:600;font-size:14px;color:darkblue;">
+          <label *ngIf="gatepassModel.approverremarks && btnDisable && materialList[0].gatepasstype=='Returnable'">Remarks:&nbsp;<span style="color:#dc3545;">{{gatepassModel.approverremarks}}</span></label>
+          <label *ngIf="gatepassModel.approverremarks && btnDisable && materialList[0].gatepasstype!='Returnable'">Remarks:&nbsp;<span style="color:#dc3545;">{{gatepassModel.fmapproverremarks}}</span></label>
+          
         </div>
+       
         <!--<div class="col-lg-6 col-md-6 col-sm-6 form-inline" *ngIf="gatepassModel.approverremarks && btnDisable && materialList[0].gatepasstype!='Returnable'" style="font-weight:600;font-size:14px;color:darkblue;">
-          Remarks:&nbsp;<span style="color:#dc3545;">{{gatepassModel.fmapproverremarks}}</span>
-        </div>-->
+    Remarks:&nbsp;<span style="color:#dc3545;">{{gatepassModel.fmapproverremarks}}</span>
+  </div>-->
         <!--<div class="col-lg-2 col-md-2 col-sm-2 form-inline">
     <label class="form-label"><b>Vehicle No:</b></label>&nbsp;<span>{{materialList[0].vehicleno}}</span>
   </div>-->

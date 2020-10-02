@@ -77,8 +77,11 @@
               <td class="ptable-cell" style="text-align:left">{{rowData.gatepasstype}}</td>
               <td class="ptable-cell" style="text-align:left">{{rowData.vendorname}}</td>
               <td class="ptable-cell" style="text-align:left">{{rowData.reasonforgatepass}}</td>
-              <td class="ptable-cell" *ngIf="rowData.approverstatus" style="text-align:left">{{rowData.approverstatus}}</td>
-              <td class="ptable-cell" *ngIf="!rowData.approverstatus" style="text-align:left">Pending</td>
+              <td class="ptable-cell" *ngIf="rowData.approverstatus && typeOfList == 'GatePassPMList'" style="text-align:left">{{rowData.approverstatus}}</td>
+              <td class="ptable-cell" *ngIf="!rowData.approverstatus && typeOfList == 'GatePassPMList'" style="text-align:left">Pending</td>
+              
+              <td class="ptable-cell" *ngIf="rowData.fmapprovedstatus && typeOfList != 'GatePassPMList'" style="text-align:left">{{rowData.fmapprovedstatus}}</td>
+              <td class="ptable-cell" *ngIf="!rowData.fmapprovedstatus && typeOfList != 'GatePassPMList'" style="text-align:left">Pending</td>
               <td class="ptable-cell" style="text-align:left">{{rowData.name}}</td>
               <td class="ptable-cell" style="text-align:center">{{rowData.requestedon | date :  constants.dateFormat}}</td>
 
@@ -193,25 +196,38 @@
           <div class="col-lg-2 col-md-2 col-sm-2 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
             Reason:&nbsp;<span style="color:#dc3545;">{{materialList[0].reasonforgatepass}}</span>
           </div>
-          <div class="col-lg-2 col-md-2 col-sm-2 form-inline" *ngIf="gatepassModel.approverstatus && btnDisable" style="font-weight:600;font-size:14px;color:darkblue;">
+          <div class="col-lg-2 col-md-2 col-sm-2 form-inline" *ngIf="gatepassModel.approverstatus && btnDisable && typeOfList == 'GatePassPMList'" style="font-weight:600;font-size:14px;color:darkblue;">
             <label>
               Status:&nbsp;<span style="color:#dc3545;">{{gatepassModel.approverstatus}}</span>
             </label>
           </div>
-          <div class="col-lg-2 col-md-2 col-sm-2W form-inline" *ngIf="!gatepassModel.approverstatus || !btnDisable" style="font-weight:600;font-size:14px;color:darkblue;">
+          <div class="col-lg-2 col-md-2 col-sm-2W form-inline" *ngIf="!gatepassModel.approverstatus || !btnDisable && typeOfList == 'GatePassPMList'" style="font-weight:600;font-size:14px;color:darkblue;">
             <label>
+              Status:&nbsp;<span style="color:#dc3545;">Pending</span>
+            </label>
+          </div>
+          <div class="col-lg-2 col-md-2 col-sm-2 form-inline" *ngIf="typeOfList != 'GatePassPMList'" style="font-weight:600;font-size:14px;color:darkblue;">
+            <label *ngIf="gatepassModel.fmapprovedstatus && btnDisable">
+              Status:&nbsp;<span style="color:#dc3545;">{{gatepassModel.fmapprovedstatus}}</span>
+            </label>
+          </div>
+          <div class="col-lg-2 col-md-2 col-sm-2W form-inline" *ngIf="typeOfList != 'GatePassPMList'" style="font-weight:600;font-size:14px;color:darkblue;">
+            <label *ngIf="!gatepassModel.fmapprovedstatus || !btnDisable">
               Status:&nbsp;<span style="color:#dc3545;">Pending</span>
             </label>
           </div>
         </div>
         <!--<br />-->
         <div class="row" style="padding-left:20px;">
-          <div class="col-lg-6 col-md-6 col-sm-6 form-inline" *ngIf="gatepassModel.approverremarks && btnDisable" style="font-weight:600;font-size:14px;color:darkblue;">
+          <div class="col-lg-6 col-md-6 col-sm-6 form-inline" *ngIf="gatepassModel.approverremarks && btnDisable && typeOfList == 'GatePassPMList'" style="font-weight:600;font-size:14px;color:darkblue;">
             Remarks:&nbsp;<span style="color:#dc3545;">{{gatepassModel.approverremarks}}</span>
           </div>
+          <div class="col-lg-6 col-md-6 col-sm-6 form-inline" *ngIf="gatepassModel.fmapproverremarks && btnDisable && typeOfList != 'GatePassPMList'" style="font-weight:600;font-size:14px;color:darkblue;">
+            Remarks:&nbsp;<span style="color:#dc3545;">{{gatepassModel.fmapproverremarks}}</span>
+          </div>
           <!--<div class="col-lg-2 col-md-2 col-sm-2 form-inline">
-        <label class="form-label"><b>Vehicle No:</b></label>&nbsp;<span>{{materialList[0].vehicleno}}</span>
-      </div>-->
+    <label class="form-label"><b>Vehicle No:</b></label>&nbsp;<span>{{materialList[0].vehicleno}}</span>
+  </div>-->
         </div>
         <!--<br />-->
         <div class="row mt-4" style="    margin: 14px;

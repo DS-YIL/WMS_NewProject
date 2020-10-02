@@ -410,9 +410,8 @@ namespace WMS.Common {
         /// <summary>
         ///   Looks up a localized string similar to select (select sum(issuedqty) from wms.wms_materialissue  where gatepassmaterialid =material.gatepassmaterialid ) as issuedqty
         ///,(select sum(availableqty) from wms.wms_stock ws where materialid =stock.materialid ) as availableqty,
-        ///max(material.gatepassid ) as gatepassid,max(material.gatepassmaterialid ) as gatepassmaterialid, max(emp.&quot;name&quot;) as name,max(pass.vendorname) as vendorname,
-        ///max(pass.gatepasstype) as gatepasstype,max(pass.approverstatus) as approverstatus,
-        ///max(pass.reasonforgatepass) as reasonf [rest of string was truncated]&quot;;.
+        ///max(material.gatepassid ) as gatepassid,max(material.expecteddate) as expecteddate,max(material.gatepassmaterialid ) as gatepassmaterialid, max(emp.&quot;name&quot;) as name,max(pass.vendorname) as vendorname,
+        ///max(pass.gatepasstype) as gatepasstype,max(pass.approverstatus) as approverstat [rest of string was truncated]&quot;;.
         /// </summary>
         public static string getgatepassmaterialdetailList {
             get {
@@ -608,13 +607,12 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select  sum(sk.availableqty)as availableqty,(select sum(issuedqty) from wms.wms_materialissue wm where itemid =sk.itemid ) as issuedqty,sk.pono,sk.materialid,sk.itemid,sk.itemlocation,ygs.materialdescription,ygs.material,createddate::DATE
+        ///   Looks up a localized string similar to select  sum(sk.availableqty)as availableqty,(select sum(issuedqty) from wms.wms_materialissue wm where itemid =sk.itemid and gatepassmaterialid = &apos;#gatepassmaterialid&apos;) as issuedqty,sk.pono,sk.materialid,sk.itemid,sk.itemlocation,ygs.materialdescription,ygs.material,createddate::DATE
         ///from wms.wms_stock sk 
         ///inner join wms.&quot;MaterialMasterYGS&quot; ygs on ygs.material=sk.materialid 
         ///left join wms.wms_materialissue iss on iss.itemid =sk.itemid 
         ///where gatepassmaterialid =&apos;#gatepassmaterialid&apos; and
-        ///sk.deleteflag=false
-        ///group by sk.itemlocation,ygs.materialdes [rest of string was truncated]&quot;;.
+        ///sk.deleteflag=f [rest of string was truncated]&quot;;.
         /// </summary>
         public static string getItemlocationListByGatepassmaterialid {
             get {

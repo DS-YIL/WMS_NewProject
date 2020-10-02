@@ -147,6 +147,7 @@ export class GatePassApproverComponent implements OnInit {
 
   //shows list of items for particular material
   showmateriallocationList(material, description, id, rowindex, qty, issuedqty, reservedqty, gatepassmaterialid) {
+    debugger;
     if (issuedqty <= qty) {
       this.issueqtyenable = true;
     }

@@ -2552,6 +2552,7 @@ namespace WMS.DAL
 							remarks
 
 						});
+						dataobj.gatepassid = Convert.ToInt32(gatepassid);
 						if (dataobj.gatepasstype == "Returnable")
 						{
 							string approvername = dataobj.managername;

@@ -108,7 +108,7 @@ export class GatePassApprovalList implements OnInit {
           //debugger;
           item.materialList.push(result[i]);
         }
-
+        debugger;
         this.gatepasslist.push(item);
       }
     });
@@ -116,11 +116,12 @@ export class GatePassApprovalList implements OnInit {
 
 
   getGatePassHistoryList(gatepassId: any) {
+    debugger;
     this.wmsService.getGatePassApprovalHistoryList(gatepassId).subscribe(data => {
       debugger;
       this.gatePassApprovalList = data;
       for (let i = 0; i < this.gatePassApprovalList.length; i++) {
-        if (this.gatePassApprovalList[i].approverid == this.employee.employeeno) {
+        if (this.gatePassApprovalList[i].approverid == this.employee.employeeno && this.gatePassApprovalList[i].approverstatus=="Pending") {
           this.gatePassApprovalList.splice(i, 1);
 
         }
@@ -160,7 +161,7 @@ export class GatePassApprovalList implements OnInit {
   }
 
   showApprover(gatepassid: any) {
-    this.btnDisable = false;
+    //this.btnDisable = false;
     this.showApprovertab = true;
     debugger;
     this.bindMaterilaDetails(gatepassid);
