@@ -626,8 +626,18 @@ export class materialrequestMain {
   requestedby: string;
   requesteddate: Date;
   ackstatus: string;
+  ackremarks: string;
+  remarks: string;
   showtr: boolean;
-  materialdata: materialtransferTR[] = [];
+  materialdata: materialrequestMR[] = [];
+}
+export class materialrequestMR {
+  requestid: string;
+  materialid: string;
+  materialdescription: string;
+  requestedquantity: number;
+  returnqty: number;
+
 }
 export class materialRequestFilterParams {
   FromDate: string;
@@ -645,9 +655,15 @@ export class materialreserveMain {
   requestedby: string;
   status: string;
   showtr: boolean;
-  materialdata: materialtransferTR[] = [];
+  materialdata: materialreserveMS[] = [];
 }
+export class materialreserveMS {
+  requestid: string;
+  materialid: string;
+  materialdescription: string;
+  reserveqty: number;
 
+}
 //Amulya
 export class materialRetFilterParams {
   FromDate: string;
@@ -660,6 +676,12 @@ export class materialreturnMain {
   createdby: string;
   confirmstatus: string;
   showtr: boolean;
-  materialdata: materialtransferTR[] = [];
+  materialdata: materialreturnMT[] = [];
 }
+export class materialreturnMT {
+  requestid: string;
+  materialid: string;
+  materialdescription: string;
+  returnqty: number;
 
+}

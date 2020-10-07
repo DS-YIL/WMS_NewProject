@@ -8532,21 +8532,29 @@ namespace WMS.DAL
 					var data = await pgsql.QueryAsync<materialrequestMain>(
 					   query, null, commandType: CommandType.Text);
 
-					if (data != null && data.Count() > 0)
-					{
-						foreach (materialrequestMain dt in data)
-						{
-							string query1 = WMSResource.gettransferiddetail.Replace("#tid", dt.requestid.ToString());
-							var datadetail = await pgsql.QueryAsync<materialtransferTR>(
-							   query1, null, commandType: CommandType.Text);
+                    if (data != null && data.Count() > 0)
+                    {
+                        foreach (materialrequestMain dt in data)
+                        {
+							try
+                            {
+								string query1 = WMSResource.getrequestiddetail.Replace("#rid", dt.requestid.ToString());
+								var datadetail = await pgsql.QueryAsync<materialrequestMR>(
+								   query1, null, commandType: CommandType.Text);
 
-							if (datadetail != null && datadetail.Count() > 0)
-							{
-								dt.materialdata = datadetail.ToList();
+								if (datadetail != null && datadetail.Count() > 0)
+								{
+									dt.materialdata = datadetail.ToList();
+								}
+
 							}
-						}
-					}
-					return data;
+                           catch(Exception ex)
+                            {
+								return null;
+                            }
+                        }
+                    }
+                    return data;
 
 				}
 				catch (Exception ex)
@@ -8579,21 +8587,21 @@ namespace WMS.DAL
 					var data = await pgsql.QueryAsync<materialreserveMain>(
 					   query, null, commandType: CommandType.Text);
 
-					if (data != null && data.Count() > 0)
-					{
-						foreach (materialreserveMain dt in data)
-						{
-							string query1 = WMSResource.gettransferiddetail.Replace("#tid", dt.reserveid.ToString());
-							var datadetail = await pgsql.QueryAsync<materialtransferTR>(
-							   query1, null, commandType: CommandType.Text);
+                    if (data != null && data.Count() > 0)
+                    {
+                        foreach (materialreserveMain dt in data)
+                        {
+                            string query1 = WMSResource.getreserveiddetail.Replace("#rsid", dt.reserveid.ToString());
+                            var datadetail = await pgsql.QueryAsync<materialreserveMS>(
+                               query1, null, commandType: CommandType.Text);
 
-							if (datadetail != null && datadetail.Count() > 0)
-							{
-								dt.materialdata = datadetail.ToList();
-							}
-						}
-					}
-					return data;
+                            if (datadetail != null && datadetail.Count() > 0)
+                            {
+                                dt.materialdata = datadetail.ToList();
+                            }
+                        }
+                    }
+                    return data;
 
 				}
 				catch (Exception ex)
@@ -8628,21 +8636,21 @@ namespace WMS.DAL
 					var data = await pgsql.QueryAsync<materialreturnMain>(
 					   query, null, commandType: CommandType.Text);
 
-					if (data != null && data.Count() > 0)
-					{
-						foreach (materialreturnMain dt in data)
-						{
-							string query1 = WMSResource.gettransferiddetail.Replace("#tid", dt.matreturnid.ToString());
-							var datadetail = await pgsql.QueryAsync<materialtransferTR>(
-							   query1, null, commandType: CommandType.Text);
+                    if (data != null && data.Count() > 0)
+                    {
+                        foreach (materialreturnMain dt in data)
+                        {
+                            string query1 = WMSResource.getreturniddetail.Replace("#rtid", dt.returnid.ToString());
+                            var datadetail = await pgsql.QueryAsync<materialreturnMT>(
+                               query1, null, commandType: CommandType.Text);
 
-							if (datadetail != null && datadetail.Count() > 0)
-							{
-								dt.materialdata = datadetail.ToList();
-							}
-						}
-					}
-					return data;
+                            if (datadetail != null && datadetail.Count() > 0)
+                            {
+                                dt.materialdata = datadetail.ToList();
+                            }
+                        }
+                    }
+                    return data;
 
 				}
 				catch (Exception ex)

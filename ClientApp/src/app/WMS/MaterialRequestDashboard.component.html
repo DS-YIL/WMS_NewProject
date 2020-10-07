@@ -15,7 +15,7 @@
     </div>
   </div>
   <div class="card-body"  style="overflow-y:hidden;padding:0px;margin-left:10px;margin-right:10px">
-    <p-table #dt [value]="requestList" [style]="{'width':'100%'}" [scrollable]="true" scrollHeight="62vh">
+    <p-table #dt [value]="requestList" [style]="{'width':'100%'}"  scrollHeight="62vh">
       <ng-template pTemplate="header">
         <tr class="mprltbldata">
           <th style="text-align:center;width:70px">Sl.No.</th>
@@ -23,6 +23,7 @@
           <th style="text-align:center;width:150px">Requested On</th>
           <th style="text-align:center;width:150px">Requested By</th>
           <th style="text-align:center;width:100px">Status</th>
+          <th style="text-align:center;width:100px">Remarks</th>
 
 
         </tr>
@@ -43,27 +44,31 @@
           <td class="ptable-cell" style="text-align:center;width:70px;">{{ri+1}}</td>
 
           <td class="ptable-cell" style="text-align: center;width: 100px;">
-            <!--<span (click)="showattachdata(rowData)" class="btn btn-link">MAREQ{{rowData.requestid}}</span>-->
-            <span class="btn btn-link">MAREQ{{rowData.requestid}}</span>
+            <span (click)="showattachdata(rowData)" class="btn btn-link">{{rowData.requestid}}</span>
+            <!--<span class="btn btn-link">{{rowData.requestid}}</span>-->
 
           </td>
           <td class="ptable-cell" style="text-align:center;width:150px;">{{rowData.requesteddate | date :  constants.dateFormat}}</td>
           <td class="ptable-cell" style="text-align:center;width:150px;">{{rowData.requestedby}}</td>
-          <td class="ptable-cell" style="text-align:left;width:100px;">
-            <span *ngIf="rowData.ackstatus">{{rowData.ackstatus}}</span>
-            <span *ngIf="!rowData.ackstatus">Pending</span>
+          <td class="ptable-cell" style="text-align:center;width:100px;">
+            {{rowData.ackstatus}}
+            <!--<span *ngIf="rowData.ackstatus">{{rowData.ackstatus}}</span>-->
+            <!--<span *ngIf="!rowData.ackstatus">Pending</span>-->
+            <span *ngIf="rowData.ackstatus==null">Pending</span>
 
             <!--<span *ngIf="rowData.materialissueid">Issued</span>-->
-            <!--<span *ngif="!rowdata.materialissueid">pending</span>-->
+            <!--<span *ngIf="!rowdata.materialissueid">pending</span>-->
 
 
           </td>
+          <td class="ptable-cell" style="text-align:center;width:100px;">{{rowData.remarks}}</td>
+
 
 
         </tr>
         <tr *ngIf="rowData.showtr">
           <td [attr.colspan]="6" style="text-align:center;">
-            <label class="labeltext">Material Detail</label>
+            <label class="labeltext">Material Details</label>
           </td>
 
         </tr>
@@ -74,9 +79,11 @@
               <ng-template pTemplate="header">
         <tr class="mprltbldata">
           <th class="ptable-cell" style="width: 10%; text-align: center">Sl. No.</th>
-          <th style="text-align:center;width:30%" class="ptable-cell">Material</th>
-          <th style="text-align:center;width:50%" class="ptable-cell">Material Description</th>
-          <th style="text-align:center;width:20%" class="ptable-cell">Transfer quantity</th>
+          <th style="text-align:center;width:20%" class="ptable-cell">Material</th>
+          <th style="text-align:center;width:40%" class="ptable-cell">Material Description</th>
+          <th style="text-align:center;width:15%" class="ptable-cell">Requested  Qty </th>
+          <th style="text-align:center;width:15%" class="ptable-cell">Issued Qty  </th>
+
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex" let-rindex=0>
@@ -85,13 +92,15 @@
           <td class="ptable-cell" style="text-align:center;">
             {{rowData.materialid}}
           </td>
-          <td class="ptable-cell" style="text-align:left">
+          <td class="ptable-cell" style="text-align:center">
             {{rowData.materialdescription}}
           </td>
-          <td class="ptable-cell" style="text-align:right">
-            {{rowData.transferredqty}}
+          <td class="ptable-cell" style="text-align:center">{{rowData.requestedquantity}}</td>
+          <td class="ptable-cell" style="text-align:center">
+            {{rowData.returnqty}}
+
           </td>
-      </ng-template>
+</ng-template>
 
 
     </p-table>
