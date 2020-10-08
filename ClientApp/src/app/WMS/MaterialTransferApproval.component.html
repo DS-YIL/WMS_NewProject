@@ -32,7 +32,7 @@
         <ng-template pTemplate="header">
           <tr class="mprltbldata">
             <th style="text-align:center;width:60px">Sl.No.</th>
-            <th style="text-align:center;width:100px">Transfer Id</th>
+            <th style="text-align:center;width:150px">Transfer Id</th>
             <th style="text-align:center;width:100px">Project From</th>
             <th style="text-align:center;width:100px">Project to</th>
             <th style="text-align:center;width:100px">Transferred On</th>
@@ -57,9 +57,9 @@
           <tr>
             <td class="ptable-cell" style="text-align:right;width:60px;">{{ri+1}}</td>
 
-            <td class="ptable-cell" style="text-align: center;width: 100px;">
-              <span *ngIf="rowData.status=='Pending'" (click)="showattachdata(rowData)" class="btn btn-link">MATFR{{rowData.transferid}}</span>
-              <span *ngIf="rowData.status !='Pending'" (click)="showattachtrdata(rowData)" class="btn btn-link">MATFR{{rowData.transferid}}</span>
+            <td class="ptable-cell" style="text-align: center;width: 150px;">
+              <span *ngIf="rowData.status=='Pending'" (click)="showattachdata(rowData)" class="btn btn-link">{{rowData.transferid}}</span>
+              <span *ngIf="rowData.status !='Pending'" (click)="showattachtrdata(rowData)" class="btn btn-link">{{rowData.transferid}}</span>
             </td>
             <td class="ptable-cell" style="text-align:center;width:100px;">{{rowData.projectcodefrom}}</td>
             <td class="ptable-cell" style="text-align:center;width:100px;">{{rowData.projectcode}}</td>

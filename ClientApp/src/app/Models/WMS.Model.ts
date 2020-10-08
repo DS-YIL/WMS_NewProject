@@ -35,6 +35,7 @@ export class PoDetails {
   binid: any;
   inwardid: number;
   asnno: string;
+  id: string
 }
 
 export class BarcodeModel {
@@ -164,6 +165,7 @@ export class StockModel {
   availableqty: number;
   stocktype: any;
   qty: any;
+  id: string;
   itemreceivedfrom: Date;
   itemlocation: string;
   createddate: Date;
@@ -200,7 +202,7 @@ export class materialRequestDetails {
 }
 
 export class materialReservetorequestModel {
-  reserveid: number;
+  reserveid: string;
   requestedby: string;
 }
 
@@ -284,6 +286,7 @@ export class materialList {
   requesterid: any;
   stocktype: string;
   projectcode: string;
+  plantstockavailableqty: number;
 
 }
 
@@ -505,7 +508,7 @@ export class materialistModeltransfer {
 }
 
 export class materialtransferMain {
-  transferid: number;
+  transferid: string;
   projectcode: string;
   projectmanagerto: string;
   projectcodefrom: string;
@@ -528,10 +531,11 @@ export class materialtransferMain {
 }
 
 export class materialtransferTR {
-  transferid: number;
+  transferid: string;
   materialid: string;
   materialdescription: string;
   transferredqty: number = 0;
+  material : any
 }
 
 export class materialtransferapproverModel {
@@ -661,5 +665,61 @@ export class materialreturnMain {
   confirmstatus: string;
   showtr: boolean;
   materialdata: materialtransferTR[] = [];
+
+}
+
+export class MaterialTransaction {
+  requestid: string;
+  pono: string;
+  requesttype: string;
+  projectcode: string;
+  remarks: string;
+  deleteflag: boolean;
+  ackstatus: string;
+  ackremarks: string;
+  approveremailid: string;
+  approverid: string;
+  requesterid: string;
+  requesteddate: Date;
+  reserveid: string;
+  materialdata: MaterialTransactionDetail[] = [];
+  approvedstatus: string;
+  status: boolean;
+  reserveupto: Date;
+  reservedby: string;
+  reservedon: Date;
+  requestedon: Date;
+  requestedby: string;
+  chkstatus: string;
+}
+
+export class MaterialTransactionDetail {
+  id: string;
+  requestid: string;
+  reserveid: string;
+  materialid: string;
+  requestedquantity: number;
+  returnqty: number;
+  materialdescription: string;
+  issuedquantity: number;
+  itemid: number;
+  reservedqty: number;
+}
+
+export class MaterialReturnTR {
+  id: string;
+  returnid: string;
+  materialid: string;
+  materialdescription: string;
+  returnqty: number;
+  remarks: string;
+}
+
+export class MaterialReturn {
+  returnid: string;
+  createdby: string;
+  createdon: Date;
+  confirmstatus: string;
+  materialdata: MaterialReturnTR[] = []
 }
 

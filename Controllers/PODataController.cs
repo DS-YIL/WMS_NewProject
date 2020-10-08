@@ -289,7 +289,7 @@ namespace WMS.Controllers
 			return await this._poService.getitemdeatilsnotif(grnnumber);
 		}
 		[HttpGet("getmaterialrequestList")]
-		public async Task<IEnumerable<IssueRequestModel>> materialissue(string pono = null, string loginid = null)
+		public async Task<IEnumerable<MaterialTransaction>> materialissue(string pono = null, string loginid = null)
 		{
 			return await this._poService.MaterialRequest(pono, loginid);
 		}
@@ -626,7 +626,7 @@ namespace WMS.Controllers
 		}
 
 		[HttpGet("getmaterialreturnreqList")]
-		public async Task<IEnumerable<IssueRequestModel>> getmaterialreturnreqList(int matreturnid)
+		public async Task<IEnumerable<IssueRequestModel>> getmaterialreturnreqList(string matreturnid)
         {
 			return await this._poService.getmaterialreturnreqList(matreturnid);
 		}
@@ -648,7 +648,7 @@ namespace WMS.Controllers
 			return this._poService.insertResevematerial(datamodel);
 		}
 		[HttpGet("GetreserveMaterilalist")]
-		public async Task<IEnumerable<ReserveMaterialModel>> GetReservedMaterialList(string reservedby)
+		public async Task<IEnumerable<MaterialTransaction>> GetReservedMaterialList(string reservedby)
 		{
 			return await this._poService.GetReservedMaterialList(reservedby);
 		}
@@ -782,9 +782,9 @@ namespace WMS.Controllers
 		
 
 		[HttpGet("getmateriallistfortransfer")]
-		public async Task<IEnumerable<ddlmodel>> getmatlist(string empno)
+		public async Task<IEnumerable<ddlmodel>> getmatlist(string querytext)
 		{
-			return await this._poService.getmatlist(empno);
+			return await this._poService.getmatlist(querytext);
 		}
 
 		[HttpGet("getmateriallistbyproject")]
@@ -917,7 +917,7 @@ namespace WMS.Controllers
 			return await this._poService.GetReturnmaterialListForConfirm(requestid);
 		}
 		[HttpGet("getreturndata")]
-		public async Task<IEnumerable<IssueRequestModel>> getreturndata(string empno)
+		public async Task<IEnumerable<MaterialReturn>> getreturndata(string empno)
 		{
 			return await this._poService.getreturndata(empno);
 		}

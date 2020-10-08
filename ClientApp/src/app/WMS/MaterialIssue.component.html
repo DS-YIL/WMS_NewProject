@@ -10,7 +10,7 @@
     <div *ngIf="showavailableqtyList">
       <div class="row  pl-0">
         <div class="col-lg-3 col-md-3 col-sm-3 pt-2 labelheading">
-          <label>Request Id :</label>&nbsp;<span><label class="labeltext">MATRQ{{materialissueList[0].requestid}}</label></span>
+          <label>Request Id :</label>&nbsp;<span><label class="labeltext">{{materialissueList[0].requestid}}</label></span>
         </div>
         <!--<div class="col-lg-6 col-md-6 col-sm-6 pt-2 labelheading">
           <label>Project Name :</label>&nbsp;<span><label *ngIf="materialissueList[0].projectname" class="labeltext">{{materialissueList[0].projectname}}</label></span>
@@ -65,7 +65,7 @@
             {{ri+1}}
           </td>
           <!--<td class="ptable-cell" style="text-align:center">{{rowData.pono}}</td>-->
-          <td class="ptable-cell" style="text-align:left;width:200px;"><button type="button" class="btn btn-link" (click)="showmateriallocationList(rowData.materialid,ri+1,ri,rowData.requestedquantity,rowData.issuedqty,rowData.reservedqty,rowData.requestforissueid);" style="padding-left:0px;">{{rowData.materialid}}</button></td>
+          <td class="ptable-cell" style="text-align:left;width:200px;"><button type="button" class="btn btn-link" (click)="showmateriallocationList(rowData.materialid,ri+1,ri,rowData.requestedquantity,rowData.issuedqty,rowData.reservedqty,rowData.requestforissueid,rowData.requestmaterialid);" style="padding-left:0px;">{{rowData.materialid}}</button></td>
           <td class="ptable-cell" style="text-align:right">{{rowData.requestedquantity}}</td>
           <td class="ptable-cell" style="text-align:right">{{rowData.availableqty}}</td>
           <td class="ptable-cell" style="text-align:right">{{rowData.reservedqty}}</td>
@@ -91,7 +91,7 @@
     <div *ngIf="showdialog && itemlocationData">
       <div class="row  pl-0">
         <div class="col-lg-4 col-md-4 col-sm-4 pt-2 labelheading">
-          <label>Material Id :</label>&nbsp;<span><label class="labeltext">{{itemlocationData[0].material}}</label></span>
+          <label>Material Id :</label>&nbsp;<span><label class="labeltext">{{itemlocationData[0].materialid}}</label></span>
         </div>
         <div class="col-lg-4 col-md-4 col-sm-4 pt-2 labelheading">
           <label>Material Desc :</label>&nbsp;<span><label class="labeltext">{{itemlocationData[0].materialdescription}}</label></span>
@@ -125,7 +125,7 @@
           <td class="ptable-cell" style="text-align:center">{{rowData.itemlocation}}</td>
           <td class="ptable-cell" style="text-align:right">{{rowData.availableqty}}</td>
           <td class="ptable-cell" style="text-align:right">
-            <input id="{{ri+1}}" pInputText type="number" [disabled]="issueqtyenable" style="text-align:right" class="form-control" (change)="checkissueqty($event,rowData.issuedqty,rowData.availableqty,rowData.material,rowData.createddate);" [(ngModel)]="rowData.issuedqty">
+            <input id="{{ri+1}}" pInputText type="number" [disabled]="issueqtyenable" style="text-align:right" class="form-control" (change)="checkissueqty($event,rowData.issuedqty,rowData.availableqty,rowData.material,rowData.createddate,rowData);" [(ngModel)]="rowData.issuedqty">
           </td>
           <td class="ptable-cell" style="text-align:center">{{rowData.createddate | date :  constants.dateFormat}}</td>
         </tr>

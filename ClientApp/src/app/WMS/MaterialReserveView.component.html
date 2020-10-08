@@ -46,7 +46,7 @@
         <ng-template pTemplate="header">
           <tr class="mprltbldata">
             <th style="text-align:center;width:70px">Sl.No.</th>
-            <th style="text-align:center;width:100px">Reserve Id</th>
+            <th style="text-align:center;width:150px">Reserve Id</th>
             <th style="text-align:center;width:100px">Project</th>
             <th style="text-align:center;width:150px">Reserved On</th>
             <th style="text-align:center;width:150px">Reserved Upto</th>
@@ -67,8 +67,8 @@
         <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
           <tr class="mprltbltddata">
             <td class="ptable-cell" style="text-align:center;width:70px">{{ri+1}}</td>
-            <td class="ptable-cell" style="text-align:center;width:100px;">
-              <button type="button" class="btn btn-link" (click)="showmaterialdetails(rowData.reserveid,rowData);" style="padding-left:0px;">MATRV{{rowData.reserveid}}</button>
+            <td class="ptable-cell" style="text-align:center;width:150px;">
+              <button type="button" class="btn btn-link" (click)="showmaterialdetails(rowData.reserveid,rowData);" style="padding-left:0px;">{{rowData.reserveid}}</button>
             </td>
             <!--<td class="ptable-cell" style="text-align:center;width:150px">{{rowData.pono}}</td>-->
             <td class="ptable-cell" style="text-align:center;width:100px">{{rowData.projectcode}}</td>
@@ -111,7 +111,7 @@
           <div *ngIf="showdialog">
             <div class="row  pl-0">
               <div class="col-lg-3 col-md-3 col-sm-4 pt-2 labelheading">
-                <label>Reserved Id :</label>&nbsp;<span><label class="labeltext">MATRV{{reserveidview}}</label></span>
+                <label>Reserved Id :</label>&nbsp;<span><label class="labeltext">{{reserveidview}}</label></span>
               </div>
               <div class="col-lg-3 col-md-3 col-sm-4 pt-2 labelheading">
                 <label>Reserved Upto :</label>&nbsp;<span><label class="labeltext">{{checkValiddate(reserveduptoview)}}</label></span>
@@ -268,7 +268,7 @@
 
               </td>
               <td class="ptable-cell" style="text-align:right">
-                <input style="text-align:left" pInputText type="number" (blur)="onComplete(rowData.quantity ,rowData.availableqty, rowData.materialid,ri)" class="form-control" [(ngModel)]="rowData.quantity">
+                <input style="text-align:left" pInputText type="number" (blur)="onComplete(rowData.quantity ,rowData.availableqty, rowData.materialid,ri,rowData.plantstockavailableqty)" class="form-control" [(ngModel)]="rowData.quantity">
               </td>
 
 

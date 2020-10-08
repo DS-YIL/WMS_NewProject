@@ -258,11 +258,11 @@ left join wms.wms_stock stocks on  stocks.inwardid=inwa.inwardid
     <value>INSERT INTO wms.wms_trackstatus(pono,status,enteredon)VALUES(@pono,'Security Checked',current_timestamp)</value>
   </data>
   <data name="updateackstatus" xml:space="preserve">
-    <value>update wms.wms_materialrequest set ackstatus=@ackstatus,ackremarks=@ackremarks where requestid=@requestid</value>
+    <value>update wms.materialrequest set ackstatus=@ackstatus,ackremarks=@ackremarks where requestid=@requestid</value>
   </data>
   <data name="updateapproverstatus" xml:space="preserve">
-    <value>insert into wms.wms_materialissue(materialissueid,pono,itemid,requestforissueid,itemissueddate,itemreceiverid,deleteflag,itemreturnable,approvedby,approvedon,issuedqty,approvedstatus,issuelocation)
-values(default,@pono,@itemid,@requestforissueid,@itemissueddate,@itemreceiverid,false,@itemreturnable,@approvedby,@approvedon,@issuedqty,@approvedstatus,@itemlocation)</value>
+    <value>insert into wms.wms_materialissue(materialissueid,pono,itemid,requestmaterialid,itemissueddate,itemreceiverid,deleteflag,itemreturnable,approvedby,approvedon,issuedqty,approvedstatus,issuelocation)
+values(default,@pono,@itemid,@requestmaterialid,@itemissueddate,@itemreceiverid,false,@itemreturnable,@approvedby,@approvedon,@issuedqty,@approvedstatus,@itemlocation)</value>
   </data>
   <data name="updategrnnumber" xml:space="preserve">
     <value>update wms.wms_securityinward set grnnumber=@grnnumber,grndate=current_date where invoiceno='#invoiceno' and pono='#pono'</value>
@@ -811,7 +811,7 @@ where reserveupto between current_date and current_date  + interval '3 day' and 
     <value>update wms.wms_stock set availableqty=availableqty+@availableqty where itemid=@itemid</value>
   </data>
   <data name="updatereturnqtyByInvMngr" xml:space="preserve">
-    <value>update wms.wms_returnmaterial set confirmstatus='Accepted' where returnid=@returnid</value>
+    <value>update wms.wms_materialreturn set confirmstatus='Accepted' where returnid='@returnid'</value>
   </data>
   <data name="getlistforconfirm" xml:space="preserve">
     <value>select * from wms.wms_returnmaterial returnmat
@@ -861,14 +861,14 @@ CASE
   END as status
 from wms.wms_transfermaterial ts
 left outer join wms.employee emp on emp.employeeno = ts.createdby
-where ts.createdby='#createdby'</value>
+where ts.createdby='#createdby' order by ts.transferid desc</value>
   </data>
   <data name="updatetransferdata" xml:space="preserve">
     <value>insert into wms.wms_transfermaterial(transferqty,createdby,createdon,remarks,projectcode,materialid,approvallevel,finalapprovallevel,fromprojectcode) values
         (@transferqty,@createdby,current_timestamp,@remarks,@projectcode,@materialid,@approvallevel,@finalapprovallevel,@fromprojectcode) RETURNING transferid</value>
   </data>
   <data name="updatetostockbyinvmanger" xml:space="preserve">
-    <value>insert into wms.wms_stock(itemid,materialid,itemlocation,availableqty,createddate,createdby,returnid,stcktype)values(default,@materialid,@itemlocation,@availableqty,current_timestamp,@createdby,@returnid,@stocktype)</value>
+    <value>insert into wms.wms_stock(itemid,materialid,itemlocation,availableqty,createddate,createdby,returnid,stcktype,storeid,rackid,binid)values(default,@materialid,@itemlocation,@availableqty,current_timestamp,@createdby,@returnid,@stocktype,@storeid,@rackid,@binid)</value>
   </data>
   <data name="getqualitycheckdropdown" xml:space="preserve">
     <value>select distinct grnnumber as value,pono as text,supplier,receiveddate::date from 
@@ -1123,7 +1123,7 @@ CASE
 	 ELSE 'Pending'
   END as status
 from wms.wms_materialtransferapproval 
-where transferid = #transferid</value>
+where transferid = '#transferid'</value>
   </data>
   <data name="getprojectmanager" xml:space="preserve">
     <value>select emp.name as projectmanager from wms.wms_project prj 
@@ -1183,22 +1183,141 @@ group by gtm.materialid</value>
   </data>
   <data name="getmaterialstoreserve" xml:space="preserve">
     <value>select max(sk.pono) as pono ,sk.materialid as material,Max(prj.projectmanager) as projectmanager,
-( select sum(availableqty) from wms.wms_stock ws where materialid =sk.materialid) as availableqty,max(mtmtr.stocktype) as stocktype,
-max(mtmtr.unitprice) as materialcost,max(mtmtr.materialdescription) as materialdescription from wms.wms_stock  sk 
+(select sum(ws.availableqty) from wms.wms_stock ws where ws.materialid =sk.materialid) as availableqty,
+(select sum(ws1.availableqty) from wms.wms_stock ws1 where ws1.materialid =sk.materialid and ws1.stcktype = 'Plant Stock') as plantstockavailableqty,
+max(mtmtr.unitprice) as materialcost,max(mtmtr.materialdescription) as materialdescription 
+from wms.wms_stock  sk 
 left outer join wms."MaterialMasterYGS" mtmtr on mtmtr.material = sk.materialid
 left outer join wms.wms_project prj on prj.pono = sk.pono 
-where sk.availableqty &gt; 0 group by sk.materialid</value>
+where sk.availableqty &gt; 0  group by sk.materialid</value>
   </data>
   <data name="getAllprojectlist" xml:space="preserve">
     <value>select projectcode as value, projectcode as text,Max(projectmanager) as projectmanager
 from wms.wms_project  where projectmanager is not null group by projectcode</value>
   </data>
   <data name="getitemlocationListBysIssueId_v1" xml:space="preserve">
-    <value>select iss.issuedqty,sk.pono,sk.materialid,sk.itemid,sk.itemlocation,sk.availableqty,sk.createddate::DATE,
+    <value>select iss.issuedqty,sk.pono,sk.materialid,sk.itemid,sk.itemlocation,
+(select sum(sk1.availableqty) from wms.wms_stock sk1 where sk1.materialid = sk.materialid and sk1.itemlocation = sk.itemlocation) as availableqty
+,sk.createddate::DATE,
 ygs.materialdescription
 from wms.wms_materialissue iss 
 left outer join wms.wms_stock sk on iss.itemid =sk.itemid
 left join wms."MaterialMasterYGS" ygs on ygs.material=sk.materialid 
-where iss.requestforissueid = '#requestforissueid'</value>
+where iss.requestmaterialid = '#requestforissueid'</value>
+  </data>
+  <data name="getmaterialissuelist" xml:space="preserve">
+    <value>select req.requestid,req.requesteddate,emp.name,req.issuedby,req.issuedon,
+	CASE WHEN req.issuedby IS Not NULL THEN 'Issued' ELSE 'Pending' END AS requeststatus
+	from wms.materialrequest req
+	left outer join wms.employee emp on req.requesterid = emp.employeeno</value>
+  </data>
+  <data name="getmaterialrequestdata" xml:space="preserve">
+    <value>select dt.id,dt.requestid,dt.materialid,dt.requestedquantity,dt.returnqty,mat.materialdescription,
+(select sum(issuedqty) from wms.wms_materialissue where requestmaterialid = dt.id) as issuedquantity
+from wms.materialrequestdetails dt 
+left outer join wms."MaterialMasterYGS" mat on dt.materialid = mat.material
+where requestid = '#requestid'</value>
+  </data>
+  <data name="getmaterialrequests" xml:space="preserve">
+    <value>select req.requestid,req.ackstatus,req.requesteddate,req.ackremarks,req.reserveid,req.projectcode,req.remarks,
+  CASE WHEN req.ackstatus IS NULL THEN false ELSE true END AS status,
+  CASE WHEN req.issuedby IS NULL THEN 'Pending' ELSE 'Approved' END AS approvedstatus
+  from wms.materialrequest req where req.requesterid = '#reqid' order by req.requestid desc</value>
+  </data>
+  <data name="getmaterialreservedata" xml:space="preserve">
+    <value>select rd.reserveid,rd.materialid,sum(rd.reservequantity) reservedqty,Max(mat.materialdescription) as materialdescription
+from wms.materialreservedetails rd
+left outer join wms."MaterialMasterYGS" mat on mat.material=rd.materialid where rd.reserveid = '#reserveid' group by rd.reserveid,rd.materialid</value>
+  </data>
+  <data name="getmaterialreserves" xml:space="preserve">
+    <value>select rsv.reserveid,rsv.reserveupto,rsv.pono,rsv.reservedon,rsv.projectcode,rsv.remarks,
+emp.name as requestedby,rsv.requestedon,
+CASE
+     WHEN rsv.reserveupto::date &lt; current_date THEN
+	 'Expired'
+     WHEN rsv.requestedby is NOT NULL THEN
+	  'Requested'
+	 ELSE 'Reserved'
+  END as chkstatus
+from wms.materialreserve rsv 
+left outer join wms.employee emp on emp.employeeno = rsv.requestedby
+where rsv.reservedby='#reservedby' order by rsv.reserveid desc</value>
+  </data>
+  <data name="getmaterialreturndetailquery" xml:space="preserve">
+    <value>select matd.returnid,matd.materialid,mat.materialdescription,matd.returnqty,matd.remarks 
+   from wms.wms_materialreturndetails matd
+   left outer join wms."MaterialMasterYGS" mat on mat.material = matd.materialid
+   where returnid = '#returnid'</value>
+  </data>
+  <data name="getmaterialreturnquery" xml:space="preserve">
+    <value>select returnid,createdby,createdon,confirmstatus from wms.wms_materialreturn
+  where createdby='#createdby' order by returnid desc</value>
+  </data>
+  <data name="getrequestdetailswithoutpo" xml:space="preserve">
+    <value>select req.id as requestmaterialid,req.requestedquantity,req.materialid,mat.materialdescription,
+ (select sum(issuedqty) from wms.wms_materialissue  where requestmaterialid = req.id) as issuedqty,
+ (select sum(availableqty) from wms.wms_stock ws where materialid =req.materialid ) as availableqty,
+ (select sum(reservequantity) from wms.materialreservedetails wm where wm.materialid =req.materialid ) as reservedqty,
+  rq.projectcode as projectname,emp.name as name,rq.requesteddate,rq.requestid,rq.pono
+ from  wms.materialrequestdetails req
+ left outer join wms.materialrequest rq on rq.requestid=req.requestid
+ left outer join wms.employee emp on emp.employeeno=rq.requesterid
+ left outer join wms."MaterialMasterYGS" mat on mat.material=req.materialid
+ where req.requestid='#requestid'</value>
+  </data>
+  <data name="getreservedatabyid" xml:space="preserve">
+    <value>select sum(rsv.reservequantity) as reservedqty,rsv.reserveid,rsv.materialid,Max(rd.projectcode) as projectcode,Max(rd.pono) as pono from wms.materialreservedetails rsv
+left outer join wms.materialreserve rd on rsv.reserveid = rd.reserveid
+where rsv.reserveid = '#reserveid' group by rsv.reserveid,rsv.materialid</value>
+  </data>
+  <data name="insertmaterialrequest" xml:space="preserve">
+    <value>INSERT INTO wms.materialrequest(approveremailid,approverid,pono,requesterid,requesteddate,deleteflag,projectcode,remarks)VALUES(@approveremailid,@approverid,@pono,@requesterid,current_date,false,@projectcode,@remarks) returning requestid</value>
+  </data>
+  <data name="insertmaterialrequestdetails" xml:space="preserve">
+    <value>INSERT INTO wms.materialrequestdetails(id,requestid,materialid,requestedquantity)
+VALUES(@id,@requestid,@materialid,@requestedquantity)</value>
+  </data>
+  <data name="insertmaterialreserve" xml:space="preserve">
+    <value>insert into wms.materialreserve(pono,reservedon,reservedby,reserveupto,projectcode,remarks)
+values(@pono,current_timestamp,@reservedby,@reserveupto,@projectcode,@remarks) returning reserveid</value>
+  </data>
+  <data name="insertmaterialreservedetails" xml:space="preserve">
+    <value>insert into wms.materialreservedetails(id,reserveid,materialid,itemid,reservequantity)
+values(@id,@reserveid,@materialid,@itemid,@reservedqty)</value>
+  </data>
+  <data name="insertmaterialreturndetails" xml:space="preserve">
+    <value>insert into wms.wms_materialreturndetails (id,returnid,materialid,returnqty,remarks)
+values (@id,@returnid,@materialid,@returnqty,@remarks)</value>
+  </data>
+  <data name="insertmaterialreturnquery" xml:space="preserve">
+    <value>insert into wms.wms_materialreturn (createdby,createdon)
+values (@createdby,current_date) returning returnid</value>
+  </data>
+  <data name="getitemlocationforissue" xml:space="preserve">
+    <value>select sum(sk.availableqty)as availableqty,Max(sk.materialid) as materialid,sk.itemlocation,Max(ygs.materialdescription) as materialdescription,sk.createddate::DATE
+from wms.wms_stock sk 
+left outer join wms."MaterialMasterYGS" ygs on ygs.material=sk.materialid 
+where sk.materialid='#materialid'
+and sk.availableqty&gt;0 
+group by sk.itemlocation,sk.createddate::DATE order by sk.createddate::DATE Desc</value>
+  </data>
+  <data name="GetreturnList_v1" xml:space="preserve">
+    <value>select rtn.returnid,emp.name as createdby,rtn.createdon,rtn.confirmstatus,
+  case 
+   WHEN 
+   (select count(distinct dtl.id) from wms.wms_materialreturndetails dtl where dtl.returnid = rtn.returnid) = (select count(distinct stk.returnid) as returned  from wms.wms_stock stk where stk.returnid in (
+	  select distinct dtl.id from wms.wms_materialreturndetails dtl where dtl.returnid = rtn.returnid
+  ))
+   THEN 'Accepted' ELSE 'Pending' End as putawaystatus
+  from wms.wms_materialreturn rtn
+  left join wms.employee emp on emp.employeeno=rtn.createdby order by rtn.returnid desc</value>
+  </data>
+  <data name="getmaterialreturndetails" xml:space="preserve">
+    <value>select  rnd.id,rnd.returnid,rnd.materialid,rnd.returnqty,mat.materialdescription,mat.stocktype,
+mat.storeid as defaultstore,mat.rackid as defaultrack,mat.binid as defaultbin,stk.itemlocation,stk.availableqty
+from wms.wms_materialreturndetails rnd
+left outer join wms."MaterialMasterYGS" mat on mat.material = rnd.materialid
+left outer join wms.wms_stock stk  on stk.returnid = rnd.id
+where rnd.returnid='#returnid'</value>
   </data>
 </root>

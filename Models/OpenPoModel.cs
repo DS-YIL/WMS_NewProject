@@ -240,7 +240,7 @@ namespace WMS.Models
 
 		public string stocktype { get; set; }
 
-		public int returnid { get; set; }
+		public string returnid { get; set; }
 		public bool initialstock { get; set; }
 
 		public string bin { get; set; }
@@ -367,13 +367,14 @@ namespace WMS.Models
 		public int reserveformaterialid { get; set; }
 		public string ackstatus { get; set; }
 		public string remarks { get; set; }
-		public int returnid { get; set; }
+		public string returnid { get; set; }
+		public string id { get; set; }
 		public int matreturnid { get; set; }
 		public int requestforissueid { get; set; }
 		public int itemid { get; set; }
 		public Boolean itemreturnable { get; set; }
 
-		public int requestid { get; set; }
+		public string requestid { get; set; }
 		public int inwardid { get; set; }
 		public int quantity { get; set; }
 		public int quotationqty { get; set; }
@@ -414,6 +415,8 @@ namespace WMS.Models
 		public string confirmstatus { get; set; }
 		public int materialcost { get; set; }
 
+		public string issuedby { get; set; }
+
 		public int storeid { get; set; }
 
 		public int rackid { get; set; }
@@ -424,11 +427,21 @@ namespace WMS.Models
 		public int defaultrack { get; set; }
 		public int defaultbin { get; set; }
 
-		public int reserveid { get; set; }
+		public string reserveid { get; set; }
 		public int reservedqty { get; set; }
 
 		public string stocktype { get; set; }
-	
+
+		public string calltype { get; set; }
+
+		public string requeststatus { get; set; }
+
+		public string requestmaterialid { get; set; }
+
+		public int plantstockavailableqty { get; set; }
+
+		public string putawaystatus { get; set; }
+
 
 
 
@@ -720,7 +733,7 @@ namespace WMS.Models
 
 		internal DateTime createddate { get; set; }
 		internal object requestid { get; set; }
-		internal int reserveid { get; set; }
+		internal string reserveid { get; set; }
 		internal string name { get; set; }
 		internal string employeeno { get; set; }
 		internal DateTime requestedon { get; set; }
@@ -852,7 +865,7 @@ namespace WMS.Models
 		public string releasedby { get; set; }
 		public DateTime releasedon { get; set; }
 		public int releasedqty { get; set; }
-		public int reserveid { get; set; }
+		public string reserveid { get; set; }
 		public string pono { get; set; }
 		public int availableqty { get; set; }
 		public int releasedquantity { get; set; }
@@ -988,7 +1001,7 @@ public class ddlmodel
 
 public class materialtransferMain
 {
-	public int transferid { get; set; }
+	public string transferid { get; set; }
 	public string projectcode { get; set; }
 	public string projectmanagerto { get; set; }
 	public string projectcodefrom { get; set; }
@@ -1018,7 +1031,7 @@ public class materialtransferMain
 }
 public class materialtransferTR
 {
-	public int transferid { get; set; }
+	public string transferid { get; set; }
 	public string materialid { get; set; }
 	public string materialdescription { get; set; }
 	public int transferredqty { get; set; }
@@ -1072,7 +1085,7 @@ public class updateonhold
 
 public class materialReservetorequestModel
 {
-	public int reserveid { get; set; }
+	public string reserveid { get; set; }
 	public string requestedby { get; set; }
 }
 
@@ -1243,3 +1256,70 @@ public class materialRetFilterParams
 	public string ToDate { get;  set; }
 	public string FromDate { get;  set; }
 }
+
+public class MaterialTransaction
+{
+	public string requestid { get; set; }
+	public string pono { get; set; }
+	public string requesttype { get; set; }
+	public string projectcode { get; set; }
+	public string remarks { get; set; }
+	public bool deleteflag { get; set; }
+	public string ackstatus { get; set; }
+	public string ackremarks { get; set; }
+	public string approveremailid { get; set; }
+	public string approverid { get; set; }
+	public string requesterid { get; set; }
+	public DateTime? requesteddate { get; set; }
+	public string reserveid { get; set; }
+	public List<MaterialTransactionDetail> materialdata { get; set; }
+
+	public string approvedstatus { get; set; }
+
+	public bool status { get; set; }
+	public DateTime reserveupto { get; set; }
+	public string reservedby { get; set; }
+	public DateTime? reservedon { get; set; }
+	public DateTime? requestedon { get; set; }
+	public string requestedby { get; set; }
+
+	public string chkstatus { get; set; }
+}
+
+public class MaterialTransactionDetail
+{
+	public string id { get; set; }
+	public string requestid { get; set; }
+	public string reserveid { get; set; }
+	public string materialid { get; set; }
+	public string materialdescription { get; set; }
+	public int requestedquantity { get; set; }
+	public int itemid { get; set; }
+	public int issuedquantity { get; set; }
+	public int reservedqty { get; set; }
+	
+	public int returnqty { get; set; }
+}
+
+public class MaterialReturnTR
+{
+	public string returnid { get; set; }
+	public string materialid { get; set; }
+	public string materialdescription { get; set; }
+	public int returnqty { get; set; }
+	public string remarks { get; set; }
+}
+
+public class MaterialReturn
+{
+
+	public string returnid { get; set; }
+	public string createdby { get; set; }
+	public DateTime? createdon { get; set; }
+
+	public string confirmstatus { get; set; }
+	public List<MaterialReturnTR> materialdata { get; set; }
+
+}
+
+

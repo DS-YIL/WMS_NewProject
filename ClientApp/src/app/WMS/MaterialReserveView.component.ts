@@ -5,7 +5,7 @@ import { wmsService } from '../WmsServices/wms.service';
 import { constants } from '../Models/WMSConstants';
 import { Employee, DynamicSearchResult, searchList } from '../Models/Common.Model';
 import { NgxSpinnerService } from "ngx-spinner";
-import { materialRequestDetails, materialList, requestData, materialListforReserve, materialReservetorequestModel, ddlmodel } from 'src/app/Models/WMS.Model';
+import { materialRequestDetails, materialList, requestData, materialListforReserve, materialReservetorequestModel, ddlmodel, MaterialTransaction } from 'src/app/Models/WMS.Model';
 import { MessageService } from 'primeng/api';
 import { commonComponent } from '../WmsCommon/CommonCode';
 import { DatePipe } from '@angular/common';
@@ -37,7 +37,7 @@ export class MaterialReserveViewComponent implements OnInit {
   public ponumber: string;
   public materialList: Array<materialListforReserve> = [];
   public requestDialog: boolean = false;
-  public reserveList: Array<any> = [];
+  public reserveList: MaterialTransaction[] = [];
   public employee: Employee;
   public displayItemRequestDialog; RequestDetailsSubmitted; showAck; btnDisable: boolean = false;
   public materialRequestDetails: materialRequestDetails;
@@ -158,22 +158,12 @@ export class MaterialReserveViewComponent implements OnInit {
       return (element.material == data.material);
     });
     if (data2.length > 0) {
-      if (data2[0].stocktype == "Plant Stock") {
+      
         data.materialdescription = data2[0].materialdescription;
         data.materialcost = data2[0].materialcost != null ? data2[0].materialcost : 0;
-        data.availableqty = data2[0].availableqty != null ? data2[0].availableqty : 0;
-      }
-      else {
-        var stocktype = data2[0].stocktype;
-        this.messageService.add({ severity: 'error', summary: '', detail: stocktype +' material can not be reserved.' });
-        this.materialList[ind].material = "";
-        this.materialList[ind].materialdescription = "";
-        this.materialList[ind].materialcost = 0;
-        this.materialList[ind].availableqty = 0;
-        this.materialList[ind].quantity = 0;
-        return false;
-
-      }
+      data.availableqty = data2[0].availableqty != null ? data2[0].availableqty : 0;
+      data.plantstockavailableqty = data2[0].plantstockavailableqty != null ? data2[0].plantstockavailableqty : 0;
+      
      
     }
 
@@ -185,10 +175,10 @@ export class MaterialReserveViewComponent implements OnInit {
     //this.employee.employeeno = "180129";
     this.wmsService.getMaterialReservelist(this.employee.employeeno).subscribe(data => {
       this.reserveList = data;
-      this.reserveList.forEach(item => {
-        if (!item.requestedquantity)
-          item.requestedquantity = item.quotationqty;
-      });
+      //this.reserveList.forEach(item => {
+      //  if (!item.requestedquantity)
+      //    item.requestedquantity = item.quotationqty;
+      //});
     });
   }
 
@@ -234,6 +224,7 @@ export class MaterialReserveViewComponent implements OnInit {
     this.suppliername = null;
     this.ponumber = null;
     this.requestMatData = new requestData();
+    this.selectedproject = new ddlmodel();
     this.materialList = [];
     this.materialmodel = [];
   }
@@ -292,9 +283,15 @@ export class MaterialReserveViewComponent implements OnInit {
 
 
   //Check for requested qty
-  onComplete(reqqty: number, avqty: number, material: any, index) {
+  onComplete(reqqty: number, avqty: number, material: any, index, plantstockavailableqty: number) {
+    debugger;
     if (avqty < reqqty) {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Requested qty cannot exceed available qty' });
+      this.materialList[index].quantity = 0;
+      return false;
+    }
+    if (reqqty > plantstockavailableqty) {
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Requested quantity not available in Plant Stock : ' + String(plantstockavailableqty) });
       this.materialList[index].quantity = 0;
       return false;
     }
@@ -436,7 +433,7 @@ export class MaterialReserveViewComponent implements OnInit {
 
   Request() {
     let savedata = new materialReservetorequestModel();
-    savedata.reserveid = parseInt(this.reserveidview);
+    savedata.reserveid = this.reserveidview;
     savedata.requestedby = this.employee.employeeno;
     this.spinner.show();
     this.wmsService.materialReservetorequest(savedata).subscribe(data => {
@@ -461,7 +458,7 @@ export class MaterialReserveViewComponent implements OnInit {
   backtoDashboard() {
     this.router.navigateByUrl("/WMS/Dashboard");
   }
-  showmaterialdetails(reservedid, data: any) {
+  showmaterialdetails(reservedid, data: MaterialTransaction) {
     debugger;
     this.showreservebtn = false;
     this.isrequested = false;
@@ -480,13 +477,14 @@ export class MaterialReserveViewComponent implements OnInit {
       this.requestedonview = data.requestedon;
       this.isrequested = true;
     }
-    this.wmsService.getmaterialissueListforreserved(reservedid).subscribe(data => {
-      this.materiallistData = data;
+    this.materiallistData = data.materialdata;
+    //this.wmsService.getmaterialissueListforreserved(reservedid).subscribe(data => {
+    //  this.materiallistData = data;
       
-      if (data != null) {
+    //  if (data != null) {
 
-      }
-    });
+    //  }
+    //});
   }
   Cancel() {
     this.AddDialog = false;
@@ -598,6 +596,7 @@ export class MaterialReserveViewComponent implements OnInit {
               this.materialList = [];
               this.materialmodel = [];
               this.messageService.add({ severity: 'success', summary: '', detail: 'Reserved materials Successfully' });
+              this.getdefaultmaterialstoreserve();
               this.getMaterialReservelist();
               //this.router.navigateByUrl("/WMS/MaterialReqView/" + this.pono);
             }

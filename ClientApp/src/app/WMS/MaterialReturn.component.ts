@@ -5,7 +5,7 @@ import { wmsService } from '../WmsServices/wms.service';
 import { constants } from '../Models/WMSConstants';
 import { Employee, DynamicSearchResult, searchList } from '../Models/Common.Model';
 import { NgxSpinnerService } from "ngx-spinner";
-import { materialRequestDetails, returnmaterial, gatepassModel, materialistModel, PoDetails, StockModel, materialistModelreturn } from 'src/app/Models/WMS.Model';
+import { materialRequestDetails, returnmaterial, gatepassModel, materialistModel, PoDetails, StockModel, materialistModelreturn, MaterialReturn, MaterialReturnTR } from 'src/app/Models/WMS.Model';
 import { MessageService } from 'primeng/api';
 import { isNullOrUndefined } from 'util';
 
@@ -14,7 +14,7 @@ import { isNullOrUndefined } from 'util';
   templateUrl: './MaterialReturn.component.html'
 })
 export class MaterialReturnComponent implements OnInit {
-   AddDialog: boolean;
+  AddDialog: boolean;
   showdialog: boolean;
 
   public materiallistData: Array<any> = [];
@@ -22,10 +22,10 @@ export class MaterialReturnComponent implements OnInit {
   AddDialogfortransfer: boolean;
   materialreturn: boolean = true;
   MaterialDetailsDialog: boolean = false;
-    showdialogfortransfer: boolean;
-    projectcodes: string;
-    showhistory: boolean=false;
-    displaydetail: boolean;
+  showdialogfortransfer: boolean;
+  projectcodes: string;
+  showhistory: boolean = false;
+  displaydetail: boolean;
   public gpIndx: number;
   GatepassTxt: string;
   public gatepassdialog: boolean = false;
@@ -53,13 +53,15 @@ export class MaterialReturnComponent implements OnInit {
   public StockModelForm: FormGroup;
   public StockModelForm1: FormGroup;
   public stock: StockModel[] = [];
+  public materialreturnlist: MaterialReturn[] = [];
+  public materialreturnlistTR: MaterialReturnTR[] = [];
   filteredmats: any[];
   ngOnInit() {
     if (localStorage.getItem("Employee"))
       this.employee = JSON.parse(localStorage.getItem("Employee"));
     else
       this.router.navigateByUrl("Login");
-   
+
     this.PoDetails = new PoDetails();
     this.StockModel = new StockModel();
     this.returnModel = new returnmaterial();
@@ -69,25 +71,18 @@ export class MaterialReturnComponent implements OnInit {
         this.pono = params["pono"];
       }
     });
-   
+
     this.getMaterialRequestlist();
-   
+
   }
 
- 
+
 
   //get Material Rquest based on login employee && po no
   getMaterialRequestlist() {
-    //this.employee.employeeno = "180129";
     this.wmsService.getreturndata(this.employee.employeeno).subscribe(data => {
-      this.requestList = data;
-      
-      //this.requestList.forEach(item => {
-      //  if (!item.requestedquantity)
-      //    item.requestedquantity = item.quotationqty;
-      //});
+      this.materialreturnlist = data;
     });
-   // this.returnModel.materialList = [];
   }
 
   //check validations for requested quantity
@@ -148,23 +143,17 @@ export class MaterialReturnComponent implements OnInit {
     this.requestid = requesid;
 
   }
-    //Displaying material details on select of material
-  showmaterialdetails(matreturnid:any) {
-      this.AddDialog = true;
+
+
+  //Displaying material details on select of material
+  showmaterialdetails(data: MaterialReturn) {
+    this.AddDialog = true;
     this.showdialog = true;
     this.materialreturn = false;
     this.MaterialDetailsDialog = true;
     this.requestid = 7;
-    this.materiallistData = [];
-    //this.materiallistData = this.requestList.filter(li => li.approvedstatus == 'Approved');
-    this.wmsService.getmaterialreturnreqList(matreturnid).subscribe(data => {
-        this.materiallistData = data;
-
-        if (data != null) {
-
-        }
-      });
-    //}
+    this.materialreturnlistTR = [];
+    this.materialreturnlistTR = data.materialdata;
   }
   showmaterialdetailsfortransfer() {
     if (this.requestid == undefined) {
@@ -191,7 +180,7 @@ export class MaterialReturnComponent implements OnInit {
     this.AddDialog = false;
   }
   returnqty() {
-  
+
 
     if (this.returnModel.materialList.length == 0) {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Please Add materials to Transfer' });
@@ -225,16 +214,16 @@ export class MaterialReturnComponent implements OnInit {
     }
     this.wmsService.UpdateReturnqty(this.returnModel.materialList).subscribe(data => {
       this.AddDialog = false;
-        if (data == 1) {
-          this.btnDisable = true;
-          this.gatepassdialog = false;
-          this.messageService.add({ severity: 'success', summary: 'suceess Message', detail: 'Material Returned' });
-          this.getMaterialRequestlist();
-        }
+      if (data == 1) {
+        this.btnDisable = true;
+        this.gatepassdialog = false;
+        this.messageService.add({ severity: 'success', summary: 'suceess Message', detail: 'Material Returned' });
+        this.getMaterialRequestlist();
+      }
     })
 
   }
-  returnQtyChange(issuesqty,returnqty) {
+  returnQtyChange(issuesqty, returnqty) {
     if (returnqty > issuesqty) {
       this.btnDisable = true;
       this.messageService.add({ severity: 'error', summary: ' ', detail: 'Return Quantity should be lessthan or equal to Issued quantity' });
@@ -269,20 +258,20 @@ export class MaterialReturnComponent implements OnInit {
     this.dynamicData = new DynamicSearchResult();
     this.dynamicData.tableName = this.constants[name].tableName + " ";
     this.dynamicData.searchCondition = "" + this.constants[name].condition;
-    this.dynamicData.searchCondition += "material" + " ilike '" + searchTxt + "%' or materialdescription ilike '" + searchTxt+"%'  limit 100";
+    this.dynamicData.searchCondition += "material" + " ilike '" + searchTxt + "%' or materialdescription ilike '" + searchTxt + "%'  limit 100";
     //this.materialistModel.materialcost = "";
     this.filteredmats = [];
     this.wmsService.GetListItems(this.dynamicData).subscribe(data => {
       this.searchresult = data;
       this.filteredmats = data;
       this.searchItems = [];
-      
+
       var fName = "";
       this.searchresult.forEach(item => {
-          fName = item[this.constants[name].fieldName];
+        fName = item[this.constants[name].fieldName];
         //if (name == "ItemId")
-          //fName = item[this.constants[name].fieldName] + " - " + item[this.constants[name].fieldId];
-          fName = item[this.constants[name].fieldId];
+        //fName = item[this.constants[name].fieldName] + " - " + item[this.constants[name].fieldId];
+        fName = item[this.constants[name].fieldId];
         var value = { listName: name, name: fName, code: item[this.constants[name].fieldId] };
         //this.materialistModel.materialcost = data[0].materialcost;
         this.searchItems.push(value);
@@ -290,12 +279,12 @@ export class MaterialReturnComponent implements OnInit {
     });
   }
 
-  
- 
-  showstory(requestid){
-   this.showhistory = true;
+
+
+  showstory(requestid) {
+    this.showhistory = true;
     this.wmsService.getreturnmaterialListforconfirm(requestid).subscribe(data => {
-     this.materiallistDataHistory = data;
+      this.materiallistDataHistory = data;
 
       if (data != null) {
 
@@ -317,15 +306,15 @@ export class MaterialReturnComponent implements OnInit {
       }
     })
   }
-  onChange(value, indexid:any) {
+  onChange(value, indexid: any) {
     console.log(event);
     if (value == 'other') {
-      document.getElementById(indexid+1).style.display = "block";
+      document.getElementById(indexid + 1).style.display = "block";
     }
     this.materiallistData[indexid].projectname = value;
-   // (<HTMLInputElement>document.getElementById(indexid)).value = event.toString();
+    // (<HTMLInputElement>document.getElementById(indexid)).value = event.toString();
   }
-  toggleVisibility(e,index) {
+  toggleVisibility(e, index) {
     if (e.checked == true) {
       this.chkChangeshideshow = true;
       document.getElementById(index).style.display = "block";
@@ -335,11 +324,11 @@ export class MaterialReturnComponent implements OnInit {
     }
   }
 
- 
+
 
   //Adding new material 
   addNewMaterial() {
-   
+
 
 
     if (this.returnModel.materialList.length == 0 || isNullOrUndefined(this.material)) {
@@ -355,7 +344,7 @@ export class MaterialReturnComponent implements OnInit {
     //  this.messageService.add({ severity: 'error', summary: ' ', detail: 'please add return quantity' });
     //  return false;
     //}
-   
+
     else {
       if (this.returnModel.materialList.filter(li => li.material == this.material.code && li.material != "0").length > 0) {
         this.messageService.add({ severity: 'error', summary: ' ', detail: 'Material already exist' });
@@ -364,22 +353,22 @@ export class MaterialReturnComponent implements OnInit {
       this.transferChange();
       //if (this.material) {
       this.returnModel.materialList[this.returnModel.materialList.length - 1].material = this.material.code;
-      this.returnModel.materialList[this.returnModel.materialList.length - 1].materialdescription = this.material.name;
+      //this.returnModel.materialList[this.returnModel.materialList.length - 1].materialdescription = this.material.name;
 
-      this.materialistModel = { material: "", materialdescription: "", remarks: " ", returnid: 0, returnqty: 0, createdby:this.employee.employeeno };
+      this.materialistModel = { material: "", materialdescription: "", remarks: " ", returnid: 0, returnqty: 0, createdby: this.employee.employeeno };
       this.returnModel.materialList.push(this.materialistModel);
-            this.material = "";
+      this.material = "";
     }
   }
 
   //gatepass change
- transferChange() {
+  transferChange() {
     //if (this.gatepassModel.gatepasstype != "0")
-      this.GatepassTxt = "Return Materials";
+    this.GatepassTxt = "Return Materials";
   }
   //open gate pass dialog
-  openDialog( gatepassobject:any,gpIndx: any, dialog) {
-   // this.bindSearchListData();
+  openDialog(gatepassobject: any, gpIndx: any, dialog) {
+    // this.bindSearchListData();
     this.displaydetail = false;
     //this.approverListdata();
     this[dialog] = true;
@@ -388,12 +377,12 @@ export class MaterialReturnComponent implements OnInit {
 
     //  //this.gpIndx = gpIndx;
     //  //this.returnModel = gatepassobject;
-      
+
     //} else {
     this.materialistModel = { material: "", materialdescription: "", remarks: " ", returnid: 0, returnqty: 0, createdby: this.employee.employeeno };
-      this.returnModel.materialList.push(this.materialistModel);
-      this.material = "";
-   // }
+    this.returnModel.materialList.push(this.materialistModel);
+    this.material = "";
+    // }
     this.transferChange();
   }
 
@@ -415,8 +404,8 @@ export class MaterialReturnComponent implements OnInit {
     //    if (data == "true") {
     this.returnModel.materialList.push(this.materialistModel);
     this.materialistModel = new materialistModelreturn();
-          this.material = "";
-   
+    this.material = "";
+
   }
   //Delete material for transfer
   removematerial(id: number, matIndex: number) {

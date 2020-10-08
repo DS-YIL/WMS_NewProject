@@ -51,24 +51,24 @@ export class MaterialIssueDashBoardComponent implements OnInit {
     //this.employee.employeeno = "400095";
     this.wmsService.getMaterialIssueLlist(this.employee.employeeno).subscribe(data => {
       this.materialIssueListnofilter = data;
-      this.materialIssueList = this.materialIssueListnofilter.filter(li => li.approvedstatus == null);
+      this.materialIssueList = this.materialIssueListnofilter.filter(li => li.requeststatus == "Pending");
     });
   }
   onSelectStatus(event) {
     this.selectedStatus = event.target.value;
     if (this.selectedStatus == "Pending") {
-      this.materialIssueList = this.materialIssueListnofilter.filter(li => li.approvedstatus == null);
+      this.materialIssueList = this.materialIssueListnofilter.filter(li => li.requeststatus == "Pending");
     }
     else if (this.selectedStatus == "Approved") {
-      this.materialIssueList = this.materialIssueListnofilter.filter(li => li.approvedstatus == 'Approved');
+      this.materialIssueList = this.materialIssueListnofilter.filter(li => li.requeststatus == "Issued" && li.issuedby == this.employee.employeeno);
     }
   }
   SubmitStatus() {
     if (this.selectedStatus == "Pending") {
-      this.materialIssueList = this.materialIssueListnofilter.filter(li => li.approvedstatus == null);
+      this.materialIssueList = this.materialIssueListnofilter.filter(li => li.requeststatus == "Pending");
     }
     else if (this.selectedStatus == "Approved") {
-      this.materialIssueList = this.materialIssueListnofilter.filter(li => li.approvedstatus == 'Approved');
+      this.materialIssueList = this.materialIssueListnofilter.filter(li => li.requeststatus == "Issued" && li.issuedby == this.employee.employeeno);
     }
   }
 
@@ -76,6 +76,7 @@ export class MaterialIssueDashBoardComponent implements OnInit {
   navigateToMatIssue(details: any) {
     if (!details.pono)
       details.pono = '';
+    debugger;
     this.constants.materialIssueType = this.selectedStatus;
     this.router.navigate(["/WMS/MaterialIssue", details.requestid, details.pono]);
   }

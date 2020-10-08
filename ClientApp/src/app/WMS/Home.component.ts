@@ -493,8 +493,9 @@ export class HomeComponent implements OnInit {
     this.wmsService.getMaterialIssueLlist(this.employee.employeeno).subscribe(data => {
       debugger;
       this.materialIssueListnofilter = data;
-      this.materialIssueList = this.materialIssueListnofilter.filter(li => li.approvedstatus == null);
+      this.materialIssueList = this.materialIssueListnofilter.filter(li => li.requeststatus == 'Pending');
       this.materialforissuecount = this.materialIssueList.length;
+      
     });
   }
 

@@ -58,7 +58,7 @@ export class MaterialTransferComponent implements OnInit {
   filteredprojectsfrom: ddlmodel[] = [];
   materiallists: ddlmodel[] = [];
   selectedmaterial: string = "";
-  filteredmaterial: string[] = [];
+  filteredmaterial: searchList[] = [];
   materialtransferlist: materialtransferMain[] = [];
   materialtransfersavelist: materialtransferMain;
   materialtransferdetil: materialtransferTR[] = [];
@@ -66,6 +66,7 @@ export class MaterialTransferComponent implements OnInit {
   projectmanagerfrom: string = "";
   projectmanagerto: string = "";
   pmdetails: UserModel;
+  filteredmats: any[];
 
   ngOnInit() {
     if (localStorage.getItem("Employee"))
@@ -148,7 +149,7 @@ export class MaterialTransferComponent implements OnInit {
       this.pmdetails = data;
       this.projectmanagerfrom = "Project Manager - " + this.pmdetails.name;
     });
-    this.getmaterialsbyprojectcode(this.selectedprojectfrom.value);
+    //this.getmaterialsbyprojectcode(this.selectedprojectfrom.value);
 
   }
 
@@ -232,6 +233,7 @@ export class MaterialTransferComponent implements OnInit {
       this.spinner.hide();
     });
   }
+ 
   //redirect to PM Dashboard
   backtoDashboard() {
     this.router.navigateByUrl("/WMS/Dashboard");
@@ -312,7 +314,25 @@ export class MaterialTransferComponent implements OnInit {
       this.btnDisable = false;
     }
   }
-  onMaterialSelected(data: any, ind: number) {
+
+  onMaterialSelected(material: any, data: any, index: number) {
+    debugger;
+    if (this.materialtransferdetil.filter(li => li.materialid == material.code).length > 0) {
+      this.messageService.add({ severity: 'error', summary: ' ', detail: 'Material already exist' });
+      return false;
+    }
+
+    var data1 = this.filteredmats.filter(function (element, index) {
+      return (element.material == material.code);
+    });
+    if (data1.length > 0) {
+      data.materialid = material.code;
+      data.materialdescription = data1[0].materialdescription;
+    }
+
+
+  }
+  onMaterialSelected1(material: any, data: any, ind: number) {
     debugger;
     var data1 = this.materialtransferdetil.filter(function (element, index) {
       return (element.materialid == data.materialid && index != ind);
@@ -324,12 +344,19 @@ export class MaterialTransferComponent implements OnInit {
       data.transferredqty = 0;
       return false;
     }
-    var data2 = this.materiallists.filter(function (element, index) {
-      return (element.value == data.materialid);
+    var data2 = this.filteredmats.filter(function (element, index) {
+      return (element.material == data.materialid);
     });
     if (data2.length > 0) {
-      data.materialdescription = data2[0].text;
+      data.materialdescription = data1[0].materialdescription;
     }
+
+    //var data2 = this.materiallists.filter(function (element, index) {
+    //  return (element.value == data.materialid);
+    //});
+    //if (data2.length > 0) {
+    //  data.materialdescription = data2[0].text;
+    //}
 
   }
   //bind materials based search
@@ -341,17 +368,20 @@ export class MaterialTransferComponent implements OnInit {
     this.dynamicData = new DynamicSearchResult();
     this.dynamicData.tableName = this.constants[name].tableName + " ";
     this.dynamicData.searchCondition = "" + this.constants[name].condition;
-    this.dynamicData.searchCondition += "material" + " ilike '" + searchTxt + "%'  limit 10";
+    this.dynamicData.searchCondition += "material" + " ilike '" + searchTxt + "%' or materialdescription ilike '" + searchTxt + "%'  limit 100";
     //this.materialistModel.materialcost = "";
+    this.filteredmats = [];
     this.wmsService.GetListItems(this.dynamicData).subscribe(data => {
       this.searchresult = data;
+      this.filteredmats = data;
       this.searchItems = [];
+
       var fName = "";
       this.searchresult.forEach(item => {
         fName = item[this.constants[name].fieldName];
         //if (name == "ItemId")
-          //fName = item[this.constants[name].fieldName] + " - " + item[this.constants[name].fieldId];
-          fName = item[this.constants[name].fieldId];
+        //fName = item[this.constants[name].fieldName] + " - " + item[this.constants[name].fieldId];
+        fName = item[this.constants[name].fieldId];
         var value = { listName: name, name: fName, code: item[this.constants[name].fieldId] };
         //this.materialistModel.materialcost = data[0].materialcost;
         this.searchItems.push(value);
@@ -600,13 +630,22 @@ export class MaterialTransferComponent implements OnInit {
   filtermaterials(event) {
     debugger;
     this.filteredmaterial = [];
-    for (let i = 0; i < this.materiallists.length; i++) {
-      let brand = this.materiallists[i].value;
-      let pos = this.materiallists[i].text;
-      if (brand.toLowerCase().indexOf(event.query.toLowerCase()) == 0 || pos.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-        this.filteredmaterial.push(brand);
-      }
-    }
+    var qry = event.query.toLowerCase();
+    this.wmsService.getmateriallistfortransfer(qry).subscribe(data => {
+      debugger;
+      this.materiallists = data;
+      this.materiallists.forEach(item => {
+        var value = { code: String(item.value) };
+        this.filteredmaterial.push(value);
+      })
+      
+     
+    });
+   
+  }
+
+  setdatatoddl() {
+    
   }
   transfermaterial() {
     if (isNullOrUndefined(this.selectedprojectfrom.value)) {

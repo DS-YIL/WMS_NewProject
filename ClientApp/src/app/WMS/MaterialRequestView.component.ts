@@ -5,7 +5,7 @@ import { wmsService } from '../WmsServices/wms.service';
 import { constants } from '../Models/WMSConstants';
 import { Employee, DynamicSearchResult, searchList } from '../Models/Common.Model';
 import { NgxSpinnerService } from "ngx-spinner";
-import { materialRequestDetails, gatepassModel, materialistModel, materialList, requestData, ddlmodel } from 'src/app/Models/WMS.Model';
+import { materialRequestDetails, gatepassModel, materialistModel, materialList, requestData, ddlmodel, MaterialTransaction } from 'src/app/Models/WMS.Model';
 import { MessageService } from 'primeng/api';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { isNullOrUndefined } from 'util';
@@ -26,7 +26,7 @@ export class MaterialRequestViewComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder, private messageService: MessageService, private wmsService: wmsService, private route: ActivatedRoute, private router: Router, public constants: constants, private spinner: NgxSpinnerService) { }
 
-  public requestList: Array<any> = [];
+  public requestList: MaterialTransaction[] = [];
   public suppliername: string;
   public ponumber: string;
   public employee: Employee;
@@ -57,6 +57,7 @@ export class MaterialRequestViewComponent implements OnInit {
   projectlists: ddlmodel[] = [];
   isreservedbefore: boolean = false;
   reserveidview: string = "";
+  requestview: string = "";
   filteredmats: any[];
   selectedproject: ddlmodel;
   filteredprojects: ddlmodel[] = [];
@@ -86,14 +87,15 @@ export class MaterialRequestViewComponent implements OnInit {
       debugger;
       //get material details for that requestid
       this.materialList[0].material = this.reqid;
-      this.getMaterialRequestlist();
+      //this.getMaterialRequestlist();
 
     }
 
 
-    this.getMaterialRequestlist();
+   
     this.getdefaultmaterialstorequest();
     this.getprojects();
+    this.getMaterialRequestlist();
   }
 
   filterpos(event) {
@@ -130,23 +132,25 @@ export class MaterialRequestViewComponent implements OnInit {
   //get Material Rquest based on login employee && po no
   getMaterialRequestlist() {
     //this.employee.employeeno = "180129";
+    this.spinner.show();
     this.wmsService.getMaterialRequestlist(this.employee.employeeno, this.pono).subscribe(data => {
       this.requestList = data;
-      console.log(data);
-      console.log(this.requestList);
-      this.requestList.forEach(item => {
-        if (!item.requestedquantity)
-          item.requestedquantity = item.quotationqty;
-      });
+      this.spinner.hide();
+      //console.log(data);
+      //console.log(this.requestList);
+      //this.requestList.forEach(item => {
+      //  if (!item.requestedquantity)
+      //    item.requestedquantity = item.quotationqty;
+      //});
     });
   }
 
   getprojects() {
-    this.spinner.show();
+   
     this.wmsService.getprojectlistbymanager(this.employee.employeeno).subscribe(data => {
       debugger;
       this.projectlists = data;
-      this.spinner.hide();
+      
     });
   }
 
@@ -174,7 +178,7 @@ export class MaterialRequestViewComponent implements OnInit {
   //add materials for gate pass
   addNewMaterial() {
     if (this.materialList.length <= 0) {
-      this.materialistModel = { material: "", materialdescription: "", quantity: 0, materialcost: 0, availableqty: 0, remarks: " ", issuedqty: 0, requesterid: this.employee.employeeno, stocktype: "", projectcode:"" };
+      this.materialistModel = { material: "", materialdescription: "", quantity: 0, materialcost: 0, availableqty: 0, remarks: " ", issuedqty: 0, requesterid: this.employee.employeeno, stocktype: "", projectcode: "", plantstockavailableqty:0 };
       this.materialList.push(this.materialistModel);
     }
     else {
@@ -199,7 +203,7 @@ export class MaterialRequestViewComponent implements OnInit {
           return false;
         });
       }
-      this.materialistModel = { material: "", materialdescription: "", quantity: 0, materialcost: 0, availableqty: 0, remarks: " ", issuedqty: 0, requesterid: this.employee.employeeno, stocktype: "", projectcode: "" };
+      this.materialistModel = { material: "", materialdescription: "", quantity: 0, materialcost: 0, availableqty: 0, remarks: " ", issuedqty: 0, requesterid: this.employee.employeeno, stocktype: "", projectcode: "", plantstockavailableqty: 0 };
       this.materialList.push(this.materialistModel);
     }
    
@@ -269,6 +273,7 @@ export class MaterialRequestViewComponent implements OnInit {
             this.spinner.hide();
             if (data) {
               this.requestDialog = false;
+              this.getdefaultmaterialstorequest();
               this.getMaterialRequestlist();
               this.btnreq = true;
               this.messageService.add({ severity: 'success', summary: '', detail: 'Request sent' });
@@ -550,7 +555,7 @@ export class MaterialRequestViewComponent implements OnInit {
     //Get PO number list, project list and materials available
     this.GetPONo();
     if (this.materialList.length <= 0) {
-      this.materialistModel = { material: "", materialdescription: "", quantity: 0, materialcost: 0, remarks: " ", availableqty: 0, issuedqty: 0, requesterid: this.employee.employeeno, stocktype: "", projectcode: "" };
+      this.materialistModel = { material: "", materialdescription: "", quantity: 0, materialcost: 0, remarks: " ", availableqty: 0, issuedqty: 0, requesterid: this.employee.employeeno, stocktype: "", projectcode: "", plantstockavailableqty: 0 };
       this.materialList.push(this.materialistModel);
     }
    
@@ -590,12 +595,18 @@ export class MaterialRequestViewComponent implements OnInit {
     else {
       this.spinner.show();
       this.btnDisable = true;
-      this.wmsService.ackmaterialreceived(this.requestList).subscribe(data => {
+      var senddata = this.requestList.filter(function (element, index) {
+        return (element.status == true && isNullOrUndefined(element.ackstatus));
+      });
+      this.wmsService.ackmaterialreceived(senddata).subscribe(data => {
         this.spinner.hide();
+        debugger;
         if (data)
-          this.messageService.add({ severity: 'sucess', summary: '', detail: 'acknowledged' });
+          this.messageService.add({ severity: 'success', summary: '', detail: 'acknowledged' });
         else
           this.messageService.add({ severity: 'error', summary: '', detail: 'acknowledge failed' });
+        this.showAck = false;
+        this.getMaterialRequestlist();
       });
     }
   }
@@ -629,24 +640,26 @@ export class MaterialRequestViewComponent implements OnInit {
   //    });
   //  }
   //}
-  showmaterialdetails(requestid,data : any) {
+  showmaterialdetails(requestid, data: MaterialTransaction) {
     debugger;
     this.materiallistData = [];
     this.isreservedbefore = false;
     this.reserveidview = "";
+    this.requestview = requestid;
     if (data.reserveid) {
       this.isreservedbefore = true;
-      this.reserveidview = "MATRV" + String(data.reserveid);
+      this.reserveidview = String(data.reserveid);
     }
     this.AddDialog = true;
     this.showdialog = true;
-    this.wmsService.getmaterialissueList(requestid).subscribe(data => {
-      this.materiallistData = data;
+    this.materiallistData = data.materialdata;
+    //this.wmsService.getmaterialissueList(requestid).subscribe(data => {
+    //  this.materiallistData = data;
 
-      if (data != null) {
+    //  if (data != null) {
 
-      }
-    });
+    //  }
+    //});
   }
   showmaterialdetailsfortransfer() {
     if (this.requestid == undefined) {

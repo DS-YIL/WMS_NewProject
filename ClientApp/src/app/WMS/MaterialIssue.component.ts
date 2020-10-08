@@ -38,6 +38,7 @@ export class MaterialIssueComponent implements OnInit {
   public pono: string="";
   public Oldestdata: FIFOValues;
   public itemlocationData: Array<any> = [];
+  public itemlocationsaveData: Array<any> = [];
   public showavailableqtyList: boolean = false;
   public showissueqtyOKorCancel: boolean = true;
   public showdialog: boolean = false;
@@ -56,6 +57,7 @@ export class MaterialIssueComponent implements OnInit {
       this.router.navigateByUrl("Login");
     //Email
     this.reqid = this.route.snapshot.queryParams.requestid;
+    this.itemlocationsaveData = [];
     if (this.reqid) {
       debugger;
       //get material details for that requestid
@@ -79,6 +81,18 @@ export class MaterialIssueComponent implements OnInit {
 
   }
   issuematerial(itemlocationData) {
+    debugger;
+    var data1 = this.itemlocationData.filter(function (element, index) {
+      return (element.issuedqty > element.availableqty);
+    });
+    if (data1.length > 0) {
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Issue Qty cannot exceed available Qty.' });
+      return;
+    }
+    var material = this.itemlocationData[0].materialid;
+    this.itemlocationsaveData = this.itemlocationsaveData.filter(function (element, index) {
+      return (element.materialid != material);
+    });
     var totalissuedqty = 0;
     this.itemlocationData.forEach(item => {
       if (item.issuedqty)
@@ -87,8 +101,10 @@ export class MaterialIssueComponent implements OnInit {
       item.approvedby = this.employee.employeeno;
       item.itemreceiverid = this.materialissueList[this.roindex].itemreceiverid;
       item.requestid = this.materialissueList[this.roindex].requestid;
+      item.requestmaterialid = this.materialissueList[this.roindex].requestmaterialid;
       totalissuedqty = totalissuedqty + (item.issuedqty);
       this.FIFOvalues.issueqty = totalissuedqty;
+      this.itemlocationsaveData.push(item);
       //item.issuedqty = this.FIFOvalues.issueqty;
       //item.issuedquantity = totalissuedqty;
       //item.issuedqty = totalissuedqty;
@@ -98,8 +114,10 @@ export class MaterialIssueComponent implements OnInit {
     if (totalissuedqty > this.reqqty) {
       this.messageService.add({ severity: 'error', summary: '', detail: ' Issue Qty cannot exceed Requested Qty' });
       this.AddDialog = true;
+      return;
     }
     else {
+
       (<HTMLInputElement>document.getElementById(this.id)).value = totalissuedqty.toString();
       this.materialissueList[this.roindex].issuedqty = totalissuedqty;
       this.txtDisable = true;
@@ -113,7 +131,7 @@ export class MaterialIssueComponent implements OnInit {
   }
 
   //shows list of items for particular material
-  showmateriallocationList(material, id, rowindex, qty, issuedqty, reservedqty, requestforissueid) {
+  showmateriallocationList(material, id, rowindex, qty, issuedqty, reservedqty, requestforissueid, requestmaterialid) {
     if (issuedqty <= qty) {
       this.issueqtyenable = true;
     }
@@ -134,7 +152,7 @@ export class MaterialIssueComponent implements OnInit {
     }
     else {
       this.issueqtyenable = true;
-      this.wmsService.getItemlocationListByIssueId(requestforissueid).subscribe(data => {
+      this.wmsService.getItemlocationListByIssueId(requestmaterialid).subscribe(data => {
         this.itemlocationData = data;
         this.showdialog = true;
       });
@@ -159,11 +177,11 @@ export class MaterialIssueComponent implements OnInit {
     });
   }
   //check issued quantity
-  checkissueqty($event, entredvalue, maxvalue, material, createddate) {
+  checkissueqty($event, entredvalue, maxvalue, material, createddate,rowdata: any) {
     var id = $event.target.id;
     if (entredvalue > maxvalue) {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Please enter issue quantity less than Available quantity' });
-
+      rowdata.issuedqty = 0;
       (<HTMLInputElement>document.getElementById(id)).value = "";
     }
     else {
@@ -232,16 +250,29 @@ export class MaterialIssueComponent implements OnInit {
     //  item.issuedqty = this.FIFOvalues.issueqty;
 
     //});
+    var data1 = this.itemlocationsaveData.filter(function (element, index) {
+      return (element.issuedqty > 0);
+    });
+    if (data1.length == 0) {
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Enter Issue quantity' });
+      this.spinner.hide();
+      return;
+    }
+
+    this.itemlocationsaveData = this.itemlocationsaveData.filter(function (element, index) {
+      return (element.issuedqty > 0);
+    });
    
 
-    this.wmsService.approvematerialrequest(this.itemlocationData).subscribe(data => {
+    this.wmsService.approvematerialrequest(this.itemlocationsaveData).subscribe(data => {
       this.spinner.hide();
       this.btndisable = false;
+      this.itemlocationsaveData = [];
       if (data)
         this.messageService.add({ severity: 'success', summary: '', detail: 'Material issued.' });
       else
         this.messageService.add({ severity: 'error', summary: '', detail: 'Material issue failed.' });
-
+      this.router.navigateByUrl('WMS/MaterialIssueDashboard');
     });
   }
   //})

@@ -100,21 +100,7 @@ export class MaterialReturnDashBoardComponent implements OnInit {
     //this.employee.employeeno = "400095";
     this.wmsService.GetReturnmaterialList().subscribe(data => {
       this.materialacceptListnofilter = data;
-      this.materialacceptListnofilter.forEach(i => {
-        if (i.confirmstatus == null) {
-          debugger;
-          if (this.materialIssueList.filter(li => li.matreturnid == i.matreturnid).length > 0) {
-
-          }
-          else {
-            this.materialIssueList.push(i);
-          }
-         
-        }
-
-      });
-     //// this.materialIssueList = this.materialacceptListnofilter.filter(li => li.confirmstatus==null);
-      //this.materialIssueList = data.filter(li=>li.requesttype=='return');
+      this.materialIssueList = this.materialacceptListnofilter.filter(li => li.putawaystatus == 'Pending');
      
     });
   }
@@ -142,39 +128,24 @@ export class MaterialReturnDashBoardComponent implements OnInit {
         }
       }
 
-
-
-
-      //if (this.stock.filter(li => li.locatorid == this.stock[index].locatorid && li.rackid == this.stock[index].rackid && li.binid == this.stock[index].binid).length > 0) {
-      //  this.messageService.add({ severity: 'error', summary: ' ', detail: 'Location already exists' });
-      //  return;
-      //}
     }
     //get stock type
-    this.locationdetails.storeid = this.stock[index].locatorid;
-    this.locationdetails.rackid = this.stock[index].rackid;
-    this.locationdetails.binid = this.stock[index].binid;
-    var bindetails = this.bindata.filter(x => x.binid == this.locationdetails.binid);
-    var storedetails = this.locationdata.filter(x => x.locatorid == this.locationdetails.storeid);
-    var rackdetails = this.rackdata.filter(x => x.rackid == this.locationdetails.rackid);
-    this.locationdetails.storename = storedetails[0].locatorname != null || storedetails[0].locatorname != "undefined" || storedetails[0].locatorname != "" ? storedetails[0].locatorname : 0;
-    this.locationdetails.rackname = rackdetails[0].racknumber != null || rackdetails[0].racknumber != "undefined" || rackdetails[0].racknumber != "" ? rackdetails[0].racknumber : 0;
-    this.locationdetails.binname = bindetails[0].binnumber != null || bindetails[0].binnumber != "undefined" || bindetails[0].binnumber != "" ? bindetails[0].binnumber : 0;
-    this.locationdetails.locationid = this.locationdetails.storeid + '.' + this.locationdetails.rackid + '.' + this.locationdetails.binid;
-    this.locationdetails.locationname = this.locationdetails.storename + '.' + this.locationdetails.rackname + '.' + this.locationdetails.binname;
-    //service to get stock type
-    //this.wmsService.getstocktype(this.locationdetails).subscribe(data => {
-    //  debugger;
-    //  if (data) {
-    //    this.stock[index].stocktype = data;
-    //    //this.invoiceForm.controls.itemRows.value[this.invoiceForm.controls.itemRows.value.length - 1].stocktype = data;
-    //    //this.StockModel.stocktype = data;
 
-    //  }
-    //  else {
-    //    this.messageService.add({ severity: 'error', summary: '', detail: 'Unable to fetch stock type' });
-    //  }
-    //});
+      //this.locationdetails.storeid = this.stock[index].locatorid;
+      //this.locationdetails.rackid = this.stock[index].rackid;
+      //this.locationdetails.binid = this.stock[index].binid;
+      //var bindetails = this.bindata.filter(x => x.binid == this.locationdetails.binid);
+      //var storedetails = this.locationdata.filter(x => x.locatorid == this.locationdetails.storeid);
+      //var rackdetails = this.rackdata.filter(x => x.rackid == this.locationdetails.rackid);
+      //this.locationdetails.storename = storedetails[0].locatorname != null || storedetails[0].locatorname != "undefined" || storedetails[0].locatorname != "" ? storedetails[0].locatorname : 0;
+      //this.locationdetails.rackname = rackdetails[0].racknumber != null || rackdetails[0].racknumber != "undefined" || rackdetails[0].racknumber != "" ? rackdetails[0].racknumber : 0;
+      //this.locationdetails.binname = bindetails[0].binnumber != null || bindetails[0].binnumber != "undefined" || bindetails[0].binnumber != "" ? bindetails[0].binnumber : 0;
+      //this.locationdetails.locationid = this.locationdetails.storeid + '.' + this.locationdetails.rackid + '.' + this.locationdetails.binid;
+      //this.locationdetails.locationname = this.locationdetails.storename + '.' + this.locationdetails.rackname + '.' + this.locationdetails.binname;
+
+    
+    
+   
 
 
   }
@@ -515,6 +486,7 @@ export class MaterialReturnDashBoardComponent implements OnInit {
   }
 
   onSubmitStockDetails() {
+    debugger;
     if (this.stock.length > 0) {
       debugger;
       if (this.stock[this.stock.length - 1].locatorid == 0) {
@@ -564,21 +536,25 @@ export class MaterialReturnDashBoardComponent implements OnInit {
         this.StockModel.returnid = this.PoDetails.returnid;
         this.StockModel.returnqty = this.PoDetails.returnQty;
         this.StockModel.stocktype = item.stocktype;
+        this.StockModel.storeid = item.locatorid;
+        this.StockModel.locatorid = item.locatorid;
+        this.StockModel.id = this.PoDetails.id;
+        this.StockModel.binid = isNullOrUndefined(item.binid) ? 0 : item.binid;
+        this.StockModel.rackid = item.rackid;
         debugger;
         binnumber = this.bindata.filter(x => x.binid == item.binid);
         storelocation = this.locationdata.filter(x => x.locatorid == item.locatorid);
         rack = this.rackdata.filter(x => x.rackid == item.rackid);
-        if (binnumber.length != 0) {
+        if (binnumber.length > 0) {
           this.StockModel.binnumber = binnumber[0].binnumber;
-          this.StockModel.binid = binnumber[0].binid;
           this.StockModel.itemlocation = storelocation[0].locatorname + "." + rack[0].racknumber + '.' + binnumber[0].binnumber;
         }
         else if (binnumber.length == 0) {
-          this.StockModel.binid = 1;
-          this.StockModel.itemlocation = storelocation[0].locatorname + "." + rack[0].racknumber;
+          var storename = storelocation.length == 0 ? "" : storelocation[0].locatorname;
+          var rackname = rack.length == 0 ? "" : rack[0].racknumber;
+          this.StockModel.itemlocation = storename + "." + rackname;
         }
-        this.StockModel.racknumber = storelocation[0].locatorname;
-        this.StockModel.rackid = rack[0].rackid;
+        this.StockModel.racknumber = rack.length == 0 ? "" : rack[0].racknumber;
         this.StockModel.confirmqty = item.qty;
         this.StockModel.itemreceivedfrom = new Date();
         this.StockModelList.push(this.StockModel);
@@ -596,7 +572,21 @@ export class MaterialReturnDashBoardComponent implements OnInit {
         return (element.stocktype == "");
       });
       if (dtt.length > 0) {
-        this.messageService.add({ severity: 'error', summary: '', detail: 'Select Stock Type.' });
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Select Stock Type' });
+        return;
+      }
+      var dttloc = this.StockModelList.filter(function (element, index) {
+        return (isNullOrUndefined(element.locatorid) || element.locatorid == "");
+      });
+      if (dttloc.length > 0) {
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Select Store' });
+        return;
+      }
+      var dttrack = this.StockModelList.filter(function (element, index) {
+        return (isNullOrUndefined(element.rackid) || element.rackid == "");
+      });
+      if (dttrack.length > 0) {
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Select Rack' });
         return;
       }
       if (totalqty == parseInt(this.matqty)) {
@@ -650,61 +640,19 @@ export class MaterialReturnDashBoardComponent implements OnInit {
     this.materialIssueList = [];
     this.selectedStatus = event.target.value;
     if (this.selectedStatus == "Pending") {
-      this.materialacceptListnofilter.forEach(i => {
-        if (i.confirmstatus == null) {
-          debugger;
-          if (this.materialIssueList.filter(li => li.matreturnid == i.matreturnid).length > 0) {
-
-          }
-          else {
-            this.materialIssueList.push(i);
-          }
-
-        }
-
-      });
-
-      //this.materialIssueList = this.materialacceptListnofilter.filter(li => li.confirmstatus == null);
+      this.materialIssueList = this.materialacceptListnofilter.filter(li => li.putawaystatus == 'Pending');
     }
     else if (this.selectedStatus == "Accepted") {
       this.materialIssueList = [];
-      this.materialacceptListnofilter.forEach(i => {
-        if (i.confirmstatus == null) {
-          debugger;
-          if (this.materialIssueAccept.filter(li => li.matreturnid == i.matreturnid).length > 0) {
-
-          }
-          else {
-            this.materialIssueAccept.push(i);
-          }
-
-        }
-        else {
-          if (this.materialIssueAccept.filter(li => li.matreturnid == i.matreturnid).length > 0) {
-
-          }
-          else {
-            if (this.materialIssueList.filter(li => li.matreturnid == i.matreturnid).length > 0) {
-
-            }
-            else {
-              this.materialIssueList.push(i);
-            }
-           
-          }
-        }
-
-      });
-      //this.materialIssueList = this.materialacceptListnofilter.filter(li => li.confirmstatus == 'Accepted');
+      this.materialIssueList = this.materialacceptListnofilter.filter(li => li.putawaystatus == 'Accepted');
     }
   }
   SubmitStatus() {
     if (this.selectedStatus == "Pending") {
-
-      //this.materialIssueList = this.materialacceptListnofilter.filter(li => li.confirmstatus == null);
+      this.materialIssueList = this.materialacceptListnofilter.filter(li => li.putawaystatus == 'Pending');
     }
     else if (this.selectedStatus == "Accepted") {
-      this.materialIssueList = this.materialacceptListnofilter.filter(li => li.confirmstatus == 'Accepted');
+      this.materialIssueList = this.materialacceptListnofilter.filter(li => li.putawaystatus == 'Accepted');
     }
   }
 }

@@ -60,7 +60,7 @@ namespace WMS.Common
 			//Inventory Manager
 			else if (subjecttype == 4)
 			{
-				mailMessage.Subject = "Request for Materials - ID" + emlSndngList.material;
+				mailMessage.Subject = "Request for Materials - ID(s)" + emlSndngList.material;
 				string requestedby = this.getnamebyid(emlSndngList.createdby);
 				subbody = "Please find the Masterials request details below. <br/> Requested By:" +requestedby + "<br/>Requested On:" + emlSndngList.createddate;
 				subbody = mailMessage.Subject;

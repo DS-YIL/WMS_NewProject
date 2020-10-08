@@ -30,7 +30,7 @@ namespace WMS.Interfaces
         Task<IEnumerable<ReqMatDetails>> getReqMatdetails(string materialid,string grnnumber);
 
         //Get material requested for return
-        Task<IEnumerable<IssueRequestModel>> getmaterialreturnreqList(int matreturnid);
+        Task<IEnumerable<IssueRequestModel>> getmaterialreturnreqList(string matreturnid);
 
         //Check material exists
         string checkMatExists(string material);
@@ -63,7 +63,7 @@ Task<string> updateonholdrow(updateonhold datamodel);
         int IssueRequest(List<IssueRequestModel> reqdata);
         Task<IEnumerable<inwardModel>> getitemdeatils(string grnnumber);
         Task<IEnumerable<inwardModel>> getitemdeatilsnotif(string grnnumber);
-        Task<IEnumerable<IssueRequestModel>> MaterialRequest(string pono,string material);
+        Task<IEnumerable<MaterialTransaction>> MaterialRequest(string pono,string material);
         Task<IEnumerable<IssueRequestModel>> MaterialRequestdata(string pono, string material);
         Task<IEnumerable<IssueRequestModel>> MaterialReservedata();
         int acknowledgeMaterialReceived(List<IssueRequestModel> dataobj);
@@ -116,7 +116,7 @@ Task<string> updateonholdrow(updateonhold datamodel);
         Task<IEnumerable<IssueRequestModel>> getissuematerialdetails(int requestid);
         Task<IEnumerable<ReserveMaterialModel>> getissuematerialdetailsforreserved(int reservedid);
         Task<int> insertResevematerial(List<ReserveMaterialModel> datamodel);
-        Task<IEnumerable<ReserveMaterialModel>> GetReservedMaterialList(string reservedby);
+        Task<IEnumerable<MaterialTransaction>> GetReservedMaterialList(string reservedby);
         Task<IEnumerable<ReserveMaterialModel>> GetReleasedmaterialList();
         Task<IEnumerable<ReserveMaterialModel>> GetmaterialdetailsByreserveid(string reserveid);
         int ApproveMaterialRelease(List<ReserveMaterialModel> dataobj);
@@ -177,7 +177,7 @@ Task<string> updateonholdrow(updateonhold datamodel);
 		Task<IEnumerable<rbamaster>> getrbadetails();
 
         Task<UserDashboardDetail> getUserDashboarddata(string empno);
-        Task<IEnumerable<IssueRequestModel>> getreturndata(string empno);
+        Task<IEnumerable<MaterialReturn>> getreturndata(string empno);
         Task<IEnumerable<materialtransferMain>> gettransferdata(string empno);
         Task<IEnumerable<materialtransferMain>> gettransferdataforapproval(string empno);
         int Updatetransferqty(List<IssueRequestModel> _listobj);
@@ -191,7 +191,7 @@ Task<string> updateonholdrow(updateonhold datamodel);
 
         Task<IEnumerable<ddlmodel>> getprojectlist();
         Task<IEnumerable<ddlmodel>> getprojectlistbymanager(string empno);
-        Task<IEnumerable<ddlmodel>> getmatlist(string empno);
+        Task<IEnumerable<ddlmodel>> getmatlist(string querytext);
         Task<IEnumerable<ddlmodel>> getmatlistbyproject(string projectcode);
         string notifyputaway(notifymodel data);
         string notifymultipleputaway(List<notifymodel> data);
