@@ -44,6 +44,7 @@ export class GatePassApproverComponent implements OnInit {
   //Email
   gateid: string = "";
   ngOnInit() {
+    debugger;
     if (localStorage.getItem("Employee"))
       this.employee = JSON.parse(localStorage.getItem("Employee"));
     else
@@ -60,7 +61,7 @@ export class GatePassApproverComponent implements OnInit {
     });
 
     //Email
-    this.gateid = this.route.snapshot.queryParams.grnnumber;
+    this.gateid = this.route.snapshot.queryParams.gatepassid;
     if (this.gateid) {
       debugger;
       //get material details for that gatepassid

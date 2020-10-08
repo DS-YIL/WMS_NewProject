@@ -54,8 +54,9 @@ export class GatePassApprovalList implements OnInit {
     if (this.gatepassid) {
       debugger;
       //get material details for that requestid
-      this.gatepasslist[0].material = this.gatepassid;
-      this.getGatePassList();
+      this.showApprover(this.gatepassid);
+      //this.gatepasslist[0].material = this.gatepassid;
+      //this.getGatePassList();
 
     }
   }

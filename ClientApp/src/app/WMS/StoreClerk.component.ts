@@ -77,6 +77,7 @@ export class StoreClerkComponent implements OnInit {
   public showPrintLabel: boolean = false;
   displayBasic: boolean = false;
   poinvoice: string = "";
+  grnn0: string = "";
 
   ngOnInit() {
     //this.autoCompleteObject.focusInput();
@@ -90,6 +91,14 @@ export class StoreClerkComponent implements OnInit {
       //get material details for that PO
       this.selectedpendingpono = this.poinvoice;
       this.showpodata();
+
+    }
+    this.grnn0 = this.route.snapshot.queryParams.grnnumber;
+    if (this.grnn0) {
+      debugger;
+      //get material details for that PO
+      this.selectedgrnno = this.grnn0;
+      this.showpodata1();
 
     }
     this.getpendingpos();

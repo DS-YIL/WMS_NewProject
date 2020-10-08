@@ -784,9 +784,9 @@ namespace WMS.DAL
 
 
 							}
-
+							objMaterial.Add(result);
 						}
-						objMaterial.Add(result);
+						//objMaterial.Add(result);
 					}
 
 
@@ -1289,7 +1289,7 @@ namespace WMS.DAL
 					emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
 					emailmodel.CC = "sushma.patil@in.yokogawa.com";
 					EmailUtilities emailobj = new EmailUtilities();
-					//emailobj.sendEmail(emailmodel, 2);
+					emailobj.sendEmail(emailmodel, 2);
 
 					return verify;
 				}
@@ -2580,7 +2580,7 @@ namespace WMS.DAL
 							emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
 							emailmodel.CC = "sushma.patil@in.yokogawa.com";
 							EmailUtilities emailobj = new EmailUtilities();
-							//emailobj.sendEmail(emailmodel, 8);
+							emailobj.sendEmail(emailmodel, 8);
 						}
 						else if (dataobj.gatepasstype == "Non Returnable")
 						{
@@ -5132,11 +5132,11 @@ namespace WMS.DAL
 			inwardModel getgrnnoforpo = new inwardModel();
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
-
+				var results = 0;
 				try
 				{
 					await pgsql.OpenAsync();
-
+					
 					string checkedon = DateTime.Now.ToString("yyyy-MM-dd");
 					foreach (var item in datamodel)
 					{
@@ -5145,7 +5145,7 @@ namespace WMS.DAL
 						string materialid = item.Material;
 						using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
 						{
-							var results = DB.ExecuteScalar(insertforquality, new
+							results = Convert.ToInt32(DB.ExecuteScalar(insertforquality, new
 							{
 								item.inwardid,
 								item.qualitypassedqty,
@@ -5153,7 +5153,8 @@ namespace WMS.DAL
 								item.receivedby,
 								item.remarks
 
-							});
+							})
+							);
 							string query = "UPDATE wms.wms_storeinward set  qualitychecked = True where inwardid = '" + item.inwardid + "'";
 							DB.ExecuteScalar(query);
 							//inwardid = Convert.ToInt32(results);
@@ -5172,20 +5173,22 @@ namespace WMS.DAL
 							//        datamodel.deleteflag,
 
 							//    });
-							if (Convert.ToInt32(results) != 0)
-							{
-								EmailModel emailmodel = new EmailModel();
-								emailmodel.pono = item.pono;
-								emailmodel.jobcode = item.projectname;
-								emailmodel.grnnumber = item.grnnumber;
-								emailmodel.ToEmailId = "developer1@in.yokogawa.com";
-								emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
-								emailmodel.CC = "sushma.patil@in.yokogawa.com";
-								EmailUtilities emailobj = new EmailUtilities();
-								//emailobj.sendEmail(emailmodel, 3);
-							}
+						
 
 						}
+						
+					}
+					if (Convert.ToInt32(results) != 0)
+					{
+						EmailModel emailmodel = new EmailModel();
+						emailmodel.pono = datamodel[0].pono;
+						emailmodel.jobcode = datamodel[0].projectname;
+						emailmodel.grnnumber = datamodel[0].grnnumber;
+						emailmodel.ToEmailId = "developer1@in.yokogawa.com";
+						emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
+						emailmodel.CC = "sushma.patil@in.yokogawa.com";
+						EmailUtilities emailobj = new EmailUtilities();
+						emailobj.sendEmail(emailmodel, 3);
 					}
 
 					//}
@@ -5750,12 +5753,23 @@ namespace WMS.DAL
 							emailmodel.approverid = model.approverid;
 							emailmodel.gatepassid = model.gatepassid;
 							emailmodel.approverstatus = model.approverstatus;
+							emailmodel.gatepasstype = model.gatepasstype;
+							emailmodel.requestedby = model.requestedby;
+							emailmodel.requestedon = model.requestedon;
 
 							emailmodel.ToEmailId = "developer1@in.yokogawa.com";
 							emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
 							emailmodel.CC = "sushma.patil@in.yokogawa.com";
 							EmailUtilities emailobj = new EmailUtilities();
-							//emailobj.sendEmail(emailmodel, 15);
+							if(model.gatepasstype=="Returnable")
+                            {
+								emailobj.sendEmail(emailmodel, 15);
+							}
+                            else
+                            {
+								emailobj.sendEmail(emailmodel, 16);
+							}
+							
 						}
 					}
 				}
@@ -5792,12 +5806,14 @@ namespace WMS.DAL
 							emailmodel.approverid = model.approverid;
 							emailmodel.gatepassid = model.gatepassid;
 							emailmodel.approverstatus = model.approverstatus;
+							emailmodel.requestedby = model.requestedby;
+							emailmodel.requestedon = model.requestedon;
 
 							emailmodel.ToEmailId = "developer1@in.yokogawa.com";
 							emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
 							emailmodel.CC = "sushma.patil@in.yokogawa.com";
 							EmailUtilities emailobj = new EmailUtilities();
-							//emailobj.sendEmail(emailmodel, 16);
+							emailobj.sendEmail(emailmodel, 17);
 
 
 						}
@@ -7604,7 +7620,7 @@ namespace WMS.DAL
 						emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
 						emailmodel.CC = "sushma.patil@in.yokogawa.com";
 						EmailUtilities emailobj = new EmailUtilities();
-						//emailobj.sendEmail(emailmodel, 13);
+						emailobj.sendEmail(emailmodel, 13);
 
 
 					}
