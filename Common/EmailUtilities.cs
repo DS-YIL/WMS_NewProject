@@ -18,30 +18,32 @@ namespace WMS.Common
 		Configurations config = new Configurations();
 		ErrorLogTrace log = new ErrorLogTrace();
 		EmailModel emailobj = new EmailModel();
+		
 		public bool sendEmail(EmailModel emlSndngList, int subjecttype)
 		{
 			string link = "";
 			MailMessage mailMessage = new MailMessage(emlSndngList.FrmEmailId, emlSndngList.ToEmailId);
 			SmtpClient client = new SmtpClient();
 			var subbody = string.Empty;
-			//Security operator to inventory clerk
+			//Security operator to inventory clerk(Receipts)
 
 			if (subjecttype == 1)
 			{
 				mailMessage.Subject = "Shipment Received - PoNo. :" + emlSndngList.pono;
 				string receivedby = this.getnamebyid(emlSndngList.employeeno);
-				subbody = "Shipment for PONO - <b>" + emlSndngList.pono + "</b> has been received.Please find the details below. <br/> Invoice No:<b>" + emlSndngList.invoiceno + "</b><br/> Received By :<b>" + receivedby + "</b><br/> Received On : <b>" + emlSndngList.receiveddate+"</b>";
+				string date = Conversion.ToDate(Convert.ToString(emlSndngList.receiveddate),"dd/mm/yyyy");
+				subbody = "Shipment for PONO - <b>" + emlSndngList.pono + "</b> has been received.Please find the details below. <br/> Invoice No : <b>" + emlSndngList.invoiceno + "</b><br/> Received By : <b>" + receivedby + "</b><br/> Received On : <b>" + date + "</b>";
 				link = "http://10.29.15.212:82/WMS/Email/GRNPosting?pono=" + emlSndngList.pono+"-"+emlSndngList.invoiceno;
 			}
-			//Inventory Clery to Quality User
+			//Inventory Clerk(Receipt) to Quality User
 			//quality user
 
 			else if (subjecttype == 2)
 			//81-2020-000135,81-2020-000136
 			{
-				mailMessage.Subject = "Pending for Quality Check - GRN No." + emlSndngList.grnnumber;
+				mailMessage.Subject = "Pending for Quality Check - GRN No. :" + emlSndngList.grnnumber;
 				//mailMessage.Subject = "Pending for Quality Check - GR No." + emlSndngList.grnnumber + "<br/>Materials of GR No - " + emlSndngList.grnnumber + "are pending for quality check.";
-				subbody = "Materials of GR No - " + emlSndngList.grnnumber + "are pending for quality check.";
+				subbody = "Materials with GRN No. - " + emlSndngList.grnnumber + " are pending for quality check.";
 				//Redirect to QualityCheck Page
 				link = "http://10.29.15.212:82/WMS/Email/QualityCheck?grnno=" + emlSndngList.grnnumber;
 			}
@@ -50,9 +52,9 @@ namespace WMS.Common
 
 			else if (subjecttype == 3)
 			{
-				mailMessage.Subject = "Completed Quality Check for  GR No. -" + emlSndngList.grnnumber;
+				mailMessage.Subject = "Completed Quality Check for  GRN No. -" + emlSndngList.grnnumber;
 				//mailMessage.Subject = "Completed Quality Check for - GR No." + emlSndngList.grnnumber + "<br/>Materials of GR No - " + emlSndngList.grnnumber + "are completed quality check.";
-				subbody = "Quality Check has completed for the Materials with  GRN No. - " + emlSndngList.grnnumber + ".";
+				subbody = "Quality Check has completed for the Materials with  GRN No. : " + emlSndngList.grnnumber + ".";
 				//Redirect to Receipts Page
 				link = "http://10.29.15.212:82/WMS/Email/GRNPosting?grnno=" + emlSndngList.grnnumber;
 			}
@@ -62,7 +64,7 @@ namespace WMS.Common
 			{
 				mailMessage.Subject = "Request for Materials - ID(s)" + emlSndngList.material;
 				string requestedby = this.getnamebyid(emlSndngList.createdby);
-				subbody = "Please find the Masterials request details below. <br/> Requested By:" +requestedby + "<br/>Requested On:" + emlSndngList.createddate;
+				subbody = "Please find the Materials request details below. <br/> Requested By:" +requestedby + "<br/>Requested On:" + emlSndngList.createddate;
 				subbody = mailMessage.Subject;
 				link = "http://10.29.15.212:82/WMS/Email/MaterialIssueDashboard?reqid=" + emlSndngList.requestid;
 
@@ -95,7 +97,7 @@ namespace WMS.Common
 			 // subbody = mailMessage.Subject;
 			 // }
 
-			//Admin to Approver(MA & FA)
+			//Admin to Approver(PM)
 
 			else if (subjecttype == 8)
 			{
@@ -103,9 +105,9 @@ namespace WMS.Common
 				//subbody = "Please find the Masterials request details below. <br/> Requested By:" + emlSndngList.requestedby + "<br/>Requested On:" + emlSndngList.requestedon;
 				//subbody = mailMessage.Subject;
 
-				mailMessage.Subject = "Gatepass Materials for Returnable - GatePass - ID" + emlSndngList.gatepassid;
+				mailMessage.Subject = "Gatepass Materials for"+ emlSndngList.gatepasstype +"- GatePass - ID : " + emlSndngList.gatepassid;
 				string requestedby = this.getnamebyid(emlSndngList.requestedby);
-				subbody = "Please find the Returnable Masterials details below. <br/> Requested By:" + requestedby + "<br/>Requested On:" + emlSndngList.requestedon + "<br/>GatePass Type:" + emlSndngList.gatepasstype;
+				subbody = "Please find the "+emlSndngList.gatepasstype+" Gatepass Materials details below. <br/> Requested By : <b>" + requestedby + "</b><br/>Requested On : <b>" + Conversion.ToDate(Convert.ToString(emlSndngList.requestedon), "dd/mm/yyyy") + "</b><br/>GatePass Type : <b>" + emlSndngList.gatepasstype+"</b>";
 				//subbody = mailMessage.Subject;
 				link = "http://10.29.15.212:82/WMS/Email/GatePassPMList?gateid=" + emlSndngList.gatepassid;
 
@@ -117,9 +119,9 @@ namespace WMS.Common
 
 			{
 
-				mailMessage.Subject = "Gate Pass Material Pending for Issue - GatePass - ID" + emlSndngList.gatepassid;
-				string requestedby = this.getnamebyid(emlSndngList.requestedby);
-				subbody = "Please find the below link for more details. <br/> Requested By:" + requestedby;
+				mailMessage.Subject = "Gate Pass Material Pending for Issue - GatePass  ID : " + emlSndngList.gatepassid;
+				string requestedby = this.getnamebyid(emlSndngList.approvername);
+				subbody = "Returnable Gate Pass was approved by PM and pending for issue.<br/>Please click on the below link to issue materials. <br/> Requested By : " + emlSndngList.approvername;
 				//subbody = mailMessage.Subject;
 				link = "http://10.29.15.212:82/WMS/Email/GatePass?gateid=" + emlSndngList.gatepassid;
 
@@ -132,37 +134,37 @@ namespace WMS.Common
 
 			{
 
-                mailMessage.Subject = "Gatepass Materials for Non-returnable - GatePass - ID" + emlSndngList.gatepassid;
+                mailMessage.Subject = "Gatepass Materials for Non-returnable - GatePass ID - " + emlSndngList.gatepassid;
 				string requestedby = this.getnamebyid(emlSndngList.requestedby);
-				subbody = "Please find the Non-returnable Masterials details below. <br/> Requested By:" + requestedby + "<br/>Requested On:" + emlSndngList.requestedon + "<br/>GatePass Type:" + emlSndngList.gatepasstype;
+				subbody = "Please find the Non-returnable Materials details below. <br/> Requested By : " + requestedby + "<br/>Requested On : " + emlSndngList.requestedon + "<br/>GatePass Type : " + emlSndngList.gatepasstype;
 				//subbody = mailMessage.Subject;
 				link = "http://10.29.15.212:82/WMS/Email/GatePassPMList?gateid=" + emlSndngList.gatepassid;
 
 
 			}
-			// Approver(PM)-Approver(FM)
+			// Approver(PM)-Approver(FM) for Non Returnable gatepass
 
 			else if (subjecttype == 16)
 
 			{
 
-				mailMessage.Subject = "Gatepass Materials for Material Issue - GatePass - ID" + emlSndngList.gatepassid;
+				mailMessage.Subject = emlSndngList.gatepasstype+ " Gatepass Materials with GatePass ID -"+ emlSndngList.gatepassid + "are pending for FM approval ";
 				string requestedby = this.getnamebyid(emlSndngList.requestedby);
-				subbody = "Please find the Material Issue details below. <br/> Requested By:" + requestedby + "<br/>Requested On:" + emlSndngList.requestedon + "<br/>GatePass Type:" + emlSndngList.gatepasstype;
+				subbody = "Please find the Material details below.<br/>GatePass Type : <b>" + emlSndngList.gatepasstype+"</b><br/>Approved By : <b>"+emlSndngList.approvername+"<b>";
 				//subbody = mailMessage.Subject;
-				link = "http://10.29.15.212:82/WMS/Email/GatePass?gateid=" + emlSndngList.gatepassid;
+				link = "http://10.29.15.212:82/WMS/Email/GatePassFMList?gateid=" + emlSndngList.gatepassid;
 
 
 			}
-			// Approverfor Returnable(PM)-Inventory Clerk
+			// Approver for Non - Returnable(FM)-Inventory Clerk
 
 			else if (subjecttype == 17)
 
 			{
 
-				mailMessage.Subject = "Gate Pass Material Pending for Issue - GatePass - ID" + emlSndngList.gatepassid;
+				mailMessage.Subject = emlSndngList.gatepasstype+" Gate Pass Material Pending for Issue - GatePass ID : " + emlSndngList.gatepassid;
 				string requestedby = this.getnamebyid(emlSndngList.requestedby);
-				subbody = "Please find the below link for more details. <br/> Requested By:" + requestedby;
+				subbody = "Please click on the below link to issue materials. ";
 				//subbody = mailMessage.Subject;
 				link = "http://10.29.15.212:82/WMS/Email/GatePass?gateid=" + emlSndngList.gatepassid;
 
@@ -185,8 +187,9 @@ namespace WMS.Common
 			}
 			else if (subjecttype == 13)
 			{
-				mailMessage.Subject = "Put Away";
+				mailMessage.Subject = "Notify to Finance";
 				subbody = "All materials are placed for GRN(s) :" + emlSndngList.jobcode;
+				link = "http://10.29.15.212:82/WMS/Email/GRNotification?grnno=" + emlSndngList.jobcode;
 			}
 			else if (subjecttype == 14)
 			{
@@ -209,7 +212,7 @@ namespace WMS.Common
 			SmtpClient mailClient = new SmtpClient("10.29.15.9", 25);
 			mailClient.DeliveryMethod = SmtpDeliveryMethod.Network;
 			mailClient.EnableSsl = false;
-			mailClient.Send(mailMessage);
+			//mailClient.Send(mailMessage);
 			return true;
 		}
 

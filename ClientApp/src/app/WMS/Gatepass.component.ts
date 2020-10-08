@@ -318,8 +318,11 @@ export class GatePassComponent implements OnInit {
     this.wmsService.getGatePassList().subscribe(data => {
       this.spinner.hide();
       this.totalGatePassList = data;
-      //filtering the based on logged in user
-      this.totalGatePassList = this.totalGatePassList.filter(li => li.requestedby == this.employee.employeeno);
+      //filtering the based on logged in user if role id is 8(Admin)
+      if (this.employee.roleid == "8") {
+        this.totalGatePassList = this.totalGatePassList.filter(li => li.requestedby == this.employee.employeeno);
+      }
+      
       //debugger;
       //console.log(this.totalGatePassList);
       //var role8 = this.userrolelist.filter(li => li.roleid == 8);
@@ -332,7 +335,7 @@ export class GatePassComponent implements OnInit {
         this.totalGatePassList.forEach(item => {
           if (item.gatepasstype == "Returnable" && item.approverstatus == "Approved")
             this.gatepasslist.push(item);
-          if (item.gatepasstype == "Non Returnable" && item.approverstatus == "Approved")
+          if (item.gatepasstype == "Non Returnable" && item.fmapprovedstatus == "Approved")
             this.gatepasslist.push(item);
         })
 

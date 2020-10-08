@@ -784,9 +784,9 @@ namespace WMS.DAL
 
 
 							}
-
+							objMaterial.Add(result);
 						}
-						objMaterial.Add(result);
+						//objMaterial.Add(result);
 					}
 
 
@@ -2794,6 +2794,7 @@ namespace WMS.DAL
 							remarks
 
 						});
+						dataobj.gatepassid = Convert.ToInt32(gatepassid);
 						if (dataobj.gatepasstype == "Returnable")
 						{
 							string approvername = dataobj.managername;
@@ -2917,7 +2918,7 @@ namespace WMS.DAL
 						if (item.gatepassmaterialid == 0)
 						{
 							string insertquerymaterial = WMSResource.insertgatepassmaterial;
-
+							dataobj.deleteflag = false;
 							var results = DB.ExecuteScalar(insertquerymaterial, new
 							{
 
@@ -5611,11 +5612,11 @@ namespace WMS.DAL
 			inwardModel getgrnnoforpo = new inwardModel();
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
-
+				var results = 0;
 				try
 				{
 					await pgsql.OpenAsync();
-
+					
 					string checkedon = DateTime.Now.ToString("yyyy-MM-dd");
 					foreach (var item in datamodel)
 					{
@@ -5624,7 +5625,7 @@ namespace WMS.DAL
 						string materialid = item.Material;
 						using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
 						{
-							var results = DB.ExecuteScalar(insertforquality, new
+							results = Convert.ToInt32(DB.ExecuteScalar(insertforquality, new
 							{
 								item.inwardid,
 								item.qualitypassedqty,
@@ -5632,7 +5633,8 @@ namespace WMS.DAL
 								item.receivedby,
 								item.remarks
 
-							});
+							})
+							);
 							string query = "UPDATE wms.wms_storeinward set  qualitychecked = True where inwardid = '" + item.inwardid + "'";
 							DB.ExecuteScalar(query);
 							//inwardid = Convert.ToInt32(results);
@@ -5651,20 +5653,22 @@ namespace WMS.DAL
 							//        datamodel.deleteflag,
 
 							//    });
-							if (Convert.ToInt32(results) != 0)
-							{
-								EmailModel emailmodel = new EmailModel();
-								emailmodel.pono = item.pono;
-								emailmodel.jobcode = item.projectname;
-								emailmodel.grnnumber = item.grnnumber;
-								emailmodel.ToEmailId = "developer1@in.yokogawa.com";
-								emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
-								emailmodel.CC = "sushma.patil@in.yokogawa.com";
-								EmailUtilities emailobj = new EmailUtilities();
-								emailobj.sendEmail(emailmodel, 3);
-							}
+						
 
 						}
+						
+					}
+					if (Convert.ToInt32(results) != 0)
+					{
+						EmailModel emailmodel = new EmailModel();
+						emailmodel.pono = datamodel[0].pono;
+						emailmodel.jobcode = datamodel[0].projectname;
+						emailmodel.grnnumber = datamodel[0].grnnumber;
+						emailmodel.ToEmailId = "developer1@in.yokogawa.com";
+						emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
+						emailmodel.CC = "sushma.patil@in.yokogawa.com";
+						EmailUtilities emailobj = new EmailUtilities();
+						emailobj.sendEmail(emailmodel, 3);
 					}
 
 					//}
@@ -6239,12 +6243,23 @@ namespace WMS.DAL
 							emailmodel.approverid = model.approverid;
 							emailmodel.gatepassid = model.gatepassid;
 							emailmodel.approverstatus = model.approverstatus;
+							emailmodel.gatepasstype = model.gatepasstype;
+							emailmodel.requestedby = model.requestedby;
+							emailmodel.requestedon = model.requestedon;
 
 							emailmodel.ToEmailId = "developer1@in.yokogawa.com";
 							emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
 							emailmodel.CC = "sushma.patil@in.yokogawa.com";
 							EmailUtilities emailobj = new EmailUtilities();
-							emailobj.sendEmail(emailmodel, 15);
+							if(model.gatepasstype=="Returnable")
+                            {
+								emailobj.sendEmail(emailmodel, 15);
+							}
+                            else
+                            {
+								emailobj.sendEmail(emailmodel, 16);
+							}
+							
 						}
 					}
 				}
@@ -6281,12 +6296,14 @@ namespace WMS.DAL
 							emailmodel.approverid = model.approverid;
 							emailmodel.gatepassid = model.gatepassid;
 							emailmodel.approverstatus = model.approverstatus;
+							emailmodel.requestedby = model.requestedby;
+							emailmodel.requestedon = model.requestedon;
 
 							emailmodel.ToEmailId = "developer1@in.yokogawa.com";
 							emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
 							emailmodel.CC = "sushma.patil@in.yokogawa.com";
 							EmailUtilities emailobj = new EmailUtilities();
-							emailobj.sendEmail(emailmodel, 16);
+							emailobj.sendEmail(emailmodel, 17);
 
 
 						}
@@ -9212,21 +9229,29 @@ namespace WMS.DAL
 					var data = await pgsql.QueryAsync<materialrequestMain>(
 					   query, null, commandType: CommandType.Text);
 
-					if (data != null && data.Count() > 0)
-					{
-						foreach (materialrequestMain dt in data)
-						{
-							string query1 = WMSResource.gettransferiddetail.Replace("#tid", dt.requestid.ToString());
-							var datadetail = await pgsql.QueryAsync<materialtransferTR>(
-							   query1, null, commandType: CommandType.Text);
+                    if (data != null && data.Count() > 0)
+                    {
+                        foreach (materialrequestMain dt in data)
+                        {
+							try
+                            {
+								string query1 = WMSResource.getrequestiddetail.Replace("#rid", dt.requestid.ToString());
+								var datadetail = await pgsql.QueryAsync<materialrequestMR>(
+								   query1, null, commandType: CommandType.Text);
 
-							if (datadetail != null && datadetail.Count() > 0)
-							{
-								dt.materialdata = datadetail.ToList();
+								if (datadetail != null && datadetail.Count() > 0)
+								{
+									dt.materialdata = datadetail.ToList();
+								}
+
 							}
-						}
-					}
-					return data;
+                           catch(Exception ex)
+                            {
+								return null;
+                            }
+                        }
+                    }
+                    return data;
 
 				}
 				catch (Exception ex)
@@ -9259,21 +9284,21 @@ namespace WMS.DAL
 					var data = await pgsql.QueryAsync<materialreserveMain>(
 					   query, null, commandType: CommandType.Text);
 
-					if (data != null && data.Count() > 0)
-					{
-						foreach (materialreserveMain dt in data)
-						{
-							string query1 = WMSResource.gettransferiddetail.Replace("#tid", dt.reserveid.ToString());
-							var datadetail = await pgsql.QueryAsync<materialtransferTR>(
-							   query1, null, commandType: CommandType.Text);
+                    if (data != null && data.Count() > 0)
+                    {
+                        foreach (materialreserveMain dt in data)
+                        {
+                            string query1 = WMSResource.getreserveiddetail.Replace("#rsid", dt.reserveid.ToString());
+                            var datadetail = await pgsql.QueryAsync<materialreserveMS>(
+                               query1, null, commandType: CommandType.Text);
 
-							if (datadetail != null && datadetail.Count() > 0)
-							{
-								dt.materialdata = datadetail.ToList();
-							}
-						}
-					}
-					return data;
+                            if (datadetail != null && datadetail.Count() > 0)
+                            {
+                                dt.materialdata = datadetail.ToList();
+                            }
+                        }
+                    }
+                    return data;
 
 				}
 				catch (Exception ex)
@@ -9308,21 +9333,21 @@ namespace WMS.DAL
 					var data = await pgsql.QueryAsync<materialreturnMain>(
 					   query, null, commandType: CommandType.Text);
 
-					if (data != null && data.Count() > 0)
-					{
-						foreach (materialreturnMain dt in data)
-						{
-							string query1 = WMSResource.gettransferiddetail.Replace("#tid", dt.matreturnid.ToString());
-							var datadetail = await pgsql.QueryAsync<materialtransferTR>(
-							   query1, null, commandType: CommandType.Text);
+                    if (data != null && data.Count() > 0)
+                    {
+                        foreach (materialreturnMain dt in data)
+                        {
+                            string query1 = WMSResource.getreturniddetail.Replace("#rtid", dt.returnid.ToString());
+                            var datadetail = await pgsql.QueryAsync<materialreturnMT>(
+                               query1, null, commandType: CommandType.Text);
 
-							if (datadetail != null && datadetail.Count() > 0)
-							{
-								dt.materialdata = datadetail.ToList();
-							}
-						}
-					}
-					return data;
+                            if (datadetail != null && datadetail.Count() > 0)
+                            {
+                                dt.materialdata = datadetail.ToList();
+                            }
+                        }
+                    }
+                    return data;
 
 				}
 				catch (Exception ex)

@@ -110,6 +110,8 @@ namespace WMS.DAL
             _appSettings = appSettings.Value;
         }
 
+
+        //Authenticate USER ID and password
         public User Authenticate(string username, string password)
         {
             //PrincipalContext ctx = new PrincipalContext(ContextType.Domain);

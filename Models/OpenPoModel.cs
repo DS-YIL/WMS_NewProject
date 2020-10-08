@@ -1205,14 +1205,24 @@ public class WMSHttpResponse
 //Amulya
 public class materialrequestMain
 {
-	public int requestid { get; set; }
+	public string requestid { get; set; }
 	public string requestedby { get; set; }
 	public DateTime requesteddate { get; set; }
 
 	public string ackstatus { get; set; }
-	public List<materialtransferTR> materialdata { get; set; }
+	public string ackremarks { get; set; }
+	 public string remarks { get; set; }
+	public List<materialrequestMR> materialdata { get; set; }
 
 
+}
+public class materialrequestMR
+{
+	public string requestid { get; set; }
+	public string materialid { get; set; }
+	public string materialdescription { get; set; }
+	public int requestedquantity { get; set; }
+	public int returnqty { get; set; }
 }
 public class materialRequestFilterParams
 {
@@ -1222,15 +1232,23 @@ public class materialRequestFilterParams
 //Amulya
 public class materialreserveMain
 {
-	public int reserveid { get; set; }
+	public string reserveid { get; set; }
 	public string reservedby { get; set; }
 	public DateTime reservedon { get; set; }
 	public string status { get; set; }
 	public string requestedby { get; set; }
+	public string remarks { get; set; }
 
-	public List<materialtransferTR> materialdata { get; set; }
+	public List<materialreserveMS> materialdata { get; set; }
 
 
+}
+public class materialreserveMS
+{
+	public string requestid { get; set; }
+	public string materialid { get; set; }
+	public string materialdescription { get; set; }
+	public int reservequantity { get; set; }
 }
 public class materialResFilterParams
 {
@@ -1241,15 +1259,23 @@ public class materialResFilterParams
 //Amulya
 public class materialreturnMain
 {
-	public int matreturnid { get; set; }
-	public int returnid { get; set; }
+	public string returnid { get; set; }
+	//public int returnid { get; set; }
 	public string createdby { get; set; }
 	public DateTime createdon { get; set; }
 	public string confirmstatus { get; set; }
+	public string remarks { get; set; }
 
-	public List<materialtransferTR> materialdata { get; set; }
+	public List<materialreturnMT> materialdata { get; set; }
 
 
+}
+public class materialreturnMT
+{
+	public string requestid { get; set; }
+	public string materialid { get; set; }
+	public string materialdescription { get; set; }
+	public int returnqty { get; set; }
 }
 public class materialRetFilterParams
 {

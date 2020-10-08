@@ -238,11 +238,11 @@ export class WarehouseInchargeComponent implements OnInit {
     //this.onQtyClick();
     if (this.stock.length > 0) {
       if (this.stock[this.stock.length - 1].locatorid != 0 || this.stock[this.stock.length - 1].qty != 0 || this.stock[this.stock.length - 1].qty != null) {
-        if (this.stock[this.stock.length - 1].locatorid == 0) {
+        if (this.stock[this.stock.length - 1].locatorid == 0 || isNullOrUndefined(this.stock[this.stock.length - 1].locatorid)) {
           this.messageService.add({ severity: 'error', summary: '', detail: 'select Location' });
           return;
         }
-        if (this.stock[this.stock.length - 1].rackid == 0) {
+        if (this.stock[this.stock.length - 1].rackid == 0 || isNullOrUndefined(this.stock[this.stock.length - 1].rackid)) {
           this.messageService.add({ severity: 'error', summary: '', detail: 'select Rack' });
           return;
         }
@@ -821,10 +821,8 @@ this.updateRowGroupMetaData();
           message: 'Are you sure to put away material in selected stock type?',
           accept: () => {
             this.disSaveBtn = true;
-            this.spinner.show();
             this.wmsService.InsertStock(this.StockModelList).subscribe(data => {
               debugger;
-              this.spinner.hide();
               //this.podetailsList[this.rowIndex].itemlocation = this.StockModel.itemlocation;
               this.issaveprocess = true;
               this.showLocationDialog = false;

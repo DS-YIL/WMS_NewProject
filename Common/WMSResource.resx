@@ -313,9 +313,9 @@ values(default,@gatepassid,@materialid,@quantity,@deleteflag,@remarks,@materialc
   <data name="getgatepassmaterialdetailList" xml:space="preserve">
     <value>select (select sum(issuedqty) from wms.wms_materialissue  where gatepassmaterialid =material.gatepassmaterialid ) as issuedqty
 ,(select sum(availableqty) from wms.wms_stock ws where materialid =stock.materialid ) as availableqty,
-max(material.gatepassid ) as gatepassid,max(material.gatepassmaterialid ) as gatepassmaterialid, max(emp."name") as name,max(pass.vendorname) as vendorname,
+max(material.gatepassid ) as gatepassid,max(material.expecteddate) as expecteddate,max(material.gatepassmaterialid ) as gatepassmaterialid, max(emp."name") as name,max(pass.vendorname) as vendorname,
 max(pass.gatepasstype) as gatepasstype,max(pass.approverstatus) as approverstatus,
-max(pass.reasonforgatepass) as reasonforgatepass,max(pass.approverremarks ) as approverremarks,
+max(pass.reasonforgatepass) as reasonforgatepass,max(pass.approverremarks ) as approverremarks,max(pass.fmapprovedstatus ) as fmapprovedstatus,max(pass.fmapproverremarks ) as fmapproverremarks,
 stock.materialid, max(ygs.materialdescription )as materialdescription, max(material.materialcost )as materialcost,
 max(material.quantity ) as quantity,max(material.remarks ) as remarks from wms.wms_stock stock
 inner join wms.wms_gatepassmaterial material on material.materialid =stock.materialid 
@@ -427,9 +427,9 @@ on asno.pono = po.pono</value>
 &lt;p&gt;Dear #user,&lt;/p&gt;
 &lt;p&gt;#subbody&lt;/p&gt;
 &lt;p&gt;
-LINK:&lt;/p&gt;
-&lt;a href="#link"&gt;#link&lt;/a&gt;
-&lt;p style='margin-bottom:0px;'&gt;Regards,&lt;/p&gt;&lt;p&gt; #sender.&lt;/p&gt;&lt;/div&gt;&lt;/body&gt;&lt;/html&gt;</value>
+LINK:
+&lt;a href="#link"&gt;#link&lt;/a&gt;&lt;/p&gt;
+&lt;p style='margin-bottom:0px;'&gt;Regards,&lt;br/&gt; #sender.&lt;/p&gt;&lt;/div&gt;&lt;/body&gt;&lt;/html&gt;</value>
   </data>
   <data name="getitemlocationList" xml:space="preserve">
     <value>select distinct sum(sk.availableqty)as availableqty,sk.pono,sk.materialid,sk.itemid,sk.itemlocation,ygs.materialdescription,ygs.material,createddate::DATE
@@ -1070,7 +1070,7 @@ from wms.wms_transfermaterial ts
 left outer join wms.employee emp on emp.employeeno = ts.createdby</value>
   </data>
   <data name="getItemlocationListByGatepassmaterialid" xml:space="preserve">
-    <value>select  sum(sk.availableqty)as availableqty,(select sum(issuedqty) from wms.wms_materialissue wm where itemid =sk.itemid ) as issuedqty,sk.pono,sk.materialid,sk.itemid,sk.itemlocation,ygs.materialdescription,ygs.material,createddate::DATE
+    <value>select  sum(sk.availableqty)as availableqty,(select sum(issuedqty) from wms.wms_materialissue wm where itemid =sk.itemid and gatepassmaterialid = '#gatepassmaterialid') as issuedqty,sk.pono,sk.materialid,sk.itemid,sk.itemlocation,ygs.materialdescription,ygs.material,createddate::DATE
 from wms.wms_stock sk 
 inner join wms."MaterialMasterYGS" ygs on ygs.material=sk.materialid 
 left join wms.wms_materialissue iss on iss.itemid =sk.itemid 
@@ -1079,16 +1079,17 @@ sk.deleteflag=false
 group by sk.itemlocation,ygs.materialdescription,ygs.material,createddate::DATE,sk.itemid</value>
   </data>
   <data name="getMaterialRequestDashboardDetails" xml:space="preserve">
-    <value>select mr.requestid,mr.requesteddate,issue.approvedstatus as ackstatus,emp.name as requestedby from wms.wms_materialrequest mr
-left outer join  wms.employee emp on emp.employeeno = mr.requesterid   left join  wms.wms_materialissue issue on issue.requestforissueid=mr.requestforissueid</value>
+    <value>select mr.requestid,mr.requesteddate,mr.ackstatus,emp.name as requestedby,mr.ackremarks,mr.remarks from wms.materialrequest mr
+left outer join  wms.employee emp on emp.employeeno = mr.requesterid</value>
   </data>
   <data name="getMaterialReserveDashboardDetails" xml:space="preserve">
-    <value>select mrs.reserveid,mrs.reservedon,issue.approvedstatus as status,emp.name as reservedby from wms.wms_materialreserve mrs
-left outer join  wms.employee emp on emp.employeeno = mrs.requestedby  left join  wms.wms_materialissue issue on issue.reserveformaterialid=mrs.reserveformaterialid</value>
+    <value>select mrs.reserveid,mrs.reservedon,mrs.ackstatus,emp.name as reservedby,mrs.remarks from wms.materialreserve mrs
+left outer join  wms.employee emp on emp.employeeno = mrs.requestedby</value>
   </data>
   <data name="getMaterialReturnDashboardDetails" xml:space="preserve">
-    <value>select mrt.matreturnid,mrt.returnid,mrt.confirmstatus,emp.name as createdby,mrt.createdon  from wms.wms_returnmaterial mrt
-left outer join  wms.employee emp on emp.employeeno = createdby</value>
+    <value>select mrt.returnid,mrt.confirmstatus,emp.name as createdby,mrt.createdon,mrd.remarks from wms.wms_materialreturn mrt
+left outer join  wms.employee emp on emp.employeeno = mrt.createdby
+left  outer join  wms.wms_materialreturndetails mrd on mrd.returnid = mrt.returnid</value>
   </data>
   <data name="inwardinsertquery" xml:space="preserve">
     <value>insert into wms.outwatdinward (gatepassid,gatepassmaterialid,inwarddate,inwardby,inwardremarks,inwardqty)
@@ -1319,5 +1320,24 @@ from wms.wms_materialreturndetails rnd
 left outer join wms."MaterialMasterYGS" mat on mat.material = rnd.materialid
 left outer join wms.wms_stock stk  on stk.returnid = rnd.id
 where rnd.returnid='#returnid'</value>
+  </data>
+  <data name="getrequestiddetail" xml:space="preserve">
+    <value>select mr.requestid,mr.requesteddate,mr.ackstatus,emp.name as requestedby,mr.ackremarks,mr.remarks,mqd.materialid,mqd.requestedquantity ,mqd.returnqty,ygs.materialdescription from wms.materialrequest mr
+left outer join  wms.employee emp on emp.employeeno = mr.requesterid 
+left outer join  wms.materialrequestdetails mqd on mqd.requestid =mr .requestid 
+left outer join  wms."MaterialMasterYGS" ygs on ygs.material = mqd.materialid 
+where  mqd.requestid='#rid'</value>
+  </data>
+  <data name="getreserveiddetail" xml:space="preserve">
+    <value>select ms.reserveid,ms.materialid,ygs.materialdescription,ms.reservequantity from wms.materialreservedetails ms
+left outer join  wms."MaterialMasterYGS" ygs on ygs.material = ms.materialid
+left outer join wms.materialreserve mrs on mrs.reserveid = ms.reserveid 
+where ms.reserveid ='#rsid'</value>
+  </data>
+  <data name="getreturniddetail" xml:space="preserve">
+    <value>select ms.returnid,ms.materialid,ygs.materialdescription,ms.returnqty from wms.wms_materialreturndetails ms
+left outer join  wms."MaterialMasterYGS" ygs on ygs.material = ms.materialid
+left outer join wms.wms_materialreturn mrs on mrs.returnid = ms.returnid 
+where ms.returnid = '#rtid'</value>
   </data>
 </root>
