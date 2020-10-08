@@ -729,6 +729,7 @@ export class MaterialReturnTR {
   materialdescription: string;
   returnqty: number;
   remarks: string;
+  requestid: string;
 }
 
 export class MaterialReturn {
@@ -737,7 +738,6 @@ export class MaterialReturn {
   createdon: Date;
   confirmstatus: string;
   materialdata: MaterialReturnTR[] = []
-  materialdata: materialreturnMT[] = [];
 }
 export class materialreturnMT {
   requestid: string;
