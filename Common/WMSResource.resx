@@ -1087,9 +1087,8 @@ left outer join  wms.employee emp on emp.employeeno = mr.requesterid</value>
 left outer join  wms.employee emp on emp.employeeno = mrs.requestedby</value>
   </data>
   <data name="getMaterialReturnDashboardDetails" xml:space="preserve">
-    <value>select mrt.returnid,mrt.confirmstatus,emp.name as createdby,mrt.createdon,mrd.remarks from wms.wms_materialreturn mrt
-left outer join  wms.employee emp on emp.employeeno = mrt.createdby
-left  outer join  wms.wms_materialreturndetails mrd on mrd.returnid = mrt.returnid</value>
+    <value>select mrt.returnid,mrt.confirmstatus,emp.name as createdby,mrt.createdon from wms.wms_materialreturn mrt
+left outer join  wms.employee emp on emp.employeeno = mrt.createdby</value>
   </data>
   <data name="inwardinsertquery" xml:space="preserve">
     <value>insert into wms.outwatdinward (gatepassid,gatepassmaterialid,inwarddate,inwardby,inwardremarks,inwardqty)
@@ -1335,7 +1334,8 @@ left outer join wms.materialreserve mrs on mrs.reserveid = ms.reserveid
 where ms.reserveid ='#rsid'</value>
   </data>
   <data name="getreturniddetail" xml:space="preserve">
-    <value>select ms.returnid,ms.materialid,ygs.materialdescription,ms.returnqty from wms.wms_materialreturndetails ms
+    <value>select ms.returnid,ms.materialid,ygs.materialdescription,ms.returnqty,ms.remarks
+from wms.wms_materialreturndetails ms
 left outer join  wms."MaterialMasterYGS" ygs on ygs.material = ms.materialid
 left outer join wms.wms_materialreturn mrs on mrs.returnid = ms.returnid 
 where ms.returnid = '#rtid'</value>

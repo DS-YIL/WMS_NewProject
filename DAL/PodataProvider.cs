@@ -9251,7 +9251,7 @@ namespace WMS.DAL
                             }
                         }
                     }
-                    return data;
+                    return data.OrderByDescending(o=>o.requestid);
 
 				}
 				catch (Exception ex)
@@ -9280,7 +9280,7 @@ namespace WMS.DAL
 						query += " where mrs.reservedon::date <= '" + filterparams.ToDate + "'";
 					if (!string.IsNullOrEmpty(filterparams.FromDate))
 						query += "  and mrs.reservedon::date >= '" + filterparams.FromDate + "'";
-					query += " order by mrs.requestedby asc";
+					//query += " order by mrs.requestedby asc";
 					var data = await pgsql.QueryAsync<materialreserveMain>(
 					   query, null, commandType: CommandType.Text);
 
@@ -9298,7 +9298,7 @@ namespace WMS.DAL
                             }
                         }
                     }
-                    return data;
+                    return data.OrderByDescending(o=>o.reserveid);
 
 				}
 				catch (Exception ex)
@@ -9329,7 +9329,7 @@ namespace WMS.DAL
 						query += " where mrt.createdon::date <= '" + filterparams.ToDate + "'";
 					if (!string.IsNullOrEmpty(filterparams.FromDate))
 						query += "  and mrt.createdon::date >= '" + filterparams.FromDate + "'";
-					query += " order by mrt.createdby asc";
+
 					var data = await pgsql.QueryAsync<materialreturnMain>(
 					   query, null, commandType: CommandType.Text);
 

@@ -3,11 +3,11 @@
     <div class="row" style="margin-top: 10px;margin-left: 0px !important;margin-right: 0px !important">
       <div class="col-lg-4 col-md-4 form-inline">
         <label class="labelheading">From Date :</label>&nbsp;&nbsp;
-        <p-calendar class="mprldatepick"  [(ngModel)]="fromDate" [monthNavigator]="true" [yearNavigator]="true" yearRange="1900:2050"></p-calendar>
+        <p-calendar class="mprldatepick"  [(ngModel)]="fromDate" [monthNavigator]="true" [yearNavigator]="true" yearRange="1900:2050" dateFormat="dd/mm/yy"></p-calendar>
       </div>
       <div class="col-lg-4 col-md-4 form-inline">
         <label class="labelheading">To Date :</label>&nbsp;&nbsp;
-        <p-calendar class="mprldatepick" [(ngModel)]="toDate" [monthNavigator]="true" [yearNavigator]="true" yearRange="1900:2050"></p-calendar>
+        <p-calendar class="mprldatepick" [(ngModel)]="toDate" [monthNavigator]="true" [yearNavigator]="true" yearRange="1900:2050" dateFormat="dd/mm/yy"></p-calendar>
       </div>
       <div class="col-lg-4 col-md-4 form-inline">
         <button type="button" class="btn btn-success" (click)="getMaterialRequestlist()" label="Save">Search</button>

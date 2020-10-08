@@ -797,8 +797,6 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select mr.requestid,mr.requesteddate,mr.ackstatus,emp.name as requestedby,mr.ackremarks,mr.remarks from wms.materialrequest mr
-        ///left outer join  wms.employee emp on emp.employeeno = mr.requesterid.
         ///   Looks up a localized string similar to select req.requestid,req.requesteddate,emp.name,req.issuedby,req.issuedon,
         ///	CASE WHEN req.issuedby IS Not NULL THEN &apos;Issued&apos; ELSE &apos;Pending&apos; END AS requeststatus
         ///	from wms.materialrequest req
@@ -811,8 +809,8 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select mr.requestid,mr.requesteddate,issue.approvedstatus as ackstatus,emp.name as requestedby from wms.wms_materialrequest mr
-        ///left outer join  wms.employee emp on emp.employeeno = mr.requesterid   left join  wms.wms_materialissue issue on issue.requestforissueid=mr.requestforissueid.
+        ///   Looks up a localized string similar to select mr.requestid,mr.requesteddate,mr.ackstatus,emp.name as requestedby,mr.ackremarks,mr.remarks from wms.materialrequest mr
+        ///left outer join  wms.employee emp on emp.employeeno = mr.requesterid.
         /// </summary>
         public static string getMaterialRequestDashboardDetails {
             get {
@@ -849,8 +847,6 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select mrs.reserveid,mrs.reservedon,mrs.ackstatus,emp.name as reservedby,mrs.remarks from wms.materialreserve mrs
-        ///left outer join  wms.employee emp on emp.employeeno = mrs.requestedby.
         ///   Looks up a localized string similar to select req.requestid,req.ackstatus,req.requesteddate,req.ackremarks,req.reserveid,req.projectcode,req.remarks,
         ///  CASE WHEN req.ackstatus IS NULL THEN false ELSE true END AS status,
         ///  CASE WHEN req.issuedby IS NULL THEN &apos;Pending&apos; ELSE &apos;Approved&apos; END AS approvedstatus
@@ -863,8 +859,8 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select mrs.reserveid,mrs.reservedon,issue.approvedstatus as status,emp.name as reservedby from wms.wms_materialreserve mrs
-        ///left outer join  wms.employee emp on emp.employeeno = mrs.requestedby  left join  wms.wms_materialissue issue on issue.reserveformaterialid=mrs.reserveformaterialid.
+        ///   Looks up a localized string similar to select mrs.reserveid,mrs.reservedon,mrs.ackstatus,emp.name as reservedby,mrs.remarks from wms.materialreserve mrs
+        ///left outer join  wms.employee emp on emp.employeeno = mrs.requestedby.
         /// </summary>
         public static string getMaterialReserveDashboardDetails {
             get {
@@ -873,9 +869,6 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select mrt.returnid,mrt.confirmstatus,emp.name as createdby,mrt.createdon,mrd.remarks from wms.wms_materialreturn mrt
-        ///left outer join  wms.employee emp on emp.employeeno = mrt.createdby
-        ///left  outer join  wms.wms_materialreturndetails mrd on mrd.returnid = mrt.returnid.
         ///   Looks up a localized string similar to select rd.reserveid,rd.materialid,sum(rd.reservequantity) reservedqty,Max(mat.materialdescription) as materialdescription
         ///from wms.materialreservedetails rd
         ///left outer join wms.&quot;MaterialMasterYGS&quot; mat on mat.material=rd.materialid where rd.reserveid = &apos;#reserveid&apos; group by rd.reserveid,rd.materialid.
@@ -907,8 +900,8 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select mrt.matreturnid,mrt.returnid,mrt.confirmstatus,emp.name as createdby,mrt.createdon  from wms.wms_returnmaterial mrt
-        ///left outer join  wms.employee emp on emp.employeeno = createdby.
+        ///   Looks up a localized string similar to select mrt.returnid,mrt.confirmstatus,emp.name as createdby,mrt.createdon from wms.wms_materialreturn mrt
+        ///left outer join  wms.employee emp on emp.employeeno = mrt.createdby.
         /// </summary>
         public static string getMaterialReturnDashboardDetails {
             get {
@@ -1346,7 +1339,8 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select ms.returnid,ms.materialid,ygs.materialdescription,ms.returnqty from wms.wms_materialreturndetails ms
+        ///   Looks up a localized string similar to select ms.returnid,ms.materialid,ygs.materialdescription,ms.returnqty,ms.remarks
+        ///from wms.wms_materialreturndetails ms
         ///left outer join  wms.&quot;MaterialMasterYGS&quot; ygs on ygs.material = ms.materialid
         ///left outer join wms.wms_materialreturn mrs on mrs.returnid = ms.returnid 
         ///where ms.returnid = &apos;#rtid&apos;.

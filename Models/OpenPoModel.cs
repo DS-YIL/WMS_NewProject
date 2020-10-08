@@ -1276,6 +1276,7 @@ public class materialreturnMT
 	public string materialid { get; set; }
 	public string materialdescription { get; set; }
 	public int returnqty { get; set; }
+	public string remarks { get; set; }
 }
 public class materialRetFilterParams
 {
