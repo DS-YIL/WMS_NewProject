@@ -86,16 +86,16 @@
               <span *ngIf="rowData.approvedstatus!=null">{{rowData.approvedstatus}}</span>
               <span *ngIf="rowData.approvedstatus==null">Pending</span>
             </td>
-            <td class="ptable-cell" style="text-align:left;width:200px;">{{rowData.remarks}}</td>
+            <td class="ptable-cell" style="text-align:left;width:200px;resize:none">{{rowData.remarks}}</td>
             <td class="ptable-cell" style="width:200px;">
               <div *ngIf="rowData.approvedstatus=='Approved' && rowData.ackstatus!='received'" class="form-inline">
 
                 <p-checkbox [(ngModel)]="rowData.status" binary="true" (click)="ackStatusChanges($event)"></p-checkbox> &nbsp;&nbsp;
 
-                <textarea type="text" style="width:140px" class="form-control" [(ngModel)]="rowData.ackremarks"></textarea>
+                <textarea type="text" style="width:140px;resize:none" class="form-control" [(ngModel)]="rowData.ackremarks"></textarea>
               </div>
               <div *ngIf="rowData.approvedstatus=='Approved' && rowData.ackstatus=='received'" class="form-inline">
-                &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; <textarea type="text" style="width:140px" class="form-control" [disabled]="true" [(ngModel)]="rowData.ackremarks"></textarea>
+                &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; <textarea type="text" style="width:140px;resize:none" class="form-control" [disabled]="true" [(ngModel)]="rowData.ackremarks"></textarea>
               </div>
               <!--<div *ngIf="rowData.approvedstatus=='Approved' && rowData.ackstatus=='received'" class="form-inline">
       <p-checkbox [(ngModel)]="rowData.status" [disabled]="rowData.approvedstatus=='Approved'?true:false" binary="true" (click)="ackStatusChanges(rowData.approvedstatus)"></p-checkbox> &nbsp;&nbsp;
@@ -363,7 +363,7 @@
                                 [dropdown]="true"></p-autoComplete>
               </div>
               <div class="col-lg-6 col-md-6 form-inline" style="padding-bottom:15px;">
-                <textarea [(ngModel)]="requestremarks" style="width:80%;resize:none;padding-bottom:3px" placeholder="Remarks"></textarea>
+                <textarea [(ngModel)]="requestremarks" style="width:80%;resize:none;padding-bottom:3px;resize:none" placeholder="Remarks"></textarea>
               </div>
 
             </div>
@@ -433,7 +433,7 @@
                                 [dropdown]="true"></p-autoComplete>
               </div>
               <div class="col-lg-6 col-md-6 form-inline" style="padding-bottom:15px;">
-                <textarea [(ngModel)]="requestremarks" style="width:80%;resize:none;padding-bottom:3px" placeholder="Remarks"></textarea>
+                <textarea [(ngModel)]="requestremarks" style="width:80%;resize:none;padding-bottom:3px;resize:none" placeholder="Remarks"></textarea>
               </div>
 
             </div>

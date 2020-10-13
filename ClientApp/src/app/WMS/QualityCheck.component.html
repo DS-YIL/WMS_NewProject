@@ -158,7 +158,7 @@
               </td>
               <td class="ptable-cell" style="text-align:right;width:15%;">
                 <span *ngIf="rowData.checkedby">{{rowData.remarks}}</span>
-                <textarea *ngIf="!rowData.checkedby" style="text-align:left" pInputText id="returnqty" class="form-control" [(ngModel)]="rowData.remarks"></textarea>
+                <textarea *ngIf="!rowData.checkedby" style="text-align:left;resize:none" pInputText id="returnqty" class="form-control" [(ngModel)]="rowData.remarks"></textarea>
               </td>
               <!--<td class="ptable-cell">
                 <div style="text-align: center;">
