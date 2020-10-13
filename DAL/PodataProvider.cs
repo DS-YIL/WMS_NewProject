@@ -7372,20 +7372,20 @@ namespace WMS.DAL
 									result = Convert.ToInt32(pgsql.ExecuteScalar(insertqueryx, new
 									{
 										inwmasterid,
-										objs.pono,
+										itm.pono,
 										binid,
 										rackid,
 										storeid,
-										objs.vendorid,
-										objs.totalquantity,
-										objs.shelflife,
+										itm.vendorid,
+										itm.totalquantity,
+										itm.shelflife,
 										availableqty,
-										objs.deleteflag,
+										itm.deleteflag,
 										itemlocation,
 										createddate,
 										createdby,
-										objs.stockstatus,
-										objs.materialid,
+										itm.stockstatus,
+										stck.materialid,
 										inwardid,
 										stocktype
 									}));
