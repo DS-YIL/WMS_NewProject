@@ -3248,7 +3248,7 @@ namespace WMS.DAL
 		<param name="model"></param>
 		Review Date :<<>>   Reviewed By :<<>>
 		*/
-		public int updategatepassapproverstatus(List<gatepassModel> model)
+		public int updategatepassapproverstatus_old(List<gatepassModel> model)
 		{
 			int returndata = 0;
 			try
@@ -3341,11 +3341,13 @@ namespace WMS.DAL
 			}
 		}
 
-		/// <summary>
-		/// update gatepass approver info
-		/// </summary>
-		/// <param name="model"></param>
-		/// <returns></returns>
+		/*
+			Name of Function : <<updategatepassapproverstatus>>  Author :<<Ramesh>>  
+			Date of Creation <<12-12-2019>>
+			Purpose : <<update gatepass approver info>>
+			<param name="model"></param>
+			Review Date :<<>>   Reviewed By :<<>>
+			*/
 		public int updategatepassapproverstatus(List<gatepassModel> model)
 		{
 			int returndata = 0;
@@ -3459,7 +3461,6 @@ namespace WMS.DAL
 		/// </summary>
 		/// <param name="gatepassid"></param>
 		/// <returns></returns>
-		public async Task<IEnumerable<gatepassModel>> GetmaterialList(string gatepassid)
 
 		/*
 		Name of Function : <<GetmaterialList>>  Author :<<Gayathri>>  
@@ -3468,7 +3469,7 @@ namespace WMS.DAL
 		<param name="gatepassid"></param>
 		Review Date :<<>>   Reviewed By :<<>>
 		*/
-		public async Task<IEnumerable<gatepassModel>> GetmaterialList(int gatepassid)
+		public async Task<IEnumerable<gatepassModel>> GetmaterialList(string gatepassid)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
