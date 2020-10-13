@@ -1,4 +1,13 @@
-﻿using Dapper;
+﻿/*
+    Name of File : <<PodataProvider>>  Author :<<Shashikala>>  
+    Date of Creation <<12-12-2019>>
+    Purpose : <<All code Functionalities except login are written in this DAL>>
+    Review Date :<<>>   Reviewed By :<<>>
+    Version : 0.1 
+    Sourcecode Copyright : Yokogawa India Limited
+*/
+
+using Dapper;
 using Npgsql;
 using System;
 using System.Collections.Generic;
@@ -22,17 +31,39 @@ using Microsoft.AspNetCore.Mvc;
 using ZXing.QrCode.Internal;
 using System.Data.OleDb;
 
+/*
+    Name of namespace : <<WMS>>  Author :<<Shashikala>>  
+    Date of Creation <<12-12-2019>>
+    Purpose : <<All code Functionalities except login are written in this DAL>>
+    Review Date :<<>>   Reviewed By :<<>>
+    Sourcecode Copyright : Yokogawa India Limited
+*/
+
 namespace WMS.DAL
 {
+
+	/*
+    Name of Class : <<PodataProvider>>  Author :<<Shashikala>>  
+    Date of Creation <<12-12-2019>>
+    Purpose : <<All code Functionalities except login are written in this class>>
+    Review Date :<<>>   Reviewed By :<<>>
+   
+*/
+
 	public class PodataProvider : IPodataService<OpenPoModel>
 	{
 		Configurations config = new Configurations();
 		ErrorLogTrace log = new ErrorLogTrace();
-		/// <summary>
-		/// check pono exists or not 
-		/// </summary>
-		/// <param name="PONO"></param>
-		/// <returns></returns>
+
+
+		/*
+    Name of Function : <<CheckPoexists>>  Author :<<Ramesh>>  
+    Date of Creation <<12-12-2019>>
+    Purpose : <<check pono exists or not >>
+	<param name="PONO"></param>
+    Review Date :<<>>   Reviewed By :<<>>
+	*/
+
 		public OpenPoModel CheckPoexists(string PONO)
 		{
 
@@ -79,14 +110,16 @@ namespace WMS.DAL
 		}
 
 
-		/// <summary>
-		/// get lst of open pono list
-		/// </summary>
-		/// <param name="loginid"></param>
-		/// <param name="pono"></param>
-		/// <param name="docno"></param>
-		/// <param name="vendorid"></param>
-		/// <returns></returns>
+		/*
+		Name of Function : <<getOpenPoList>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<get lst of open pono list>>
+		<param name="loginid"></param>
+		 <param name="pono"></param>
+		 <param name="docno"></param>
+		 <param name="vendorid"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<OpenPoModel>> getOpenPoList(string loginid, string pono = null, string docno = null, string vendorid = null)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -130,7 +163,13 @@ namespace WMS.DAL
 		}
 
 
-		//Gayathri -get po numbers and qty
+		/*
+		Name of Function : <<getPOList>>  Author :<<Gayathri>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<get po numbers and qty>>
+		<param: name=postatus - Displaying data based on status selected></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<POList>> getPOList(string postatus)
 		{
 
@@ -306,9 +345,13 @@ namespace WMS.DAL
 			}
 		}
 
-		///<summary>
-		///Generating barcode
-		///</summary>
+		/*
+		Name of Function : <<generateBarcodeMaterial>>  Author :<<Gayathri>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<Generate QRCode>>
+		<param name="printMat"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public printMaterial generateBarcodeMaterial(printMaterial printMat)
 		{
 			try
@@ -396,8 +439,14 @@ namespace WMS.DAL
 			return printMat;
 		}
 
-
-		//Printing barcode- printBarcodeMaterial
+		/*
+		Name of Function : <<printBarcodeMaterial>>  Author :<<Gayathri>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<Printing barcode- printBarcodeMaterial>>
+		<param name="printMat"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
+		
 		public string printBarcodeMaterial(printMaterial printMat)
 		{
 			try
@@ -499,12 +548,14 @@ namespace WMS.DAL
 			return "success";
 		}
 
+		/*
+		Name of Function : <<InsertBarcodeInfo>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<Inserting barcode info>>
+		<param name="dataobj"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 
-		/// <summary>
-		/// inserting barcode info
-		/// </summary>
-		/// <param name="dataobj"></param>
-		/// <returns></returns>
 		public string InsertBarcodeInfo(BarcodeModel dataobj)
 		{
 			try
@@ -686,7 +737,13 @@ namespace WMS.DAL
 
 		}
 
-		//Get Invoice details based on PONO.
+		/*
+		Name of Function : <<getinvoiveforpo>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<Get Invoice details based on PONO.>>
+		<param name="PONO"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<InvoiceDetails>> getinvoiveforpo(string PONO)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -713,7 +770,13 @@ namespace WMS.DAL
 			}
 		}
 
-		//get Material details based on grn number
+		/*
+		Name of Function : <<getMaterialDetails>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<get Material details based on grn number>>
+		<param name="grnNo"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<MaterialDetails>> getMaterialDetails(string grnNo)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -857,8 +920,14 @@ namespace WMS.DAL
 			}
 		}
 
-
-		//Get location details based on material id
+		/*
+		Name of Function : <<getlocationdetails>>  Author :<<Gayathri>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<Get location details based on material id>>
+		<param name="materialid"></param>
+		 <param name="grnnumber"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<LocationDetails>> getlocationdetails(string materialid, string grnnumber)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -885,8 +954,14 @@ namespace WMS.DAL
 			}
 		}
 
-
-		//Get material requested, acknowledged and issued details
+		/*
+		Name of Function : <<getReqMatdetails>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<Get material requested, acknowledged and issued details>>
+		<param name="materialid"></param>
+		 <param name="grnnumber"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<ReqMatDetails>> getReqMatdetails(string materialid, string grnnumber)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -966,6 +1041,14 @@ namespace WMS.DAL
 			}
 		}
 
+
+		/*
+		Name of Function : <<GetDeatilsForholdgr>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<get details of Hold GR based on status>>
+		<param name="status"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<OpenPoModel>> GetDeatilsForholdgr(string status)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -992,13 +1075,15 @@ namespace WMS.DAL
 		}
 
 
-
-		/// <summary>
-		/// get list of info for three way matching
-		/// </summary>
-		/// <param name="invoiceno"></param>
-		/// <param name="pono"></param>
-		/// <returns></returns>
+		/*
+		Name of Function : <<GetDeatilsForthreeWaymatching>>  Author :<<LP>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<get list of info for three way matching>>
+		<param name="invoiceno"></param>
+		 <param name="pono"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
+		
 		public async Task<IEnumerable<OpenPoModel>> GetDeatilsForthreeWaymatching(string invoiceno, string pono, bool isgrn, string grnno)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -1161,14 +1246,14 @@ namespace WMS.DAL
 			}
 		}
 
-
-		/// <summary>
-		/// get list of info for quality check
-		/// Ramesh kumar 07/07/2020
-		/// </summary>
-		/// <param name="invoiceno"></param>
-		/// <param name="pono"></param>
-		/// <returns></returns>
+		/*
+		Name of Function : <<Getqualitydetails>>  Author :<<Ramesh kumar>>  
+		Date of Creation <<07/07/2020>>
+		Purpose : <<get list of info for quality check>>
+		<param name="invoiceno"></param>
+		 <param name="pono"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<OpenPoModel>> Getqualitydetails(string grnnumber)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -1194,12 +1279,15 @@ namespace WMS.DAL
 				//throw new NotImplementedException();
 			}
 		}
-		/// <summary>
-		/// to verify three way match and generate GRN No
-		/// </summary>
-		/// <param name="pono"></param>
-		/// <param name="invoiceno"></param>
-		/// <returns></returns>
+
+		/*
+		Name of Function : <<VerifythreeWay>>  Author :<<LP>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<To verify three way match and generate GRN No>>
+		<param name="invoiceno"></param>
+		 <param name="pono"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<OpenPoModel> VerifythreeWay(string pono, string invoiceno)
 		{
 			OpenPoModel verify = new OpenPoModel();
@@ -1310,12 +1398,14 @@ namespace WMS.DAL
 				//throw new NotImplementedException();
 			}
 		}
-		/// <summary>
-		/// to receive material
-		/// Ramesh kumar 07/07/2020
-		/// </summary>
-		/// <param name="datamodel"></param>
-		/// <returns></returns>
+
+		/*
+		Name of Function : <<receivequantity>>  Author :<<Ramesh kumar>>  
+		Date of Creation <<07/07/2020>>
+		Purpose : <<to receive material>>
+		<param name="datamodel"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 
 		public async Task<string> receivequantity(List<inwardModel> datamodel)
 		{
@@ -1462,12 +1552,13 @@ namespace WMS.DAL
 		}
 
 
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="datamodel"></param>
-		/// <returns></returns>
+		/*
+		Name of Function : <<insertquantity>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<Insert data into store Inward >>
+		<param name="datamodel"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<string> insertquantity(List<inwardModel> datamodel)
 		{
 
@@ -1554,11 +1645,14 @@ namespace WMS.DAL
 				}
 			}
 		}
-		/// <summary>
-		/// inserting material details to warehouse
-		/// </summary>
-		/// <param name="data"></param>
-		/// <returns></returns>
+
+		/*
+		Name of Function : <<InsertStock>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<inserting material details to warehouse>>
+		<param name="data"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public string InsertStock(List<StockModel> data)
 		{
 			try
@@ -1686,11 +1780,15 @@ namespace WMS.DAL
 			}
 
 
-		}       /// <summary>
-				/// to get search data and pass  query dynamically
-				/// </summary>
-				/// <param name="Result"></param>
-				/// <returns></returns>
+		}
+
+		/*
+		Name of Function : <<GetListItems>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<to get search data and pass  query dynamically>>
+		<param name="Result"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public DataTable GetListItems(DynamicSearchResult Result)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -1740,7 +1838,13 @@ namespace WMS.DAL
 
 		}
 
-		//Get material List- gayathri  GetMaterialItems
+		/*
+		Name of Function : <<GetMaterialItems>>  Author :<<gayathri>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<GetMaterialItems>>
+		<param name="Result"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public DataTable GetMaterialItems(DynamicSearchResult Result)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -1779,11 +1883,13 @@ namespace WMS.DAL
 
 		}
 
-		/// <summary>
-		/// material request by Project manager
-		/// </summary>
-		/// <param name="reqdata"></param>
-		/// <returns></returns>
+		/*
+		Name of Function : <<IssueRequest>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<material request by Project manager>>
+		<param name="reqdata"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public int IssueRequest(List<IssueRequestModel> reqdata)
 		{
 			int requestid = 0;
@@ -1835,11 +1941,14 @@ namespace WMS.DAL
 				return 0;
 			}
 		}
-		/// <summary>
-		/// based on grnnumber will get lst of items
-		/// </summary>
-		/// <param name="grnnumber"></param>
-		/// <returns></returns>
+
+		/*
+		Name of Function : <<getitemdeatils>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<based on grnnumber will get lst of items>>
+		<param name="grnnumber"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<inwardModel>> getitemdeatils(string grnnumber)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -1866,11 +1975,13 @@ namespace WMS.DAL
 
 		}
 
-		/// <summary>
-		/// based on grnnumber will get lst of items for notification
-		/// </summary>
-		/// <param name="grnnumber"></param>
-		/// <returns></returns>
+		/*
+		Name of Function : <<getitemdeatilsnotif>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<based on grnnumber will get lst of items for notification>>
+		<param name="grnnumber"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<inwardModel>> getitemdeatilsnotif(string grnnumber)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -1896,12 +2007,15 @@ namespace WMS.DAL
 			}
 
 		}
-		/// <summary>
-		/// requesting for material
-		/// </summary>
-		/// <param name="pono"></param>
-		/// <param name="approverid"></param>
-		/// <returns></returns>
+
+		/*
+		Name of Function : <<MaterialRequest_old>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<requesting for material>>
+		<param name="pono"></param>
+		 <param name="approverid"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<IssueRequestModel>> MaterialRequest_old(string pono, string approverid)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -1936,13 +2050,14 @@ namespace WMS.DAL
 			}
 		}
 
-		/// <summary>
-		/// requesting for material
-		/// </summary>
-		/// <param name="pono"></param>
-		/// <param name="approverid"></param>
-		/// <returns></returns>
-		/// Email--
+		/*
+		Name of Function : <<MaterialRequest>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<requesting for material>>
+		<param name="approverid"></param>
+		 <param name="pono"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<MaterialTransaction>> MaterialRequest(string pono, string approverid)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -1978,12 +2093,14 @@ namespace WMS.DAL
 
 			}
 		}
-		/// <summary>
-		/// acknowledge fro received item from Project manager
-		/// </summary>
-		/// <param name="dataobj"></param>
-		/// <returns></returns>
-		/// Amulya
+
+		/*
+		Name of Function : <<acknowledgeMaterialReceived>>  Author :<<Amulya>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<acknowledge for received item from Project manager>>
+		<param name="dataobj"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public int acknowledgeMaterialReceived(List<IssueRequestModel> dataobj)
 		{
 
@@ -2065,11 +2182,14 @@ namespace WMS.DAL
 			//}
 
 		}
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="requesterid"></param>
-		/// <returns></returns>
+
+		/*
+		Name of Function : <<GetMaterialissueList>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<get material issue list>>
+		<param name="requesterid"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 
 		public async Task<IEnumerable<IssueRequestModel>> GetMaterialissueList(string requesterid)
 		{
@@ -2098,11 +2218,14 @@ namespace WMS.DAL
 
 			}
 		}
-		/// <summary>
-		/// get list of material details based on approver id
-		/// </summary>
-		/// <param name="approverid"></param>
-		/// <returns></returns>
+
+		/*
+		Name of Function : <<GetMaterialissueListforapprover_old>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<get list of material details based on approver id>>
+		<param name="approverid"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<IssueRequestModel>> GetMaterialissueListforapprover_old(string approverid)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -2133,11 +2256,13 @@ namespace WMS.DAL
 			}
 		}
 
-		/// <summary>
-		/// get list of material details based on approver id
-		/// </summary>
-		/// <param name="approverid"></param>
-		/// <returns></returns>
+		/*
+		Name of Function : <<GetMaterialissueListforapprover>>  Author :<<LP>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<get list of material details based on approver id>>
+		<param name="approverid"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<IssueRequestModel>> GetMaterialissueListforapprover(string approverid)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -2167,11 +2292,15 @@ namespace WMS.DAL
 
 			}
 		}
-		/// <summary>
-		/// get list of materail details based on particlular requestid
-		/// </summary>
-		/// <param name="requestid"></param>
-		/// <returns></returns>
+
+		/*
+		Name of Function : <<GetmaterialdetailsByrequestid_old>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<get list of materail details based on particlular requestid>>
+		<param name="requestid"></param>
+		 <param name="pono"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<IssueRequestModel>> GetmaterialdetailsByrequestid_old(string requestid, string pono)
 		{
 
@@ -2206,11 +2335,14 @@ namespace WMS.DAL
 			}
 		}
 
-		/// <summary>
-		/// get list of materail details based on particlular requestid
-		/// </summary>
-		/// <param name="requestid"></param>
-		/// <returns></returns>
+		/*
+		Name of Function : <<GetmaterialdetailsByrequestid>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : << get list of materail details based on particlular requestid>>
+		<param name="requestid"></param>
+		 <param name="pono"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<IssueRequestModel>> GetmaterialdetailsByrequestid(string requestid, string pono)
 		{
 
@@ -2248,11 +2380,14 @@ namespace WMS.DAL
 
 			}
 		}
-		/// <summary>
-		/// get list of pono data
-		/// </summary>
-		/// <param name="pono"></param>
-		/// <returns></returns>
+
+		/*
+		Name of Function : <<GetPonodetails>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<get list of pono data>>
+		 <param name="pono"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<IssueRequestModel>> GetPonodetails(string pono)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -2280,12 +2415,14 @@ namespace WMS.DAL
 
 			}
 		}
-		/// <summary>
-		/// inserting or updating requested qty by PM
-		/// </summary>
-		/// <param name="dataobj"></param>
-		/// <returns></returns>
-		/// Amulya
+
+		/*
+		Name of Function : <<updaterequestedqty_old>>  Author :<<Amulya>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<inserting or updating requested qty by PM>>
+		<param name="dataobj"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public int updaterequestedqty_old(List<IssueRequestModel> dataobj)
 		{
 
@@ -2378,12 +2515,14 @@ namespace WMS.DAL
 
 			
 		}
-		/// <summary>
-		/// inserting or updating requested qty by PM
-		/// </summary>
-		/// <param name="dataobj"></param>
-		/// <returns></returns>
-		/// Ramesh
+
+		/*
+		Name of Function : <<updaterequestedqty>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<inserting or updating requested qty by PM>>
+		<param name="dataobj"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public int updaterequestedqty(List<IssueRequestModel> dataobj)
 		{
 
@@ -2496,12 +2635,14 @@ namespace WMS.DAL
 			}
 			
 		}
-		/// <summary>
-		/// issued matreial list 
-		/// </summary>
-		/// <param name="dataobj"></param>
-		/// <returns></returns>
-		/// Amulya
+
+		/*
+		Name of Function : <<ApproveMaterialissue>>  Author :<<Amulya>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<issued matreial list >>
+		<param name="dataobj"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public int ApproveMaterialissue(List<IssueRequestModel> dataobj)
 		{
 			NpgsqlTransaction Trans = null;
@@ -2624,10 +2765,12 @@ namespace WMS.DAL
 			}
 		}
 
-		/// <summary>
-		/// get list of gatepass data
-		/// </summary>
-		/// <returns></returns>
+		/*
+		Name of Function : <<GetgatepassList>>  Author :<<Gayathri>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<get list of gatepass data>>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<gatepassModel>> GetgatepassList()
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -2655,11 +2798,14 @@ namespace WMS.DAL
 
 			}
 		}
-		/// <summary>
-		/// non returnable gatepass for outward entry
-		/// Ramesh 23/07/2020
-		/// </summary>
-		/// <returns></returns>
+
+		/*
+		Name of Function : <<NonreturnGetgatepassList>>  Author :<<Ramesh>>  
+		Date of Creation <<23/07/2020>>
+		Purpose : <<non returnable gatepass for outward entry>>
+		<param name="type"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 
 		public async Task<IEnumerable<gatepassModel>> NonreturnGetgatepassList(string type)
 		{
@@ -2702,11 +2848,12 @@ namespace WMS.DAL
 			}
 		}
 
-		/// <summary>
-		/// Report (out)
-		/// Ramesh 23/07/2020
-		/// </summary>
-		/// <returns></returns>
+		/*
+		Name of Function : <<outingatepassreport>>  Author :<<Ramesh>>  
+		Date of Creation <<23/07/2020>>
+		Purpose : <<Report (out)>>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 
 		public async Task<IEnumerable<outwardinwardreportModel>> outingatepassreport()
 		{
@@ -2737,11 +2884,13 @@ namespace WMS.DAL
 			}
 		}
 
-		/// <summary>
-		/// insert or update gatepass info
-		/// </summary>
-		/// <param name="dataobj"></param>
-		/// <returns></returns>
+		/*
+		Name of Function : <<SaveOrUpdateGatepassDetails>>  Author :<<Gayathri>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<insert or update gatepass info>>
+		<param name="dataobj"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public int SaveOrUpdateGatepassDetails(gatepassModel dataobj)
 		{
 			NpgsqlTransaction Trans = null;
@@ -2969,12 +3118,15 @@ namespace WMS.DAL
 				return 0;
 			}
 		}
-		/// <summary>
-		/// check material in stock
-		/// </summary>
-		/// <param name="material"></param>
-		/// <param name="qty"></param>
-		/// <returns></returns>
+
+		/*
+		Name of Function : <<checkmaterialandqty>>  Author :<<Gayathri>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<check material in stock>>
+		<param name="material"></param>
+		 <param name="qty"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public string checkmaterialandqty(string material = null, int qty = 0)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -3055,11 +3207,14 @@ namespace WMS.DAL
 
 			}
 		}
-		/// <summary>
-		/// delete gatepass
-		/// </summary>
-		/// <param name="gatepassmaterialid"></param>
-		/// <returns></returns>
+
+		/*
+		Name of Function : <<deletegatepassmaterial>>  Author :<<Gayathri>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<delete gatepass>>
+		<param name="gatepassmaterialid"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public int deletegatepassmaterial(int gatepassmaterialid)
 		{
 			int returndata = 0;
@@ -3085,12 +3240,15 @@ namespace WMS.DAL
 				return 0;
 			}
 		}
-		/// <summary>
-		/// update gatepass approver info
-		/// </summary>
-		/// <param name="model"></param>
-		/// <returns></returns>
-		public int updategatepassapproverstatus_old(List<gatepassModel> model)
+
+		/*
+		Name of Function : <<updategatepassapproverstatus>>  Author :<<Gayathri>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<update gatepass approver info>>
+		<param name="model"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
+		public int updategatepassapproverstatus(List<gatepassModel> model)
 		{
 			int returndata = 0;
 			try
@@ -3302,6 +3460,15 @@ namespace WMS.DAL
 		/// <param name="gatepassid"></param>
 		/// <returns></returns>
 		public async Task<IEnumerable<gatepassModel>> GetmaterialList(string gatepassid)
+
+		/*
+		Name of Function : <<GetmaterialList>>  Author :<<Gayathri>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<get list of material based on gatepassid>>
+		<param name="gatepassid"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
+		public async Task<IEnumerable<gatepassModel>> GetmaterialList(int gatepassid)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
@@ -3328,10 +3495,12 @@ namespace WMS.DAL
 
 			}
 		}
-		/*  Name of Function : <<name>>  Author :<<Pavithran>>  
-			Date of Creation <<12-12-2019>>
-			Purpose : <<Write briefly in one line or two lines>>
-			Review Date :<<>>   Reviewed By :<<>>
+		/*
+		Name of Function : <<getGatePassApprovalHistoryList>>  Author :<<Gayathri>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<get gatepass approval history based on gatepassid>>
+		<param name="gatepassid"></param>
+		Review Date :<<>>   Reviewed By :<<>>
 		*/
 		public async Task<IEnumerable<gatepassapprovalsModel>> getGatePassApprovalHistoryList(string gatepassid)
 		{
@@ -3360,11 +3529,14 @@ namespace WMS.DAL
 
 			}
 		}
-		/// <summary>
-		/// updating print status
-		/// </summary>
-		/// <param name="model"></param>
-		/// <returns></returns>
+
+		/*
+		Name of Function : <<updateprintstatus>>  Author :<<Gayathri>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<updating print status>>
+		<param name="model"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public int updateprintstatus(gatepassModel model)
 		{
 			{
@@ -3476,11 +3648,14 @@ namespace WMS.DAL
 		//    return 0;
 		//}
 		//}
-		/// <summary>
-		/// updating reprint status 
-		/// </summary>
-		/// <param name="model"></param>
-		/// <returns></returns>
+
+		/*
+		Name of Function : <<updatereprintstatus>>  Author :<<Gayathri>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<updating reprint status >>
+		<param name="model"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public int updatereprintstatus(reprintModel model)
 		{
 			reprintModel obj = new reprintModel();
@@ -3540,11 +3715,14 @@ namespace WMS.DAL
 				return 0;
 			}
 		}
-		/// <summary>
-		/// get list based on ABC category
-		/// </summary>
-		/// <param name="categoryid"></param>
-		/// <returns></returns>
+
+		/*
+		Name of Function : <<GetreportBasedCategory>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<get list based on ABC category>>
+		<param name="categoryid"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<ReportModel>> GetreportBasedCategory(int categoryid)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -3574,11 +3752,14 @@ namespace WMS.DAL
 			}
 
 		}
-		/// <summary>
-		/// get list based on materail in category
-		/// </summary>
-		/// <param name="materailid"></param>
-		/// <returns></returns>
+
+		/*
+		Name of Function : <<GetreportBasedMaterial>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<get list based on materail in category>>
+		<param name="materailid"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<ReportModel>> GetreportBasedMaterial(string materailid)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -3608,6 +3789,13 @@ namespace WMS.DAL
 			}
 		}
 
+		/*
+		Name of Function : <<updateABCcategorydata>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<update ABC categorydata>>
+		<param name="model"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public int updateABCcategorydata(List<ABCCategoryModel> model)
 		{
 			int returndata = 0;
@@ -3690,6 +3878,12 @@ namespace WMS.DAL
 			}
 		}
 
+		/*
+		Name of Function : <<GetABCCategorydata>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<Get ABC Category data>>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<ABCCategoryModel>> GetABCCategorydata()
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -3719,6 +3913,12 @@ namespace WMS.DAL
 			}
 		}
 
+		/*
+		Name of Function : <<GetABCavailableqtyList>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<Get ABC available qty List>>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<ReportModel>> GetABCavailableqtyList()
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -3747,7 +3947,13 @@ namespace WMS.DAL
 			}
 		}
 
-		//Ramesh (08/06/2020) returns Enquiry Details
+		/*
+		Name of Function : <<GetEnquirydata>>  Author :<<Ramesh>>  
+		Date of Creation <<08/06/2020>>
+		Purpose : <<returns Enquiry Details>>
+		<param name="materialid"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<Enquirydata> GetEnquirydata(string materialid)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -3775,8 +3981,15 @@ namespace WMS.DAL
 			}
 		}
 
-
-		//Ramesh (08/06/2020) returns all  Materials to count
+		/*
+		Name of Function : <<GetCyclecountList>>  Author :<<Ramesh>>  
+		Date of Creation <<08/06/2020>>
+		Purpose : <<returns all  Materials to count>>
+		<param name="limita"></param>
+		 <param name="limitb"></param>
+		 <param name="limitc"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<CycleCountList>> GetCyclecountList(int limita, int limitb, int limitc)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -3870,7 +4083,13 @@ namespace WMS.DAL
 
 			}
 		}
-		//Ramesh (08/06/2020) returns All counted Material list
+
+		/*
+		Name of Function : <<GetCyclecountPendingList>>  Author :<<Ramesh>>  
+		Date of Creation <<08/06/2020>>
+		Purpose : <<returns All counted Material list>>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<CycleCountList>> GetCyclecountPendingList()
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -3897,7 +4116,13 @@ namespace WMS.DAL
 			}
 		}
 
-		//Ramesh (08/06/2020) update or insert cycle count
+		/*
+		Name of Function : <<UpdateinsertCycleCount>>  Author :<<Ramesh>>  
+		Date of Creation <<08/06/2020>>
+		Purpose : <<update or insert cycle count>>
+		<param name="dataobj"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public int UpdateinsertCycleCount(List<CycleCountList> dataobj)
 		{
 			using (var DB = new NpgsqlConnection(config.PostgresConnectionString))
@@ -3958,7 +4183,13 @@ namespace WMS.DAL
 			}
 		}
 
-		//Ramesh (08/06/2020) update cycle count configuration 
+		/*
+		Name of Function : <<UpdateCycleCountconfig>>  Author :<<Ramesh>>  
+		Date of Creation <<08/06/2020>>
+		Purpose : <<update cycle count configuration >>
+		<param name="dataobj"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public int UpdateCycleCountconfig(Cyclecountconfig dataobj)
 		{
 			try
@@ -3997,7 +4228,13 @@ namespace WMS.DAL
 			}
 		}
 
-		//Ramesh (08/06/2020) update cycle count configuration
+
+		/*
+		Name of Function : <<GetCyclecountConfig>>  Author :<<Ramesh>>  
+		Date of Creation <<08/06/2020>>
+		Purpose : <<update cycle count configuration>>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<Cyclecountconfig> GetCyclecountConfig()
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -4057,6 +4294,13 @@ namespace WMS.DAL
 			}
 		}
 
+		/*
+		Name of Function : <<GetABCListBycategory>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<Get ABC List By category>>
+		<param name="category"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<ReportModel>> GetABCListBycategory(string category)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -4085,6 +4329,13 @@ namespace WMS.DAL
 			}
 		}
 
+		/*
+		Name of Function : <<GetFIFOList>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<get FIFI list of material>>
+		<param name="material"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<FIFOModel>> GetFIFOList(string material)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -4122,6 +4373,14 @@ namespace WMS.DAL
 			}
 		}
 
+		/*
+		Name of Function : <<checkloldestmaterial>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<check oldest material>>
+		<param name="materialid"></param>
+		 <param name="createddate"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public ReportModel checkloldestmaterial(string materialid, string createddate)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -4151,6 +4410,13 @@ namespace WMS.DAL
 			}
 		}
 
+		/*
+		Name of Function : <<FIFOitemsupdate>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<FIFO items update>>
+		<param name="model"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public int FIFOitemsupdate(List<FIFOModel> model)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -4199,12 +4465,13 @@ namespace WMS.DAL
 			}
 		}
 
-		/// <summary>
-		/// get list of todays expected shipments
-		/// Ramesh
-		/// </summary>
-		/// <param name="deliverydate"></param>
-		/// <returns></returns>
+		/*
+		Name of Function : <<getASNList>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<get list of todays expected shipments>>
+		<param name="deliverydate"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<OpenPoModel>> getASNList(string deliverydate)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -4231,6 +4498,12 @@ namespace WMS.DAL
 			}
 		}
 
+		/*
+		Name of Function : <<getASNListdata>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<get ASN List data>>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<OpenPoModel>> getASNListdata()
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -4261,6 +4534,13 @@ namespace WMS.DAL
 			}
 		}
 
+		/*
+		Name of Function : <<getUserDashboarddata>>  Author :<<LP>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<get User Dashboard data>>
+		<param name="empno"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<UserDashboardDetail> getUserDashboarddata(string empno)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -4384,6 +4664,13 @@ namespace WMS.DAL
 			}
 		}
 
+		/*
+		Name of Function : <<GetItemlocationListBymterial_old>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<Get Item location List By mterial_old>>
+		<param name="material"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<IssueRequestModel>> GetItemlocationListBymterial_old(string material)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -4414,12 +4701,13 @@ namespace WMS.DAL
 			}
 		}
 
-		/// <summary>
-		/// get itemlocation to issue materials
-		/// Ramesh kumar <<06_10_2020>>
-		/// </summary>
-		/// <param name="material"></param>
-		/// <returns></returns>
+		/*
+		Name of Function : <<GetItemlocationListBymterial>>  Author :<<Ramesh>>  
+		Date of Creation <<06_10_2020>>
+		Purpose : <<get itemlocation to issue materials>>
+		<param name="material"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 
 		public async Task<IEnumerable<IssueRequestModel>> GetItemlocationListBymterial(string material)
 		{
@@ -4449,6 +4737,14 @@ namespace WMS.DAL
 
 			}
 		}
+
+		/*
+		Name of Function : <<getItemlocationListByIssueId>>  Author :<<Ramesh>>  
+		Date of Creation <<10_01_2020>>
+		Purpose : <<Get list of Material issued by issueid>>
+		<param name="requestforissueid"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		/// <summary>
 		/// get materiallistfor stock transfer
 		/// Ramesh  kumar 12_10_2020
@@ -4533,6 +4829,12 @@ namespace WMS.DAL
 			}
 		}
 
+		/*
+		Name of Function : <<getItemlocationListByGatepassmaterialid>>  Author :<<LP>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<get Item location List By Gatepass materialid>>
+		<param name="gatepassmaterialid"></param>
+		*/
 		public async Task<IEnumerable<IssueRequestModel>> getItemlocationListByGatepassmaterialid(string gatepassmaterialid)
 		{
 
@@ -4575,12 +4877,14 @@ namespace WMS.DAL
 
 			}
 		}
-		/// <summary>
-		/// Get item location list for stock transfer
-		/// Ramesh 29/07/2020
-		/// </summary>
-		/// <param name="material"></param>
-		/// <returns></returns>
+
+		/*
+		Name of Function : <<GetItemlocationListforST>>  Author :<<Ramesh>>  
+		Date of Creation <<29/07/2020>>
+		Purpose : <<Get item location list for stock transfer>>
+		<param name="material"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<IssueRequestModel>> GetItemlocationListforST(string material)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -4611,6 +4915,13 @@ namespace WMS.DAL
 			}
 		}
 
+		/*
+		Name of Function : <<updateissuedmaterial>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<update issued material details>>
+		<param name="obj"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public int updateissuedmaterial(List<IssueRequestModel> obj)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -4687,10 +4998,13 @@ namespace WMS.DAL
 			}
 		}
 
-		//Name of Function : <<AssignRoles>>  Author :<<prasanna>>  
-		//Date of Creation <<10-06-2020>>
-		//Purpose : <<insert method to Asssign roles for employee >>
-		//Review Date :<<>>   Reviewed By :<<>>
+		/*
+		Name of Function : <<AssignRoles>>  Author :<<prasanna>>  
+		Date of Creation <<10-06-2020>>
+		Purpose : <<insert method to Asssign roles for employee>>
+		<param name="model"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public int assignRole(authUser model)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -4757,6 +5071,7 @@ namespace WMS.DAL
 
 			}
 		}
+
 		//Name of Function : <<getuserAcessList>>  Author :<<Ramesh>>  
 		//Date of Creation <<28-07-2020>>
 		//Purpose : <<function used to get role list based on employeeid>>
@@ -4883,6 +5198,12 @@ namespace WMS.DAL
 			}
 		}
 
+		/*
+		Name of Function : <<getUserdashboardgraphdata>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<get User  dashboard graph data>>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<UserDashboardGraphModel>> getUserdashboardgraphdata()
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -4940,6 +5261,12 @@ namespace WMS.DAL
 			}
 		}
 
+		/*
+		Name of Function : <<getWeeklyUserdashboardgraphdata>>  Author :<<LP>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<get Weekly User dashboard graphdata>>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<UserDashboardGraphModel>> getWeeklyUserdashboardgraphdata()
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -4993,6 +5320,12 @@ namespace WMS.DAL
 			}
 		}
 
+		/*
+		Name of Function : <<getmonthlyUserdashboardgraphdata>>  Author :<<LP>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<get monthly User dashboard graphdata>>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<UserDashboardGraphModel>> getmonthlyUserdashboardgraphdata()
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -5054,6 +5387,15 @@ namespace WMS.DAL
 
 			}
 		}
+
+		/*
+		Name of Function : <<MaterialRequestdata>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<Material Request data>>
+		<param name="approverid"></param>
+		 <param name="pono"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<IssueRequestModel>> MaterialRequestdata(string pono, string approverid)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -5090,6 +5432,12 @@ namespace WMS.DAL
 			}
 		}
 
+		/*
+		Name of Function : <<MaterialReservedata>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<Material Reserve data>>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<IssueRequestModel>> MaterialReservedata()
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -5117,6 +5465,13 @@ namespace WMS.DAL
 			}
 		}
 
+		/*
+		Name of Function : <<getempnamebycode>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<get emp name by code>>
+		<param name="empno"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<User> getempnamebycode(string empno)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -5144,6 +5499,14 @@ namespace WMS.DAL
 
 			}
 		}
+
+		/*
+		Name of Function : <<getissuematerialdetails>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<get issue material details>>
+		<param name="requestid"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<IssueRequestModel>> getissuematerialdetails(int requestid)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -5172,6 +5535,13 @@ namespace WMS.DAL
 			}
 		}
 
+		/*
+		Name of Function : <<insertResevematerial_old>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<insert Resevematerial_old>>
+		<param name="datamodel"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<int> insertResevematerial_old(List<ReserveMaterialModel> datamodel)
 		{
 			int reserveid = 0;
@@ -5282,12 +5652,15 @@ namespace WMS.DAL
 				return 0;
 			}
 		}
-		/// <summary>
-		/// Reserve material + Email--
-		/// Ramesh kumar
-		/// </summary>
-		/// <param name="datamodel"></param>
-		/// <returns></returns>
+
+
+		/*
+		Name of Function : <<insertResevematerial>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<Reserve material + Email-->>
+		<param name="datamodel"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<int> insertResevematerial(List<ReserveMaterialModel> datamodel)
 		{
 			int reserveid = 0;
@@ -5441,6 +5814,13 @@ namespace WMS.DAL
 			
 		}
 
+		/*
+		Name of Function : <<GetReservedMaterialList_old>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<Get Reserved MaterialList_old>>
+		<param name="reservedby"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<ReserveMaterialModel>> GetReservedMaterialList_old(string reservedby)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -5467,12 +5847,14 @@ namespace WMS.DAL
 
 			}
 		}
-		/// <summary>
-		/// get material reserve list
-		/// Author: Ramesh kumar<<05-10-2020>>
-		/// </summary>
-		/// <param name="reservedby"></param>
-		/// <returns></returns>
+
+		/*
+		Name of Function : <<getOpenPoList>>  Author :<<Ramesh>>  
+		Date of Creation <<05-10-2020>>
+		Purpose : <<get material reserve list>>
+		<param name="reservedby"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<MaterialTransaction>> GetReservedMaterialList(string reservedby)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -5510,6 +5892,14 @@ namespace WMS.DAL
 			
 		}
 
+		/*
+		Name of Function : <<getissuematerialdetailsforreserved>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<get issue material details for reserved>>
+		<param name="reservedid"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
+
 		public async Task<IEnumerable<ReserveMaterialModel>> getissuematerialdetailsforreserved(int reservedid)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -5538,6 +5928,12 @@ namespace WMS.DAL
 			}
 		}
 
+		/*
+		Name of Function : <<GetReleasedmaterialList>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<Get Released material List>>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<ReserveMaterialModel>> GetReleasedmaterialList()
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -5564,6 +5960,13 @@ namespace WMS.DAL
 			}
 		}
 
+		/*
+		Name of Function : <<GetmaterialdetailsByreserveid>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<Get material details By reserveid>>
+		<param name="reserveid"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<ReserveMaterialModel>> GetmaterialdetailsByreserveid(string reserveid)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -5589,11 +5992,14 @@ namespace WMS.DAL
 
 			}
 		}
-		/// <summary>
-		/// ApproveMaterialRelease
-		/// </summary>
-		/// <param name="dataobj"></param>
-		/// <returns></returns>
+
+		/*
+		Name of Function : <<ApproveMaterialRelease>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<Approve Material Release>>
+		<param name="dataobj"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public int ApproveMaterialRelease(List<ReserveMaterialModel> dataobj)
 		{
 			try
@@ -5670,6 +6076,14 @@ namespace WMS.DAL
 
 		}
 
+
+		/*
+		Name of Function : <<acknowledgeMaterialReceivedforreserved>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<acknowledge Material Received for reserved>>
+		<param name="dataobj"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public int acknowledgeMaterialReceivedforreserved(List<ReserveMaterialModel> dataobj)
 		{
 			try
@@ -5716,11 +6130,13 @@ namespace WMS.DAL
 			}
 
 		}
-		/// <summary>
-		/// Ramesh kumar
-		/// </summary>
-		/// <returns></returns>
-		//get received po list based on current date
+
+		/*
+		Name of Function : <<getSecurityreceivedList>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<get received po list based on current date>>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<SecurityInwardreceivedModel>> getSecurityreceivedList()
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -5748,7 +6164,14 @@ namespace WMS.DAL
 
 			}
 		}
-		//Amulya
+
+		/*
+		Name of Function : <<insertquantitycheck>>  Author :<<Amulya>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<insert quantity check>>
+		<param name="datamodel"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<string> insertquantitycheck(List<inwardModel> datamodel)
 		{
 
@@ -5831,8 +6254,12 @@ namespace WMS.DAL
 		}
 
 
-
-		//Ramesh
+		/*
+		Name of Function : <<getprojectlist>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<get project list>>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<ddlmodel>> getprojectlist()
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -5865,6 +6292,13 @@ namespace WMS.DAL
 			}
 		}
 
+		/*
+		Name of Function : <<getprojectlistbymanager>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<get project list by manager>>
+		<param name="empno"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<ddlmodel>> getprojectlistbymanager(string empno)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -5896,6 +6330,13 @@ namespace WMS.DAL
 			}
 		}
 
+		/*
+		Name of Function : <<getmatlist>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<get material list>>
+		<param name="querytext"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<ddlmodel>> getmatlist(string querytext = "")
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -5937,6 +6378,13 @@ namespace WMS.DAL
 			}
 		}
 
+		/*
+		Name of Function : <<getmatlistbyproject>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<get mat list by project>>
+		<param name="projectcode"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<ddlmodel>> getmatlistbyproject(string projectcode)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -5969,11 +6417,13 @@ namespace WMS.DAL
 		}
 
 
-
-
-
-
-
+		/*
+				Name of Function : <<insertreturn>>  Author :<<Ramesh>>  
+				Date of Creation <<12-12-2019>>
+				Purpose : <<insert return>>
+				<param name="datamodel"></param>
+				Review Date :<<>>   Reviewed By :<<>>
+				*/
 		public async Task<string> insertreturn(List<inwardModel> datamodel)
 		{
 
@@ -6047,7 +6497,12 @@ namespace WMS.DAL
 
 
 
-
+		/*
+		Name of Function : <<Getlocationdata>>  Author :<<Shashikala>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<Get location data>>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<dropdownModel>> Getlocationdata()
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -6073,6 +6528,13 @@ namespace WMS.DAL
 
 			}
 		}
+
+		/*
+		Name of Function : <<Getbindata>>  Author :<<Shashikala>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<Get bin data>>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<dropdownModel>> Getbindata()
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -6099,6 +6561,13 @@ namespace WMS.DAL
 
 			}
 		}
+
+		/*
+		Name of Function : <<Getrackdata>>  Author :<<Shashikala>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<Get rack data>>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<dropdownModel>> Getrackdata()
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -6124,11 +6593,13 @@ namespace WMS.DAL
 
 			}
 		}
-		/// <summary>
-		/// Get list of materials 
-		/// Ramesh Kumar 15/07/2020
-		/// </summary>
-		/// <returns></returns>
+
+		/*
+		Name of Function : <<Getrackdata>>  Author :<<Ramesh Kumar>>  
+		Date of Creation <<15/07/2020>>
+		Purpose : <<Get list of materials >>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<Materials>> GetMaterialcombo()
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -6155,6 +6626,13 @@ namespace WMS.DAL
 			}
 		}
 
+		/*
+	Name of Function : <<getapproverList>>  Author :<<Ramesh Kumar>>  
+	Date of Creation <<15/07/2020>>
+	Purpose : <<get approver List >>
+	<param name="empid"></param>
+	Review Date :<<>>   Reviewed By :<<>>
+	*/
 		public async Task<IEnumerable<employeeModel>> getapproverList(string empid)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -6181,6 +6659,13 @@ namespace WMS.DAL
 			}
 		}
 
+		/*
+		Name of Function : <<getgatepassByapproverList>>  Author :<<Gayathri>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<get gatepass By approver List>>
+		<param name="empid"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<gatepassModel>> getgatepassByapproverList(string empid)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -6207,7 +6692,13 @@ namespace WMS.DAL
 			}
 		}
 
-
+		/*
+		Name of Function : <<Getpagesbyroleid>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<Getpages by roleid>>
+		<param name="roleid"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<pageModel>> Getpagesbyroleid(int roleid)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -6235,6 +6726,12 @@ namespace WMS.DAL
 
 		}
 
+		/*
+		Name of Function : <<Getpages>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<Get pages>>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<pageModel>> Getpages()
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -6262,6 +6759,13 @@ namespace WMS.DAL
 
 		}
 
+		/*
+		Name of Function : <<GatepassapproveByMail>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<Gatepass approve By Mail>>
+		<param name="model"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public int GatepassapproveByMail(gatepassModel model)
 		{
 			try
@@ -6346,7 +6850,13 @@ namespace WMS.DAL
 			}
 		}
 
-		//Amulya
+		/*
+		Name of Function : <<GatepassapproveByManager>>  Author :<<Amulya>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<Gate pass approve By Manager>>
+		<param name="model"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public int GatepassapproveByManager(gatepassModel model)
 		{
 			try
@@ -6464,6 +6974,12 @@ namespace WMS.DAL
 			}
 		}
 
+		/*
+		Name of Function : <<getSafteyStockList>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<get Saftey Stock List>>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<safteyStockList>> getSafteyStockList()
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -6491,7 +7007,12 @@ namespace WMS.DAL
 
 		}
 
-
+		/*
+		Name of Function : <<GetBinList>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<Get Bin List>>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<StockModel>> GetBinList()
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -6518,11 +7039,12 @@ namespace WMS.DAL
 			}
 		}
 
-		/// <summary>
-		/// Get list of materials for stock transfer 
-		/// Ramesh Kumar 15/07/2020
-		/// </summary>
-		/// <returns></returns>
+		/*
+		Name of Function : <<GetMaterialstockcombo>>  Author :<<Ramesh>>  
+		Date of Creation <<15/07/2020>>
+		Purpose : <<Get list of materials for stock transfer >>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<Materials>> GetMaterialstockcombo()
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -6548,11 +7070,14 @@ namespace WMS.DAL
 
 			}
 		}
-		/// <summary>
-		/// Updating location for stock
-		/// </summary>
-		/// <param name="data"></param>
-		/// <returns></returns>
+
+		/*
+		Name of Function : <<UpdateStockTransfer>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<Updating location for stock>>
+		<param name="data"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 
 		public string UpdateStockTransfer(List<StockModel> data)
 		{
@@ -6698,12 +7223,14 @@ namespace WMS.DAL
 
 
 		}
-		/// <summary>
-		/// Internal Stock Transfer function
-		/// Ramesh Kumar - modified on <<13-10-2020>>
-		/// </summary>
-		/// <param name="data"></param>
-		/// <returns></returns>
+
+		/*
+		Name of Function : <<InvStockTransfer>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<Inv Stock Transfer>>
+		<param name="data"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public string InvStockTransfer(invstocktransfermodel data)
 		{
 
@@ -6952,7 +7479,12 @@ namespace WMS.DAL
 
 		}
 
-
+		/*
+		Name of Function : <<getstocktransferdata>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<get stock transfer data>>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<stocktransferModel>> getstocktransferdata()
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -6979,6 +7511,12 @@ namespace WMS.DAL
 			}
 		}
 
+		/*
+		Name of Function : <<getstocktransferdatagroup>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<get stock transfer data group>>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<stocktransferModel>> getstocktransferdatagroup()
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -7004,11 +7542,13 @@ namespace WMS.DAL
 
 			}
 		}
-		/// <summary>
-		/// get stock transferdata
-		/// Ramesh 18/07/2020
-		/// </summary>
-		/// <returns></returns>
+
+		/*
+		Name of Function : <<getstocktransferdatagroup1>>  Author :<<Ramesh>>  
+		Date of Creation <<18/07/2020>>
+		Purpose : <<get stock transferdata>>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<invstocktransfermodel>> getstocktransferdatagroup1()
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -7050,7 +7590,12 @@ namespace WMS.DAL
 			}
 		}
 
-
+		/*
+		Name of Function : <<getgrnlistforacceptance>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<get grn list for acceptance>>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<ddlmodel>> getgrnlistforacceptance()
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -7093,6 +7638,12 @@ namespace WMS.DAL
 			}
 		}
 
+		/*
+		Name of Function : <<getgrnlistforacceptanceputaway>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<get grn list for acceptance put away>>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<ddlmodel>> getgrnlistforacceptanceputaway()
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -7132,6 +7683,13 @@ namespace WMS.DAL
 			}
 		}
 
+		/*
+		Name of Function : <<getgrnlistforacceptancenotify>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<get grn list for acceptance notify>>
+		<param name="type"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<inwardModel>> getgrnlistforacceptancenotify(string type)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -7189,7 +7747,12 @@ namespace WMS.DAL
 			}
 		}
 
-
+		/*
+		Name of Function : <<getholdgrlist>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<get hold gr list>>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<ddlmodel>> getholdgrlist()
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -7219,6 +7782,12 @@ namespace WMS.DAL
 			}
 		}
 
+		/*
+		Name of Function : <<getgrnlistforacceptanceqc>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<getgrnlistforacceptanceqc>>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<ddlmodel>> getgrnlistforacceptanceqc()
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -7247,6 +7816,14 @@ namespace WMS.DAL
 			}
 		}
 
+		/*
+		Name of Function : <<getgrnlistforacceptanceqcbydate>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<get grn list for acceptance qc by date>>
+		<param name="fromdt"></param>
+		 <param name="todt"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<ddlmodel>> getgrnlistforacceptanceqcbydate(string fromdt, string todt)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -7275,6 +7852,14 @@ namespace WMS.DAL
 			}
 		}
 
+		/*
+		Name of Function : <<getnotifiedgrbydate>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<get notified gr by date>>
+		<param name="fromdt"></param>
+		 <param name="todt"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<inwardModel>> getnotifiedgrbydate(string fromdt, string todt)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -7322,7 +7907,12 @@ namespace WMS.DAL
 			}
 		}
 
-
+		/*
+		Name of Function : <<pendingreceiptslist>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<pending receipts list>>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<ddlmodel>> pendingreceiptslist()
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -7349,7 +7939,13 @@ namespace WMS.DAL
 			}
 		}
 
-
+		/*
+		Name of Function : <<UnholdGRdata>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<Unhold GR data>>
+		<param name="datamodel"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public int UnholdGRdata(UnholdGRModel datamodel)
 		{
 			int result = 0;
@@ -7380,6 +7976,13 @@ namespace WMS.DAL
 			return result;
 		}
 		//current
+		/*
+		Name of Function : <<mattransfer>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<mat transfer>>
+		<param name="datamodel"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public int mattransfer(materialtransferMain datamodel)
 		{
 			int result = 0;
@@ -7527,7 +8130,13 @@ namespace WMS.DAL
 		}
 
 
-
+		/*
+		Name of Function : <<mattransferapprove>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<mat transfer approve>>
+		<param name="datamodel"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public int mattransferapprove(List<materialtransferMain> datamodel)
 		{
 			int result = 0;
@@ -7642,6 +8251,13 @@ namespace WMS.DAL
 			return result;
 		}
 
+		/*
+		Name of Function : <<mrnupdate>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<mrn update>>
+		<param name="datamodel"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public int mrnupdate(MRNsavemodel datamodel)
 		{
 			int result = 0;
@@ -7671,6 +8287,13 @@ namespace WMS.DAL
 			return result;
 		}
 
+		/*
+		Name of Function : <<updateonholdrow>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<update onhold row>>
+		<param name="datamodel"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<string> updateonholdrow(updateonhold datamodel)
 		{
 			string result = "";
@@ -7700,11 +8323,13 @@ namespace WMS.DAL
 			}
 			return result;
 		}
-		/// <summary>
-		/// get organasation dropdown
-		/// Ramesh Kumar (28/07/2020)
-		/// </summary>
-		/// <returns></returns>
+
+		/*
+		Name of Function : <<getdepartmentmasterdata>>  Author :<<Ramesh>>  
+		Date of Creation <<28/07/2020>>
+		Purpose : <<get organasation dropdown>>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<ddlmodel>> getdepartmentmasterdata()
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -7731,11 +8356,12 @@ namespace WMS.DAL
 			}
 		}
 
-		/// <summary>
-		/// get rba details
-		/// Ramesh Kumar (28/07/2020)
-		/// </summary>
-		/// <returns></returns>
+		/*
+		Name of Function : <<getrbadetails>>  Author :<<Ramesh>>  
+		Date of Creation <<28/07/2020>>
+		Purpose : <<get rba details>>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<rbamaster>> getrbadetails()
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -7762,6 +8388,13 @@ namespace WMS.DAL
 			}
 		}
 
+		/*
+		Name of Function : <<insertdatacsv>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<insert data csv>>
+		<param name="obj"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public int insertdatacsv(ddlmodel obj)
 		{
 			ddlmodel mdl = new ddlmodel();
@@ -7817,8 +8450,14 @@ namespace WMS.DAL
 		}
 
 
-
-	   public int requesttoreserve(materialReservetorequestModel obj)
+		/*
+		Name of Function : <<requesttoreserve>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<request to reserve>>
+		<param name="obj"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
+		public int requesttoreserve(materialReservetorequestModel obj)
 		{
 
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -7885,6 +8524,14 @@ namespace WMS.DAL
 
 			}
 		}
+
+		/*
+		Name of Function : <<updatematmovement>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<update mat movement>>
+		<param name="obj"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public int updatematmovement(List<materialistModel> obj)
 		{
 
@@ -7981,11 +8628,13 @@ namespace WMS.DAL
 		}
 
 
-
-		/// <summary>
-		/// get stock type
-		/// Ramesh 22/07/2020
-		/// </summary>
+		/*
+		Name of Function : <<getstocktype>>  Author :<<Ramesh>>  
+		Date of Creation <<22/07/2020>>
+		Purpose : <<get stock type>>
+		<param name="locdetails"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public string getstocktype(locataionDetailsStock locdetails)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -8014,6 +8663,12 @@ namespace WMS.DAL
 			}
 		}
 
+		/*
+		Name of Function : <<UpdateMaterialReserve>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<Update Material Reserve>>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public int UpdateMaterialReserve()
 		{
 			int result = 0;
@@ -8085,7 +8740,15 @@ namespace WMS.DAL
 
 		}
 
-		//get stock details
+		/*
+		Name of Function : <<getstockdetails>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<get stock details>>
+		<param name="materialid"></param>
+		 <param name="pono"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
+
 		public stockCardPrint getstockdetails(string pono, string materialid)
 		{
 			stockCardPrint objstock = new stockCardPrint();
@@ -8116,12 +8779,13 @@ namespace WMS.DAL
 
 			return objstock;
 
-		}
-		/// <summary>
-		/// inserting the data to retrunmaterial by pm
-		/// </summary>
-		/// <param name="_listobj"></param>
-		/// <returns></returns>
+		}/*
+		Name of Function : <<UpdateReturnqty_old>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<inserting the data to retrunmaterial by pm>>
+		<param name="_listobj"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public int UpdateReturnqty_old(List<IssueRequestModel> _listobj)
 		{
 			int result = 0;
@@ -8180,12 +8844,13 @@ namespace WMS.DAL
 			return result;
 		}
 
-
-		/// <summary>
-		/// inserting the data to retrunmaterial by pm
-		/// </summary>
-		/// <param name="_listobj"></param>
-		/// <returns></returns>
+		/*
+		Name of Function : <<UpdateReturnqty>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<inserting the data to retrunmaterial by pm>>
+		<param name="_listobj"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public int UpdateReturnqty(List<IssueRequestModel> _listobj)
 		{
 			int result = 0;
@@ -8255,6 +8920,14 @@ namespace WMS.DAL
 
 			return result;
 		}
+
+		/*
+		Name of Function : <<UpdateReturnmaterialTostock>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<Update Returnmaterial To stock>>
+		<param name="model"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public int UpdateReturnmaterialTostock(List<IssueRequestModel> model)
 		{
 			int result = 0;
@@ -8381,7 +9054,13 @@ namespace WMS.DAL
 			return result;
 		}
 
-
+		/*
+		Name of Function : <<updateputawayfilename>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<update putaway filename>>
+		<param name="file"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public string updateputawayfilename(ddlmodel file)
 		{
 			string result = "";
@@ -8416,6 +9095,13 @@ namespace WMS.DAL
 			return result;
 		}
 
+		/*
+		Name of Function : <<notifyputaway>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<notify put away>>
+		<param name="data"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public string notifyputaway(notifymodel data)
 		{
 			string result = "";
@@ -8461,6 +9147,13 @@ namespace WMS.DAL
 			return result;
 		}
 
+		/*
+		Name of Function : <<notifymultipleputaway>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<notify multiple putaway>>
+		<param name="datalst"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public string notifymultipleputaway(List<notifymodel> datalst)
 		{
 			string result = "";
@@ -8517,9 +9210,13 @@ namespace WMS.DAL
 
 			return result;
 		}
-		/// <summary>
-		/// onload to display the returned already by PM
-		/// </summary>
+
+		/*
+		Name of Function : <<GetReturnmaterialList>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : << onload to display the returned already by PM>>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<IssueRequestModel>> GetReturnmaterialList()
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -8549,11 +9246,14 @@ namespace WMS.DAL
 
 
 		}
-		/// <summary>
-		/// based on request/return id we will get details for confirm
-		/// </summary>
-		/// <param name="requestid"></param>
-		/// <returns></returns>
+
+		/*
+		Name of Function : <<GetReturnmaterialListForConfirm>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<based on request/return id we will get details for confirm>>
+		<param name="requestid"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<IssueRequestModel>> GetReturnmaterialListForConfirm(string requestid)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -8583,11 +9283,14 @@ namespace WMS.DAL
 
 
 		}
-		// <summary>
-		/// getreturn data by empno
-		/// </summary>
-		/// <param name="empno"></param>
-		/// <returns></returns>
+
+		/*
+		Name of Function : <<getreturndata_old>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<getreturn data by empno>>
+		<param name="empno"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<IssueRequestModel>> getreturndata_old(string empno)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -8615,12 +9318,13 @@ namespace WMS.DAL
 			}
 		}
 
-
-		/// <summary>
-		/// getreturn data by empno
-		/// </summary>
-		/// <param name="empno"></param>
-		/// <returns></returns>
+		/*
+		Name of Function : <<getreturndata>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<get return data>>
+		<param name="empno"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<MaterialReturn>> getreturndata(string empno)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -8665,11 +9369,13 @@ namespace WMS.DAL
 			}
 		}
 
-		/// <summary>
-		/// get materials requested for return data based on material return requested id - Gayathri -> 14/08/2020
-		/// </summary>
-		/// <param name="empno"></param>
-		/// <returns></returns>
+		/*
+		Name of Function : <<getmaterialreturnreqList>>  Author :<<Gayathri>>  
+		Date of Creation <<14/08/2020>>
+		Purpose : <<get materials requested for return data based on material return requested id >>
+		<param name="matreturnid"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<IssueRequestModel>> getmaterialreturnreqList(string matreturnid)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -8699,11 +9405,13 @@ namespace WMS.DAL
 			}
 		}
 
-		/// <summary>
-		/// get transferred data based on login id
-		/// </summary>
-		/// <param name="empno"></param>
-		/// <returns></returns>
+		/*
+		Name of Function : <<gettransferdata>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<get transferred data based on login id>>
+		<param name="empno"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<materialtransferMain>> gettransferdata(string empno)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -8755,11 +9463,13 @@ namespace WMS.DAL
 			}
 		}
 
-		/// <summary>
-		/// get transferred data based on login id
-		/// </summary>
-		/// <param name="empno"></param>
-		/// <returns></returns>
+		/*
+		Name of Function : <<gettransferdataforapproval>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<get transferred data based on login id>>
+		<param name="empno"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<materialtransferMain>> gettransferdataforapproval(string empno)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -8811,11 +9521,13 @@ namespace WMS.DAL
 			}
 		}
 
-		/// <summary>
-		/// get direct transferred data
-		/// </summary>
-		///
-		/// <returns></returns>
+		/*
+		Name of Function : <<getdirecttransferdata>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<get direct transferred data>>
+		<param name="empno"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<DirectTransferMain>> getdirecttransferdata(string empno)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -8858,11 +9570,13 @@ namespace WMS.DAL
 			}
 		}
 
-		/// <summary>
-		/// update/insert transfer material details
-		/// </summary>
-		/// <param name="_listobj"></param>
-		/// <returns></returns>
+		/*
+		Name of Function : <<Updatetransferqty>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : << update/insert transfer material details>>
+		<param name="_listobj"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public int Updatetransferqty(List<IssueRequestModel> _listobj)
 		{
 			int result = 0;
@@ -8902,11 +9616,13 @@ namespace WMS.DAL
 			return result;
 		}
 
-
-		/// <summary>
-		/// checkMatExists - check whether the material exists and generate qrcode for material
-		/// Gayathri -  06/08/2020
-		/// </summary>
+		/*
+		Name of Function : <<checkMatExists>>  Author :<<Gayathri>>  
+		Date of Creation <<06/08/2020>>
+		Purpose : <<check whether the material exists and generate qrcode for material>>
+		<param name="material"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public string checkMatExists(string material)
 		{
 			string returnvalue = null;
@@ -8974,7 +9690,13 @@ namespace WMS.DAL
 			}
 		}
 
-		//Get podetails list Gayathri - 10/08/2020
+		/*
+		Name of Function : <<getPODetails>>  Author :<<Ramesh>>  
+		Date of Creation <<10/08/2020>>
+		Purpose : <<Get podetails list>>
+		<param name="empno"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<PODetails>> getPODetails(string empno)
 		{
 			//List<PODetails> objPO = new List<PODetails>();
@@ -9000,7 +9722,12 @@ namespace WMS.DAL
 			}
 		}
 
-		//Ramesh
+		/*
+		Name of Function : <<gettestcrud>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<get test crud>>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<testcrud>> gettestcrud()
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -9032,6 +9759,13 @@ namespace WMS.DAL
 			}
 		}
 
+		/*
+		Name of Function : <<posttestcrud>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<post test crud>>
+		<param name="data"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public string posttestcrud(testcrud data)
 		{
 			string result = "";
@@ -9097,6 +9831,14 @@ namespace WMS.DAL
 
 			return result;
 		}
+
+		/*
+		Name of Function : <<deletetestcurd>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<delete test curd>>
+		<param name="id"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public string deletetestcurd(int id)
 		{
 			string result = "";
@@ -9134,6 +9876,13 @@ namespace WMS.DAL
 
 		}
 
+		/*
+		Name of Function : <<updateSecurityPrintHistory>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<update Security Print History>>
+		<param name="model"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public string updateSecurityPrintHistory(PrintHistoryModel model)
 		{
 
@@ -9220,7 +9969,13 @@ namespace WMS.DAL
 
 		}
 
-
+		/*
+		Name of Function : <<updateQRcodePrintHistory>>  Author :<<Gayathri>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<update QRcode Print History>>
+		<param name="printMat"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public string updateQRcodePrintHistory(printMaterial printMat)
         {
 			
@@ -9356,7 +10111,13 @@ namespace WMS.DAL
 			return "success";
         }
 
-
+		/*
+		Name of Function : <<getMaterialtransferdetails>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<get Material transfer details>>
+		<param name="filterparams"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<materialtransferMain>> getMaterialtransferdetails(materilaTrasFilterParams filterparams)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -9403,7 +10164,14 @@ namespace WMS.DAL
 			}
 		}
 
-		//Amulya
+		/*
+		Name of Function : <<getmaterialrequestdashboardList>>  Author :<<Amulya>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<get material request dashboardList>>
+		<param name="filterparams"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
+
 		public async Task<IEnumerable<materialrequestMain>> getmaterialrequestdashboardList(materialRequestFilterParams filterparams)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -9457,8 +10225,14 @@ namespace WMS.DAL
 				}
 			}
 		}
-		//Amulya
 
+		/*
+		Name of Function : <<getmaterialreservedashboardList>>  Author :<<Amulya>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<get material reserve dashboard List>>
+		<param name="filterparams"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 		public async Task<IEnumerable<materialreserveMain>> getmaterialreservedashboardList(materialResFilterParams filterparams)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -9506,7 +10280,13 @@ namespace WMS.DAL
 		}
 
 
-		//Amulya
+		/*
+		Name of Function : <<getmaterialreturndashboardlist>>  Author :<<Amulya>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<get material return dashboardlist>>
+		<param name="filterparams"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
 
 		public async Task<IEnumerable<materialreturnMain>> getmaterialreturndashboardlist(materialRetFilterParams filterparams)
 		{
