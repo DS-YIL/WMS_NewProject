@@ -91,7 +91,7 @@
                 <tr>
                   <td class="ptable-cell" style="text-align: center; width: 5%;">{{ri+1}}</td>
                   <td class="ptable-cell" style="text-align:center;width:15%;">
-                    <p-dropdown [options]="combomaterial" appendTo="body" [style]="{'width':'100%'}" (onChange)="setdescription($event,rowData,ri)" placeholder="Select material" optionLabel="material"></p-dropdown>
+                    <p-dropdown [options]="combomaterial" appendTo="body" [style]="{'width':'100%'}" [filter]="true" (onChange)="setdescription($event,rowData,ri)" placeholder="Select material" optionLabel="material"></p-dropdown>
                   </td>
                   <td class="ptable-cell" style="text-align:left;">
                     <span>{{rowData.materialdescription}}</span>
@@ -174,7 +174,7 @@
                   <th style="    text-align: center; width: 5%;background-color: #9ba5af !important">Sl.No.</th>
                   <th style="    text-align: center; width: 15%;background-color: #9ba5af !important">Material</th>
                   <th style="    text-align: center;background-color: #9ba5af!important">Material Description</th>
-                  <th style="    text-align: center; width: 20;background-color: #9ba5af !important;">Source location</th>
+                  <th style="    text-align: center; width: 20%;background-color: #9ba5af !important;">Source location</th>
                   <th style="    text-align: center;width: 20%;background-color: #9ba5af!important">Destination Location</th>
                   <th style="    text-align: center; width: 10%;
     background-color: #9ba5af!important">Transfer Qty</th>

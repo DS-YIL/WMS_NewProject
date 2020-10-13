@@ -57,7 +57,7 @@
       <ng-template pTemplate="header">
         <tr class="mprltbldata">
           <th style="text-align: center; width: 70px">Sl.No.</th>
-          <th style="text-align:center;width: 100px">Gatepass Id</th>
+          <th style="text-align:center;width: 200px">Gatepass Id</th>
           <th style="text-align:center">Supplier</th>
           <th style="text-align:center;width: 300px">Approved By</th>
           <th style="text-align:center;width: 200px">Approved On</th>
@@ -76,7 +76,7 @@
             {{ri+1}}
           </td>
           <!--<td class="ptable-cell" style="text-align:center"> <a style="color:blue;cursor:pointer;text-decoration:underline" href="#" [pRowToggler]="rowData"> <i [ngClass]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></i>{{rowData.gatepassid}}</a></td>-->
-          <td class="ptable-cell" style="text-align:left"><button class="btn btn-link" (click)="showdetails(rowData)">GTP{{rowData.gatepassid}}</button></td>
+          <td class="ptable-cell" style="text-align:left"><button class="btn btn-link" (click)="showdetails(rowData)">{{rowData.gatepassid}}</button></td>
           <td class="ptable-cell" style="text-align:left">{{rowData.vendorname}}</td>
           <td class="ptable-cell" style="text-align:left">
             <span *ngIf="nonreturn">{{rowData.fmapprover}}</span>
@@ -101,7 +101,7 @@
 <p-dialog header="Material Details" [(visible)]="showmatDialog" [responsive]="true" showEffect="fade" [modal]="true" [style]="{'width':'98%','height':'500px','overflow':'auto!important','margin-right': '0px','margin-left':'0px'}">
   <div class="row " style="margin-top:5px">
     <div class="col-lg-2 col-md-2 form-inline labelheading">
-      <label class="form-label"><b>GatePass Id: </b> </label>&nbsp;<label class="labeltext">GTP{{DGgatepassid}}</label>
+      <label class="form-label"><b>GatePass Id: </b> </label>&nbsp;<label class="labeltext">{{DGgatepassid}}</label>
     </div>
     <div class="col-lg-2 col-md-2 form-inline labelheading">
       <label class="form-label"><b>Type: </b> </label>&nbsp;<label class="labeltext">{{DGgatepasstype}}</label>

@@ -280,7 +280,7 @@ export class GatePassoutwardComponent implements OnInit {
     senddata.forEach(item => {
       let mdata = new outwardmaterialistModel();
       mdata.gatepassmaterialid = item.gatepassmaterialid;
-      mdata.gatepassid = parseInt(this.DGgatepassid);
+      mdata.gatepassid = this.DGgatepassid;
       mdata.remarks = this.pgremarks;
       mdata.movedby = this.employee.employeeno;
       var date = this.datePipe.transform(tdate, 'yyyy-MM-dd hh:mm:ss');

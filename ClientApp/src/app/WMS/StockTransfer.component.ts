@@ -91,7 +91,7 @@ export class StockTransferComponent implements OnInit {
   }
   setdescription(event: any, data: any, index: number) {
     debugger;
-      data.materialdescription = event.value.materialdescription;
+     data.materialdescription = event.value.materialdescription;
     data.materialid = event.value.material;
     data.sourcelocation = "";
     data.destinationlocation = "";
@@ -106,6 +106,7 @@ export class StockTransferComponent implements OnInit {
         this.racklist.forEach(item => {
           if (!isNullOrUndefined(item.racknumber)) {
             var rac = loc + "." + item.racknumber;
+            this.results.push(rac);
             this.binlist.forEach(item => {
               if (!isNullOrUndefined(item.binnumber)) {
                 var bin = rac + "." + item.binnumber;
@@ -135,19 +136,15 @@ export class StockTransferComponent implements OnInit {
     });
    
   }
-  showmateriallocationList(material: any,index : number) {
+  showmateriallocationList(material: any, index: number) {
+    this.itemlocationData = [];
     if (material) {
       //this.currentrowindex = rowindex;
       //this.AddDialog = true;
-      this.wmsService.getItemlocationListByMaterial(material).subscribe(data => {
+      this.wmsService.getItemlocationListByMaterialsourcelocation(material).subscribe(data => {
         this.itemlocationData = data;
         this.podetailsList[index].itemlocationdata = data;
         this.setmatlocation(index);
-        //console.log(this.itemlocationData);
-        //this.showdialog = true;
-        //if (data != null) {
-
-        //}
       });
     }
     else {
@@ -200,16 +197,13 @@ export class StockTransferComponent implements OnInit {
       data.transferqty = 0;
       return;
     }
-
-    var itmrow = data.itemlocationdata.filter((dt) => dt.material == data.materialid && dt.itemlocation == data.sourcelocation);
-    if (itmrow.length > 0) {
-      data.sourceitemid = itmrow[0].itemid;
-    }
-    else {
-      data.sourceitemid = 0;
-    }
-
-    
+    //var itmrow = data.itemlocationdata.filter((dt) => dt.material == data.materialid && dt.itemlocation == data.sourcelocation);
+    //if (itmrow.length > 0) {
+    //  data.sourceitemid = itmrow[0].itemid;
+    //}
+    //else {
+    //  data.sourceitemid = 0;
+    //}
 
     if (data.transferqty > 0) {
       this.setqty(data);
@@ -232,7 +226,36 @@ export class StockTransferComponent implements OnInit {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Same source and destination location for this material already exists' });
       
     }
-   
+
+    var destloc = data.destinationlocation.split('.');
+    var store = destloc[0];
+    var rack = destloc[1];
+
+    var itmrow = this.locationlist.filter((dt) => dt.locatorname == store);
+    if (itmrow.length > 0) {
+      data.storeid = parseInt(itmrow[0].locatorid);
+    }
+    else {
+      data.storeid = 0;
+    }
+    var itmrow1 = this.racklist.filter((dt) => dt.racknumber == rack);
+    if (itmrow1.length > 0) {
+      data.rackid = parseInt(itmrow1[0].rackid);
+    }
+    else {
+      data.rackid = 0;
+    }
+    if (destloc.length == 3) {
+      var bin = destloc[2];
+      var itmrow2 = this.binlist.filter((dt) => dt.binnumber == bin);
+      if (itmrow2.length > 0) {
+        data.binid = parseInt(itmrow2[0].binid);
+      }
+      else {
+        data.binid = 0;
+      }
+
+    }
   }
   setqty(data: any) {
     debugger;
@@ -492,7 +515,7 @@ export class StockTransferComponent implements OnInit {
       return;
     }
     var invalidrow = this.podetailsList.filter(function (element, index) {
-      return (!element.sourcelocation) || (!element.destinationlocation) || (!element.transferqty) || (!element.materialid);
+      return (!element.sourcelocation) || (!element.destinationlocation) || (!element.transferqty) || (!element.materialid) || (element.transferqty == 0);
     });
     if (invalidrow.length > 0) {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Fill all details.' });
@@ -511,22 +534,22 @@ export class StockTransferComponent implements OnInit {
     var svdata = this.mainmodel;
     svdata.transferredby = this.employee.employeeno;
     svdata.materialdata = this.podetailsList;
-    svdata.materialdata.forEach(data => {
-      var itmrow = data.itemlocationdata.filter((dt) => dt.material == data.materialid && dt.itemlocation == data.sourcelocation);
-      if (itmrow.length > 0) {
-        data.sourceitemid = itmrow[0].itemid;
-      }
-      else {
-        data.sourceitemid = 0;
-      }
-      var itmrow = data.itemlocationdata.filter((dt) => dt.material == data.materialid && dt.itemlocation == data.destinationlocation);
-      if (itmrow.length > 0) {
-        data.destinationitemid = itmrow[0].itemid;
-      }
-      else {
-        data.destinationitemid = 0;
-      }
-    });
+    //svdata.materialdata.forEach(data => {
+    //  var itmrow = data.itemlocationdata.filter((dt) => dt.material == data.materialid && dt.itemlocation == data.sourcelocation);
+    //  if (itmrow.length > 0) {
+    //    data.sourceitemid = itmrow[0].itemid;
+    //  }
+    //  else {
+    //    data.sourceitemid = 0;
+    //  }
+    //  var itmrow = data.itemlocationdata.filter((dt) => dt.material == data.materialid && dt.itemlocation == data.destinationlocation);
+    //  if (itmrow.length > 0) {
+    //    data.destinationitemid = itmrow[0].itemid;
+    //  }
+    //  else {
+    //    data.destinationitemid = 0;
+    //  }
+    //});
 
     this.wmsService.Stocktransfer1(svdata).subscribe(data => {
       this.messageService.add({ severity: 'success', summary: '', detail: 'Material transferred' });

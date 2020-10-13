@@ -16,12 +16,7 @@
     </div>
 
   </div>
-  <!--<div class="card-header text-center cardheadertext">
-    <span>
-      <i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;Gate Pass Material Issue
-    </span>
-    <button type="button" icon="fa fa-arrow-left" pButton aria-hidden="true" pTooltip="Back" (click)="backtogatepass()" style="float: left; height: 26px;"></button>
-  </div>-->
+  
   <div class="card-body" style="overflow-y:scroll">
     <div *ngIf="materialList.length>0">
       <div *ngIf="employee.roleid=='8'" class="row mt-2" style="padding-left:20px;">
@@ -76,7 +71,7 @@
       <!--<br />-->
       <div class="row" style="padding-left:20px;">
         <div class="col-lg-2 col-md-2 col-sm-2 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
-          GatePass Id:&nbsp;<span style="color:#dc3545;">GTP{{materialList[0].gatepassid}}</span>
+          GatePass Id:&nbsp;<span style="color:#dc3545;">{{materialList[0].gatepassid}}</span>
         </div>
         <div class="col-lg-4 col-md-4 col-sm-4 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
           Requester:&nbsp;<span style="color:#dc3545;">{{materialList[0].name}}</span>
@@ -252,7 +247,7 @@
           <td class="ptable-cell" style="text-align:center">{{rowData.itemlocation}}</td>
           <td class="ptable-cell" style="text-align:right">{{rowData.availableqty}}</td>
           <td class="ptable-cell" style="text-align:right">
-            <input id="{{ri+1}}" pInputText type="number" [disabled]="issueqtyenable" style="text-align:right" class="form-control" (change)="checkissueqty($event,rowData.issuedqty,rowData.availableqty,rowData.material,rowData.createddate);" [(ngModel)]="rowData.issuedqty">
+            <input id="{{ri+1}}" pInputText type="number" [disabled]="issueqtyenable" style="text-align:right" class="form-control" (change)="checkissueqty($event,rowData.issuedqty,rowData.availableqty,rowData.material,rowData.createddate,ri);" [(ngModel)]="rowData.issuedqty">
           </td>
           <td class="ptable-cell" style="text-align:center">{{rowData.createddate | date :  constants.dateFormat}}</td>
         </tr>

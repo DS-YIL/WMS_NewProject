@@ -79,8 +79,8 @@ Task<string> updateonholdrow(updateonhold datamodel);
         string checkmaterialandqty(string material=null,int qty=0);
         int deletegatepassmaterial(int gatepassmaterialid);
         int updategatepassapproverstatus(List<gatepassModel> model);
-        Task<IEnumerable<gatepassModel>> GetmaterialList(int gatepassid);
-        Task<IEnumerable<gatepassapprovalsModel>> getGatePassApprovalHistoryList(int gatepassid);
+        Task<IEnumerable<gatepassModel>> GetmaterialList(string gatepassid);
+        Task<IEnumerable<gatepassapprovalsModel>> getGatePassApprovalHistoryList(string gatepassid);
         
         int updateprintstatus(gatepassModel model);
         int updatereprintstatus(reprintModel model);
@@ -106,6 +106,9 @@ Task<string> updateonholdrow(updateonhold datamodel);
         Task<IEnumerable<OpenPoModel>> getASNList(string deliverdate);
         Task<IEnumerable<OpenPoModel>> getASNListdata();
         Task<IEnumerable<IssueRequestModel>> GetItemlocationListBymterial(string material);
+        Task<IEnumerable<IssueRequestModel>> GetItemlocationListBymterialsourcelocation(string material);
+
+        
         Task<IEnumerable<IssueRequestModel>> getItemlocationListByIssueId(string requestforissueid);
         int updateissuedmaterial(List<IssueRequestModel> obj);
         int assignRole(authUser authuser);

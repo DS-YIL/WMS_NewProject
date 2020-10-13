@@ -390,7 +390,7 @@ namespace WMS.Controllers
 			return this._poService.updategatepassapproverstatus(model);
 		}
 		[HttpGet("getmaterialdetailsbygatepassid")]
-		public async Task<IEnumerable<gatepassModel>> gatepassmaterialdetail(int gatepassid)
+		public async Task<IEnumerable<gatepassModel>> gatepassmaterialdetail(string gatepassid)
 		{
 			return await this._poService.GetmaterialList(gatepassid);
 		}
@@ -403,7 +403,7 @@ namespace WMS.Controllers
 		}
 
 		[HttpGet("getGatePassApprovalHistoryList")]
-		public async Task<IEnumerable<gatepassapprovalsModel>> getGatePassApprovalHistoryList(int gatepassid)
+		public async Task<IEnumerable<gatepassapprovalsModel>> getGatePassApprovalHistoryList(string gatepassid)
 		{
 			return await this._poService.getGatePassApprovalHistoryList(gatepassid);
 		}
@@ -524,6 +524,12 @@ namespace WMS.Controllers
 		{
 
 			return await this._poService.GetItemlocationListBymterial(material);
+		}
+		[HttpGet("GetItemLocationListByMaterialsourcelocation")]
+		public async Task<IEnumerable<IssueRequestModel>> getitemlocationBymaterialsourcelocation(string material)
+		{
+
+			return await this._poService.GetItemlocationListBymterialsourcelocation(material);
 		}
 		[HttpGet("getItemlocationListByIssueId")]
 		public async Task<IEnumerable<IssueRequestModel>> getItemlocationListByIssueId(string requestforissueid)

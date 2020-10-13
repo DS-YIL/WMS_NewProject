@@ -303,7 +303,7 @@ export class wmsService {
 
     return this.http.get<any>(this.url + 'POData/getmaterialdetailsbygatepassid?gatepassid=' + gatepassId + '', this.httpOptions);
   }
-  getGatePassApprovalHistoryList(gatepassId): Observable<any> {
+  getGatePassApprovalHistoryList(gatepassId: string): Observable<any> {
     return this.http.get<any>(this.url + 'POData/getGatePassApprovalHistoryList?gatepassid=' + gatepassId + '', this.httpOptions);
   }
 
@@ -394,6 +394,10 @@ export class wmsService {
   getItemlocationListByMaterial(material: string): Observable<any> {
     material = encodeURIComponent(material);
     return this.http.get<any>(this.url + 'POData/GetItemLocationListByMaterial?material=' + material, this.httpOptions);
+  }
+  getItemlocationListByMaterialsourcelocation(material: string): Observable<any> {
+    material = encodeURIComponent(material);
+    return this.http.get<any>(this.url + 'POData/GetItemLocationListByMaterialsourcelocation?material=' + material, this.httpOptions);
   }
   getItemlocationListByIssueId(requestforissueid: string): Observable<any> {
     requestforissueid = encodeURIComponent(requestforissueid);

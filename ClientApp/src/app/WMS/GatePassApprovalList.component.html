@@ -73,7 +73,7 @@
               <td class="ptable-cell" style="text-align:center">
                 {{ri+1}}
               </td>
-              <td class="ptable-cell" style="text-align:center"><button class="btn btn-link" *ngIf="rowData.gatepassid" (click)="showApprover(rowData.gatepassid)">GTP{{rowData.gatepassid}}</button></td>
+              <td class="ptable-cell" style="text-align:center"><button class="btn btn-link" *ngIf="rowData.gatepassid" (click)="showApprover(rowData.gatepassid)">{{rowData.gatepassid}}</button></td>
               <td class="ptable-cell" style="text-align:left">{{rowData.gatepasstype}}</td>
               <td class="ptable-cell" style="text-align:left">{{rowData.vendorname}}</td>
               <td class="ptable-cell" style="text-align:left">{{rowData.reasonforgatepass}}</td>
@@ -182,7 +182,7 @@
 
         <div class="row" style="padding-left:20px;">
           <div class="col-lg-2 col-md-2 col-sm-2 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
-            GatePass Id:&nbsp;<span style="color:#dc3545;">GTP{{materialList[0].gatepassid}}</span>
+            GatePass Id:&nbsp;<span style="color:#dc3545;">{{materialList[0].gatepassid}}</span>
           </div>
           <div class="col-lg-2 col-md-2 col-sm-2 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
             Requester:&nbsp;<span style="color:#dc3545;">{{materialList[0].name}}</span>
@@ -274,7 +274,7 @@
           <div class="row">
             <div class="col-lg-1 col-md-1 col-sm-1"></div>
             <div class="col-lg-3 col-md-3 col-sm-3  form-inline" *ngIf="!btnDisable">
-              <label class="form-label">Status:</label>&nbsp;&nbsp;
+              <label class="form-label labelheading">Status:</label>&nbsp;&nbsp;
               <div *ngIf="typeOfList != 'GatePassPMList'" class="form-inline-list">
                 <select class="form-control forms-input" [(ngModel)]="gatepassModel.fmapprovedstatus">
                   <option value='Approved'>Approved</option>
@@ -292,11 +292,11 @@
 
               </div>
             </div>
-            <div class="col-lg-3 col-md-3 col-sm-3 form-inline" *ngIf="!btnDisable">
-              <label class="form-label">Remarks:</label>&nbsp;&nbsp;
-              <div class="form-inline-list">
-                <input *ngIf="typeOfList != 'GatePassPMList'" type="text" class="form-control" [(ngModel)]="gatepassModel.fmapproverremarks" />
-                <input *ngIf="typeOfList == 'GatePassPMList'" type="text" class="form-control" [(ngModel)]="gatepassModel.approverremarks" />
+            <div class="col-lg-4 col-md-4 col-sm-4 form-inline" *ngIf="!btnDisable">
+              <label class="form-label labelheading">Remarks:</label>&nbsp;&nbsp;
+              <div class="form-inline-list" style="width:80%">
+                <textarea *ngIf="typeOfList != 'GatePassPMList'" style="width:100%" class="form-control" [(ngModel)]="gatepassModel.fmapproverremarks"></textarea>
+                <textarea *ngIf="typeOfList == 'GatePassPMList'" style="width:100%" class="form-control" [(ngModel)]="gatepassModel.approverremarks"></textarea>
               </div>
 
             </div>

@@ -176,6 +176,7 @@ export class GatePassApprovalList implements OnInit {
 
   //get gatepass list
   bindMaterilaDetails(gatepassId: any) {
+    this.btnDisable = false;
     this.wmsService.gatepassmaterialdetail(gatepassId).subscribe(data => {
       debugger;
       this.materialList = data;
@@ -194,8 +195,24 @@ export class GatePassApprovalList implements OnInit {
 
 
   updategatepassapproverstatus() {
+    debugger;
+    if (this.typeOfList == "GatePassPMList") {
+      if (isNullOrUndefined(this.gatepassModel.approverstatus) || this.gatepassModel.approverstatus == "" || this.gatepassModel.approverstatus == "Pending") {
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Select Status' });
+        return;
+      }
+    }
+    else if (this.typeOfList == "GatePassFMList") {
+      if (isNullOrUndefined(this.gatepassModel.fmapprovedstatus) || this.gatepassModel.fmapprovedstatus == "" || this.gatepassModel.fmapprovedstatus == "Pending") {
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Select Status' });
+        return;
+      }
+    }
+   
+   
     this.gatepassModel.gatepassid = this.materialList[0].gatepassid;
     if (this.typeOfList == "GatePassPMList")
+     // if (isNullOrUndefined())
       this.gatepassModel.categoryid = 1;
     else
       this.gatepassModel.categoryid = 2;

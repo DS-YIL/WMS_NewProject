@@ -228,7 +228,8 @@ export class locationdetails {
 export class gatepassModel {
   issuedqty: number;
   issuedquantity: number;
-  gatepassid: number;
+  // gatepassid: number;
+  gatepassid: string;
   gatepasstype: string;
   status: string;
   remarks: string;
@@ -304,7 +305,8 @@ export class materialListforReserve {
 }
 
 export class outwardmaterialistModel {
-  gatepassid: number;
+  // gatepassid: number;
+  gatepassid: string;
   gatepassmaterialid: string;
   materialid: string;
   materialdescription: string;
@@ -449,6 +451,10 @@ export class stocktransfermateriakmodel {
   transferid: string;
   itemid: number;
   materialid: string;
+  createddate: Date;
+  binid: number;
+  rackid: number;
+  storeid: number;
   materialdescription: string;
   sourcelocation: string;
   sourceitemid: number;
@@ -579,7 +585,8 @@ export class UserModel {
 }
 
 export class outwardinwardreportModel {
-  gatepassid: number;
+  // gatepassid: number;
+  gatepassid: string;
   gatepassmaterialid: number;
   materialid: string;
   materialdescription: string;

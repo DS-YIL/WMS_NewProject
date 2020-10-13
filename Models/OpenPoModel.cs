@@ -493,7 +493,8 @@ namespace WMS.Models
 		public int issuedqty { get; set; }
 		public string reprintedby { get; set; }
 		public int availableqty { get; set; }
-		public int gatepassid { get; set; }
+		//gate pass change
+		public string gatepassid { get; set; }
 		public string gatepasstype { get; set; }
 		public string status { get; set; }
 		public string referenceno { get; set; }
@@ -513,7 +514,7 @@ namespace WMS.Models
 		public string approverremarks { get; set; }
 		public Boolean print { get; set; }
 		public int reprintcount { get; set; }
-		public DateTime approvedon { get; set; }
+		public DateTime? approvedon { get; set; }
 		public List<materialistModel> materialList { get; set; }
 		public string printedby { get; set; }
 		public DateTime printedon { get; set; }
@@ -553,6 +554,8 @@ namespace WMS.Models
 
 		public string fmapprover { get; set; }
 		public string approvername { get; set; }
+
+		public DateTime? createddate { get; set; }
 	}
 	public class materialistModel
 	{
@@ -569,7 +572,8 @@ namespace WMS.Models
 
 	public class outwardinwardreportModel
     {
-		public int gatepassid { get; set; }
+		//gate pass change
+		public string gatepassid { get; set; }
 		public int gatepassmaterialid { get; set; }
 		public string materialid{ get; set; }
 		public string materialdescription{ get; set; }
@@ -591,8 +595,11 @@ namespace WMS.Models
 
 	public class reprintModel
 	{
+		//gate pass change
 		public int reprinthistoryid { get; set; }
-		public int? gatepassid { get; set; }
+
+		//public int? gatepassid { get; set; }
+		public string gatepassid { get; set; }
 		public int? inwmasterid { get; set; }
 		public DateTime reprintedon { get; set; }
 		public string reprintedby { get; set; }
@@ -640,6 +647,11 @@ namespace WMS.Models
 		public string binid { get; set; }
 		public string unitprice { get; set; }
 
+	}
+
+	public class class1
+    {
+		public string material { get; set; }
 	}
 
 	public class ReportModel
@@ -738,8 +750,10 @@ namespace WMS.Models
 		internal string employeeno { get; set; }
 		internal DateTime requestedon { get; set; }
 		internal string requestedby { get; set; }
-		internal int gatepassid { get; set; }
-        internal string gatepasstype { get; set; }
+		// gate pass change
+		//internal int gatepassid { get; set; }
+		internal string gatepassid { get; set; }
+		internal string gatepasstype { get; set; }
 
 		public int materialissueid { get; set; }
 
@@ -924,7 +938,10 @@ namespace WMS.Models
 public class gatepassapprovalsModel
 {
 	public int historyid { get; set; }
-	public int gatepassid { get; set; }
+
+	// gate pass change
+	//internal int gatepassid { get; set; }
+	public string gatepassid { get; set; }
 	public int approverid { get; set; }
 	public string approvername { get; set; }
 	public string approverstatus { get; set; }
@@ -979,6 +996,10 @@ public class stocktransfermateriakmodel
 	public string transferid { get; set; }
 	public int itemid { get; set; }
 	public string materialid { get; set; }
+
+	public int binid { get; set; }
+	public int rackid { get; set; }
+	public int storeid { get; set; }
 	public string materialdescription { get; set; }
 	public string sourcelocation { get; set; }
 	public int sourceitemid { get; set; }
@@ -1091,7 +1112,9 @@ public class materialReservetorequestModel
 
 public class materialistModel
 {
-	public int gatepassid { get; set; }
+	// gate pass change
+	//internal int gatepassid { get; set; }
+	public string gatepassid { get; set; }
 	public string gatepassmaterialid { get; set; }
 	public string materialid { get; set; }
 	public string materialdescription { get; set; }
@@ -1179,7 +1202,10 @@ public class testcrud
 public class PrintHistoryModel
 {
 	public int reprinthistoryid { get; set; }
-	public int gatepassid { get; set; }
+
+	// gate pass change
+	//internal int gatepassid { get; set; }
+	public string gatepassid { get; set; }
 	public int inwmasterid { get; set; }
 	public DateTime reprintedon { get; set; }
 	public string reprintedby { get; set; }

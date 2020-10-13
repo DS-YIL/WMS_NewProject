@@ -233,7 +233,7 @@ export class GatePassComponent implements OnInit {
     this.dynamicData.tableName = this.constants[name].tableName + " ";
     this.dynamicData.searchCondition = "" + this.constants[name].condition;
     this.dynamicData.searchCondition += "sk.materialid" + " ilike '" + searchTxt + "%'" + " and sk.availableqty>=1";
-    this.materialistModel.materialcost = "";
+    //this.materialistModel.materialcost = "";
     this.wmsService.GetMaterialItems(this.dynamicData).subscribe(data => {
       debugger;
 
@@ -297,7 +297,6 @@ export class GatePassComponent implements OnInit {
     this.wmsService.gatepassmaterialdetail(gatepassId).subscribe(data => {
       this.materialList = data;
       this.gatepassFiltered[this.selectedRow].materiallistarray = data;
-      console.log(data);
       this.gatepassModel = this.materialList[0];
       console.log(this.gatepassModel);
 
@@ -319,14 +318,9 @@ export class GatePassComponent implements OnInit {
       this.spinner.hide();
       this.totalGatePassList = data;
       //filtering the based on logged in user if role id is 8(Admin)
-      if (this.employee.roleid == "8") {
+      if (this.employee.roleid == "7") {
         this.totalGatePassList = this.totalGatePassList.filter(li => li.requestedby == this.employee.employeeno);
       }
-      
-      //debugger;
-      //console.log(this.totalGatePassList);
-      //var role8 = this.userrolelist.filter(li => li.roleid == 8);
-      //var role3 = this.userrolelist.filter(li => li.roleid == 3);
       this.gatepasslist = [];
       if (this.employee.roleid == "8") {
         this.gatepasslist = this.totalGatePassList.filter(li => li.gatepasstype == 'Non Returnable' && (li.approverstatus == this.approverstatus || li.approverstatus == null));
@@ -465,7 +459,7 @@ export class GatePassComponent implements OnInit {
   }
   //open gate pass dialog
   openGatepassDialog(gatepassobject: any, gpIndx: any, dialog) {
-    console.log(gatepassobject);
+    debugger;
     this.displaydetail = false;
     this.approverListdata();
     this[dialog] = true;
@@ -474,9 +468,22 @@ export class GatePassComponent implements OnInit {
       this.edit = true;
       this.gpIndx = gpIndx;
       this.gatepassModel = gatepassobject;
-      //this.materialistModel = { materialid: "", gatepassmaterialid: "0", materialdescription: "", quantity: 0, materialcost: "0", remarks: " ", expecteddate: this.date, returneddate: this.date };
-      //this.gatepassModel.materialList.push(this.materialistModel);
-      //this.material = "";
+      if (String(dialog) == 'updateReturnedDateDialog') {
+        var matdata = [];
+        var materialdata = gatepassobject.materialList;
+        materialdata.forEach(item => {
+          debugger;
+          var exisdata = matdata.filter(o => o.materialid == item.materialid);
+          if (exisdata.length == 0) {
+            matdata.push(item);
+          }
+
+          this.gatepassModel.materialList = matdata;
+
+        })
+      }
+      
+     
     } else {
       this.gatepassModel.gatepasstype = "0";
       this.gatepassModel.reasonforgatepass = "0";
@@ -626,18 +633,47 @@ export class GatePassComponent implements OnInit {
           this.gatepassModel.materialList[i].returneddate = this.gatepassModel.materialList[i].returneddate != null ? new Date(this.gatepassModel.materialList[i].returneddate).toLocaleDateString() : undefined;
 
         }
-        if (isNullOrUndefined(this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].materialid) || this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].materialid == "") {
+       
+        var invalidrcvmat = this.gatepassModel.materialList.filter(function (element, index) {
+            return (isNullOrUndefined(element.materialid) || element.materialid == "");
+        });
+        var invalidrcvquantity = this.gatepassModel.materialList.filter(function (element, index) {
+          return (element.quantity <= 0 || isNullOrUndefined(element.quantity));
+        });
+        if (invalidrcvmat.length > 0) {
           this.messageService.add({ severity: 'error', summary: '', detail: 'Select Material from list' });
           this.disableGPBtn = false;
           return false;
         }
-        else if (this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].quantity <= 0) {
+        if (invalidrcvquantity.length > 0) {
           this.messageService.add({ severity: 'error', summary: '', detail: 'Enter Quantity' });
           this.disableGPBtn = false;
           return false;
         }
+        if (this.gatepassModel.gatepasstype == "Returnable") {
+          var invalidrcv = this.gatepassModel.materialList.filter(function (element, index) {
+            return (isNullOrUndefined(element.expecteddate) || element.expecteddate == "");
+          });
+          if (invalidrcv.length > 0) {
+            this.messageService.add({ severity: 'error', summary: '', detail: 'Select Expected Date' });
+            this.disableGPBtn = false;
+            return false;
+          }
+        }
 
-        else if (this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].quantity > 0) {
+        
+        //if (isNullOrUndefined(this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].materialid) || this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].materialid == "") {
+        //  this.messageService.add({ severity: 'error', summary: '', detail: 'Select Material from list' });
+        //  this.disableGPBtn = false;
+        //  return false;
+        //}
+        //else if (this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].quantity <= 0) {
+        //  this.messageService.add({ severity: 'error', summary: '', detail: 'Enter Quantity' });
+        //  this.disableGPBtn = false;
+        //  return false;
+        //}
+
+        if (this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].quantity > 0) {
 
           this.spinner.show();
           //check if for that material quanity exists or not
@@ -645,12 +681,6 @@ export class GatePassComponent implements OnInit {
             this.spinner.hide();
             if (data == "true") {
               this.gatepassModel.requestedby = this.employee.employeeno;
-              if (this.gatepassModel.gatepasstype == "Returnable" && this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].expecteddate == undefined) {
-                this.messageService.add({ severity: 'error', summary: '', detail: 'Select Expected Date' });
-                this.disableGPBtn = false;
-                return false;
-              }
-              else {
                 this.gatepassModel.requestedby = this.employee.employeeno;
                 this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].expecteddate = this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].expecteddate != null ? new Date(this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].expecteddate).toLocaleDateString() : undefined;
                 this.spinner.show();
@@ -671,7 +701,7 @@ export class GatePassComponent implements OnInit {
                   }
 
                 })
-              }
+              
               //else {
               //  this.materialistModel = { materialid: "", gatepassmaterialid: "0", materialdescription: "", quantity: 0, materialcost: "0", remarks: " ", expecteddate: this.date, returneddate: this.date, issuedqty: 0 };
               //  this.gatepassModel.materialList.push(this.materialistModel);
@@ -686,15 +716,15 @@ export class GatePassComponent implements OnInit {
           });
 
         }
-        else if (this.gatepassModel.gatepasstype == "Returnable" && this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].expecteddate == undefined) {
-          this.messageService.add({ severity: 'error', summary: '', detail: 'Select Expected Date' });
-          this.disableGPBtn = false;
-          return false;
-        }
-        else {
-          this.materialistModel = { materialid: "", gatepassmaterialid: "0", materialdescription: "", quantity: 0, materialcost: "0", remarks: " ", expecteddate: this.date, returneddate: this.date, issuedqty: 0, showdetail: false, materiallistdata: [] };
-          this.gatepassModel.materialList.push(this.materialistModel);
-        }
+        //else if (this.gatepassModel.gatepasstype == "Returnable" && this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].expecteddate == undefined) {
+        //  this.messageService.add({ severity: 'error', summary: '', detail: 'Select Expected Date' });
+        //  this.disableGPBtn = false;
+        //  return false;
+        //}
+        //else {
+        //  this.materialistModel = { materialid: "", gatepassmaterialid: "0", materialdescription: "", quantity: 0, materialcost: "0", remarks: " ", expecteddate: this.date, returneddate: this.date, issuedqty: 0, showdetail: false, materiallistdata: [] };
+        //  this.gatepassModel.materialList.push(this.materialistModel);
+        //}
 
       }
       else {

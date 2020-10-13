@@ -90,13 +90,15 @@
           <ng-template pTemplate="header">
             <tr class="mprltbldata">
               <th style="text-align: center; width: 70px">Sl.No.</th>
-              <th style="text-align:center">GatePass Id</th>
+              <th style="text-align:center;width:150px;">GatePass Id</th>
               <th style="text-align:center" *ngIf="employee.roleid!='8'">Type</th>
               <th style="text-align:center">Supplier</th>
               <th style="text-align:center">Reason</th>
               <th style="text-align:center">Status</th>
-              <th style="text-align:center">Requested By</th>
-              <th style="text-align:center">Requested On</th>
+              <th style="text-align:center" *ngIf="employee.roleid!='7'">Requested By</th>
+              <th style="text-align:center" *ngIf="employee.roleid!='7'">Requested On</th>
+              <th style="text-align:center" *ngIf="employee.roleid =='7'">Approver</th>
+              <th style="text-align:center" *ngIf="employee.roleid =='7'">Approver Remarks</th>
               <th *ngIf="selectedStatus=='Issued'" style="text-align:center">Approved By</th>
               <th *ngIf="selectedStatus=='Issued'" style="text-align:center">Approved On</th>
               <th *ngIf="employee.roleid!='3' && employee.roleid !='8'" style="text-align:center;">Edit</th>
@@ -123,9 +125,9 @@
                 {{ri+1}}
               </td>
 
-              <td class="ptable-cell" style="text-align:center">
-                <a style="cursor:pointer;color:blue;text-decoration:underline;" *ngIf="rowData.gatepassid && employee.roleid=='7'" (click)="showdetails(rowData,ri)">GTP{{rowData.gatepassid}}</a>
-                <a *ngIf="employee.roleid!='7'" [routerLink]="['/WMS/GatePassApprover',rowData.gatepassid]" (click)="showdetails(rowData,ri)" routerLinkActive="active">GTP{{rowData.gatepassid}}</a>
+              <td class="ptable-cell" style="text-align:center;width:150px;">
+                <a style="cursor:pointer;color:blue;text-decoration:underline;" *ngIf="rowData.gatepassid && employee.roleid=='7'" (click)="showdetails(rowData,ri)">{{rowData.gatepassid}}</a>
+                <a *ngIf="employee.roleid!='7'" [routerLink]="['/WMS/GatePassApprover',rowData.gatepassid]" (click)="showdetails(rowData,ri)" routerLinkActive="active">{{rowData.gatepassid}}</a>
               </td>
               <td class="ptable-cell" style="text-align:left" *ngIf="employee.roleid!='8'">{{rowData.gatepasstype}}</td>
               <td class="ptable-cell" style="text-align:left">{{rowData.vendorname}}</td>
@@ -133,18 +135,32 @@
               <td class="ptable-cell" style="text-align:left">{{rowData.reasonforgatepass}}</td>
               <td class="ptable-cell" style="text-align:left">
                 <span *ngIf="!rowData.approverstatus">Pending for Approval</span>
-                <span *ngIf="rowData.approverstatus && selectedStatus!='Issued'">{{rowData.approverstatus}}</span>
+                <span *ngIf="rowData.gatepasstype == 'Returnable' && selectedStatus!='Issued'">{{rowData.approverstatus}}</span>
+                <span *ngIf="rowData.gatepasstype == 'Non Returnable' && !rowData.fmapprovedon && selectedStatus!='Issued'">(PM)-{{rowData.approverstatus}}</span>
+                <span *ngIf="rowData.gatepasstype == 'Non Returnable' && rowData.fmapprovedon && selectedStatus!='Issued'">(FM)-{{rowData.fmapprovedstatus}}</span>
                 <!--<span *ngIf="rowData.approverstatus && selectedStatus=='Issued'">Issued</span>-->
                 <span *ngIf="rowData.approverstatus=='Approved' && selectedStatus=='Issued'" [ngStyle]="{'color':rowData.status === 'Partial Closure' ? 'red' : 'black' }" style="color:red">{{rowData.status}}</span>
                 <!--<span *ngIf="rowData.approverstatus=='Approved' && rowData.print==false && rowData.returneddate!=null" style="color:red">Full Closure</span>-->
               </td>
 
               <!--<td class="ptable-cell" *ngIf="!rowData.approverstatus" style="text-align:left">Pending</td>-->
-              <td class="ptable-cell" style="text-align:left">{{rowData.name}}</td>
-              <td class="ptable-cell" style="text-align:center">{{rowData.requestedon | date :  constants.dateFormat}}</td>
+              <td class="ptable-cell" style="text-align:left" *ngIf="employee.roleid!='7'">{{rowData.name}}</td>
+              <td class="ptable-cell" style="text-align:center" *ngIf="employee.roleid!='7'">{{rowData.requestedon | date :  constants.dateFormat}}</td>
+              <td class="ptable-cell" style="text-align:left" *ngIf="employee.roleid == '7'">
+                <span *ngIf="!rowData.fmapprovedon && !rowData.approvedon"></span>
+                <span *ngIf="rowData.approvedon && !rowData.fmapprovedon">{{rowData.approvername}}-(PM)</span>
+                <span *ngIf="rowData.fmapprovedon">{{rowData.fmapprover}}-(FM)</span>
+              </td>
+              <td class="ptable-cell" style="text-align:center" *ngIf="employee.roleid =='7'">
+                <span *ngIf="!rowData.fmapprovedon && !rowData.approvedon"></span>
+                <span *ngIf="rowData.approvedon && !rowData.fmapprovedon">{{rowData.approverremarks}}</span>
+                <span *ngIf="rowData.fmapprovedon">{{rowData.fmapproverremarks}}</span>
+              </td>
               <td *ngIf="selectedStatus=='Issued'" class="ptable-cell" style="text-align:left">{{rowData.approvername}}</td>
               <td *ngIf="selectedStatus=='Issued'" class="ptable-cell" style="text-align:center">{{rowData.approvedon | date :  constants.dateFormat}}</td>
-              <td class="ptable-cell" *ngIf="employee.roleid!='3' && employee.roleid !='8'" style="text-align:center"><button *ngIf="rowData.approverstatus!='Approved' && rowData.requestedby==employee.employeeno" type="button" icon="fa fa-edit" pButton aria-hidden="true" (click)="openGatepassDialog(rowData,ri,'gatepassdialog')"></button></td>
+              <td class="ptable-cell" *ngIf="employee.roleid!='3' && employee.roleid !='8'" style="text-align:center">
+              <button *ngIf="rowData.approverstatus!='Approved' && rowData.approverstatus!='Sent for Modification' && rowData.fmapprovedstatus!='Sent for Modification' && rowData.requestedby==employee.employeeno" type="button" icon="fa fa-edit" pButton aria-hidden="true" (click)="openGatepassDialog(rowData,ri,'gatepassdialog')"></button>
+              </td>
               <td class="ptable-cell" *ngIf="employee.roleid=='3' && employee.roleid !='8'" style="text-align:center"><button *ngIf="rowData.approverstatus=='Approved'" type="button" icon="fa fa-print" pButton aria-hidden="true" (click)="showprint(rowData)"></button></td>
               <td *ngIf="employee.roleid=='3' && selectedStatus=='Issued'" class="ptable-cell" style="text-align:center"><button *ngIf="rowData.gatepasstype=='Returnable' && employee.roleid=='3' && rowData.approverstatus=='Approved' && rowData.status!='Full Closure' " type="button" icon="fa fa-pencil" pButton aria-hidden="true" (click)="openGatepassDialog(rowData,ri,'updateReturnedDateDialog')"></button></td>
             </tr>
@@ -157,10 +173,9 @@
             <tr *ngIf="rowData.showdetail">
               <td [attr.colspan]="getcolspan()" style="text-align:center;">
                 <p-table [value]="rowData.materiallistarray" [style]="{'width':'100%','overflow':'auto!important'}"
-                         [responsive]="true" [rows]="50"
+                         [responsive]="true"
                          [resizableColumns]="true"
                          columnResizeMode="expand"
-                         [paginator]="true" [rowsPerPageOptions]="[25,50,75,100]"
                          appendTo="body">
                   <ng-template pTemplate="header">
             <tr class="mprltbldata">
@@ -374,7 +389,7 @@
                   <td class="ptable-cell" style="text-align:left;">
 
                     <!--<input *ngIf="rowData.materialid" [(ngModel)]="rowData.materialid" class="form-control" type="text" name="{{rowData.materialid}}" />-->
-                    <p-autoComplete [(ngModel)]="rowData.materialid" type="text" appendTo="body"   [suggestions]="searchItems" (onSelect)="onMaterialSelected(rowData.materialid,ri)" (completeMethod)="bindSearchListData($event,'ItemId')" [size]="10"
+                    <p-autoComplete [(ngModel)]="rowData.materialid" type="text" appendTo="body" [forceSelection]="true"   [suggestions]="searchItems" (onSelect)="onMaterialSelected(rowData.materialid,ri)" (completeMethod)="bindSearchListData($event,'ItemId')" [size]="10"
                                     [dropdown]="true"></p-autoComplete>
 
                     <!--<p-autoComplete appendTo="body" *ngIf="!rowData.materialid" (onSelect)="onMaterialSelected(material)" [(ngModel)]="material" type="text" [suggestions]="searchItems" field="name" [dropdown]="true" (completeMethod)="bindSearchListData($event,'ItemId')" size="8"></p-autoComplete>-->
@@ -426,7 +441,7 @@
       <p-dialog header="Gate Pass" [(visible)]="updateReturnedDateDialog" [responsive]="true" showEffect="fade" [modal]="true" [style]="{'width':'85%','height':'500px','overflow':'auto!important','margin-right': '0px','margin-left':'0px'}">
         <div class="row " style="margin-top:10px">
           <div class="col-lg-3 col-md-3 col-sm-3 form-inline">
-            <label for="itemlocation" class="form-label"><b>GatePass Id: </b> </label>&nbsp;GTP{{gatepassModel.gatepassid}}
+            <label for="itemlocation" class="form-label"><b>GatePass Id: </b> </label>&nbsp;{{gatepassModel.gatepassid}}
           </div>
           <div class="col-lg-3 col-md-3 col-sm-3 form-inline">
             <label for="itemlocation" class="form-label"><b>Type: </b> </label>&nbsp;{{gatepassModel.gatepasstype}}

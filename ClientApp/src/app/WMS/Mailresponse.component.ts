@@ -18,7 +18,7 @@ export class MailresponseComponent implements OnInit {
     this.gatepass = new gatepassModel();
     this.gatepass.approverid = '400104';
     this.gatepass.approverstatus = "Approved";
-    this.gatepass.gatepassid = 182;
+    this.gatepass.gatepassid = "182";
     this.gatepass.categoryid = 1;
     this.approvereject();
   }

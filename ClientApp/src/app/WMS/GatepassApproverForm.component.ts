@@ -96,7 +96,7 @@ export class GatePassApproverComponent implements OnInit {
   backtogatepass() {
     this.router.navigateByUrl("WMS/GatePass");
   }
-  getGatePassHistoryList(gatepassId: any) {
+  getGatePassHistoryList(gatepassId: string) {
     this.wmsService.getGatePassApprovalHistoryList(gatepassId).subscribe(data => {
       this.gatePassApprovalList = data;
      //if (this.gatePassApprovalList.filter(li => li.approverid == this.employee.employeeno)[0].approverstatus != "Approved")
@@ -119,6 +119,9 @@ export class GatePassApproverComponent implements OnInit {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Enter Issue Qty.' });
       return;
     }
+    this.issueFinalList = this.issueFinalList.filter(function (element, index) {
+      return (element.issuedqty > 0);
+    });
     this.spinner.show();
     this.wmsService.updategatepassapproverstatus(this.issueFinalList).subscribe(data => {
       //this.materialList = data;
@@ -207,25 +210,22 @@ export class GatePassApproverComponent implements OnInit {
     });
   }
   //check issued quantity
-  checkissueqty($event, entredvalue, maxvalue, material, createddate, index) {
+  checkissueqty($event, entredvalue, maxvalue, material, createddate, index: number) {
+    debugger;
     var id = $event.target.id;
     if (entredvalue > maxvalue) {
       this.itemlocationData[index].issuedqty = 0;
       this.messageService.add({ severity: 'error', summary: '', detail: 'Please enter issue quantity less than Available quantity' });
-      // this.btnDisableformaterial = true;
       (<HTMLInputElement>document.getElementById(id)).value = "0";
       this.materialList[this.roindex].issuedqty = 0;
 
     }
     else {
-      // this.btnDisableformaterial = false;
       this.wmsService.checkoldestmaterial(material, createddate).subscribe(data => {
         this.Oldestdata = data;
         if (data != null) {
           this.alertconfirm(this.Oldestdata);
         }
-        //this.calculateTotalQty();
-        //this.calculateTotalPrice();
         this.spinner.hide();
       });
     }

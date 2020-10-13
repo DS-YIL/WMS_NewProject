@@ -2519,7 +2519,6 @@ namespace WMS.DAL
 						var createdate = Convert.ToDateTime(item.createddate).ToString("yyyy-MM-dd");
 						string stockquery = "select * from wms.wms_stock where materialid = '" + item.materialid + "' and availableqty > 0 and itemlocation = '" + item.itemlocation + "' and createddate::DATE = '" + createdate + "' order by itemid";
 						var stockdata =  DB.QueryAsync<StockModel>(stockquery, null, commandType: CommandType.Text);
-						//var stockdata =   DB.QueryAsync<StockModel>(stockquery, null, commandType: CommandType.Text);
 						if(stockdata != null)
                         {
 							int quantitytoissue = item.issuedqty;
@@ -2542,7 +2541,7 @@ namespace WMS.DAL
 								}
                                 else
                                 {
-									issuedqty = item.availableqty;
+									issuedqty = itm.availableqty;
 								}
 								
 								quantitytoissue = quantitytoissue - issuedqty;
@@ -2745,226 +2744,227 @@ namespace WMS.DAL
 		/// <returns></returns>
 		public int SaveOrUpdateGatepassDetails(gatepassModel dataobj)
 		{
+			NpgsqlTransaction Trans = null;
+
 			try
 			{
 				//foreach(var item in dataobj._list)
 				//{
 				string status = "Pending";
 				string remarks = dataobj.statusremarks;
-				if (dataobj.gatepassid == 0)
-				{
-					dataobj.requestedon = System.DateTime.Now;
-					string insertquery = WMSResource.insertgatepassdata;
-					string fmapprovedstatus = "";
-					string approverstatus = "Pending";
+				EmailModel emailmodel = new EmailModel();
 
-					string insertgatepasshistory = WMSResource.insertgatepassapprovalhistory;
-					dataobj.deleteflag = false;
-					dataobj.fmapproverid = null;
-					if (dataobj.gatepasstype == "Non Returnable")
-                    {
-						dataobj.fmapproverid = "400104";
-						dataobj.fmapprovedstatus = "Pending";
-
-					}
-						
-						
-
-					using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
+				using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+                {
+					pgsql.OpenAsync();
+					Trans = pgsql.BeginTransaction();
+					if (dataobj.gatepassid == "" || dataobj.gatepassid == null)
 					{
-						dataobj.status = status;
-						dataobj.approverstatus = approverstatus;
-						var gatepassid = DB.ExecuteScalar(insertquery, new
-						{
+						dataobj.requestedon = System.DateTime.Now;
+						string insertquery = WMSResource.insertgatepassdata;
+						string fmapprovedstatus = "";
+						string approverstatus = "Pending";
 
-							dataobj.gatepasstype,
-							dataobj.status,
-							dataobj.requestedon,
-							dataobj.referenceno,
-							dataobj.vehicleno,
-							dataobj.requestedby,
-							dataobj.deleteflag,
-							dataobj.vendorname,
-							dataobj.reasonforgatepass,
-							dataobj.approverid,
-							dataobj.fmapproverid,
-							dataobj.requestid,
-							dataobj.fmapprovedstatus,
-							dataobj.approverstatus,
-							remarks
-
-						});
-						dataobj.gatepassid = Convert.ToInt32(gatepassid);
-						if (dataobj.gatepasstype == "Returnable")
+						string insertgatepasshistory = WMSResource.insertgatepassapprovalhistory;
+						dataobj.deleteflag = false;
+						dataobj.fmapproverid = null;
+						if (dataobj.gatepasstype == "Non Returnable")
 						{
-							string approvername = dataobj.managername;
-							int label = 1;
-							//string approverstatus = "Pending";
-							var gatepasshistory = DB.ExecuteScalar(insertgatepasshistory, new
+							dataobj.fmapproverid = "400104";
+							dataobj.fmapprovedstatus = "Pending";
+
+						}
+							dataobj.status = status;
+							dataobj.approverstatus = approverstatus;
+							var gatepassid = pgsql.ExecuteScalar(insertquery, new
 							{
 
+								dataobj.gatepasstype,
+								dataobj.status,
+								dataobj.requestedon,
+								dataobj.referenceno,
+								dataobj.vehicleno,
+								dataobj.requestedby,
+								dataobj.deleteflag,
+								dataobj.vendorname,
+								dataobj.reasonforgatepass,
 								dataobj.approverid,
-								approvername,
-								gatepassid,
-								label,
-								approverstatus
+								dataobj.fmapproverid,
+								dataobj.requestid,
+								dataobj.fmapprovedstatus,
+								dataobj.approverstatus,
+								remarks
+
 							});
-							EmailModel emailmodel = new EmailModel();
-							emailmodel.pono = dataobj.pono;
-							emailmodel.requestid = dataobj.requestid;
-							emailmodel.gatepassid = dataobj.gatepassid;
-							emailmodel.gatepasstype = dataobj.gatepasstype;
-
-							emailmodel.requestedon = dataobj.requestedon;
-							emailmodel.requestedby = dataobj.requestedby;
-
-							emailmodel.ToEmailId = "developer1@in.yokogawa.com";
-							emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
-							emailmodel.CC = "sushma.patil@in.yokogawa.com";
-							EmailUtilities emailobj = new EmailUtilities();
-							emailobj.sendEmail(emailmodel, 8);
-						}
-						else if (dataobj.gatepasstype == "Non Returnable")
-						{
-							//string updategatepasshistoryfornonreturn = WMSResource.updategatepasshistoryfornonreturn;
+							dataobj.gatepassid = gatepassid.ToString();
+							if (dataobj.gatepasstype == "Returnable")
 							{
 								string approvername = dataobj.managername;
 								int label = 1;
 								//string approverstatus = "Pending";
-								var gatepasshistory = DB.ExecuteScalar(insertgatepasshistory, new
+								var gatepasshistory = pgsql.ExecuteScalar(insertgatepasshistory, new
 								{
 
 									dataobj.approverid,
 									approvername,
 									gatepassid,
 									label,
-									approverstatus,
+									approverstatus
 								});
-								string approverid = "400104";
-								approvername = "Lakshmi Prasanna";
-								label = 2;
-								var gatepassdata = DB.ExecuteScalar(insertgatepasshistory, new
+								
+								emailmodel.pono = dataobj.pono;
+								emailmodel.requestid = dataobj.requestid;
+								emailmodel.gatepassid = dataobj.gatepassid;
+								emailmodel.gatepasstype = dataobj.gatepasstype;
+
+								emailmodel.requestedon = dataobj.requestedon;
+								emailmodel.requestedby = dataobj.requestedby;
+
+								emailmodel.ToEmailId = "developer1@in.yokogawa.com";
+								emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
+								emailmodel.CC = "sushma.patil@in.yokogawa.com";
+								
+							}
+							else if (dataobj.gatepasstype == "Non Returnable")
+							{
+								//string updategatepasshistoryfornonreturn = WMSResource.updategatepasshistoryfornonreturn;
+								{
+									string approvername = dataobj.managername;
+									int label = 1;
+									//string approverstatus = "Pending";
+									var gatepasshistory = pgsql.ExecuteScalar(insertgatepasshistory, new
+									{
+
+										dataobj.approverid,
+										approvername,
+										gatepassid,
+										label,
+										approverstatus,
+									});
+									string approverid = "400104";
+									approvername = "Lakshmi Prasanna";
+									label = 2;
+									var gatepassdata = pgsql.ExecuteScalar(insertgatepasshistory, new
+									{
+
+										approverid,
+										gatepassid,
+										label,
+										approverstatus,
+										approvername
+									});
+								}
+								
+								emailmodel.pono = dataobj.pono;
+								emailmodel.requestid = dataobj.requestid;
+								emailmodel.gatepassid = dataobj.gatepassid;
+								emailmodel.gatepasstype = dataobj.gatepasstype;
+								emailmodel.requestedon = dataobj.requestedon;
+								emailmodel.requestedby = dataobj.requestedby;
+								emailmodel.ToEmailId = "developer1@in.yokogawa.com";
+								emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
+								emailmodel.CC = "sushma.patil@in.yokogawa.com";
+								
+							}
+
+
+							if (dataobj.gatepassid == "" || dataobj.gatepassid == null)
+								dataobj.gatepassid = gatepassid.ToString();
+						
+					}
+					else
+					{
+						dataobj.requestedon = System.DateTime.Now;
+						string insertquery = WMSResource.updategatepass.Replace("#gatepassid", Convert.ToString(dataobj.gatepassid));
+
+						
+							var result = pgsql.ExecuteScalar(insertquery, new
+							{
+
+								dataobj.gatepasstype,
+								dataobj.status,
+								dataobj.requestedon,
+								dataobj.referenceno,
+								dataobj.vehicleno,
+								dataobj.requestedby,
+								dataobj.vendorname,
+								dataobj.reasonforgatepass,
+								remarks
+
+							});
+						
+					}
+					foreach (var item in dataobj.materialList)
+					{
+						int itemid = 0;
+						
+							//string materialrequestquery = "select itemid from wms.wms_materialissue where gatepassmaterialid=" + item.gatepassmaterialid;
+							//gatepassModel gatemodel = new gatepassModel();
+							//gatemodel = pgsql.QueryFirstOrDefault<gatepassModel>(
+							//		  materialrequestquery, null, commandType: CommandType.Text);
+							//if (gatemodel != null)
+							//	itemid = gatemodel.itemid;
+					
+
+
+						
+							if (item.gatepassmaterialid == 0)
+							{
+								string insertquerymaterial = WMSResource.insertgatepassmaterial;
+								dataobj.deleteflag = false;
+								var results = pgsql.ExecuteScalar(insertquerymaterial, new
 								{
 
-									approverid,
-									gatepassid,
-									label,
-									approverstatus,
-									approvername
+									dataobj.gatepassid,
+									item.materialid,
+									item.quantity,
+									dataobj.deleteflag,
+									item.remarks,
+									item.materialcost,
+									item.expecteddate,
+									//item.returneddate,
+									item.issuedqty
 								});
+
 							}
-							EmailModel emailmodel = new EmailModel();
-							emailmodel.pono = dataobj.pono;
-							emailmodel.requestid = dataobj.requestid;
-							emailmodel.gatepassid = dataobj.gatepassid;
-							emailmodel.gatepasstype = dataobj.gatepasstype;
-							emailmodel.requestedon = dataobj.requestedon;
-							emailmodel.requestedby = dataobj.requestedby;
-							emailmodel.ToEmailId = "developer1@in.yokogawa.com";
-							emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
-							emailmodel.CC = "sushma.patil@in.yokogawa.com";
-							EmailUtilities emailobj = new EmailUtilities();
-							emailobj.sendEmail(emailmodel, 9);
-						}
-
-
-						if (dataobj.gatepassid == 0)
-							dataobj.gatepassid = Convert.ToInt32(gatepassid);
-					}
-				}
-				else
-				{
-					dataobj.requestedon = System.DateTime.Now;
-					string insertquery = WMSResource.updategatepass.Replace("#gatepassid", Convert.ToString(dataobj.gatepassid));
-
-					using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
-					{
-						var result = DB.ExecuteScalar(insertquery, new
-						{
-
-							dataobj.gatepasstype,
-							dataobj.status,
-							dataobj.requestedon,
-							dataobj.referenceno,
-							dataobj.vehicleno,
-							dataobj.requestedby,
-							dataobj.vendorname,
-							dataobj.reasonforgatepass,
-							remarks
-
-						});
-					}
-				}
-				foreach (var item in dataobj.materialList)
-				{
-					int itemid = 0;
-
-					using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
-					{
-
-						string materialrequestquery = "select itemid from wms.wms_materialissue where gatepassmaterialid=" + item.gatepassmaterialid;
-
-						pgsql.OpenAsync();
-						gatepassModel gatemodel = new gatepassModel();
-						gatemodel = pgsql.QueryFirstOrDefault<gatepassModel>(
-								  materialrequestquery, null, commandType: CommandType.Text);
-						if (gatemodel != null)
-							itemid = gatemodel.itemid;
-					}
-
-
-					using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
-					{
-						if (item.gatepassmaterialid == 0)
-						{
-							string insertquerymaterial = WMSResource.insertgatepassmaterial;
-							dataobj.deleteflag = false;
-							var results = DB.ExecuteScalar(insertquerymaterial, new
+							else
 							{
+								//string updatestockquery = "update wms.wms_stock set availableqty=availableqty+" + item.quantity + " where itemid=" + itemid;
 
-								dataobj.gatepassid,
-								item.materialid,
-								item.quantity,
-								dataobj.deleteflag,
-								item.remarks,
-								item.materialcost,
-								item.expecteddate,
-								//item.returneddate,
-								item.issuedqty
-							});
+								//var result1 = DB.ExecuteScalar(updatestockquery, new
+								//{
+								//});
 
-						}
-						else
-						{
-							string updatestockquery = "update wms.wms_stock set availableqty=availableqty+" + item.quantity + " where itemid=" + itemid;
+								string updatequery = WMSResource.updategatepassmaterial.Replace("#gatepassmaterialid", Convert.ToString(item.gatepassmaterialid));
 
-							var result1 = DB.ExecuteScalar(updatestockquery, new
-							{
-							});
+								var result = pgsql.ExecuteScalar(updatequery, new
+								{
 
-							string updatequery = WMSResource.updategatepassmaterial.Replace("#gatepassmaterialid", Convert.ToString(item.gatepassmaterialid));
+									dataobj.gatepassid,
+									item.materialid,
+									item.quantity,
+									item.remarks,
+									item.materialcost,
+									item.expecteddate,
+									item.returneddate,
 
-							var result = DB.ExecuteScalar(updatequery, new
-							{
-
-								dataobj.gatepassid,
-								item.materialid,
-								item.quantity,
-								item.remarks,
-								item.materialcost,
-								item.expecteddate,
-								item.returneddate,
-
-							});
+								});
 
 
-						}
+							}
+						
 					}
+					EmailUtilities emailobj = new EmailUtilities();
+					emailobj.sendEmail(emailmodel, 8);
+					Trans.Commit();
 				}
+
+				
 				return (1);
 			}
 			catch (Exception Ex)
 			{
+				Trans.Rollback();
 				log.ErrorMessage("PODataProvider", "SaveOrUpdateGatepassDetails", Ex.StackTrace.ToString());
 				return 0;
 			}
@@ -3090,7 +3090,7 @@ namespace WMS.DAL
 		/// </summary>
 		/// <param name="model"></param>
 		/// <returns></returns>
-		public int updategatepassapproverstatus(List<gatepassModel> model)
+		public int updategatepassapproverstatus_old(List<gatepassModel> model)
 		{
 			int returndata = 0;
 			try
@@ -3108,11 +3108,9 @@ namespace WMS.DAL
 						gatemodel = pgsql.QueryFirstOrDefault<gatepassModel>(
 						  query, null, commandType: CommandType.Text);
 					}
-					//item.itemid = gatemodel.itemid;
 					string updateapproverstatus = WMSResource.updategatepassmaterialissue;
 					string approvedstatus = item.approverstatus;
 					item.itemissueddate = System.DateTime.Now;
-					//item.issuedqty = item.quantity;
 					item.approvedon = System.DateTime.Now;
 					Boolean itemreturnable = false;
 					if (item.gatepasstype == "Returnable")
@@ -3147,8 +3145,6 @@ namespace WMS.DAL
 
 						});
 					}
-					//int qty = gatemodel.availableqty - item.issuedqty;
-					//string updatestockavailable = WMSResource.updatestockavailable.Replace("#availableqty", Convert.ToString(qty)).Replace("#itemid", Convert.ToString(item.itemid));
 					string updatestockavailable = WMSResource.updateqtyafterissue.Replace("#itemid", Convert.ToString(item.itemid)).Replace("#issuedqty", Convert.ToString(item.issuedqty));
 					using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
 					{
@@ -3186,12 +3182,126 @@ namespace WMS.DAL
 				return 0;
 			}
 		}
+
+		/// <summary>
+		/// update gatepass approver info
+		/// </summary>
+		/// <param name="model"></param>
+		/// <returns></returns>
+		public int updategatepassapproverstatus(List<gatepassModel> model)
+		{
+			int returndata = 0;
+			NpgsqlTransaction Trans = null;
+			try
+			{
+				using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+				{
+
+					pgsql.OpenAsync();
+					Trans = pgsql.BeginTransaction();
+					foreach (var item in model)
+					{
+
+						var createdate = Convert.ToDateTime(item.createddate).ToString("yyyy-MM-dd");
+						string stockquery = "select * from wms.wms_stock where materialid = '" + item.materialid + "' and availableqty > 0 and itemlocation = '" + item.itemlocation + "' and createddate::DATE = '" + createdate + "' order by itemid";
+						var stockdata = pgsql.QueryAsync<StockModel>(stockquery, null, commandType: CommandType.Text);
+						if (stockdata != null)
+						{
+							int quantitytoissue = item.issuedqty;
+							int issuedqty = 0;
+							int totalissued = 0;
+							foreach (StockModel itm in stockdata.Result)
+							{
+								if (quantitytoissue <= itm.availableqty)
+								{
+									issuedqty = quantitytoissue;
+								}
+								else
+								{
+									issuedqty = itm.availableqty;
+								}
+
+								quantitytoissue = quantitytoissue - issuedqty;
+								totalissued = totalissued + issuedqty;
+								string updateapproverstatus = WMSResource.updategatepassmaterialissue;
+								string approvedstatus = item.approverstatus;
+								item.itemissueddate = System.DateTime.Now;
+								item.approvedon = System.DateTime.Now;
+								Boolean itemreturnable = false;
+								if (item.gatepasstype == "Returnable")
+								{
+									itemreturnable = true;
+								}
+
+								var result1 = pgsql.Execute(updateapproverstatus, new
+								{
+									approvedstatus,
+									item.gatepassmaterialid,
+									item.approvedon,
+									issuedqty,
+									item.materialid,
+									item.pono,
+									itm.itemid,
+									itemreturnable,
+									item.approvedby,
+									item.itemissueddate,
+									item.itemreceiverid,
+
+								});
+
+								string updateissueqty = "update  wms.wms_gatepassmaterial set issuedqty=" + totalissued + " where gatepassmaterialid=" + item.gatepassmaterialid;
+								var result2 = pgsql.Execute(updateissueqty);
+								string updatestockavailable = WMSResource.updateqtyafterissue.Replace("#itemid", Convert.ToString(itm.itemid)).Replace("#issuedqty", Convert.ToString(issuedqty));
+								var result3 = pgsql.Execute(updatestockavailable);
+
+								if (quantitytoissue <= 0)
+								{
+									break;
+								}
+
+
+							}
+
+						}
+						else
+						{
+							Trans.Rollback();
+							log.ErrorMessage("PODataProvider", "updategatepassapproverstatus", "No material in stock");
+							return 0;
+						}
+						model[0].approvedon = System.DateTime.Now;
+						model[0].status = "Issued";
+						string insertquery = WMSResource.updategatepassapproverstatus.Replace("#gatepassid", Convert.ToString(model[0].gatepassid));
+						var data = pgsql.Execute(insertquery, new
+						{
+							model[0].status,
+							model[0].approverremarks,
+							model[0].approverstatus,
+							model[0].approvedon,
+
+						});
+						returndata = Convert.ToInt32(data);
+
+						
+					}
+					Trans.Commit();
+					return returndata;
+
+				}
+			}
+			catch (Exception Ex)
+			{
+				Trans.Rollback();
+				log.ErrorMessage("PODataProvider", "updategatepassapproverstatus", Ex.StackTrace.ToString());
+				return 0;
+			}
+		}
 		/// <summary>
 		/// get list of material based on gatepassid
 		/// </summary>
 		/// <param name="gatepassid"></param>
 		/// <returns></returns>
-		public async Task<IEnumerable<gatepassModel>> GetmaterialList(int gatepassid)
+		public async Task<IEnumerable<gatepassModel>> GetmaterialList(string gatepassid)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
@@ -3223,7 +3333,7 @@ namespace WMS.DAL
 			Purpose : <<Write briefly in one line or two lines>>
 			Review Date :<<>>   Reviewed By :<<>>
 		*/
-		public async Task<IEnumerable<gatepassapprovalsModel>> getGatePassApprovalHistoryList(int gatepassid)
+		public async Task<IEnumerable<gatepassapprovalsModel>> getGatePassApprovalHistoryList(string gatepassid)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
@@ -4340,6 +4450,40 @@ namespace WMS.DAL
 			}
 		}
 		/// <summary>
+		/// get materiallistfor stock transfer
+		/// Ramesh  kumar 12_10_2020
+		/// </summary>
+		/// <param name="material"></param>
+		/// <returns></returns>
+		public async Task<IEnumerable<IssueRequestModel>> GetItemlocationListBymterialsourcelocation(string material)
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+
+				try
+				{
+					string query = WMSResource.getitemlocationforstocktransfer.Replace("#materialid", material);
+					await pgsql.OpenAsync();
+					var data = await pgsql.QueryAsync<IssueRequestModel>(
+					  query, null, commandType: CommandType.Text);
+					return data;
+
+
+
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "GetItemlocationListBymterial", Ex.StackTrace.ToString());
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+			}
+		}
+		/// <summary>
 		/// Get list of Material issued by issueid
 		/// </summary>
 		/// <param name="requestforissueid"></param>
@@ -4397,26 +4541,26 @@ namespace WMS.DAL
 
 				try
 				{
-					string query = WMSResource.getItemlocationListByGatepassmaterialid.Replace("#gatepassmaterialid", gatepassmaterialid);
+					string query = WMSResource.getItemlocationListByGatepassmaterialid_v1.Replace("#gatepassmaterialid", gatepassmaterialid);
 					await pgsql.OpenAsync();
 					var data = await pgsql.QueryAsync<IssueRequestModel>(
 					 query, null, commandType: CommandType.Text);
 					data = data.OrderByDescending(o => o.createddate);
 
-					IEnumerable<IssueRequestModel> result = data.GroupBy(c => new { c.itemlocation, c.createddate }).Select(t => new IssueRequestModel
-					{
+					//IEnumerable<IssueRequestModel> result = data.GroupBy(c => new { c.itemlocation, c.createddate }).Select(t => new IssueRequestModel
+					//{
 
-						availableqty = t.Sum(u => u.availableqty),
-						issuedqty = t.Sum(u => u.issuedqty),
-						pono = t.First().pono,
-						materialid = t.First().materialid,
-						itemid = t.First().itemid,
-						Materialdescription = t.First().Materialdescription,
-						material = t.First().material,
-						itemlocation = t.Key.itemlocation,
-						createddate = t.Key.createddate
-					});
-					return result;
+					//	availableqty = t.Sum(u => u.availableqty),
+					//	issuedqty = t.Sum(u => u.issuedqty),
+					//	pono = t.First().pono,
+					//	materialid = t.First().materialid,
+					//	itemid = t.First().itemid,
+					//	Materialdescription = t.First().Materialdescription,
+					//	material = t.First().material,
+					//	itemlocation = t.Key.itemlocation,
+					//	createddate = t.Key.createddate
+					//});
+					return data;
 
 				}
 				catch (Exception Ex)
@@ -5935,7 +6079,8 @@ namespace WMS.DAL
 			{
 				try
 				{
-					string materialrequestquery = "select * from wms.wms_rd_bin where deleteflag=false  order by binnumber asc";
+					//string materialrequestquery = "select * from wms.wms_rd_bin where deleteflag=false  order by binnumber asc";
+					string materialrequestquery =  "select binnumber, Max(binid) as binid  from wms.wms_rd_bin where deleteflag = false group by binnumber  order by binnumber asc";
 
 					await pgsql.OpenAsync();
 					return await pgsql.QueryAsync<dropdownModel>(
@@ -5960,8 +6105,8 @@ namespace WMS.DAL
 			{
 				try
 				{
-					string materialrequestquery = "select * from wms.wms_rd_rack where deleteflag=false order by racknumber asc";
-
+					//string materialrequestquery = "select * from wms.wms_rd_rack where deleteflag=false order by racknumber asc";
+					string materialrequestquery = "select racknumber,Max(rackid) as rackid  from wms.wms_rd_rack where deleteflag=false group by racknumber  order by racknumber asc";
 					await pgsql.OpenAsync();
 					return await pgsql.QueryAsync<dropdownModel>(
 					  materialrequestquery, null, commandType: CommandType.Text);
@@ -6553,7 +6698,12 @@ namespace WMS.DAL
 
 
 		}
-
+		/// <summary>
+		/// Internal Stock Transfer function
+		/// Ramesh Kumar - modified on <<13-10-2020>>
+		/// </summary>
+		/// <param name="data"></param>
+		/// <returns></returns>
 		public string InvStockTransfer(invstocktransfermodel data)
 		{
 
@@ -6565,9 +6715,6 @@ namespace WMS.DAL
 			foreach (stocktransfermateriakmodel stck in data.materialdata)
 			{
 				NpgsqlTransaction Trans = null;
-
-
-
 				using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 				{
 					try
@@ -6577,24 +6724,6 @@ namespace WMS.DAL
 						StockModel objs = new StockModel();
 						if (x == 0)
 						{
-
-							string compare = "ST" + DateTime.Now.Year.ToString().Substring(2);
-							string Query = "select transferid from wms.wms_invstocktransfer order by transferredon desc limit 1";
-							var rslt = pgsql.QueryFirstOrDefault<invstocktransfermodel>(
-							Query, null, commandType: CommandType.Text);
-							if (rslt != null)
-							{
-								string[] poserial = rslt.transferid.Split('T');
-								int serial = Convert.ToInt32(poserial[1].Substring(2));
-								int nextserial = serial + 1;
-								string nextid = "ST" + DateTime.Now.Year.ToString().Substring(2) + nextserial.ToString().PadLeft(6, '0');
-								transfer.transferid = nextid;
-							}
-							else
-							{
-								string nextid = "ST" + DateTime.Now.Year.ToString().Substring(2) + "000001";
-								transfer.transferid = nextid;
-							}
 
 							transfer.transferredby = data.transferredby;
 							transfer.transferredon = System.DateTime.Now;
@@ -6609,135 +6738,197 @@ namespace WMS.DAL
 							transfer.sourceplant = data.sourceplant;
 							transfer.destinationplant = data.destinationplant;
 							transfer.remarks = data.remarks;
-							string mainstockinsertqueryy = WMSResource.insertInvStocktransfer;
-							var resultsxx = pgsql.ExecuteScalar(mainstockinsertqueryy, new
-							{
-								transfer.transferid,
-								transfer.transferredby,
-								transfer.transferredon,
-								transfer.transfertype,
-								transfer.sourceplant,
-								transfer.destinationplant,
-								transfer.remarks
+                            string mainstockinsertqueryy = WMSResource.insertInvStocktransfer;
+                            var resultsxx = pgsql.ExecuteScalar(mainstockinsertqueryy, new
+                            {
+                                transfer.transferredby,
+                                transfer.transferredon,
+                                transfer.transfertype,
+                                transfer.sourceplant,
+                                transfer.destinationplant,
+                                transfer.remarks
 
-							});
+                            });
+							transfer.transferid = resultsxx.ToString();
 
-						}
+                        }
 
-						string query = "select * from wms.wms_stock where itemid = '" + stck.sourceitemid + "'";
-						objs = pgsql.QueryFirstOrDefault<StockModel>(
-						   query, null, commandType: CommandType.Text);
+						string query = "select * from wms.wms_stock where materialid ='"+stck.materialid+"' and itemlocation = '"+stck.sourcelocation+"' and availableqty > 0 order by itemid";
 
-						if (objs != null)
+						var stockdata = pgsql.QueryAsync<StockModel>(query, null, commandType: CommandType.Text);
+						if (stockdata != null)
 						{
-
-							int decavail = objs.availableqty - stck.transferqty;
-							int? inwmasterid = null;
-							int? inwardid = null;
-							if (objs.inwmasterid > 0)
+							int quantitytotransfer = stck.transferqty;
+							int issuedqty = 0;
+							foreach (StockModel itm in stockdata.Result)
 							{
-								inwmasterid = objs.inwmasterid;
-
-							}
-							if (objs.inwmasterid > 0)
-							{
-								inwardid = objs.inwardid;
-
-							}
-
-							string query1 = "UPDATE wms.wms_stock set availableqty=" + decavail + "  where itemid = '" + stck.sourceitemid + "'";
-							pgsql.ExecuteScalar(query1);
-							StockModel objs1 = new StockModel();
-							string query2 = "select * from wms.wms_stock where pono = '" + objs.pono + "' and materialid = '" + objs.materialid + "' and itemlocation = '" + stck.destinationlocation + "'";
-							objs1 = pgsql.QueryFirstOrDefault<StockModel>(
-							   query2, null, commandType: CommandType.Text);
-							if (objs1 != null)
-							{
-								int availqty = objs1.availableqty + stck.transferqty;
-
-								string query4 = "UPDATE wms.wms_stock set availableqty=" + availqty + "  where pono = '" + objs.pono + "' and materialid = '" + objs.materialid + "' and itemlocation = '" + stck.destinationlocation + "'";
-								pgsql.ExecuteScalar(query4);
-								string stockinsertqry = WMSResource.insertinvtransfermaterial;
-								var resultsxx = pgsql.ExecuteScalar(stockinsertqry, new
+							
+								if (quantitytotransfer <= itm.availableqty)
 								{
-									transfer.transferid,
-									stck.materialid,
-									stck.sourcelocation,
-									stck.sourceitemid,
-									stck.destinationlocation,
-									stck.destinationitemid,
-									stck.transferqty
-
-								});
-							}
-							else
-							{
-								string insertqueryx = WMSResource.insertstock;
-								DateTime createddate = System.DateTime.Now;
-								int? binid = null;
-								int availableqty = stck.transferqty;
-								string itemlocation = stck.destinationlocation;
-								string createdby = transfer.transferredby;
-								int itemid = 0;
-								var result = 0;
-								result = Convert.ToInt32(pgsql.ExecuteScalar(insertqueryx, new
+									issuedqty = quantitytotransfer;
+								}
+								else
 								{
-									inwmasterid,
-									objs.pono,
-									binid,
-									objs.vendorid,
-									objs.totalquantity,
-									objs.shelflife,
-									availableqty,
-									objs.deleteflag,
-									//data.itemreceivedfrom,
-									itemlocation,
-									createddate,
-									createdby,
-									objs.stockstatus,
-									objs.materialid,
-									inwardid
-								}));
-								if (result != 0)
+									issuedqty = itm.availableqty;
+								}
+								int? inwmasterid = null;
+								int? inwardid = null;
+								if (itm.inwmasterid > 0)
 								{
-									itemid = Convert.ToInt32(result);
-									string insertqueryforlocationhistory = WMSResource.insertqueryforlocationhistory;
-									var results = pgsql.ExecuteScalar(insertqueryforlocationhistory, new
-									{
-										itemlocation,
-										itemid,
-										createddate,
-										createdby,
+									inwmasterid = itm.inwmasterid;
 
-									});
+								}
+								if (itm.inwmasterid > 0)
+								{
+									inwardid = itm.inwardid;
 
+								}
+
+								quantitytotransfer = quantitytotransfer - issuedqty;
+
+								string insertqueryforstatusforqty = WMSResource.updateqtyafterissue.Replace("#itemid", Convert.ToString(itm.itemid)).Replace("#issuedqty", Convert.ToString(issuedqty));
+								var data1 = pgsql.ExecuteScalar(insertqueryforstatusforqty);
+								StockModel objs1 = new StockModel();
+								string query2 = "select * from wms.wms_stock where pono = '" + itm.pono + "' and materialid = '" + itm.materialid + "' and itemlocation = '" + stck.destinationlocation + "' order by itemid";
+								objs1 = pgsql.QueryFirstOrDefault<StockModel>(
+								   query2, null, commandType: CommandType.Text);
+								if (objs1 != null)
+								{
+									int availqty = objs1.availableqty + issuedqty;
+
+									string query4 = "UPDATE wms.wms_stock set availableqty=" + availqty + "  where itemid = "+ objs1.itemid+ "";
+									pgsql.ExecuteScalar(query4);
 									string stockinsertqry = WMSResource.insertinvtransfermaterial;
-									stck.destinationitemid = itemid;
+									int sourceitemid = itm.itemid;
+									int destinationitemid = objs1.itemid;
+									int transferqty = issuedqty;
 									var resultsxx = pgsql.ExecuteScalar(stockinsertqry, new
 									{
 										transfer.transferid,
 										stck.materialid,
 										stck.sourcelocation,
-										stck.sourceitemid,
+										sourceitemid,
 										stck.destinationlocation,
-										stck.destinationitemid,
-										stck.transferqty
+										destinationitemid,
+										transferqty
 
 									});
+								}
+								else
+								{
+									string insertqueryx = WMSResource.insertstock;
+									DateTime createddate = System.DateTime.Now;
+									
+									int? binid = null;
+									int? rackid = null;
+									int? storeid = null;
+									if(stck.binid > 0)
+                                    {
+										binid = stck.binid;
+                                    }
+									if (stck.rackid > 0)
+									{
+										rackid = stck.rackid;
+									}
+									if (stck.storeid > 0)
+									{
+										storeid = stck.storeid;
+									}
+									//int availableqty = stck.transferqty;
+									int availableqty = issuedqty;
+									string itemlocation = stck.destinationlocation;
+									string createdby = transfer.transferredby;
+									string stocktype = itm.stocktype;
+									int itemid = 0;
+									var result = 0;
+									result = Convert.ToInt32(pgsql.ExecuteScalar(insertqueryx, new
+									{
+										inwmasterid,
+										objs.pono,
+										binid,
+										rackid,
+										storeid,
+										objs.vendorid,
+										objs.totalquantity,
+										objs.shelflife,
+										availableqty,
+										objs.deleteflag,
+										itemlocation,
+										createddate,
+										createdby,
+										objs.stockstatus,
+										objs.materialid,
+										inwardid,
+										stocktype
+									}));
+									if (result != 0)
+									{
+										itemid = Convert.ToInt32(result);
+										string insertqueryforlocationhistory = WMSResource.insertqueryforlocationhistory;
+										var results = pgsql.ExecuteScalar(insertqueryforlocationhistory, new
+										{
+											itemlocation,
+											itemid,
+											createddate,
+											createdby,
+
+										});
+										int sourceitemid = itm.itemid;
+										int destinationitemid = result;
+										string stockinsertqry = WMSResource.insertinvtransfermaterial;
+										stck.destinationitemid = itemid;
+										int transferqty = issuedqty;
+										var resultsxx = pgsql.ExecuteScalar(stockinsertqry, new
+										{
+											transfer.transferid,
+											stck.materialid,
+											stck.sourcelocation,
+											sourceitemid,
+											stck.destinationlocation,
+											destinationitemid,
+											transferqty
+										});
+
+									}
 
 								}
+								if (quantitytotransfer <= 0)
+								{
+									break;
+								}
+
 
 							}
-
-
-
-
 						}
-						else
-						{
-							Trans.Rollback();
-							return null;
-						}
+
+						//if (objs != null)
+						//{
+							
+
+						//	int decavail = objs.availableqty - stck.transferqty;
+						//	int? inwmasterid = null;
+						//	int? inwardid = null;
+						//	if (objs.inwmasterid > 0)
+						//	{
+						//		inwmasterid = objs.inwmasterid;
+
+						//	}
+						//	if (objs.inwmasterid > 0)
+						//	{
+						//		inwardid = objs.inwardid;
+
+						//	}
+
+						//	string query1 = "UPDATE wms.wms_stock set availableqty=" + decavail + "  where itemid = '" + stck.sourceitemid + "'";
+						//	pgsql.ExecuteScalar(query1);
+							
+
+						//}
+						//else
+						//{
+						//	Trans.Rollback();
+						//	return null;
+						//}
 						Trans.Commit();
 						x++;
 
@@ -7705,7 +7896,7 @@ namespace WMS.DAL
 
 					foreach (materialistModel mat in obj)
 					{
-						//					gatepassid integer references wms.wms_gatepass(gatepassid) not null,
+						//gatepassid integer references wms.wms_gatepass(gatepassid) not null,
 						//gatepassmaterialid integer references wms.wms_gatepassmaterial(gatepassmaterialid) not null,
 						//outwarddate TIMESTAMP without time zone null,
 						//outwardby varchar(50) null,
@@ -7721,7 +7912,7 @@ namespace WMS.DAL
 						if (mat.movetype == "out")
 						{
 							query = "insert into wms.outwatdinward(gatepassid, gatepassmaterialid, outwarddate, outwardby, outwardremarks, outwardqty)";
-							query += " values("+mat.gatepassid+", "+gatepassmaterialid+", '"+mat.outwarddatestring+"', '"+mat.movedby+"', '"+mat.remarks+"', "+mat.outwardqty+")";
+							query += " values('"+mat.gatepassid+"', "+gatepassmaterialid+", '"+mat.outwarddatestring+"', '"+mat.movedby+"', '"+mat.remarks+"', "+mat.outwardqty+")";
 							var resultsx = pgsql.ExecuteScalar(query);
 							//query = WMSResource.outwardinsertquery;
 							//results11 = pgsql.Execute(query, new
@@ -7740,7 +7931,7 @@ namespace WMS.DAL
 						else if(mat.movetype == "in")
 						{
 							query = "insert into wms.outwatdinward(gatepassid, gatepassmaterialid, securityinwardby, securityinwarddate, securityinwardremarks)";
-							query += " values(" + mat.gatepassid + ", " + gatepassmaterialid + ",'" + mat.movedby + "', '" + mat.inwarddatestring + "', '" + mat.remarks + "')";
+							query += " values('" + mat.gatepassid + "', " + gatepassmaterialid + ",'" + mat.movedby + "', '" + mat.inwarddatestring + "', '" + mat.remarks + "')";
 							var resultsx = pgsql.ExecuteScalar(query);
 							//query = "update wms.wms_gatepassmaterial set inwardqty = " + mat.inwardqty + ", inwarddate = '" + mat.inwarddatestring + "' , inwardedby='" + mat.movedby + "',inwardremarks='" + mat.remarks + "' where gatepassmaterialid = " + mat.gatepassmaterialid + "";
 							//results11 = pgsql.ExecuteScalar(query);
@@ -7827,10 +8018,10 @@ namespace WMS.DAL
 		{
 			int result = 0;
 			List<ReserveMaterialModel> _listobj = new List<ReserveMaterialModel>();
-			EmailUtilities emailutil = new EmailUtilities();
-			EmailModel emailobj = new EmailModel();
-			emailobj.FrmEmailId = "developer1@in.yokogawa.com";
-			emailobj.CC = "sushma.patil@in.yokogawa.com";
+			EmailUtilities emailobj = new EmailUtilities();
+			EmailModel emailmodel = new EmailModel();
+			emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
+			emailmodel.CC = "sushma.patil@in.yokogawa.com";
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
 				try
@@ -7860,18 +8051,18 @@ namespace WMS.DAL
 								{
 
 								});
-								emailobj.ToEmailId = items.email;
-								emailutil.sendEmail(emailobj, 10);
+								emailmodel.ToEmailId = items.email;
+								emailobj.sendEmail(emailmodel, 10);
 							}
 							else if (reservedate == date.AddDays(1))
 							{
-								emailobj.ToEmailId = items.email;
-								emailutil.sendEmail(emailobj, 11);
+								emailmodel.ToEmailId = items.email;
+								emailobj.sendEmail(emailmodel, 11);
 							}
 							else if (reservedate == date.AddDays(2))
 							{
-								emailobj.ToEmailId = items.email;
-								emailutil.sendEmail(emailobj, 12);
+								emailmodel.ToEmailId = items.email;
+								emailobj.sendEmail(emailmodel, 12);
 							}
 						}
 					}
