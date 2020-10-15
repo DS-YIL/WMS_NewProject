@@ -6609,6 +6609,72 @@ namespace WMS.DAL
 		}
 
 		/*
+		Name of Function : <<Getbindataforputaway>>  Author :<<Gayathri>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<Get bin data>>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
+		public async Task<IEnumerable<dropdownModel>> Getbindataforputaway()
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				try
+				{
+					string materialrequestquery = "select * from wms.wms_rd_bin where deleteflag=false  order by binnumber asc";
+					//string materialrequestquery = "select binnumber, Max(binid) as binid  from wms.wms_rd_bin where deleteflag = false group by binnumber  order by binnumber asc";
+
+					await pgsql.OpenAsync();
+					return await pgsql.QueryAsync<dropdownModel>(
+					  materialrequestquery, null, commandType: CommandType.Text);
+
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "Getbindata", Ex.StackTrace.ToString());
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+			}
+		}
+
+		/*
+		Name of Function : <<Getrackdataforputaway>>  Author :<<Gayathri>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<Get rack data>>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
+		public async Task<IEnumerable<dropdownModel>> Getrackdataforputaway()
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				try
+				{
+					string materialrequestquery = "select * from wms.wms_rd_rack where deleteflag=false order by racknumber asc";
+					//string materialrequestquery = "select racknumber,Max(rackid) as rackid  from wms.wms_rd_rack where deleteflag=false group by racknumber  order by racknumber asc";
+					await pgsql.OpenAsync();
+					return await pgsql.QueryAsync<dropdownModel>(
+					  materialrequestquery, null, commandType: CommandType.Text);
+
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "Getrackdata", Ex.StackTrace.ToString());
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+			}
+		}
+
+
+		/*
 		Name of Function : <<Getrackdata>>  Author :<<Ramesh Kumar>>  
 		Date of Creation <<15/07/2020>>
 		Purpose : <<Get list of materials >>

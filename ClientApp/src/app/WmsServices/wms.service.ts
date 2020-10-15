@@ -439,6 +439,12 @@ export class wmsService {
   getrackdata(): Observable<any> {
     return this.http.get<any>(this.url + 'POData/getrackata/', this.httpOptions);
   }
+  getbindataforputaway(): Observable<any> {
+    return this.http.get<any>(this.url + 'POData/getbindataforputaway/', this.httpOptions);
+  }
+  getrackdataforputaway(): Observable<any> {
+    return this.http.get<any>(this.url + 'POData/getrackataforputaway/', this.httpOptions);
+  }
   getMaterial(): Observable<Materials[]> {
     return this.http.get<Materials[]>(this.url + 'POData/GetMaterialdata/', this.httpOptions);
   }

@@ -401,7 +401,7 @@ export class WarehouseInchargeComponent implements OnInit {
   }
   binListdata() {
     debugger;
-    this.wmsService.getbindata().
+    this.wmsService.getbindataforputaway().
       subscribe(
         res => {
           //this._list = res; //save posts in array
@@ -421,7 +421,7 @@ export class WarehouseInchargeComponent implements OnInit {
   }
   rackListdata() {
     debugger;
-    this.wmsService.getrackdata().
+    this.wmsService.getrackdataforputaway().
       subscribe(
         res => {
           //this._list = res; //save posts in array
@@ -904,7 +904,7 @@ this.updateRowGroupMetaData();
         });
   }
   binListdata1() {
-    this.wmsService.getbindata().
+    this.wmsService.getbindataforputaway().
       subscribe(
         res => {
           //this._list = res; //save posts in array
@@ -912,7 +912,7 @@ this.updateRowGroupMetaData();
         });
   }
   rackListdata1() {
-    this.wmsService.getrackdata().
+    this.wmsService.getrackdataforputaway().
       subscribe(
         res => {
           //this._list = res; //save posts in array

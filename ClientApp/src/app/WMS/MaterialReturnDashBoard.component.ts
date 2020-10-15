@@ -446,7 +446,7 @@ export class MaterialReturnDashBoardComponent implements OnInit {
 
   binListdata() {
     debugger;
-    this.wmsService.getbindata().
+    this.wmsService.getbindataforputaway().
       subscribe(
         res => {
           //this._list = res; //save posts in array
@@ -466,7 +466,7 @@ export class MaterialReturnDashBoardComponent implements OnInit {
   }
   rackListdata() {
     debugger;
-    this.wmsService.getrackdata().
+    this.wmsService.getrackdataforputaway().
       subscribe(
         res => {
           //this._list = res; //save posts in array

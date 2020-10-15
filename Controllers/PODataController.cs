@@ -702,6 +702,17 @@ namespace WMS.Controllers
 		{
 			return await this._poService.Getrackdata();
 		}
+		[HttpGet("getbindataforputaway")]
+		public async Task<IEnumerable<dropdownModel>> getbindataforputaway()
+		{
+
+			return await this._poService.Getbindataforputaway();
+		}
+		[HttpGet("getrackataforputaway")]
+		public async Task<IEnumerable<dropdownModel>> getrackataforputaway()
+		{
+			return await this._poService.Getrackdataforputaway();
+		}
 
 		[HttpGet("GetMaterialdata")]
 		public async Task<IEnumerable<Materials>> GetMaterialcombo()

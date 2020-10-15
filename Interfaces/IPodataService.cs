@@ -128,7 +128,9 @@ Task<string> updateonholdrow(updateonhold datamodel);
         Task<IEnumerable<dropdownModel>> Getlocationdata();
         Task<IEnumerable<dropdownModel>> Getbindata();
         Task<IEnumerable<dropdownModel>> Getrackdata();
-		Task<string> insertquantitycheck(List<inwardModel> datamodel);
+        Task<IEnumerable<dropdownModel>> Getbindataforputaway();
+        Task<IEnumerable<dropdownModel>> Getrackdataforputaway();
+        Task<string> insertquantitycheck(List<inwardModel> datamodel);
         Task<string> insertreturn(List<inwardModel> datamodel);
 
         Task<IEnumerable<Materials>> GetMaterialcombo();
