@@ -81,21 +81,5 @@ export class ASNViewComponent implements OnInit {
   
  
 
- 
-
-  
- 
-  
-
-
-
- 
- 
-
- 
-
-
- 
-
 
 }

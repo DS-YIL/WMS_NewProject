@@ -55,6 +55,7 @@ export class ABCCategoryComponent implements OnInit {
     this.classA.enddate = new Date('03/31/' + toYear + '');
   }
 
+  //get catergory data
   getcategorydata() {
     this.wmsService.getcategorymasterdata().subscribe(data => {
       if (data) {
@@ -75,6 +76,7 @@ export class ABCCategoryComponent implements OnInit {
     });
   }
 
+  //Update ABC Range
   updateABCRange() {
     this.spinner.show();
     this.catList = [];

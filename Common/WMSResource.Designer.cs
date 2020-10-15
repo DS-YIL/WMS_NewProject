@@ -863,13 +863,12 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select &apos;&apos; as jobname, inw.confirmqty,sec.grnnumber,sec.pono,mtmaster.materialdescription,
-        ///sk.materialid, sk.availableqty,sk.itemid
+        ///   Looks up a localized string similar to select &apos;&apos; as jobname, inw.confirmqty,sec.grnnumber,sec.pono,mtmaster.materialdescription,sec.inwmasterid,
+        ///mtmaster.material
         /// from wms.wms_securityinward sec left join wms.wms_storeinward inw on inw.inwmasterid=sec.inwmasterid
-        ///left join wms.wms_stock sk on sec.inwmasterid = sk.inwmasterid
-        ///left  join wms.wms_polist openpo on sk.pono = openpo.pono
-        ///left join wms.&quot;MaterialMasterYGS&quot;  mtmaster on mtmaster.material= sk.materialid 
-        ///where sec.grnnumber =&apos;#grnnumber&apos; and sk.materialid=&apos;#materialid&apos;.
+        ///  join wms.wms_polist openpo on sec.pono = openpo.pono
+        /// join wms.&quot;MaterialMasterYGS&quot;  mtmaster on mtmaster.material= &apos;#materialid&apos;
+        ///where sec.grnnumber =&apos;#grnnumber&apos; and inw.materialid =&apos;#materialid&apos;.
         /// </summary>
         public static string getMaterialRequestDetails {
             get {
@@ -1016,12 +1015,11 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select  sec.inwmasterid,inw.confirmqty,sec.grnnumber,sec.pono,mtmaster.materialdescription,inw.materialid,sk.itemid
+        ///   Looks up a localized string similar to select  sec.inwmasterid,inw.confirmqty, sec.grnnumber,sec.pono,mtmaster.materialdescription,inw.materialid
         /// from wms.wms_securityinward sec 
-        /// left join wms.wms_stock sk on sec.inwmasterid = sk.inwmasterid
-        ///left join wms.wms_storeinward inw on inw.inwmasterid=sec.inwmasterid
-        ///left  join wms.wms_polist openpo on sk.pono = openpo.pono
-        ///left join wms.&quot;MaterialMasterYGS&quot;  mtmaster on mtmaster.material= sk.materialid
+        /// join wms.wms_storeinward inw on inw.inwmasterid=sec.inwmasterid
+        ///  join wms.wms_polist openpo on sec.pono = openpo.pono
+        /// join wms.&quot;MaterialMasterYGS&quot;  mtmaster on mtmaster.material= inw.materialid
         ///where sec.grnnumber =&apos;#grn&apos;.
         /// </summary>
         public static string getmatforgrnno {

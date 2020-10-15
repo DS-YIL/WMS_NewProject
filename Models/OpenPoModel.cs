@@ -324,6 +324,7 @@ namespace WMS.Models
 		public string gatepasstype { get; set; }
 		public string jobname { get; set; }
 		public int itemid { get; set; }
+		public string inwmasterid { get; set; }
 		public int quantity { get; set; }
 		public string requesterid { get; set; }
 		public string itemreceiverid { get; set; }
@@ -331,6 +332,7 @@ namespace WMS.Models
 		public string requestername { get; set; }
 		public string approvername { get; set; }
 		public string type { get; set; }
+		public string pono { get; set; }
 
 		public string details { get; set; }
 		public string acknowledge { get; set; }

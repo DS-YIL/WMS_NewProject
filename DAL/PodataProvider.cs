@@ -295,6 +295,7 @@ namespace WMS.DAL
 					}
 					else if (postatus == "SecurityCheck")
 					{
+						//If PO status is security check get materials
 						string query = "select mats.pono,SUM(mats.materialqty) as qty from wms.wms_pomaterials mats where mats.pono in (select DISTINCT sinw.pono from wms.wms_securityinward sinw where sinw.grnnumber is not null and sinw.pono not in (select  DISTINCT pono from wms.wms_stock))group by mats.pono";
 						await pgsql.OpenAsync();
 						var result = await pgsql.QueryAsync<POList>(
@@ -813,7 +814,8 @@ namespace WMS.DAL
 								result.availableqty = enquiryobj.availableqty;
 
 								ReportModel modelobj = new ReportModel();
-								string matIssuedQuery = "select sum(issuedqty)as issuedqty from wms.wms_materialissue where itemid =" + mtData.itemid;
+								string matIssuedQuery = "select sum(iss.issuedqty)as issuedqty from wms.wms_materialissue iss" +
+									" join wms.wms_stock sk on sk.pono='" +mtData.pono+"' where iss.itemid = sk.itemid and sk.materialid='" + mtData.materialid + "' and sk.inwmasterid=" + mtData.inwmasterid ;
 								modelobj = pgsql.QuerySingleOrDefault<ReportModel>(
 												matIssuedQuery, null, commandType: CommandType.Text);
 								if (modelobj != null)
@@ -822,7 +824,7 @@ namespace WMS.DAL
 								}
 								//Get material reserved qty
 								ReserveMaterialModel modeldataobj = new ReserveMaterialModel();
-								string matReserveQuery = "select sum(reservedqty)as reservedqty from wms.wms_materialreserve where itemid =" + mtData.itemid;
+								string matReserveQuery = "select sum(reser.reservequantity )as reservedqty from wms.materialreservedetails reser join wms.wms_stock sk on sk.pono='" + mtData.pono + "' where reser.itemid =sk.itemid and sk.materialid='" + mtData.materialid + "' and sk.inwmasterid=" + mtData.inwmasterid;
 								modeldataobj = pgsql.QuerySingleOrDefault<ReserveMaterialModel>(
 												matReserveQuery, null, commandType: CommandType.Text);
 								if (modeldataobj != null)
@@ -834,15 +836,16 @@ namespace WMS.DAL
 								//get material in gatepass
 								gatepassModel obj = new gatepassModel();
 								//string matgateQuery = "select sum(gtmat.quantity)as quantity from wms.wms_gatepassmaterial gtmat left join wms.wms_gatepass gp on gp.gatepassid = gtmat.gatepassid where materialid = '" + mtData.materialid + "' and gp.approvedon != null and gp.approverstatus!=null";
-								string matgateQuery = "select sum(gtmat.quantity)as quantity from wms.wms_gatepassmaterial gtmat left join wms.wms_gatepass gp on gp.gatepassid = gtmat.gatepassid left join wms.wms_materialissue matiss on matiss.itemid = '" + mtData.itemid + "'where materialid = '" + mtData.materialid + "' and gp.approvedon != null and gp.approverstatus != null and matiss.gatepassmaterialid = gtmat.gatepassmaterialid";
+								////string matgateQuery = "select sum(matiss.issuedqty)as quantity from wms.wms_gatepassmaterial gtmat join wms.wms_materialissue matiss on matiss.gatepassmaterialid = gtmat.gatepassmaterialid join wms.wms_gatepass gp on gp.gatepassid = gtmat.gatepassid join wms.wms_stock sk on sk.pono='" + mtData.pono + "' where sk.inwmasterid ="+ mtData.inwmasterid+ "and matiss.itemid =sk.itemid and gtmat.materialid ='"+mtData.materialid+"'";
 								//IssueRequestModel obj = new IssueRequestModel();
 								//pgsql.Open();
 
-								obj = pgsql.QuerySingle<gatepassModel>(
-								   matgateQuery, null, commandType: CommandType.Text);
+								//obj = pgsql.QuerySingle<gatepassModel>(
+								//   matgateQuery, null, commandType: CommandType.Text);
 
-								gatepassissuedqty = obj.quantity;
-								totalissed = Convert.ToInt32(issuedqty) + Convert.ToInt32(reservedqty) + gatepassissuedqty;
+								//gatepassissuedqty = obj.quantity;
+								//totalissed = Convert.ToInt32(issuedqty) + Convert.ToInt32(reservedqty) + gatepassissuedqty;
+								totalissed = Convert.ToInt32(issuedqty) + Convert.ToInt32(reservedqty);
 								result.issued = totalissed;
 
 
@@ -977,7 +980,8 @@ namespace WMS.DAL
 					   query, null, commandType: CommandType.Text);
 					foreach (var matdata in obj)
 					{
-						string reservequery = "select max(emp.name) as requestername,max(emp1.name)  as approvedby,max(res.reservedon) as issuedon,sum(res.reservedqty) as quantity from wms.wms_materialreserve res left join wms.employee emp on res.reservedby = emp.employeeno left join wms.employee emp1 on emp1.employeeno = res.releasedby where res.itemid=" + matdata.itemid;
+						string reservequery = "select max(emp.name) as requestername,max(emp1.name)  as approvedby,max(res.reservedon) as issuedon,sum(resdetails.reservequantity) as quantity from wms.materialreservedetails resdetails join wms.materialreserve res on resdetails.reserveid = res.reserveid join wms.wms_stock sk on sk.pono='" + matdata.pono + "' join wms.employee emp on res.reservedby = emp.employeeno join wms.employee emp1 on emp1.employeeno = res.reservedby where resdetails.itemid =sk.itemid and sk.materialid='" + materialid + "' and sk.inwmasterid=" + matdata.inwmasterid;
+							//"select max(emp.name) as requestername,max(emp1.name)  as approvedby,max(res.reservedon) as issuedon,sum(res.reservedqty) as quantity from wms.wms_materialreserve res left join wms.employee emp on res.reservedby = emp.employeeno join wms.wms_stock sk on sk.pono='"+ matdata.pono+ "'  left join wms.employee emp1 on emp1.employeeno = res.releasedby where res.itemid=sk.itemid and sk.materialid='"+ materialid + "' and sk.inwmasterid="+matdata.inwmasterid;
 						var data = pgsql.QuerySingle<ReqMatDetails>(
 						   reservequery, null, commandType: CommandType.Text);
 						objs = new ReqMatDetails();
@@ -992,7 +996,7 @@ namespace WMS.DAL
 							listobj.Add(objs);
 						}
 
-						string requstedquery = "select sum(issue.issuedqty)as quantity,max(emp.name) as requestername,max(emp1.name) as approvername from wms.wms_materialissue issue inner join wms.wms_materialrequest req on req.requestforissueid = issue.requestforissueid left join wms.employee emp on emp.employeeno = req.requesterid left join wms.employee emp1 on emp1.employeeno = req.approverid  where issue.itemid=" + matdata.itemid;
+						string requstedquery = "select sum(issue.issuedqty)as quantity,max(emp.name) as requestername,max(emp1.name) as approvername,max(issue.itemissueddate) as issuedon from wms.wms_materialissue issue inner join wms.materialrequestdetails matreqdetails on matreqdetails.id = issue.requestmaterialid inner join wms.materialrequest req on matreqdetails.requestid = req.requestid  left join wms.employee emp on emp.employeeno = req.requesterid join wms.wms_stock sk on sk.pono='" + matdata.pono + "' left join wms.employee emp1 on emp1.employeeno = req.approverid  where issue.itemid=sk.itemid and sk.materialid='" + materialid + "' and sk.inwmasterid=" + matdata.inwmasterid;
 						var data1 = pgsql.QuerySingle<ReqMatDetails>(
 					   requstedquery, null, commandType: CommandType.Text);
 						objs = new ReqMatDetails();
@@ -1008,21 +1012,30 @@ namespace WMS.DAL
 							listobj.Add(objs);
 						}
 						//string gatepassquery = " select max(gate.gatepasstype)as gatepasstype,sum(mat.quantity)as quantity,max(gate.approvedon) as issuedon,max(emp.name) as requestername,max(emp1.name) as approvername from wms.wms_gatepass gate  inner join wms.wms_gatepassmaterial mat on mat.gatepassid = gate.gatepassid  left join wms.employee emp on emp.employeeno = gate.requestedby left join wms.employee emp1 on emp1.employeeno = gate.approvedby where mat.materialid = '" + obj.materialid + "' and gate.approvedon != null and gate.approverstatus!=null";
-						string gatepassquery = "select max(gate.gatepasstype)as gatepasstype,sum(wmissue.issuedqty)as quantity,max(gate.approvedon) as issuedon,max(emp.name) as requestername,max(emp1.name) as approvername from wms.wms_gatepass gate  inner join wms.wms_gatepassmaterial mat on mat.gatepassid = gate.gatepassid  left join wms.employee emp on emp.employeeno = gate.requestedby left join wms.employee emp1 on emp1.employeeno = gate.approvedby join wms.wms_materialissue wmissue  on mat.gatepassmaterialid = wmissue.gatepassmaterialid where mat.materialid = '" + matdata.materialid + "' and gate.approvedon != null and gate.approverstatus != null";
-						var data2 = pgsql.QuerySingleOrDefault<ReqMatDetails>(
+						string gatepassquery = "select gp.gatepasstype as type,sum(matiss.issuedqty) as quantity,max(gp.approvedon) as issuedon,max(emp.name) as requestername, max(emp1.name) as approvername from wms.wms_gatepassmaterial gtmat join wms.wms_materialissue matiss on matiss.gatepassmaterialid = gtmat.gatepassmaterialid join wms.wms_gatepass gp on gp.gatepassid = gtmat.gatepassid left join wms.employee emp on emp.employeeno = gp.requestedby left join wms.employee emp1 on emp1.employeeno = gp.approverid join wms.wms_stock sk on sk.pono = '" + matdata.pono+"' where sk.inwmasterid = "+ matdata.inwmasterid + "and matiss.itemid = sk.itemid and gtmat.materialid = '"+ materialid + "' group by gp.gatepasstype";
+							//"select max(gate.gatepasstype)as gatepasstype,sum(wmissue.issuedqty)as quantity,max(gate.approvedon) as issuedon,max(emp.name) as requestername,max(emp1.name) as approvername from wms.wms_gatepass gate  inner join wms.wms_gatepassmaterial mat on mat.gatepassid = gate.gatepassid  left join wms.employee emp on emp.employeeno = gate.requestedby left join wms.employee emp1 on emp1.employeeno = gate.approvedby join wms.wms_materialissue wmissue  on mat.gatepassmaterialid = wmissue.gatepassmaterialid where mat.materialid = '" + matdata.materialid + "' and gate.approvedon != null and gate.approverstatus != null";
+						var data2 = await pgsql.QueryAsync<ReqMatDetails>(
 					   gatepassquery, null, commandType: CommandType.Text);
-						objs = new ReqMatDetails();
-						if (data2.quantity != 0)
-						{
-							objs.quantity = data2.quantity;
-							objs.type = data2.gatepasstype;
-							objs.requestername = data2.requestername;
-							objs.issuedon = data1.issuedon;
-							objs.details = matdata.jobname;
-							objs.approvername = data1.approvername;
-							objs.acknowledge = data1.requestername;
-							listobj.Add(objs);
-						}
+						
+						if(data2!=null)
+                        {
+							foreach(var gpdata in data2)
+                            {
+								if (gpdata.quantity != 0)
+								{
+									objs = new ReqMatDetails();
+									objs.quantity = gpdata.quantity;
+									objs.type = gpdata.type;
+									objs.requestername = gpdata.requestername;
+									objs.issuedon = gpdata.issuedon;
+									objs.details = gpdata.jobname;
+									objs.approvername = gpdata.approvername;
+									objs.acknowledge = gpdata.requestername;
+									listobj.Add(objs);
+								}
+							}
+                        }
+						
 
 					}
 					return listobj;

@@ -470,13 +470,12 @@ where sec.grnnumber ='#grn' and sk.materialid ='#materialid' and sk.availableqty
     <comment>get material details based on grn number</comment>
   </data>
   <data name="getMaterialRequestDetails" xml:space="preserve">
-    <value>select '' as jobname, inw.confirmqty,sec.grnnumber,sec.pono,mtmaster.materialdescription,
-sk.materialid, sk.availableqty,sk.itemid
+    <value>select '' as jobname, inw.confirmqty,sec.grnnumber,sec.pono,mtmaster.materialdescription,sec.inwmasterid,
+mtmaster.material
  from wms.wms_securityinward sec left join wms.wms_storeinward inw on inw.inwmasterid=sec.inwmasterid
-left join wms.wms_stock sk on sec.inwmasterid = sk.inwmasterid
-left  join wms.wms_polist openpo on sk.pono = openpo.pono
-left join wms."MaterialMasterYGS"  mtmaster on mtmaster.material= sk.materialid 
-where sec.grnnumber ='#grnnumber' and sk.materialid='#materialid'</value>
+  join wms.wms_polist openpo on sec.pono = openpo.pono
+ join wms."MaterialMasterYGS"  mtmaster on mtmaster.material= '#materialid'
+where sec.grnnumber ='#grnnumber' and inw.materialid ='#materialid'</value>
     <comment>get material requested and issued details</comment>
   </data>
   <data name="getpolist" xml:space="preserve">
@@ -574,12 +573,11 @@ values(default,@materialid,@itemid,@pono,current_timestamp,@reservedby,@reserved
     <value>update wms.wms_stock set availableqty=#availableqty where itemid=#itemid</value>
   </data>
   <data name="getmatforgrnno" xml:space="preserve">
-    <value>select  sec.inwmasterid,inw.confirmqty,sec.grnnumber,sec.pono,mtmaster.materialdescription,inw.materialid,sk.itemid
+    <value>select  sec.inwmasterid,inw.confirmqty, sec.grnnumber,sec.pono,mtmaster.materialdescription,inw.materialid
  from wms.wms_securityinward sec 
- left join wms.wms_stock sk on sec.inwmasterid = sk.inwmasterid
-left join wms.wms_storeinward inw on inw.inwmasterid=sec.inwmasterid
-left  join wms.wms_polist openpo on sk.pono = openpo.pono
-left join wms."MaterialMasterYGS"  mtmaster on mtmaster.material= sk.materialid
+ join wms.wms_storeinward inw on inw.inwmasterid=sec.inwmasterid
+  join wms.wms_polist openpo on sec.pono = openpo.pono
+ join wms."MaterialMasterYGS"  mtmaster on mtmaster.material= inw.materialid
 where sec.grnnumber ='#grn'</value>
     <comment>get material details</comment>
   </data>

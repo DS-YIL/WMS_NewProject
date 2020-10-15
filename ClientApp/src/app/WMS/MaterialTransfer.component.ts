@@ -618,7 +618,6 @@ export class MaterialTransferComponent implements OnInit {
 
   filterprojectsfrom(event) {
     this.filteredprojectsfrom = [];
-    debugger;
     for (let i = 0; i < this.projectlists.length; i++) {
       let brand = this.projectlists[i].value;
       let pos = this.projectlists[i].projectmanager;

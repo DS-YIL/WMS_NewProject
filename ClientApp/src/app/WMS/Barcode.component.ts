@@ -48,11 +48,14 @@ export class BarcodeComponent implements OnInit {
 
   }
 
+  //On click of button decrease qty
   decreaseQty() {
     if (this.qty > 1) {
       this.qty = this.qty - 1;
     }
   }
+
+  //On click of increase qty increase the qty
   increaseQty() {
     if (this.qty < this.noOfPrint) {
       this.qty = this.qty + 1;

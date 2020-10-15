@@ -16,6 +16,7 @@ import { DialogModule } from 'primeng/dialog';
 import { ToastModule } from 'primeng/toast';
 import { NgxSpinnerModule } from "ngx-spinner";
 import { MatBadgeModule } from '@angular/material/badge';
+import { ChartModule } from 'primeng/chart';
 
 import { ConfirmationDialogComponent } from './WmsCommon/confirmationdialog/confirmation-dialog.component';
 import { SelectfilterPipe } from './WmsCommon/selectfilter.pipe';
@@ -214,6 +215,7 @@ import { FieldsetModule } from 'primeng/fieldset';
     MatBadgeModule,
     InputNumberModule, RadioButtonModule,
     ToolbarModule,
+    ChartModule,
     SelectButtonModule,
     FileUploadModule,
     TabViewModule,
