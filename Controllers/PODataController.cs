@@ -579,6 +579,13 @@ namespace WMS.Controllers
 			return await this._poService.getUserdashboardgraphdata();
 		}
 
+		[HttpGet("getManagerdashboardgraphdata")]
+		public async Task<ManagerDashboard> getManagerdashboardgraphdata()
+        {
+			return await this._poService.getManagerdashboardgraphdata();
+
+		}
+
 		[HttpGet("getweeklyUserdashgraphdata")]
 		public async Task<IEnumerable<UserDashboardGraphModel>> getWeeklyUserdashboardgraphdata()
 		{

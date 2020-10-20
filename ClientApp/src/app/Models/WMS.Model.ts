@@ -627,6 +627,19 @@ export class PrintHistoryModel {
   invoiceNo: string;
 }
 
+export class ManagerDashboard {
+  pendingcount: any;
+  onholdcount: any;
+  completedcount: any;
+  qualitycompcount: any;
+  qualitypendcount: any;
+  putawaypendcount: any;
+  putawaycompcount: any;
+  putawayinprocount: any;
+  acceptancependcount: any;
+  acceptancecompcount: any;
+}
+
 export class materilaTrasFilterParams {
   FromDate: string;
   ToDate: string;

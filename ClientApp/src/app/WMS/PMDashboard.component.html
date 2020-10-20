@@ -1,0 +1,39 @@
+<div class="row col-lg-12 col-sm-12 col-mg-12" style="margin-top:10px;margin-bottom:10px">
+  <div class="col-lg-3 col-sm-3 col-mg-3">
+    <p-card header="Receipts">
+      <p-chart type="pie" [data]="receiptsdata"></p-chart>
+      <div style="text-align:center">
+        <b>
+          Total:{{totalReceipts}}</b>
+      </div>
+    </p-card>
+  </div>
+  <div class="col-lg-3 col-sm-3 col-mg-3">
+    <p-card header="Quality">
+      <p-chart type="pie" [data]="qualitydata"></p-chart>
+      <div style="text-align:center">
+        <b>
+          Total:{{totalquality}}</b>
+      </div>
+    </p-card>
+  </div>
+  <div class="col-lg-3 col-sm-3 col-mg-3">
+    <p-card header="Acceptance">
+      <p-chart type="pie" [data]="acceptancedata"></p-chart>
+      <div style="text-align:center">
+        <b>
+          Total:{{totalacceptance}}</b>
+      </div>
+    </p-card>
+  </div>
+  <div class="col-lg-3 col-sm-3 col-mg-3">
+    <p-card header="Put Away">
+      <p-chart type="pie" [data]="putawaydata"></p-chart>
+      <div style="text-align:center"><b>
+  Total:{{totalputaway}}</b>
+      </div>
+    </p-card>
+  </div>
+</div>
+<div class="row col-lg-12 col-sm-12 col-mg-12">
+  </div>

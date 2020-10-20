@@ -386,8 +386,8 @@ export class HomeComponent implements OnInit {
     this.nodes = [];
     this.nodes.push(node);
     node.classList.add("cardactive");
-    //this.setgraph(type);
-    //this.setmonthlygraph(type);
+    this.setgraph(type);
+    this.setmonthlygraph(type);
     
   }
   activeCard(event, type: string) {
@@ -512,8 +512,8 @@ export class HomeComponent implements OnInit {
       }
       this.getGatePassList();
       this.getMaterialIssueList();
-      //this.getgraphdata();
-      //this.getmonthlygraphdata();
+      this.getgraphdata();
+      this.getmonthlygraphdata();
       this.spinner.hide();
       })
 

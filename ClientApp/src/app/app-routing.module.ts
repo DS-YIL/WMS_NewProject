@@ -63,6 +63,7 @@ import { MaterialTransferDashboardComponent } from './WMS/MaterialTransferDashbo
 import { OutwardinwardreportComponent } from './WMS/Outwardinwardreport.component';
 import { GatepassinwardreceiveComponent } from './WMS/Gatepassinwardreceive.component';
 import { MaterialTransferApprovalComponent } from './WMS/MaterialTransferApproval.component';
+import { PMDashboardComponent } from './WMS/PMDashboard.component';
 
 
 const routes: Routes = [{
@@ -143,8 +144,8 @@ const routes: Routes = [{
     { path: "MaterialTransferDashboard", component: MaterialTransferDashboardComponent, canActivate: [AuthGuard] },
     { path: "outinDashboard", component: OutwardinwardreportComponent, canActivate: [AuthGuard] },
     { path: "gatepassreceive", component: GatepassinwardreceiveComponent, canActivate: [AuthGuard] },
-    { path: "materialtransferapproval", component: MaterialTransferApprovalComponent, canActivate: [AuthGuard] }
-    
+    { path: "materialtransferapproval", component: MaterialTransferApprovalComponent, canActivate: [AuthGuard] },
+    { path: "PMDashboard", component: PMDashboardComponent, canActivate:[AuthGuard] }
   ]
   
 },

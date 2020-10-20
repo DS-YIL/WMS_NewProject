@@ -5276,6 +5276,90 @@ namespace WMS.DAL
 		}
 
 		/*
+		Name of Function : <<getManagerdashboardgraphdata>>  Author :<<Gayathri>>  
+		Date of Creation <<>>
+		Purpose : <<get Manager  dashboard graph data>>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
+		public async Task<ManagerDashboard> getManagerdashboardgraphdata()
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+
+
+				try
+				{
+
+					//Get count of po and invoice for pending receipts
+					string penqry = "select count(*) as pendingcount from wms.wms_securityinward where receiveddate> now() - interval '7 days' and grnnumber is null and onhold is null ";
+
+					//Get count of po and invoice for on hold receipts
+					string onholdqry = "select count(*) as onholdcount from wms.wms_securityinward where receiveddate> now() - interval '7 days' and grnnumber is null and onhold = true ";
+
+					//Get count of po and invoice for complete receipts
+					string completeqry = "select count(*) as completedcount from wms.wms_securityinward where receiveddate> now() - interval '7 days' and grnnumber is not null and onhold is null ";
+
+					//Get count of quality check completed
+					string qualitycompl= "select count(*),COUNT(*) OVER () as  qualitycompcount from wms.wms_storeinward where receiveddate> now() - interval '7 days' and qualitycheckrequired =true and qualitychecked =true group by inwmasterid";
+
+					//Get count of quality check pending
+					string qualitypending = "select count(*),COUNT(*) OVER () as qualitypendcount from wms.wms_storeinward where receiveddate> now() - interval '7 days' and qualitycheckrequired =true and qualitychecked is null group by inwmasterid";
+
+					//Get count of pending GRN's - putaway 
+					string putawaypend= " select count(*),COUNT(*) OVER () as putawaypendcount from wms.wms_securityinward secinw  where secinw.inwmasterid not in (select distinct inwmasterid  from wms.wms_stock where inwmasterid is not null order by inwmasterid desc) and receiveddate> now() - interval '7 days' group by secinw.inwmasterid ";
+
+					//Get count of completed GRN's - putaway 
+					string putawaycomp = " select sinw.grnnumber,COUNT(*) OVER () as putawaycompcount from wms.wms_storeinward stinw  join wms.wms_securityinward sinw on stinw.inwmasterid = sinw.inwmasterid where stinw.returnedby is not null and sinw.isdirecttransferred is NOT true and stinw.inwardid  in (select distinct inwardid from wms.wms_stock where inwardid is not null and createddate> now() - interval '7 days'  order by inwardid desc) group by sinw.grnnumber";
+
+					//Get count of In progress GRN's - putaway
+					string putawayinprogres = " select sinw.grnnumber,COUNT(*) OVER () as putawayinprocount from wms.wms_storeinward stinw join wms.wms_securityinward sinw on stinw.inwmasterid = sinw.inwmasterid where stinw.returnedby is not null and sinw.isdirecttransferred is NOT true and stinw.inwardid not in (select distinct inwardid from wms.wms_stock where inwardid is not null and createddate> now() - interval '7 days'  order by inwardid desc)  group by sinw.grnnumber";
+
+					//Get count of pending GRN's - Acceptance 
+					string acceptancepenqry = "select count(*),COUNT(*) OVER () as acceptancependcount from wms.wms_storeinward stin where receiveddate> now() - interval '7 days' and returnqty is null and confirmqty is null   group by(inwmasterid)";
+
+					//Get count of Accepted GRN's - Acceptance 
+					string acceptancecomptqry = "select count(*),COUNT(*) OVER () as acceptancecompcount from wms.wms_storeinward stin where receiveddate> now() - interval '7 days' and returnqty is not null and confirmqty is not null  group by(inwmasterid)";
+
+					var data1 = await pgsql.QueryAsync<ManagerDashboard>(penqry, null, commandType: CommandType.Text);
+					var data2 = await pgsql.QueryAsync<ManagerDashboard>(onholdqry, null, commandType: CommandType.Text);
+					var data3 = await pgsql.QueryAsync<ManagerDashboard>(completeqry, null, commandType: CommandType.Text);
+					var data4 = await pgsql.QueryAsync<ManagerDashboard>(qualitycompl, null, commandType: CommandType.Text);
+					var data5 = await pgsql.QueryAsync<ManagerDashboard>(qualitypending, null, commandType: CommandType.Text);
+                    var data6 = await pgsql.QueryAsync<ManagerDashboard>(putawaypend, null, commandType: CommandType.Text);
+                    var data7 = await pgsql.QueryAsync<ManagerDashboard>(putawaycomp, null, commandType: CommandType.Text);
+                    var data8 = await pgsql.QueryAsync<ManagerDashboard>(putawayinprogres, null, commandType: CommandType.Text);
+                    var data9 = await pgsql.QueryAsync<ManagerDashboard>(acceptancepenqry, null, commandType: CommandType.Text);
+					var data10 = await pgsql.QueryAsync<ManagerDashboard>(acceptancecomptqry, null, commandType: CommandType.Text);
+
+					var data = new ManagerDashboard();
+					data.pendingcount = data1.FirstOrDefault().pendingcount;
+					data.onholdcount = data2.FirstOrDefault().onholdcount;
+					data.completedcount = data3.FirstOrDefault().completedcount;
+					data.qualitycompcount = data4.FirstOrDefault().qualitycompcount;
+					data.qualitypendcount = data5.FirstOrDefault().qualitypendcount;
+                    data.putawaycompcount = data7.FirstOrDefault().putawaycompcount;
+                    data.putawaypendcount = data6.FirstOrDefault().putawaypendcount;
+                    data.putawayinprocount = data8.FirstOrDefault().putawayinprocount;
+                    data.acceptancependcount = data9.FirstOrDefault().acceptancependcount;
+					data.acceptancecompcount = data10.FirstOrDefault().acceptancecompcount;
+
+					return data;
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "getManagerdashboardgraphdata", Ex.StackTrace.ToString());
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+			}
+		}
+
+
+		/*
 		Name of Function : <<getWeeklyUserdashboardgraphdata>>  Author :<<LP>>  
 		Date of Creation <<12-12-2019>>
 		Purpose : <<get Weekly User dashboard graphdata>>

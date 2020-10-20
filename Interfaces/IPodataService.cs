@@ -187,7 +187,7 @@ Task<string> updateonholdrow(updateonhold datamodel);
         Task<IEnumerable<materialtransferMain>> gettransferdataforapproval(string empno);
         int Updatetransferqty(List<IssueRequestModel> _listobj);
 		  Task<IEnumerable<UserDashboardGraphModel>> getUserdashboardgraphdata();
-
+        Task<ManagerDashboard>  getManagerdashboardgraphdata();
         Task<IEnumerable<UserDashboardGraphModel>> getWeeklyUserdashboardgraphdata();
 
         Task<IEnumerable<UserDashboardGraphModel>> getmonthlyUserdashboardgraphdata();

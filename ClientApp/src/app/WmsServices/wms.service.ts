@@ -651,6 +651,10 @@ export class wmsService {
     gatepassmaterialid = encodeURIComponent(gatepassmaterialid);
     return this.http.get<any>(this.url + 'POData/getItemlocationListByGatepassmaterialid?gatepassmaterialid=' + gatepassmaterialid, this.httpOptions);
   }
+
+  getreceiptslist(): Observable<any> {
+    return this.http.get<UserDashboardGraphModel[]>(this.url + 'POData/getManagerdashboardgraphdata/', this.httpOptions);
+  }
 }
 
 

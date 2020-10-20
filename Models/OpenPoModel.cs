@@ -844,6 +844,20 @@ namespace WMS.Models
 
 	}
 
+	public class ManagerDashboard
+	{
+		public int pendingcount { get; set; }
+		public int onholdcount { get; set; }
+		public int completedcount { get; set; }
+		public int qualitycompcount { get; set; }
+		public int qualitypendcount { get; set; }
+		public int putawaypendcount {get;set;}
+		public int putawaycompcount {get;set;}
+		public int putawayinprocount {get;set;}
+		public int acceptancependcount { get; set; }
+		public int acceptancecompcount { get; set; }
+
+	}
 	public class UserDashboardGraphModel
 	{
 		public string smonth { get; set; }

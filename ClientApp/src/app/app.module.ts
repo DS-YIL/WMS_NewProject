@@ -95,6 +95,7 @@ import {MaterialsReturnDashboardComponent } from './WMS/MaterialsReturnDashboard
 import { OutwardinwardreportComponent } from './WMS/Outwardinwardreport.component';
 import { GatepassinwardreceiveComponent } from './WMS/Gatepassinwardreceive.component';
 import { MaterialTransferApprovalComponent } from './WMS/MaterialTransferApproval.component';
+import { PMDashboardComponent } from './WMS/PMDashboard.component';
 ////pages
 import { LoginComponent } from './WMS/Login.component';
 import {HomeComponent} from './WMS/Home.component';
@@ -180,8 +181,8 @@ import { FieldsetModule } from 'primeng/fieldset';
     MaterialsReturnDashboardComponent,
     OutwardinwardreportComponent,
     GatepassinwardreceiveComponent,
-    MaterialTransferApprovalComponent
-
+    MaterialTransferApprovalComponent,
+    PMDashboardComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
