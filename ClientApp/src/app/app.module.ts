@@ -108,6 +108,7 @@ import { FileUploadModule } from 'primeng/fileupload';
 import { TabViewModule } from 'primeng/tabview';
 import { DataViewModule } from 'primeng/dataview';
 import { PanelModule } from 'primeng/panel';
+import { MultiSelectModule } from 'primeng/multiselect';
 import { FieldsetModule } from 'primeng/fieldset';
 @Injectable
   ({
@@ -210,6 +211,7 @@ import { FieldsetModule } from 'primeng/fieldset';
     CalendarModule,
     CheckboxModule,
     TooltipModule,
+    MultiSelectModule,
     AutoCompleteModule,
     ConfirmDialogModule,
     DropdownModule,

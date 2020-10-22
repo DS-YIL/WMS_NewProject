@@ -164,7 +164,8 @@ where  inwmaster.pono='#pono'</value>
     <comment>barcodedata insertion</comment>
   </data>
   <data name="insertinvoicedata" xml:space="preserve">
-    <value>INSERT INTO wms.wms_securityinward(inwmasterid,pono,invoiceno,invoicedate,receivedby,receiveddate,deleteflag,departmentid,suppliername,asnno,inwardremarks,filename)VALUES(default,@pono,@invoiceno,@invoicedate,@receivedby,@receiveddate,@deleteflag,@departmentid,@suppliername,@asnno,@inwardremarks,@filename)</value>
+    <value>INSERT INTO wms.wms_securityinward(inwmasterid,pono,invoiceno,invoicedate,receivedby,receiveddate,deleteflag,departmentid,suppliername,asnno,inwardremarks,filename,vehicleno,transporterdetails)
+VALUES(default,@pono,@invoiceno,@invoicedate,@receivedby,@receiveddate,@deleteflag,@departmentid,@suppliername,@asnno,@inwardremarks,@filename,@vehicleno,@transporterdetails)</value>
     <comment>invoice data insertion</comment>
   </data>
   <data name="materialquest" xml:space="preserve">

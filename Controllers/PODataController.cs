@@ -603,6 +603,12 @@ namespace WMS.Controllers
 			return await this._poService.Getpagesbyroleid(roleid);
 		}
 
+		[HttpGet("getPODataList")]
+		public async Task<IEnumerable<POList>> getPODataList()
+		{
+			return await this._poService.getPODataList();
+		}
+
 		[HttpGet("Getpages")]
 		public async Task<IEnumerable<pageModel>> Getpages()
 		{

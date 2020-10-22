@@ -34,6 +34,17 @@ export class DynamicSearchResult {
   query: string;
 }
 
+export class POList {
+  value: any;
+  name: any;
+  code: any;
+  text: any;
+  POno: any;
+  qty: any;
+  quotationqty: any;
+  status: any;
+}
+
 export class printMaterial {
   materialid: any;
   receiveddate: any;

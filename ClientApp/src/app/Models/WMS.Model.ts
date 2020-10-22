@@ -1,3 +1,5 @@
+import { POList } from "./Common.Model";
+
 export class PoFilterParams {
   loginid: string = "";
   PONo: string = "";
@@ -35,7 +37,8 @@ export class PoDetails {
   binid: any;
   inwardid: number;
   asnno: string;
-  id: string
+  id: string;
+  vehicleno: string;
 }
 
 export class BarcodeModel {
@@ -54,7 +57,10 @@ export class BarcodeModel {
   suppliername: string;
   asnno: string;
   inwardremarks: string;
-  docfile: string
+  docfile: string;
+  vehicleno: any;
+  transporterdetails: any;
+  polist: POList[];
 }
 
 export class Cyclecountconfig {

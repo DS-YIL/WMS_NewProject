@@ -2,13 +2,15 @@ import { Component, OnInit, Inject, ViewChild, ElementRef } from '@angular/core'
 import { Router, ActivatedRoute, RouterEvent, NavigationEnd } from '@angular/router';
 import { wmsService } from '../WmsServices/wms.service';
 import { constants } from '../Models/WMSConstants';
-import { Employee, DynamicSearchResult } from '../Models/Common.Model';
+import { Employee, DynamicSearchResult, POList } from '../Models/Common.Model';
 import { NgxSpinnerService } from "ngx-spinner";
 import { PoDetails, BarcodeModel, ddlmodel, PrintHistoryModel } from 'src/app/Models/WMS.Model';
 import { MessageService } from 'primeng/api';
 import { filter } from 'rxjs/operators';
 import { isNullOrUndefined } from 'util';
 import { HttpClient } from '@angular/common/http';
+import { SelectItem } from 'primeng/api';
+import { POListComponent } from './POList.component';
 
 
 @Component({
@@ -16,10 +18,23 @@ import { HttpClient } from '@angular/common/http';
   templateUrl: './SecurityHome.component.html'
 })
 export class SecurityHomeComponent implements OnInit {
+  cities1: SelectItem[];
+  selectedCities1: any[];
+  selectedCountries1: string[] = [];
   public url = "";
   @ViewChild('fileInput', { static: false })
   myInputVariable: ElementRef;
-  constructor(private messageService: MessageService, private http: HttpClient, private wmsService: wmsService, private route: ActivatedRoute, private router: Router, public constants: constants, private spinner: NgxSpinnerService, @Inject('BASE_URL') baseUrl: string) { this.url = baseUrl; }
+  constructor(private messageService: MessageService, private http: HttpClient, private wmsService: wmsService, private route: ActivatedRoute, private router: Router, public constants: constants, private spinner: NgxSpinnerService, @Inject('BASE_URL') baseUrl: string) {
+  this.url = baseUrl;
+    //SelectItem API with label-value pairs
+    this.cities1 = [
+      { label: 'New York', value: { id: 1, name: 'New York', code: 'NY' } },
+      { label: 'Rome', value: { id: 2, name: 'Rome', code: 'RM' } },
+      { label: 'London', value: { id: 3, name: 'London', code: 'LDN' } },
+      { label: 'Istanbul', value: { id: 4, name: 'Istanbul', code: 'IST' } },
+      { label: 'Paris', value: { id: 5, name: 'Paris', code: 'PRS' } }
+    ];
+  }
   public print: string = "Print Barcode";
   public PoDetails: PoDetails;
   public Poinvoicedetails: PoDetails;
@@ -45,10 +60,15 @@ export class SecurityHomeComponent implements OnInit {
   selecteddept: ddlmodel;
   searchdata: string = "";
   nonporemarks: string = "";
+  transportdetails: string = "";
   nonpofile: any;
   clicked: boolean = false;
   public showPrintBtn: boolean = false;
   public PrintHistoryModel: PrintHistoryModel;
+  public podatavisible: boolean;
+  POlist: POList[];
+  public selectedPOs: POList[];
+  public multiplepo: boolean = false;
 
   ngOnInit() {
 
@@ -91,6 +111,7 @@ export class SecurityHomeComponent implements OnInit {
     this.PoDetails = new PoDetails();
     this.Poinvoicedetails = new PoDetails();
     this.nonporemarks = "";
+    this.transportdetails = "";
     this.searchdata = "";
     this.selecteddept = null;
     this.disSaveBtn = false;
@@ -107,6 +128,29 @@ export class SecurityHomeComponent implements OnInit {
     }
 
 
+  }
+
+  OnMultipleSelect(ischecked: boolean) {
+    this.spinner.show();
+    //alert(ischecked["checked"]);
+    //Get polist data
+    if (ischecked["checked"] == true) {
+      this.podatavisible = true;
+      this.wmsService.getPODataList().subscribe(data => {
+        debugger;
+        this.POlist = data;
+        this.multiplepo = true;
+        this.spinner.hide();
+      });
+    }
+    this.multiplepo = false;
+    this.spinner.hide();
+  }
+
+  //close on submit
+  hidepolist() {
+    this.podatavisible = false;
+    console.log(this.selectedPOs);
   }
 
   reset() {
@@ -245,10 +289,18 @@ export class SecurityHomeComponent implements OnInit {
       this.BarcodeModel.paitemid = 1;
       this.BarcodeModel.barcode = this.searchdata + "_" + this.Poinvoicedetails.invoiceno;
       this.BarcodeModel.createdby = this.employee.employeeno;
-      this.BarcodeModel.pono = this.PoDetails.pono;
+      if (this.multiplepo == true) {
+        this.BarcodeModel.polist = this.selectedPOs;
+      }
+      else {
+        this.BarcodeModel.pono = this.PoDetails.pono;
+      }
+    
       this.BarcodeModel.asnno = this.PoDetails.asnno;
       this.BarcodeModel.departmentid = this.PoDetails.departmentid;
       this.BarcodeModel.inwardremarks = this.nonporemarks;
+      this.BarcodeModel.vehicleno = this.Poinvoicedetails.vehicleno;
+      this.BarcodeModel.transporterdetails = this.transportdetails;
       this.BarcodeModel.suppliername = this.PoDetails.vendorname;
       if (this.isnonpochecked) {
         this.BarcodeModel.pono = "NONPO";

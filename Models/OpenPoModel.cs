@@ -113,6 +113,7 @@ namespace WMS.Models
 		public DateTime receiveddate { get; set; }
 		public string Material { get; set; }
 		public string Materialdescription { get; set; }
+		public POList[] polist { get; set; }
 
 		public string suppliername { get; set; }
 		public string asnno { get; set; }
@@ -123,7 +124,8 @@ namespace WMS.Models
 		public DateTime reprintedon { get; set; }
 		public string reprintedby { get; set; }
 		public int reprintcount { get; set; }
-
+		public string transporterdetails { get; set; }
+		public string vehicleno { get; set; }
 
 	}
 
@@ -265,6 +267,11 @@ namespace WMS.Models
 	//Polist model
 	public class POList
 	{
+		public string value { get; set; }
+		public string text { get; set; }
+		public string name { get; set; }
+		public string suppliername { get; set; }
+		public string code { get; set; }
 		public string POno { get; set; }
 		public string qty { get; set; }
 		public int quotationqty { get; set; }

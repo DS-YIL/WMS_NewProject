@@ -162,15 +162,43 @@ namespace WMS.DAL
 			}
 		}
 
-
 		/*
-		Name of Function : <<getPOList>>  Author :<<Gayathri>>  
+		Name of Function : <<getPODataList>>  Author :<<Gayathri>>  
 		Date of Creation <<12-12-2019>>
-		Purpose : <<get po numbers and qty>>
-		<param: name=postatus - Displaying data based on status selected></param>
+		Purpose : <<get po numbers>>
 		Review Date :<<>>   Reviewed By :<<>>
 		*/
-		public async Task<IEnumerable<POList>> getPOList(string postatus)
+		public async Task<IEnumerable<POList>> getPODataList()
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				//List<POList> objpo = null;
+				try
+				{
+					//objpo = new List<POList>();
+					string query = "select pono,suppliername from wms.wms_polist";
+					await pgsql.OpenAsync();
+					var objpo = await pgsql.QueryAsync<POList>(
+					   query, null, commandType: CommandType.Text);
+					return objpo;
+				}
+				catch (Exception ex)
+				{
+					log.ErrorMessage("PODataProvider", "getPOList", ex.StackTrace.ToString());
+					return null;
+				}
+
+			}
+		}
+
+			/*
+			Name of Function : <<getPOList>>  Author :<<Gayathri>>  
+			Date of Creation <<12-12-2019>>
+			Purpose : <<get po numbers and qty>>
+			<param: name=postatus - Displaying data based on status selected></param>
+			Review Date :<<>>   Reviewed By :<<>>
+			*/
+			public async Task<IEnumerable<POList>> getPOList(string postatus)
 		{
 
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -564,6 +592,15 @@ namespace WMS.DAL
 				//dataobj.docfile = ;
 				using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
 				{
+					if(dataobj.pono==null)
+                    {
+						//If PO is empty
+						foreach(var podata in dataobj.polist)
+                        {
+							dataobj.pono = dataobj.pono+","+podata.POno;
+                        }
+
+                    }
 					var q1 = WMSResource.getinvoiceexists.Replace("#pono", dataobj.pono).Replace("#invno", dataobj.invoiceno);
 					int count = int.Parse(DB.ExecuteScalar(q1, null).ToString());
 
@@ -675,7 +712,9 @@ namespace WMS.DAL
 							dataobj.inwardremarks,
 							dataobj.grnnumber,
 							dataobj.createdby,
-							filename
+							filename,
+							dataobj.vehicleno,
+							dataobj.transporterdetails
 							//barcodeid,
 						});
 
@@ -5335,13 +5374,25 @@ namespace WMS.DAL
 					data.pendingcount = data1.FirstOrDefault().pendingcount;
 					data.onholdcount = data2.FirstOrDefault().onholdcount;
 					data.completedcount = data3.FirstOrDefault().completedcount;
-					data.qualitycompcount = data4.FirstOrDefault().qualitycompcount;
+					if(data4.Count()>0)
+                    {
+						data.qualitycompcount = data4.FirstOrDefault().qualitycompcount;
+					}
+					
 					data.qualitypendcount = data5.FirstOrDefault().qualitypendcount;
-                    data.putawaycompcount = data7.FirstOrDefault().putawaycompcount;
+					if (data7.Count() > 0)
+					{
+						data.putawaycompcount = data7.FirstOrDefault().putawaycompcount;
+					}
+					
                     data.putawaypendcount = data6.FirstOrDefault().putawaypendcount;
                     data.putawayinprocount = data8.FirstOrDefault().putawayinprocount;
                     data.acceptancependcount = data9.FirstOrDefault().acceptancependcount;
-					data.acceptancecompcount = data10.FirstOrDefault().acceptancecompcount;
+					if (data10.Count()>0)
+					{
+						data.acceptancecompcount = data10.FirstOrDefault().acceptancecompcount;
+					}
+					
 
 					return data;
 				}

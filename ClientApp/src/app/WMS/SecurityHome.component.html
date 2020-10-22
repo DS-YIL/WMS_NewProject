@@ -30,6 +30,12 @@
                 <button type="button" class="btn btn-primary btn-sm" label="Save" (click)="SearchPoNo()">Search</button>
               </div>
             </div>
+            <div class="row " style="margin-top:5px;">
+              <div class="col-lg-12 col-md-12">
+                <label class="labelheading">Multiple PO's:</label>&nbsp;&nbsp;&nbsp;
+                <p-checkbox name="group1" value="" [(ngModel)]="multiplepo" (onChange)="OnMultipleSelect($event)"></p-checkbox>
+              </div>
+            </div>
             <div *ngIf="showDetails">
               <div class="row " style="margin-top:5px;" *ngIf="!PoDetails.ispono">
                 <div class="col-lg-2 col-md-2" style="padding-right:0px">
@@ -39,10 +45,16 @@
                   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label class="labeltext">{{PoDetails.pono}}</label>
                 </div>
                 <!--<div class="col-lg-12 col-md-12 col-sm-12 form-inline">
-      <label class="labelheading">Supplier :</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      <label class="labeltext">{{PoDetails.vendorname}}</label>
-    </div>-->
+        <label class="labelheading">Supplier :</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <label class="labeltext">{{PoDetails.vendorname}}</label>
+      </div>-->
               </div>
+              <!--<div class="row " style="margin-top:5px;">
+                <div class="col-lg-12 col-md-12">
+                  <label class="labelheading">Multiple PO's:</label>&nbsp;&nbsp;&nbsp;
+                  <p-checkbox name="group1" value="" [(ngModel)]="multiplepo" (onChange)="OnMultipleSelect($event)"></p-checkbox>
+                </div>
+              </div>-->
               <div class="row " style="margin-top:5px;">
                 <div class="col-lg-2 col-md-2">
                   <label class="labelheading">Supplier:</label>
@@ -51,14 +63,29 @@
                   &nbsp;&nbsp;<label class="labeltext" style="margin-left:15px;">{{PoDetails.vendorname}}</label>
                 </div>
                 <!--<div class="col-lg-12 col-md-12 col-sm-12 form-inline">
-      <label class="labelheading">Supplier :</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      <label class="labeltext">{{PoDetails.vendorname}}</label>
-    </div>-->
+        <label class="labelheading">Supplier :</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <label class="labeltext">{{PoDetails.vendorname}}</label>
+      </div>-->
               </div>
               <div class="row " style="margin-top:5px;">
                 <div class="col-lg-12 col-md-12 col-sm-12 form-inline">
                   <label class="labelheading">Invoice No.: </label>&nbsp;&nbsp;&nbsp;
                   <input class="form-control" type="text" [disabled]="disSaveBtn" maxlength="15" [(ngModel)]="Poinvoicedetails.invoiceno">
+                </div>
+              </div>
+              <div class="row " style="margin-top:5px;">
+                <div class="col-lg-12 col-md-12 col-sm-12 form-inline">
+                  <label class="labelheading">Vehicle No.: </label>&nbsp;&nbsp;&nbsp;
+                  <input class="form-control" type="text" [disabled]="disSaveBtn" maxlength="15" [(ngModel)]="Poinvoicedetails.vehicleno">
+                </div>
+              </div>
+              <div class="row " style="margin-top:5px;">
+                <div class="col-lg-2 col-md-2 col-sm-2 form-inline">
+                  <label class="labelheading">Transport Details: </label>
+                </div>
+                <div class="col-lg-10 col-md-10 col-sm-10 form-inline">
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  <textarea class="form-control" type="text" style="width:250px;resize:none" [disabled]="disSaveBtn" [(ngModel)]="transportdetails"></textarea>
                 </div>
               </div>
               <div class="row " style="margin-top:5px;">
@@ -69,23 +96,24 @@
               </div>
 
               <!--<div class="row" style="margin-top:5px;">
-    <div class="col-lg-4 col-md-4 labelheading">
-      <label class="text-primary" style="float:left">Supplier : </label>
-    </div>
-    <div class="col-lg-8 col-md-8 labeltext">
-      <label class="form-label">{{PoDetails.vendorname}}</label>
-    </div>
+      <div class="col-lg-4 col-md-4 labelheading">
+        <label class="text-primary" style="float:left">Supplier : </label>
+      </div>
+      <div class="col-lg-8 col-md-8 labeltext">
+        <label class="form-label">{{PoDetails.vendorname}}</label>
+      </div>
 
-  </div>-->
+    </div>-->
               <!--<div class="row" style="margin-top:5px;">
-    <div class="col-lg-4 col-md-4 labelheading">
-      <label class="text-primary" style="float:left">Invoice No :</label>
-    </div>
-    <div class="col-lg-8 col-md-8">
-      <input class="form-control" type="text" [disabled]="disSaveBtn" [(ngModel)]="Poinvoicedetails.invoiceno">
-    </div>
+      <div class="col-lg-4 col-md-4 labelheading">
+        <label class="text-primary" style="float:left">Invoice No :</label>
+      </div>
+      <div class="col-lg-8 col-md-8">
+        <input class="form-control" type="text" [disabled]="disSaveBtn" [(ngModel)]="Poinvoicedetails.invoiceno">
+      </div>
 
-  </div>-->
+    </div>-->
+
               <div class="row" style="margin-top:20px;">
                 <div class="col-lg-5 col-md-5">
                   <button type="button" style="float:right" [disabled]="disSaveBtn" class="btn btn-success" (click)="onsaveSecDetails()" label="Save">Save</button>
@@ -96,81 +124,96 @@
 
               </div>
               <!--<div class="row " style="margin-top:10px;margin-left:10px">
-    <div class="col-lg-4 col-md-4 col-sm-4 form-group">
+      <div class="col-lg-4 col-md-4 col-sm-4 form-group">
 
-      <input class="form-control" type="text" readonly [(ngModel)]="PoDetails.vendorname">
+        <input class="form-control" type="text" readonly [(ngModel)]="PoDetails.vendorname">
+      </div>
+      <div class="col-lg-4 col-md-4 col-sm-4 form-group">
+        <label class="form-label">Quanity: </label>
+        <input class="form-control" type="text" readonly [(ngModel)]="PoDetails.quotationqty">
+      </div>
     </div>
-    <div class="col-lg-4 col-md-4 col-sm-4 form-group">
-      <label class="form-label">Quanity: </label>
-      <input class="form-control" type="text" readonly [(ngModel)]="PoDetails.quotationqty">
+    <div class="row " style="margin-top:10px;margin-left:20px">
+      <div class="col-lg-4 col-md-4 col-sm-4 form-group">
+        <label class="form-label">Invoice No: </label>
+      </div>
     </div>
-  </div>
-  <div class="row " style="margin-top:10px;margin-left:20px">
-    <div class="col-lg-4 col-md-4 col-sm-4 form-group">
-      <label class="form-label">Invoice No: </label>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-lg-4 col-md-4 col-sm-4"></div>
-    <div class="col-lg-4 col-md-4 col-sm-4">
-      <button type="button" [disabled]="disSaveBtn" class="btn btn-success" (click)="onsaveSecDetails()" label="Save">Save</button>&nbsp;&nbsp;&nbsp;
-      <button type="button" class="btn btn-success" (click)="onsaveSecDetails()" label="Save">Print Barcode</button>
+    <div class="row">
+      <div class="col-lg-4 col-md-4 col-sm-4"></div>
+      <div class="col-lg-4 col-md-4 col-sm-4">
+        <button type="button" [disabled]="disSaveBtn" class="btn btn-success" (click)="onsaveSecDetails()" label="Save">Save</button>&nbsp;&nbsp;&nbsp;
+        <button type="button" class="btn btn-success" (click)="onsaveSecDetails()" label="Save">Print Barcode</button>
 
-    </div>
-  </div>-->
+      </div>
+    </div>-->
             </div>
-
-            </div>
-         
-          <div *ngIf="isnonpochecked">
-            <div class="row " style="margin-top:5px;">
-              <div class="col-lg-12 col-md-12 col-sm-12 form-inline">
-                <label class="labelheading">Supplier: </label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <input class="form-control" type="text" [disabled]="disSaveBtn" style="width:250px;" maxlength="30" [(ngModel)]="Poinvoicedetails.vendorname">
-              </div>
-            </div>
-            <div class="row " style="margin-top:5px;">
-              <div class="col-lg-12 col-md-12 col-sm-12 form-inline">
-                <label class="labelheading">Invoice No: </label>&nbsp;&nbsp;&nbsp;
-                <input class="form-control" type="text" style="width:250px;" [disabled]="disSaveBtn" maxlength="20" [(ngModel)]="Poinvoicedetails.invoiceno">
-              </div>
-            </div>
-            <div class="row " style="margin-top:5px;">
-              <div class="col-lg-12 col-md-12 col-sm-12 form-inline">
-                <label class="labelheading">Dept: </label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <p-dropdown [options]="ddldeptlist" [disabled]="disSaveBtn" [(ngModel)]="selecteddept" [showClear]="true" [style]="{'width':'250px'}" filter="true" placeholder="Select department" optionLabel="text"></p-dropdown>
-              </div>
-
-            </div>
-            <div class="row " style="margin-top:5px;">
-              <div class="col-lg-12 col-md-12 col-sm-12 form-inline">
-                <label class="labelheading">Remarks: </label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <textarea class="form-control" type="text" style="width:250px;resize:none" [disabled]="disSaveBtn" [(ngModel)]="nonporemarks"></textarea>
-              </div>
-            </div>
-            <div class="row " style="margin-top:5px;">
-              <div class="col-lg-12 col-md-12 col-sm-12 form-inline">
-                <label class="labelheading">File: </label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <!--<p-fileUpload mode="basic" name="demo[]"  accept="image/*,.pdf" maxFileSize="1000000" (onUpload)="onBasicUpload($event)"></p-fileUpload>-->
-                <input type="file" #fileInput (change)="onBasicUpload($event)"/>
-              </div>
-            </div>
-            <div class="row" style="margin-top:20px;">
-              <div class="col-lg-5 col-md-5">
-                <button type="button" style="float:right" [disabled]="disSaveBtn" class="btn btn-success" (click)="onsaveSecDetails()" label="Save">Save</button>
-              </div>
-              <div *ngIf="showPrintBtn" class="col-lg-6 col-md-6">
-                <button type="button" style="float:left" class="btn btn-success" (click)="printbarcode()" label="Save">{{print}}</button>
-              </div>
-
-            </div>
-
 
           </div>
 
+              <div *ngIf="isnonpochecked">
+                <div class="row " style="margin-top:5px;">
+                  <div class="col-lg-12 col-md-12 col-sm-12 form-inline">
+                    <label class="labelheading">Supplier: </label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <input class="form-control" type="text" [disabled]="disSaveBtn" style="width:250px;" maxlength="30" [(ngModel)]="Poinvoicedetails.vendorname">
+                  </div>
+                </div>
+                <div class="row " style="margin-top:5px;">
+                  <div class="col-lg-12 col-md-12 col-sm-12 form-inline">
+                    <label class="labelheading">Invoice No: </label>&nbsp;&nbsp;&nbsp;
+                    <input class="form-control" type="text" style="width:250px;" [disabled]="disSaveBtn" maxlength="20" [(ngModel)]="Poinvoicedetails.invoiceno">
+                  </div>
+                </div>
+                <div class="row " style="margin-top:5px;">
+                  <div class="col-lg-12 col-md-12 col-sm-12 form-inline">
+                    <label class="labelheading">Dept: </label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <p-dropdown [options]="ddldeptlist" [disabled]="disSaveBtn" [(ngModel)]="selecteddept" [showClear]="true" [style]="{'width':'250px'}" filter="true" placeholder="Select department" optionLabel="text"></p-dropdown>
+                  </div>
+
+                </div>
+                <div class="row " style="margin-top:5px;">
+                  <div class="col-lg-12 col-md-12 col-sm-12 form-inline">
+                    <label class="labelheading">Vehicle No.: </label>&nbsp;&nbsp;&nbsp;
+                    <input class="form-control" type="text" [disabled]="disSaveBtn" maxlength="15" [(ngModel)]="Poinvoicedetails.vehicleno">
+                  </div>
+                </div>
+                <div class="row " style="margin-top:5px;">
+                  <div class="col-lg-2 col-md-2 col-sm-2 form-inline">
+                    <label class="labelheading">Transport Details: </label>
+                  </div>
+                  <div class="col-lg-10 col-md-10 col-sm-10 form-inline">
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <textarea class="form-control" type="text" style="width:250px;resize:none" [disabled]="disSaveBtn" [(ngModel)]="transportdetails"></textarea>
+                  </div>
+                </div>
+                <div class="row " style="margin-top:5px;">
+                  <div class="col-lg-12 col-md-12 col-sm-12 form-inline">
+                    <label class="labelheading">Remarks: </label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <textarea class="form-control" type="text" style="width:250px;resize:none" [disabled]="disSaveBtn" [(ngModel)]="nonporemarks"></textarea>
+                  </div>
+                </div>
+                <div class="row " style="margin-top:5px;">
+                  <div class="col-lg-12 col-md-12 col-sm-12 form-inline">
+                    <label class="labelheading">File: </label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <!--<p-fileUpload mode="basic" name="demo[]"  accept="image/*,.pdf" maxFileSize="1000000" (onUpload)="onBasicUpload($event)"></p-fileUpload>-->
+                    <input type="file" #fileInput (change)="onBasicUpload($event)" />
+                  </div>
+                </div>
+                <div class="row" style="margin-top:20px;">
+                  <div class="col-lg-5 col-md-5">
+                    <button type="button" style="float:right" [disabled]="disSaveBtn" class="btn btn-success" (click)="onsaveSecDetails()" label="Save">Save</button>
+                  </div>
+                  <div *ngIf="showPrintBtn" class="col-lg-6 col-md-6">
+                    <button type="button" style="float:left" class="btn btn-success" (click)="printbarcode()" label="Save">{{print}}</button>
+                  </div>
+
+                </div>
 
 
-        </div>
+              </div>
+
+
+
+            </div>
       </div>
      
     </div>
@@ -223,7 +266,7 @@
                       <td class="ptable-cell" style="text-align:center;width:20%;"> {{rowData.asn}} </td>
                       <td class="ptable-cell" style="text-align:center;width:20%;"> {{rowData.pono}} </td>
                       <td class="ptable-cell" style="text-align:left;width:70%">{{rowData.vendorname}} </td>
-</ng-template>
+                  </ng-template>
                   <ng-template pTemplate="emptymessage">
                     <tr>
                       <td colspan="4" style="text-align:center;color:red">No Shipment notifications for today.</td>
@@ -285,3 +328,53 @@
     </div>-->
      
     </div>
+<div >
+  <p-dialog header="Select Multiple PO's" [(visible)]="podatavisible" [responsive]="true" showEffect="fade" [modal]="true" [style]="{'width':'85%','overflow':'auto!important','margin-right': '0px','margin-left':'0px'}">
+    <div class="row col-lg-12 col-mg-12">
+      <!--<div class="col-lg-12 col-mg-12" style="margin-top:10px;height:900px">
+    <label>Select PO's: </label>
+    <p-multiSelect [options]="countries" [(ngModel)]="selectedCountries1" defaultLabel="Select PO's" optionLabel="name" class="multiselect-custom">
+      <ng-template let-value pTemplate="selectedItems">
+        <div class="country-item country-item-value" *ngFor="let option of selectedCountries1">
+          <div>{{option.name}}</div>
+        </div>
+        <div *ngIf="!selectedCountries1 || selectedCountries1.length === 0" class="country-placeholder">
+          Select Countries
+        </div>
+      </ng-template>
+      <ng-template let-country pTemplate="item">
+        <div class="country-item">
+          <div>{{country.value.name}}</div>
+        </div>
+      </ng-template>
+    </p-multiSelect>
+  </div>-->
+      <p-table [value]="POlist" [(selection)]="selectedPOs" dataKey="pOno">
+        <ng-template pTemplate="header">
+          <tr>
+            <th style="width: 3rem">
+              <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+            </th>
+            <th>PO No.</th>
+            <th>Supplier Name</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-product>
+          <tr>
+            <td>
+              <p-tableCheckbox [value]="product"></p-tableCheckbox>
+            </td>
+            <td>{{product.pOno}}</td>
+            <td>{{product.suppliername}}</td>
+          </tr>
+        </ng-template>
+      </p-table>
+      <div class="col-lg-12 col-mg-12" mat-dialog-actions align="end">
+        <br/>
+        <button class="btn btn-primary btn-sm" style="font-weight:600;" (click)="hidepolist()">Submit</button>
+      </div>
+      
+    </div>
+   
+   </p-dialog>
+ </div>

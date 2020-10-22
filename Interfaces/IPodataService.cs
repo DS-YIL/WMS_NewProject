@@ -11,6 +11,8 @@ namespace WMS.Interfaces
 
         Task<IEnumerable<POList>> getPOList(string postatus);
 
+        Task<IEnumerable<POList>> getPODataList();
+
         //Get invoice details for PO no
         Task<IEnumerable<InvoiceDetails>> getinvoiveforpo(string PONO);
 

@@ -655,6 +655,10 @@ export class wmsService {
   getreceiptslist(): Observable<any> {
     return this.http.get<UserDashboardGraphModel[]>(this.url + 'POData/getManagerdashboardgraphdata/', this.httpOptions);
   }
+
+  getPODataList(): Observable<any> {
+    return this.http.get<any[]>(this.url + 'POData/getPODataList/', this.httpOptions);
+  }
 }
 
 
