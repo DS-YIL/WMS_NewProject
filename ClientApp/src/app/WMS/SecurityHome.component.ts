@@ -87,6 +87,7 @@ export class SecurityHomeComponent implements OnInit {
       filter((event: RouterEvent) => event instanceof NavigationEnd)
     ).subscribe(() => {
       this.refresh();
+      this.onsaveSecDetails();
     });
 
     if (localStorage.getItem("Employee"))
@@ -104,6 +105,7 @@ export class SecurityHomeComponent implements OnInit {
 
     ///get department master list
     this.getdepts();
+    this.SearchPoNo();
   }
 
   //page refresh functionality
@@ -130,16 +132,31 @@ export class SecurityHomeComponent implements OnInit {
 
   }
 
-  OnMultipleSelect(ischecked: boolean) {
+  OnMultipleSelects($event) {
+    //console.log($event)
+    //console.log($event.target)
+    //console.log($event.target.value)
+
+    debugger;
+   //alert('hi')
+    this.podatavisible = true;
+
+   
+  }
+
+  OnMultipleSelect(ischecked: boolean, suppliername: string) {
+    
     this.spinner.show();
     //alert(ischecked["checked"]);
     //Get polist data
     if (ischecked["checked"] == true) {
       this.podatavisible = true;
-      this.wmsService.getPODataList().subscribe(data => {
+      this.wmsService.getPODataList(suppliername).subscribe(data => {
         debugger;
         this.POlist = data;
         this.multiplepo = true;
+         debugger;
+
         this.spinner.hide();
       });
     }
@@ -149,8 +166,26 @@ export class SecurityHomeComponent implements OnInit {
 
   //close on submit
   hidepolist() {
+    //debugger;
+    this.PoDetails.pono = "";
     this.podatavisible = false;
     console.log(this.selectedPOs);
+    this.selectedPOs.forEach(item => {
+      if (
+        this.PoDetails.pono == ""
+      ) {
+        this.PoDetails.pono = item.pOno;
+
+      }
+      else {
+        this.PoDetails.pono = this.PoDetails.pono + ',' + item.pOno;
+
+      }
+      //alert(item.p)
+      //this.PoDetails.pono = this.PoDetails.pono + ',' + item.pOno;
+
+    }
+    )
   }
 
   reset() {
@@ -228,9 +263,10 @@ export class SecurityHomeComponent implements OnInit {
       this.ddldeptlist = data;
     });
   }
-
+ 
   //get details based on po no
   SearchPoNo() {
+    debugger;
     if (this.searchdata) {
       this.disSaveBtn = false;
       this.spinner.show();
@@ -244,13 +280,16 @@ export class SecurityHomeComponent implements OnInit {
         }
         else {
           this.PoDetails = new PoDetails();
-          this.messageService.add({ severity: 'error', summary: '', detail: 'No data for this ASN/PO No.' });
+          console.log(this.PoDetails)
+          this.messageService.add({ severity: 'error', summary: '', detail: 'No data for this ASN/PO No./Supplier Name' });
           this.showDetails = false;
+
         }
       })
+
     }
     else
-      this.messageService.add({ severity: 'error', summary: '', detail: 'Enter PO/ASN No.' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Enter PO/ASN No./Supplier Name' });
   }
 
 
@@ -375,17 +414,19 @@ export class SecurityHomeComponent implements OnInit {
             this.uploadnonpodoc(data);
           }
           this.disSaveBtn = true;
-          //this.refresh();
+          this.refresh();
           this.messageService.add({ severity: 'success', summary: '', detail: 'Invoice No. Updated' });
           this.print = "Print Barcode";
           this.showPrintBtn = true;
           this.getcurrentDateReceivedPOlist();
         }
       });
+      
     }
     else {
       this.messageService.add({ severity: 'info', summary: '', detail: 'Processing' });
     }
+    //this.reset();
   }
 
   printbarcode() {

@@ -72,12 +72,16 @@ namespace WMS.DAL
 
 				try
 				{
+					OpenPoModel returndata = new OpenPoModel();
 					pgsql.Open();
 					//WMSResource.checkponoexists.Replace("#pono", PONO);
 					//string query = "select pono,suppliername as vendorname from wms.wms_polist where pono = '" + PONO + "'";
 					string query = "select asno.asn as asnno,asno.pono,pl.suppliername as vendorname from wms.wms_asn asno left outer join wms.wms_polist pl on pl.pono = asno.pono where asno.asn = '" + PONO.Trim() + "'";
 					var podata = pgsql.QueryFirstOrDefault<OpenPoModel>(
 					   query, null, commandType: CommandType.Text);
+
+					
+
 					if (podata != null)
 					{
 						podata.ispono = false;
@@ -91,6 +95,17 @@ namespace WMS.DAL
 						if (podata1 != null)
 						{
 							podata1.ispono = true;
+						}
+                        else
+                        {
+							query = "select suppliername as vendorname from wms.wms_polist where suppliername = '" + PONO.Trim() + "'";
+							var podata2 = pgsql.QueryFirstOrDefault<OpenPoModel>(
+							   query, null, commandType: CommandType.Text);
+							if (podata2 != null)
+							{
+								podata2.ispono = false;
+							}
+							return podata2;
 						}
 						return podata1;
 					}
@@ -168,7 +183,7 @@ namespace WMS.DAL
 		Purpose : <<get po numbers>>
 		Review Date :<<>>   Reviewed By :<<>>
 		*/
-		public async Task<IEnumerable<POList>> getPODataList()
+		public async Task<IEnumerable<POList>> getPODataList(string suppliername)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
@@ -176,7 +191,9 @@ namespace WMS.DAL
 				try
 				{
 					//objpo = new List<POList>();
-					string query = "select pono,suppliername from wms.wms_polist";
+					string query = "select pono,suppliername from wms.wms_polist where (suppliername='"+suppliername+"' AND type='po') ";
+					//string query = "select asno.asn as asnno,asno.pono,pl.suppliername as vendorname from wms.wms_asn asno left outer join wms.wms_polist pl on pl.pono = asno.pono where pl.suppliername = '#suppliername'";
+
 					await pgsql.OpenAsync();
 					var objpo = await pgsql.QueryAsync<POList>(
 					   query, null, commandType: CommandType.Text);
@@ -592,15 +609,22 @@ namespace WMS.DAL
 				//dataobj.docfile = ;
 				using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
 				{
-					if(dataobj.pono==null)
-                    {
+					if (dataobj.pono == null)
+					{
 						//If PO is empty
-						foreach(var podata in dataobj.polist)
-                        {
-							dataobj.pono = dataobj.pono+","+podata.POno;
-                        }
+						foreach (var podata in dataobj.polist)
+						{
+							if (dataobj.pono == null)
+							{
+								dataobj.pono = podata.POno;
+							}
+							else
+							{
+								dataobj.pono = dataobj.pono + "," + podata.POno;
+							}
+						}
 
-                    }
+					}
 					var q1 = WMSResource.getinvoiceexists.Replace("#pono", dataobj.pono).Replace("#invno", dataobj.invoiceno);
 					int count = int.Parse(DB.ExecuteScalar(q1, null).ToString());
 

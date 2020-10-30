@@ -604,9 +604,9 @@ namespace WMS.Controllers
 		}
 
 		[HttpGet("getPODataList")]
-		public async Task<IEnumerable<POList>> getPODataList()
+		public async Task<IEnumerable<POList>> getPODataList(string suppliername)
 		{
-			return await this._poService.getPODataList();
+			return await this._poService.getPODataList(suppliername);
 		}
 
 		[HttpGet("Getpages")]

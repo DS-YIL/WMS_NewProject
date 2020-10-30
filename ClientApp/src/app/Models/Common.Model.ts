@@ -39,7 +39,7 @@ export class POList {
   name: any;
   code: any;
   text: any;
-  POno: any;
+  pOno: any;
   qty: any;
   quotationqty: any;
   status: any;

@@ -77,6 +77,8 @@ namespace WMS.Models
 
 		public DateTime deliverydate { get; set; }
 
+		public List<string> pos { get; set; }
+
 	}
 
 	public class printMaterial

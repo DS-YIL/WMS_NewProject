@@ -656,8 +656,9 @@ export class wmsService {
     return this.http.get<UserDashboardGraphModel[]>(this.url + 'POData/getManagerdashboardgraphdata/', this.httpOptions);
   }
 
-  getPODataList(): Observable<any> {
-    return this.http.get<any[]>(this.url + 'POData/getPODataList/', this.httpOptions);
+  getPODataList(suppliername: any): Observable<any> {
+    //console.log(suppliername)
+    return this.http.get<any[]>(this.url + 'POData/getPODataList?suppliername=' + suppliername, this.httpOptions);
   }
 }
 
