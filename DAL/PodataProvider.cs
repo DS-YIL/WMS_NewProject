@@ -737,6 +737,7 @@ namespace WMS.DAL
 							dataobj.grnnumber,
 							dataobj.createdby,
 							filename,
+							dataobj.inwmasterid,
 							dataobj.vehicleno,
 							dataobj.transporterdetails
 							//barcodeid,
@@ -755,7 +756,9 @@ namespace WMS.DAL
 								dataobj.createddate,
 								dataobj.deleteflag,
 								dataobj.pono,
-								dataobj.invoiceno
+								dataobj.invoiceno,
+								dataobj.inwmasterid
+
 							});
 
 							EmailModel emailmodel = new EmailModel();
@@ -767,6 +770,7 @@ namespace WMS.DAL
 							emailmodel.suppliername = dataobj.suppliername;
 							emailmodel.grnnumber = dataobj.grnnumber;
 							emailmodel.employeeno = dataobj.receivedby;
+							emailmodel.inwmasterid = dataobj.inwmasterid;
 
 
 							emailmodel.ToEmailId = "developer1@in.yokogawa.com";

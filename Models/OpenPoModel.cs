@@ -788,11 +788,8 @@ namespace WMS.Models
 		public string approverid { get; set; }
 		public string approvername { get; set; }
 		public string approverstatus { get; set; }
-
-
-
-
-	}
+        public int inwmasterid { get; set; }
+    }
 	public class employeeModel
 	{
 		public string name { get; set; }
