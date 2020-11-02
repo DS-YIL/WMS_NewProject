@@ -130,7 +130,16 @@ export class StoreClerkComponent implements OnInit {
       quantity: [0, [Validators.required]],
     });
   }
-
+  decreaseQty() {
+    if (this.qty > 1) {
+      this.qty = this.qty - 1;
+    }
+  }
+  increaseQty() {
+    if (this.qty < this.noOfPrint) {
+      this.qty = this.qty + 1;
+    }
+  }
   checkreceivedqty(entredvalue, confirmedqty, returnedqty, maxvalue, data: any) {
     debugger;
     if (isNullOrUndefined(entredvalue)) {

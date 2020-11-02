@@ -14,6 +14,7 @@ export class MaterialBarcodeComponent implements OnInit {
   constructor(private wmsService: wmsService, private route: ActivatedRoute, private messageService: MessageService, private router: Router, public constants: constants, private spinner: NgxSpinnerService) { }
 
   public employee: Employee;
+  public material: any;
   public dynamicData: DynamicSearchResult;
   public path: string = null;
 

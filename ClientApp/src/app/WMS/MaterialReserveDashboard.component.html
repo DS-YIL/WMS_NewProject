@@ -107,7 +107,7 @@
     <div style="height: 5px; overflow-y: scroll">
 
 
-      <p-dialog header={{GatepassTxt}} [(visible)]="gatepassdialog" [responsive]="true" showEffect="fade" [modal]="true" [style]="{'width':'98vw','overflow':'auto!important','margin-right': '0px','margin-left':'0px'}">
+      <!--<p-dialog header={{GatepassTxt}} [(visible)]="gatepassdialog" [responsive]="true" showEffect="fade" [modal]="true" [style]="{'width':'98vw','overflow':'auto!important','margin-right': '0px','margin-left':'0px'}">
         <div class="row">
           <div class="col-lg-6 col-md-6 form-inline">
             <label class="labelheading">Transfer to :</label>&nbsp;
@@ -143,12 +143,12 @@
               <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex" let-rindex=0>
                 <tr>
                   <td class="ptable-cell" style="text-align:center"> {{ri+1}} </td>
-                  <td class="ptable-cell" style="text-align:left;">
+                  <td class="ptable-cell" style="text-align:left;">-->
                     <!--<input *ngIf="rowData.material" [(ngModel)]="rowData.material" class="form-control" type="text" name="{{rowData.materialid}}" />-->
-                    <p-autoComplete [(ngModel)]="rowData.materialid" (onSelect)="onMaterialSelected(rowData,ri)" appendTo="body" [suggestions]="filteredmaterial" placeholder="search by name/code" [forceSelection]="true" (completeMethod)="filtermaterials($event)" [size]="30"
-                                    [dropdown]="true"></p-autoComplete>
+                    <!--<p-autoComplete [(ngModel)]="rowData.materialid" (onSelect)="onMaterialSelected(rowData,ri)" appendTo="body" [suggestions]="filteredmaterial" placeholder="search by name/code" [forceSelection]="true" (completeMethod)="filtermaterials($event)" [size]="30"
+                                    [dropdown]="true"></p-autoComplete>-->
                     <!--<p-autoComplete appendTo="body" [style]="{'width' : '100%'}" (onSelect)="onMaterialSelected(rowData,ri)" [(ngModel)]="rowData.materialid" type="text" [suggestions]="searchItems" field="name" [dropdown]="true" (completeMethod)="bindSearchListDatamaterial($event,'material')" size="8"></p-autoComplete>-->
-                  </td>
+                  <!--</td>
                   <td class="ptable-cell" style="text-align:right">
                     <input style="text-align:left" pInputText type="text" readonly class="form-control" [(ngModel)]="rowData.materialdescription">
                   </td>
@@ -175,7 +175,7 @@
             <button type="button" pButton icon="fa fa-close" (click)="transfermaterial()" label="Submit"></button>
           </div>
         </p-footer>
-      </p-dialog>
+      </p-dialog>-->
     </div>
   </div>
 
