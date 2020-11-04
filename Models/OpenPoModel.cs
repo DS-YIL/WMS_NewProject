@@ -65,7 +65,9 @@ namespace WMS.Models
 
 		public string receivedby { get; set; }
 
-		public int inwmasterid { get; set; }
+		//public int inwmasterid { get; set; }
+		public string inwmasterid { get; set; }
+
 
 		public string unholdedby { get; set; }
 
@@ -78,6 +80,8 @@ namespace WMS.Models
 		public DateTime deliverydate { get; set; }
 
 		public List<string> pos { get; set; }
+		public bool isasn { get; set; }
+		public bool issupplier { get; set; }
 
 	}
 
@@ -107,7 +111,9 @@ namespace WMS.Models
 		public DateTime createddate { get; set; }
 		public string createdby { get; set; }
 		public bool deleteflag { get; set; }
-		public int inwmasterid { get; set; }
+		//public int inwmasterid { get; set; }
+		public string inwmasterid { get; set; }
+
 		public string pono { get; set; }
 		public string invoiceno { get; set; }
 		public DateTime invoicedate { get; set; }
@@ -133,7 +139,9 @@ namespace WMS.Models
 
 	public class iwardmasterModel
 	{
-		public int inwmasterid { get; set; }
+		//public int inwmasterid { get; set; }
+		public string inwmasterid { get; set; }
+
 		public string pono { get; set; }
 		public string invoiceno { get; set; }
 		public DateTime invoicedate { get; set; }
@@ -156,7 +164,9 @@ namespace WMS.Models
 		public int vendorid { get; set; }
 		public int inwardid { get; set; }
 		public string projectname { get; set; }
-		public int inwmasterid { get; set; }
+		//public int inwmasterid { get; set; }
+		public string inwmasterid { get; set; }
+
 		public string quotationqty { get; set; }
 		public int receivedqty { get; set; }
 		public DateTime receiveddate { get; set; }
@@ -220,7 +230,9 @@ namespace WMS.Models
 		public string stockstatus { get; set; }
 		public int itemid { get; set; }
 		public string grnnumber { get; set; }
-		public int inwmasterid { get; set; }
+		//public int inwmasterid { get; set; }
+		public string inwmasterid { get; set; }
+
 		public int paitemid { get; set; }
 		public string pono { get; set; }
 		public int binid { get; set; }
@@ -316,7 +328,9 @@ namespace WMS.Models
 		public string materialid { get; set; }
 		public string qtytotal { get; set; }
 		public int confirmqty { get; set; }
-		public int inwmasterid { get; set; }
+		//public int inwmasterid { get; set; }
+				public string inwmasterid { get; set; }
+
 	}
 
 	//Location Details
@@ -611,7 +625,9 @@ namespace WMS.Models
 
 		//public int? gatepassid { get; set; }
 		public string gatepassid { get; set; }
-		public int? inwmasterid { get; set; }
+		//public int? inwmasterid { get; set; }
+		public string inwmasterid { get; set; }
+
 		public DateTime reprintedon { get; set; }
 		public string reprintedby { get; set; }
 		public int reprintcount { get; set; }
@@ -788,8 +804,10 @@ namespace WMS.Models
 		public string approverid { get; set; }
 		public string approvername { get; set; }
 		public string approverstatus { get; set; }
-        public int inwmasterid { get; set; }
-    }
+		// public int inwmasterid { get; set; }
+		public string inwmasterid { get; set; }
+
+	}
 	public class employeeModel
 	{
 		public string name { get; set; }
@@ -824,7 +842,8 @@ namespace WMS.Models
 
 	public class UnholdGRModel
 	{
-		public int inwmasterid { get; set; }
+		//public int inwmasterid { get; set; }
+		public string inwmasterid { get; set; }
 		public bool unholdaction { get; set; }
 		public string unholdedby { get; set; }
 
@@ -1092,7 +1111,9 @@ public class materialtransferapproverModel
 }
 public class DirectTransferMain
 {
-	public int inwmasterid { get; set; }
+	//public int inwmasterid { get; set; }
+	public string inwmasterid { get; set; }
+
 	public string projectcode { get; set; }
 	public string grnnumber { get; set; }
 	public string mrnremarks { get; set; }
@@ -1103,7 +1124,9 @@ public class DirectTransferMain
 }
 public class DirectTransferTR
 {
-	public int inwmasterid { get; set; }
+	//public int inwmasterid { get; set; }
+	public string inwmasterid { get; set; }
+
 	public string materialid { get; set; }
 	public string materialdescription { get; set; }
 	public int confirmqty { get; set; }
@@ -1228,7 +1251,9 @@ public class PrintHistoryModel
 	// gate pass change
 	//internal int gatepassid { get; set; }
 	public string gatepassid { get; set; }
-	public int inwmasterid { get; set; }
+	//public int inwmasterid { get; set; }
+	public string inwmasterid { get; set; }
+
 	public DateTime reprintedon { get; set; }
 	public string reprintedby { get; set; }
 	public int reprintcount { get; set; }

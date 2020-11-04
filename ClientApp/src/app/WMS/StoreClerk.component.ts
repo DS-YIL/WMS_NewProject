@@ -78,6 +78,7 @@ export class StoreClerkComponent implements OnInit {
   displayBasic: boolean = false;
   poinvoice: string = "";
   grnn0: string = "";
+  inwmasterid: string = "";
 
   ngOnInit() {
     //this.autoCompleteObject.focusInput();
@@ -85,6 +86,7 @@ export class StoreClerkComponent implements OnInit {
       this.employee = JSON.parse(localStorage.getItem("Employee"));
     else
       this.router.navigateByUrl("Login");
+    //Email
     this.poinvoice = this.route.snapshot.queryParams.pono;
     if (this.poinvoice) {
       debugger;
@@ -428,6 +430,8 @@ export class StoreClerkComponent implements OnInit {
       this.showQtyUpdateDialog = true;
       // alert(this.PoDetails);
       this.PoDetails.pono = this.selectedpendingpono;
+      //this.PoDetails.inwmasterid = this.selectedpendingpono;
+
       this.getponodetails(this.selectedpendingpono);
     }
     else {

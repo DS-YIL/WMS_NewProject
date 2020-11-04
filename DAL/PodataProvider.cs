@@ -77,15 +77,37 @@ namespace WMS.DAL
 					//WMSResource.checkponoexists.Replace("#pono", PONO);
 					//string query = "select pono,suppliername as vendorname from wms.wms_polist where pono = '" + PONO + "'";
 					string query = "select asno.asn as asnno,asno.pono,pl.suppliername as vendorname from wms.wms_asn asno left outer join wms.wms_polist pl on pl.pono = asno.pono where asno.asn = '" + PONO.Trim() + "'";
-					var podata = pgsql.QueryFirstOrDefault<OpenPoModel>(
+					//string query = "select asn as asnno,pono from wms.wms_asn where asn = '" + PONO.Trim() + "'";
+
+					var podata = pgsql.QueryAsync<OpenPoModel>(
 					   query, null, commandType: CommandType.Text);
 
-					
+					int count = podata.Result.Count();
 
-					if (podata != null)
+					if (podata != null && (podata.Result.Count()>0))
 					{
-						podata.ispono = false;
-						return podata;
+						//List<OpenPoModel> podataList = podata.Result.ToList();
+						//returndata = podata.Result.FirstOrDefault();
+						string postr = "";
+						int i = 0;
+						foreach(OpenPoModel model in podata.Result)
+                        {
+							returndata = model;
+							if(i>0)
+                            {
+								postr += ",";
+                            }
+							postr += model.pono;
+							returndata.pono = postr;
+							i++;
+							
+
+						}
+						returndata.ispono = false;
+						returndata.isasn = true;
+						returndata.issupplier = false;
+						return returndata;
+
 					}
 					else
 					{
@@ -95,6 +117,8 @@ namespace WMS.DAL
 						if (podata1 != null)
 						{
 							podata1.ispono = true;
+							podata1.isasn = false;
+							podata1.issupplier = false;
 						}
                         else
                         {
@@ -104,6 +128,8 @@ namespace WMS.DAL
 							if (podata2 != null)
 							{
 								podata2.ispono = false;
+								podata2.isasn = false;
+								podata2.issupplier = true;
 							}
 							return podata2;
 						}
@@ -875,14 +901,14 @@ namespace WMS.DAL
 								int reservedqty = 0;
 
 								Enquirydata enquiryobj = new Enquirydata();
-								string availableQtyqry = "select sum(availableqty) as availableqty from wms.wms_stock where materialid ='" + mtData.materialid + "' and pono='" + mtData.pono + "' and inwmasterid =" + mtData.inwmasterid;
+								string availableQtyqry = "select sum(availableqty) as availableqty from wms.wms_stock where materialid ='" + mtData.materialid + "' and pono='" + mtData.pono + "' and inwmasterid = '" + mtData.inwmasterid +"'";
 								enquiryobj = pgsql.QuerySingleOrDefault<Enquirydata>(
 												availableQtyqry, null, commandType: CommandType.Text);
 								result.availableqty = enquiryobj.availableqty;
 
 								ReportModel modelobj = new ReportModel();
 								string matIssuedQuery = "select sum(iss.issuedqty)as issuedqty from wms.wms_materialissue iss" +
-									" join wms.wms_stock sk on sk.pono='" +mtData.pono+"' where iss.itemid = sk.itemid and sk.materialid='" + mtData.materialid + "' and sk.inwmasterid=" + mtData.inwmasterid ;
+									" join wms.wms_stock sk on sk.pono='" +mtData.pono+"' where iss.itemid = sk.itemid and sk.materialid='" + mtData.materialid + "' and sk.inwmasterid= '" + mtData.inwmasterid +"'";
 								modelobj = pgsql.QuerySingleOrDefault<ReportModel>(
 												matIssuedQuery, null, commandType: CommandType.Text);
 								if (modelobj != null)
@@ -891,7 +917,7 @@ namespace WMS.DAL
 								}
 								//Get material reserved qty
 								ReserveMaterialModel modeldataobj = new ReserveMaterialModel();
-								string matReserveQuery = "select sum(reser.reservequantity )as reservedqty from wms.materialreservedetails reser join wms.wms_stock sk on sk.pono='" + mtData.pono + "' where reser.itemid =sk.itemid and sk.materialid='" + mtData.materialid + "' and sk.inwmasterid=" + mtData.inwmasterid;
+								string matReserveQuery = "select sum(reser.reservequantity )as reservedqty from wms.materialreservedetails reser join wms.wms_stock sk on sk.pono='" + mtData.pono + "' where reser.itemid =sk.itemid and sk.materialid='" + mtData.materialid + "' and sk.inwmasterid='" + mtData.inwmasterid+"'";
 								modeldataobj = pgsql.QuerySingleOrDefault<ReserveMaterialModel>(
 												matReserveQuery, null, commandType: CommandType.Text);
 								if (modeldataobj != null)
@@ -1047,7 +1073,7 @@ namespace WMS.DAL
 					   query, null, commandType: CommandType.Text);
 					foreach (var matdata in obj)
 					{
-						string reservequery = "select max(emp.name) as requestername,max(emp1.name)  as approvedby,max(res.reservedon) as issuedon,sum(resdetails.reservequantity) as quantity from wms.materialreservedetails resdetails join wms.materialreserve res on resdetails.reserveid = res.reserveid join wms.wms_stock sk on sk.pono='" + matdata.pono + "' join wms.employee emp on res.reservedby = emp.employeeno join wms.employee emp1 on emp1.employeeno = res.reservedby where resdetails.itemid =sk.itemid and sk.materialid='" + materialid + "' and sk.inwmasterid=" + matdata.inwmasterid;
+						string reservequery = "select max(emp.name) as requestername,max(emp1.name)  as approvedby,max(res.reservedon) as issuedon,sum(resdetails.reservequantity) as quantity from wms.materialreservedetails resdetails join wms.materialreserve res on resdetails.reserveid = res.reserveid join wms.wms_stock sk on sk.pono='" + matdata.pono + "' join wms.employee emp on res.reservedby = emp.employeeno join wms.employee emp1 on emp1.employeeno = res.reservedby where resdetails.itemid =sk.itemid and sk.materialid='" + materialid + "' and sk.inwmasterid='" + matdata.inwmasterid +"'";
 							//"select max(emp.name) as requestername,max(emp1.name)  as approvedby,max(res.reservedon) as issuedon,sum(res.reservedqty) as quantity from wms.wms_materialreserve res left join wms.employee emp on res.reservedby = emp.employeeno join wms.wms_stock sk on sk.pono='"+ matdata.pono+ "'  left join wms.employee emp1 on emp1.employeeno = res.releasedby where res.itemid=sk.itemid and sk.materialid='"+ materialid + "' and sk.inwmasterid="+matdata.inwmasterid;
 						var data = pgsql.QuerySingle<ReqMatDetails>(
 						   reservequery, null, commandType: CommandType.Text);
@@ -1063,7 +1089,7 @@ namespace WMS.DAL
 							listobj.Add(objs);
 						}
 
-						string requstedquery = "select sum(issue.issuedqty)as quantity,max(emp.name) as requestername,max(emp1.name) as approvername,max(issue.itemissueddate) as issuedon from wms.wms_materialissue issue inner join wms.materialrequestdetails matreqdetails on matreqdetails.id = issue.requestmaterialid inner join wms.materialrequest req on matreqdetails.requestid = req.requestid  left join wms.employee emp on emp.employeeno = req.requesterid join wms.wms_stock sk on sk.pono='" + matdata.pono + "' left join wms.employee emp1 on emp1.employeeno = req.approverid  where issue.itemid=sk.itemid and sk.materialid='" + materialid + "' and sk.inwmasterid=" + matdata.inwmasterid;
+						string requstedquery = "select sum(issue.issuedqty)as quantity,max(emp.name) as requestername,max(emp1.name) as approvername,max(issue.itemissueddate) as issuedon from wms.wms_materialissue issue inner join wms.materialrequestdetails matreqdetails on matreqdetails.id = issue.requestmaterialid inner join wms.materialrequest req on matreqdetails.requestid = req.requestid  left join wms.employee emp on emp.employeeno = req.requesterid join wms.wms_stock sk on sk.pono='" + matdata.pono + "' left join wms.employee emp1 on emp1.employeeno = req.approverid  where issue.itemid=sk.itemid and sk.materialid='" + materialid + "' and sk.inwmasterid='" + matdata.inwmasterid  +"'";	
 						var data1 = pgsql.QuerySingle<ReqMatDetails>(
 					   requstedquery, null, commandType: CommandType.Text);
 						objs = new ReqMatDetails();
@@ -1079,7 +1105,7 @@ namespace WMS.DAL
 							listobj.Add(objs);
 						}
 						//string gatepassquery = " select max(gate.gatepasstype)as gatepasstype,sum(mat.quantity)as quantity,max(gate.approvedon) as issuedon,max(emp.name) as requestername,max(emp1.name) as approvername from wms.wms_gatepass gate  inner join wms.wms_gatepassmaterial mat on mat.gatepassid = gate.gatepassid  left join wms.employee emp on emp.employeeno = gate.requestedby left join wms.employee emp1 on emp1.employeeno = gate.approvedby where mat.materialid = '" + obj.materialid + "' and gate.approvedon != null and gate.approverstatus!=null";
-						string gatepassquery = "select gp.gatepasstype as type,sum(matiss.issuedqty) as quantity,max(gp.approvedon) as issuedon,max(emp.name) as requestername, max(emp1.name) as approvername from wms.wms_gatepassmaterial gtmat join wms.wms_materialissue matiss on matiss.gatepassmaterialid = gtmat.gatepassmaterialid join wms.wms_gatepass gp on gp.gatepassid = gtmat.gatepassid left join wms.employee emp on emp.employeeno = gp.requestedby left join wms.employee emp1 on emp1.employeeno = gp.approverid join wms.wms_stock sk on sk.pono = '" + matdata.pono+"' where sk.inwmasterid = "+ matdata.inwmasterid + "and matiss.itemid = sk.itemid and gtmat.materialid = '"+ materialid + "' group by gp.gatepasstype";
+						string gatepassquery = "select gp.gatepasstype as type,sum(matiss.issuedqty) as quantity,max(gp.approvedon) as issuedon,max(emp.name) as requestername, max(emp1.name) as approvername from wms.wms_gatepassmaterial gtmat join wms.wms_materialissue matiss on matiss.gatepassmaterialid = gtmat.gatepassmaterialid join wms.wms_gatepass gp on gp.gatepassid = gtmat.gatepassid left join wms.employee emp on emp.employeeno = gp.requestedby left join wms.employee emp1 on emp1.employeeno = gp.approverid join wms.wms_stock sk on sk.pono = '" + matdata.pono+"' where sk.inwmasterid = '"+ matdata.inwmasterid + "' and matiss.itemid = sk.itemid and gtmat.materialid = '"+ materialid + "' group by gp.gatepasstype";
 							//"select max(gate.gatepasstype)as gatepasstype,sum(wmissue.issuedqty)as quantity,max(gate.approvedon) as issuedon,max(emp.name) as requestername,max(emp1.name) as approvername from wms.wms_gatepass gate  inner join wms.wms_gatepassmaterial mat on mat.gatepassid = gate.gatepassid  left join wms.employee emp on emp.employeeno = gate.requestedby left join wms.employee emp1 on emp1.employeeno = gate.approvedby join wms.wms_materialissue wmissue  on mat.gatepassmaterialid = wmissue.gatepassmaterialid where mat.materialid = '" + matdata.materialid + "' and gate.approvedon != null and gate.approverstatus != null";
 						var data2 = await pgsql.QueryAsync<ReqMatDetails>(
 					   gatepassquery, null, commandType: CommandType.Text);
@@ -1188,7 +1214,7 @@ namespace WMS.DAL
 
 
 					List<OpenPoModel> datalist = new List<OpenPoModel>();
-					if (obj.inwmasterid != 0)
+					if (obj.inwmasterid != null && obj.inwmasterid != "")
 					{
 						string query = "";
 						if (pono.StartsWith("NP"))
@@ -1507,7 +1533,7 @@ namespace WMS.DAL
 					getgrnnoforpo = pgsql.QueryFirstOrDefault<inwardModel>(
 					   getGRNno, null, commandType: CommandType.Text);
 					int inwardid = 0;
-					if (obj.inwmasterid != 0)
+					if (obj.inwmasterid != null && obj.inwmasterid != "")
 					{
 						int loop = 0;
 						bool isupdateprocess = false;
@@ -1659,7 +1685,7 @@ namespace WMS.DAL
 					getgrnnoforpo = pgsql.QueryFirstOrDefault<inwardModel>(
 					   getGRNno, null, commandType: CommandType.Text);
 					int inwardid = 0;
-					if (obj.inwmasterid != 0)
+					if (obj.inwmasterid != null && obj.inwmasterid != "")
 					{
 
 						foreach (var item in datamodel)
@@ -1740,7 +1766,8 @@ namespace WMS.DAL
 				StockModel obj = new StockModel();
 				string loactiontext = string.Empty;
 				var result = 0;
-				int inwmasterid = 0;
+				//int inwmasterid = 0;
+				string inwmasterid = "";
 				foreach (var item in data)
 				{
 
@@ -3765,9 +3792,9 @@ namespace WMS.DAL
 				using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 				{
 					string query = WMSResource.checkreprintalreadydone;
-					if (model.inwmasterid != null)
+					if (model.inwmasterid !=null && model.inwmasterid != "")
 					{
-						query = query + " inwmasterid=" + model.inwmasterid + " order by reprintcount desc limit 1";
+						query = query + " inwmasterid= '" + model.inwmasterid + "' order by reprintcount desc limit 1";
 					}
 					else if (model.gatepassid != null)
 					{
@@ -7541,14 +7568,14 @@ namespace WMS.DAL
 								{
 									issuedqty = itm.availableqty;
 								}
-								int? inwmasterid = null;
+								string inwmasterid = "";
 								int? inwardid = null;
-								if (itm.inwmasterid > 0)
+								if (itm.inwmasterid != null && itm.inwmasterid != "")
 								{
 									inwmasterid = itm.inwmasterid;
 
 								}
-								if (itm.inwmasterid > 0)
+								if (itm.inwmasterid != null && itm.inwmasterid != "")
 								{
 									inwardid = itm.inwardid;
 
@@ -8200,7 +8227,7 @@ namespace WMS.DAL
 
 					pgsql.OpenAsync();
 					string status = datamodel.unholdaction == true ? "accepted" : "returned";
-					string qry = "Update wms.wms_securityinward set onhold = False,holdgrstatus='" + status + "',unholdedby = '" + datamodel.unholdedby + "',unholdedon = current_date,unholdremarks = '" + datamodel.unholdremarks + "' where inwmasterid = " + datamodel.inwmasterid + "";
+					string qry = "Update wms.wms_securityinward set onhold = False,holdgrstatus='" + status + "',unholdedby = '" + datamodel.unholdedby + "',unholdedon = current_date,unholdremarks = '" + datamodel.unholdremarks + "' where inwmasterid = '" + datamodel.inwmasterid + "'";
 					var results11 = pgsql.ExecuteScalar(qry);
 					result = 1;
 
@@ -10262,7 +10289,7 @@ namespace WMS.DAL
 					string queryx = WMSResource.isgrnexistsquerybyinvoce.Replace("#pono", printMat.pono).Replace("#invno", printMat.invoiceno);
 					var objx = DB.QuerySingle<inwardModel>(
 					 queryx, null, commandType: CommandType.Text);
-					if(objx.inwmasterid !=0)
+					if(objx.inwmasterid !=null && objx.inwmasterid != "")
                     {
 						//check if print is true
 						string barcodequery = "select isprint from wms.wms_printstatusmaterial where  inwmasterid ='" + objx.inwmasterid + "' and materialid='"+printMat.materialid+"'";

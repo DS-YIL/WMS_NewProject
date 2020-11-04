@@ -39,6 +39,7 @@ export class PoDetails {
   asnno: string;
   id: string;
   vehicleno: string;
+    inwmasterid: string;
 }
 
 export class BarcodeModel {

@@ -61,7 +61,7 @@
           <p-checkbox name="group1" value="" [(ngModel)]="multiplepo" (onChange)="OnMultipleSelect($event)"></p-checkbox>
         </div>
       </div>-->
-                <div class="row " *ngIf="showDetails" style="margin-top:5px;">
+                <div class="row " *ngIf="showDetails && !PoDetails.asnno" style="margin-top:5px;">
                   <div class="col-lg-2 col-md-2">
                     <label class="labelheading">Supplier:</label>
                   </div>
