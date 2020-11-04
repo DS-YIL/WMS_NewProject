@@ -748,7 +748,7 @@ namespace WMS.DAL
 							filename = dataobj.pono + "_" + dataobj.docfile;
 						}
 
-						var results = DB.Execute(insertqueryforinvoice, new
+						var results = DB.ExecuteScalar(insertqueryforinvoice, new
 						{
 							dataobj.invoicedate,
 							dataobj.departmentid,
@@ -769,8 +769,9 @@ namespace WMS.DAL
 							//barcodeid,
 						});
 
-						if (results != 0)
+						if (results != null &&  results != "" )
 						{
+							dataobj.inwmasterid = results.ToString();
 							dataobj.barcode = dataobj.pono + "_" + dataobj.invoiceno;
 							//insert bar code data
 							dataobj.createddate = DateTime.Now;
@@ -800,7 +801,7 @@ namespace WMS.DAL
 
 
 							emailmodel.ToEmailId = "developer1@in.yokogawa.com";
-							emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
+							emailmodel.FrmEmailId = "developer6@in.yokogawa.com";
 							emailmodel.CC = "sushma.patil@in.yokogawa.com";
 							EmailUtilities emailobj = new EmailUtilities();
 							emailobj.sendEmail(emailmodel, 1);
@@ -1485,7 +1486,7 @@ namespace WMS.DAL
 					emailmodel.grnnumber = verify.grnnumber;
 
 					emailmodel.ToEmailId = "developer1@in.yokogawa.com";
-					emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
+					emailmodel.FrmEmailId = "developer6@in.yokogawa.com";
 					emailmodel.CC = "sushma.patil@in.yokogawa.com";
 					EmailUtilities emailobj = new EmailUtilities();
 					emailobj.sendEmail(emailmodel, 2);
@@ -2251,7 +2252,7 @@ namespace WMS.DAL
 						emailmodel.pono = item.pono;
 						emailmodel.requestid = item.requestid;
 						emailmodel.ToEmailId = "developer1@in.yokogawa.com";
-						emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
+						emailmodel.FrmEmailId = "developer6@in.yokogawa.com";
 						emailmodel.CC = "sushma.patil@in.yokogawa.com";
 						EmailUtilities emailobj = new EmailUtilities();
 						emailobj.sendEmail(emailmodel, 6);
@@ -2592,7 +2593,7 @@ namespace WMS.DAL
 
 
 							emailmodel.ToEmailId = "developer1@in.yokogawa.com";
-							emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
+							emailmodel.FrmEmailId = "developer6@in.yokogawa.com";
 							emailmodel.CC = "sushma.patil@in.yokogawa.com";
 							EmailUtilities emailobj = new EmailUtilities();
 							emailobj.sendEmail(emailmodel,4);
@@ -2710,7 +2711,7 @@ namespace WMS.DAL
 
 
                         emailmodel.ToEmailId = "developer1@in.yokogawa.com";
-                        emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
+                        emailmodel.FrmEmailId = "developer6@in.yokogawa.com";
                         emailmodel.CC = "sushma.patil@in.yokogawa.com";
                         EmailUtilities emailobj = new EmailUtilities();
                         emailobj.sendEmail(emailmodel, 4);
@@ -2857,7 +2858,7 @@ namespace WMS.DAL
 				emailmodel.materialissueid = dataobj[0].materialissueid;
 				emailmodel.requestid =dataobj[0].requestid;
 				emailmodel.ToEmailId = "developer1@in.yokogawa.com";
-				emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
+				emailmodel.FrmEmailId = "developer6@in.yokogawa.com";
 				emailmodel.CC = "sushma.patil@in.yokogawa.com";
 				EmailUtilities emailobj = new EmailUtilities();
 				emailobj.sendEmail(emailmodel, 5);
@@ -5984,7 +5985,7 @@ namespace WMS.DAL
 
 
                         emailmodel.ToEmailId = "developer1@in.yokogawa.com";
-                        emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
+                        emailmodel.FrmEmailId = "developer6@in.yokogawa.com";
                         emailmodel.CC = "sushma.patil@in.yokogawa.com";
                         EmailUtilities emailobj = new EmailUtilities();
                         emailobj.sendEmail(emailmodel,4);
@@ -6436,7 +6437,7 @@ namespace WMS.DAL
 						emailmodel.jobcode = datamodel[0].projectname;
 						emailmodel.grnnumber = datamodel[0].grnnumber;
 						emailmodel.ToEmailId = "developer1@in.yokogawa.com";
-						emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
+						emailmodel.FrmEmailId = "developer6@in.yokogawa.com";
 						emailmodel.CC = "sushma.patil@in.yokogawa.com";
 						EmailUtilities emailobj = new EmailUtilities();
 						emailobj.sendEmail(emailmodel, 3);
@@ -7173,7 +7174,7 @@ namespace WMS.DAL
 							emailmodel.requestedon = model.requestedon;
 
 							emailmodel.ToEmailId = "developer1@in.yokogawa.com";
-							emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
+							emailmodel.FrmEmailId = "developer6@in.yokogawa.com";
 							emailmodel.CC = "sushma.patil@in.yokogawa.com";
 							EmailUtilities emailobj = new EmailUtilities();
 							if(model.gatepasstype=="Returnable")
@@ -7225,7 +7226,7 @@ namespace WMS.DAL
 							emailmodel.requestedon = model.requestedon;
 
 							emailmodel.ToEmailId = "developer1@in.yokogawa.com";
-							emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
+							emailmodel.FrmEmailId = "developer6@in.yokogawa.com";
 							emailmodel.CC = "sushma.patil@in.yokogawa.com";
 							EmailUtilities emailobj = new EmailUtilities();
 							emailobj.sendEmail(emailmodel, 17);
@@ -8373,7 +8374,7 @@ namespace WMS.DAL
 							emailmodel.transferbody = "Material Transfer request initiated for approval with Transferid :MATFR" + datamodel.transferid.ToString();
 							emailmodel.ToEmailId = "developer1@in.yokogawa.com";
 							//emailmodel.ToEmailId = mailto;
-							emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
+							emailmodel.FrmEmailId = "developer6@in.yokogawa.com";
 							emailmodel.CC = "sushma.patil@in.yokogawa.com";
 							EmailUtilities emailobj = new EmailUtilities();
 							emailobj.sendEmail(emailmodel, 14);
@@ -8486,7 +8487,7 @@ namespace WMS.DAL
 							emailmodel1.transferbody = "Material Transfer request rejected with Transferid :MATFR" + data.transferid.ToString();
 							emailmodel1.ToEmailId = "developer1@in.yokogawa.com";
 							//emailmodel.ToEmailId = mailto;
-							emailmodel1.FrmEmailId = "developer1@in.yokogawa.com";
+							emailmodel1.FrmEmailId = "developer6@in.yokogawa.com";
 							emailmodel1.CC = "sushma.patil@in.yokogawa.com";
 							emailmodels.Add(emailmodel1);
 
@@ -9394,7 +9395,7 @@ namespace WMS.DAL
 						EmailModel emailmodel = new EmailModel();
 						emailmodel.jobcode = data.grnnumber;
 						emailmodel.ToEmailId = "developer1@in.yokogawa.com";
-						emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
+						emailmodel.FrmEmailId = "developer6@in.yokogawa.com";
 						emailmodel.CC = "sushma.patil@in.yokogawa.com";
 						EmailUtilities emailobj = new EmailUtilities();
 						emailobj.sendEmail(emailmodel, 13);
@@ -9464,7 +9465,7 @@ namespace WMS.DAL
 				EmailModel emailmodel = new EmailModel();
 				emailmodel.jobcode = grns;
 				emailmodel.ToEmailId = "developer1@in.yokogawa.com";
-				emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
+				emailmodel.FrmEmailId = "developer6@in.yokogawa.com";
 				emailmodel.CC = "sushma.patil@in.yokogawa.com";
 				EmailUtilities emailobj = new EmailUtilities();
 				emailobj.sendEmail(emailmodel, 13);

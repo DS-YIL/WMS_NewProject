@@ -31,16 +31,15 @@ namespace WMS.Common
 			{
 				mailMessage.Subject = "Shipment Received - GATE ENTRY NO. :" + emlSndngList.inwmasterid;
 				string receivedby = this.getnamebyid(emlSndngList.employeeno);
-				string date = Conversion.ToDate(Convert.ToString(emlSndngList.receiveddate),"dd/mm/yyyy");
+				string date = Convert.ToDateTime( emlSndngList.receiveddate).ToString("dd/MM/yyyy");
 				subbody = "Shipment for GATE ENTRY NO. - <b>" + emlSndngList.inwmasterid + "</b> has been received.Please find the details below. <br/> Invoice No : <b>" + emlSndngList.invoiceno + "</b><br/>PO's : <b>" + emlSndngList.pono + "</b><br/> Received By : <b>" + receivedby + "</b><br/> Received On : <b>" + date + "</b>";
-				link = "http://10.29.15.212:82/WMS/Email/GRNPosting?inwmasterid=" + emlSndngList.inwmasterid;
+				link = "http://10.29.15.212:82/WMS/Email/GRNPosting?gateentryno=" + emlSndngList.inwmasterid;
 				//+ "-"+emlSndngList.invoiceno;
 			}
 			//Inventory Clerk(Receipt) to Quality User
 			//quality user
 
 			else if (subjecttype == 2)
-			//81-2020-000135,81-2020-000136
 			{
 				mailMessage.Subject = "Pending for Quality Check - GRN No. :" + emlSndngList.grnnumber;
 				//mailMessage.Subject = "Pending for Quality Check - GR No." + emlSndngList.grnnumber + "<br/>Materials of GR No - " + emlSndngList.grnnumber + "are pending for quality check.";

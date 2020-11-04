@@ -165,7 +165,7 @@ where  inwmaster.pono='#pono'</value>
   </data>
   <data name="insertinvoicedata" xml:space="preserve">
     <value>INSERT INTO wms.wms_securityinward(inwmasterid,pono,invoiceno,invoicedate,receivedby,receiveddate,deleteflag,departmentid,suppliername,asnno,inwardremarks,filename,vehicleno,transporterdetails)
-VALUES(default,@pono,@invoiceno,@invoicedate,@receivedby,@receiveddate,@deleteflag,@departmentid,@suppliername,@asnno,@inwardremarks,@filename,@vehicleno,@transporterdetails)</value>
+VALUES(default,@pono,@invoiceno,@invoicedate,@receivedby,@receiveddate,@deleteflag,@departmentid,@suppliername,@asnno,@inwardremarks,@filename,@vehicleno,@transporterdetails) returning inwmasterid</value>
     <comment>invoice data insertion</comment>
   </data>
   <data name="materialquest" xml:space="preserve">
