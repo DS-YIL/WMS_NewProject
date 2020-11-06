@@ -508,8 +508,7 @@ where sk.availableqty &gt; 0 and (prj.projectmanager = '#manager' or sk.returnid
   group by req.requestforissueid,iss.materialissueid</value>
   </data>
   <data name="getsecurityreceivedlist" xml:space="preserve">
-    <value>select sl.pono,emp.name as receivedby,sl.asnno as asn,sl.invoiceno,
-(select suppliername from wms.wms_polist where pono = sl.pono limit 1) as suppliername
+    <value>select sl.pono,emp.name as receivedby,sl.asnno as asn,sl.invoiceno,sl.suppliername
 from wms.wms_securityinward sl 
 left outer join wms.employee emp on sl.receivedby = emp.employeeno</value>
   </data>

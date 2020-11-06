@@ -1450,8 +1450,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select sl.pono,emp.name as receivedby,sl.asnno as asn,sl.invoiceno,
-        ///(select suppliername from wms.wms_polist where pono = sl.pono limit 1) as suppliername
+        ///   Looks up a localized string similar to select sl.pono,emp.name as receivedby,sl.asnno as asn,sl.invoiceno,sl.suppliername
         ///from wms.wms_securityinward sl 
         ///left outer join wms.employee emp on sl.receivedby = emp.employeeno.
         /// </summary>

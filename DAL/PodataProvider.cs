@@ -122,7 +122,7 @@ namespace WMS.DAL
 						}
                         else
                         {
-							query = "select suppliername as vendorname from wms.wms_polist where suppliername = '" + PONO.Trim() + "'";
+							query = "select suppliername as vendorname from wms.wms_polist where LOWER(suppliername) = LOWER('" + PONO.Trim() + "') ";
 							var podata2 = pgsql.QueryFirstOrDefault<OpenPoModel>(
 							   query, null, commandType: CommandType.Text);
 							if (podata2 != null)

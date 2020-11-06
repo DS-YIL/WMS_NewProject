@@ -143,24 +143,33 @@ export class SecurityHomeComponent implements OnInit {
    
   }
 
-  OnMultipleSelect(ischecked: boolean, suppliername: string) {
+  OnMultipleSelect(event: any, suppliername: string) {
     
     this.spinner.show();
     //alert(ischecked["checked"]);
     //Get polist data
-    if (ischecked["checked"] == true) {
+    debugger;
+    var data = event.target.checked;
+    if(data) {
       this.podatavisible = true;
       this.wmsService.getPODataList(suppliername).subscribe(data => {
         debugger;
         this.POlist = data;
         this.multiplepo = true;
-         debugger;
+        debugger;
 
         this.spinner.hide();
       });
     }
-    this.multiplepo = false;
-    this.spinner.hide();
+    else {
+      debugger;
+      this.POlist = [];
+      this.PoDetails.pono = '';
+      this.selectedPOs = [];
+      this.multiplepo = false;
+      this.spinner.hide();
+    }
+    
   }
 
   //close on submit
@@ -360,6 +369,22 @@ export class SecurityHomeComponent implements OnInit {
         }
         this.BarcodeModel.suppliername = this.Poinvoicedetails.vendorname;
       }
+      else {
+        if (this.PoDetails.vendorname == "" || isNullOrUndefined(this.PoDetails.vendorname)) {
+          this.spinner.hide();
+          this.messageService.add({ severity: 'error', summary: '', detail: 'Suppliername Not Defined' });
+          this.clicked = false;
+          return;
+        }
+
+        if (this.PoDetails.pono == "" || isNullOrUndefined(this.PoDetails.pono)) {
+          this.spinner.hide();
+          this.messageService.add({ severity: 'error', summary: '', detail: 'PONo. Not  Defined' });
+          this.clicked = false;
+          return;
+        }
+      }
+
       if (this.Poinvoicedetails.invoiceno && this.Poinvoicedetails.invoiceno.trim() != "") {
       }
       else {
