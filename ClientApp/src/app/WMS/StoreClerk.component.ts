@@ -222,9 +222,10 @@ export class StoreClerkComponent implements OnInit {
     this.filteredpos = [];
     for (let i = 0; i < this.pendingpos.length; i++) {
       let brand = isNullOrUndefined(this.pendingpos[i].supplier) ? "" : this.pendingpos[i].supplier;
-      let pos = this.pendingpos[i].value;
-      if (brand.toLowerCase().indexOf(event.query.toLowerCase()) == 0 || pos.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-        this.filteredpos.push(pos);
+      let pos = this.pendingpos[i].pos;
+      let slno = this.pendingpos[i].text;
+      if (brand.toLowerCase().indexOf(event.query.toLowerCase()) == 0 || pos.toLowerCase().indexOf(event.query.toLowerCase()) == 0 || slno.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+        this.filteredpos.push(slno);
       }
     }
   }
@@ -258,34 +259,11 @@ export class StoreClerkComponent implements OnInit {
   }
 
 
-
-
-  scanBarcode() {
-    debugger;
-    if (this.PoDetails.pono) {
-      this.PoDetails.pono;
-      this.PoDetails.invoiceno;
-      this.spinner.show();
-      //this.wmsService.verifythreewaymatch(this.PoDetails.pono).subscribe(data => {
-      //  //this.wmsService.verifythreewaymatch("123", "228738234", "1", "SK19VASP8781").subscribe(data => {
-      //this.spinner.hide();
-      //  if (data == true) {
-      this.showQtyUpdateDialog = true;
-      this.getponodetails(this.PoDetails.pono);
-      // this.messageService.add({ severity: 'success', summary: 'Success Message', detail: 'GRN Posted  Sucessfully' });
-      // }
-      //else
-      //this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Already verified' });
-      //this.getponodetails(this.PoDetails.pono);
-      // })
-
-    }
-
-
-  }
   addrows() {
     debugger;
     let empltymodel = new inwardModel();
+    empltymodel.pono = this.lblpono;
+    empltymodel.inwmasterid = this.podetailsList[0].inwmasterid;
     empltymodel.material = "";
     empltymodel.materialdescription = "";
     empltymodel.materialqty = 0;
@@ -429,10 +407,21 @@ export class StoreClerkComponent implements OnInit {
       this.PoDetails = new PoDetails();
       this.showQtyUpdateDialog = true;
       // alert(this.PoDetails);
-      this.PoDetails.pono = this.selectedpendingpono;
+      var selpo = this.selectedpendingpono;
+      var data1 = this.pendingpos.filter(function (element, index) {
+        return (element.text == selpo);
+      });
+      if (data1.length > 0) {
+        this.PoDetails.pono = data1[0].value;
+      }
+      else {
+        this.PoDetails.pono = this.selectedpendingpono;
+      }
+     
+     
       //this.PoDetails.inwmasterid = this.selectedpendingpono;
 
-      this.getponodetails(this.selectedpendingpono);
+      this.getponodetails(this.PoDetails.pono);
     }
     else {
 
@@ -737,7 +726,7 @@ export class StoreClerkComponent implements OnInit {
 
         }
         pg.resetpage();
-        //pg.scanBarcode();
+      
 
       });
 

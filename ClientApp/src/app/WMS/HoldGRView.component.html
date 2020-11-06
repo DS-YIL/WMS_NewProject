@@ -61,7 +61,7 @@
           <ng-template pTemplate="header">
             <tr class="mprltbldata">
               <th style="text-align:center;width:5%;">Sl.No.</th>
-              <th style="text-align:center;width:15%;">PO No.</th>
+              <th style="text-align:center;width:15%;">Gate Entry Id</th>
               <th style="text-align:center;;width:15%;">Invoice No</th>
               <th style="text-align:center;width:30%;">Supplier</th>
               <th style="text-align:center;width:20%;" *ngIf="grstatus === 'hold'">Created By</th>
@@ -71,7 +71,7 @@
             </tr>
             <tr>
               <th></th>
-              <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'pono', 'startsWith')"></th>
+              <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'inwmasterid', 'startsWith')"></th>
               <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'invoiceno', 'startsWith')"></th>
               <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'vendorname', 'startsWith')"></th>
               <th *ngIf="grstatus === 'hold'"> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'receivedby', 'contains')"></th>
@@ -84,7 +84,7 @@
             <tr>
               <td class="ptable-cell" style="text-align:right;width:5%;">{{ri+1}}</td>
               <td class="ptable-cell" style="text-align:center;width:15%;">
-                <span class="text-primary" style="text-decoration:underline" (click)="showgrdetail(rowData)">{{rowData.pono}}</span>
+                <span class="text-primary" style="text-decoration:underline" (click)="showgrdetail(rowData)">{{rowData.inwmasterid}}</span>
               </td>
               <td class="ptable-cell" style="text-align:center;width:15%;">
                 {{rowData.invoiceno}}
@@ -124,9 +124,9 @@
 <p-dialog header="Material Details" [(visible)]="showdetail" (onHide)="hideDG()" [modal]="true" [style]="{width: '95vw'}" [maximizable]="true" [baseZIndex]="10000"
           [draggable]="true" [resizable]="false">
   <div class="row  pl-0">
-    <div class="col-lg-2 col-md-2 labelheading">
+    <!--<div class="col-lg-2 col-md-2 labelheading">
       <label>PO No :</label>&nbsp;<span><label class="labeltext">{{dtpono}}</label></span>
-    </div>
+    </div>-->
     <div class="col-lg-2 col-md-2 labelheading">
       <label>Invoice No :</label>&nbsp;<span><label class="labeltext">{{dtinvoiceno}}</label></span>
     </div>
@@ -154,6 +154,7 @@
     <ng-template pTemplate="header">
       <tr class="mprltbldata">
         <th style="text-align:center;width:5%;">Sl.No.</th>
+        <th style="text-align:center;width:20%;">PONo.</th>
         <th style="text-align:center;width:20%;">Material</th>
         <th style="text-align:center;">Material Description</th>
 
@@ -163,6 +164,9 @@
     <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
       <tr>
         <td class="ptable-cell" style="text-align:right;width:5%;">{{ri+1}}</td>
+        <td class="ptable-cell" style="text-align:center;width:20%;">
+          {{rowData.pono}}
+        </td>
         <td class="ptable-cell" style="text-align:center;width:20%;">
           {{rowData.material}}
         </td>

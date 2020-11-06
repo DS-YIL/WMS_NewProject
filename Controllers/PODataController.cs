@@ -162,15 +162,30 @@ namespace WMS.Controllers
 			bool isgrn = false;
 			string grn = "";
 			string po = pono;
-			string[] ponoandinvoice = pono.Split('-');
-			if (ponoandinvoice.Length > 2)
-			{
-				isgrn = true;
-				grn = po;
+            if (pono.Contains('-'))
+            {
+				string ponodata = "";
+				string invoiceno = "";
+				string[] ponoandinvoice = pono.Split('-');
+				if (ponoandinvoice.Length == 3)
+				{
+					isgrn = true;
+					grn = po;
+				}
+				else if(ponoandinvoice.Length == 4)
+                {
+					ponodata = ponoandinvoice[0].Trim() + "-" + ponoandinvoice[1].Trim() + "-" + ponoandinvoice[2].Trim();
+				    invoiceno = ponoandinvoice[3].Trim();
+				}
+				
+				return await this._poService.GetDeatilsForthreeWaymatching(invoiceno, ponodata, isgrn, grn);
+
 			}
-			string ponodata = ponoandinvoice[0].Trim();
-			string invoiceno = ponoandinvoice[1].Trim();
-			return await this._poService.GetDeatilsForthreeWaymatching(invoiceno, ponodata, isgrn, grn);
+            else
+            {
+				return null;
+            }
+			
 		}
 
 		[HttpGet("GetholdGRdetails")]
@@ -195,8 +210,8 @@ namespace WMS.Controllers
 		public async Task<OpenPoModel> verifythreewaymatching(string pono)
 		{
 			string[] ponoandinvoice = pono.Split('-');
-			string ponodata = ponoandinvoice[0];
-			string invoiceno = ponoandinvoice[1];
+			string ponodata = ponoandinvoice[0].Trim()+"-"+ ponoandinvoice[1].Trim() +"-"+ ponoandinvoice[2].Trim();
+			string invoiceno = ponoandinvoice[3].Trim(); ;
 			return await this._poService.VerifythreeWay(ponodata, invoiceno);
 		}
 		[HttpPost("GRNposting")]

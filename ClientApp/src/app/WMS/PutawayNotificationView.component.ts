@@ -200,6 +200,13 @@ export class PutawayNotificationViewComponent implements OnInit {
       }
     }
   }
+
+  getpos(pono: any) {
+    debugger;
+    var pos = pono;
+    var returnstr = String(pos.split(',').join(' '));
+    return returnstr;
+  }
  
   getnotifiedgrn() {
     this.spinner.show();

@@ -39,6 +39,7 @@ export class QualityCheckComponent implements OnInit {
   todateview1: string = "";
   //Email
   grnno: string = "";
+  ismultiplepo: boolean = false;
   //podetailsList: string = "";
 
   ngOnInit() {
@@ -217,6 +218,7 @@ export class QualityCheckComponent implements OnInit {
 
     //Email
   getqualitydetails() {
+    this.ismultiplepo = false;
     this.podetailsList = [];
     var grn = this.selectedgrnno;
     this.wmsService.Getdataforqualitycheck(grn).subscribe(data => {
@@ -230,6 +232,9 @@ export class QualityCheckComponent implements OnInit {
           return (element.receivedqty > '0');
         });
         this.grnnumber = this.podetailsList[0].grnnumber;
+        if (this.podetailsList[0].securitypo.includes(',')) {
+          this.ismultiplepo = true;
+        }
         if (!this.grnnumber) {
           this.disGrnBtn = true;
         }
@@ -246,20 +251,7 @@ export class QualityCheckComponent implements OnInit {
     })
   }
 
-  onVerifyDetails(details: any) {
-    this.spinner.show();
-    this.PoDetails = details;
-    this.inwardModel.grndate = new Date();
-    this.wmsService.verifythreewaymatch(details).subscribe(data => {
-      //this.wmsService.verifythreewaymatch("123", "228738234", "1", "SK19VASP8781").subscribe(data => {
-      this.spinner.hide();
-      if (data == true) {
-        this.showQtyUpdateDialog = true;
-      }
-      else
-        this.messageService.add({ severity: 'error', summary: '', detail: 'Verification failed' });
-    })
-  }
+  
 
   quanityChange() {
     this.inwardModel.pendingqty = parseInt(this.PoDetails.materialqty) - this.inwardModel.confirmqty;
@@ -269,7 +261,6 @@ export class QualityCheckComponent implements OnInit {
     debugger;
 
       this.spinner.show();
-      // this.onVerifyDetails(this.podetailsList);
       this.inwardModel.pono = this.PoDetails.pono;
       this.inwardModel.receivedqty = this.PoDetails.materialqty;
       this.inwardModel.receivedby = this.inwardModel.qcby = this.employee.employeeno;

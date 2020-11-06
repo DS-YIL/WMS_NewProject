@@ -355,7 +355,7 @@ export class StockTransferComponent implements OnInit {
     debugger;
     var currentrow = index;
     var data = this.savedata.filter(function (element, index) {
-      return (element.inwmasterid == currentrow);
+      return (element.testindex == currentrow);
     });
     if (data.length > 0) {
       data.forEach(item => {
@@ -373,7 +373,7 @@ export class StockTransferComponent implements OnInit {
     debugger;
     var currentrow = this.currentrowindex;
     var data = this.savedata.filter(function (element, index) {
-      return (element.inwmasterid == currentrow);
+      return (element.testindex == currentrow);
     });
     if (data.length > 0) {
       var binnumber;
@@ -431,7 +431,7 @@ export class StockTransferComponent implements OnInit {
     debugger;
     var currindex = this.currentrowindex;
     this.savedata = this.savedata.filter(function (element, index) {
-      return (element.inwmasterid != currindex);
+      return (element.testindex != currindex);
     });
     var data = this.itemlocationData.filter(function (element, index) {
       return (element.issuedquantity > 0);
@@ -441,7 +441,7 @@ export class StockTransferComponent implements OnInit {
       data.forEach(item => {
         let stock = new StockModel();
         stock.itemid = item.itemid;
-        stock.inwmasterid = this.currentrowindex;
+        stock.testindex = this.currentrowindex;
         stock.itemlocation = item.itemlocation;
         stock.availableqty = item.issuedquantity;
         totalqty += item.issuedquantity;

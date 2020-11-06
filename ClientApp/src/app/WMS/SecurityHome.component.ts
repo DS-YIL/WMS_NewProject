@@ -87,7 +87,6 @@ export class SecurityHomeComponent implements OnInit {
       filter((event: RouterEvent) => event instanceof NavigationEnd)
     ).subscribe(() => {
       this.refresh();
-      this.onsaveSecDetails();
     });
 
     if (localStorage.getItem("Employee"))
@@ -105,7 +104,7 @@ export class SecurityHomeComponent implements OnInit {
 
     ///get department master list
     this.getdepts();
-    this.SearchPoNo();
+   // this.SearchPoNo();
   }
 
   //page refresh functionality
@@ -288,8 +287,9 @@ export class SecurityHomeComponent implements OnInit {
       })
 
     }
-    else
+    else {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Enter PO/ASN No./Supplier Name' });
+    }
   }
 
 
@@ -414,7 +414,7 @@ export class SecurityHomeComponent implements OnInit {
             this.uploadnonpodoc(data);
           }
           this.disSaveBtn = true;
-          this.refresh();
+          //this.refresh();
           this.messageService.add({ severity: 'success', summary: '', detail: 'Invoice No. Updated' });
           this.print = "Print Barcode";
           this.showPrintBtn = true;

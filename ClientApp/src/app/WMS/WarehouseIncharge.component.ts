@@ -582,19 +582,19 @@ this.updateRowGroupMetaData();
       var count = 0;
       for (let i = 0; i < this.podetailsList.length; i++) {
         let rowData = this.podetailsList[i];
-        let material = rowData.material;
+        let inwardidview = rowData.inwardidview;
         if (i == 0) {
-          this.rowGroupMetadata[material] = { index: 0, size: 1 };
+          this.rowGroupMetadata[inwardidview] = { index: 0, size: 1 };
           count = count + 1;
           this.podetailsList[i].serialno = count;
         }
         else {
           let previousRowData = this.podetailsList[i - 1];
-          let previousRowGroup = previousRowData.material;
-          if (material === previousRowGroup)
-            this.rowGroupMetadata[material].size++;
+          let previousRowGroup = previousRowData.inwardidview;
+          if (inwardidview === previousRowGroup)
+            this.rowGroupMetadata[inwardidview].size++;
           else {
-            this.rowGroupMetadata[material] = { index: i, size: 1 };
+            this.rowGroupMetadata[inwardidview] = { index: i, size: 1 };
             count = count + 1;
             this.podetailsList[i].serialno = count;
           }

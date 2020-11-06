@@ -26,9 +26,9 @@
       <div class="row " *ngIf="podetailsList.length>0" style="margin-top: 10px;
     margin-left: 0px !important;
     margin-right: 0px !important">
-        <div class="col-md-2 col-lg-2  pt-2 labelheading" *ngIf="podetailsList.length>0">
+        <!--<div class="col-md-2 col-lg-2  pt-2 labelheading" *ngIf="podetailsList.length>0">
           PO No : <span class="labeltext">{{podetailsList[0].pono}}</span>
-        </div>
+        </div>-->
         <div class="col-md-2 col-lg-2 pt-2 labelheading" style="font-weight:600;font-size:14px;color:darkblue;" *ngIf="podetailsList.length>0">
           Invoice No : <span class="labeltext">{{podetailsList[0].invoiceno}}</span>
         </div>
@@ -46,12 +46,13 @@
             <p-table [columns]="cols" [scrollable]="true" scrollHeight="60vh" [value]="podetailsList" dataKey="material">
               <ng-template pTemplate="header" let-columns>
                 <tr class="mprltbldata">
-                  <th rowspan="2" style="width:70px;text-align:center">Sl.No.</th>
-                  <th rowspan="2" style="width:200px;text-align:center">Material</th>
-                  <th rowspan="2" style="text-align: center">Material Description</th>
-                  <th rowspan="2" style="width:200px;text-align:center">Accepted Qty</th>
-                  <th rowspan="2" style="width:250px;text-align:center" *ngIf="isalreadytransferred">Transferred By</th>
-                  <th rowspan="2" style="width:200px;text-align:center" *ngIf="isalreadytransferred">Transferred On</th>
+                  <th style="width:70px;text-align:center">Sl.No.</th>
+                  <th style="width:150px;text-align:center">PONo.</th>
+                  <th style="width:200px;text-align:center">Material</th>
+                  <th style="text-align: center">Material Description</th>
+                  <th style="width:200px;text-align:center">Accepted Qty</th>
+                  <th style="width:250px;text-align:center" *ngIf="isalreadytransferred">Transferred By</th>
+                  <th style="width:200px;text-align:center" *ngIf="isalreadytransferred">Transferred On</th>
                 </tr>
 
               </ng-template>
@@ -59,6 +60,9 @@
                 <tr class="ui-widget-header">
 
                   <td class="ptable-cell" style="text-align:center;width:70px">{{rowIndex + 1}}</td>
+                  <td class="ptable-cell" style="text-align:center;width:150px;">
+                    {{rowData.pono}}
+                  </td>
                   <td class="ptable-cell" style="text-align:center;width:200px;" colspan="1">
                     {{rowData.material}}
                   </td>

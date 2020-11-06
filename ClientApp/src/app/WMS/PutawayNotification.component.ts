@@ -92,6 +92,7 @@ export class PutawayNotificationComponent implements OnInit {
   grstatus: string = "";
   issentdata: boolean = false;
   isallselected: boolean = false;
+  ismultipleselected: boolean = false;
   clspan: number = 8;
   imgurl = environment.imgurl;
  
@@ -154,13 +155,28 @@ export class PutawayNotificationComponent implements OnInit {
     // this.loadStores();
   }
 
-  //On selection of location updating rack
+  
  
 
-  //On selection of rack updating bin
  
+  getpos(pono: any) {
+    debugger;
+    var pos = pono;
+    var returnstr = String(pos.split(',').join(' '));
+    return returnstr;
+  }
 
   //generate barcode -gayathri
+  getSlected(event: any) {
+    debugger;
+    this.ismultipleselected = false;
+    var datafilter = this.checkedgrnlist.filter(function (element, index) {
+      return (element.selectedrow);
+    });
+    if (datafilter.length > 0) {
+      this.ismultipleselected = true;
+    }
+  }
   showattachdata(rowData: inwardModel) {
     debugger;
     rowData.uploadedFiles = [];
@@ -189,6 +205,15 @@ export class PutawayNotificationComponent implements OnInit {
         item.selectedrow = false;
       })
     }
+    this.ismultipleselected = false;
+    var datafilter = this.checkedgrnlist.filter(function (element, index) {
+      return (element.selectedrow);
+    });
+    if (datafilter.length > 0) {
+      this.ismultipleselected = true;
+    }
+
+   
     
   }
   getcheckedgrn() {
@@ -315,6 +340,7 @@ export class PutawayNotificationComponent implements OnInit {
     notif.notifyremarks = rowData.notifyremarks;
     this.wmsService.notifyputawayfn(notif).subscribe(data => {
       this.messageService.add({ severity: 'success', summary: '', detail: 'Notified.' });
+      this.ismultipleselected = false;
       this.getcheckedgrn();
     });
  
@@ -331,16 +357,12 @@ export class PutawayNotificationComponent implements OnInit {
         let notif = new notifymodel();
         notif.grnnumber = item.grnnumber;
         notif.notifiedby = this.employee.employeeno;
-        if (!isNullOrUndefined(this.notifremarks) && this.notifremarks != "") {
-          notif.notifyremarks = this.notifremarks;
-        }
-        else {
-          notif.notifyremarks = item.notifyremarks;
-        }
+        notif.notifyremarks = item.notifyremarks;
         this.multinotifmodel.push(notif);
       });
 
       this.wmsService.notifymultipleputawayfn(this.multinotifmodel).subscribe(data => {
+        this.ismultipleselected = false;
         this.messageService.add({ severity: 'success', summary: '', detail: 'Notified.' });
         this.getcheckedgrn();
       });

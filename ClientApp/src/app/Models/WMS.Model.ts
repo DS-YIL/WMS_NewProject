@@ -49,7 +49,7 @@ export class BarcodeModel {
   createddate: Date
   createdby: string
   deleteflag: boolean
-  inwmasterid: number;
+  inwmasterid: string;
   pono: string;
   invoiceno: string;
   departmentid: number;
@@ -86,7 +86,7 @@ export class UserDashboardGraphModel {
 }
 
 export class UnholdGRModel {
-  inwmasterid: number;
+  inwmasterid: string;
   unholdaction: boolean;
   unholdedby: string;
   unholdremarks: string
@@ -97,7 +97,9 @@ export class UnholdGRModel {
 export class inwardModel {
   serialno: number;
   inwardid: number;
-  inwmasterid: number;
+  inwardidview: string;
+  securitypo: string;
+  inwmasterid: string;
   poitemid: number;
   receivedqty: string;
   receiveddate: Date;
@@ -157,8 +159,9 @@ export class inwardModel {
 
 export class StockModel {
   itemid: number;
-  inwmasterid: number;
+  inwmasterid: string;
   paitemid: number;
+  testindex: number;
   pono: string;
   grnnumber: string;
   binid: number;
@@ -371,6 +374,7 @@ export class ddlmodel {
   value: string;
   text: string;
   supplier: string;
+  pos: string;
   projectmanager: string;
   receiveddate: Date
 
@@ -561,7 +565,7 @@ export class materialtransferapproverModel {
 
 
 export class DirectTransferMain {
-  inwmasterid: number;
+  inwmasterid: string;
   projectcode: string;
   grnnumber: string;
   mrnremarks: string;
@@ -571,7 +575,7 @@ export class DirectTransferMain {
   materialdata: DirectTransferTR[] = [];
 }
 export class DirectTransferTR {
-  inwmasterid: number;
+  inwmasterid: string;
   materialid: string;
   materialdescription: string;
   confirmqty: number = 0;

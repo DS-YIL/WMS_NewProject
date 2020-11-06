@@ -11,6 +11,8 @@ namespace WMS.Models
 	{
 		public int rfqsplititemid { get; set; }
 		public string departmentname { get; set; }
+
+		public string securitypo { get; set; }
 		public int departmentid { get; set; }
 		public string documentno { get; set; }
 		public int paid { get; set; }
@@ -154,6 +156,8 @@ namespace WMS.Models
 	public class inwardModel
 	{
 		public string binnumber { get; set; }
+
+		public string inwardidview { get; set; }
 		public string racknumber { get; set; }
 		public string locatorname { get; set; }
 		public string storeid { get; set; }
@@ -1056,6 +1060,7 @@ public class ddlmodel
 	public string value { get; set; }
 	public string text { get; set; }
 	public string supplier { get; set; }
+	public string pos { get; set; }
 	public string projectmanager { get; set; }
 	public DateTime receiveddate { get; set; }
 
