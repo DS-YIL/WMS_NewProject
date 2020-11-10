@@ -19,9 +19,47 @@ namespace WMS.Common
 		ErrorLogTrace log = new ErrorLogTrace();
 		EmailModel emailobj = new EmailModel();
 		
-		public bool sendEmail(EmailModel emlSndngList, int subjecttype)
+		public bool sendEmail(EmailModel emlSndngList, int subjecttype,int roleid=0)
 		{
 			string link = "";
+			string tomainlstring = "";
+			if(roleid > 0)
+            {
+				try {
+					using (var DB = new NpgsqlConnection(config.PostgresConnectionString))
+					{
+						string query = WMSResource.dynamicemaildata.Replace("#roleid",roleid.ToString());
+
+						var result = DB.QueryAsync<authUser>(
+					   query, null, commandType: CommandType.Text);
+                        if(result != null && result.Result.Count()>0){
+							int i = 0;
+							
+							foreach (authUser user in result.Result)
+                            {
+                                if (i > 0)
+                                {
+									tomainlstring += ";";
+
+								}
+								i++;
+
+								tomainlstring += user.email.Trim();
+							} 
+                        }
+
+					}
+
+
+				}
+				catch(Exception e)
+
+                {
+					return false;
+                }
+				emlSndngList.ToEmailId = tomainlstring;
+
+			}
 			MailMessage mailMessage = new MailMessage(emlSndngList.FrmEmailId, emlSndngList.ToEmailId);
 			SmtpClient client = new SmtpClient();
 			var subbody = string.Empty;
@@ -34,6 +72,7 @@ namespace WMS.Common
 				string date = Convert.ToDateTime( emlSndngList.receiveddate).ToString("dd/MM/yyyy");
 				subbody = "Shipment for GateEntryNo. - <b>" + emlSndngList.inwmasterid + "</b> has been received.Please find the details below. <br/> Invoice No : <b>" + emlSndngList.invoiceno + "</b><br/>POs : <b>" + emlSndngList.pono + "</b><br/> Received By : <b>" + receivedby + "</b><br/> Received On : <b>" + date + "</b>";
 				link = "http://10.29.15.212:82/WMS/Email/GRNPosting?gateentryno=" + emlSndngList.inwmasterid;
+				
 				//+ "-"+emlSndngList.invoiceno;
 			}
 			//Inventory Clerk(Receipt) to Quality User

@@ -1392,4 +1392,9 @@ left outer join wms.wms_rd_rack rac on rac.rackid = st.rackid
 left outer join wms.wms_rd_bin bn on bn.binid = st.binid
 where st.initialstock is True</value>
   </data>
+  <data name="dynamicemaildata" xml:space="preserve">
+    <value>select auth.employeeid,rl.email from  wms.auth_users auth
+ left outer join wms.employee rl on auth.employeeid = rl.employeeno 
+ where auth.roleid = #roleid and auth.emailnotification is True</value>
+  </data>
 </root>

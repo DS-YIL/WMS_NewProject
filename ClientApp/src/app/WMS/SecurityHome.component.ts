@@ -379,7 +379,7 @@ export class SecurityHomeComponent implements OnInit {
 
         if (this.PoDetails.pono == "" || isNullOrUndefined(this.PoDetails.pono)) {
           this.spinner.hide();
-          this.messageService.add({ severity: 'error', summary: '', detail: 'PONo. Not  Defined' });
+          this.messageService.add({ severity: 'error', summary: '', detail: 'Please Select PO' });
           this.clicked = false;
           return;
         }
