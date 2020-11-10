@@ -9,6 +9,7 @@
 using Dapper;
 using Microsoft.AspNetCore.Mvc;
 using Npgsql;
+using NpgsqlTypes;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -16,6 +17,7 @@ using System.Data.OleDb;
 using System.Globalization;
 using System.IO;
 using System.Net;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using WMS.Common;
 using WMS.Models;
@@ -286,13 +288,13 @@ namespace WMS.Controllers
 				int rowsinserted = 0;
 				try
 				{
-					serverPath = @"\\ZAWMS-001\StockExcel\";
-					using (new NetworkConnection(serverPath, new NetworkCredential(@"administrator", "Wms@1234*")))
-					{
-						
+					//serverPath = @"\\ZAWMS-001\StockExcel\";
+					//using (new NetworkConnection(serverPath, new NetworkCredential(@"administrator", "Wms@1234*")))
+					//{
 
-						//var filePath = @"D:\A_StagingTable\StockstagecsvTest1.xlsx";
-						var filePath = serverPath+ "StockstagecsvTest1.xlsx";
+
+						var filePath = @"D:\A_StagingTable\initialStockUploadv1.xlsx";
+						//var filePath = serverPath+ "StockstagecsvTest1.xlsx";
 
 
 						DataTable dtexcel = new DataTable();
@@ -328,134 +330,83 @@ namespace WMS.Controllers
 						foreach (DataRow row in dtexcel.Rows)
 						{
 							
-								string Error_Description = "";
-								bool dataloaderror = false;
+						    string Error_Description = "";
+						    bool dataloaderror = false;
 
-								if (string.IsNullOrEmpty(row["Material"].ToString()))
-									Error_Description += " There is NO Material";
-								if (string.IsNullOrEmpty(row["Material Description"].ToString()))
+							initialStock initialstk = new initialStock();
+							initialstk.material = Conversion.toStr(row["Material"]);
+							initialstk.materialdescription = Conversion.toStr(row["Material Description"]);
+							initialstk.store = Conversion.toStr(row["Store"]);
+							initialstk.rack = Conversion.toStr(row["Rack"]);
+							initialstk.bin = Conversion.toStr(row["Bin"]);
+							initialstk.quantity = Conversion.toInt(row["Quantity"]);
+							initialstk.projectid = Conversion.toStr(row["Project Id"]);
+							initialstk.pono = Conversion.toStr(row["PO No"]);
+							initialstk.value = Conversion.Todecimaltype(row["Value"]);
+							initialstk.grn = Conversion.toStr(row["GRN"]);
+						    initialstk.receiveddate = Conversion.TodtTime(row["Received date"]);
+						    initialstk.shelflifeexpiration = Conversion.TodtTime(row["Shelf life expiration"]);
+						    initialstk.dateofmanufacture = Conversion.TodtTime(row["Date of Manufacture"]);
+						    initialstk.dataenteredon = Conversion.TodtTime(row["Data Entered On"]);
+							initialstk.datasource = Conversion.toStr(row["DataSource"]);
+							initialstk.dataenteredby = Conversion.toStr(row["Data Entered By"]); ;
+							initialstk.createddate = System.DateTime.Now;
+							initialstk.stocktype = null;
+							initialstk.category = null;
+						initialstk.unitprice = null;
+
+
+						if (string.IsNullOrEmpty(initialstk.material) || initialstk.material == "")
+									Error_Description += " There is NO Material ";
+								if (string.IsNullOrEmpty(initialstk.materialdescription) || initialstk.materialdescription == "")
 									Error_Description += " No material description";
-								if (string.IsNullOrEmpty(row["Store"].ToString()))
+								if (string.IsNullOrEmpty(initialstk.store) || initialstk.store == "")
 									Error_Description += " No Store";
-								if (string.IsNullOrEmpty(row["Rack"].ToString()))
+								if (string.IsNullOrEmpty(initialstk.rack) || initialstk.rack == "")
 									Error_Description += " No Rack";
-								if (string.IsNullOrEmpty(row["Bin"].ToString()))
+								if (string.IsNullOrEmpty(initialstk.bin) || initialstk.bin == "")
 									Error_Description += " No Bin";
-								if (string.IsNullOrEmpty(row["Quantity"].ToString()))
+								if (initialstk.quantity == null || initialstk.quantity == 0)
 									Error_Description += " No Quantity";
-								if (string.IsNullOrEmpty(row["Stock Type"].ToString()))
-									Error_Description += " No Stock Type";
-								if (string.IsNullOrEmpty(row["Unit Price"].ToString()))
-									Error_Description += " No Unit Price";
-								if (!string.IsNullOrEmpty(Error_Description))
+							   if (string.IsNullOrEmpty(initialstk.projectid) || initialstk.projectid == "")
+								    Error_Description += " No Project Id";
+							   if (string.IsNullOrEmpty(initialstk.pono) || initialstk.pono == "")
+								    Error_Description += " No PONo";
+							if (!string.IsNullOrEmpty(Error_Description))
 									dataloaderror = true;
 
+							initialstk.DataloadErrors = dataloaderror;
+							initialstk.error_description = Error_Description;
 
 
-								string? rcvdate = Conversion.ToDate(row["Received date"].ToString(), "yyyy-MM-dd");
-								if (rcvdate == null)
-								{
-									Error_Description += " Invalid Received Date Format.";
-								}
-								string? shelflife = Conversion.ToDate(row["Shelf life expiration"].ToString(), "yyyy-MM-dd");
-								if (shelflife == null)
-								{
+							string insertpoqry = WMSResource.InsertInitialStock;
+							var rslt = DB.Execute(insertpoqry, new
+							{
+								initialstk.material,
+								initialstk.materialdescription,
+								initialstk.store,
+								initialstk.rack,
+								initialstk.bin,
+								initialstk.quantity,
+								initialstk.grn,
+								initialstk.receiveddate,
+								initialstk.shelflifeexpiration,
+								initialstk.dateofmanufacture,
+								initialstk.dataenteredon,
+								initialstk.datasource,
+								initialstk.dataenteredby,
+								initialstk.createddate,
+								initialstk.DataloadErrors,
+								initialstk.error_description,
+								initialstk.stocktype,
+								initialstk.category,
+								initialstk.unitprice,
+								initialstk.projectid,
+								initialstk.pono,
+								initialstk.value
+							});
 
-									Error_Description += " Invalid Shelf Life Expiration Date Format.";
-								}
-								string? manufacture = Conversion.ToDate(row["Date of Manufacture"].ToString(), "yyyy-MM-dd");
-								if (manufacture == null)
-								{
-
-									Error_Description += " Invalid Date of Manufacture Format.";
-								}
-								string? enteredon = Conversion.ToDate(row["Data Entered On"].ToString(), "yyyy-MM-dd");
-								if (enteredon == null)
-								{
-									Error_Description += " Invalid Data Entered  Format.";
-								}
-								int qty = Conversion.toInt(row["Quantity"].ToString());
-								if (qty == 0)
-								{
-									Error_Description += " Invalid Quantity.";
-								}
-								int unitprice = Conversion.toInt(row["Unit Price"].ToString());
-								if (unitprice == 0)
-								{
-									Error_Description += " Invalid Unit Price.";
-								}
-
-						//		if(Error_Description != "" || dataloaderror)
-      //                  {
-						//	StockModel stock = new StockModel();
-						//	stock.materialid = row["Material"].ToString();
-						//	stock.matrialdescription = row["Material Description"].ToString();
-						//	stock.store = row["Store"].ToString();
-						//	stock.rack = row["Rack"].ToString();
-						//	stock.bin = row["Bin"].ToString();
-						//	stock.availableqty = Conversion.toInt(row["Quantity"].ToString());
-						//	stock.stocktype = row["Stock Type"].ToString();
-						//	stock.unitprice = Conversion.toInt(row["Unit Price"].ToString());
-						//    stock.receiveddate = Conversion.ToDate(row["Received date"].ToString(), "yyyy-MM-dd");
-						//	stock.shelflifedate = Conversion.ToDate(row["Shelf life expiration"].ToString(), "yyyy-MM-dd");
-						//	stock.manufacturedate = Conversion.ToDate(row["Date of Manufacture"].ToString(), "yyyy-MM-dd");
-						//	stock.entrydate = Conversion.ToDate(row["Data Entered On"].ToString(), "yyyy-MM-dd");
-
-						//}
-
-
-
-								var query = "INSERT INTO wms.st_initialstock (material,materialdescription,store,rack,bin,quantity,grn,";
-								if (rcvdate != null)
-								{
-									query += " receiveddate,";
-
-								}
-								if (shelflife != null)
-								{
-									query += " shelflifeexpiration,";
-
-								}
-								if (manufacture != null)
-								{
-									query += " dateofmanufacture,";
-
-								}
-								if (enteredon != null)
-								{
-									query += " dataenteredon,";
-
-								}
-
-								query += " datasource,dataenteredby,createddate,DataloadErrors ,Error_Description,stocktype,category,unitprice)VALUES('" + row["Material"].ToString() + "'," +
-													  "'" + row["Material Description"].ToString() + "','" + row["Store"].ToString() + "','" + row["Rack"].ToString() + "','" + row["Bin"].ToString() + "'," + qty + ",'" + row["GRN"].ToString() + "',";
-								if (rcvdate != null)
-								{
-									query += " '" + rcvdate + "',";
-
-								}
-								if (shelflife != null)
-								{
-									query += " '" + shelflife + "',";
-
-								}
-								if (manufacture != null)
-								{
-									query += " '" + manufacture + "',";
-
-								}
-								if (enteredon != null)
-								{
-									query += " '" + enteredon + "',";
-
-								}
-								query += " '" + row["DataSource"].ToString() + "','" + row["Data Entered By"].ToString() + "'," +
-								"'" + DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss") + "'," + dataloaderror + ", '" + Error_Description + "','" + row["Stock Type"].ToString() + "','" + row["Category"].ToString() + "'," + unitprice + ")";
-								NpgsqlCommand dbcmd = DB.CreateCommand();
-								dbcmd.CommandText = query;
-							    dbcmd.ExecuteNonQuery();
-							
-							    rowsinserted = rowsinserted + 1;
+							rowsinserted = rowsinserted + 1;
 							
 						}
 
@@ -463,7 +414,7 @@ namespace WMS.Controllers
 						result.message = "Completed_Total_Rows_" + rows + "_Inserted_rows_" + rowsinserted.ToString();
 						return result;
 
-					}
+					//}
 					
 					
 				}
@@ -481,6 +432,193 @@ namespace WMS.Controllers
 			}
 		}
 
+
+		[HttpPost("uploadInitialStockExcelByUser"), DisableRequestSizeLimit]
+		public WMSHttpResponse uploadInitialStockExcelByUser()
+		{
+
+			WMSHttpResponse result = new WMSHttpResponse();
+
+
+			using (NpgsqlConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+
+				DB.Open();
+				string serverPath = "";
+				string rows = "";
+				int rowsinserted = 0;
+				try
+				{
+					
+					var postedfile = Request.Form.Files[0];
+					string filename = postedfile.FileName;
+					var folderName = Path.Combine("Resources", "documents");
+					var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+
+					if (postedfile.Length > 0)
+					{
+						var fileName = ContentDispositionHeaderValue.Parse(postedfile.ContentDisposition).FileName.Trim('"');
+						var fullPath = Path.Combine(pathToSave, fileName);
+						var dbPath = Path.Combine(folderName, fileName);
+
+						using (var stream = new FileStream(fullPath, FileMode.Create))
+						{
+							postedfile.CopyTo(stream);
+						}
+
+					}
+
+					string path = Environment.CurrentDirectory + @"\Resources\documents\";
+
+					var filePath = path + filename;
+
+
+
+					DataTable dtexcel = new DataTable();
+					bool hasHeaders = true;
+					string HDR = hasHeaders ? "Yes" : "No";
+					string strConn;
+					if (filename.Substring(filename.LastIndexOf('.')).ToLower() == ".xlsx")
+						strConn = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + filePath + ";Extended Properties=\"Excel 12.0;HDR=" + HDR + ";IMEX=1\"";
+					else
+						strConn = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + filePath + ";Extended Properties=\"Excel 8.0;HDR=" + HDR + ";IMEX=1\"";
+
+
+					OleDbConnection conn = new OleDbConnection(strConn);
+					conn.Open();
+					DataTable schemaTable = conn.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, new object[] { null, null, null, "TABLE" });
+
+					DataRow schemaRow = schemaTable.Rows[0];
+					string sheet = schemaRow["TABLE_NAME"].ToString();
+					if (!sheet.EndsWith("_"))
+					{
+
+						string query = "SELECT  * FROM [" + sheet + "]";
+						OleDbDataAdapter daexcel = new OleDbDataAdapter(query, conn);
+						dtexcel.Locale = CultureInfo.CurrentCulture;
+						daexcel.Fill(dtexcel);
+
+
+					}
+
+
+					conn.Close();
+					rows = dtexcel.Rows.Count.ToString();
+					string Error_Description_all = "";
+					int i = 1;
+					foreach (DataRow row in dtexcel.Rows)
+					{
+
+						string Error_Description = "";
+						bool dataloaderror = false;
+
+						initialStock initialstk = new initialStock();
+						initialstk.material = Conversion.toStr(row["Material"]);
+						initialstk.materialdescription = Conversion.toStr(row["Material Description"]);
+						initialstk.store = Conversion.toStr(row["Store"]);
+						initialstk.rack = Conversion.toStr(row["Rack"]);
+						initialstk.bin = Conversion.toStr(row["Bin"]);
+						initialstk.quantity = Conversion.toInt(row["Quantity"]);
+						initialstk.projectid = Conversion.toStr(row["Project Id"]);
+						initialstk.pono = Conversion.toStr(row["PO No"]);
+						initialstk.value = Conversion.Todecimaltype(row["Value"]);
+						initialstk.grn = Conversion.toStr(row["GRN"]);
+						initialstk.receiveddate = Conversion.TodtTime(row["Received date"]);
+						initialstk.shelflifeexpiration = Conversion.TodtTime(row["Shelf life expiration"]);
+						initialstk.dateofmanufacture = Conversion.TodtTime(row["Date of Manufacture"]);
+						initialstk.dataenteredon = Conversion.TodtTime(row["Data Entered On"]);
+						initialstk.datasource = Conversion.toStr(row["DataSource"]);
+						initialstk.dataenteredby = Conversion.toStr(row["Data Entered By"]); ;
+						initialstk.createddate = System.DateTime.Now;
+						initialstk.stocktype = null;
+						initialstk.unitprice = null;
+						initialstk.category = null;
+
+
+						if (string.IsNullOrEmpty(initialstk.material) || initialstk.material == "")
+							Error_Description += " There is NO Material";
+						if (string.IsNullOrEmpty(initialstk.materialdescription) || initialstk.materialdescription == "")
+							Error_Description += " No material description";
+						if (string.IsNullOrEmpty(initialstk.store) || initialstk.store == "")
+							Error_Description += " No Store";
+						if (string.IsNullOrEmpty(initialstk.rack) || initialstk.rack == "")
+							Error_Description += " No Rack";
+						if (string.IsNullOrEmpty(initialstk.bin) || initialstk.bin == "")
+							Error_Description += " No Bin";
+						if (initialstk.quantity == null || initialstk.quantity == 0)
+							Error_Description += " No Quantity";
+						if (string.IsNullOrEmpty(initialstk.projectid) || initialstk.projectid == "")
+							Error_Description += " No Project Id";
+						if (string.IsNullOrEmpty(initialstk.pono) || initialstk.pono == "")
+							Error_Description += " No PONo";
+						if (!string.IsNullOrEmpty(Error_Description))
+                        {
+							dataloaderror = true;
+							Error_Description_all +=  Error_Description + " For Row " + i.ToString()+"-";
+
+						}
+							
+
+						initialstk.DataloadErrors = dataloaderror;
+						initialstk.error_description = Error_Description;
+
+
+						string insertpoqry = WMSResource.InsertInitialStock;
+						var rslt = DB.Execute(insertpoqry, new
+						{
+							initialstk.material,
+							initialstk.materialdescription,
+							initialstk.store,
+							initialstk.rack,
+							initialstk.bin,
+							initialstk.quantity,
+							initialstk.grn,
+							initialstk.receiveddate,
+							initialstk.shelflifeexpiration,
+							initialstk.dateofmanufacture,
+							initialstk.dataenteredon,
+							initialstk.datasource,
+							initialstk.dataenteredby,
+							initialstk.createddate,
+							initialstk.DataloadErrors,
+							initialstk.error_description,
+							initialstk.stocktype,
+							initialstk.category,
+							initialstk.unitprice,
+							initialstk.projectid,
+							initialstk.pono,
+							initialstk.value
+						});
+
+						rowsinserted = rowsinserted + 1;
+
+					}
+
+					DB.Close();
+					result.message += Error_Description_all;
+					result.message += "-To Staging Table - Total_Rows_:" + rows + "-Inserted_rows_to_staging_table_:" + rowsinserted.ToString();
+					string msg = loadStockData();
+					result.message += msg;
+					return result;
+
+					//}
+
+
+				}
+				catch (Exception ex)
+				{
+					DB.Close();
+					result.message = ex.Message;
+					return result;
+				}
+
+
+
+
+
+			}
+		}
+
 		/*
 		function : <<loadStockData>>  Author :<<Prasanna>>  
 		Date of Creation <<16-09-2020>>
@@ -488,8 +626,11 @@ namespace WMS.Controllers
 		Review Date :<<>>   Reviewed By :<<>>
 		Sourcecode Copyright : Yokogawa India Limited
 		*/
-		public IActionResult loadStockData()
+		//[HttpGet]
+		//[Route("uploadInitialStockDB")]
+		public string loadStockData()
 		{
+			string insertmessage = "";
 			using (NpgsqlConnection pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 
 			{
@@ -500,7 +641,8 @@ namespace WMS.Controllers
                     var stagingList = pgsql.Query<StagingStockModel>(
                        query, null, commandType: CommandType.Text);
 
-
+					int rowinserted = 0;
+					
                     foreach (StagingStockModel stag_data in stagingList)
 					{
 						NpgsqlTransaction Trans = null;
@@ -646,7 +788,7 @@ namespace WMS.Controllers
 							}
 
 							//insert wms_stock ##storeid, binid,rackid,totalquantity,shelflife ,createddate,materialid ,initialstock
-							var insertquery = "INSERT INTO wms.wms_stock(storeid, binid,rackid,itemlocation,totalquantity,availableqty,shelflife ,createddate,materialid ,initialstock,stcktype,unitprice)VALUES(@storeid, @bindata,@rackid,@itemlocation,@totalquantity,@availableqty,@shelflife ,@createddate,@materialid ,@initialstock,@stocktype,@unitprice)";
+							var insertquery = "INSERT INTO wms.wms_stock(storeid, binid,rackid,itemlocation,totalquantity,availableqty,shelflife ,createddate,materialid ,initialstock,stcktype,unitprice,value,pono,projectid)VALUES(@storeid, @bindata,@rackid,@itemlocation,@totalquantity,@availableqty,@shelflife ,@createddate,@materialid ,@initialstock,@stocktype,@unitprice,@value,@pono,@projectid)";
 							var results = pgsql.ExecuteScalar(insertquery, new
 							{
 								stock.storeid,
@@ -660,10 +802,16 @@ namespace WMS.Controllers
 								stock.materialid,
 								stock.initialstock,
 								stag_data.stocktype,
-								stag_data.unitprice
+								stag_data.unitprice,
+								stag_data.value,
+								stag_data.pono,
+								stag_data.projectid
 							});
 
 							Trans.Commit();
+							rowinserted = rowinserted + 1;
+
+							
 
 
 						}
@@ -671,16 +819,18 @@ namespace WMS.Controllers
 						{
 							Trans.Rollback();
 							var res = e;
+							insertmessage += e.Message.ToString();
 							log.ErrorMessage("StagingController", "loadStockData", e.StackTrace.ToString());
 							continue;
 						}
 					}
+					insertmessage = "-To Database - Inserted_rows_to_Stock_Table:" + rowinserted.ToString();
 					pgsql.Close();
 
 					//throw new NotImplementedException();
 				}
 			}
-			return Ok(true);
+			return insertmessage;
 
 		}
 	}

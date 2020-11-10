@@ -33,6 +33,22 @@ namespace WMS.Common
             return d;
         }
 
+        public static string toStr(object obj)
+        {
+            string d;
+                try
+                {
+                  d = obj.ToString();
+
+                }
+                catch
+                {
+                    return d = "";
+                }
+
+            return d;
+        }
+
         public static double toDbl(object obj)
         {
             double d;
@@ -62,6 +78,40 @@ namespace WMS.Common
 
             
         }
+
+        public static DateTime? TodtTime(Object dateTimeStr)
+        {
+            DateTime? dt = null;
+            try
+            {
+                dt = Convert.ToDateTime(dateTimeStr);
+                return dt;
+            }
+            catch
+            {
+                return null;
+            }
+
+
+        }
+
+        public static Decimal? Todecimaltype(Object dateTimeStr)
+        {
+            Decimal? dt = null;
+            try
+            {
+                dt = Convert.ToDecimal(dateTimeStr);
+                return dt;
+            }
+            catch
+            {
+                return null;
+            }
+
+
+        }
+
+
 
     }
 }

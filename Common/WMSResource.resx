@@ -1321,7 +1321,9 @@ left outer join wms.wms_stock stk  on stk.returnid = rnd.id
 where rnd.returnid='#returnid'</value>
   </data>
   <data name="getrequestiddetail" xml:space="preserve">
-    <value>select mr.requestid,mr.requesteddate,mr.ackstatus,emp.name as requestedby,mr.ackremarks,mr.remarks,mqd.materialid,mqd.requestedquantity ,mqd.returnqty,ygs.materialdescription from wms.materialrequest mr
+    <value>select mr.requestid,mr.requesteddate,mr.ackstatus,emp.name as requestedby,mr.ackremarks,mr.remarks,mqd.materialid,mqd.requestedquantity ,mqd.returnqty,ygs.materialdescription,
+(select sum(issuedqty) from wms.wms_materialissue where requestmaterialid = mqd.id) as issuedquantity
+from wms.materialrequest mr
 left outer join  wms.employee emp on emp.employeeno = mr.requesterid 
 left outer join  wms.materialrequestdetails mqd on mqd.requestid =mr .requestid 
 left outer join  wms."MaterialMasterYGS" ygs on ygs.material = mqd.materialid 
@@ -1371,5 +1373,23 @@ left outer join wms."MaterialMasterYGS" ms on ms.material = mat.materialid</valu
   </data>
   <data name="isgrnexistbyinwardmasterid" xml:space="preserve">
     <value>select inwmasterid,grnnumber,onhold,unholdedby from wms.wms_securityinward where inwmasterid = '#inw' </value>
+  </data>
+  <data name="InsertInitialStock" xml:space="preserve">
+    <value>INSERT INTO wms.st_initialstock (material,materialdescription,store,rack,bin,quantity,grn,
+								 receiveddate,shelflifeexpiration,dateofmanufacture,dataenteredon,
+								 datasource,dataenteredby,createddate,DataloadErrors,error_description,stocktype,
+								 category,unitprice,projectid,pono,value) values (@material,@materialdescription,@store,
+															@rack,@bin,@quantity,@grn,@receiveddate,@shelflifeexpiration,
+															@dateofmanufacture,@dataenteredon,@datasource,
+															@dataenteredby,@createddate,@DataloadErrors,@error_description,
+															@stocktype,@category,@unitprice,@projectid,@pono,@value)</value>
+  </data>
+  <data name="initialstockviewdata" xml:space="preserve">
+    <value>select st.materialid as material,mat.materialdescription,loc.locatorname,rac.racknumber,bn.binnumber,st.availableqty,st.value,st.projectid,st.pono,st.shelflife from wms.wms_stock st 
+left outer join wms."MaterialMasterYGS" mat on mat.material = st.materialid
+left outer join wms.wms_rd_locator loc on loc.locatorid = st.storeid
+left outer join wms.wms_rd_rack rac on rac.rackid = st.rackid
+left outer join wms.wms_rd_bin bn on bn.binid = st.binid
+where st.initialstock is True</value>
   </data>
 </root>

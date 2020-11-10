@@ -191,6 +191,9 @@ export class StockModel {
   locationlists: any[] = [];
   binlist: any[] = [];
   racklist: any[] = [];
+  materialdescription: string;
+  value: number;
+  projectid: string
 }
 
 export class locataionDetailsStock {
@@ -278,7 +281,7 @@ export class materialistModel {
   remarks: string;
   expecteddate: any;
   returneddate: any;
-  materialcost: string;
+  materialcost: number;
   //availableqty: number;
   issuedqty: number;
   showdetail: boolean;
@@ -672,6 +675,7 @@ export class materialrequestMR {
   materialdescription: string;
   requestedquantity: number;
   returnqty: number;
+  issuedquantity: number;
 
 }
 export class materialRequestFilterParams {

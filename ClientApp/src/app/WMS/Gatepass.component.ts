@@ -82,6 +82,11 @@ export class GatePassComponent implements OnInit {
   }
 
 
+  resetDG() {
+    this.disableGPBtn = false;
+  }
+
+
   //Adding new material - Gayathri
   addNewMaterial() {
     this.gatePassChange();
@@ -104,12 +109,12 @@ export class GatePassComponent implements OnInit {
               return false;
             }
             else if (this.gatepassModel.gatepasstype != "Returnable") {
-              this.materialistModel = { materialid: "", gatepassmaterialid: "0", materialdescription: "", quantity: 0, materialcost: "0", remarks: " ", expecteddate: this.date, returneddate: this.date, issuedqty: 0, showdetail: false, materiallistdata: [] };
+              this.materialistModel = { materialid: "", gatepassmaterialid: "0", materialdescription: "", quantity: 0, materialcost: 0, remarks: " ", expecteddate: this.date, returneddate: this.date, issuedqty: 0, showdetail: false, materiallistdata: [] };
               this.gatepassModel.materialList.push(this.materialistModel);
             }
             else {
               this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].expecteddate = this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].expecteddate != null ? new Date(this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].expecteddate).toLocaleDateString() : undefined;
-              this.materialistModel = { materialid: "", gatepassmaterialid: "0", materialdescription: "", quantity: 0, materialcost: "0", remarks: " ", expecteddate: this.date, returneddate: this.date, issuedqty: 0, showdetail: false, materiallistdata: [] };
+              this.materialistModel = { materialid: "", gatepassmaterialid: "0", materialdescription: "", quantity: 0, materialcost: 0, remarks: " ", expecteddate: this.date, returneddate: this.date, issuedqty: 0, showdetail: false, materiallistdata: [] };
               this.gatepassModel.materialList.push(this.materialistModel);
             }
 
@@ -128,14 +133,14 @@ export class GatePassComponent implements OnInit {
       }
       else {
         debugger;
-        this.materialistModel = { materialid: "", gatepassmaterialid: "0", materialdescription: "", quantity: 0, materialcost: "0", remarks: " ", expecteddate: this.date, returneddate: this.date, issuedqty: 0, showdetail: false, materiallistdata: [] };
+        this.materialistModel = { materialid: "", gatepassmaterialid: "0", materialdescription: "", quantity: 0, materialcost: 0, remarks: " ", expecteddate: this.date, returneddate: this.date, issuedqty: 0, showdetail: false, materiallistdata: [] };
         this.gatepassModel.materialList.push(this.materialistModel);
       }
 
     }
     else {
       if (this.gatepassModel.materialList.length <= 0) {
-        this.materialistModel = { materialid: "", gatepassmaterialid: "0", materialdescription: "", quantity: 0, materialcost: "0", remarks: " ", expecteddate: this.date, returneddate: this.date, issuedqty: 0, showdetail: false, materiallistdata: [] };
+        this.materialistModel = { materialid: "", gatepassmaterialid: "0", materialdescription: "", quantity: 0, materialcost: 0, remarks: " ", expecteddate: this.date, returneddate: this.date, issuedqty: 0, showdetail: false, materiallistdata: [] };
         this.gatepassModel.materialList.push(this.materialistModel);
       }
       else {
@@ -487,7 +492,7 @@ export class GatePassComponent implements OnInit {
     } else {
       this.gatepassModel.gatepasstype = "0";
       this.gatepassModel.reasonforgatepass = "0";
-      this.materialistModel = { materialid: "", gatepassmaterialid: "0", materialdescription: "", quantity: 0, materialcost: "0", remarks: " ", expecteddate: this.date, returneddate: this.date, issuedqty: 0, showdetail: false, materiallistdata: [] };
+      this.materialistModel = { materialid: "", gatepassmaterialid: "0", materialdescription: "", quantity: 0, materialcost: 0, remarks: " ", expecteddate: this.date, returneddate: this.date, issuedqty: 0, showdetail: false, materiallistdata: [] };
       this.gatepassModel.materialList.push(this.materialistModel);
       this.material = "";
     }
@@ -623,6 +628,7 @@ export class GatePassComponent implements OnInit {
 
   //saving gatepass details --Gayathri
   async onSubmitgatepassData() {
+    debugger;
     this.disableGPBtn = true;
     this.gatePassChange();
     if (this.gatepassModel.gatepasstype != "0") {
@@ -683,7 +689,8 @@ export class GatePassComponent implements OnInit {
               this.gatepassModel.requestedby = this.employee.employeeno;
                 this.gatepassModel.requestedby = this.employee.employeeno;
                 this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].expecteddate = this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].expecteddate != null ? new Date(this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].expecteddate).toLocaleDateString() : undefined;
-                this.spinner.show();
+              this.spinner.show();
+              debugger;
                 this.wmsService.saveoreditgatepassmaterial(this.gatepassModel).subscribe(data => {
                   this.spinner.hide();
                   this.disableGPBtn = false;

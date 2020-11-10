@@ -107,10 +107,6 @@ namespace WMS.Controllers
 						file.CopyTo(stream);
 					}
 
-                    //if(fileName.StartsWith("putaway")){
-					//	this._poService.updateputawayfilename(fileName);
-					//}
-
 					return Ok(new { dbPath });
 				}
 				else
@@ -996,6 +992,11 @@ namespace WMS.Controllers
 		public async Task<IEnumerable<testcrud>> gettestcrud()
 		{
 			return await this._poService.gettestcrud();
+		}
+		[HttpGet("getinitialstock")]
+		public async Task<IEnumerable<StockModel>> getinitialstock()
+		{
+			return await this._poService.getinitialstock();
 		}
 		[HttpPost("postputtestcrud")]
 		public string posttestcrud(testcrud data)

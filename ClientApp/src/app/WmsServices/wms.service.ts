@@ -548,6 +548,11 @@ export class wmsService {
     return this.http.post<any>(this.url + 'POData/notifyputaway', data, httpOptions);
   }
 
+  postinitialstock(data: any): Observable<any> {
+    const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }), responseType: 'text' as any };
+    return this.http.post<any>(this.url + 'Staging/uploadInitialStockExcelByUser', data, httpOptions);
+  }
+
   notifymultipleputawayfn(data: notifymodel[]): Observable<any> {
     const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }), responseType: 'text' as any };
     return this.http.post<any>(this.url + 'POData/notifymultipleputaway', data, httpOptions);
@@ -610,6 +615,10 @@ export class wmsService {
 
   gettestcrud(): Observable<testcrud[]> {
     return this.http.get<testcrud[]>(this.url + 'POData/gettestcrud/', this.httpOptions);
+  }
+
+  getinitialStock(): Observable<StockModel[]> {
+    return this.http.get<StockModel[]>(this.url + 'POData/getinitialstock/', this.httpOptions);
   }
 
   posttestcrud(data: testcrud): Observable<any> {

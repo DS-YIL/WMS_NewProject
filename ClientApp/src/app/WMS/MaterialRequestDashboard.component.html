@@ -34,7 +34,7 @@
           <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'requesteddate', 'contains')"></th>
           <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'requestedby', 'contains')"></th>
           <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'ackstatus', 'contains')"></th>
-
+          <th></th>
 
 
         </tr>
@@ -97,7 +97,7 @@
           </td>
           <td class="ptable-cell" style="text-align:center">{{rowData.requestedquantity}}</td>
           <td class="ptable-cell" style="text-align:center">
-            {{rowData.returnqty}}
+            {{rowData.issuedquantity}}
 
           </td>
 </ng-template>

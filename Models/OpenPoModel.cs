@@ -230,7 +230,7 @@ namespace WMS.Models
 	{
 		public int inwardid { get; set; }
 		public string Material { get; set; }
-		public string matrialdescription { get; set; }
+		public string materialdescription { get; set; }
 		public string stockstatus { get; set; }
 		public int itemid { get; set; }
 		public string grnnumber { get; set; }
@@ -266,12 +266,17 @@ namespace WMS.Models
 		public string bin { get; set; }
 		public string rack { get; set; }
 		public string store { get; set; }
+		public string locatorname { get; set; }
 		public int unitprice { get; set; }
+		//public Decimal? unitprice { get; set; }
 
 		public string receiveddate { get; set; }
 		public string shelflifedate { get; set; }
 		public string manufacturedate { get; set; }
 		public string entrydate { get; set; }
+
+		public Decimal? value { get; set; }
+		public string projectid { get; set; }
 
 	}
 	public class trackstatusModel
@@ -442,7 +447,7 @@ namespace WMS.Models
 		public string projectcode { get; set; }
 		public DateTime createdon { get; set; }
 		public string confirmstatus { get; set; }
-		public int materialcost { get; set; }
+		public Decimal? materialcost { get; set; }
 
 		public string issuedby { get; set; }
 
@@ -549,7 +554,7 @@ namespace WMS.Models
 		public DateTime printedon { get; set; }
 		public string remarks { get; set; }
 
-		public int materialcost { get; set; }
+		public Decimal? materialcost { get; set; }
 		public DateTime? expecteddate { get; set; }
 		public DateTime? returneddate { get; set; }
 		public string approvedby { get; set; }
@@ -592,7 +597,7 @@ namespace WMS.Models
 		public string remarks { get; set; }
 		public int quantity { get; set; }
 		public int gatepassmaterialid { get; set; }
-		public int materialcost { get; set; }
+		public Decimal? materialcost { get; set; }
 		public DateTime expecteddate { get; set; }
 		public DateTime? returneddate { get; set; }
 		public int issuedqty { get; set; }
@@ -1301,6 +1306,7 @@ public class materialrequestMR
 	public string materialdescription { get; set; }
 	public int requestedquantity { get; set; }
 	public int returnqty { get; set; }
+	public int issuedquantity { get; set; }
 }
 public class materialRequestFilterParams
 {
@@ -1425,6 +1431,32 @@ public class MaterialReturn
 	public string confirmstatus { get; set; }
 	public List<MaterialReturnTR> materialdata { get; set; }
 
+}
+
+public class initialStock
+{
+	public string material { get; set; }
+	public string materialdescription { get; set; }
+	public string store { get; set; }
+	public string rack { get; set; }
+	public string bin { get; set; }
+	public int? quantity { get; set; }
+	public string grn { get; set; }
+	public DateTime? receiveddate { get; set; }
+	public DateTime? shelflifeexpiration { get; set; }
+	public DateTime? dateofmanufacture { get; set; }
+	public string datasource { get; set; }
+	public string dataenteredby { get; set; }
+	public DateTime? dataenteredon { get; set; }
+	public bool DataloadErrors { get; set; }
+	public string error_description { get; set; }
+	public DateTime? createddate { get; set; }
+	public string stocktype { get; set; }
+	public Decimal? unitprice { get; set; }
+	public string category { get; set; }
+	public Decimal? value { get; set; }
+	public string projectid { get; set; }
+	public string pono { get; set; }
 }
 
 

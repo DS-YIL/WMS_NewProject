@@ -438,7 +438,7 @@
         </p-footer>
       </p-dialog>
 
-      <p-dialog header="Gate Pass" [(visible)]="updateReturnedDateDialog" [responsive]="true" showEffect="fade" [modal]="true" [style]="{'width':'85%','height':'500px','overflow':'auto!important','margin-right': '0px','margin-left':'0px'}">
+      <p-dialog header="Gate Pass" [(visible)]="updateReturnedDateDialog" [responsive]="true" (onHide)="resetDG()" showEffect="fade" [modal]="true" [style]="{'width':'85%','height':'500px','overflow':'auto!important','margin-right': '0px','margin-left':'0px'}">
         <div class="row " style="margin-top:10px">
           <div class="col-lg-3 col-md-3 col-sm-3 form-inline">
             <label for="itemlocation" class="form-label"><b>GatePass Id: </b> </label>&nbsp;{{gatepassModel.gatepassid}}

@@ -10074,6 +10074,43 @@ namespace WMS.DAL
 		}
 
 		/*
+		Name of Function : <<gettestcrud>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<get test crud>>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
+		public async Task<IEnumerable<StockModel>> getinitialstock()
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				try
+				{
+					string testgetquery = WMSResource.initialstockviewdata;
+
+
+					await pgsql.OpenAsync();
+					var data = await pgsql.QueryAsync<StockModel>(
+					  testgetquery, null, commandType: CommandType.Text);
+					return data;
+
+
+
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "gettestcrud", Ex.StackTrace.ToString());
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+
+			}
+		}
+
+		/*
 		Name of Function : <<posttestcrud>>  Author :<<Ramesh>>  
 		Date of Creation <<12-12-2019>>
 		Purpose : <<post test crud>>

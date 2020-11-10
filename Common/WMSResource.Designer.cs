@@ -1318,11 +1318,12 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select mr.requestid,mr.requesteddate,mr.ackstatus,emp.name as requestedby,mr.ackremarks,mr.remarks,mqd.materialid,mqd.requestedquantity ,mqd.returnqty,ygs.materialdescription from wms.materialrequest mr
+        ///   Looks up a localized string similar to select mr.requestid,mr.requesteddate,mr.ackstatus,emp.name as requestedby,mr.ackremarks,mr.remarks,mqd.materialid,mqd.requestedquantity ,mqd.returnqty,ygs.materialdescription,
+        ///(select sum(issuedqty) from wms.wms_materialissue where requestmaterialid = mqd.id) as issuedquantity
+        ///from wms.materialrequest mr
         ///left outer join  wms.employee emp on emp.employeeno = mr.requesterid 
         ///left outer join  wms.materialrequestdetails mqd on mqd.requestid =mr .requestid 
-        ///left outer join  wms.&quot;MaterialMasterYGS&quot; ygs on ygs.material = mqd.materialid 
-        ///where  mqd.requestid=&apos;#rid&apos;.
+        ///left outer join  wms.&quot;MaterialMasterYGS&quot; ygs on yg [rest of string was truncated]&quot;;.
         /// </summary>
         public static string getrequestiddetail {
             get {
@@ -1555,6 +1556,20 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to select st.materialid as material,mat.materialdescription,loc.locatorname,rac.racknumber,bn.binnumber,st.availableqty,st.value,st.projectid,st.pono,st.shelflife from wms.wms_stock st 
+        ///left outer join wms.&quot;MaterialMasterYGS&quot; mat on mat.material = st.materialid
+        ///left outer join wms.wms_rd_locator loc on loc.locatorid = st.storeid
+        ///left outer join wms.wms_rd_rack rac on rac.rackid = st.rackid
+        ///left outer join wms.wms_rd_bin bn on bn.binid = st.binid
+        ///where st.initialstock is True.
+        /// </summary>
+        public static string initialstockviewdata {
+            get {
+                return ResourceManager.GetString("initialstockviewdata", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to insert into wms.wms_rd_category(categoryid,categoryname,minpricevalue,maxpricevalue,createdby,createdon,deleteflag,startdate,enddate)values(default,@categoryname,@minpricevalue,@maxpricevalue,@createdby,current_date,false,@startdate,@enddate).
         /// </summary>
         public static string insertABCrange {
@@ -1626,6 +1641,21 @@ namespace WMS.Common {
         public static string insertgatepassmaterial {
             get {
                 return ResourceManager.GetString("insertgatepassmaterial", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to INSERT INTO wms.st_initialstock (material,materialdescription,store,rack,bin,quantity,grn,
+        ///								 receiveddate,shelflifeexpiration,dateofmanufacture,dataenteredon,
+        ///								 datasource,dataenteredby,createddate,DataloadErrors,error_description,stocktype,
+        ///								 category,unitprice,projectid,pono,value) values (@material,@materialdescription,@store,
+        ///															@rack,@bin,@quantity,@grn,@receiveddate,@shelflifeexpiration,
+        ///															@dateofmanufacture,@dataenteredon,@datasource,
+        ///														 [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string InsertInitialStock {
+            get {
+                return ResourceManager.GetString("InsertInitialStock", resourceCulture);
             }
         }
         

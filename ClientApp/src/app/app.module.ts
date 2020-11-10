@@ -96,6 +96,7 @@ import { OutwardinwardreportComponent } from './WMS/Outwardinwardreport.componen
 import { GatepassinwardreceiveComponent } from './WMS/Gatepassinwardreceive.component';
 import { MaterialTransferApprovalComponent } from './WMS/MaterialTransferApproval.component';
 import { PMDashboardComponent } from './WMS/PMDashboard.component';
+import { AdminStockUploadComponent } from './WMS/AdminStockUpload.component';
 ////pages
 import { LoginComponent } from './WMS/Login.component';
 import {HomeComponent} from './WMS/Home.component';
@@ -183,7 +184,8 @@ import { FieldsetModule } from 'primeng/fieldset';
     OutwardinwardreportComponent,
     GatepassinwardreceiveComponent,
     MaterialTransferApprovalComponent,
-    PMDashboardComponent
+    PMDashboardComponent,
+    AdminStockUploadComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

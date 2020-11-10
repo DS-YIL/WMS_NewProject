@@ -58,7 +58,11 @@ namespace WMS.Models
 		public DateTime createddate { get; set; }
 		public string stocktype { get; set; }
 		public string category { get; set; }
-		public int unitprice { get; set; }
+		public Decimal? unitprice { get; set; }
+		public Decimal? value { get; set; }
+		public string pono { get; set; }
+		public string projectid { get; set; }
+
 
 	}
 	public class LocationModel

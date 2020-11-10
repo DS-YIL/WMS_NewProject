@@ -58,7 +58,7 @@
             <td class="ptable-cell" style="text-align:right;width:70px;">{{ri+1}}</td>
 
             <td class="ptable-cell" style="text-align: center;width: 150px;">
-              <span (click)="showattachdata(rowData)" class="btn btn-link">GTP{{rowData.gatepassid}}</span>
+              <span (click)="showattachdata(rowData)" class="btn btn-link">{{rowData.gatepassid}}</span>
             </td>
             <td *ngIf="isoutward" class="ptable-cell" style="text-align:center;width:150px;">{{rowData.outwardby}}</td>
             <td *ngIf="isoutward" class="ptable-cell" style="text-align:center;width:100px;">{{rowData.outwarddate | date :  constants.dateFormat}}</td>
@@ -100,7 +100,7 @@
             </td>
             <td class="ptable-cell" style="text-align:right">
               <span *ngIf="isoutward">{{rowData.issuedqty}}</span>
-              <span *ngIf="isinward">{{rowData.outwardqty}}</span>
+              <span *ngIf="isinward">{{rowData.issuedqty}}</span>
             </td>
         </ng-template>
 

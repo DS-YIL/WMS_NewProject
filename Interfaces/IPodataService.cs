@@ -204,6 +204,7 @@ Task<string> updateonholdrow(updateonhold datamodel);
         string notifymultipleputaway(List<notifymodel> data);
 
         Task<IEnumerable<testcrud>> gettestcrud();
+        Task<IEnumerable<StockModel>> getinitialstock();
         string posttestcrud(testcrud data);
         string deletetestcurd(int id);
         string updateSecurityPrintHistory(PrintHistoryModel model);
