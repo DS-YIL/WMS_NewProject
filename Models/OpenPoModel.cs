@@ -810,6 +810,7 @@ namespace WMS.Models
 		public string approverstatus { get; set; }
 		// public int inwmasterid { get; set; }
 		public string inwmasterid { get; set; }
+		 
 
 	}
 	public class employeeModel
@@ -827,6 +828,8 @@ namespace WMS.Models
 		public DateTime createddate { get; set; }
 		public string createdby { get; set; }
 		public bool deleteflag { get; set; }
+		 public bool emailnotification { get; set; }
+		public string email { get; set; }
 	}
 	public class userAcessNamesModel
 	{

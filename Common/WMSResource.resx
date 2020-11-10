@@ -1372,4 +1372,9 @@ left outer join wms."MaterialMasterYGS" ms on ms.material = mat.materialid</valu
   <data name="isgrnexistbyinwardmasterid" xml:space="preserve">
     <value>select inwmasterid,grnnumber,onhold,unholdedby from wms.wms_securityinward where inwmasterid = '#inw' </value>
   </data>
+  <data name="dynamicemaildata" xml:space="preserve">
+    <value>select auth.employeeid,rl.email from  wms.auth_users auth
+ left outer join wms.employee rl on auth.employeeid = rl.employeeno 
+ where auth.roleid = #roleid and auth.emailnotification is True</value>
+  </data>
 </root>

@@ -173,6 +173,17 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to select auth.employeeid,rl.email from  wms.auth_users auth
+        /// left outer join wms.employee rl on auth.employeeid = rl.employeeno 
+        /// where auth.roleid = #roleid and auth.emailnotification is True.
+        /// </summary>
+        public static string dynamicemaildata {
+            get {
+                return ResourceManager.GetString("dynamicemaildata", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &lt;html&gt;&lt;meta charset=\&quot;ISO-8859-1\&quot;&gt;&lt;head&gt;&lt;link rel =&apos;stylesheet&apos; href =&apos;https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css&apos;&gt;&lt;/head&gt;
         ///&lt;body&gt;&lt;div class=&apos;container&apos;&gt;
         ///&lt;p&gt;Dear #user,&lt;/p&gt;
