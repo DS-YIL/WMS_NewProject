@@ -39,7 +39,7 @@ namespace WMS.Common
                             {
                                 if (i > 0)
                                 {
-									tomainlstring += ";";
+									tomainlstring += ",";
 
 								}
 								i++;
