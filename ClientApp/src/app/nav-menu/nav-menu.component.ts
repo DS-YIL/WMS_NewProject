@@ -53,7 +53,7 @@ export class NavMenuComponent implements OnInit {
   pono: string = "";
   gateid: string = "";
   fmgateid: string = "";
-
+  gateentryid: string = "";
   ngOnInit() {
     debugger;
     this.cars = [
@@ -82,16 +82,16 @@ export class NavMenuComponent implements OnInit {
     }
     if (eurl.includes("/Email")) {
       //this.isapprovalurl = true;
-      this.poinvoice = this.route.snapshot.queryParams.pono;
-      this.poinvoice = eurl.split('=')[1];
+      this.gateentryid = this.route.snapshot.queryParams.pono;
+      this.gateentryid = eurl.split('=')[1];
 
       let element: HTMLElement = document.getElementById("btnuser") as HTMLElement;
       element.hidden = true;
       let element1: HTMLDivElement = document.getElementById("menudiv") as HTMLDivElement;
       element1.hidden = false;
-      if (eurl.includes("/Email/GRNPosting?pono")) {
+      if (eurl.includes("/Email/GRNPosting?GateEntryNo")) {
         //this.poinvoice = this.route.snapshot.queryParams.pono;
-        if (this.poinvoice) {
+        if (this.gateentryid) {
 
           //redirects to Receipts page 
           this.bindMenuForEmail();

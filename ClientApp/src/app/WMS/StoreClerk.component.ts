@@ -78,7 +78,9 @@ export class StoreClerkComponent implements OnInit {
   displayBasic: boolean = false;
   poinvoice: string = "";
   grnn0: string = "";
-  inwmasterid: string = "";
+  //inwmasterid: string = "";
+  gateentryid: string = "";
+  public inwmasterid: string;
 
   ngOnInit() {
     //this.autoCompleteObject.focusInput();
@@ -87,11 +89,11 @@ export class StoreClerkComponent implements OnInit {
     else
       this.router.navigateByUrl("Login");
     //Email
-    this.poinvoice = this.route.snapshot.queryParams.pono;
-    if (this.poinvoice) {
+    this.gateentryid = this.route.snapshot.queryParams.inwmasterid;
+    if (this.gateentryid) {
       debugger;
       //get material details for that PO
-      this.selectedpendingpono = this.poinvoice;
+      this.selectedpendingpono = this.gateentryid;
       this.showpodata();
 
     }
