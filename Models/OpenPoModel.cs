@@ -1438,6 +1438,7 @@ public class MaterialReturn
 
 public class initialStock
 {
+	public string uploadedby { get; set; }
 	public string material { get; set; }
 	public string materialdescription { get; set; }
 	public string store { get; set; }

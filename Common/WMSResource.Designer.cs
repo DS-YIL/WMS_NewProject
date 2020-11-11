@@ -1572,7 +1572,7 @@ namespace WMS.Common {
         ///left outer join wms.wms_rd_locator loc on loc.locatorid = st.storeid
         ///left outer join wms.wms_rd_rack rac on rac.rackid = st.rackid
         ///left outer join wms.wms_rd_bin bn on bn.binid = st.binid
-        ///where st.initialstock is True.
+        ///where st.initialstock is True and uploadbatchcode = &apos;#code&apos;.
         /// </summary>
         public static string initialstockviewdata {
             get {
@@ -1659,10 +1659,10 @@ namespace WMS.Common {
         ///   Looks up a localized string similar to INSERT INTO wms.st_initialstock (material,materialdescription,store,rack,bin,quantity,grn,
         ///								 receiveddate,shelflifeexpiration,dateofmanufacture,dataenteredon,
         ///								 datasource,dataenteredby,createddate,DataloadErrors,error_description,stocktype,
-        ///								 category,unitprice,projectid,pono,value) values (@material,@materialdescription,@store,
+        ///								 category,unitprice,projectid,pono,value,uploadedby) values (@material,@materialdescription,@store,
         ///															@rack,@bin,@quantity,@grn,@receiveddate,@shelflifeexpiration,
         ///															@dateofmanufacture,@dataenteredon,@datasource,
-        ///														 [rest of string was truncated]&quot;;.
+        ///			 [rest of string was truncated]&quot;;.
         /// </summary>
         public static string InsertInitialStock {
             get {

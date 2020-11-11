@@ -617,8 +617,8 @@ export class wmsService {
     return this.http.get<testcrud[]>(this.url + 'POData/gettestcrud/', this.httpOptions);
   }
 
-  getinitialStock(): Observable<StockModel[]> {
-    return this.http.get<StockModel[]>(this.url + 'POData/getinitialstock/', this.httpOptions);
+  getinitialStock(uploadcode: string): Observable<StockModel[]> {
+    return this.http.get<StockModel[]>(this.url + 'POData/getinitialstock?code=' + uploadcode, this.httpOptions);
   }
 
   posttestcrud(data: testcrud): Observable<any> {

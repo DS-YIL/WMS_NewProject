@@ -28,6 +28,7 @@ export class AdminStockUploadComponent implements OnInit {
   public url = "";
   getlistdata: StockModel[] = [];
   public responsestr: string = "";
+  public responseexceptionstr: string = "";
   displayModal: boolean = false;
 
   
@@ -39,14 +40,14 @@ export class AdminStockUploadComponent implements OnInit {
       this.router.navigateByUrl("Login");
     this.response = new WMSHttpResponse();
     this.displayModal = false;
-    this.getlist();
+    //this.getlist();
      
   }
 
-  getlist() {
+  getlist(uploadcode: string) {
     this.getlistdata = [];
     this.spinner.show();
-    this.wmsService.getinitialStock().subscribe(data => {
+    this.wmsService.getinitialStock(uploadcode).subscribe(data => {
       this.getlistdata = data;
       this.spinner.hide();
     });
@@ -55,7 +56,8 @@ export class AdminStockUploadComponent implements OnInit {
   onUpload(event) {
     for (let file of event.files) {
 
-      var fname = file.name;
+      var empno = this.employee.employeeno;
+      var fname = empno+"_" + file.name;
       const formData = new FormData();
       formData.append('file', file, fname);
       //this.wmsService.postinitialstock(formData).subscribe(data => {
@@ -67,12 +69,20 @@ export class AdminStockUploadComponent implements OnInit {
           this.spinner.hide();
           debugger;
           this.response = data as WMSHttpResponse;
-          let displaystring = String(this.response.message);
+          var arrdata = String(this.response.message).split('$viewdatalistcode$');
+          var uploadcode = String(arrdata[1]).trim();
+          var arrwithexception = String(arrdata[0]).trim();
+          var arrexception = String(arrwithexception).split('$EX$');
+          let exception = String(arrexception[0]).trim()
+          let displaystring = String(arrexception[1]).trim();
           displaystring = displaystring.split('-').join('\n');
           displaystring = displaystring.split('_').join(' ');
+          exception = exception.split('-').join('\n');
+          exception = exception.split('_').join(' ');
           this.responsestr = displaystring;
+          this.responseexceptionstr = exception;
           this.displayModal = true;
-          this.getlist();
+          this.getlist(uploadcode);
         
        });
     }

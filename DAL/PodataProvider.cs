@@ -10079,7 +10079,7 @@ namespace WMS.DAL
 		Purpose : <<get test crud>>
 		Review Date :<<>>   Reviewed By :<<>>
 		*/
-		public async Task<IEnumerable<StockModel>> getinitialstock()
+		public async Task<IEnumerable<StockModel>> getinitialstock(string code)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{

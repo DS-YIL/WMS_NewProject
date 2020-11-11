@@ -2,7 +2,7 @@
   <p-fileUpload name="myfile[]" customUpload="true" [style]="{'width' : '95vw','height':'80vh'}" (uploadHandler)="onUpload($event)"
                 accept=".xlsx" maxFileSize="1000000">
     <ng-template pTemplate="content">
-      
+      <label><span [innerText]="responseexceptionstr" style="font-size:medium;font-weight:600;margin:14px"></span></label>
       <p-table #dt [value]="getlistdata" [style]="{'overflow':'auto!important','box-shadow' : '5px 5px #888888'}"
                [scrollable]="true" scrollHeight="65vh">
         <ng-template pTemplate="header">

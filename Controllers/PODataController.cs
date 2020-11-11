@@ -994,9 +994,9 @@ namespace WMS.Controllers
 			return await this._poService.gettestcrud();
 		}
 		[HttpGet("getinitialstock")]
-		public async Task<IEnumerable<StockModel>> getinitialstock()
+		public async Task<IEnumerable<StockModel>> getinitialstock(string code)
 		{
-			return await this._poService.getinitialstock();
+			return await this._poService.getinitialstock(code);
 		}
 		[HttpPost("postputtestcrud")]
 		public string posttestcrud(testcrud data)

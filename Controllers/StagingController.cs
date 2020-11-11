@@ -8,6 +8,7 @@
 
 using Dapper;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using Npgsql;
 using NpgsqlTypes;
 using System;
@@ -452,6 +453,8 @@ namespace WMS.Controllers
 					
 					var postedfile = Request.Form.Files[0];
 					string filename = postedfile.FileName;
+					int index = filename.IndexOf('_');
+					string uploadedby = filename.Substring(0, index);
 					var folderName = Path.Combine("Resources", "documents");
 					var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
 
@@ -533,10 +536,11 @@ namespace WMS.Controllers
 						initialstk.stocktype = null;
 						initialstk.unitprice = null;
 						initialstk.category = null;
+						initialstk.uploadedby = uploadedby;
 
 
 						if (string.IsNullOrEmpty(initialstk.material) || initialstk.material == "")
-							Error_Description += " There is NO Material";
+							Error_Description += " NO Material";
 						if (string.IsNullOrEmpty(initialstk.materialdescription) || initialstk.materialdescription == "")
 							Error_Description += " No material description";
 						if (string.IsNullOrEmpty(initialstk.store) || initialstk.store == "")
@@ -557,6 +561,7 @@ namespace WMS.Controllers
 							Error_Description_all +=  Error_Description + " For Row " + i.ToString()+"-";
 
 						}
+						i++;
 							
 
 						initialstk.DataloadErrors = dataloaderror;
@@ -564,38 +569,46 @@ namespace WMS.Controllers
 
 
 						string insertpoqry = WMSResource.InsertInitialStock;
-						var rslt = DB.Execute(insertpoqry, new
-						{
-							initialstk.material,
-							initialstk.materialdescription,
-							initialstk.store,
-							initialstk.rack,
-							initialstk.bin,
-							initialstk.quantity,
-							initialstk.grn,
-							initialstk.receiveddate,
-							initialstk.shelflifeexpiration,
-							initialstk.dateofmanufacture,
-							initialstk.dataenteredon,
-							initialstk.datasource,
-							initialstk.dataenteredby,
-							initialstk.createddate,
-							initialstk.DataloadErrors,
-							initialstk.error_description,
-							initialstk.stocktype,
-							initialstk.category,
-							initialstk.unitprice,
-							initialstk.projectid,
-							initialstk.pono,
-							initialstk.value
-						});
+                        var rslt = DB.Execute(insertpoqry, new
+                        {
+                            initialstk.material,
+                            initialstk.materialdescription,
+                            initialstk.store,
+                            initialstk.rack,
+                            initialstk.bin,
+                            initialstk.quantity,
+                            initialstk.grn,
+                            initialstk.receiveddate,
+                            initialstk.shelflifeexpiration,
+                            initialstk.dateofmanufacture,
+                            initialstk.dataenteredon,
+                            initialstk.datasource,
+                            initialstk.dataenteredby,
+                            initialstk.createddate,
+                            initialstk.DataloadErrors,
+                            initialstk.error_description,
+                            initialstk.stocktype,
+                            initialstk.category,
+                            initialstk.unitprice,
+                            initialstk.projectid,
+                            initialstk.pono,
+                            initialstk.value,
+							initialstk.uploadedby
+                        });
 
-						rowsinserted = rowsinserted + 1;
+                        rowsinserted = rowsinserted + 1;
 
 					}
 
 					DB.Close();
-					result.message += Error_Description_all;
+					if(string.IsNullOrEmpty(Error_Description_all))
+                    {
+						result.message += "No Exceptions$EX$";
+					}
+                    else
+                    {
+						result.message += "Exceptions:-"+ Error_Description_all + "$EX$";
+					}
 					result.message += "-To Staging Table - Total_Rows_:" + rows + "-Inserted_rows_to_staging_table_:" + rowsinserted.ToString();
 					string msg = loadStockData();
 					result.message += msg;
@@ -642,6 +655,7 @@ namespace WMS.Controllers
                        query, null, commandType: CommandType.Text);
 
 					int rowinserted = 0;
+					string uploadcode = Guid.NewGuid().ToString();
 					
                     foreach (StagingStockModel stag_data in stagingList)
 					{
@@ -650,7 +664,6 @@ namespace WMS.Controllers
 						{
 							// add master table data for store,rack,bin
 
-							
 							Trans = pgsql.BeginTransaction();
 							bool deleteflag = false;
 							//Add locator in masterdata
@@ -788,7 +801,7 @@ namespace WMS.Controllers
 							}
 
 							//insert wms_stock ##storeid, binid,rackid,totalquantity,shelflife ,createddate,materialid ,initialstock
-							var insertquery = "INSERT INTO wms.wms_stock(storeid, binid,rackid,itemlocation,totalquantity,availableqty,shelflife ,createddate,materialid ,initialstock,stcktype,unitprice,value,pono,projectid)VALUES(@storeid, @bindata,@rackid,@itemlocation,@totalquantity,@availableqty,@shelflife ,@createddate,@materialid ,@initialstock,@stocktype,@unitprice,@value,@pono,@projectid)";
+							var insertquery = "INSERT INTO wms.wms_stock(storeid, binid,rackid,itemlocation,totalquantity,availableqty,shelflife ,createddate,materialid ,initialstock,stcktype,unitprice,value,pono,projectid,uploadedby,uploadbatchcode)VALUES(@storeid, @bindata,@rackid,@itemlocation,@totalquantity,@availableqty,@shelflife ,@createddate,@materialid ,@initialstock,@stocktype,@unitprice,@value,@pono,@projectid,@uploadedby,@uploadcode)";
 							var results = pgsql.ExecuteScalar(insertquery, new
 							{
 								stock.storeid,
@@ -805,7 +818,9 @@ namespace WMS.Controllers
 								stag_data.unitprice,
 								stag_data.value,
 								stag_data.pono,
-								stag_data.projectid
+								stag_data.projectid,
+								stag_data.uploadedby,
+								uploadcode
 							});
 
 							Trans.Commit();
@@ -825,6 +840,7 @@ namespace WMS.Controllers
 						}
 					}
 					insertmessage = "-To Database - Inserted_rows_to_Stock_Table:" + rowinserted.ToString();
+					insertmessage += "$viewdatalistcode$" + uploadcode;
 					pgsql.Close();
 
 					//throw new NotImplementedException();
