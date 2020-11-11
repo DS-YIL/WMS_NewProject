@@ -10085,7 +10085,7 @@ namespace WMS.DAL
 			{
 				try
 				{
-					string testgetquery = WMSResource.initialstockviewdata;
+					string testgetquery = WMSResource.initialstockviewdata.Replace("#code",code);
 
 
 					await pgsql.OpenAsync();

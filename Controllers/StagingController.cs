@@ -260,7 +260,7 @@ namespace WMS.Controllers
 		[Route("uploadInitialStock")]
 		public IActionResult uploadInitialStock()
 		{
-			loadStockData();
+			//loadStockData();
 			return Ok(true);
 		}
 
@@ -448,6 +448,7 @@ namespace WMS.Controllers
 				string serverPath = "";
 				string rows = "";
 				int rowsinserted = 0;
+				string uploadcode = Guid.NewGuid().ToString();
 				try
 				{
 					
@@ -537,12 +538,13 @@ namespace WMS.Controllers
 						initialstk.unitprice = null;
 						initialstk.category = null;
 						initialstk.uploadedby = uploadedby;
+						initialstk.uploadbatchcode = uploadcode;
 
 
 						if (string.IsNullOrEmpty(initialstk.material) || initialstk.material == "")
-							Error_Description += " NO Material";
+							Error_Description += " No Material";
 						if (string.IsNullOrEmpty(initialstk.materialdescription) || initialstk.materialdescription == "")
-							Error_Description += " No material description";
+							Error_Description += " No Material Description";
 						if (string.IsNullOrEmpty(initialstk.store) || initialstk.store == "")
 							Error_Description += " No Store";
 						if (string.IsNullOrEmpty(initialstk.rack) || initialstk.rack == "")
@@ -593,7 +595,8 @@ namespace WMS.Controllers
                             initialstk.projectid,
                             initialstk.pono,
                             initialstk.value,
-							initialstk.uploadedby
+							initialstk.uploadedby,
+							initialstk.uploadbatchcode
                         });
 
                         rowsinserted = rowsinserted + 1;
@@ -610,7 +613,7 @@ namespace WMS.Controllers
 						result.message += "Exceptions:-"+ Error_Description_all + "$EX$";
 					}
 					result.message += "-To Staging Table - Total_Rows_:" + rows + "-Inserted_rows_to_staging_table_:" + rowsinserted.ToString();
-					string msg = loadStockData();
+					string msg = loadStockData(uploadcode);
 					result.message += msg;
 					return result;
 
@@ -641,7 +644,7 @@ namespace WMS.Controllers
 		*/
 		//[HttpGet]
 		//[Route("uploadInitialStockDB")]
-		public string loadStockData()
+		public string loadStockData(string batchcode)
 		{
 			string insertmessage = "";
 			using (NpgsqlConnection pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -649,13 +652,13 @@ namespace WMS.Controllers
 			{
 				{
 
-					string query = "select * from wms.st_initialstock where material  !='' and materialdescription !='' and store !='' and rack !='' and quantity  !='0' and dataloaderrors=false";
+					string query = "select * from wms.st_initialstock where material  !='' and materialdescription !='' and store !='' and rack !='' and quantity  !='0' and dataloaderrors=false and uploadbatchcode = '"+batchcode+"'";
 					pgsql.Open();
                     var stagingList = pgsql.Query<StagingStockModel>(
                        query, null, commandType: CommandType.Text);
 
 					int rowinserted = 0;
-					string uploadcode = Guid.NewGuid().ToString();
+					string uploadcode = batchcode;
 					
                     foreach (StagingStockModel stag_data in stagingList)
 					{

@@ -1659,10 +1659,9 @@ namespace WMS.Common {
         ///   Looks up a localized string similar to INSERT INTO wms.st_initialstock (material,materialdescription,store,rack,bin,quantity,grn,
         ///								 receiveddate,shelflifeexpiration,dateofmanufacture,dataenteredon,
         ///								 datasource,dataenteredby,createddate,DataloadErrors,error_description,stocktype,
-        ///								 category,unitprice,projectid,pono,value,uploadedby) values (@material,@materialdescription,@store,
+        ///								 category,unitprice,projectid,pono,value,uploadedby,uploadbatchcode) values (@material,@materialdescription,@store,
         ///															@rack,@bin,@quantity,@grn,@receiveddate,@shelflifeexpiration,
-        ///															@dateofmanufacture,@dataenteredon,@datasource,
-        ///			 [rest of string was truncated]&quot;;.
+        ///															@dateofmanufacture,@dataenteredon,@ [rest of string was truncated]&quot;;.
         /// </summary>
         public static string InsertInitialStock {
             get {
