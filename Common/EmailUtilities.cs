@@ -71,7 +71,7 @@ namespace WMS.Common
 				string receivedby = this.getnamebyid(emlSndngList.employeeno);
 				string date = Convert.ToDateTime( emlSndngList.receiveddate).ToString("dd/MM/yyyy");
 				subbody = "Shipment for GateEntryNo. - <b>" + emlSndngList.inwmasterid + "</b> has been received.Please find the details below. <br/> Invoice No : <b>" + emlSndngList.invoiceno + "</b><br/>POs : <b>" + emlSndngList.pono + "</b><br/> Received By : <b>" + receivedby + "</b><br/> Received On : <b>" + date + "</b>";
-				link = "http://10.29.15.212:82/WMS/Email/GRNPosting?gateentryno=" + emlSndngList.inwmasterid;
+				link = "http://10.29.15.212:82/WMS/Email/GRNPosting?GateEntryNo=" + emlSndngList.inwmasterid;
 				
 				//+ "-"+emlSndngList.invoiceno;
 			}
