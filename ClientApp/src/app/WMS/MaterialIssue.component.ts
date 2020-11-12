@@ -143,6 +143,7 @@ export class MaterialIssueComponent implements OnInit {
     this.id = id;
     this.AddDialog = true;
     this.roindex = rowindex;
+    this.itemlocationData = [];
     if (this.constants.materialIssueType == "Pending") {
       this.issueqtyenable = false;
       this.wmsService.getItemlocationListByMaterial(material).subscribe(data => {

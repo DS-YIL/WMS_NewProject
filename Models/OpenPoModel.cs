@@ -230,6 +230,7 @@ namespace WMS.Models
 	{
 		public int inwardid { get; set; }
 		public string Material { get; set; }
+		public string exceptions { get; set; }
 		public string materialdescription { get; set; }
 		public string stockstatus { get; set; }
 		public int itemid { get; set; }

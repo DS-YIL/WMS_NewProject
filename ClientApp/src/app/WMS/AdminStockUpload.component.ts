@@ -27,9 +27,15 @@ export class AdminStockUploadComponent implements OnInit {
   uploadedFiles: any[] = [];
   public url = "";
   getlistdata: StockModel[] = [];
+  getEXlistdata: StockModel[] = [];
   public responsestr: string = "";
   public responseexceptionstr: string = "";
   displayModal: boolean = false;
+  uploadcode: string = "";
+  displayEXModal: boolean = false;
+  displayTable: boolean = false;
+  strtotalrecord: string = "";
+  strsuccessrecord: string = "";
 
   
 
@@ -39,21 +45,49 @@ export class AdminStockUploadComponent implements OnInit {
     else
       this.router.navigateByUrl("Login");
     this.response = new WMSHttpResponse();
+    this.strsuccessrecord = "";
+    this.strtotalrecord = "";
     this.displayModal = false;
     //this.getlist();
      
   }
 
+  settextval(records: string) {
+    debugger;
+    let rcds = records;
+    this.strsuccessrecord = "";
+    this.strtotalrecord = "";
+    var arrrcds = rcds.split('\n');
+    this.strtotalrecord = String(arrrcds[1]);
+    this.strsuccessrecord = String(arrrcds[2]);
+  }
+
   getlist(uploadcode: string) {
+    this.displayTable = false;
     this.getlistdata = [];
     this.spinner.show();
     this.wmsService.getinitialStock(uploadcode).subscribe(data => {
       this.getlistdata = data;
+      this.displayTable = true;
+      this.spinner.hide();
+    });
+  }
+  showex() {
+    alert("Hiii");
+  }
+  getexlist() {
+    this.getEXlistdata = [];
+    this.displayEXModal = false;
+    this.spinner.show();
+    this.wmsService.getinitialStockEX(this.uploadcode).subscribe(data => {
+      this.getEXlistdata = data;
+      this.displayEXModal = true;
       this.spinner.hide();
     });
   }
 
-  onUpload(event) {
+  onUpload(event, form) {
+    this.displayTable = false;
     for (let file of event.files) {
 
       var empno = this.employee.employeeno;
@@ -67,25 +101,36 @@ export class AdminStockUploadComponent implements OnInit {
       this.http.post(this.url + 'Staging/uploadInitialStockExcelByUser', formData)
         .subscribe(data => {
           this.spinner.hide();
+          form.clear();
+          this.displayTable = true;
           debugger;
           this.response = data as WMSHttpResponse;
           var arrdata = String(this.response.message).split('$viewdatalistcode$');
           var uploadcode = String(arrdata[1]).trim();
           var arrwithexception = String(arrdata[0]).trim();
           var arrexception = String(arrwithexception).split('$EX$');
-          let exception = String(arrexception[0]).trim()
-          let displaystring = String(arrexception[1]).trim();
-          displaystring = displaystring.split('-').join('\n');
-          displaystring = displaystring.split('_').join(' ');
+          let exception = String(arrexception[1]).trim()
+          let displaystring = String(arrexception[0]).trim();
+          let displaystring1 = String(displaystring.split('-').join('\n'));
+          let displaystring2 = String(displaystring1.split('_').join(' '));
           exception = exception.split('-').join('\n');
           exception = exception.split('_').join(' ');
-          this.responsestr = displaystring;
+          this.responsestr = displaystring2 + "\n" + String(exception);
           this.responseexceptionstr = exception;
-          this.displayModal = true;
-          this.getlist(uploadcode);
+          this.uploadcode = uploadcode;
+          if (!isNullOrUndefined(this.responsestr)) {
+            this.displayModal = true;
+          }
+          if (!isNullOrUndefined(uploadcode)) {
+            this.getlist(uploadcode);
+          }
+          this.settextval(displaystring2);
+         
         
        });
     }
+
+   
   }
 
  

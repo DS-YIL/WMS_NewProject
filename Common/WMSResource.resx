@@ -1397,4 +1397,10 @@ where st.initialstock is True and uploadbatchcode = '#code'</value>
  left outer join wms.employee rl on auth.employeeid = rl.employeeno 
  where auth.roleid = #roleid and auth.emailnotification is True</value>
   </data>
+  <data name="initialstockExceptions" xml:space="preserve">
+    <value>select material,materialdescription,store as locatorname,rack as racknumber,bin as binnumber,quantity as availableqty,value,projectid,pono,shelflifeexpiration as shelflife,
+error_description as exceptions
+from wms.st_initialstock
+where dataloaderrors is True and uploadbatchcode = '#code'</value>
+  </data>
 </root>

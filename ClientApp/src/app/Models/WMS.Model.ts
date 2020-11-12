@@ -193,7 +193,8 @@ export class StockModel {
   racklist: any[] = [];
   materialdescription: string;
   value: number;
-  projectid: string
+  projectid: string;
+  exceptions: string
 }
 
 export class locataionDetailsStock {

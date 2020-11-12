@@ -60,7 +60,8 @@ export class wmsService {
   }
 
   getPoDetails(PoNo: string): Observable<any> {
-    return this.http.get<any>(this.url + 'POData/CheckPoNoexists?PONO=' + PoNo + '', this.httpOptions);
+    var sendparam = encodeURIComponent(PoNo);
+    return this.http.get<any>(this.url + "POData/CheckPoNoexists?PONO=" + sendparam, this.httpOptions);
   }
   getitemdetailsbygrnno(GrnNo: string): Observable<any> {
     return this.http.get<any>(this.url + 'POData/getitemdetailsbygrnno?grnnumber=' + GrnNo + '', this.httpOptions);
@@ -619,6 +620,9 @@ export class wmsService {
 
   getinitialStock(uploadcode: string): Observable<StockModel[]> {
     return this.http.get<StockModel[]>(this.url + 'POData/getinitialstock?code=' + uploadcode, this.httpOptions);
+  }
+  getinitialStockEX(uploadcode: string): Observable<StockModel[]> {
+    return this.http.get<StockModel[]>(this.url + 'POData/getinitialstockEX?code=' + uploadcode, this.httpOptions);
   }
 
   posttestcrud(data: testcrud): Observable<any> {

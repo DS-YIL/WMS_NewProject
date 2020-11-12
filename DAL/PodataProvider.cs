@@ -3254,9 +3254,11 @@ namespace WMS.DAL
 							}
 						
 					}
-					EmailUtilities emailobj = new EmailUtilities();
-					emailobj.sendEmail(emailmodel, 8,8);
 					Trans.Commit();
+					EmailUtilities emailobj = new EmailUtilities();
+					emailmodel.FrmEmailId = "ramesh.kumar@in.yokogawa.com";
+					emailobj.sendEmail(emailmodel, 8,8);
+					
 				}
 
 				
@@ -10074,9 +10076,9 @@ namespace WMS.DAL
 		}
 
 		/*
-		Name of Function : <<gettestcrud>>  Author :<<Ramesh>>  
-		Date of Creation <<12-12-2019>>
-		Purpose : <<get test crud>>
+		Name of Function : <<get initial stock>>  Author :<<Ramesh>>  
+		Date of Creation <<11-11-2019>>
+		Purpose : <<get currently uploaded initial stock>>
 		Review Date :<<>>   Reviewed By :<<>>
 		*/
 		public async Task<IEnumerable<StockModel>> getinitialstock(string code)
@@ -10086,6 +10088,43 @@ namespace WMS.DAL
 				try
 				{
 					string testgetquery = WMSResource.initialstockviewdata.Replace("#code",code);
+
+
+					await pgsql.OpenAsync();
+					var data = await pgsql.QueryAsync<StockModel>(
+					  testgetquery, null, commandType: CommandType.Text);
+					return data;
+
+
+
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "getinitialstock", Ex.StackTrace.ToString());
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+
+			}
+		}
+
+		/*
+		Name of Function : <<get initial stock Exception>>  Author :<<Ramesh>>  
+		Date of Creation <<11-11-2019>>
+		Purpose : <<get currently uploaded initial stock>>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
+		public async Task<IEnumerable<StockModel>> getinitialstockEX(string code)
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				try
+				{
+					string testgetquery = WMSResource.initialstockExceptions.Replace("#code", code);
 
 
 					await pgsql.OpenAsync();

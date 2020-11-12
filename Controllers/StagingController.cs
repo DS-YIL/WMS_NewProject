@@ -448,6 +448,7 @@ namespace WMS.Controllers
 				string serverPath = "";
 				string rows = "";
 				int rowsinserted = 0;
+				int exceptionrows = 0;
 				string uploadcode = Guid.NewGuid().ToString();
 				try
 				{
@@ -534,7 +535,15 @@ namespace WMS.Controllers
 						initialstk.datasource = Conversion.toStr(row["DataSource"]);
 						initialstk.dataenteredby = Conversion.toStr(row["Data Entered By"]); ;
 						initialstk.createddate = System.DateTime.Now;
-						initialstk.stocktype = null;
+						if (string.IsNullOrEmpty(initialstk.projectid) || initialstk.projectid == "")
+                        {
+							initialstk.stocktype = "Plant Stock";
+						}
+                        else
+                        {
+							initialstk.stocktype = "Project Stock";
+						}
+							
 						initialstk.unitprice = null;
 						initialstk.category = null;
 						initialstk.uploadedby = uploadedby;
@@ -560,6 +569,7 @@ namespace WMS.Controllers
 						if (!string.IsNullOrEmpty(Error_Description))
                         {
 							dataloaderror = true;
+							exceptionrows = exceptionrows + 1;
 							Error_Description_all +=  Error_Description + " For Row " + i.ToString()+"-";
 
 						}
@@ -604,17 +614,19 @@ namespace WMS.Controllers
 					}
 
 					DB.Close();
-					if(string.IsNullOrEmpty(Error_Description_all))
-                    {
-						result.message += "No Exceptions$EX$";
-					}
-                    else
-                    {
-						result.message += "Exceptions:-"+ Error_Description_all + "$EX$";
-					}
-					result.message += "-To Staging Table - Total_Rows_:" + rows + "-Inserted_rows_to_staging_table_:" + rowsinserted.ToString();
+					//result.message += "-Total_Rows_:" + rows + "-Inserted_rows_to_staging_table_:" + rowsinserted.ToString();
+					result.message += "-Total Records_:" + rows;
 					string msg = loadStockData(uploadcode);
 					result.message += msg;
+					if (string.IsNullOrEmpty(Error_Description_all))
+					{
+						result.message += "$EX$Exception Records: 0";
+					}
+					else
+					{
+						result.message += "$EX$Exception Records:" + exceptionrows + "";
+					}
+					result.message += "$viewdatalistcode$" + uploadcode;
 					return result;
 
 					//}
@@ -804,7 +816,7 @@ namespace WMS.Controllers
 							}
 
 							//insert wms_stock ##storeid, binid,rackid,totalquantity,shelflife ,createddate,materialid ,initialstock
-							var insertquery = "INSERT INTO wms.wms_stock(storeid, binid,rackid,itemlocation,totalquantity,availableqty,shelflife ,createddate,materialid ,initialstock,stcktype,unitprice,value,pono,projectid,uploadedby,uploadbatchcode)VALUES(@storeid, @bindata,@rackid,@itemlocation,@totalquantity,@availableqty,@shelflife ,@createddate,@materialid ,@initialstock,@stocktype,@unitprice,@value,@pono,@projectid,@uploadedby,@uploadcode)";
+							var insertquery = "INSERT INTO wms.wms_stock(storeid, binid,rackid,itemlocation,totalquantity,availableqty,shelflife ,createddate,materialid ,initialstock,stcktype,unitprice,value,pono,projectid,createdby,uploadbatchcode)VALUES(@storeid, @bindata,@rackid,@itemlocation,@totalquantity,@availableqty,@shelflife ,@createddate,@materialid ,@initialstock,@stocktype,@unitprice,@value,@pono,@projectid,@uploadedby,@uploadcode)";
 							var results = pgsql.ExecuteScalar(insertquery, new
 							{
 								stock.storeid,
@@ -842,8 +854,8 @@ namespace WMS.Controllers
 							continue;
 						}
 					}
-					insertmessage = "-To Database - Inserted_rows_to_Stock_Table:" + rowinserted.ToString();
-					insertmessage += "$viewdatalistcode$" + uploadcode;
+					//insertmessage = "-To Database - Inserted_rows_to_Stock_Table:" + rowinserted.ToString();
+					insertmessage = "-Success Records:" + rowinserted.ToString();
 					pgsql.Close();
 
 					//throw new NotImplementedException();
