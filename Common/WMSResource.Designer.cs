@@ -1567,6 +1567,18 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to select material,materialdescription,store as locatorname,rack as racknumber,bin as binnumber,quantity as availableqty,value,projectid,pono,shelflifeexpiration as shelflife,
+        ///error_description as exceptions
+        ///from wms.st_initialstock
+        ///where dataloaderrors is True and uploadbatchcode = &apos;#code&apos;.
+        /// </summary>
+        public static string initialstockExceptions {
+            get {
+                return ResourceManager.GetString("initialstockExceptions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to select st.materialid as material,mat.materialdescription,loc.locatorname,rac.racknumber,bn.binnumber,st.availableqty,st.value,st.projectid,st.pono,st.shelflife from wms.wms_stock st 
         ///left outer join wms.&quot;MaterialMasterYGS&quot; mat on mat.material = st.materialid
         ///left outer join wms.wms_rd_locator loc on loc.locatorid = st.storeid

@@ -175,6 +175,7 @@ export class GatePassApproverComponent implements OnInit {
     //  this.locdetails.issuedqty = issuedqty;
     //  this.itemissuedloc.push(this.locdetails);
     //}
+    this.itemlocationData = [];
     if (this.constants.gatePassIssueType == "Pending") {
       this.issueqtyenable = false;
       this.wmsService.getItemlocationListByMaterial(material).subscribe(data => {

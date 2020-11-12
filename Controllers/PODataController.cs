@@ -12,6 +12,7 @@ using WMS.Common;
 using System.Reflection.Metadata;
 using System.IO;
 using System.Net.Http.Headers;
+using System.Web;
 
 namespace WMS.Controllers
 {
@@ -997,6 +998,11 @@ namespace WMS.Controllers
 		public async Task<IEnumerable<StockModel>> getinitialstock(string code)
 		{
 			return await this._poService.getinitialstock(code);
+		}
+		[HttpGet("getinitialstockEX")]
+		public async Task<IEnumerable<StockModel>> getinitialstockEX(string code)
+		{
+			return await this._poService.getinitialstockEX(code);
 		}
 		[HttpPost("postputtestcrud")]
 		public string posttestcrud(testcrud data)

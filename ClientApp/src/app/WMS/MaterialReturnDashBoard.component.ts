@@ -594,8 +594,10 @@ export class MaterialReturnDashBoardComponent implements OnInit {
           message: 'Are you sure to put away material in selected stock type?',
           accept: () => {
             this.disSaveBtn = true;
+            this.spinner.show();
             this.wmsService.UpdateReturnmaterialTostock(this.StockModelList).subscribe(data => {
               debugger;
+              this.spinner.hide();
               //this.podetailsList[this.rowIndex].itemlocation = this.StockModel.itemlocation;
               //this.issaveprocess = true;
               this.showLocationDialog = false;
