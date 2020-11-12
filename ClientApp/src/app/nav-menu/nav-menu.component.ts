@@ -80,6 +80,8 @@ export class NavMenuComponent implements OnInit {
       this.router.navigateByUrl("WMS/Mailresponse");
       return;
     }
+    //Purpose: << Security Operator >>
+
     if (eurl.includes("/Email")) {
       //this.isapprovalurl = true;
       this.gateentryid = this.route.snapshot.queryParams.pono;
@@ -99,8 +101,9 @@ export class NavMenuComponent implements OnInit {
 
 
       }
-      //R
-      if (eurl.includes("/Email/GRNPosting?grnno")) {
+       //Purpose: << Receipts >>
+
+      if (eurl.includes("/Email/GRNPosting?GRNo")) {
         this.grnno = this.route.snapshot.queryParams.grnno;
         this.grnno = eurl.split('=')[1];
         if (this.grnno) {
@@ -108,8 +111,10 @@ export class NavMenuComponent implements OnInit {
           this.bindMenuForEmail();
         }
       }
-      //QC
-      if (eurl.includes("/Email/QualityCheck?grnno")) {
+    
+       //Purpose: << Quality check >>
+
+      if (eurl.includes("/Email/QualityCheck?GRNo")) {
         //this.grnno = this.route.snapshot.queryParams.grnnumber;
         this.grnno = this.route.snapshot.queryParams.grnnumber;
         this.grnno = eurl.split('=')[1];
@@ -118,8 +123,10 @@ export class NavMenuComponent implements OnInit {
           this.bindMenuForQualityCheckEmails();
         }
       }
-      //PM
-      if (eurl.includes("/Email/MaterialIssueDashboard?reqid")) {
+      
+      //Purpose: << Project Manager >>
+
+      if (eurl.includes("/Email/MaterialIssueDashboard?ReqId")) {
         this.reqid = this.route.snapshot.queryParams.requestid;
         this.reqid = eurl.split('=')[1];
         if (this.reqid) {
@@ -127,8 +134,10 @@ export class NavMenuComponent implements OnInit {
           this.bindMenuForPMEmails();
         }
       }
-      //IM
-      if (eurl.includes("/Email/MaterialReqView?reqid")) {
+      
+       //Purpose: << InventoryManager >>
+
+      if (eurl.includes("/Email/MaterialReqView?ReqId")) {
         this.reqid = this.route.snapshot.queryParams.requestid;
         this.reqid = eurl.split('=')[1];
         this.pono = eurl.split('=')[3];
@@ -137,8 +146,10 @@ export class NavMenuComponent implements OnInit {
           this.bindMenuForIMEmails();
         }
       }
-      //PM ACK
-      if (eurl.includes("/Email/MaterialReqView?reqid")) {
+      
+      //Purpose: << PM ACK >>
+
+      if (eurl.includes("/Email/MaterialReqView?ReqId")) {
         this.reqid = this.route.snapshot.queryParams.requestid;
         this.reqid = eurl.split('=')[1];
         if (this.reqid) {
@@ -147,8 +158,9 @@ export class NavMenuComponent implements OnInit {
         }
       }
 
-      //GatePassPM
-      if (eurl.includes("/Email/GatePassPMList?gateid")) {
+      //Purpose: << GatePassPM >>
+
+      if (eurl.includes("/Email/GatePassPMList?GateId")) {
         this.gateid = this.route.snapshot.queryParams.gateid;
         this.gateid = eurl.split('=')[1];
         if (this.gateid) {
@@ -165,8 +177,10 @@ export class NavMenuComponent implements OnInit {
       //    this.bindMenuForGatePassEmails();
       //  }
       //}
-      //GatePassPM-InventoryClerk
-      if (eurl.includes("/Email/GatePass?gateid")) {
+      //
+       //Purpose: << GatePassPM-InventoryClerk >>
+
+      if (eurl.includes("/Email/GatePass?GateId")) {
         this.gateid = this.route.snapshot.queryParams.gateid;
         this.gateid = eurl.split('=')[1];
         if (this.gateid) {
@@ -175,8 +189,10 @@ export class NavMenuComponent implements OnInit {
         }
       }
 
-      //Gate Pass PM approver to FM approver
-      if (eurl.includes("/Email/GatePassFMList?gateid")) {
+      
+      //Purpose: << Gate Pass PM approver to FM approver >>
+
+      if (eurl.includes("/Email/GatePassFMList?GateId")) {
         this.fmgateid = this.route.snapshot.queryParams.gateid;
         this.fmgateid = eurl.split('=')[1];
         if (this.fmgateid) {
@@ -185,8 +201,10 @@ export class NavMenuComponent implements OnInit {
         }
       }
 
-      //Notify to Finance
-      if (eurl.includes("/Email/GRNotification?grnno")) {
+      
+      //Purpose: << Notify to Finance>>
+
+      if (eurl.includes("/Email/GRNotification?GRNo")) {
         this.grnno = this.route.snapshot.queryParams.grnno;
         this.grnno = eurl.split('=')[1];
         if (this.grnno) {
@@ -332,6 +350,7 @@ export class NavMenuComponent implements OnInit {
     this.items.push({ label: 'Finance Approval', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GatePassFMList') });
     this.router.navigateByUrl('WMS/GatePassPMList');
   }
+    //Purpose:<<Inventory Clerk>>
 
   bindMenuForGatePassInventoryClerkEmails() {
     debugger;
@@ -361,7 +380,7 @@ export class NavMenuComponent implements OnInit {
     let element1: HTMLDivElement = document.getElementById("menudiv") as HTMLDivElement;
     element1.hidden = false;
   }
-  //Finance
+  //Purpose:<<Finance>>
   bindMenuFinance() {
     this.items = [];
     this.emp.roleid = "10";
@@ -371,10 +390,13 @@ export class NavMenuComponent implements OnInit {
     let element1: HTMLDivElement = document.getElementById("menudiv") as HTMLDivElement;
     element1.hidden = false;
   }
+
+  //Purpose:<<Approver>>
+
   bindMenuForGatePassEmails() {
     debugger;
     this.items = [];
-    this.emp.roleid = "8";//Approver
+    this.emp.roleid = "8";
    
     this.items.push({ label: 'Manager Approval', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GatePassPMList') });
           this.items.push({ label: 'Finance Approval', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GatePassFMList') });
@@ -392,10 +414,13 @@ export class NavMenuComponent implements OnInit {
     element1.hidden = false;
 
   }
+
+    //Purpose:<<Quality Control>>
+
   bindMenuForQualityCheckEmails() {
     debugger;
     this.items = [];
-    this.emp.roleid = "9";//Quality Control
+    this.emp.roleid = "9";
     this.items.push({ label: 'Home', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-home', command: () => this.router.navigateByUrl('WMS/Home'), styleClass: 'active' });
     this.items.push({ label: 'Quality Check', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/QualityCheck') });
 
@@ -406,7 +431,10 @@ export class NavMenuComponent implements OnInit {
     element1.hidden = false;
    
   }
-  bindMenuForPMEmails() {//Inventory Clerk
+
+      //Purpose:<<Inventory Clerk>>
+
+  bindMenuForPMEmails() {
     this.items = [];
     this.emp.roleid = "3";//project manager
     this.items.push({ label: 'Home', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-home', command: () => this.router.navigateByUrl('WMS/Home'), styleClass: 'active' });
@@ -432,6 +460,8 @@ export class NavMenuComponent implements OnInit {
     let element1: HTMLDivElement = document.getElementById("menudiv") as HTMLDivElement;
     element1.hidden = false;
   }
+    //Purpose:<<Project Manager>>
+
   bindMenuForIMEmails() {//inventory clerk
     this.items = [];
     this.emp.roleid = "5";//Project Manager
@@ -448,6 +478,8 @@ export class NavMenuComponent implements OnInit {
     let element1: HTMLDivElement = document.getElementById("menudiv") as HTMLDivElement;
     element1.hidden = false;
   }
+   //Purpose:<<Project Manager>>
+
   bindMenuForPMACKEmails() {//inventory clerk
     this.items = [];
     this.emp.roleid = "5";//Project Manager
@@ -463,6 +495,8 @@ export class NavMenuComponent implements OnInit {
     let element1: HTMLDivElement = document.getElementById("menudiv") as HTMLDivElement;
     element1.hidden = false;
   }
+
+    //Purpose:<<Inventory Enquiry>>
 
   bindMenuForEmail() {
     debugger;
