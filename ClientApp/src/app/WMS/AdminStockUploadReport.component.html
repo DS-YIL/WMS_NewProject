@@ -1,0 +1,152 @@
+<div class="card commoncardcss" style="margin:10px" *ngIf="viewdetail">
+    <div class="card-header text-center commoncardheader">
+      <div class="row" style="margin-top: 10px;
+    margin-left: 0px !important;
+    margin-right: 0px !important">
+        <div class="col-lg-4 col-md-4">
+          <button type="button" icon="fa fa-arrow-left" pButton aria-hidden="true" pTooltip="Back" (click)="backtomain()" style="float: left;
+    height: 26px;"></button>
+        </div>
+        <div class="col-lg-4 col-md-4 text-center">
+          <span style="color:#428bca;font-size:18px" class="commonheadertext">
+            <i class="fa fa-check-circle-o commonheadertext"></i>&nbsp;Initial Stock Upload Details
+          </span>
+        </div>
+        <div class="col-lg-4 col-md-4 form-inline"></div>
+      </div>
+
+    </div>
+    <div class="card-body">
+      <div class="row" style="margin-top:0px;">
+        <div class="col-lg-3 col-md-3 labelheading" style="font-weight:600;font-size:14px;color:darkblue;">
+          File Name : <span class="labeltext">{{lblfilename}}</span>
+        </div>
+        <div class="col-lg-3 col-md-3 labelheading" style="font-weight: 600;font-size: 14px;color: darkblue;resize: none">
+          <span>Upload Date : </span><span class="labeltext">{{lbldate | date : 'dd/MM/yyyy'}}</span>
+        </div>
+        <div class="col-lg-3 col-md-3 labelheading" style="font-weight: 600;font-size: 14px;color: darkblue;resize: none">
+          <span>{{lblvalue}} : </span><span class="labeltext">{{lblqty}}</span>
+        </div>
+        
+
+      </div>
+      <p-table #dt [value]="getlistdata" [style]="{'box-shadow' : '5px 5px #888888'}"
+               [scrollable]="true" scrollHeight="65vh">
+        <ng-template pTemplate="header">
+          <tr class="mprltbldata">
+            <th class="ptable-cell" style="text-align:center;width:70px;">Sl.No.</th>
+            <th class="ptable-cell" style="text-align:center;">Material</th>
+            <th class="ptable-cell" style="text-align:center;width:200px;">Material Description</th>
+            <th class="ptable-cell" style="text-align:center;">Store</th>
+            <th class="ptable-cell" style="text-align:center;">Rack</th>
+            <th class="ptable-cell" style="text-align:center;">Bin</th>
+            <th class="ptable-cell" style="text-align:center;">Quantity</th>
+            <th class="ptable-cell" style="text-align:center;">Value</th>
+            <th class="ptable-cell" style="text-align:center;">Project Id</th>
+            <th class="ptable-cell" style="text-align:center;">PONo</th>
+            <th class="ptable-cell" style="text-align:center;" *ngIf="viewexception">Exceptions</th>
+
+
+          </tr>
+          <tr>
+            <th></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'material', 'startsWith')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'materialdescription', 'contains')"></th>
+            <th><input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'locatorname', 'startsWith')"></th>
+            <th><input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'racknumber', 'startsWith')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'binnumber', 'startsWith')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'availableqty', 'startsWith')"></th>
+            <th><input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'value', 'startsWith')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'projectid', 'startsWith')"></th>
+            <th><input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'pono', 'startsWith')"></th>
+            <th *ngIf="viewexception"><input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'exceptions', 'contains')"></th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex" let-rindex=0>
+          <tr>
+            <td class="ptable-cell" style="text-align:right;width:70px;"> {{ri+1}} </td>
+            <td class="ptable-cell" style="text-align:center"> {{rowData.material}} </td>
+            <td class="ptable-cell" style="text-align:left;width:200px;"> {{rowData.materialdescription}} </td>
+            <td class="ptable-cell" style="text-align:center;">{{rowData.locatorname}} </td>
+            <td class="ptable-cell" style="text-align:center;">{{rowData.racknumber}} </td>
+            <td class="ptable-cell" style="text-align:center;">{{rowData.binnumber}} </td>
+            <td class="ptable-cell" style="text-align:right;">{{rowData.availableqty}} </td>
+            <td class="ptable-cell" style="text-align:right;">{{rowData.value}} </td>
+            <td class="ptable-cell" style="text-align:center;">{{rowData.projectid}} </td>
+            <td class="ptable-cell" style="text-align:center;">{{rowData.pono}} </td>
+            <td class="ptable-cell" style="text-align:left;color:red;"*ngIf="viewexception">{{rowData.exceptions}} </td>
+
+</ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="4" style="text-align:center;color:red">No Records.</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+
+  <div style="margin: 5px;" *ngIf="viewmain">
+    <div class="card commoncardcss" style="margin:10px">
+      <div class="card-header text-center commoncardheader">
+        <div class="row text-center" style="margin-top:10px">
+          <div class="col-lg-12 col-md-12 text-center">
+            <span style="color:#428bca;font-size:18px" class="commonheadertext">
+              <i class="fa fa-check-circle-o commonheadertext"></i>&nbsp;Initial Stock Upload Report
+            </span>
+          </div>
+        </div>
+
+
+      </div>
+      <div class="card-body">
+        <p-table #dt1 [value]="getmainlistdata" [style]="{'box-shadow' : '5px 5px #888888'}"
+                 [scrollable]="true" scrollHeight="65vh">
+          <ng-template pTemplate="header">
+            <tr class="mprltbldata">
+              <th class="ptable-cell" style="text-align:center;width:70px;">Sl.No.</th>
+              <!--<th class="ptable-cell" style="text-align:center;">Code</th>-->
+              <th class="ptable-cell" style="text-align:center;">File Name</th>
+              <th class="ptable-cell" style="text-align:center;">Upload Date</th>
+              <th class="ptable-cell" style="text-align:center;">Total Records</th>
+              <th class="ptable-cell" style="text-align:center;">Success Records</th>
+              <th class="ptable-cell" style="text-align:center;">Exception Records</th>
+            </tr>
+            <tr>
+              <th></th>
+              <th> <input pInputText type="text" class="form-control" (input)="dt1.filter($event.target.value, 'uploadedfilename', 'startsWith')"></th>
+              <th> <p-calendar (onSelect)="onDateSelect($event)" appendTo="body" (onClearClick)="dt1.filter('', 'createddate', 'equals')" [showButtonBar]="true" styleClass="p-column-filter" placeholder="Upload Date" [readonlyInput]="true" dateFormat="dd/mm/yy"></p-calendar></th>
+              <th> <input pInputText type="text" class="form-control" (input)="dt1.filter($event.target.value, 'totalrecords', 'startsWith')"></th>
+              <th><input pInputText type="text" class="form-control" (input)="dt1.filter($event.target.value, 'successrecords', 'startsWith')"></th>
+              <th><input pInputText type="text" class="form-control" (input)="dt1.filter($event.target.value, 'exceptionrecords', 'startsWith')"></th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex" let-rindex=0>
+            <tr>
+              <td class="ptable-cell" style="text-align:right;width:70px;"> {{ri+1}} </td>
+              <!--<td class="ptable-cell" style="text-align:center"> {{rowData.uploadbatchcode}} </td>-->
+              <td class="ptable-cell" style="text-align:left;">
+                <span class="text-primary" style="text-decoration:underline;cursor:pointer" (click)="getalllist(rowData)">{{rowData.uploadedfilename}}</span>
+              </td>
+              <td class="ptable-cell" style="text-align:center;">{{rowData.createddate | date : 'dd/MM/yyyy'}} </td>
+              <td class="ptable-cell" style="text-align:right;">{{rowData.totalrecords}} </td>
+              <td class="ptable-cell" style="text-align:right;">
+                <span class="text-primary" style="text-decoration:underline;cursor:pointer" (click)="getlist(rowData)">{{rowData.successrecords}}
+                  </span>
+              </td>
+              <td class="ptable-cell" style="text-align:right;">
+                <span class="text-primary" style="text-decoration:underline;cursor:pointer" (click)="getexlist(rowData)">{{rowData.exceptionrecords}}</span>
+              </td>
+
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="4" style="text-align:center;color:red">No Records.</td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </div>
+
+  </div>
+

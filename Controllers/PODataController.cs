@@ -999,10 +999,25 @@ namespace WMS.Controllers
 		{
 			return await this._poService.getinitialstock(code);
 		}
+		[HttpGet("getinitialstockall")]
+		public async Task<IEnumerable<StockModel>> getinitialstockall(string code)
+		{
+			return await this._poService.getinitialstockall(code);
+		}
 		[HttpGet("getinitialstockEX")]
 		public async Task<IEnumerable<StockModel>> getinitialstockEX(string code)
 		{
 			return await this._poService.getinitialstockEX(code);
+		}
+		[HttpGet("getinitialstockReport")]
+		public async Task<IEnumerable<StockModel>> getinitialstockReport(string code)
+		{
+			return await this._poService.getinitialstockReport(code);
+		}
+		[HttpGet("getinitialstockReportGroup")]
+		public async Task<IEnumerable<StockModel>> getinitialstockReportgroup(string code)
+		{
+			return await this._poService.getinitialstockReportGroup(code);
 		}
 		[HttpPost("postputtestcrud")]
 		public string posttestcrud(testcrud data)

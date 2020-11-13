@@ -42,7 +42,7 @@ namespace WMS.Models
 
 	public class StagingStockModel
 	{
-		
+		public string uploadedfilename { get; set; }
 		public string uploadbatchcode { get; set; }
 		public string uploadedby { get; set; }
 		public string material { get; set; }

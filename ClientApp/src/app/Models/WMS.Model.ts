@@ -194,7 +194,13 @@ export class StockModel {
   materialdescription: string;
   value: number;
   projectid: string;
-  exceptions: string
+  exceptions: string;
+  uploadedfilename: string;
+  uploadbatchcode: string;
+  successrecords: number;
+  exceptionrecords: number;
+  totalrecords: number;
+
 }
 
 export class locataionDetailsStock {

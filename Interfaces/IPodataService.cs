@@ -205,7 +205,10 @@ Task<string> updateonholdrow(updateonhold datamodel);
 
         Task<IEnumerable<testcrud>> gettestcrud();
         Task<IEnumerable<StockModel>> getinitialstock(string code);
+        Task<IEnumerable<StockModel>> getinitialstockall(string code);
         Task<IEnumerable<StockModel>> getinitialstockEX(string code);
+        Task<IEnumerable<StockModel>> getinitialstockReport(string code);
+        Task<IEnumerable<StockModel>> getinitialstockReportGroup(string code);
         string posttestcrud(testcrud data);
         string deletetestcurd(int id);
         string updateSecurityPrintHistory(PrintHistoryModel model);

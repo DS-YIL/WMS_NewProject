@@ -233,6 +233,18 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to select material,materialdescription,store as locatorname,rack as racknumber,bin as binnumber,quantity as availableqty,value,projectid,pono,shelflifeexpiration as shelflife,
+        ///error_description as exceptions
+        ///from wms.st_initialstock
+        ///where uploadbatchcode = &apos;#code&apos;.
+        /// </summary>
+        public static string getallinitialstockdata {
+            get {
+                return ResourceManager.GetString("getallinitialstockdata", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to select projectcode as value, projectcode as text,Max(projectmanager) as projectmanager
         ///from wms.wms_project  where projectmanager is not null group by projectcode.
         /// </summary>
@@ -1584,7 +1596,35 @@ namespace WMS.Common {
         ///left outer join wms.wms_rd_locator loc on loc.locatorid = st.storeid
         ///left outer join wms.wms_rd_rack rac on rac.rackid = st.rackid
         ///left outer join wms.wms_rd_bin bn on bn.binid = st.binid
-        ///where st.initialstock is True and uploadbatchcode = &apos;#code&apos;.
+        ///where st.initialstock is True and st.createdby = &apos;#code&apos;.
+        /// </summary>
+        public static string initialstockreport {
+            get {
+                return ResourceManager.GetString("initialstockreport", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to select st.uploadbatchcode,Max(st.uploadedfilename) as uploadedfilename,Max(st.createddate) as createddate,
+        ///Count(*) as successrecords,
+        ///(select count(*) from wms.st_initialstock where dataloaderrors is True and uploadbatchcode = st.uploadbatchcode) as exceptionrecords,
+        ///(select count(*) from wms.st_initialstock where uploadbatchcode = st.uploadbatchcode) as totalrecords
+        ///from wms.wms_stock
+        ///st where st.initialstock is True and st.createdby = &apos;#code&apos; group by st.uploadbatchcode.
+        /// </summary>
+        public static string initialstockreportgroupby {
+            get {
+                return ResourceManager.GetString("initialstockreportgroupby", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to select st.materialid as material,mat.materialdescription,loc.locatorname,rac.racknumber,bn.binnumber,st.availableqty,st.value,st.projectid,st.pono,st.shelflife from wms.wms_stock st 
+        ///left outer join wms.&quot;MaterialMasterYGS&quot; mat on mat.material = st.materialid
+        ///left outer join wms.wms_rd_locator loc on loc.locatorid = st.storeid
+        ///left outer join wms.wms_rd_rack rac on rac.rackid = st.rackid
+        ///left outer join wms.wms_rd_bin bn on bn.binid = st.binid
+        ///where st.initialstock is True and st.uploadbatchcode = &apos;#cod [rest of string was truncated]&quot;;.
         /// </summary>
         public static string initialstockviewdata {
             get {
@@ -1671,9 +1711,9 @@ namespace WMS.Common {
         ///   Looks up a localized string similar to INSERT INTO wms.st_initialstock (material,materialdescription,store,rack,bin,quantity,grn,
         ///								 receiveddate,shelflifeexpiration,dateofmanufacture,dataenteredon,
         ///								 datasource,dataenteredby,createddate,DataloadErrors,error_description,stocktype,
-        ///								 category,unitprice,projectid,pono,value,uploadedby,uploadbatchcode) values (@material,@materialdescription,@store,
+        ///								 category,unitprice,projectid,pono,value,uploadedby,uploadbatchcode,uploadedfilename) values (@material,@materialdescription,@store,
         ///															@rack,@bin,@quantity,@grn,@receiveddate,@shelflifeexpiration,
-        ///															@dateofmanufacture,@dataenteredon,@ [rest of string was truncated]&quot;;.
+        ///															@dateofmanufacture [rest of string was truncated]&quot;;.
         /// </summary>
         public static string InsertInitialStock {
             get {

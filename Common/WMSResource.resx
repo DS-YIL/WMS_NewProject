@@ -1378,11 +1378,11 @@ left outer join wms."MaterialMasterYGS" ms on ms.material = mat.materialid</valu
     <value>INSERT INTO wms.st_initialstock (material,materialdescription,store,rack,bin,quantity,grn,
 								 receiveddate,shelflifeexpiration,dateofmanufacture,dataenteredon,
 								 datasource,dataenteredby,createddate,DataloadErrors,error_description,stocktype,
-								 category,unitprice,projectid,pono,value,uploadedby,uploadbatchcode) values (@material,@materialdescription,@store,
+								 category,unitprice,projectid,pono,value,uploadedby,uploadbatchcode,uploadedfilename) values (@material,@materialdescription,@store,
 															@rack,@bin,@quantity,@grn,@receiveddate,@shelflifeexpiration,
 															@dateofmanufacture,@dataenteredon,@datasource,
 															@dataenteredby,@createddate,@DataloadErrors,@error_description,
-															@stocktype,@category,@unitprice,@projectid,@pono,@value,@uploadedby,@uploadbatchcode)</value>
+															@stocktype,@category,@unitprice,@projectid,@pono,@value,@uploadedby,@uploadbatchcode,@uploadedfilename)</value>
   </data>
   <data name="initialstockviewdata" xml:space="preserve">
     <value>select st.materialid as material,mat.materialdescription,loc.locatorname,rac.racknumber,bn.binnumber,st.availableqty,st.value,st.projectid,st.pono,st.shelflife from wms.wms_stock st 
@@ -1390,7 +1390,7 @@ left outer join wms."MaterialMasterYGS" mat on mat.material = st.materialid
 left outer join wms.wms_rd_locator loc on loc.locatorid = st.storeid
 left outer join wms.wms_rd_rack rac on rac.rackid = st.rackid
 left outer join wms.wms_rd_bin bn on bn.binid = st.binid
-where st.initialstock is True and uploadbatchcode = '#code'</value>
+where st.initialstock is True and st.uploadbatchcode = '#code'</value>
   </data>
   <data name="dynamicemaildata" xml:space="preserve">
     <value>select auth.employeeid,rl.email from  wms.auth_users auth
@@ -1402,5 +1402,27 @@ where st.initialstock is True and uploadbatchcode = '#code'</value>
 error_description as exceptions
 from wms.st_initialstock
 where dataloaderrors is True and uploadbatchcode = '#code'</value>
+  </data>
+  <data name="getallinitialstockdata" xml:space="preserve">
+    <value>select material,materialdescription,store as locatorname,rack as racknumber,bin as binnumber,quantity as availableqty,value,projectid,pono,shelflifeexpiration as shelflife,
+error_description as exceptions
+from wms.st_initialstock
+where uploadbatchcode = '#code'</value>
+  </data>
+  <data name="initialstockreport" xml:space="preserve">
+    <value>select st.materialid as material,mat.materialdescription,loc.locatorname,rac.racknumber,bn.binnumber,st.availableqty,st.value,st.projectid,st.pono,st.shelflife from wms.wms_stock st 
+left outer join wms."MaterialMasterYGS" mat on mat.material = st.materialid
+left outer join wms.wms_rd_locator loc on loc.locatorid = st.storeid
+left outer join wms.wms_rd_rack rac on rac.rackid = st.rackid
+left outer join wms.wms_rd_bin bn on bn.binid = st.binid
+where st.initialstock is True and st.createdby = '#code'</value>
+  </data>
+  <data name="initialstockreportgroupby" xml:space="preserve">
+    <value>select st.uploadbatchcode,Max(st.uploadedfilename) as uploadedfilename,Max(st.createddate) as createddate,
+Count(*) as successrecords,
+(select count(*) from wms.st_initialstock where dataloaderrors is True and uploadbatchcode = st.uploadbatchcode) as exceptionrecords,
+(select count(*) from wms.st_initialstock where uploadbatchcode = st.uploadbatchcode) as totalrecords
+from wms.wms_stock
+st where st.initialstock is True and st.createdby = '#code' group by st.uploadbatchcode</value>
   </data>
 </root>
