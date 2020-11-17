@@ -10113,6 +10113,43 @@ namespace WMS.DAL
 		}
 
 		/*
+		Name of Function : <<get initial stock>>  Author :<<Ramesh>>  
+		Date of Creation <<11-11-2019>>
+		Purpose : <<get currently uploaded initial stock>>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
+		public async Task<IEnumerable<StockModel>> getinitialstockall(string code)
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				try
+				{
+					string testgetquery = WMSResource.getallinitialstockdata.Replace("#code", code);
+
+
+					await pgsql.OpenAsync();
+					var data = await pgsql.QueryAsync<StockModel>(
+					  testgetquery, null, commandType: CommandType.Text);
+					return data;
+
+
+
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "getinitialstock", Ex.StackTrace.ToString());
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+
+			}
+		}
+
+		/*
 		Name of Function : <<get initial stock Exception>>  Author :<<Ramesh>>  
 		Date of Creation <<11-11-2019>>
 		Purpose : <<get currently uploaded initial stock>>
@@ -10138,6 +10175,80 @@ namespace WMS.DAL
 				catch (Exception Ex)
 				{
 					log.ErrorMessage("PODataProvider", "gettestcrud", Ex.StackTrace.ToString());
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+
+			}
+		}
+
+		/*
+		Name of Function : <<get initial stock Report>>  Author :<<Ramesh>>  
+		Date of Creation <<13-11-2019>>
+		Purpose : <<get initial stock uploaded by loggedin user>>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
+		public async Task<IEnumerable<StockModel>> getinitialstockReport(string code)
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				try
+				{
+					string testgetquery = WMSResource.initialstockreport.Replace("#code", code);
+
+
+					await pgsql.OpenAsync();
+					var data = await pgsql.QueryAsync<StockModel>(
+					  testgetquery, null, commandType: CommandType.Text);
+					return data;
+
+
+
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "getinitialstockReport", Ex.StackTrace.ToString());
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+
+			}
+		}
+
+		/*
+		Name of Function : <<get initial stock Report Group by every insertion>>  Author :<<Ramesh>>  
+		Date of Creation <<13-11-2019>>
+		Purpose : <<get initial stock uploaded by loggedin user>>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
+		public async Task<IEnumerable<StockModel>> getinitialstockReportGroup(string code)
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				try
+				{
+					string testgetquery = WMSResource.initialstockreportgroupby.Replace("#code", code);
+
+
+					await pgsql.OpenAsync();
+					var data = await pgsql.QueryAsync<StockModel>(
+					  testgetquery, null, commandType: CommandType.Text);
+					return data.OrderByDescending(o=>o.createddate);
+
+
+
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "getinitialstockReport", Ex.StackTrace.ToString());
 					return null;
 				}
 				finally

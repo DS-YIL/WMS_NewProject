@@ -621,8 +621,17 @@ export class wmsService {
   getinitialStock(uploadcode: string): Observable<StockModel[]> {
     return this.http.get<StockModel[]>(this.url + 'POData/getinitialstock?code=' + uploadcode, this.httpOptions);
   }
+  getinitialStockAllrecords(uploadcode: string): Observable<StockModel[]> {
+    return this.http.get<StockModel[]>(this.url + 'POData/getinitialstockall?code=' + uploadcode, this.httpOptions);
+  }
   getinitialStockEX(uploadcode: string): Observable<StockModel[]> {
     return this.http.get<StockModel[]>(this.url + 'POData/getinitialstockEX?code=' + uploadcode, this.httpOptions);
+  }
+  getinitialStockReport(empno: string): Observable<StockModel[]> {
+    return this.http.get<StockModel[]>(this.url + 'POData/getinitialstockReport?code=' + empno, this.httpOptions);
+  }
+  getinitialStockReportGroup(empno: string): Observable<StockModel[]> {
+    return this.http.get<StockModel[]>(this.url + 'POData/getinitialstockReportGroup?code=' + empno, this.httpOptions);
   }
 
   posttestcrud(data: testcrud): Observable<any> {

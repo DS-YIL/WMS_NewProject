@@ -65,6 +65,7 @@ import { GatepassinwardreceiveComponent } from './WMS/Gatepassinwardreceive.comp
 import { MaterialTransferApprovalComponent } from './WMS/MaterialTransferApproval.component';
 import { PMDashboardComponent } from './WMS/PMDashboard.component';
 import { AdminStockUploadComponent } from './WMS/AdminStockUpload.component';
+import { AdminStockUploadReportComponent } from './WMS/AdminStockUploadReport.component';
 
 
 const routes: Routes = [{
@@ -147,7 +148,8 @@ const routes: Routes = [{
     { path: "gatepassreceive", component: GatepassinwardreceiveComponent, canActivate: [AuthGuard] },
     { path: "materialtransferapproval", component: MaterialTransferApprovalComponent, canActivate: [AuthGuard] },
     { path: "PMDashboard", component: PMDashboardComponent, canActivate: [AuthGuard] },
-    { path: "InitialStock", component: AdminStockUploadComponent, canActivate: [AuthGuard] }
+    { path: "InitialStock", component: AdminStockUploadComponent, canActivate: [AuthGuard] },
+    { path: "InitialStockReport", component: AdminStockUploadReportComponent, canActivate: [AuthGuard] }
   ]
   
 },

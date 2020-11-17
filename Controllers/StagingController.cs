@@ -457,6 +457,7 @@ namespace WMS.Controllers
 					string filename = postedfile.FileName;
 					int index = filename.IndexOf('_');
 					string uploadedby = filename.Substring(0, index);
+					string uploadedfilename = filename.Substring(index+1);
 					var folderName = Path.Combine("Resources", "documents");
 					var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
 
@@ -535,6 +536,7 @@ namespace WMS.Controllers
 						initialstk.datasource = Conversion.toStr(row["DataSource"]);
 						initialstk.dataenteredby = Conversion.toStr(row["Data Entered By"]); ;
 						initialstk.createddate = System.DateTime.Now;
+						initialstk.uploadedfilename = uploadedfilename;
 						if (string.IsNullOrEmpty(initialstk.projectid) || initialstk.projectid == "")
                         {
 							initialstk.stocktype = "Plant Stock";
@@ -606,7 +608,8 @@ namespace WMS.Controllers
                             initialstk.pono,
                             initialstk.value,
 							initialstk.uploadedby,
-							initialstk.uploadbatchcode
+							initialstk.uploadbatchcode,
+							initialstk.uploadedfilename
                         });
 
                         rowsinserted = rowsinserted + 1;
@@ -671,6 +674,8 @@ namespace WMS.Controllers
 
 					int rowinserted = 0;
 					string uploadcode = batchcode;
+
+					DateTime currentdate = DateTime.Now;
 					
                     foreach (StagingStockModel stag_data in stagingList)
 					{
@@ -799,7 +804,7 @@ namespace WMS.Controllers
 							stock.totalquantity = stag_data.quantity;
 							stock.availableqty = stag_data.quantity;
 							stock.shelflife = stag_data.shelflifeexpiration;
-							stock.createddate = DateTime.Now;
+							stock.createddate = currentdate;
 							stock.materialid = stag_data.material;
 							stock.initialstock = true;
 							string itemlocation = stag_data.store + "." + stag_data.rack;
@@ -816,7 +821,7 @@ namespace WMS.Controllers
 							}
 
 							//insert wms_stock ##storeid, binid,rackid,totalquantity,shelflife ,createddate,materialid ,initialstock
-							var insertquery = "INSERT INTO wms.wms_stock(storeid, binid,rackid,itemlocation,totalquantity,availableqty,shelflife ,createddate,materialid ,initialstock,stcktype,unitprice,value,pono,projectid,createdby,uploadbatchcode)VALUES(@storeid, @bindata,@rackid,@itemlocation,@totalquantity,@availableqty,@shelflife ,@createddate,@materialid ,@initialstock,@stocktype,@unitprice,@value,@pono,@projectid,@uploadedby,@uploadcode)";
+							var insertquery = "INSERT INTO wms.wms_stock(storeid, binid,rackid,itemlocation,totalquantity,availableqty,shelflife ,createddate,materialid ,initialstock,stcktype,unitprice,value,pono,projectid,createdby,uploadbatchcode,uploadedfilename)VALUES(@storeid, @bindata,@rackid,@itemlocation,@totalquantity,@availableqty,@shelflife ,@createddate,@materialid ,@initialstock,@stocktype,@unitprice,@value,@pono,@projectid,@uploadedby,@uploadcode,@uploadedfilename)";
 							var results = pgsql.ExecuteScalar(insertquery, new
 							{
 								stock.storeid,
@@ -835,7 +840,8 @@ namespace WMS.Controllers
 								stag_data.pono,
 								stag_data.projectid,
 								stag_data.uploadedby,
-								uploadcode
+								uploadcode,
+								stag_data.uploadedfilename
 							});
 
 							Trans.Commit();

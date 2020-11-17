@@ -278,6 +278,13 @@ namespace WMS.Models
 
 		public Decimal? value { get; set; }
 		public string projectid { get; set; }
+		public string  uploadedfilename { get; set; }
+		public string uploadbatchcode { get; set; }
+
+		public int successrecords { get; set; }
+		public int exceptionrecords { get; set; }
+		public int totalrecords { get; set; }
+
 
 	}
 	public class trackstatusModel
@@ -1439,6 +1446,7 @@ public class MaterialReturn
 
 public class initialStock
 {
+	public string uploadedfilename { get; set; }
 	public string uploadbatchcode { get; set; }
 	public string uploadedby { get; set; }
 	public string material { get; set; }
