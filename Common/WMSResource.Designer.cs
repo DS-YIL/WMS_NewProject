@@ -1579,6 +1579,27 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Select st.materialid as material,Max(mat.materialdescription)  as materialdescription, SUM(st.availableqty) as availableqty,
+        ///(Max(mat.unitprice) * SUM(st.availableqty)) as value
+        ///from wms.wms_stock st left outer join wms.&quot;MaterialMasterYGS&quot; mat on mat.material = st.materialid group by st.materialid.
+        /// </summary>
+        public static string inhandmaterial {
+            get {
+                return ResourceManager.GetString("inhandmaterial", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to select itemlocation,SUM(availableqty) as quantity from wms.wms_stock where materialid = &apos;#material&apos; and availableqty &gt; 0
+        ///group by itemlocation.
+        /// </summary>
+        public static string inhandmateriallocation {
+            get {
+                return ResourceManager.GetString("inhandmateriallocation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to select material,materialdescription,store as locatorname,rack as racknumber,bin as binnumber,quantity as availableqty,value,projectid,pono,shelflifeexpiration as shelflife,
         ///error_description as exceptions
         ///from wms.st_initialstock

@@ -98,6 +98,7 @@ import { MaterialTransferApprovalComponent } from './WMS/MaterialTransferApprova
 import { PMDashboardComponent } from './WMS/PMDashboard.component';
 import { AdminStockUploadComponent } from './WMS/AdminStockUpload.component';
 import { AdminStockUploadReportComponent } from './WMS/AdminStockUploadReport.component';
+import { InhandMaterialComponent } from './WMS/InhandMaterial.component';
 ////pages
 import { LoginComponent } from './WMS/Login.component';
 import {HomeComponent} from './WMS/Home.component';
@@ -187,7 +188,8 @@ import { FieldsetModule } from 'primeng/fieldset';
     MaterialTransferApprovalComponent,
     PMDashboardComponent,
     AdminStockUploadComponent,
-    AdminStockUploadReportComponent
+    AdminStockUploadReportComponent,
+    InhandMaterialComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

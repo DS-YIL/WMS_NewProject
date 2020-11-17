@@ -631,6 +631,19 @@ export class testcrud {
   ismanager: boolean
 }
 
+export class MaterialinHand {
+  material: string;
+  materialdescription: string;
+  availableqty: number;
+  value: number;
+  locations: matlocations[];
+}
+
+export class matlocations {
+  itemlocation : string
+  quantity: number
+}
+
 export class WMSHttpResponse {
   message:string
 }
