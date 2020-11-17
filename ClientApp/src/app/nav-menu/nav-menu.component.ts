@@ -54,6 +54,7 @@ export class NavMenuComponent implements OnInit {
   gateid: string = "";
   fmgateid: string = "";
   gateentryid: string = "";
+  inwmasterid: string = "";
   ngOnInit() {
     debugger;
     this.cars = [
@@ -92,7 +93,7 @@ export class NavMenuComponent implements OnInit {
       let element1: HTMLDivElement = document.getElementById("menudiv") as HTMLDivElement;
       element1.hidden = false;
       if (eurl.includes("/Email/GRNPosting?GateEntryNo")) {
-        //this.poinvoice = this.route.snapshot.queryParams.pono;
+        this.inwmasterid = this.route.snapshot.queryParams.gateentryid;
         if (this.gateentryid) {
 
           //redirects to Receipts page 
@@ -104,6 +105,7 @@ export class NavMenuComponent implements OnInit {
        //Purpose: << Receipts >>
 
       if (eurl.includes("/Email/GRNPosting?GRNo")) {
+      debugger;
         this.grnno = this.route.snapshot.queryParams.grnno;
         this.grnno = eurl.split('=')[1];
         if (this.grnno) {
@@ -115,6 +117,7 @@ export class NavMenuComponent implements OnInit {
        //Purpose: << Quality check >>
 
       if (eurl.includes("/Email/QualityCheck?GRNo")) {
+        debugger;
         //this.grnno = this.route.snapshot.queryParams.grnnumber;
         this.grnno = this.route.snapshot.queryParams.grnnumber;
         this.grnno = eurl.split('=')[1];
@@ -495,42 +498,35 @@ export class NavMenuComponent implements OnInit {
     let element1: HTMLDivElement = document.getElementById("menudiv") as HTMLDivElement;
     element1.hidden = false;
   }
-
-    //Purpose:<<Inventory Enquiry>>
+ 
+    //Purpose:<<Inventory clerk login>>
 
   bindMenuForEmail() {
     debugger;
     //this.itemsrole = 2;
-    // Inventory clerk login
     this.items = [];
-    this.emp.roleid = "2";//Inventory Enquiry
-
+    this.emp.roleid = "3";
     this.items.push({ label: 'Home', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-home', command: () => this.router.navigateByUrl('WMS/Home'), styleClass: 'active' });
+    this.items.push({ label: 'Receipts', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GRNPosting') });
+    //this.items.push({ label: 'Quality Check', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/QualityCheck') });
+    this.items.push({ label: 'Put Away', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/WarehouseIncharge') });
+    this.items.push({ label: 'On Hold Receipts', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/HoldGRView') });
+    this.items.push({ label: 'Gate Pass', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GatePass') });
+    this.items.push({ label: 'Material Return', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReturn') });
+    this.items.push({ label: 'Material Issue', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialIssueDashboard') });
+    this.items.push({ label: 'MIN', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MRNView') });
+    this.items.push({ label: 'ASN', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/ASNView') });
     this.items.push({
-      label: 'Inventory Ageing',
-      icon: 'pi pi-fw pi-bars',
-      style: { 'font-weight': '600' },
+      label: 'Operations', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars',
       items: [
-        { label: 'Obsolete Inventory', style: { 'font-weight': '600', 'width': '200px' }, icon: 'pi pi-fw pi-caret-right', command: () => this.router.navigateByUrl('WMS/ObsoleteInventoryMovement') },
-        { label: 'Excess Inventory', style: { 'font-weight': '600', 'width': '200px' }, icon: 'pi pi-fw pi-caret-right', command: () => this.router.navigateByUrl('WMS/ExcessInventoryMovement') },
+        { label: 'Print Barcode', icon: 'pi pi-fw pi-print', style: { 'width': '200px' }, command: () => this.router.navigateByUrl('WMS/PrintBarcode') },
+        { label: 'Notify to finance', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/Putawaynotify') },
+        { label: 'Receive gatepass', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/gatepassreceive') },
+        { label: 'Test', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/Test') }
       ]
     });
-    this.items.push({
-      label: 'ABC Analysis',
-      icon: 'pi pi-fw pi-bars',
-      style: { 'font-weight': '600' },
-      items: [
-        { label: 'ABC Classification', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-caret-right', command: () => this.router.navigateByUrl('WMS/ABCCategory') },
-        { label: 'ABC Analysis', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-caret-right', command: () => this.router.navigateByUrl('WMS/ABCAnalysis') },
-      ]
-    });
-    this.items.push({ label: 'Material Tracking', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/POStatus') });
-    this.items.push({ label: 'Safety Stock List', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/SafetyStockList') });
-    this.items.push({ label: 'Bin Status Report', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/BinStatusReport') });
-    this.items.push({ label: 'Outward/Inward Report', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/outinDashboard') });
-
     if (this.poinvoice != null) {
-      this.router.navigate(['WMS/GRNPosting'], { queryParams: { pono: this.poinvoice } });
+      this.router.navigate(['WMS/GRNPosting'], { queryParams: { inwmasterid: this.gateentryid } });
     }
     else {
       if (this.grnno != null) {
