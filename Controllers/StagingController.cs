@@ -512,6 +512,7 @@ namespace WMS.Controllers
 					rows = dtexcel.Rows.Count.ToString();
 					string Error_Description_all = "";
 					int i = 1;
+					DateTime createdate = DateTime.Now; 
 					foreach (DataRow row in dtexcel.Rows)
 					{
 
@@ -535,7 +536,7 @@ namespace WMS.Controllers
 						initialstk.dataenteredon = Conversion.TodtTime(row["Data Entered On"]);
 						initialstk.datasource = Conversion.toStr(row["DataSource"]);
 						initialstk.dataenteredby = Conversion.toStr(row["Data Entered By"]); ;
-						initialstk.createddate = System.DateTime.Now;
+						initialstk.createddate = createdate;
 						initialstk.uploadedfilename = uploadedfilename;
 						if (string.IsNullOrEmpty(initialstk.projectid) || initialstk.projectid == "")
                         {

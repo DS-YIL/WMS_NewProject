@@ -1627,11 +1627,11 @@ namespace WMS.Common {
         
         /// <summary>
         ///   Looks up a localized string similar to select st.uploadbatchcode,Max(st.uploadedfilename) as uploadedfilename,Max(st.createddate) as createddate,
-        ///Count(*) as successrecords,
+        ///Count(*) as totalrecords,
         ///(select count(*) from wms.st_initialstock where dataloaderrors is True and uploadbatchcode = st.uploadbatchcode) as exceptionrecords,
-        ///(select count(*) from wms.st_initialstock where uploadbatchcode = st.uploadbatchcode) as totalrecords
-        ///from wms.wms_stock
-        ///st where st.initialstock is True and st.createdby = &apos;#code&apos; group by st.uploadbatchcode.
+        ///(select count(*) from wms.wms_stock where uploadbatchcode = st.uploadbatchcode) as successrecords
+        ///from wms.st_initialstock 
+        ///st where st.uploadedby = &apos;#code&apos; group by st.uploadbatchcode.
         /// </summary>
         public static string initialstockreportgroupby {
             get {

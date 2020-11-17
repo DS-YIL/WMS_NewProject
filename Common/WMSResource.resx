@@ -1419,11 +1419,11 @@ where st.initialstock is True and st.createdby = '#code'</value>
   </data>
   <data name="initialstockreportgroupby" xml:space="preserve">
     <value>select st.uploadbatchcode,Max(st.uploadedfilename) as uploadedfilename,Max(st.createddate) as createddate,
-Count(*) as successrecords,
+Count(*) as totalrecords,
 (select count(*) from wms.st_initialstock where dataloaderrors is True and uploadbatchcode = st.uploadbatchcode) as exceptionrecords,
-(select count(*) from wms.st_initialstock where uploadbatchcode = st.uploadbatchcode) as totalrecords
-from wms.wms_stock
-st where st.initialstock is True and st.createdby = '#code' group by st.uploadbatchcode</value>
+(select count(*) from wms.wms_stock where uploadbatchcode = st.uploadbatchcode) as successrecords
+from wms.st_initialstock 
+st where st.uploadedby = '#code' group by st.uploadbatchcode</value>
   </data>
   <data name="inhandmaterial" xml:space="preserve">
     <value>Select st.materialid as material,Max(mat.materialdescription)  as materialdescription, SUM(st.availableqty) as availableqty,
