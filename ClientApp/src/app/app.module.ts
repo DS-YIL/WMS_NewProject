@@ -98,6 +98,9 @@ import { MaterialTransferApprovalComponent } from './WMS/MaterialTransferApprova
 import { PMDashboardComponent } from './WMS/PMDashboard.component';
 import { AdminStockUploadComponent } from './WMS/AdminStockUpload.component';
 import { AdminStockUploadReportComponent } from './WMS/AdminStockUploadReport.component';
+import { InitialStockLoadComponent } from './WMS/InitialStockLoad.component';
+
+
 import { InhandMaterialComponent } from './WMS/InhandMaterial.component';
 ////pages
 import { LoginComponent } from './WMS/Login.component';
@@ -189,6 +192,7 @@ import { FieldsetModule } from 'primeng/fieldset';
     PMDashboardComponent,
     AdminStockUploadComponent,
     AdminStockUploadReportComponent,
+    InitialStockLoadComponent,
     InhandMaterialComponent
   ],
   imports: [

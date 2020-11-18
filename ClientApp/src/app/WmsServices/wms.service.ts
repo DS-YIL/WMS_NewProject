@@ -640,6 +640,10 @@ export class wmsService {
   getinitialStockReportGroup(empno: string): Observable<StockModel[]> {
     return this.http.get<StockModel[]>(this.url + 'POData/getinitialstockReportGroup?code=' + empno, this.httpOptions);
   }
+  //Amulya
+  getinitialStockLoad(): Observable<StockModel[]> {
+    return this.http.get<StockModel[]>(this.url + 'POData/getinitialstockload/', this.httpOptions);
+  }
 
   posttestcrud(data: testcrud): Observable<any> {
     const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }), responseType: 'text' as any };

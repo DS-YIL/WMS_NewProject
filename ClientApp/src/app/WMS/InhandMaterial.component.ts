@@ -28,9 +28,10 @@ export class InhandMaterialComponent implements OnInit {
   lblmaterial: string = "";
   lblmaterialdesc: string = "";
   response: WMSHttpResponse;
-
-
-  
+  //availableValues= [];
+  value: any;
+  totalLength: any;
+  totalLengthValues: any;
 
   ngOnInit() {
     if (localStorage.getItem("Employee"))
@@ -62,12 +63,31 @@ export class InhandMaterialComponent implements OnInit {
 
   getlist() {
     this.getlistdata = [];
-    this.spinner.show();
+   this.spinner.show();
     this.wmsService.getmatinhand().subscribe(data => {
       this.getlistdata = data;
+      this.getTotalCount(data);
       this.spinner.hide();
     });
   }
+  getTotalCount(data) {
+    let availableValues = [];
+    let totalValues = [];
+    for (let i = 0;i< data.length; i++) {
+      availableValues.push(data[i].availableqty)
+      totalValues.push(data[i].value)
+    }
+  
 
+    this.totalLength = availableValues.reduce(function (a, b) {
+      return a + b;
+    }, 0);
 
+    this.totalLengthValues = totalValues.reduce(function (a, b) {
+      return a + b;
+    }, 0);
+
+   
+  }
+  
 }

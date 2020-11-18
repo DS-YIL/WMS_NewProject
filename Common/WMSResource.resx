@@ -1434,6 +1434,16 @@ from wms.wms_stock st left outer join wms."MaterialMasterYGS" mat on mat.materia
     <value>select itemlocation,SUM(availableqty) as quantity from wms.wms_stock where materialid = '#material' and availableqty &gt; 0
 group by itemlocation</value>
   </data>
+  <data name="initialstockloadgroupby" xml:space="preserve">
+    <value>select st.uploadbatchcode,Max(st.uploadedfilename) as uploadedfilename,Max(st.createddate) as createddate,Max (e.name ) as createdby,
+ Max (st.createddate ) as createddate ,
+Count(*) as totalrecords,
+(select count(*) from wms.st_initialstock where dataloaderrors is True and uploadbatchcode = st.uploadbatchcode) as exceptionrecords,
+(select count(*) from wms.wms_stock where uploadbatchcode = st.uploadbatchcode) as successrecords 
+from wms.st_initialstock st 
+left outer join wms.employee e on e.employeeno = st.uploadedby 
+group by st.uploadbatchcode</value>
+  </data>
   <data name="materiallablestaginginsert" xml:space="preserve">
     <value>INSERT INTO wms.WMS_ST_MaterialLabel(po,polineitemno,serialno,material,mscode,saleorderno,solineitemno,saleordertype,insprec,linkageno,customername,shipto,plant,gr,shippingpoint,projectiddef,loadingdate,custpo,partno,grno,codetype,description) values
 (@po,@polineitemno,@serialno,@material,@mscode,@saleorderno,@solineitemno,@saleordertype,@insprec,@linkageno,@customername,@shipto,@plant,@gr,@shippingpoint,@projectiddef,@loadingdate,@custpo,@partno,@grnno,@codetype,@description )</value>

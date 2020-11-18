@@ -10325,6 +10325,37 @@ namespace WMS.DAL
 
 			}
 		}
+		//Amulya
+		public async Task<IEnumerable<StockModel>> getinitialstockload(string code)
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				try
+				{
+					string testgetquery = WMSResource.initialstockloadgroupby.Replace("#code", code);
+
+
+					await pgsql.OpenAsync();
+					var data = await pgsql.QueryAsync<StockModel>(
+					  testgetquery, null, commandType: CommandType.Text);
+					return data.OrderByDescending(o => o.createddate);
+
+
+
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "getinitialstockReport", Ex.StackTrace.ToString());
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+
+			}
+		}
 
 		/*
 		Name of Function : <<posttestcrud>>  Author :<<Ramesh>>  

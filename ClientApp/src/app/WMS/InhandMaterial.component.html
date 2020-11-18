@@ -1,97 +1,114 @@
 <div class="card" style="margin-left:10px;margin-right:10px;">
   <div class="card-header text-center commoncardheader">
-    <div class="row text-center" style="margin-top:10px">
+    <div class="row text-center" style="margin-top:20px">
       <div class="col-lg-12 col-md-12 text-center">
         <span style="color:#428bca;font-size:18px" class="commonheadertext">
           <i class="fa fa-check-circle-o commonheadertext"></i>&nbsp;Inventory Report
         </span>
       </div>
+
     </div>
 
 
   </div>
-</div>
-<div class="row " style="margin-right:15px;margin-left:15px;">
-  <p-table #dt [value]="getlistdata" [style]="{'overflow':'auto!important','box-shadow' : '5px 5px #888888'}"
-           [scrollable]="true" scrollHeight="65vh">
-    <ng-template pTemplate="header">
-      <tr class="mprltbldata">
-        <th class="ptable-cell" style="text-align:center;width:70px;">Sl.No.</th>
-        <th class="ptable-cell" style="text-align:center;">Material</th>
-        <th class="ptable-cell" style="text-align:center;">Material Description</th>
-        <th class="ptable-cell" style="text-align:center;">Available Qty</th>
-        <th class="ptable-cell" style="text-align:center;">Value(in Rs.)</th>
-        <th class="ptable-cell" style="text-align:center;width:100px;"></th>
-      </tr>
-      <tr>
-        <th></th>
-        <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'material', 'startsWith')"></th>
-        <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'materialdescription', 'contains')"></th>
-        <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'availableqty', 'startsWith')"></th>
-        <th><input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'value', 'startsWith')"></th>
-        <th></th>
-      </tr>
-    </ng-template>
-    <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex" let-rindex=0>
-      <tr>
-        <td class="ptable-cell" style="text-align:center;width:70px;"> {{ri + 1}} </td>
-        <td class="ptable-cell" style="text-align:center;"> {{rowData.material}} </td>
-        <td class="ptable-cell" style="text-align:left;">{{rowData.materialdescription}} </td>
-        <td class="ptable-cell" style="text-align:right;">{{rowData.availableqty}} </td>
-        <td class="ptable-cell" style="text-align:right;">{{rowData.value | number : '1.2-2'}} </td>
-        <td class="ptable-cell" style="text-align:center;width:100px;">
-          <a class="text-primary" style="text-decoration:underline;cursor:pointer"(click)="getlocations(rowData.material,rowData)">Location</a>
-        </td>
-      </tr>
-</ng-template>
-    <ng-template pTemplate="emptymessage">
-      <tr>
-        <td colspan="4" style="text-align:center;color:red">No Records.</td>
-      </tr>
-    </ng-template>
-  </p-table>
-</div>
-<p-dialog header="Material Locations" [(visible)]="showadddatamodel" (onHide)="refreshsavemodel()" [modal]="true" [style]="{width: '60vw'}" [baseZIndex]="10000"
-          [draggable]="false" [resizable]="false">
-  <div class="row">
-    <div class="col-lg-6 col-md-6">
-      <div class="form-inline">
-        <label class="labelheading">Material:</label>&nbsp;&nbsp;
-        <label class="labeltext"><span>{{lblmaterial}}</span></label>&nbsp;&nbsp;
-      </div>
+  <div class="card-body">
+   
 
-    </div>
-    <div class="col-lg-6 col-md-6">
-      <div class="form-inline" style="float:right">
-        <label class="labelheading">Material Description:</label>&nbsp;&nbsp;
-        <label class="labeltext"><span>{{lblmaterialdesc}}</span></label>&nbsp;&nbsp;
-      </div>
+    <div class="row" style="margin-top:0px;">
+        <div class="col-lg-2 col-md-2 labelheading" style="font-weight:600;font-size:14px;color:darkblue;margin-left: 850px">
+      Total Inventory :<span class="labeltext">{{totalLength}}</span>
+        </div>
+        <div  style="font-weight: 600;font-size: 14px;color: darkblue; ">
+          Total Value :<span class="labeltext">{{totalLengthValues | number : '1.2-2'}}</span>
+        </div>
+     </div>
 
-    </div>
 
+
+    <!--<div class="row " style="margin-right:15px;margin-left:15px;">-->
+    <p-table #dt [value]="getlistdata" [style]="{'overflow':'auto!important','box-shadow' : '5px 5px #888888'}"
+             [scrollable]="true" scrollHeight="65vh">
+      <ng-template pTemplate="header">
+        <tr class="mprltbldata">
+          <th class="ptable-cell" style="text-align:center;width:70px;">Sl.No.</th>
+          <th class="ptable-cell" style="text-align:center;">Material</th>
+          <th class="ptable-cell" style="text-align:center;">Material Description</th>
+          <th class="ptable-cell" style="text-align:center;">Available Qty</th>
+          <th class="ptable-cell" style="text-align:center;">Value(in Rs.)</th>
+          <th class="ptable-cell" style="text-align:center;width:100px;"></th>
+        </tr>
+        <tr>
+          <th></th>
+          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'material', 'startsWith')"></th>
+          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'materialdescription', 'contains')"></th>
+          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'availableqty', 'startsWith')"></th>
+          <th><input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'value', 'startsWith')"></th>
+          <th></th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex" let-rindex=0>
+        <tr>
+          <td class="ptable-cell" style="text-align:center;width:70px;"> {{ri + 1}} </td>
+          <td class="ptable-cell" style="text-align:center;"> {{rowData.material}} </td>
+          <td class="ptable-cell" style="text-align:left;">{{rowData.materialdescription}} </td>
+          <td class="ptable-cell" style="text-align:right;">{{rowData.availableqty}} </td>
+          <td class="ptable-cell" style="text-align:right;">{{rowData.value | number : '1.2-2'}} </td>
+          <td class="ptable-cell" style="text-align:center;width:100px;">
+            <a class="text-primary" style="text-decoration:underline;cursor:pointer" (click)="getlocations(rowData.material,rowData)">Location</a>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="4" style="text-align:center;color:red">No Records.</td>
+        </tr>
+      </ng-template>
+    </p-table>
+    <!--</div>-->
   </div>
 
-  
-  <p-table #dt1 [value]="getlocationlistdata" [style]="{'overflow':'auto!important','box-shadow' : '5px 5px #888888'}"
-           [scrollable]="true" scrollHeight="65vh">
-    <ng-template pTemplate="header">
-      <tr class="mprltbldata">
-        <th class="ptable-cell" style="text-align:center;width:70px;">Sl.No.</th>
-        <th class="ptable-cell" style="text-align:center;">Location</th>
-        <th class="ptable-cell" style="text-align:center;">Available Qty</th>
-      </tr>
-    </ng-template>
-    <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex" let-rindex=0>
-      <tr>
-        <td class="ptable-cell" style="text-align:right;width:70px;"> {{ri + 1}} </td>
-        <td class="ptable-cell" style="text-align:left;"> {{rowData.itemlocation}} </td>
-        <td class="ptable-cell" style="text-align:right;">{{rowData.quantity}} </td> 
-      </tr>
-    </ng-template>
-    <ng-template pTemplate="emptymessage">
-      <tr>
-        <td colspan="4" style="text-align:center;color:red">No Records.</td>
-      </tr>
-    </ng-template>
-  </p-table>
-</p-dialog>
+</div>
+  <p-dialog header="Material Locations" [(visible)]="showadddatamodel" (onHide)="refreshsavemodel()" [modal]="true" [style]="{width: '60vw'}" [baseZIndex]="10000"
+            [draggable]="false" [resizable]="false">
+    <div class="row">
+      <div class="col-lg-6 col-md-6">
+        <div class="form-inline">
+          <label class="labelheading">Material:</label>&nbsp;&nbsp;
+          <label class="labeltext"><span>{{lblmaterial}}</span></label>&nbsp;&nbsp;
+        </div>
+
+      </div>
+      <div class="col-lg-6 col-md-6">
+        <div class="form-inline" style="float:right">
+          <label class="labelheading">Material Description:</label>&nbsp;&nbsp;
+          <label class="labeltext"><span>{{lblmaterialdesc}}</span></label>&nbsp;&nbsp;
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <p-table #dt1 [value]="getlocationlistdata" [style]="{'overflow':'auto!important','box-shadow' : '5px 5px #888888'}"
+             [scrollable]="true" scrollHeight="65vh">
+      <ng-template pTemplate="header">
+        <tr class="mprltbldata">
+          <th class="ptable-cell" style="text-align:center;width:70px;">Sl.No.</th>
+          <th class="ptable-cell" style="text-align:center;">Location</th>
+          <th class="ptable-cell" style="text-align:center;">Available Qty</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex" let-rindex=0>
+        <tr>
+          <td class="ptable-cell" style="text-align:right;width:70px;"> {{ri + 1}} </td>
+          <td class="ptable-cell" style="text-align:left;"> {{rowData.itemlocation}} </td>
+          <td class="ptable-cell" style="text-align:right;">{{rowData.quantity}} </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="4" style="text-align:center;color:red">No Records.</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </p-dialog>

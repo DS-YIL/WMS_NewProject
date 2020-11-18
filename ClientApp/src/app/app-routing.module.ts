@@ -66,6 +66,7 @@ import { MaterialTransferApprovalComponent } from './WMS/MaterialTransferApprova
 import { PMDashboardComponent } from './WMS/PMDashboard.component';
 import { AdminStockUploadComponent } from './WMS/AdminStockUpload.component';
 import { AdminStockUploadReportComponent } from './WMS/AdminStockUploadReport.component';
+import { InitialStockLoadComponent } from './WMS/InitialStockLoad.component';
 import { InhandMaterialComponent } from './WMS/InhandMaterial.component';
 
 
@@ -151,6 +152,7 @@ const routes: Routes = [{
     { path: "PMDashboard", component: PMDashboardComponent, canActivate: [AuthGuard] },
     { path: "InitialStock", component: AdminStockUploadComponent, canActivate: [AuthGuard] },
     { path: "InitialStockReport", component: AdminStockUploadReportComponent, canActivate: [AuthGuard] },
+    { path: "InitialStockLoad", component: InitialStockLoadComponent, canActivate: [AuthGuard] },
     { path: "inventoryreport", component: InhandMaterialComponent, canActivate: [AuthGuard] }
   ]
   
