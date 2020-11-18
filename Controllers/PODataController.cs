@@ -994,6 +994,17 @@ namespace WMS.Controllers
 		{
 			return await this._poService.gettestcrud();
 		}
+		[HttpGet("getmatinhand")]
+		public async Task<IEnumerable<MaterialinHand>> getmatinhand()
+		{
+			return await this._poService.getmatinhand();
+		}
+
+		[HttpGet("getmatinhandlocation")]
+		public async Task<IEnumerable<matlocations>> getmatinhandlocation(string material)
+		{
+			return await this._poService.getmatinhandlocation(material);
+		}
 		[HttpGet("getinitialstock")]
 		public async Task<IEnumerable<StockModel>> getinitialstock(string code)
 		{

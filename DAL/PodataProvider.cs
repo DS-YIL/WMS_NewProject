@@ -10187,6 +10187,72 @@ namespace WMS.DAL
 		}
 
 		/*
+		Name of Function : <<get Material in hand>>  Author :<<Ramesh>>  
+		Date of Creation <<17-11-2019>>
+		Purpose : <<get Materials in stock>>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
+		public async Task<IEnumerable<MaterialinHand>> getmatinhand()
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				try
+				{
+					string testgetquery = WMSResource.inhandmaterial;
+					await pgsql.OpenAsync();
+					var data = await pgsql.QueryAsync<MaterialinHand>(
+					  testgetquery, null, commandType: CommandType.Text);
+					return data;
+
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "getmatinhand", Ex.StackTrace.ToString());
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+
+			}
+		}
+
+		/*
+		Name of Function : <<get Material in hand location>>  Author :<<Ramesh>>  
+		Date of Creation <<17-11-2019>>
+		Purpose : <<get Materials in stock locations>>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
+		public async Task<IEnumerable<matlocations>> getmatinhandlocation(string material)
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				try
+				{
+					string testgetquery = WMSResource.inhandmateriallocation.Replace("#material",material);
+					await pgsql.OpenAsync();
+					var data = await pgsql.QueryAsync<matlocations>(
+					  testgetquery, null, commandType: CommandType.Text);
+					return data;
+
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "getmatinhandlocation", Ex.StackTrace.ToString());
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+
+			}
+		}
+
+		/*
 		Name of Function : <<get initial stock Report>>  Author :<<Ramesh>>  
 		Date of Creation <<13-11-2019>>
 		Purpose : <<get initial stock uploaded by loggedin user>>

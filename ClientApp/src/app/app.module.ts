@@ -101,6 +101,7 @@ import { AdminStockUploadReportComponent } from './WMS/AdminStockUploadReport.co
 import { InitialStockLoadComponent } from './WMS/InitialStockLoad.component';
 
 
+import { InhandMaterialComponent } from './WMS/InhandMaterial.component';
 ////pages
 import { LoginComponent } from './WMS/Login.component';
 import {HomeComponent} from './WMS/Home.component';
@@ -192,6 +193,8 @@ import { FieldsetModule } from 'primeng/fieldset';
     AdminStockUploadComponent,
     AdminStockUploadReportComponent,
     InitialStockLoadComponent
+    AdminStockUploadReportComponent,
+    InhandMaterialComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

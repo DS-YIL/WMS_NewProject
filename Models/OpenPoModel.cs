@@ -287,6 +287,21 @@ namespace WMS.Models
 
 
 	}
+
+	public class MaterialinHand
+	{
+		public string material { get; set; }
+		public string materialdescription { get; set; }
+		public int availableqty { get; set; }
+		public Decimal? value { get; set; }
+        List<matlocations> locations { get; set; }
+	}
+
+	public class matlocations
+	{
+		public string itemlocation { get; set; }
+		public int quantity { get; set; }
+	}
 	public class trackstatusModel
 	{
 		public int trackid { get; set; }

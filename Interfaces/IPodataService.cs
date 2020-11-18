@@ -204,6 +204,8 @@ Task<string> updateonholdrow(updateonhold datamodel);
         string notifymultipleputaway(List<notifymodel> data);
 
         Task<IEnumerable<testcrud>> gettestcrud();
+        Task<IEnumerable<MaterialinHand>> getmatinhand();
+        Task<IEnumerable<matlocations>> getmatinhandlocation(string material);
         Task<IEnumerable<StockModel>> getinitialstock(string code);
         Task<IEnumerable<StockModel>> getinitialstockall(string code);
         Task<IEnumerable<StockModel>> getinitialstockEX(string code);
