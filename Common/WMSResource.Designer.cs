@@ -2030,6 +2030,16 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to INSERT INTO wms.WMS_ST_MaterialLabel(po,polineitemno,serialno,material,mscode,saleorderno,solineitemno,saleordertype,insprec,linkageno,customername,shipto,plant,gr,shippingpoint,projectiddef,loadingdate,custpo,partno,grno,codetype,description) values
+        ///(@po,@polineitemno,@serialno,@material,@mscode,@saleorderno,@solineitemno,@saleordertype,@insprec,@linkageno,@customername,@shipto,@plant,@gr,@shippingpoint,@projectiddef,@loadingdate,@custpo,@partno,@grnno,@codetype,@description ).
+        /// </summary>
+        public static string materiallablestaginginsert {
+            get {
+                return ResourceManager.GetString("materiallablestaginginsert", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to INSERT INTO wms.wms_materialrequest(requestforissueid,quantity,approveremailid,approverid,pono,materialid,requesterid,requestid,requestedquantity,requesteddate,deleteflag,projectcode,remarks)VALUES(default,@quantity,@approveremailid,@approverid,@pono,@materialid,@requesterid,@requestid,@requestedquantity,current_date,false,@projectcode,@remarks).
         /// </summary>
         public static string materialquest {

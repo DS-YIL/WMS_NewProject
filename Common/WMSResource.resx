@@ -1434,4 +1434,8 @@ from wms.wms_stock st left outer join wms."MaterialMasterYGS" mat on mat.materia
     <value>select itemlocation,SUM(availableqty) as quantity from wms.wms_stock where materialid = '#material' and availableqty &gt; 0
 group by itemlocation</value>
   </data>
+  <data name="materiallablestaginginsert" xml:space="preserve">
+    <value>INSERT INTO wms.WMS_ST_MaterialLabel(po,polineitemno,serialno,material,mscode,saleorderno,solineitemno,saleordertype,insprec,linkageno,customername,shipto,plant,gr,shippingpoint,projectiddef,loadingdate,custpo,partno,grno,codetype,description) values
+(@po,@polineitemno,@serialno,@material,@mscode,@saleorderno,@solineitemno,@saleordertype,@insprec,@linkageno,@customername,@shipto,@plant,@gr,@shippingpoint,@projectiddef,@loadingdate,@custpo,@partno,@grnno,@codetype,@description )</value>
+  </data>
 </root>

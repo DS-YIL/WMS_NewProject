@@ -83,5 +83,34 @@ namespace WMS.Models
 		public string materialid { get; set; }
 		public string materialdescription { get; set; }
 	}
+
+	public class MateriallabelModel
+	{
+		public string po { get; set; }
+		public string polineitemno { get; set; }
+		public string  description { get; set; }
+		public string serialno { get; set; }
+		public string material { get; set; }
+		public string mscode { get; set; }
+		public string saleorderno { get; set; }
+		public string solineitemno { get; set; }
+		public string saleordertype { get; set; }
+		public string insprec { get; set; }
+		public string linkageno { get; set; }
+		public string customername { get; set; }
+		public string shipto { get; set; }
+		public string plant { get; set; }
+		public string gr { get; set; }
+		public string shippingpoint { get; set; }
+		public string projectiddef { get; set; }
+		public DateTime? loadingdate { get; set; }
+		public string custpo { get; set; }
+		public string partno { get; set; }
+		public string grnno { get; set; }
+		public string codetype { get; set; }
+
+	}
+
+	
 }
 
