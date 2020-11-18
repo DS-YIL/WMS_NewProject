@@ -1040,13 +1040,14 @@ namespace WMS.Controllers
 							model.serialno = Conversion.toStr(dr[0]["Serial Number"]);
 						}
 						/////0006
-						DataRow[] dr1 = dtexcel1.Select("[Sales Document No#] = '" + model.saleorderno + "' AND [Sales Order Item No#] = '" + model.solineitemno + "'");
+						DataRow[] dr1 = dtexcel1.Select("[Sales Document No.] = '" + model.saleorderno + "' AND [Sales Order Item No.] = '" + model.solineitemno + "'");
 						if (dr1.Length > 0)
 						{
 							model.saleordertype = Conversion.toStr(dr1[0]["Sales Document Type"]);
 							model.customername = Conversion.toStr(dr1[0]["Name: Sold-to party"]);
 							model.shipto = Conversion.toStr(dr1[0]["Name: Ship-to party"]);
 							model.shippingpoint = Conversion.toStr(dr1[0]["Shipping Point"]);
+							model.loadingdate = Conversion.TodtTime(dr1[0]["Planned Billing Date"]);
 							model.projectiddef = Conversion.toStr(dr1[0]["Project definition(level 0)"]);
 							model.partno = Conversion.toStr(dr1[0]["Material"]);
 							model.custpo = Conversion.toStr(dr1[0]["PO number"]);
