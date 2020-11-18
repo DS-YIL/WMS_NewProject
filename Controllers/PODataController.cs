@@ -1019,6 +1019,13 @@ namespace WMS.Controllers
 		{
 			return await this._poService.getinitialstockReportGroup(code);
 		}
+		//Amulya
+		[HttpGet("getinitialstockload")]
+		public async Task<IEnumerable<StockModel>> getinitialstockload(string code)
+		{
+			return await this._poService.getinitialstockload(code);
+		}
+
 		[HttpPost("postputtestcrud")]
 		public string posttestcrud(testcrud data)
 		{

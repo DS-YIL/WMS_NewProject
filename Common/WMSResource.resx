@@ -1425,4 +1425,14 @@ Count(*) as successrecords,
 from wms.wms_stock
 st where st.initialstock is True and st.createdby = '#code' group by st.uploadbatchcode</value>
   </data>
+  <data name="initialstockloadgroupby" xml:space="preserve">
+    <value>select st.uploadbatchcode,Max(st.uploadedfilename) as uploadedfilename,Max(st.createddate) as createddate,Max (e.name ) as createdby,
+ Max (st.createddate ) as createddate ,
+Count(*) as totalrecords,
+(select count(*) from wms.st_initialstock where dataloaderrors is True and uploadbatchcode = st.uploadbatchcode) as exceptionrecords,
+(select count(*) from wms.wms_stock where uploadbatchcode = st.uploadbatchcode) as successrecords 
+from wms.st_initialstock st 
+left outer join wms.employee e on e.employeeno = st.uploadedby 
+group by st.uploadbatchcode</value>
+  </data>
 </root>

@@ -1591,6 +1591,21 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to select st.uploadbatchcode,Max(st.uploadedfilename) as uploadedfilename,Max(st.createddate) as createddate,Max (e.name ) as createdby,
+        /// Max (st.createddate ) as createddate ,
+        ///Count(*) as totalrecords,
+        ///(select count(*) from wms.st_initialstock where dataloaderrors is True and uploadbatchcode = st.uploadbatchcode) as exceptionrecords,
+        ///(select count(*) from wms.wms_stock where uploadbatchcode = st.uploadbatchcode) as successrecords 
+        ///from wms.st_initialstock st 
+        ///left outer join wms.employee e on e.employee [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string initialstockloadgroupby {
+            get {
+                return ResourceManager.GetString("initialstockloadgroupby", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to select st.materialid as material,mat.materialdescription,loc.locatorname,rac.racknumber,bn.binnumber,st.availableqty,st.value,st.projectid,st.pono,st.shelflife from wms.wms_stock st 
         ///left outer join wms.&quot;MaterialMasterYGS&quot; mat on mat.material = st.materialid
         ///left outer join wms.wms_rd_locator loc on loc.locatorid = st.storeid

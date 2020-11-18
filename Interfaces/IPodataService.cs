@@ -209,6 +209,9 @@ Task<string> updateonholdrow(updateonhold datamodel);
         Task<IEnumerable<StockModel>> getinitialstockEX(string code);
         Task<IEnumerable<StockModel>> getinitialstockReport(string code);
         Task<IEnumerable<StockModel>> getinitialstockReportGroup(string code);
+        //Amulya
+        Task<IEnumerable<StockModel>> getinitialstockload(string code);
+
         string posttestcrud(testcrud data);
         string deletetestcurd(int id);
         string updateSecurityPrintHistory(PrintHistoryModel model);
