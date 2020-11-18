@@ -192,8 +192,7 @@ import { FieldsetModule } from 'primeng/fieldset';
     PMDashboardComponent,
     AdminStockUploadComponent,
     AdminStockUploadReportComponent,
-    InitialStockLoadComponent
-    AdminStockUploadReportComponent,
+    InitialStockLoadComponent,
     InhandMaterialComponent
   ],
   imports: [

@@ -153,8 +153,6 @@ const routes: Routes = [{
     { path: "InitialStock", component: AdminStockUploadComponent, canActivate: [AuthGuard] },
     { path: "InitialStockReport", component: AdminStockUploadReportComponent, canActivate: [AuthGuard] },
     { path: "InitialStockLoad", component: InitialStockLoadComponent, canActivate: [AuthGuard] },
-
-    { path: "InitialStockReport", component: AdminStockUploadReportComponent, canActivate: [AuthGuard] },
     { path: "inventoryreport", component: InhandMaterialComponent, canActivate: [AuthGuard] }
   ]
   
