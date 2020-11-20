@@ -99,6 +99,7 @@ namespace WMS.Models
 		public string linkageno { get; set; }
 		public string customername { get; set; }
 		public string shipto { get; set; }
+		public string soldto { get; set; }
 		public string plant { get; set; }
 		public string gr { get; set; }
 		public string shippingpoint { get; set; }
@@ -106,10 +107,34 @@ namespace WMS.Models
 		public DateTime? loadingdate { get; set; }
 		public string custpo { get; set; }
 		public string partno { get; set; }
-		public string grnno { get; set; }
+		public string grno { get; set; }
 		public string codetype { get; set; }
+		public string error_description { get; set; }
+		public bool isloaderror { get; set; }
+
+		public string uploadcode { get; set; }
+		//properties fot pomaterials
+		public int id { get; set; }
+		public string pono { get; set; }
+		public string materialid { get; set; }
+		public int itemno { get; set; }
+		public string podescription { get; set; }
+		
+
 
 	}
+
+	public class AuditLog
+    {
+		public int id { get; set; }
+		public string filename { get; set; }
+		public string filelocation { get; set; }
+		public DateTime? uploadedon { get; set; }
+		public string uploadedby { get; set; }
+		public string uploadedto { get; set; }
+		public string modulename { get; set; }
+
+    }
 
 	
 }

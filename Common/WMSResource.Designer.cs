@@ -1678,6 +1678,16 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to insert into wms.AuditLog(id,filename,filelocation,uploadedon,uploadedby,uploadedto,modulename) 
+        /// values (default,@filename,@filelocation,@uploadedon,@uploadedby,@uploadedto,@modulename).
+        /// </summary>
+        public static string insertauditlog {
+            get {
+                return ResourceManager.GetString("insertauditlog", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to insert into wms.auth_users(authid,employeeid,roleid,createddate,createdby,deleteflag)values(default,@employeeid,@roleid,@createddate,@createdby,@deleteflag)returning authid.
         /// </summary>
         public static string insertAuthUserData {
@@ -2045,8 +2055,8 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO wms.WMS_ST_MaterialLabel(po,polineitemno,serialno,material,mscode,saleorderno,solineitemno,saleordertype,insprec,linkageno,customername,shipto,plant,gr,shippingpoint,projectiddef,loadingdate,custpo,partno,grno,codetype,description) values
-        ///(@po,@polineitemno,@serialno,@material,@mscode,@saleorderno,@solineitemno,@saleordertype,@insprec,@linkageno,@customername,@shipto,@plant,@gr,@shippingpoint,@projectiddef,@loadingdate,@custpo,@partno,@grnno,@codetype,@description ).
+        ///   Looks up a localized string similar to INSERT INTO wms.WMS_ST_MaterialLabel(po,polineitemno,serialno,material,mscode,saleorderno,solineitemno,saleordertype,insprec,linkageno,customername,shipto,plant,gr,shippingpoint,projectiddef,loadingdate,custpo,partno,grno,codetype,description,error_description,isloaderror,uploadcode) values
+        ///(@po,@polineitemno,@serialno,@material,@mscode,@saleorderno,@solineitemno,@saleordertype,@insprec,@linkageno,@customername,@shipto,@plant,@gr,@shippingpoint,@projectiddef,@loadingdate,@custpo,@partno,@grno,@codetype,@de [rest of string was truncated]&quot;;.
         /// </summary>
         public static string materiallablestaginginsert {
             get {
@@ -2399,6 +2409,19 @@ namespace WMS.Common {
         public static string updatelocation {
             get {
                 return ResourceManager.GetString("updatelocation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to update wms.wms_pomaterials set podescription = @podescription,mscode = @mscode, saleorderno = @saleorderno,
+        ///solineitemno = @solineitemno, linkageno = @linkageno,material = @material,plant = @plant, saleordertype = @saleordertype,
+        ///customername = @customername, shippingpoint= @shippingpoint, loadingdate = @loadingdate, gr = @gr,projectiddef= @projectiddef,
+        ///partno = @partno,custpo = @custpo, grno = @grno,codetype = @codetype, shipto = @shipto, soldto = @soldto,uploadcode = @uploadcode
+        ///where id = #idx.
+        /// </summary>
+        public static string updatepoformatlabel {
+            get {
+                return ResourceManager.GetString("updatepoformatlabel", resourceCulture);
             }
         }
         

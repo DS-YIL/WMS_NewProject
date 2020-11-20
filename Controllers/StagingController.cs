@@ -49,6 +49,9 @@ namespace WMS.Controllers
 				DB.Open();
 				//var filePath = @"http://10.29.15.183:100/WMSFiles/stageTest1.xlsx";
 				var filePath = @"D:\YILProjects\WMS\WMSFiles\stageTest1.xlsx";
+				var filenamestr = @"D:\YILProjects\WMS\WMSFiles\stageTest1.xlsx";
+				string[] fillenamearr = filenamestr.Split('\\');
+				string filename = fillenamearr[fillenamearr.Length - 1];
 				DataTable dtexcel = new DataTable();
 				bool hasHeaders = false;
 				string HDR = hasHeaders ? "Yes" : "No";
@@ -106,6 +109,7 @@ namespace WMS.Controllers
 						NpgsqlCommand dbcmd = DB.CreateCommand();
 						dbcmd.CommandText = query;
 						dbcmd.ExecuteNonQuery();
+						
 					}
 					catch (Exception e)
 					{
@@ -116,6 +120,13 @@ namespace WMS.Controllers
 				}
 
 				DB.Close();
+				AuditLog auditlog = new AuditLog();
+				auditlog.filename = filename;
+				auditlog.filelocation = filePath;
+				auditlog.uploadedon = DateTime.Now;
+				auditlog.uploadedto = "STAG_PO_SAP";
+				auditlog.modulename = "uploadPoData";
+				loadAuditLog(auditlog);
 				loadPOData();
 				return Ok(true);
 			}
@@ -621,6 +632,13 @@ namespace WMS.Controllers
 					DB.Close();
 					//result.message += "-Total_Rows_:" + rows + "-Inserted_rows_to_staging_table_:" + rowsinserted.ToString();
 					result.message += "-Total Records_:" + rows;
+					AuditLog auditlog = new AuditLog();
+					auditlog.filename = uploadedfilename;
+					auditlog.uploadedon = createdate;
+					auditlog.uploadedby = uploadedby;
+					auditlog.uploadedto = "st_initialstock";
+					auditlog.modulename = "initialstock";
+					loadAuditLog(auditlog);
 					string msg = loadStockData(uploadcode);
 					result.message += msg;
 					if (string.IsNullOrEmpty(Error_Description_all))
@@ -659,8 +677,6 @@ namespace WMS.Controllers
 		Review Date :<<>>   Reviewed By :<<>>
 		Sourcecode Copyright : Yokogawa India Limited
 		*/
-		//[HttpGet]
-		//[Route("uploadInitialStockDB")]
 		public string loadStockData(string batchcode)
 		{
 			string insertmessage = "";
@@ -885,97 +901,49 @@ namespace WMS.Controllers
 				var filePath = @"D:\A_StagingTable\ZLMMP00001_ListofPO.xlsx";
 				var filePath1 = @"D:\A_StagingTable\ZGSDR00006_QTSO-Sept-Oct2020.xlsx";
 				var filePath2 = @"D:\A_StagingTable\ZGMMR02023_slno_imports.xlsx";
+
+
+				/////////for audit purpose/////////
+				string[] file1arr = new string[3];
+				file1arr[0] = filePath;
+				file1arr[1] = filePath1;
+				file1arr[2] = filePath1;
+				/////////for audit purpose/////////
+
+
+
+
 				DataTable dtexcel = new DataTable();
 				DataTable dtexcel1 = new DataTable();
 				DataTable dtexcel2 = new DataTable();
-				bool hasHeaders = true;
-				string HDR = hasHeaders ? "Yes" : "No";
-				string strConn;
-				string strConn1;
-				string strConn2;
-				//if (filePath.Substring(filePath.LastIndexOf('.')).ToLower() == ".xlsx")
-				//	strConn = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + filePath + ";Extended Properties=\"Excel 12.0;HDR=" + HDR + ";IMEX=0\"";
-				//else
-				//	strConn = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + filePath + ";Extended Properties=\"Excel 8.0;HDR=" + HDR + ";IMEX=0\"";
-				if (filePath.Substring(filePath.LastIndexOf('.')).ToLower() == ".xlsx")
-					strConn = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + filePath + ";Extended Properties=\"Excel 12.0;HDR=" + HDR + ";IMEX=1\"";
-				else
-					strConn = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + filePath + ";Extended Properties=\"Excel 8.0;HDR=" + HDR + ";IMEX=1\"";
-
-				if (filePath1.Substring(filePath1.LastIndexOf('.')).ToLower() == ".xlsx")
-					strConn1 = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + filePath1 + ";Extended Properties=\"Excel 12.0;HDR=" + HDR + ";IMEX=1\"";
-				else
-					strConn1 = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + filePath1 + ";Extended Properties=\"Excel 8.0;HDR=" + HDR + ";IMEX=1\"";
-
-				if (filePath2.Substring(filePath2.LastIndexOf('.')).ToLower() == ".xlsx")
-					strConn2 = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + filePath2 + ";Extended Properties=\"Excel 12.0;HDR=" + HDR + ";IMEX=1\"";
-				else
-					strConn2 = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + filePath2 + ";Extended Properties=\"Excel 8.0;HDR=" + HDR + ";IMEX=1\"";
-
-				OleDbConnection conn = new OleDbConnection(strConn);
-				conn.Open();
-				DataTable schemaTable = conn.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, new object[] { null, null, null, "TABLE" });
-
-				DataRow schemaRow = schemaTable.Rows[0];
-				string sheet = schemaRow["TABLE_NAME"].ToString();
-				if (!sheet.EndsWith("_"))
-				{
-					//string query = "SELECT * FROM [Sheet1$]";
-					string query = "SELECT  * FROM [" + sheet + "]";
-					OleDbDataAdapter daexcel = new OleDbDataAdapter(query, conn);
-					dtexcel.Locale = CultureInfo.CurrentCulture;
-					daexcel.Fill(dtexcel);
-				}
-
-				conn.Close();
-				OleDbConnection conn1 = new OleDbConnection(strConn1);
-				conn1.Open();
-				DataTable schemaTable1 = conn1.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, new object[] { null, null, null, "TABLE" });
-
-				DataRow schemaRow1 = schemaTable1.Rows[0];
-				string sheet1 = schemaRow1["TABLE_NAME"].ToString();
-				if (!sheet1.EndsWith("_"))
-				{
-					//string query = "SELECT * FROM [Sheet1$]";
-					//string query1 = "SELECT  * FROM [" + sheet1 + "]";
-					string query1 = "SELECT  [Sales Document No#], [Sales Order Item No#],[Sales Document Type],[Name: Sold-to party]";
-					query1 += ",[Name: Ship-to party]";
-					query1 += ",[Shipping Point]";
-					query1 += ",[Project definition(level 0)]";
-					query1 += ",[Material]";
-					query1 += ",[PO number]";
-					//query1 += ",[Planned Billing Date]";
-					query1 += " FROM [" + sheet1 + "]";
-					//..SELECT[columnName1], [columnName2] FROM Sheet1
-					OleDbDataAdapter daexcel1 = new OleDbDataAdapter(query1, conn1);
-					dtexcel1.Locale = CultureInfo.CurrentCulture;
-					//daexcel1.Fill(dtexcel1);
-				}
-
-				conn1.Close();
-				OleDbConnection conn2 = new OleDbConnection(strConn2);
-				conn2.Open();
-				DataTable schemaTable2 = conn2.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, new object[] { null, null, null, "TABLE" });
-
-				DataRow schemaRow2 = schemaTable2.Rows[0];
-				string sheet2 = schemaRow2["TABLE_NAME"].ToString();
-				if (!sheet1.EndsWith("_"))
-				{
-					//string query = "SELECT * FROM [Sheet1$]";
-					string query2 = "SELECT  * FROM [" + sheet2 + "]";
-					OleDbDataAdapter daexcel2 = new OleDbDataAdapter(query2, conn2);
-					dtexcel2.Locale = CultureInfo.CurrentCulture;
-					daexcel2.Fill(dtexcel2);
-				}
-
-				conn2.Close();
+				
 
 				// For .net core, the next line requires the NuGet package, 
 				// System.Text.Encoding.CodePages
 				System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
-				using (var stream = System.IO.File.Open(filePath1, FileMode.Open, FileAccess.Read))
+				using (var stream1 = System.IO.File.Open(filePath, FileMode.Open, FileAccess.Read))
 				{
-					using (var reader = ExcelReaderFactory.CreateReader(stream))
+					using (var reader = ExcelReaderFactory.CreateReader(stream1))
+					{
+
+						// 2. Use the AsDataSet extension method
+						var result = reader.AsDataSet(new ExcelDataSetConfiguration()
+						{
+							ConfigureDataTable = (_) => new ExcelDataTableConfiguration()
+							{
+								UseHeaderRow = true
+							}
+						});
+
+						// The result of each spreadsheet is in result.Tables
+						dtexcel = result.Tables[0];
+
+					}
+				}
+
+				using (var stream2 = System.IO.File.Open(filePath1, FileMode.Open, FileAccess.Read))
+				{
+					using (var reader = ExcelReaderFactory.CreateReader(stream2))
 					{
 
 						// 2. Use the AsDataSet extension method
@@ -993,97 +961,130 @@ namespace WMS.Controllers
 					}
 				}
 
+				using (var stream3 = System.IO.File.Open(filePath2, FileMode.Open, FileAccess.Read))
+				{
+					using (var reader = ExcelReaderFactory.CreateReader(stream3))
+					{
+
+						// 2. Use the AsDataSet extension method
+						var result = reader.AsDataSet(new ExcelDataSetConfiguration()
+						{
+							ConfigureDataTable = (_) => new ExcelDataTableConfiguration()
+							{
+								UseHeaderRow = true
+							}
+						});
+
+						// The result of each spreadsheet is in result.Tables
+						dtexcel2 = result.Tables[0];
+
+					}
+				}
 
 
 
 
 
-
-
-
-
-
-
-
-
-
+				int i = 0;
+				string upcode = Guid.NewGuid().ToString();
 				foreach (DataRow row in dtexcel.Rows)
 				{
+
 					string Error_Description = "";
 					bool dataloaderror = false;
 
 					MateriallabelModel model = new MateriallabelModel();
-					model.description = Conversion.toStr(row["Description"]);
-					model.po = Conversion.toStr(row["Purch#Doc#"]);
-					model.description = Conversion.toStr(row["Description"]);
+					model.po = Conversion.toStr(row["Purch.Doc."]);
 					model.polineitemno = Conversion.toStr(row["Item"]);
+					model.description = Conversion.toStr(row["Description"]);
 					model.mscode = Conversion.toStr(row["MS Code"]);
 					model.saleorderno = Conversion.toStr(row["Sales Order Number"]);
 					model.solineitemno = Conversion.toStr(row["Sales Order Item Number"]);
-					model.material = Conversion.toStr(row["Sales Order Item Number"]);
 					model.linkageno = Conversion.toStr(row["Linkage Number"]);
-					
-					if (!string.IsNullOrEmpty(model.saleorderno) && !string.IsNullOrEmpty(model.solineitemno))
-                    {
-						//var rows = from rowx in dtexcel2.AsEnumerable()
-						//		   where rowx.Field<string>("Sales Document").Trim() == model.saleorderno
-						//		   select row;
-						string searchTerm = model.saleorderno;
-						string expression = String.Format("[Sales Document] = '{0}'", searchTerm.Trim());
-						/////2023
-						DataRow[] dr = dtexcel2.Select("[Sales Document] = '"+ model.saleorderno + "' AND [Sales Document Item] = '"+ model.solineitemno+"'");
-						if (dr.Length > 0)
-                        {
-							model.material = Conversion.toStr(dr[0]["Material Number"]);
-							model.gr = Conversion.toStr(dr[0]["Storage Location"]);
-							model.plant = Conversion.toStr(dr[0]["Plant"]);
-							model.serialno = Conversion.toStr(dr[0]["Serial Number"]);
-						}
-						/////0006
-						DataRow[] dr1 = dtexcel1.Select("[Sales Document No.] = '" + model.saleorderno + "' AND [Sales Order Item No.] = '" + model.solineitemno + "'");
-						if (dr1.Length > 0)
-						{
-							model.saleordertype = Conversion.toStr(dr1[0]["Sales Document Type"]);
-							model.customername = Conversion.toStr(dr1[0]["Name: Sold-to party"]);
-							model.shipto = Conversion.toStr(dr1[0]["Name: Ship-to party"]);
-							model.shippingpoint = Conversion.toStr(dr1[0]["Shipping Point"]);
-							model.loadingdate = Conversion.TodtTime(dr1[0]["Planned Billing Date"]);
-							model.projectiddef = Conversion.toStr(dr1[0]["Project definition(level 0)"]);
-							model.partno = Conversion.toStr(dr1[0]["Material"]);
-							model.custpo = Conversion.toStr(dr1[0]["PO number"]);
+					model.codetype = Conversion.toStr(row["A"]);
+					model.uploadcode = upcode;
 
+					if (string.IsNullOrEmpty(model.po))
+						Error_Description += " No pono";
+					if (string.IsNullOrEmpty(model.polineitemno))
+						Error_Description += " No po line item";
+					
+					if (!string.IsNullOrEmpty(Error_Description))
+					{
+						dataloaderror = true;
+						model.error_description = Error_Description;
+						model.isloaderror = dataloaderror;
+
+					}
+					string materialQuery = "Select po from wms.WMS_ST_MaterialLabel where po = '" + model.po + "' and polineitemno = '" + model.polineitemno + "' ";
+					var materialid = DB.ExecuteScalar(materialQuery, null);
+					if(materialid == null)
+                    {
+						if (!string.IsNullOrEmpty(model.saleorderno) && !string.IsNullOrEmpty(model.solineitemno))
+						{
+							/////2023
+							DataRow[] dr = dtexcel2.Select("[Sales Document] = '" + model.saleorderno + "' AND [Sales Document Item] = '" + model.solineitemno + "'");
+							if (dr.Length > 0)
+							{
+								model.material = Conversion.toStr(dr[0]["Material Number"]);
+								model.gr = Conversion.toStr(dr[0]["Storage Location"]);
+								model.plant = Conversion.toStr(dr[0]["Plant"]);
+								//model.serialno = Conversion.toStr(dr[0]["Serial Number"]);
+							}
+							/////0006
+							DataRow[] dr1 = dtexcel1.Select("[Sales Document No.] = '" + model.saleorderno + "' AND [Sales Order Item No.] = '" + model.solineitemno + "'");
+							if (dr1.Length > 0)
+							{
+								model.saleordertype = Conversion.toStr(dr1[0]["Sales Document Type"]);
+								model.customername = Conversion.toStr(dr1[0]["Sold-to party"]) + " " + Conversion.toStr(dr1[0]["Name: Sold-to party"]);
+								model.shipto = Conversion.toStr(dr1[0]["Ship-to party"]) + " " + Conversion.toStr(dr1[0]["Name: Ship-to party"]);
+								model.shippingpoint = Conversion.toStr(dr1[0]["Shipping Point"]) + " " + Conversion.toStr(dr1[0]["Text: Shipping Point"]);
+								model.loadingdate = Conversion.TodtTime(dr1[0]["Planned Billing Date"]);
+								model.projectiddef = Conversion.toStr(dr1[0]["Project definition(level 0)"]);
+								model.partno = Conversion.toStr(dr1[0]["Material"]);
+								model.custpo = Conversion.toStr(dr1[0]["PO number"]);
+
+
+							}
 						}
+
+						//@po,@polineitemno,@serialno,@material,@mscode,@saleorderno,@solineitemno,@saleordertype,@insprec,@linkageno,@customername,@shipto,@plant,
+						//@gr,@shippingpoint,@projectiddef,@loadingdate,@custpo,@partno,@grnno,@codetype,@description
+
+						string insertpoqry = WMSResource.materiallablestaginginsert;
+						var rslt = DB.Execute(insertpoqry, new
+						{
+							model.po,
+							model.polineitemno,
+							model.serialno,
+							model.material,
+							model.mscode,
+							model.saleorderno,
+							model.solineitemno,
+							model.saleordertype,
+							model.insprec,
+							model.linkageno,
+							model.customername,
+							model.shipto,
+							model.plant,
+							model.gr,
+							model.shippingpoint,
+							model.projectiddef,
+							model.loadingdate,
+							model.custpo,
+							model.partno,
+							model.grno,
+							model.codetype,
+							model.description,
+							model.error_description,
+							model.isloaderror,
+							model.uploadcode
+						});
+
 					}
 
-					//@po,@polineitemno,@serialno,@material,@mscode,@saleorderno,@solineitemno,@saleordertype,@insprec,@linkageno,@customername,@shipto,@plant,
-					//@gr,@shippingpoint,@projectiddef,@loadingdate,@custpo,@partno,@grnno,@codetype,@description
 
-					string insertpoqry = WMSResource.materiallablestaginginsert;
-					var rslt = DB.Execute(insertpoqry, new
-					{
-						model.po,
-						model.polineitemno,
-						model.serialno,
-						model.material,
-						model.mscode,
-						model.saleorderno,
-						model.solineitemno,
-						model.saleordertype,
-						model.insprec,
-						model.linkageno,
-						model.customername,
-						model.shipto,
-						model.plant,
-						model.gr,
-						model.shippingpoint,
-						model.projectiddef,
-						model.loadingdate,
-						model.custpo,
-						model.partno,
-						model.grnno,
-						model.codetype,
-						model.description
-					});
+					
 
 
 
@@ -1092,11 +1093,158 @@ namespace WMS.Controllers
 				}
 
 
+				foreach(string str in file1arr)
+                {
+					string[] filearr = str.Split("\\");
+					string nameoffile = filearr[filearr.Length - 1];
+					AuditLog auditlog = new AuditLog();
+					auditlog.filename = nameoffile;
+					auditlog.filelocation = str;
+					auditlog.uploadedon = DateTime.Now;
+					auditlog.uploadedto = "wms_st_materiallabel";
+					auditlog.modulename = "materiallabelinfo";
+					loadAuditLog(auditlog);
 
+				}
+				string rsltx = loadlabeldatatobase(upcode);
 				return Ok(true);
 
 				
 			}
+		}
+
+
+		/*
+		function : <<loadlabeldatatobase>>  Author :<<Ramesh>>  
+		Date of Creation <<20-11-2020>>
+		Purpose : <<From materiallabel staging to base table>>
+		Review Date :<<>>   Reviewed By :<<>>
+		Sourcecode Copyright : Yokogawa India Limited
+		*/
+		public string loadlabeldatatobase(string batchcode)
+		{
+			string insertmessage = "";
+			using (NpgsqlConnection pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+
+			{
+					string query = "select * from wms.WMS_ST_MaterialLabel  where isloaderror is NOT True and uploadcode = '" + batchcode + "'";
+					pgsql.Open();
+					var stagingList = pgsql.Query<MateriallabelModel>(
+					   query, null, commandType: CommandType.Text);
+
+					int rowinserted = 0;
+					string uploadcode = batchcode;
+
+					DateTime currentdate = DateTime.Now;
+
+					foreach (MateriallabelModel stag_data in stagingList)
+					{
+						NpgsqlTransaction Trans = null;
+						try
+						{
+							int itmno = Convert.ToInt32(stag_data.polineitemno);
+							string materialQuery = "Select * from wms.wms_pomaterials where pono = '" + stag_data.po + "' and itemno ="+ itmno;
+							var podata = pgsql.QueryFirstOrDefault<MateriallabelModel>(materialQuery, null, commandType: CommandType.Text);
+							if (podata == null)
+							{
+								
+								int rslt = 0;
+								string podescription = stag_data.description;
+								stag_data.soldto = stag_data.customername;
+								var updateqry = WMSResource.updatepoformatlabel.Replace("#idx", podata.id.ToString()); ;
+								rslt = pgsql.Execute(updateqry, new
+								{
+									podescription,
+									stag_data.mscode,
+									stag_data.saleorderno,
+									stag_data.solineitemno,
+									stag_data.linkageno,
+									stag_data.material,
+									stag_data.plant,
+									stag_data.saleordertype,
+									stag_data.customername,
+									stag_data.shippingpoint,
+									stag_data.loadingdate,
+									stag_data.gr,
+									stag_data.projectiddef,
+									stag_data.partno,
+									stag_data.custpo,
+									stag_data.grno,
+									stag_data.codetype,
+									stag_data.shipto,
+									stag_data.soldto,
+									stag_data.uploadcode,
+
+								});
+							}
+
+							rowinserted = rowinserted + 1;
+
+						}
+						catch (Exception e)
+						{
+							var res = e;
+							insertmessage += e.Message.ToString();
+							log.ErrorMessage("StagingController", "loadmatlabelDatatobase", e.Message.ToString());
+							continue;
+						}
+					}
+					insertmessage = rowinserted.ToString();
+					pgsql.Close();
+			}
+			return insertmessage;
+
+		}
+
+
+		/*
+		function : <<loadAuditLog>>  Author :<<Ramesh>>  
+		Date of Creation <<19-11-2020>>
+		Purpose : <<Contains metadata of staging process>>
+		Review Date :<<>>   Reviewed By :<<>>
+		Sourcecode Copyright : Yokogawa India Limited
+		*/
+
+		public void loadAuditLog(AuditLog logdata)
+		{
+			
+			using (NpgsqlConnection pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+						try
+						{
+					        var insertquery = WMSResource.insertauditlog;
+							var results = pgsql.ExecuteScalar(insertquery, new
+							{
+								logdata.filename,
+								logdata.filelocation,
+								logdata.uploadedon,
+								logdata.uploadedby,
+								logdata.uploadedto,
+								logdata.modulename
+							});
+
+
+
+
+						}
+						catch (Exception e)
+						{
+							var res = e;
+							log.ErrorMessage("StagingController", "loadStockData", e.StackTrace.ToString());
+							
+						}
+                finally
+                {
+					pgsql.Close();
+
+				}
+					
+
+					
+				
+			}
+			
+
 		}
 	}
 }
