@@ -851,3 +851,12 @@ export class MateriallabelModel {
 
 
 	}
+
+export class grReports {
+  wmsgr: string;
+  sapgr: string;
+  updatedby: string;
+  updatedon: Date;
+  pono: string;
+}
+
