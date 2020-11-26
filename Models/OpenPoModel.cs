@@ -1517,5 +1517,14 @@ public class initialStock
 	public string projectid { get; set; }
 	public string pono { get; set; }
 }
+ public  class grReports
+{
+	public string wmsgr { get; set; }
+	public string sapgr { get; set; }
+	public string updatedby { get; set; }
+	public string updatedon { get; set; }
+	public string pono { get; set; }
 
+
+}
 

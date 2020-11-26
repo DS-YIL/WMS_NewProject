@@ -61,6 +61,24 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to insert into wms.wms_sapgr (sapgr) values (@sapgr).
+        /// </summary>
+        public static string addGRReports {
+            get {
+                return ResourceManager.GetString("addGRReports", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to update wms.wms_sapgr set sapgr = &apos;#sapgr&apos; where wmsgr = &apos;#wmsgr&apos;.
+        /// </summary>
+        public static string addSAPGR {
+            get {
+                return ResourceManager.GetString("addSAPGR", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to select * from wms.wms_stock where materialid=&apos;#materialid&apos; limit 1.
         /// </summary>
         public static string checkmaterial {
@@ -180,6 +198,16 @@ namespace WMS.Common {
         public static string dynamicemaildata {
             get {
                 return ResourceManager.GetString("dynamicemaildata", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to select sg.wmsgr,sg.sapgr,sg.updatedby ,sg.updatedon,si.pono from wms.wms_sapgr sg
+        ///left outer join  wms.wms_securityinward si on si.grnnumber = sg.wmsgr where wmsgr = #wmsgr.
+        /// </summary>
+        public static string editGRReports {
+            get {
+                return ResourceManager.GetString("editGRReports", resourceCulture);
             }
         }
         
@@ -483,6 +511,16 @@ namespace WMS.Common {
         public static string getGRNNo {
             get {
                 return ResourceManager.GetString("getGRNNo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to select sg.wmsgr,sg.sapgr,sg.updatedby ,sg.updatedon,si.pono from wms.wms_sapgr sg
+        ///left outer join  wms.wms_securityinward si on si.grnnumber = sg.wmsgr.
+        /// </summary>
+        public static string GetGRReportDataList {
+            get {
+                return ResourceManager.GetString("GetGRReportDataList", resourceCulture);
             }
         }
         

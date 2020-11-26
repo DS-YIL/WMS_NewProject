@@ -10339,14 +10339,21 @@ namespace WMS.DAL
 
             }
         }
-        //Amulya
-        public async Task<IEnumerable<StockModel>> getinitialstockload(string code)
-        {
-            using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
-            {
-                try
-                {
-                    string testgetquery = WMSResource.initialstockloadgroupby.Replace("#code", code);
+     
+		/*
+			Name of File : <<name>>  Author :<<Amulya>>  
+			Date of Creation <<17-11-2020>>
+			Purpose : <<Get Data from wms.st_initialstock table>>
+			Review Date :<<>>   Reviewed By :<<  >>
+			Sourcecode Copyright : Yokogawa India Limited
+		*/
+		public async Task<IEnumerable<StockModel>> getinitialstockload(string code)
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				try
+				{
+					string testgetquery = WMSResource.initialstockloadgroupby.Replace("#code", code);
 
 
                     await pgsql.OpenAsync();
@@ -10972,17 +10979,109 @@ namespace WMS.DAL
                 catch (Exception ex)
                 {
 
-                    log.ErrorMessage("PODataProvider", "gettransferdata", ex.StackTrace.ToString());
-                    return null;
-                }
-                finally
-                {
-                    pgsql.Close();
-                }
-            }
-        }
+					log.ErrorMessage("PODataProvider", "gettransferdata", ex.StackTrace.ToString());
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+			}
+		}
 
 
+		/*
+			Name of File : <<name>>  Author :<<Amulya>>  
+			Date of Creation <<18-11-2020>>
+			Purpose : <<Get Data of GR Reports>>
+			Review Date :<<>>   Reviewed By :<<  >>
+			Sourcecode Copyright : Yokogawa India Limited
+		*/
 
+		public async Task<IEnumerable<grReports>> getGRListdata()
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				try
+				{
+					string grreportquery = WMSResource.GetGRReportDataList;
+
+					await pgsql.OpenAsync();
+					return await pgsql.QueryAsync<grReports>(
+					  grreportquery, null, commandType: CommandType.Text);
+
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "GetGRReport", Ex.StackTrace.ToString());
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+			}
+		}
+
+
+		public async Task<IEnumerable<grReports>> addEditReports(string wmsgr)
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				try
+				{
+					string editquery = WMSResource.editGRReports.Replace("#wmsgr", wmsgr);
+
+					await pgsql.OpenAsync();
+					return await pgsql.QueryAsync<grReports>(
+					  editquery, null, commandType: CommandType.Text);
+
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "editGRReport", Ex.StackTrace.ToString());
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+			}
+		}
+      
+
+		public string EditReports( grReports data)
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				try
+				{
+					string editquery = WMSResource.addSAPGR.Replace("#sapgr",data.sapgr).Replace("#wmsgr",data.wmsgr);
+
+					 pgsql.Open();
+					 pgsql.Execute(editquery);
+					return "updated";
+
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "editquery", Ex.StackTrace.ToString());
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+			}
+		}
+
+		//public string addEditGRReports(grReports data)
+		//{
+		//    throw new NotImplementedException();
+		//}
+	
     }
 }

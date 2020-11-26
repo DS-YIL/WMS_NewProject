@@ -1459,4 +1459,18 @@ customername = @customername, shippingpoint= @shippingpoint, loadingdate = @load
 partno = @partno,custpo = @custpo, grno = @grno,codetype = @codetype, shipto = @shipto, soldto = @soldto,uploadcode = @uploadcode
 where id = #idx</value>
   </data>
+  <data name="GetGRReportDataList" xml:space="preserve">
+    <value>select sg.wmsgr,sg.sapgr,sg.updatedby ,sg.updatedon,si.pono from wms.wms_sapgr sg
+left outer join  wms.wms_securityinward si on si.grnnumber = sg.wmsgr</value>
+  </data>
+  <data name="addGRReports" xml:space="preserve">
+    <value>insert into wms.wms_sapgr (sapgr) values (@sapgr)</value>
+  </data>
+  <data name="editGRReports" xml:space="preserve">
+    <value>select sg.wmsgr,sg.sapgr,sg.updatedby ,sg.updatedon,si.pono from wms.wms_sapgr sg
+left outer join  wms.wms_securityinward si on si.grnnumber = sg.wmsgr where wmsgr = #wmsgr</value>
+  </data>
+  <data name="addSAPGR" xml:space="preserve">
+    <value>update wms.wms_sapgr set sapgr = '#sapgr' where wmsgr = '#wmsgr'</value>
+  </data>
 </root>

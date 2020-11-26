@@ -1101,6 +1101,24 @@ namespace WMS.Controllers
 		{
 			return await this._poService.getmaterialreturndashboardlist(filters);
 		}
+		[HttpGet("getGRListdata")]
+		public Task<IEnumerable<grReports>> getGRListdata()
+		{
+
+			return this._poService.getGRListdata();
+		}
+
+        [HttpPost("SAPGREditReport")]
+        public string SAPGREditReport(grReports data)
+        {
+            return this._poService.EditReports(data);
+        }
+
+        [HttpGet("addEditReports")]
+		public async Task<IEnumerable<grReports>> addEditReports(string wmsgr)
+		{
+			return await this._poService.addEditReports(wmsgr);
+		}
 
 
 	}
