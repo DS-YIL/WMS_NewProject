@@ -148,7 +148,9 @@ export class MRNViewComponent implements OnInit {
       this.spinner.hide();
       this.messageService.add({ severity: 'success', summary: '', detail: "Material transferred" });
       //this.getponodetails(this.selectedpendingpo.value)
+
       this.SearchGRNNo();
+      this.getcheckedgrn();
     })
 
 

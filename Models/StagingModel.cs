@@ -13,10 +13,11 @@ namespace WMS.Models
 	internal class StagingModel
 	{
 		public string pono { get; set; }
-		public DateTime deliverydate { get; set; }
+		public DateTime? deliverydate { get; set; }
 		public int vendorid { get; set; }
 		public string suppliername { get; set; }
 		public string jobname { get; set; }
+		public string vendorcode { get; set; }
 		public string projectcode { get; set; }
 		public string projectname { get; set; }
 		public string projectmanager { get; set; }
@@ -24,10 +25,14 @@ namespace WMS.Models
 		public string materialdescription { get; set; }
 		public int materialqty { get; set; }
 		public int itemno { get; set; }
-
 		public int item { get; set; }
-		public int itemamount { get; set; }
-		public DateTime itemdeliverydate { get; set; }
+		public decimal? itemamount { get; set; }
+		public DateTime? itemdeliverydate { get; set; }
+		public decimal? NetPrice { get; set; }
+		public bool dataloaderror { get; set; }
+		public string error_description { get; set; }
+
+
 
 
 		public string purchdoc { get; set; }
@@ -119,7 +124,18 @@ namespace WMS.Models
 		public string materialid { get; set; }
 		public int itemno { get; set; }
 		public string podescription { get; set; }
-		
+
+		/////property for insert in master table
+
+		public string vendorcode { get; set; }
+		public string vendorname { get; set; }
+		public string materialdescription { get; set; }
+		public int materialqty { get; set; }
+		public decimal? itemamount { get; set; }
+		public DateTime? itemdeliverydate { get; set; }
+		public string projectcode { get; set; }
+
+
 
 
 	}

@@ -758,6 +758,7 @@ this.updateRowGroupMetaData();
         this.StockModel.material = this.PoDetails.material;
         this.StockModel.itemid = this.PoDetails.itemid;
         this.StockModel.pono = this.PoDetails.pono;
+        this.StockModel.lineitemno = this.PoDetails.lineitemno;
         this.StockModel.grnnumber = this.PoDetails.grnnumber;
         this.StockModel.vendorid = this.PoDetails.vendorid;
         this.StockModel.paitemid = this.PoDetails.paitemid;

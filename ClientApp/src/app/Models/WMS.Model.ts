@@ -9,6 +9,7 @@ export class PoFilterParams {
 
 export class PoDetails {
   pono: string = "";
+  lineitemno: string;
   departmentid: number;
   invoiceno: string;
   Barcode: string = "";
@@ -98,6 +99,7 @@ export class inwardModel {
   serialno: number;
   inwardid: number;
   inwardidview: string;
+  lineitemno: string;
   securitypo: string;
   inwmasterid: string;
   poitemid: number;
@@ -160,6 +162,7 @@ export class inwardModel {
 export class StockModel {
   itemid: number;
   inwmasterid: string;
+  lineitemno: string;
   paitemid: number;
   testindex: number;
   pono: string;
@@ -801,6 +804,53 @@ export class materialreturnMT {
   returnqty: number;
 
 }
+
+export class MateriallabelModel {
+  po: string;
+  polineitemno: string;
+  description: string;
+  serialno: string;
+  material: string;
+  mscode: string;
+  saleorderno: string;
+  solineitemno: string;
+  saleordertype: string;
+  insprec: string;
+  linkageno: string;
+  customername: string;
+  shipto: string;
+  soldto: string;
+  plant: string;
+  gr: string;
+  shippingpoint: string;
+  projectiddef: string;
+	loadingdate :Date
+  custpo: string;
+  partno: string;
+  grno: string;
+  codetype: string;
+  error_description: string;
+  isloaderror: boolean;
+  uploadcode: string;
+  
+  id: number
+  pono: string;
+  materialid: string;
+  itemno: number
+  podescription: string;
+		
+  vendorcode: string;
+  vendorname: string;
+  materialdescription: string;
+  materialqty: number;
+  itemamount: number
+  itemdeliverydate: Date
+  projectcode: string;
+
+
+
+
+	}
 
 export class grReports {
   wmsgr: string;

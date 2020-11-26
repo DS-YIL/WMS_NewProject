@@ -214,7 +214,7 @@ Task<string> updateonholdrow(updateonhold datamodel);
         //Amulya
         Task<IEnumerable<StockModel>> getinitialstockload(string code);
 
-        Task<MateriallabelModel> getmateriallabeldetail(string pono, int lineitemno);
+        Task<MateriallabelModel> getmateriallabeldetail(string pono, int lineitemno, string materialid);
 
         string posttestcrud(testcrud data);
         string deletetestcurd(int id);

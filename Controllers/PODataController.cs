@@ -1032,9 +1032,9 @@ namespace WMS.Controllers
 		}
 
 		[HttpGet("getmateriallabeldata")]
-		public async Task<MateriallabelModel> getmateriallabeldata(string pono, int lineitemno)
+		public async Task<MateriallabelModel> getmateriallabeldata(string pono, int lineitemno, string materialid)
 		{
-			return await this._poService.getmateriallabeldetail(pono, lineitemno);
+			return await this._poService.getmateriallabeldetail(pono, lineitemno, materialid);
 		}
 		//Amulya
 		[HttpGet("getinitialstockload")]
