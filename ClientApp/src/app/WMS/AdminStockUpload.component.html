@@ -12,7 +12,7 @@
   </div>
 </div>
 <p-fileUpload #form name="myfile[]" customUpload="true" [style]="{'width' : '98vw','margin-left':'10px'}" (uploadHandler)="onUpload($event,form)"
-              accept=".xlsx" chooseLabel="Select" maxFileSize="1000000">
+              accept=".xlsx" chooseLabel="Select" maxFileSize="100000000">
   <ng-template pTemplate="content">
     <div class="row">
       <div class="col-lg-4 col-md-4 col-sm-4">

@@ -10339,16 +10339,7 @@ namespace WMS.DAL
 
             }
         }
-        //Amulya
-        public async Task<IEnumerable<StockModel>> getinitialstockload(string code)
-        {
-            using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
-            {
-                try
-                {
-                    string testgetquery = WMSResource.initialstockloadgroupby.Replace("#code", code);
-			}
-		}
+     
 		/*
 			Name of File : <<name>>  Author :<<Amulya>>  
 			Date of Creation <<17-11-2020>>
@@ -11059,15 +11050,7 @@ namespace WMS.DAL
 
 			}
 		}
-                    log.ErrorMessage("PODataProvider", "gettransferdata", ex.StackTrace.ToString());
-                    return null;
-                }
-                finally
-                {
-                    pgsql.Close();
-                }
-            }
-        }
+      
 
 		public string EditReports( grReports data)
 		{
@@ -11099,6 +11082,6 @@ namespace WMS.DAL
 		//{
 		//    throw new NotImplementedException();
 		//}
-	}
+	
     }
 }
