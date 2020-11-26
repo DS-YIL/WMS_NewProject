@@ -377,7 +377,7 @@
                   <th style="text-align:center" class="ptable-cell">Remarks</th>
                   <th *ngIf="gatepassModel.gatepasstype=='Returnable'" style="text-align:center" class="ptable-cell">Expected Date</th>
                   <!--<th *ngIf="gatepassModel.gatepasstype=='Returnable'" class="ptable-cell">Returned Date</th>-->
-                  <th style="text-align:center" class="ptable-cell"></th>
+                  <th style="text-align:center;width:60px;" class="ptable-cell"></th>
                 </tr>
               </ng-template>
               <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex" let-rindex=0>
@@ -421,7 +421,7 @@
 
 
 
-                  <td class="ptable-cell" style="text-align:center"><button pButton type="button" icon="fa fa-trash" class="ui-button-info" style="margin-left: 1px;" (click)="removematerial(rowData.gatepassmaterialid, ri)"></button></td>
+                  <td class="ptable-cell" style="text-align:center;width:60px;"><button pButton type="button" icon="fa fa-trash" class="ui-button-info" style="margin-left: 1px;" (click)="removematerial(rowData.gatepassmaterialid, ri)"></button></td>
 
 
               </ng-template>

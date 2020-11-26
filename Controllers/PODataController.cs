@@ -1030,6 +1030,12 @@ namespace WMS.Controllers
 		{
 			return await this._poService.getinitialstockReportGroup(code);
 		}
+
+		[HttpGet("getmateriallabeldata")]
+		public async Task<MateriallabelModel> getmateriallabeldata(string pono, int lineitemno)
+		{
+			return await this._poService.getmateriallabeldetail(pono, lineitemno);
+		}
 		//Amulya
 		[HttpGet("getinitialstockload")]
 		public async Task<IEnumerable<StockModel>> getinitialstockload(string code)

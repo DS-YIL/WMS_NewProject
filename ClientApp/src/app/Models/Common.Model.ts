@@ -56,6 +56,33 @@ export class printMaterial {
   materialcodePath: any;
   printedby: any;
   isprint: any;
+  noofpieces: any;
+  totalboxes: any;
+  boxno: any;
+  serialno: any;
+  material: any;
+  mscode: any;
+  receivedqty: any;
+  order: any;
+  qty: any;
+  sotype: any;
+  insprec: any;
+  shipto: any;
+  matdesc: any;
+  saleorder: any;
+  saleorderlineitemno: any;
+  qtyrec: any;
+
+  plant: any;
+  gr: any;
+  sp: any;
+  loadingdate: any;
+  linkageno: any;
+  customername: any;
+  customer: any;
+
+  partno: any;
+
 }
 
 export class searchParams {

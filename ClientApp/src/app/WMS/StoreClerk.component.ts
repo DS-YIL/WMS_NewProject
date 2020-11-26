@@ -32,6 +32,9 @@ export class StoreClerkComponent implements OnInit {
   public podetailsList: Array<inwardModel> = [];
   public nonpovalidationList: Array<inwardModel> = [];
   public employee: Employee;
+  public noofpieces: any=1;
+  public totalboxes: any=1;
+  public boxno: any=1;
   public showDetails; showQtyUpdateDialog: boolean = false;
   public disGrnBtn: boolean = true;
   public BarcodeModel: BarcodeModel;
@@ -78,6 +81,7 @@ export class StoreClerkComponent implements OnInit {
   displayBasic: boolean = false;
   poinvoice: string = "";
   grnn0: string = "";
+  receivedqty: string = "";
   //inwmasterid: string = "";
   gateentryid: string = "";
   public inwmasterid: string;
@@ -295,8 +299,10 @@ export class StoreClerkComponent implements OnInit {
     this.receivedDate = this.datePipe.transform(details.receiveddate, this.constants.dateFormat);
     this.acceptedQty = details.confirmqty;
     this.pono = details.pono;
+    this.receivedqty = details.receivedqty;
     this.invoiceNo = details.invoiceno;
     this.grnNo = details.grnnumber;
+    this.noofpieces = details.receivedqty;
   }
   get formArr() {
     return this.invoiceForm.get('itemRows') as FormArray;
@@ -313,11 +319,14 @@ export class StoreClerkComponent implements OnInit {
     this.printData.pono = this.podetailsList[0].pono;
     this.printData.noofprint = this.noOfPrint;
     this.printData.receiveddate = this.receivedDate;
-
+    this.printData.boxno = this.boxno;
+    this.printData.noofpieces = this.noofpieces;
+    this.printData.totalboxes = this.totalboxes;
+    this.printData.receivedqty = this.receivedqty;
     //api call
     this.wmsService.generateBarcodeMaterial(this.printData).subscribe(data => {
       if (data) {
-
+        debugger;
         this.printData = data;
         if (this.printData.isprint == true) {
           this.print = "Re-Print";

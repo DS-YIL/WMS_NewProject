@@ -1444,6 +1444,21 @@ from wms.st_initialstock st
 left outer join wms.employee e on e.employeeno = st.uploadedby 
 group by st.uploadbatchcode</value>
   </data>
+  <data name="materiallablestaginginsert" xml:space="preserve">
+    <value>INSERT INTO wms.WMS_ST_MaterialLabel(po,polineitemno,serialno,material,mscode,saleorderno,solineitemno,saleordertype,insprec,linkageno,customername,shipto,plant,gr,shippingpoint,projectiddef,loadingdate,custpo,partno,grno,codetype,description,error_description,isloaderror,uploadcode) values
+(@po,@polineitemno,@serialno,@material,@mscode,@saleorderno,@solineitemno,@saleordertype,@insprec,@linkageno,@customername,@shipto,@plant,@gr,@shippingpoint,@projectiddef,@loadingdate,@custpo,@partno,@grno,@codetype,@description,@error_description,@isloaderror,@uploadcode)</value>
+  </data>
+  <data name="insertauditlog" xml:space="preserve">
+    <value>insert into wms.AuditLog(id,filename,filelocation,uploadedon,uploadedby,uploadedto,modulename) 
+ values (default,@filename,@filelocation,@uploadedon,@uploadedby,@uploadedto,@modulename)</value>
+  </data>
+  <data name="updatepoformatlabel" xml:space="preserve">
+    <value>update wms.wms_pomaterials set podescription = @podescription,mscode = @mscode, saleorderno = @saleorderno,
+solineitemno = @solineitemno, linkageno = @linkageno,material = @material,plant = @plant, saleordertype = @saleordertype,
+customername = @customername, shippingpoint= @shippingpoint, loadingdate = @loadingdate, gr = @gr,projectiddef= @projectiddef,
+partno = @partno,custpo = @custpo, grno = @grno,codetype = @codetype, shipto = @shipto, soldto = @soldto,uploadcode = @uploadcode
+where id = #idx</value>
+  </data>
   <data name="GetGRReportDataList" xml:space="preserve">
     <value>select sg.wmsgr,sg.sapgr,sg.updatedby ,sg.updatedon,si.pono from wms.wms_sapgr sg
 left outer join  wms.wms_securityinward si on si.grnnumber = sg.wmsgr</value>

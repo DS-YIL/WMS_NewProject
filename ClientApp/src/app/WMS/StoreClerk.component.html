@@ -255,6 +255,7 @@
               <th style="text-align:center;width:8%;">Received Qty</th>
               <th style="text-align: center;width:8%;">Accepted Qty</th>
               <th style="text-align:center;width:8%;">Rejected Qty</th>
+              <th style="text-align:center;width:8%;">Material Barcode</th>
               <th style="text-align:center;width:15%;">Remarks</th>
               <th style="text-align:center;width:10%;">Quality status</th>
 
@@ -305,6 +306,9 @@
                 <span *ngIf="rowData.returnedby && (getstatus(rowData) != 'Pending')">{{rowData.returnqty}}</span>
                 <input *ngIf="!rowData.returnedby && (getstatus(rowData) != 'Pending')" pInputText type="number" [min]="0" (change)="checkreturnqty(rowData.returnqty,rowData.receivedqty,rowData.confirmqty,rowData);" id="returnqty" class="form-control" [(ngModel)]="rowData.returnqty">
               </td>
+              <td style="text-align: center;width: 10%;">
+                <button type="button" icon="fa fa-print" pButton aria-hidden="true" (click)="generateBarcode(rowData)"></button>
+              </td>
               <td style="text-align: left;width: 15%;">
                 <span *ngIf="rowData.returnedby && (getstatus(rowData) != 'Pending')">{{rowData.returnremarks}}</span>
                 <textarea *ngIf="!rowData.returnedby && (getstatus(rowData) != 'Pending')" style="resize:none" [(ngModel)]="rowData.returnremarks"></textarea>
@@ -336,44 +340,53 @@
 
 
     </div>
-    <p-dialog header="Generate Barcode" [(visible)]="showPrintDialog" [contentStyle]="{'overflow':'visible'}" [style]="{width: '60%'}">
+    <p-dialog header="Generate Barcode" [(visible)]="showPrintDialog" [contentStyle]="{'overflow':'visible'}" [style]="{width: '80%'}">
       <div class="row ">
-        <div class="col-lg-1 col-md-1 col-sm-1 form-inline ">
-        </div>
+        <!--<div class="col-lg-1 col-md-1 col-sm-1 form-inline ">
+        </div>-->
         <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
           <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">PO No.:</label>
         </div>
         <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
           <input type="text" [disabled]="true" class="form-control" [(ngModel)]="pono" />
         </div>
-        <div class="col-lg-1 col-md-1 col-sm-1 form-inline ">
-        </div>
-        <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
-          <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">Invoice No.:</label>
-        </div>
-        <div class="col-lg-3 col-md-3 col-sm-3 form-inline ">
-          <input type="text" [disabled]="true" class="form-control" [(ngModel)]="invoiceNo" />
-        </div>
-      </div>
-      <br />
-      <div class="row">
-        <div class="col-lg-1 col-md-1 col-sm-1 form-inline">
-        </div>
-        <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
-          <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">GRN No.:</label>
-        </div>
-        <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
-          <input type="text" [disabled]="true" class="form-control" [(ngModel)]="grnNo" />
-        </div>
-        <div class="col-lg-1 col-md-1 col-sm-1 form-inline">
-        </div>
+        <!--<div class="col-lg-1 col-md-1 col-sm-1 form-inline ">
+        </div>-->
         <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
           <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">Material Code:</label>
         </div>
         <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
           <input type="text" [disabled]="true" class="form-control" [(ngModel)]="materialCode" />
         </div>
-
+        <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
+          <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">Received Qty:</label>
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
+          <input type="text" [disabled]="true" class="form-control" [(ngModel)]="receivedqty" />
+        </div>
+        <!--<div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
+    <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">Invoice No.:</label>
+  </div>
+  <div class="col-lg-3 col-md-3 col-sm-3 form-inline ">
+    <input type="text" [disabled]="true" class="form-control" [(ngModel)]="invoiceNo" />
+  </div>-->
+      </div>
+      <!--<br />
+      <div class="row">
+        <div class="col-lg- col-md-2 col-sm-2 form-inline ">
+          <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">GRN No.:</label>
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
+          <input type="text" [disabled]="true" class="form-control" [(ngModel)]="grnNo" />
+        </div>
+       
+        <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
+          <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">Material Code:</label>
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
+          <input type="text" [disabled]="true" class="form-control" [(ngModel)]="materialCode" />
+        </div>
+       
       </div>
       <br />
       <div class="row">
@@ -395,12 +408,6 @@
           <input type="text" [disabled]="true" class="form-control" [(ngModel)]="acceptedQty" />
         </div>
 
-        <!--<div class="col-lg-2 col-md-2 col-sm-2 form-inline">
-          <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">Item No.</label>
-        </div>
-        <div class="col-lg-3 col-md-3 col-sm-3 form-inline">
-          <input type="text" class="form-control" value="40" />
-        </div>-->
       </div>
       <br />
       <div class="row">
@@ -422,8 +429,31 @@
           <input type="text" class="form-control" [disabled]="true" value="{{qty}}/{{noOfPrint}}" style="width: 100px;text-align:center" />
           <button (click)="increaseQty()">&#62;&#62;</button>
         </div>
-      </div>
+      </div>-->
+      <br/>
+      <div class="row">
+        <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
+          <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">Total No. of Boxes:</label>
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
+          <input type="text" class="form-control" [(ngModel)]="totalboxes" />
+        </div>
 
+        <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
+          <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">No. of materials in box:</label>
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
+          <input type="text" class="form-control" [(ngModel)]="noofpieces" style="width: 100px;text-align:center" />
+          <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">/{{receivedqty}}</label>
+        </div>
+
+        <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
+          <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">Box No.:</label>
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
+          <input type="text" class="form-control" [(ngModel)]="boxno" />
+        </div>
+      </div>
       <br>
       <div class="row">
         <div class="col-lg-5 col-md-5 col-sm-5"></div>
@@ -433,16 +463,126 @@
       </div>
     </p-dialog>
 
-    <p-dialog header="Print Barcode" [(visible)]="showPrintLabel" [contentStyle]="{'overflow':'visible'}" [style]="{width: '50%'}">
+    <p-dialog header="Print Barcode" [(visible)]="showPrintLabel" [contentStyle]="{'overflow':'auto'}" [style]="{width: '50%'}">
       <form>
-        <div class="row">
+        <!--<div class="row">
           <div class="col-lg-9 col-md-9 col-sm-9"></div>
           <div class="col-lg-3 col-md-3 col-sm-3">
             <label><b>No. of prints:</b></label>
             <label>{{printData.noofprint}}</label>
           </div>
-        </div>
+        </div>-->
+        
         <div class="row">
+          <div class="col-lg-1 col-md-1 col-sm-1"></div>
+          <div class="col-lg-10 col-md-10 col-sm-10">
+            <div><b>Ref# -</b> {{printData.pono}}</div>
+            <table>
+              <tr>
+                <th style="outline: thin solid;width:200px;height:30px">Serial No.:</th>
+                <td style="outline: thin solid;width:1640px;height:30px">
+                  {{printData.serialno}}
+                </td>
+              </tr>
+              <tr>
+                <th style="outline: thin solid;width:200px;height:30px">Material:</th>
+                <td style="outline: thin solid;width:1640px;height:30px">
+                  {{printData.material}}
+                </td>
+              </tr>
+              <tr>
+                <th style="outline: thin solid;width:200px;height:30px">MS Code:</th>
+                <td style="outline: thin solid;width:1640px;height:30px">
+                  {{printData.mscode}}
+                </td>
+              </tr>
+              <tr>
+                <th style="outline: thin solid;width:200px;height:30px">Order:</th>
+                <td style="outline: thin solid;width:1640px;height:30px">
+                  {{printData.order}}
+                </td>
+              </tr>
+              <tr>
+                <th style="outline: thin solid;width:200px;height:30px">Qty:</th>
+                <td style="outline: thin solid;width:1640px;height:30px">
+                  {{printData.qty}}
+                </td>
+              </tr>
+              <tr>
+                <th style="outline: thin solid;width:200px;height:30px">S/O Type:</th>
+                <td style="outline: thin solid;width:1640px;height:30px">
+                  {{printData.saleorder}}
+                </td>
+              </tr>
+              <tr>
+                <th style="outline: thin solid;width:200px;height:30px">Insp Rec.</th>
+                <td style="outline: thin solid;width:1640px;height:30px">
+                  {{printData.insprec}}
+                </td>
+              </tr>
+              <tr>
+                <th style="outline: thin solid;width:200px;height:30px">Ship-to:</th>
+                <td style="outline: thin solid;width:1640px;height:30px">
+                  {{printData.serialno}}
+                </td>
+              </tr>
+            </table>
+            <div style="text-align:center"><b>Additional Work Instruction</b></div>
+            <table>
+              <tr>
+                <th style="outline: thin solid;width:400px;height:30px">Plant:</th>
+                <td style="outline: thin solid;width:400px;height:30px" colspan="2">
+                  {{printData.plant}}
+                </td>
+              </tr>
+              <tr>
+                <th style="outline: thin solid;width:100px;height:30px">#</th>
+                <th style="outline: thin solid;width:1800px;height:30px">Carry-in Place</th>
+                <th style="outline: thin solid;width:1500px;height:30px">S_Loc</th>
+              </tr>
+              <tr>
+                <th style="outline: thin solid;width:400px;height:30px">GR</th>
+                <th style="outline: thin solid;width:400px;height:30px">Ship(kar-PCI)</th>
+                <th style="outline: thin solid;width:400px;height:30px"></th>
+              </tr>
+              <tr>
+                <th style="outline: thin solid;width:400px;height:30px">1.</th>
+                <th style="outline: thin solid;width:400px;height:30px"></th>
+                <th style="outline: thin solid;width:400px;height:30px"></th>
+              </tr>
+              <tr>
+                <th style="outline: thin solid;width:400px;height:30px">2.</th>
+                <th style="outline: thin solid;width:400px;height:30px"></th>
+                <th style="outline: thin solid;width:400px;height:30px"></th>
+              </tr>
+              <tr>
+                <th style="outline: thin solid;width:400px;height:30px">3.</th>
+                <th style="outline: thin solid;width:400px;height:30px"></th>
+                <th style="outline: thin solid;width:400px;height:30px"></th>
+              </tr>
+              <tr>
+                <th style="outline: thin solid;width:400px;height:30px">SP</th>
+                <td style="outline: thin solid;width:400px;height:30px" colspan="2">
+                  {{printData.shippingpoint}}
+                </td>
+              </tr>
+              <tr>
+                <th style="outline: thin solid;width:400px;height:30px">Loading Date</th>
+                <td style="outline: thin solid;width:400px;height:30px" colspan="2">
+                  {{printData.loadingdate}}
+                </td>
+              </tr>
+              <tr>
+                <th style="outline: thin solid;width:400px;height:30px">Linkage No.</th>
+                <td style="outline: thin solid;width:400px;height:30px" colspan="2">
+                  {{printData.linkageno}}
+                </td>
+              </tr>
+            </table>
+          </div>
+
+        </div>
+        <!--<div class="row">
           <div class="col-lg-1 col-md-1 col-sm-1"></div>
           <div class="col-lg-10 col-md-10 col-sm-10">
             <table>
@@ -452,10 +592,9 @@
                 <th style="outline: thin solid;width:200px;height:30px" rowspan="2">
                   <img class="images" src="{{printData.materialcodePath}}" />
                 </th>
-                <!--<th style="outline: thin solid;width:400px;height:30px">{{printData.materialid}}</th>-->
               </tr>
               <tr>
-                <th style="outline: thin solid;width:400px;height:30px">Received Date:</th>
+                <th style="outline: thin solid;width:400px;height:30px">30Received Date:th</th>
                 <th style="outline: thin solid;width:400px;height:30px">{{printData.receiveddate}}</th>
               </tr>
               <tr>
@@ -464,38 +603,38 @@
                 <th *ngIf="!printData.grnno" style="outline: thin solid;width:400px;height:90px">PO No. - Invoice No. : </th>
                 <th *ngIf="!printData.grnno" style="outline: thin solid;width:400px;height:30px">{{printData.pono}}- {{printData.invoiceno}}</th>
                 <th style="outline: thin solid; width: 200px; height: 90px; align-content: center" rowspan="2"><img class="images" src="{{printData.barcodePath}}" /></th>
-                <!--<th style="outline: thin solid;width:400px;height:30px"></th>-->
+              
               </tr>
               <tr>
                 <th style="outline: thin solid;width:400px;height:30px">Quantity</th>
                 <th style="outline: thin solid;width:400px;height:30px">1/{{printData.noofprint}}</th>
-                <!--<th style="outline: thin solid; width: 500px; height: 30px">1/{{printData.noofprint}}</th>-->
-                <!--<th style="outline: thin solid;width:400px;height:30px"></th>-->
               </tr>
             </table>
           </div>
-        </div>
+        </div>-->
         <br />
         <!--<div class="row">
-          <div class="col-lg-3 col-md-3 col-sm-3"></div>
-          <div class="col-lg-7 col-md-7 col-sm-7">
-            <img class="images" src="{{printData.barcodePath}}" />
-          </div>
-        </div>
-        <br/><br/>
-             <div class="row">
-               <div class="col-lg-3 col-md-3 col-sm-3"></div>
-               <div class="col-lg-2 col-md-2 col-sm-2">
-                 <label>{{printData.receiveddate}}</label>&nbsp;&nbsp;
+    <div class="col-lg-3 col-md-3 col-sm-3"></div>
+    <div class="col-lg-7 col-md-7 col-sm-7">
+      <img class="images" src="{{printData.barcodePath}}" />
+    </div>
+  </div>
+  <br/><br/>
+       <div class="row">
+         <div class="col-lg-3 col-md-3 col-sm-3"></div>
+         <div class="col-lg-2 col-md-2 col-sm-2">
+           <label>{{printData.receiveddate}}</label>&nbsp;&nbsp;
 
-               </div>
-               <div class="col-lg-3 col-md-3 col-sm-3"></div>
-               <div class="col-lg-2 col-md-2 col-sm-2">
-                 <label>1/{{printData.noofprint}}</label>
-               </div>
-             </div>-->
+         </div>
+         <div class="col-lg-3 col-md-3 col-sm-3"></div>
+         <div class="col-lg-2 col-md-2 col-sm-2">
+           <label>1/{{printData.noofprint}}</label>
+         </div>
+       </div>-->
         <div class="row">
           <div class="col-lg-5 col-md-5 col-sm-5"></div>
+         
+
           <div class="col-lg-3 col-md-3 col-sm-3">
             <button type="button" class="btn btn-primary" (click)="printLabel()" label="Save">{{print}}</button>
           </div>

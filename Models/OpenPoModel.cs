@@ -91,6 +91,8 @@ namespace WMS.Models
 	{
 		public string materialid { get; set; }
 		public string receiveddate { get; set; }
+
+		public string receivedqty { get; set; }
 		public string grnno { get; set; }
 		public string pono { get; set; }
 		public string invoiceno { get; set; }
@@ -100,6 +102,34 @@ namespace WMS.Models
 		public string errorMsg { get; set; }
 		public bool isprint { get; set; }
 		public string printedby { get; set; }
+		public int noofpieces { get; set; }
+		public int totalboxes { get; set; }
+		public int boxno { get; set; }
+		public string serialno { get; set; }
+		public string material { get; set; }
+		public string mscode { get; set; }
+
+		public string order { get; set; }
+		public string qty { get; set; }
+		public string sotype { get; set; }
+		public string insprec { get; set; }
+		public string shipto { get; set; }
+		public string matdesc { get; set; }
+		public string saleorder { get; set; }
+		public string saleorderlineitemno { get; set; }
+		public int qtyrec { get; set; }
+
+		public string plant { get; set; }
+		public string gr { get; set; }
+		public string sp { get; set; }
+		public string loadingdate { get; set; }
+		public string linkageno { get; set; }
+		public string customername { get; set; }
+		public string customer { get; set; }
+
+		public string partno { get;set; }
+
+
 	}
 
 	public class BarcodeModel
