@@ -526,6 +526,24 @@
                   {{printData.serialno}}
                 </td>
               </tr>
+              <tr *ngIf="printData.codetype=='N'">
+                <th style="outline: thin solid;width:200px;height:30px">Project ID & Definition:</th>
+                <td style="outline: thin solid;width:1640px;height:30px">
+                  {{printData.proid}}
+                </td>
+              </tr>
+              <tr *ngIf="printData.codetype=='A'">
+                <th style="outline: thin solid;width:200px;height:30px">Asset & Sub Number:</th>
+                <td style="outline: thin solid;width:1640px;height:30px">
+                  {{printData.asset}}
+                </td>
+              </tr>
+              <tr *ngIf="printData.codetype=='Y'">
+                <th style="outline: thin solid;width:200px;height:30px">Cost Center & Cost Center Text:</th>
+                <td style="outline: thin solid;width:1640px;height:30px">
+                  {{printData.costcenter}}
+                </td>
+              </tr>
             </table>
             <div style="text-align:center"><b>Additional Work Instruction</b></div>
             <table>
