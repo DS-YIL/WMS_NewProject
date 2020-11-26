@@ -426,8 +426,10 @@ namespace WMS.DAL
 		*/
         public printMaterial generateBarcodeMaterial(printMaterial printMat)
         {
+            printMaterial objprint = new printMaterial();
             try
             {
+               
                 string path = "";
 
                 path = Environment.CurrentDirectory + @"\Barcodes\";
@@ -440,17 +442,29 @@ namespace WMS.DAL
                 using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
                 {
                     //Check if the material is already printed
-                    string query = "Select * from wms.wms_securityinward sinw join wms.wms_printstatusmaterial psmat on psmat.inwmasterid=sinw.inwmasterid where sinw.pono='" + printMat.pono + "' and sinw.invoiceno='" + printMat.invoiceno + "' and psmat.materialid='" + printMat.materialid + "'";
-                    var data = Convert.ToBoolean(DB.ExecuteScalar(query, false));
-                    if (data != false)
-                    {
-                        printMat.isprint = true;
-                    }
-                    else
-                    {
-                        printMat.isprint = false;
-                    }
+                    // string query = "Select * from wms.wms_securityinward sinw join wms.wms_printstatusmaterial psmat on psmat.inwmasterid=sinw.inwmasterid where sinw.pono='" + printMat.pono + "' and sinw.invoiceno='" + printMat.invoiceno + "' and psmat.materialid='" + printMat.materialid + "'";
+                    string query = "Select * from wms.wms_securityinward sinw left join wms.wms_st_materiallabel psmat on psmat.po = sinw.pono where sinw.pono = '" + printMat.pono + "' and sinw.invoiceno = '" + printMat.invoiceno + "'  and psmat.mscode = '" + printMat.materialid + "'";
+                  
+                    objprint = DB.QueryFirstOrDefault<printMaterial>(
+                           query, null, commandType: CommandType.Text);
+
+                    //var data = Convert.ToBoolean(DB.ExecuteScalar(query, false));
+                    ////if (data != false)
+                    ////{
+                    ////    printMat.isprint = true;
+                    ////}
+                    ////else
+                    ////{
+                    ////    printMat.isprint = false;
+                    ////}
+                    ///
+                    objprint.noofpieces =printMat.noofpieces;
+                    objprint.boxno =printMat.boxno;
+                    objprint.totalboxes =printMat.totalboxes;
+                    objprint.qty = objprint.noofpieces + "/" + objprint.receivedqty + "ST " + objprint.boxno + "OF " + objprint.totalboxes + "BOXES";
+
                 }
+
                 //generate barcode for material code and GRN No.
                 var content = printMat.grnno + "-" + printMat.materialid;
                 BarcodeWriter writer = new BarcodeWriter
@@ -508,7 +522,7 @@ namespace WMS.DAL
                 printMat.errorMsg = ex.Message;
                 log.ErrorMessage("PODataProvider", "generateBarcodeMaterial", ex.StackTrace.ToString());
             }
-            return printMat;
+            return objprint;
         }
 
         /*
