@@ -164,7 +164,8 @@
           <ng-template pTemplate="header">
             <tr class="mprltbldata">
               <th style="text-align:center;width:5%;">Sl.No.</th>
-              <th style="text-align:center;width:12%;">PONo.</th>
+              <th style="text-align:center;width:10%;">PONo.</th>
+              <th style="text-align:center;width:8%;">line item No.</th>
               <th style="text-align:center;width:12%;">Material</th>
               <th style="text-align:center;">Material Description</th>
               <th *ngIf="!isnonpo && !qualitychecked" style="text-align:center;width:8%;">Material Qty</th>
@@ -194,14 +195,14 @@
 
 
               <td class="ptable-cell" style="text-align:right;width:5%;">{{ri+1}}</td>
-              <td class="ptable-cell" style="text-align:center;width:12%;">{{rowData.pono}}</td>
-
+              <td class="ptable-cell" style="text-align:center;width:10%;">{{rowData.pono}}</td>
+              <td class="ptable-cell" style="text-align:center;width:8%;">{{rowData.lineitemno}}</td>
               <td class="ptable-cell" style="text-align:center;width:12%;">
                 <span *ngIf="!isnonpoentry">{{rowData.material}}</span>
                 <input *ngIf="isnonpoentry" pInputText type="text" (change)="setmatdesc(rowData)" (blur)="validate(rowData,ri)" class="form-control" [(ngModel)]="rowData.material">
                 <!--<p-dropdown [options]="combomaterial" appendTo="body" *ngIf="isnonpoentry" [style]="{'width':'100%'}" (onChange)="setdescription($event,rowData)" placeholder="Select material" optionLabel="material"></p-dropdown>-->
                 <!--<p-autoComplete *ngIf="isnonpoentry" [(ngModel)]="rowData.material" appendTo="body" [suggestions]="filteredmats" placeholder="search by material no/desc" [forceSelection]="false" (onBlur)="validate(rowData,ri)" (change)="setmatdesc(rowData)" (onSelect)="setmatdesc(rowData)" (completeMethod)="filtermats($event)" [size]="30"
-                  [dropdown]="false"></p-autoComplete>-->
+      [dropdown]="false"></p-autoComplete>-->
               </td>
               <td class="ptable-cell" style="text-align:left;">
                 <span *ngIf="!isnonpoentry && rowData.materialdescription">{{rowData.materialdescription}}</span>
@@ -220,7 +221,7 @@
                 <input *ngIf="!grnnumber && (!isallreceived || isnonpo)" pInputText type="number" [min]="0" (change)="checkreceivedqty(rowData.receivedqty,rowData.confirmqty,rowData.returnqty,rowData.materialqty,rowData);" id="receivedqty" class="form-control" [(ngModel)]="rowData.receivedqty">
               </td>
               <td style="    text-align: center;width: 10%;">
-                <button type="button" icon="fa fa-print" pButton aria-hidden="true" (click)="generateBarcode(rowData)"></button>
+                <button type="button" icon="fa fa-print" pButton aria-hidden="true" (click)="generatelabel(rowData)"></button>
               </td>
               <td style="text-align: left;width: 15%;resize: none" *ngIf="!isonHoldview">
                 <span *ngIf="grnnumber || isonHold">{{rowData.receiveremarks}}</span>
@@ -249,6 +250,7 @@
             <tr class="mprltbldata">
               <th style="text-align:center;width:5%;">Sl.No.</th>
               <th style="text-align:center;width:12%;">PONo.</th>
+              <th style="text-align:center;width:10%;">line item No.</th>
               <th style="text-align:center;width:12%;">Material</th>
               <th style="text-align:center;">Material Description</th>
               <!--<th *ngIf="isreceivedbefore" style="text-align:center;width:10%;">Pending Qty</th>-->
@@ -281,6 +283,7 @@
 
               <td class="ptable-cell" style="text-align:right;width:5%;">{{ri+1}}</td>
               <td class="ptable-cell" style="text-align:center;width:12%;">{{rowData.pono}}</td>
+              <td class="ptable-cell" style="text-align:center;width:10%;">{{rowData.lineitemno}}</td>
 
               <td class="ptable-cell" style="text-align:center;width:12%;">
                 <span>{{rowData.material}}</span>

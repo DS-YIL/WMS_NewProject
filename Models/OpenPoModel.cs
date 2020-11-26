@@ -12,6 +12,8 @@ namespace WMS.Models
 		public int rfqsplititemid { get; set; }
 		public string departmentname { get; set; }
 
+		public bool isreceived { get; set; }
+
 		public string securitypo { get; set; }
 		public int departmentid { get; set; }
 		public string documentno { get; set; }
@@ -78,6 +80,8 @@ namespace WMS.Models
 		public DateTime unholdedon { get; set; }
 
 		public string unholdremarks { get; set; }
+
+		public string lineitemno { get; set; }
 
 		public DateTime deliverydate { get; set; }
 
@@ -156,6 +160,7 @@ namespace WMS.Models
 	public class inwardModel
 	{
 		public string binnumber { get; set; }
+		public string lineitemno { get; set; }
 
 		public string inwardidview { get; set; }
 		public string racknumber { get; set; }
@@ -230,6 +235,7 @@ namespace WMS.Models
 	{
 		public int inwardid { get; set; }
 		public string Material { get; set; }
+		public string lineitemno { get; set; }
 		public string exceptions { get; set; }
 		public string materialdescription { get; set; }
 		public string stockstatus { get; set; }

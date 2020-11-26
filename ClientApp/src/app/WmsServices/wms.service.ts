@@ -5,7 +5,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { constants } from '../Models/WMSConstants'
 import { Employee, Login, DynamicSearchResult, printMaterial, rbamaster } from '../Models/Common.Model';
-import { PoFilterParams, PoDetails, BarcodeModel, StockModel, materialRequestDetails, inwardModel, gatepassModel, stocktransfermodel, Materials, authUser, invstocktransfermodel, ddlmodel, locataionDetailsStock, updateonhold, materialistModel, outwardmaterialistModel, pageModel, UserDashboardDetail, UserDashboardGraphModel, UnholdGRModel, MRNsavemodel, notifymodel, materialtransferMain, materialReservetorequestModel, testcrud, PrintHistoryModel, materilaTrasFilterParams, materialRequestFilterParams, materialResFilterParams, materialRetFilterParams, outwardinwardreportModel, UserModel, WMSHttpResponse, MaterialinHand, matlocations} from '../Models/WMS.Model';
+import { PoFilterParams, PoDetails, BarcodeModel, StockModel, materialRequestDetails, inwardModel, gatepassModel, stocktransfermodel, Materials, authUser, invstocktransfermodel, ddlmodel, locataionDetailsStock, updateonhold, materialistModel, outwardmaterialistModel, pageModel, UserDashboardDetail, UserDashboardGraphModel, UnholdGRModel, MRNsavemodel, notifymodel, materialtransferMain, materialReservetorequestModel, testcrud, PrintHistoryModel, materilaTrasFilterParams, materialRequestFilterParams, materialResFilterParams, materialRetFilterParams, outwardinwardreportModel, UserModel, WMSHttpResponse, MaterialinHand, matlocations, MateriallabelModel} from '../Models/WMS.Model';
 import { Text } from '@angular/compiler/src/i18n/i18n_ast';
 
 @Injectable({
@@ -517,6 +517,10 @@ export class wmsService {
 
   getprojectlist(): Observable<ddlmodel[]> {
     return this.http.get<ddlmodel[]>(this.url + 'POData/getprojectlist/', this.httpOptions);
+  }
+
+  getmateriallabeldata(pono: string, lineitemno: number, materialid: string): Observable<MateriallabelModel> {
+    return this.http.get<MateriallabelModel>(this.url + 'POData/getmateriallabeldata?pono=' + pono + '&lineitemno=' + lineitemno + '&materialid=' + materialid, this.httpOptions);
   }
 
   getprojectlistbymanager(empno: string): Observable<ddlmodel[]> {

@@ -19,38 +19,41 @@ using Npgsql;
 
 namespace WMS.DAL
 {
-    //public class LoginDataProvider
-    //{
-
-    //}
     public class LoginDataProvider : IUserService
     {
         Configurations config = new Configurations();
         ErrorLogTrace log = new ErrorLogTrace();
 
-        public  List<User> validatelogincredentials(string DomainId,string pwd)
+        /*
+        Name of Function : <<validatelogincredentials>>  Author :<<>>  
+        Date of Creation <<>>
+        Purpose : <<validation of user>>
+        <param: DomainId,pwd></param>
+        Review Date :<<>>   Reviewed By :<<>>
+        */
+        public List<User> validatelogincredentials(string DomainId, string pwd)
         {
-      
+
             string id = DomainId;
-         // PrincipalContext ctx = new PrincipalContext(ContextType.Domain);
-           PrincipalContext ctx = null;
+            // PrincipalContext ctx = new PrincipalContext(ContextType.Domain);
+            PrincipalContext ctx = null;
             List<User> userdata = new List<User>();
             User data = new User();
             //UserPrincipal user = UserPrincipal.FindByIdentity(ctx, id);
-           UserPrincipal user = null;
+            UserPrincipal user = null;
             if (user != null)
             {
                 if (ctx.ValidateCredentials(DomainId, pwd))
                 {
-                   
+
                     using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
                     {
 
                         try
                         {
-                             pgsql.Open();
-                            string query = "select  * from wms.employee where domainid='"+ id.ToUpper() +"'";
-                            data= pgsql.QuerySingle<User>(
+                            pgsql.Open();
+                            string query = "select  * from wms.employee where domainid='" + id.ToUpper() + "'";
+                            data = pgsql.QuerySingle<User>(
                                query, null, commandType: CommandType.Text);
                             data.Password = pwd;
                             userdata.Add(data);
@@ -58,7 +61,7 @@ namespace WMS.DAL
                         catch (Exception Ex)
                         {
                             log.ErrorMessage("LoginDataProvider", "validatelogincredentials", Ex.StackTrace.ToString());
-                            userdata= null;
+                            userdata = null;
                         }
                         finally
                         {
@@ -66,9 +69,9 @@ namespace WMS.DAL
                         }
                     }
                 }
-               
-           }
-            else if(user==null)
+
+            }
+            else if (user == null)
             {
                 using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
                 {
@@ -94,15 +97,10 @@ namespace WMS.DAL
                 }
             }
             return userdata;
-          
+
         }
 
-        //private List<User> _users = new List<User>
-        //{
-            
-        //    new User { deptId = 1, FirstName = "Test", LastName = "User", Username = "test", Password = "test" }
-        //};
-       
+
         private readonly AppSettings _appSettings;
 
         public LoginDataProvider(IOptions<AppSettings> appSettings)
@@ -111,12 +109,16 @@ namespace WMS.DAL
         }
 
 
-        //Authenticate USER ID and password
+        /*
+        Name of Function : <<Authenticate>>  Author :<<>>  
+        Date of Creation <<>>
+        Purpose : <<Authenticate of userid and password>>
+        <param: username,password></param>
+        Review Date :<<>>   Reviewed By :<<>>
+        */
         public User Authenticate(string username, string password)
         {
-            //PrincipalContext ctx = new PrincipalContext(ContextType.Domain);
-           //var user = _users.SingleOrDefault(x => x.Username == username && x.Password == password);
-          var userss = validatelogincredentials(username,password);
+            var userss = validatelogincredentials(username, password);
             if (userss.Count != 0)
             {
                 var user = userss.SingleOrDefault(x => x.domainid == username.ToUpper() && x.Password == password);
@@ -151,9 +153,5 @@ namespace WMS.DAL
 
         }
 
-        //public IEnumerable<User> GetAll()
-        //{
-        //    return _users.WithoutPasswords();
-        //}
     }
 }

@@ -298,6 +298,23 @@ export class StoreClerkComponent implements OnInit {
     this.invoiceNo = details.invoiceno;
     this.grnNo = details.grnnumber;
   }
+  generatelabel(details: any) {
+    debugger;
+    var pono = details.pono;
+    var materialid = details.material;
+    var lineitemno = details.lineitemno;
+    this.wmsService.getmateriallabeldata(pono,lineitemno,materialid).subscribe(data => {
+      if (data) {
+        var strjson = JSON.stringify(data);
+        alert(strjson);
+
+      }
+      else {
+        alert("No data");
+      }
+    })
+    
+  }
   get formArr() {
     return this.invoiceForm.get('itemRows') as FormArray;
     // return (this.invoiceForm.get('itemRows') as FormArray).controls;
@@ -554,6 +571,11 @@ export class StoreClerkComponent implements OnInit {
         this.onholdremarks = this.podetailsList[0].onholdremarks;
         if (pono.startsWith("NP") && !this.grnnumber && !this.isonHold) {
           this.isnonpoentry = true;
+        }
+        if (this.grnnumber) {
+          this.podetailsList = this.podetailsList.filter(function (element, index) {
+            return (parseInt(element.receivedqty) > 0);
+          });
         }
         if (pono.startsWith("NP")) {
           this.isnonpo = true;

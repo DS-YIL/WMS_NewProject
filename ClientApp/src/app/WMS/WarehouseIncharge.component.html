@@ -32,9 +32,10 @@
               <ng-template pTemplate="header" let-columns>
                 <tr class="mprltbldata">
                   <th rowspan="2" style="width: 4em">Sl.No.</th>
-                   <th rowspan="2" style="width: 100px;text-align:center;">PONo</th>
+                  <th rowspan="2" style="width: 100px;text-align:center;">PONo</th>
                   <th rowspan="2" style="width:100px;text-align:center">Material</th>
-                  <th rowspan="2" style="width:220px; text-align: center">Material Description</th>
+                  <th rowspan="2" style="width:70px;text-align:center">Line item no</th>
+                  <th rowspan="2" style="width:200px; text-align: center">Material Description</th>
                   <th rowspan="2" *ngIf="!isnonpo" style="width:70px;text-align:center">Material Quantity</th>
                   <th rowspan="2" style="width:70px;text-align:center">Received Quantity</th>
                   <th rowspan="2" style="width:70px;text-align:center">Accepted Quantity</th>
@@ -57,6 +58,9 @@
                   <td class="ptable-cell" style="text-align:left;width:100px;">
                     {{rowData.material}}
                   </td>
+                  <td class="ptable-cell" style="text-align:center;width:70px;">
+                    {{rowData.lineitemno}}
+                  </td>
                   <td class="ptable-cell" style="text-align:left;">
                     <span *ngIf="rowData.materialdescription">{{rowData.materialdescription}}</span>
                     <span *ngIf="!rowData.materialdescription">-</span>
@@ -76,8 +80,8 @@
               </ng-template>
               <ng-template pTemplate="rowexpansion" let-rowData let-rowIndex="rowIndex">
                 <tr>
-                  <td *ngIf="!isnonpo" colspan="8"></td>
-                  <td *ngIf="isnonpo" colspan="7"></td>
+                  <td *ngIf="!isnonpo" colspan="9"></td>
+                  <td *ngIf="isnonpo" colspan="8"></td>
                   <td style="text-align:right;width:100px">
                     {{rowData.availableqty}}
                   </td>

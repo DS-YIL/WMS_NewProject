@@ -1308,11 +1308,15 @@ namespace WMS.DAL
 
                             foreach (OpenPoModel po in data)
                             {
-                                var fdata = datalist.Where(o => o.Material == po.Material && o.Materialdescription == po.Materialdescription && o.pono == po.pono).FirstOrDefault();
+                                var fdata = datalist.Where(o => o.Material == po.Material && o.Materialdescription == po.Materialdescription && o.pono == po.pono && o.lineitemno == po.lineitemno).FirstOrDefault();
                                 if (fdata == null)
                                 {
                                     string querya = "select inw.pono,inw.materialid,Max(inw.materialqty) as materialqty,SUM(inw.confirmqty) as confirmqty from wms.wms_storeinward inw";
                                     querya += " where inw.pono = '" + po.pono + "' and inw.materialid = '" + po.Material + "'";
+                                    if (!pono.StartsWith("NP"))
+                                    {
+                                        querya += " and inw.lineitemno = '" + po.lineitemno + "'";
+                                    }
                                     querya += " group by inw.pono,inw.materialid";
                                     var datax = await pgsql.QueryAsync<OpenPoModel>(
                                     querya, null, commandType: CommandType.Text);
@@ -1601,6 +1605,8 @@ namespace WMS.DAL
 
                             if (!isupdateprocess)
                             {
+                              
+
                                 var results = pgsql.ExecuteScalar(insertforinvoicequery, new
                                 {
                                     item.inwmasterid,
@@ -1613,7 +1619,8 @@ namespace WMS.DAL
                                     qualitychecked,
                                     item.materialqty,
                                     item.receiveremarks,
-                                    item.pono
+                                    item.pono,
+                                    item.lineitemno
 
                                 });
                                 inwardid = Convert.ToInt32(results);
@@ -1855,7 +1862,8 @@ namespace WMS.DAL
                             item.stockstatus,
                             materialid,
                             item.inwardid,
-                            item.stocktype
+                            item.stocktype,
+                            item.lineitemno
                         }));
                         if (result != 0)
                         {
@@ -10884,13 +10892,13 @@ namespace WMS.DAL
      Review Date :<<>>   Reviewed By :<<>>
      */
 
-        public async Task<MateriallabelModel> getmateriallabeldetail(string pono,int lineitemno)
+        public async Task<MateriallabelModel> getmateriallabeldetail(string pono,int lineitemno, string materialid)
         {
             using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
             {
                 try
                 {
-                    string lblquery = "Select *  from wms.wms_pomaterials where  pono = '"+pono+ "' and itemno ="+ lineitemno;
+                    string lblquery = "Select *  from wms.wms_pomaterials where  pono = '"+pono+ "' and materialid = '" + materialid + "' and itemno =" + lineitemno;
 
 
                     await pgsql.OpenAsync();
