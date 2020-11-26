@@ -227,5 +227,12 @@ Task<string> updateonholdrow(updateonhold datamodel);
         Task<IEnumerable<materialreturnMain>> getmaterialreturndashboardlist(materialRetFilterParams filters);
 
         Task<IEnumerable<IssueRequestModel>> getItemlocationListByGatepassmaterialid(string gatepassmaterialid);
+
+        Task<IEnumerable<grReports>> getGRListdata();
+        Task<IEnumerable<grReports>> addEditReports(string wmsgr );
+
+        string EditReports(grReports data);
+
+
     }
 }

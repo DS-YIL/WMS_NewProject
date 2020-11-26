@@ -801,3 +801,12 @@ export class materialreturnMT {
   returnqty: number;
 
 }
+
+export class grReports {
+  wmsgr: string;
+  sapgr: string;
+  updatedby: string;
+  updatedon: Date;
+  pono: string;
+}
+

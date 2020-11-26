@@ -609,6 +609,7 @@ export class NavMenuComponent implements OnInit {
               label: 'Material Transfer Dashboard', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialTransferDashboard'),
             },
             { label: 'Initial Stock Load', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-caret-right', command: () => this.router.navigateByUrl('WMS/InitialStockReport') },
+            { label: 'GR Report', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-caret-right', command: () => this.router.navigateByUrl('WMS/GRReports') },
 ]
 
           //   this.items.push({ label: 'Material Transfer Dashboard', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialTransferDashboard') });
@@ -996,7 +997,10 @@ export class NavMenuComponent implements OnInit {
           { label: 'Material Transfer Dashboard', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialTransferDashboard') },
           { label: 'Initial Stock Load', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/InitialStockLoad') },
 
-          { label: 'Inventory Report', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/inventoryreport') }]
+          { label: 'Inventory Report', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/inventoryreport') },
+          { label: 'GR Report', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GRReports') },
+
+        ]
 
       });
       this.items.push({ label:'Outward/Inward Report', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/outinDashboard') });

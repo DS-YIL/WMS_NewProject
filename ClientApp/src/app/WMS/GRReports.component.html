@@ -1,0 +1,94 @@
+<div style="margin:10px;">
+  <div class="card commoncardcss">
+    <div class="card-header commoncardheader">
+      <div class="row " style="    margin-top: 10px;
+    margin-left: 0px !important;
+    margin-right: 0px !important">
+        <div class="col-lg-4 col-md-4 form-inline">
+        </div>
+        <div class="col-lg-4 col-md-4 text-center">
+          <span style="color:#428bca;font-size:18px" class="commonheadertext">
+            <i class="fa fa-check-circle-o commonheadertext"></i>&nbsp;GR Details
+          </span>
+        </div>
+        <div class="col-lg-4 col-md-4 form-inline"></div>
+      </div>
+    </div>
+    <div class="card-body" style="overflow-y:hidden;padding:0px;margin-left:10px;margin-right:10px">
+
+
+      <div class="row " style="margin-top: 10px;margin-left: 0px !important;margin-right: 0px !important">
+
+        <p-table #dt [value]="grReportsList" [style]="{'overflow':'auto!important','box-shadow' : '5px 5px #888888'}"
+                 [scrollable]="true" scrollHeight="65vh">
+          <ng-template pTemplate="header">
+            <tr style="background-color:aqua !important" class="mprltbldata">
+              <th class="ptable-cell" style="text-align:center;width:5%;">Sl.No.</th>
+              <th class="ptable-cell" style="text-align:center;width:25%;">WMS GR No</th>
+              <th class="ptable-cell" style="text-align:center;width:25%;">PO No.</th>
+              <th class="ptable-cell" style="text-align:center;width:25%">SAP GR</th>
+              <th class="ptable-cell" style="text-align:center;width:5%" >Edit</th>
+            </tr>
+            <tr>
+              <th></th>
+              <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'wmsgr', 'startsWith')"></th>
+              <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'sapgr', 'startsWith')"></th>
+              <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'pono', 'startsWith')"></th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex" let-rindex=0>
+            <tr>
+              <td class="ptable-cell" style="text-align: center;width: 5%;"> {{ri+1}} </td>
+              <td class="ptable-cell" style="text-align:center;width:25%;"> {{rowData.wmsgr}} </td>
+              <td class="ptable-cell" style="text-align:center;width:25%;"> {{rowData.pono}} </td>
+              <td class="ptable-cell" style="text-align:center;width:25%" >{{rowData.sapgr}} </td>
+              <td class="ptable-cell" style="text-align:center;width:5%">
+                <!--<button type="button" icon="fa fa-edit" pButton aria-hidden="true"   *ngIf="!sapgr" (click)="post(r)"></button>-->
+
+                 <button type="button" icon="fa fa-edit" pButton aria-hidden="true" *ngIf="rowData.sapgr==null " (click)="post(rowData)"></button>
+
+              </td>
+ 
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="4" style="text-align:center;color:red">No Reports</td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+
+
+    </div>
+
+  </div>
+
+
+  <p-dialog header="Edit-SAP GR" [(visible)]="showadddatamodel" (onHide)="refreshsavemodel()" [modal]="true" [style]="{width: '50vw'}" [baseZIndex]="10000"
+            [draggable]="false" [resizable]="false">
+
+    <div class="form-inline">
+      <label class="labelheading">WMS GR :</label>&nbsp;&nbsp;&nbsp;
+      <input type="text" readonly [(ngModel)]="postmodel.wmsgr" style="width:40%;margin:2px" class="form-control" />
+
+    </div>
+    <div class="form-inline">
+      <label class="labelheading">Pos :</label>&nbsp;&nbsp;&nbsp;&nbsp;
+      <input type="text" readonly [(ngModel)]="postmodel.pono" style="width:40%;margin:27px" class="form-control" />
+
+    </div>
+    <div class="form-inline">
+      <label class="labelheading">SAP GR :</label>&nbsp;&nbsp;&nbsp;
+      <input type="text" [(ngModel)]="postmodel.sapgr" style="width:40%;margin:7px" class="form-control" />
+
+    </div>
+    <p-footer>
+      <div class="ui-dialog-buttonpane ui-helper-clearfix">
+        <button type="button" pButton icon="fa fa-check" class="ui-button-success" (click)="postdata()" label="Submit"></button>
+        <button type="button" pButton icon="pi pi-times" (click)="showadddatamodel=false" label="Cancel" class="ui-button-secondary"></button>
+
+      </div>
+    </p-footer>
+  </p-dialog>
+</div>
+
