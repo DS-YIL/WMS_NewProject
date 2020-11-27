@@ -323,7 +323,7 @@ export class GatePassComponent implements OnInit {
       this.spinner.hide();
       this.totalGatePassList = data;
       //filtering the based on logged in user if role id is 8(Admin)
-      if (this.employee.roleid == "7") {
+      if (this.employee.roleid == "5") {
         this.totalGatePassList = this.totalGatePassList.filter(li => li.requestedby == this.employee.employeeno);
       }
       this.gatepasslist = [];
