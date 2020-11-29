@@ -619,7 +619,7 @@ export class GatePassComponent implements OnInit {
         this.updateReturnedDateDialog = false;
         this.getGatePassList();
         if (data)
-          this.messageService.add({ severity: 'success', summary: '', detail: 'Data Saved' });
+          this.messageService.add({ severity: 'success', summary: '', detail: 'Gatepass Updated' });
       })
     }
     else
