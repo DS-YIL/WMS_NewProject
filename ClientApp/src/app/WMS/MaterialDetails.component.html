@@ -33,6 +33,9 @@
       <div class="col-lg-4 col-md-4 col-sm-4 form-group" style="font-weight:600;font-size:14px;color:darkblue;">
         GRN No.: <label class="form-label" style="color:#dc3545;">{{grnno}}</label>
       </div>
+      <div class="col-lg-4 col-md-4 col-sm-4 form-group" style="font-weight:600;font-size:14px;color:darkblue;">
+        PONo.: <label class="form-label" style="color:#dc3545;">{{pono}}</label>
+      </div>
     </div>
     <!--<h5 style="text-align:left">GRN No.: {{grnno}}</h5>-->
     <p-table #dt [columns]="cols" [value]="MaterialData">
@@ -52,9 +55,11 @@
         <tr>
           <th></th>
           <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'materialid', 'contains')"></th>
-          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'qtytotal', 'contains')"></th>
+          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'materialdescription', 'contains')"></th>
+          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'confirmqty', 'contains')"></th>
           <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'issued', 'contains')"></th>
-          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'qtyavailable', 'contains')"></th>
+          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'reservedqty', 'contains')"></th>
+          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'availableqty', 'contains')"></th>
 
 
         </tr>
@@ -65,8 +70,10 @@
             {{ri+1}}
           </td>
           <td class="ptable-cell" style="text-align:left">{{rowData.materialid}}</td>
+          <td class="ptable-cell" style="text-align:left">{{rowData.materialdescription}}</td>
           <td class="ptable-cell" style="text-align:right">{{rowData.confirmqty}}</td>
-          <td class="ptable-cell" style="text-align:right"><a style="color:#36f !important" (click)="IssuedMatDetails(rowData.materialid)">{{rowData.issued}}</a></td>
+          <td class="ptable-cell" style="text-align:right"><a style="color:#36f !important" (click)="IssuedMatDetails(rowData.materialid, 'Issue')">{{rowData.issuedqty}}</a></td>
+          <td class="ptable-cell" style="text-align:right"><a style="color:#36f !important" (click)="IssuedMatDetails(rowData.materialid, 'Reserve')">{{rowData.reservedqty}}</a></td>
           <td class="ptable-cell" style="text-align:right"><a style="color:#36f !important" (click)="AvailableMaterialLoc(rowData.materialid)">{{rowData.availableqty}}</a></td>
 
 

@@ -17,7 +17,7 @@ namespace WMS.Interfaces
         Task<IEnumerable<InvoiceDetails>> getinvoiveforpo(string PONO);
 
         //Get material Details
-        Task<IEnumerable<MaterialDetails>> getMaterialDetails(string grnno);
+        Task<IEnumerable<MaterialDetails>> getMaterialDetails(string grnno, string pono);
 
         //Location Details
         Task<IEnumerable<LocationDetails>> getlocationdetails(string materialid, string grnnumber);
@@ -29,7 +29,9 @@ namespace WMS.Interfaces
         Task<IEnumerable<DirectTransferMain>> getdirecttransferdata(string empno);
 
         //Get material request and issued details
-        Task<IEnumerable<ReqMatDetails>> getReqMatdetails(string materialid,string grnnumber);
+        Task<IEnumerable<ReqMatDetails>> getReqMatdetails(string materialid,string grnnumber, string pono);
+        //Get material reserve details for material tracking
+        Task<IEnumerable<ReqMatDetails>> getReserveMatdetails(string materialid, string grnnumber, string pono);
 
         //Get material requested for return
         Task<IEnumerable<IssueRequestModel>> getmaterialreturnreqList(string matreturnid);

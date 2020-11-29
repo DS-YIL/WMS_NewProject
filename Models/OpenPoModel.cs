@@ -390,6 +390,8 @@ namespace WMS.Models
 		public string grnnumber { get; set; }
 		public string materialdescription { get; set; }
 		public int totalquantity { get; set; }
+		public int issuedqty { get; set; }
+		public int reservedqty { get; set; }
 		public int availableqty { get; set; }
 		public int issued { get; set; }
 		public string qtyavailable { get; set; }
@@ -417,6 +419,7 @@ namespace WMS.Models
 		public int itemid { get; set; }
 		public string inwmasterid { get; set; }
 		public int quantity { get; set; }
+		public int issuedqty { get; set; }
 		public string requesterid { get; set; }
 		public string itemreceiverid { get; set; }
 		public string approverid { get; set; }
@@ -427,8 +430,29 @@ namespace WMS.Models
 
 		public string details { get; set; }
 		public string acknowledge { get; set; }
-		public DateTime issuedon { get; set; }
+		public DateTime? issuedon { get; set; }
 
+		public DateTime? requesteddate { get; set; }
+		public string requestid { get; set; }
+
+		public string gatepassmaterialid { get; set; }
+		public string issuedby { get; set; }
+		public string requestmaterialid { get; set; }
+		public string issuelocation { get; set; }
+		public string materialdescription { get; set; }
+		public string ackstatus { get; set; }
+
+		public string mgapprover { get; set; }
+		public string fmapprover { get; set; }
+		public string gatepassrequestedby { get; set; }
+		public DateTime? gatepassrequesteddate { get; set; }
+
+		public int reservequantity { get; set; }
+		public string reserveid { get; set; }
+		public DateTime? reservedon { get; set; }
+		public DateTime? reserveupto { get; set; }
+		public string projectcode { get; set; }
+		public string reservedby { get; set; }
 
 	}
 	public class DynamicSearchResult
@@ -883,6 +907,8 @@ namespace WMS.Models
 		public string employeenoformanager { get; set; }
 		public string managername { get; set; }
 		public string approverid { get; set; }
+		public string departmentheadid { get; set; }
+		public string departmentheadname { get; set; }
 	}
 	public class authUser
 	{

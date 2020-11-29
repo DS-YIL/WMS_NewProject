@@ -54,9 +54,9 @@ namespace WMS.Controllers
 
 		//Get material details
 		[HttpGet("getMaterialDetailsforgrn")]
-		public async Task<IEnumerable<MaterialDetails>> getMaterialDetails(string grnNo)
+		public async Task<IEnumerable<MaterialDetails>> getMaterialDetails(string grnNo, string pono)
 		{
-			return await this._poService.getMaterialDetails(grnNo);
+			return await this._poService.getMaterialDetails(grnNo,pono);
 		}
 
 		//Get Location details for material
@@ -68,9 +68,16 @@ namespace WMS.Controllers
 
 		//Get material request details
 		[HttpGet("getReqMatdetailsformaterialid")]
-		public async Task<IEnumerable<ReqMatDetails>> getReqMatdetails(string materialid,string grnnumber)
+		public async Task<IEnumerable<ReqMatDetails>> getReqMatdetails(string materialid,string grnnumber, string pono)
 		{
-			return await this._poService.getReqMatdetails(materialid, grnnumber);
+			return await this._poService.getReqMatdetails(materialid, grnnumber, pono);
+		}
+
+		//Get material reserve details
+		[HttpGet("getReserveMatdetailsformaterialtracking")]
+		public async Task<IEnumerable<ReqMatDetails>> getReserveMatdetails(string materialid, string grnnumber, string pono)
+		{
+			return await this._poService.getReserveMatdetails(materialid, grnnumber, pono);
 		}
 
 		[HttpPost("generateBarcodeMaterial")]

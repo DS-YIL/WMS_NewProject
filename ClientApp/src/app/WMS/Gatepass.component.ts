@@ -1061,8 +1061,15 @@ export class GatePassComponent implements OnInit {
     this.wmsService.getapproverdata(this.employee.employeeno).
       subscribe(
         res => {
-          this.gatepassModel.approverid = res[0].approverid;
-          this.gatepassModel.managername = res[0].managername;
+          if (!isNullOrUndefined(res[0].approverid)) {
+            this.gatepassModel.approverid = res[0].approverid;
+            this.gatepassModel.managername = res[0].managername;
+          }
+          else {
+            this.gatepassModel.approverid = res[0].departmentheadid;
+            this.gatepassModel.managername = res[0].departmentheadname;
+          }
+         
 
         });
   }

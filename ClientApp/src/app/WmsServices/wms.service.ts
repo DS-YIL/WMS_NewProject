@@ -140,8 +140,8 @@ export class wmsService {
   }
 
   //Get Material Details
-  getMaterialDetails(grnno: string): Observable<any> {
-    return this.http.get<any>(this.url + 'POData/getMaterialDetailsforgrn?grnNo=' + grnno, this.httpOptions);
+  getMaterialDetails(grnno: string, pono: string): Observable<any> {
+    return this.http.get<any>(this.url + 'POData/getMaterialDetailsforgrn?grnNo=' + grnno + '&pono=' + pono, this.httpOptions);
   }
 
   //Check material exists
@@ -158,9 +158,14 @@ export class wmsService {
   }
 
   //Get material request, isuued and approved details
-  getMaterialRequestDetails(materialid: string, gnrno: string): Observable<any> {
+  getMaterialRequestDetails(materialid: string, gnrno: string, pono: string): Observable<any> {
     materialid = encodeURIComponent(materialid);
-    return this.http.get<any>(this.url + 'POData/getReqMatdetailsformaterialid?materialid=' + materialid + '&grnnumber=' + gnrno, this.httpOptions);
+    return this.http.get<any>(this.url + 'POData/getReqMatdetailsformaterialid?materialid=' + materialid + '&grnnumber=' + gnrno + '&pono=' + pono, this.httpOptions);
+  }
+  //Get material reserve details
+  getMaterialReserveDetails(materialid: string, gnrno: string, pono: string): Observable<any> {
+    materialid = encodeURIComponent(materialid);
+    return this.http.get<any>(this.url + 'POData/getReserveMatdetailsformaterialtracking?materialid=' + materialid + '&grnnumber=' + gnrno + '&pono=' + pono, this.httpOptions);
   }
 
   insertitems(inwardModel: inwardModel[]): Observable<any> {

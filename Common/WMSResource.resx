@@ -670,9 +670,12 @@ left outer join wms.wms_qualitycheck qc on qc.inwardid = inw.inwardid</value>
   VALUES(@inwardid,@qualitypassedqty,@qualityfailedqty,@receivedby,@remarks,current_date) returning qcid</value>
   </data>
   <data name="getimmediatemnger" xml:space="preserve">
-    <value>select emp.name,orgdept.departmenthead  as approverid,emp1.name as managername from wms.employee  emp
- inner join wms.orgdepartments orgdept on orgdept.orgdepartmentid=emp.orgdepartmentid
- inner join wms.employee emp1 on emp1.employeeno=orgdept.departmenthead
+    <value>select emp.name,emp.hodempno as approverid,emp1y.name as managername,
+orgdept.departmenthead  as departmentheadid,emp1.name departmentheadname
+ from wms.employee  emp
+ left outer join wms.orgdepartments orgdept on orgdept.orgdepartmentid=emp.orgdepartmentid
+ left outer join wms.employee emp1 on emp1.employeeno=orgdept.departmenthead
+ left outer join wms.employee emp1y on emp1y.employeeno=emp.hodempno
  where emp.employeeno='#employeeno'</value>
   </data>
   <data name="getgatepassapproverdata" xml:space="preserve">
@@ -1480,5 +1483,74 @@ left outer join  wms.wms_securityinward si on si.grnnumber = sg.wmsgr where wmsg
 								shippingpoint,loadingdate,gr,projectiddef,partno,custpo,grno,codetype,shipto,soldto,uploadcode)
 values (@pono, @materialid, @materialdescription,@materialqty,@itemno,@itemdeliverydate,@podescription,@mscode,@saleorderno,@solineitemno,
 	   @linkageno,@material,@plant,@saleordertype,@customername,@shippingpoint,@loadingdate,@gr,@projectiddef,@partno,@custpo,@grno,@codetype,@shipto,@soldto,@uploadcode)</value>
+  </data>
+  <data name="directtransfermatdetail" xml:space="preserve">
+    <value>select tsd.inwmasterid,tsd.materialid,SUM(tsd.confirmqty) as confirmqty,mat.materialdescription
+from wms.wms_storeinward tsd
+left outer join wms."MaterialMasterYGS" mat on mat.material = tsd.materialid
+where tsd.inwmasterid = '#inw'
+group by tsd.inwmasterid,tsd.materialid,mat.materialdescription</value>
+  </data>
+  <data name="directtransferreportmainquery" xml:space="preserve">
+    <value>select ts.inwmasterid, ts.projectcode,ts.mrnremarks ,ts.grnnumber,Max(emp.name) as mrnby,Max(ts.mrnon) as mrnon,
+prj.projectmanager
+from wms.wms_securityinward ts
+left outer join wms.employee emp on emp.employeeno = ts.mrnby
+left outer join wms.wms_project prj on prj.projectcode = ts.projectcode
+where ts.mrnby is not null and prj.projectmanager = '#empno'
+group by ts.inwmasterid, ts.projectcode,ts.mrnremarks ,ts.grnnumber,
+prj.projectmanager</value>
+  </data>
+  <data name="getmateriallistforTracking" xml:space="preserve">
+    <value>select SUM(stk.availableqty) availableqty,SUM(inw.confirmqty) confirmqty,inw.materialid,Max(mat.materialdescription) as materialdescription,
+ (select sum(iss.issuedqty) from wms.wms_materialissue iss 
+  left outer join wms.wms_stock sk on sk.itemid= iss.itemid where  sk.materialid = inw.materialid and sk.inwmasterid = sec.inwmasterid) as issuedqty,
+  (select sum(res.reservequantity) from wms.materialreservedetails res 
+ left outer join wms.wms_stock sk1 on sk1.itemid= res.itemid where  sk1.materialid = inw.materialid and sk1.inwmasterid = sec.inwmasterid) as reservedqty
+ from wms.wms_stock stk
+ left outer join wms.wms_storeinward inw on inw.inwardid=stk.inwardid
+ left outer join wms.wms_securityinward sec on inw.inwmasterid=sec.inwmasterid
+ left outer join wms."MaterialMasterYGS" mat on mat.material=inw.materialid
+  where sec.grnnumber ='#grn' and inw.pono = '#pono' 
+ group by inw.materialid, inw.pono,sec.inwmasterid</value>
+  </data>
+  <data name="materialTrackingissedDetail" xml:space="preserve">
+    <value>select iss.issuedqty,iss.gatepassmaterialid,mrq.requestid,iss.requestmaterialid,stk.itemlocation as issuelocation,sinw.grnnumber,stinw.materialid,
+ emp.name as requestername,mrq.requesteddate,iss.itemissueddate as issuedon,emp1.name as issuedby,mrq.ackstatus,
+ gtp.gatepasstype,gtp.requestedby as gatepassrequestedby,gtp.requestedon as gatepassrequesteddate,
+ emp2.name as mgapprover,emp3.name as fmapprover,mat.materialdescription
+ from wms.wms_materialissue iss
+ left outer join wms.wms_stock stk on iss.itemid = stk.itemid
+ left outer join wms.wms_storeinward stinw on stinw.inwardid = stk.inwardid
+ left outer join wms.wms_securityinward sinw on sinw.inwmasterid = stinw.inwmasterid
+ left outer join wms.materialrequestdetails mr on mr.id = iss.requestmaterialid
+ left outer join  wms.materialrequest mrq  on mrq.requestid = mr.requestid
+ left outer join wms.wms_gatepassmaterial gm on gm.gatepassmaterialid = iss.gatepassmaterialid
+ left outer join  wms.wms_gatepass gtp  on gtp.gatepassid = gm.gatepassid
+ left outer join  wms.employee emp  on mrq.requesterid = emp.employeeno
+ left outer join  wms.employee emp1  on iss.approvedby = emp1.employeeno
+ left outer join  wms.employee emp2  on gtp.approverid = emp2.employeeno
+ left outer join  wms.employee emp3  on gtp.fmapproverid = emp3.employeeno
+ left outer join wms."MaterialMasterYGS" mat on mat.material=stinw.materialid
+ where stinw.materialid = '#material' and sinw.grnnumber = '#grno' and stinw.pono = '#pono'</value>
+  </data>
+  <data name="materialtrackingReservedlist" xml:space="preserve">
+    <value>select iss.reservequantity,mrq.reserveid,sinw.grnnumber,stinw.materialid,mrq.projectcode,mrq.reserveupto,mat.materialdescription,
+ emp.name as reservedby,mrq.reservedon,stk.itemlocation as issuelocation,
+ CASE
+     WHEN mrq.reserveupto::date &lt; current_date THEN
+	 'Expired'
+     WHEN mrq.requestedby is NOT NULL THEN
+	  'Requested'
+	 ELSE 'Reserved'
+  END as ackstatus
+ from  wms.materialreservedetails iss
+ left outer join wms.materialreserve mrq on iss.reserveid = mrq.reserveid
+ left outer join wms.wms_stock stk on iss.itemid = stk.itemid
+ left outer join wms.wms_storeinward stinw on stinw.inwardid = stk.inwardid
+ left outer join wms.wms_securityinward sinw on sinw.inwmasterid = stinw.inwmasterid
+ left outer join  wms.employee emp  on mrq.reservedby = emp.employeeno
+ left outer join wms."MaterialMasterYGS" mat on mat.material=stinw.materialid
+ where stinw.materialid = '#material' and sinw.grnnumber = '#grno' and stinw.pono = '#pono'</value>
   </data>
 </root>
