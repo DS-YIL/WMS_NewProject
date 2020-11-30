@@ -785,7 +785,7 @@ order by matis.gatepassmaterialid desc</value>
     <value>select stocktype from wms.stocklocation where locationid='#locationid' and location='#locationname' and storeid=#stid and rackid=#rkid and binid=#biid limit 1</value>
   </data>
   <data name="getuserroles" xml:space="preserve">
-    <value>select distinct rl.roleid,rm.rolename as accessname from wms.v_getAccessList rl
+    <value>select distinct rl.roleid,rm.rolename as accessname,rl.subroleid  from wms.v_getAccessList rl
 left outer join wms.rolemaster rm on rl.roleid = rm.roleid
 where rl.employeeid = '#employeeid'</value>
   </data>

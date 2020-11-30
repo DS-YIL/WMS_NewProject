@@ -247,7 +247,7 @@ export class QualityCheckComponent implements OnInit {
         this.showDetails = true;
       }
       else
-        this.messageService.add({ severity: 'eoor', summary: '', detail: 'No materials for quality check' });
+        this.messageService.add({ severity: 'error', summary: '', detail: 'No materials for quality check' });
     })
   }
 
