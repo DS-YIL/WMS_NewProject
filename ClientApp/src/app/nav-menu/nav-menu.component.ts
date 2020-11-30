@@ -102,10 +102,10 @@ export class NavMenuComponent implements OnInit {
 
 
       }
-       //Purpose: << Receipts >>
+      //Purpose: << Receipts >>
 
       if (eurl.includes("/Email/GRNPosting?GRNo")) {
-      debugger;
+        debugger;
         this.grnno = this.route.snapshot.queryParams.grnno;
         this.grnno = eurl.split('=')[1];
         if (this.grnno) {
@@ -113,8 +113,8 @@ export class NavMenuComponent implements OnInit {
           this.bindMenuForEmail();
         }
       }
-    
-       //Purpose: << Quality check >>
+
+      //Purpose: << Quality check >>
 
       if (eurl.includes("/Email/QualityCheck?GRNo")) {
         debugger;
@@ -126,7 +126,7 @@ export class NavMenuComponent implements OnInit {
           this.bindMenuForQualityCheckEmails();
         }
       }
-      
+
       //Purpose: << Project Manager >>
 
       if (eurl.includes("/Email/MaterialIssueDashboard?ReqId")) {
@@ -137,8 +137,8 @@ export class NavMenuComponent implements OnInit {
           this.bindMenuForPMEmails();
         }
       }
-      
-       //Purpose: << InventoryManager >>
+
+      //Purpose: << InventoryManager >>
 
       if (eurl.includes("/Email/MaterialReqView?ReqId")) {
         this.reqid = this.route.snapshot.queryParams.requestid;
@@ -149,7 +149,7 @@ export class NavMenuComponent implements OnInit {
           this.bindMenuForIMEmails();
         }
       }
-      
+
       //Purpose: << PM ACK >>
 
       if (eurl.includes("/Email/MaterialReqView?ReqId")) {
@@ -181,7 +181,7 @@ export class NavMenuComponent implements OnInit {
       //  }
       //}
       //
-       //Purpose: << GatePassPM-InventoryClerk >>
+      //Purpose: << GatePassPM-InventoryClerk >>
 
       if (eurl.includes("/Email/GatePass?GateId")) {
         this.gateid = this.route.snapshot.queryParams.gateid;
@@ -192,7 +192,7 @@ export class NavMenuComponent implements OnInit {
         }
       }
 
-      
+
       //Purpose: << Gate Pass PM approver to FM approver >>
 
       if (eurl.includes("/Email/GatePassFMList?GateId")) {
@@ -204,7 +204,7 @@ export class NavMenuComponent implements OnInit {
         }
       }
 
-      
+
       //Purpose: << Notify to Finance>>
 
       if (eurl.includes("/Email/GRNotification?GRNo")) {
@@ -346,14 +346,14 @@ export class NavMenuComponent implements OnInit {
     node.classList.add("active")
   }
 
- 
+
   bindemailMenu() {
     this.items = [];
     this.items.push({ label: 'Manager Approval', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GatePassPMList') });
     this.items.push({ label: 'Finance Approval', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GatePassFMList') });
     this.router.navigateByUrl('WMS/GatePassPMList');
   }
-    //Purpose:<<Inventory Clerk>>
+  //Purpose:<<Inventory Clerk>>
 
   bindMenuForGatePassInventoryClerkEmails() {
     debugger;
@@ -379,7 +379,7 @@ export class NavMenuComponent implements OnInit {
       ]
     });
     this.router.navigate(['WMS/GatePassApprover', this.gateid]);
-    
+
     let element1: HTMLDivElement = document.getElementById("menudiv") as HTMLDivElement;
     element1.hidden = false;
   }
@@ -400,11 +400,11 @@ export class NavMenuComponent implements OnInit {
     debugger;
     this.items = [];
     this.emp.roleid = "8";
-   
+
     this.items.push({ label: 'Manager Approval', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GatePassPMList') });
-          this.items.push({ label: 'Finance Approval', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GatePassFMList') });
-        
-   
+    this.items.push({ label: 'Finance Approval', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GatePassFMList') });
+
+
     //this.router.navigateByUrl('/WMS/Home');
     if (this.fmgateid) {
       this.router.navigate(['WMS/GatePassFMList'], { queryParams: { requestid: this.fmgateid } });
@@ -412,13 +412,13 @@ export class NavMenuComponent implements OnInit {
     else {
       this.router.navigate(['WMS/GatePassPMList'], { queryParams: { requestid: this.gateid } });
     }
-   
+
     let element1: HTMLDivElement = document.getElementById("menudiv") as HTMLDivElement;
     element1.hidden = false;
 
   }
 
-    //Purpose:<<Quality Control>>
+  //Purpose:<<Quality Control>>
 
   bindMenuForQualityCheckEmails() {
     debugger;
@@ -432,10 +432,10 @@ export class NavMenuComponent implements OnInit {
     this.router.navigate(['WMS/QualityCheck'], { queryParams: { grnnumber: this.grnno } });
     let element1: HTMLDivElement = document.getElementById("menudiv") as HTMLDivElement;
     element1.hidden = false;
-   
+
   }
 
-      //Purpose:<<Inventory Clerk>>
+  //Purpose:<<Inventory Clerk>>
 
   bindMenuForPMEmails() {
     this.items = [];
@@ -463,7 +463,7 @@ export class NavMenuComponent implements OnInit {
     let element1: HTMLDivElement = document.getElementById("menudiv") as HTMLDivElement;
     element1.hidden = false;
   }
-    //Purpose:<<Project Manager>>
+  //Purpose:<<Project Manager>>
 
   bindMenuForIMEmails() {//inventory clerk
     this.items = [];
@@ -477,11 +477,11 @@ export class NavMenuComponent implements OnInit {
     this.items.push({ label: 'Direct Shipment', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/Directtransfer') });
     this.router.navigateByUrl('WMS/Dashboard');
     this.router.navigate(['WMS/MaterialReqView'], { queryParams: { requestid: this.reqid } });
-   
+
     let element1: HTMLDivElement = document.getElementById("menudiv") as HTMLDivElement;
     element1.hidden = false;
   }
-   //Purpose:<<Project Manager>>
+  //Purpose:<<Project Manager>>
 
   bindMenuForPMACKEmails() {
     this.items = [];
@@ -499,8 +499,8 @@ export class NavMenuComponent implements OnInit {
     let element1: HTMLDivElement = document.getElementById("menudiv") as HTMLDivElement;
     element1.hidden = false;
   }
- 
-    //Purpose:<<Inventory clerk login>>
+
+  //Purpose:<<Inventory clerk login>>
 
   bindMenuForEmail() {
     debugger;
@@ -611,7 +611,7 @@ export class NavMenuComponent implements OnInit {
             },
             { label: 'Initial Stock Load', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-caret-right', command: () => this.router.navigateByUrl('WMS/InitialStockReport') },
             { label: 'GR Report', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-caret-right', command: () => this.router.navigateByUrl('WMS/GRReports') },
-]
+          ]
 
           //   this.items.push({ label: 'Material Transfer Dashboard', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialTransferDashboard') });
 
@@ -995,7 +995,7 @@ export class NavMenuComponent implements OnInit {
         items: [
           { label: 'Material Request Dashboard', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialRequestDashboard') },
           { label: 'Material Reserve Dashboard', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReserveDashboard') },
-          { label: 'Material Return Dashboard', style: { 'font-weight': '600','width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialsReturnDashboard') },
+          { label: 'Material Return Dashboard', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialsReturnDashboard') },
           { label: 'Material Transfer Dashboard', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialTransferDashboard') },
           { label: 'Initial Stock Load', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/InitialStockLoad') },
 
@@ -1005,8 +1005,8 @@ export class NavMenuComponent implements OnInit {
         ]
 
       });
-      this.items.push({ label:'Outward/Inward Report', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/outinDashboard') });
-      
+      this.items.push({ label: 'Outward/Inward Report', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/outinDashboard') });
+
       //this.items.push({ label: 'GRN Posting', icon: 'pi pi-fw pi-lock', command: () => this.router.navigateByUrl('WMS/GRNPosting') })
       this.router.navigateByUrl('WMS/Home');
     }
@@ -1039,17 +1039,25 @@ export class NavMenuComponent implements OnInit {
       //this.items.push({ label: 'Material Issue', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialIssueDashboard') });
       // this.items.push({ label: '"Put Away"  Material wise', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/WarehouseIncharge') });
       this.items.push({ label: 'Cycle Count', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/Cyclecount') });
-     // this.items.push({ label: 'Material Transfer Dashboard', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialTransferDashboard') });
+      // this.items.push({ label: 'Material Transfer Dashboard', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialTransferDashboard') });
       //this.items.push({ label: 'Gate Pass', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GatePass') });
       //this.items.push({ label: 'Material Return', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReturn') });
       this.router.navigateByUrl('WMS/Home');
     }
     if (this.emp.roleid == "5") {//project manager (Material Requester)
       this.items = [];
+      var subroles = [];
+      if (this.userrolelist.filter(li => li.roleid == 5).length > 0) {
+        subroles = this.userrolelist.filter(li => li.roleid == 5)[0]["subroleid"];
+      }
+     
       this.items.push({ label: 'Home', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-home', command: () => this.router.navigateByUrl('WMS/Home') });
       this.items.push({ label: 'Manager Dashboard', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-chart-bar', command: () => this.router.navigateByUrl('WMS/PMDashboard') });
       this.items.push({ label: 'MR Dashboard', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-chart-bar', command: () => this.router.navigateByUrl('WMS/Dashboard'), styleClass: 'active' });
-      this.items.push({ label: 'Material Request', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReqView') });
+      if (subroles.includes("1"))//GatePassRequester
+        this.items.push({ label: 'Gate Pass', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GatePass') });
+      if (subroles.includes("2"))//Material Requestor
+        this.items.push({ label: 'Material Request', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReqView') });
       this.items.push({ label: 'Material Reserve', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReserveView') });
       this.items.push({ label: 'Material Transfer', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialTransfer') });
       this.items.push({ label: 'Material Return', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReturnfromPm') });
