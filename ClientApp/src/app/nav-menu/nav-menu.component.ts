@@ -1050,14 +1050,17 @@ export class NavMenuComponent implements OnInit {
       if (this.userrolelist.filter(li => li.roleid == 5).length > 0) {
         subroles = this.userrolelist.filter(li => li.roleid == 5)[0]["subroleid"];
       }
-     
+
       this.items.push({ label: 'Home', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-home', command: () => this.router.navigateByUrl('WMS/Home') });
       this.items.push({ label: 'Manager Dashboard', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-chart-bar', command: () => this.router.navigateByUrl('WMS/PMDashboard') });
       this.items.push({ label: 'MR Dashboard', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-chart-bar', command: () => this.router.navigateByUrl('WMS/Dashboard'), styleClass: 'active' });
-      if (subroles.includes("1"))//GatePassRequester
+      if (subroles && subroles.includes("1"))//GatePassRequester
         this.items.push({ label: 'Gate Pass', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GatePass') });
-      if (subroles.includes("2"))//Material Requestor
+      if (subroles && subroles.includes("2"))//Material Requestor
         this.items.push({ label: 'Material Request', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReqView') });
+      if (subroles == null)//Material Requestor
+        this.items.push({ label: 'Material Request', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReqView') });
+
       this.items.push({ label: 'Material Reserve', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReserveView') });
       this.items.push({ label: 'Material Transfer', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialTransfer') });
       this.items.push({ label: 'Material Return', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReturnfromPm') });
