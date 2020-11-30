@@ -34,7 +34,7 @@ namespace WMS.Controllers
         ErrorLogTrace log = new ErrorLogTrace();
         /*Name of Function : <<uploadExcel>>  Author :<<Prasanna>>  
 		Date of Creation <<02-07-2020>>
-		Purpose : <<Write briefly in one line or two lines>>
+		Purpose : <<fill podata from excel to staging table>>
 		Review Date :<<>>   Reviewed By :<<>>
 		Sourcecode Copyright : Yokogawa India Limited
 		*/
@@ -189,7 +189,7 @@ namespace WMS.Controllers
 
         /*Name of Function : <<loadPOData>>  Author :<<Prasanna>>  
 		Date of Creation <<06-07-2020>>
-		Purpose : <<Write briefly in one line or two lines>>
+		Purpose : <<fill po data from staging to base table>>
 		Review Date :<<>>   Reviewed By :<<>>
 		Sourcecode Copyright : Yokogawa India Limited
 		*/
@@ -355,9 +355,9 @@ namespace WMS.Controllers
         }
 
 
-        /*Name of Function : <<uploadInitialStockExcel>>  Author :<<Prasanna>>  
+        /*Name of Function : <<uploadInitialStockExcel>>  Author :<<Ramesh>>  
         Date of Creation <<16-09-2020>>
-        Purpose : <<Write briefly in one line or two lines>>
+        Purpose : <<Upload initial stock from Excel to staging>>
         Review Date :<<>>   Reviewed By :<<>>
         Sourcecode Copyright : Yokogawa India Limited
         */
@@ -523,7 +523,12 @@ namespace WMS.Controllers
             }
         }
 
-
+        /*Name of Function : <<uploadInitialStockExcelByUser>>  Author :<<Ramesh>>  
+        Date of Creation <<16-09-2020>>
+        Purpose : <<Upload initial stock from Excel to staging>>
+        Review Date :<<>>   Reviewed By :<<>>
+        Sourcecode Copyright : Yokogawa India Limited
+        */
         [HttpPost("uploadInitialStockExcelByUser"), DisableRequestSizeLimit]
         public WMSHttpResponse uploadInitialStockExcelByUser()
         {
@@ -749,9 +754,9 @@ namespace WMS.Controllers
         }
 
         /*
-		function : <<loadStockData>>  Author :<<Prasanna>>  
+		function : <<loadStockData>>  Author :<<Ramesh>>  
 		Date of Creation <<16-09-2020>>
-		Purpose : <<Write briefly in one line or two lines>>
+		Purpose : <<upload stock data from staging to base tables>>
 		Review Date :<<>>   Reviewed By :<<>>
 		Sourcecode Copyright : Yokogawa India Limited
 		*/
@@ -967,12 +972,18 @@ namespace WMS.Controllers
 
         }
 
+
+        /*
+       function : <<loadStockData>>  Author :<<Ramesh>>  
+       Date of Creation <<20-11-2020>>
+       Purpose : <<upload material label data from excel to staging>>
+       Review Date :<<>>   Reviewed By :<<>>
+       Sourcecode Copyright : Yokogawa India Limited
+       */
         [HttpGet]
         [Route("uploadDataExcel")]
         public IActionResult uploadDataExcel()
         {
-           string rsltx = loadlabeldatatobase("d534f713-e9d7-43ec-9151-fa74648f106b");
-           return Ok(true);
 
             using (NpgsqlConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
             {

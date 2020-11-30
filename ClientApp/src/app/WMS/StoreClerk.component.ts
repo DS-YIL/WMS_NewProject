@@ -495,10 +495,11 @@ export class StoreClerkComponent implements OnInit {
     var mat = data.material;
     this.nonpovalidationList = [];
     var selectedm = this.combomaterial.filter(function (element, index) {
-      return (element.material == mat);
+      return (element.material.toLowerCase() == String(mat).toLowerCase());
     });
     if (selectedm.length > 0) {
       data.materialdescription = selectedm[0].materialdescription;
+      data.material = selectedm[0].material;
       data.qualitycheck = selectedm[0].qualitycheck;
     }
     else {

@@ -695,7 +695,7 @@ namespace WMS.DAL
                             string Query = WMSResource.getmaxnonpo;
                             var data = DB.QueryFirstOrDefault<POList>(
                             Query, null, commandType: CommandType.Text);
-                            if (data != null)
+                            if (data.POno != null)
                             {
                                 string[] poserial = data.POno.Split('P');
                                 int serial = Convert.ToInt32(poserial[1].Substring(2));
