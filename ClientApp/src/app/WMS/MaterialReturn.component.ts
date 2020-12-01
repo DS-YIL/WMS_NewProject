@@ -55,13 +55,18 @@ export class MaterialReturnComponent implements OnInit {
   public stock: StockModel[] = [];
   public materialreturnlist: MaterialReturn[] = [];
   public materialreturnlistTR: MaterialReturnTR[] = [];
+  public materialReturnPrintModel: MaterialReturn;
+  public reasonforReturn: string;
+  public currentDate: Date;
+
   filteredmats: any[];
+  ShowPrint: boolean = false;
   ngOnInit() {
     if (localStorage.getItem("Employee"))
       this.employee = JSON.parse(localStorage.getItem("Employee"));
     else
       this.router.navigateByUrl("Login");
-
+    this.currentDate = new Date();
     this.PoDetails = new PoDetails();
     this.StockModel = new StockModel();
     this.returnModel = new returnmaterial();
@@ -80,7 +85,9 @@ export class MaterialReturnComponent implements OnInit {
 
   //get Material Rquest based on login employee && po no
   getMaterialRequestlist() {
+    this.spinner.show();
     this.wmsService.getreturndata(this.employee.employeeno).subscribe(data => {
+      this.spinner.hide();
       this.materialreturnlist = data;
     });
   }
@@ -204,6 +211,10 @@ export class MaterialReturnComponent implements OnInit {
         this.messageService.add({ severity: 'error', summary: ' ', detail: 'Material already exist' });
         return false;
       }
+      else if (!this.reasonforReturn) {
+        this.messageService.add({ severity: 'error', summary: ' ', detail: 'Enter Reason' });
+        return false;
+      }
       //this.gatePassChange();
       else if (this.returnModel.materialList[this.returnModel.materialList.length - 1].material == "" && !isNullOrUndefined(this.material.code)) {
         this.returnModel.materialList[this.returnModel.materialList.length - 1].material = this.material.code;
@@ -212,6 +223,8 @@ export class MaterialReturnComponent implements OnInit {
         // this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].returneddate = this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].returneddate != null ? new Date(this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].returneddate).toLocaleDateString() : undefined;  
       }
     }
+    //adding reason for return
+    this.returnModel.materialList[0].reason = this.reasonforReturn;
     this.wmsService.UpdateReturnqty(this.returnModel.materialList).subscribe(data => {
       this.AddDialog = false;
       if (data == 1) {
@@ -332,7 +345,7 @@ export class MaterialReturnComponent implements OnInit {
 
 
     if (this.returnModel.materialList.length == 0 || isNullOrUndefined(this.material)) {
-      this.materialistModel = { material: "", materialdescription: "", remarks: " ", returnid: 0, returnqty: 0, createdby: this.employee.employeeno };
+      this.materialistModel = { material: "", materialdescription: "", remarks: " ", returnid: 0, returnqty: 0, reason: "", uom: "", saleorderno: "", location: "", createdby: this.employee.employeeno };
       this.returnModel.materialList.push(this.materialistModel);
       this.material = "";
     }
@@ -355,7 +368,7 @@ export class MaterialReturnComponent implements OnInit {
       this.returnModel.materialList[this.returnModel.materialList.length - 1].material = this.material.code;
       //this.returnModel.materialList[this.returnModel.materialList.length - 1].materialdescription = this.material.name;
 
-      this.materialistModel = { material: "", materialdescription: "", remarks: " ", returnid: 0, returnqty: 0, createdby: this.employee.employeeno };
+      this.materialistModel = { material: "", materialdescription: "", remarks: " ", returnid: 0, returnqty: 0, reason: "", uom: "", saleorderno: "", location: "", createdby: this.employee.employeeno };
       this.returnModel.materialList.push(this.materialistModel);
       this.material = "";
     }
@@ -379,9 +392,10 @@ export class MaterialReturnComponent implements OnInit {
     //  //this.returnModel = gatepassobject;
 
     //} else {
-    this.materialistModel = { material: "", materialdescription: "", remarks: " ", returnid: 0, returnqty: 0, createdby: this.employee.employeeno };
+    this.materialistModel = { material: "", materialdescription: "", remarks: " ", returnid: 0, returnqty: 0, reason: "", uom: "", saleorderno: "", location: "", createdby: this.employee.employeeno };
     this.returnModel.materialList.push(this.materialistModel);
     this.material = "";
+    this.reasonforReturn = "";
     // }
     this.transferChange();
   }
@@ -420,4 +434,14 @@ export class MaterialReturnComponent implements OnInit {
 
   }
 
+  PrintMaterialReturn(data: MaterialReturn) {
+    this.ShowPrint = true;
+    this.materialReturnPrintModel = new MaterialReturn();
+    this.materialReturnPrintModel = data;
+  }
+
+  //back to MRN view
+  navigateToMatReturnView() {
+    this.ShowPrint = false
+  }
 }

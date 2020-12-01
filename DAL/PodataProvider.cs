@@ -9234,6 +9234,7 @@ namespace WMS.DAL
                         string mainquery = WMSResource.insertmaterialreturnquery;
                         var rslt = DB.ExecuteScalar(mainquery, new
                         {
+							_listobj[0].reason,
                             createdby
                         });
                         if (rslt != null)
@@ -9256,7 +9257,10 @@ namespace WMS.DAL
                                         returnid,
                                         item.materialid,
                                         item.returnqty,
-                                        item.remarks
+										item.uom,
+										item.saleorderno,
+										item.location,
+										item.remarks
 
 
                                     });

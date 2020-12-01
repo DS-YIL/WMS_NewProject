@@ -32,6 +32,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { NgxPrintModule } from 'ngx-print';
 
 import { DashboardComponent } from './WMS/Dashboard.component';
 import { POListComponent } from './WMS/POList.component';
@@ -228,6 +229,7 @@ import { FieldsetModule } from 'primeng/fieldset';
     DropdownModule,
     MatBadgeModule,
     InputNumberModule, RadioButtonModule,
+    NgxPrintModule,
     ToolbarModule,
     ChartModule,
     SelectButtonModule,

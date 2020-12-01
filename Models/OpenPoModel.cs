@@ -559,7 +559,10 @@ namespace WMS.Models
 
 		public string putawaystatus { get; set; }
 
-
+		public string reason { get; set; }
+		public string uom { get; set; }
+		public string saleorderno { get; set; }
+		public string location { get; set; }
 
 
 	}
@@ -1506,6 +1509,9 @@ public class MaterialReturnTR
 	public string returnid { get; set; }
 	public string materialid { get; set; }
 	public string materialdescription { get; set; }
+	public string uom { get; set; }
+	public string saleorderno { get; set; }
+	public string location { get; set; }
 	public int returnqty { get; set; }
 	public string remarks { get; set; }
 }
@@ -1518,6 +1524,7 @@ public class MaterialReturn
 	public DateTime? createdon { get; set; }
 
 	public string confirmstatus { get; set; }
+	public string reason { get; set; }
 	public List<MaterialReturnTR> materialdata { get; set; }
 
 }

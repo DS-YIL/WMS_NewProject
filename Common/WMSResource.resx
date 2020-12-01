@@ -1248,13 +1248,13 @@ left outer join wms.employee emp on emp.employeeno = rsv.requestedby
 where rsv.reservedby='#reservedby' order by rsv.reserveid desc</value>
   </data>
   <data name="getmaterialreturndetailquery" xml:space="preserve">
-    <value>select matd.returnid,matd.materialid,mat.materialdescription,matd.returnqty,matd.remarks 
+    <value>select matd.returnid,matd.materialid,mat.materialdescription,matd.uom,matd.saleorderno,matd.location,matd.returnqty,matd.remarks 
    from wms.wms_materialreturndetails matd
    left outer join wms."MaterialMasterYGS" mat on mat.material = matd.materialid
    where returnid = '#returnid'</value>
   </data>
   <data name="getmaterialreturnquery" xml:space="preserve">
-    <value>select returnid,createdby,createdon,confirmstatus from wms.wms_materialreturn
+    <value>select returnid,createdby,createdon,confirmstatus,reason from wms.wms_materialreturn
   where createdby='#createdby' order by returnid desc</value>
   </data>
   <data name="getrequestdetailswithoutpo" xml:space="preserve">
@@ -1290,12 +1290,12 @@ values(@pono,current_timestamp,@reservedby,@reserveupto,@projectcode,@remarks) r
 values(@id,@reserveid,@materialid,@itemid,@reservedqty)</value>
   </data>
   <data name="insertmaterialreturndetails" xml:space="preserve">
-    <value>insert into wms.wms_materialreturndetails (id,returnid,materialid,returnqty,remarks)
-values (@id,@returnid,@materialid,@returnqty,@remarks)</value>
+    <value>insert into wms.wms_materialreturndetails (id,returnid,materialid,returnqty,uom,saleorderno,location,remarks)
+values (@id,@returnid,@materialid,@returnqty,@uom,@saleorderno,@location,@remarks)</value>
   </data>
   <data name="insertmaterialreturnquery" xml:space="preserve">
-    <value>insert into wms.wms_materialreturn (createdby,createdon)
-values (@createdby,current_date) returning returnid</value>
+    <value>insert into wms.wms_materialreturn (reason,createdby,createdon)
+values (@reason,@createdby,current_date) returning returnid</value>
   </data>
   <data name="getitemlocationforissue" xml:space="preserve">
     <value>select sum(sk.availableqty)as availableqty,Max(sk.materialid) as materialid,sk.itemlocation,Max(ygs.materialdescription) as materialdescription,sk.createddate::DATE
