@@ -516,6 +516,7 @@ export class UserDashboardDetail {
 export class returnmaterial {
   materialLists: Array<materialistModeltransfer> = [];
   materialList: Array<materialistModelreturn> = [];
+  reason: string;
 }
 export class materialistModelreturn {
   // gatepassmaterialid: string;
@@ -525,6 +526,10 @@ export class materialistModelreturn {
   remarks: string;
   returnid: number;
   createdby: string;
+  reason: string;
+  uom: string;
+  saleorderno: string;
+  location: string;
 }
 export class materialistModeltransfer {
   // gatepassmaterialid: string;

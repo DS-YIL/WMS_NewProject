@@ -1,5 +1,5 @@
 
-<div class="card commoncardcss" style="margin:10px">
+<div *ngIf="!ShowPrint" class="card commoncardcss" style="margin:10px">
   <div class="card-header text-center commoncardheader">
     <div class="row " style="    margin-top: 10px;
     margin-left: 0px !important;
@@ -26,12 +26,16 @@
           <th style="text-align:center;width:100px">Return Id</th>
           <th style="text-align:center;width:150px">Returned On</th>
           <th style="text-align:center;width:100px">Status</th>
+          <th style="text-align:center;width:100px">Reason</th>
+          <th style="text-align:center;width:100px">Print</th>
         </tr>
         <tr>
           <!--<th></th>-->
           <th></th>
           <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'returnid', 'contains')"></th>
           <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'createdon', 'contains')"></th>
+          <th><input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'confirmstatus', 'contains')"> </th>
+          <th><input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'reason', 'contains')"> </th>
           <th> </th>
         </tr>
       </ng-template>
@@ -43,20 +47,15 @@
           <td class="ptable-cell" style="text-align: center;width: 100px;">
             <button type="button" class="btn btn-link" (click)="showmaterialdetails(rowData)" style="padding-left:0px;text-align:center;">{{rowData.returnid}}</button>
           </td>
-
-
           <td class="ptable-cell" style="text-align:center;width:150px;">{{rowData.createdon| date :  constants.dateFormat}}</td>
-
-
-
-
           <td class="ptable-cell" style="text-align:center;width:100px;">
-
-
             <span *ngIf="rowData.confirmstatus=='Accepted'">{{rowData.confirmstatus}}</span>
             <span *ngIf="rowData.confirmstatus==null">Pending</span>
           </td>
-
+          <td class="ptable-cell" style="text-align:center;width:100px;">{{rowData.reason}}</td>
+          <td class="ptable-cell" style="text-align:center;width:100px;">
+            <input class="btn btn-primary btn-sm" (click)="PrintMaterialReturn(rowData)" type="button" value="Print">
+          </td>
         </tr>
       </ng-template>
     </p-table>
@@ -279,6 +278,9 @@
                   <th style="text-align:center;width:250px" class="ptable-cell">Material</th>
                   <th style="text-align:center" class="ptable-cell">Material Description</th>
                   <th style="text-align:center;width:150px" class="ptable-cell">Return qty</th>
+                  <th style="text-align:center;width:150px" class="ptable-cell">UOM</th>
+                  <th style="text-align:center;width:150px" class="ptable-cell">Sale Order</th>
+                  <th style="text-align:center;width:150px" class="ptable-cell">Location</th>
                   <th style="text-align:center;width:250px" class="ptable-cell">Remarks</th>
                   <th style="text-align:center;width:60px" class="ptable-cell"></th>
                 </tr>
@@ -302,6 +304,15 @@
                   <td class="ptable-cell" style="text-align:right">
                     <input style="text-align:left" pInputText type="number" class="form-control" [(ngModel)]="rowData.returnqty">
                   </td>
+                  <td class="ptable-cell" style="text-align:right">
+                    <input style="text-align:left" pInputText type="text" class="form-control" [(ngModel)]="rowData.uom">
+                  </td>
+                  <td class="ptable-cell" style="text-align:right">
+                    <input style="text-align:left" pInputText type="text" class="form-control" [(ngModel)]="rowData.saleorderno">
+                  </td>
+                  <td class="ptable-cell" style="text-align:right">
+                    <input style="text-align:left" pInputText type="text" class="form-control" [(ngModel)]="rowData.location">
+                  </td>
 
                   <td class="ptable-cell" style="text-align:right">
                     <input [(ngModel)]="rowData.remarks" class="form-control" type="text" name="{{rowData.remarks}}" />
@@ -315,14 +326,125 @@
             </p-table>
           </div>
         </div>
-
         <p-footer>
-          <div class="ui-dialog-buttonpane ui-helper-clearfix">
-            <button type="button" pButton icon="fa fa-close" (click)="returnqty()" label="Submit"></button>
+          <div class="row form-inline">
+            <div class="col-xs-2 col-md-2 col-sm-2"> </div>
+            <div class="col-xs-10 col-md-10 col-sm-10 form-inline">
+              <label>Reason:</label>&nbsp;<span style="color:red">*</span><textarea style="width: 250px" class="form-control" [(ngModel)]="reasonforReturn"></textarea>&nbsp;&nbsp;
+              <button type="button" pButton icon="fa fa-close" (click)="returnqty()" label="Submit"></button>
+            </div>
           </div>
         </p-footer>
       </p-dialog>
     </div>
+  </div>
+</div>
+
+<div *ngIf="ShowPrint" style="margin-left:5px;margin-right:5px;">
+  <div class="col-lg-4 col-md-4 form-inline">
+    <button type="button" icon="fa fa-arrow-left" pButton aria-hidden="true" pTooltip="Back" (click)="navigateToMatReturnView()" style="float: left; height: 26px;"></button>
+  </div>
+  <div id="print-section">
+    <table border="1" style="margin:20px;width:85%" >
+      <thead>
+        <tr>
+          <td style="width:50%">
+            <div class="row printheader" style="margin: 0px; padding-top: 5px;">
+              <div class="col-lg-4 col-md-4 col-sm-4 "><img src="../assets/banner1.jpg" height="60" width="150" /></div>
+              <div class="col-lg-3 col-md-3 col-sm-3"></div>
+              <div class="col-lg-5 col-md-5 col-sm-5 form-group">
+                <span class="form-group"><b>Yokogawa India Limited</b></span><br />
+                <span class="form-group">Plot No.96, Complex,3rd Cross, Hosur Road,</span><br />
+                <span class="form-group">Electronic City, Bengaluru, Karnataka 560100</span>
+              </div>
+            </div>
+          </td>
+          <td style="width:50%">
+            <div class=" row font-weight-bold m-2">STORES RETURN NOTE</div><br />
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            <div class=" row font-weight-bold m-2">We are returning the following materials to stores.</div><br />
+          </td>
+        </tr>
+        <tr>
+          <td style="width:50%">
+            <div class="row form-inline m-2">
+              <label class="form-label"><b>Doc No:</b>&nbsp;</label>
+            </div>
+          </td>
+          <td style="width:50%">
+            <div class="row form-inline m-2">
+              <b>Doc Date:</b>&nbsp;<span>{{currentDate | date :  constants.dateFormat}}</span><br />
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            <div class="row form-inline m-2">
+              <b>Reason:</b>&nbsp;<span>{{ materialReturnPrintModel.reason}}</span><br />
+            </div>
+          </td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td colspan="2">
+            <div class="printmain">
+              <div class="row m-2">
+                <table border="1" style="width:100%">
+                  <tr>
+                    <th class="ptable-cell" style="text-align:center;width:30px">Sl. No.</th>
+                    <th class="ptable-cell" style="text-align:center;width:80px">Part No</th>
+                    <th class="ptable-cell" style="text-align:center;width:150px">Description</th>
+                    <th class="ptable-cell" style="text-align:center;width:80px">UOM</th>
+                    <th class="ptable-cell" style="text-align:center;width:60px">Qty</th>
+                    <th class="ptable-cell" style="text-align:center;width:80px">Sale Order</th>
+                    <th class="ptable-cell" style="text-align:center;width:80px">Location</th>
+                  </tr>
+                  <tr *ngFor="let rowData of materialReturnPrintModel.materialdata;let ri = index" >
+                    <td class="ptable-cell" style="text-align:left;width:30px"> {{ri+1}} </td>
+                    <td class="ptable-cell" style="text-align:center;width:80px"> {{rowData.materialid}} </td>
+                    <td class="ptable-cell" style="text-align:left;width:150px"> {{rowData.materialdescription}} </td>
+                    <td class="ptable-cell" style="text-align:center;width:60px">{{rowData.uom}}</td>
+                    <td class="ptable-cell" style="text-align:right;width:60px">{{rowData.returnqty}}</td>
+                    <td class="ptable-cell" style="text-align:center;width:60px">{{rowData.saleorderno}}</td>
+                    <td class="ptable-cell" style="text-align:center;width:60px">{{rowData.location}}</td>
+                  </tr>
+                </table>
+              </div>
+              <div class="row m-2">
+                <div class="col-lg-4 col-md-4 col-sm-4"></div>
+                <div class="col-lg-2 col-md-2 col-sm-2">
+                  <span style="text-align:center" *ngIf="materialReturnPrintModel.materialdata.length==1"><b>Total {{materialReturnPrintModel.materialdata.length}} Item</b></span>
+                  <span style="text-align:center" *ngIf="materialReturnPrintModel.materialdata.length>1"><b>Total {{materialReturnPrintModel.materialdata.length}} Items</b></span>
+                </div>
+              </div>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <div class="printfooter">
+          <br /><br /><br /><br />
+          <div class="row m-0">
+            <div class="col-lg-3 col-md-3 col-sm-3 form-inline">
+              <label class="form-label">Return by : </label>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-3 form-inline">
+              <label class="form-label">Authorised by : </label>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-3 form-inline">
+              <label class="form-label">Store Incharge : </label>
+            </div>
+          </div>
+        </div>
+      </tfoot>
+    </table>
+  </div>
+  <div style="text-align: center;margin-top:5px;bottom:0;position:fixed;margin-left:45%">
+    <button class="btn btn-primary" printTitle="MRN" [useExistingCss]="true" styleSheetFile="/styles.css" [printStyle]="{h1 : {'color': 'red'}, h2 : {'border': 'solid 1px'}}" printSectionId="print-section" ngxPrint> print</button>
   </div>
 </div>
 

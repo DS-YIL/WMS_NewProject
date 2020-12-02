@@ -30,8 +30,10 @@ export class MaterialIssueDashBoardComponent implements OnInit {
   public materialIssueList: Array<any> = [];
   public materialIssueListnofilter: Array<any> = [];
   public employee: Employee;
-  public displayItemRequestDialog; RequestDetailsSubmitted: boolean = false;
+  public displayItemRequestDialog; RequestDetailsSubmitted; ShowPrint: boolean = false;
   public materialRequestDetails: materialRequestDetails;
+  public materialissueDetailsList: Array<any> = [];
+  public currentDate: Date;
 
   ngOnInit() {
     this.materialIssueList = [];
@@ -40,6 +42,7 @@ export class MaterialIssueDashBoardComponent implements OnInit {
     else
       this.router.navigateByUrl("Login");
 
+    this.currentDate = new Date();
     this.selectedStatus = "Pending";
     this.getMaterialIssueList();
 
@@ -81,5 +84,23 @@ export class MaterialIssueDashBoardComponent implements OnInit {
     this.router.navigate(["/WMS/MaterialIssue", details.requestid, details.pono]);
   }
 
+
+  //
+  PrintMaterialIssue(data: any) {
+    if (!data.pono)
+      data.pono = "";
+    if (!data.requestid)
+      data.requestid = "";
+    this.wmsService.getmaterialIssueListbyrequestid(data.requestid, data.pono).subscribe(data => {
+      this.spinner.hide();
+      this.ShowPrint = true;
+      this.materialissueDetailsList = data;
+    });
+  }
+
+  //back to material issue view
+  navigateToMatIssueView() {
+    this.ShowPrint = false
+  }
 
 }
