@@ -31,17 +31,19 @@ namespace WMS.Models
 		public decimal? NetPrice { get; set; }
 		public bool dataloaderror { get; set; }
 		public string error_description { get; set; }
-
-
-
-
 		public string purchdoc { get; set; }
 		public string material { get; set; }
-
 		public string vendor { get; set; }
 		public string vendorname { get; set; }
 		public string projectdefinition { get; set; }
 		public int poquantity { get; set; }
+		public string saleorderno { get; set; }
+		public string solineitemno { get; set; }
+		public string saleordertype { get; set; }
+		public string codetype { get; set; }
+		public string costcenter { get; set; }
+		public string assetno { get; set; }
+		public string projecttext { get; set; }
 
 	}
 
@@ -134,6 +136,10 @@ namespace WMS.Models
 		public decimal? itemamount { get; set; }
 		public DateTime? itemdeliverydate { get; set; }
 		public string projectcode { get; set; }
+		public string assetno { get; set; }
+		public string assetsubno { get; set; }
+		public string costcenter { get; set; }
+		public string projecttext { get; set; }
 
 
 

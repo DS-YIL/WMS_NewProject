@@ -1638,7 +1638,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select distinct rl.roleid,rm.rolename as accessname from wms.v_getAccessList rl
+        ///   Looks up a localized string similar to select distinct rl.roleid,rm.rolename as accessname,rl.subroleid  from wms.v_getAccessList rl
         ///left outer join wms.rolemaster rm on rl.roleid = rm.roleid
         ///where rl.employeeid = &apos;#employeeid&apos;.
         /// </summary>
@@ -1950,10 +1950,9 @@ namespace WMS.Common {
         
         /// <summary>
         ///   Looks up a localized string similar to insert into wms.wms_pomaterials (pono, materialid, materialdescription,materialqty,itemno,itemdeliverydate,podescription,
-        ///								mscode,saleorderno,solineitemno,linkageno,material,plant,saleordertype,customername,
-        ///								shippingpoint,loadingdate,gr,projectiddef,partno,custpo,grno,codetype,shipto,soldto,uploadcode)
+        ///								mscode,saleorderno,solineitemno,linkageno,grno,codetype,uploadcode,assetno,assetsubno,costcenter)
         ///values (@pono, @materialid, @materialdescription,@materialqty,@itemno,@itemdeliverydate,@podescription,@mscode,@saleorderno,@solineitemno,
-        ///	   @linkageno,@material,@plant,@saleordertype,@cu [rest of string was truncated]&quot;;.
+        ///	   @linkageno,@grno,@codetype,@uploadcode,@assetno,@assetsubno,@costcenter).
         /// </summary>
         public static string insertpoformatlabel {
             get {
@@ -1967,6 +1966,17 @@ namespace WMS.Common {
         public static string insertprintmaterial {
             get {
                 return ResourceManager.GetString("insertprintmaterial", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to INSERT INTO wms.st_qtso(
+        ///	id, saleorderno, solineitemno, saleordertype, customername, shipto, shippingpoint, loadingdate, projectiddef, partno, custpo, uploadcode, uploadedon,error_description,isloaderror,projecttext)
+        ///	VALUES (default, @saleorderno, @solineitemno, @saleordertype, @customername, @shipto, @shippingpoint, @loadingdate, @projectiddef, @partno, @custpo, @uploadcode, @uploadedon,@error_description,@isloaderror,@projecttext).
+        /// </summary>
+        public static string insertqtso {
+            get {
+                return ResourceManager.GetString("insertqtso", resourceCulture);
             }
         }
         
@@ -2062,6 +2072,17 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to INSERT INTO wms.st_slno_imports(
+        ///	id, saleorderno, solineitemno, material, gr, plant, serialno, uploadcode, uploadedon,error_description,isloaderror)
+        ///	VALUES (default,@saleorderno, @solineitemno, @material, @gr, @plant, @serialno, @uploadcode, @uploadedon,@error_description,@isloaderror).
+        /// </summary>
+        public static string insertstserialimport {
+            get {
+                return ResourceManager.GetString("insertstserialimport", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to insert into wms.wms_materialtransferapproval(transferid,approverid,approvername,approveremail,approvalLevel) values
         ///        (@transferid,@approverid,@approvername,@approveremail,@approvallevel).
         /// </summary>
@@ -2151,8 +2172,8 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO wms.WMS_ST_MaterialLabel(po,polineitemno,serialno,material,mscode,saleorderno,solineitemno,saleordertype,insprec,linkageno,customername,shipto,plant,gr,shippingpoint,projectiddef,loadingdate,custpo,partno,grno,codetype,description,error_description,isloaderror,uploadcode,vendorcode,vendorname,materialid,materialdescription,materialqty,itemdeliverydate,projectcode) values
-        ///(@po,@polineitemno,@serialno,@material,@mscode,@saleorderno,@solineitemno,@saleordertype,@insprec,@linkageno,@customername,@s [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to INSERT INTO wms.WMS_ST_MaterialLabel(po,polineitemno,mscode,saleorderno,solineitemno,insprec,linkageno,grno,codetype,description,error_description,isloaderror,uploadcode,vendorcode,vendorname,materialid,materialdescription,materialqty,itemdeliverydate,projectcode,assetno,assetsubno,costcenter) values
+        ///(@po,@polineitemno,@mscode,@saleorderno,@solineitemno,@insprec,@linkageno,@grno,@codetype,@description,@error_description,@isloaderror,@uploadcode,@vendorcode,@vendorname,@materialid,@materialdescription,@mate [rest of string was truncated]&quot;;.
         /// </summary>
         public static string materiallablestaginginsert {
             get {
@@ -2544,14 +2565,35 @@ namespace WMS.Common {
         
         /// <summary>
         ///   Looks up a localized string similar to update wms.wms_pomaterials set podescription = @podescription,mscode = @mscode, saleorderno = @saleorderno,
-        ///solineitemno = @solineitemno, linkageno = @linkageno,material = @material,plant = @plant, saleordertype = @saleordertype,
-        ///customername = @customername, shippingpoint= @shippingpoint, loadingdate = @loadingdate, gr = @gr,projectiddef= @projectiddef,
-        ///partno = @partno,custpo = @custpo, grno = @grno,codetype = @codetype, shipto = @shipto, soldto = @soldto,uploadcode = @uploadcode
+        ///solineitemno = @solineitemno, linkageno = @linkageno,grno = @grno,codetype = @codetype,uploadcode = @uploadcode,
+        ///assetno = @assetno,assetsubno = @assetsubno,costcenter = @costcenter
         ///where id = #idx.
         /// </summary>
         public static string updatepoformatlabel {
             get {
                 return ResourceManager.GetString("updatepoformatlabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to update wms.wms_pomaterials set material = @material,plant = @plant,gr = @gr
+        ///   where  saleorderno = &apos;#sono&apos; and solineitemno = &apos;#solineitemno&apos;.
+        /// </summary>
+        public static string updatepomatbrserialexcel {
+            get {
+                return ResourceManager.GetString("updatepomatbrserialexcel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to update wms.wms_pomaterials set saleordertype = @saleordertype,customername = @customername,shippingpoint = @shippingpoint,
+        ///	loadingdate = @loadingdate,projectiddef = @projectiddef,partno = @partno,custpo=@custpo,shipto=@shipto,
+        ///	projecttext = @projecttext
+        ///    where  saleorderno = &apos;#sono&apos; and solineitemno = &apos;#solineitemno&apos;.
+        /// </summary>
+        public static string updatepomatbyqtsoexcel {
+            get {
+                return ResourceManager.GetString("updatepomatbyqtsoexcel", resourceCulture);
             }
         }
         

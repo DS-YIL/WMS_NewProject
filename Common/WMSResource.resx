@@ -1449,8 +1449,8 @@ left outer join wms.employee e on e.employeeno = st.uploadedby
 group by st.uploadbatchcode</value>
   </data>
   <data name="materiallablestaginginsert" xml:space="preserve">
-    <value>INSERT INTO wms.WMS_ST_MaterialLabel(po,polineitemno,serialno,material,mscode,saleorderno,solineitemno,saleordertype,insprec,linkageno,customername,shipto,plant,gr,shippingpoint,projectiddef,loadingdate,custpo,partno,grno,codetype,description,error_description,isloaderror,uploadcode,vendorcode,vendorname,materialid,materialdescription,materialqty,itemdeliverydate,projectcode) values
-(@po,@polineitemno,@serialno,@material,@mscode,@saleorderno,@solineitemno,@saleordertype,@insprec,@linkageno,@customername,@shipto,@plant,@gr,@shippingpoint,@projectiddef,@loadingdate,@custpo,@partno,@grno,@codetype,@description,@error_description,@isloaderror,@uploadcode,@vendorcode,@vendorname,@materialid,@materialdescription,@materialqty,@itemdeliverydate,@projectcode)</value>
+    <value>INSERT INTO wms.WMS_ST_MaterialLabel(po,polineitemno,mscode,saleorderno,solineitemno,insprec,linkageno,grno,codetype,description,error_description,isloaderror,uploadcode,vendorcode,vendorname,materialid,materialdescription,materialqty,itemdeliverydate,projectcode,assetno,assetsubno,costcenter) values
+(@po,@polineitemno,@mscode,@saleorderno,@solineitemno,@insprec,@linkageno,@grno,@codetype,@description,@error_description,@isloaderror,@uploadcode,@vendorcode,@vendorname,@materialid,@materialdescription,@materialqty,@itemdeliverydate,@projectcode,@assetno,@assetsubno,@costcenter)</value>
   </data>
   <data name="insertauditlog" xml:space="preserve">
     <value>insert into wms.AuditLog(id,filename,filelocation,uploadedon,uploadedby,uploadedto,modulename) 
@@ -1458,9 +1458,8 @@ group by st.uploadbatchcode</value>
   </data>
   <data name="updatepoformatlabel" xml:space="preserve">
     <value>update wms.wms_pomaterials set podescription = @podescription,mscode = @mscode, saleorderno = @saleorderno,
-solineitemno = @solineitemno, linkageno = @linkageno,material = @material,plant = @plant, saleordertype = @saleordertype,
-customername = @customername, shippingpoint= @shippingpoint, loadingdate = @loadingdate, gr = @gr,projectiddef= @projectiddef,
-partno = @partno,custpo = @custpo, grno = @grno,codetype = @codetype, shipto = @shipto, soldto = @soldto,uploadcode = @uploadcode
+solineitemno = @solineitemno, linkageno = @linkageno,grno = @grno,codetype = @codetype,uploadcode = @uploadcode,
+assetno = @assetno,assetsubno = @assetsubno,costcenter = @costcenter
 where id = #idx</value>
   </data>
   <data name="GetGRReportDataList" xml:space="preserve">
@@ -1479,10 +1478,9 @@ left outer join  wms.wms_securityinward si on si.grnnumber = sg.wmsgr where wmsg
   </data>
   <data name="insertpoformatlabel" xml:space="preserve">
     <value>insert into wms.wms_pomaterials (pono, materialid, materialdescription,materialqty,itemno,itemdeliverydate,podescription,
-								mscode,saleorderno,solineitemno,linkageno,material,plant,saleordertype,customername,
-								shippingpoint,loadingdate,gr,projectiddef,partno,custpo,grno,codetype,shipto,soldto,uploadcode)
+								mscode,saleorderno,solineitemno,linkageno,grno,codetype,uploadcode,assetno,assetsubno,costcenter)
 values (@pono, @materialid, @materialdescription,@materialqty,@itemno,@itemdeliverydate,@podescription,@mscode,@saleorderno,@solineitemno,
-	   @linkageno,@material,@plant,@saleordertype,@customername,@shippingpoint,@loadingdate,@gr,@projectiddef,@partno,@custpo,@grno,@codetype,@shipto,@soldto,@uploadcode)</value>
+	   @linkageno,@grno,@codetype,@uploadcode,@assetno,@assetsubno,@costcenter)</value>
   </data>
   <data name="directtransfermatdetail" xml:space="preserve">
     <value>select tsd.inwmasterid,tsd.materialid,SUM(tsd.confirmqty) as confirmqty,mat.materialdescription
@@ -1552,5 +1550,25 @@ prj.projectmanager</value>
  left outer join  wms.employee emp  on mrq.reservedby = emp.employeeno
  left outer join wms."MaterialMasterYGS" mat on mat.material=stinw.materialid
  where stinw.materialid = '#material' and sinw.grnnumber = '#grno' and stinw.pono = '#pono'</value>
+  </data>
+  <data name="insertqtso" xml:space="preserve">
+    <value>INSERT INTO wms.st_qtso(
+	id, saleorderno, solineitemno, saleordertype, customername, shipto, shippingpoint, loadingdate, projectiddef, partno, custpo, uploadcode, uploadedon,error_description,isloaderror,projecttext)
+	VALUES (default, @saleorderno, @solineitemno, @saleordertype, @customername, @shipto, @shippingpoint, @loadingdate, @projectiddef, @partno, @custpo, @uploadcode, @uploadedon,@error_description,@isloaderror,@projecttext)</value>
+  </data>
+  <data name="insertstserialimport" xml:space="preserve">
+    <value>INSERT INTO wms.st_slno_imports(
+	id, saleorderno, solineitemno, material, gr, plant, serialno, uploadcode, uploadedon,error_description,isloaderror)
+	VALUES (default,@saleorderno, @solineitemno, @material, @gr, @plant, @serialno, @uploadcode, @uploadedon,@error_description,@isloaderror)</value>
+  </data>
+  <data name="updatepomatbrserialexcel" xml:space="preserve">
+    <value>update wms.wms_pomaterials set material = @material,plant = @plant,gr = @gr
+   where  saleorderno = '#sono' and solineitemno = '#solineitemno'</value>
+  </data>
+  <data name="updatepomatbyqtsoexcel" xml:space="preserve">
+    <value>update wms.wms_pomaterials set saleordertype = @saleordertype,customername = @customername,shippingpoint = @shippingpoint,
+	loadingdate = @loadingdate,projectiddef = @projectiddef,partno = @partno,custpo=@custpo,shipto=@shipto,
+	projecttext = @projecttext
+    where  saleorderno = '#sono' and solineitemno = '#solineitemno'</value>
   </data>
 </root>

@@ -105,8 +105,10 @@ namespace WMS.Controllers
 
                     //conn.Close();
                     string uploadcode = Guid.NewGuid().ToString();
+                    int i = 0;
                     foreach (DataRow row in dtexcel.Rows)
                     {
+                      
 
                         try
                         {
@@ -120,6 +122,13 @@ namespace WMS.Controllers
                             model.projectdefinition = Conversion.toStr(row["project_definition"]);
                             model.itemno = Conversion.toInt(row["po_item_no"]);
                             model.NetPrice = Conversion.Todecimaltype(row["po_item_amt"]);
+                            model.saleorderno = Conversion.toStr(row["sales_order_no"]);
+                            model.solineitemno = Conversion.toStr(row["sales_oreder_item_no"]);
+                            model.saleordertype = Conversion.toStr(row["document_type"]);
+                            model.codetype = Conversion.toStr(row["account_assignment_category"]);
+                            model.costcenter = Conversion.toStr(row["cost_center"]);
+                            model.assetno = Conversion.toStr(row["asset_no"]);
+                            model.projecttext = Conversion.toStr(row["description"]);
                             string Error_Description = "";
                             bool dataloaderror = false;
                             if (string.IsNullOrEmpty(model.pono.Replace('.', '#')))
@@ -143,8 +152,8 @@ namespace WMS.Controllers
                             //dbcmd.CommandText = query;
                             //dbcmd.ExecuteNonQuery();
                             poitem = model.pono +"-"+ model.itemno.ToString();
-                            var insertquery = "INSERT INTO wms.STAG_PO_SAP(PurchDoc,ItemDeliveryDate,Material,POQuantity,Vendor,VendorName,ProjectDefinition,Item,NetPrice,datasource,createddate,DataloadErrors ,Error_Description,uploadcode)";
-                            insertquery += " VALUES(@pono, @itemdeliverydate,@materialid,@poquantity,@vendorcode,@vendorname,@projectdefinition,@itemno,@NetPrice,'SAP',current_timestamp,@dataloaderror,@error_description,@uploadcode)";
+                            var insertquery = "INSERT INTO wms.STAG_PO_SAP(PurchDoc,ItemDeliveryDate,Material,POQuantity,Vendor,VendorName,ProjectDefinition,Item,NetPrice,datasource,createddate,DataloadErrors ,Error_Description,uploadcode,saleorderno,solineitemno,saleordertype,codetype,costcenter,assetno,projecttext)";
+                            insertquery += " VALUES(@pono, @itemdeliverydate,@materialid,@poquantity,@vendorcode,@vendorname,@projectdefinition,@itemno,@NetPrice,'SAP',current_timestamp,@dataloaderror,@error_description,@uploadcode,@saleorderno,@solineitemno,@saleordertype,@codetype,@costcenter,@assetno,@projecttext)";
                             var results = DB.ExecuteScalar(insertquery, new
                             {
                                 model.pono,
@@ -158,7 +167,14 @@ namespace WMS.Controllers
                                 model.NetPrice,
                                 dataloaderror,
                                 model.error_description,
-                                uploadcode
+                                uploadcode,
+                                model.saleorderno,
+                                model.solineitemno,
+                                model.saleordertype,
+                                model.codetype,
+                                model.costcenter,
+                                model.assetno,
+                                model.projecttext
                             });
 
 
@@ -244,13 +260,13 @@ namespace WMS.Controllers
                             if (Projcount == 0)
                             {
                                 //insert wms_project ##pono,jobname,projectcode,projectname,projectmanager,
-                                var insertquery = "INSERT INTO wms.wms_project(pono, jobname, projectcode,projectname,projectmanager,uploadcode)VALUES(@pono, @jobname,@projectcode,@projectname,@projectmanager,@uploadcode)";
+                                var insertquery = "INSERT INTO wms.wms_project(pono, jobname, projectcode,projectname,projectmanager,uploadcode)VALUES(@pono, @jobname,@projectcode,@projecttext,@projectmanager,@uploadcode)";
                                 var results = pgsql.ExecuteScalar(insertquery, new
                                 {
                                     stag_data.pono,
                                     stag_data.jobname,
                                     stag_data.projectcode,
-                                    stag_data.projectname,
+                                    stag_data.projecttext,
                                     stag_data.projectmanager,
                                     uploadcode
                                 });
@@ -283,7 +299,7 @@ namespace WMS.Controllers
                             if (matcount == 0)
                             {
                                 //insert wms_pomaterials ##pono,materialid,materialdescr,materilaqty,itemno,itemamount,item deliverydate,
-                                var insertquery = "INSERT INTO wms.wms_pomaterials(pono, materialid, materialdescription,materialqty,itemno,itemamount,itemdeliverydate)VALUES(@pono, @materialid, @materialdescription,@materialqty,@itemno,@itemamount,@itemdeliverydate)";
+                                var insertquery = "INSERT INTO wms.wms_pomaterials(pono, materialid, materialdescription,materialqty,itemno,itemamount,itemdeliverydate,saleorderno,solineitemno,saleordertype,codetype,costcenter,assetno)VALUES(@pono, @materialid, @materialdescription,@materialqty,@itemno,@itemamount,@itemdeliverydate,@saleorderno,@solineitemno,@saleordertype,@codetype,@costcenter,@assetno)";
                                 var results = pgsql.ExecuteScalar(insertquery, new
                                 {
                                     stag_data.pono,
@@ -292,7 +308,13 @@ namespace WMS.Controllers
                                     stag_data.materialqty,
                                     stag_data.itemno,
                                     stag_data.itemamount,
-                                    stag_data.itemdeliverydate
+                                    stag_data.itemdeliverydate,
+                                    stag_data.saleorderno,
+                                    stag_data.solineitemno,
+                                    stag_data.saleordertype,
+                                    stag_data.codetype,
+                                    stag_data.costcenter,
+                                    stag_data.assetno
                                 });
                             }
                             //else
@@ -984,15 +1006,22 @@ namespace WMS.Controllers
         [Route("uploadDataExcel")]
         public IActionResult uploadDataExcel()
         {
+            string serverPath = "";
 
             using (NpgsqlConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
             {
+                serverPath = @"\\ZAWMS-001\StockExcel\";
+                using (new NetworkConnection(serverPath, new NetworkCredential(@"administrator", "Wms@1234*")))
+                {
 
                 DB.Open();
                 //var filePath = @"D:\Projects\WMS\Docs\label data\ZLMMP00001_ListofPO.xlsx";
-                var filePath = @"D:\A_StagingTable\ZLMMP00001_ListofPO.xlsx";
-                var filePath1 = @"D:\A_StagingTable\ZGSDR00006_QTSO-Sept-Oct2020.xlsx";
-                var filePath2 = @"D:\A_StagingTable\ZGMMR02023_slno_imports.xlsx";
+                //var filePath = @"D:\A_StagingTable\ZLMMP00001_ListofPO.xlsx";
+                //var filePath1 = @"D:\A_StagingTable\ZGSDR00006_QTSO-Sept-Oct2020.xlsx";
+                //var filePath2 = @"D:\A_StagingTable\ZGMMR02023_slno_imports.xlsx";
+                var filePath = serverPath + "ZLMMP00001_ListofPO.xlsx";
+                var filePath1 = serverPath + "ZGSDR00006_QTSO-Sept-Oct2020.xlsx";
+                var filePath2 = serverPath + "ZGMMR02023_slno_imports.xlsx";
 
 
                 /////////for audit purpose/////////
@@ -1072,143 +1101,234 @@ namespace WMS.Controllers
 
                     }
                 }
-
-
-
-
-
-                int i = 0;
                 string upcode = Guid.NewGuid().ToString();
-                foreach (DataRow row in dtexcel.Rows)
+
+                try
                 {
-                    i++;
-                   
-                            
-                    string Error_Description = "";
-                    bool dataloaderror = false;
+                    int i = 0;
 
-                    MateriallabelModel model = new MateriallabelModel();
-                    model.po = Conversion.toStr(row["Purch.Doc."]);
-                    model.polineitemno = Conversion.toStr(row["Item"]);
-                    model.description = Conversion.toStr(row["Description"]);
-                    model.mscode = Conversion.toStr(row["MS Code"]);
-                    model.saleorderno = Conversion.toStr(row["Sales Order Number"]);
-                    model.solineitemno = Conversion.toStr(row["Sales Order Item Number"]);
-                    model.linkageno = Conversion.toStr(row["Linkage Number"]);
-                    model.codetype = Conversion.toStr(row["A"]);
-                    //----//
-                    model.materialid = Conversion.toStr(row["Material"]);
-                    model.vendorcode = Conversion.toStr(row["Vendor"]);
-                    model.vendorname = Conversion.toStr(row["Vendor Name"]);
-                    model.materialqty = Conversion.toInt(row["PO Quantity"]);
-                    model.itemdeliverydate = Conversion.TodtTime(row["Item Delivery Date"]);
-                    model.projectcode = Conversion.toStr(row["Project Definition"]);
-                    model.uploadcode = upcode;
-                    string materialQueryxx = "Select materialdescription from wms.\"MaterialMasterYGS\" where material = '" + model.materialid + "'";
-                    var materialdesc = DB.ExecuteScalar(materialQueryxx, null);
-                    if (materialdesc == null)
+                    foreach (DataRow row in dtexcel.Rows)
                     {
-                        model.materialdescription = "-";
-                    }
-                    else
-                    {
-                        model.materialdescription = materialdesc.ToString();
-                    }
 
-                    if (string.IsNullOrEmpty(model.po))
-                        Error_Description += " No pono";
-                    if (string.IsNullOrEmpty(model.polineitemno))
-                        Error_Description += " No po line item";
 
-                    if (!string.IsNullOrEmpty(Error_Description))
-                    {
-                        dataloaderror = true;
-                        model.error_description = Error_Description;
-                        model.isloaderror = dataloaderror;
 
-                    }
-                    string materialQuery = "Select po from wms.WMS_ST_MaterialLabel where po = '" + model.po + "' and materialid = '"+model.materialid+"' and polineitemno = '" + model.polineitemno + "' ";
-                    var materialid = DB.ExecuteScalar(materialQuery, null);
-                    if (materialid == null)
-                    {
-                        if (!string.IsNullOrEmpty(model.saleorderno) && !string.IsNullOrEmpty(model.solineitemno))
+                        string Error_Description = "";
+                        bool dataloaderror = false;
+
+                        MateriallabelModel model = new MateriallabelModel();
+                        model.po = Conversion.toStr(row["Purch.Doc."]);
+                        model.polineitemno = Conversion.toStr(row["Item"]);
+                        model.description = Conversion.toStr(row["Description"]);
+                        model.mscode = Conversion.toStr(row["MS Code"]);
+                        model.saleorderno = Conversion.toStr(row["Sales Order Number"]);
+                        model.solineitemno = Conversion.toStr(row["Sales Order Item Number"]);
+                        model.linkageno = Conversion.toStr(row["Linkage Number"]);
+                        model.codetype = Conversion.toStr(row["A"]);
+                        //----//
+                        model.materialid = Conversion.toStr(row["Material"]);
+                        model.vendorcode = Conversion.toStr(row["Vendor"]);
+                        model.vendorname = Conversion.toStr(row["Vendor Name"]);
+                        model.materialqty = Conversion.toInt(row["PO Quantity"]);
+                        model.itemdeliverydate = Conversion.TodtTime(row["Item Delivery Date"]);
+                        model.projectcode = Conversion.toStr(row["Project Definition"]);
+                        model.assetno = Conversion.toStr(row["Asset Number"]);
+                        model.assetsubno = Conversion.toStr(row["Asset Subnumber"]);
+                        model.costcenter = Conversion.toStr(row["Cost Center1"]);
+
+
+                        model.uploadcode = upcode;
+                        string materialQueryxx = "Select materialdescription from wms.\"MaterialMasterYGS\" where material = '" + model.materialid + "'";
+                        var materialdesc = DB.ExecuteScalar(materialQueryxx, null);
+                        if (materialdesc == null)
                         {
-                            /////2023
-                            DataRow[] dr = dtexcel2.Select("[Sales Document] = '" + model.saleorderno + "' AND [Sales Document Item] = '" + model.solineitemno + "'");
-                            if (dr.Length > 0)
-                            {
-                                model.material = Conversion.toStr(dr[0]["Material Number"]);
-                                model.gr = Conversion.toStr(dr[0]["Storage Location"]);
-                                model.plant = Conversion.toStr(dr[0]["Plant"]);
-                                //model.serialno = Conversion.toStr(dr[0]["Serial Number"]);
-                            }
-                            /////0006
-                            DataRow[] dr1 = dtexcel1.Select("[Sales Document No.] = '" + model.saleorderno + "' AND [Sales Order Item No.] = '" + model.solineitemno + "'");
-                            if (dr1.Length > 0)
-                            {
-                                model.saleordertype = Conversion.toStr(dr1[0]["Sales Document Type"]);
-                                model.customername = Conversion.toStr(dr1[0]["Sold-to party"]) + " " + Conversion.toStr(dr1[0]["Name: Sold-to party"]);
-                                model.shipto = Conversion.toStr(dr1[0]["Ship-to party"]) + " " + Conversion.toStr(dr1[0]["Name: Ship-to party"]);
-                                model.shippingpoint = Conversion.toStr(dr1[0]["Shipping Point"]) + " " + Conversion.toStr(dr1[0]["Text: Shipping Point"]);
-                                model.loadingdate = Conversion.TodtTime(dr1[0]["Planned Billing Date"]);
-                                model.projectiddef = Conversion.toStr(dr1[0]["Project definition(level 0)"]);
-                                model.partno = Conversion.toStr(dr1[0]["Material"]);
-                                model.custpo = Conversion.toStr(dr1[0]["PO number"]);
-
-
-                            }
+                            model.materialdescription = "-";
+                        }
+                        else
+                        {
+                            model.materialdescription = materialdesc.ToString();
                         }
 
-                        //@po,@polineitemno,@serialno,@material,@mscode,@saleorderno,@solineitemno,@saleordertype,@insprec,@linkageno,@customername,@shipto,@plant,
-                        //@gr,@shippingpoint,@projectiddef,@loadingdate,@custpo,@partno,@grnno,@codetype,@description
+                        if (string.IsNullOrEmpty(model.po))
+                            Error_Description += " No pono";
+                        if (string.IsNullOrEmpty(model.polineitemno))
+                            Error_Description += " No po line item";
 
-                        string insertpoqry = WMSResource.materiallablestaginginsert;
-                        var rslt = DB.Execute(insertpoqry, new
+                        if (!string.IsNullOrEmpty(Error_Description))
                         {
-                            model.po,
-                            model.polineitemno,
-                            model.serialno,
-                            model.material,
-                            model.mscode,
-                            model.saleorderno,
-                            model.solineitemno,
-                            model.saleordertype,
-                            model.insprec,
-                            model.linkageno,
-                            model.customername,
-                            model.shipto,
-                            model.plant,
-                            model.gr,
-                            model.shippingpoint,
-                            model.projectiddef,
-                            model.loadingdate,
-                            model.custpo,
-                            model.partno,
-                            model.grno,
-                            model.codetype,
-                            model.description,
-                            model.error_description,
-                            model.isloaderror,
-                            model.uploadcode,
-                            model.vendorcode,
-                            model.vendorname,
-                            model.materialid,
-                            model.materialdescription,
-                            model.materialqty,
-                            model.itemdeliverydate,
-                            model.projectcode
-                        });
+                            dataloaderror = true;
+                            model.error_description = Error_Description;
+                            model.isloaderror = dataloaderror;
+
+                        }
+                        string materialQuery = "Select po from wms.WMS_ST_MaterialLabel where po = '" + model.po + "' and materialid = '" + model.materialid + "' and polineitemno = '" + model.polineitemno + "' ";
+                        var materialid = DB.ExecuteScalar(materialQuery, null);
+                        if (materialid == null)
+                        {
+
+                            string insertpoqry = WMSResource.materiallablestaginginsert;
+                            var rslt = DB.Execute(insertpoqry, new
+                            {
+                                model.po,
+                                model.polineitemno,
+                                model.mscode,
+                                model.saleorderno,
+                                model.solineitemno,
+                                model.insprec,
+                                model.linkageno,
+                                model.grno,
+                                model.codetype,
+                                model.description,
+                                model.error_description,
+                                model.isloaderror,
+                                model.uploadcode,
+                                model.vendorcode,
+                                model.vendorname,
+                                model.materialid,
+                                model.materialdescription,
+                                model.materialqty,
+                                model.itemdeliverydate,
+                                model.projectcode,
+                                model.assetno,
+                                model.assetsubno,
+                                model.costcenter
+                            });
+
+                        }
+
+
+
+
+
+
+
 
                     }
 
+                    int J = 0;
+
+                    foreach (DataRow row in dtexcel2.Rows)
+                    {
+
+                        string Error_Description = "";
+                        bool dataloaderror = false;
+                        MateriallabelModel slimports = new MateriallabelModel();
+                        slimports.saleorderno = Conversion.toStr(row["Sales Document"]);
+                        slimports.solineitemno = Conversion.toStr(row["Sales Document Item"]);
+
+                        slimports.material = Conversion.toStr(row["Material Number"]);
+                        slimports.gr = Conversion.toStr(row["Storage Location"]);
+                        slimports.plant = Conversion.toStr(row["Plant"]);
+                        slimports.serialno = Conversion.toStr(row["Serial Number"]);
+                        slimports.uploadcode = upcode;
+                        DateTime uploadedon = DateTime.Now;
+                        if (string.IsNullOrEmpty(slimports.saleorderno))
+                            Error_Description += " No saleorder";
+
+                        if (!string.IsNullOrEmpty(Error_Description))
+                        {
+                            dataloaderror = true;
+                            slimports.error_description = Error_Description;
+                            slimports.isloaderror = dataloaderror;
+
+                        }
+
+                        string soQuery = "Select saleorderno from wms.st_slno_imports where saleorderno = '" + slimports.saleorderno + "' and solineitemno = '" + slimports.solineitemno + "' and serialno = '" + slimports.serialno + "' ";
+                        var so = DB.ExecuteScalar(soQuery, null);
+                        if (so == null)
+                        {
+                            string stquery = WMSResource.insertstserialimport;
+                            var rslt = DB.Execute(stquery, new
+                            {
+                                slimports.saleorderno,
+                                slimports.solineitemno,
+                                slimports.material,
+                                slimports.gr,
+                                slimports.plant,
+                                slimports.serialno,
+                                slimports.uploadcode,
+                                uploadedon,
+                                slimports.error_description,
+                                slimports.isloaderror
+                            });
+
+                        }
 
 
 
 
+                    }
+                    int K = 0;
+                    foreach (DataRow row in dtexcel1.Rows)
+                    {
+
+                        string Error_Description = "";
+                        bool dataloaderror = false;
+                        MateriallabelModel model = new MateriallabelModel();
+                        model.saleorderno = Conversion.toStr(row["Sales Document No."]);
+                        model.solineitemno = Conversion.toStr(row["Sales Order Item No."]);
+                        model.saleordertype = Conversion.toStr(row["Sales Document Type"]);
+                        model.customername = Conversion.toStr(row["Sold-to party"]) + " " + Conversion.toStr(row["Name: Sold-to party"]);
+                        model.shipto = Conversion.toStr(row["Ship-to party"]) + " " + Conversion.toStr(row["Name: Ship-to party"]);
+                        model.shippingpoint = Conversion.toStr(row["Shipping Point"]) + " " + Conversion.toStr(row["Text: Shipping Point"]);
+                        model.loadingdate = Conversion.TodtTime(row["Planned Billing Date"]);
+                        model.projectiddef = Conversion.toStr(row["Project definition(level 0)"]);
+                        model.projecttext = Conversion.toStr(row["Project text (Level 0)"]);
+                        model.partno = Conversion.toStr(row["Material"]);
+                        model.custpo = Conversion.toStr(row["PO number"]);
+                        model.uploadcode = upcode;
+                        DateTime uploadedon = DateTime.Now;
+                        if (string.IsNullOrEmpty(model.saleorderno))
+                            Error_Description += " No saleorder";
+
+                        if (!string.IsNullOrEmpty(Error_Description))
+                        {
+                            dataloaderror = true;
+                            model.error_description = Error_Description;
+                            model.isloaderror = dataloaderror;
+
+                        }
+
+                        string soQuery = "Select saleorderno from wms.st_QTSO where saleorderno = '" + model.saleorderno + "' and solineitemno = '" + model.solineitemno + "'";
+                        var so = DB.ExecuteScalar(soQuery, null);
+                        if (so == null)
+                        {
+                            string stquery = WMSResource.insertqtso;
+                            var rslt = DB.Execute(stquery, new
+                            {
+                                model.saleorderno,
+                                model.solineitemno,
+                                model.saleordertype,
+                                model.customername,
+                                model.shipto,
+                                model.shippingpoint,
+                                model.loadingdate,
+                                model.projectiddef,
+                                model.partno,
+                                model.custpo,
+                                model.uploadcode,
+                                uploadedon,
+                                model.error_description,
+                                model.isloaderror,
+                                model.projecttext
+                            });
+
+
+                        }
+
+
+
+                    }
 
 
 
                 }
+                catch (Exception ex)
+                {
+                    var data = ex;
+                    log.ErrorMessage("StagingController", "uploadDataExcel", ex.Message.ToString());
+
+                }
+
 
 
                 foreach (string str in file1arr)
@@ -1225,7 +1345,9 @@ namespace WMS.Controllers
 
                 }
                 string rsltx1 = loadlabeldatatobase(upcode);
+
                 return Ok(true);
+            }
 
 
             }
@@ -1246,9 +1368,15 @@ namespace WMS.Controllers
 
             {
                 string query = "select * from wms.WMS_ST_MaterialLabel  where isloaderror is NOT True and uploadcode = '" + batchcode + "'";
+                string serialquery = "select * from wms.st_slno_imports  where isloaderror is NOT True and uploadcode = '" + batchcode + "'";
+                string qtsoqry = "select * from wms.st_QTSO  where isloaderror is NOT True and uploadcode = '" + batchcode + "'";
                 pgsql.Open();
                 var stagingList = pgsql.Query<MateriallabelModel>(
                    query, null, commandType: CommandType.Text);
+                var seriallist = pgsql.Query<MateriallabelModel>(
+                  serialquery, null, commandType: CommandType.Text);
+                var qtsolist = pgsql.Query<MateriallabelModel>(
+                 qtsoqry, null, commandType: CommandType.Text);
 
                 int rowinserted = 0;
                 string uploadcode = batchcode;
@@ -1258,7 +1386,6 @@ namespace WMS.Controllers
 
                 foreach (MateriallabelModel stag_data in stagingList)
                 {
-                    NpgsqlTransaction Trans = null;
                     try
                     {
                         int itmno = Convert.ToInt32(stag_data.polineitemno);
@@ -1278,21 +1405,24 @@ namespace WMS.Controllers
                                 stag_data.saleorderno,
                                 stag_data.solineitemno,
                                 stag_data.linkageno,
-                                stag_data.material,
-                                stag_data.plant,
-                                stag_data.saleordertype,
-                                stag_data.customername,
-                                stag_data.shippingpoint,
-                                stag_data.loadingdate,
-                                stag_data.gr,
-                                stag_data.projectiddef,
-                                stag_data.partno,
-                                stag_data.custpo,
+                                //stag_data.material,
+                                //stag_data.plant,
+                                //stag_data.saleordertype,
+                                //stag_data.customername,
+                                //stag_data.shippingpoint,
+                                //stag_data.loadingdate,
+                                //stag_data.gr,
+                                //stag_data.projectiddef,
+                                //stag_data.partno,
+                                //stag_data.custpo,
                                 stag_data.grno,
                                 stag_data.codetype,
-                                stag_data.shipto,
-                                stag_data.soldto,
+                                //stag_data.shipto,
+                                //stag_data.soldto,
                                 stag_data.uploadcode,
+                                stag_data.assetno,
+                                stag_data.assetsubno,
+                                stag_data.costcenter
 
                             });
                         }
@@ -1322,11 +1452,12 @@ namespace WMS.Controllers
                             if (Projcount == 0)
                             {
                                 //insert wms_project ##pono,jobname,projectcode,projectname,projectmanager,
-                                var insertquery = "INSERT INTO wms.wms_project(pono,projectcode,uploadcode)VALUES(@po,@projectcode,@uploadcode)";
+                                var insertquery = "INSERT INTO wms.wms_project(pono,projectcode,projectname,uploadcode)VALUES(@po,@projectcode,@description,@uploadcode)";
                                 var results = pgsql.ExecuteScalar(insertquery, new
                                 {
                                     stag_data.po,
                                     stag_data.projectcode,
+                                    stag_data.description,
                                     uploadcode
                                   
                                 });
@@ -1372,21 +1503,24 @@ namespace WMS.Controllers
                                 stag_data.saleorderno,
                                 stag_data.solineitemno,
                                 stag_data.linkageno,
-                                stag_data.material,
-                                stag_data.plant,
-                                stag_data.saleordertype,
-                                stag_data.customername,
-                                stag_data.shippingpoint,
-                                stag_data.loadingdate,
-                                stag_data.gr,
-                                stag_data.projectiddef,
-                                stag_data.partno,
-                                stag_data.custpo,
+                                //stag_data.material,
+                                //stag_data.plant,
+                                //stag_data.saleordertype,
+                                //stag_data.customername,
+                                //stag_data.shippingpoint,
+                                //stag_data.loadingdate,
+                                //stag_data.gr,
+                                //stag_data.projectiddef,
+                                //stag_data.partno,
+                                //stag_data.custpo,
                                 stag_data.grno,
                                 stag_data.codetype,
-                                stag_data.shipto,
-                                stag_data.soldto,
+                                //stag_data.shipto,
+                                //stag_data.soldto,
                                 stag_data.uploadcode,
+                                stag_data.assetno,
+                                stag_data.assetsubno,
+                                stag_data.costcenter
 
                             });
 
@@ -1401,6 +1535,73 @@ namespace WMS.Controllers
                         var res = e;
                         insertmessage += e.Message.ToString();
                         log.ErrorMessage("StagingController", "loadmatlabelDatatobase", e.Message.ToString());
+                        continue;
+                    }
+                }
+                foreach (MateriallabelModel stag_data in seriallist)
+                {
+                    try
+                    {
+                        int itmno = Convert.ToInt32(stag_data.polineitemno);
+                        string materialQuery = "Select * from wms.wms_pomaterials where saleorderno = '" + stag_data.saleorderno + "' and solineitemno ='" + stag_data.solineitemno +"'";
+                        var podata = pgsql.QueryFirstOrDefault<MateriallabelModel>(materialQuery, null, commandType: CommandType.Text);
+                        if (podata != null)
+                        {
+
+                            int rslt = 0;
+                            string podescription = stag_data.description;
+                            stag_data.soldto = stag_data.customername;
+                            var updateqry = WMSResource.updatepomatbrserialexcel.Replace("#sono", stag_data.saleorderno).Replace("#solineitemno", stag_data.solineitemno);
+                            rslt = pgsql.Execute(updateqry, new
+                            {
+                              
+                                stag_data.material,
+                                stag_data.plant,
+                                stag_data.gr
+                            });
+                        }
+
+                    }
+                    catch (Exception e)
+                    {
+                        var res = e;
+                        insertmessage += e.Message.ToString();
+                        log.ErrorMessage("StagingController", "load_st_serialimports", e.Message.ToString());
+                        continue;
+                    }
+                }
+                foreach (MateriallabelModel stag_data in qtsolist)
+                {
+                    
+                    try
+                    {
+                        int itmno = Convert.ToInt32(stag_data.polineitemno);
+                        string materialQuery = "Select * from wms.wms_pomaterials where saleorderno = '" + stag_data.saleorderno + "' and solineitemno ='" + stag_data.solineitemno + "'";
+                        var podata = pgsql.QueryFirstOrDefault<MateriallabelModel>(materialQuery, null, commandType: CommandType.Text);
+                        if (podata != null)
+                        {
+
+                            int rslt = 0;
+                            var updateqry = WMSResource.updatepomatbyqtsoexcel.Replace("#sono", stag_data.saleorderno).Replace("#solineitemno", stag_data.solineitemno);
+                            rslt = pgsql.Execute(updateqry, new
+                            {
+                                stag_data.saleordertype,
+                                stag_data.customername,
+                                stag_data.shippingpoint,
+                                stag_data.loadingdate,
+                                stag_data.projectiddef,
+                                stag_data.partno,
+                                stag_data.custpo,
+                                stag_data.shipto    
+                            });
+                        }
+
+                    }
+                    catch (Exception e)
+                    {
+                        var res = e;
+                        insertmessage += e.Message.ToString();
+                        log.ErrorMessage("StagingController", "load_st_qtsoimports", e.Message.ToString());
                         continue;
                     }
                 }
