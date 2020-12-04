@@ -217,26 +217,262 @@
             </div>
 
             <!--<img src="./assets/wmshome3.png" alt="homepage image" style="height:75vh" />-->
+            <!--<div class="card-header" style="height:20px;padding-top:2px">
+       <span class="labeltext">
+        <i class="fa fa-area-chart"></i>&nbsp;Graphical view
+       </span>
+  </div>
+    <div class="row">
+      <div class="col-lg-6 col-md-6">
+       <p-chart type="line" [data]="chartdata" [height]="350" [options]="chartoptions"></p-chart>
+      </div>
+      <div class="col-lg-6 col-md-6">
+       <p-chart type="bar" [data]="monthlychartdata" [height]="350" [options]="chartoptions1"></p-chart>
+      </div>
+    </div>-->
+            <!-- Cards -->
+
+            <div class="container" style="margin:2px" *ngIf="userroleid == 3">
+              <div class="row">
+
+                <div class="col-lg-3 mb-3">
+                  <div class="card" style="width: 12rem;height:6rem;">
+                    <div class="card-body">
+                      <h5 class="labelheading"  style="font-size:15px">Receipts</h5>
+                      <div class="card-link">
+                        <div class="row justify-content-around">
+
+                          <div class="col-sm-6">
+                            <label> Total :</label>
+                            <span class="labelheading">{{cardDetailslistdata.completedcount}}</span>
+                          </div>
+
+                          <div class="col-sm-6">
+                            <label>Pending :</label>
+                            <span class="labelheading" >{{cardDetailslistdata.pendingcount}}</span>
+                          </div>
+
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
 
-            <div class="card-header" style="height:30px;padding-top:2px">
-            <span class="labeltext">
-              <i class="fa fa-area-chart"></i>&nbsp;Graphical view
-            </span>
-          </div>
-          <div class="row">
-            <div class="col-lg-6 col-md-6">
-              <p-chart type="line" [data]="chartdata" [height]="450" [options]="chartoptions"></p-chart>
+                <div class="col-lg-3 mb-3">
+                  <div class="card" style="width: 12rem;height:6rem;">
+                    <div class="card-body">
+                      <h5 class="labelheading"  style="font-size:15px">Quality</h5>
+                      <div class="card-link">
+                        <div class="row justify-content-around">
+
+                          <div class="col-sm-6">
+                            <label>Total :</label>
+                            <span class="labelheading" >{{cardDetailslistdata.qualitycompcount}}</span>
+                          </div>
+
+                          <div class="col-sm-6">
+                            <label>Pending :</label>
+                            <span class="labelheading" >{{cardDetailslistdata.qualitypendcount}}</span>
+                          </div>
+
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
+                <div class="col-lg-3 mb-3">
+                  <div class="card" style="width: 12rem;height:6rem;">
+                    <div class="card-body">
+                      <h5 class="labelheading"  style="font-size:15px">Acceptance</h5>
+                      <div class="card-link">
+                        <div class="row justify-content-around">
+
+                          <div class="col-sm-6">
+                            <label>Total :</label>
+                            <span class="labelheading">{{cardDetailslistdata.acceptancecompcount}}</span>
+                          </div>
+
+                          <div class="col-sm-6">
+                            <label>Pending :</label>
+                            <span class="labelheading" >{{cardDetailslistdata.acceptancependcount}}</span>
+                          </div>
+
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
+                <div class="col-lg-3 mb-3">
+                  <div class="card" style="width: 12rem;height:6rem;">
+                    <div class="card-body">
+                      <h5 class="labelheading"  style="font-size:15px">Put Away</h5>
+                      <div class="card-link">
+                        <div class="row justify-content-around">
+
+                          <div class="col-sm-6">
+                            <label>Total :</label>
+                            <span class="labelheading" >{{cardDetailslistdata.putawaycompcount}}</span>
+                          </div>
+
+                          <div class="col-sm-6">
+                            <label>Pending :</label>
+                            <span class="labelheading" >{{cardDetailslistdata.putawaypendcount}}</span>
+                          </div>
+
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
+
+              </div>
             </div>
-            <div class="col-lg-6 col-md-6">
-              <p-chart type="bar" [data]="monthlychartdata" [height]="450" [options]="chartoptions1"></p-chart>
+            <!-- PM Cards -->
+
+            <div class="container" style="margin:2px" *ngIf="userroleid == 11">
+              <div class="row">
+
+                <div class="col-lg-3 mb-3">
+                  <div class="card" style="width: 12rem;height:6rem;">
+                    <div class="card-body">
+                      <h5 class="labelheading"  style="font-size:15px">Material Requests</h5>
+                      <div class="card-link">
+                        <div class="row justify-content-around">
+
+                          <div>
+                            <label>Total:</label>
+                            <span class="labelheading">{{pmCardDetailslistdata.totalmaterialrequest}}</span>
+                          </div>
+
+                          <div >
+                            <label>Issued:</label>
+                            <span class="labelheading">{{pmCardDetailslistdata.issuedmaterialrequest}}</span>
+                          </div>
+                          <div >
+                            <label>Pending:</label>
+                            <span class="labelheading">{{pmCardDetailslistdata.pendingmaterialrequest}}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
+                <div class="col-lg-3 mb-3">
+                  <div class="card" style="width: 12rem;height:6rem;">
+                    <div class="card-body">
+                      <h5 class="labelheading"  style="font-size:15px">Material Return</h5>
+                      <div class="card-link">
+                        <div class="row justify-content-around">
+
+                          <div>
+                            <label>Total:</label>
+                            <span class="labelheading">{{pmCardDetailslistdata.totalmaterialreturn}}</span>
+                          </div>
+                          <div>
+                            <label>Approved:</label>
+                            <span class="labelheading">{{pmCardDetailslistdata.approvedmaterialreturn}}</span>
+                          </div>
+                          <div>
+                            <label>Pending:</label>
+                            <span class="labelheading">{{pmCardDetailslistdata.pendingmaterialreturn}}</span>
+                          </div>
+
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
+                <div class="col-lg-3 mb-3">
+                  <div class="card" style="width: 12rem;height:6rem;">
+                    <div class="card-body">
+                      <h5 class="labelheading"  style="font-size:15px">Material Reserved</h5>
+                      <div class="card-link">
+                        <div class="row justify-content-around">
+
+                          <div class="col-sm-6">
+                            <label>Total :</label>
+                            <span class="labelheading">{{pmCardDetailslistdata.totalmaterialreserved}}</span>
+                          </div>
+
+                          <!--<div class="col-sm-6">
+                            <label>Pending :</label>
+                            <span class="labelheading" *ngIf="isqualityuser">{{cardDetailslistdata.acceptancependcount}}</span>
+                          </div>-->
+
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
+                <div class="col-lg-3 mb-3">
+                  <div class="card" style="width: 12rem;height:6rem;">
+                    <div class="card-body">
+                      <h5 class="labelheading"  style="font-size:15px">Material Returned</h5>
+                      <div class="card-link">
+                        <div class="row justify-content-around">
+
+                          <div class="col-sm-6">
+                            <label>Total :</label>
+                            <span class="labelheading">{{pmCardDetailslistdata.totalmaterialreturned}}</span>
+                          </div>
+
+                          <!--<div class="col-sm-6">
+                            <label>Pending :</label>
+                            <span class="labelheading" *ngIf="isinventoryclerk">{{cardDetailslistdata.putawaypendcount}}</span>
+                          </div>-->
+
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
+
+              </div>
             </div>
 
-          </div>
+            <!-- Cards -->
+
+            <div class="card-header" style="height:20px;padding-top:2px">
+              <span class="labeltext">
+                <i class="fa fa-area-chart"></i>&nbsp;Graphical view
+              </span>
+            </div>
+            <div class="row">
+              <div class="col-lg-6 col-md-6">
+                <p-chart type="line" [data]="monthlychartdata" [height]="250" [options]="chartoptions1"></p-chart>
+              </div>
+              <div class="col-lg-6 col-md-6">
+                <p-chart type="bar" [data]="chartdata" [height]="250" [options]="chartoptions"></p-chart>
+              </div>
+              <!--<div class="col-lg-6 col-md-6">
+                <p-chart type="bar" [data]="chartdataPM" [height]="250" [options]="chartoptions"></p-chart>
+              </div>-->
+            </div>
+            <!--<div class="col-lg-3 col-md-3" >
+    <p-chart type="doughnut" [data]="monthlychartdata"  ></p-chart>
+  </div>-->
+            <!-- End Graphs -->
+
+
           </div>
 
 
-        </div>
+          </div>
 
       </div>
 

@@ -5,7 +5,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { constants } from '../Models/WMSConstants'
 import { Employee, Login, DynamicSearchResult, printMaterial, rbamaster } from '../Models/Common.Model';
-import { PoFilterParams, PoDetails, BarcodeModel, StockModel, materialRequestDetails, inwardModel, gatepassModel, stocktransfermodel, Materials, authUser, invstocktransfermodel, ddlmodel, locataionDetailsStock, updateonhold, materialistModel, outwardmaterialistModel, pageModel, UserDashboardDetail, UserDashboardGraphModel, UnholdGRModel, MRNsavemodel, notifymodel, materialtransferMain, materialReservetorequestModel, testcrud, PrintHistoryModel, materilaTrasFilterParams, materialRequestFilterParams, materialResFilterParams, materialRetFilterParams, outwardinwardreportModel, UserModel, WMSHttpResponse, MaterialinHand, matlocations, grReports} from '../Models/WMS.Model';
+import { PoFilterParams, PoDetails, BarcodeModel, StockModel, materialRequestDetails, inwardModel, gatepassModel, stocktransfermodel, Materials, authUser, invstocktransfermodel, ddlmodel, locataionDetailsStock, updateonhold, materialistModel, outwardmaterialistModel, pageModel, UserDashboardDetail, UserDashboardGraphModel, UnholdGRModel, MRNsavemodel, notifymodel, materialtransferMain, materialReservetorequestModel, testcrud, PrintHistoryModel, materilaTrasFilterParams, materialRequestFilterParams, materialResFilterParams, materialRetFilterParams, outwardinwardreportModel, UserModel, WMSHttpResponse, MaterialinHand, matlocations, grReports, ManagerDashboard, pmDashboardCards} from '../Models/WMS.Model';
 import { Text } from '@angular/compiler/src/i18n/i18n_ast';
 
 @Injectable({
@@ -689,6 +689,11 @@ export class wmsService {
     return this.http.get<UserDashboardGraphModel[]>(this.url + 'POData/getManagerdashboardgraphdata/', this.httpOptions);
   }
 
+  getCardlist(): Observable<any> {
+    return this.http.get<ManagerDashboard>(this.url + 'POData/getManagerdashboardgraphdata/', this.httpOptions);
+  }
+
+
   getPODataList(suppliername: any): Observable<any> {
     //console.log(suppliername)
     return this.http.get<any[]>(this.url + 'POData/getPODataList?suppliername=' + suppliername, this.httpOptions);
@@ -706,6 +711,14 @@ export class wmsService {
 
   editGRReports(wmsgr: string): Observable<grReports> {
     return this.http.get<grReports>(this.url + 'POData/addEditReports?wmsgr=' + wmsgr, this.httpOptions);
+  }
+
+  getPMCardlist(): Observable<any> {
+    return this.http.get<pmDashboardCards>(this.url + 'POData/getPMdashboarddata/', this.httpOptions);
+  }
+
+  getPMdashgraphdata(): Observable<UserDashboardGraphModel[]> {
+    return this.http.get<UserDashboardGraphModel[]>(this.url + 'POData/getUserdashboardgraphPMdata/', this.httpOptions);
   }
 }
 

@@ -33,10 +33,10 @@ namespace WMS.DAL
       
             string id = DomainId;
          // PrincipalContext ctx = new PrincipalContext(ContextType.Domain);
-           PrincipalContext ctx = null;
+          PrincipalContext ctx = null;
             List<User> userdata = new List<User>();
             User data = new User();
-            //UserPrincipal user = UserPrincipal.FindByIdentity(ctx, id);
+           //UserPrincipal user = UserPrincipal.FindByIdentity(ctx, id);
            UserPrincipal user = null;
             if (user != null)
             {

@@ -234,7 +234,10 @@ Task<string> updateonholdrow(updateonhold datamodel);
         Task<IEnumerable<grReports>> addEditReports(string wmsgr );
 
         string EditReports(grReports data);
+        Task<pmDashboardCards> getPMdashboarddata();
+        //Task<imDashboardCards> getIMdashboarddata();
 
+        Task<IEnumerable<UserDashboardGraphModel>> getUserdashboardgraphPMdata();
 
     }
 }

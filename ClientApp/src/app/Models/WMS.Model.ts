@@ -83,6 +83,7 @@ export class UserDashboardGraphModel {
   count: number;
   graphdate: Date;
   type: string;
+  sweek: string;
 }
 
 export class UnholdGRModel {
@@ -810,3 +811,13 @@ export class grReports {
   pono: string;
 }
 
+export class pmDashboardCards{
+  totalmaterialrequest: any;
+  issuedmaterialrequest: any;
+  pendingmaterialrequest: any;
+  totalmaterialreturn: any;
+  approvedmaterialreturn: any;
+  pendingmaterialreturn: any;
+  totalmaterialreserved: any;
+  totalmaterialreturned: any;
+}

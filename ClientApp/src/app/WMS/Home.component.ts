@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { Employee, userAcessNamesModel } from '../Models/Common.Model';
-import { UserDashboardDetail, UserDashboardGraphModel } from '../Models/WMS.Model';
+import { UserDashboardDetail, UserDashboardGraphModel, ManagerDashboard, pmDashboardCards} from '../Models/WMS.Model';
 import { wmsService } from '../WmsServices/wms.service';
 import { NgxSpinnerService } from "ngx-spinner";
 import { DatePipe } from '@angular/common';
@@ -16,12 +16,15 @@ import { TreeNode } from 'primeng/api';
 })
 export class HomeComponent implements OnInit {
   chartdata: any;
+  chartdataPM: any;
   monthlychartdata: any;
   weeklychartdata: any;
   piedata: any;
   data1: TreeNode[];
   constructor(private router: Router, private wmsService: wmsService, private spinner: NgxSpinnerService, private datePipe: DatePipe, private navpage: NavMenuComponent, private apppage: AppComponent ) {
    }
+  cardDetailslistdata: ManagerDashboard[] = [];
+  pmCardDetailslistdata: pmDashboardCards[] = [];
   public employee: Employee;
   isroleselected: boolean = true;
   userrolelist: userAcessNamesModel[] = [];
@@ -30,6 +33,7 @@ export class HomeComponent implements OnInit {
   dashboardmodel: UserDashboardDetail;
   dashboardgraphmodel: UserDashboardGraphModel[] = [];
   monthlydashboardgraphmodel: UserDashboardGraphModel[] = [];
+  pmdashboardgraphmodel: UserDashboardGraphModel[] = [];
   chartoptions: any;
   chartoptions1: any;
   nodes: any[] = [];
@@ -62,6 +66,7 @@ export class HomeComponent implements OnInit {
     this.dashboardmodel = new UserDashboardDetail();
     this.dashboardgraphmodel = [];
     this.monthlydashboardgraphmodel = [];
+    this.pmdashboardgraphmodel = [];
     this.approverstatus = "Pending";
     this.materialforissuecount = 0;
     this.selectedrolename = "";
@@ -233,6 +238,7 @@ export class HomeComponent implements OnInit {
       if (data != null) {
 
         this.dashboardgraphmodel = data;
+     // console.log(this.dashboardgraphmodel)
         this.setgraph('Receive'); 
 
       }
@@ -241,7 +247,6 @@ export class HomeComponent implements OnInit {
 
 
   }
-
   getmonthlygraphdata() {
 
     this.spinner.show();
@@ -251,7 +256,7 @@ export class HomeComponent implements OnInit {
         this.monthlydashboardgraphmodel = data;
         this.setmonthlygraph('Receive');
        
-
+       // console.log(this.monthlydashboardgraphmodel)
 
       }
       this.spinner.hide();
@@ -317,10 +322,11 @@ export class HomeComponent implements OnInit {
   }
 
   setmonthlygraph(type: string) {
+    debugger;
     this.monthlychartdata = null;
     var lblmessage = "";
     if (type == "Receive") {
-      lblmessage = "Monthly Received Receipts"
+      lblmessage = "Weekly Received Receipts"
     }
     if (type == "Quality") {
 
@@ -350,7 +356,12 @@ export class HomeComponent implements OnInit {
     }
 
     this.monthlychartdata = {
-
+      //chart: {
+      //  //height: 350,
+      //  type: "line",
+      //  zoom: {
+      //    enabled: false
+      //  },
       labels: pid,
       datasets: [
         {
@@ -365,7 +376,7 @@ export class HomeComponent implements OnInit {
     }
     this.chartoptions1 = { scales: { yAxes: [{ ticks: { beginAtZero: true, userCallback: function (label, index, labels) { if (Math.floor(label) === label) { return label; } }, } }] } }
 
-
+   // console.log(this.monthlychartdata);
 
 
   }
@@ -511,17 +522,124 @@ export class HomeComponent implements OnInit {
 
         this.dashboardmodel = data;
 
-           
+        //console.log(this.dashboardmodel) 
       }
       this.getGatePassList();
       this.getMaterialIssueList();
       this.getgraphdata();
       this.getmonthlygraphdata();
+      this.getCardlist();
+      this.getPMCardlist();
+      this.getgraphPMdata();
       this.spinner.hide();
       })
 
     
   }
+
+
+  getCardlist() {
+    this.cardDetailslistdata = [];
+    this.spinner.show();
+    this.wmsService.getCardlist().subscribe(data => {
+      this.cardDetailslistdata = data;
+
+       //console.log(this.cardDetailslistdata)
+
+      this.spinner.hide();
+    });
+  }
+
+  getPMCardlist() {
+    this.pmCardDetailslistdata = [];
+    this.spinner.show();
+    this.wmsService.getPMCardlist().subscribe(data => {
+      this.pmCardDetailslistdata = data;
+
+     // console.log(this.pmCardDetailslistdata)
+
+      this.spinner.hide();
+    });
+  }
+
+  getgraphPMdata() {
+
+    this.spinner.show();
+    this.wmsService.getPMdashgraphdata().subscribe(data => {
+      if (data != null) {
+
+        this.pmdashboardgraphmodel = data;
+        console.log(this.pmdashboardgraphmodel)
+        this.setPMgraph('Request');
+
+      }
+      this.spinner.hide();
+    })
+
+
+  }
+
+
+
+
+
+  setPMgraph(type: string) {
+    this.chartdataPM = null;
+    var lblmessage = "";
+    if (type == "Request") {
+      lblmessage = "material Requested  in past seven days."
+    }
+    if (type == "Return") {
+
+      lblmessage = "materials Return in past seven days."
+
+    }
+    if (type == "Reserve") {
+
+      lblmessage = "materials Reserved  in past seven days."
+
+    }
+    if (type == "Returned") {
+
+      lblmessage = "materials Returned in past seven days."
+
+    }
+    var pid = []
+    var count = []
+    var gdata = this.pmdashboardgraphmodel.filter(function (elementx, index) {
+      console.log( this.pmdashboardgraphmodel)
+      return (elementx.type == type);
+    });
+    if (gdata.length > 0) {
+      gdata.forEach(element => {
+
+        var showdate = this.datePipe.transform(element.graphdate, 'dd/MM/yyyy');
+        pid.push(showdate);
+        count.push(element.count);
+      });
+    }
+
+    this.chartdataPM = {
+
+      labels: pid,
+      datasets: [
+        {
+          label: lblmessage,
+          //backgroundColor: '#42A5F5',
+          backgroundColor: 'rgba(0,255,0,0.5)',
+          borderColor: '#7CB342',
+          data: count
+        },
+      ]
+
+    }
+    this.chartoptions = { scales: { yAxes: [{ ticks: { beginAtZero: true, userCallback: function (label, index, labels) { if (Math.floor(label) === label) { return label; } }, } }] } }
+    console.log(this.chartdataPM)
+
+
+
+  }
+
 }
 
 

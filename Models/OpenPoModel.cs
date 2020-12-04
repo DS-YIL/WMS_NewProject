@@ -1528,3 +1528,17 @@ public class initialStock
 
 }
 
+public class pmDashboardCards
+{
+	public int totalmaterialrequest { get; set; }
+	public int issuedmaterialrequest { get; set; }
+	public int pendingmaterialrequest { get; set; }
+	public int totalmaterialreturn { get; set; }
+	public int approvedmaterialreturn { get; set; }
+	public int pendingmaterialreturn { get; set; }
+	public int totalmaterialreserved { get; set; }
+	public int totalmaterialreturned { get; set; }
+
+
+
+}

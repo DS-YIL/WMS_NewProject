@@ -4710,7 +4710,7 @@ namespace WMS.DAL
 		Review Date :<<>>   Reviewed By :<<>>
 		*/
         public async Task<UserDashboardDetail> getUserDashboarddata(string empno)
-        {
+         {
             using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
             {
 
@@ -5445,34 +5445,34 @@ namespace WMS.DAL
                 {
 
                     //Get count of po and invoice for pending receipts
-                    string penqry = "select count(*) as pendingcount from wms.wms_securityinward where receiveddate> now() - interval '7 days' and grnnumber is null and onhold is null ";
+                    string penqry = "select count(*) as pendingcount from wms.wms_securityinward where receiveddate> now() - interval '1 month' and grnnumber is null and onhold is null ";
 
                     //Get count of po and invoice for on hold receipts
-                    string onholdqry = "select count(*) as onholdcount from wms.wms_securityinward where receiveddate> now() - interval '7 days' and grnnumber is null and onhold = true ";
+                    string onholdqry = "select count(*) as onholdcount from wms.wms_securityinward where receiveddate> now() - interval '1 month' and grnnumber is null and onhold = true ";
 
                     //Get count of po and invoice for complete receipts
-                    string completeqry = "select count(*) as completedcount from wms.wms_securityinward where receiveddate> now() - interval '7 days' and grnnumber is not null and onhold is null ";
+                    string completeqry = "select count(*) as completedcount from wms.wms_securityinward where receiveddate> now() - interval '1 month' and grnnumber is not null and onhold is null ";
 
                     //Get count of quality check completed
-                    string qualitycompl = "select count(*),COUNT(*) OVER () as  qualitycompcount from wms.wms_storeinward where receiveddate> now() - interval '7 days' and qualitycheckrequired =true and qualitychecked =true group by inwmasterid";
+                    string qualitycompl = "select count(*),COUNT(*) OVER () as  qualitycompcount from wms.wms_storeinward where receiveddate> now() - interval '1 month' and qualitycheckrequired =true and qualitychecked =true group by inwmasterid";
 
                     //Get count of quality check pending
-                    string qualitypending = "select count(*),COUNT(*) OVER () as qualitypendcount from wms.wms_storeinward where receiveddate> now() - interval '7 days' and qualitycheckrequired =true and qualitychecked is null group by inwmasterid";
+                    string qualitypending = "select count(*),COUNT(*) OVER () as qualitypendcount from wms.wms_storeinward where receiveddate> now() - interval '1 month' and qualitycheckrequired =true and qualitychecked is null group by inwmasterid";
 
                     //Get count of pending GRN's - putaway 
-                    string putawaypend = " select count(*),COUNT(*) OVER () as putawaypendcount from wms.wms_securityinward secinw  where secinw.inwmasterid not in (select distinct inwmasterid  from wms.wms_stock where inwmasterid is not null order by inwmasterid desc) and receiveddate> now() - interval '7 days' group by secinw.inwmasterid ";
+                    string putawaypend = " select count(*),COUNT(*) OVER () as putawaypendcount from wms.wms_securityinward secinw  where secinw.inwmasterid not in (select distinct inwmasterid  from wms.wms_stock where inwmasterid is not null order by inwmasterid desc) and receiveddate> now() - interval '1 month' group by secinw.inwmasterid ";
 
                     //Get count of completed GRN's - putaway 
-                    string putawaycomp = " select sinw.grnnumber,COUNT(*) OVER () as putawaycompcount from wms.wms_storeinward stinw  join wms.wms_securityinward sinw on stinw.inwmasterid = sinw.inwmasterid where stinw.returnedby is not null and sinw.isdirecttransferred is NOT true and stinw.inwardid  in (select distinct inwardid from wms.wms_stock where inwardid is not null and createddate> now() - interval '7 days'  order by inwardid desc) group by sinw.grnnumber";
+                    string putawaycomp = " select sinw.grnnumber,COUNT(*) OVER () as putawaycompcount from wms.wms_storeinward stinw  join wms.wms_securityinward sinw on stinw.inwmasterid = sinw.inwmasterid where stinw.returnedby is not null and sinw.isdirecttransferred is NOT true and stinw.inwardid  in (select distinct inwardid from wms.wms_stock where inwardid is not null and createddate> now() - interval '1 month'  order by inwardid desc) group by sinw.grnnumber";
 
                     //Get count of In progress GRN's - putaway
-                    string putawayinprogres = " select sinw.grnnumber,COUNT(*) OVER () as putawayinprocount from wms.wms_storeinward stinw join wms.wms_securityinward sinw on stinw.inwmasterid = sinw.inwmasterid where stinw.returnedby is not null and sinw.isdirecttransferred is NOT true and stinw.inwardid not in (select distinct inwardid from wms.wms_stock where inwardid is not null and createddate> now() - interval '7 days'  order by inwardid desc)  group by sinw.grnnumber";
+                    string putawayinprogres = " select sinw.grnnumber,COUNT(*) OVER () as putawayinprocount from wms.wms_storeinward stinw join wms.wms_securityinward sinw on stinw.inwmasterid = sinw.inwmasterid where stinw.returnedby is not null and sinw.isdirecttransferred is NOT true and stinw.inwardid not in (select distinct inwardid from wms.wms_stock where inwardid is not null and createddate> now() - interval '1 month'  order by inwardid desc)  group by sinw.grnnumber";
 
                     //Get count of pending GRN's - Acceptance 
-                    string acceptancepenqry = "select count(*),COUNT(*) OVER () as acceptancependcount from wms.wms_storeinward stin where receiveddate> now() - interval '7 days' and returnqty is null and confirmqty is null   group by(inwmasterid)";
+                    string acceptancepenqry = "select count(*),COUNT(*) OVER () as acceptancependcount from wms.wms_storeinward stin where receiveddate> now() - interval '1 month' and returnqty is null and confirmqty is null   group by(inwmasterid)";
 
                     //Get count of Accepted GRN's - Acceptance 
-                    string acceptancecomptqry = "select count(*),COUNT(*) OVER () as acceptancecompcount from wms.wms_storeinward stin where receiveddate> now() - interval '7 days' and returnqty is not null and confirmqty is not null  group by(inwmasterid)";
+                    string acceptancecomptqry = "select count(*),COUNT(*) OVER () as acceptancecompcount from wms.wms_storeinward stin where receiveddate> now() - interval '1 month' and returnqty is not null and confirmqty is not null  group by(inwmasterid)";
 
                     var data1 = await pgsql.QueryAsync<ManagerDashboard>(penqry, null, commandType: CommandType.Text);
                     var data2 = await pgsql.QueryAsync<ManagerDashboard>(onholdqry, null, commandType: CommandType.Text);
@@ -5486,23 +5486,23 @@ namespace WMS.DAL
                     var data10 = await pgsql.QueryAsync<ManagerDashboard>(acceptancecomptqry, null, commandType: CommandType.Text);
 
                     var data = new ManagerDashboard();
-                    data.pendingcount = data1.FirstOrDefault().pendingcount;
-                    data.onholdcount = data2.FirstOrDefault().onholdcount;
-                    data.completedcount = data3.FirstOrDefault().completedcount;
+                    data.pendingcount = data1.Count() > 0 ? data1.FirstOrDefault().pendingcount : 0;
+                    data.onholdcount =data2.Count()>0? data2.FirstOrDefault().onholdcount: 0; 
+                    data.completedcount =data3.Count()>0? data3.FirstOrDefault().completedcount:0;
                     if (data4.Count() > 0)
                     {
                         data.qualitycompcount = data4.FirstOrDefault().qualitycompcount;
                     }
 
-                    data.qualitypendcount = data5.FirstOrDefault().qualitypendcount;
+                    data.qualitypendcount =data5.Count()>0? data5.FirstOrDefault().qualitypendcount:0;
                     if (data7.Count() > 0)
                     {
                         data.putawaycompcount = data7.FirstOrDefault().putawaycompcount;
                     }
 
-                    data.putawaypendcount = data6.FirstOrDefault().putawaypendcount;
-                    data.putawayinprocount = data8.FirstOrDefault().putawayinprocount;
-                    data.acceptancependcount = data9.FirstOrDefault().acceptancependcount;
+                    data.putawaypendcount = data6.Count()>0?data6.FirstOrDefault().putawaypendcount:0;
+                    data.putawayinprocount = data8.Count()>0?data8.FirstOrDefault().putawayinprocount:0;
+                    data.acceptancependcount =data9.Count()>0? data9.FirstOrDefault().acceptancependcount:0;
                     if (data10.Count() > 0)
                     {
                         data.acceptancecompcount = data10.FirstOrDefault().acceptancecompcount;
@@ -5600,33 +5600,26 @@ namespace WMS.DAL
                 {
 
 
-                    string rcvqry = "select to_char(receiveddate,'Mon') as smonth,";
-                    rcvqry += " extract(year from receiveddate) as syear,";
-                    rcvqry += " count(*) as count,";
-                    rcvqry += " 'Receive' as type";
-                    rcvqry += " from wms.wms_storeinward where receiveddate > now() - interval '1 year' and receiveddate is not null and extract(year from receiveddate) > 2000";
-                    rcvqry += " group by 1,2 order by to_char(receiveddate, 'Mon') DESC";
 
-                    string qcqry = "select to_char(qcdate,'Mon') as smonth,";
-                    qcqry += " extract(year from qcdate) as syear,";
-                    qcqry += " count(*) as count,";
-                    qcqry += " 'Quality' as type";
-                    qcqry += " from wms.wms_qualitycheck where qcdate > now() - interval '1 year' and qcdate is not null and extract(year from qcdate) > 2000";
-                    qcqry += " group by 1,2 order by to_char(qcdate, 'Mon') DESC";
+                    string rcvqry = "SELECT date_part('year', receiveddate::date) as syear,";
+                    rcvqry += " date_part('week', receiveddate::date) AS sweek,COUNT(*) as count, 'Receive' as type";
+                    rcvqry += " FROM wms.wms_storeinward where receiveddate is not null and receiveddate > now() - interval '1 month' and extract(year from receiveddate) > 2000";
+                    rcvqry += " GROUP BY syear, sweek ORDER BY syear, sweek";
 
-                    string accqry = "select to_char(returnedon,'Mon') as smonth,";
-                    accqry += " extract(year from returnedon) as syear,";
-                    accqry += " count(*) as count,";
-                    accqry += " 'Accept' as type";
-                    accqry += " from wms.wms_storeinward where returnedon > now() - interval '1 year' and returnedon is not null and extract(year from returnedon) > 2000";
-                    accqry += " group by 1,2 order by to_char(returnedon, 'Mon') DESC";
+                    string qcqry = "SELECT date_part('year', qcdate::date) as syear,";
+                    qcqry += " date_part('week', qcdate::date) AS sweek,COUNT(*) as count, 'Quality' as type";
+                    qcqry += " FROM wms.wms_qualitycheck where qcdate is not null and qcdate > now() - interval '1 month' and extract(year from qcdate) > 2000";
+                    qcqry += " GROUP BY syear, sweek ORDER BY syear, sweek";
 
-                    string pwqry = "select to_char(createddate,'Mon') as smonth,";
-                    pwqry += " extract(year from createddate) as syear,";
-                    pwqry += " count(*) as count,";
-                    pwqry += " 'Putaway' as type";
-                    pwqry += " from wms.wms_stock where createddate > now() - interval '1 year' and createddate is not null and extract(year from createddate) > 2000";
-                    pwqry += " group by 1,2 order by to_char(createddate, 'Mon') DESC";
+                    string accqry = "SELECT date_part('year', returnedon::date) as syear,";
+                    accqry += " date_part('week', returnedon::date) AS sweek,COUNT(*) as count, 'Accept' as type";
+                    accqry += " FROM wms.wms_storeinward where returnedon is not null and returnedon > now() - interval '1 month' and extract(year from returnedon) > 2000";
+                    accqry += " GROUP BY syear, sweek ORDER BY syear, sweek";
+                    
+                    string pwqry = "SELECT date_part('year', createddate::date) as syear,";
+                    pwqry += " date_part('week', createddate::date) AS sweek,COUNT(*) as count, 'Putaway' as type";
+                    pwqry += " FROM wms.wms_stock where createddate is not null and createddate > now() - interval '1 month' and extract(year from createddate) > 2000";
+                    pwqry += " GROUP BY syear, sweek ORDER BY syear, sweek";
 
 
                     var data1 = await pgsql.QueryAsync<UserDashboardGraphModel>(rcvqry, null, commandType: CommandType.Text);
@@ -11078,10 +11071,147 @@ namespace WMS.DAL
 			}
 		}
 
-		//public string addEditGRReports(grReports data)
-		//{
-		//    throw new NotImplementedException();
-		//}
-	
+        //public string addEditGRReports(grReports data)
+        //{
+        //    throw new NotImplementedException();
+        //}
+
+        public async Task<pmDashboardCards> getPMdashboarddata()
+        {
+            using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+            {
+
+
+                try
+                {
+
+                    //Get count of total material requested
+                    string totalqry = " select count(*) as totalmaterialrequest from  wms.materialrequest where requesteddate> now() - interval '1 month' and requestid is not null ";
+
+                    //Get count of issued material requested
+                    string issuedqry = "select count(*) as issuedmaterialrequest from  wms.materialrequest where issuedon > now() - interval '1 month' and requestid is not null ";
+
+                    //Get count of pending material requested
+                    string pendingqry = "select  count(*) OVER () as pendingmaterialrequest from  wms.materialrequest req join wms.materialreserve res on req.reserveid =res.reserveid is not null where reservedon > now() - interval '1 month' and requestid is not null ";
+
+                    //Get count of total material return
+                    string materialtotalreturndqry = "select count(*) as totalmaterialreturn from  wms.wms_materialreturn where createdon > now() - interval '1 month' and returnid is not null";
+
+                    //Get count of approved material return
+                    string materialappreturndqry = "select count(*) as approvedmaterialreturn from  wms.wms_materialreturn where createdon > now() - interval '1 month' and returnid is not null and confirmstatus ='Accepted'";
+
+                    //Get count of pending material return 
+                    string materialpendreturndqry = " select count(*) as pendingmaterialreturn from  wms.wms_materialreturn where createdon > now() - interval '1 month' and returnid is not null and confirmstatus is null ";
+
+                    //Get count of total material reserved 
+                    string materialreservededqry = "select count(*) as totalmaterialreserved from  wms.materialreserve where reservedon > now() - interval '1 month' and reserveid is not null";
+
+                    //Get count of total material returned
+                    string materialreturnedqry = "select count(*) as totalmaterialreturned from   wms.wms_materialreturn where createdon > now() - interval '1 month' and returnid is not null and confirmstatus ='Accepted'";
+
+       
+                    var data1 = await pgsql.QueryAsync<pmDashboardCards>(totalqry, null, commandType: CommandType.Text);
+                    var data2 = await pgsql.QueryAsync<pmDashboardCards>(issuedqry, null, commandType: CommandType.Text);
+                    var data3 = await pgsql.QueryAsync<pmDashboardCards>(pendingqry, null, commandType: CommandType.Text);
+                    var data4 = await pgsql.QueryAsync<pmDashboardCards>(materialtotalreturndqry, null, commandType: CommandType.Text);
+                    var data5 = await pgsql.QueryAsync<pmDashboardCards>(materialappreturndqry, null, commandType: CommandType.Text);
+                    var data6 = await pgsql.QueryAsync<pmDashboardCards>(materialpendreturndqry, null, commandType: CommandType.Text);
+                    var data7 = await pgsql.QueryAsync<pmDashboardCards>(materialreservededqry, null, commandType: CommandType.Text);
+                    var data8 = await pgsql.QueryAsync<pmDashboardCards>(materialreturnedqry, null, commandType: CommandType.Text);
+                   
+                    var data = new pmDashboardCards();
+                    data.totalmaterialrequest = data1.Count() > 0 ? data1.FirstOrDefault().totalmaterialrequest : 0;
+                    data.issuedmaterialrequest = data2.Count() > 0 ? data2.FirstOrDefault().issuedmaterialrequest : 0;
+                    data.pendingmaterialrequest = data3.Count() > 0 ? data3.FirstOrDefault().pendingmaterialrequest : 0;
+                    if (data4.Count() > 0)
+                    {
+                        data.totalmaterialreturn = data4.FirstOrDefault().totalmaterialreturn;
+                    }
+
+                    data.approvedmaterialreturn = data5.Count() > 0 ? data5.FirstOrDefault().approvedmaterialreturn : 0;
+                    data.pendingmaterialreturn = data6.Count()>0? data6.FirstOrDefault().pendingmaterialreturn:0;
+
+                    //if (data7.Count() > 0)
+                    //{
+                    //    data.pendingmaterialreturn = data7.FirstOrDefault().pendingmaterialreturn;
+                    //}
+
+                    data.totalmaterialreserved = data7.Count() > 0 ? data7.FirstOrDefault().totalmaterialreserved : 0;
+                    data.totalmaterialreturned = data8.Count() > 0 ? data8.FirstOrDefault().totalmaterialreturned : 0;
+                  
+
+
+                    return data;
+                }
+                catch (Exception Ex)
+                {
+                    log.ErrorMessage("PODataProvider", "getPMdashboarddata", Ex.StackTrace.ToString());
+                    return null;
+                }
+                finally
+                {
+                    pgsql.Close();
+                }
+
+            }
+        }
+
+
+        public async Task<IEnumerable<UserDashboardGraphModel>> getUserdashboardgraphPMdata()
+        {
+            using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+            {
+
+
+                try
+                {
+
+                    string rcvqry = "SELECT requesteddate::date as graphdate, COUNT(*),'Request' as type ";
+                    rcvqry += " from wms.materialrequest";
+                    rcvqry += " WHERE requesteddate > now() - interval '7 days'";
+                    rcvqry += " GROUP BY requesteddate::date";
+                    rcvqry += " ORDER BY requesteddate::date ASC";
+
+                    string qcqry = "SELECT createdon::date as graphdate, COUNT(*),'Return' as type ";
+                    qcqry += " from wms.wms_materialreturn";
+                    qcqry += " WHERE createdon > now() - interval '7 days'";
+                    qcqry += " GROUP BY createdon::date";
+                    qcqry += " ORDER BY createdon::date ASC";
+
+                    string accqry = "SELECT reservedon::date as graphdate, COUNT(*),'Reserve' as type ";
+                    accqry += " from  wms.materialreserve";
+                    accqry += " WHERE reservedon > now() - interval '7 days'";
+                    accqry += " GROUP BY reservedon::date";
+                    accqry += " ORDER BY reservedon::date ASC";
+
+                    string pwqry = "SELECT createddate::date as graphdate, COUNT(*),'Returned' as type ";
+                    pwqry += " from wms.wms_materialreturn";
+                    pwqry += " WHERE createdon > now() - interval '7 days'";
+                    pwqry += " GROUP BY createdon::date";
+                    pwqry += " ORDER BY createdon::date ASC";
+
+
+                    var data1 = await pgsql.QueryAsync<UserDashboardGraphModel>(rcvqry, null, commandType: CommandType.Text);
+                    var data2 = await pgsql.QueryAsync<UserDashboardGraphModel>(qcqry, null, commandType: CommandType.Text);
+                    var data3 = await pgsql.QueryAsync<UserDashboardGraphModel>(accqry, null, commandType: CommandType.Text);
+                    var data4 = await pgsql.QueryAsync<UserDashboardGraphModel>(pwqry, null, commandType: CommandType.Text);
+
+                    var data = data1.Concat(data2.Concat(data3.Concat(data4)));
+
+                    return data;
+
+                }
+                catch (Exception Ex)
+                {
+                    log.ErrorMessage("PODataProvider", "getUserdashboardgraphPMdata", Ex.StackTrace.ToString());
+                    return null;
+                }
+                finally
+                {
+                    pgsql.Close();
+                }
+
+            }
+        }
     }
 }
