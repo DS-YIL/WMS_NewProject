@@ -247,7 +247,7 @@ export class QualityCheckComponent implements OnInit {
         this.showDetails = true;
       }
       else
-        this.messageService.add({ severity: 'eoor', summary: '', detail: 'No materials for quality check' });
+        this.messageService.add({ severity: 'error', summary: '', detail: 'No materials for quality check' });
     })
   }
 
@@ -271,12 +271,13 @@ export class QualityCheckComponent implements OnInit {
         }
       });
       this.recqty = this.podetailsList[0].confirmqty + this.podetailsList[0].returnqty;
-      this.totalqty = parseInt(this.podetailsList[0].receivedqty);
+    this.totalqty = parseInt(this.podetailsList[0].receivedqty);
+   
     var savedata = this.podetailsList.filter(function (element, index) {
-      return (element.qualitypassedqty != 0 && !element.checkedby);
+      return ((element.qualitypassedqty != 0 || element.qualityfailedqty != 0) && !element.checkedby);
     });
     if (savedata.length == 0) {
-      this.messageService.add({ severity: 'error', summary: '', detail: 'Enter passed quantity.' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Enter passed/Failed quantity.' });
       this.spinner.hide();
       return;
     }
@@ -307,6 +308,7 @@ export class QualityCheckComponent implements OnInit {
             
           }
           this.getqualitydetails();
+          this.getcheckedgrnforqc();
         });
      
   

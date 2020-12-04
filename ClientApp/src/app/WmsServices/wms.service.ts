@@ -5,6 +5,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { constants } from '../Models/WMSConstants'
 import { Employee, Login, DynamicSearchResult, printMaterial, rbamaster } from '../Models/Common.Model';
+import { PoFilterParams, PoDetails, BarcodeModel, StockModel, materialRequestDetails, inwardModel, gatepassModel, stocktransfermodel, Materials, authUser, invstocktransfermodel, ddlmodel, locataionDetailsStock, updateonhold, materialistModel, outwardmaterialistModel, pageModel, UserDashboardDetail, UserDashboardGraphModel, UnholdGRModel, MRNsavemodel, notifymodel, materialtransferMain, materialReservetorequestModel, testcrud, PrintHistoryModel, materilaTrasFilterParams, materialRequestFilterParams, materialResFilterParams, materialRetFilterParams, outwardinwardreportModel, UserModel, WMSHttpResponse, MaterialinHand, matlocations, grReports, MateriallabelModel} from '../Models/WMS.Model';
 import { PoFilterParams, PoDetails, BarcodeModel, StockModel, materialRequestDetails, inwardModel, gatepassModel, stocktransfermodel, Materials, authUser, invstocktransfermodel, ddlmodel, locataionDetailsStock, updateonhold, materialistModel, outwardmaterialistModel, pageModel, UserDashboardDetail, UserDashboardGraphModel, UnholdGRModel, MRNsavemodel, notifymodel, materialtransferMain, materialReservetorequestModel, testcrud, PrintHistoryModel, materilaTrasFilterParams, materialRequestFilterParams, materialResFilterParams, materialRetFilterParams, outwardinwardreportModel, UserModel, WMSHttpResponse, MaterialinHand, matlocations, grReports, ManagerDashboard, pmDashboardCards} from '../Models/WMS.Model';
 import { Text } from '@angular/compiler/src/i18n/i18n_ast';
 
@@ -140,8 +141,8 @@ export class wmsService {
   }
 
   //Get Material Details
-  getMaterialDetails(grnno: string): Observable<any> {
-    return this.http.get<any>(this.url + 'POData/getMaterialDetailsforgrn?grnNo=' + grnno, this.httpOptions);
+  getMaterialDetails(grnno: string, pono: string): Observable<any> {
+    return this.http.get<any>(this.url + 'POData/getMaterialDetailsforgrn?grnNo=' + grnno + '&pono=' + pono, this.httpOptions);
   }
 
   //Check material exists
@@ -158,9 +159,14 @@ export class wmsService {
   }
 
   //Get material request, isuued and approved details
-  getMaterialRequestDetails(materialid: string, gnrno: string): Observable<any> {
+  getMaterialRequestDetails(materialid: string, gnrno: string, pono: string): Observable<any> {
     materialid = encodeURIComponent(materialid);
-    return this.http.get<any>(this.url + 'POData/getReqMatdetailsformaterialid?materialid=' + materialid + '&grnnumber=' + gnrno, this.httpOptions);
+    return this.http.get<any>(this.url + 'POData/getReqMatdetailsformaterialid?materialid=' + materialid + '&grnnumber=' + gnrno + '&pono=' + pono, this.httpOptions);
+  }
+  //Get material reserve details
+  getMaterialReserveDetails(materialid: string, gnrno: string, pono: string): Observable<any> {
+    materialid = encodeURIComponent(materialid);
+    return this.http.get<any>(this.url + 'POData/getReserveMatdetailsformaterialtracking?materialid=' + materialid + '&grnnumber=' + gnrno + '&pono=' + pono, this.httpOptions);
   }
 
   insertitems(inwardModel: inwardModel[]): Observable<any> {
@@ -517,6 +523,10 @@ export class wmsService {
 
   getprojectlist(): Observable<ddlmodel[]> {
     return this.http.get<ddlmodel[]>(this.url + 'POData/getprojectlist/', this.httpOptions);
+  }
+
+  getmateriallabeldata(pono: string, lineitemno: number, materialid: string): Observable<MateriallabelModel> {
+    return this.http.get<MateriallabelModel>(this.url + 'POData/getmateriallabeldata?pono=' + pono + '&lineitemno=' + lineitemno + '&materialid=' + materialid, this.httpOptions);
   }
 
   getprojectlistbymanager(empno: string): Observable<ddlmodel[]> {

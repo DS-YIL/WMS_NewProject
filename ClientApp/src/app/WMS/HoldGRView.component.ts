@@ -147,6 +147,7 @@ export class HoldGRViewComponent implements OnInit {
     this.unholdremarks = "";
   }
   getholdgrdetails() {
+    debugger;
     this.podetailsList = [];
     this.filteredpodetailsList = [];
     var grn = this.selectedgrnno;

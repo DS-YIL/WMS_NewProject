@@ -12,6 +12,8 @@ namespace WMS.Models
 		public int rfqsplititemid { get; set; }
 		public string departmentname { get; set; }
 
+		public bool isreceived { get; set; }
+
 		public string securitypo { get; set; }
 		public int departmentid { get; set; }
 		public string documentno { get; set; }
@@ -79,6 +81,8 @@ namespace WMS.Models
 
 		public string unholdremarks { get; set; }
 
+		public string lineitemno { get; set; }
+
 		public DateTime deliverydate { get; set; }
 
 		public List<string> pos { get; set; }
@@ -127,16 +131,16 @@ namespace WMS.Models
 		public string customername { get; set; }
 		public string customer { get; set; }
 
-		public string partno { get;set; }
+		public string partno { get; set; }
 
 
 	}
 
 	public class BarcodeModel
 	{
-        internal string grnnumber { get; set; }
+		internal string grnnumber { get; set; }
 
-        public int departmentid { get; set; }
+		public int departmentid { get; set; }
 		public int barcodeid { get; set; }
 		public int paitemid { get; set; }
 		public string barcode { get; set; }
@@ -186,6 +190,7 @@ namespace WMS.Models
 	public class inwardModel
 	{
 		public string binnumber { get; set; }
+		public string lineitemno { get; set; }
 
 		public string inwardidview { get; set; }
 		public string racknumber { get; set; }
@@ -260,6 +265,7 @@ namespace WMS.Models
 	{
 		public int inwardid { get; set; }
 		public string Material { get; set; }
+		public string lineitemno { get; set; }
 		public string exceptions { get; set; }
 		public string materialdescription { get; set; }
 		public string stockstatus { get; set; }
@@ -308,7 +314,7 @@ namespace WMS.Models
 
 		public Decimal? value { get; set; }
 		public string projectid { get; set; }
-		public string  uploadedfilename { get; set; }
+		public string uploadedfilename { get; set; }
 		public string uploadbatchcode { get; set; }
 
 		public int successrecords { get; set; }
@@ -324,7 +330,7 @@ namespace WMS.Models
 		public string materialdescription { get; set; }
 		public int availableqty { get; set; }
 		public Decimal? value { get; set; }
-        List<matlocations> locations { get; set; }
+		List<matlocations> locations { get; set; }
 	}
 
 	public class matlocations
@@ -384,6 +390,8 @@ namespace WMS.Models
 		public string grnnumber { get; set; }
 		public string materialdescription { get; set; }
 		public int totalquantity { get; set; }
+		public int issuedqty { get; set; }
+		public int reservedqty { get; set; }
 		public int availableqty { get; set; }
 		public int issued { get; set; }
 		public string qtyavailable { get; set; }
@@ -391,7 +399,7 @@ namespace WMS.Models
 		public string qtytotal { get; set; }
 		public int confirmqty { get; set; }
 		//public int inwmasterid { get; set; }
-				public string inwmasterid { get; set; }
+		public string inwmasterid { get; set; }
 
 	}
 
@@ -411,6 +419,7 @@ namespace WMS.Models
 		public int itemid { get; set; }
 		public string inwmasterid { get; set; }
 		public int quantity { get; set; }
+		public int issuedqty { get; set; }
 		public string requesterid { get; set; }
 		public string itemreceiverid { get; set; }
 		public string approverid { get; set; }
@@ -421,8 +430,29 @@ namespace WMS.Models
 
 		public string details { get; set; }
 		public string acknowledge { get; set; }
-		public DateTime issuedon { get; set; }
+		public DateTime? issuedon { get; set; }
 
+		public DateTime? requesteddate { get; set; }
+		public string requestid { get; set; }
+
+		public string gatepassmaterialid { get; set; }
+		public string issuedby { get; set; }
+		public string requestmaterialid { get; set; }
+		public string issuelocation { get; set; }
+		public string materialdescription { get; set; }
+		public string ackstatus { get; set; }
+
+		public string mgapprover { get; set; }
+		public string fmapprover { get; set; }
+		public string gatepassrequestedby { get; set; }
+		public DateTime? gatepassrequesteddate { get; set; }
+
+		public int reservequantity { get; set; }
+		public string reserveid { get; set; }
+		public DateTime? reservedon { get; set; }
+		public DateTime? reserveupto { get; set; }
+		public string projectcode { get; set; }
+		public string reservedby { get; set; }
 
 	}
 	public class DynamicSearchResult
@@ -529,7 +559,10 @@ namespace WMS.Models
 
 		public string putawaystatus { get; set; }
 
-
+		public string reason { get; set; }
+		public string uom { get; set; }
+		public string saleorderno { get; set; }
+		public string location { get; set; }
 
 
 	}
@@ -570,9 +603,9 @@ namespace WMS.Models
 
 	public class gatepassModel
 	{
-        internal object requestid;
+		internal object requestid;
 
-        public string statusremarks { get; set; }
+		public string statusremarks { get; set; }
 		public string managername { get; set; }
 		public string pono { get; set; }
 		public int itemid { get; set; }
@@ -658,24 +691,24 @@ namespace WMS.Models
 	}
 
 	public class outwardinwardreportModel
-    {
+	{
 		//gate pass change
 		public string gatepassid { get; set; }
 		public int gatepassmaterialid { get; set; }
-		public string materialid{ get; set; }
-		public string materialdescription{ get; set; }
-		public DateTime? outwarddate{ get; set; }
-        public string outwardby{ get; set; }
-	    public string outwardremarks{ get; set; }
-		public int outwardqty{ get; set; }
-	    public DateTime?  inwarddate { get; set; }
-	    public string inwardby{ get; set; }
-        public string inwardremarks{ get; set; }
-	    public int inwardqty{ get; set; }
-        public DateTime? securityinwarddate { get; set; }
-	    public string securityinwardby{ get; set; }
+		public string materialid { get; set; }
+		public string materialdescription { get; set; }
+		public DateTime? outwarddate { get; set; }
+		public string outwardby { get; set; }
+		public string outwardremarks { get; set; }
+		public int outwardqty { get; set; }
+		public DateTime? inwarddate { get; set; }
+		public string inwardby { get; set; }
+		public string inwardremarks { get; set; }
+		public int inwardqty { get; set; }
+		public DateTime? securityinwarddate { get; set; }
+		public string securityinwardby { get; set; }
 		public string securityinwardremarks { get; set; }
-		public int issuedqty{ get; set; }
+		public int issuedqty { get; set; }
 
 
 	}
@@ -739,7 +772,7 @@ namespace WMS.Models
 	}
 
 	public class class1
-    {
+	{
 		public string material { get; set; }
 	}
 
@@ -822,7 +855,7 @@ namespace WMS.Models
 	}
 
 	public class employeeModel1
-    {
+	{
 		public string employeeno { get; set; }
 		public string name { get; set; }
 		public string email { get; set; }
@@ -830,7 +863,7 @@ namespace WMS.Models
 	}
 	public class EmailModel
 	{
-        internal string createdby { get; set; }
+		internal string createdby { get; set; }
 
 		internal DateTime createddate { get; set; }
 		internal object requestid { get; set; }
@@ -868,7 +901,7 @@ namespace WMS.Models
 		public string approverstatus { get; set; }
 		// public int inwmasterid { get; set; }
 		public string inwmasterid { get; set; }
-		 
+
 
 	}
 	public class employeeModel
@@ -877,6 +910,8 @@ namespace WMS.Models
 		public string employeenoformanager { get; set; }
 		public string managername { get; set; }
 		public string approverid { get; set; }
+		public string departmentheadid { get; set; }
+		public string departmentheadname { get; set; }
 	}
 	public class authUser
 	{
@@ -886,7 +921,7 @@ namespace WMS.Models
 		public DateTime createddate { get; set; }
 		public string createdby { get; set; }
 		public bool deleteflag { get; set; }
-		 public bool emailnotification { get; set; }
+		public bool emailnotification { get; set; }
 		public string email { get; set; }
 	}
 	public class userAcessNamesModel
@@ -894,6 +929,7 @@ namespace WMS.Models
 		public int authid { get; set; }
 		public int employeeid { get; set; }
 		public int roleid { get; set; }
+		public string subroleid { get; set; }
 		public int userid { get; set; }
 		public string accessname { get; set; }
 	}
@@ -941,9 +977,9 @@ namespace WMS.Models
 		public int completedcount { get; set; }
 		public int qualitycompcount { get; set; }
 		public int qualitypendcount { get; set; }
-		public int putawaypendcount {get;set;}
-		public int putawaycompcount {get;set;}
-		public int putawayinprocount {get;set;}
+		public int putawaypendcount { get; set; }
+		public int putawaycompcount { get; set; }
+		public int putawayinprocount { get; set; }
 		public int acceptancependcount { get; set; }
 		public int acceptancecompcount { get; set; }
 
@@ -1350,7 +1386,7 @@ public class materialrequestMain
 
 	public string ackstatus { get; set; }
 	public string ackremarks { get; set; }
-	 public string remarks { get; set; }
+	public string remarks { get; set; }
 	public List<materialrequestMR> materialdata { get; set; }
 
 
@@ -1366,8 +1402,8 @@ public class materialrequestMR
 }
 public class materialRequestFilterParams
 {
-	public string ToDate { get;  set; }
-	public string FromDate { get;  set; }
+	public string ToDate { get; set; }
+	public string FromDate { get; set; }
 }
 //Amulya
 public class materialreserveMain
@@ -1392,8 +1428,8 @@ public class materialreserveMS
 }
 public class materialResFilterParams
 {
-	public string ToDate { get;  set; }
-	public string FromDate { get;  set; }
+	public string ToDate { get; set; }
+	public string FromDate { get; set; }
 }
 
 //Amulya
@@ -1420,8 +1456,8 @@ public class materialreturnMT
 }
 public class materialRetFilterParams
 {
-	public string ToDate { get;  set; }
-	public string FromDate { get;  set; }
+	public string ToDate { get; set; }
+	public string FromDate { get; set; }
 }
 
 public class MaterialTransaction
@@ -1464,7 +1500,7 @@ public class MaterialTransactionDetail
 	public int itemid { get; set; }
 	public int issuedquantity { get; set; }
 	public int reservedqty { get; set; }
-	
+
 	public int returnqty { get; set; }
 }
 
@@ -1473,6 +1509,9 @@ public class MaterialReturnTR
 	public string returnid { get; set; }
 	public string materialid { get; set; }
 	public string materialdescription { get; set; }
+	public string uom { get; set; }
+	public string saleorderno { get; set; }
+	public string location { get; set; }
 	public int returnqty { get; set; }
 	public string remarks { get; set; }
 }
@@ -1485,6 +1524,7 @@ public class MaterialReturn
 	public DateTime? createdon { get; set; }
 
 	public string confirmstatus { get; set; }
+	public string reason { get; set; }
 	public List<MaterialReturnTR> materialdata { get; set; }
 
 }
@@ -1517,7 +1557,7 @@ public class initialStock
 	public string projectid { get; set; }
 	public string pono { get; set; }
 }
- public  class grReports
+public class grReports
 {
 	public string wmsgr { get; set; }
 	public string sapgr { get; set; }

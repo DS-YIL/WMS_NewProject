@@ -164,13 +164,14 @@
           <ng-template pTemplate="header">
             <tr class="mprltbldata">
               <th style="text-align:center;width:5%;">Sl.No.</th>
-              <th style="text-align:center;width:12%;">PONo.</th>
+              <th style="text-align:center;width:10%;">PONo.</th>
+              <th style="text-align:center;width:8%;">line item No.</th>
               <th style="text-align:center;width:12%;">Material</th>
               <th style="text-align:center;">Material Description</th>
               <th *ngIf="!isnonpo && !qualitychecked" style="text-align:center;width:8%;">Material Qty</th>
               <th *ngIf="!isnonpo && isreceivedbefore" style="text-align:center;width:8%;">Pending Qty</th>
               <th style="text-align:center;width:10%;" *ngIf="!isonHoldview">Received Qty</th>
-              <th rowspan="2" style="width:10%;text-align:center">Material Barcode</th>
+              <!--<th rowspan="2" style="width:10%;text-align:center">Material Barcode</th>-->
               <th style="text-align:center;width:15%;" *ngIf="!isonHoldview">Remarks</th>
               <th style="text-align:center;width:10%;" *ngIf="!isonHoldview">QC Required</th>
               <th style="text-align:center;width:10%;" *ngIf="isnonpoentry"></th>
@@ -194,14 +195,14 @@
 
 
               <td class="ptable-cell" style="text-align:right;width:5%;">{{ri+1}}</td>
-              <td class="ptable-cell" style="text-align:center;width:12%;">{{rowData.pono}}</td>
-
+              <td class="ptable-cell" style="text-align:center;width:10%;">{{rowData.pono}}</td>
+              <td class="ptable-cell" style="text-align:center;width:8%;">{{rowData.lineitemno}}</td>
               <td class="ptable-cell" style="text-align:center;width:12%;">
                 <span *ngIf="!isnonpoentry">{{rowData.material}}</span>
                 <input *ngIf="isnonpoentry" pInputText type="text" (change)="setmatdesc(rowData)" (blur)="validate(rowData,ri)" class="form-control" [(ngModel)]="rowData.material">
                 <!--<p-dropdown [options]="combomaterial" appendTo="body" *ngIf="isnonpoentry" [style]="{'width':'100%'}" (onChange)="setdescription($event,rowData)" placeholder="Select material" optionLabel="material"></p-dropdown>-->
                 <!--<p-autoComplete *ngIf="isnonpoentry" [(ngModel)]="rowData.material" appendTo="body" [suggestions]="filteredmats" placeholder="search by material no/desc" [forceSelection]="false" (onBlur)="validate(rowData,ri)" (change)="setmatdesc(rowData)" (onSelect)="setmatdesc(rowData)" (completeMethod)="filtermats($event)" [size]="30"
-                  [dropdown]="false"></p-autoComplete>-->
+      [dropdown]="false"></p-autoComplete>-->
               </td>
               <td class="ptable-cell" style="text-align:left;">
                 <span *ngIf="!isnonpoentry && rowData.materialdescription">{{rowData.materialdescription}}</span>
@@ -219,9 +220,9 @@
                 <span *ngIf="grnnumber">{{rowData.receivedqty}}</span>
                 <input *ngIf="!grnnumber && (!isallreceived || isnonpo)" pInputText type="number" [min]="0" (change)="checkreceivedqty(rowData.receivedqty,rowData.confirmqty,rowData.returnqty,rowData.materialqty,rowData);" id="receivedqty" class="form-control" [(ngModel)]="rowData.receivedqty">
               </td>
-              <td style="    text-align: center;width: 10%;">
+              <!--<td style="    text-align: center;width: 10%;">
                 <button type="button" icon="fa fa-print" pButton aria-hidden="true" (click)="generateBarcode(rowData)"></button>
-              </td>
+              </td>-->
               <td style="text-align: left;width: 15%;resize: none" *ngIf="!isonHoldview">
                 <span *ngIf="grnnumber || isonHold">{{rowData.receiveremarks}}</span>
                 <textarea *ngIf="!grnnumber && !isonHold" style="resize:none" [(ngModel)]="rowData.receiveremarks"></textarea>
@@ -248,7 +249,8 @@
           <ng-template pTemplate="header">
             <tr class="mprltbldata">
               <th style="text-align:center;width:5%;">Sl.No.</th>
-              <th style="text-align:center;width:12%;">PONo.</th>
+              <th style="text-align:center;width:10%;">PONo.</th>
+              <th style="text-align:center;width:7%;">line item No.</th>
               <th style="text-align:center;width:12%;">Material</th>
               <th style="text-align:center;">Material Description</th>
               <!--<th *ngIf="isreceivedbefore" style="text-align:center;width:10%;">Pending Qty</th>-->
@@ -257,7 +259,7 @@
               <th style="text-align:center;width:8%;">Rejected Qty</th>
               <th style="text-align:center;width:8%;">Material Barcode</th>
               <th style="text-align:center;width:15%;">Remarks</th>
-              <th style="text-align:center;width:10%;">Quality status</th>
+              <th style="text-align:center;width:7%;">Quality status</th>
 
 
             </tr>
@@ -281,7 +283,8 @@
 
 
               <td class="ptable-cell" style="text-align:right;width:5%;">{{ri+1}}</td>
-              <td class="ptable-cell" style="text-align:center;width:12%;">{{rowData.pono}}</td>
+              <td class="ptable-cell" style="text-align:center;width:10%;">{{rowData.pono}}</td>
+              <td class="ptable-cell" style="text-align:center;width:7%;">{{rowData.lineitemno}}</td>
 
               <td class="ptable-cell" style="text-align:center;width:12%;">
                 <span>{{rowData.material}}</span>
@@ -313,7 +316,7 @@
                 <span *ngIf="rowData.returnedby && (getstatus(rowData) != 'Pending')">{{rowData.returnremarks}}</span>
                 <textarea *ngIf="!rowData.returnedby && (getstatus(rowData) != 'Pending')" style="resize:none" [(ngModel)]="rowData.returnremarks"></textarea>
               </td>
-              <td style="text-align:center;width:10%;">
+              <td style="text-align:center;width:7%;">
                 <span [innerText]="getstatus(rowData)"></span>
               </td>
 
@@ -524,6 +527,24 @@
                 <th style="outline: thin solid;width:200px;height:30px">Ship-to:</th>
                 <td style="outline: thin solid;width:1640px;height:30px">
                   {{printData.serialno}}
+                </td>
+              </tr>
+              <tr *ngIf="printData.codetype=='N'">
+                <th style="outline: thin solid;width:200px;height:30px">Project ID & Definition:</th>
+                <td style="outline: thin solid;width:1640px;height:30px">
+                  {{printData.proid}}
+                </td>
+              </tr>
+              <tr *ngIf="printData.codetype=='A'">
+                <th style="outline: thin solid;width:200px;height:30px">Asset & Sub Number:</th>
+                <td style="outline: thin solid;width:1640px;height:30px">
+                  {{printData.asset}}
+                </td>
+              </tr>
+              <tr *ngIf="printData.codetype=='Y'">
+                <th style="outline: thin solid;width:200px;height:30px">Cost Center & Cost Center Text:</th>
+                <td style="outline: thin solid;width:1640px;height:30px">
+                  {{printData.costcenter}}
                 </td>
               </tr>
             </table>

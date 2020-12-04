@@ -9,7 +9,7 @@
       </div>
       <div class="col-lg-4 col-md-4 text-center">
         <span style="color:#428bca;font-size:18px" class="commonheadertext">
-          <i class="fa fa-check-circle-o commonheadertext"></i>&nbsp;Material Request Details
+          <i class="fa fa-check-circle-o commonheadertext"></i>&nbsp;Material {{type}} Details
         </span>
       </div>
       <div class="col-lg-4 col-md-4 form-inline"></div>
@@ -31,13 +31,24 @@
     <h5 style="text-align:center">Material Request Details</h5>
   </div>-->
   <div class="card-body" style="overflow-y: scroll; margin-left: 10px; margin-right: 10px">
-    <p-table #dt [columns]="cols" [value]="MaterailRequestDetails">
+    <div class="row col-lg-12 col-md-12 col-sm-12">
+      <div class="col-lg-3 col-md-3 col-sm-6 form-group" style="font-weight:600;font-size:14px;color:darkblue;">
+        GRN No.: <label class="form-label" style="color:#dc3545;">{{grnNo}}</label>
+      </div>
+      <div class="col-lg-3 col-md-3 col-sm-6 form-group" style="font-weight:600;font-size:14px;color:darkblue;">
+        PONo.: <label class="form-label" style="color:#dc3545;">{{pono}}</label>
+      </div>
+      <div class="col-lg-6 col-md-6 col-sm-6 form-group" style="font-weight:600;font-size:14px;color:darkblue;">
+        Material: <label class="form-label" style="color:#dc3545;">{{materialcode}}{{materialdescription}}</label>
+      </div>
+    </div>
+    <p-table #dt [columns]="cols" [value]="MaterailRequestDetails" *ngIf="isissueview">
       <!--<ng-template pTemplate="caption">
-        <div class="ui-helper-clearfix" style="text-align: left">
-          <button type="button" pButton icon="pi pi-file-excel" iconPos="left" label="EXCEL" (click)="exportExcel()" style="margin-right: 0.5em;" class="ui-button-success"></button>
-          <button type="button" pButton icon="pi pi-file-pdf" iconPos="left" label="PDF" (click)="exportPdf()" class="ui-button-warning"></button>
-        </div>
-      </ng-template>-->
+      <div class="ui-helper-clearfix" style="text-align: left">
+        <button type="button" pButton icon="pi pi-file-excel" iconPos="left" label="EXCEL" (click)="exportExcel()" style="margin-right: 0.5em;" class="ui-button-success"></button>
+        <button type="button" pButton icon="pi pi-file-pdf" iconPos="left" label="PDF" (click)="exportPdf()" class="ui-button-warning"></button>
+      </div>
+    </ng-template>-->
       <ng-template pTemplate="header" let-columns>
         <tr class="mprltbldata">
           <th style="text-align:center;width:70px">Sl. No.</th>
@@ -45,15 +56,64 @@
             {{col.header}}
           </th>
         </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
         <tr>
-          <th></th>
-          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'quantity', 'contains')"></th>
-          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'requesterid', 'contains')"></th>
-          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'itemreceiverid', 'contains')"></th>
-          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'approverid', 'contains')"></th>
-          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'approverid', 'contains')"></th>
-          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'approverid', 'contains')"></th>
-          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'approverid', 'contains')"></th>
+          <td class="ptable-cell" style="text-align:center">
+            {{ri+1}}
+          </td>
+          <td class="ptable-cell" style="text-align: right;width: 70px">{{rowData.issuedqty}}</td>
+          <td class="ptable-cell" style="text-align:left">
+            <span *ngIf="rowData.requestmaterialid">Material Request</span>
+            <span *ngIf="rowData.gatepassmaterialid">Gate Pass-{{rowData.gatepasstype}}</span>
+          </td>
+          <td class="ptable-cell" style="text-align:left">
+            <span *ngIf="rowData.requestmaterialid">{{rowData.requestername}}</span>
+            <span *ngIf="rowData.gatepassmaterialid">{{rowData.gatepassrequestedby}}</span>
+          </td>
+          <td class="ptable-cell" style="text-align:center">
+            <span *ngIf="rowData.requestmaterialid">{{rowData.requesteddate | date :  constants.dateFormat}}</span>
+            <span *ngIf="rowData.gatepassmaterialid">{{rowData.gatepassrequesteddate | date :  constants.dateFormat}}</span>
+          </td>
+          <td class="ptable-cell" style="text-align:center">{{rowData.issuedby}}</td>
+          <td class="ptable-cell" style="text-align:center">{{rowData.issuedon| date :  constants.dateFormat}}</td>
+          <td class="ptable-cell" style="text-align:left;width:150px">{{rowData.issuelocation}}</td>
+          <td class="ptable-cell" style="text-align:left">
+            <span *ngIf="rowData.gatepassmaterialid && rowData.gatepasstype === 'Returnable'">{{rowData.mgapprover}}-(PM)</span>
+            <span *ngIf="rowData.gatepassmaterialid && rowData.gatepasstype === 'Non Returnable'">{{rowData.fmapprover}}-(FM)</span>
+
+          </td>
+          <td class="ptable-cell" style="text-align:left">
+            <span *ngIf="rowData.ackstatus">
+              {{rowData.requestername}}
+            </span>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="footer">
+        <tr>
+          <td style="color: #17a2b8;">Total</td>
+          <td style="text-align:right;color: #17a2b8;">{{QtyTotal}}</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+
+        </tr>
+
+      </ng-template>
+    </p-table>
+    <p-table #dt [columns]="reservecols" [value]="MaterailReserveDetails" *ngIf="!isissueview">
+      <ng-template pTemplate="header" let-columns>
+        <tr class="mprltbldata">
+          <th style="text-align:center;width:70px">Sl. No.</th>
+          <th style="text-align:center" *ngFor="let col of columns">
+            {{col.header}}
+          </th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
@@ -61,13 +121,13 @@
           <td class="ptable-cell" style="text-align:center">
             {{ri+1}}
           </td>
-          <td class="ptable-cell" style="text-align: right;width: 70px">{{rowData.quantity}}</td>
-          <td class="ptable-cell" style="text-align:left">{{rowData.type}}</td>
-          <td class="ptable-cell" style="text-align:left">{{rowData.requestername}}</td>
-          <td class="ptable-cell" style="text-align:center">{{rowData.issuedon| date :  constants.dateFormat}}</td>
-          <td class="ptable-cell" style="text-align:left;width:150px">{{rowData.details}}</td>
-          <td class="ptable-cell" style="text-align:left">{{rowData.approvername}}</td>
-          <td class="ptable-cell" style="text-align:left">{{rowData.acknowledge}}</td>
+          <td class="ptable-cell" style="text-align: right;width: 70px">{{rowData.reservequantity}}</td>
+          <td class="ptable-cell" style="text-align:left">{{rowData.reservedby}}</td>
+          <td class="ptable-cell" style="text-align:center">{{rowData.reservedon| date :  constants.dateFormat}}</td>
+          <td class="ptable-cell" style="text-align:center">{{rowData.reserveupto| date :  constants.dateFormat}}</td>
+          <td class="ptable-cell" style="text-align:left;width:150px">{{rowData.issuelocation}}</td>
+          <td class="ptable-cell" style="text-align:left">{{rowData.projectcode}}</td>
+          <td class="ptable-cell" style="text-align:left">{{rowData.ackstatus}}</td>
         </tr>
       </ng-template>
       <ng-template pTemplate="footer">

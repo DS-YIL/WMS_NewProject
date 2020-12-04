@@ -39,9 +39,11 @@ export class MaterialDetailsComponent implements OnInit {
    
 
     this.cols = [
-      { field: 'materialdescription', header: 'Material' },
-      { field: 'totalquantity', header: 'Accepted Qty' },
-      { field: 'issued', header: 'Issued Qty' },
+      { field: 'materialid', header: 'Material' },
+      { field: 'materialdescription', header: 'Material Description' },
+      { field: 'confirmqty', header: 'Accepted Qty' },
+      { field: 'issuedqty', header: 'Issued Qty' },
+      { field: 'reservedqty', header: 'Reserved Qty' },
       { field: 'availableqty', header: 'Available Qty' },
       
     ];
@@ -49,7 +51,7 @@ export class MaterialDetailsComponent implements OnInit {
     this.grnNo = this.currentRoute.snapshot.queryParams.grnNo;
     this.pono = this.currentRoute.snapshot.queryParams.pono;
     this.poQty = this.currentRoute.snapshot.queryParams.qty;
-    this.getMaterialDetails(this.grnNo);
+    this.getMaterialDetails(this.grnNo, this.pono);
     this.exportColumns = this.cols.map(col => ({ title: col.header, dataKey: col.field }));
   }
 
@@ -57,20 +59,21 @@ export class MaterialDetailsComponent implements OnInit {
   {
     this.router.navigate(['/WMS/LocationDetails'], { queryParams: { materialid: materialid, pono: this.pono, grnNo: this.grnNo, qty: this.poQty } });
   }
-  IssuedMatDetails(materialid: string) {
-    this.router.navigate(['/WMS/MaterialReqDetails'], { queryParams: { materialid: materialid, pono: this.pono, grnNo: this.grnNo, qty: this.poQty } });
+  IssuedMatDetails(materialid: string, typ: string) {
+    this.router.navigate(['/WMS/MaterialReqDetails'], { queryParams: { materialid: materialid, pono: this.pono, grnNo: this.grnNo, qty: this.poQty, type: typ } });
   }
 
   backInvoiceDetails() {
     this.router.navigate(['/WMS/InvoiceDetails'], { queryParams: { PONO: this.pono, qty: this.poQty } });
   }
 
-  getMaterialDetails(grnNo:string) {
+  getMaterialDetails(grnNo: string, pono: string) {
     this.dynamicData = new DynamicSearchResult();
+    this.spinner.show();
    // this.dynamicData.query = "select op.material , op.materialdescription,op.projectname, SUM(totalquantity) as Received , SUM(availableqty) as Balance ,SUM(totalquantity -availableqty ) as Issued, MAX(createddate) as createddate  from wms.wms_stock ws inner join wms.openpolistview  op on op.pono = ws.pono where ws.materialid notnull and createddate <='" + this.toDate.toDateString() + "' and createddate > '" + this.fromDate.toDateString() + "' group by  op.material , op.materialdescription,op.projectname"
-    this.wmsService.getMaterialDetails(grnNo).subscribe(data => {
+    this.wmsService.getMaterialDetails(grnNo,pono).subscribe(data => {
       debugger;
-      console.log(data);
+      this.spinner.hide();
       this.grnno = grnNo;
       this.MaterialData = data;
     });

@@ -52,13 +52,6 @@ export class GatePassPrintComponent implements OnInit {
     this.gatepassModel.printedby = this.employee.employeeno;
     this.wmsService.updateprintstatus(this.gatepassModel).subscribe(data => {
       this.prnttxt = "Reprint";
-      //printing gatepass
-      var printContents = document.getElementById("printTemplate").innerHTML;
-      var originalContents = document.body.innerHTML;
-      document.body.innerHTML = printContents;
-      window.print();
-      document.body.innerHTML = originalContents;
-      return false;
     });
 
     

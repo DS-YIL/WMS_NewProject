@@ -59,7 +59,6 @@ export class LoginComponent implements OnInit {
   }
 
   alertDG() {
-    debugger;
     if (isNullOrUndefined(localStorage.getItem("Roles")) || localStorage.getItem("Roles") == "null" || localStorage.getItem("Roles") == null || localStorage.getItem("Roles") == "NULL") {
       this.getRoles();
     }

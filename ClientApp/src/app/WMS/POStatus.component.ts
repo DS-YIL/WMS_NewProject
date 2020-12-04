@@ -35,7 +35,7 @@ export class POStatusComponent implements OnInit {
 
     this.cols = [
       { field: 'po', header: 'PO No.' },
-      { field: 'qty', header: 'Quantity' },
+      { field: 'qty', header: 'PO Quantity' },
       {field:'status',header:'Status'}
     ];
 
@@ -53,6 +53,7 @@ export class POStatusComponent implements OnInit {
 
   onSelectStatus(event) {
     this.selectedStatus = event.target.value;
+    this.SubmitStatus();
    
   }
 

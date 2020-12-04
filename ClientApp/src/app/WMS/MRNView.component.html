@@ -41,7 +41,7 @@
 
       </div>
     </div>
-    <div class="card-body" style="overflow-y:hidden">
+    <div class="card-body" style="overflow-y:scroll">
      
             <p-table [columns]="cols" [scrollable]="true" scrollHeight="60vh" [value]="podetailsList" dataKey="material">
               <ng-template pTemplate="header" let-columns>
@@ -49,10 +49,11 @@
                   <th style="width:70px;text-align:center">Sl.No.</th>
                   <th style="width:150px;text-align:center">PONo.</th>
                   <th style="width:200px;text-align:center">Material</th>
+                  <th style="width:100px;text-align:center">Line item no</th>
                   <th style="text-align: center">Material Description</th>
-                  <th style="width:200px;text-align:center">Accepted Qty</th>
-                  <th style="width:250px;text-align:center" *ngIf="isalreadytransferred">Transferred By</th>
-                  <th style="width:200px;text-align:center" *ngIf="isalreadytransferred">Transferred On</th>
+                  <th style="width:100px;text-align:center">Accepted Qty</th>
+                  <th style="width:200px;text-align:center" *ngIf="isalreadytransferred">Transferred By</th>
+                  <th style="width:100px;text-align:center" *ngIf="isalreadytransferred">Transferred On</th>
                 </tr>
 
               </ng-template>
@@ -66,10 +67,13 @@
                   <td class="ptable-cell" style="text-align:center;width:200px;" colspan="1">
                     {{rowData.material}}
                   </td>
+                  <td class="ptable-cell" style="text-align:center;width:100px;" colspan="1">
+                    {{rowData.lineitemno}}
+                  </td>
                   <td class="ptable-cell" style="text-align:left;">{{rowData.materialdescription}}</td>
-                  <td class="ptable-cell" style="text-align:right;width:200px;">{{rowData.confirmqty}}</td>
-                  <td class="ptable-cell" style="text-align:left;width:250px;" *ngIf="isalreadytransferred">{{rowData.mrnby}}</td>
-                  <td class="ptable-cell" style="text-align:center;width:200px;" *ngIf="isalreadytransferred">{{rowData.mrnon | date: 'dd/MM/yyyy'}}</td>
+                  <td class="ptable-cell" style="text-align:right;width:100px;">{{rowData.confirmqty}}</td>
+                  <td class="ptable-cell" style="text-align:left;width:200px;" *ngIf="isalreadytransferred">{{rowData.mrnby}}</td>
+                  <td class="ptable-cell" style="text-align:center;width:100px;" *ngIf="isalreadytransferred">{{rowData.mrnon | date: 'dd/MM/yyyy'}}</td>
 
                 </tr>
               </ng-template>

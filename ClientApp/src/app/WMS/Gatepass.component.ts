@@ -323,7 +323,7 @@ export class GatePassComponent implements OnInit {
       this.spinner.hide();
       this.totalGatePassList = data;
       //filtering the based on logged in user if role id is 8(Admin)
-      if (this.employee.roleid == "7") {
+      if (this.employee.roleid == "5") {
         this.totalGatePassList = this.totalGatePassList.filter(li => li.requestedby == this.employee.employeeno);
       }
       this.gatepasslist = [];
@@ -619,7 +619,7 @@ export class GatePassComponent implements OnInit {
         this.updateReturnedDateDialog = false;
         this.getGatePassList();
         if (data)
-          this.messageService.add({ severity: 'success', summary: '', detail: 'Data Saved' });
+          this.messageService.add({ severity: 'success', summary: '', detail: 'Gatepass Updated' });
       })
     }
     else
@@ -1061,8 +1061,15 @@ export class GatePassComponent implements OnInit {
     this.wmsService.getapproverdata(this.employee.employeeno).
       subscribe(
         res => {
-          this.gatepassModel.approverid = res[0].approverid;
-          this.gatepassModel.managername = res[0].managername;
+          if (!isNullOrUndefined(res[0].approverid)) {
+            this.gatepassModel.approverid = res[0].approverid;
+            this.gatepassModel.managername = res[0].managername;
+          }
+          else {
+            this.gatepassModel.approverid = res[0].departmentheadid;
+            this.gatepassModel.managername = res[0].departmentheadname;
+          }
+         
 
         });
   }

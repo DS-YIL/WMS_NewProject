@@ -55,7 +55,7 @@
         </div>
         <div class="col-lg-4 col-md-4 text-center">
 
-          <div *ngIf="employee.roleid =='3'">
+          <div *ngIf="employee.roleid =='3' || employee.roleid =='5'">
             <span class="commonheadertext">
               <i class="fa fa-check-circle-o commonheadertext"></i>&nbsp;Gate Pass
             </span>
@@ -95,10 +95,10 @@
               <th style="text-align:center">Supplier</th>
               <th style="text-align:center">Reason</th>
               <th style="text-align:center">Status</th>
-              <th style="text-align:center" *ngIf="employee.roleid!='7'">Requested By</th>
-              <th style="text-align:center" *ngIf="employee.roleid!='7'">Requested On</th>
-              <th style="text-align:center" *ngIf="employee.roleid =='7'">Approver</th>
-              <th style="text-align:center" *ngIf="employee.roleid =='7'">Approver Remarks</th>
+              <th style="text-align:center" *ngIf="employee.roleid!='5'">Requested By</th>
+              <th style="text-align:center" *ngIf="employee.roleid!='5'">Requested On</th>
+              <th style="text-align:center" *ngIf="employee.roleid =='5'">Approver</th>
+              <th style="text-align:center" *ngIf="employee.roleid =='5'">Approver Remarks</th>
               <th *ngIf="selectedStatus=='Issued'" style="text-align:center">Approved By</th>
               <th *ngIf="selectedStatus=='Issued'" style="text-align:center">Approved On</th>
               <th *ngIf="employee.roleid!='3' && employee.roleid !='8'" style="text-align:center;">Edit</th>
@@ -126,8 +126,8 @@
               </td>
 
               <td class="ptable-cell" style="text-align:center;width:150px;">
-                <a style="cursor:pointer;color:blue;text-decoration:underline;" *ngIf="rowData.gatepassid && employee.roleid=='7'" (click)="showdetails(rowData,ri)">{{rowData.gatepassid}}</a>
-                <a *ngIf="employee.roleid!='7'" [routerLink]="['/WMS/GatePassApprover',rowData.gatepassid]" (click)="showdetails(rowData,ri)" routerLinkActive="active">{{rowData.gatepassid}}</a>
+                <a style="cursor:pointer;color:blue;text-decoration:underline;" *ngIf="rowData.gatepassid && employee.roleid=='5'" (click)="showdetails(rowData,ri)">{{rowData.gatepassid}}</a>
+                <a *ngIf="employee.roleid!='5'" [routerLink]="['/WMS/GatePassApprover',rowData.gatepassid]" (click)="showdetails(rowData,ri)" routerLinkActive="active">{{rowData.gatepassid}}</a>
               </td>
               <td class="ptable-cell" style="text-align:left" *ngIf="employee.roleid!='8'">{{rowData.gatepasstype}}</td>
               <td class="ptable-cell" style="text-align:left">{{rowData.vendorname}}</td>
@@ -144,14 +144,14 @@
               </td>
 
               <!--<td class="ptable-cell" *ngIf="!rowData.approverstatus" style="text-align:left">Pending</td>-->
-              <td class="ptable-cell" style="text-align:left" *ngIf="employee.roleid!='7'">{{rowData.name}}</td>
-              <td class="ptable-cell" style="text-align:center" *ngIf="employee.roleid!='7'">{{rowData.requestedon | date :  constants.dateFormat}}</td>
-              <td class="ptable-cell" style="text-align:left" *ngIf="employee.roleid == '7'">
+              <td class="ptable-cell" style="text-align:left" *ngIf="employee.roleid!='5'">{{rowData.name}}</td>
+              <td class="ptable-cell" style="text-align:center" *ngIf="employee.roleid!='5'">{{rowData.requestedon | date :  constants.dateFormat}}</td>
+              <td class="ptable-cell" style="text-align:left" *ngIf="employee.roleid == '5'">
                 <span *ngIf="!rowData.fmapprovedon && !rowData.approvedon"></span>
                 <span *ngIf="rowData.approvedon && !rowData.fmapprovedon">{{rowData.approvername}}-(PM)</span>
                 <span *ngIf="rowData.fmapprovedon">{{rowData.fmapprover}}-(FM)</span>
               </td>
-              <td class="ptable-cell" style="text-align:center" *ngIf="employee.roleid =='7'">
+              <td class="ptable-cell" style="text-align:center" *ngIf="employee.roleid =='5'">
                 <span *ngIf="!rowData.fmapprovedon && !rowData.approvedon"></span>
                 <span *ngIf="rowData.approvedon && !rowData.fmapprovedon">{{rowData.approverremarks}}</span>
                 <span *ngIf="rowData.fmapprovedon">{{rowData.fmapproverremarks}}</span>

@@ -304,6 +304,23 @@ export class StoreClerkComponent implements OnInit {
     this.grnNo = details.grnnumber;
     this.noofpieces = details.receivedqty;
   }
+  generatelabel(details: any) {
+    debugger;
+    var pono = details.pono;
+    var materialid = details.material;
+    var lineitemno = details.lineitemno;
+    this.wmsService.getmateriallabeldata(pono,lineitemno,materialid).subscribe(data => {
+      if (data) {
+        var strjson = JSON.stringify(data);
+        alert(strjson);
+
+      }
+      else {
+        alert("No data");
+      }
+    })
+    
+  }
   get formArr() {
     return this.invoiceForm.get('itemRows') as FormArray;
     // return (this.invoiceForm.get('itemRows') as FormArray).controls;
@@ -478,10 +495,11 @@ export class StoreClerkComponent implements OnInit {
     var mat = data.material;
     this.nonpovalidationList = [];
     var selectedm = this.combomaterial.filter(function (element, index) {
-      return (element.material == mat);
+      return (element.material.toLowerCase() == String(mat).toLowerCase());
     });
     if (selectedm.length > 0) {
       data.materialdescription = selectedm[0].materialdescription;
+      data.material = selectedm[0].material;
       data.qualitycheck = selectedm[0].qualitycheck;
     }
     else {
@@ -563,6 +581,11 @@ export class StoreClerkComponent implements OnInit {
         this.onholdremarks = this.podetailsList[0].onholdremarks;
         if (pono.startsWith("NP") && !this.grnnumber && !this.isonHold) {
           this.isnonpoentry = true;
+        }
+        if (this.grnnumber) {
+          this.podetailsList = this.podetailsList.filter(function (element, index) {
+            return (parseInt(element.receivedqty) > 0);
+          });
         }
         if (pono.startsWith("NP")) {
           this.isnonpo = true;
