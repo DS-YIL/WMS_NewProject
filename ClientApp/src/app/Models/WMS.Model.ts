@@ -876,3 +876,13 @@ export class pmDashboardCards{
   totalmaterialreserved: any;
   totalmaterialreturned: any;
 }
+export class invDashboardCards {
+  totalmaterialrequests: any;
+  issuedmaterialrequests: any;
+  pendingmaterialrequests: any;
+  totalmaterialreserved: any;
+  totalmaterialreturn: any;
+  totalmaterialtransfer: any;
+  approvedmaterialtransfer: any;
+
+}

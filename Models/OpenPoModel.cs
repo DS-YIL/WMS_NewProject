@@ -1582,3 +1582,18 @@ public class pmDashboardCards
 
 
 }
+//invDashboardCards
+
+public class invDashboardCards
+{  
+	public int totalmaterialrequests { get; set; }
+	public int issuedmaterialrequests { get; set; }
+	public int pendingmaterialrequests { get; set; }
+	public int totalmaterialreserved { get; set; }
+	public int totalmaterialreturn { get; set; }
+	public int totalmaterialtransfer { get; set; }
+	public int approvedmaterialtransfer { get; set; }
+
+
+
+}

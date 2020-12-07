@@ -1133,15 +1133,15 @@ namespace WMS.Controllers
 			return await this._poService.getPMdashboarddata();
 
 		}
-		
 
-		//	[HttpGet("getIMdashboarddata")]
-		//public async Task<pmDashboardCards> getIMdashboarddata()
-		//{
-		//	return await this._poService.getIMdashboarddata();
 
-		//}
-		[HttpGet("getUserdashboardgraphPMdata")]
+        [HttpGet("getInvdashboarddata")]
+        public async Task<invDashboardCards> getInvdashboarddata()
+        {
+            return await this._poService.getInvdashboarddata();
+
+        }
+        [HttpGet("getUserdashboardgraphPMdata")]
 		public async Task<IEnumerable<UserDashboardGraphModel>> getUserdashboardgraphPMdata(string employeeid)
 		{
 

@@ -5,7 +5,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { constants } from '../Models/WMSConstants'
 import { Employee, Login, DynamicSearchResult, printMaterial, rbamaster } from '../Models/Common.Model';
-import { PoFilterParams, PoDetails, BarcodeModel, StockModel, materialRequestDetails, inwardModel, gatepassModel, stocktransfermodel, Materials, authUser, invstocktransfermodel, ddlmodel, locataionDetailsStock, updateonhold, materialistModel, outwardmaterialistModel, pageModel, UserDashboardDetail, UserDashboardGraphModel, UnholdGRModel, MRNsavemodel, notifymodel, materialtransferMain, materialReservetorequestModel, testcrud, PrintHistoryModel, materilaTrasFilterParams, materialRequestFilterParams, materialResFilterParams, materialRetFilterParams, outwardinwardreportModel, UserModel, WMSHttpResponse, MaterialinHand, matlocations, grReports, MateriallabelModel, ManagerDashboard, pmDashboardCards} from '../Models/WMS.Model';
+import { PoFilterParams, PoDetails, BarcodeModel, StockModel, materialRequestDetails, inwardModel, gatepassModel, stocktransfermodel, Materials, authUser, invstocktransfermodel, ddlmodel, locataionDetailsStock, updateonhold, materialistModel, outwardmaterialistModel, pageModel, UserDashboardDetail, UserDashboardGraphModel, UnholdGRModel, MRNsavemodel, notifymodel, materialtransferMain, materialReservetorequestModel, testcrud, PrintHistoryModel, materilaTrasFilterParams, materialRequestFilterParams, materialResFilterParams, materialRetFilterParams, outwardinwardreportModel, UserModel, WMSHttpResponse, MaterialinHand, matlocations, grReports, MateriallabelModel, ManagerDashboard, pmDashboardCards, invDashboardCards} from '../Models/WMS.Model';
 import { Text } from '@angular/compiler/src/i18n/i18n_ast';
 
 @Injectable({
@@ -724,6 +724,10 @@ export class wmsService {
 
   getPMCardlist(): Observable<any> {
     return this.http.get<pmDashboardCards>(this.url + 'POData/getPMdashboarddata/', this.httpOptions);
+  }
+
+  getInvCardlist(): Observable<any> {
+    return this.http.get<invDashboardCards>(this.url + 'POData/getInvdashboarddata/', this.httpOptions);
   }
 
   getPMdashgraphdata(): Observable<UserDashboardGraphModel[]> {

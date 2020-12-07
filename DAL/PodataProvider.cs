@@ -11255,5 +11255,78 @@ namespace WMS.DAL
         //    throw new NotImplementedException();
         //}
 
+
+
+        public async Task<invDashboardCards> getInvdashboarddata()
+        {
+            using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+            {
+
+
+                try
+                {
+
+                    //Get count of total material requested
+                    string totalqry = " select count(*) as totalmaterialrequests from  wms.materialrequest where requesteddate> now() - interval '1 month' and requestid is not null ";
+
+                    //Get count of issued material requested
+                    string issuedqry = "select count(*) as issuedmaterialrequests from  wms.materialrequest where issuedon > now() - interval '1 month' and requestid is not null ";
+
+                    //Get count of pending material requested
+                    string pendingqry = "select  count(*) OVER () as pendingmaterialrequests from  wms.materialrequest req join wms.materialreserve res on req.reserveid =res.reserveid is not null where reservedon > now() - interval '1 month' and requestid is not null ";
+
+                    //Get count of total material reserved 
+                    string materialreservededqry = "select count(*) as totalmaterialreserved from  wms.materialreserve where reservedon > now() - interval '1 month' and reserveid is not null";
+                    
+                    //Get count of total material return
+                    string materialtotalreturndqry = "select count(*) as totalmaterialreturn from  wms.wms_materialreturn where createdon > now() - interval '1 month' and returnid is not null";
+
+                    //Get count of total material transfer 
+                    string materialtotaltransferqry = "select count(*) as totalmaterialtransfer from   wms.wms_transfermaterial where createdon > now() - interval '1 month' and materialid is not null";
+
+                    //Get count of approved material transfer 
+                    string materialtransferapprovedqry = "select count(*) as approvedmaterialtransfer from wms.wms_materialtransferapproval where approvaldate > now() - interval '1 month' and approverid is not null  ";
+
+
+
+
+                    var data1 = await pgsql.QueryAsync<invDashboardCards>(totalqry, null, commandType: CommandType.Text);
+                    var data2 = await pgsql.QueryAsync<invDashboardCards>(issuedqry, null, commandType: CommandType.Text);
+                    var data3 = await pgsql.QueryAsync<invDashboardCards>(pendingqry, null, commandType: CommandType.Text);
+                    var data4 = await pgsql.QueryAsync<invDashboardCards>(materialreservededqry, null, commandType: CommandType.Text);
+                    var data5 = await pgsql.QueryAsync<invDashboardCards>(materialtotalreturndqry, null, commandType: CommandType.Text);
+                    var data6 = await pgsql.QueryAsync<invDashboardCards>(materialtotaltransferqry, null, commandType: CommandType.Text);
+                    var data7 = await pgsql.QueryAsync<invDashboardCards>(materialtransferapprovedqry, null, commandType: CommandType.Text);
+
+                    var data = new invDashboardCards();
+                    data.totalmaterialrequests = data1.Count() > 0 ? data1.FirstOrDefault().totalmaterialrequests : 0;
+                    data.issuedmaterialrequests = data2.Count() > 0 ? data2.FirstOrDefault().issuedmaterialrequests : 0;
+                    data.pendingmaterialrequests = data3.Count() > 0 ? data3.FirstOrDefault().pendingmaterialrequests : 0;
+                    if (data4.Count() > 0)
+                    {
+                        data.totalmaterialreserved = data4.FirstOrDefault().totalmaterialreserved;
+                    }
+
+                    data.totalmaterialreturn = data5.Count() > 0 ? data5.FirstOrDefault().totalmaterialreturn : 0;
+                    data.totalmaterialtransfer = data6.Count() > 0 ? data6.FirstOrDefault().totalmaterialtransfer : 0;
+                    data.approvedmaterialtransfer = data7.Count() > 0 ? data7.FirstOrDefault().approvedmaterialtransfer : 0;
+
+
+
+                    return data;
+                }
+                catch (Exception Ex)
+                {
+                    log.ErrorMessage("PODataProvider", "getInvdashboarddata", Ex.StackTrace.ToString());
+                    return null;
+                }
+                finally
+                {
+                    pgsql.Close();
+                }
+
+            }
+        }
+
     }
 }

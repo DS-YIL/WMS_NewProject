@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { Employee, userAcessNamesModel } from '../Models/Common.Model';
-import { UserDashboardDetail, UserDashboardGraphModel, ManagerDashboard, pmDashboardCards} from '../Models/WMS.Model';
+import { UserDashboardDetail, UserDashboardGraphModel, ManagerDashboard, pmDashboardCards, invDashboardCards} from '../Models/WMS.Model';
 import { wmsService } from '../WmsServices/wms.service';
 import { NgxSpinnerService } from "ngx-spinner";
 import { DatePipe } from '@angular/common';
@@ -25,6 +25,7 @@ export class HomeComponent implements OnInit {
    }
   cardDetailslistdata: ManagerDashboard[] = [];
   pmCardDetailslistdata: pmDashboardCards[] = [];
+  invCardDetailslistdata: invDashboardCards[] = [];
   public employee: Employee;
   isroleselected: boolean = true;
   userrolelist: userAcessNamesModel[] = [];
@@ -531,6 +532,7 @@ export class HomeComponent implements OnInit {
       this.getCardlist();
       this.getPMCardlist();
       this.getgraphPMdata();
+      this.getInvCardlist();
       this.spinner.hide();
       })
 
@@ -557,6 +559,19 @@ export class HomeComponent implements OnInit {
       this.pmCardDetailslistdata = data;
 
      // console.log(this.pmCardDetailslistdata)
+
+      this.spinner.hide();
+    });
+  }
+
+
+  getInvCardlist() {
+    this.invCardDetailslistdata = [];
+    this.spinner.show();
+    this.wmsService.getInvCardlist().subscribe(data => {
+      this.invCardDetailslistdata = data;
+
+      console.log(this.invCardDetailslistdata)
 
       this.spinner.hide();
     });
