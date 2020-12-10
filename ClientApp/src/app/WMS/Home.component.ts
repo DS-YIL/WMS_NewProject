@@ -345,8 +345,8 @@ export class HomeComponent implements OnInit {
         datasets: [
           {
             label: lblmessage,
-            //backgroundColor: '#42A5F5',
-            backgroundColor: 'rgba(0,255,0,0.5)',
+            backgroundColor: '#334b80',
+            //backgroundColor: 'rgba(0,255,0,0.5)',
             borderColor: '#7CB342',
             data: count
           },
@@ -397,8 +397,8 @@ export class HomeComponent implements OnInit {
       datasets: [
         {
           label: lblmessage,
-          //backgroundColor: '#42A5F5',
-          backgroundColor: 'rgba(0,255,0,0.5)',
+          backgroundColor: '#334b80',
+         // backgroundColor: 'rgba(0,255,0,0.5)',
           borderColor: '#7CB342',
           data: count
         },
@@ -462,8 +462,8 @@ export class HomeComponent implements OnInit {
         {
           label: lblmessage,
           //backgroundColor: '#42A5F5',
-          backgroundColor: '#4BC0C0',
-          borderColor: '#7CB342',
+          backgroundColor: '#70b385',
+          borderColor: '#555961',
           data: count
         },
       ]
@@ -508,7 +508,7 @@ export class HomeComponent implements OnInit {
           label: lblmessage,
           //backgroundColor: '#42A5F5',
           backgroundColor: '#4BC0C0',
-          borderColor: '#7CB342',
+          borderColor: '#555961',
           data: count
         },
       ]
