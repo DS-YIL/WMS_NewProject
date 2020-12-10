@@ -405,7 +405,7 @@
                             <span class="labelheading">{{pmCardDetailslistdata.totalmaterialreserved}}</span>
                           </div>
 
-                       
+
 
                         </div>
                       </div>
@@ -479,8 +479,8 @@
                             <label>Total:</label>
                             <span class="labelheading">{{invCardDetailslistdata.totalmaterialreserved}}</span>
                           </div>
-                         
-                         
+
+
 
                         </div>
                       </div>
@@ -496,12 +496,12 @@
                       <div class="card-link">
                         <div class="row justify-content-around">
 
-                          <div >
+                          <div>
                             <label>Total :</label>
                             <span class="labelheading">{{invCardDetailslistdata.totalmaterialreturn}}</span>
                           </div>
 
-                        
+
 
                         </div>
                       </div>
@@ -517,14 +517,14 @@
                       <div class="card-link">
                         <div class="row justify-content-around">
 
-                          <div >
+                          <div>
                             <label>Total :</label>
                             <span class="labelheading">{{invCardDetailslistdata.totalmaterialtransfer}}</span>
                           </div>
 
-                          <div >
-                          <label>Approved :</label>
-                          <span class="labelheading">{{invCardDetailslistdata.approvedmaterialtransfer}}</span>
+                          <div>
+                            <label>Approved :</label>
+                            <span class="labelheading">{{invCardDetailslistdata.approvedmaterialtransfer}}</span>
                           </div>
 
                         </div>
@@ -539,27 +539,41 @@
             </div>
             <!-- Cards -->
 
-            <div class="card-header" style="height:20px;padding-top:2px">
+            <div class="card-header" style="height:20px;padding-top:2px" *ngIf="employee.roleid!='10' && employee.roleid !='8' && employee.roleid!='4' && employee.roleid !='5' && employee.roleid!='7'  &&  employee.roleid!='9' &&  employee.roleid!='1'">
               <span class="labeltext">
                 <i class="fa fa-area-chart"></i>&nbsp;Graphical view
               </span>
             </div>
-            <div class="row">
-              <div class="col-lg-6 col-md-6">
+            <div class="row" *ngIf="employee.roleid!='10' && employee.roleid !='8' && employee.roleid!='4' && employee.roleid !='5' && employee.roleid!='7' ">
+              <div class="col-lg-6 col-md-6" *ngIf="employee.roleid =='3'">
                 <p-chart type="line" [data]="monthlychartdata" [height]="250" [options]="chartoptions1"></p-chart>
               </div>
-              <div class="col-lg-6 col-md-6">
+              <div class="col-lg-6 col-md-6" *ngIf="employee.roleid =='2'">
+                <p-chart type="line" [data]="monthlyIEchartdata" [height]="250" [options]="chartoptions2"></p-chart>
+              </div>
+              <div class="col-lg-6 col-md-6" *ngIf="employee.roleid =='11'">
+                <p-chart type="line" [data]="monthlyIEchartdata" [height]="250" [options]="chartoptions2"></p-chart>
+              </div>
+              <div class="col-lg-6 col-md-6" *ngIf="employee.roleid =='3'">
                 <p-chart type="bar" [data]="chartdata" [height]="250" [options]="chartoptions"></p-chart>
               </div>
+              <div class="col-lg-6 col-md-6" *ngIf="employee.roleid =='2' ">
+                <p-chart type="bar" [data]="chartdataIE" [height]="250" [options]="chartoptions11"></p-chart>
+              </div>
+              <div class="col-lg-6 col-md-6" *ngIf="employee.roleid =='11' ">
+                <p-chart type="bar" [data]="chartdataIE" [height]="250" [options]="chartoptions11"></p-chart>
+              </div>
               <!--<div class="col-lg-6 col-md-6">
-      <p-chart type="bar" [data]="chartdataPM" [height]="250" [options]="chartoptions"></p-chart>
-    </div>-->
+    <p-chart type="bar" [data]="chartdataPM" [height]="250" [options]="chartoptions"></p-chart>
+  </div>-->
             </div>
             <!--<div class="col-lg-3 col-md-3" >
     <p-chart type="doughnut" [data]="monthlychartdata"  ></p-chart>
   </div>-->
             <!-- End Graphs -->
-
+            <div style="height:60vh" *ngIf="employee.roleid!='2' && employee.roleid !='3' && employee.roleid!='11' ">
+              <img src="./assets/wmshome3.png" alt="homepage image" height="100%" width="100%" />
+            </div>
 
           </div>
 

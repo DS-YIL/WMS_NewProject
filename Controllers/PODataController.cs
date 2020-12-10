@@ -597,6 +597,12 @@ namespace WMS.Controllers
 
 			return await this._poService.getUserdashboardgraphdata();
 		}
+		[HttpGet("getUserdashIEgraphdata")]
+		public async Task<IEnumerable<UserDashboardGraphModel>> getUserdashIEgraphdata(string employeeid)
+		{
+
+			return await this._poService.getUserdashIEgraphdata();
+		}
 
 		[HttpGet("getManagerdashboardgraphdata")]
 		public async Task<ManagerDashboard> getManagerdashboardgraphdata()
@@ -1133,9 +1139,13 @@ namespace WMS.Controllers
 			return await this._poService.getPMdashboarddata();
 
 		}
+		[HttpGet("getmonthlyUserdashboardIEgraphdata")]
+		public async Task<IEnumerable<UserDashboardGraphModel>> getmonthlyUserdashboardIEgraphdata()
+		{
+			return await this._poService.getmonthlyUserdashboardIEgraphdata();
+		}
 
-
-        [HttpGet("getInvdashboarddata")]
+		[HttpGet("getInvdashboarddata")]
         public async Task<invDashboardCards> getInvdashboarddata()
         {
             return await this._poService.getInvdashboarddata();

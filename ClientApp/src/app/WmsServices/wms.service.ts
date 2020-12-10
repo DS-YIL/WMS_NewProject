@@ -598,6 +598,9 @@ export class wmsService {
   getdashgraphdata(): Observable<UserDashboardGraphModel[]> {
     return this.http.get<UserDashboardGraphModel[]>(this.url + 'POData/getUserdashgraphdata/', this.httpOptions);
   }
+  getdashIEgraphdata(): Observable<UserDashboardGraphModel[]> {
+    return this.http.get<UserDashboardGraphModel[]>(this.url + 'POData/getUserdashIEgraphdata/', this.httpOptions);
+  }
 
   getmonthlydashgraphdata(): Observable<UserDashboardGraphModel[]> {
     return this.http.get<UserDashboardGraphModel[]>(this.url + 'POData/getmonthlyUserdashgraphdata/', this.httpOptions);
@@ -726,6 +729,9 @@ export class wmsService {
     return this.http.get<pmDashboardCards>(this.url + 'POData/getPMdashboarddata/', this.httpOptions);
   }
 
+  getmonthlyUserdashboardIEgraphdata(): Observable<UserDashboardGraphModel[]> {
+    return this.http.get<UserDashboardGraphModel[]>(this.url + 'POData/getmonthlyUserdashboardIEgraphdata/', this.httpOptions);
+  }
   getInvCardlist(): Observable<any> {
     return this.http.get<invDashboardCards>(this.url + 'POData/getInvdashboarddata/', this.httpOptions);
   }
