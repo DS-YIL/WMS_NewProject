@@ -5414,7 +5414,7 @@ namespace WMS.DAL
                 {
 
                     string rcvqry = "SELECT receiveddate::date as graphdate, COUNT(*),'Receive' as type ";
-                    rcvqry += " from wms.wms_storeinward";
+                    rcvqry += " from wms.wms_storeinward ";
                     rcvqry += " WHERE receiveddate > now() - interval '7 days'";
                     rcvqry += " GROUP BY receiveddate::date";
                     rcvqry += " ORDER BY receiveddate::date ASC";
@@ -5492,7 +5492,8 @@ namespace WMS.DAL
                     string qualitypending = "select count(*),COUNT(*) OVER () as qualitypendcount from wms.wms_storeinward where receiveddate> now() - interval '1 month' and qualitycheckrequired =true and qualitychecked is null group by inwmasterid";
 
                     //Get count of pending GRN's - putaway 
-                    string putawaypend = " select count(*),COUNT(*) OVER () as putawaypendcount from wms.wms_securityinward secinw  where secinw.inwmasterid not in (select distinct inwmasterid  from wms.wms_stock where inwmasterid is not null order by inwmasterid desc) and receiveddate> now() - interval '1 month' group by secinw.inwmasterid ";
+                    //string putawaypend = " select count(*),COUNT(*) OVER () as putawaypendcount from wms.wms_securityinward secinw  where secinw.inwmasterid not in (select distinct inwmasterid  from wms.wms_stock where inwmasterid is not null order by inwmasterid desc) and receiveddate> now() - interval '1 month' group by secinw.inwmasterid ";
+                    string putawaypend = " select sinw.grnnumber,COUNT(*) OVER() as putawaypendcount from wms.wms_storeinward stinw join wms.wms_securityinward sinw on stinw.inwmasterid = sinw.inwmasterid where stinw.returnedby is not null and sinw.isdirecttransferred is NOT true and stinw.inwardid not in (select distinct inwardid from wms.wms_stock where inwardid is not null and createddate > now() - interval '1 month'  order by inwardid desc)  group by sinw.grnnumber";
 
                     //Get count of completed GRN's - putaway 
                     string putawaycomp = " select sinw.grnnumber,COUNT(*) OVER () as putawaycompcount from wms.wms_storeinward stinw  join wms.wms_securityinward sinw on stinw.inwmasterid = sinw.inwmasterid where stinw.returnedby is not null and sinw.isdirecttransferred is NOT true and stinw.inwardid  in (select distinct inwardid from wms.wms_stock where inwardid is not null and createddate> now() - interval '1 month'  order by inwardid desc) group by sinw.grnnumber";
@@ -5574,7 +5575,7 @@ namespace WMS.DAL
 
                     string rcvqry = "SELECT date_part('year', receiveddate::date) as syear,";
                     rcvqry += " date_part('week', receiveddate::date) AS sweek,COUNT(*) as count, 'Receive' as type";
-                    rcvqry += " FROM wms.wms_storeinward where receiveddate is not null and receiveddate > now() - interval '1 month' and extract(year from receiveddate) > 2000";
+                    rcvqry += " FROM wms.wms_securityinward where receiveddate is not null and receiveddate > now() - interval '1 month' and extract(year from receiveddate) > 2000";
                     rcvqry += " GROUP BY syear, sweek ORDER BY syear, sweek";
 
                     string qcqry = "SELECT date_part('year', qcdate::date) as syear,";
@@ -5630,30 +5631,29 @@ namespace WMS.DAL
 
                 try
                 {
+                    string rcvqry = "SELECT date_part('month', receiveddate::date) as smonth,";
+                    rcvqry += " concat('week',date_part('week', receiveddate::date) ) AS sweek,COUNT(*) as count, 'Receive' as type";
+                    rcvqry += " FROM  wms.wms_securityinward where receiveddate is not null and receiveddate > now() - interval '1 month'  and grnnumber is not null and onhold is null";
+                    rcvqry += " GROUP BY smonth, sweek ORDER BY smonth , sweek";
 
 
-
-                    string rcvqry = "SELECT date_part('year', receiveddate::date) as syear,";
-                    rcvqry += " date_part('week', receiveddate::date) AS sweek,COUNT(*) as count, 'Receive' as type";
-                    rcvqry += " FROM wms.wms_storeinward where receiveddate is not null and receiveddate > now() - interval '1 month' and extract(year from receiveddate) > 2000";
-                    rcvqry += " GROUP BY syear, sweek ORDER BY syear, sweek";
-
-                    string qcqry = "SELECT date_part('year', qcdate::date) as syear,";
+                    string qcqry = "SELECT date_part('month', qcdate::date) as smonth,";
                     qcqry += " date_part('week', qcdate::date) AS sweek,COUNT(*) as count, 'Quality' as type";
-                    qcqry += " FROM wms.wms_qualitycheck where qcdate is not null and qcdate > now() - interval '1 month' and extract(year from qcdate) > 2000";
-                    qcqry += " GROUP BY syear, sweek ORDER BY syear, sweek";
+                    qcqry += " FROM wms.wms_qualitycheck where qcdate is not null and qcdate > now() - interval '1 month' ";
+                    qcqry += " GROUP BY smonth, sweek ORDER BY smonth, sweek";
 
-                    string accqry = "SELECT date_part('year', returnedon::date) as syear,";
+                    string accqry = "SELECT date_part('month', returnedon::date) as smonth,";
                     accqry += " date_part('week', returnedon::date) AS sweek,COUNT(*) as count, 'Accept' as type";
-                    accqry += " FROM wms.wms_storeinward where returnedon is not null and returnedon > now() - interval '1 month' and extract(year from returnedon) > 2000";
-                    accqry += " GROUP BY syear, sweek ORDER BY syear, sweek";
-                    
-                    string pwqry = "SELECT date_part('year', createddate::date) as syear,";
+                    accqry += " FROM wms.wms_storeinward where returnedon is not null and returnedon > now() - interval '1 month'  ";
+                    accqry += " GROUP BY smonth, sweek ORDER BY smonth, sweek";
+
+                    string pwqry = "SELECT date_part('month', createddate::date) as smonth,";
                     pwqry += " date_part('week', createddate::date) AS sweek,COUNT(*) as count, 'Putaway' as type";
-                    pwqry += " FROM wms.wms_stock where createddate is not null and createddate > now() - interval '1 month' and extract(year from createddate) > 2000";
-                    pwqry += " GROUP BY syear, sweek ORDER BY syear, sweek";
+                    pwqry += " FROM wms.wms_stock where createddate is not null and createddate > now() - interval '1 month' ";
+                    pwqry += " GROUP BY smonth, sweek ORDER BY smonth, sweek";
 
 
+                   
                     var data1 = await pgsql.QueryAsync<UserDashboardGraphModel>(rcvqry, null, commandType: CommandType.Text);
                     var data2 = await pgsql.QueryAsync<UserDashboardGraphModel>(qcqry, null, commandType: CommandType.Text);
                     var data3 = await pgsql.QueryAsync<UserDashboardGraphModel>(accqry, null, commandType: CommandType.Text);
@@ -11250,12 +11250,121 @@ namespace WMS.DAL
 
             }
         }
+
+        public async Task<IEnumerable<UserDashboardGraphModel>> getmonthlyUserdashboardIEgraphdata()
+        {
+            using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+            {
+
+
+                try
+                {
+                   
+
+                    string mrvqry = "SELECT date_part('month', requesteddate::date) as smonth,";
+                    mrvqry += " concat('week',date_part('week', requesteddate::date) ) AS sweek,COUNT(*) as count, 'Request' as type";
+                    mrvqry += " FROM  wms.materialrequest where requesteddate is not null and requesteddate > now() - interval '1 month'  and requestid is not null ";
+                    mrvqry += " GROUP BY smonth, sweek ORDER BY smonth , sweek";
+
+
+                    string mrnvqry = "SELECT date_part('month', createdon::date) as smonth,";
+                    mrnvqry += " concat('week',date_part('week', createdon::date) ) AS sweek,COUNT(*) as count, 'Return' as type";
+                    mrnvqry += " FROM  wms.wms_materialreturn where createdon is not null and createdon > now() - interval '1 month'  and returnid is not null";
+                    mrnvqry += " GROUP BY smonth, sweek ORDER BY smonth , sweek";
+
+
+                    string mrsvqry = "SELECT date_part('month', reservedon::date) as smonth,";
+                    mrsvqry += " concat('week',date_part('week', reservedon::date) ) AS sweek,COUNT(*) as count, 'Reserve' as type";
+                    mrsvqry += " FROM  wms.materialreserve where reservedon is not null and reservedon > now() - interval '1 month'  and reserveid is not null";
+                    mrsvqry += " GROUP BY smonth, sweek ORDER BY smonth , sweek";
+
+                    string mrtvqry = "SELECT date_part('month', createdon::date) as smonth,";
+                    mrtvqry += " concat('week',date_part('week', createdon::date) ) AS sweek,COUNT(*) as count, 'Transfer' as type";
+                    mrtvqry += " FROM  wms.wms_transfermaterial where createdon is not null and createdon > now() - interval '1 month'  and materialid is not null";
+                    mrtvqry += " GROUP BY smonth, sweek ORDER BY smonth , sweek";
+                    var data1 = await pgsql.QueryAsync<UserDashboardGraphModel>(mrvqry, null, commandType: CommandType.Text);
+
+                    var data2 = await pgsql.QueryAsync<UserDashboardGraphModel>(mrnvqry, null, commandType: CommandType.Text);
+                    var data3 = await pgsql.QueryAsync<UserDashboardGraphModel>(mrsvqry, null, commandType: CommandType.Text);
+                    var data4 = await pgsql.QueryAsync<UserDashboardGraphModel>(mrtvqry, null, commandType: CommandType.Text);
+
+                    var data = data1.Concat(data2.Concat(data3.Concat(data4)));
+                    //var data = data1;
+                    return data;
+
+                }
+                catch (Exception Ex)
+                {
+                    log.ErrorMessage("PODataProvider", "getmonthlyUserdashboardIEgraphdata", Ex.StackTrace.ToString());
+                    return null;
+                }
+                finally
+                {
+                    pgsql.Close();
+                }
+
+            }
+        }
         //public string addEditGRReports(grReports data)
         //{
         //    throw new NotImplementedException();
         //}
 
+        public async Task<IEnumerable<UserDashboardGraphModel>> getUserdashIEgraphdata()
+        {
+            using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+            {
 
+
+                try
+                {
+
+                    string mrqvqry = "SELECT requesteddate::date as graphdate, COUNT(*),'Request' as type";
+                    mrqvqry += " from wms.materialrequest";
+                    mrqvqry += " WHERE requesteddate > now() - interval '7 days'";
+                    mrqvqry += " GROUP BY requesteddate::date";
+                    mrqvqry += " ORDER BY requesteddate::date ASC";
+                  
+                    string mrnqry = "SELECT createdon::date as graphdate, COUNT(*),'Return' as type ";
+                    mrnqry += " from wms.wms_materialreturn";
+                    mrnqry += " WHERE createdon > now() - interval '7 days'";
+                    mrnqry += " GROUP BY createdon::date";
+                    mrnqry += " ORDER BY createdon::date ASC";
+
+                    string mrsqry = "SELECT reservedon::date as graphdate, COUNT(*),'Reserve' as type ";
+                    mrsqry += " from  wms.materialreserve";
+                    mrsqry += " WHERE reservedon > now() - interval '7 days'";
+                    mrsqry += " GROUP BY reservedon::date";
+                    mrsqry += " ORDER BY reservedon::date ASC";
+
+                    string mrtqry = "SELECT createdon::date as graphdate, COUNT(*),'Transfer' as type ";
+                    mrtqry += " from wms.wms_transfermaterial";
+                    mrtqry += " WHERE createdon > now() - interval '7 days'";
+                    mrtqry += " GROUP BY createdon::date";
+                    mrtqry += " ORDER BY createdon::date ASC";
+
+                    var data1 = await pgsql.QueryAsync<UserDashboardGraphModel>(mrqvqry, null, commandType: CommandType.Text);
+                    var data2 = await pgsql.QueryAsync<UserDashboardGraphModel>(mrnqry, null, commandType: CommandType.Text);
+                    var data3 = await pgsql.QueryAsync<UserDashboardGraphModel>(mrsqry, null, commandType: CommandType.Text);
+                    var data4 = await pgsql.QueryAsync<UserDashboardGraphModel>(mrtqry, null, commandType: CommandType.Text);
+
+                    var data = data1.Concat(data2.Concat(data3.Concat(data4)));
+
+                    return data;
+
+                }
+                catch (Exception Ex)
+                {
+                    log.ErrorMessage("PODataProvider", "getUserdashboardIEgraphdata", Ex.StackTrace.ToString());
+                    return null;
+                }
+                finally
+                {
+                    pgsql.Close();
+                }
+
+            }
+        }
 
         public async Task<invDashboardCards> getInvdashboarddata()
         {

@@ -44,6 +44,7 @@ namespace WMS.Models
 		public string costcenter { get; set; }
 		public string assetno { get; set; }
 		public string projecttext { get; set; }
+		public string sloc { get; set; }
 
 	}
 
@@ -157,7 +158,16 @@ namespace WMS.Models
 		public string modulename { get; set; }
 
     }
+	public class MaterialStage
+	{
+		public string material { get; set; }
+		public string plant { get; set; }
+		public string hsncode { get; set; }
+		public DateTime createddate { get; set; }
+		public bool dataloaderror { get; set; }
+		public string error_description { get; set; }
+	}
 
-	
+
 }
 

@@ -16,8 +16,10 @@ import { TreeNode } from 'primeng/api';
 })
 export class HomeComponent implements OnInit {
   chartdata: any;
+  chartdataIE: any;
   chartdataPM: any;
   monthlychartdata: any;
+  monthlyIEchartdata: any;
   weeklychartdata: any;
   piedata: any;
   data1: TreeNode[];
@@ -34,9 +36,13 @@ export class HomeComponent implements OnInit {
   dashboardmodel: UserDashboardDetail;
   dashboardgraphmodel: UserDashboardGraphModel[] = [];
   monthlydashboardgraphmodel: UserDashboardGraphModel[] = [];
+  monthlydashboardIEgraphmodel: UserDashboardGraphModel[] = [];
+  dashboardIEgraphmodel: UserDashboardGraphModel[] = [];
   pmdashboardgraphmodel: UserDashboardGraphModel[] = [];
   chartoptions: any;
+  chartoptions11: any;
   chartoptions1: any;
+  chartoptions2: any;
   nodes: any[] = [];
   firstload: boolean = true;
   public totalGatePassList: Array<any> = [];
@@ -66,7 +72,9 @@ export class HomeComponent implements OnInit {
     this.firstload = true;
     this.dashboardmodel = new UserDashboardDetail();
     this.dashboardgraphmodel = [];
+    this.dashboardIEgraphmodel = [];
     this.monthlydashboardgraphmodel = [];
+    this.monthlydashboardIEgraphmodel = [];
     this.pmdashboardgraphmodel = [];
     this.approverstatus = "Pending";
     this.materialforissuecount = 0;
@@ -239,9 +247,23 @@ export class HomeComponent implements OnInit {
       if (data != null) {
 
         this.dashboardgraphmodel = data;
-     // console.log(this.dashboardgraphmodel)
+    // console.log(this.dashboardgraphmodel)
         this.setgraph('Receive'); 
+      }
+      this.spinner.hide();
+    })
 
+
+  }
+  getIEgraphdata() {
+
+    this.spinner.show();
+    this.wmsService.getdashIEgraphdata().subscribe(data => {
+      if (data != null) {
+
+        this.dashboardIEgraphmodel = data;
+         console.log(this.dashboardIEgraphmodel)
+        this.setgraphIE('Request')
       }
       this.spinner.hide();
     })
@@ -266,6 +288,22 @@ export class HomeComponent implements OnInit {
 
   }
 
+  getmonthlyIEgraphdata() {
+
+    this.spinner.show();
+    this.wmsService.getmonthlyUserdashboardIEgraphdata().subscribe(data => {
+      if (data != null) {
+
+        this.monthlydashboardIEgraphmodel = data;
+        this.setmonthlyIEgraph('Request');
+
+       // console.log(this.monthlydashboardIEgraphmodel )
+      }
+      this.spinner.hide();
+    })
+
+
+  }
   setgraph(type: string) {
     this.chartdata = null;
     var lblmessage = "";
@@ -307,8 +345,8 @@ export class HomeComponent implements OnInit {
         datasets: [
           {
             label: lblmessage,
-            //backgroundColor: '#42A5F5',
-            backgroundColor: 'rgba(0,255,0,0.5)',
+            backgroundColor: '#334b80',
+            //backgroundColor: 'rgba(0,255,0,0.5)',
             borderColor: '#7CB342',
             data: count
           },
@@ -319,7 +357,59 @@ export class HomeComponent implements OnInit {
 
 
     
+   // console.log(this.dashboardgraphmodel);
+  }
 
+  setgraphIE(type: string) {
+    this.chartdataIE = null;
+    var lblmessage = "";
+    if (type == "Request") {
+      lblmessage = "Materials Request in past seven days."
+    }
+
+    if (type == "Return") {
+      lblmessage = "Materials Return in past seven days."
+    }
+    if (type == "Reserve") {
+      lblmessage = "Materials Reserve in past seven days."
+    }
+    if (type == "Transfer") {
+      lblmessage = "Materials Transfer in past seven days."
+    }
+
+    var pid = []
+    var count = []
+    var gdata = this.dashboardIEgraphmodel.filter(function (elementx, index) {
+      return (elementx.type == type);
+    });
+    if (gdata.length > 0) {
+      gdata.forEach(element => {
+
+        var showdate = this.datePipe.transform(element.graphdate, 'dd/MM/yyyy');
+        pid.push(showdate);
+        count.push(element.count);
+      });
+    }
+
+    this.chartdataIE = {
+
+      labels: pid,
+      datasets: [
+        {
+          label: lblmessage,
+          backgroundColor: '#334b80',
+         // backgroundColor: 'rgba(0,255,0,0.5)',
+          borderColor: '#7CB342',
+          data: count
+        },
+      ]
+
+    }
+    this.chartoptions11 = { scales: { yAxes: [{ ticks: { beginAtZero: true, userCallback: function (label, index, labels) { if (Math.floor(label) === label) { return label; } }, } }] } }
+
+
+
+    console.log(this.dashboardIEgraphmodel);
   }
 
   setmonthlygraph(type: string) {
@@ -327,7 +417,7 @@ export class HomeComponent implements OnInit {
     this.monthlychartdata = null;
     var lblmessage = "";
     if (type == "Receive") {
-      lblmessage = "Weekly Received Receipts"
+      lblmessage = "Monthly Received Receipts"
     }
     if (type == "Quality") {
 
@@ -344,6 +434,10 @@ export class HomeComponent implements OnInit {
       lblmessage = "Monthly put aways"
 
     }
+    if (type == "Request" ) {
+      lblmessage = "Monthly Request Materials"
+    }
+    
     var pid = []
     var count = []
     var gdata = this.monthlydashboardgraphmodel.filter(function (elementx, index) {
@@ -351,7 +445,7 @@ export class HomeComponent implements OnInit {
     });
     if (gdata.length > 0) {
       gdata.forEach(element => {
-        pid.push(element.smonth);
+        pid.push(element.sweek);
         count.push(element.count);
       });
     }
@@ -368,8 +462,8 @@ export class HomeComponent implements OnInit {
         {
           label: lblmessage,
           //backgroundColor: '#42A5F5',
-          backgroundColor: '#4BC0C0',
-          borderColor: '#7CB342',
+          backgroundColor: '#70b385',
+          borderColor: '#555961',
           data: count
         },
       ]
@@ -384,8 +478,48 @@ export class HomeComponent implements OnInit {
 
 
  
-
   
+  setmonthlyIEgraph(type: string) {
+    debugger;
+    this.monthlyIEchartdata = null;
+    var lblmessage = "";
+   
+    if (type == "Request" ) {
+      lblmessage = "Monthly Request Materials"
+    }
+
+    var pid = []
+    var count = []
+    var gdata = this.monthlydashboardIEgraphmodel.filter(function (elementx, index) {
+      return (elementx.type == type);
+    });
+    if (gdata.length > 0) {
+      gdata.forEach(element => {
+        pid.push(element.sweek);
+        count.push(element.count);
+      });
+    }
+
+    this.monthlyIEchartdata = {
+      
+      labels: pid,
+      datasets: [
+        {
+          label: lblmessage,
+          //backgroundColor: '#42A5F5',
+          backgroundColor: '#4BC0C0',
+          borderColor: '#555961',
+          data: count
+        },
+      ]
+
+    }
+    this.chartoptions2 = { scales: { yAxes: [{ ticks: { beginAtZero: true, userCallback: function (label, index, labels) { if (Math.floor(label) === label) { return label; } }, } }] } }
+
+   // console.log(this.monthlydashboardIEgraphmodel );
+
+
+  }
 
   activeCard1(event, type: string) {
     debugger;
@@ -400,6 +534,8 @@ export class HomeComponent implements OnInit {
     node.classList.add("cardactive");
     this.setgraph(type);
     this.setmonthlygraph(type);
+    this.setmonthlyIEgraph(type);
+    this.setgraphIE(type);
     
   }
   activeCard(event, type: string) {
@@ -531,8 +667,10 @@ export class HomeComponent implements OnInit {
       this.getmonthlygraphdata();
       this.getCardlist();
       this.getPMCardlist();
-      this.getgraphPMdata();
+     // this.getgraphPMdata();
       this.getInvCardlist();
+      this.getmonthlyIEgraphdata();
+      this.getIEgraphdata();
       this.spinner.hide();
       })
 
@@ -571,89 +709,89 @@ export class HomeComponent implements OnInit {
     this.wmsService.getInvCardlist().subscribe(data => {
       this.invCardDetailslistdata = data;
 
-      console.log(this.invCardDetailslistdata)
+      //console.log(this.invCardDetailslistdata)
 
       this.spinner.hide();
     });
   }
 
-  getgraphPMdata() {
+  //getgraphPMdata() {
 
-    this.spinner.show();
-    this.wmsService.getPMdashgraphdata().subscribe(data => {
-      if (data != null) {
+  //  this.spinner.show();
+  //  this.wmsService.getPMdashgraphdata().subscribe(data => {
+  //    if (data != null) {
 
-        this.pmdashboardgraphmodel = data;
-        console.log(this.pmdashboardgraphmodel)
-        this.setPMgraph('Request');
+  //      this.pmdashboardgraphmodel = data;
+  //      console.log(this.pmdashboardgraphmodel)
+  //      this.setPMgraph('Request');
 
-      }
-      this.spinner.hide();
-    })
-
-
-  }
+  //    }
+  //    this.spinner.hide();
+  //  })
 
 
+  //}
 
 
 
-  setPMgraph(type: string) {
-    this.chartdataPM = null;
-    var lblmessage = "";
-    if (type == "Request") {
-      lblmessage = "material Requested  in past seven days."
-    }
-    if (type == "Return") {
-
-      lblmessage = "materials Return in past seven days."
-
-    }
-    if (type == "Reserve") {
-
-      lblmessage = "materials Reserved  in past seven days."
-
-    }
-    if (type == "Returned") {
-
-      lblmessage = "materials Returned in past seven days."
-
-    }
-    var pid = []
-    var count = []
-    var gdata = this.pmdashboardgraphmodel.filter(function (elementx, index) {
-      console.log( this.pmdashboardgraphmodel)
-      return (elementx.type == type);
-    });
-    if (gdata.length > 0) {
-      gdata.forEach(element => {
-
-        var showdate = this.datePipe.transform(element.graphdate, 'dd/MM/yyyy');
-        pid.push(showdate);
-        count.push(element.count);
-      });
-    }
-
-    this.chartdataPM = {
-
-      labels: pid,
-      datasets: [
-        {
-          label: lblmessage,
-          //backgroundColor: '#42A5F5',
-          backgroundColor: 'rgba(0,255,0,0.5)',
-          borderColor: '#7CB342',
-          data: count
-        },
-      ]
-
-    }
-    this.chartoptions = { scales: { yAxes: [{ ticks: { beginAtZero: true, userCallback: function (label, index, labels) { if (Math.floor(label) === label) { return label; } }, } }] } }
-    console.log(this.chartdataPM)
 
 
+  //setPMgraph(type: string) {
+  //  this.chartdataPM = null;
+  //  var lblmessage = "";
+  //  if (type == "Request") {
+  //    lblmessage = "material Requested  in past seven days."
+  //  }
+  //  if (type == "Return") {
 
-  }
+  //    lblmessage = "materials Return in past seven days."
+
+  //  }
+  //  if (type == "Reserve") {
+
+  //    lblmessage = "materials Reserved  in past seven days."
+
+  //  }
+  //  if (type == "Returned") {
+
+  //    lblmessage = "materials Returned in past seven days."
+
+  //  }
+  //  var pid = []
+  //  var count = []
+  //  var gdata = this.pmdashboardgraphmodel.filter(function (elementx, index) {
+  //    console.log( this.pmdashboardgraphmodel)
+  //    return (elementx.type == type);
+  //  });
+  //  if (gdata.length > 0) {
+  //    gdata.forEach(element => {
+
+  //      var showdate = this.datePipe.transform(element.graphdate, 'dd/MM/yyyy');
+  //      pid.push(showdate);
+  //      count.push(element.count);
+  //    });
+  //  }
+
+  //  this.chartdataPM = {
+
+  //    labels: pid,
+  //    datasets: [
+  //      {
+  //        label: lblmessage,
+  //        //backgroundColor: '#42A5F5',
+  //        backgroundColor: 'rgba(0,255,0,0.5)',
+  //        borderColor: '#7CB342',
+  //        data: count
+  //      },
+  //    ]
+
+  //  }
+  //  this.chartoptions = { scales: { yAxes: [{ ticks: { beginAtZero: true, userCallback: function (label, index, labels) { if (Math.floor(label) === label) { return label; } }, } }] } }
+  //  console.log(this.chartdataPM)
+
+
+
+  //}
 
 }
 
