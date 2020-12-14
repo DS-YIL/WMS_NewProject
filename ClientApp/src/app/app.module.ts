@@ -33,6 +33,7 @@ import { AutoCompleteModule } from 'primeng/autocomplete';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { NgxPrintModule } from 'ngx-print';
+import { VirtualScrollerModule } from 'primeng/virtualscroller';
 
 import { DashboardComponent } from './WMS/Dashboard.component';
 import { POListComponent } from './WMS/POList.component';
@@ -237,7 +238,8 @@ import { FieldsetModule } from 'primeng/fieldset';
     TabViewModule,
     DataViewModule,
     PanelModule,
-    FieldsetModule
+    FieldsetModule,
+    VirtualScrollerModule
     //RouterModule.forRoot([
     //  { path: '', component: LoginComponent, pathMatch: 'full' },
     // ])

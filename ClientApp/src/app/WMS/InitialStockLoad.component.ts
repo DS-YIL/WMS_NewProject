@@ -4,7 +4,7 @@ import { wmsService } from '../WmsServices/wms.service';
 import { constants } from '../Models/WMSConstants';
 import { Employee } from '../Models/Common.Model';
 import { NgxSpinnerService } from "ngx-spinner";
-import { MessageService } from 'primeng/api';
+import { MessageService, LazyLoadEvent } from 'primeng/api';
 import { ConfirmationService } from 'primeng/api';
 import { isNullOrUndefined } from 'util';
 import { HttpClient } from '@angular/common/http';
@@ -29,10 +29,13 @@ export class InitialStockLoadComponent implements OnInit {
   viewdetail: boolean = false;
   viewexception: boolean = false;
   getmainlistdata: StockModel[] = [];
+  getVirtuallistdata: StockModel[] = [];
   lblfilename: string = "";
   lbldate: Date;
   lblqty: number;
   lblvalue: string = "";
+  loading: boolean = false;
+  totalRecords: number;
   
 
   ngOnInit() {
@@ -88,6 +91,26 @@ export class InitialStockLoadComponent implements OnInit {
     this.viewexception = false;
   }
 
+  loadCarsLazy(event: LazyLoadEvent) {
+    debugger;
+    this.loading = true;
+
+    //in a real application, make a remote request to load data using state metadata from event
+    //event.first = First row offset
+    //event.rows = Number of rows per page
+    //event.sortField = Field name to sort with
+    //event.sortOrder = Sort order as number, 1 for asc and -1 for dec
+    //filters: FilterMetadata object having field as key and filter value, filter matchMode as value
+
+    //imitate db connection over a network
+    setTimeout(() => {
+      if (this.getlistdata) {
+        this.getVirtuallistdata = this.getlistdata.slice(event.first, (event.first + event.rows));
+        this.loading = false;
+      }
+    }, 1000);
+  }
+
   getexlist(data: StockModel) {
     this.lblfilename = data.uploadedfilename;
     this.lbldate = data.createddate;
@@ -96,12 +119,15 @@ export class InitialStockLoadComponent implements OnInit {
     this.getlistdata = [];
     var uploadcode = data.uploadbatchcode;
     this.viewexception = false;
+    this.loading = true;
+    this.viewdetail = false;
     this.spinner.show();
     this.wmsService.getinitialStockEX(uploadcode).subscribe(data => {
       this.getlistdata = data;
       this.viewmain = false;
       this.viewdetail = true;
       this.viewexception = true;
+      this.totalRecords = this.getlistdata.length;
       this.spinner.hide();
     });
   }
@@ -114,12 +140,15 @@ export class InitialStockLoadComponent implements OnInit {
     this.getlistdata = [];
     var uploadcode = data.uploadbatchcode;
     this.viewexception = false;
+    this.loading = true;
+    this.viewdetail = false;
     this.spinner.show();
     this.wmsService.getinitialStockAllrecords(uploadcode).subscribe(data => {
       this.getlistdata = data;
       this.viewmain = false;
       this.viewdetail = true;
       this.viewexception = true;
+      this.totalRecords = this.getlistdata.length;
       this.spinner.hide();
     });
   }
@@ -132,11 +161,14 @@ export class InitialStockLoadComponent implements OnInit {
     this.getlistdata = [];
     var uploadcode = data.uploadbatchcode;
     this.viewexception = false;
+    this.viewdetail = false;
+    this.loading = true;
     this.spinner.show();
     this.wmsService.getinitialStock(uploadcode).subscribe(data => {
       this.getlistdata = data;
       this.viewmain = false;
       this.viewdetail = true;
+      this.totalRecords = this.getlistdata.length;
       this.spinner.hide();
     });
   }

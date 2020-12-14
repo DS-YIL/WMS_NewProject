@@ -577,6 +577,14 @@ namespace WMS.Controllers
                     string uploadedfilename = filename.Substring(index + 1);
                     var folderName = Path.Combine("Resources", "documents");
                     var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+                    string storeQuery = "Select uploadedfilename from wms.st_initialstock where uploadedfilename = '" + uploadedfilename + "'";
+                    var fileexists = DB.ExecuteScalar(storeQuery, null);
+                    if(fileexists != null)
+                    {
+                        result.message = "FILEFOUND";
+                        return result;
+                    }
+
 
                     if (postedfile.Length > 0)
                     {
@@ -632,7 +640,7 @@ namespace WMS.Controllers
                     DateTime createdate = DateTime.Now;
                     foreach (DataRow row in dtexcel.Rows)
                     {
-
+                     
                         string Error_Description = "";
                         bool dataloaderror = false;
 
@@ -678,8 +686,6 @@ namespace WMS.Controllers
                             Error_Description += " No Store";
                         if (string.IsNullOrEmpty(initialstk.rack) || initialstk.rack == "")
                             Error_Description += " No Rack";
-                        if (string.IsNullOrEmpty(initialstk.bin) || initialstk.bin == "")
-                            Error_Description += " No Bin";
                         if (initialstk.quantity == null || initialstk.quantity == 0)
                             Error_Description += " No Quantity";
                         if (string.IsNullOrEmpty(initialstk.projectid) || initialstk.projectid == "")
@@ -693,8 +699,7 @@ namespace WMS.Controllers
                             Error_Description_all += Error_Description + " For Row " + i.ToString() + "-";
 
                         }
-                        i++;
-
+                      
 
                         initialstk.DataloadErrors = dataloaderror;
                         initialstk.error_description = Error_Description;
@@ -853,7 +858,7 @@ namespace WMS.Controllers
                                 rackId = Convert.ToInt32(rackresults);
                             }
 
-                            //Add Bin masterdata if not exist
+                           
                             string binQuery = "Select binid from wms.wms_rd_bin where binnumber = '" + stag_data.bin + "' and locatorid=" + storeId + " and rackid=" + rackId + "";
                             var binId = pgsql.ExecuteScalar(binQuery, null);
                             if (binId == null && (stag_data.bin != null && stag_data.bin != ""))

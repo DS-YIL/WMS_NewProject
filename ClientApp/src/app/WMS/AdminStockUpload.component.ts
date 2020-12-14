@@ -4,7 +4,7 @@ import { wmsService } from '../WmsServices/wms.service';
 import { constants } from '../Models/WMSConstants';
 import { Employee } from '../Models/Common.Model';
 import { NgxSpinnerService } from "ngx-spinner";
-import { MessageService } from 'primeng/api';
+import { MessageService, LazyLoadEvent } from 'primeng/api';
 import { ConfirmationService } from 'primeng/api';
 import { isNullOrUndefined } from 'util';
 import { HttpClient } from '@angular/common/http';
@@ -27,7 +27,7 @@ export class AdminStockUploadComponent implements OnInit {
   uploadedFiles: any[] = [];
   public url = "";
   getlistdata: StockModel[] = [];
-  getEXlistdata: StockModel[] = [];
+  getVirtuallistdata: StockModel[] = [];
   public responsestr: string = "";
   public responseexceptionstr: string = "";
   displayModal: boolean = false;
@@ -36,6 +36,9 @@ export class AdminStockUploadComponent implements OnInit {
   displayTable: boolean = false;
   strtotalrecord: string = "";
   strsuccessrecord: string = "";
+  loading: boolean;
+  totalRecords: number;
+  viewexception: boolean = false;
 
   
 
@@ -48,6 +51,8 @@ export class AdminStockUploadComponent implements OnInit {
     this.strsuccessrecord = "";
     this.strtotalrecord = "";
     this.displayModal = false;
+    this.viewexception = false;
+    this.loading = true;
     //this.getlist();
      
   }
@@ -62,13 +67,27 @@ export class AdminStockUploadComponent implements OnInit {
     this.strsuccessrecord = String(arrrcds[2]);
   }
 
-  getlist(uploadcode: string) {
-    this.displayTable = false;
+  loadCarsLazy(event: LazyLoadEvent) {
+    this.loading = true;
+    setTimeout(() => {
+      if (this.getlistdata) {
+        this.getVirtuallistdata = this.getlistdata.slice(event.first, (event.first + event.rows));
+        this.loading = false;
+      }
+    }, 1000);
+  }
+
+  
+  getlist() {
+    this.viewexception = false;
+    this.displayTable = !this.displayTable;
+    this.loading = true;
     this.getlistdata = [];
     this.spinner.show();
-    this.wmsService.getinitialStock(uploadcode).subscribe(data => {
+    this.wmsService.getinitialStock(this.uploadcode).subscribe(data => {
       this.getlistdata = data;
       this.displayTable = true;
+      this.totalRecords = this.getlistdata.length;
       this.spinner.hide();
     });
   }
@@ -76,12 +95,15 @@ export class AdminStockUploadComponent implements OnInit {
     alert("Hiii");
   }
   getexlist() {
-    this.getEXlistdata = [];
-    this.displayEXModal = false;
+    this.displayTable = false;
+    this.viewexception = true;
+    this.loading = true;
+    this.getlistdata = [];
     this.spinner.show();
     this.wmsService.getinitialStockEX(this.uploadcode).subscribe(data => {
-      this.getEXlistdata = data;
-      this.displayEXModal = true;
+      this.getlistdata = data;
+      this.displayTable = true;
+      this.totalRecords = this.getlistdata.length;
       this.spinner.hide();
     });
   }
@@ -105,26 +127,34 @@ export class AdminStockUploadComponent implements OnInit {
           this.displayTable = true;
           debugger;
           this.response = data as WMSHttpResponse;
-          var arrdata = String(this.response.message).split('$viewdatalistcode$');
-          var uploadcode = String(arrdata[1]).trim();
-          var arrwithexception = String(arrdata[0]).trim();
-          var arrexception = String(arrwithexception).split('$EX$');
-          let exception = String(arrexception[1]).trim()
-          let displaystring = String(arrexception[0]).trim();
-          let displaystring1 = String(displaystring.split('-').join('\n'));
-          let displaystring2 = String(displaystring1.split('_').join(' '));
-          exception = exception.split('-').join('\n');
-          exception = exception.split('_').join(' ');
-          this.responsestr = displaystring2 + "\n" + String(exception);
-          this.responseexceptionstr = exception;
-          this.uploadcode = uploadcode;
-          if (!isNullOrUndefined(this.responsestr)) {
+          if (String(this.response.message) == "FILEFOUND") {
+            this.responsestr = "File with same name already uploaded.";
             this.displayModal = true;
           }
-          if (!isNullOrUndefined(uploadcode)) {
-            this.getlist(uploadcode);
+          else {
+            var arrdata = String(this.response.message).split('$viewdatalistcode$');
+            var uploadcode = String(arrdata[1]).trim();
+            var arrwithexception = String(arrdata[0]).trim();
+            var arrexception = String(arrwithexception).split('$EX$');
+            let exception = String(arrexception[1]).trim()
+            let displaystring = String(arrexception[0]).trim();
+            let displaystring1 = String(displaystring.split('-').join('\n'));
+            let displaystring2 = String(displaystring1.split('_').join(' '));
+            exception = exception.split('-').join('\n');
+            exception = exception.split('_').join(' ');
+            this.responsestr = displaystring2 + "\n" + String(exception);
+            this.responseexceptionstr = exception;
+            this.uploadcode = uploadcode;
+            if (!isNullOrUndefined(this.responsestr)) {
+              this.displayModal = true;
+            }
+            //if (!isNullOrUndefined(uploadcode)) {
+            //  this.getlist();
+            //}
+            this.settextval(displaystring2);
+
           }
-          this.settextval(displaystring2);
+          
          
         
        });
