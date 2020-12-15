@@ -984,6 +984,25 @@ namespace WMS.Models
 		public int acceptancecompcount { get; set; }
 
 	}
+
+
+	public class GraphModelNew
+    {
+		public string sweek { get; set; }
+		public string displayweek { get; set; }
+		public string smonth { get; set; }
+		public string syear { get; set; }
+		public string type { get; set; }
+		public string total { get; set; }
+		public string pending { get; set; }
+		public string received { get; set; }
+
+		public string grnnumber { get; set; }
+		public string inwmasterid { get; set; }
+		public DateTime? receiveddate { get; set; }
+
+	}
+
 	public class UserDashboardGraphModel
 	{
 		public string smonth { get; set; }

@@ -893,3 +893,16 @@ export class invDashboardCards {
   approvedmaterialtransfer: any;
 
 }
+export class GraphModelNew {
+  sweek: string;
+  displayweek: string;
+  smonth: string;
+  syear: string;
+  type: string;
+  total: string;
+  pending: string;
+  received: string;
+  grnnumber: string;
+  inwmasterid: string;
+  receiveddate: Date;
+}

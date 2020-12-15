@@ -245,5 +245,7 @@ Task<string> updateonholdrow(updateonhold datamodel);
 
         Task<IEnumerable<UserDashboardGraphModel>> getUserdashboardgraphPMdata();
 
+        Task<IEnumerable<GraphModelNew>> getWeeklyUserdashboardReceive();
+
     }
 }

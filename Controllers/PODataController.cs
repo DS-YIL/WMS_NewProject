@@ -1158,5 +1158,12 @@ namespace WMS.Controllers
 			return await this._poService.getUserdashboardgraphPMdata();
 		}
 
+		[HttpGet("getReceivedgraph")]
+		public async Task<IEnumerable<GraphModelNew>> getWeeklyUserdashboardReceive()
+		{
+
+			return await this._poService.getWeeklyUserdashboardReceive();
+		}
+
 	}
 }

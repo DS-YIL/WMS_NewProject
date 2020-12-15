@@ -128,7 +128,7 @@ export class AdminStockUploadComponent implements OnInit {
           debugger;
           this.response = data as WMSHttpResponse;
           if (String(this.response.message) == "FILEFOUND") {
-            this.responsestr = "File with same name already uploaded.";
+            this.responsestr = "Filename already exists.";
             this.displayModal = true;
           }
           else {

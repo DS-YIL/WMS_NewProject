@@ -580,7 +580,7 @@ namespace WMS.Controllers
                     string uploadedfilename = filename.Substring(index + 1);
                     var folderName = Path.Combine("Resources", "documents");
                     var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
-                    string storeQuery = "Select uploadedfilename from wms.st_initialstock where uploadedfilename = '" + uploadedfilename + "'";
+                    string storeQuery = "Select uploadedfilename from wms.st_initialstock where Lower(uploadedfilename) = Lower('" + uploadedfilename + "') limit 1";
                     var fileexists = DB.ExecuteScalar(storeQuery, null);
                     if(fileexists != null)
                     {

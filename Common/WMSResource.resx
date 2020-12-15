@@ -1571,4 +1571,11 @@ prj.projectmanager</value>
 	projecttext = @projecttext
     where  saleorderno = '#sono' and solineitemno = '#solineitemno'</value>
   </data>
+  <data name="dataforreceivedgraph" xml:space="preserve">
+    <value>Select date_part('year', current_date::date) as syear,
+date_part('month', current_date::date) as smonth,
+inwmasterid,date_part('week', receiveddate::date) AS sweek,receiveddate,grnnumber from wms.wms_securityinward
+where receiveddate &gt;= (select date_trunc('month', current_date))
+order by sweek</value>
+  </data>
 </root>

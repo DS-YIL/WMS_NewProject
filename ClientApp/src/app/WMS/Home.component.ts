@@ -1,13 +1,14 @@
 import { Component, Input, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { Employee, userAcessNamesModel } from '../Models/Common.Model';
-import { UserDashboardDetail, UserDashboardGraphModel, ManagerDashboard, pmDashboardCards, invDashboardCards} from '../Models/WMS.Model';
+import { UserDashboardDetail, UserDashboardGraphModel, ManagerDashboard, pmDashboardCards, invDashboardCards, GraphModelNew} from '../Models/WMS.Model';
 import { wmsService } from '../WmsServices/wms.service';
 import { NgxSpinnerService } from "ngx-spinner";
 import { DatePipe } from '@angular/common';
 import { NavMenuComponent } from '../nav-menu/nav-menu.component';
 import { AppComponent } from '../app.component';
 import { TreeNode } from 'primeng/api';
+import { element } from 'protractor';
 
 @Component({
   selector: 'app-Home',
@@ -18,7 +19,12 @@ export class HomeComponent implements OnInit {
   chartdata: any;
   chartdataIE: any;
   chartdataPM: any;
+  lblmonth: string = "";
   monthlychartdata: any;
+  //for receipts
+  receivedchartdata: any;
+  receivedchartdatalist: GraphModelNew[] = [];
+  ///
   monthlyIEchartdata: any;
   weeklychartdata: any;
   piedata: any;
@@ -53,6 +59,7 @@ export class HomeComponent implements OnInit {
   approverstatus: string = "";
   notifcount: number = 0;
   notif: boolean = false;
+  monthlist: any[] = [];
   public materialIssueList: Array<any> = [];
   public materialIssueListnofilter: Array<any> = [];
   materialforissuecount: number;
@@ -70,6 +77,8 @@ export class HomeComponent implements OnInit {
   ngOnInit() {
     debugger;
     this.firstload = true;
+    this.lblmonth = "";
+    this.monthlist = ["","January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
     this.dashboardmodel = new UserDashboardDetail();
     this.dashboardgraphmodel = [];
     this.dashboardIEgraphmodel = [];
@@ -142,8 +151,19 @@ export class HomeComponent implements OnInit {
     }];
     this.getdashboarddetail();
     this.setcontroldata();
+    this.getreceivedchartdatalist();
     
    // this.defaultactive();
+  }
+
+  getreceivedchartdatalist() {
+    this.wmsService.getreceivedgraphdata().subscribe(data => {
+      if (data != null) {
+        this.receivedchartdatalist = data;
+        this.setReceivedgraph();
+      }
+    })
+
   }
 
   setcontroldata() {
@@ -506,6 +526,65 @@ export class HomeComponent implements OnInit {
         //  borderColor: '#555961',
         //  data: count3
         //},
+      ]
+
+    }
+    this.chartoptions1 = { scales: { yAxes: [{ ticks: { beginAtZero: true, userCallback: function (label, index, labels) { if (Math.floor(label) === label) { return label; } }, } }] } }
+
+    //console.log(this.monthlydashboardgraphmodel);
+
+
+  }
+
+  setReceivedgraph() {
+    debugger;
+   
+    this.receivedchartdata = null;
+    var lblmessage = "Total";
+    var lblmessage1 = "Received";
+    var lblmessage2 = "Pending";
+    var pid = [];
+    var total = [];
+    var received = [];
+    var pending = [];
+    if (this.receivedchartdatalist.length > 0) {
+      this.lblmonth = this.monthlist[this.receivedchartdatalist[0].smonth];
+    }
+    this.receivedchartdatalist.forEach(element => {
+      pid.push(element.displayweek);
+      total.push(element.total);
+      received.push(element.received);
+      pending.push(element.pending);
+    });
+
+
+    this.receivedchartdata = {
+
+      labels: pid,
+      datasets: [
+        {
+          label: lblmessage,
+          //backgroundColor: '#42A5F5',
+          backgroundColor: '#70b385',
+          borderColor: '#555961',
+          data: total
+        },
+        {
+          label: lblmessage1,
+          //backgroundColor: '#42A5F5',
+          backgroundColor: '#42A5F5',
+          borderColor: '#555961',
+          data: received
+        },
+        {
+          label: lblmessage2,
+          //backgroundColor: '#42A5F5',
+          backgroundColor: '#f5428a',
+          borderColor: '#555961',
+          data: pending
+        }
+        
+      
       ]
 
     }

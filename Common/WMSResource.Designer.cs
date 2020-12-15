@@ -147,6 +147,19 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Select date_part(&apos;year&apos;, current_date::date) as syear,
+        ///date_part(&apos;month&apos;, current_date::date) as smonth,
+        ///inwmasterid,date_part(&apos;week&apos;, receiveddate::date) AS sweek,receiveddate,grnnumber from wms.wms_securityinward
+        ///where receiveddate &gt;= (select date_trunc(&apos;month&apos;, current_date))
+        ///order by sweek.
+        /// </summary>
+        public static string dataforreceivedgraph {
+            get {
+                return ResourceManager.GetString("dataforreceivedgraph", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to update wms.wms_gatepassmaterial set deleteflag=&apos;true&apos; where gatepassmaterialid=#gatepassmaterialid.
         /// </summary>
         public static string deletegatepassmaterial {
@@ -1045,7 +1058,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select matd.returnid,matd.materialid,mat.materialdescription,matd.returnqty,matd.remarks 
+        ///   Looks up a localized string similar to select matd.returnid,matd.materialid,mat.materialdescription,matd.uom,matd.saleorderno,matd.location,matd.returnqty,matd.remarks 
         ///   from wms.wms_materialreturndetails matd
         ///   left outer join wms.&quot;MaterialMasterYGS&quot; mat on mat.material = matd.materialid
         ///   where returnid = &apos;#returnid&apos;.
@@ -1071,7 +1084,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select returnid,createdby,createdon,confirmstatus from wms.wms_materialreturn
+        ///   Looks up a localized string similar to select returnid,createdby,createdon,confirmstatus,reason from wms.wms_materialreturn
         ///  where createdby=&apos;#createdby&apos; order by returnid desc.
         /// </summary>
         public static string getmaterialreturnquery {
@@ -1920,8 +1933,8 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to insert into wms.wms_materialreturndetails (id,returnid,materialid,returnqty,remarks)
-        ///values (@id,@returnid,@materialid,@returnqty,@remarks).
+        ///   Looks up a localized string similar to insert into wms.wms_materialreturndetails (id,returnid,materialid,returnqty,uom,saleorderno,location,remarks)
+        ///values (@id,@returnid,@materialid,@returnqty,@uom,@saleorderno,@location,@remarks).
         /// </summary>
         public static string insertmaterialreturndetails {
             get {
@@ -1930,8 +1943,8 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to insert into wms.wms_materialreturn (createdby,createdon)
-        ///values (@createdby,current_date) returning returnid.
+        ///   Looks up a localized string similar to insert into wms.wms_materialreturn (reason,createdby,createdon)
+        ///values (@reason,@createdby,current_date) returning returnid.
         /// </summary>
         public static string insertmaterialreturnquery {
             get {
