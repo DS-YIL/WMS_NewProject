@@ -5584,6 +5584,8 @@ namespace WMS.DAL
                                 GraphModelNew obj = new GraphModelNew();
                                 obj.displayweek = "Week" + i;
                                 obj.sweek = grph.sweek;
+                                obj.smonth = grph.smonth;
+                                obj.syear = grph.syear;
                                 obj.total = data1.Where(o => o.sweek == grph.sweek).Count().ToString();
                                 obj.received = data1.Where(o => o.sweek == grph.sweek && o.grnnumber != null).Count().ToString();
                                 obj.pending = data1.Where(o => o.sweek == grph.sweek && o.grnnumber == null).Count().ToString();
