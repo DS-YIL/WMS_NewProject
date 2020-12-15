@@ -5486,7 +5486,7 @@ namespace WMS.DAL
                     string completeqry = "select count(*) as completedcount from wms.wms_securityinward where receiveddate> now() - interval '1 month' and grnnumber is not null and onhold is null ";
 
                     //Get count of quality check completed
-                    string qualitycompl = "select count(*),COUNT(*) OVER () as  qualitycompcount from wms.wms_storeinward where receiveddate> now() - interval '1 month' and qualitycheckrequired =true and qualitychecked =true group by inwmasterid";
+                    string qualitycompl = "select count(*),COUNT(*) OVER () as  qualitycompcount from wms.wms_storeinward where receiveddate> now() - interval '1 month'  and qualitychecked =true group by inwmasterid";
 
                     //Get count of quality check pending
                     string qualitypending = "select count(*),COUNT(*) OVER () as qualitypendcount from wms.wms_storeinward where receiveddate> now() - interval '1 month' and qualitycheckrequired =true and qualitychecked is null group by inwmasterid";
@@ -5638,18 +5638,18 @@ namespace WMS.DAL
 
 
                     string qcqry = "SELECT date_part('month', qcdate::date) as smonth,";
-                    qcqry += " date_part('week', qcdate::date) AS sweek,COUNT(*) as count, 'Quality' as type";
+                    qcqry += " concat('week',date_part('week', qcdate::date) ) AS sweek,COUNT(*) as count, 'Quality' as type";
                     qcqry += " FROM wms.wms_qualitycheck where qcdate is not null and qcdate > now() - interval '1 month' ";
                     qcqry += " GROUP BY smonth, sweek ORDER BY smonth, sweek";
 
                     string accqry = "SELECT date_part('month', returnedon::date) as smonth,";
-                    accqry += " date_part('week', returnedon::date) AS sweek,COUNT(*) as count, 'Accept' as type";
+                    accqry += " concat('week',date_part('week', returnedon::date) ) AS sweek,COUNT(*) as count, 'Accept' as type";
                     accqry += " FROM wms.wms_storeinward where returnedon is not null and returnedon > now() - interval '1 month'  ";
                     accqry += " GROUP BY smonth, sweek ORDER BY smonth, sweek";
 
                     string pwqry = "SELECT date_part('month', createddate::date) as smonth,";
-                    pwqry += " date_part('week', createddate::date) AS sweek,COUNT(*) as count, 'Putaway' as type";
-                    pwqry += " FROM wms.wms_stock where createddate is not null and createddate > now() - interval '1 month' ";
+                    pwqry += " concat('week',date_part('week', createddate::date) ) AS sweek,COUNT(*) as count, 'Putaway' as type";
+                    pwqry += " FROM wms.wms_stock where createddate is not null and createddate > now() - interval '1 month' and  initialstock is not True ";
                     pwqry += " GROUP BY smonth, sweek ORDER BY smonth, sweek";
 
 

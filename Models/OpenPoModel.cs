@@ -993,6 +993,13 @@ namespace WMS.Models
 		public DateTime graphdate { get; set; }
 
 		public string type { get; set; }
+		public string count1 { get; set; }
+		public string quality { get; set; }
+		public  string count2 { get; set; }
+		public string accept { get; set; }
+		public string count3 { get; set; }
+		public string putaway { get; set; }
+
 
 	}
 

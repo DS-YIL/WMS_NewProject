@@ -546,23 +546,32 @@
             </div>
             <div class="row" *ngIf="employee.roleid!='10' && employee.roleid !='8' && employee.roleid!='4' && employee.roleid !='5' && employee.roleid!='7' ">
               <div class="col-lg-6 col-md-6" *ngIf="employee.roleid =='3'">
-                <p-chart type="line" [data]="monthlychartdata" [height]="250" [options]="chartoptions1"></p-chart>
-              </div>
-              <div class="col-lg-6 col-md-6" *ngIf="employee.roleid =='2'">
-                <p-chart type="line" [data]="monthlyIEchartdata" [height]="250" [options]="chartoptions2"></p-chart>
-              </div>
-              <div class="col-lg-6 col-md-6" *ngIf="employee.roleid =='11'">
-                <p-chart type="line" [data]="monthlyIEchartdata" [height]="250" [options]="chartoptions2"></p-chart>
+                <p-chart type="bar" [data]="monthlychartdata" [height]="180" [options]="chartoptions1"></p-chart>
               </div>
               <div class="col-lg-6 col-md-6" *ngIf="employee.roleid =='3'">
-                <p-chart type="bar" [data]="chartdata" [height]="250" [options]="chartoptions"></p-chart>
+                <p-chart type="bar" [data]="monthlychartdata" [height]="180" [options]="chartoptions1"></p-chart>
               </div>
-              <div class="col-lg-6 col-md-6" *ngIf="employee.roleid =='2' ">
-                <p-chart type="bar" [data]="chartdataIE" [height]="250" [options]="chartoptions11"></p-chart>
+              <div class="col-lg-6 col-md-6" *ngIf="employee.roleid =='3'">
+                <p-chart type="bar" [data]="monthlychartdata" [height]="180" [options]="chartoptions1"></p-chart>
               </div>
-              <div class="col-lg-6 col-md-6" *ngIf="employee.roleid =='11' ">
-                <p-chart type="bar" [data]="chartdataIE" [height]="250" [options]="chartoptions11"></p-chart>
+              <div class="col-lg-6 col-md-6" *ngIf="employee.roleid =='3'">
+                <p-chart type="bar" [data]="monthlychartdata" [height]="180" [options]="chartoptions1"></p-chart>
               </div>
+              <div class="col-lg-6 col-md-6" *ngIf="employee.roleid =='2'">
+                <p-chart type="line" [data]="monthlyIEchartdata" [height]="350" [options]="chartoptions2"></p-chart>
+              </div>
+              <div class="col-lg-6 col-md-6" *ngIf="employee.roleid =='11'">
+                <p-chart type="line" [data]="monthlyIEchartdata" [height]="350" [options]="chartoptions2"></p-chart>
+              </div>
+              <!--<div class="col-lg-6 col-md-6" *ngIf="employee.roleid =='3'">
+    <p-chart type="bar" [data]="chartdata" [height]="250" [options]="chartoptions"></p-chart>
+  </div>-->
+              <!--<div class="col-lg-6 col-md-6" *ngIf="employee.roleid =='2' ">
+    <p-chart type="bar" [data]="chartdataIE" [height]="250" [options]="chartoptions11"></p-chart>
+  </div>-->
+              <!--<div class="col-lg-6 col-md-6" *ngIf="employee.roleid =='11' ">
+    <p-chart type="bar" [data]="chartdataIE" [height]="250" [options]="chartoptions11"></p-chart>
+  </div>-->
               <!--<div class="col-lg-6 col-md-6">
     <p-chart type="bar" [data]="chartdataPM" [height]="250" [options]="chartoptions"></p-chart>
   </div>-->

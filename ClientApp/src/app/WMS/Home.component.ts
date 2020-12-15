@@ -262,7 +262,7 @@ export class HomeComponent implements OnInit {
       if (data != null) {
 
         this.dashboardIEgraphmodel = data;
-         console.log(this.dashboardIEgraphmodel)
+         //console.log(this.dashboardIEgraphmodel)
         this.setgraphIE('Request')
       }
       this.spinner.hide();
@@ -278,8 +278,11 @@ export class HomeComponent implements OnInit {
 
         this.monthlydashboardgraphmodel = data;
         this.setmonthlygraph('Receive');
-       
-       // console.log(this.monthlydashboardgraphmodel)
+        //this.setmonthlygraph('Quality');
+        //this.setmonthlygraph('Accept');
+        //this.setmonthlygraph('Putaway');
+
+        console.log(this.monthlydashboardgraphmodel)
 
       }
       this.spinner.hide();
@@ -409,37 +412,41 @@ export class HomeComponent implements OnInit {
 
 
 
-    console.log(this.dashboardIEgraphmodel);
+    //console.log(this.dashboardIEgraphmodel);
   }
 
   setmonthlygraph(type: string) {
     debugger;
     this.monthlychartdata = null;
     var lblmessage = "";
+    var lblmessage1 = "";
+    var lblmessage2 = "";
+    var lblmessage3 = "";
+
     if (type == "Receive") {
       lblmessage = "Monthly Received Receipts"
     }
     if (type == "Quality") {
 
-      lblmessage = "Monthly Quality checked"
+      lblmessage1 = "Monthly Quality checked"
 
     }
     if (type == "Accept") {
 
-      lblmessage = "Monthly Accepted Receipts"
+      lblmessage2 = "Monthly Accepted Receipts"
 
     }
     if (type == "Putaway") {
 
-      lblmessage = "Monthly put aways"
+      lblmessage3 = "Monthly put aways"
 
     }
-    if (type == "Request" ) {
-      lblmessage = "Monthly Request Materials"
-    }
+   
     
     var pid = []
     var count = []
+    var count1 = []
+
     var gdata = this.monthlydashboardgraphmodel.filter(function (elementx, index) {
       return (elementx.type == type);
     });
@@ -449,14 +456,26 @@ export class HomeComponent implements OnInit {
         count.push(element.count);
       });
     }
-
+    //else if (gdata.length > 0) {
+    //  gdata.forEach(element => {
+    //    pid.push(element.quality);
+    //    count1.push(element.count1);
+    //  });
+    //}
+    //if (gdata.length > 0) {
+    //  gdata.forEach(element => {
+    //    pid.push(element.accept);
+    //    count2.push(element.count2);
+    //  });
+    //}
+    //if (gdata.length > 0) {
+    //  gdata.forEach(element => {
+    //    pid.push(element.putaway);
+    //    count3.push(element.count3);
+    //  });
+    //}
     this.monthlychartdata = {
-      //chart: {
-      //  //height: 350,
-      //  type: "line",
-      //  zoom: {
-      //    enabled: false
-      //  },
+      
       labels: pid,
       datasets: [
         {
@@ -466,12 +485,33 @@ export class HomeComponent implements OnInit {
           borderColor: '#555961',
           data: count
         },
+        //{
+        //  label: lblmessage1,
+        //  //backgroundColor: '#42A5F5',
+        //  backgroundColor: '#42A5F5',
+        //  borderColor: '#555961',
+        //  data: count1
+        //},
+        //{
+        //  label: lblmessage2,
+        //  //backgroundColor: '#42A5F5',
+        //  backgroundColor: '#f5428a',
+        //  borderColor: '#555961',
+        //  data: count2
+        //},
+        //{
+        //  label: lblmessage3,
+        //  //backgroundColor: '#42A5F5',
+        //  backgroundColor: '#8ab5b4',
+        //  borderColor: '#555961',
+        //  data: count3
+        //},
       ]
 
     }
     this.chartoptions1 = { scales: { yAxes: [{ ticks: { beginAtZero: true, userCallback: function (label, index, labels) { if (Math.floor(label) === label) { return label; } }, } }] } }
 
-   // console.log(this.monthlychartdata);
+    //console.log(this.monthlydashboardgraphmodel);
 
 
   }

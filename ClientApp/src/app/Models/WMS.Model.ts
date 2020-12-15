@@ -85,6 +85,13 @@ export class UserDashboardGraphModel {
   graphdate: Date;
   type: string;
   sweek: string;
+    count1: any;
+  quality: any;
+  count2: any;
+  accept: any;
+  count3: any;
+  putaway: any;
+
 }
 
 export class UnholdGRModel {
