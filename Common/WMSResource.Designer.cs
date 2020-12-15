@@ -1108,7 +1108,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select mat.pono,mat.materialid as material,mat.itemno::text as lineitemno,ms.materialdescription,mat.materialqty,&apos;#invoice&apos; as invoiceno,&apos;#inw&apos; as inwmasterid,NULL as grnnumber,ms.qualitycheck
+        ///   Looks up a localized string similar to select mat.pono,mat.materialid as material,mat.itemno::text as lineitemno,ms.materialdescription,mat.materialqty,&apos;#invoice&apos; as invoiceno,&apos;#inw&apos; as inwmasterid,NULL as grnnumber,ms.qualitycheck,mat.asnno,mat.asnqty as receivedqty
         ///from wms.wms_pomaterials mat
         ///left outer join wms.&quot;MaterialMasterYGS&quot; ms on ms.material = mat.materialid.
         /// </summary>
