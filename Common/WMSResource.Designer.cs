@@ -149,6 +149,45 @@ namespace WMS.Common {
         /// <summary>
         ///   Looks up a localized string similar to Select date_part(&apos;year&apos;, current_date::date) as syear,
         ///date_part(&apos;month&apos;, current_date::date) as smonth,
+        ///inwmasterid,date_part(&apos;week&apos;, receiveddate::date) AS sweek,receiveddate,confirmqty from wms.wms_storeinward
+        ///where receiveddate &gt;= (select date_trunc(&apos;month&apos;, current_date))
+        ///order by sweek.
+        /// </summary>
+        public static string dataforacceptgraph {
+            get {
+                return ResourceManager.GetString("dataforacceptgraph", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select date_part(&apos;year&apos;, current_date::date) as syear,
+        ///date_part(&apos;month&apos;, current_date::date) as smonth,
+        ///inwmasterid,date_part(&apos;week&apos;, createddate::date) AS sweek,createddate,initialstock  from wms.wms_stock
+        ///where createddate &gt;= (select date_trunc(&apos;month&apos;, current_date))
+        ///order by sweek.
+        /// </summary>
+        public static string dataforputawaygraph {
+            get {
+                return ResourceManager.GetString("dataforputawaygraph", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select date_part(&apos;year&apos;, current_date::date) as syear,
+        ///date_part(&apos;month&apos;, current_date::date) as smonth,
+        ///inwmasterid,date_part(&apos;week&apos;, receiveddate::date) AS sweek,receiveddate,qualitychecked from wms.wms_storeinward
+        ///where receiveddate &gt;= (select date_trunc(&apos;month&apos;, current_date))
+        ///order by sweek.
+        /// </summary>
+        public static string dataforqualitygraph {
+            get {
+                return ResourceManager.GetString("dataforqualitygraph", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select date_part(&apos;year&apos;, current_date::date) as syear,
+        ///date_part(&apos;month&apos;, current_date::date) as smonth,
         ///inwmasterid,date_part(&apos;week&apos;, receiveddate::date) AS sweek,receiveddate,grnnumber from wms.wms_securityinward
         ///where receiveddate &gt;= (select date_trunc(&apos;month&apos;, current_date))
         ///order by sweek.
@@ -156,6 +195,58 @@ namespace WMS.Common {
         public static string dataforreceivedgraph {
             get {
                 return ResourceManager.GetString("dataforreceivedgraph", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select date_part(&apos;year&apos;, current_date::date) as syear,
+        ///date_part(&apos;month&apos;, current_date::date) as smonth,
+        ///date_part(&apos;week&apos;, requesteddate::date) AS sweek,requesteddate,requestid from wms.materialrequest
+        ///where requesteddate &gt;= (select date_trunc(&apos;month&apos;, current_date))
+        ///order by sweek.
+        /// </summary>
+        public static string dataforrequestgraph {
+            get {
+                return ResourceManager.GetString("dataforrequestgraph", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select date_part(&apos;year&apos;, current_date::date) as syear,
+        ///date_part(&apos;month&apos;, current_date::date) as smonth,
+        ///date_part(&apos;week&apos;, reservedon::date) AS sweek,reservedon,reserveid from wms.materialreserve
+        ///where reservedon &gt;= (select date_trunc(&apos;month&apos;, current_date))
+        ///order by sweek.
+        /// </summary>
+        public static string dataforreservegraph {
+            get {
+                return ResourceManager.GetString("dataforreservegraph", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select date_part(&apos;year&apos;, current_date::date) as syear,
+        ///date_part(&apos;month&apos;, current_date::date) as smonth,
+        ///date_part(&apos;week&apos;, createdon::date) AS sweek,createdon,returnid from wms.wms_materialreturn
+        ///where createdon &gt;= (select date_trunc(&apos;month&apos;, current_date))
+        ///order by sweek.
+        /// </summary>
+        public static string dataforreturngraph {
+            get {
+                return ResourceManager.GetString("dataforreturngraph", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select date_part(&apos;year&apos;, current_date::date) as syear,
+        ///date_part(&apos;month&apos;, current_date::date) as smonth,
+        ///date_part(&apos;week&apos;, createdon::date) AS sweek,createdon,materialid from wms.wms_transfermaterial
+        ///where createdon &gt;= (select date_trunc(&apos;month&apos;, current_date))
+        ///order by sweek.
+        /// </summary>
+        public static string datafortransfergraph {
+            get {
+                return ResourceManager.GetString("datafortransfergraph", resourceCulture);
             }
         }
         
@@ -396,10 +487,11 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select stinw.inwardid,stinw.lineitemno,stinw.pono,stinw.inwmasterid,stinw.qualitycheckrequired,stinw.materialid as material,secinw.grnnumber,secinw.pono as securitypo,secinw.invoiceno,secinw.onhold,mat.materialdescription,stinw.receivedqty,stinw.receiveddate,stinw.returnqty,qc.qualitypassedqty,qc.qualityfailedqty,qc.remarks,qc.qcby as checkedby
-        ///  from wms.wms_storeinward stinw
-        ///  left outer join wms.wms_securityinward secinw on secinw.inwmasterid=stinw.inwmasterid
-        ///  left outer join wms.&quot;MaterialMasterYGS&quot; [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to Select date_part(&apos;year&apos;, current_date::date) as syear,
+        ///date_part(&apos;month&apos;, current_date::date) as smonth,
+        ///inwmasterid,date_part(&apos;week&apos;, receiveddate::date) AS sweek,receiveddate,qualitychecked from wms.wms_storeinward
+        ///where receiveddate &gt;= (select date_trunc(&apos;month&apos;, current_date))
+        ///order by sweek.
         /// </summary>
         public static string getdataforqualitydetails {
             get {

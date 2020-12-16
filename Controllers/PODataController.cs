@@ -1165,5 +1165,56 @@ namespace WMS.Controllers
 			return await this._poService.getWeeklyUserdashboardReceive();
 		}
 
+		[HttpGet("getQualitygraph")]
+		public async Task<IEnumerable<GraphModelNew>> getWeeklyUserdashboardQuality()
+		{
+
+			return await this._poService.getWeeklyUserdashboardQuality();
+		}
+
+		[HttpGet("getAcceptgraph")]
+		public async Task<IEnumerable<GraphModelNew>> getWeeklyUserdashboardAccept()
+		{
+
+			return await this._poService.getWeeklyUserdashboardAccept();
+		}
+		[HttpGet("getPutawaygraph")]
+		public async Task<IEnumerable<GraphModelNew>> getWeeklyUserdashboardPutaway()
+		{
+
+			return await this._poService.getWeeklyUserdashboardPutaway();
+		}
+
+		[HttpGet("getRequestgraph")]
+		public async Task<IEnumerable<GraphModelNew>> getWeeklyUserdashboardRequest()
+		{
+
+			return await this._poService.getWeeklyUserdashboardRequest();
+		}
+
+		[HttpGet("getReturngraph")]
+		public async Task<IEnumerable<GraphModelNew>> getWeeklyUserdashboardReturn()
+		{
+
+			return await this._poService.getWeeklyUserdashboardReturn();
+		}
+
+		[HttpGet("getReservegraph")]
+		public async Task<IEnumerable<GraphModelNew>> getWeeklyUserdashboardReserve()
+		{
+
+			return await this._poService.getWeeklyUserdashboardReserve();
+		}
+
+		[HttpGet("getTransfergraph")]
+		public async Task<IEnumerable<GraphModelNew>> getWeeklyUserdashboardtransfer()
+		{
+
+			return await this._poService.getWeeklyUserdashboardtransfer();
+		}
+
+
+
+
 	}
 }

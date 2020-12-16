@@ -905,4 +905,11 @@ export class GraphModelNew {
   grnnumber: string;
   inwmasterid: string;
   receiveddate: Date;
+  qualitychecked: string;
+  confirmqty: string;
+  initialstock: string;
+  requestid: string;
+  returnid: string;
+  reserveid: string;
+  materialid: string;
 }

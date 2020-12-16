@@ -246,6 +246,13 @@ Task<string> updateonholdrow(updateonhold datamodel);
         Task<IEnumerable<UserDashboardGraphModel>> getUserdashboardgraphPMdata();
 
         Task<IEnumerable<GraphModelNew>> getWeeklyUserdashboardReceive();
+        Task<IEnumerable<GraphModelNew>> getWeeklyUserdashboardQuality();
+        Task<IEnumerable<GraphModelNew>> getWeeklyUserdashboardAccept();
+        Task<IEnumerable<GraphModelNew>> getWeeklyUserdashboardPutaway();
+         Task<IEnumerable<GraphModelNew>> getWeeklyUserdashboardRequest();
+        Task<IEnumerable<GraphModelNew>> getWeeklyUserdashboardReturn();
+        Task<IEnumerable<GraphModelNew>> getWeeklyUserdashboardReserve();
+        Task<IEnumerable<GraphModelNew>> getWeeklyUserdashboardtransfer();
 
     }
 }
