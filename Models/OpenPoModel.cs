@@ -329,6 +329,9 @@ namespace WMS.Models
 		public string material { get; set; }
 		public string materialdescription { get; set; }
 		public int availableqty { get; set; }
+		public string hsncode { get; set; }
+		public string suppliername { get; set; }
+		public string projectname { get; set; }
 		public Decimal? value { get; set; }
 		List<matlocations> locations { get; set; }
 	}

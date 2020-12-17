@@ -1767,9 +1767,13 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Select st.materialid as material,Max(mat.materialdescription)  as materialdescription, SUM(st.availableqty) as availableqty,
-        ///(Max(mat.unitprice) * SUM(st.availableqty)) as value
-        ///from wms.wms_stock st left outer join wms.&quot;MaterialMasterYGS&quot; mat on mat.material = st.materialid group by st.materialid.
+        ///   Looks up a localized string similar to Select st.materialid as material,Max(mat.materialdescription)  as materialdescription,
+        ///max( mat.hsncode) as hsncode,max(po.suppliername) as suppliername ,Max(prj.projectname) as projectname,
+        ///SUM(st.availableqty) as availableqty,(Max(mat.unitprice) * SUM(st.availableqty)) as value
+        ///from wms.wms_stock st 
+        ///left outer join wms.wms_polist po on po.pono =st.pono 
+        ///left outer join wms.wms_project prj on prj.pono =st.pono 
+        ///left outer join wms.&quot;MaterialMasterYGS&quot; mat on mat.material = st.materialid group by st.m [rest of string was truncated]&quot;;.
         /// </summary>
         public static string inhandmaterial {
             get {
