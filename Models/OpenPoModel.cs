@@ -329,6 +329,9 @@ namespace WMS.Models
 		public string material { get; set; }
 		public string materialdescription { get; set; }
 		public int availableqty { get; set; }
+		public string hsncode { get; set; }
+		public string suppliername { get; set; }
+		public string projectname { get; set; }
 		public Decimal? value { get; set; }
 		List<matlocations> locations { get; set; }
 	}
@@ -987,7 +990,7 @@ namespace WMS.Models
 
 
 	public class GraphModelNew
-    {
+	{
 		public string sweek { get; set; }
 		public string displayweek { get; set; }
 		public string smonth { get; set; }
@@ -1000,6 +1003,17 @@ namespace WMS.Models
 		public string grnnumber { get; set; }
 		public string inwmasterid { get; set; }
 		public DateTime? receiveddate { get; set; }
+
+		public string qualitychecked { get;set;}
+
+		public string confirmqty { get; set; }
+		public string initialstock { get; set; }
+		public string requestid { get; set; }
+		public string returnid { get; set; }
+
+		public string materialid { get; set; }
+
+		public string reserveid { get; set; }
 
 	}
 

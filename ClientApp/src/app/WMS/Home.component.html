@@ -546,25 +546,80 @@
             </div>
             <div class="row" *ngIf="employee.roleid!='10' && employee.roleid !='8' && employee.roleid!='4' && employee.roleid !='5' && employee.roleid!='7' ">
               <div class="col-lg-6 col-md-6" *ngIf="employee.roleid =='3'">
-                <h5 class="text-center" *ngIf="lblmonth !== ''">Receipt Graph For Month {{lblmonth}}</h5>
-                <h5 class="text-center" *ngIf="lblmonth === ''">Monthly Receipt Graph</h5>
+                <!--<h5 class="text-center" *ngIf="lblmonth !== ''">Receipt Graph For Month {{lblmonth}}</h5>
+                <h5 class="text-center" *ngIf="lblmonth === ''">Monthly Receipt Graph</h5>-->
+                <h6 class="text-center">Receipt Graph</h6>
                 <p-chart type="bar" [data]="receivedchartdata" [height]="180" [options]="chartoptions1"></p-chart>
               </div>
               <div class="col-lg-6 col-md-6" *ngIf="employee.roleid =='3'">
-                <p-chart type="bar" [data]="monthlychartdata" [height]="180" [options]="chartoptions1"></p-chart>
+                <!--<h5 class="text-center" *ngIf="lblmonth !== ''">Quality Graph For Month {{lblmonth}}</h5>
+                <h5 class="text-center" *ngIf="lblmonth === ''">Monthly Quality Graph</h5>-->
+                <h6 class="text-center">Quality Graph</h6>
+                <p-chart type="bar" [data]="qualitychartdata" [height]="180" [options]="chartoptions1"></p-chart>
               </div>
               <div class="col-lg-6 col-md-6" *ngIf="employee.roleid =='3'">
-                <p-chart type="bar" [data]="monthlychartdata" [height]="180" [options]="chartoptions1"></p-chart>
+                <!--<h5 class="text-center" *ngIf="lblmonth !== ''">Acceptance Graph For Month {{lblmonth}}</h5>
+                    <h5 class="text-center" *ngIf="lblmonth === ''">Monthly Acceptance Graph</h5>-->
+                <h6 class="text-center">Acceptance Graph</h6>
+                <p-chart type="bar" [data]="acceptchartdata" [height]="180" [options]="chartoptions1"></p-chart>
               </div>
               <div class="col-lg-6 col-md-6" *ngIf="employee.roleid =='3'">
-                <p-chart type="bar" [data]="monthlychartdata" [height]="180" [options]="chartoptions1"></p-chart>
+                <!--<h5 class="text-center" *ngIf="lblmonth !== ''">PutAway Graph For Month {{lblmonth}}</h5>
+                <h5 class="text-center" *ngIf="lblmonth === ''">Monthly PutAway Graph</h5>-->
+                <h6 class="text-center">PutAway Graph</h6>
+                <p-chart type="bar" [data]="putawaychartdata" [height]="180" [options]="chartoptions1"></p-chart>
               </div>
               <div class="col-lg-6 col-md-6" *ngIf="employee.roleid =='2'">
-                <p-chart type="line" [data]="monthlyIEchartdata" [height]="350" [options]="chartoptions2"></p-chart>
+                <!--<h5 class="text-center" *ngIf="lblmonth !== ''">Request Graph For Month {{lblmonth}}</h5>
+                <h5 class="text-center" *ngIf="lblmonth === ''">Monthly Request Graph</h5>-->
+                <h6 class="text-center">Request Graph</h6>
+                <p-chart type="bar" [data]="requestchartdata" [height]="180" [options]="chartoptions1"></p-chart>
+              </div>
+              <div class="col-lg-6 col-md-6" *ngIf="employee.roleid =='2'">
+                <!--<h5 class="text-center" *ngIf="lblmonth !== ''">Return Graph For Month {{lblmonth}}</h5>
+                <h5 class="text-center" *ngIf="lblmonth === ''">Monthly Return Graph</h5>-->
+                <h6 class="text-center">Return Graph</h6>
+                <p-chart type="bar" [data]="returnchartdata" [height]="180" [options]="chartoptions1"></p-chart>
+              </div>
+              <div class="col-lg-6 col-md-6" *ngIf="employee.roleid =='2'">
+                <!--<h5 class="text-center" *ngIf="lblmonth !== ''">Reserve Graph For Month {{lblmonth}}</h5>
+                <h5 class="text-center" *ngIf="lblmonth === ''">Monthly Reserve Graph</h5>-->
+                <h6 class="text-center">Reserve Graph</h6>
+                <p-chart type="bar" [data]="reservechartdata" [height]="180" [options]="chartoptions1"></p-chart>
+              </div>
+              <div class="col-lg-6 col-md-6" *ngIf="employee.roleid =='2'">
+                <!--<h5 class="text-center" *ngIf="lblmonth !== ''">Transfer Graph For Month {{lblmonth}}</h5>
+                <h5 class="text-center" *ngIf="lblmonth === ''">Monthly Transfer Graph</h5>-->
+                <h6 class="text-center">Transfer Graph</h6>
+                <p-chart type="bar" [data]="transferchartdata" [height]="180" [options]="chartoptions1"></p-chart>
               </div>
               <div class="col-lg-6 col-md-6" *ngIf="employee.roleid =='11'">
-                <p-chart type="line" [data]="monthlyIEchartdata" [height]="350" [options]="chartoptions2"></p-chart>
+                <h6 class="text-center">Request Graph</h6>
+                <!--<h5 class="text-center" *ngIf="lblmonth !== ''">Request Graph For Month {{lblmonth}}</h5>
+                 <h5 class="text-center" *ngIf="lblmonth === ''">Monthly Request Graph</h5>-->
+                <p-chart type="bar" [data]="requestchartdata" [height]="180" [options]="chartoptions1"></p-chart>
               </div>
+              <div class="col-lg-6 col-md-6" *ngIf="employee.roleid =='11'">
+                <!--<h5 class="text-center" *ngIf="lblmonth !== ''">Return Graph For Month {{lblmonth}}</h5>
+                  <h5 class="text-center" *ngIf="lblmonth === ''">Monthly Return Graph</h5>-->
+                <h6 class="text-center">Return Graph</h6>
+                <p-chart type="bar" [data]="returnchartdata" [height]="180" [options]="chartoptions1"></p-chart>
+              </div>
+              <div class="col-lg-6 col-md-6" *ngIf="employee.roleid =='11'">
+                <!--<h5 class="text-center" *ngIf="lblmonth !== ''">Reserve Graph For Month {{lblmonth}}</h5>
+                <h5 class="text-center" *ngIf="lblmonth === ''">Monthly Reserve Graph</h5>-->
+                <h6 class="text-center">Reserve Graph</h6>
+                <p-chart type="bar" [data]="reservechartdata" [height]="180" [options]="chartoptions1"></p-chart>
+              </div>
+              <div class="col-lg-6 col-md-6" *ngIf="employee.roleid =='11'">
+                <!--<h5 class="text-center" *ngIf="lblmonth !== ''">Transfer Graph For Month {{lblmonth}}</h5>
+                <h5 class="text-center" *ngIf="lblmonth === ''">Monthly Transfer Graph</h5>-->
+                <h6 class="text-center">Transfer Graph</h6>
+                <p-chart type="bar" [data]="transferchartdata" [height]="180" [options]="chartoptions1"></p-chart>
+              </div>
+              <!--<div class="col-lg-6 col-md-6" *ngIf="employee.roleid =='11'">
+    <p-chart type="line" [data]="monthlyIEchartdata" [height]="350" [options]="chartoptions2"></p-chart>
+  </div>-->
               <!--<div class="col-lg-6 col-md-6" *ngIf="employee.roleid =='3'">
     <p-chart type="bar" [data]="chartdata" [height]="250" [options]="chartoptions"></p-chart>
   </div>-->

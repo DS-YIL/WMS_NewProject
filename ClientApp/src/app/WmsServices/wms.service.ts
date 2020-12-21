@@ -743,6 +743,31 @@ export class wmsService {
   getreceivedgraphdata(): Observable<GraphModelNew[]> {
     return this.http.get<GraphModelNew[]>(this.url + 'POData/getReceivedgraph/', this.httpOptions);
   }
+  getqualitygraphdata(): Observable<GraphModelNew[]> {
+    return this.http.get<GraphModelNew[]>(this.url + 'POData/getQualitygraph/', this.httpOptions);
+  }
+  getacceptgraphdata(): Observable<GraphModelNew[]> {
+    return this.http.get<GraphModelNew[]>(this.url + 'POData/getAcceptgraph/', this.httpOptions);
+  }
+  getputawaygraphdata(): Observable<GraphModelNew[]> {
+    return this.http.get<GraphModelNew[]>(this.url + 'POData/getPutawaygraph/', this.httpOptions);
+  }
+
+  getrequestgraphdata(): Observable<GraphModelNew[]> {
+    return this.http.get<GraphModelNew[]>(this.url + 'POData/getRequestgraph/', this.httpOptions);
+  }
+
+  getreturngraphdata(): Observable<GraphModelNew[]> {
+    return this.http.get<GraphModelNew[]>(this.url + 'POData/getReturngraph/', this.httpOptions);
+  }
+
+  getreservegraphdata(): Observable<GraphModelNew[]> {
+    return this.http.get<GraphModelNew[]>(this.url + 'POData/getReservegraph/', this.httpOptions);
+  }
+
+  gettransfergraphdata(): Observable<GraphModelNew[]> {
+    return this.http.get<GraphModelNew[]>(this.url + 'POData/getTransfergraph/', this.httpOptions);
+  }
 }
 
 

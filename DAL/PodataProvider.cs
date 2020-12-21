@@ -1344,7 +1344,7 @@ namespace WMS.DAL
 
                             foreach (OpenPoModel po in data)
                             {
-                                var fdata = datalist.Where(o => o.Material == po.Material && o.Materialdescription == po.Materialdescription && o.pono == po.pono && o.lineitemno == po.lineitemno).FirstOrDefault();
+                                var fdata = datalist.Where(o => o.Material == po.Material && o.Materialdescription == po.Materialdescription && o.pono == po.pono && o.lineitemno == po.lineitemno && o.asnno == po.asnno).FirstOrDefault();
                                 if (fdata == null)
                                 {
                                     string querya = "select inw.pono,inw.materialid,Max(inw.materialqty) as materialqty,SUM(inw.confirmqty) as confirmqty from wms.wms_storeinward inw";
@@ -5610,14 +5610,369 @@ namespace WMS.DAL
          }
 
 
+        /*
+      Name of Function : <<getWeeklyUserdashboardgraphdata>>  Author :<<LP>>  
+      Date of Creation <<12-12-2019>>
+      Purpose : <<get Weekly User dashboard graphdata>>
+      Review Date :<<>>   Reviewed By :<<>>
+      */
+        public async Task<IEnumerable<GraphModelNew>> getWeeklyUserdashboardQuality()
+        {
+            using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+            {
+                try
+                {
+                    List<GraphModelNew> rcvdata = new List<GraphModelNew>();
+                    string rcvquery = WMSResource.dataforqualitygraph;
+                    var data1 = await pgsql.QueryAsync<GraphModelNew>(rcvquery, null, commandType: CommandType.Text);
+                    if (data1 != null && data1.Count() > 0)
+                    {
+                        int i = 1;
+                        foreach (GraphModelNew grph in data1)
+                        {
+                            string week = grph.sweek;
+                            var insertcheck = rcvdata.Where(o => o.sweek == week).FirstOrDefault();
+                            if (insertcheck == null)
+                            {
+                                GraphModelNew obj = new GraphModelNew();
+                                obj.displayweek = "Week" + i;
+                                obj.sweek = grph.sweek;
+                                obj.smonth = grph.smonth;
+                                obj.syear = grph.syear;
+                                obj.total = data1.Where(o => o.sweek == grph.sweek).Count().ToString();
+                                obj.received = data1.Where(o => o.sweek == grph.sweek && o.qualitychecked != null).Count().ToString();
+                                obj.pending = data1.Where(o => o.sweek == grph.sweek && o.qualitychecked == null).Count().ToString();
+                                rcvdata.Add(obj);
+                                i++;
+                            }
+                        }
+                    }
 
-            /*
-            Name of Function : <<getWeeklyUserdashboardgraphdata>>  Author :<<LP>>  
-            Date of Creation <<12-12-2019>>
-            Purpose : <<get Weekly User dashboard graphdata>>
-            Review Date :<<>>   Reviewed By :<<>>
-            */
-       public async Task<IEnumerable<UserDashboardGraphModel>> getWeeklyUserdashboardgraphdata()
+                    return rcvdata;
+                }
+                catch (Exception ex)
+                {
+                    string msg = ex.Message;
+                    return null;
+                }
+
+            }
+
+        }
+
+
+        /*
+    Name of Function : <<getWeeklyUserdashboardgraphdata>>  Author :<<LP>>  
+    Date of Creation <<12-12-2019>>
+    Purpose : <<get Weekly User dashboard graphdata>>
+    Review Date :<<>>   Reviewed By :<<>>
+    */
+        public async Task<IEnumerable<GraphModelNew>> getWeeklyUserdashboardAccept()
+        {
+            using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+            {
+                try
+                {
+                    List<GraphModelNew> rcvdata = new List<GraphModelNew>();
+                    string rcvquery = WMSResource.dataforqualitygraph;
+                    var data1 = await pgsql.QueryAsync<GraphModelNew>(rcvquery, null, commandType: CommandType.Text);
+                    if (data1 != null && data1.Count() > 0)
+                    {
+                        int i = 1;
+                        foreach (GraphModelNew grph in data1)
+                        {
+                            string week = grph.sweek;
+                            var insertcheck = rcvdata.Where(o => o.sweek == week).FirstOrDefault();
+                            if (insertcheck == null)
+                            {
+                                GraphModelNew obj = new GraphModelNew();
+                                obj.displayweek = "Week" + i;
+                                obj.sweek = grph.sweek;
+                                obj.smonth = grph.smonth;
+                                obj.syear = grph.syear;
+                                obj.total = data1.Where(o => o.sweek == grph.sweek).Count().ToString();
+                                obj.received = data1.Where(o => o.sweek == grph.sweek && o.confirmqty != null).Count().ToString();
+                                obj.pending = data1.Where(o => o.sweek == grph.sweek && o.confirmqty == null).Count().ToString();
+                                rcvdata.Add(obj);
+                                i++;
+                            }
+                        }
+                    }
+
+                    return rcvdata;
+                }
+                catch (Exception ex)
+                {
+                    string msg = ex.Message;
+                    return null;
+                }
+
+            }
+
+        }
+
+        /*
+   Name of Function : <<getWeeklyUserdashboardgraphdata>>  Author :<<LP>>  
+   Date of Creation <<12-12-2019>>
+   Purpose : <<get Weekly User dashboard graphdata>>
+   Review Date :<<>>   Reviewed By :<<>>
+   */
+        public async Task<IEnumerable<GraphModelNew>> getWeeklyUserdashboardPutaway()
+        {
+            using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+            {
+                try
+                {
+                    List<GraphModelNew> rcvdata = new List<GraphModelNew>();
+                    string rcvquery = WMSResource.dataforputawaygraph;
+                    var data1 = await pgsql.QueryAsync<GraphModelNew>(rcvquery, null, commandType: CommandType.Text);
+                    if (data1 != null && data1.Count() > 0)
+                    {
+                        int i = 1;
+                        foreach (GraphModelNew grph in data1)
+                        {
+                            string week = grph.sweek;
+                            var insertcheck = rcvdata.Where(o => o.sweek == week).FirstOrDefault();
+                            if (insertcheck == null)
+                            {
+                                GraphModelNew obj = new GraphModelNew();
+                                obj.displayweek = "Week" + i;
+                                obj.sweek = grph.sweek;
+                                obj.smonth = grph.smonth;
+                                obj.syear = grph.syear;
+                                obj.total = data1.Where(o => o.sweek == grph.sweek).Count().ToString();
+                                obj.received = data1.Where(o => o.sweek == grph.sweek && o.initialstock != null).Count().ToString();
+                                obj.pending = data1.Where(o => o.sweek == grph.sweek && o.initialstock == null).Count().ToString();
+                                rcvdata.Add(obj);
+                                i++;
+                            }
+                        }
+                    }
+
+                    return rcvdata;
+                }
+                catch (Exception ex)
+                {
+                    string msg = ex.Message;
+                    return null;
+                }
+
+            }
+
+        }
+
+
+        /*
+   Name of Function : <<getWeeklyUserdashboardgraphdata>>  Author :<<LP>>  
+   Date of Creation <<12-12-2019>>
+   Purpose : <<get Weekly User dashboard graphdata>>
+   Review Date :<<>>   Reviewed By :<<>>
+   */
+        public async Task<IEnumerable<GraphModelNew>> getWeeklyUserdashboardRequest()
+        {
+            using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+            {
+                try
+                {
+                    List<GraphModelNew> rcvdata = new List<GraphModelNew>();
+                    string rcvquery = WMSResource.dataforrequestgraph;
+                    var data1 = await pgsql.QueryAsync<GraphModelNew>(rcvquery, null, commandType: CommandType.Text);
+                    if (data1 != null && data1.Count() > 0)
+                    {
+                        int i = 1;
+                        foreach (GraphModelNew grph in data1)
+                        {
+                            string week = grph.sweek;
+                            var insertcheck = rcvdata.Where(o => o.sweek == week).FirstOrDefault();
+                            if (insertcheck == null)
+                            {
+                                GraphModelNew obj = new GraphModelNew();
+                                obj.displayweek = "Week" + i;
+                                obj.sweek = grph.sweek;
+                                obj.smonth = grph.smonth;
+                                obj.syear = grph.syear;
+                                obj.total = data1.Where(o => o.sweek == grph.sweek).Count().ToString();
+                                obj.received = data1.Where(o => o.sweek == grph.sweek && o.requestid != null).Count().ToString();
+                                obj.pending = data1.Where(o => o.sweek == grph.sweek && o.requestid == null).Count().ToString();
+                                rcvdata.Add(obj);
+                                i++;
+                            }
+                        }
+                    }
+
+                    return rcvdata;
+                }
+                catch (Exception ex)
+                {
+                    string msg = ex.Message;
+                    return null;
+                }
+
+            }
+
+        }
+
+        /*
+   Name of Function : <<getWeeklyUserdashboardgraphdata>>  Author :<<LP>>  
+   Date of Creation <<12-12-2019>>
+   Purpose : <<get Weekly User dashboard graphdata>>
+   Review Date :<<>>   Reviewed By :<<>>
+   */
+        public async Task<IEnumerable<GraphModelNew>> getWeeklyUserdashboardReturn()
+        {
+            using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+            {
+                try
+                {
+                    List<GraphModelNew> rcvdata = new List<GraphModelNew>();
+                    string rcvquery = WMSResource.dataforreturngraph;
+                    var data1 = await pgsql.QueryAsync<GraphModelNew>(rcvquery, null, commandType: CommandType.Text);
+                    if (data1 != null && data1.Count() > 0)
+                    {
+                        int i = 1;
+                        foreach (GraphModelNew grph in data1)
+                        {
+                            string week = grph.sweek;
+                            var insertcheck = rcvdata.Where(o => o.sweek == week).FirstOrDefault();
+                            if (insertcheck == null)
+                            {
+                                GraphModelNew obj = new GraphModelNew();
+                                obj.displayweek = "Week" + i;
+                                obj.sweek = grph.sweek;
+                                obj.smonth = grph.smonth;
+                                obj.syear = grph.syear;
+                                obj.total = data1.Where(o => o.sweek == grph.sweek).Count().ToString();
+                                obj.received = data1.Where(o => o.sweek == grph.sweek && o.returnid != null).Count().ToString();
+                                obj.pending = data1.Where(o => o.sweek == grph.sweek && o.returnid == null).Count().ToString();
+                                rcvdata.Add(obj);
+                                i++;
+                            }
+                        }
+                    }
+
+                    return rcvdata;
+                }
+                catch (Exception ex)
+                {
+                    string msg = ex.Message;
+                    return null;
+                }
+
+            }
+
+        }
+
+
+        /*
+  Name of Function : <<getWeeklyUserdashboardgraphdata>>  Author :<<LP>>  
+  Date of Creation <<12-12-2019>>
+  Purpose : <<get Weekly User dashboard graphdata>>
+  Review Date :<<>>   Reviewed By :<<>>
+  */
+        public async Task<IEnumerable<GraphModelNew>> getWeeklyUserdashboardReserve()
+        {
+            using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+            {
+                try
+                {
+                    List<GraphModelNew> rcvdata = new List<GraphModelNew>();
+                    string rcvquery = WMSResource.dataforreservegraph;
+                    var data1 = await pgsql.QueryAsync<GraphModelNew>(rcvquery, null, commandType: CommandType.Text);
+                    if (data1 != null && data1.Count() > 0)
+                    {
+                        int i = 1;
+                        foreach (GraphModelNew grph in data1)
+                        {
+                            string week = grph.sweek;
+                            var insertcheck = rcvdata.Where(o => o.sweek == week).FirstOrDefault();
+                            if (insertcheck == null)
+                            {
+                                GraphModelNew obj = new GraphModelNew();
+                                obj.displayweek = "Week" + i;
+                                obj.sweek = grph.sweek;
+                                obj.smonth = grph.smonth;
+                                obj.syear = grph.syear;
+                                obj.total = data1.Where(o => o.sweek == grph.sweek).Count().ToString();
+                                obj.received = data1.Where(o => o.sweek == grph.sweek && o.reserveid != null).Count().ToString();
+                                obj.pending = data1.Where(o => o.sweek == grph.sweek && o.reserveid == null).Count().ToString();
+                                rcvdata.Add(obj);
+                                i++;
+                            }
+                        }
+                    }
+
+                    return rcvdata;
+                }
+                catch (Exception ex)
+                {
+                    string msg = ex.Message;
+                    return null;
+                }
+
+            }
+
+        }
+
+
+        /*
+  Name of Function : <<getWeeklyUserdashboardgraphdata>>  Author :<<LP>>  
+  Date of Creation <<12-12-2019>>
+  Purpose : <<get Weekly User dashboard graphdata>>
+  Review Date :<<>>   Reviewed By :<<>>
+  */
+        public async Task<IEnumerable<GraphModelNew>> getWeeklyUserdashboardtransfer()
+        {
+            using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+            {
+                try
+                {
+                    List<GraphModelNew> rcvdata = new List<GraphModelNew>();
+                    string rcvquery = WMSResource.datafortransfergraph;
+                    var data1 = await pgsql.QueryAsync<GraphModelNew>(rcvquery, null, commandType: CommandType.Text);
+                    if (data1 != null && data1.Count() > 0)
+                    {
+                        int i = 1;
+                        foreach (GraphModelNew grph in data1)
+                        {
+                            string week = grph.sweek;
+                            var insertcheck = rcvdata.Where(o => o.sweek == week).FirstOrDefault();
+                            if (insertcheck == null)
+                            {
+                                GraphModelNew obj = new GraphModelNew();
+                                obj.displayweek = "Week" + i;
+                                obj.sweek = grph.sweek;
+                                obj.smonth = grph.smonth;
+                                obj.syear = grph.syear;
+                                obj.total = data1.Where(o => o.sweek == grph.sweek).Count().ToString();
+                                obj.received = data1.Where(o => o.sweek == grph.sweek && o.materialid != null).Count().ToString();
+                                obj.pending = data1.Where(o => o.sweek == grph.sweek && o.materialid == null).Count().ToString();
+                                rcvdata.Add(obj);
+                                i++;
+                            }
+                        }
+                    }
+
+                    return rcvdata;
+                }
+                catch (Exception ex)
+                {
+                    string msg = ex.Message;
+                    return null;
+                }
+
+            }
+
+        }
+
+
+
+        /*
+        Name of Function : <<getWeeklyUserdashboardgraphdata>>  Author :<<LP>>  
+        Date of Creation <<12-12-2019>>
+        Purpose : <<get Weekly User dashboard graphdata>>
+        Review Date :<<>>   Reviewed By :<<>>
+        */
+        public async Task<IEnumerable<UserDashboardGraphModel>> getWeeklyUserdashboardgraphdata()
           {
             using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
             {

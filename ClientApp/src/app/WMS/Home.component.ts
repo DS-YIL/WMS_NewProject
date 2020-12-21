@@ -24,6 +24,20 @@ export class HomeComponent implements OnInit {
   //for receipts
   receivedchartdata: any;
   receivedchartdatalist: GraphModelNew[] = [];
+  qualitychartdata: any;
+  qualitychartdatalist: GraphModelNew[] = [];
+  acceptchartdata:any;
+  acceptchartdatalist: GraphModelNew[] = [];
+  putawaychartdata: any;
+  putawaychartdatalist: GraphModelNew[] = [];
+  requestchartdata: any;
+  requestchartdatalist: GraphModelNew[] = [];
+  returnchartdata: any;
+  returnchartdatalist: GraphModelNew[] = [];
+  reservechartdata: any;
+  reservechartdatalist: GraphModelNew[] = [];
+  transferchartdata: any;
+  transferchartdatalist: GraphModelNew[] = [];
   ///
   monthlyIEchartdata: any;
   weeklychartdata: any;
@@ -152,7 +166,13 @@ export class HomeComponent implements OnInit {
     this.getdashboarddetail();
     this.setcontroldata();
     this.getreceivedchartdatalist();
-    
+    this.getqualitychartdatalist();
+    this.getacceptchartdatalist();
+    this.getputawaychartdatalist();
+    this.getrequestdatalist();
+    this.getreturndatalist();
+    this.getreservedatalist();
+    this.gettransferdatalist();
    // this.defaultactive();
   }
 
@@ -161,6 +181,73 @@ export class HomeComponent implements OnInit {
       if (data != null) {
         this.receivedchartdatalist = data;
         this.setReceivedgraph();
+      }
+    })
+
+  }
+  getqualitychartdatalist() {
+    this.wmsService.getqualitygraphdata().subscribe(data => {
+      if (data != null) {
+        this.qualitychartdatalist = data;
+        this.setQualitygraph();
+      }
+    })
+
+  }
+  getacceptchartdatalist() {
+    this.wmsService.getacceptgraphdata().subscribe(data => {
+      if (data != null) {
+        this.acceptchartdatalist = data;
+        this.setAcceptgraph();
+      }
+    })
+
+  }
+  getputawaychartdatalist() {
+    this.wmsService.getputawaygraphdata().subscribe(data => {
+      if (data != null) {
+        this.putawaychartdatalist = data;
+        this.setPutawaygraph();
+      }
+    })
+
+  }
+
+  getrequestdatalist() {
+    this.wmsService.getrequestgraphdata().subscribe(data => {
+      if (data != null) {
+        this.requestchartdatalist = data;
+        this.setRequestgraph();
+      }
+    })
+
+  }
+
+  getreturndatalist() {
+    this.wmsService.getreturngraphdata().subscribe(data => {
+      if (data != null) {
+        this.returnchartdatalist = data;
+        this.setReturngraph();
+      }
+    })
+
+  }
+
+  getreservedatalist() {
+    this.wmsService.getreservegraphdata().subscribe(data => {
+      if (data != null) {
+        this.reservechartdatalist = data;
+        this.setReservegraph();
+      }
+    })
+
+  }
+
+  gettransferdatalist() {
+    this.wmsService.gettransfergraphdata().subscribe(data => {
+      if (data != null) {
+        this.transferchartdatalist = data;
+        this.setTransfergraph();
       }
     })
 
@@ -594,10 +681,429 @@ export class HomeComponent implements OnInit {
 
 
   }
-
-
- 
   
+  setQualitygraph() {
+    debugger;
+
+    this.qualitychartdata = null;
+    var lblmessage = "Total";
+    var lblmessage1 = "Received";
+    var lblmessage2 = "Pending";
+    var pid = [];
+    var total = [];
+    var received = [];
+    var pending = [];
+    if (this.qualitychartdatalist.length > 0) {
+      this.lblmonth = this.monthlist[this.qualitychartdatalist[0].smonth];
+    }
+    this.qualitychartdatalist.forEach(element => {
+      pid.push(element.displayweek);
+      total.push(element.total);
+      received.push(element.received);
+      pending.push(element.pending);
+    });
+
+
+    this.qualitychartdata = {
+
+      labels: pid,
+      datasets: [
+        {
+          label: lblmessage,
+          //backgroundColor: '#42A5F5',
+          backgroundColor: '#70b385',
+          borderColor: '#555961',
+          data: total
+        },
+        {
+          label: lblmessage1,
+          //backgroundColor: '#42A5F5',
+          backgroundColor: '#42A5F5',
+          borderColor: '#555961',
+          data: received
+        },
+        {
+          label: lblmessage2,
+          //backgroundColor: '#42A5F5',
+          backgroundColor: '#f5428a',
+          borderColor: '#555961',
+          data: pending
+        }
+
+
+      ]
+
+    }
+    this.chartoptions1 = { scales: { yAxes: [{ ticks: { beginAtZero: true, userCallback: function (label, index, labels) { if (Math.floor(label) === label) { return label; } }, } }] } }
+
+    //console.log(this.monthlydashboardgraphmodel);
+
+
+  }
+
+
+  setAcceptgraph() {
+    debugger;
+
+    this.acceptchartdata = null;
+    var lblmessage = "Total";
+    var lblmessage1 = "Received";
+    var lblmessage2 = "Pending";
+    var pid = [];
+    var total = [];
+    var received = [];
+    var pending = [];
+    if (this.acceptchartdatalist.length > 0) {
+      this.lblmonth = this.monthlist[this.acceptchartdatalist[0].smonth];
+    }
+    this.acceptchartdatalist.forEach(element => {
+      pid.push(element.displayweek);
+      total.push(element.total);
+      received.push(element.received);
+      pending.push(element.pending);
+    });
+
+
+    this.acceptchartdata = {
+
+      labels: pid,
+      datasets: [
+        {
+          label: lblmessage,
+          //backgroundColor: '#42A5F5',
+          backgroundColor: '#70b385',
+          borderColor: '#555961',
+          data: total
+        },
+        {
+          label: lblmessage1,
+          //backgroundColor: '#42A5F5',
+          backgroundColor: '#42A5F5',
+          borderColor: '#555961',
+          data: received
+        },
+        {
+          label: lblmessage2,
+          //backgroundColor: '#42A5F5',
+          backgroundColor: '#f5428a',
+          borderColor: '#555961',
+          data: pending
+        }
+
+
+      ]
+
+    }
+    this.chartoptions1 = { scales: { yAxes: [{ ticks: { beginAtZero: true, userCallback: function (label, index, labels) { if (Math.floor(label) === label) { return label; } }, } }] } }
+
+    //console.log(this.monthlydashboardgraphmodel);
+
+
+  }
+
+
+  setPutawaygraph() {
+    debugger;
+
+    this.putawaychartdata = null;
+    var lblmessage = "Total";
+    var lblmessage1 = "Received";
+    var lblmessage2 = "Pending";
+    var pid = [];
+    var total = [];
+    var received = [];
+    var pending = [];
+    if (this.putawaychartdatalist.length > 0) {
+      this.lblmonth = this.monthlist[this.putawaychartdatalist[0].smonth];
+    }
+    this.putawaychartdatalist.forEach(element => {
+      pid.push(element.displayweek);
+      total.push(element.total);
+      received.push(element.received);
+      pending.push(element.pending);
+    });
+
+
+    this.putawaychartdata = {
+
+      labels: pid,
+      datasets: [
+        {
+          label: lblmessage,
+          //backgroundColor: '#42A5F5',
+          backgroundColor: '#70b385',
+          borderColor: '#555961',
+          data: total
+        },
+        {
+          label: lblmessage1,
+          //backgroundColor: '#42A5F5',
+          backgroundColor: '#42A5F5',
+          borderColor: '#555961',
+          data: received
+        },
+        {
+          label: lblmessage2,
+          //backgroundColor: '#42A5F5',
+          backgroundColor: '#f5428a',
+          borderColor: '#555961',
+          data: pending
+        }
+
+
+      ]
+
+    }
+    this.chartoptions1 = { scales: { yAxes: [{ ticks: { beginAtZero: true, userCallback: function (label, index, labels) { if (Math.floor(label) === label) { return label; } }, } }] } }
+
+    //console.log(this.monthlydashboardgraphmodel);
+
+
+  }
+
+
+  setRequestgraph() {
+    debugger;
+
+    this.requestchartdata = null;
+    var lblmessage = "Total";
+    var lblmessage1 = "Received";
+    var lblmessage2 = "Pending";
+    var pid = [];
+    var total = [];
+    var received = [];
+    var pending = [];
+    if (this.requestchartdatalist.length > 0) {
+      this.lblmonth = this.monthlist[this.requestchartdatalist[0].smonth];
+    }
+    this.requestchartdatalist.forEach(element => {
+      pid.push(element.displayweek);
+      total.push(element.total);
+      received.push(element.received);
+      pending.push(element.pending);
+    });
+
+
+    this.requestchartdata = {
+
+      labels: pid,
+      datasets: [
+        {
+          label: lblmessage,
+          //backgroundColor: '#42A5F5',
+          backgroundColor: '#70b385',
+          borderColor: '#555961',
+          data: total
+        },
+        {
+          label: lblmessage1,
+          //backgroundColor: '#42A5F5',
+          backgroundColor: '#42A5F5',
+          borderColor: '#555961',
+          data: received
+        },
+        {
+          label: lblmessage2,
+          //backgroundColor: '#42A5F5',
+          backgroundColor: '#f5428a',
+          borderColor: '#555961',
+          data: pending
+        }
+
+
+      ]
+
+    }
+    this.chartoptions1 = { scales: { yAxes: [{ ticks: { beginAtZero: true, userCallback: function (label, index, labels) { if (Math.floor(label) === label) { return label; } }, } }] } }
+
+    //console.log(this.monthlydashboardgraphmodel);
+
+
+  }
+
+
+
+  setReturngraph() {
+    debugger;
+
+    this.returnchartdata = null;
+    var lblmessage = "Total";
+    var lblmessage1 = "Received";
+    var lblmessage2 = "Pending";
+    var pid = [];
+    var total = [];
+    var received = [];
+    var pending = [];
+    if (this.returnchartdatalist.length > 0) {
+      this.lblmonth = this.monthlist[this.returnchartdatalist[0].smonth];
+    }
+    this.returnchartdatalist.forEach(element => {
+      pid.push(element.displayweek);
+      total.push(element.total);
+      received.push(element.received);
+      pending.push(element.pending);
+    });
+
+
+    this.returnchartdata = {
+
+      labels: pid,
+      datasets: [
+        {
+          label: lblmessage,
+          //backgroundColor: '#42A5F5',
+          backgroundColor: '#70b385',
+          borderColor: '#555961',
+          data: total
+        },
+        {
+          label: lblmessage1,
+          //backgroundColor: '#42A5F5',
+          backgroundColor: '#42A5F5',
+          borderColor: '#555961',
+          data: received
+        },
+        {
+          label: lblmessage2,
+          //backgroundColor: '#42A5F5',
+          backgroundColor: '#f5428a',
+          borderColor: '#555961',
+          data: pending
+        }
+
+
+      ]
+
+    }
+    this.chartoptions1 = { scales: { yAxes: [{ ticks: { beginAtZero: true, userCallback: function (label, index, labels) { if (Math.floor(label) === label) { return label; } }, } }] } }
+
+    //console.log(this.monthlydashboardgraphmodel);
+
+
+  }
+
+
+
+  setReservegraph() {
+    debugger;
+
+    this.reservechartdata = null;
+    var lblmessage = "Total";
+    var lblmessage1 = "Received";
+    var lblmessage2 = "Pending";
+    var pid = [];
+    var total = [];
+    var received = [];
+    var pending = [];
+    if (this.reservechartdatalist.length > 0) {
+      this.lblmonth = this.monthlist[this.reservechartdatalist[0].smonth];
+    }
+    this.reservechartdatalist.forEach(element => {
+      pid.push(element.displayweek);
+      total.push(element.total);
+      received.push(element.received);
+      pending.push(element.pending);
+    });
+
+
+    this.reservechartdata = {
+
+      labels: pid,
+      datasets: [
+        {
+          label: lblmessage,
+          //backgroundColor: '#42A5F5',
+          backgroundColor: '#70b385',
+          borderColor: '#555961',
+          data: total
+        },
+        {
+          label: lblmessage1,
+          //backgroundColor: '#42A5F5',
+          backgroundColor: '#42A5F5',
+          borderColor: '#555961',
+          data: received
+        },
+        {
+          label: lblmessage2,
+          //backgroundColor: '#42A5F5',
+          backgroundColor: '#f5428a',
+          borderColor: '#555961',
+          data: pending
+        }
+
+
+      ]
+
+    }
+    this.chartoptions1 = { scales: { yAxes: [{ ticks: { beginAtZero: true, userCallback: function (label, index, labels) { if (Math.floor(label) === label) { return label; } }, } }] } }
+
+    //console.log(this.monthlydashboardgraphmodel);
+
+
+  }
+
+
+
+  setTransfergraph() {
+    debugger;
+
+    this.transferchartdata = null;
+    var lblmessage = "Total";
+    var lblmessage1 = "Received";
+    var lblmessage2 = "Pending";
+    var pid = [];
+    var total = [];
+    var received = [];
+    var pending = [];
+    if (this.transferchartdatalist.length > 0) {
+      this.lblmonth = this.monthlist[this.transferchartdatalist[0].smonth];
+    }
+    this.transferchartdatalist.forEach(element => {
+      pid.push(element.displayweek);
+      total.push(element.total);
+      received.push(element.received);
+      pending.push(element.pending);
+    });
+
+
+    this.transferchartdata = {
+
+      labels: pid,
+      datasets: [
+        {
+          label: lblmessage,
+          //backgroundColor: '#42A5F5',
+          backgroundColor: '#70b385',
+          borderColor: '#555961',
+          data: total
+        },
+        {
+          label: lblmessage1,
+          //backgroundColor: '#42A5F5',
+          backgroundColor: '#42A5F5',
+          borderColor: '#555961',
+          data: received
+        },
+        {
+          label: lblmessage2,
+          //backgroundColor: '#42A5F5',
+          backgroundColor: '#f5428a',
+          borderColor: '#555961',
+          data: pending
+        }
+
+
+      ]
+
+    }
+    this.chartoptions1 = { scales: { yAxes: [{ ticks: { beginAtZero: true, userCallback: function (label, index, labels) { if (Math.floor(label) === label) { return label; } }, } }] } }
+
+    //console.log(this.monthlydashboardgraphmodel);
+
+
+  }
+
   setmonthlyIEgraph(type: string) {
     debugger;
     this.monthlyIEchartdata = null;

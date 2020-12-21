@@ -598,12 +598,11 @@ values(default,@pono,@itemid,@gatepassmaterialid,@itemissueddate,@itemreceiverid
     <value>UPDATE  wms.wms_storeinward set  qualitypassedqty=@qualitypassedqty,qualityfailedqty = @qualityfailedqty,checkedby = @receivedby,checkedon=current_date,remarks=@remarks where inwardid =#inwardid</value>
   </data>
   <data name="getdataforqualitydetails" xml:space="preserve">
-    <value>select stinw.inwardid,stinw.lineitemno,stinw.pono,stinw.inwmasterid,stinw.qualitycheckrequired,stinw.materialid as material,secinw.grnnumber,secinw.pono as securitypo,secinw.invoiceno,secinw.onhold,mat.materialdescription,stinw.receivedqty,stinw.receiveddate,stinw.returnqty,qc.qualitypassedqty,qc.qualityfailedqty,qc.remarks,qc.qcby as checkedby
-  from wms.wms_storeinward stinw
-  left outer join wms.wms_securityinward secinw on secinw.inwmasterid=stinw.inwmasterid
-  left outer join wms."MaterialMasterYGS" mat on mat.material = stinw.materialid
-  left outer join wms.wms_qualitycheck qc on qc.inwardid=stinw.inwardid
-  where stinw.qualitycheckrequired is True and secinw.grnnumber = '#grnno'</value>
+    <value>Select date_part('year', current_date::date) as syear,
+date_part('month', current_date::date) as smonth,
+inwmasterid,date_part('week', receiveddate::date) AS sweek,receiveddate,qualitychecked from wms.wms_storeinward
+where receiveddate &gt;= (select date_trunc('month', current_date))
+order by sweek</value>
   </data>
   <data name="receiveforinvoice" xml:space="preserve">
     <value>INSERT INTO wms.wms_storeinward(inwmasterid,receiveddate,receivedby,receivedqty,materialid,deleteflag,qualitycheckrequired,qualitychecked,materialqty,remarks,pono,lineitemno)
@@ -1365,7 +1364,7 @@ left join wms."MaterialMasterYGS" ygs on ygs.material=sk.materialid
 where iss.gatepassmaterialid = '#gatepassmaterialid'</value>
   </data>
   <data name="getMaterialsforreceipt" xml:space="preserve">
-    <value>select mat.pono,mat.materialid as material,mat.itemno::text as lineitemno,ms.materialdescription,mat.materialqty,'#invoice' as invoiceno,'#inw' as inwmasterid,NULL as grnnumber,ms.qualitycheck
+    <value>select mat.pono,mat.materialid as material,mat.itemno::text as lineitemno,ms.materialdescription,mat.materialqty,'#invoice' as invoiceno,'#inw' as inwmasterid,NULL as grnnumber,ms.qualitycheck,mat.asnno,mat.asnqty as receivedqty
 from wms.wms_pomaterials mat
 left outer join wms."MaterialMasterYGS" ms on ms.material = mat.materialid</value>
   </data>
@@ -1430,9 +1429,13 @@ from wms.st_initialstock
 st where st.uploadedby = '#code' group by st.uploadbatchcode</value>
   </data>
   <data name="inhandmaterial" xml:space="preserve">
-    <value>Select st.materialid as material,Max(mat.materialdescription)  as materialdescription, SUM(st.availableqty) as availableqty,
-(Max(mat.unitprice) * SUM(st.availableqty)) as value
-from wms.wms_stock st left outer join wms."MaterialMasterYGS" mat on mat.material = st.materialid group by st.materialid</value>
+    <value>Select st.materialid as material,Max(mat.materialdescription)  as materialdescription,
+max( mat.hsncode) as hsncode,max(po.suppliername) as suppliername ,Max(prj.projectname) as projectname,
+SUM(st.availableqty) as availableqty,(Max(mat.unitprice) * SUM(st.availableqty)) as value
+from wms.wms_stock st 
+left outer join wms.wms_polist po on po.pono =st.pono 
+left outer join wms.wms_project prj on prj.pono =st.pono 
+left outer join wms."MaterialMasterYGS" mat on mat.material = st.materialid group by st.materialid</value>
   </data>
   <data name="inhandmateriallocation" xml:space="preserve">
     <value>select itemlocation,SUM(availableqty) as quantity from wms.wms_stock where materialid = '#material' and availableqty &gt; 0
@@ -1576,6 +1579,55 @@ prj.projectmanager</value>
 date_part('month', current_date::date) as smonth,
 inwmasterid,date_part('week', receiveddate::date) AS sweek,receiveddate,grnnumber from wms.wms_securityinward
 where receiveddate &gt;= (select date_trunc('month', current_date))
+order by sweek</value>
+  </data>
+  <data name="dataforacceptgraph" xml:space="preserve">
+    <value>Select date_part('year', current_date::date) as syear,
+date_part('month', current_date::date) as smonth,
+inwmasterid,date_part('week', receiveddate::date) AS sweek,receiveddate,confirmqty from wms.wms_storeinward
+where receiveddate &gt;= (select date_trunc('month', current_date))
+order by sweek</value>
+  </data>
+  <data name="dataforputawaygraph" xml:space="preserve">
+    <value>Select date_part('year', current_date::date) as syear,
+date_part('month', current_date::date) as smonth,
+inwmasterid,date_part('week', createddate::date) AS sweek,createddate,initialstock  from wms.wms_stock
+where createddate &gt;= (select date_trunc('month', current_date))
+order by sweek</value>
+  </data>
+  <data name="dataforqualitygraph" xml:space="preserve">
+    <value>Select date_part('year', current_date::date) as syear,
+date_part('month', current_date::date) as smonth,
+inwmasterid,date_part('week', receiveddate::date) AS sweek,receiveddate,qualitychecked from wms.wms_storeinward
+where receiveddate &gt;= (select date_trunc('month', current_date))
+order by sweek</value>
+  </data>
+  <data name="dataforrequestgraph" xml:space="preserve">
+    <value>Select date_part('year', current_date::date) as syear,
+date_part('month', current_date::date) as smonth,
+date_part('week', requesteddate::date) AS sweek,requesteddate,requestid from wms.materialrequest
+where requesteddate &gt;= (select date_trunc('month', current_date))
+order by sweek</value>
+  </data>
+  <data name="dataforreservegraph" xml:space="preserve">
+    <value>Select date_part('year', current_date::date) as syear,
+date_part('month', current_date::date) as smonth,
+date_part('week', reservedon::date) AS sweek,reservedon,reserveid from wms.materialreserve
+where reservedon &gt;= (select date_trunc('month', current_date))
+order by sweek</value>
+  </data>
+  <data name="dataforreturngraph" xml:space="preserve">
+    <value>Select date_part('year', current_date::date) as syear,
+date_part('month', current_date::date) as smonth,
+date_part('week', createdon::date) AS sweek,createdon,returnid from wms.wms_materialreturn
+where createdon &gt;= (select date_trunc('month', current_date))
+order by sweek</value>
+  </data>
+  <data name="datafortransfergraph" xml:space="preserve">
+    <value>Select date_part('year', current_date::date) as syear,
+date_part('month', current_date::date) as smonth,
+date_part('week', createdon::date) AS sweek,createdon,materialid from wms.wms_transfermaterial
+where createdon &gt;= (select date_trunc('month', current_date))
 order by sweek</value>
   </data>
 </root>
