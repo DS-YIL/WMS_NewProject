@@ -357,6 +357,8 @@ export class outwardmaterialistModel {
   inwardqty: number;
   mgapprover: string;
   fmapprover: string;
+  outwardedqty: number;
+  inwardedqty: number;
 }
 
 export class categoryValues {

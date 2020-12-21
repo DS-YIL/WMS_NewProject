@@ -33,6 +33,15 @@ export class OutwardinwardreportComponent implements OnInit {
    
   }
 
+  getcolspan() {
+    if (this.isinward) {
+      return "4"
+    }
+    else {
+      return "5"
+    }
+  }
+
   showattachdata(data: outwardinwardreportModel) {
     data.materialdata = [];
     if (this.isoutward) {

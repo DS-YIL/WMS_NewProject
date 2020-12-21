@@ -160,6 +160,7 @@ export class GatePassoutwardComponent implements OnInit {
   }
 
   showdetails(data: any) {
+    debugger;
     var dt = new Date();
     this.fromdateview = this.datePipe.transform(dt, this.constants.dateFormat);
     this.DGgatepassid = data.gatepassid;
@@ -232,7 +233,7 @@ export class GatePassoutwardComponent implements OnInit {
         this.totalGatePassList = data;
 
         if (this.isinward) {
-          this.totalGatePassList = this.totalGatePassList.filter(li => li.outwarddate != null && li.securityinwarddate == null);
+          this.totalGatePassList = this.totalGatePassList.filter(li => li.outwarddate != null && (li.outwardedqty != li.inwardedqty));
         }
         else {
           this.totalGatePassList = this.totalGatePassList.filter(li => li.outwardedqty != li.issuedqty);
@@ -252,31 +253,38 @@ export class GatePassoutwardComponent implements OnInit {
     var senddata = this.materialListDG;
     this.selectedmdata = [];
     var tdate = new Date();
-    //if (this.isoutward) {
-    //  var invalidrcv = senddata.filter(function (element, index) {
-    //    return (element.outwardqty != 0);
-    //  });
-    //  if (invalidrcv.length == 0) {
-    //    this.messageService.add({ severity: 'error', summary: '', detail: 'Enter Outward Quantity' });
-    //    return;
-    //  }
-    //  senddata = senddata.filter(function (element, index) {
-    //    return (element.outwardqty != 0);
-    //  });
-    //}
-    //else {
-    //  var invalidrcv = senddata.filter(function (element, index) {
-    //    return (element.inwardqty != 0);
-    //  });
-    //  if (invalidrcv.length == 0) {
-    //    this.messageService.add({ severity: 'error', summary: '', detail: 'Enter Inward Quantity' });
-    //    return;
-    //  }
-    //  senddata = senddata.filter(function (element, index) {
-    //    return (element.inwardqty != 0);
-    //  });
+    if (this.isoutward) {
+      //var invalidrcv = senddata.filter(function (element, index) {
+      //  return (element.outwardqty != 0);
+      //});
+      //if (invalidrcv.length == 0) {
+      //  this.messageService.add({ severity: 'error', summary: '', detail: 'Enter Outward Quantity' });
+      //  return;
+      //}
+      //senddata = senddata.filter(function (element, index) {
+      //  return (element.outwardqty != 0);
+      //});
+    }
+    else {
+      var invalidrcv = senddata.filter(function (element, index) {
+        return (element.inwardqty != 0);
+      });
+      if (invalidrcv.length == 0) {
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Enter Inward Quantity' });
+        return;
+      }
+      var invalidrcv1 = senddata.filter(function (element, index) {
+        return (element.inwardqty > (element.outwardedqty - element.inwardedqty));
+      });
+      if (invalidrcv1.length > 0) {
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Intward quantity cannot exceed Pending quantity.' });
+        return;
+      }
+      senddata = senddata.filter(function (element, index) {
+        return (element.inwardqty != 0);
+      });
 
-    //}
+    }
     senddata.forEach(item => {
       let mdata = new outwardmaterialistModel();
       mdata.gatepassmaterialid = item.gatepassmaterialid;
@@ -293,6 +301,7 @@ export class GatePassoutwardComponent implements OnInit {
         mdata.inwarddatestring = this.fromdateview1;
         mdata.movetype = "in";
         mdata.inwardqty = item.inwardqty;
+        mdata.remarks = item.remarks
       }
       this.selectedmdata.push(mdata);
     })
@@ -324,14 +333,14 @@ export class GatePassoutwardComponent implements OnInit {
     
   }
 
-  checkinqty(enrtered: number, qty: number, data: any) {
+  checkinqty(enrtered: number, qty: number, inqty: number, data: any) {
     if (enrtered < 0) {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Negative value not allowed.' });
       data.outwardqty = 0;
       return;
     }
 
-    if (enrtered > qty) {
+    if (enrtered > (qty - inqty)) {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Intward quantity cannot be greater than Pending quantity.' });
       data.outwardqty = 0;
       return;

@@ -5557,6 +5557,8 @@ namespace WMS.DAL
             }
         }
 
+       
+
         /*
        Name of Function : <<getWeeklyUserdashboardgraphdata>>  Author :<<LP>>  
        Date of Creation <<12-12-2019>>
@@ -8983,8 +8985,8 @@ namespace WMS.DAL
 
                         else if (mat.movetype == "in")
                         {
-                            query = "insert into wms.outwatdinward(gatepassid, gatepassmaterialid, securityinwardby, securityinwarddate, securityinwardremarks)";
-                            query += " values('" + mat.gatepassid + "', " + gatepassmaterialid + ",'" + mat.movedby + "', '" + mat.inwarddatestring + "', '" + mat.remarks + "')";
+                            query = "insert into wms.outwatdinward(gatepassid, gatepassmaterialid,inwardqty, securityinwardby, securityinwarddate, securityinwardremarks)";
+                            query += " values('" + mat.gatepassid + "', " + gatepassmaterialid + ","+mat.inwardqty+",'" + mat.movedby + "', '" + mat.inwarddatestring + "', '" + mat.remarks + "')";
                             var resultsx = pgsql.ExecuteScalar(query);
                             //query = "update wms.wms_gatepassmaterial set inwardqty = " + mat.inwardqty + ", inwarddate = '" + mat.inwarddatestring + "' , inwardedby='" + mat.movedby + "',inwardremarks='" + mat.remarks + "' where gatepassmaterialid = " + mat.gatepassmaterialid + "";
                             //results11 = pgsql.ExecuteScalar(query);

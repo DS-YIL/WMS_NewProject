@@ -63,8 +63,19 @@ export class AdminStockUploadComponent implements OnInit {
     this.strsuccessrecord = "";
     this.strtotalrecord = "";
     var arrrcds = rcds.split('\n');
-    this.strtotalrecord = String(arrrcds[1]);
-    this.strsuccessrecord = String(arrrcds[2]);
+    if (!isNullOrUndefined(arrrcds[1])) {
+      this.strtotalrecord = String(arrrcds[1]);
+    }
+    else {
+      this.strtotalrecord = "";
+    }
+
+    if (!isNullOrUndefined(arrrcds[2])) {
+      this.strsuccessrecord = String(arrrcds[2]);
+    }
+    else {
+      this.strsuccessrecord = "";
+    }
   }
 
   loadCarsLazy(event: LazyLoadEvent) {
@@ -142,8 +153,15 @@ export class AdminStockUploadComponent implements OnInit {
             let displaystring2 = String(displaystring1.split('_').join(' '));
             exception = exception.split('-').join('\n');
             exception = exception.split('_').join(' ');
-            this.responsestr = displaystring2 + "\n" + String(exception);
-            this.responseexceptionstr = exception;
+            this.responsestr = displaystring2;
+            if (!isNullOrUndefined(exception) && exception != "undefined") {
+              this.responseexceptionstr = exception;
+              this.responsestr += "\n" + String(exception);
+            }
+            else {
+              this.responseexceptionstr = "";
+            }
+            
             this.uploadcode = uploadcode;
             if (!isNullOrUndefined(this.responsestr)) {
               this.displayModal = true;
