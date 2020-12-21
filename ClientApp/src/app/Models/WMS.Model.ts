@@ -654,6 +654,9 @@ export class MaterialinHand {
   materialdescription: string;
   availableqty: number;
   value: number;
+  projectname: string;
+  suppliername: string;
+  hsncode: string;
   locations: matlocations[];
 }
 

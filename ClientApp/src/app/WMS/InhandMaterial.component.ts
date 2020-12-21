@@ -75,6 +75,9 @@ export class InhandMaterialComponent implements OnInit {
       return {
         'Material': obj.material,
         'Material Description': obj.materialdescription,
+        'Project Name': obj.projectname,
+        'Supplier Name': obj.suppliername,
+        'Hsncode': obj.hsncode,
         'Avialable Quantity': obj.availableqty,
         'Value': obj.value
       }
