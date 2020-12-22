@@ -8149,7 +8149,8 @@ namespace WMS.DAL
                                         itm.stockstatus,
                                         stck.materialid,
                                         inwardid,
-                                        stocktype
+                                        stocktype,
+                                        itm.lineitemno
                                     }));
                                     if (result != 0)
                                     {
