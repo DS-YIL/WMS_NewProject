@@ -4299,7 +4299,8 @@ namespace WMS.DAL
 				{
 					Cyclecountconfigmodel config = new Cyclecountconfigmodel();
 					await pgsql.OpenAsync();
-					string QueryA = "Select * from wms.cyclecount";
+					//string QueryA = "Select * from wms.cyclecount";
+					string QueryA = "Select cy.*,(pomat.unitprice * cy.availableqty ) as value from wms.cyclecount cy inner join wms.wms_pomaterials pomat  on cy.materialid = pomat.material";
 					var adata = await pgsql.QueryAsync<CycleCountList>(QueryA, null, commandType: CommandType.Text);
 					return adata;
 				}

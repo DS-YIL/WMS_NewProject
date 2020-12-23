@@ -385,7 +385,8 @@ namespace WMS.Common {
         ///          WHERE op.unitprice ::numeric &gt;= wrc.minpricevalue::numeric and
         ///          (op.unitprice ::numeric &lt;= wrc.maxpricevalue::numeric or op.unitprice ::numeric = wrc.maxpricevalue::numeric is null) and wrc.deleteflag=false
         ///         LIMIT 1) AS category from wms.wms_stock ws
-        /// inner join wms.&quot;MaterialMasterYGS&quot; op on  ws.materialid =op.material [rest of string was truncated]&quot;;.
+        /// inner join wms.wms_pomaterials op on  ws.materialid =op.material
+        /// W [rest of string was truncated]&quot;;.
         /// </summary>
         public static string GetallavlqtyABCList {
             get {
@@ -1664,8 +1665,11 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select mmy.material, mmy.materialdescription,sum(st.availableqty) as availableqty,mmy.safteystock as safteystock ,mmy.minorderqty as minorderqty
-        ///from wms.&quot;MaterialMasterYGS&quot; mmy  join wms.wms_stock st on st.materialid =mmy.material where st.availableqty &lt; mmy.safteystock group by mmy.material.
+        ///   Looks up a localized string similar to select mmy.material, mmy.materialdescription,sum(st.availableqty) as availableqty,mmy.safteystock as safteystock ,mmy.minorderqty as minorderqty,
+        ///(max(pomat.unitprice)  * sum(st.availableqty )) as value from wms.&quot;MaterialMasterYGS&quot; mmy  
+        ///join wms.wms_stock st on st.materialid =mmy.material
+        ///join wms.wms_pomaterials pomat on pomat.material =mmy.material 
+        ///where st.availableqty &lt; mmy.safteystock group by mmy.material.
         /// </summary>
         public static string getSafteyStockList {
             get {
@@ -1781,11 +1785,11 @@ namespace WMS.Common {
         /// <summary>
         ///   Looks up a localized string similar to Select max(pomat.materialid) as material,Max(mat.materialdescription)  as materialdescription,pomat.poitemdescription , max(po.pono ) as pono,
         ///max( mat.hsncode) as hsncode,max(po.suppliername) as suppliername ,Max(prj.projectname) as projectname,
-        ///SUM(st.availableqty) as availableqty,(Max(mat.unitprice) * SUM(st.availableqty)) as value
+        ///SUM(st.availableqty) as availableqty,(Max(pomat.unitprice) * SUM(st.availableqty)) as value
         ///from wms.wms_stock st 
         ///left outer join wms.wms_polist po on po.pono =st.pono 
         ///left outer join wms.wms_project prj on prj.pono =st.pono 
-        ///left outer join wms.&quot;MaterialMast [rest of string was truncated]&quot;;.
+        ///left outer join wms.&quot;MaterialMa [rest of string was truncated]&quot;;.
         /// </summary>
         public static string inhandmaterial {
             get {
@@ -1845,12 +1849,13 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select st.uploadbatchcode,Max(st.uploadedfilename) as uploadedfilename,Max(st.createddate) as createddate,
-        ///Count(*) as totalrecords,
-        ///(select count(*) from wms.st_initialstock where dataloaderrors is True and uploadbatchcode = st.uploadbatchcode) as exceptionrecords,
-        ///(select count(*) from wms.wms_stock where uploadbatchcode = st.uploadbatchcode) as successrecords
-        ///from wms.st_initialstock 
-        ///st where st.uploadedby = &apos;#code&apos; group by st.uploadbatchcode.
+        ///   Looks up a localized string similar to select st.materialid as material,mat.materialdescription,loc.locatorname,rac.racknumber,bn.binnumber,st.availableqty,(pomat.unitprice * st.availableqty ) as value,st.projectid,st.pono,st.shelflife 
+        ///from wms.wms_stock st 
+        ///left outer join wms.&quot;MaterialMasterYGS&quot; mat on mat.material = st.materialid
+        ///left outer join wms.wms_pomaterials  pomat on mat.material =st.materialid 
+        ///left outer join wms.wms_rd_locator loc on loc.locatorid = st.storeid
+        ///left outer join wms.wms_rd_rack rac on rac.rackid = st.rackid
+        ///lef [rest of string was truncated]&quot;;.
         /// </summary>
         public static string initialstockreportgroupby {
             get {

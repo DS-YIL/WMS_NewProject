@@ -23,12 +23,14 @@
           <th style="text-align:center;width:120px">Material</th>
           <th style="text-align:center;width:150px">Material Description</th>
           <th style="text-align:center;width:60px">Min Order Qty </th>
+          <th style="text-align:center;width:60px">Value(in Rs.) </th>
         </tr>
         <tr>
           <th></th>
           <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'material', 'contains')"></th>
           <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'materialdescription', 'contains')"></th>
           <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'minorderqty', 'contains')"></th>
+          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'value', 'contains')"></th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
@@ -39,6 +41,7 @@
           <td class="ptable-cell" style="text-align: center">{{rowData.material}}</td>
           <td class="ptable-cell" style="text-align:left">{{rowData.materialdescription}}</td>
           <td class="ptable-cell" style="text-align:right">{{rowData.minorderqty}}</td>
+          <td class="ptable-cell" style="text-align:right">{{rowData.value}}</td>
         </tr>
       </ng-template>
     </p-table>

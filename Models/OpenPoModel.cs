@@ -760,6 +760,7 @@ namespace WMS.Models
 		public string verified_by { get; set; }
 
 		public int todayscount { get; set; }
+		public decimal? value { get; set; }
 
 	}
 
@@ -1143,6 +1144,7 @@ public class safteyStockList
 	public int availableqty { get; set; }
 	public int safteystock { get; set; }
 	public int minorderqty { get; set; }
+	public decimal? value { get; set; }
 }
 public class stocktransferModel
 {

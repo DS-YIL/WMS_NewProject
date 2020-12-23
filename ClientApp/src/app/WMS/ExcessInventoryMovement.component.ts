@@ -46,6 +46,7 @@ export class ExcessInventoryMovementComponent implements OnInit {
       { field: 'materialdescription', header: 'Material Descr' },
       { field: 'issuedqty', header: 'Total consumed Qty for last ' + this.movingDays + ' years' },
       { field: 'availableqty', header: 'Total Available Qty for last ' + this.movingDays + ' years' },
+      { field: 'value', header: 'Value(in Rs.)' },
       //{ field: 'departmentname', header: 'Dep Name' },
       //{ field: 'itemlocation', header: 'Item Location' },
       //{ field: 'projectname', header: 'Project Name' },

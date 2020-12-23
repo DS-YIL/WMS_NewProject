@@ -48,6 +48,7 @@
                 <th style="text-align:center">Physical  Qty</th>
                 <th style="text-align:center">difference</th>
                 <th style="text-align:center">Status</th>
+                <th style="text-align:center">Value(in Rs.)</th>
               </tr>
             </ng-template>
             <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
@@ -68,6 +69,9 @@
                 </td>
                 <td class="ptable-cell" style="text-align:center">
                   {{rowData.status}}
+                </td>
+                <td class="ptable-cell" style="text-align:center">
+                  {{rowData.value}}
                 </td>
 
 

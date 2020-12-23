@@ -399,7 +399,7 @@ wms.wms_stock ws inner join wms.wms_securityinward sec on sec.pono =ws.pono wher
           WHERE op.unitprice ::numeric &gt;= wrc.minpricevalue::numeric and
           (op.unitprice ::numeric &lt;= wrc.maxpricevalue::numeric or op.unitprice ::numeric = wrc.maxpricevalue::numeric is null) and wrc.deleteflag=false
          LIMIT 1) AS category from wms.wms_stock ws
- inner join wms."MaterialMasterYGS" op on  ws.materialid =op.material
+ inner join wms.wms_pomaterials op on  ws.materialid =op.material
  WHERE ws.materialid IS NOT null and op.unitprice is not null
 group by category</value>
   </data>
@@ -695,8 +695,11 @@ values(default,@gatepassid,@fmapproverid,@fmapprovername,'Pending',@label)</valu
     <value>update wms.wms_gatepass set approverstatus='#approverstatus',approverremarks=@approverremarks,approvedon=current_timestamp where gatepassid=@gatepassid</value>
   </data>
   <data name="getSafteyStockList" xml:space="preserve">
-    <value>select mmy.material, mmy.materialdescription,sum(st.availableqty) as availableqty,mmy.safteystock as safteystock ,mmy.minorderqty as minorderqty
-from wms."MaterialMasterYGS" mmy  join wms.wms_stock st on st.materialid =mmy.material where st.availableqty &lt; mmy.safteystock group by mmy.material</value>
+    <value>select mmy.material, mmy.materialdescription,sum(st.availableqty) as availableqty,mmy.safteystock as safteystock ,mmy.minorderqty as minorderqty,
+(max(pomat.unitprice)  * sum(st.availableqty )) as value from wms."MaterialMasterYGS" mmy  
+join wms.wms_stock st on st.materialid =mmy.material
+join wms.wms_pomaterials pomat on pomat.material =mmy.material 
+where st.availableqty &lt; mmy.safteystock group by mmy.material</value>
   </data>
   <data name="getbinlist" xml:space="preserve">
     <value>select bin.binnumber,sk.binid,sk.materialid as material,sum(sk.availableqty)as availableqty,max(sk.itemlocation)as itemlocation
@@ -1421,17 +1424,19 @@ left outer join wms.wms_rd_bin bn on bn.binid = st.binid
 where st.initialstock is True and st.createdby = '#code'</value>
   </data>
   <data name="initialstockreportgroupby" xml:space="preserve">
-    <value>select st.uploadbatchcode,Max(st.uploadedfilename) as uploadedfilename,Max(st.createddate) as createddate,
-Count(*) as totalrecords,
-(select count(*) from wms.st_initialstock where dataloaderrors is True and uploadbatchcode = st.uploadbatchcode) as exceptionrecords,
-(select count(*) from wms.wms_stock where uploadbatchcode = st.uploadbatchcode) as successrecords
-from wms.st_initialstock 
-st where st.uploadedby = '#code' group by st.uploadbatchcode</value>
+    <value>select st.materialid as material,mat.materialdescription,loc.locatorname,rac.racknumber,bn.binnumber,st.availableqty,(pomat.unitprice * st.availableqty ) as value,st.projectid,st.pono,st.shelflife 
+from wms.wms_stock st 
+left outer join wms."MaterialMasterYGS" mat on mat.material = st.materialid
+left outer join wms.wms_pomaterials  pomat on mat.material =st.materialid 
+left outer join wms.wms_rd_locator loc on loc.locatorid = st.storeid
+left outer join wms.wms_rd_rack rac on rac.rackid = st.rackid
+left outer join wms.wms_rd_bin bn on bn.binid = st.binid
+where st.initialstock is True and st.createdby = '#code'</value>
   </data>
   <data name="inhandmaterial" xml:space="preserve">
     <value>Select max(pomat.materialid) as material,Max(mat.materialdescription)  as materialdescription,pomat.poitemdescription , max(po.pono ) as pono,
 max( mat.hsncode) as hsncode,max(po.suppliername) as suppliername ,Max(prj.projectname) as projectname,
-SUM(st.availableqty) as availableqty,(Max(mat.unitprice) * SUM(st.availableqty)) as value
+SUM(st.availableqty) as availableqty,(Max(pomat.unitprice) * SUM(st.availableqty)) as value
 from wms.wms_stock st 
 left outer join wms.wms_polist po on po.pono =st.pono 
 left outer join wms.wms_project prj on prj.pono =st.pono 
