@@ -154,6 +154,7 @@ export class MiscellanousReceiptsComponent implements OnInit {
     this.wmsService.miscellanousReceiptDataUpdate(this.MisData).subscribe(data => {
       this.spinner.hide();
       this.getMiscellanousReceiptsList();
+      this.isSubmit = false;
       this.displayReceiptsDialog = false;
       if (data) {
         this.messageService.add({ severity: 'success', summary: '', detail: 'Stock Updated' });
