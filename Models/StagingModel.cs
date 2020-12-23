@@ -22,6 +22,7 @@ namespace WMS.Models
 		public string projectname { get; set; }
 		public string projectmanager { get; set; }
 		public string materialid { get; set; }
+		public string poitemdescription { get; set; }
 		public string materialdescription { get; set; }
 		public int materialqty { get; set; }
 		public int itemno { get; set; }

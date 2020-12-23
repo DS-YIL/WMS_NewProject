@@ -1,0 +1,124 @@
+<div class="card" style="min-height: 500px;border-radius: 10px;box-shadow: 5px 10px #888888;">
+  <div class="card-header text-center cardheadertext">
+    <span><i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;Miscellanous Issues</span>
+  </div>
+  <div class="card-body" style="overflow-y:hidden;padding:0px;margin-left:40px;margin-right:40px">
+    <div class="col-lg-4 col-md-4 form-inline m-2">
+      <div class="form-inline">
+        <label class="labelheading">Stock :</label>&nbsp;&nbsp;
+        <select [(ngModel)]="initialStock" class="form-control" (change)="getMiscellanousIssueList()">
+          <option value=false>All</option>
+          <option value=true>Initial Stock</option>
+        </select>
+      </div>
+    </div>
+    <br />
+    <p-table #dt [value]="IssueList">
+      <ng-template pTemplate="header">
+        <tr class="mprltbldata">
+          <th style="text-align:center;width:70px">S.No</th>
+          <th style="text-align:center;width:150px">Material</th>
+          <th style="text-align:center;width:180px">Material Description</th>
+          <th style="text-align:center;width:90px">Storage Location</th>
+          <th style="text-align:center;width:90px">Available Quantity</th>
+          <th style="text-align:center;width:90px">Value</th>
+          <th style="text-align:center;width:90px">Issue</th>
+        </tr>
+        <tr>
+          <th></th>
+          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'material', 'contains')"></th>
+          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'materialdescription', 'contains')"></th>
+          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'itemlocation', 'contains')"></th>
+          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'availableqty', 'contains')"></th>
+          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'value', 'contains')"></th>
+          <th></th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
+        <tr>
+          <td class="ptable-cell" style="text-align:center">{{ri+1}}</td>
+          <td class="ptable-cell" style="text-align:left">{{rowData.material}}</td>
+          <td class="ptable-cell" style="text-align:left">{{rowData.materialdescription}}</td>
+          <td class="ptable-cell" style="text-align:right">{{rowData.itemlocation}}</td>
+          <td class="ptable-cell" style="text-align:right">{{rowData.availableqty}}</td>
+          <td class="ptable-cell" style="text-align:right">{{rowData.value}}</td>
+          <td class="ptable-cell" style="text-align: center">
+            <input class="btn btn-primary btn-sm" (click)="showIssueDialog(rowData)" type="button" value="Issue">
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
+
+<p-dialog header="Miscellanous Issue" [(visible)]="displayIssueDialog" showEffect="fade" [modal]="true" [style]="{width: '1100px'}" >
+  <div class="row m-2">
+    <div class="col-xs-6 col-lg-6 col-md-6 col-sm-6">
+      <div class="form-inline">
+        <label class="labelheading">Material:</label>&nbsp;&nbsp;
+        <label class="labeltext"><span>{{MisData.material}}</span></label>&nbsp;&nbsp;
+      </div>
+    </div>
+    <div class="col-xs-6 col-lg-6 col-md-6 col-sm-6">
+      <div class="form-inline">
+        <label class="labelheading">Material Description:</label>&nbsp;&nbsp;
+        <label class="labeltext"><span>{{MisData.materialdescription}}</span></label>&nbsp;&nbsp;
+      </div>
+    </div>
+  </div>
+  <div class="row m-2">
+    <div class="col-xs-6 col-lg-6 col-md-6 col-sm-6">
+      <div class="form-inline">
+        <label class="labelheading">Avaailable Qty:</label>&nbsp;&nbsp;
+        <label class="labeltext"><span>{{MisData.availableqty}}</span></label>&nbsp;&nbsp;
+      </div>
+    </div>
+    <div class="col-xs-6 col-lg-6 col-md-6 col-sm-6">
+      <div class="form-inline">
+        <label class="labelheading">
+          Miscellanous Issue Qty:
+        </label>&nbsp;&nbsp;
+        <label class="labeltext"><input type="text" class="form-control" [(ngModel)]="MisData.MiscellanousIssueQty" (blur)="checkQuantity()"></label>&nbsp;&nbsp;
+      </div>
+    </div>
+  </div>
+  <div class="row m-2">
+    <div class="col-xs-6 col-lg-6 col-md-6 col-sm-6">
+      <div class="form-inline">
+        <label class="labelheading">Reason:</label>&nbsp;&nbsp;
+        <label class="labeltext">
+          <select [(ngModel)]="MisData.Reason" class="form-control">
+            <option value="">Select</option>
+            <option *ngFor="let ca of ReasonList" [ngValue]="ca.reasonid">{{ca.reason}}</option>
+          </select>
+        </label>&nbsp;&nbsp;
+      </div>
+    </div>
+    <div class="col-xs-6 col-lg-6 col-md-6 col-sm-6">
+      <div class="form-inline">
+        <label class="labelheading">
+          Project Id:
+        </label>&nbsp;&nbsp;
+        <label class="labeltext"><input type="text" class="form-control" [(ngModel)]="MisData.ProjectId"></label>&nbsp;&nbsp;
+      </div>
+    </div>
+  </div>
+  <div class="row m-2">
+    <div class="col-xs-6 col-lg-6 col-md-6 col-sm-6">
+      <div class="form-inline">
+        <label class="labelheading">
+          Remarks:
+        </label>&nbsp;&nbsp;
+        <label class="labeltext"><input type="text" class="form-control" [(ngModel)]="MisData.Remarks"></label>&nbsp;&nbsp;
+      </div>
+    </div>
+  </div>
+  <p-footer>
+    <div class="ui-dialog-buttonpane ui-helper-clearfix">
+      <button type="submit" pButton icon="fa fa-check" class="ui-button-primary" (click)="onQunatitySubmit()" label="Submit"></button>&nbsp;&nbsp;
+      <button type="button" pButton icon="fa fa-close" class="ui-button-danger" (click)="dialogCancel('displayIssueDialog')" label="Cancel"></button>
+    </div>
+  </p-footer>
+</p-dialog>
+
+

@@ -211,7 +211,7 @@ export class StockModel {
   successrecords: number;
   exceptionrecords: number;
   totalrecords: number;
-
+  poitemdescription: string;
 }
 
 export class locataionDetailsStock {
@@ -917,4 +917,18 @@ export class GraphModelNew {
   returnid: string;
   reserveid: string;
   materialid: string;
+}
+export class miscellanousIssueData {
+  itemid: string;
+  material: string;
+  materialdescription: string;
+  availableqty: string;
+  MiscellanousIssueQty: string;
+  Reason: string;
+  Remarks: string;
+  ProjectId: string;
+  createdby: string;
+}
+export class inventoryFilters {
+  itemlocation: string = "";
 }

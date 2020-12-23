@@ -1271,6 +1271,18 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to select max(st.itemid ) as itemid, max(st.materialid) as material,Max(mat.materialdescription)  as materialdescription,
+        ///st.itemlocation, SUM(st.availableqty) as availableqty,(Max(mat.unitprice) * SUM(st.availableqty)) as value
+        ///from wms.wms_stock st 
+        ///left join wms.&quot;MaterialMasterYGS&quot; mat on mat.material = st.materialid.
+        /// </summary>
+        public static string getMiscellanousIssuesList {
+            get {
+                return ResourceManager.GetString("getMiscellanousIssuesList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to select requestid from wms.wms_materialrequest order by requestid desc limit 1.
         /// </summary>
         public static string getnextrequestid {
@@ -1767,13 +1779,13 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Select st.materialid as material,Max(mat.materialdescription)  as materialdescription,
+        ///   Looks up a localized string similar to Select max(pomat.materialid) as material,Max(mat.materialdescription)  as materialdescription,pomat.poitemdescription , max(po.pono ) as pono,
         ///max( mat.hsncode) as hsncode,max(po.suppliername) as suppliername ,Max(prj.projectname) as projectname,
         ///SUM(st.availableqty) as availableqty,(Max(mat.unitprice) * SUM(st.availableqty)) as value
         ///from wms.wms_stock st 
         ///left outer join wms.wms_polist po on po.pono =st.pono 
         ///left outer join wms.wms_project prj on prj.pono =st.pono 
-        ///left outer join wms.&quot;MaterialMasterYGS&quot; mat on mat.material = st.materialid group by st.m [rest of string was truncated]&quot;;.
+        ///left outer join wms.&quot;MaterialMast [rest of string was truncated]&quot;;.
         /// </summary>
         public static string inhandmaterial {
             get {
@@ -2172,7 +2184,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO wms.wms_stock(inwmasterid,stockstatus,pono,binid,rackid ,storeid, vendorid,totalquantity,shelflife,availableqty,deleteflag,itemlocation,createddate,createdby,materialid,inwardid,stcktype,lineitemno)VALUES(@inwmasterid,@stockstatus,@pono,@binid,@rackid,@storeid,@vendorid,@totalquantity,@shelflife,@availableqty,@deleteflag,@itemlocation,@createddate,@createdby,@materialid,@inwardid,@stocktype,@lineitemno)returning itemid.
+        ///   Looks up a localized string similar to INSERT INTO wms.wms_stock(inwmasterid,stockstatus,pono,binid,rackid ,storeid, vendorid,totalquantity,shelflife,availableqty,deleteflag,itemlocation,createddate,createdby,materialid,inwardid,stcktype,lineitemno,receivedtype,poitemdescription)VALUES(@inwmasterid,@stockstatus,@pono,@binid,@rackid,@storeid,@vendorid,@totalquantity,@shelflife,@availableqty,@deleteflag,@itemlocation,@createddate,@createdby,@materialid,@inwardid,@stocktype,@lineitemno,@receivedtype,@poitemdescription)returning itemid.
         /// </summary>
         public static string insertstock {
             get {
@@ -2673,6 +2685,15 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to update wms.wms_stock set availableqty=availableqty-#IssuedQty,projectid =#projectid where itemid=#itemid.
+        /// </summary>
+        public static string updateMisQty {
+            get {
+                return ResourceManager.GetString("updateMisQty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to update wms.wms_pomaterials set podescription = @podescription,mscode = @mscode, saleorderno = @saleorderno,
         ///solineitemno = @solineitemno, linkageno = @linkageno,grno = @grno,codetype = @codetype,uploadcode = @uploadcode,
         ///assetno = @assetno,assetsubno = @assetsubno,costcenter = @costcenter
@@ -2807,6 +2828,16 @@ namespace WMS.Common {
         public static string updatestockavailable {
             get {
                 return ResourceManager.GetString("updatestockavailable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to insert into wms.wms_stocklog(itemid, transactiontype, issuedqty, reason, remarks, createddate, createdby)
+        ///values(default, @transactiontype, @issuedqty, @reason, @remarks, @createddate, @createdby).
+        /// </summary>
+        public static string updateStockLog {
+            get {
+                return ResourceManager.GetString("updateStockLog", resourceCulture);
             }
         }
         

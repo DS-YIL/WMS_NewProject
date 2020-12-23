@@ -2,14 +2,14 @@ import { Component, OnInit, Inject, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { wmsService } from '../WmsServices/wms.service';
 import { constants } from '../Models/WMSConstants';
-import { Employee } from '../Models/Common.Model';
+import { Employee, DynamicSearchResult } from '../Models/Common.Model';
 import { DecimalPipe } from '@angular/common';
 import { NgxSpinnerService } from "ngx-spinner";
 import { MessageService } from 'primeng/api';
 import { ConfirmationService } from 'primeng/api';
 import { isNullOrUndefined } from 'util';
 import { HttpClient } from '@angular/common/http';
-import { testcrud, WMSHttpResponse, MaterialinHand, matlocations } from '../Models/WMS.Model';
+import { testcrud, WMSHttpResponse, MaterialinHand, matlocations, inventoryFilters } from '../Models/WMS.Model';
 
 @Component({
   selector: 'app-InhandMaterial',
@@ -19,8 +19,8 @@ import { testcrud, WMSHttpResponse, MaterialinHand, matlocations } from '../Mode
 export class InhandMaterialComponent implements OnInit {
 
   constructor(private confirmationService: ConfirmationService, private decimalPipe: DecimalPipe, private http: HttpClient, private messageService: MessageService, private wmsService: wmsService, private route: ActivatedRoute, private router: Router, public constants: constants, private spinner: NgxSpinnerService) { }
-  
-  
+
+
   public employee: Employee;
   getlistdata: MaterialinHand[] = [];
   getlocationlistdata: matlocations[] = [];
@@ -32,6 +32,9 @@ export class InhandMaterialComponent implements OnInit {
   value: any;
   totalLength: any;
   totalLengthValues: any;
+  public inventoryFilters: inventoryFilters;
+  public locationList: Array<any> = [];
+  public dynamicData: DynamicSearchResult;
 
   ngOnInit() {
     if (localStorage.getItem("Employee"))
@@ -39,8 +42,19 @@ export class InhandMaterialComponent implements OnInit {
     else
       this.router.navigateByUrl("Login");
     this.response = new WMSHttpResponse();
+    this.inventoryFilters = new inventoryFilters();
+    this.getItemLocationsList();
     this.getlist();
-     
+
+  }
+
+  //get material details by materialid
+  getItemLocationsList() {
+    this.dynamicData = new DynamicSearchResult();
+    this.dynamicData.query = "select itemlocation from wms.wms_stock ws group by ws.itemlocation ";
+    this.wmsService.GetListItems(this.dynamicData).subscribe(data => {
+      this.locationList = data;
+    });
   }
   refreshsavemodel() {
     this.showadddatamodel = false;
@@ -63,8 +77,8 @@ export class InhandMaterialComponent implements OnInit {
 
   getlist() {
     this.getlistdata = [];
-   this.spinner.show();
-    this.wmsService.getmatinhand().subscribe(data => {
+    this.spinner.show();
+    this.wmsService.getmatinhand(this.inventoryFilters).subscribe(data => {
       this.getlistdata = data;
       this.getTotalCount(data);
       this.spinner.hide();
@@ -103,11 +117,11 @@ export class InhandMaterialComponent implements OnInit {
   getTotalCount(data) {
     let availableValues = [];
     let totalValues = [];
-    for (let i = 0;i< data.length; i++) {
+    for (let i = 0; i < data.length; i++) {
       availableValues.push(data[i].availableqty)
       totalValues.push(data[i].value)
     }
-  
+
 
     this.totalLength = availableValues.reduce(function (a, b) {
       return a + b;
@@ -117,7 +131,7 @@ export class InhandMaterialComponent implements OnInit {
       return a + b;
     }, 0);
 
-   
+
   }
-  
+
 }

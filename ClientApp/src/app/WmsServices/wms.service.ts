@@ -5,7 +5,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { constants } from '../Models/WMSConstants'
 import { Employee, Login, DynamicSearchResult, printMaterial, rbamaster } from '../Models/Common.Model';
-import { PoFilterParams, PoDetails, BarcodeModel, StockModel, materialRequestDetails, inwardModel, gatepassModel, stocktransfermodel, Materials, authUser, invstocktransfermodel, ddlmodel, locataionDetailsStock, updateonhold, materialistModel, outwardmaterialistModel, pageModel, UserDashboardDetail, UserDashboardGraphModel, UnholdGRModel, MRNsavemodel, notifymodel, materialtransferMain, materialReservetorequestModel, testcrud, PrintHistoryModel, materilaTrasFilterParams, materialRequestFilterParams, materialResFilterParams, materialRetFilterParams, outwardinwardreportModel, UserModel, WMSHttpResponse, MaterialinHand, matlocations, grReports, MateriallabelModel, ManagerDashboard, pmDashboardCards, invDashboardCards, GraphModelNew} from '../Models/WMS.Model';
+import { PoFilterParams, PoDetails, BarcodeModel, StockModel, materialRequestDetails, inwardModel, gatepassModel, stocktransfermodel, Materials, authUser, invstocktransfermodel, ddlmodel, locataionDetailsStock, updateonhold, materialistModel, outwardmaterialistModel, pageModel, UserDashboardDetail, UserDashboardGraphModel, UnholdGRModel, MRNsavemodel, notifymodel, materialtransferMain, materialReservetorequestModel, testcrud, PrintHistoryModel, materilaTrasFilterParams, materialRequestFilterParams, materialResFilterParams, materialRetFilterParams, outwardinwardreportModel, UserModel, WMSHttpResponse, MaterialinHand, matlocations, grReports, MateriallabelModel, ManagerDashboard, pmDashboardCards, invDashboardCards, GraphModelNew, miscellanousIssueData, inventoryFilters } from '../Models/WMS.Model';
 import { Text } from '@angular/compiler/src/i18n/i18n_ast';
 
 @Injectable({
@@ -630,8 +630,8 @@ export class wmsService {
     return this.http.get<testcrud[]>(this.url + 'POData/gettestcrud/', this.httpOptions);
   }
 
-  getmatinhand(): Observable<MaterialinHand[]> {
-    return this.http.get<MaterialinHand[]>(this.url + 'POData/getmatinhand/', this.httpOptions);
+  getmatinhand(inventoryFilters: inventoryFilters): Observable<MaterialinHand[]> {
+    return this.http.post<MaterialinHand[]>(this.url + 'POData/getmatinhand',inventoryFilters, this.httpOptions);
   }
   getmatinhandlocations(material:string): Observable<matlocations[]> {
     return this.http.get<matlocations[]>(this.url + 'POData/getmatinhandlocation?material=' + material, this.httpOptions);
@@ -767,6 +767,21 @@ export class wmsService {
 
   gettransfergraphdata(): Observable<GraphModelNew[]> {
     return this.http.get<GraphModelNew[]>(this.url + 'POData/getTransfergraph/', this.httpOptions);
+  }
+
+
+  getMiscellanousIssueList(initialstock: boolean): Observable<any> {
+    return this.http.get<any>(this.url + 'POData/getMiscellanousIssueList/' + initialstock, this.httpOptions);
+  }
+  
+  getMiscellanousReceiptsList(): Observable<any> {
+    return this.http.get<any>(this.url + 'POData/getMiscellanousReceiptsList/' , this.httpOptions);
+  }
+  miscellanousIssueDataUpdate(data: miscellanousIssueData): Observable<any> {
+    return this.http.post<any>(this.url + 'POData/miscellanousIssueDataUpdate', data, this.httpOptions);
+  }
+  miscellanousReceiptDataUpdate(data: StockModel): Observable<any> {
+    return this.http.post<any>(this.url + 'POData/updateMiscellanousReceipt', data, this.httpOptions);
   }
 }
 

@@ -31,14 +31,14 @@ namespace WMS.Controllers
 		[HttpGet("GetOpenPoList")]
 		public async Task<IEnumerable<OpenPoModel>> GetPoNodata(string loginid, string pono = null, string docno = null, string vendorid = null)
 		{
-			return await this._poService.getOpenPoList(loginid, pono, docno, vendorid); 
+			return await this._poService.getOpenPoList(loginid, pono, docno, vendorid);
 		}
-//Get list of PO 
-        [HttpGet("GetPOList")]
-        public async Task<IEnumerable<POList>> GetPoNo(string postatus)
-        {
-            return await this._poService.getPOList(postatus);
-        }
+		//Get list of PO 
+		[HttpGet("GetPOList")]
+		public async Task<IEnumerable<POList>> GetPoNo(string postatus)
+		{
+			return await this._poService.getPOList(postatus);
+		}
 		[HttpGet("CheckPoNoexists")]
 		public OpenPoModel CheckPo(string PONO)
 		{
@@ -56,7 +56,7 @@ namespace WMS.Controllers
 		[HttpGet("getMaterialDetailsforgrn")]
 		public async Task<IEnumerable<MaterialDetails>> getMaterialDetails(string grnNo, string pono)
 		{
-			return await this._poService.getMaterialDetails(grnNo,pono);
+			return await this._poService.getMaterialDetails(grnNo, pono);
 		}
 
 		//Get Location details for material
@@ -68,7 +68,7 @@ namespace WMS.Controllers
 
 		//Get material request details
 		[HttpGet("getReqMatdetailsformaterialid")]
-		public async Task<IEnumerable<ReqMatDetails>> getReqMatdetails(string materialid,string grnnumber, string pono)
+		public async Task<IEnumerable<ReqMatDetails>> getReqMatdetails(string materialid, string grnnumber, string pono)
 		{
 			return await this._poService.getReqMatdetails(materialid, grnnumber, pono);
 		}
@@ -82,7 +82,7 @@ namespace WMS.Controllers
 
 		[HttpPost("generateBarcodeMaterial")]
 		public printMaterial generateBarcodeMaterial(printMaterial printMat)
-        {
+		{
 			return this._poService.generateBarcodeMaterial(printMat);
 
 		}
@@ -166,8 +166,8 @@ namespace WMS.Controllers
 			bool isgrn = false;
 			string grn = "";
 			string po = pono;
-            if (pono.Contains('-'))
-            {
+			if (pono.Contains('-'))
+			{
 				string ponodata = "";
 				string invoiceno = "";
 				string[] ponoandinvoice = pono.Split('-');
@@ -176,30 +176,30 @@ namespace WMS.Controllers
 					isgrn = true;
 					grn = po;
 				}
-				else if(ponoandinvoice.Length == 4)
-                {
+				else if (ponoandinvoice.Length == 4)
+				{
 					ponodata = ponoandinvoice[0].Trim() + "-" + ponoandinvoice[1].Trim() + "-" + ponoandinvoice[2].Trim();
-				    invoiceno = ponoandinvoice[3].Trim();
+					invoiceno = ponoandinvoice[3].Trim();
 				}
-				
+
 				return await this._poService.GetDeatilsForthreeWaymatching(invoiceno, ponodata, isgrn, grn);
 
 			}
-            else
-            {
+			else
+			{
 				return null;
-            }
-			
+			}
+
 		}
 
 		[HttpGet("GetholdGRdetails")]
 		public async Task<IEnumerable<OpenPoModel>> getholdgrdetails(string status)
 		{
-			
+
 			return await this._poService.GetDeatilsForholdgr(status);
 		}
 
-	
+
 		[HttpGet("Getqualitydetails")]
 		public async Task<IEnumerable<OpenPoModel>> Getqualitydetails(string grnnumber)
 		{
@@ -214,7 +214,7 @@ namespace WMS.Controllers
 		public async Task<OpenPoModel> verifythreewaymatching(string pono)
 		{
 			string[] ponoandinvoice = pono.Split('-');
-			string ponodata = ponoandinvoice[0].Trim()+"-"+ ponoandinvoice[1].Trim() +"-"+ ponoandinvoice[2].Trim();
+			string ponodata = ponoandinvoice[0].Trim() + "-" + ponoandinvoice[1].Trim() + "-" + ponoandinvoice[2].Trim();
 			string invoiceno = ponoandinvoice[3].Trim(); ;
 			return await this._poService.VerifythreeWay(ponodata, invoiceno);
 		}
@@ -289,7 +289,7 @@ namespace WMS.Controllers
 		//Get stocktype -gayathri
 		[HttpPost("getstocktype")]
 		public string getstocktype(locataionDetailsStock locdetails)
-        {
+		{
 			return this._poService.getstocktype(locdetails);
 
 		}
@@ -346,7 +346,7 @@ namespace WMS.Controllers
 
 		[HttpGet("getPODetails")]
 		public Task<IEnumerable<PODetails>> getPODetails(string empno)
-        {
+		{
 			return this._poService.getPODetails(empno);
 
 		}
@@ -394,7 +394,7 @@ namespace WMS.Controllers
 
 		[HttpGet("getstockdetails")]
 		public stockCardPrint getstockdetails(string pono, string materialid)
-        {
+		{
 			return this._poService.getstockdetails(pono, materialid);
 
 		}
@@ -417,8 +417,8 @@ namespace WMS.Controllers
 		//Check material exists or not
 		[HttpGet("checkMatExists")]
 		public string checkMatExists(string material)
-        {
-			return  this._poService.checkMatExists(material);
+		{
+			return this._poService.checkMatExists(material);
 		}
 
 		[HttpGet("getGatePassApprovalHistoryList")]
@@ -557,13 +557,13 @@ namespace WMS.Controllers
 			return await this._poService.getItemlocationListByIssueId(requestforissueid);
 		}
 
-        [HttpGet("getItemlocationListByGatepassmaterialid")]
-        public async Task<IEnumerable<IssueRequestModel>> getItemlocationListByGatepassmaterialid(string gatepassmaterialid)
-        {
+		[HttpGet("getItemlocationListByGatepassmaterialid")]
+		public async Task<IEnumerable<IssueRequestModel>> getItemlocationListByGatepassmaterialid(string gatepassmaterialid)
+		{
 
-            return await this._poService.getItemlocationListByGatepassmaterialid(gatepassmaterialid);
-        }
-        [HttpPost("updateMaterialavailabality")]
+			return await this._poService.getItemlocationListByGatepassmaterialid(gatepassmaterialid);
+		}
+		[HttpPost("updateMaterialavailabality")]
 		public int updateMaterialavailabality([FromBody]List<IssueRequestModel> model)
 		{
 
@@ -606,7 +606,7 @@ namespace WMS.Controllers
 
 		[HttpGet("getManagerdashboardgraphdata")]
 		public async Task<ManagerDashboard> getManagerdashboardgraphdata()
-        {
+		{
 			return await this._poService.getManagerdashboardgraphdata();
 
 		}
@@ -616,7 +616,7 @@ namespace WMS.Controllers
 		{
 			return await this._poService.getWeeklyUserdashboardgraphdata();
 		}
-		
+
 		[HttpGet("getmonthlyUserdashgraphdata")]
 		public async Task<IEnumerable<UserDashboardGraphModel>> getmonthlyUserdashboardgraphdata()
 		{
@@ -671,7 +671,7 @@ namespace WMS.Controllers
 
 		[HttpGet("getmaterialreturnreqList")]
 		public async Task<IEnumerable<IssueRequestModel>> getmaterialreturnreqList(string matreturnid)
-        {
+		{
 			return await this._poService.getmaterialreturnreqList(matreturnid);
 		}
 
@@ -792,7 +792,7 @@ namespace WMS.Controllers
 		{
 			return await this._poService.GetBinList();
 		}
-			[HttpGet("GetMaterialdatafromstock")]
+		[HttpGet("GetMaterialdatafromstock")]
 		public async Task<IEnumerable<Materials>> GetMaterialstockcombo()
 		{
 			return await this._poService.GetMaterialstockcombo();
@@ -822,11 +822,11 @@ namespace WMS.Controllers
 			return await this._poService.pendingreceiptslist();
 		}
 
-        [HttpGet("getprojectlist")]
-        public async Task<IEnumerable<ddlmodel>> getprojectlist()
-        {
-            return await this._poService.getprojectlist();
-        }
+		[HttpGet("getprojectlist")]
+		public async Task<IEnumerable<ddlmodel>> getprojectlist()
+		{
+			return await this._poService.getprojectlist();
+		}
 
 		[HttpGet("getprojectlistbymanager")]
 		public async Task<IEnumerable<ddlmodel>> getprojectlistbymanager(string empno)
@@ -834,7 +834,7 @@ namespace WMS.Controllers
 			return await this._poService.getprojectlistbymanager(empno);
 		}
 
-		
+
 
 		[HttpGet("getmateriallistfortransfer")]
 		public async Task<IEnumerable<ddlmodel>> getmatlist(string querytext)
@@ -880,7 +880,7 @@ namespace WMS.Controllers
 		}
 
 		[HttpGet("getgrnforacceptanceqcbydate")]
-		public async Task<IEnumerable<ddlmodel>> getgrnlistforacceptanceqcbydate(string fromdt,string todt)
+		public async Task<IEnumerable<ddlmodel>> getgrnlistforacceptanceqcbydate(string fromdt, string todt)
 		{
 			return await this._poService.getgrnlistforacceptanceqcbydate(fromdt, todt);
 		}
@@ -924,7 +924,7 @@ namespace WMS.Controllers
 		[HttpGet("UpdateMaterialReserve")]
 		public int UpdateMaterialReserve()
 		{
-			return  this._poService.UpdateMaterialReserve();
+			return this._poService.UpdateMaterialReserve();
 		}
 		[HttpPost("UpdateReturnqty")]
 		public int UpdateReturnqty([FromBody] List<IssueRequestModel> obj)
@@ -1007,10 +1007,10 @@ namespace WMS.Controllers
 		{
 			return await this._poService.gettestcrud();
 		}
-		[HttpGet("getmatinhand")]
-		public async Task<IEnumerable<MaterialinHand>> getmatinhand()
+		[HttpPost("getmatinhand")]
+		public async Task<IEnumerable<MaterialinHand>> getmatinhand(inventoryFilters filters)
 		{
-			return await this._poService.getmatinhand();
+			return await this._poService.getmatinhand(filters);
 		}
 
 		[HttpGet("getmatinhandlocation")]
@@ -1121,13 +1121,13 @@ namespace WMS.Controllers
 			return this._poService.getGRListdata();
 		}
 
-        [HttpPost("SAPGREditReport")]
-        public string SAPGREditReport(grReports data)
-        {
-            return this._poService.EditReports(data);
-        }
+		[HttpPost("SAPGREditReport")]
+		public string SAPGREditReport(grReports data)
+		{
+			return this._poService.EditReports(data);
+		}
 
-        [HttpGet("addEditReports")]
+		[HttpGet("addEditReports")]
 		public async Task<IEnumerable<grReports>> addEditReports(string wmsgr)
 		{
 			return await this._poService.addEditReports(wmsgr);
@@ -1146,12 +1146,12 @@ namespace WMS.Controllers
 		}
 
 		[HttpGet("getInvdashboarddata")]
-        public async Task<invDashboardCards> getInvdashboarddata()
-        {
-            return await this._poService.getInvdashboarddata();
+		public async Task<invDashboardCards> getInvdashboarddata()
+		{
+			return await this._poService.getInvdashboarddata();
 
-        }
-        [HttpGet("getUserdashboardgraphPMdata")]
+		}
+		[HttpGet("getUserdashboardgraphPMdata")]
 		public async Task<IEnumerable<UserDashboardGraphModel>> getUserdashboardgraphPMdata(string employeeid)
 		{
 
@@ -1213,8 +1213,29 @@ namespace WMS.Controllers
 			return await this._poService.getWeeklyUserdashboardtransfer();
 		}
 
+		[HttpGet("getMiscellanousIssueList/{initialstock}")]
+		public async Task<IEnumerable<StockModel>> getMiscellanousIssueList(bool initialstock)
+		{
+			return await this._poService.getMiscellanousIssueList(initialstock);
+		}
 
+		[HttpGet("getMiscellanousReceiptsList")]
+		public async Task<IEnumerable<StockModel>> getMiscellanousReceiptsList()
+		{
+			return await this._poService.getMiscellanousReceiptsList();
+		}
+		[HttpPost("miscellanousIssueDataUpdate")]
+		public bool miscellanousIssueDataUpdate(miscellanousIssueData misData)
+		{
+			return this._poService.miscellanousIssueDataUpdate(misData);
 
+		}
+		[HttpPost("updateMiscellanousReceipt")]
+		public string updateMiscellanousReceipt(StockModel data)
+		{
+			return this._poService.updateMiscellanousReceipt(data);
+
+		}
 
 	}
 }

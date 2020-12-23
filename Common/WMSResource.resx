@@ -228,7 +228,7 @@ VALUES(@inwmasterid,@receiveddate,@receivedby,@receivedqty,@returnqty,@qualitypa
     <value>INSERT INTO wms.wms_trackstatus(pono,status,enteredon)VALUES(@pono,'In Store',current_timestamp)</value>
   </data>
   <data name="insertstock" xml:space="preserve">
-    <value>INSERT INTO wms.wms_stock(inwmasterid,stockstatus,pono,binid,rackid ,storeid, vendorid,totalquantity,shelflife,availableqty,deleteflag,itemlocation,createddate,createdby,materialid,inwardid,stcktype,lineitemno)VALUES(@inwmasterid,@stockstatus,@pono,@binid,@rackid,@storeid,@vendorid,@totalquantity,@shelflife,@availableqty,@deleteflag,@itemlocation,@createddate,@createdby,@materialid,@inwardid,@stocktype,@lineitemno)returning itemid</value>
+    <value>INSERT INTO wms.wms_stock(inwmasterid,stockstatus,pono,binid,rackid ,storeid, vendorid,totalquantity,shelflife,availableqty,deleteflag,itemlocation,createddate,createdby,materialid,inwardid,stcktype,lineitemno,receivedtype,poitemdescription)VALUES(@inwmasterid,@stockstatus,@pono,@binid,@rackid,@storeid,@vendorid,@totalquantity,@shelflife,@availableqty,@deleteflag,@itemlocation,@createddate,@createdby,@materialid,@inwardid,@stocktype,@lineitemno,@receivedtype,@poitemdescription)returning itemid</value>
   </data>
   <data name="lastinsertedgrn" xml:space="preserve">
     <value>select * from  wms.wms_sequencemaster  where  enddate&gt;=current_date and id=1</value>
@@ -1429,13 +1429,14 @@ from wms.st_initialstock
 st where st.uploadedby = '#code' group by st.uploadbatchcode</value>
   </data>
   <data name="inhandmaterial" xml:space="preserve">
-    <value>Select st.materialid as material,Max(mat.materialdescription)  as materialdescription,
+    <value>Select max(pomat.materialid) as material,Max(mat.materialdescription)  as materialdescription,pomat.poitemdescription , max(po.pono ) as pono,
 max( mat.hsncode) as hsncode,max(po.suppliername) as suppliername ,Max(prj.projectname) as projectname,
 SUM(st.availableqty) as availableqty,(Max(mat.unitprice) * SUM(st.availableqty)) as value
 from wms.wms_stock st 
 left outer join wms.wms_polist po on po.pono =st.pono 
 left outer join wms.wms_project prj on prj.pono =st.pono 
-left outer join wms."MaterialMasterYGS" mat on mat.material = st.materialid group by st.materialid</value>
+left outer join wms."MaterialMasterYGS" mat on mat.material = st.materialid
+left outer join wms.wms_pomaterials pomat on pomat.pono =st.pono</value>
   </data>
   <data name="inhandmateriallocation" xml:space="preserve">
     <value>select itemlocation,SUM(availableqty) as quantity from wms.wms_stock where materialid = '#material' and availableqty &gt; 0
@@ -1580,6 +1581,7 @@ date_part('month', current_date::date) as smonth,
 inwmasterid,date_part('week', receiveddate::date) AS sweek,receiveddate,grnnumber from wms.wms_securityinward
 where receiveddate &gt;= (select date_trunc('month', current_date))
 order by sweek</value>
+    <comment>z</comment>
   </data>
   <data name="dataforacceptgraph" xml:space="preserve">
     <value>Select date_part('year', current_date::date) as syear,
@@ -1629,5 +1631,18 @@ date_part('month', current_date::date) as smonth,
 date_part('week', createdon::date) AS sweek,createdon,materialid from wms.wms_transfermaterial
 where createdon &gt;= (select date_trunc('month', current_date))
 order by sweek</value>
+  </data>
+  <data name="getMiscellanousIssuesList" xml:space="preserve">
+    <value>select max(st.itemid ) as itemid, max(st.materialid) as material,Max(mat.materialdescription)  as materialdescription,
+st.itemlocation, SUM(st.availableqty) as availableqty,(Max(mat.unitprice) * SUM(st.availableqty)) as value
+from wms.wms_stock st 
+left join wms."MaterialMasterYGS" mat on mat.material = st.materialid</value>
+  </data>
+  <data name="updateMisQty" xml:space="preserve">
+    <value>update wms.wms_stock set availableqty=availableqty-#IssuedQty,projectid =#projectid where itemid=#itemid</value>
+  </data>
+  <data name="updateStockLog" xml:space="preserve">
+    <value>insert into wms.wms_stocklog(itemid, transactiontype, issuedqty, reason, remarks, createddate, createdby)
+values(default, @transactiontype, @issuedqty, @reason, @remarks, @createddate, @createdby)</value>
   </data>
 </root>

@@ -116,6 +116,7 @@ namespace WMS.Controllers
 							model.pono = Conversion.toStr(row["po_no"]);
 							model.itemdeliverydate = Conversion.TodtTime(row["item_delivery_date"]);
 							model.materialid = Conversion.toStr(row["ms_cd"]);
+							model.poitemdescription = Conversion.toStr(row["material_n"]);
 							model.poquantity = Conversion.toInt(row["po_quantity"]);
 							model.vendorcode = Conversion.toStr(row["vendor_cd"]);
 							model.vendorname = Conversion.toStr(row["vendor_n"]);
@@ -153,13 +154,14 @@ namespace WMS.Controllers
 							//dbcmd.CommandText = query;
 							//dbcmd.ExecuteNonQuery();
 							poitem = model.pono + "-" + model.itemno.ToString();
-							var insertquery = "INSERT INTO wms.STAG_PO_SAP(PurchDoc,ItemDeliveryDate,Material,POQuantity,Vendor,VendorName,ProjectDefinition,Item,NetPrice,datasource,createddate,DataloadErrors ,Error_Description,uploadcode,saleorderno,solineitemno,saleordertype,codetype,costcenter,assetno,projecttext,sloc)";
-							insertquery += " VALUES(@pono, @itemdeliverydate,@materialid,@poquantity,@vendorcode,@vendorname,@projectdefinition,@itemno,@NetPrice,'SAP',current_timestamp,@dataloaderror,@error_description,@uploadcode,@saleorderno,@solineitemno,@saleordertype,@codetype,@costcenter,@assetno,@projecttext,@sloc)";
+							var insertquery = "INSERT INTO wms.STAG_PO_SAP(PurchDoc,ItemDeliveryDate,Material,material_n,POQuantity,Vendor,VendorName,ProjectDefinition,Item,NetPrice,datasource,createddate,DataloadErrors ,Error_Description,uploadcode,saleorderno,solineitemno,saleordertype,codetype,costcenter,assetno,projecttext,sloc)";
+							insertquery += " VALUES(@pono, @itemdeliverydate,@materialid,@material_n,@poquantity,@vendorcode,@vendorname,@projectdefinition,@itemno,@NetPrice,'SAP',current_timestamp,@dataloaderror,@error_description,@uploadcode,@saleorderno,@solineitemno,@saleordertype,@codetype,@costcenter,@assetno,@projecttext,@sloc)";
 							var results = DB.ExecuteScalar(insertquery, new
 							{
 								model.pono,
 								model.itemdeliverydate,
 								model.materialid,
+								model.poitemdescription,
 								model.poquantity,
 								model.vendorcode,
 								model.vendorname,
@@ -302,7 +304,7 @@ namespace WMS.Controllers
 							if (matcount == 0)
 							{
 								//insert wms_pomaterials ##pono,materialid,materialdescr,materilaqty,itemno,itemamount,item deliverydate,
-								var insertquery = "INSERT INTO wms.wms_pomaterials(pono, materialid, materialdescription,materialqty,itemno,itemamount,itemdeliverydate,saleorderno,solineitemno,saleordertype,codetype,costcenter,assetno)VALUES(@pono, @materialid, @materialdescription,@materialqty,@itemno,@itemamount,@itemdeliverydate,@saleorderno,@solineitemno,@saleordertype,@codetype,@costcenter,@assetno)";
+								var insertquery = "INSERT INTO wms.wms_pomaterials(pono, materialid, materialdescription,materialqty,itemno,itemamount,itemdeliverydate,saleorderno,solineitemno,saleordertype,codetype,costcenter,assetno,poitemdescription)VALUES(@pono, @materialid, @materialdescription,@materialqty,@itemno,@itemamount,@itemdeliverydate,@saleorderno,@solineitemno,@saleordertype,@codetype,@costcenter,@assetno,@poitemdescription)";
 								var results = pgsql.ExecuteScalar(insertquery, new
 								{
 									stag_data.pono,
@@ -317,7 +319,8 @@ namespace WMS.Controllers
 									stag_data.saleordertype,
 									stag_data.codetype,
 									stag_data.costcenter,
-									stag_data.assetno
+									stag_data.assetno,
+									stag_data.poitemdescription
 								});
 							}
 							//else

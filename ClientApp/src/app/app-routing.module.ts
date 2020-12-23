@@ -69,6 +69,8 @@ import { AdminStockUploadReportComponent } from './WMS/AdminStockUploadReport.co
 import { InitialStockLoadComponent } from './WMS/InitialStockLoad.component';
 import { InhandMaterialComponent } from './WMS/InhandMaterial.component';
 import { GRReportsComponent } from './WMS/GRReports.component';
+import { MiscellanousIssueComponent } from './WMS/MiscellanousIssues.component';
+import { MiscellanousReceiptsComponent } from './WMS/MiscellanousReceipts.component';
 
 const routes: Routes = [{
   path: 'WMS',
@@ -154,7 +156,10 @@ const routes: Routes = [{
     { path: "InitialStockReport", component: AdminStockUploadReportComponent, canActivate: [AuthGuard] },
     { path: "InitialStockLoad", component: InitialStockLoadComponent, canActivate: [AuthGuard] },
     { path: "inventoryreport", component: InhandMaterialComponent, canActivate: [AuthGuard] },
-    { path: "GRReports" , component: GRReportsComponent, canActivate: [AuthGuard] }
+    { path: "GRReports", component: GRReportsComponent, canActivate: [AuthGuard] },
+
+    { path: "MiscellanousIssues", component: MiscellanousIssueComponent, canActivate: [AuthGuard] },
+    { path: "MiscellanousReceipts", component: MiscellanousReceiptsComponent, canActivate: [AuthGuard] }
   ]
   
 },

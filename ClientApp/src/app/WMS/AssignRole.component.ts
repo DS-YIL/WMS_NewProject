@@ -12,7 +12,7 @@ import { wmsService } from '../WmsServices/wms.service';
 import { constants } from '../Models/WMSConstants';
 import { Employee, DynamicSearchResult } from '../Models/Common.Model';
 import { NgxSpinnerService } from "ngx-spinner";
-import { authUser } from '../Models/WMS.Model';
+import { authUser, ddlmodel } from '../Models/WMS.Model';
 import { MessageService } from 'primeng/api';
 
 @Component({
@@ -28,6 +28,8 @@ export class AssignRoleComponent implements OnInit {
   employeeModel: Array<any> = [];
   authUsersList: Array<any> = [];
   authUser: authUser;
+  selectedEmployee: any;
+  filteredEmployees: ddlmodel[] = [];
 
   ngOnInit() {
     if (localStorage.getItem("Employee"))
@@ -75,13 +77,26 @@ export class AssignRoleComponent implements OnInit {
     })
   }
 
+  filterEmployee(event) {
+    this.filteredEmployees = [];
+    for (let i = 0; i < this.employeeModel.length; i++) {
+      let brand = this.employeeModel[i].employeeno;
+      let pos = this.employeeModel[i].name;
+      if (brand.toLowerCase().indexOf(event.query.toLowerCase()) == 0 || pos.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+        this.filteredEmployees.push(this.employeeModel[i]);
+      }
+    }
+  }
+
   rolechange() {
 
   }
   //Assign Roles
   assignRole() {
+    if (this.selectedEmployee)
+      this.authUser.employeeid = this.selectedEmployee.employeeno;
     if (this.authUser.employeeid && this.authUser.roleid) {
-      if (this.authUsersList&&this.authUsersList.length > 0 && (this.authUsersList.filter(li => li.employeeid == this.authUser.employeeid && li.roleid == this.authUser.roleid).length > 0)) {
+      if (this.authUsersList && this.authUsersList.length > 0 && (this.authUsersList.filter(li => li.employeeid == this.authUser.employeeid && li.roleid == this.authUser.roleid).length > 0)) {
         this.messageService.add({ severity: 'error', summary: 'Validation', detail: 'Selected Role already added for this Employee' });
         return false;
       }

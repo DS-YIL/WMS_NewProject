@@ -320,19 +320,21 @@ namespace WMS.Models
 		public int successrecords { get; set; }
 		public int exceptionrecords { get; set; }
 		public int totalrecords { get; set; }
-
-
+		public string receivedtype { get; set; }
+		public string poitemdescription { get; set; }
 	}
 
 	public class MaterialinHand
 	{
 		public string material { get; set; }
 		public string materialdescription { get; set; }
+		public string poitemdescription { get; set; }
 		public int availableqty { get; set; }
 		public string hsncode { get; set; }
 		public string suppliername { get; set; }
 		public string projectname { get; set; }
 		public Decimal? value { get; set; }
+		public string pono { get; set; }
 		List<matlocations> locations { get; set; }
 	}
 
@@ -1004,7 +1006,7 @@ namespace WMS.Models
 		public string inwmasterid { get; set; }
 		public DateTime? receiveddate { get; set; }
 
-		public string qualitychecked { get;set;}
+		public string qualitychecked { get; set; }
 
 		public string confirmqty { get; set; }
 		public string initialstock { get; set; }
@@ -1028,7 +1030,7 @@ namespace WMS.Models
 		public string type { get; set; }
 		public string count1 { get; set; }
 		public string quality { get; set; }
-		public  string count2 { get; set; }
+		public string count2 { get; set; }
 		public string accept { get; set; }
 		public string count3 { get; set; }
 		public string putaway { get; set; }
@@ -1415,7 +1417,10 @@ public class WMSHttpResponse
 {
 	public string message { get; set; }
 }
-
+public class inventoryFilters
+{
+	public string itemlocation { get; set; }
+}
 
 //Amulya
 public class materialrequestMain
@@ -1625,7 +1630,7 @@ public class pmDashboardCards
 //invDashboardCards
 
 public class invDashboardCards
-{  
+{
 	public int totalmaterialrequests { get; set; }
 	public int issuedmaterialrequests { get; set; }
 	public int pendingmaterialrequests { get; set; }
@@ -1633,7 +1638,16 @@ public class invDashboardCards
 	public int totalmaterialreturn { get; set; }
 	public int totalmaterialtransfer { get; set; }
 	public int approvedmaterialtransfer { get; set; }
-
-
-
+}
+public class miscellanousIssueData
+{
+	public string itemid { get; set; }
+	public string material { get; set; }
+	public string materialdescription { get; set; }
+	public string availableqty { get; set; }
+	public string MiscellanousIssueQty { get; set; }
+	public string Reason { get; set; }
+	public string Remarks { get; set; }
+	public string ProjectId { get; set; }
+	public string createdby { get; set; }
 }

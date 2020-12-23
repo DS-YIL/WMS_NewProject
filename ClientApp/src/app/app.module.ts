@@ -104,6 +104,8 @@ import { InitialStockLoadComponent } from './WMS/InitialStockLoad.component';
 import { GRReportsComponent } from './WMS/GRReports.component';
 
 import { InhandMaterialComponent } from './WMS/InhandMaterial.component';
+import { MiscellanousIssueComponent } from './WMS/MiscellanousIssues.component';
+import { MiscellanousReceiptsComponent } from './WMS/MiscellanousReceipts.component';
 ////pages
 import { LoginComponent } from './WMS/Login.component';
 import {HomeComponent} from './WMS/Home.component';
@@ -196,7 +198,9 @@ import { FieldsetModule } from 'primeng/fieldset';
     AdminStockUploadReportComponent,
     InitialStockLoadComponent,
     InhandMaterialComponent,
-    GRReportsComponent
+    GRReportsComponent,
+    MiscellanousIssueComponent,
+    MiscellanousReceiptsComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

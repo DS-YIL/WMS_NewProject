@@ -1,29 +1,27 @@
-<div class="row">
-  <div class="col-lg-4 col-md-4 col-sm-4">
-    <label class="form-label">Select Employee:</label>
-    <div class="form-inline-list">
-      <select [(ngModel)]="authUser.employeeid" class="form-control">
-        <option value=0>select</option>
-        <option *ngFor="let data of employeeModel" [ngValue]="data.employeeno">
-          {{data.name}}
-        </option>
-      </select>
+<div style="margin:10px">
+  <div class="card commoncardcss">
+    <div class="card-header text-center commoncardheader">
+      <div class="row m-2">
+        <div class="col-lg-4 col-md-4 col-sm-4">
+          <label class="labelheading">Select Employee :</label>
+          <p-autoComplete [(ngModel)]="selectedEmployee" field="name" appendTo="body" [suggestions]="filteredEmployees" placeholder="search by name/No" [ngModelOptions]="{standalone: true}" [forceSelection]="true" (completeMethod)="filterEmployee($event)" [size]="30" [dropdown]="true"></p-autoComplete>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-4 form-inline">
+          <label class="labelheading">Select Role :</label>
+          <select [(ngModel)]="authUser.roleid" class="form-control" (change)="rolechange();">
+            <option value=0>Select</option>
+            <option *ngFor="let data of roleNameModel" [ngValue]="data.roleid">
+              {{data.rolename}}
+            </option>
+          </select>
+        </div>
+      </div><br />
+      <div class="row">
+        <div class="col-lg-4 col-md-4 col-sm-4"></div>
+        <div class="col-lg-4 col-md-4 col-sm-4">
+          <button class="btn btn bg-primary" (click)="assignRole()">Assign</button>
+        </div>
+      </div>
     </div>
   </div>
-
-  <div class="col-lg-4 col-md-4 col-sm-4">
-    <label class="form-label">Select Role:</label>
-    <select [(ngModel)]="authUser.roleid" class="form-control" (change)="rolechange();">
-      <option value=0>select</option>
-      <option *ngFor="let data of roleNameModel" [ngValue]="data.roleid">
-        {{data.rolename}}
-      </option>
-    </select>
-  </div>
-</div><br />
-<div class="row">
-  <div class="col-lg-4 col-md-4 col-sm-4"></div>
-    <div class="col-lg-4 col-md-4 col-sm-4">
-      <button class="btn btn bg-primary" (click)="assignRole()">Assign</button>  
-    </div>
-  </div>
+</div>
