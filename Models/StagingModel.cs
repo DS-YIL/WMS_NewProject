@@ -157,8 +157,11 @@ namespace WMS.Models
 		public string uploadedby { get; set; }
 		public string uploadedto { get; set; }
 		public string modulename { get; set; }
+		public int successrecords { get; set; }
+		public int exceptionrecords { get; set; }
+		public int totalrecords { get; set; }
 
-    }
+	}
 	public class MaterialStage
 	{
 		public string material { get; set; }

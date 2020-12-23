@@ -657,14 +657,20 @@ namespace WMS.Controllers
 						initialstk.rack = Conversion.toStr(row["Rack"]);
 						initialstk.bin = Conversion.toStr(row["Bin"]);
 						initialstk.quantity = Conversion.toInt(row["Quantity"]);
+						initialstk.quantitystr = Conversion.toStr(row["Quantity"]);
 						initialstk.projectid = Conversion.toStr(row["Project Id"]);
 						initialstk.pono = Conversion.toStr(row["PO No"]);
 						initialstk.value = Conversion.Todecimaltype(row["Value"]);
+						initialstk.valuestr = Conversion.toStr(row["Value"]);
 						initialstk.grn = Conversion.toStr(row["GRN"]);
 						initialstk.receiveddate = Conversion.TodtTime(row["Received date"]);
+						initialstk.receiveddatestr = Conversion.toStr(row["Received date"]);
 						initialstk.shelflifeexpiration = Conversion.TodtTime(row["Shelf life expiration"]);
+						initialstk.shelflifeexpirationstr = Conversion.toStr(row["Shelf life expiration"]);
 						initialstk.dateofmanufacture = Conversion.TodtTime(row["Date of Manufacture"]);
+						initialstk.dateofmanufacturestr = Conversion.toStr(row["Date of Manufacture"]);
 						initialstk.dataenteredon = Conversion.TodtTime(row["Data Entered On"]);
+						initialstk.dataenteredonstr = Conversion.toStr(row["Data Entered On"]);
 						initialstk.datasource = Conversion.toStr(row["DataSource"]);
 						initialstk.dataenteredby = Conversion.toStr(row["Data Entered By"]);
 						initialstk.createddate = createdate;
@@ -700,6 +706,8 @@ namespace WMS.Controllers
                             Error_Description += " No PONo";
 						if (initialstk.pono.ToString().Trim().Contains("\\") || initialstk.pono.ToString().Trim().Contains(","))
 							Error_Description += " Invalid PO format";
+						if (initialstk.value == null || initialstk.value == 0)
+							Error_Description += " No value";
 						if (!string.IsNullOrEmpty(Error_Description))
                         {
                             dataloaderror = true;
@@ -750,13 +758,7 @@ namespace WMS.Controllers
 					DB.Close();
 					//result.message += "-Total_Rows_:" + rows + "-Inserted_rows_to_staging_table_:" + rowsinserted.ToString();
 					result.message += "-Total Records_:" + rows;
-					AuditLog auditlog = new AuditLog();
-					auditlog.filename = uploadedfilename;
-					auditlog.uploadedon = createdate;
-					auditlog.uploadedby = uploadedby;
-					auditlog.uploadedto = "st_initialstock";
-					auditlog.modulename = "initialstock";
-					loadAuditLog(auditlog);
+					
 					string msg = loadStockData(uploadcode);
 					result.message += msg;
 					if (string.IsNullOrEmpty(Error_Description_all))
@@ -768,6 +770,18 @@ namespace WMS.Controllers
 						result.message += "$EX$Exception Records:" + exceptionrows + "";
 					}
 					result.message += "$viewdatalistcode$" + uploadcode;
+					AuditLog auditlog = new AuditLog();
+					auditlog.filename = uploadedfilename;
+					auditlog.uploadedon = createdate;
+					auditlog.uploadedby = uploadedby;
+					auditlog.uploadedto = "st_initialstock";
+					auditlog.modulename = "initialstock";
+					auditlog.totalrecords = Conversion.toInt(rows);
+					auditlog.exceptionrecords = Conversion.toInt(exceptionrows);
+					auditlog.successrecords = Conversion.toInt(rows) - Conversion.toInt(exceptionrows);
+
+					loadAuditLog(auditlog);
+
 					return result;
 
 					//}
@@ -1651,7 +1665,10 @@ namespace WMS.Controllers
 						logdata.uploadedon,
 						logdata.uploadedby,
 						logdata.uploadedto,
-						logdata.modulename
+						logdata.modulename,
+						logdata.successrecords,
+						logdata.exceptionrecords,
+						logdata.totalrecords
 					});
 
 

@@ -10223,6 +10223,11 @@ input[type=number] {
   border-radius: 10px;
   box-shadow: 5px 10px #888888;
 }
+.commoncardcssnoheight {
+  min-height: 81vh;
+  border-radius: 10px;
+  box-shadow: 5px 10px #888888;
+}
 .commoncardheader {
   height: 50px;
   padding-top: 0px;

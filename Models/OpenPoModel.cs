@@ -1585,20 +1585,27 @@ public class initialStock
 	public string rack { get; set; }
 	public string bin { get; set; }
 	public int? quantity { get; set; }
+	public string quantitystr { get; set; }
 	public string grn { get; set; }
 	public DateTime? receiveddate { get; set; }
+	public string receiveddatestr { get; set; }
 	public DateTime? shelflifeexpiration { get; set; }
+	public string shelflifeexpirationstr { get; set; }
 	public DateTime? dateofmanufacture { get; set; }
+	public string dateofmanufacturestr { get; set; }
 	public string datasource { get; set; }
 	public string dataenteredby { get; set; }
 	public DateTime? dataenteredon { get; set; }
+	public string dataenteredonstr { get; set; }
 	public bool DataloadErrors { get; set; }
 	public string error_description { get; set; }
 	public DateTime? createddate { get; set; }
+	public string createddatestr { get; set; }
 	public string stocktype { get; set; }
 	public Decimal? unitprice { get; set; }
 	public string category { get; set; }
 	public Decimal? value { get; set; }
+	public string valuestr { get; set; }
 	public string projectid { get; set; }
 	public string pono { get; set; }
 }

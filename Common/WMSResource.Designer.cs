@@ -1882,8 +1882,8 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to insert into wms.AuditLog(id,filename,filelocation,uploadedon,uploadedby,uploadedto,modulename) 
-        /// values (default,@filename,@filelocation,@uploadedon,@uploadedby,@uploadedto,@modulename).
+        ///   Looks up a localized string similar to insert into wms.AuditLog(id,filename,filelocation,uploadedon,uploadedby,uploadedto,modulename,successrecords,exceptionrecords,totalrecords) 
+        /// values (default,@filename,@filelocation,@uploadedon,@uploadedby,@uploadedto,@modulename,successrecords,exceptionrecords,totalrecords).
         /// </summary>
         public static string insertauditlog {
             get {
