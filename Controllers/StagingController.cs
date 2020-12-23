@@ -666,7 +666,7 @@ namespace WMS.Controllers
 						initialstk.dateofmanufacture = Conversion.TodtTime(row["Date of Manufacture"]);
 						initialstk.dataenteredon = Conversion.TodtTime(row["Data Entered On"]);
 						initialstk.datasource = Conversion.toStr(row["DataSource"]);
-						initialstk.dataenteredby = Conversion.toStr(row["Data Entered By"]); ;
+						initialstk.dataenteredby = Conversion.toStr(row["Data Entered By"]);
 						initialstk.createddate = createdate;
 						initialstk.uploadedfilename = uploadedfilename;
 						if (string.IsNullOrEmpty(initialstk.projectid) || initialstk.projectid == "")
@@ -698,7 +698,9 @@ namespace WMS.Controllers
                             Error_Description += " No Project Id";
                         if (string.IsNullOrEmpty(initialstk.pono) || initialstk.pono == "")
                             Error_Description += " No PONo";
-                        if (!string.IsNullOrEmpty(Error_Description))
+						if (initialstk.pono.ToString().Trim().Contains("\\") || initialstk.pono.ToString().Trim().Contains(","))
+							Error_Description += " Invalid PO format";
+						if (!string.IsNullOrEmpty(Error_Description))
                         {
                             dataloaderror = true;
                             exceptionrows = exceptionrows + 1;
@@ -940,6 +942,7 @@ namespace WMS.Controllers
 							stock.shelflife = stag_data.shelflifeexpiration;
 							stock.createddate = currentdate;
 							stock.materialid = stag_data.material;
+							stock.poitemdescription = stag_data.materialdescription;
 							stock.initialstock = true;
 							string itemlocation = stag_data.store + "." + stag_data.rack;
 							if (stag_data.bin != "" && stag_data.bin != null)
@@ -955,7 +958,7 @@ namespace WMS.Controllers
 							}
 
 							//insert wms_stock ##storeid, binid,rackid,totalquantity,shelflife ,createddate,materialid ,initialstock
-							var insertquery = "INSERT INTO wms.wms_stock(storeid, binid,rackid,itemlocation,totalquantity,availableqty,shelflife ,createddate,materialid ,initialstock,stcktype,unitprice,value,pono,projectid,createdby,uploadbatchcode,uploadedfilename)VALUES(@storeid, @bindata,@rackid,@itemlocation,@totalquantity,@availableqty,@shelflife ,@createddate,@materialid ,@initialstock,@stocktype,@unitprice,@value,@pono,@projectid,@uploadedby,@uploadcode,@uploadedfilename)";
+							var insertquery = "INSERT INTO wms.wms_stock(storeid, binid,rackid,itemlocation,totalquantity,availableqty,shelflife ,createddate,materialid ,initialstock,stcktype,unitprice,value,pono,projectid,createdby,uploadbatchcode,uploadedfilename,poitemdescription)VALUES(@storeid, @bindata,@rackid,@itemlocation,@totalquantity,@availableqty,@shelflife ,@createddate,@materialid ,@initialstock,@stocktype,@unitprice,@value,@pono,@projectid,@uploadedby,@uploadcode,@uploadedfilename,@poitemdescription)";
 							var results = pgsql.ExecuteScalar(insertquery, new
 							{
 								stock.storeid,
@@ -975,7 +978,8 @@ namespace WMS.Controllers
 								stag_data.projectid,
 								stag_data.uploadedby,
 								uploadcode,
-								stag_data.uploadedfilename
+								stag_data.uploadedfilename,
+								stock.poitemdescription
 							});
 
 							Trans.Commit();
