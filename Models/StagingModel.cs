@@ -28,6 +28,8 @@ namespace WMS.Models
 		public int itemno { get; set; }
 		public int item { get; set; }
 		public decimal? itemamount { get; set; }
+		public decimal? unitprice { get; set; }
+
 		public DateTime? itemdeliverydate { get; set; }
 		public decimal? NetPrice { get; set; }
 		public bool dataloaderror { get; set; }

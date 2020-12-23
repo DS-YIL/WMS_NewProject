@@ -1271,8 +1271,8 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select max(st.itemid ) as itemid, max(st.materialid) as material,Max(mat.materialdescription)  as materialdescription,
-        ///st.itemlocation, SUM(st.availableqty) as availableqty,(Max(mat.unitprice) * SUM(st.availableqty)) as value
+        ///   Looks up a localized string similar to select max(st.itemid ) as itemid, max(st.materialid) as material,max(st.poitemdescription) as poitemdescription,Max(mat.materialdescription)  as materialdescription,
+        ///st.itemlocation, SUM(st.availableqty) as availableqty,(Max(mat.unitprice) * SUM(st.availableqty)) as value,max(st.createddate ) as createddate
         ///from wms.wms_stock st 
         ///left join wms.&quot;MaterialMasterYGS&quot; mat on mat.material = st.materialid.
         /// </summary>

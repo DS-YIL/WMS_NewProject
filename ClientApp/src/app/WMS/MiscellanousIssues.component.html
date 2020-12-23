@@ -13,7 +13,7 @@
       </div>
     </div>
     <br />
-    <p-table #dt [value]="IssueList">
+    <p-table #dt [value]="IssueList" [paginator]="true" [rows]="10" [resizableColumns]="true" [responsive]="true">
       <ng-template pTemplate="header">
         <tr class="mprltbldata">
           <th style="text-align:center;width:70px">S.No</th>

@@ -5,12 +5,12 @@
   <div class="card-body" style="overflow-y:hidden;padding:0px;margin-left:40px;margin-right:40px">
     <button type="submit" pButton class="ui-button-primary mt-2" (click)="showReceiptsDialog()" label="Add Miscellanous Receipt"></button>
     <div class="mt-2">
-      <p-table #dt [value]="ReceiptsList">
+      <p-table #dt [value]="ReceiptsList" [paginator]="true" [rows]="10" [resizableColumns]="true" [responsive]="true">
         <ng-template pTemplate="header">
           <tr class="mprltbldata">
             <th style="text-align:center;width:70px">S.No</th>
             <th style="text-align:center;width:150px">Material</th>
-            <th style="text-align:center;width:180px">Material Description</th>
+            <th style="text-align:center;width:180px">PO Item Description</th>
             <th style="text-align:center;width:90px">Storage Location</th>
             <th style="text-align:center;width:90px">Available Quantity</th>
             <th style="text-align:center;width:90px">Value</th>
@@ -19,7 +19,7 @@
           <tr>
             <th></th>
             <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'material', 'contains')"></th>
-            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'materialdescription', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'poitemdescription', 'contains')"></th>
             <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'itemlocation', 'contains')"></th>
             <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'availableqty', 'contains')"></th>
             <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'value', 'contains')"></th>
@@ -30,11 +30,11 @@
           <tr>
             <td class="ptable-cell" style="text-align:center">{{ri+1}}</td>
             <td class="ptable-cell" style="text-align:left">{{rowData.material}}</td>
-            <td class="ptable-cell" style="text-align:left">{{rowData.materialdescription}}</td>
+            <td class="ptable-cell" style="text-align:left">{{rowData.poitemdescription}}</td>
             <td class="ptable-cell" style="text-align:right">{{rowData.itemlocation}}</td>
             <td class="ptable-cell" style="text-align:right">{{rowData.availableqty}}</td>
             <td class="ptable-cell" style="text-align:right">{{rowData.value}}</td>
-            <td class="ptable-cell" style="text-align: center">{{rowdata.createddate}} </td>
+            <td class="ptable-cell" style="text-align: center">{{rowData.createddate  | date : constants.dateFormat}} </td>
           </tr>
         </ng-template>
       </p-table>

@@ -11949,7 +11949,7 @@ namespace WMS.DAL
 				{
 					string query = WMSResource.getMiscellanousIssuesList;
 
-					query += " where st.receivedtype='Miscellanous Receipt'";
+					query += " where st.receivedtype='Miscellanous Receipt' group by st.itemlocation";
 
 					await pgsql.OpenAsync();
 					var result = await pgsql.QueryAsync<StockModel>(
@@ -12025,9 +12025,9 @@ namespace WMS.DAL
 						string transactiontype = "Miscellanous Receipt";
 						DateTime createddate = DateTime.Now;
 						string insertpry = WMSResource.updateStockLog;
-						var issuedqty="";
+						int? issuedqty = null;
 						var remarks = "";
-						var reason ="";
+						int? reason =null;
 						pgsql.ExecuteScalar(insertpry, new
 						{
 							itemid,
