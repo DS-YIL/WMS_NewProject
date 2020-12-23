@@ -122,7 +122,7 @@ namespace WMS.Controllers
 							model.vendorname = Conversion.toStr(row["vendor_n"]);
 							model.projectdefinition = Conversion.toStr(row["project_definition"]);
 							model.itemno = Conversion.toInt(row["po_item_no"]);
-							model.NetPrice = Conversion.Todecimaltype(row["po_item_amt"]);
+							model.NetPrice = Conversion.Todecimaltype(row["po_item_amt_lc"]);//total value
 							model.saleorderno = Conversion.toStr(row["sales_order_no"]);
 							model.solineitemno = Conversion.toStr(row["sales_oreder_item_no"]);
 							model.saleordertype = Conversion.toStr(row["document_type"]);
@@ -238,6 +238,7 @@ namespace WMS.Controllers
 							stag_data.materialqty = stag_data.poquantity;
 							stag_data.itemno = stag_data.item;
 							stag_data.itemamount = stag_data.NetPrice;
+							var unitprice = stag_data.unitprice / stag_data.poquantity;
 							string materialdescquery = WMSResource.getMateDescr.Replace("#materialid", stag_data.materialid.ToString());
 							stag_data.materialdescription = pgsql.QuerySingleOrDefault<string>(
 											materialdescquery, null, commandType: CommandType.Text);
@@ -304,7 +305,7 @@ namespace WMS.Controllers
 							if (matcount == 0)
 							{
 								//insert wms_pomaterials ##pono,materialid,materialdescr,materilaqty,itemno,itemamount,item deliverydate,
-								var insertquery = "INSERT INTO wms.wms_pomaterials(pono, materialid, materialdescription,materialqty,itemno,itemamount,itemdeliverydate,saleorderno,solineitemno,saleordertype,codetype,costcenter,assetno,poitemdescription)VALUES(@pono, @materialid, @materialdescription,@materialqty,@itemno,@itemamount,@itemdeliverydate,@saleorderno,@solineitemno,@saleordertype,@codetype,@costcenter,@assetno,@poitemdescription)";
+								var insertquery = "INSERT INTO wms.wms_pomaterials(pono, materialid, materialdescription,materialqty,itemno,itemamount,itemdeliverydate,saleorderno,solineitemno,saleordertype,codetype,costcenter,assetno,poitemdescription,unitprice)VALUES(@pono, @materialid, @materialdescription,@materialqty,@itemno,@itemamount,@itemdeliverydate,@saleorderno,@solineitemno,@saleordertype,@codetype,@costcenter,@assetno,@poitemdescription,@unitprice)";
 								var results = pgsql.ExecuteScalar(insertquery, new
 								{
 									stag_data.pono,
@@ -320,7 +321,8 @@ namespace WMS.Controllers
 									stag_data.codetype,
 									stag_data.costcenter,
 									stag_data.assetno,
-									stag_data.poitemdescription
+									stag_data.poitemdescription,
+									unitprice
 								});
 							}
 							//else
