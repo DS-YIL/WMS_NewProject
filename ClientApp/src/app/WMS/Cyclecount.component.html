@@ -19,7 +19,11 @@
             <i class="fa fa-check-circle-o commonheadertext"></i>&nbsp;Cycle count
           </span>
         </div>
-        <div class="col-lg-4 col-md-4 form-inline"></div>
+        <div class="col-lg-4 col-md-4 form-inline">
+          <div class="col-lg-12 col-md-12" style="float:right">
+            <button type="button" pButton icon="pi pi-file-excel" iconPos="left" label="Export to Excel" (click)="exportExcel()" style="margin-right: 0.5em;" class="ui-button-success"></button>
+          </div>
+        </div>
         <button type="button" *ngIf="showsubmitbutton && CyclecountPendingMaterialList.length > 0" style="border-radius: 10em!important;background-color: rgb(18, 88, 121)!important;color: #fff;float:right;margin-left: 5px;" rounded="true" size="lg" class="my-0" (click)="submit()">Submit</button>
         <button type="button" *ngIf="showsubmitbuttonuser && CyclecountMaterialList.length > 0" style="border-radius: 10em!important;background-color: rgb(18, 88, 121)!important;color: #fff;float:right;margin-left: 5px;" rounded="true" size="lg" class="my-0" (click)="submit()">Submit</button>
       </div>

@@ -12,6 +12,9 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
+using ZXing;
+using ZXing.Common;
+using ZXing.CoreCompat.System.Drawing;
 
 namespace WMS.Common
 {
@@ -44,6 +47,76 @@ namespace WMS.Common
             }
 
 
+        }
+
+
+        public string generatebarcode(string path, string barcodename)
+        {
+            string barcodepath = null;
+            try
+            {
+              
+                BarcodeWriter writer = new BarcodeWriter
+                {
+                    Format = BarcodeFormat.QR_CODE,
+                    Options = new EncodingOptions
+                    {
+                        Height = 90,
+                        Width = 100,
+                        PureBarcode = false,
+                        Margin = 1,
+
+                    },
+                };
+                var bitmap = writer.Write(barcodename);
+
+                // write text and generate a 2-D barcode as a bitmap
+                writer
+                    .Write(barcodename)
+                    .Save(path + barcodename +"_"+DateTime.Now+ ".bmp");
+
+                barcodepath = "./Barcodes/" + barcodename + "_" + DateTime.Now + ".bmp";
+            }
+            catch(Exception ex)
+            {
+                return "Error";
+            }
+            return barcodepath;
+        }
+
+        //Generate QRCode
+        public string generateqrcode(string path, string qrcodename)
+        {
+            string barcodepath = null;
+            try
+            {
+
+                BarcodeWriter writer = new BarcodeWriter
+                {
+                    Format = BarcodeFormat.QR_CODE,
+                    Options = new EncodingOptions
+                    {
+                        Height = 90,
+                        Width = 100,
+                        PureBarcode = false,
+                        Margin = 1,
+
+                    },
+                };
+                var bitmap = writer.Write(qrcodename);
+
+                // write text and generate a 2-D barcode as a bitmap
+                writer
+                    .Write(qrcodename)
+                    .Save(path + qrcodename + "_" + DateTime.Now + ".bmp");
+
+                barcodepath = "./Barcodes/" + qrcodename + "_" + DateTime.Now + ".bmp";
+            }
+            catch (Exception ex)
+            {
+                return "Error";
+            }
+            return barcodepath;
         }
     }
 }

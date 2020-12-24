@@ -1,10 +1,13 @@
 <div class="card commoncardcss" style="margin:10px" >
   <div class="card-header text-center commoncardheader">
     <div class="row text-center" style="margin-top:10px">
-      <div class="col-lg-12 col-md-12 text-center">
+      <div class="col-lg-8 col-md-8 text-center">
         <span style="color:#428bca;font-size:18px" class="commonheadertext">
           <i class="fa fa-check-circle-o commonheadertext"></i>&nbsp;ABC Analysis
         </span>
+      </div>
+      <div class="col-lg-4 col-md-4">
+        <button type="button" pButton icon="pi pi-file-excel" iconPos="left" label="Export to Excel" (click)="exportExcel()" style="margin-right: 0.5em;" class="ui-button-success float-right"></button>
       </div>
     </div>
   </div>

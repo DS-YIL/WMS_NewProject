@@ -1565,6 +1565,10 @@ prj.projectmanager</value>
 	id, saleorderno, solineitemno, saleordertype, customername, shipto, shippingpoint, loadingdate, projectiddef, partno, custpo, uploadcode, uploadedon,error_description,isloaderror,projecttext)
 	VALUES (default, @saleorderno, @solineitemno, @saleordertype, @customername, @shipto, @shippingpoint, @loadingdate, @projectiddef, @partno, @custpo, @uploadcode, @uploadedon,@error_description,@isloaderror,@projecttext)</value>
   </data>
+  <data name="insertmatbarcodelabeldata" xml:space="preserve">
+    <value>INSERT INTO wms.wms_materiallabeldetails(id,pono,inwardid ,noofprints ,qtyinbox ,isprint ,totalboxes ,boxno ,totalqty ,isonholdgr,matbarcodepath,soitembcpath,plantbarcodepath,spbarcode,linkagebarcodepath)
+VALUES(default,@pono,@inwardid,@noofprints,@qtyinbox,@isprint,@totalboxes,@boxno,@totalqty,@isonholdgr,@matbarcodepath,@soitembcpath,@plantbarcodepath,@spbarcode,@linkagebarcodepath) returning id</value>
+  </data>
   <data name="insertstserialimport" xml:space="preserve">
     <value>INSERT INTO wms.st_slno_imports(
 	id, saleorderno, solineitemno, material, gr, plant, serialno, uploadcode, uploadedon,error_description,isloaderror)

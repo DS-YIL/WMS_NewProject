@@ -1,35 +1,102 @@
-<div class="card commoncardcss" style="margin:10px;">
-  <div class="card-header text-center">
-    <span class="commonheadertext">
-      <i class="fa fa-check-circle-o commonheadertext"></i>&nbsp;Material Barcode
-    </span>
-  </div>
-  <div class="card-body" style="overflow-y:scroll">
-
-    <div class="row col-sm-12 col-mg-12 col-lg-12">
-      <div class="col-sm-2 col-mg-2 col-lg-2"></div>
-      <div class="col-sm-2 col-mg-2 col-lg-2" style="font-weight:600;font-size:14px;color:darkblue;">
-        Enter Material:
-      </div>
-      <div class="col-sm-3 col-mg-3 col-lg-3">
-        <input class="form-control" type="text" form-control placeholder="Enter Material" [(ngModel)]="material" />
-      </div>
-      <div class="col-sm-2 col-mg-2 col-lg-2">
-        <button type="button" class="btn btn-success" (click)="GenerateBarcode(material)">Generate Barcode</button>
 
 
-      </div>
-      <div class="col-sm-2 col-mg-2 col-lg-2"></div>
+  <div class="card commoncardcss" style="margin:10px;">
+    <div class="card-header text-center">
+      <span class="commonheadertext">
+        <i class="fa fa-check-circle-o commonheadertext"></i>&nbsp;Location Barcode
+      </span>
     </div>
-    <div class="row col-sm-12 col-mg-12 col-lg-12">
-      <div class="col-sm-4 col-mg-4 col-lg-4"></div>
-      <div *ngIf="path" class="col-sm-4 col-mg-4 col-lg-4">
-        <img src="{{path}}" />
+    <div class="card-body" style="overflow-y:scroll">
+      <div class="row col-lg-12 col-md-12">
+        <div class="col-lg-3 col-md-3">
+          <span style="font-weight:600;font-size:14px;color:darkblue;">
+            &nbsp;Print Label for :
+          </span>
+        </div>
+        <div class="col-lg-3 col-md-3">
+          <input type="radio" name="labelcheck" checked="checked" (change)="racklabel()" /> <label class="labelheading text-dark">&nbsp;&nbsp;Rack</label>
+        </div>
+       
+        <div class="col-lg-6 col-md-6">
+          
+          <input type="radio" name="labelcheck" (change)="binlabel()" /> <label class="labelheading text-dark">&nbsp;&nbsp;Bin</label>
+        </div>
+
+
       </div>
-      <div class="col-sm-4 col-mg-4 col-lg-4"></div>
+
+      <div *ngIf="isracklabel">
+        <div class="row">
+          <div class="col-sm-2 col-mg-2 col-lg-2" style="font-weight:600;font-size:14px;color:darkblue;">Select Location:</div>
+          <div class="col-sm-2 col-mg-2 col-lg-2">
+            <select class="form-control dropdown" [(ngModel)]="locatorid" (change)="onlocUpdate(locatorid,locatorname,false)">
+
+              <option *ngFor=" let loclist of locationlist" value={{loclist.locatorid}}>
+                {{loclist.locatorname}}
+              </option>
+            </select>
+          </div>
+          <div class="col-sm-3 col-mg-3 col-lg-3">
+            <select class="form-control dropdown"  [(ngModel)]="rackid" (change)="onracUpdate(rackid,racknumber,false)">
+      <option selected value="0"></option>
+
+      <option *ngFor=" let loclist of racklist " value={{loclist.rackid}}>
+        {{loclist.racknumber}}
+      </option>
+    </select>
+          </div>
+          <div class="col-sm-2 col-mg-2 col-lg-2">
+            <button type="button" class="btn btn-success" (click)="PrintRacklabel()">Print Rack Label</button>
+
+
+          </div>
+          <div class="col-sm-2 col-mg-2 col-lg-2"></div>
+        </div>
+      </div>
+      <div *ngIf="isbinlabel">
+        <div class="row">
+            <div class="col-sm-2 col-mg-2 col-lg-2" style="font-weight:600;font-size:14px;color:darkblue;">Select Location:</div>
+            <div class="col-sm-2 col-mg-2 col-lg-2">
+              <select class="form-control dropdown" [(ngModel)]="locatorid"  (change)="onlocUpdate(locatorid,false)">
+
+                <option *ngFor=" let loclist of locationlist" value={{loclist.locatorid}}>
+                  {{loclist.locatorname}}
+                </option>
+              </select>
+            </div>
+            <div class="col-sm-3 col-mg-3 col-lg-3">
+              <select class="form-control dropdown" [(ngModel)]="rackid"  (change)="onrackUpdate(locatorid,rackid,false)">
+                <option selected value="0"></option>
+
+                <option *ngFor=" let loclist of racklist " value={{loclist.rackid}}>
+                  {{loclist.racknumber}}
+                </option>
+              </select>
+            </div>
+            <div class="col-sm-3 col-mg-3 col-lg-3">
+              <select class="form-control dropdown" [(ngModel)]="binid">
+
+                <option selected value="0"></option>
+                <option *ngFor=" let loclist of binlist" value={{loclist.binid}}>
+                  {{loclist.binnumber}}
+                </option>
+              </select>
+            </div>
+            <div class="col-sm-2 col-mg-2 col-lg-2">
+
+
+
+              <button type="button" class="btn btn-success" (click)="PrintBinlabel()">Print Bin Label</button>
+
+
+            </div>
+            <div class="col-sm-2 col-mg-2 col-lg-2"></div>
+         
+        </div>
+      </div>
+
+     
 
     </div>
+  </div>
 
-  </div>
-  </div>
-   

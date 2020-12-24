@@ -39,6 +39,9 @@ namespace WMS.Interfaces
 		//Check material exists
 		string checkMatExists(string material);
 
+		Task<IEnumerable<MaterialDetails>> getMaterialDetails(string grnNo);
+		
+
 		OpenPoModel CheckPoexists(string PONO);
 
 		stockCardPrint getstockdetails(string pono, string materialid);
@@ -46,19 +49,21 @@ namespace WMS.Interfaces
 		string getstocktype(locataionDetailsStock locdetails);
 		printMaterial generateBarcodeMaterial(printMaterial printMat);
 
-		string printBarcodeMaterial(printMaterial printMat);
-		string updateQRcodePrintHistory(printMaterial printMat);
-		string InsertBarcodeInfo(BarcodeModel dataobj);
-		//int insertInvoicedetails(iwardmasterModel obj);
-		Task<IEnumerable<T>> GetDeatilsForthreeWaymatching(string invoiceno, string pono, bool isgrn, string grnno);
-		Task<IEnumerable<T>> GetDeatilsForholdgr(string status);
-		Task<IEnumerable<T>> Getqualitydetails(string grnnumber);
-		Task<OpenPoModel> VerifythreeWay(string pono, string invoiceno);
-		Task<string> insertquantity(List<inwardModel> datamodel);
-		Task<string> receivequantity(List<inwardModel> datamodel);
-		Task<string> updateonholdrow(updateonhold datamodel);
-		string InsertStock(List<StockModel> data);
-		string UpdateStockTransfer(List<StockModel> data);
+        printMaterial generateBarcodeMatonhold(printMaterial printMat);
+
+        string printBarcodeMaterial(printMaterial printMat);
+        string updateQRcodePrintHistory(printMaterial printMat);
+        string InsertBarcodeInfo(BarcodeModel dataobj);
+        //int insertInvoicedetails(iwardmasterModel obj);
+        Task<IEnumerable<T>> GetDeatilsForthreeWaymatching(string invoiceno,string pono,bool isgrn, string grnno);
+        Task<IEnumerable<T>> GetDeatilsForholdgr(string status);
+        Task<IEnumerable<T>> Getqualitydetails(string grnnumber);
+        Task<OpenPoModel> VerifythreeWay(string pono,string invoiceno);
+        Task<string> insertquantity(List<inwardModel> datamodel);
+        Task<string> receivequantity(List<inwardModel> datamodel);
+Task<string> updateonholdrow(updateonhold datamodel);
+        string InsertStock(List<StockModel> data);
+        string UpdateStockTransfer(List<StockModel> data);
 
 		string InvStockTransfer(invstocktransfermodel data);
 

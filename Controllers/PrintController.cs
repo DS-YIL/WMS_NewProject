@@ -188,6 +188,10 @@ namespace WMS.Controllers
                             tw.WriteLine("PRINT 1,1");
                             tw.WriteLine("<xpml></page></xpml><xpml><end/></xpml>");
 
+
+
+
+
                         }
                         else
                         {

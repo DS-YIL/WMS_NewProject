@@ -99,6 +99,7 @@ namespace WMS.Models
 		public string receivedqty { get; set; }
 		public string grnno { get; set; }
 		public string pono { get; set; }
+		public string itemno { get; set; }
 		public string invoiceno { get; set; }
 		public int noofprint { get; set; }
 		public string barcodePath { get; set; }
@@ -111,27 +112,43 @@ namespace WMS.Models
 		public int boxno { get; set; }
 		public string serialno { get; set; }
 		public string material { get; set; }
+		public string uploadcode { get; set; }
+		public string costcenter { get; set; }
+		public string assetno { get; set; }
+		public string assetsubno { get; set; }
+		public string projecttext { get; set; }
 		public string mscode { get; set; }
+		public string shippingpoint { get; set; }
+		public string projectiddef { get; set; }
 
 		public string order { get; set; }
 		public string qty { get; set; }
-		public string sotype { get; set; }
+		public string saleordertype { get; set; }
 		public string insprec { get; set; }
 		public string shipto { get; set; }
-		public string matdesc { get; set; }
-		public string saleorder { get; set; }
-		public string saleorderlineitemno { get; set; }
+		public string materialdescription { get; set; }
+		public string saleorderno { get; set; }
+		public string solineitemno { get; set; }
 		public int qtyrec { get; set; }
 
 		public string plant { get; set; }
 		public string gr { get; set; }
-		public string sp { get; set; }
 		public string loadingdate { get; set; }
 		public string linkageno { get; set; }
 		public string customername { get; set; }
 		public string customer { get; set; }
+		public string inwardid { get; set; }
+		public string soldto { get; set; }
 
-		public string partno { get; set; }
+		public string lineitemno { get; set; }
+		public string partno { get;set; }
+		public string custpo { get; set; }
+		public string codetype { get; set; }
+		public string materialbarcode { get; set; }
+		public string soiembarcode { get; set; }
+		public string plantbarcode { get; set; }
+		public string linkagebarcode { get; set; }
+		public string spbarcode { get; set; } 
 
 
 	}
