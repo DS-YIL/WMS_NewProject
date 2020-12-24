@@ -321,15 +321,15 @@ namespace WMS.Models
 		public string rack { get; set; }
 		public string store { get; set; }
 		public string locatorname { get; set; }
-		public int unitprice { get; set; }
-		//public Decimal? unitprice { get; set; }
+		//public int unitprice { get; set; }
+		public decimal? unitprice { get; set; }
 
 		public string receiveddate { get; set; }
 		public string shelflifedate { get; set; }
 		public string manufacturedate { get; set; }
 		public string entrydate { get; set; }
 
-		public Decimal? value { get; set; }
+		public decimal? value { get; set; }
 		public string projectid { get; set; }
 		public string uploadedfilename { get; set; }
 		public string uploadbatchcode { get; set; }

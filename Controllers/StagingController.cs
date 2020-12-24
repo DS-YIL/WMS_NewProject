@@ -685,8 +685,12 @@ namespace WMS.Controllers
 						{
 							initialstk.stocktype = "Project Stock";
 						}
-
 						initialstk.unitprice = null;
+						if(initialstk.value != null && initialstk.value > 0 && initialstk.quantity != null && initialstk.quantity > 0)
+                        {
+							initialstk.unitprice = initialstk.value / initialstk.quantity;
+
+						}
 						initialstk.category = null;
 						initialstk.uploadedby = uploadedby;
 						initialstk.uploadbatchcode = uploadcode;
