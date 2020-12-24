@@ -79,6 +79,7 @@ export class AdminStockUploadComponent implements OnInit {
   }
 
   loadCarsLazy(event: LazyLoadEvent) {
+    debugger;
     this.loading = true;
     setTimeout(() => {
       if (this.getlistdata) {
@@ -120,6 +121,12 @@ export class AdminStockUploadComponent implements OnInit {
   }
 
   onUpload(event, form) {
+    this.strsuccessrecord = "";
+    this.strtotalrecord = "";
+    this.responsestr = "";
+    this.responseexceptionstr = "";
+    this.getlistdata = [];
+    this.getVirtuallistdata = [];
     this.displayTable = false;
     for (let file of event.files) {
 
@@ -140,6 +147,10 @@ export class AdminStockUploadComponent implements OnInit {
           this.response = data as WMSHttpResponse;
           if (String(this.response.message) == "FILEFOUND") {
             this.responsestr = "Filename already exists.";
+            this.strsuccessrecord = "";
+            this.strtotalrecord = "";
+            this.responseexceptionstr = "";
+            this.displayTable = false;
             this.displayModal = true;
           }
           else {

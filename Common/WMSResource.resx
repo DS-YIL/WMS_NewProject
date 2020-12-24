@@ -1463,7 +1463,7 @@ group by st.uploadbatchcode</value>
   </data>
   <data name="insertauditlog" xml:space="preserve">
     <value>insert into wms.AuditLog(id,filename,filelocation,uploadedon,uploadedby,uploadedto,modulename,successrecords,exceptionrecords,totalrecords) 
- values (default,@filename,@filelocation,@uploadedon,@uploadedby,@uploadedto,@modulename,successrecords,exceptionrecords,totalrecords)</value>
+ values (default,@filename,@filelocation,@uploadedon,@uploadedby,@uploadedto,@modulename,@successrecords,@exceptionrecords,@totalrecords)</value>
   </data>
   <data name="updatepoformatlabel" xml:space="preserve">
     <value>update wms.wms_pomaterials set podescription = @podescription,mscode = @mscode, saleorderno = @saleorderno,
