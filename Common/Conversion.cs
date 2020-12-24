@@ -95,9 +95,9 @@ namespace WMS.Common
 
         }
 
-        public static Decimal? Todecimaltype(Object dateTimeStr)
+        public static decimal? Todecimaltype(Object dateTimeStr)
         {
-            Decimal? dt = null;
+            decimal? dt = null;
             try
             {
                 dt = Convert.ToDecimal(dateTimeStr);
