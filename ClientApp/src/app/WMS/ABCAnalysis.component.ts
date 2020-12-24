@@ -3,6 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { wmsService } from '../WmsServices/wms.service';
 import { constants } from '../Models/WMSConstants';
 import { Employee, DynamicSearchResult } from '../Models/Common.Model';
+import { MessageService } from 'primeng/api';
 import { NgxSpinnerService } from "ngx-spinner";
 
 @Component({
@@ -10,7 +11,7 @@ import { NgxSpinnerService } from "ngx-spinner";
   templateUrl: './ABCAnalysis.component.html'
 })
 export class ABCAnalysisComponent implements OnInit {
-  constructor(private wmsService: wmsService, private route: ActivatedRoute, private router: Router, public constants: constants, private spinner: NgxSpinnerService) { }
+  constructor(private wmsService: wmsService, private messageService: MessageService, private route: ActivatedRoute, private router: Router, public constants: constants, private spinner: NgxSpinnerService) { }
 
   public employee: Employee;
   public dynamicData: DynamicSearchResult;
@@ -20,7 +21,8 @@ export class ABCAnalysisComponent implements OnInit {
   public category: string;
   public showABCavailableqtyList: boolean = true;
   public showAbcListByCategory; showAbcMatList: boolean = false;
-  public totalunitprice; totalQty: number = 0;
+  public totalunitprice;
+  public totalQty: number = 0;
 
   cols: any[];
   exportColumns: any[];
@@ -59,6 +61,46 @@ export class ABCAnalysisComponent implements OnInit {
       this.spinner.hide();
     });
     
+  }
+
+  //Export to excel
+  exportExcel() {
+    if (this.ABCavailableqtyList.length>0) {
+      let new_list = this.ABCavailableqtyList.map(function (obj) {
+        return {
+          'Category': obj.category,
+          'Available Qty': obj.availableqty,
+          '% of Qty': ((obj.availableqty / this.totalQty) * 100).toFixed(),
+          'Cost': obj.totalcost,
+          '% of cost': ((obj.totalcost / this.totalunitprice) * 100).toFixed()
+
+        }
+
+      });
+      import("xlsx").then(xlsx => {
+        const worksheet = xlsx.utils.json_to_sheet(new_list);
+        const workbook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
+        const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
+        this.saveAsExcelFile(excelBuffer, "ABCAnalysisreport");
+      });
+    }
+    else {
+      this.messageService.add({ severity: 'error', summary: '', detail: 'No data exists' });
+      return;
+    }
+   
+  }
+
+
+  saveAsExcelFile(buffer: any, fileName: string): void {
+    import("file-saver").then(FileSaver => {
+      let EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+      let EXCEL_EXTENSION = '.xlsx';
+      const data: Blob = new Blob([buffer], {
+        type: EXCEL_TYPE
+      });
+      FileSaver.saveAs(data, fileName + '_export_' + new Date().getTime() + EXCEL_EXTENSION);
+    });
   }
 
  //get ABCList by categories

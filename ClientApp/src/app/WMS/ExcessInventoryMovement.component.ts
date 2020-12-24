@@ -5,6 +5,7 @@ import { wmsService } from '../WmsServices/wms.service';
 import { constants } from '../Models/WMSConstants';
 import { Employee, DynamicSearchResult } from '../Models/Common.Model';
 import { NgxSpinnerService } from "ngx-spinner";
+import { MessageService } from 'primeng/api';
 import { commonComponent } from '../WmsCommon/CommonCode';
 
 @Component({
@@ -12,7 +13,7 @@ import { commonComponent } from '../WmsCommon/CommonCode';
   templateUrl: './ExcessInventoryMovement.component.html'
 })
 export class ExcessInventoryMovementComponent implements OnInit {
-  constructor(private wmsService: wmsService, private commonComponent: commonComponent, private route: ActivatedRoute, private router: Router, public constants: constants, private spinner: NgxSpinnerService) { }
+  constructor(private wmsService: wmsService, private commonComponent: commonComponent, private messageService: MessageService, private route: ActivatedRoute, private router: Router, public constants: constants, private spinner: NgxSpinnerService) { }
 
   public employee: Employee;
   public fromDate: Date;
@@ -102,8 +103,45 @@ export class ExcessInventoryMovementComponent implements OnInit {
 
 
   //export to excel 
+  //exportExcel() {
+  //  this.commonComponent.exportExcel(this.ExcessInventoryList, 'ExcessInventoryList');
+  //}
+
   exportExcel() {
-    this.commonComponent.exportExcel(this.ExcessInventoryList, 'ExcessInventoryList');
+    if (this.ExcessInventoryList.length>0) {
+      var totalconsumed = "Total consumed Qty for last " + this.movingDays + " years";
+      let new_list = this.ExcessInventoryList.map(function (obj) {
+        return {
+          'Material': obj.materialid,
+          'Material Description': obj.materialdescription,
+          [totalconsumed] : obj.issuedqty,
+          'Available Qty': "gh" + obj.availableqty
+        }
+      });
+      import("xlsx").then(xlsx => {
+        const worksheet = xlsx.utils.json_to_sheet(new_list);
+        const workbook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
+        const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
+        this.saveAsExcelFile(excelBuffer, "ExcessInventoryReport");
+      });
+    }
+    else {
+      this.messageService.add({ severity: 'error', summary: '', detail: 'No data exists' });
+      return;
+    }
+   
+  }
+
+
+  saveAsExcelFile(buffer: any, fileName: string): void {
+    import("file-saver").then(FileSaver => {
+      let EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+      let EXCEL_EXTENSION = '.xlsx';
+      const data: Blob = new Blob([buffer], {
+        type: EXCEL_TYPE
+      });
+      FileSaver.saveAs(data, fileName + '_export_' + new Date().getTime() + EXCEL_EXTENSION);
+    });
   }
 
   //pdfexport

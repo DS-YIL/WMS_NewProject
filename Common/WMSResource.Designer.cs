@@ -2007,6 +2007,16 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to INSERT INTO wms.wms_materiallabeldetails(id,pono,inwardid ,noofprints ,qtyinbox ,isprint ,totalboxes ,boxno ,totalqty ,isonholdgr,matbarcodepath,soitembcpath,plantbarcodepath,spbarcode,linkagebarcodepath)
+        ///VALUES(default,@pono,@inwardid,@noofprints,@qtyinbox,@isprint,@totalboxes,@boxno,@totalqty,@isonholdgr,@matbarcodepath,@soitembcpath,@plantbarcodepath,@spbarcode,@linkagebarcodepath) returning id.
+        /// </summary>
+        public static string insertmatbarcodelabeldata {
+            get {
+                return ResourceManager.GetString("insertmatbarcodelabeldata", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to INSERT INTO wms.materialrequest(approveremailid,approverid,pono,requesterid,requesteddate,deleteflag,projectcode,remarks)VALUES(@approveremailid,@approverid,@pono,@requesterid,current_date,false,@projectcode,@remarks) returning requestid.
         /// </summary>
         public static string insertmaterialrequest {

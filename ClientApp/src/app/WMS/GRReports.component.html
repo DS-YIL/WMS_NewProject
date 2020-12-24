@@ -18,6 +18,9 @@
 
 
       <div class="row " style="margin-top: 10px;margin-left: 0px !important;margin-right: 0px !important">
+        <div class="col-lg-12 col-md-12">
+          <button type="button" pButton icon="pi pi-file-excel" iconPos="left" label="Export to Excel" (click)="exportExcel()" style="margin-right: 0.5em;" class="ui-button-success float-right"></button>
+        </div>
 
         <p-table #dt [value]="grReportsList" [style]="{'overflow':'auto!important','box-shadow' : '5px 5px #888888'}"
                  [scrollable]="true" scrollHeight="65vh">

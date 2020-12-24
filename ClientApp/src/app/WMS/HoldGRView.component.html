@@ -66,6 +66,7 @@
               <th style="text-align:center;width:30%;">Supplier</th>
               <th style="text-align:center;width:20%;" *ngIf="grstatus === 'hold'">Created By</th>
               <th style="text-align:center;width:15%;" *ngIf="grstatus === 'hold'">Created On</th>
+              <th style="text-align:center;width:15%;" *ngIf="grstatus === 'hold'">Material Barcode</th>
               <th style="text-align:center;width:20%;" *ngIf="grstatus != 'hold'">{{tempcol1}}</th>
               <th style="text-align:center;width:15%;" *ngIf="grstatus != 'hold'">{{tempcol2}}</th>
             </tr>
@@ -76,6 +77,7 @@
               <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'vendorname', 'startsWith')"></th>
               <th *ngIf="grstatus === 'hold'"> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'receivedby', 'contains')"></th>
               <th *ngIf="grstatus === 'hold'"> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'receiveddate', 'contains')"></th>
+              <th></th>
               <th *ngIf="grstatus != 'hold'"> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'unholdedby', 'contains')"></th>
               <th *ngIf="grstatus != 'hold'"> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'unholdedon', 'contains')"></th>
             </tr>
@@ -97,6 +99,9 @@
               </td>
               <td class="ptable-cell" style="text-align:center;width:15%;" *ngIf="grstatus === 'hold'">
                 <span>{{rowData.receiveddate | date : 'dd/MM/yyyy'}}</span>
+              </td>
+              <td class="ptable-cell" style="text-align:center;width:15%;" *ngIf="grstatus === 'hold'">
+                <button type="button" icon="fa fa-print" pButton aria-hidden="true" (click)="generatelabel(rowData)"></button>
               </td>
               <td class="ptable-cell" style="text-align:left;width:20%;" *ngIf="grstatus != 'hold'">
                 <span>{{rowData.unholdedby}}</span>

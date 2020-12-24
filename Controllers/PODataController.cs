@@ -87,6 +87,13 @@ namespace WMS.Controllers
 
 		}
 
+		[HttpPost("generateBarcodeMatonhold")]
+		public printMaterial generateBarcodeMatonhold(printMaterial printMat)
+		{
+			return this._poService.generateBarcodeMatonhold(printMat);
+
+		}
+
 		[HttpPost("printBarcodeMaterial")]
 		public string printBarcodeMaterial(printMaterial printMat)
 		{
