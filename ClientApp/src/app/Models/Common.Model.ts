@@ -34,6 +34,16 @@ export class DynamicSearchResult {
   query: string;
 }
 
+export class locationBarcode {
+  locatorid: any;
+  locatorname: any;
+  rackid: any;
+  rackname: any;
+  binid: any;
+  binname: any;
+  isracklabel: any;
+}
+
 export class POList {
   value: any;
   name: any;
@@ -50,6 +60,7 @@ export class printMaterial {
   receiveddate: any;
   grnno: any;
   pono: any;
+  inwardid: any;
   invoiceno: any;
   noofprint: any;
   barcodePath: any;
@@ -72,7 +83,7 @@ export class printMaterial {
   saleorder: any;
   saleorderlineitemno: any;
   qtyrec: any;
-
+  lineitemno: any;
   plant: any;
   gr: any;
   sp: any;
