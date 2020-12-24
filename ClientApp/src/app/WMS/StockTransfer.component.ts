@@ -552,14 +552,22 @@ export class StockTransferComponent implements OnInit {
     //});
 
     this.wmsService.Stocktransfer1(svdata).subscribe(data => {
-      this.messageService.add({ severity: 'success', summary: '', detail: 'Material transferred' });
-      this.savedata = [];
-      this.podetailsList = [];
-      this.mainmodel = new invstocktransfermodel();
-      this.mainmodel.sourceplant = "Plant1";
-      this.mainmodel.destinationplant = "Plant1";
-      this.getStocktransferdatagroup();
-      this.addprocess = false;
+      debugger;
+      if (data) {
+        this.messageService.add({ severity: 'success', summary: '', detail: 'Material transferred' });
+        this.savedata = [];
+        this.podetailsList = [];
+        this.mainmodel = new invstocktransfermodel();
+        this.mainmodel.sourceplant = "Plant1";
+        this.mainmodel.destinationplant = "Plant1";
+        this.getStocktransferdatagroup();
+        this.addprocess = false;
+
+      }
+      else {
+        this.messageService.add({ severity: 'error', summary: '', detail: 'transfer failed' });
+      }
+      
       // }
     });
   }

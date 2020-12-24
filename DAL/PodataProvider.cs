@@ -1899,7 +1899,9 @@ namespace WMS.DAL
 							materialid,
 							item.inwardid,
 							item.stocktype,
-							item.lineitemno
+							item.lineitemno,
+							item.receivedtype,
+							item.poitemdescription
 						}));
 						if (result != 0)
 						{
@@ -7981,7 +7983,7 @@ namespace WMS.DAL
 
 
 
-			return loactiontext;
+			return loactiontext = "success";
 
 
 
@@ -8062,7 +8064,7 @@ namespace WMS.DAL
 								{
 									issuedqty = itm.availableqty;
 								}
-								string inwmasterid = "";
+								string inwmasterid = null;
 								int? inwardid = null;
 								if (itm.inwmasterid != null && itm.inwmasterid != "")
 								{
@@ -8151,7 +8153,10 @@ namespace WMS.DAL
 										stck.materialid,
 										inwardid,
 										stocktype,
-										itm.lineitemno
+										itm.lineitemno,
+										itm.receivedtype,
+										itm.poitemdescription
+									
 									}));
 									if (result != 0)
 									{
@@ -8237,7 +8242,7 @@ namespace WMS.DAL
 
 
 
-			return loactiontext;
+			return loactiontext = "success";
 
 
 
