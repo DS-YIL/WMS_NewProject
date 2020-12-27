@@ -7399,22 +7399,7 @@ namespace WMS.DAL
 								item.returnremarks
 
 							});
-							//inwardid = Convert.ToInt32(results);
-							//if (inwardid != 0)
-							//{
-							//    string insertqueryforqualitycheck =WMSResource.insertqueryforqualitycheck;
-
-							//    var data = DB.ExecuteScalar(insertqueryforqualitycheck, new
-							//    {
-							//        inwardid,
-							//        datamodel.quality,
-							//        datamodel.qtype,
-							//        datamodel.qcdate,
-							//        datamodel.qcby,
-							//        datamodel.remarks,
-							//        datamodel.deleteflag,
-
-							//    });
+							
 							string insertqueryforstatusforqty = WMSResource.insertqueryforstatusforqty;
 
 							var data1 = DB.ExecuteScalar(insertqueryforstatusforqty, new
@@ -7423,6 +7408,27 @@ namespace WMS.DAL
 								item.returnqty
 
 							});
+                            if (item.pono.StartsWith("NP"))
+                            {
+								string closepoqry = WMSResource.closepoquery.Replace("#pono",item.pono);
+								DB.ExecuteScalar(closepoqry, null);
+							}
+                            else
+                            {
+								string isallreceived = WMSResource.isallreceivedqueryforpo.Replace("#pono", item.pono);
+								bool isreceived = (bool)DB.ExecuteScalar(isallreceived, null);
+								if (isreceived)
+                                {
+									string closepoqry = WMSResource.closepoquery.Replace("#pono", item.pono);
+									DB.ExecuteScalar(closepoqry, null);
+								}
+
+							}
+
+							
+
+
+							
 
 
 						}

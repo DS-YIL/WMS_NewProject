@@ -147,6 +147,15 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to update wms.wms_polist set isclosed = True where pono = &apos;#pono&apos;.
+        /// </summary>
+        public static string closepoquery {
+            get {
+                return ResourceManager.GetString("closepoquery", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Select date_part(&apos;year&apos;, current_date::date) as syear,
         ///date_part(&apos;month&apos;, current_date::date) as smonth,
         ///inwmasterid,date_part(&apos;week&apos;, receiveddate::date) AS sweek,receiveddate,confirmqty from wms.wms_storeinward
@@ -488,11 +497,10 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Select date_part(&apos;year&apos;, current_date::date) as syear,
-        ///date_part(&apos;month&apos;, current_date::date) as smonth,
-        ///inwmasterid,date_part(&apos;week&apos;, receiveddate::date) AS sweek,receiveddate,qualitychecked from wms.wms_storeinward
-        ///where receiveddate &gt;= (select date_trunc(&apos;month&apos;, current_date))
-        ///order by sweek.
+        ///   Looks up a localized string similar to select stinw.inwardid,stinw.lineitemno,stinw.pono,stinw.inwmasterid,stinw.qualitycheckrequired,stinw.materialid as material,secinw.grnnumber,secinw.pono as securitypo,secinw.invoiceno,secinw.onhold,mat.materialdescription,stinw.receivedqty,stinw.receiveddate,stinw.returnqty,qc.qualitypassedqty,qc.qualityfailedqty,qc.remarks,qc.qcby as checkedby
+        ///  from wms.wms_storeinward stinw
+        ///  left outer join wms.wms_securityinward secinw on secinw.inwmasterid=stinw.inwmasterid
+        ///  left outer join wms.&quot;MaterialMasterYGS&quot; [rest of string was truncated]&quot;;.
         /// </summary>
         public static string getdataforqualitydetails {
             get {
@@ -617,7 +625,7 @@ namespace WMS.Common {
         ///   Looks up a localized string similar to select MAX(stinw.inwardid) as value,sinw.grnnumber as text,Max(sinw.suppliername) as supplier 
         ///from wms.wms_storeinward stinw
         ///left outer join wms.wms_securityinward sinw on stinw.inwmasterid = sinw.inwmasterid 
-        ///where (stinw.confirmqty is null or stinw.confirmqty = 0) and stinw.receivedqty &gt; 0  and sinw.grnnumber is not null and sinw.onhold is not True  group by stinw.inwmasterid,sinw.grnnumber.
+        ///where (stinw.confirmqty is null or stinw.confirmqty = 0) and stinw.receivedqty &gt; 0  and stinw.returnedby is null and sinw.grnnumber is not null and sinw.onhold is not True  group by stinw.inwmasterid,sinw.grnnumber.
         /// </summary>
         public static string getgrnlistdata {
             get {
@@ -2261,6 +2269,20 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to select CASE
+        ///     WHEN (select SUM(materialqty)from wms.wms_pomaterials where pono = &apos;#pono&apos;) = SUM(confirmqty) THEN True
+        ///	 ELSE False
+        /// END as isallreceived   
+        /// from wms.wms_storeinward 
+        ///where pono = &apos;#pono&apos; group by pono.
+        /// </summary>
+        public static string isallreceivedqueryforpo {
+            get {
+                return ResourceManager.GetString("isallreceivedqueryforpo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to select inwmasterid,grnnumber,onhold,unholdedby from wms.wms_securityinward where inwmasterid = &apos;#inw&apos; .
         /// </summary>
         public static string isgrnexistbyinwardmasterid {
@@ -2284,6 +2306,15 @@ namespace WMS.Common {
         public static string isgrnexistsquerybyinvoce {
             get {
                 return ResourceManager.GetString("isgrnexistsquerybyinvoce", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to select isclosed from wms.wms_polist where pono = &apos;#pono&apos;.
+        /// </summary>
+        public static string ispoclosedquery {
+            get {
+                return ResourceManager.GetString("ispoclosedquery", resourceCulture);
             }
         }
         
