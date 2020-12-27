@@ -34,7 +34,7 @@ export class InventoryMovementComponent implements OnInit {
 
     this.cols = [
       { field: 'material', header: 'Material' },
-      { field: 'materialdescription', header: 'Material Description' },
+      { field: 'poitemdescription', header: 'PO Item Description' },
       { field: 'projectname', header: 'Project Name' },
       { field: 'received', header: 'Received' },
       { field: 'issued', header: 'Issued' },
@@ -46,7 +46,8 @@ export class InventoryMovementComponent implements OnInit {
 
   getinventoryList() {
     this.dynamicData = new DynamicSearchResult();
-    this.dynamicData.query = "select op.material , op.materialdescription,op.projectname, SUM(totalquantity) as Received , SUM(availableqty) as Balance ,SUM(totalquantity -availableqty ) as Issued, MAX(createddate) as createddate  from wms.wms_stock ws inner join wms.openpolistview  op on op.pono = ws.pono where ws.materialid notnull and createddate <='" + this.toDate.toDateString() + "' and createddate > '" + this.fromDate.toDateString() + "' group by  op.material , op.materialdescription,op.projectname"
+    //this.dynamicData.query = "select op.material , op.materialdescription,op.projectname, SUM(totalquantity) as Received , SUM(availableqty) as Balance ,SUM(totalquantity -availableqty ) as Issued, MAX(createddate) as createddate  from wms.wms_stock ws inner join wms.openpolistview  op on op.pono = ws.pono where ws.materialid notnull and createddate <='" + this.toDate.toDateString() + "' and createddate > '" + this.fromDate.toDateString() + "' group by  op.material , op.materialdescription,op.projectname"
+    this.dynamicData.query = "select ws.materialid as material, max(op.materialdescription) as materialdescription,op.poitemdescription,prj.projectname, SUM(totalquantity) as Received , SUM(availableqty) as Balance ,SUM(totalquantity -availableqty ) as Issued, MAX(createddate) as createddate  from wms.wms_stock ws inner join wms.wms_pomaterials  op on op.pono = ws.pono left join wms.wms_project prj on prj.pono =ws.pono where ws.materialid notnull and createddate <='" + this.toDate.toDateString() + "' and createddate > '" + this.fromDate.toDateString() + "' group by  ws.materialid , op.poitemdescription ,prj.projectname";
     this.wmsService.GetListItems(this.dynamicData).subscribe(data => {
       this.inventoryList = data;
     });

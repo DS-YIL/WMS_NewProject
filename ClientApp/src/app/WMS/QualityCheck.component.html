@@ -111,7 +111,8 @@
               <th style="text-align:center;width:10%;" *ngIf="ismultiplepo">PONo</th>
               <th style="text-align:center;width:8%;">Line item no</th>
               <th style="text-align:center;width:10%;">Material</th>
-              <th style="text-align:center;">Material Description</th>
+              <!--<th style="text-align:center;">Material Description</th>-->
+              <th style="text-align:center;">PO Item Description</th>
               <th style="text-align:center;width:10%;">Received Qty</th>
               <th style="text-align: center;width:10%;">Quality Passed</th>
               <th style="text-align:center;width:10%;">Quality Failed</th>
@@ -146,8 +147,10 @@
               <!--<td class="ptable-cell" style="text-align:center">{{rowData.projectname}}</td>-->
               <td class="ptable-cell" style="text-align:center;width:10%;">{{rowData.material}}</td>
               <td class="ptable-cell" style="text-align:left">
-                <span *ngIf="rowData.materialdescription">{{rowData.materialdescription}}</span>
-                <span *ngIf="!rowData.materialdescription">-</span>
+                <!--<span *ngIf="rowData.materialdescription">{{rowData.materialdescription}}</span>
+                <span *ngIf="!rowData.materialdescription">-</span>-->
+                <span *ngIf="rowData.poitemdescription">{{rowData.poitemdescription}}</span>
+                <span *ngIf="!rowData.poitemdescription">-</span>
               </td>
               <td class="ptable-cell" style="text-align:right;width:10%;">
                 <span>{{rowData.receivedqty}}</span>

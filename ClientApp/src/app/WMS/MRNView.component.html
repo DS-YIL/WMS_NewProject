@@ -50,7 +50,8 @@
                   <th style="width:150px;text-align:center">PONo.</th>
                   <th style="width:200px;text-align:center">Material</th>
                   <th style="width:100px;text-align:center">Line item no</th>
-                  <th style="text-align: center">Material Description</th>
+                  <!--<th style="text-align: center">Material Description</th>-->
+                  <th style="text-align: center">PO Item Description</th>
                   <th style="width:100px;text-align:center">Accepted Qty</th>
                   <th style="width:200px;text-align:center" *ngIf="isalreadytransferred">Transferred By</th>
                   <th style="width:100px;text-align:center" *ngIf="isalreadytransferred">Transferred On</th>
@@ -70,7 +71,8 @@
                   <td class="ptable-cell" style="text-align:center;width:100px;" colspan="1">
                     {{rowData.lineitemno}}
                   </td>
-                  <td class="ptable-cell" style="text-align:left;">{{rowData.materialdescription}}</td>
+                  <!--<td class="ptable-cell" style="text-align:left;">{{rowData.materialdescription}}</td>-->
+                <td class="ptable-cell" style="text-align:left;">{{rowData.poitemdescription}}</td>
                   <td class="ptable-cell" style="text-align:right;width:100px;">{{rowData.confirmqty}}</td>
                   <td class="ptable-cell" style="text-align:left;width:200px;" *ngIf="isalreadytransferred">{{rowData.mrnby}}</td>
                   <td class="ptable-cell" style="text-align:center;width:100px;" *ngIf="isalreadytransferred">{{rowData.mrnon | date: 'dd/MM/yyyy'}}</td>

@@ -1551,12 +1551,12 @@ namespace WMS.DAL
 								query = WMSResource.getMaterialsforreceipt.Replace("#invoice", invoiceno).Replace("#inw", inwmasterid);
 								if (isgrn)
 								{
-									query += " where sinw.grnnumber = '" + grnno + "'";
+									query += " where sinw.grnnumber = '" + grnno + "' group by mat.poitemdescription";
 								}
 								else
 								{
 									//query += " where mat.pono = '" + pono + "'  and sinw.invoiceno = '" + invoiceno + "'";
-									query += " where mat.pono in ('" + poforquery + "')";
+									query += " where mat.pono in ('" + poforquery + "') group by mat.poitemdescription";
 								}
 							}
 							else
@@ -6360,7 +6360,7 @@ namespace WMS.DAL
 					//{
 					//	materialrequestquery = materialrequestquery + " and pro.projectmanager = '" + approverid + "' ";
 					//}
-					materialrequestquery = materialrequestquery + " group by sk.materialid";
+					materialrequestquery = materialrequestquery + " group by  pomat.poitemdescription, sk.materialid";
 					await pgsql.OpenAsync();
 					var data = await pgsql.QueryAsync<IssueRequestModel>(
 					  materialrequestquery, null, commandType: CommandType.Text);

@@ -167,7 +167,8 @@
               <th style="text-align:center;width:10%;">PONo.</th>
               <th style="text-align:center;width:8%;">line item No.</th>
               <th style="text-align:center;width:12%;">Material</th>
-              <th style="text-align:center;">Material Description</th>
+              <!--<th style="text-align:center;">Material Description</th>-->
+              <th style="text-align:center;">PO Item Description</th>
               <th *ngIf="!isnonpo && !qualitychecked" style="text-align:center;width:8%;">Material Qty</th>
               <th *ngIf="!isnonpo && isreceivedbefore" style="text-align:center;width:8%;">Pending Qty</th>
               <th style="text-align:center;width:10%;" *ngIf="!isonHoldview">Received Qty</th>
@@ -205,9 +206,12 @@
       [dropdown]="false"></p-autoComplete>-->
               </td>
               <td class="ptable-cell" style="text-align:left;">
-                <span *ngIf="!isnonpoentry && rowData.materialdescription">{{rowData.materialdescription}}</span>
-                <span *ngIf="!isnonpoentry && !rowData.materialdescription">-</span>
-                <input *ngIf="isnonpoentry" pInputText type="text" readonly id="receivedqty" class="form-control" [(ngModel)]="rowData.materialdescription">
+                <span *ngIf="!isnonpoentry && rowData.poitemdescription">{{rowData.poitemdescription}}</span>
+                <span *ngIf="!isnonpoentry && !rowData.poitemdescription">-</span>
+                <input *ngIf="isnonpoentry" pInputText type="text" readonly id="receivedqty" class="form-control" [(ngModel)]="rowData.poitemdescription">
+                <!--<span *ngIf="!isnonpoentry && rowData.materialdescription">{{rowData.materialdescription}}</span>
+  <span *ngIf="!isnonpoentry && !rowData.materialdescription">-</span>
+  <input *ngIf="isnonpoentry" pInputText type="text" readonly id="receivedqty" class="form-control" [(ngModel)]="rowData.materialdescription">-->
               </td>
               <td class="ptable-cell" *ngIf="!isnonpo && !qualitychecked" style="text-align:right;width:8%;">
                 <span>{{rowData.materialqty}}</span>
@@ -252,7 +256,8 @@
               <th style="text-align:center;width:10%;">PONo.</th>
               <th style="text-align:center;width:7%;">line item No.</th>
               <th style="text-align:center;width:12%;">Material</th>
-              <th style="text-align:center;">Material Description</th>
+              <!--<th style="text-align:center;">Material Description</th>-->
+              <th style="text-align:center;">PO Item Description</th>
               <!--<th *ngIf="isreceivedbefore" style="text-align:center;width:10%;">Pending Qty</th>-->
               <th style="text-align:center;width:8%;">Received Qty</th>
               <th style="text-align: center;width:8%;">Accepted Qty</th>
@@ -291,8 +296,10 @@
 
               </td>
               <td class="ptable-cell" style="text-align:left">
-                <span *ngIf="rowData.materialdescription">{{rowData.materialdescription}}</span>
-                <span *ngIf="!rowData.materialdescription">-</span>
+                <!--<span *ngIf="rowData.materialdescription">{{rowData.materialdescription}}</span>
+                <span *ngIf="!rowData.materialdescription">-</span>-->
+                <span *ngIf="rowData.poitemdescription">{{rowData.materialdescription}}</span>
+                <span *ngIf="!rowData.poitemdescription">-</span>
 
               </td>
               <!--<td class="ptable-cell" *ngIf="isreceivedbefore" style="text-align:center;width:20%;">

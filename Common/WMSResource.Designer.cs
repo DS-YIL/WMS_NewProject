@@ -978,9 +978,9 @@ namespace WMS.Common {
         ///   Looks up a localized string similar to select max(sk.pono) as pono ,sk.materialid as material,Max(prj.projectmanager) as projectmanager,
         ///( select sum(availableqty) from wms.wms_stock ws where materialid =sk.materialid) as availableqty,
         ///max(mtmtr.stocktype) as stocktype,max(po.suppliername) as suppliername,
-        ///max(mtmtr.unitprice) as materialcost,max(mtmtr.materialdescription) as materialdescription from wms.wms_stock  sk 
+        ///max(mtmtr.unitprice) as materialcost,max(pomat.poitemdescription ) as materialdescription from wms.wms_stock  sk 
         ///left outer join wms.&quot;MaterialMasterYGS&quot; mtmtr on mtmtr.material = sk.materialid
-        ///left outer join wms.wms_project prj on prj. [rest of string was truncated]&quot;;.
+        ///left outer join wms.wms_project prj on prj.p [rest of string was truncated]&quot;;.
         /// </summary>
         public static string getmaterialdetailfprrequest {
             get {
@@ -1151,9 +1151,10 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select matd.returnid,matd.materialid,mat.materialdescription,matd.uom,matd.saleorderno,matd.location,matd.returnqty,matd.remarks 
+        ///   Looks up a localized string similar to select matd.returnid,matd.materialid,pomat.poitemdescription as materialdescription,matd.uom,matd.saleorderno,matd.location,matd.returnqty,matd.remarks 
         ///   from wms.wms_materialreturndetails matd
         ///   left outer join wms.&quot;MaterialMasterYGS&quot; mat on mat.material = matd.materialid
+        ///   left outer join wms.wms_pomaterials pomat on pomat.material =matd.materialid 
         ///   where returnid = &apos;#returnid&apos;.
         /// </summary>
         public static string getmaterialreturndetailquery {
@@ -1201,7 +1202,9 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select mat.pono,mat.materialid as material,mat.itemno::text as lineitemno,ms.materialdescription,mat.materialqty,&apos;#invoice&apos; as invoiceno,&apos;#inw&apos; as inwmasterid,NULL as grnnumber,ms.qualitycheck,mat.asnno,mat.asnqty as receivedqty
+        ///   Looks up a localized string similar to select max(mat.pono) as pono,max(mat.materialid) as material,mat.poitemdescription,max(mat.itemno::text) as lineitemno,max(ms.materialdescription) as materialdescription,
+        ///max(mat.materialqty) as materialqty,&apos;#invoice&apos; as invoiceno,&apos;#inw&apos; as inwmasterid,NULL as grnnumber,bool_or(ms.qualitycheck) as qualitycheck,
+        ///max(mat.asnno) as asnno,max(mat.asnqty) as receivedqty
         ///from wms.wms_pomaterials mat
         ///left outer join wms.&quot;MaterialMasterYGS&quot; ms on ms.material = mat.materialid.
         /// </summary>
@@ -1215,9 +1218,9 @@ namespace WMS.Common {
         ///   Looks up a localized string similar to select max(sk.pono) as pono ,sk.materialid as material,Max(prj.projectmanager) as projectmanager,
         ///(select sum(ws.availableqty) from wms.wms_stock ws where ws.materialid =sk.materialid) as availableqty,
         ///(select sum(ws1.availableqty) from wms.wms_stock ws1 where ws1.materialid =sk.materialid and ws1.stcktype = &apos;Plant Stock&apos;) as plantstockavailableqty,
-        ///max(mtmtr.unitprice) as materialcost,max(mtmtr.materialdescription) as materialdescription 
+        ///max(mtmtr.unitprice) as materialcost,max(pomat.poitemdescription ) as materialdescription 
         ///from wms.wms_stock  sk 
-        ///left outer join wms.&quot;MaterialMasterYGS&quot; [rest of string was truncated]&quot;;.
+        ///left outer join wms.&quot;MaterialMasterYGS&quot;  [rest of string was truncated]&quot;;.
         /// </summary>
         public static string getmaterialstoreserve {
             get {
@@ -1665,11 +1668,12 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select mmy.material, mmy.materialdescription,sum(st.availableqty) as availableqty,mmy.safteystock as safteystock ,mmy.minorderqty as minorderqty,
+        ///   Looks up a localized string similar to select max(mmy.material) as material,pomat.poitemdescription, max(mmy.materialdescription) as materialdescription,sum(st.availableqty) as availableqty,max(mmy.safteystock) as safteystock ,
+        ///max(mmy.minorderqty) as minorderqty,
         ///(max(pomat.unitprice)  * sum(st.availableqty )) as value from wms.&quot;MaterialMasterYGS&quot; mmy  
         ///join wms.wms_stock st on st.materialid =mmy.material
         ///join wms.wms_pomaterials pomat on pomat.material =mmy.material 
-        ///where st.availableqty &lt; mmy.safteystock group by mmy.material.
+        ///where st.availableqty &lt; mmy.safteystock group by pomat.poitemdescription.
         /// </summary>
         public static string getSafteyStockList {
             get {
@@ -1738,9 +1742,10 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select tsd.transferid,tsd.materialid,tsd.transferqty as transferredqty,mat.materialdescription
+        ///   Looks up a localized string similar to select tsd.transferid,tsd.materialid,tsd.transferqty as transferredqty,pomat.poitemdescription as materialdescription
         ///from wms.wms_transfermaterialdetail tsd
         ///left outer join wms.&quot;MaterialMasterYGS&quot; mat on mat.material = tsd.materialid
+        ///left outer join wms.wms_pomaterials  pomat on pomat.materialid =tsd.materialid 
         ///where tsd.transferid = &apos;#tid&apos;.
         /// </summary>
         public static string gettransferiddetail {
@@ -1852,10 +1857,10 @@ namespace WMS.Common {
         ///   Looks up a localized string similar to select st.materialid as material,mat.materialdescription,loc.locatorname,rac.racknumber,bn.binnumber,st.availableqty,(pomat.unitprice * st.availableqty ) as value,st.projectid,st.pono,st.shelflife 
         ///from wms.wms_stock st 
         ///left outer join wms.&quot;MaterialMasterYGS&quot; mat on mat.material = st.materialid
-        ///left outer join wms.wms_pomaterials  pomat on mat.material =st.materialid 
+        ///left outer join wms.wms_pomaterials  pomat on mat.materialid =st.materialid 
         ///left outer join wms.wms_rd_locator loc on loc.locatorid = st.storeid
         ///left outer join wms.wms_rd_rack rac on rac.rackid = st.rackid
-        ///lef [rest of string was truncated]&quot;;.
+        ///l [rest of string was truncated]&quot;;.
         /// </summary>
         public static string initialstockreportgroupby {
             get {
@@ -2433,8 +2438,7 @@ namespace WMS.Common {
         ///   Looks up a localized string similar to select inwa.inwardid,inwa.lineitemno,inwa.inwardid as inwardidview,bin.binnumber, rack.racknumber, loc.locatorname,mat.rackid,mat.binid,
         /// mat.storeid,stocks.itemlocation,stocks.availableqty,stocks.itemid,inw.grnnumber,inwa.pono,inwa.pono as securitypo,inw.invoiceno,inw.receiveddate,
         /// inw.isdirecttransferred,inw.projectcode,emp.name as mrnby,inw.mrnon,inw.mrnremarks,
-        /// inwa.materialqty,inwa.materialid as material,mat.materialdescription,mat.stocktype,inwa.receivedqty,inwa.confirmqty,inwa.returnqty 
-        /// from  [rest of string was truncated]&quot;;.
+        /// inwa.materialqty,inwa.materialid as material,pomat.poitemdescription, mat.materialdescription,mat.stocktype,inwa.receivedqty,inwa.confirmqt [rest of string was truncated]&quot;;.
         /// </summary>
         public static string queryforitemdetails {
             get {

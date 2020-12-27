@@ -182,7 +182,8 @@
             <tr class="mprltbldata">
               <th class="ptable-cell" style="    text-align: center;width: 20px;background-color: #9ba5af !important">Sl.No.</th>
               <th class="ptable-cell" style="    text-align: center;background-color: #9ba5af !important">Material</th>
-              <th class="ptable-cell" style="    text-align: center; width: 500px;background-color: #9ba5af !important">Material Description</th>
+              <!--<th class="ptable-cell" style="    text-align: center; width: 500px;background-color: #9ba5af !important">Material Description</th>-->
+              <th class="ptable-cell" style="    text-align: center; width: 500px;background-color: #9ba5af !important">PO Item Description</th>
               <th class="ptable-cell" style="    text-align: center;background-color: #9ba5af !important">Price</th>
               <th class="ptable-cell" style="    text-align: center;background-color: #9ba5af !important">Remarks</th>
               <th class="ptable-cell" style="    text-align: center;background-color: #9ba5af !important">Requested Qty</th>
@@ -198,7 +199,8 @@
                 <span *ngIf="employee.roleid !='3'">{{rowData.materialid}}</span>
                 <button *ngIf="employee.roleid !='8' && employee.roleid =='3'" type="button" class="btn btn-link" (click)="showmateriallocationList(rowData.materialid,ri+1,ri,rowData.quantity);" style="padding-left:0px;">{{rowData.materialid}}</button>
               </td>
-              <td class="ptable-cell" style="    text-align: left;width: 500px;"> {{rowData.materialdescription}} </td>
+              <!--<td class="ptable-cell" style="    text-align: left;width: 500px;"> {{rowData.materialdescription}} </td>-->
+            <td class="ptable-cell" style="    text-align: left;width: 500px;"> {{rowData.poitemdescription}} </td>
               <td class="ptable-cell" style="text-align:right"><span *ngIf="rowData.materialcost">{{rowData.materialcost}}</span></td>
               <td class="ptable-cell" style="text-align:left"> {{rowData.remarks}} </td>
               <td class="ptable-cell" style="text-align:right">{{rowData.quantity}}</td>
@@ -208,7 +210,7 @@
               <td class="ptable-cell" style="text-align:center" *ngIf="employee.roleid !='8' && materialList[0].gatepasstype=='Returnable'">{{checkValiddate(rowData.expecteddate) | date :  constants.dateFormat}}</td>
               <td *ngIf="materialList[0].gatepasstype=='Returnable' && rowData.returneddate" class="ptable-cell" style="text-align:center">{{checkValiddate(rowData.returneddate) | date :  constants.dateFormat}}</td>
 
-          </ng-template>
+</ng-template>
 
         </p-table>
         </td>
@@ -465,7 +467,8 @@
                 <tr class="mprltbldata">
                   <th class="ptable-cell" style="text-align:center;width:60px;">Sl. No.</th>
                   <th class="ptable-cell" style="text-align:center">Material</th>
-                  <th class="ptable-cell" style="text-align:center">Material Description</th>
+                  <!--<th class="ptable-cell" style="text-align:center">Material Description</th>-->
+                  <th class="ptable-cell" style="text-align:center">PO Item Description</th>
                   <th class="ptable-cell" style="text-align:center">Quantity</th>
                   <th class="ptable-cell" style="text-align:center">Price</th>
                   <th class="ptable-cell" style="text-align:center">Remarks</th>
@@ -477,7 +480,8 @@
                 <tr>
                   <td *ngIf="rowData.materialid" class="ptable-cell" style="text-align:center;width:60px;"> {{ri+1}} </td>
                   <td *ngIf="rowData.materialid" class="ptable-cell" style="text-align:left"> {{rowData.materialid}} </td>
-                  <td *ngIf="rowData.materialid" class="ptable-cell" style="text-align:left"> {{rowData.materialdescription}} </td>
+                  <!--<td *ngIf="rowData.materialid" class="ptable-cell" style="text-align:left"> {{rowData.materialdescription}} </td>-->
+                <td *ngIf="rowData.materialid" class="ptable-cell" style="text-align:left"> {{rowData.poitemdescription}} </td>
                   <td *ngIf="rowData.materialid" class="ptable-cell" style="text-align:right">{{rowData.quantity}}</td>
                   <td *ngIf="rowData.materialid" class="ptable-cell" style="text-align:right">{{rowData.materialcost}}</td>
                   <td *ngIf="rowData.materialid" class="ptable-cell" style="text-align:left"> {{rowData.remarks}} </td>
@@ -490,7 +494,7 @@
                     <!--<input *ngIf="employee.roleid=='7' && !rowData.returneddate" appendTo="body" type="date" [(ngModel)]="rowData.returneddate" [value]="rowData.returneddate |  date:'yyyy-MM-dd'" (input)="rowData.returneddate=parseDate($event.target.value)">-->
 
                   </td>
-              </ng-template>
+</ng-template>
             </p-table>
           </div>
         </div><br />

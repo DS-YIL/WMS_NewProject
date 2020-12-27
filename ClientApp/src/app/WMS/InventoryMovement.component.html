@@ -39,7 +39,7 @@
         <tr>
           <th></th>
           <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'material', 'contains')"></th>
-          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'materialdescription', 'contains')"></th>
+          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'poitemdescription', 'contains')"></th>
           <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'projectname', 'contains')"></th>
           <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'received', 'contains')"></th>
           <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'issued', 'contains')"></th>
@@ -52,7 +52,8 @@
             {{ri+1}}
           </td>
           <td class="ptable-cell" style="text-align:center">{{rowData.material}}</td>
-          <td class="ptable-cell" style="text-align:center">{{rowData.materialdescription}}</td>
+          <!--<td class="ptable-cell" style="text-align:center">{{rowData.materialdescription}}</td>-->
+        <td class="ptable-cell" style="text-align:center">{{rowData.poitemdescription}}</td>
           <td class="ptable-cell" style="text-align:center">{{rowData.projectname}}</td>
           <td class="ptable-cell" style="text-align:right">{{rowData.received}}</td>
           <td class="ptable-cell" style="text-align:right">{{rowData.issued}}</td>

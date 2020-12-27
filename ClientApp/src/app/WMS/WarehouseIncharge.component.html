@@ -35,7 +35,8 @@
                   <th rowspan="2" style="width: 100px;text-align:center;">PONo</th>
                   <th rowspan="2" style="width:100px;text-align:center">Material</th>
                   <th rowspan="2" style="width:70px;text-align:center">Line item no</th>
-                  <th rowspan="2" style="width:200px; text-align: center">Material Description</th>
+                  <!--<th rowspan="2" style="width:200px; text-align: center">Material Description</th>-->
+                  <th rowspan="2" style="width:200px; text-align: center">PO Item Description</th>
                   <th rowspan="2" *ngIf="!isnonpo" style="width:70px;text-align:center">Material Quantity</th>
                   <th rowspan="2" style="width:70px;text-align:center">Received Quantity</th>
                   <th rowspan="2" style="width:70px;text-align:center">Accepted Quantity</th>
@@ -62,8 +63,10 @@
                     {{rowData.lineitemno}}
                   </td>
                   <td class="ptable-cell" style="text-align:left;">
-                    <span *ngIf="rowData.materialdescription">{{rowData.materialdescription}}</span>
-                    <span *ngIf="!rowData.materialdescription">-</span>
+                    <!--<span *ngIf="rowData.materialdescription">{{rowData.materialdescription}}</span>
+                     <span *ngIf="!rowData.materialdescription">-</span>-->
+                    <span *ngIf="rowData.materialdescription">{{rowData.poitemdescription}}</span>
+                    <span *ngIf="!rowData.poitemdescription">-</span>
                   </td>
                   <td *ngIf="!isnonpo" class="ptable-cell" style="text-align:right;width:100px;">{{rowData.materialqty}}</td>
                   <td class="ptable-cell" style="text-align:right;width:100px;">{{rowData.receivedqty}}</td>
