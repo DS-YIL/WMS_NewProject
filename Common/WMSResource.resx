@@ -601,11 +601,12 @@ values(default,@pono,@itemid,@gatepassmaterialid,@itemissueddate,@itemreceiverid
     <value>UPDATE  wms.wms_storeinward set  qualitypassedqty=@qualitypassedqty,qualityfailedqty = @qualityfailedqty,checkedby = @receivedby,checkedon=current_date,remarks=@remarks where inwardid =#inwardid</value>
   </data>
   <data name="getdataforqualitydetails" xml:space="preserve">
-    <value>Select date_part('year', current_date::date) as syear,
-date_part('month', current_date::date) as smonth,
-inwmasterid,date_part('week', receiveddate::date) AS sweek,receiveddate,qualitychecked from wms.wms_storeinward
-where receiveddate &gt;= (select date_trunc('month', current_date))
-order by sweek</value>
+    <value>select stinw.inwardid,stinw.lineitemno,stinw.pono,stinw.inwmasterid,stinw.qualitycheckrequired,stinw.materialid as material,secinw.grnnumber,secinw.pono as securitypo,secinw.invoiceno,secinw.onhold,mat.materialdescription,stinw.receivedqty,stinw.receiveddate,stinw.returnqty,qc.qualitypassedqty,qc.qualityfailedqty,qc.remarks,qc.qcby as checkedby
+  from wms.wms_storeinward stinw
+  left outer join wms.wms_securityinward secinw on secinw.inwmasterid=stinw.inwmasterid
+  left outer join wms."MaterialMasterYGS" mat on mat.material = stinw.materialid
+  left outer join wms.wms_qualitycheck qc on qc.inwardid=stinw.inwardid
+  where stinw.qualitycheckrequired is True and secinw.grnnumber = '#grnno'</value>
   </data>
   <data name="receiveforinvoice" xml:space="preserve">
     <value>INSERT INTO wms.wms_storeinward(inwmasterid,receiveddate,receivedby,receivedqty,materialid,deleteflag,qualitycheckrequired,qualitychecked,materialqty,remarks,pono,lineitemno)
@@ -755,7 +756,7 @@ order by sl.inwmasterid desc</value>
     <value>select MAX(stinw.inwardid) as value,sinw.grnnumber as text,Max(sinw.suppliername) as supplier 
 from wms.wms_storeinward stinw
 left outer join wms.wms_securityinward sinw on stinw.inwmasterid = sinw.inwmasterid 
-where (stinw.confirmqty is null or stinw.confirmqty = 0) and stinw.receivedqty &gt; 0  and sinw.grnnumber is not null and sinw.onhold is not True  group by stinw.inwmasterid,sinw.grnnumber</value>
+where (stinw.confirmqty is null or stinw.confirmqty = 0) and stinw.receivedqty &gt; 0  and stinw.returnedby is null and sinw.grnnumber is not null and sinw.onhold is not True  group by stinw.inwmasterid,sinw.grnnumber</value>
   </data>
   <data name="getgrnlistdataforputaway" xml:space="preserve">
     <value>select stinw.inwardid as value,sinw.grnnumber as text,
@@ -1661,5 +1662,19 @@ left join wms."MaterialMasterYGS" mat on mat.material = st.materialid</value>
   <data name="updateStockLog" xml:space="preserve">
     <value>insert into wms.wms_stocklog(itemid, transactiontype, issuedqty, reason, remarks, createddate, createdby)
 values(default, @transactiontype, @issuedqty, @reason, @remarks, @createddate, @createdby)</value>
+  </data>
+  <data name="closepoquery" xml:space="preserve">
+    <value>update wms.wms_polist set isclosed = True where pono = '#pono'</value>
+  </data>
+  <data name="isallreceivedqueryforpo" xml:space="preserve">
+    <value>select CASE
+     WHEN (select SUM(materialqty)from wms.wms_pomaterials where pono = '#pono') = SUM(confirmqty) THEN True
+	 ELSE False
+ END as isallreceived   
+ from wms.wms_storeinward 
+where pono = '#pono' group by pono</value>
+  </data>
+  <data name="ispoclosedquery" xml:space="preserve">
+    <value>select isclosed from wms.wms_polist where pono = '#pono'</value>
   </data>
 </root>
