@@ -40,7 +40,7 @@ export class PoDetails {
   asnno: string;
   id: string;
   vehicleno: string;
-    inwmasterid: string;
+  inwmasterid: string;
 }
 
 export class BarcodeModel {
@@ -85,7 +85,7 @@ export class UserDashboardGraphModel {
   graphdate: Date;
   type: string;
   sweek: string;
-    count1: any;
+  count1: any;
   quality: any;
   count2: any;
   accept: any;
@@ -580,7 +580,7 @@ export class materialtransferTR {
   materialid: string;
   materialdescription: string;
   transferredqty: number = 0;
-  material : any
+  material: any
 }
 
 export class materialtransferapproverModel {
@@ -631,13 +631,13 @@ export class outwardinwardreportModel {
   materialdescription: string;
   outwarddate: Date;
   outwardby: string;
-	outwardremarks: string;
-	outwardqty: number;
+  outwardremarks: string;
+  outwardqty: number;
   inwarddate: Date;
   inwardremarks: string;
-	inwardqty: number;
+  inwardqty: number;
   securityinwarddate: Date;
-	securityinwardby: string;
+  securityinwardby: string;
   securityinwardremarks: string;
   showtr: boolean = false;
   materialdata: outwardinwardreportModel[] = [];
@@ -661,12 +661,12 @@ export class MaterialinHand {
 }
 
 export class matlocations {
-  itemlocation : string
+  itemlocation: string
   quantity: number
 }
 
 export class WMSHttpResponse {
-  message:string
+  message: string
 }
 
 export class PrintHistoryModel {
@@ -842,7 +842,7 @@ export class MateriallabelModel {
   gr: string;
   shippingpoint: string;
   projectiddef: string;
-	loadingdate :Date
+  loadingdate: Date
   custpo: string;
   partno: string;
   grno: string;
@@ -850,13 +850,13 @@ export class MateriallabelModel {
   error_description: string;
   isloaderror: boolean;
   uploadcode: string;
-  
+
   id: number
   pono: string;
   materialid: string;
   itemno: number
   podescription: string;
-		
+
   vendorcode: string;
   vendorname: string;
   materialdescription: string;
@@ -868,7 +868,7 @@ export class MateriallabelModel {
 
 
 
-	}
+}
 
 export class grReports {
   wmsgr: string;
@@ -878,7 +878,7 @@ export class grReports {
   pono: string;
 }
 
-export class pmDashboardCards{
+export class pmDashboardCards {
   totalmaterialrequest: any;
   issuedmaterialrequest: any;
   pendingmaterialrequest: any;
@@ -932,4 +932,18 @@ export class miscellanousIssueData {
 }
 export class inventoryFilters {
   itemlocation: string = "";
+}
+
+
+export class MaterialMaster {
+  material: string;
+  materialdescription: string;
+  storeid: number;
+  rackid: number;
+  binid: number;
+  qualitycheck: boolean;
+  stocktype: string;
+  safterystock: number;
+  unitprice: string;
+  hsncode: string;
 }

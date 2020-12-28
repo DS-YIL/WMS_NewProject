@@ -1680,4 +1680,17 @@ where pono = '#pono' group by pono</value>
   <data name="ispoclosedquery" xml:space="preserve">
     <value>select isclosed from wms.wms_polist where pono = '#pono'</value>
   </data>
+  <data name="getMaterialMasterList" xml:space="preserve">
+    <value>select mmy.*, loc.locatorname, rack.racknumber,bin.binnumber from wms."MaterialMasterYGS" mmy 
+left outer join wms.wms_rd_locator loc on loc.locatorid =mmy.storeid 
+left outer join wms.wms_rd_rack  rack on rack.rackid =mmy.rackid 
+left outer join wms.wms_rd_bin bin on bin.binid =mmy.binid</value>
+  </data>
+  <data name="insertmaterialMaster" xml:space="preserve">
+    <value>INSERT INTO wms."MaterialMasterYGS" (material, materialdescription, storeid,rackid,binid,qualitycheck,stocktype,unitprice,hsncode)VALUES(@material, @materialdescription,@locatorid,@rackid,@binid,@qualitycheck,@stocktype,@unitprice,@hsncode)</value>
+  </data>
+  <data name="updateMaterialMaster" xml:space="preserve">
+    <value>UPDATE  wms."MaterialMasterYGS" set  materialdescription=@materialdescription,storeid = @storeid,rackid = @rackid,binid=@binid,qualitycheck=@qualitycheck,
+stocktype=@stocktype,unitprice=@unitprice,hsncode=@hsncode where material =#material</value>
+  </data>
 </root>

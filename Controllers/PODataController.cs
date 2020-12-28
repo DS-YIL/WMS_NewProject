@@ -1244,5 +1244,18 @@ namespace WMS.Controllers
 
 		}
 
+		[HttpGet("getMaterialMasterList")]
+		public IActionResult getMaterialMasterList()
+		{
+			return Ok(this._poService.getMaterialMasterList());
+		}
+
+		[HttpPost("updateMaterialMaster")]
+		public bool updateMaterialMaster(materilaMasterYgs data)
+		{
+			return this._poService.updateMaterialMaster(data);
+
+		}
+
 	}
 }

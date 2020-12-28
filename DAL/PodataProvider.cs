@@ -570,7 +570,7 @@ namespace WMS.DAL
 			}
 		}
 
-	
+
 		/*
 		Name of Function : <<generateBarcodeMaterial>>  Author :<<Gayathri>>  
 		Date of Creation <<12-12-2019>>
@@ -578,199 +578,199 @@ namespace WMS.DAL
 		<param name="printMat"></param>
 		Review Date :<<>>   Reviewed By :<<>>
 		*/
-	public printMaterial generateBarcodeMaterial(printMaterial printMat)
-        {
-            printMaterial objprint = new printMaterial();
-            try
-            {
+		public printMaterial generateBarcodeMaterial(printMaterial printMat)
+		{
+			printMaterial objprint = new printMaterial();
+			try
+			{
 
-                string path = "";
+				string path = "";
 
-                path = Environment.CurrentDirectory + @"\Barcodes\";
+				path = Environment.CurrentDirectory + @"\Barcodes\";
 
-                if (!Directory.Exists(path))
-                {
-                    Directory.CreateDirectory(path);
-                }
+				if (!Directory.Exists(path))
+				{
+					Directory.CreateDirectory(path);
+				}
 
-                using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
-                {
-                    //Check if the material is already printed
-                    string query = "select * from wms.wms_pomaterials where pono='" + printMat.pono + "' and materialid='" + printMat.materialid + "' and itemno='" + printMat.lineitemno + "'";
-                    // string query = "Select * from wms.wms_securityinward sinw join wms.wms_printstatusmaterial psmat on psmat.inwmasterid=sinw.inwmasterid where sinw.pono='" + printMat.pono + "' and sinw.invoiceno='" + printMat.invoiceno + "' and psmat.materialid='" + printMat.materialid + "'";
-                    //string query = "Select * from wms.wms_securityinward sinw left join wms.wms_st_materiallabel psmat on psmat.po = sinw.pono where sinw.pono = '" + printMat.pono + "' and sinw.invoiceno = '" + printMat.invoiceno + "'  and psmat.mscode = '" + printMat.materialid + "'";
+				using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
+				{
+					//Check if the material is already printed
+					string query = "select * from wms.wms_pomaterials where pono='" + printMat.pono + "' and materialid='" + printMat.materialid + "' and itemno='" + printMat.lineitemno + "'";
+					// string query = "Select * from wms.wms_securityinward sinw join wms.wms_printstatusmaterial psmat on psmat.inwmasterid=sinw.inwmasterid where sinw.pono='" + printMat.pono + "' and sinw.invoiceno='" + printMat.invoiceno + "' and psmat.materialid='" + printMat.materialid + "'";
+					//string query = "Select * from wms.wms_securityinward sinw left join wms.wms_st_materiallabel psmat on psmat.po = sinw.pono where sinw.pono = '" + printMat.pono + "' and sinw.invoiceno = '" + printMat.invoiceno + "'  and psmat.mscode = '" + printMat.materialid + "'";
 
-                    objprint = DB.QueryFirstOrDefault<printMaterial>(
-                           query, null, commandType: CommandType.Text);
+					objprint = DB.QueryFirstOrDefault<printMaterial>(
+						   query, null, commandType: CommandType.Text);
 
 
-                    objprint.noofpieces = printMat.noofpieces;
-                    objprint.boxno = printMat.boxno;
-                    objprint.totalboxes = printMat.totalboxes;
-                    objprint.insprec = "Not Required";
-                    objprint.qty = objprint.noofpieces + "/" + objprint.receivedqty + "ST " + objprint.boxno + "OF " + objprint.totalboxes + "BOXES";
+					objprint.noofpieces = printMat.noofpieces;
+					objprint.boxno = printMat.boxno;
+					objprint.totalboxes = printMat.totalboxes;
+					objprint.insprec = "Not Required";
+					objprint.qty = objprint.noofpieces + "/" + objprint.receivedqty + "ST " + objprint.boxno + "OF " + objprint.totalboxes + "BOXES";
 
-                }
-                PrintUtilities objprntmat = new PrintUtilities();
-                //generate barcodes in material label
-                //Material barcode
-                printMat.materialbarcode = "./Barcodes/" + objprint.material + ".bmp";
-                var content = objprint.material;
-                objprint.materialbarcode = objprntmat.generatebarcode(printMat.materialbarcode, content);
+				}
+				PrintUtilities objprntmat = new PrintUtilities();
+				//generate barcodes in material label
+				//Material barcode
+				printMat.materialbarcode = "./Barcodes/" + objprint.material + ".bmp";
+				var content = objprint.material;
+				objprint.materialbarcode = objprntmat.generatebarcode(printMat.materialbarcode, content);
 
-                //order barcode
-                printMat.soiembarcode = "./Barcodes/" + objprint.saleorderno + "_" + objprint.solineitemno + ".bmp";
-                content = objprint.saleorderno + "-" + objprint.solineitemno;
-                objprint.soiembarcode = objprntmat.generatebarcode(printMat.soiembarcode, content);
+				//order barcode
+				printMat.soiembarcode = "./Barcodes/" + objprint.saleorderno + "_" + objprint.solineitemno + ".bmp";
+				content = objprint.saleorderno + "-" + objprint.solineitemno;
+				objprint.soiembarcode = objprntmat.generatebarcode(printMat.soiembarcode, content);
 
-                //plant barcode
-                printMat.plantbarcode = "./Barcodes/" + objprint.plant + ".bmp";
-                content = objprint.plant;
-                objprint.plantbarcode = objprntmat.generatebarcode(printMat.plantbarcode, content);
+				//plant barcode
+				printMat.plantbarcode = "./Barcodes/" + objprint.plant + ".bmp";
+				content = objprint.plant;
+				objprint.plantbarcode = objprntmat.generatebarcode(printMat.plantbarcode, content);
 
-                //sp barcode
-                printMat.spbarcode = "./Barcodes/" + objprint.spbarcode + ".bmp";
-                content = objprint.spbarcode;
-                objprint.spbarcode = objprntmat.generatebarcode(printMat.spbarcode, content);
+				//sp barcode
+				printMat.spbarcode = "./Barcodes/" + objprint.spbarcode + ".bmp";
+				content = objprint.spbarcode;
+				objprint.spbarcode = objprntmat.generatebarcode(printMat.spbarcode, content);
 
-                //Linkage barcode
-                printMat.linkagebarcode = "./Barcodes/" + objprint.linkageno + ".bmp";
-                content = objprint.linkageno;
-                objprint.linkagebarcode = objprntmat.generatebarcode(printMat.linkagebarcode, content);
+				//Linkage barcode
+				printMat.linkagebarcode = "./Barcodes/" + objprint.linkageno + ".bmp";
+				content = objprint.linkageno;
+				objprint.linkagebarcode = objprntmat.generatebarcode(printMat.linkagebarcode, content);
 
-                int noofprints = 1;
-                bool isprint = true;
-                bool isonholdgr = false;
-                //Save data in database
-                string insertqueryforinvoice = WMSResource.insertmatbarcodelabeldata;
-                using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
-                {
-                    var results = DB.ExecuteScalar(insertqueryforinvoice, new
-                    {
-                        objprint.pono,
-                        objprint.inwardid,
-                        noofprints,
-                        objprint.noofpieces,
-                        isprint,
-                        objprint.totalboxes,
-                        objprint.boxno,
-                        objprint.receivedqty,
-                        isonholdgr,
-                        objprint.materialcodePath,
-                        objprint.soiembarcode,
-                        objprint.plantbarcode,
-                        objprint.spbarcode,
-                        objprint.linkagebarcode,
-                    });
+				int noofprints = 1;
+				bool isprint = true;
+				bool isonholdgr = false;
+				//Save data in database
+				string insertqueryforinvoice = WMSResource.insertmatbarcodelabeldata;
+				using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
+				{
+					var results = DB.ExecuteScalar(insertqueryforinvoice, new
+					{
+						objprint.pono,
+						objprint.inwardid,
+						noofprints,
+						objprint.noofpieces,
+						isprint,
+						objprint.totalboxes,
+						objprint.boxno,
+						objprint.receivedqty,
+						isonholdgr,
+						objprint.materialcodePath,
+						objprint.soiembarcode,
+						objprint.plantbarcode,
+						objprint.spbarcode,
+						objprint.linkagebarcode,
+					});
 
-                }
-            }
-            catch (Exception ex)
-            {
-                printMat.errorMsg = ex.Message;
-                log.ErrorMessage("PODataProvider", "generateBarcodeMaterial", ex.StackTrace.ToString());
-            }
-            return objprint;
-        }
+				}
+			}
+			catch (Exception ex)
+			{
+				printMat.errorMsg = ex.Message;
+				log.ErrorMessage("PODataProvider", "generateBarcodeMaterial", ex.StackTrace.ToString());
+			}
+			return objprint;
+		}
 
-        /*
+		/*
        Name of Function : <<generateBarcodeMatonhold>>  Author :<<Gayathri>>  
        Date of Creation <<12-12-2019>>
        Purpose : <<Generate barcode and qrcode label required for Material label and get the get required to display on the material label>>
        <param name="printMat"></param>
        Review Date :<<>>   Reviewed By :<<>>
        */
-        public printMaterial generateBarcodeMatonhold(printMaterial printMat)
-        {
-            printMaterial objprint = new printMaterial();
-            try
-            {
-                PrintUtilities objptutlities = new PrintUtilities();
-                string path = "";
+		public printMaterial generateBarcodeMatonhold(printMaterial printMat)
+		{
+			printMaterial objprint = new printMaterial();
+			try
+			{
+				PrintUtilities objptutlities = new PrintUtilities();
+				string path = "";
 
-                path = Environment.CurrentDirectory + @"\Barcodes\";
+				path = Environment.CurrentDirectory + @"\Barcodes\";
 
-                if (!Directory.Exists(path))
-                {
-                    Directory.CreateDirectory(path);
-                }
+				if (!Directory.Exists(path))
+				{
+					Directory.CreateDirectory(path);
+				}
 
-                using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
-                {
-                    //Check if the material is already printed
-                     string query = "Select * from wms.wms_securityinward sinw join wms.wms_printstatusmaterial psmat on psmat.inwmasterid=sinw.inwmasterid where sinw.pono='" + printMat.pono + "' and sinw.invoiceno='" + printMat.invoiceno + "' and psmat.materialid='" + printMat.materialid + "'";
-                    
-                    objprint = DB.QueryFirstOrDefault<printMaterial>(
-                           query, null, commandType: CommandType.Text);
+				using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
+				{
+					//Check if the material is already printed
+					string query = "Select * from wms.wms_securityinward sinw join wms.wms_printstatusmaterial psmat on psmat.inwmasterid=sinw.inwmasterid where sinw.pono='" + printMat.pono + "' and sinw.invoiceno='" + printMat.invoiceno + "' and psmat.materialid='" + printMat.materialid + "'";
 
-
-
-                }
-                var content = printMat.grnno + "-" + printMat.materialid;
-                printMat.barcodePath = "./Barcodes/" + content + ".bmp";
-                printMat.materialcodePath = objptutlities.generatebarcode(printMat.barcodePath,content);
-
-                ////generate barcode for material code and GRN No.
-               
-                //BarcodeWriter writer = new BarcodeWriter
-                //{
-                //    Format = BarcodeFormat.QR_CODE,
-                //    Options = new EncodingOptions
-                //    {
-                //        Height = 90,
-                //        Width = 100,
-                //        PureBarcode = false,
-                //        Margin = 1,
-
-                //    },
-                //};
-                //var bitmap = writer.Write(content);
-
-                //// write text and generate a 2-D barcode as a bitmap
-                //writer
-                //    .Write(content)
-                //    .Save(path + content + ".bmp");
-
-                //printMat.barcodePath = "./Barcodes/" + content + ".bmp";
-
-                //Barcode design for material code
-                //generate barcode for material code and GRN No.
-
-                content = printMat.materialid;
-                printMat.materialcodePath = objptutlities.generateqrcode(printMat.barcodePath, content);
-
-                //BarcodeWriter writerData = new BarcodeWriter
-                //{
-                //    Format = BarcodeFormat.QR_CODE,
-                //    Options = new EncodingOptions
-                //    {
-                //        Height = 90,
-                //        Width = 100,
-                //        PureBarcode = false,
-                //        Margin = 1,
-
-                //    },
-                //};
-
-                //bitmap = writerData.Write(content);
-
-                //// write text and generate a 2-D barcode as a bitmap
-                //writer
-                //    .Write(content)
-                //    .Save(path + content + ".bmp");
-
-                //printMat.materialcodePath = "./Barcodes/" + content + ".bmp";
+					objprint = DB.QueryFirstOrDefault<printMaterial>(
+						   query, null, commandType: CommandType.Text);
 
 
 
-            }
-            catch (Exception ex)
-            {
-                printMat.errorMsg = ex.Message;
-                log.ErrorMessage("PODataProvider", "generateBarcodeMaterial", ex.StackTrace.ToString());
-            }
-            return objprint;
-        }
+				}
+				var content = printMat.grnno + "-" + printMat.materialid;
+				printMat.barcodePath = "./Barcodes/" + content + ".bmp";
+				printMat.materialcodePath = objptutlities.generatebarcode(printMat.barcodePath, content);
+
+				////generate barcode for material code and GRN No.
+
+				//BarcodeWriter writer = new BarcodeWriter
+				//{
+				//    Format = BarcodeFormat.QR_CODE,
+				//    Options = new EncodingOptions
+				//    {
+				//        Height = 90,
+				//        Width = 100,
+				//        PureBarcode = false,
+				//        Margin = 1,
+
+				//    },
+				//};
+				//var bitmap = writer.Write(content);
+
+				//// write text and generate a 2-D barcode as a bitmap
+				//writer
+				//    .Write(content)
+				//    .Save(path + content + ".bmp");
+
+				//printMat.barcodePath = "./Barcodes/" + content + ".bmp";
+
+				//Barcode design for material code
+				//generate barcode for material code and GRN No.
+
+				content = printMat.materialid;
+				printMat.materialcodePath = objptutlities.generateqrcode(printMat.barcodePath, content);
+
+				//BarcodeWriter writerData = new BarcodeWriter
+				//{
+				//    Format = BarcodeFormat.QR_CODE,
+				//    Options = new EncodingOptions
+				//    {
+				//        Height = 90,
+				//        Width = 100,
+				//        PureBarcode = false,
+				//        Margin = 1,
+
+				//    },
+				//};
+
+				//bitmap = writerData.Write(content);
+
+				//// write text and generate a 2-D barcode as a bitmap
+				//writer
+				//    .Write(content)
+				//    .Save(path + content + ".bmp");
+
+				//printMat.materialcodePath = "./Barcodes/" + content + ".bmp";
+
+
+
+			}
+			catch (Exception ex)
+			{
+				printMat.errorMsg = ex.Message;
+				log.ErrorMessage("PODataProvider", "generateBarcodeMaterial", ex.StackTrace.ToString());
+			}
+			return objprint;
+		}
 
 
 		/*
@@ -5771,22 +5771,22 @@ namespace WMS.DAL
 
 					var data = new ManagerDashboard();
 					data.pendingcount = data1.Count() > 0 ? data1.FirstOrDefault().pendingcount : 0;
-					data.onholdcount =data2.Count()>0? data2.FirstOrDefault().onholdcount: 0;
-					data.completedcount =data3.Count()>0? data3.FirstOrDefault().completedcount:0;
+					data.onholdcount = data2.Count() > 0 ? data2.FirstOrDefault().onholdcount : 0;
+					data.completedcount = data3.Count() > 0 ? data3.FirstOrDefault().completedcount : 0;
 					if (data4.Count() > 0)
 					{
 						data.qualitycompcount = data4.FirstOrDefault().qualitycompcount;
 					}
 
-					data.qualitypendcount =data5.Count()>0? data5.FirstOrDefault().qualitypendcount:0;
+					data.qualitypendcount = data5.Count() > 0 ? data5.FirstOrDefault().qualitypendcount : 0;
 					if (data7.Count() > 0)
 					{
 						data.putawaycompcount = data7.FirstOrDefault().putawaycompcount;
 					}
 
-					data.putawaypendcount = data6.Count()>0?data6.FirstOrDefault().putawaypendcount:0;
-					data.putawayinprocount = data8.Count()>0?data8.FirstOrDefault().putawayinprocount:0;
-					data.acceptancependcount =data9.Count()>0? data9.FirstOrDefault().acceptancependcount:0;
+					data.putawaypendcount = data6.Count() > 0 ? data6.FirstOrDefault().putawaypendcount : 0;
+					data.putawayinprocount = data8.Count() > 0 ? data8.FirstOrDefault().putawayinprocount : 0;
+					data.acceptancependcount = data9.Count() > 0 ? data9.FirstOrDefault().acceptancependcount : 0;
 					if (data10.Count() > 0)
 					{
 						data.acceptancecompcount = data10.FirstOrDefault().acceptancecompcount;
@@ -5825,14 +5825,14 @@ namespace WMS.DAL
 					List<GraphModelNew> rcvdata = new List<GraphModelNew>();
 					string rcvquery = WMSResource.dataforreceivedgraph;
 					var data1 = await pgsql.QueryAsync<GraphModelNew>(rcvquery, null, commandType: CommandType.Text);
-					if(data1 != null && data1.Count() > 0)
+					if (data1 != null && data1.Count() > 0)
 					{
 						int i = 1;
-						foreach(GraphModelNew grph in data1)
+						foreach (GraphModelNew grph in data1)
 						{
 							string week = grph.sweek;
 							var insertcheck = rcvdata.Where(o => o.sweek == week).FirstOrDefault();
-							if(insertcheck == null)
+							if (insertcheck == null)
 							{
 								GraphModelNew obj = new GraphModelNew();
 								obj.displayweek = "Week" + i;
@@ -5850,7 +5850,7 @@ namespace WMS.DAL
 
 					return rcvdata;
 				}
-				catch(Exception ex)
+				catch (Exception ex)
 				{
 					string msg = ex.Message;
 					return null;
@@ -7399,7 +7399,7 @@ namespace WMS.DAL
 								item.returnremarks
 
 							});
-							
+
 							string insertqueryforstatusforqty = WMSResource.insertqueryforstatusforqty;
 
 							var data1 = DB.ExecuteScalar(insertqueryforstatusforqty, new
@@ -7408,27 +7408,27 @@ namespace WMS.DAL
 								item.returnqty
 
 							});
-                            if (item.pono.StartsWith("NP"))
-                            {
-								string closepoqry = WMSResource.closepoquery.Replace("#pono",item.pono);
+							if (item.pono.StartsWith("NP"))
+							{
+								string closepoqry = WMSResource.closepoquery.Replace("#pono", item.pono);
 								DB.ExecuteScalar(closepoqry, null);
 							}
-                            else
-                            {
+							else
+							{
 								string isallreceived = WMSResource.isallreceivedqueryforpo.Replace("#pono", item.pono);
 								bool isreceived = (bool)DB.ExecuteScalar(isallreceived, null);
 								if (isreceived)
-                                {
+								{
 									string closepoqry = WMSResource.closepoquery.Replace("#pono", item.pono);
 									DB.ExecuteScalar(closepoqry, null);
 								}
 
 							}
 
-							
 
 
-							
+
+
 
 
 						}
@@ -8410,7 +8410,7 @@ namespace WMS.DAL
 										itm.lineitemno,
 										itm.receivedtype,
 										itm.poitemdescription
-									
+
 									}));
 									if (result != 0)
 									{
@@ -9602,7 +9602,7 @@ namespace WMS.DAL
 						else if (mat.movetype == "in")
 						{
 							query = "insert into wms.outwatdinward(gatepassid, gatepassmaterialid,inwardqty, securityinwardby, securityinwarddate, securityinwardremarks)";
-							query += " values('" + mat.gatepassid + "', " + gatepassmaterialid + ","+mat.inwardqty+",'" + mat.movedby + "', '" + mat.inwarddatestring + "', '" + mat.remarks + "')";
+							query += " values('" + mat.gatepassid + "', " + gatepassmaterialid + "," + mat.inwardqty + ",'" + mat.movedby + "', '" + mat.inwarddatestring + "', '" + mat.remarks + "')";
 							var resultsx = pgsql.ExecuteScalar(query);
 							//query = "update wms.wms_gatepassmaterial set inwardqty = " + mat.inwardqty + ", inwarddate = '" + mat.inwarddatestring + "' , inwardedby='" + mat.movedby + "',inwardremarks='" + mat.remarks + "' where gatepassmaterialid = " + mat.gatepassmaterialid + "";
 							//results11 = pgsql.ExecuteScalar(query);
@@ -11839,7 +11839,7 @@ namespace WMS.DAL
 					}
 
 					data.approvedmaterialreturn = data5.Count() > 0 ? data5.FirstOrDefault().approvedmaterialreturn : 0;
-					data.pendingmaterialreturn = data6.Count()>0? data6.FirstOrDefault().pendingmaterialreturn:0;
+					data.pendingmaterialreturn = data6.Count() > 0 ? data6.FirstOrDefault().pendingmaterialreturn : 0;
 
 					//if (data7.Count() > 0)
 					//{
@@ -12231,8 +12231,8 @@ namespace WMS.DAL
 		}
 
 		/*
-		Name of Function : <<InsertStock>>  Author :<<Ramesh>>  
-		Date of Creation <<12-12-2019>>
+		Name of Function : <<updateMiscellanousReceipt>>  Author :<<Prasanna>>  
+		Date of Creation <<27-12-2019>>
 		Purpose : <<inserting material details to warehouse>>
 		<param name="data"></param>
 		Review Date :<<>>   Reviewed By :<<>>
@@ -12244,7 +12244,7 @@ namespace WMS.DAL
 				StockModel obj = new StockModel();
 				string loactiontext = string.Empty;
 				var result = 0;
-				string inwmasterid =null;
+				string inwmasterid = null;
 				using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 				{
 					StockModel objs = new StockModel();
@@ -12284,13 +12284,13 @@ namespace WMS.DAL
 							unitprice
 						}));
 
-						 itemid = Convert.ToInt32(result);
+						itemid = Convert.ToInt32(result);
 						string transactiontype = "Miscellanous Receipt";
 						DateTime createddate = DateTime.Now;
 						string insertpry = WMSResource.updateStockLog;
 						int? issuedqty = null;
 						var remarks = "";
-						int? reason =null;
+						int? reason = null;
 						pgsql.ExecuteScalar(insertpry, new
 						{
 							itemid,
@@ -12314,5 +12314,85 @@ namespace WMS.DAL
 
 
 		}
+
+
+		/*
+			Name of Function : <<InsertStock>>  Author :<<Ramesh>>  
+			Date of Creation <<12-12-2019>>
+			Purpose : <<inserting material details to warehouse>>
+			<param name="data"></param>
+			Review Date :<<>>   Reviewed By :<<>>
+			*/
+		public DataTable getMaterialMasterList()
+		{
+			DataTable dataTable = new DataTable();
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+
+				IDbCommand selectCommand = pgsql.CreateCommand();
+				selectCommand.CommandText = WMSResource.getMaterialMasterList;
+				IDbDataAdapter dbDataAdapter = new NpgsqlDataAdapter();
+				dbDataAdapter.SelectCommand = selectCommand;
+
+				DataSet dataSet = new DataSet();
+
+				dbDataAdapter.Fill(dataSet);
+				dataTable = dataSet.Tables[0];
+			}
+			return dataTable;
+		}
+
+
+		public bool updateMaterialMaster(materilaMasterYgs materialDetails)
+		{
+			try
+			{
+				using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+				{
+					string materialQuery = "Select material from wms.\"MaterialMasterYGS\" where material = '" + materialDetails.material + "'";
+					var materialid = pgsql.ExecuteScalar(materialQuery, null);
+					if (materialid == null)
+					{
+						var insertStorequery = WMSResource.insertmaterialMaster;
+						var rslt = pgsql.Execute(insertStorequery, new
+						{
+							materialDetails.material,
+							materialDetails.materialdescription,
+							materialDetails.storeid,
+							materialDetails.rackid,
+							materialDetails.binid,
+							materialDetails.qualitycheck,
+							materialDetails.stocktype,
+							materialDetails.unitprice,
+							materialDetails.hsncode
+						});
+					}
+					else
+					{
+						string updateQry = WMSResource.updateMaterialMaster.Replace("#material", materialDetails.material);
+
+						var results = pgsql.ExecuteScalar(updateQry, new
+						{
+							materialDetails.materialdescription,
+							materialDetails.storeid,
+							materialDetails.rackid,
+							materialDetails.binid,
+							materialDetails.qualitycheck,
+							materialDetails.stocktype,
+							materialDetails.unitprice,
+							materialDetails.hsncode
+
+						});
+					}
+				}
+			}
+			catch (Exception Ex)
+			{
+				log.ErrorMessage("PODataProvider", "updateMaterialMaster", Ex.StackTrace.ToString());
+				return false;
+			}
+			return true;
+		}
+
 	}
 }

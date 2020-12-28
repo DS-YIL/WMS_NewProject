@@ -1059,6 +1059,18 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to select mmy.*, loc.locatorname, rack.racknumber,bin.binnumber from wms.&quot;MaterialMasterYGS&quot; mmy 
+        ///left outer join wms.wms_rd_locator loc on loc.locatorid =mmy.storeid 
+        ///left outer join wms.wms_rd_rack  rack on rack.rackid =mmy.rackid 
+        ///left outer join wms.wms_rd_bin bin on bin.binid =mmy.binid.
+        /// </summary>
+        public static string getMaterialMasterList {
+            get {
+                return ResourceManager.GetString("getMaterialMasterList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to select mr.requestid,mr.requesteddate,mr.ackstatus,emp.name as requestedby,mr.ackremarks,mr.remarks from wms.materialrequest mr
         ///left outer join  wms.employee emp on emp.employeeno = mr.requesterid.
         /// </summary>
@@ -2032,6 +2044,15 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to INSERT INTO wms.&quot;MaterialMasterYGS&quot; (material, materialdescription, storeid,rackid,binid,qualitycheck,stocktype,unitprice,hsncode)VALUES(@material, @materialdescription,@locatorid,@rackid,@binid,@qualitycheck,@stocktype,@unitprice,@hsncode).
+        /// </summary>
+        public static string insertmaterialMaster {
+            get {
+                return ResourceManager.GetString("insertmaterialMaster", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to INSERT INTO wms.materialrequest(approveremailid,approverid,pono,requesterid,requesteddate,deleteflag,projectcode,remarks)VALUES(@approveremailid,@approverid,@pono,@requesterid,current_date,false,@projectcode,@remarks) returning requestid.
         /// </summary>
         public static string insertmaterialrequest {
@@ -2733,6 +2754,16 @@ namespace WMS.Common {
         public static string updatelocation {
             get {
                 return ResourceManager.GetString("updatelocation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to UPDATE  wms.&quot;MaterialMasterYGS&quot; set  materialdescription=@materialdescription,storeid = @storeid,rackid = @rackid,binid=@binid,qualitycheck=@qualitycheck,
+        ///stocktype=@stocktype,unitprice=@unitprice,hsncode=@hsncode where material =#material.
+        /// </summary>
+        public static string updateMaterialMaster {
+            get {
+                return ResourceManager.GetString("updateMaterialMaster", resourceCulture);
             }
         }
         

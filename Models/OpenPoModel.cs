@@ -29,6 +29,7 @@ namespace WMS.Models
 		public int paitemid { get; set; }
 		public string Material { get; set; }
 		public string Materialdescription { get; set; }
+		public string poitemdescription { get; set; }
 		public string status { get; set; }
 		public int returnqty { get; set; }
 		public int vendorid { get; set; }
@@ -1676,4 +1677,22 @@ public class miscellanousIssueData
 	public string Remarks { get; set; }
 	public string ProjectId { get; set; }
 	public string createdby { get; set; }
+}
+
+public class materilaMasterYgs
+{
+	public string material { get; set; }
+	public string materialdescription { get; set; }
+	public int storeid { get; set; }
+	public int rackid { get; set; }
+	public int binid { get; set; }
+
+	public bool qualitycheck { get; set; }
+	public string stocktype { get; set; }
+
+	public int safterystock { get; set; }
+	public decimal? unitprice { get; set; }
+	public string hsncode { get; set; }
+
+
 }

@@ -1,1 +1,160 @@
-Material Master
+<div class="card" style="min-height: 500px;border-radius: 10px;box-shadow: 5px 10px #888888;">
+  <div class="card-header text-center cardheadertext">
+    <span><i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;material Master</span>
+  </div>
+  <div class="card-body" style="overflow-y:hidden;padding:0px;margin-left:40px;margin-right:40px">
+    <button type="submit" pButton class="ui-button-primary mt-2" (click)="showAddDialog('')" label="Add Material Master"></button>
+    <div class="mt-2">
+      <p-table #dt [value]="MaterialMasterList" [paginator]="true" [rows]="10" [resizableColumns]="true" [responsive]="true">
+        <ng-template pTemplate="header">
+          <tr class="mprltbldata">
+            <th style="text-align:center;width:70px">S.No</th>
+            <th style="text-align:center;">Material</th>
+            <!--<th style="text-align:center;width:180px">Material Type</th>-->
+            <th style="text-align:center;">Material Description</th>
+            <th style="text-align:center;">Unit Price</th>
+            <th style="text-align:center;">HSN Code</th>
+            <th style="text-align:center;">Store</th>
+            <th style="text-align:center;">Rack</th>
+            <th style="text-align:center;">Bin</th>
+            <th style="text-align:center;">Quality Check</th>
+            <th style="text-align:center;">Stock Type</th>
+            <th  style="text-align:center;">Edit</th>
+            <!--<th style="text-align:center;width:90px">Saftey Stock</th>-->
+
+
+          </tr>
+          <tr>
+            <th></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'material', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'materialdescription', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'unitprice', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'hsncode', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'store', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'rack', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'bin', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'qualitycheck', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'stocktype', 'contains')"></th>
+            <!--<th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'safterystock', 'contains')"></th>-->
+
+            <th></th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
+          <tr>
+            <td class="ptable-cell" style="text-align:center">{{ri+1}}</td>
+            <td class="ptable-cell" style="text-align:left">{{rowData.material}}</td>
+            <td class="ptable-cell" style="text-align:left">{{rowData.materialdescription}}</td>
+            <td class="ptable-cell" style="text-align:right">{{rowData.unitprice}}</td>
+            <td class="ptable-cell" style="text-align:right">{{rowData.hsncode}}</td>
+            <td class="ptable-cell" style="text-align:center">{{rowData.locatorname}}</td>
+            <td class="ptable-cell" style="text-align:center">{{rowData.racknumber}}</td>
+            <td class="ptable-cell" style="text-align:center">{{rowData.binnumber}}</td>
+            <td class="ptable-cell" style="text-align:center">{{rowData.qualitycheck}}</td>
+            <td class="ptable-cell" style="text-align:left">{{rowData.stocktype}}</td>
+            <td class="ptable-cell" style="text-align:center"> <button  type="button" icon="fa fa-edit" pButton aria-hidden="true" (click)="showAddDialog(rowData)"></button></td>
+            <!--<td class="ptable-cell" style="text-align:right">{{rowData.safterystock}}</td>-->
+
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+</div>
+<p-dialog header="Material Master" [(visible)]="displayAddDialog" showEffect="fade" [modal]="true" [style]="{width: '80%'}">
+  <form [formGroup]="CreateMaterial">
+    <div class="row m-2">
+      <div class="col-xs-3 col-lg-3 col-md-3 col-sm-3 form-group">
+        <label class="labelheading">Material :</label>
+        <div class="form-inline-list">
+          <input type="text" class="form-control" maxlength="50" formControlName="material" [ngClass]="{ 'is-invalid': isSubmit && CreateMaterial.controls.material.errors}" [(ngModel)]="MaterialMaster.material">
+          <span *ngIf="isSubmit && CreateMaterial.controls.material.errors" class="invalid-feedback">Enter Material.</span>
+        </div>
+      </div>
+      <div class="col-xs-3 col-lg-3 col-md-3 col-sm-3 form-group">
+        <label class="labelheading">Material Description:</label>
+        <div class="form-inline-list">
+          <input type="text" class="form-control" maxlength="200" formControlName="materialdescription" [ngClass]="{ 'is-invalid': isSubmit && CreateMaterial.controls.materialdescription.errors}" [(ngModel)]="MaterialMaster.materialdescription">
+          <span *ngIf="isSubmit && CreateMaterial.controls.materialdescription.errors" class="invalid-feedback">Enter Material Description.</span>
+        </div>
+      </div>
+      <div class="col-xs-3 col-lg-3 col-md-3 col-sm-3 form-group">
+        <label class="labelheading">Unit Price:</label>
+        <div class="form-inline-list">
+          <input type="number" class="form-control"  formControlName="unitprice" [ngClass]="{ 'is-invalid': isSubmit && CreateMaterial.controls.unitprice.errors}" [(ngModel)]="MaterialMaster.unitprice">
+          <span *ngIf="isSubmit && CreateMaterial.controls.unitprice.errors" class="invalid-feedback">Enter UnitPrice.</span>
+        </div>
+      </div>
+      <div class="col-xs-3 col-lg-3 col-md-3 col-sm-3 form-group">
+        <label class="labelheading">HSNCode:</label>
+        <div class="form-inline-list">
+          <input type="number" class="form-control" maxlength="10" formControlName="hsncode" [ngClass]="{ 'is-invalid': isSubmit && CreateMaterial.controls.hsncode.errors}" [(ngModel)]="MaterialMaster.hsncode">
+          <span *ngIf="isSubmit && CreateMaterial.controls.hsncode.errors" class="invalid-feedback">Enter HSN ode.</span>
+        </div>
+      </div>
+
+    </div>
+    <div class="row m-2">
+      <div class="col-xs-3 col-lg-3 col-md-3 col-sm-3 form-group">
+        <label class="labelheading">Store:</label>
+        <div class="form-inline-list">
+          <select [(ngModel)]="MaterialMaster.storeid" class="form-control dropdown" formControlName="storeid" (change)="onlocUpdate()" [ngClass]="{ 'is-invalid': isSubmit && CreateMaterial.controls.storeid.errors}">
+            <option value=null>Select</option>
+            <option *ngFor=" let loclist of locationlists" value={{loclist.locatorid}}>
+              {{loclist.locatorname}}
+            </option>
+          </select>
+          <span *ngIf="isSubmit && CreateMaterial.controls.storeid.errors" class="invalid-feedback">Select Store.</span>
+        </div>
+      </div>
+      <div class="col-xs-3 col-lg-3 col-md-3 col-sm-3 form-group">
+        <label class="labelheading">Rack:</label>
+        <div class="form-inline-list">
+          <select class="form-control dropdown" formControlName="rackid" (change)="onrackUpdate()" [ngClass]="{ 'is-invalid': isSubmit && CreateMaterial.controls.rackid.errors}" [(ngModel)]="MaterialMaster.rackid">
+            <option value=null>Select</option>
+            <option *ngFor=" let loclist of racklist " value={{loclist.rackid}}>
+              {{loclist.racknumber}}
+            </option>
+          </select>
+          <span *ngIf="isSubmit && CreateMaterial.controls.rackid.errors" class="invalid-feedback">Select Rack.</span>
+        </div>
+      </div>
+      <div class="col-xs-3 col-lg-3 col-md-3 col-sm-3 form-group">
+        <label class="labelheading">Bin:</label>
+        <div class="form-inline-list">
+          <select [(ngModel)]="MaterialMaster.binid" class="form-control dropdown" formControlName="binid" [ngClass]="{ 'is-invalid': isSubmit && CreateMaterial.controls.binid.errors}">
+            <option value=null>Select</option>
+            <option *ngFor=" let loclist of binlist" value={{loclist.binid}}>
+              {{loclist.binnumber}}
+            </option>
+          </select>
+          <span *ngIf="isSubmit && CreateMaterial.controls.binid.errors" class="invalid-feedback">Select Bin.</span>
+        </div>
+      </div>
+      <div class="col-xs-3 col-lg-3 col-md-3 col-sm-3 form-group">
+        <label class="labelheading">Quality Check:</label>
+        <div class="form-inline-list">
+          <input type="checkbox" style="height:30px;width:30px" class="form-control" formControlName="qualitycheck" [ngClass]="{ 'is-invalid': isSubmit && CreateMaterial.controls.qualitycheck.errors}" [(ngModel)]="MaterialMaster.qualitycheck">
+          <span *ngIf="isSubmit && CreateMaterial.controls.qualitycheck.errors" class="invalid-feedback">Select Quality check.</span>
+        </div>
+      </div>
+    </div>
+    <div class="row m-2">
+      <div class="col-xs-3 col-lg-3 col-md-3 col-sm-3 form-group">
+        <label class="labelheading">Stock Type:</label>
+        <div class="form-inline-list">
+          <input type="text" class="form-control" maxlength="100" formControlName="stocktype" [ngClass]="{ 'is-invalid': isSubmit && CreateMaterial.controls.stocktype.errors}" [(ngModel)]="MaterialMaster.stocktype">
+          <span *ngIf="isSubmit && CreateMaterial.controls.stocktype.errors" class="invalid-feedback">Enter Stock Type.</span>
+        </div>
+      </div>
+    </div>
+  </form>
+  <p-footer>
+    <div class="ui-dialog-buttonpane ui-helper-clearfix">
+      <button type="submit" pButton icon="fa fa-check" class="ui-button-primary" (click)="onSubmit()" label="Submit"></button>&nbsp;&nbsp;
+      <button type="button" pButton icon="fa fa-close" class="ui-button-danger" (click)="dialogCancel('displayAddDialog')" label="Cancel"></button>
+    </div>
+  </p-footer>
+</p-dialog>
+
+

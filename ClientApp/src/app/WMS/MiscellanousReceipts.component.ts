@@ -81,12 +81,12 @@ export class MiscellanousReceiptsComponent implements OnInit {
   //On selection of location updating rack
   onlocUpdate() {
     this.racklist = [];
-    this.racklist = this.rackdata.filter(li => li.locationid == this.MisData.locatorid);
+    this.racklist = this.rackdata.filter(li => li.locatorid == this.MisData.storeid);
   }
   //On selection of rack updating bin
   onrackUpdate() {
     this.binlist = [];
-    this.binlist = this.bindata.filter(li => li.locationid == this.MisData.locatorid && li.rackid == this.MisData.rackid)
+    this.binlist = this.bindata.filter(li => li.locatorid == this.MisData.storeid && li.rackid == this.MisData.rackid)
   }
 
 

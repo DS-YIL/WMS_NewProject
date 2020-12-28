@@ -263,5 +263,8 @@ Task<string> updateonholdrow(updateonhold datamodel);
 		Task<IEnumerable<StockModel>> getMiscellanousReceiptsList();
 		string updateMiscellanousReceipt(StockModel item);
 
+		System.Data.DataTable getMaterialMasterList();
+		bool updateMaterialMaster(materilaMasterYgs material);
+
 	}
 }
