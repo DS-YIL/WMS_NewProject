@@ -61,14 +61,14 @@
       <div class="col-xs-3 col-lg-3 col-md-3 col-sm-3 form-group">
         <label class="labelheading">Quantity:</label>
         <div class="form-inline-list">
-          <input type="text" class="form-control" formControlName="availableqty" [ngClass]="{ 'is-invalid': isSubmit && CreateMis.controls.availableqty.errors}" [(ngModel)]="MisData.availableqty">
+          <input type="number" class="form-control" formControlName="availableqty" [ngClass]="{ 'is-invalid': isSubmit && CreateMis.controls.availableqty.errors}" [(ngModel)]="MisData.availableqty">
           <span *ngIf="isSubmit && CreateMis.controls.availableqty.errors" class="invalid-feedback">Enter Quantity.</span>
         </div>
       </div>
       <div class="col-xs-3 col-lg-3 col-md-3 col-sm-3 form-group">
         <label class="labelheading">Value:</label>
         <div class="form-inline-list">
-          <input type="text" class="form-control" formControlName="value" [ngClass]="{ 'is-invalid': isSubmit && CreateMis.controls.value.errors}" [(ngModel)]="MisData.value">
+          <input type="number" class="form-control" formControlName="value" [ngClass]="{ 'is-invalid': isSubmit && CreateMis.controls.value.errors}" [(ngModel)]="MisData.value">
           <span *ngIf="isSubmit && CreateMis.controls.value.errors" class="invalid-feedback">Enter value.</span>
         </div>
       </div>
@@ -122,8 +122,8 @@
       <div class="col-xs-3 col-lg-3 col-md-3 col-sm-3 form-group">
         <label class="labelheading">PO No:</label>
         <div class="form-inline-list">
-          <input type="text" class="form-control" formControlName="pono" [ngClass]="{ 'is-invalid': isSubmit && CreateMis.controls.pono.errors}" [(ngModel)]="MisData.pono">
-          <span *ngIf="isSubmit && CreateMis.controls.pono.errors" class="invalid-feedback">Select Store.</span>
+          <input type="text" class="form-control" maxlength="10" formControlName="pono" [ngClass]="{ 'is-invalid': isSubmit && CreateMis.controls.pono.errors}" [(ngModel)]="MisData.pono">
+          <span *ngIf="isSubmit && CreateMis.controls.pono.errors" class="invalid-feedback">Enter PONo.</span>
         </div>
       </div>
     </div>

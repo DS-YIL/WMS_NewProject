@@ -781,7 +781,8 @@ export class wmsService {
     return this.http.post<any>(this.url + 'POData/miscellanousIssueDataUpdate', data, this.httpOptions);
   }
   miscellanousReceiptDataUpdate(data: StockModel): Observable<any> {
-    return this.http.post<any>(this.url + 'POData/updateMiscellanousReceipt', data, this.httpOptions);
+    const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }), responseType: 'text' as any };
+    return this.http.post<any>(this.url + 'POData/updateMiscellanousReceipt', data, httpOptions);
   }
 }
 

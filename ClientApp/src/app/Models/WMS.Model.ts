@@ -922,6 +922,7 @@ export class miscellanousIssueData {
   itemid: string;
   material: string;
   materialdescription: string;
+  poitemdescription: string;
   availableqty: string;
   MiscellanousIssueQty: string;
   Reason: string;

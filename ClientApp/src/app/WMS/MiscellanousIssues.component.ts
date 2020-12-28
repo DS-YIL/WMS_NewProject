@@ -58,7 +58,7 @@ export class MiscellanousIssueComponent implements OnInit {
     this.displayIssueDialog = true;
     this.MisData = new miscellanousIssueData();
     this.MisData.material = data.material;
-    this.MisData.materialdescription = data.materialdescription;
+    this.MisData.poitemdescription = data.poitemdescription;
     this.MisData.availableqty = data.availableqty;
     this.MisData.itemid = data.itemid;
     this.MisData.Reason = "";

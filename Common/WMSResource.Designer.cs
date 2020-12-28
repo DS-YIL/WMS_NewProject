@@ -1285,10 +1285,9 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select max(st.itemid ) as itemid, max(st.materialid) as material,max(st.poitemdescription) as poitemdescription,Max(mat.materialdescription)  as materialdescription,
-        ///st.itemlocation, SUM(st.availableqty) as availableqty,(Max(mat.unitprice) * SUM(st.availableqty)) as value,max(st.createddate ) as createddate
-        ///from wms.wms_stock st 
-        ///left join wms.&quot;MaterialMasterYGS&quot; mat on mat.material = st.materialid.
+        ///   Looks up a localized string similar to select max(st.itemid ) as itemid, max(st.materialid) as material,max(st.poitemdescription) as poitemdescription,
+        ///st.itemlocation, SUM(st.availableqty) as availableqty,(Max(st.unitprice ) * SUM(st.availableqty)) as value,max(st.createddate ) as createddate
+        ///from wms.wms_stock st.
         /// </summary>
         public static string getMiscellanousIssuesList {
             get {
@@ -2215,7 +2214,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO wms.wms_stock(inwmasterid,stockstatus,pono,binid,rackid ,storeid, vendorid,totalquantity,shelflife,availableqty,deleteflag,itemlocation,createddate,createdby,materialid,inwardid,stcktype,lineitemno,receivedtype,poitemdescription)VALUES(@inwmasterid,@stockstatus,@pono,@binid,@rackid,@storeid,@vendorid,@totalquantity,@shelflife,@availableqty,@deleteflag,@itemlocation,@createddate,@createdby,@materialid,@inwardid,@stocktype,@lineitemno,@receivedtype,@poitemdescription)returning itemid.
+        ///   Looks up a localized string similar to INSERT INTO wms.wms_stock(inwmasterid,stockstatus,pono,binid,rackid ,storeid, vendorid,totalquantity,shelflife,availableqty,deleteflag,itemlocation,createddate,createdby,materialid,inwardid,stcktype,lineitemno,receivedtype,poitemdescription,value,unitprice)VALUES(@inwmasterid,@stockstatus,@pono,@binid,@rackid,@storeid,@vendorid,@totalquantity,@shelflife,@availableqty,@deleteflag,@itemlocation,@createddate,@createdby,@materialid,@inwardid,@stocktype,@lineitemno,@receivedtype,@poitemdescription,@value,@unitpr [rest of string was truncated]&quot;;.
         /// </summary>
         public static string insertstock {
             get {

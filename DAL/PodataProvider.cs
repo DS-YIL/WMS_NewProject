@@ -12126,9 +12126,9 @@ namespace WMS.DAL
 				{
 					string query = WMSResource.getMiscellanousIssuesList;
 					if (initialStock)
-						query += " where st.initialstock=true group by st.itemlocation";
+						query += " where st.initialstock=true group by st.poitemdescription, st.itemlocation";
 					else
-						query += " group by st.itemlocation";
+						query += " group by st.poitemdescription,st.itemlocation";
 					await pgsql.OpenAsync();
 					var result = await pgsql.QueryAsync<StockModel>(
 					  query, null, commandType: CommandType.Text);
@@ -12209,7 +12209,7 @@ namespace WMS.DAL
 				{
 					string query = WMSResource.getMiscellanousIssuesList;
 
-					query += " where st.receivedtype='Miscellanous Receipt' group by st.itemlocation";
+					query += " where st.receivedtype='Miscellanous Receipt' group by st.poitemdescription,  st.itemlocation";
 
 					await pgsql.OpenAsync();
 					var result = await pgsql.QueryAsync<StockModel>(
@@ -12255,6 +12255,7 @@ namespace WMS.DAL
 					string materialid = item.Material;
 					item.totalquantity = item.availableqty;
 					item.receivedtype = "Miscellanous Receipt";
+					var unitprice = item.value / item.availableqty;
 					using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
 					{
 						result = Convert.ToInt32(DB.ExecuteScalar(insertquery, new
@@ -12278,7 +12279,9 @@ namespace WMS.DAL
 							item.stocktype,
 							item.lineitemno,
 							item.receivedtype,
-							item.poitemdescription
+							item.poitemdescription,
+							item.value,
+							unitprice
 						}));
 
 						 itemid = Convert.ToInt32(result);

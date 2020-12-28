@@ -228,7 +228,7 @@ VALUES(@inwmasterid,@receiveddate,@receivedby,@receivedqty,@returnqty,@qualitypa
     <value>INSERT INTO wms.wms_trackstatus(pono,status,enteredon)VALUES(@pono,'In Store',current_timestamp)</value>
   </data>
   <data name="insertstock" xml:space="preserve">
-    <value>INSERT INTO wms.wms_stock(inwmasterid,stockstatus,pono,binid,rackid ,storeid, vendorid,totalquantity,shelflife,availableqty,deleteflag,itemlocation,createddate,createdby,materialid,inwardid,stcktype,lineitemno,receivedtype,poitemdescription)VALUES(@inwmasterid,@stockstatus,@pono,@binid,@rackid,@storeid,@vendorid,@totalquantity,@shelflife,@availableqty,@deleteflag,@itemlocation,@createddate,@createdby,@materialid,@inwardid,@stocktype,@lineitemno,@receivedtype,@poitemdescription)returning itemid</value>
+    <value>INSERT INTO wms.wms_stock(inwmasterid,stockstatus,pono,binid,rackid ,storeid, vendorid,totalquantity,shelflife,availableqty,deleteflag,itemlocation,createddate,createdby,materialid,inwardid,stcktype,lineitemno,receivedtype,poitemdescription,value,unitprice)VALUES(@inwmasterid,@stockstatus,@pono,@binid,@rackid,@storeid,@vendorid,@totalquantity,@shelflife,@availableqty,@deleteflag,@itemlocation,@createddate,@createdby,@materialid,@inwardid,@stocktype,@lineitemno,@receivedtype,@poitemdescription,@value,@unitprice)returning itemid</value>
   </data>
   <data name="lastinsertedgrn" xml:space="preserve">
     <value>select * from  wms.wms_sequencemaster  where  enddate&gt;=current_date and id=1</value>
@@ -1655,10 +1655,9 @@ where createdon &gt;= (select date_trunc('month', current_date))
 order by sweek</value>
   </data>
   <data name="getMiscellanousIssuesList" xml:space="preserve">
-    <value>select max(st.itemid ) as itemid, max(st.materialid) as material,max(st.poitemdescription) as poitemdescription,Max(mat.materialdescription)  as materialdescription,
-st.itemlocation, SUM(st.availableqty) as availableqty,(Max(mat.unitprice) * SUM(st.availableqty)) as value,max(st.createddate ) as createddate
-from wms.wms_stock st 
-left join wms."MaterialMasterYGS" mat on mat.material = st.materialid</value>
+    <value>select max(st.itemid ) as itemid, max(st.materialid) as material,max(st.poitemdescription) as poitemdescription,
+st.itemlocation, SUM(st.availableqty) as availableqty,(Max(st.unitprice ) * SUM(st.availableqty)) as value,max(st.createddate ) as createddate
+from wms.wms_stock st</value>
   </data>
   <data name="updateMisQty" xml:space="preserve">
     <value>update wms.wms_stock set availableqty=availableqty-#IssuedQty,projectid =#projectid where itemid=#itemid</value>
