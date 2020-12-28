@@ -98,8 +98,11 @@ onrackUpdate() {
   showAddDialog(details:any) {
     this.displayAddDialog = true;
     this.MaterialMaster = new MaterialMaster();
-    if (details)
+    if (details) {
       this.MaterialMaster = details;
+      this.onlocUpdate();
+      this.onrackUpdate(); 
+    }
   }
 
   dialogCancel(dialog: any) {

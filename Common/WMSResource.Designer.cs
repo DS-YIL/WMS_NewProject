@@ -497,10 +497,10 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select stinw.inwardid,stinw.lineitemno,stinw.pono,stinw.inwmasterid,stinw.qualitycheckrequired,stinw.materialid as material,secinw.grnnumber,secinw.pono as securitypo,secinw.invoiceno,secinw.onhold,mat.materialdescription,stinw.receivedqty,stinw.receiveddate,stinw.returnqty,qc.qualitypassedqty,qc.qualityfailedqty,qc.remarks,qc.qcby as checkedby
-        ///  from wms.wms_storeinward stinw
-        ///  left outer join wms.wms_securityinward secinw on secinw.inwmasterid=stinw.inwmasterid
-        ///  left outer join wms.&quot;MaterialMasterYGS&quot; [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to select max(stinw.inwardid) as inwardid,max(stinw.lineitemno) as lineitemno,max(stinw.pono)as pono,max(stinw.inwmasterid) as inwmasterid,
+        ///bool_or(stinw.qualitycheckrequired) as qualitycheckrequired,stinw.materialid as material,max(secinw.grnnumber) as grnnumber,
+        ///max(secinw.pono) as securitypo,max(secinw.invoiceno) as invoiceno,bool_or(secinw.onhold) as onhold,pomat.poitemdescription, 
+        ///max(stinw.receivedqty) as receivedqty,max(stinw.receiveddate) as receiveddate,max(stinw.returnqty) as returnqty,max(qc.qua [rest of string was truncated]&quot;;.
         /// </summary>
         public static string getdataforqualitydetails {
             get {
@@ -2044,7 +2044,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO wms.&quot;MaterialMasterYGS&quot; (material, materialdescription, storeid,rackid,binid,qualitycheck,stocktype,unitprice,hsncode)VALUES(@material, @materialdescription,@locatorid,@rackid,@binid,@qualitycheck,@stocktype,@unitprice,@hsncode).
+        ///   Looks up a localized string similar to INSERT INTO wms.&quot;MaterialMasterYGS&quot; (material, materialdescription, storeid,rackid,binid,qualitycheck,stocktype,unitprice,hsncode)VALUES(@material, @materialdescription,@storeid,@rackid,@binid,@qualitycheck,@stocktype,@unitprice,@hsncode).
         /// </summary>
         public static string insertmaterialMaster {
             get {
@@ -2759,7 +2759,7 @@ namespace WMS.Common {
         
         /// <summary>
         ///   Looks up a localized string similar to UPDATE  wms.&quot;MaterialMasterYGS&quot; set  materialdescription=@materialdescription,storeid = @storeid,rackid = @rackid,binid=@binid,qualitycheck=@qualitycheck,
-        ///stocktype=@stocktype,unitprice=@unitprice,hsncode=@hsncode where material =#material.
+        ///stocktype=@stocktype,unitprice=@unitprice,hsncode=@hsncode where material =&apos;#material&apos;.
         /// </summary>
         public static string updateMaterialMaster {
             get {

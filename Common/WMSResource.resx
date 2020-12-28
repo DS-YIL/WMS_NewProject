@@ -601,12 +601,17 @@ values(default,@pono,@itemid,@gatepassmaterialid,@itemissueddate,@itemreceiverid
     <value>UPDATE  wms.wms_storeinward set  qualitypassedqty=@qualitypassedqty,qualityfailedqty = @qualityfailedqty,checkedby = @receivedby,checkedon=current_date,remarks=@remarks where inwardid =#inwardid</value>
   </data>
   <data name="getdataforqualitydetails" xml:space="preserve">
-    <value>select stinw.inwardid,stinw.lineitemno,stinw.pono,stinw.inwmasterid,stinw.qualitycheckrequired,stinw.materialid as material,secinw.grnnumber,secinw.pono as securitypo,secinw.invoiceno,secinw.onhold,mat.materialdescription,stinw.receivedqty,stinw.receiveddate,stinw.returnqty,qc.qualitypassedqty,qc.qualityfailedqty,qc.remarks,qc.qcby as checkedby
-  from wms.wms_storeinward stinw
+    <value>select max(stinw.inwardid) as inwardid,max(stinw.lineitemno) as lineitemno,max(stinw.pono)as pono,max(stinw.inwmasterid) as inwmasterid,
+bool_or(stinw.qualitycheckrequired) as qualitycheckrequired,stinw.materialid as material,max(secinw.grnnumber) as grnnumber,
+max(secinw.pono) as securitypo,max(secinw.invoiceno) as invoiceno,bool_or(secinw.onhold) as onhold,pomat.poitemdescription, 
+max(stinw.receivedqty) as receivedqty,max(stinw.receiveddate) as receiveddate,max(stinw.returnqty) as returnqty,max(qc.qualitypassedqty) as returnqty,max(qc.qualityfailedqty) as qualityfailedqty
+,max(qc.remarks) as remarks,max(qc.qcby) as checkedby from wms.wms_storeinward stinw
   left outer join wms.wms_securityinward secinw on secinw.inwmasterid=stinw.inwmasterid
   left outer join wms."MaterialMasterYGS" mat on mat.material = stinw.materialid
+  left outer join wms.wms_pomaterials pomat on pomat.materialid = stinw.materialid
   left outer join wms.wms_qualitycheck qc on qc.inwardid=stinw.inwardid
-  where stinw.qualitycheckrequired is True and secinw.grnnumber = '#grnno'</value>
+  where stinw.qualitycheckrequired is True and secinw.grnnumber = '#grnno'
+  group by pomat.poitemdescription,stinw.materialid</value>
   </data>
   <data name="receiveforinvoice" xml:space="preserve">
     <value>INSERT INTO wms.wms_storeinward(inwmasterid,receiveddate,receivedby,receivedqty,materialid,deleteflag,qualitycheckrequired,qualitychecked,materialqty,remarks,pono,lineitemno)
@@ -1687,10 +1692,10 @@ left outer join wms.wms_rd_rack  rack on rack.rackid =mmy.rackid
 left outer join wms.wms_rd_bin bin on bin.binid =mmy.binid</value>
   </data>
   <data name="insertmaterialMaster" xml:space="preserve">
-    <value>INSERT INTO wms."MaterialMasterYGS" (material, materialdescription, storeid,rackid,binid,qualitycheck,stocktype,unitprice,hsncode)VALUES(@material, @materialdescription,@locatorid,@rackid,@binid,@qualitycheck,@stocktype,@unitprice,@hsncode)</value>
+    <value>INSERT INTO wms."MaterialMasterYGS" (material, materialdescription, storeid,rackid,binid,qualitycheck,stocktype,unitprice,hsncode)VALUES(@material, @materialdescription,@storeid,@rackid,@binid,@qualitycheck,@stocktype,@unitprice,@hsncode)</value>
   </data>
   <data name="updateMaterialMaster" xml:space="preserve">
     <value>UPDATE  wms."MaterialMasterYGS" set  materialdescription=@materialdescription,storeid = @storeid,rackid = @rackid,binid=@binid,qualitycheck=@qualitycheck,
-stocktype=@stocktype,unitprice=@unitprice,hsncode=@hsncode where material =#material</value>
+stocktype=@stocktype,unitprice=@unitprice,hsncode=@hsncode where material ='#material'</value>
   </data>
 </root>
