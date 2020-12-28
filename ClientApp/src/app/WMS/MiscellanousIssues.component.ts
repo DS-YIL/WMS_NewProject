@@ -38,7 +38,7 @@ export class MiscellanousIssueComponent implements OnInit {
   //get material details by materialid
   getMisIssueReasonList() {
     this.dynamicData = new DynamicSearchResult();
-    this.dynamicData.query = "select * from wms.MisIssueReason where deleteflag =false";
+    this.dynamicData.query = "select * from wms.RD_Reason  where ReasonType='MiscellaonousIssue' and deleteflag =false";
     this.wmsService.GetListItems(this.dynamicData).subscribe(data => {
       this.ReasonList = data;
     });
