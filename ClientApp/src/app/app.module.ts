@@ -106,6 +106,10 @@ import { GRReportsComponent } from './WMS/GRReports.component';
 import { InhandMaterialComponent } from './WMS/InhandMaterial.component';
 import { MiscellanousIssueComponent } from './WMS/MiscellanousIssues.component';
 import { MiscellanousReceiptsComponent } from './WMS/MiscellanousReceipts.component';
+
+//admin
+import { MaterilMasterComponent } from './WMS/Admin/Materialmaster.component';
+
 ////pages
 import { LoginComponent } from './WMS/Login.component';
 import {HomeComponent} from './WMS/Home.component';
@@ -200,7 +204,8 @@ import { FieldsetModule } from 'primeng/fieldset';
     InhandMaterialComponent,
     GRReportsComponent,
     MiscellanousIssueComponent,
-    MiscellanousReceiptsComponent
+    MiscellanousReceiptsComponent,
+    MaterilMasterComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

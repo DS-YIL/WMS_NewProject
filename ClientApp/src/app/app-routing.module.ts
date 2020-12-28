@@ -72,6 +72,9 @@ import { GRReportsComponent } from './WMS/GRReports.component';
 import { MiscellanousIssueComponent } from './WMS/MiscellanousIssues.component';
 import { MiscellanousReceiptsComponent } from './WMS/MiscellanousReceipts.component';
 
+//admin
+import { MaterilMasterComponent } from './WMS/Admin/Materialmaster.component';
+
 const routes: Routes = [{
   path: 'WMS',
   children: [
@@ -128,15 +131,15 @@ const routes: Routes = [{
     { path: "Stocktransfer", component: StockTransferComponent, canActivate: [AuthGuard] },
     { path: "GatePassinout/:pageid", component: GatePassoutwardComponent, canActivate: [AuthGuard] },
     { path: "MaterialReturn", component: MaterialReturnDashBoardComponent, canActivate: [AuthGuard] },
-      { path: "StoresReturnNote", component: StoresReturnNotePrintComponent, canActivate: [AuthGuard] },
+    { path: "StoresReturnNote", component: StoresReturnNotePrintComponent, canActivate: [AuthGuard] },
     { path: "StockCardPrint", component: StockCardPrintComponent, canActivate: [AuthGuard] },
     { path: "Mailresponse", component: MailresponseComponent, canActivate: [AuthGuard] },
     { path: "MaterialTransfer", component: MaterialTransferComponent, canActivate: [AuthGuard] },
     { path: "MaterialReturnfromPm", component: MaterialReturnComponent, canActivate: [AuthGuard] },
     { path: "HoldGRView", component: HoldGRViewComponent, canActivate: [AuthGuard] },
     { path: "MRNView", component: MRNViewComponent, canActivate: [AuthGuard] },
-    { path: "ASNView", component: ASNViewComponent, canActivate: [AuthGuard] },  
-{ path: "PrintBarcode", component: MaterialBarcodeComponent, canActivate: [AuthGuard] },
+    { path: "ASNView", component: ASNViewComponent, canActivate: [AuthGuard] },
+    { path: "PrintBarcode", component: MaterialBarcodeComponent, canActivate: [AuthGuard] },
     { path: "MaterialReport", component: MaterialReportComponent, canActivate: [AuthGuard] },
     { path: "Putawaynotify", component: PutawayNotificationComponent, canActivate: [AuthGuard] },
     { path: "Gatepassinward", component: GatepassinwardViewComponent, canActivate: [AuthGuard] },
@@ -159,23 +162,25 @@ const routes: Routes = [{
     { path: "GRReports", component: GRReportsComponent, canActivate: [AuthGuard] },
 
     { path: "MiscellanousIssues", component: MiscellanousIssueComponent, canActivate: [AuthGuard] },
-    { path: "MiscellanousReceipts", component: MiscellanousReceiptsComponent, canActivate: [AuthGuard] }
-  ]
-  
-},
-  {
-    path: '', redirectTo: 'WMS', pathMatch: 'full'
-  },
-  { path: '**', redirectTo: 'WMS' }
- ];
+    { path: "MiscellanousReceipts", component: MiscellanousReceiptsComponent, canActivate: [AuthGuard] },
+    { path: "MaterialMaster", component: MaterilMasterComponent, canActivate: [AuthGuard] }
 
-    @NgModule({
-        imports: [
-            RouterModule.forRoot(routes)
-        ],
-        exports: [
-            RouterModule
-        ],
-        declarations: []
-    })
-    export class AppRoutingModule { }
+  ]
+
+},
+{
+  path: '', redirectTo: 'WMS', pathMatch: 'full'
+},
+{ path: '**', redirectTo: 'WMS' }
+];
+
+@NgModule({
+  imports: [
+    RouterModule.forRoot(routes)
+  ],
+  exports: [
+    RouterModule
+  ],
+  declarations: []
+})
+export class AppRoutingModule { }

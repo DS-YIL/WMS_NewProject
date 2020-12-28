@@ -1134,7 +1134,15 @@ export class NavMenuComponent implements OnInit {
       //});
       //this.items.push({ label: 'Bin Status Report', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/BinStatusReport') });
       //this.items.push({ label: 'BarCode', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/Barcode') });
-
+         this.items.push({
+        label: 'Master Pages',
+        icon: 'pi pi-fw pi-bars',
+        style: { 'font-weight': '600' },
+        items: [
+          { label: 'Material Master', icon: 'pi pi-fw pi-bars', style: { 'width': '250px' }, command: () => this.router.navigateByUrl('WMS/MaterialMaster') },
+          
+        ]
+      });
       this.router.navigateByUrl('/WMS/Home');
     }
     if (this.emp.roleid == "8") {//Approver     
