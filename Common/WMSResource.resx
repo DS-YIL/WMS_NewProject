@@ -319,7 +319,7 @@ values(default,@gatepassid,@materialid,@quantity,@deleteflag,@remarks,@materialc
 max(material.gatepassid ) as gatepassid,max(material.expecteddate) as expecteddate,max(material.gatepassmaterialid ) as gatepassmaterialid, max(emp."name") as name,max(pass.vendorname) as vendorname,
 max(pass.gatepasstype) as gatepasstype,max(pass.approverstatus) as approverstatus,
 max(pass.reasonforgatepass) as reasonforgatepass,max(pass.approverremarks ) as approverremarks,max(pass.fmapprovedstatus ) as fmapprovedstatus,max(pass.fmapproverremarks ) as fmapproverremarks,
-stock.materialid, max(ygs.materialdescription )as materialdescription,max(pomat.poitemdescription ) as poitemdescription, max(material.materialcost )as materialcost,
+stock.materialid, max(pomat.poitemdescription )as materialdescription,max(pomat.poitemdescription ) as poitemdescription, max(material.materialcost )as materialcost,
 max(material.quantity ) as quantity,max(material.remarks ) as remarks from wms.wms_stock stock
 inner join wms.wms_gatepassmaterial material on material.materialid =stock.materialid 
 inner join wms.wms_gatepass pass on pass.gatepassid=material.gatepassid 
@@ -1327,20 +1327,24 @@ group by sk.itemlocation,sk.createddate::DATE order by sk.createddate::DATE Desc
   left join wms.employee emp on emp.employeeno=rtn.createdby order by rtn.returnid desc</value>
   </data>
   <data name="getmaterialreturndetails" xml:space="preserve">
-    <value>select  rnd.id,rnd.returnid,rnd.materialid,rnd.returnqty,mat.materialdescription,mat.stocktype,
-mat.storeid as defaultstore,mat.rackid as defaultrack,mat.binid as defaultbin,stk.itemlocation,stk.availableqty
+    <value>select  rnd.id,rnd.returnid,rnd.materialid,rnd.returnqty,pomat.poitemdescription  as materialdescription,mat.stocktype,
+mat.storeid as defaultstore,mat.rackid as defaultrack,mat.binid as defaultbin,stk.itemlocation,
+stk.availableqty
 from wms.wms_materialreturndetails rnd
 left outer join wms."MaterialMasterYGS" mat on mat.material = rnd.materialid
+left outer join wms.wms_pomaterials pomat on pomat.materialid =rnd.materialid 
 left outer join wms.wms_stock stk  on stk.returnid = rnd.id
 where rnd.returnid='#returnid'</value>
   </data>
   <data name="getrequestiddetail" xml:space="preserve">
-    <value>select mr.requestid,mr.requesteddate,mr.ackstatus,emp.name as requestedby,mr.ackremarks,mr.remarks,mqd.materialid,mqd.requestedquantity ,mqd.returnqty,ygs.materialdescription,
+    <value>select mr.requestid,mr.requesteddate,mr.ackstatus,emp.name as requestedby,mr.ackremarks,mr.remarks,mqd.materialid,mqd.requestedquantity ,mqd.returnqty,
+pomat.poitemdescription  as materialdescription,
 (select sum(issuedqty) from wms.wms_materialissue where requestmaterialid = mqd.id) as issuedquantity
 from wms.materialrequest mr
 left outer join  wms.employee emp on emp.employeeno = mr.requesterid 
 left outer join  wms.materialrequestdetails mqd on mqd.requestid =mr .requestid 
 left outer join  wms."MaterialMasterYGS" ygs on ygs.material = mqd.materialid 
+left outer join wms.wms_pomaterials pomat on pomat.materialid =mqd.materialid 
 where  mqd.requestid='#rid'</value>
   </data>
   <data name="getreserveiddetail" xml:space="preserve">

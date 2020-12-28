@@ -1172,12 +1172,14 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select  rnd.id,rnd.returnid,rnd.materialid,rnd.returnqty,mat.materialdescription,mat.stocktype,
-        ///mat.storeid as defaultstore,mat.rackid as defaultrack,mat.binid as defaultbin,stk.itemlocation,stk.availableqty
+        ///   Looks up a localized string similar to select  rnd.id,rnd.returnid,rnd.materialid,rnd.returnqty,pomat.poitemdescription  as materialdescription,mat.stocktype,
+        ///mat.storeid as defaultstore,mat.rackid as defaultrack,mat.binid as defaultbin,stk.itemlocation,
+        ///stk.availableqty
         ///from wms.wms_materialreturndetails rnd
         ///left outer join wms.&quot;MaterialMasterYGS&quot; mat on mat.material = rnd.materialid
+        ///left outer join wms.wms_pomaterials pomat on pomat.materialid =rnd.materialid 
         ///left outer join wms.wms_stock stk  on stk.returnid = rnd.id
-        ///where rnd.returnid=&apos;#returnid&apos;.
+        ///where rnd.returni [rest of string was truncated]&quot;;.
         /// </summary>
         public static string getmaterialreturndetails {
             get {
@@ -1553,12 +1555,13 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select mr.requestid,mr.requesteddate,mr.ackstatus,emp.name as requestedby,mr.ackremarks,mr.remarks,mqd.materialid,mqd.requestedquantity ,mqd.returnqty,ygs.materialdescription,
+        ///   Looks up a localized string similar to select mr.requestid,mr.requesteddate,mr.ackstatus,emp.name as requestedby,mr.ackremarks,mr.remarks,mqd.materialid,mqd.requestedquantity ,mqd.returnqty,
+        ///pomat.poitemdescription  as materialdescription,
         ///(select sum(issuedqty) from wms.wms_materialissue where requestmaterialid = mqd.id) as issuedquantity
         ///from wms.materialrequest mr
         ///left outer join  wms.employee emp on emp.employeeno = mr.requesterid 
         ///left outer join  wms.materialrequestdetails mqd on mqd.requestid =mr .requestid 
-        ///left outer join  wms.&quot;MaterialMasterYGS&quot; ygs on yg [rest of string was truncated]&quot;;.
+        ///left outer join  wms.&quot;Ma [rest of string was truncated]&quot;;.
         /// </summary>
         public static string getrequestiddetail {
             get {
