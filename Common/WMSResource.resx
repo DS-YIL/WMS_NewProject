@@ -1685,7 +1685,7 @@ where pono = '#pono' group by pono</value>
   <data name="ispoclosedquery" xml:space="preserve">
     <value>select isclosed from wms.wms_polist where pono = '#pono'</value>
   </data>
-  <data name="getMaterialMasterList" xml:space="preserve">
+ <data name="getMaterialMasterList" xml:space="preserve">
     <value>select mmy.*, loc.locatorname, rack.racknumber,bin.binnumber from wms."MaterialMasterYGS" mmy 
 left outer join wms.wms_rd_locator loc on loc.locatorid =mmy.storeid 
 left outer join wms.wms_rd_rack  rack on rack.rackid =mmy.rackid 
@@ -1697,5 +1697,18 @@ left outer join wms.wms_rd_bin bin on bin.binid =mmy.binid</value>
   <data name="updateMaterialMaster" xml:space="preserve">
     <value>UPDATE  wms."MaterialMasterYGS" set  materialdescription=@materialdescription,storeid = @storeid,rackid = @rackid,binid=@binid,qualitycheck=@qualitycheck,
 stocktype=@stocktype,unitprice=@unitprice,hsncode=@hsncode where material ='#material'</value>
+  </data>
+
+  <data name="getGPReasons" xml:space="preserve">
+    <value>select * from wms.rd_reason where reasontype ='GatePass' and deleteflag =false</value>
+  </data>
+  <data name="insertGPReason" xml:space="preserve">
+    <value>insert into wms.rd_reason(reasonid ,reason,reasontype,createddate,createdby,deleteflag)values(default,@reason,@type,current_timestamp,@createdby,false)</value>
+  </data>
+  <data name="updateGPReason" xml:space="preserve">
+    <value>update wms.rd_reason set reason=#reason, createddate =current_date ,createdby =#createdby </value>
+  </data>
+  <data name="deleteGPReason" xml:space="preserve">
+    <value>update wms.rd_reason set deleteflag=#isdelete, deleteddate =current_date ,deletedby =#deletedby</value>
   </data>
 </root>

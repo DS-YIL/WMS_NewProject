@@ -109,6 +109,7 @@ import { MiscellanousReceiptsComponent } from './WMS/MiscellanousReceipts.compon
 
 //admin
 import { MaterilMasterComponent } from './WMS/Admin/Materialmaster.component';
+import { GatePassMasterComponent } from './WMS/Admin/GatePassMaster .component';
 
 ////pages
 import { LoginComponent } from './WMS/Login.component';
@@ -205,7 +206,8 @@ import { FieldsetModule } from 'primeng/fieldset';
     GRReportsComponent,
     MiscellanousIssueComponent,
     MiscellanousReceiptsComponent,
-    MaterilMasterComponent
+    MaterilMasterComponent,
+    GatePassMasterComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

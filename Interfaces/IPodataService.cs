@@ -262,9 +262,13 @@ Task<string> updateonholdrow(updateonhold datamodel);
 		bool miscellanousIssueDataUpdate(miscellanousIssueData data);
 		Task<IEnumerable<StockModel>> getMiscellanousReceiptsList();
 		string updateMiscellanousReceipt(StockModel item);
-
-		System.Data.DataTable getMaterialMasterList();
+	System.Data.DataTable getMaterialMasterList();
 		bool updateMaterialMaster(materilaMasterYgs material);
+		string GPReasonMTAdd(GPReasonMTData data);
+
+		string GPReasonMTDelete(GPReasonMTData data);
+
+		Task<IEnumerable<GPReasonMTData>> getGPReasonData();
 
 	}
 }

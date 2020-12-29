@@ -122,7 +122,8 @@ export class ObsoleteInventoryMovementComponent implements OnInit {
           'Material': obj.materialid,
           'Material Description': obj.materialdescription,
           [totalconsumed]: obj.issuedqty,
-          'Available Qty': obj.availableqty
+          'Available Qty': obj.availableqty,
+          'Value(in Rs.)': obj.value
         }
       });
       import("xlsx").then(xlsx => {
