@@ -7,6 +7,7 @@ import { Employee, DynamicSearchResult, searchList } from '../Models/Common.Mode
 import { NgxSpinnerService } from "ngx-spinner";
 import { materialRequestDetails } from 'src/app/Models/WMS.Model';
 import { MessageService } from 'primeng/api';
+import { isNullOrUndefined } from 'util';
 
 @Component({
   selector: 'app-MaterialIsuueDashBoard',
@@ -34,8 +35,10 @@ export class MaterialIssueDashBoardComponent implements OnInit {
   public materialRequestDetails: materialRequestDetails;
   public materialissueDetailsList: Array<any> = [];
   public currentDate: Date;
+  public requestedid: string = "";
 
   ngOnInit() {
+    debugger;
     this.materialIssueList = [];
     if (localStorage.getItem("Employee"))
       this.employee = JSON.parse(localStorage.getItem("Employee"));
@@ -44,17 +47,23 @@ export class MaterialIssueDashBoardComponent implements OnInit {
 
     this.currentDate = new Date();
     this.selectedStatus = "Pending";
+    this.requestedid = this.route.snapshot.queryParams.requestid;
     this.getMaterialIssueList();
 
   }
 
   //get material issue list based on loginid
   getMaterialIssueList() {
+    debugger;
     this.materialIssueList = [];
     //this.employee.employeeno = "400095";
     this.wmsService.getMaterialIssueLlist(this.employee.employeeno).subscribe(data => {
       this.materialIssueListnofilter = data;
+      debugger;
       this.materialIssueList = this.materialIssueListnofilter.filter(li => li.requeststatus == "Pending");
+      if (!isNullOrUndefined(this.requestedid) && this.requestedid != "") {
+        this.materialIssueList = this.materialIssueList.filter(li => li.requestid == this.requestedid);
+      }
     });
   }
   onSelectStatus(event) {

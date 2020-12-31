@@ -143,7 +143,7 @@ export class NavMenuComponent implements OnInit {
       if (eurl.includes("/Email/MaterialReqView?ReqId")) {
         this.reqid = this.route.snapshot.queryParams.requestid;
         this.reqid = eurl.split('=')[1];
-        this.pono = eurl.split('=')[3];
+       // this.pono = eurl.split('=')[3];
         if (this.reqid) {
           //redirects to MaterialReqView
           this.bindMenuForIMEmails();
@@ -455,8 +455,7 @@ export class NavMenuComponent implements OnInit {
       items: [
         { label: 'Print Barcode', icon: 'pi pi-fw pi-print', style: { 'width': '200px' }, command: () => this.router.navigateByUrl('WMS/PrintBarcode') },
         { label: 'Notify to finance', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/Putawaynotify') },
-        { label: 'Receive gatepass', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/gatepassreceive') },
-        { label: 'Test', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/Test') }
+        { label: 'Receive gatepass', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/gatepassreceive') } 
       ]
     });
     this.router.navigate(['WMS/MaterialIssueDashboard'], { queryParams: { requestid: this.reqid } });
@@ -526,11 +525,11 @@ export class NavMenuComponent implements OnInit {
         { label: 'Test', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/Test') }
       ]
     });
-    if (this.poinvoice != null) {
+    if (this.inwmasterid != null && this.inwmasterid != "") {
       this.router.navigate(['WMS/GRNPosting'], { queryParams: { inwmasterid: this.gateentryid } });
     }
     else {
-      if (this.grnno != null) {
+      if (this.grnno != null && this.grnno != "") {
 
 
         this.router.navigate(['WMS/GRNPosting'], { queryParams: { grnnumber: this.grnno } });

@@ -1876,13 +1876,12 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select st.materialid as material,mat.materialdescription,loc.locatorname,rac.racknumber,bn.binnumber,st.availableqty,(pomat.unitprice * st.availableqty ) as value,st.projectid,st.pono,st.shelflife 
-        ///from wms.wms_stock st 
-        ///left outer join wms.&quot;MaterialMasterYGS&quot; mat on mat.material = st.materialid
-        ///left outer join wms.wms_pomaterials  pomat on mat.materialid =st.materialid 
-        ///left outer join wms.wms_rd_locator loc on loc.locatorid = st.storeid
-        ///left outer join wms.wms_rd_rack rac on rac.rackid = st.rackid
-        ///l [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to select st.uploadbatchcode,Max(st.uploadedfilename) as uploadedfilename,Max(st.createddate) as createddate,
+        ///Count(*) as totalrecords,
+        ///(select count(*) from wms.st_initialstock where dataloaderrors is True and uploadbatchcode = st.uploadbatchcode) as exceptionrecords,
+        ///(select count(*) from wms.wms_stock where uploadbatchcode = st.uploadbatchcode) as successrecords
+        ///from wms.st_initialstock 
+        ///st where st.uploadedby = &apos;#code&apos; group by st.uploadbatchcode.
         /// </summary>
         public static string initialstockreportgroupby {
             get {
@@ -1891,12 +1890,10 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select st.materialid as material,mat.materialdescription,loc.locatorname,rac.racknumber,bn.binnumber,st.availableqty,st.value,st.projectid,st.pono,st.shelflife from wms.wms_stock st 
-        ///left outer join wms.&quot;MaterialMasterYGS&quot; mat on mat.material = st.materialid
-        ///left outer join wms.wms_rd_locator loc on loc.locatorid = st.storeid
-        ///left outer join wms.wms_rd_rack rac on rac.rackid = st.rackid
-        ///left outer join wms.wms_rd_bin bn on bn.binid = st.binid
-        ///where st.initialstock is True and st.uploadbatchcode = &apos;#cod [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to select material,materialdescription,store as locatorname,rack as racknumber,bin as binnumber,quantity as availableqty,value,projectid,pono,shelflifeexpiration as shelflife,
+        ///error_description as exceptions
+        ///from wms.st_initialstock
+        ///where dataloaderrors is not True and uploadbatchcode = &apos;#code&apos;.
         /// </summary>
         public static string initialstockviewdata {
             get {

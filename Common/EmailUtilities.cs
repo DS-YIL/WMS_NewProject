@@ -106,7 +106,7 @@ namespace WMS.Common
 				mailMessage.Subject = "Request for Materials - ID(s)" + emlSndngList.material;
 				string requestedby = this.getnamebyid(emlSndngList.createdby);
 				subbody = "Please find the Materials request details below. <br/> Requested By:" +requestedby + "<br/>Requested On:" + emlSndngList.createddate;
-				subbody = mailMessage.Subject;
+				subbody += mailMessage.Subject;
 				link = "http://10.29.15.212:82/WMS/Email/MaterialIssueDashboard?ReqId=" + emlSndngList.requestid;
 
 			}
@@ -116,8 +116,8 @@ namespace WMS.Common
 			{
 				mailMessage.Subject = "Materials Issued for Request Id" + emlSndngList.requestid ;
 				subbody = "The materials for Request Id " + emlSndngList.requestid + "has been issued.";
-				subbody = mailMessage.Subject;
-				link = "http://10.29.15.212:82/WMS/Email/MaterialReqView?ReqId=" + emlSndngList.requestid+"?pono="+emlSndngList.pono;
+				subbody += mailMessage.Subject;
+				link = "http://10.29.15.212:82/WMS/Email/MaterialReqView?ReqId=" + emlSndngList.requestid;
 
 			}
 			//Project Manager  Acknowledgement to Inventoty Clerk

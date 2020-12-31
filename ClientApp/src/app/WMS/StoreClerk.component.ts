@@ -92,24 +92,14 @@ export class StoreClerkComponent implements OnInit {
       this.employee = JSON.parse(localStorage.getItem("Employee"));
     else
       this.router.navigateByUrl("Login");
-    //Email
-    this.gateentryid = this.route.snapshot.queryParams.inwmasterid;
-    if (this.gateentryid) {
-      debugger;
-      //get material details for that PO
-      this.selectedpendingpono = this.gateentryid;
-      this.showpodata();
-
-    }
+   
     this.grnn0 = this.route.snapshot.queryParams.grnnumber;
-    if (this.grnn0) {
-      debugger;
-      //get material details for that PO
-      this.selectedgrnno = this.grnn0;
-      this.showpodata1();
-
-    }
+    this.gateentryid = this.route.snapshot.queryParams.inwmasterid;
+   
     this.getpendingpos();
+    //Email
+    
+    
     this.invoiceForm = this.formBuilder.group({
       itemRows: this.formBuilder.array([this.initItemRows()])
     });
@@ -414,6 +404,14 @@ export class StoreClerkComponent implements OnInit {
     this.wmsService.getPendingpo().subscribe(data => {
       debugger;
       this.pendingpos = data;
+      ///Email
+      if (this.gateentryid) {
+        debugger;
+        //get material details for that PO
+        this.selectedpendingpono = this.gateentryid;
+        this.showpodata();
+
+      }
     });
   }
   ////get pending to accept
@@ -421,6 +419,13 @@ export class StoreClerkComponent implements OnInit {
     this.wmsService.getcheckedgrnlist().subscribe(data => {
       debugger;
       this.checkedgrnlist = data;
+      if (this.grnn0) {
+        debugger;
+        //get material details for that PO
+        this.selectedgrnno = this.grnn0;
+        this.showpodata1();
+
+      }
     });
   }
 

@@ -120,6 +120,7 @@ export class AdminStockUploadReportComponent implements OnInit {
     this.getlistdata = [];
     var uploadcode = data.uploadbatchcode;
     this.viewexception = false;
+    this.viewdetail = false;
     this.loading = true;
     this.spinner.show();
     this.wmsService.getinitialStockEX(uploadcode).subscribe(data => {
@@ -143,12 +144,13 @@ export class AdminStockUploadReportComponent implements OnInit {
     this.viewexception = false;
     this.loading = true;
     this.viewmain = false;
-    this.viewdetail = true;
+    this.viewdetail = false;
     this.viewexception = true;
     this.spinner.show();
     this.wmsService.getinitialStockAllrecords(uploadcode).subscribe(data => {
       this.getlistdata = data;
       this.totalRecords = this.getlistdata.length;
+      this.viewdetail = true;
       this.spinner.hide();
     });
   }
@@ -162,12 +164,13 @@ export class AdminStockUploadReportComponent implements OnInit {
     this.loading = true;
     var uploadcode = data.uploadbatchcode;
     this.viewmain = false;
-    this.viewdetail = true;
+    this.viewdetail = false;
     this.viewexception = false;
     this.spinner.show();
     this.wmsService.getinitialStock(uploadcode).subscribe(data => {
       this.getlistdata = data;
       this.totalRecords = this.getlistdata.length;
+      this.viewdetail = true;
       this.spinner.hide();
     });
   }
