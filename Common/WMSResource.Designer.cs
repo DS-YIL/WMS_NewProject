@@ -1456,6 +1456,15 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to select itemamount ,unitprice from wms.wms_pomaterials where pono=&quot;#pono&quot; and materialid=&quot;#material&quot;.
+        /// </summary>
+        public static string getpricedetails {
+            get {
+                return ResourceManager.GetString("getpricedetails", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to select * from wms.wms_gatepass where gatepassid=#gatepassid and deleteflag=false.
         /// </summary>
         public static string getprintdetails {
@@ -1828,13 +1837,8 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Select max(pomat.materialid) as material,Max(mat.materialdescription)  as materialdescription,pomat.poitemdescription , max(po.pono ) as pono,
-        ///max( mat.hsncode) as hsncode,max(po.suppliername) as suppliername ,Max(prj.projectname) as projectname,
-        ///SUM(st.availableqty) as availableqty,(Max(pomat.unitprice) * SUM(st.availableqty)) as value
-        ///from wms.wms_stock st 
-        ///left outer join wms.wms_polist po on po.pono =st.pono 
-        ///left outer join wms.wms_project prj on prj.pono =st.pono 
-        ///left outer join wms.&quot;MaterialMa [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to select st.materialid as material,st.unitprice,st.poitemdescription,st.pono,sum(st.availableqty) as availableqty, st.receivedtype from wms.wms_stock st 
+        ///group by st.poitemdescription,st.materialid,st.unitprice,st.pono,st.receivedtype.
         /// </summary>
         public static string inhandmaterial {
             get {
@@ -1843,7 +1847,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select itemlocation,SUM(availableqty) as quantity from wms.wms_stock where materialid = &apos;#material&apos; and availableqty &gt; 0
+        ///   Looks up a localized string similar to select itemlocation,SUM(availableqty) as quantity from wms.wms_stock where poitemdescription= &apos;#poitemdescription&apos; and availableqty &gt; 0
         ///group by itemlocation.
         /// </summary>
         public static string inhandmateriallocation {
@@ -1898,7 +1902,7 @@ namespace WMS.Common {
         ///Count(*) as totalrecords,
         ///(select count(*) from wms.st_initialstock where dataloaderrors is True and uploadbatchcode = st.uploadbatchcode) as exceptionrecords,
         ///(select count(*) from wms.wms_stock where uploadbatchcode = st.uploadbatchcode) as successrecords
-        ///from wms.st_initialstock 
+        ///from wms.st_initialstock
         ///st where st.uploadedby = &apos;#code&apos; group by st.uploadbatchcode.
         /// </summary>
         public static string initialstockreportgroupby {

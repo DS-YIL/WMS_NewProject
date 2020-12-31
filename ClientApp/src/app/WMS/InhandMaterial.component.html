@@ -12,18 +12,19 @@
 
   </div>
   <div class="card-body">
-    <div class="col-lg-6 col-md-6 form-inline m-2">
-      <div class="form-inline">
-        <label class="labelheading">Location :</label>&nbsp;&nbsp;
-        <select [(ngModel)]="inventoryFilters.itemlocation" class="form-control" (change)="getlist()">
-          <option value="">All</option>
-          <option *ngFor="let ca of locationList" [ngValue]="ca.itemlocation">{{ca.itemlocation}}</option>
-        </select>
-      </div>
-    </div>
+    
 
     <div class="row" style="margin-top:0px;">
-      <div class="col-lg-2 col-md-2 labelheading" style="font-weight:600;font-size:14px;color:darkblue;margin-left: 500px">
+      <div class="col-lg-4 col-md-4 form-inline m-2" style="margin: 0rem !important;">
+        <div class="form-inline">
+          <label class="labelheading">Location :</label>&nbsp;&nbsp;
+          <select [(ngModel)]="inventoryFilters.itemlocation" class="form-control" (change)="getlist()">
+            <option value="">All</option>
+            <option *ngFor="let ca of locationList" [ngValue]="ca.itemlocation">{{ca.itemlocation}}</option>
+          </select>
+        </div>
+      </div>
+      <div class="col-lg-2 col-md-2 labelheading" style="font-weight:600;font-size:14px;color:darkblue;">
         Total Inventory :<span class="labeltext">{{totalLength}}</span>
       </div>
       <div class="col-lg-3 col-md-3 labelheading" style="font-weight: 600;font-size: 14px;color: darkblue; ">
@@ -38,7 +39,7 @@
 
     <!--<div class="row " style="margin-right:15px;margin-left:15px;">-->
     <p-table #dt [value]="getlistdata" [style]="{'overflow':'auto!important','box-shadow' : '5px 5px #888888'}"
-             [scrollable]="true" scrollHeight="65vh">
+              [paginator]="true" [scrollable]="true" scrollHeight="65vh" [rows]="10" >
       <ng-template pTemplate="header">
         <tr class="mprltbldata">
           <th class="ptable-cell" style="text-align:center;width:70px;">Sl.No.</th>
@@ -71,7 +72,7 @@
         <tr>
           <td class="ptable-cell" style="text-align:center;width:70px;"> {{ri + 1}} </td>
           <td class="ptable-cell" style="text-align:center;"> {{rowData.pono}} </td>
-          <td class="ptable-cell" style="text-align:center;"> {{rowData.material}} </td>
+          <td class="ptable-cell" style="text-align:left;"> {{rowData.material}} </td>
           <!--<td class="ptable-cell" style="text-align:left;">{{rowData.materialdescription}} </td>-->
           <td class="ptable-cell" style="text-align:left;">{{rowData.poitemdescription}} </td>
           <td class="ptable-cell" style="text-align:left;">{{rowData.projectname}} </td>
@@ -81,7 +82,7 @@
           <td class="ptable-cell" style="text-align:right;">{{rowData.value | number : '1.2-2'}} </td>
           <td class="ptable-cell" style="text-align:center;">
             <span *ngIf="inventoryFilters.itemlocation">{{inventoryFilters.itemlocation}}</span>
-            <a *ngIf="!inventoryFilters.itemlocation" class="text-primary" style="text-decoration:underline;cursor:pointer" (click)="getlocations(rowData.material,rowData)">Location</a>
+            <a *ngIf="!inventoryFilters.itemlocation" class="text-primary" style="text-decoration:underline;cursor:pointer" (click)="getlocations(rowData.poitemdescription,rowData)">Location</a>
           </td>
         </tr>
       </ng-template>
@@ -98,16 +99,16 @@
 <p-dialog header="Material Locations" [(visible)]="showadddatamodel" (onHide)="refreshsavemodel()" [modal]="true" [style]="{width: '60vw'}" [baseZIndex]="10000"
           [draggable]="false" [resizable]="false">
   <div class="row">
-    <div class="col-lg-6 col-md-6">
+    <div class="col-lg-4 col-md-4">
       <div class="form-inline">
         <label class="labelheading">Material:</label>&nbsp;&nbsp;
         <label class="labeltext"><span>{{lblmaterial}}</span></label>&nbsp;&nbsp;
       </div>
 
     </div>
-    <div class="col-lg-6 col-md-6">
+    <div class="col-lg-8 col-md-8">
       <div class="form-inline" style="float:right">
-        <label class="labelheading">Material Description:</label>&nbsp;&nbsp;
+        <label class="labelheading">PO Item Description:</label>&nbsp;&nbsp;
         <label class="labeltext"><span>{{lblmaterialdesc}}</span></label>&nbsp;&nbsp;
       </div>
 

@@ -271,7 +271,8 @@ export class CyclecountComponent implements OnInit {
           'Available Qty': obj.availableqty,
           'Physical Qty': obj.physicalqty,
           'difference': obj.difference,
-          'Status': obj.status
+          'Status': obj.status,
+          'Value(in Rs.)': obj.value
         }
       });
       import("xlsx").then(xlsx => {

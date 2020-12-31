@@ -2102,6 +2102,8 @@ namespace WMS.DAL
 				var result = 0;
 				//int inwmasterid = 0;
 				string inwmasterid = "";
+				string value = "";
+				string unitprice = "";
 				foreach (var item in data)
 				{
 
@@ -2116,13 +2118,23 @@ namespace WMS.DAL
 						   query, null, commandType: CommandType.Text);
 						if (objs != null)
 							inwmasterid = objs.inwmasterid;
+
+						//foreach (var item in data) { 
+						item.createddate = System.DateTime.Now;
+						
+						//if (data.itemid == 0)
+						//{
+						
+
+						//Get unit price and value from pomaterials table
+						string getprice = WMSResource.getpricedetails.Replace("#pono", item.pono).Replace("#material", item.Material);
+						var objdata = pgsql.QueryFirstOrDefault<pricedetails>(
+							   query, null, commandType: CommandType.Text);
+						 value = objdata.itemamount;
+						 unitprice = objdata.unitprice;
 					}
-					//foreach (var item in data) { 
-					item.createddate = System.DateTime.Now;
 					string insertquery = WMSResource.insertstock;
 					int itemid = 0;
-					//if (data.itemid == 0)
-					//{
 					string materialid = item.Material;
 					item.availableqty = item.confirmqty;
 					using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
@@ -2149,7 +2161,8 @@ namespace WMS.DAL
 							item.stocktype,
 							item.lineitemno,
 							item.receivedtype,
-							item.poitemdescription
+							item.poitemdescription,
+
 						}));
 						if (result != 0)
 						{
@@ -10907,25 +10920,110 @@ namespace WMS.DAL
 		*/
 		public async Task<IEnumerable<MaterialinHand>> getmatinhand(inventoryFilters filters)
 		{
+			List<MaterialinHand> objmat = new List<MaterialinHand>();
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
 				try
 				{
 					string testgetquery = WMSResource.inhandmaterial;
+					
 					if (!string.IsNullOrEmpty(filters.itemlocation))
 
-						testgetquery += " where st.itemlocation ='" + filters.itemlocation + "'";
-					testgetquery += " group by pomat.poitemdescription";
+						//testgetquery += " where st.itemlocation ='" + filters.itemlocation + "'";
+					//testgetquery += " group by pomat.poitemdescription";
 					await pgsql.OpenAsync();
 					var data = await pgsql.QueryAsync<MaterialinHand>(
 					  testgetquery, null, commandType: CommandType.Text);
-					return data;
+
+					foreach(var mat in data)
+                    {
+						
+						if (objmat.Count>0)
+                        {
+							if (mat.receivedtype == "Put Away")
+							{
+								var matdata = "Select mat.materialdescription  as materialdescription,pomat .unitprice ,pomat.poitemdescription , po.pono as pono,";
+								matdata += "mat.hsncode as hsncode,po.suppliername as suppliername ,prj.projectname as projectname from wms.wms_pomaterials pomat";
+								matdata += "left outer join wms.wms_polist po on po.pono ='" + mat.pono;
+								matdata += "'left outer join wms.wms_project prj on prj.pono ='" + mat.pono;
+								matdata += "'left outer join wms.\"MaterialMasterYGS\" mat on mat.material ='" + mat.material;
+								matdata += "where st.mater";
+								var datamat = await pgsql.QueryAsync<MaterialinHand>(
+								 matdata, null, commandType: CommandType.Text);
+								//objmat.Add(datamat);
+
+							}
+							else
+							{
+								
+									if (objmat.Any(x => x.poitemdescription ==mat.poitemdescription))
+
+                                    {
+									
+									decimal value = (mat.unitprice) * (mat.availableqty);
+									objmat.Where(x => x.poitemdescription == mat.poitemdescription).ToList().ForEach(w => {
+										w.availableqty = w.availableqty + mat.availableqty;
+										w.value = w.value + value;
+										if (w.material.Contains(mat.material))
+										{
+
+										}
+										else
+										{
+											w.material = w.material + ',' + mat.material;
+										}
+									});
+
+									
+			
+									}
+                                    else
+                                    {
+										mat.value = (mat.unitprice) * (mat.availableqty);
+										mat.materialdescription = "-";
+										mat.hsncode = "-";
+										mat.suppliername = "-";
+										mat.projectname = "-";
+										objmat.Add(mat);
+									}
+                               
+							}
+						}
+                        else
+                        {
+							if(mat.receivedtype=="Put Away")
+                            {
+								var matdata = "Select mat.materialdescription  as materialdescription,pomat .unitprice ,pomat.poitemdescription , po.pono as pono,";
+								matdata += "mat.hsncode as hsncode,po.suppliername as suppliername ,prj.projectname as projectname from wms.wms_pomaterials pomat";
+								matdata += "left outer join wms.wms_polist po on po.pono ='" + mat.pono;
+								matdata += "'left outer join wms.wms_project prj on prj.pono ='"+mat.pono;
+								matdata += "'left outer join wms.\"MaterialMasterYGS\" mat on mat.material ='"+mat.material;
+								matdata += "where st.mater";
+								var datamat = await pgsql.QueryAsync<MaterialinHand>(
+								 matdata, null, commandType: CommandType.Text);
+								//objmat.Add(datamat);
+
+							}
+                            else
+                            {
+								mat.value = (mat.unitprice) * (mat.availableqty);
+								mat.materialdescription = "-";
+								mat.hsncode = "-";
+								mat.suppliername = "-";
+								mat.projectname = "-";
+								objmat.Add(mat);
+                            }
+                        }
+
+                    }
+
+					return objmat;
 
 				}
 				catch (Exception Ex)
 				{
 					log.ErrorMessage("PODataProvider", "getmatinhand", Ex.StackTrace.ToString());
-					return null;
+					return objmat;
 				}
 				finally
 				{
@@ -10942,13 +11040,13 @@ namespace WMS.DAL
 		Purpose : <<get Materials in stock locations>>
 		Review Date :<<>>   Reviewed By :<<>>
 		*/
-		public async Task<IEnumerable<matlocations>> getmatinhandlocation(string material)
+		public async Task<IEnumerable<matlocations>> getmatinhandlocation(string poitemdescription)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
 				try
 				{
-					string testgetquery = WMSResource.inhandmateriallocation.Replace("#material", material);
+					string testgetquery = WMSResource.inhandmateriallocation.Replace("#poitemdescription", poitemdescription);
 					await pgsql.OpenAsync();
 					var data = await pgsql.QueryAsync<matlocations>(
 					  testgetquery, null, commandType: CommandType.Text);

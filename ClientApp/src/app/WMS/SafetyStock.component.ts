@@ -39,12 +39,13 @@ export class SafetyStockComponent implements OnInit {
 
   exportExcel() {
     debugger;
-    if (this.safetyStockList!=null) {
+    if (this.safetyStockList.length>0) {
       let new_list = this.safetyStockList.map(function (obj) {
         return {
           'Material': obj.material,
           'Material Description': obj.materialdescription,
           'Min Order Qty': obj.minorderqty,
+          'Value(in Rs.)':obj.value
         }
       });
       import("xlsx").then(xlsx => {
