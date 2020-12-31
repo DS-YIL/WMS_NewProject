@@ -1456,7 +1456,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select itemamount ,unitprice from wms.wms_pomaterials where pono=&quot;#pono&quot; and materialid=&quot;#material&quot;.
+        ///   Looks up a localized string similar to select * from wms.wms_pomaterials where pono=&apos;#pono&apos; and materialid=&apos;#material&apos;.
         /// </summary>
         public static string getpricedetails {
             get {
@@ -1837,7 +1837,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select st.materialid as material,st.unitprice,st.poitemdescription,st.pono,sum(st.availableqty) as availableqty, st.receivedtype from wms.wms_stock st 
+        ///   Looks up a localized string similar to select st.materialid as material,st.unitprice,st.poitemdescription,st.pono,sum(st.availableqty) as availableqty, st.receivedtype,max(st.projectid) as projectname from wms.wms_stock st 
         ///group by st.poitemdescription,st.materialid,st.unitprice,st.pono,st.receivedtype.
         /// </summary>
         public static string inhandmaterial {

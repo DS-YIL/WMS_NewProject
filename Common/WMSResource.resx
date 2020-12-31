@@ -1449,7 +1449,7 @@ from wms.st_initialstock
 st where st.uploadedby = '#code' group by st.uploadbatchcode</value>
   </data>
   <data name="inhandmaterial" xml:space="preserve">
-    <value>select st.materialid as material,st.unitprice,st.poitemdescription,st.pono,sum(st.availableqty) as availableqty, st.receivedtype from wms.wms_stock st 
+    <value>select st.materialid as material,st.unitprice,st.poitemdescription,st.pono,sum(st.availableqty) as availableqty, st.receivedtype,max(st.projectid) as projectname from wms.wms_stock st 
 group by st.poitemdescription,st.materialid,st.unitprice,st.pono,st.receivedtype</value>
     <comment>BG: Changed SUM to Max for value and available qty  - 30/12/2020
 BG: Updating the query to calculate value for each material</comment>
@@ -1703,7 +1703,7 @@ stocktype=@stocktype,unitprice=@unitprice,hsncode=@hsncode where material ='#mat
     <value>update wms.rd_reason set deleteflag=#isdelete, deleteddate =current_date ,deletedby =#deletedby</value>
   </data>
   <data name="getpricedetails" xml:space="preserve">
-    <value>select itemamount ,unitprice from wms.wms_pomaterials where pono="#pono" and materialid="#material"</value>
+    <value>select * from wms.wms_pomaterials where pono='#pono' and materialid='#material'</value>
     <comment>BG: To get unit price details from po materials table </comment>
   </data>
 </root>

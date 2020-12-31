@@ -2102,8 +2102,8 @@ namespace WMS.DAL
 				var result = 0;
 				//int inwmasterid = 0;
 				string inwmasterid = "";
-				string value = "";
-				string unitprice = "";
+				decimal value = 0;
+				decimal unitprice = 0;
 				foreach (var item in data)
 				{
 
@@ -2129,7 +2129,7 @@ namespace WMS.DAL
 						//Get unit price and value from pomaterials table
 						string getprice = WMSResource.getpricedetails.Replace("#pono", item.pono).Replace("#material", item.Material);
 						var objdata = pgsql.QueryFirstOrDefault<pricedetails>(
-							   query, null, commandType: CommandType.Text);
+							   getprice, null, commandType: CommandType.Text);
 						 value = objdata.itemamount;
 						 unitprice = objdata.unitprice;
 					}
@@ -2137,6 +2137,7 @@ namespace WMS.DAL
 					int itemid = 0;
 					string materialid = item.Material;
 					item.availableqty = item.confirmqty;
+					item.receivedtype = "Put Away";
 					using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
 					{
 						result = Convert.ToInt32(DB.ExecuteScalar(insertquery, new
@@ -2162,6 +2163,8 @@ namespace WMS.DAL
 							item.lineitemno,
 							item.receivedtype,
 							item.poitemdescription,
+							value,
+							unitprice
 
 						}));
 						if (result != 0)
@@ -10929,34 +10932,69 @@ namespace WMS.DAL
 					
 					if (!string.IsNullOrEmpty(filters.itemlocation))
 
-						//testgetquery += " where st.itemlocation ='" + filters.itemlocation + "'";
-					//testgetquery += " group by pomat.poitemdescription";
+						//Get materials in stock table 
 					await pgsql.OpenAsync();
 					var data = await pgsql.QueryAsync<MaterialinHand>(
 					  testgetquery, null, commandType: CommandType.Text);
 
 					foreach(var mat in data)
                     {
-						
+						//if objmat is empty insert inventory data into list 
+						//If data is already present check if that data (po item description and material id) is present in the list and add data.
 						if (objmat.Count>0)
                         {
 							if (mat.receivedtype == "Put Away")
 							{
-								var matdata = "Select mat.materialdescription  as materialdescription,pomat .unitprice ,pomat.poitemdescription , po.pono as pono,";
-								matdata += "mat.hsncode as hsncode,po.suppliername as suppliername ,prj.projectname as projectname from wms.wms_pomaterials pomat";
-								matdata += "left outer join wms.wms_polist po on po.pono ='" + mat.pono;
-								matdata += "'left outer join wms.wms_project prj on prj.pono ='" + mat.pono;
-								matdata += "'left outer join wms.\"MaterialMasterYGS\" mat on mat.material ='" + mat.material;
-								matdata += "where st.mater";
-								var datamat = await pgsql.QueryAsync<MaterialinHand>(
-								 matdata, null, commandType: CommandType.Text);
-								//objmat.Add(datamat);
+								//If po item description is already present update material and availanle qty and value column
+								if (objmat.Any(x => x.poitemdescription == mat.poitemdescription))
+
+								{
+									decimal value = (mat.unitprice) * (mat.availableqty);
+									objmat.Where(x => x.poitemdescription == mat.poitemdescription).ToList().ForEach(w => {
+										w.availableqty = w.availableqty + mat.availableqty;
+										w.value = w.value + value;
+										if (w.material.Contains(mat.material))
+										{
+
+										}
+										else
+										{
+											w.material = w.material + ',' + mat.material;
+										}
+									});
+
+								}
+                                else
+                                {
+									var matdata = "select po.suppliername, matygs.hsncode from wms.wms_polist po left outer join wms.\"MaterialMasterYGS\" matygs on matygs.material ='" + mat.pono;
+									matdata += "' where po.pono='" + mat.material + "'";
+									var datamat = pgsql.QueryFirstOrDefault<MaterialinHand>(
+									 matdata, null, commandType: CommandType.Text);
+
+									if(datamat!=null)
+                                    {
+										datamat.value = (mat.unitprice) * (mat.availableqty);
+										datamat.material = mat.material;
+										datamat.poitemdescription = mat.poitemdescription;
+										datamat.pono = mat.pono;
+										datamat.availableqty = mat.availableqty;
+										objmat.Add(datamat);
+									}
+                                    else
+                                    {
+										objmat.Add(mat);
+                                    }
+									
+								}
+
+							
+								
 
 							}
 							else
 							{
-								
-									if (objmat.Any(x => x.poitemdescription ==mat.poitemdescription))
+								//If po item description is already present update material and availanle qty and value column
+								if (objmat.Any(x => x.poitemdescription ==mat.poitemdescription))
 
                                     {
 									
@@ -10983,7 +11021,7 @@ namespace WMS.DAL
 										mat.materialdescription = "-";
 										mat.hsncode = "-";
 										mat.suppliername = "-";
-										mat.projectname = "-";
+										//mat.projectname = "-";
 										objmat.Add(mat);
 									}
                                
@@ -10991,17 +11029,20 @@ namespace WMS.DAL
 						}
                         else
                         {
+							//If data is not present in list add data directly into list
 							if(mat.receivedtype=="Put Away")
                             {
-								var matdata = "Select mat.materialdescription  as materialdescription,pomat .unitprice ,pomat.poitemdescription , po.pono as pono,";
-								matdata += "mat.hsncode as hsncode,po.suppliername as suppliername ,prj.projectname as projectname from wms.wms_pomaterials pomat";
-								matdata += "left outer join wms.wms_polist po on po.pono ='" + mat.pono;
-								matdata += "'left outer join wms.wms_project prj on prj.pono ='"+mat.pono;
-								matdata += "'left outer join wms.\"MaterialMasterYGS\" mat on mat.material ='"+mat.material;
-								matdata += "where st.mater";
-								var datamat = await pgsql.QueryAsync<MaterialinHand>(
+								var matdata = "select po.suppliername, mat.hsncode from wms.wms_polist po left outer join wms.\"MaterialMasterYGS\" matygs on matygs.material ='" + mat.pono;
+								matdata += "' where po.pono='" + mat.material + "'";
+								var datamat = pgsql.QueryFirstOrDefault<MaterialinHand>(
 								 matdata, null, commandType: CommandType.Text);
-								//objmat.Add(datamat);
+
+								datamat.value = (mat.unitprice) * (mat.availableqty);
+								datamat.material = mat.material;
+								datamat.poitemdescription = mat.poitemdescription;
+								datamat.pono = mat.pono;
+								datamat.availableqty = mat.availableqty;
+								objmat.Add(datamat);
 
 							}
                             else
@@ -11010,7 +11051,7 @@ namespace WMS.DAL
 								mat.materialdescription = "-";
 								mat.hsncode = "-";
 								mat.suppliername = "-";
-								mat.projectname = "-";
+								//mat.projectname = "-";
 								objmat.Add(mat);
                             }
                         }

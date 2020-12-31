@@ -1021,9 +1021,9 @@ namespace WMS.Controllers
 		}
 
 		[HttpGet("getmatinhandlocation")]
-		public async Task<IEnumerable<matlocations>> getmatinhandlocation(string material)
+		public async Task<IEnumerable<matlocations>> getmatinhandlocation(string poitemdescription)
 		{
-			return await this._poService.getmatinhandlocation(material);
+			return await this._poService.getmatinhandlocation(poitemdescription);
 		}
 		[HttpGet("getinitialstock")]
 		public async Task<IEnumerable<StockModel>> getinitialstock(string code)
