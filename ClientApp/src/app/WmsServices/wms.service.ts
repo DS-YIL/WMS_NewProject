@@ -5,7 +5,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { constants } from '../Models/WMSConstants'
 import { Employee, Login, DynamicSearchResult, printMaterial, rbamaster } from '../Models/Common.Model';
-import { PoFilterParams, PoDetails, BarcodeModel, StockModel, materialRequestDetails, inwardModel, gatepassModel, stocktransfermodel, Materials, authUser, invstocktransfermodel, ddlmodel, locataionDetailsStock, updateonhold, materialistModel, outwardmaterialistModel, pageModel, UserDashboardDetail, UserDashboardGraphModel, UnholdGRModel, MRNsavemodel, notifymodel, materialtransferMain, materialReservetorequestModel, testcrud, PrintHistoryModel, materilaTrasFilterParams, materialRequestFilterParams, materialResFilterParams, materialRetFilterParams, outwardinwardreportModel, UserModel, WMSHttpResponse, MaterialinHand, matlocations, grReports, MateriallabelModel, ManagerDashboard, pmDashboardCards, invDashboardCards, GraphModelNew, miscellanousIssueData, inventoryFilters, MaterialMaster } from '../Models/WMS.Model';
+import { PoFilterParams, PoDetails, BarcodeModel, StockModel, materialRequestDetails, inwardModel, gatepassModel, stocktransfermodel, Materials, authUser, invstocktransfermodel, ddlmodel, locataionDetailsStock, updateonhold, materialistModel, outwardmaterialistModel, pageModel, UserDashboardDetail, UserDashboardGraphModel, UnholdGRModel, MRNsavemodel, notifymodel, materialtransferMain, materialReservetorequestModel, testcrud, PrintHistoryModel, materilaTrasFilterParams, materialRequestFilterParams, materialResFilterParams, materialRetFilterParams, outwardinwardreportModel, UserModel, WMSHttpResponse, MaterialinHand, matlocations, grReports, MateriallabelModel, ManagerDashboard, pmDashboardCards, invDashboardCards, GraphModelNew, miscellanousIssueData, inventoryFilters, MaterialMaster,GPReasonMTdata } from '../Models/WMS.Model';
 import { Text } from '@angular/compiler/src/i18n/i18n_ast';
 
 @Injectable({
@@ -785,12 +785,25 @@ export class wmsService {
     return this.http.post<any>(this.url + 'POData/updateMiscellanousReceipt', data, httpOptions);
   }
 
-  getMaterialMasterList(): Observable<any> {
+getMaterialMasterList(): Observable<any> {
     return this.http.get<any>(this.url + 'POData/getMaterialMasterList/', this.httpOptions);
   }
   materialMasterUpdate(data: MaterialMaster): Observable<any> {
     return this.http.post<any>(this.url + 'POData/updateMaterialMaster', data, this.httpOptions);
   }
+  GPReasonAdd(data: GPReasonMTdata): Observable<any> {
+    const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }), responseType: 'text' as any };
+    return this.http.post<any>(this.url + 'POData/GPReasonMTAdd', data, httpOptions);
+  }
+  GPReasonDelete(data: GPReasonMTdata): Observable<any> {
+    const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }), responseType: 'text' as any };
+    return this.http.post<any>(this.url + 'POData/GPReasonMTDelete', data, httpOptions);
+  }
+
+  getGPReasonData(): Observable<any> {
+    return this.http.get<any>(this.url + 'POData/getGPReasonData',  this.httpOptions);
+  }
+
 }
 
 

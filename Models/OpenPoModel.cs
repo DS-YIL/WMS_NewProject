@@ -279,6 +279,17 @@ namespace WMS.Models
 		public string putawayfilename { get; set; }
 		public string stocktype { get; set; }
 	}
+
+	public class GPReasonMTData
+    {
+		public string reason { get; set; }
+		public string createdby { get; set; }
+	
+		public DateTime createddate { get; set; }
+		public int reasonid { get; set; }
+		public string type { get; set; }
+	}
+
 	public class StockModel
 	{
 		public int inwardid { get; set; }

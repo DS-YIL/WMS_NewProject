@@ -930,6 +930,14 @@ export class miscellanousIssueData {
   ProjectId: string;
   createdby: string;
 }
+
+export class GPReasonMTdata {
+  reason: string;
+  createdby: string;
+  createddate: any;
+  reasonid: any;
+}
+
 export class inventoryFilters {
   itemlocation: string = "";
 }

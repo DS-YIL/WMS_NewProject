@@ -115,7 +115,8 @@ export class ExcessInventoryMovementComponent implements OnInit {
           'Material': obj.materialid,
           'Material Description': obj.materialdescription,
           [totalconsumed] : obj.issuedqty,
-          'Available Qty': "gh" + obj.availableqty
+          'Available Qty': "gh" + obj.availableqty,
+          'Value(in Rs.)':obj.value
         }
       });
       import("xlsx").then(xlsx => {

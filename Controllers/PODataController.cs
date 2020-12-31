@@ -1243,8 +1243,7 @@ namespace WMS.Controllers
 			return this._poService.updateMiscellanousReceipt(data);
 
 		}
-
-		[HttpGet("getMaterialMasterList")]
+[HttpGet("getMaterialMasterList")]
 		public IActionResult getMaterialMasterList()
 		{
 			return Ok(this._poService.getMaterialMasterList());
@@ -1256,6 +1255,27 @@ namespace WMS.Controllers
 			return this._poService.updateMaterialMaster(data);
 
 		}
+		[HttpPost("GPReasonMTAdd")]
+		public string GPReasonMTAdd(GPReasonMTData data)
+		{
+			return this._poService.GPReasonMTAdd(data);
+
+		}
+
+		[HttpPost("GPReasonMTDelete")]
+		public string GPReasonMTDelete(GPReasonMTData data)
+		{
+			return this._poService.GPReasonMTDelete(data);
+
+		}
+
+		[HttpGet("getGPReasonData")]
+		public async Task<IEnumerable<GPReasonMTData>> getGPReasonData()
+		{
+			return await this._poService.getGPReasonData();
+
+		}
+
 
 	}
 }

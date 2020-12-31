@@ -269,6 +269,15 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to update wms.rd_reason set deleteflag=#isdelete, deleteddate =current_date ,deletedby =#deletedby.
+        /// </summary>
+        public static string deleteGPReason {
+            get {
+                return ResourceManager.GetString("deleteGPReason", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to delete from wms.testcrud where id = #id.
         /// </summary>
         public static string deletetestcurd {
@@ -618,6 +627,15 @@ namespace WMS.Common {
         public static string getgatepassunitprice {
             get {
                 return ResourceManager.GetString("getgatepassunitprice", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to select * from wms.rd_reason where reasontype =&apos;GatePass&apos; and deleteflag =false.
+        /// </summary>
+        public static string getGPReasons {
+            get {
+                return ResourceManager.GetString("getGPReasons", resourceCulture);
             }
         }
         
@@ -1987,6 +2005,15 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to insert into wms.rd_reason(reasonid ,reason,reasontype,createddate,createdby,deleteflag)values(default,@reason,@type,current_timestamp,@createdby,false).
+        /// </summary>
+        public static string insertGPReason {
+            get {
+                return ResourceManager.GetString("insertGPReason", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to INSERT INTO wms.st_initialstock (material,materialdescription,store,rack,bin,quantity,grn,
         ///								 receiveddate,shelflifeexpiration,dateofmanufacture,dataenteredon,
         ///								 datasource,dataenteredby,createddate,DataloadErrors,error_description,stocktype,
@@ -2733,6 +2760,15 @@ namespace WMS.Common {
         public static string updategatepassmaterialissue {
             get {
                 return ResourceManager.GetString("updategatepassmaterialissue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to update wms.rd_reason set reason=#reason, createddate =current_date ,createdby =#createdby .
+        /// </summary>
+        public static string updateGPReason {
+            get {
+                return ResourceManager.GetString("updateGPReason", resourceCulture);
             }
         }
         
