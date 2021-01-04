@@ -1551,12 +1551,20 @@ namespace WMS.DAL
 								query = WMSResource.getMaterialsforreceipt.Replace("#invoice", invoiceno).Replace("#inw", inwmasterid);
 								if (isgrn)
 								{
-									query += " where sinw.grnnumber = '" + grnno + "' group by mat.poitemdescription";
+									query += " where sinw.grnnumber = '" + grnno + "'";
+									if (obj.asnno != null && obj.asnno != "")
+									{
+										query += " and  mat.asnno = '" + obj.asnno + "'";
+									}
 								}
 								else
 								{
 									//query += " where mat.pono = '" + pono + "'  and sinw.invoiceno = '" + invoiceno + "'";
-									query += " where mat.pono in ('" + poforquery + "') group by mat.poitemdescription";
+									query += " where mat.pono in ('" + poforquery + "')";
+									if (obj.asnno != null && obj.asnno != "")
+                                    {
+										query += " and mat.asnno = '" + obj.asnno + "'";
+									}
 								}
 							}
 							else
@@ -1904,7 +1912,9 @@ namespace WMS.DAL
 									item.materialqty,
 									item.receiveremarks,
 									item.pono,
-									item.lineitemno
+									item.lineitemno,
+									item.poitemdescription,
+									item.unitprice
 
 								});
 								inwardid = Convert.ToInt32(results);

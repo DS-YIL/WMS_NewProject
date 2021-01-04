@@ -163,7 +163,8 @@ export class inwardModel {
   selectedrow: boolean = false;
   uploadedFiles: any[] = [];
   stocktype: string;
-
+  poitemdescription: string;
+  unitprice: number;
 }
 
 

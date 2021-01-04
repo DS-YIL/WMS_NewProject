@@ -90,6 +90,8 @@ namespace WMS.Models
 		public bool isasn { get; set; }
 		public bool issupplier { get; set; }
 
+		public decimal? unitprice { get; set; }
+
 	}
 
 	public class printMaterial
@@ -278,6 +280,9 @@ namespace WMS.Models
 		public DateTime notifiedon { get; set; }
 		public string putawayfilename { get; set; }
 		public string stocktype { get; set; }
+		public string asnno { get; set; }
+		public string poitemdescription { get; set; }
+		public decimal? unitprice { get; set; }
 	}
 
 	public class GPReasonMTData
