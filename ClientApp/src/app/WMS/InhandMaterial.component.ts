@@ -10,15 +10,16 @@ import { ConfirmationService } from 'primeng/api';
 import { isNullOrUndefined } from 'util';
 import { HttpClient } from '@angular/common/http';
 import { testcrud, WMSHttpResponse, MaterialinHand, matlocations, inventoryFilters } from '../Models/WMS.Model';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-InhandMaterial',
   templateUrl: './InhandMaterial.component.html',
-  providers: [ConfirmationService, DecimalPipe]
+  providers: [ConfirmationService, DecimalPipe, DatePipe]
 })
 export class InhandMaterialComponent implements OnInit {
 
-  constructor(private confirmationService: ConfirmationService, private decimalPipe: DecimalPipe, private http: HttpClient, private messageService: MessageService, private wmsService: wmsService, private route: ActivatedRoute, private router: Router, public constants: constants, private spinner: NgxSpinnerService) { }
+  constructor(private confirmationService: ConfirmationService, private datePipe: DatePipe, private decimalPipe: DecimalPipe, private http: HttpClient, private messageService: MessageService, private wmsService: wmsService, private route: ActivatedRoute, private router: Router, public constants: constants, private spinner: NgxSpinnerService) { }
 
 
   public employee: Employee;
@@ -35,6 +36,7 @@ export class InhandMaterialComponent implements OnInit {
   public inventoryFilters: inventoryFilters;
   public locationList: Array<any> = [];
   public dynamicData: DynamicSearchResult;
+  currentDate = new Date();
 
   ngOnInit() {
     if (localStorage.getItem("Employee"))
@@ -62,12 +64,12 @@ export class InhandMaterialComponent implements OnInit {
     this.lblmaterialdesc = "";
   }
 
-  getlocations(material: string, data: MaterialinHand) {
+  getlocations(poitemdescription: string, data: MaterialinHand) {
     this.getlocationlistdata = [];
     this.lblmaterial = data.material;
-    this.lblmaterialdesc = data.materialdescription;
+    this.lblmaterialdesc = poitemdescription;
     this.spinner.show();
-    this.wmsService.getmatinhandlocations(material.trim()).subscribe(data => {
+    this.wmsService.getmatinhandlocations(poitemdescription).subscribe(data => {
       this.getlocationlistdata = data;
       this.showadddatamodel = true;
       this.spinner.hide();
@@ -85,22 +87,25 @@ export class InhandMaterialComponent implements OnInit {
     });
   }
   exportExcel() {
+    //this.getlistdata[0].itemlocation = this.inventoryFilters.itemlocation;
     let new_list = this.getlistdata.map(function (obj) {
       return {
+        'PO No.': obj.pono,
         'Material': obj.material,
-        'Material Description': obj.materialdescription,
-        'Project Name': obj.projectname,
+        'PO Item description': obj.poitemdescription,
+        'Project code': obj.projectname,
         'Supplier Name': obj.suppliername,
         'Hsncode': obj.hsncode,
-        'Avialable Quantity': obj.availableqty,
-        'Value': obj.value
+        'Available Quantity': obj.availableqty,
+        'Value': obj.value,
+        //'Location': obj.itemlocation
       }
     });
     import("xlsx").then(xlsx => {
       const worksheet = xlsx.utils.json_to_sheet(new_list);
       const workbook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
       const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
-      this.saveAsExcelFile(excelBuffer, "invoicereport");
+      this.saveAsExcelFile(excelBuffer, "InventoryReport");
     });
   }
 
@@ -111,7 +116,9 @@ export class InhandMaterialComponent implements OnInit {
       const data: Blob = new Blob([buffer], {
         type: EXCEL_TYPE
       });
-      FileSaver.saveAs(data, fileName + '_export_' + new Date().getTime() + EXCEL_EXTENSION);
+      
+      var date = this.datePipe.transform(this.currentDate, 'dd-MM-yyyy');
+      FileSaver.saveAs(data, fileName +"_"+ date + EXCEL_EXTENSION);
     });
   }
   getTotalCount(data) {

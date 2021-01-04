@@ -652,6 +652,8 @@ export class testcrud {
 
 export class MaterialinHand {
   material: string;
+  pono: string;
+  poitemdescription: string;
   materialdescription: string;
   availableqty: number;
   value: number;
@@ -659,6 +661,7 @@ export class MaterialinHand {
   suppliername: string;
   hsncode: string;
   locations: matlocations[];
+  itemlocation: any;
 }
 
 export class matlocations {

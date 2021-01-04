@@ -28,7 +28,7 @@
           <td class="ptable-cell" style="text-align:center">{{ri+1}}</td>
           <td class="ptable-cell" style="text-align:left">{{rowData.reason}}</td>
           <!--<td class="ptable-cell" style="text-align:left">{{rowData.createdby}}</td>-->
-        <td class="ptable-cell" style="text-align:left">{{rowData.createddate | date : 'dd/MM/yyyy'}}</td>
+        <td class="ptable-cell" style="text-align:center">{{rowData.createddate | date : 'dd/MM/yyyy'}}</td>
         <td class="ptable-cell" style="text-align:center">
           <button type="button" icon="fa fa-edit" pButton aria-hidden="true" (click)="editreason(rowData)"></button>&nbsp;&nbsp;
           <button type="button" icon="fa fa-trash" pButton aria-hidden="true" (click)="deletereason(rowData)"></button>

@@ -65,14 +65,18 @@ export class ABCAnalysisComponent implements OnInit {
 
   //Export to excel
   exportExcel() {
-    if (this.ABCavailableqtyList.length>0) {
+
+    if (this.ABCavailableqtyList.length > 0) {
+      this.ABCavailableqtyList[0].totalQty = this.totalQty;
+      this.ABCavailableqtyList[0].totalunitprice = this.totalunitprice;
       let new_list = this.ABCavailableqtyList.map(function (obj) {
+       
         return {
           'Category': obj.category,
           'Available Qty': obj.availableqty,
-          '% of Qty': ((obj.availableqty / this.totalQty) * 100).toFixed(),
+          '% of Qty': ((obj.availableqty / obj.totalQty) * 100).toFixed(),
           'Cost': obj.totalcost,
-          '% of cost': ((obj.totalcost / this.totalunitprice) * 100).toFixed()
+          '% of cost': ((obj.totalcost / obj.totalunitprice) * 100).toFixed()
 
         }
 

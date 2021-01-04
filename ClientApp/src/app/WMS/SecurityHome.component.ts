@@ -250,19 +250,26 @@ export class SecurityHomeComponent implements OnInit {
   pocheck() {
     this.Poinvoicedetails.vendorname = "";
     this.Poinvoicedetails.invoiceno = "";
+    this.Poinvoicedetails.vehicleno = "";
     this.ispochecked = true;
     this.disSaveBtn = false;
     this.isnonpochecked = false;
+    this.transportdetails = "";
+    this.nonporemarks = "";
   }
+
   nonpocheck() {
     this.PoDetails.pono = "";
     this.Poinvoicedetails.vendorname = "";
+    this.Poinvoicedetails.vehicleno = "";
     this.Poinvoicedetails.invoiceno = "";
     this.ispochecked = false;
     this.isnonpochecked = true;
     this.disSaveBtn = false;
     this.showPrintBtn = false;
     this.print = "Print Barcode";
+    this.transportdetails = "";
+    this.nonporemarks = "";
   }
 
   getdepts() {

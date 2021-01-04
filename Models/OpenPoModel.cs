@@ -358,6 +358,11 @@ namespace WMS.Models
 		public string poitemdescription { get; set; }
 	}
 
+	public class pricedetails
+    {
+		public string itemamount { get; set; }
+		public string unitprice { get; set; }
+    }
 	public class MaterialinHand
 	{
 		public string material { get; set; }
@@ -370,6 +375,8 @@ namespace WMS.Models
 		public Decimal? value { get; set; }
 		public string pono { get; set; }
 		List<matlocations> locations { get; set; }
+		public string receivedtype { get; set; }
+		public decimal unitprice { get; set; }
 	}
 
 	public class matlocations
