@@ -41,6 +41,8 @@ export class PoDetails {
   id: string;
   vehicleno: string;
   inwmasterid: string;
+  poitemdescription: string;
+  unitprice: number;
 }
 
 export class BarcodeModel {
@@ -213,6 +215,7 @@ export class StockModel {
   exceptionrecords: number;
   totalrecords: number;
   poitemdescription: string;
+  unitprice: number;
 }
 
 export class locataionDetailsStock {

@@ -47,6 +47,10 @@ export class MaterialRequestViewComponent implements OnInit {
   public materialistModel: materialList;
   public materialmodel: Array<materialList> = [];
   public defaultmaterials: materialList[] = [];
+  public defaultmaterialids: materialList[] = [];
+  public defaultmaterialidescs: materialList[] = [];
+  public defaultuniquematerialids: materialList[] = [];
+  public defaultuniquematerialidescs: materialList[] = [];
   public gatepassModel: gatepassModel;
   public materialList: Array<materialList> = [];
   public chkChangeshideshow: boolean = false;
@@ -59,6 +63,7 @@ export class MaterialRequestViewComponent implements OnInit {
   reserveidview: string = "";
   requestview: string = "";
   filteredmats: any[];
+  filteredmatdesc: any[];
   selectedproject: ddlmodel;
   filteredprojects: ddlmodel[] = [];
   requestremarks: string = "";
@@ -126,8 +131,72 @@ export class MaterialRequestViewComponent implements OnInit {
     this.defaultmaterials = []
     this.wmsService.getMaterialRequestlistdata(this.employee.employeeno, null).subscribe(data => {
       this.defaultmaterials = data;
+      this.setmatdesclist(this.defaultmaterials);
+      //this.defaultmaterialids = data;
+      //this.defaultmaterialidescs = data;
     });
-   }
+  }
+
+  setmatdesclist(datax: materialList[]) {
+    debugger;
+    var listdata = datax;
+    this.defaultmaterialidescs = [];
+    this.defaultmaterialids = [];
+    this.defaultuniquematerialids = [];
+    this.defaultuniquematerialidescs = [];
+    listdata.forEach(item => {
+      debugger;
+      var mat = item.material;
+      var desc = item.materialdescription;
+      var dt1 = this.defaultmaterialids.filter(function (element, index) {
+        return (element.material.toLowerCase() == String(mat).toLowerCase());
+      });
+      if (dt1.length == 0) {
+        this.defaultmaterialids.push(item);
+      }
+      var dt2 = this.defaultmaterialidescs.filter(function (element, index) {
+        return (element.materialdescription.toLowerCase() == String(desc).toLowerCase());
+      });
+      if (dt2.length == 0) {
+        this.defaultmaterialidescs.push(item);
+      }
+       
+    });
+    this.defaultuniquematerialids = this.defaultmaterialids;
+    this.defaultuniquematerialidescs = this.defaultmaterialidescs;
+
+  }
+
+  setmatlist(datax: materialList[]) {
+    var listdata = datax;
+    this.defaultmaterialids = [];
+    listdata.forEach(item => {
+      var mat = item.material;
+      var dt1 = this.defaultmaterialids.filter(function (element, index) {
+        return (element.material.toLowerCase() == String(mat).toLowerCase());
+      });
+      if (dt1.length == 0) {
+        this.defaultmaterialids.push(item);
+      }
+
+    });
+  }
+
+  setdesclist(datax: materialList[]) {
+    debugger;
+    var listdata = datax;
+    this.defaultmaterialidescs = [];
+    listdata.forEach(item => {
+      var desc = item.materialdescription;
+      var dt2 = this.defaultmaterialidescs.filter(function (element, index) {
+        return (element.materialdescription.toLowerCase() == String(desc).toLowerCase());
+      });
+      if (dt2.length == 0) {
+        this.defaultmaterialidescs.push(item);
+      }
+
+    });
+  }
 
   //get Material Rquest based on login employee && po no
   getMaterialRequestlist() {
@@ -483,39 +552,111 @@ export class MaterialRequestViewComponent implements OnInit {
 
   onMaterialSelected1(data: any, ind: number) {
     debugger;
-    var data1 = this.materialList.filter(function (element, index) {
-      return (element.material == data.material && index != ind);
-    });
-    if (data1.length > 0) {
-      this.messageService.add({ severity: 'error', summary: '', detail: 'Material already exist' });
-      this.materialList[ind].material = "";
-      this.materialList[ind].materialdescription = "";
-      this.materialList[ind].materialcost = 0;
-      this.materialList[ind].availableqty = 0;
-      this.materialList[ind].quantity = 0;
-      return false;
+    if (!isNullOrUndefined(data.materialdescription) && data.materialdescription != "") {
+      var data1 = this.materialList.filter(function (element, index) {
+        return (element.material == data.material && element.materialdescription == data.materialdescription && index != ind);
+      });
+      if (data1.length > 0) {
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Material already exist' });
+        this.materialList[ind].material = "";
+        this.materialList[ind].materialdescription = "";
+        this.materialList[ind].materialcost = 0;
+        this.materialList[ind].availableqty = 0;
+        this.materialList[ind].quantity = 0;
+        return false;
+      }
+      var data2 = this.defaultmaterials.filter(function (element, index) {
+        return (element.material == data.material && element.materialdescription == data.materialdescription);
+      });
+      if (data2.length > 0) {
+        data.materialdescription = data2[0].materialdescription;
+        data.materialcost = data2[0].materialcost != null ? data2[0].materialcost : 0;
+        data.availableqty = data2[0].availableqty != null ? data2[0].availableqty : 0;
+      }
     }
-    var data2 = this.defaultmaterials.filter(function (element, index) {
-      return (element.material == data.material);
-    });
-    if (data2.length > 0) {
-      data.materialdescription = data2[0].materialdescription;
-      data.materialcost = data2[0].materialcost != null ? data2[0].materialcost : 0;
-      data.availableqty = data2[0].availableqty != null ? data2[0].availableqty : 0;
+    else {
+      var senddata = this.defaultmaterials.filter(function (element, index) {
+        return (element.material == data.material);
+      });
+      this.setdesclist(senddata);
+
+    }
+   
+
+  }
+
+  onDescriptionSelected(data: any, ind: number) {
+    debugger;
+    if (!isNullOrUndefined(data.material) && data.material != "") {
+      var data1 = this.materialList.filter(function (element, index) {
+        return (element.material == data.material && element.materialdescription == data.materialdescription && index != ind);
+      });
+      if (data1.length > 0) {
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Material and description already exist' });
+        this.materialList[ind].material = "";
+        this.materialList[ind].materialdescription = "";
+        this.materialList[ind].materialcost = 0;
+        this.materialList[ind].availableqty = 0;
+        this.materialList[ind].quantity = 0;
+        return false;
+      }
+      var data2 = this.defaultmaterials.filter(function (element, index) {
+        return (element.material == data.material && element.materialdescription == data.materialdescription);
+      });
+      if (data2.length > 0) {
+        data.materialdescription = data2[0].materialdescription;
+        data.materialcost = data2[0].materialcost != null ? data2[0].materialcost : 0;
+        data.availableqty = data2[0].availableqty != null ? data2[0].availableqty : 0;
+      }
+    }
+    else {
+      var senddata = this.defaultmaterials.filter(function (element, index) {
+        return (element.materialdescription == data.materialdescription);
+      });
+      this.setmatlist(senddata);
+
     }
 
   }
 
 
-  filtermats(event) {
+  filtermats(event,data : any) {
+    if (!isNullOrUndefined(data.materialdescription) && data.materialdescription != "") {
+      var senddata = this.defaultmaterials.filter(function (element, index) {
+        return (element.materialdescription == data.materialdescription);
+      });
+      this.setmatlist(senddata);
+    }
+    else {
+      this.defaultmaterialids = this.defaultuniquematerialids;
+    }
     this.filteredmats = [];
-    for (let i = 0; i < this.defaultmaterials.length; i++) {
-      let brand = this.defaultmaterials[i].material;
-      let pos = this.defaultmaterials[i].materialdescription;
-      if (brand.toLowerCase().indexOf(event.query.toLowerCase()) == 0 || pos.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+    for (let i = 0; i < this.defaultmaterialids.length; i++) {
+      let brand = this.defaultmaterialids[i].material;
+      if (brand.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
         this.filteredmats.push(brand);
       }
       
+    }
+  }
+
+  filtermatdescs(event, data: any) {
+    if (!isNullOrUndefined(data.material) && data.material != "") {
+      var senddata = this.defaultmaterials.filter(function (element, index) {
+        return (element.material == data.material);
+      });
+      this.setdesclist(senddata);
+    }
+    else {
+      this.defaultmaterialidescs = this.defaultuniquematerialidescs;
+    }
+    this.filteredmatdesc = [];
+    for (let i = 0; i < this.defaultmaterialidescs.length; i++) {
+      let pos = this.defaultmaterialidescs[i].materialdescription;
+      if (pos.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+        this.filteredmatdesc.push(pos);
+      }
+
     }
   }
 

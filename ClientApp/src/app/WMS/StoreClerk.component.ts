@@ -504,12 +504,15 @@ export class StoreClerkComponent implements OnInit {
     });
     if (selectedm.length > 0) {
       data.materialdescription = selectedm[0].materialdescription;
+      data.poitemdescription = selectedm[0].materialdescription;
+      data.unitprice = null;
       data.material = selectedm[0].material;
       data.qualitycheck = selectedm[0].qualitycheck;
     }
     else {
       data.materialdescription = "-";
       data.qualitycheck = true;
+      data.unitprice = null;
     }
 
 

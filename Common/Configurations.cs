@@ -11,6 +11,7 @@ namespace WMS.Common
     {
         public readonly string _SQLconnectionString = string.Empty;
         public readonly string _PostgreconnectionString = string.Empty;
+        public readonly string _EmailLinkUrl = string.Empty;
         public Configurations()
         {
             var configurationBuilder = new ConfigurationBuilder();
@@ -21,6 +22,7 @@ namespace WMS.Common
             _SQLconnectionString = root.GetSection("ConnectionStrings").GetSection("DataConnection").Value;
 
             _PostgreconnectionString = root.GetSection("ConnectionStrings").GetSection("PostgresConnection").Value;
+            _EmailLinkUrl = root.GetSection("ConnectionStrings").GetSection("EmailLinkUrl").Value;
 
             var appSetting = root.GetSection("ApplicationSettings");
 
@@ -34,6 +36,10 @@ namespace WMS.Common
         public string PostgresConnectionString
         {
             get => _PostgreconnectionString;
+        }
+        public string EmailLinkUrl
+        {
+            get => _EmailLinkUrl;
         }
 
     }

@@ -165,10 +165,10 @@
             <tr class="mprltbldata">
               <th style="text-align:center;width:5%;">Sl.No.</th>
               <th style="text-align:center;width:10%;">PONo.</th>
-              <th style="text-align:center;width:8%;">line item No.</th>
+              <th *ngIf="!isnonpo" style="text-align:center;width:8%;">line item No.</th>
               <th style="text-align:center;width:12%;">Material</th>
-              <!--<th style="text-align:center;">Material Description</th>-->
-              <th style="text-align:center;">PO Item Description</th>
+               <th *ngIf="isnonpo" style="text-align:center;">Material Description</th>
+              <th *ngIf="!isnonpo" style="text-align:center;">PO Item Description</th>
               <th *ngIf="!isnonpo && !qualitychecked" style="text-align:center;width:8%;">Material Qty</th>
               <th *ngIf="!isnonpo && isreceivedbefore" style="text-align:center;width:8%;">Pending Qty</th>
               <th style="text-align:center;width:10%;" *ngIf="!isonHoldview">Received Qty</th>
@@ -197,7 +197,7 @@
 
               <td class="ptable-cell" style="text-align:right;width:5%;">{{ri+1}}</td>
               <td class="ptable-cell" style="text-align:center;width:10%;">{{rowData.pono}}</td>
-              <td class="ptable-cell" style="text-align:center;width:8%;">{{rowData.lineitemno}}</td>
+              <td *ngIf="!isnonpo" class="ptable-cell" style="text-align:center;width:8%;">{{rowData.lineitemno}}</td>
               <td class="ptable-cell" style="text-align:center;width:12%;">
                 <span *ngIf="!isnonpoentry">{{rowData.material}}</span>
                 <input *ngIf="isnonpoentry" pInputText type="text" (change)="setmatdesc(rowData)" (blur)="validate(rowData,ri)" class="form-control" [(ngModel)]="rowData.material">
@@ -208,7 +208,7 @@
               <td class="ptable-cell" style="text-align:left;">
                 <span *ngIf="!isnonpoentry && rowData.poitemdescription">{{rowData.poitemdescription}}</span>
                 <span *ngIf="!isnonpoentry && !rowData.poitemdescription">-</span>
-                <input *ngIf="isnonpoentry" pInputText type="text" readonly id="receivedqty" class="form-control" [(ngModel)]="rowData.poitemdescription">
+                <input *ngIf="isnonpoentry" pInputText type="text" readonly id="receivedqty" class="form-control" [(ngModel)]="rowData.materialdescription">
                 <!--<span *ngIf="!isnonpoentry && rowData.materialdescription">{{rowData.materialdescription}}</span>
   <span *ngIf="!isnonpoentry && !rowData.materialdescription">-</span>
   <input *ngIf="isnonpoentry" pInputText type="text" readonly id="receivedqty" class="form-control" [(ngModel)]="rowData.materialdescription">-->
@@ -298,7 +298,7 @@
               <td class="ptable-cell" style="text-align:left">
                 <!--<span *ngIf="rowData.materialdescription">{{rowData.materialdescription}}</span>
                 <span *ngIf="!rowData.materialdescription">-</span>-->
-                <span *ngIf="rowData.poitemdescription">{{rowData.materialdescription}}</span>
+                <span *ngIf="rowData.poitemdescription">{{rowData.poitemdescription}}</span>
                 <span *ngIf="!rowData.poitemdescription">-</span>
 
               </td>

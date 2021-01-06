@@ -65,7 +65,7 @@
                   <td class="ptable-cell" style="text-align:left;">
                     <!--<span *ngIf="rowData.materialdescription">{{rowData.materialdescription}}</span>
                      <span *ngIf="!rowData.materialdescription">-</span>-->
-                    <span *ngIf="rowData.materialdescription">{{rowData.poitemdescription}}</span>
+                    <span *ngIf="rowData.poitemdescription">{{rowData.poitemdescription}}</span>
                     <span *ngIf="!rowData.poitemdescription">-</span>
                   </td>
                   <td *ngIf="!isnonpo" class="ptable-cell" style="text-align:right;width:100px;">{{rowData.materialqty}}</td>
@@ -425,7 +425,7 @@
     </div>
 
       <p-footer>
-        <button type="button" pButton icon="fa fa-close" (click)="onSubmitStockDetails()" label="Submit"></button>
+        <button type="button" pButton icon="fa fa-check" (click)="onSubmitStockDetails()" label="Submit"></button>
       </p-footer>
     </p-dialog>
  

@@ -256,7 +256,9 @@
 
               </td>
               <td class="ptable-cell" style="text-align:left">
-                {{rowData.materialdescription}}
+                <p-autoComplete [(ngModel)]="rowData.materialdescription" placeholder="search by description" type="text" appendTo="body" [forceSelection]="true" (onSelect)="onDescriptionSelected(rowData,ri)" [suggestions]="filteredmatdesc" (completeMethod)="filtermatdescs($event,rowData)" [size]="50"
+                                [dropdown]="true"></p-autoComplete>
+                <!--{{rowData.materialdescription}}-->
 
               </td>
               <td class="ptable-cell" style="text-align:right">

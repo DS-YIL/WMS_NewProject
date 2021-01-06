@@ -655,7 +655,7 @@ this.updateRowGroupMetaData();
     this.StockModel.locatorid = details.storeid;
     this.StockModel.rackid = details.rackid;
     this.StockModel.binid = details.binid;
-    this.matdescription = details.materialdescription;
+    this.matdescription = details.poitemdescription;
     this.matqty = details.confirmqty;
    
     
@@ -759,6 +759,8 @@ this.updateRowGroupMetaData();
         this.StockModel.itemid = this.PoDetails.itemid;
         this.StockModel.pono = this.PoDetails.pono;
         this.StockModel.lineitemno = this.PoDetails.lineitemno;
+        this.StockModel.poitemdescription = this.PoDetails.poitemdescription,
+          this.StockModel.unitprice = this.PoDetails.unitprice,
         this.StockModel.grnnumber = this.PoDetails.grnnumber;
         this.StockModel.vendorid = this.PoDetails.vendorid;
         this.StockModel.paitemid = this.PoDetails.paitemid;

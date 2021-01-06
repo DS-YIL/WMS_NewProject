@@ -360,8 +360,8 @@ namespace WMS.Models
 
 	public class pricedetails
     {
-		public string itemamount { get; set; }
-		public string unitprice { get; set; }
+		public decimal itemamount { get; set; }
+		public decimal unitprice { get; set; }
     }
 	public class MaterialinHand
 	{
@@ -1584,12 +1584,13 @@ public class MaterialTransactionDetail
 	public string reserveid { get; set; }
 	public string materialid { get; set; }
 	public string materialdescription { get; set; }
+	public string poitemdescription { get; set; }
 	public int requestedquantity { get; set; }
 	public int itemid { get; set; }
 	public int issuedquantity { get; set; }
 	public int reservedqty { get; set; }
-
 	public int returnqty { get; set; }
+	public decimal? materialcost { get; set; }
 }
 
 public class MaterialReturnTR

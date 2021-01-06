@@ -54,8 +54,13 @@ export class MaterialReserveViewComponent implements OnInit {
   showreservebtn: boolean = false;
   isrequested: boolean = false;
   public defaultmaterials: materialList[] = [];
+  public defaultmaterialids: materialList[] = [];
+  public defaultmaterialidescs: materialList[] = [];
+  public defaultuniquematerialids: materialList[] = [];
+  public defaultuniquematerialidescs: materialList[] = [];
   reservetorequest: materialReservetorequestModel;
   filteredmats: any[];
+  filteredmatdesc: any[];
   displaypos: boolean = false;
   projectlists: ddlmodel[] = [];
   selectedproject: ddlmodel;
@@ -85,8 +90,71 @@ export class MaterialReserveViewComponent implements OnInit {
     this.defaultmaterials = []
     this.wmsService.getMaterialReservelistdata().subscribe(data => {
       this.defaultmaterials = data;
+      this.setmatdesclist(this.defaultmaterials);
     });
   }
+
+  setmatdesclist(datax: materialList[]) {
+    debugger;
+    var listdata = datax;
+    this.defaultmaterialidescs = [];
+    this.defaultmaterialids = [];
+    this.defaultuniquematerialids = [];
+    this.defaultuniquematerialidescs = [];
+    listdata.forEach(item => {
+      debugger;
+      var mat = item.material;
+      var desc = item.materialdescription;
+      var dt1 = this.defaultmaterialids.filter(function (element, index) {
+        return (element.material.toLowerCase() == String(mat).toLowerCase());
+      });
+      if (dt1.length == 0) {
+        this.defaultmaterialids.push(item);
+      }
+      var dt2 = this.defaultmaterialidescs.filter(function (element, index) {
+        return (element.materialdescription.toLowerCase() == String(desc).toLowerCase());
+      });
+      if (dt2.length == 0) {
+        this.defaultmaterialidescs.push(item);
+      }
+
+    });
+    this.defaultuniquematerialids = this.defaultmaterialids;
+    this.defaultuniquematerialidescs = this.defaultmaterialidescs;
+
+  }
+
+  setmatlist(datax: materialList[]) {
+    var listdata = datax;
+    this.defaultmaterialids = [];
+    listdata.forEach(item => {
+      var mat = item.material;
+      var dt1 = this.defaultmaterialids.filter(function (element, index) {
+        return (element.material.toLowerCase() == String(mat).toLowerCase());
+      });
+      if (dt1.length == 0) {
+        this.defaultmaterialids.push(item);
+      }
+
+    });
+  }
+
+  setdesclist(datax: materialList[]) {
+    debugger;
+    var listdata = datax;
+    this.defaultmaterialidescs = [];
+    listdata.forEach(item => {
+      var desc = item.materialdescription;
+      var dt2 = this.defaultmaterialidescs.filter(function (element, index) {
+        return (element.materialdescription.toLowerCase() == String(desc).toLowerCase());
+      });
+      if (dt2.length == 0) {
+        this.defaultmaterialidescs.push(item);
+      }
+
+    });
+  }
+
 
   getprojects() {
     this.spinner.show();
@@ -97,16 +165,57 @@ export class MaterialReserveViewComponent implements OnInit {
     });
   }
 
-  filtermats(event) {
+  //filtermats(event) {
+  //  this.filteredmats = [];
+  //  for (let i = 0; i < this.defaultmaterials.length; i++) {
+  //    let brand = this.defaultmaterials[i].material;
+  //    let pos = this.defaultmaterials[i].materialdescription;
+  //    if (brand.toLowerCase().indexOf(event.query.toLowerCase()) == 0 || pos.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+  //      this.filteredmats.push(brand);
+  //    }
+  //  }
+  //}
+
+  filtermats(event, data: any) {
+    if (!isNullOrUndefined(data.materialdescription) && data.materialdescription != "") {
+      var senddata = this.defaultmaterials.filter(function (element, index) {
+        return (element.materialdescription == data.materialdescription);
+      });
+      this.setmatlist(senddata);
+    }
+    else {
+      this.defaultmaterialids = this.defaultuniquematerialids;
+    }
     this.filteredmats = [];
-    for (let i = 0; i < this.defaultmaterials.length; i++) {
-      let brand = this.defaultmaterials[i].material;
-      let pos = this.defaultmaterials[i].materialdescription;
-      if (brand.toLowerCase().indexOf(event.query.toLowerCase()) == 0 || pos.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+    for (let i = 0; i < this.defaultmaterialids.length; i++) {
+      let brand = this.defaultmaterialids[i].material;
+      if (brand.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
         this.filteredmats.push(brand);
       }
+
     }
   }
+
+  filtermatdescs(event, data: any) {
+    if (!isNullOrUndefined(data.material) && data.material != "") {
+      var senddata = this.defaultmaterials.filter(function (element, index) {
+        return (element.material == data.material);
+      });
+      this.setdesclist(senddata);
+    }
+    else {
+      this.defaultmaterialidescs = this.defaultuniquematerialidescs;
+    }
+    this.filteredmatdesc = [];
+    for (let i = 0; i < this.defaultmaterialidescs.length; i++) {
+      let pos = this.defaultmaterialidescs[i].materialdescription;
+      if (pos.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+        this.filteredmatdesc.push(pos);
+      }
+
+    }
+  }
+
   filterprojects(event) {
     this.filteredprojects = [];
     for (let i = 0; i < this.projectlists.length; i++) {
@@ -140,31 +249,102 @@ export class MaterialReserveViewComponent implements OnInit {
   showpodatabox() {
     this.displaypos = !this.displaypos;
   }
-  onMaterialSelected1(data: any, ind: number) {
-    debugger;
-    var data1 = this.materialList.filter(function (element, index) {
-      return (element.material == data.material && index != ind);
-    });
-    if (data1.length > 0) {
-      this.messageService.add({ severity: 'error', summary: '', detail: 'Material already exist' });
-      this.materialList[ind].material = "";
-      this.materialList[ind].materialdescription = "";
-      this.materialList[ind].materialcost = 0;
-      this.materialList[ind].availableqty = 0;
-      this.materialList[ind].quantity = 0;
-      return false;
-    }
-    var data2 = this.defaultmaterials.filter(function (element, index) {
-      return (element.material == data.material);
-    });
-    if (data2.length > 0) {
+  //onMaterialSelected1(data: any, ind: number) {
+  //  debugger;
+  //  var data1 = this.materialList.filter(function (element, index) {
+  //    return (element.material == data.material && index != ind);
+  //  });
+  //  if (data1.length > 0) {
+  //    this.messageService.add({ severity: 'error', summary: '', detail: 'Material already exist' });
+  //    this.materialList[ind].material = "";
+  //    this.materialList[ind].materialdescription = "";
+  //    this.materialList[ind].materialcost = 0;
+  //    this.materialList[ind].availableqty = 0;
+  //    this.materialList[ind].quantity = 0;
+  //    return false;
+  //  }
+  //  var data2 = this.defaultmaterials.filter(function (element, index) {
+  //    return (element.material == data.material);
+  //  });
+  //  if (data2.length > 0) {
       
-        data.materialdescription = data2[0].materialdescription;
-        data.materialcost = data2[0].materialcost != null ? data2[0].materialcost : 0;
-      data.availableqty = data2[0].availableqty != null ? data2[0].availableqty : 0;
-      data.plantstockavailableqty = data2[0].plantstockavailableqty != null ? data2[0].plantstockavailableqty : 0;
+  //      data.materialdescription = data2[0].materialdescription;
+  //      data.materialcost = data2[0].materialcost != null ? data2[0].materialcost : 0;
+  //    data.availableqty = data2[0].availableqty != null ? data2[0].availableqty : 0;
+  //    data.plantstockavailableqty = data2[0].plantstockavailableqty != null ? data2[0].plantstockavailableqty : 0;
       
      
+  //  }
+
+  //}
+
+  onMaterialSelected1(data: any, ind: number) {
+    debugger;
+    if (!isNullOrUndefined(data.materialdescription) && data.materialdescription != "") {
+      var data1 = this.materialList.filter(function (element, index) {
+        return (element.material == data.material && element.materialdescription == data.materialdescription && index != ind);
+      });
+      if (data1.length > 0) {
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Material already exist' });
+        this.materialList[ind].material = "";
+        this.materialList[ind].materialdescription = "";
+        this.materialList[ind].materialcost = 0;
+        this.materialList[ind].availableqty = 0;
+        this.materialList[ind].quantity = 0;
+        return false;
+      }
+      var data2 = this.defaultmaterials.filter(function (element, index) {
+        return (element.material == data.material && element.materialdescription == data.materialdescription);
+      });
+      if (data2.length > 0) {
+        data.materialdescription = data2[0].materialdescription;
+        data.materialcost = data2[0].materialcost != null ? data2[0].materialcost : 0;
+        data.availableqty = data2[0].availableqty != null ? data2[0].availableqty : 0;
+        data.plantstockavailableqty = data2[0].plantstockavailableqty != null ? data2[0].plantstockavailableqty : 0;
+      }
+    }
+    else {
+      var senddata = this.defaultmaterials.filter(function (element, index) {
+        return (element.material == data.material);
+      });
+      this.setdesclist(senddata);
+
+    }
+
+
+  }
+
+  onDescriptionSelected(data: any, ind: number) {
+    debugger;
+    if (!isNullOrUndefined(data.material) && data.material != "") {
+      var data1 = this.materialList.filter(function (element, index) {
+        return (element.material == data.material && element.materialdescription == data.materialdescription && index != ind);
+      });
+      if (data1.length > 0) {
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Material and description already exist' });
+        this.materialList[ind].material = "";
+        this.materialList[ind].materialdescription = "";
+        this.materialList[ind].materialcost = 0;
+        this.materialList[ind].availableqty = 0;
+        this.materialList[ind].quantity = 0;
+        return false;
+      }
+      var data2 = this.defaultmaterials.filter(function (element, index) {
+        return (element.material == data.material && element.materialdescription == data.materialdescription);
+      });
+      if (data2.length > 0) {
+        data.materialdescription = data2[0].materialdescription;
+        data.materialcost = data2[0].materialcost != null ? data2[0].materialcost : 0;
+        data.availableqty = data2[0].availableqty != null ? data2[0].availableqty : 0;
+        data.plantstockavailableqty = data2[0].plantstockavailableqty != null ? data2[0].plantstockavailableqty : 0;
+      }
+    }
+    else {
+      var senddata = this.defaultmaterials.filter(function (element, index) {
+        return (element.materialdescription == data.materialdescription);
+      });
+      this.setmatlist(senddata);
+
     }
 
   }

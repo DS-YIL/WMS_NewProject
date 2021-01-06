@@ -1423,6 +1423,7 @@ namespace WMS.Controllers
 				{
 					try
 					{
+						
 						int itmno = Convert.ToInt32(stag_data.polineitemno);
 						string materialQuery = "Select * from wms.wms_pomaterials where pono = '" + stag_data.po + "' and itemno =" + itmno;
 						var podata = pgsql.QueryFirstOrDefault<MateriallabelModel>(materialQuery, null, commandType: CommandType.Text);

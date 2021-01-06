@@ -1898,7 +1898,6 @@ namespace WMS.DAL
 							if (!isupdateprocess)
 							{
 
-
 								var results = pgsql.ExecuteScalar(insertforinvoicequery, new
 								{
 									item.inwmasterid,
@@ -2112,8 +2111,8 @@ namespace WMS.DAL
 				var result = 0;
 				//int inwmasterid = 0;
 				string inwmasterid = "";
-				decimal value = 0;
-				decimal unitprice = 0;
+				decimal? value = 0;
+				decimal? unitprice = 0;
 				foreach (var item in data)
 				{
 
@@ -2137,16 +2136,19 @@ namespace WMS.DAL
 						
 
 						//Get unit price and value from pomaterials table
-						string getprice = WMSResource.getpricedetails.Replace("#pono", item.pono).Replace("#material", item.Material);
-						var objdata = pgsql.QueryFirstOrDefault<pricedetails>(
-							   getprice, null, commandType: CommandType.Text);
-						 value = objdata.itemamount;
-						 unitprice = objdata.unitprice;
+						//string getprice = WMSResource.getpricedetails.Replace("#pono", item.pono).Replace("#material", item.Material);
+						//var objdata = pgsql.QueryFirstOrDefault<pricedetails>(
+						//	   getprice, null, commandType: CommandType.Text);
+						// value = objdata.itemamount;
+						// unitprice = objdata.unitprice;
 					}
+					
 					string insertquery = WMSResource.insertstock;
 					int itemid = 0;
 					string materialid = item.Material;
 					item.availableqty = item.confirmqty;
+					value = item.confirmqty * item.unitprice;
+					unitprice = item.unitprice;
 					item.receivedtype = "Put Away";
 					using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
 					{
@@ -3044,6 +3046,8 @@ namespace WMS.DAL
 							detail.requestid = result.ToString();
 							detail.materialid = item.material;
 							detail.requestedquantity = item.quantity;
+							detail.poitemdescription = item.Materialdescription;
+							detail.materialcost = item.materialcost;
 							string insertdataqry = WMSResource.insertmaterialrequestdetails;
 							var result1 = pgsql.Execute(insertdataqry, new
 							{
@@ -3051,7 +3055,9 @@ namespace WMS.DAL
 								detail.id,
 								detail.requestid,
 								detail.materialid,
-								detail.requestedquantity
+								detail.requestedquantity,
+								detail.poitemdescription,
+								detail.materialcost
 
 							});
 
@@ -6386,7 +6392,7 @@ namespace WMS.DAL
 					//{
 					//	materialrequestquery = materialrequestquery + " and pro.projectmanager = '" + approverid + "' ";
 					//}
-					materialrequestquery = materialrequestquery + " group by  pomat.poitemdescription, sk.materialid";
+					materialrequestquery = materialrequestquery + " group by  sk.poitemdescription, sk.materialid";
 					await pgsql.OpenAsync();
 					var data = await pgsql.QueryAsync<IssueRequestModel>(
 					  materialrequestquery, null, commandType: CommandType.Text);

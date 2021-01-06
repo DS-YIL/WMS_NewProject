@@ -83,6 +83,89 @@ export class NavMenuComponent implements OnInit {
     }
     //Purpose: << Security Operator >>
 
+   
+    if (localStorage.getItem("Employee")) {
+      if (localStorage.getItem("rbalist")) {
+        this.rbalist = JSON.parse(localStorage.getItem("rbalist")) as rbamaster[];
+      }
+
+      this.loggedin = true;
+      let element: HTMLElement = document.getElementById("btnuser") as HTMLElement;
+      element.hidden = false;
+      this.emp = JSON.parse(localStorage.getItem("Employee")) as Employee;
+      this.profileimage = this.imgurl + this.emp.employeeno + ".jpg";
+      this.loggeduserdata.push(this.emp);
+      if (localStorage.getItem("pages")) {
+        this.pagelist = JSON.parse(localStorage.getItem("pages")) as pageModel[];
+      }
+      if (this.ismailurl && this.emp.roleid != "8") {
+        this.logout();
+      }
+      this.username = this.emp.name;
+      if (localStorage.getItem("userroles") && this.emp.roleid == "0") {
+        this.userrolelist = JSON.parse(localStorage.getItem("userroles")) as userAcessNamesModel[];
+        this.bindMenuwithoutrole();
+      }
+      else {
+        if (localStorage.getItem("userroles")) {
+          this.userrolelist = JSON.parse(localStorage.getItem("userroles")) as userAcessNamesModel[];
+        }
+        else {
+          this.userrolelist = JSON.parse(localStorage.getItem("allroles")) as userAcessNamesModel[];
+        }
+        var rid = this.emp.roleid;
+        var data1 = this.userrolelist.filter(function (element, index) {
+          return (element.roleid == parseInt(rid));
+        });
+        if (data1.length > 0) {
+          this.rolename = data1[0].accessname;
+          if (this.rolename) {
+            this.loggedinas = "Logged in as " + this.rolename;
+          }
+
+        }
+        if (sessionStorage.getItem("userdashboardpage")) {
+          this.binduserdashboardmenu();
+        }
+        else {
+          if (eurl.includes("/Email")) {
+            this.bindMenuForEmailNav(eurl);
+          }
+          else {
+            this.bindMenu();
+          }
+          
+        }
+
+      }
+
+      //if (this.emp.roleid != "8") {
+      //  let elementx: HTMLElement = document.getElementById("btnuser1") as HTMLElement;
+      //  elementx.hidden = false;
+      //  let elementy: HTMLElement = document.getElementById("btnuser2") as HTMLElement;
+      //  elementy.hidden = false;
+      //  this.getGatePassList();
+      //}
+
+    }
+    else {
+      let element: HTMLElement = document.getElementById("btnuser") as HTMLElement;
+      element.hidden = true;
+      let element1: HTMLDivElement = document.getElementById("menudiv") as HTMLDivElement;
+      element1.hidden = true;
+      //let elementx: HTMLElement = document.getElementById("btnuser1") as HTMLElement;
+      //elementx.hidden = true;
+      //let elementy: HTMLElement = document.getElementById("btnuser2") as HTMLElement;
+      //elementy.hidden = true;
+      this.router.navigateByUrl("WMS/Login");
+    }
+
+
+
+
+  }
+
+  bindMenuForEmailNav(eurl : any) {
     if (eurl.includes("/Email")) {
       //this.isapprovalurl = true;
       this.gateentryid = this.route.snapshot.queryParams.pono;
@@ -143,7 +226,7 @@ export class NavMenuComponent implements OnInit {
       if (eurl.includes("/Email/MaterialReqView?ReqId")) {
         this.reqid = this.route.snapshot.queryParams.requestid;
         this.reqid = eurl.split('=')[1];
-       // this.pono = eurl.split('=')[3];
+        // this.pono = eurl.split('=')[3];
         if (this.reqid) {
           //redirects to MaterialReqView
           this.bindMenuForIMEmails();
@@ -217,78 +300,6 @@ export class NavMenuComponent implements OnInit {
       }
       return;
     }
-    if (localStorage.getItem("Employee")) {
-      if (localStorage.getItem("rbalist")) {
-        this.rbalist = JSON.parse(localStorage.getItem("rbalist")) as rbamaster[];
-      }
-
-      this.loggedin = true;
-      let element: HTMLElement = document.getElementById("btnuser") as HTMLElement;
-      element.hidden = false;
-      this.emp = JSON.parse(localStorage.getItem("Employee")) as Employee;
-      this.profileimage = this.imgurl + this.emp.employeeno + ".jpg";
-      this.loggeduserdata.push(this.emp);
-      if (localStorage.getItem("pages")) {
-        this.pagelist = JSON.parse(localStorage.getItem("pages")) as pageModel[];
-      }
-      if (this.ismailurl && this.emp.roleid != "8") {
-        this.logout();
-      }
-      this.username = this.emp.name;
-      if (localStorage.getItem("userroles") && this.emp.roleid == "0") {
-        this.userrolelist = JSON.parse(localStorage.getItem("userroles")) as userAcessNamesModel[];
-        this.bindMenuwithoutrole();
-      }
-      else {
-        if (localStorage.getItem("userroles")) {
-          this.userrolelist = JSON.parse(localStorage.getItem("userroles")) as userAcessNamesModel[];
-        }
-        else {
-          this.userrolelist = JSON.parse(localStorage.getItem("allroles")) as userAcessNamesModel[];
-        }
-        var rid = this.emp.roleid;
-        var data1 = this.userrolelist.filter(function (element, index) {
-          return (element.roleid == parseInt(rid));
-        });
-        if (data1.length > 0) {
-          this.rolename = data1[0].accessname;
-          if (this.rolename) {
-            this.loggedinas = "Logged in as " + this.rolename;
-          }
-
-        }
-        if (sessionStorage.getItem("userdashboardpage")) {
-          this.binduserdashboardmenu();
-        }
-        else {
-          this.bindMenu();
-        }
-
-      }
-
-      //if (this.emp.roleid != "8") {
-      //  let elementx: HTMLElement = document.getElementById("btnuser1") as HTMLElement;
-      //  elementx.hidden = false;
-      //  let elementy: HTMLElement = document.getElementById("btnuser2") as HTMLElement;
-      //  elementy.hidden = false;
-      //  this.getGatePassList();
-      //}
-
-    }
-    else {
-      let element: HTMLElement = document.getElementById("btnuser") as HTMLElement;
-      element.hidden = true;
-      let element1: HTMLDivElement = document.getElementById("menudiv") as HTMLDivElement;
-      element1.hidden = true;
-      //let elementx: HTMLElement = document.getElementById("btnuser1") as HTMLElement;
-      //elementx.hidden = true;
-      //let elementy: HTMLElement = document.getElementById("btnuser2") as HTMLElement;
-      //elementy.hidden = true;
-      this.router.navigateByUrl("WMS/Login");
-    }
-
-
-
 
   }
   Navigatetopagefn() {
@@ -526,7 +537,7 @@ export class NavMenuComponent implements OnInit {
         { label: 'Test', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/Test') }
       ]
     });
-    if (this.inwmasterid != null && this.inwmasterid != "") {
+    if (this.gateentryid != null && this.gateentryid != "") {
       this.router.navigate(['WMS/GRNPosting'], { queryParams: { inwmasterid: this.gateentryid } });
     }
     else {

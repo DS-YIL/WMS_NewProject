@@ -170,6 +170,7 @@
                 <th style="text-align:center;width:70px">Sl.No</th>
                 <th style="text-align:center;width:200px">Material</th>
                 <th style="text-align:center">PO Item Description</th>
+                <th style="text-align:center;width:150px">Value</th>
                 <th style="text-align:center;width:150px">Requested  Qty</th>
                 <th style="text-align:center;width:150px">Issued Qty</th>
                 <!--<th style="text-align:center;width:150px">Return Qty</th>-->
@@ -184,14 +185,15 @@
                 </td>
                 <td class="ptable-cell" style="text-align:center">{{rowData.materialid}}</td>
                 <td class="ptable-cell" style="text-align:left">{{rowData.materialdescription}}</td>
+                <td class="ptable-cell" style="text-align:right">{{rowData.materialcost}}</td>
                 <td class="ptable-cell" style="text-align:right">{{rowData.requestedquantity}}</td>
                 <td class="ptable-cell" style="text-align:right">
                   {{rowData.issuedquantity}}
 
                 </td>
                 <!--<td class="ptable-cell" style="text-align:center;width:100px;">
-        <input pInputText [disabled]="rowData.approvedstatus=='Approved'?false:true" type="number" (change)="returnQtyChange(rowData.issuedquantity,rowData.returnqty)" class="form-control" [(ngModel)]="rowData.returnqty">
-      </td>-->
+    <input pInputText [disabled]="rowData.approvedstatus=='Approved'?false:true" type="number" (change)="returnQtyChange(rowData.issuedquantity,rowData.returnqty)" class="form-control" [(ngModel)]="rowData.returnqty">
+  </td>-->
                 <!--<td class="ptable-cell" style="text-align:left">{{rowData.createddate | date :  constants.dateFormat}}</td>-->
               </tr>
             </ng-template>
@@ -391,13 +393,15 @@
               <td class="ptable-cell" style="text-align:left;">
 
                 <!--<input *ngIf="rowData.materialid" [(ngModel)]="rowData.materialid" class="form-control" type="text" name="{{rowData.materialid}}" />-->
-                <p-autoComplete [(ngModel)]="rowData.material" placeholder="search by name/code" type="text" appendTo="body" [forceSelection]="true" (onSelect)="onMaterialSelected1(rowData,ri)" [suggestions]="filteredmats" (completeMethod)="filtermats($event)" [size]="20"
+                <p-autoComplete [(ngModel)]="rowData.material" placeholder="search by code" type="text" appendTo="body" [forceSelection]="true" (onSelect)="onMaterialSelected1(rowData,ri)" [suggestions]="filteredmats" (completeMethod)="filtermats($event,rowData)" [size]="20"
                                 [dropdown]="true"></p-autoComplete>
 
               </td>
               <td class="ptable-cell" style="text-align:left">
+                <p-autoComplete [(ngModel)]="rowData.materialdescription" placeholder="search by description" type="text" appendTo="body" [forceSelection]="true" (onSelect)="onDescriptionSelected(rowData,ri)" [suggestions]="filteredmatdesc" (completeMethod)="filtermatdescs($event,rowData)" [size]="50"
+                                [dropdown]="true"></p-autoComplete>
 
-                {{rowData.materialdescription}}
+                <!--{{rowData.materialdescription}}-->
 
               </td>
               <td class="ptable-cell" style="text-align:right">
