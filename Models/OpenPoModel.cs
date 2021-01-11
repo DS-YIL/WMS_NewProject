@@ -323,7 +323,6 @@ namespace WMS.Models
 		public string itemlocation { get; set; }
 		public string requestid { get; set; }
 		public string requesttype { get; set; }
-		public DateTime createddate { get; set; }
 		public DateTime? createddate { get; set; }
 		public string createdby { get; set; }
 		public string binnumber { get; set; }
