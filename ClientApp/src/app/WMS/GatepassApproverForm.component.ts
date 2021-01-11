@@ -252,6 +252,7 @@ export class GatePassApproverComponent implements OnInit {
         item.approverremarks = this.materialList[this.roindex].approverremarks;
         item.fmapproverremarks = this.materialList[this.roindex].fmapproverremarks;
         item.itemreceiverid = this.materialList[this.roindex].itemreceiverid;
+        item.requesttype = "GPRequest";
         totalissuedqty = totalissuedqty + (item.issuedqty);
         this.issueFinalList.push(item);
       }
