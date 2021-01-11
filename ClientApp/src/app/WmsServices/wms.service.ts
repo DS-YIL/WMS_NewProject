@@ -545,6 +545,11 @@ export class wmsService {
     return this.http.post<any>(this.url + 'POData/updateonholddata', updaeonhold, httpOptions);
   }
 
+  updateinitialstock(stockdata: StockModel): Observable<any> {
+    const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }), responseType: 'text' as any };
+    return this.http.post<any>(this.url + 'POData/updateinitialstock', stockdata, httpOptions);
+  }
+
   updateonholdgr(updaeonhold: UnholdGRModel): Observable<any> {
     return this.http.post<any>(this.url + 'POData/UnholdGR', updaeonhold, this.httpOptions);
   }

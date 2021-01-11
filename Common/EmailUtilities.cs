@@ -18,7 +18,15 @@ namespace WMS.Common
 		Configurations config = new Configurations();
 		ErrorLogTrace log = new ErrorLogTrace();
 		EmailModel emailobj = new EmailModel();
-		
+
+		public enum Emailparameter
+		{
+			mailforqualitycheck = 1, 
+			mailforacceptance = 2, 
+			mailforputaway = 3, 
+			mailaftermaterialrequest = 4, 
+			mailaftermaterialreserve = 5
+		}
 		public bool sendEmail(EmailModel emlSndngList, int subjecttype,int roleid=0)
 		{
 			string link = "";
@@ -104,16 +112,48 @@ namespace WMS.Common
 			//Inventory Manager
 			else if (subjecttype == 4)
 			{
-				mailMessage.Subject = "Request for Materials - ID(s)" + emlSndngList.material;
+				mailMessage.Subject = "Request for Materials with request id:" + emlSndngList.requestid;
 				string requestedby = this.getnamebyid(emlSndngList.createdby);
-				subbody = "Please find the Materials request details below. <br/> Requested By:" +requestedby + "<br/>Requested On:" + emlSndngList.createddate;
-				subbody += mailMessage.Subject;
+				subbody = "Please find the Material request details below. <br/> Requested By:" +requestedby + "<br/>Requested On:" + emlSndngList.createddate;
+				//subbody += "<br/>"+ mailMessage.Subject;
 				link = linkurl + "WMS/Email/MaterialIssueDashboard?ReqId=" + emlSndngList.requestid;
+
+			}
+			//Project Manager to Inventoty Clerk
+			//Inventory Manager
+			else if (subjecttype == Conversion.toInt(Emailparameter.mailaftermaterialreserve))
+			{
+				mailMessage.Subject = "Reserve material with reserveid :" + emlSndngList.reserveid;
+				string requestedby = this.getnamebyid(emlSndngList.createdby);
+				subbody = "Please find the Material reserve details below.<br/> Reserve id:" + emlSndngList.reserveid + " <br/> Reserved By:" + requestedby + "<br/>Reserved On:" + emlSndngList.createddate + "<br/>Reserve upto:" + emlSndngList.reserveupto + "<br/>Project code:" + emlSndngList.projectcode;
+				subbody += "<br/>";
+				if(emlSndngList.remarks != null && emlSndngList.remarks != "")
+                {
+					subbody += "<br/>Remarks :" + emlSndngList.remarks;
+					subbody += "<br/>";
+				}
+				subbody += "<table style=\"border: 1px solid black;border-collapse:collapse; \">";
+				subbody += "<tr>";
+				subbody += "<th style=\"border: 1px solid black;border-collapse:collapse;\">Material</th>";
+				subbody += "<th style=\"border: 1px solid black;border-collapse:collapse;\">PO Item Description</th>";
+				subbody += "<th style=\"border: 1px solid black;border-collapse:collapse;\">Reserve Quantity</th>";
+				subbody += "</tr>";
+				foreach(MaterialTransactionDetail dt in emlSndngList.reservedata)
+                {
+					subbody += "<tr>";
+					subbody += "<td style=\"border: 1px solid black;border-collapse:collapse;\">" + dt.materialid+"</td>";
+					subbody += "<td style=\"border: 1px solid black;border-collapse:collapse;\">" + dt.poitemdescription + "</td>";
+					subbody += "<td style=\"border: 1px solid black;border-collapse:collapse;\">" + dt.reservedqty + "</td>";
+					subbody += "</tr>";
+				}
+				subbody += "</table>";
+
+				//link = linkurl + "WMS/Email/MaterialIssueDashboard?ReqId=" + emlSndngList.requestid;
 
 			}
 			//Inventory Manager to Project manager
 			//project manager
-			else if (subjecttype == 5)
+			else if (subjecttype == 51)
 			{
 				mailMessage.Subject = "Materials Issued for Request Id" + emlSndngList.requestid ;
 				subbody = "The materials for Request Id " + emlSndngList.requestid + "has been issued.";
@@ -155,20 +195,7 @@ namespace WMS.Common
 
 
 			}
-			// Approverfor Returnable(PM)-Inventory Clerk
-
-			else if (subjecttype == 15)
-
-			{
-
-				mailMessage.Subject = "Gate Pass Material Pending for Issue - GatePass  ID : " + emlSndngList.gatepassid;
-				string requestedby = this.getnamebyid(emlSndngList.approvername);
-				subbody = "Returnable Gate Pass was approved by PM and pending for issue.<br/>Please click on the below link to issue materials. <br/> Requested By : " + emlSndngList.approvername;
-				//subbody = mailMessage.Subject;
-				link = linkurl + "WMS/Email/GatePass?GateId=" + emlSndngList.gatepassid.Trim();
-
-
-			}
+			
 
 			//Admin to Approver(MA)
 
@@ -184,34 +211,8 @@ namespace WMS.Common
 
 
 			}
-			// Approver(PM)-Approver(FM) for Non Returnable gatepass
-
-			else if (subjecttype == 16)
-
-			{
-
-				mailMessage.Subject = emlSndngList.gatepasstype+ " Gatepass Materials with GatePass ID -"+ emlSndngList.gatepassid + "are pending for FM approval ";
-				string requestedby = this.getnamebyid(emlSndngList.requestedby);
-				subbody = "Please find the Material details below.<br/>GatePass Type : <b>" + emlSndngList.gatepasstype+"</b><br/>Approved By : <b>"+emlSndngList.approvername+"<b>";
-				//subbody = mailMessage.Subject;
-				link = linkurl + "WMS/Email/GatePassFMList?GateId=" + emlSndngList.gatepassid.Trim();
-
-
-			}
-			// Approver for Non - Returnable(FM)-Inventory Clerk
-
-			else if (subjecttype == 17)
-
-			{
-
-				mailMessage.Subject = emlSndngList.gatepasstype+" Gate Pass Material Pending for Issue - GatePass ID : " + emlSndngList.gatepassid;
-				string requestedby = this.getnamebyid(emlSndngList.requestedby);
-				subbody = "Please click on the below link to issue materials. ";
-				//subbody = mailMessage.Subject;
-				link = linkurl + "WMS/Email/GatePass?GateId=" + emlSndngList.gatepassid.Trim();
-
-
-			}
+			
+			
 			else if (subjecttype == 10)
 			{
                 mailMessage.Subject = "Reserve material";
@@ -235,8 +236,63 @@ namespace WMS.Common
 			}
 			else if (subjecttype == 14)
 			{
-				mailMessage.Subject = "Material Transfer";
+				mailMessage.Subject = "Material Transfer with transfer id :" + emlSndngList.transferid;
 				subbody = emlSndngList.transferbody;
+				link = linkurl + "WMS/Email/materialtransferapproval?transferid=" + emlSndngList.transferid.Trim();
+			}
+			// Approverfor Returnable(PM)-Inventory Clerk
+
+			else if (subjecttype == 15)
+
+			{
+
+				mailMessage.Subject = "Gate Pass Material Pending for Issue - GatePass  ID : " + emlSndngList.gatepassid;
+				string requestedby = this.getnamebyid(emlSndngList.approvername);
+				subbody = "Returnable Gate Pass was approved by PM and pending for issue.<br/>Please click on the below link to issue materials. <br/> Requested By : " + emlSndngList.approvername;
+				//subbody = mailMessage.Subject;
+				link = linkurl + "WMS/Email/GatePass?GateId=" + emlSndngList.gatepassid.Trim();
+
+
+			}
+			// Approver(PM)-Approver(FM) for Non Returnable gatepass
+
+			else if (subjecttype == 16)
+
+			{
+
+				mailMessage.Subject = emlSndngList.gatepasstype + " Gatepass Materials with GatePass ID -" + emlSndngList.gatepassid + "are pending for FM approval ";
+				string requestedby = this.getnamebyid(emlSndngList.requestedby);
+				subbody = "Please find the Material details below.<br/>GatePass Type : <b>" + emlSndngList.gatepasstype + "</b><br/>Approved By : <b>" + emlSndngList.approvername + "<b>";
+				//subbody = mailMessage.Subject;
+				link = linkurl + "WMS/Email/GatePassFMList?GateId=" + emlSndngList.gatepassid.Trim();
+
+
+			}
+			// Approver for Non - Returnable(FM)-Inventory Clerk
+
+			else if (subjecttype == 17)
+
+			{
+
+				mailMessage.Subject = emlSndngList.gatepasstype + " Gate Pass Material Pending for Issue - GatePass ID : " + emlSndngList.gatepassid;
+				string requestedby = this.getnamebyid(emlSndngList.requestedby);
+				subbody = "Please click on the below link to issue materials. ";
+				//subbody = mailMessage.Subject;
+				link = linkurl + "WMS/Email/GatePass?GateId=" + emlSndngList.gatepassid.Trim();
+
+
+			}
+			else if (subjecttype == 18)
+			{
+				mailMessage.Subject = "Material Transfer with transfer id :" + emlSndngList.transferid;
+				subbody = emlSndngList.transferbody;
+				link = linkurl + "WMS/Email/materialtransfer?transferid=" + emlSndngList.transferid.Trim();
+			}
+			else if (subjecttype == 19)
+			{
+				mailMessage.Subject = "Material reurn with return id :" + emlSndngList.returnid;
+				subbody = "Please click on the below link for material return details. ";
+				link = linkurl + "WMS/Email/materialreturndashboard?returnid=" + emlSndngList.returnid.Trim();
 			}
 
 			if (!string.IsNullOrEmpty(emlSndngList.CC))

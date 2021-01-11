@@ -31,12 +31,28 @@ export class AdminStockUploadReportComponent implements OnInit {
   viewdetail: boolean = false;
   viewexception: boolean = false;
   getmainlistdata: StockModel[] = [];
+  editStockModel: StockModel;
   lblfilename: string = "";
   lbldate: Date;
   lblqty: number;
   lblvalue: string = "";
   loading: boolean = false;
   totalRecords: number;
+  showadddatamodel: boolean = false;
+
+  datainaction: StockModel;
+  currentstage: string = "";
+
+  ///to show lable dynamically on edit
+  ismaterial: boolean = false;
+  isdescription: boolean = false;
+  isstore: boolean = false;
+  israck: boolean = false;
+  isbin: boolean = false;
+  isquantity: boolean = false;
+  isvalue: boolean = false;
+  isprojectid: boolean = false;
+  ispono: boolean = false;
   
 
   ngOnInit() {
@@ -47,7 +63,21 @@ export class AdminStockUploadReportComponent implements OnInit {
     this.viewmain = true;
     this.viewdetail = false;
     this.viewexception = false;
+    this.showadddatamodel = false;
+    this.editStockModel = new StockModel();
+    this.datainaction = new StockModel();
+    this.currentstage = "";
     this.getMainlist();
+
+    this.ismaterial = false;
+    this.isdescription = false;
+    this.isstore = false;
+    this.israck = false;
+    this.isbin = false;
+    this.isquantity = false;
+    this.isvalue = false;
+    this.isprojectid = false;
+    this.ispono = false;
      
   }
 
@@ -111,8 +141,94 @@ export class AdminStockUploadReportComponent implements OnInit {
       }
     }, 1000);
   }
+  refreshsavemodel() {
+    this.editStockModel = new StockModel();
+  }
+
+  EditStock(rowData: StockModel) {
+    this.setEditControls(rowData);
+    this.editStockModel = rowData;
+    this.showadddatamodel = true;
+
+  }
+
+  setEditControls(rowData: StockModel) {
+    this.ismaterial = false;
+    this.isdescription = false;
+    this.isstore = false;
+    this.israck = false;
+    this.isbin = false;
+    this.isquantity = false;
+    this.isvalue = false;
+    this.isprojectid = false;
+    this.ispono = false;
+    if (!isNullOrUndefined(rowData.material) && String(rowData.material).trim() != "") {
+      this.ismaterial = true;
+    }
+    if (!isNullOrUndefined(rowData.materialdescription) && String(rowData.materialdescription).trim() != "") {
+      this.isdescription = true;
+    }
+    if (!isNullOrUndefined(rowData.locatorname) && String(rowData.locatorname).trim() != "") {
+      this.isstore = true;
+    }
+    if (!isNullOrUndefined(rowData.racknumber) && String(rowData.racknumber).trim() != "") {
+      this.israck = true;
+    }
+    if (!isNullOrUndefined(rowData.binnumber) && String(rowData.binnumber).trim() != "") {
+      this.isbin = true;
+    }
+    if (!isNullOrUndefined(rowData.availableqty) && rowData.availableqty > 0) {
+      this.isquantity = true;
+    }
+    if (!isNullOrUndefined(rowData.value) && rowData.value > 0) {
+      this.isvalue = true;
+    }
+    if (!isNullOrUndefined(rowData.projectid) && String(rowData.projectid).trim() != "") {
+      this.isprojectid = true;
+    }
+    if (!isNullOrUndefined(rowData.pono) && String(rowData.pono).trim() != "") {
+      this.ispono = true;
+    }
+
+
+  }
+
+  setdataaftersave() {
+    debugger;
+    this.getmainlistdata = [];
+    this.viewmain = true;
+    this.viewdetail = false;
+    this.viewexception = false;
+    this.showadddatamodel = false;
+    this.spinner.show();
+    this.wmsService.getinitialStockReportGroup(this.employee.employeeno).subscribe(data => {
+      this.getmainlistdata = data;
+      this.spinner.hide();
+      var actioncode = this.datainaction.uploadbatchcode;
+      var data = this.getmainlistdata.filter(o => o.uploadbatchcode == actioncode);
+      if (data.length > 0) {
+        if (this.currentstage == "Exception") {
+          this.getexlist(data[0]);
+        }
+        else if (this.currentstage == "ALL") {
+          this.getalllist(data[0]);
+        }
+        else if (this.currentstage == "Success") {
+          this.getlist(data[0]);
+        }
+      }
+    });
+   
+   
+    
+
+  }
+
+
 
   getexlist(data: StockModel) {
+    this.currentstage = "Exception";
+    this.datainaction = data;
     this.lblfilename = data.uploadedfilename;
     this.lbldate = data.createddate;
     this.lblqty = data.exceptionrecords;
@@ -135,6 +251,8 @@ export class AdminStockUploadReportComponent implements OnInit {
   }
 
   getalllist(data: StockModel) {
+    this.currentstage = "All";
+    this.datainaction = data;
     this.lblfilename = data.uploadedfilename;
     this.lbldate = data.createddate;
     this.lblqty = data.totalrecords;
@@ -155,7 +273,61 @@ export class AdminStockUploadReportComponent implements OnInit {
     });
   }
 
+  post() {
+    debugger;
+    var rowData = this.editStockModel;
+    if (isNullOrUndefined(rowData.material) || String(rowData.material).trim() == "") {
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Enter material' });
+      return;
+    }
+    if (isNullOrUndefined(rowData.materialdescription) || String(rowData.materialdescription).trim() == "") {
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Enter material description' });
+      return;
+    }
+    if (isNullOrUndefined(rowData.locatorname) || String(rowData.locatorname).trim() == "") {
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Enter store' });
+      return;
+    }
+    if (isNullOrUndefined(rowData.racknumber) || String(rowData.racknumber).trim() == "") {
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Enter rack' });
+      return;
+    }
+    if (isNullOrUndefined(rowData.binnumber) || String(rowData.binnumber).trim() == "") {
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Enter bin' });
+      return;
+    }
+    if (isNullOrUndefined(rowData.availableqty) || rowData.availableqty == 0) {
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Enter quantity' });
+      return;
+    }
+    if (isNullOrUndefined(rowData.value) || rowData.value == 0) {
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Enter value' });
+      return;
+    }
+    if (isNullOrUndefined(rowData.projectid) || String(rowData.projectid).trim() == "") {
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Enter projectid' });
+      return;
+    }
+    if (isNullOrUndefined(rowData.pono) || String(rowData.pono).trim() == "") {
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Enter pono' });
+      return;
+    }
+    this.editStockModel.createdby = this.employee.employeeno;
+    this.spinner.show();
+    this.wmsService.updateinitialstock(this.editStockModel).subscribe(data => {
+      this.spinner.hide();
+      debugger;
+      this.messageService.add({ severity: 'success', summary: '', detail: data });
+      this.showadddatamodel = false;
+      this.setdataaftersave();
+
+    });
+
+  }
+
   getlist(data: StockModel) {
+    this.currentstage = "Success";
+    this.datainaction = data;
     this.lblfilename = data.uploadedfilename;
     this.lbldate = data.createddate;
     this.lblqty = data.successrecords;

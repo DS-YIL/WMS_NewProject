@@ -298,6 +298,7 @@ namespace WMS.Models
 	public class StockModel
 	{
 		public int inwardid { get; set; }
+		public int stockid { get; set; }
 		public string Material { get; set; }
 		public string lineitemno { get; set; }
 		public string exceptions { get; set; }
@@ -315,12 +316,12 @@ namespace WMS.Models
 		public int storeid { get; set; }
 		public int vendorid { get; set; }
 		public int totalquantity { get; set; }
-		public DateTime shelflife { get; set; }
+		public DateTime? shelflife { get; set; }
 		public int availableqty { get; set; }
 		public bool deleteflag { get; set; }
 		public DateTime itemreceivedfrom { get; set; }
 		public string itemlocation { get; set; }
-		public DateTime createddate { get; set; }
+		public DateTime? createddate { get; set; }
 		public string createdby { get; set; }
 		public string binnumber { get; set; }
 		public string racknumber { get; set; }
@@ -560,6 +561,7 @@ namespace WMS.Models
 		//public string Material { get; set; }
 		public string ackremarks { get; set; }
 		public string Materialdescription { get; set; }
+		public string poitemdescription { get; set; }
 		public DateTime createddate { get; set; }
 		public int availableqty { get; set; }
 		public string itemlocation { get; set; }
@@ -577,6 +579,7 @@ namespace WMS.Models
 		public DateTime createdon { get; set; }
 		public string confirmstatus { get; set; }
 		public Decimal? materialcost { get; set; }
+		public Decimal? value { get; set; }
 
 		public string issuedby { get; set; }
 
@@ -609,6 +612,7 @@ namespace WMS.Models
 		public string uom { get; set; }
 		public string saleorderno { get; set; }
 		public string location { get; set; }
+		public string projectid { get; set; }
 
 
 	}
@@ -948,6 +952,12 @@ namespace WMS.Models
 		public string approverstatus { get; set; }
 		// public int inwmasterid { get; set; }
 		public string inwmasterid { get; set; }
+		public string reserveupto { get; set; }
+		public string projectcode { get; set; }
+		public string remarks { get; set; }
+		public string type { get; set; }
+		public List<MaterialTransactionDetail> reservedata { get; set; }
+		public string returnid { get; set; }
 
 
 	}
@@ -1128,6 +1138,7 @@ namespace WMS.Models
 		public string materialdescription { get; set; }
 		public string projectcode { get; set; }
 		public string remarks { get; set; }
+		public string poitemdescription { get; set; }
 	}
 	public class SecurityInwardreceivedModel
 	{
@@ -1601,6 +1612,9 @@ public class MaterialReturnTR
 	public string uom { get; set; }
 	public string saleorderno { get; set; }
 	public string location { get; set; }
+	public string projectcode { get; set; }
+	public string pono { get; set; }
+	public decimal? materialcost { get; set; }
 	public int returnqty { get; set; }
 	public string remarks { get; set; }
 }

@@ -31,6 +31,7 @@ export class MaterialTransferComponent implements OnInit {
   public tarnsferModel: returnmaterial;
   public material: any;
   public requestList: materialtransferMain[] = [];
+  public requestListall: materialtransferMain[] = [];
   public employee: Employee;
   public displayItemRequestDialog; RequestDetailsSubmitted; showAck; btnDisable: boolean = false;
   public materialRequestDetails: materialRequestDetails;
@@ -65,6 +66,7 @@ export class MaterialTransferComponent implements OnInit {
   transferremarks: string = "";
   projectmanagerfrom: string = "";
   projectmanagerto: string = "";
+  requestedid: string = "";
   pmdetails: UserModel;
   filteredmats: any[];
 
@@ -88,6 +90,7 @@ export class MaterialTransferComponent implements OnInit {
     this.materialtransferlist = [];
     this.materialtransfersavelist = new materialtransferMain();
     this.materialtransferdetil = [];
+    this.requestedid = this.route.snapshot.queryParams.transferid;
     this.route.params.subscribe(params => {
       if (params["pono"]) {
         this.pono = params["pono"];
@@ -120,11 +123,19 @@ export class MaterialTransferComponent implements OnInit {
   getMaterialRequestlist(employeeno) {
     this.wmsService.gettransferdata(employeeno).subscribe(data => {
       this.requestList = data;
+      if (!isNullOrUndefined(this.requestedid) && this.requestedid != "") {
+        var tid = this.requestedid;
+        this.requestList = this.requestList.filter(function (element, index) {
+          return (element.transferid == tid);
+        });
+      }
       this.requestList.forEach(item => {
         item.showtr = false;
       });
+      this.requestedid = "";
     });
   }
+
 
   showattachdata(rowData: materialtransferMain) {
     debugger;
@@ -361,6 +372,36 @@ export class MaterialTransferComponent implements OnInit {
   }
   //bind materials based search
   public bindSearchListDatamaterial(event: any, name?: string) {
+    var searchTxt = event.query;
+    if (searchTxt == undefined)
+      searchTxt = "";
+    searchTxt = searchTxt.replace('*', '%');
+    this.dynamicData = new DynamicSearchResult();
+    this.dynamicData.tableName = this.constants[name].tableName + " ";
+    this.dynamicData.searchCondition = "" + this.constants[name].condition;
+    this.dynamicData.searchCondition += "material" + " ilike '" + searchTxt + "%' or materialdescription ilike '" + searchTxt + "%'  limit 100";
+    //this.materialistModel.materialcost = "";
+    this.filteredmats = [];
+    this.wmsService.GetListItems(this.dynamicData).subscribe(data => {
+      this.searchresult = data;
+      this.filteredmats = data;
+      this.searchItems = [];
+
+      var fName = "";
+      this.searchresult.forEach(item => {
+        fName = item[this.constants[name].fieldName];
+        //if (name == "ItemId")
+        //fName = item[this.constants[name].fieldName] + " - " + item[this.constants[name].fieldId];
+        fName = item[this.constants[name].fieldId];
+        var value = { listName: name, name: fName, code: item[this.constants[name].fieldId] };
+        //this.materialistModel.materialcost = data[0].materialcost;
+        this.searchItems.push(value);
+      });
+    });
+  }
+
+  //bind materials based search
+  public bindSearchListDatamaterialDesc(event: any, name?: string) {
     var searchTxt = event.query;
     if (searchTxt == undefined)
       searchTxt = "";

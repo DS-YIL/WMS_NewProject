@@ -125,6 +125,7 @@ import { DataViewModule } from 'primeng/dataview';
 import { PanelModule } from 'primeng/panel';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { FieldsetModule } from 'primeng/fieldset';
+import { KeyFilterModule } from 'primeng/keyfilter';
 @Injectable
   ({
     providedIn: 'root',
@@ -250,7 +251,8 @@ import { FieldsetModule } from 'primeng/fieldset';
     DataViewModule,
     PanelModule,
     FieldsetModule,
-    VirtualScrollerModule
+    VirtualScrollerModule,
+    KeyFilterModule
     //RouterModule.forRoot([
     //  { path: '', component: LoginComponent, pathMatch: 'full' },
     // ])

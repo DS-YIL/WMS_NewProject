@@ -61,8 +61,10 @@ namespace WMS.Interfaces
         Task<OpenPoModel> VerifythreeWay(string pono,string invoiceno);
         Task<string> insertquantity(List<inwardModel> datamodel);
         Task<string> receivequantity(List<inwardModel> datamodel);
-Task<string> updateonholdrow(updateonhold datamodel);
-        string InsertStock(List<StockModel> data);
+        Task<string> updateonholdrow(updateonhold datamodel);
+		string updateinitialstockdata(StockModel datamodel);
+		
+		string InsertStock(List<StockModel> data);
         string UpdateStockTransfer(List<StockModel> data);
 
 		string InvStockTransfer(invstocktransfermodel data);

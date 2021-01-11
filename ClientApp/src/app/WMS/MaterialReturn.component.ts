@@ -188,7 +188,7 @@ export class MaterialReturnComponent implements OnInit {
   }
   returnqty() {
 
-
+    debugger;
     if (this.returnModel.materialList.length == 0) {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Please Add materials to Transfer' });
       return false;
@@ -218,7 +218,6 @@ export class MaterialReturnComponent implements OnInit {
       //this.gatePassChange();
       else if (this.returnModel.materialList[this.returnModel.materialList.length - 1].material == "" && !isNullOrUndefined(this.material.code)) {
         this.returnModel.materialList[this.returnModel.materialList.length - 1].material = this.material.code;
-        this.returnModel.materialList[this.returnModel.materialList.length - 1].materialdescription = this.material.name;
         //this.tarnsferModel.materialLists[this.tarnsferModel.materialLists.length - 1].expecteddate = new Date(this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].expecteddate).toLocaleDateString();
         // this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].returneddate = this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].returneddate != null ? new Date(this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].returneddate).toLocaleDateString() : undefined;  
       }
@@ -230,7 +229,7 @@ export class MaterialReturnComponent implements OnInit {
       if (data == 1) {
         this.btnDisable = true;
         this.gatepassdialog = false;
-        this.messageService.add({ severity: 'success', summary: 'suceess Message', detail: 'Material Returned' });
+        this.messageService.add({ severity: 'success', summary: '', detail: 'Material Returned' });
         this.getMaterialRequestlist();
       }
     })
@@ -345,7 +344,7 @@ export class MaterialReturnComponent implements OnInit {
 
 
     if (this.returnModel.materialList.length == 0 || isNullOrUndefined(this.material)) {
-      this.materialistModel = { material: "", materialdescription: "", remarks: " ", returnid: 0, returnqty: 0, reason: "", uom: "", saleorderno: "", location: "", createdby: this.employee.employeeno };
+      this.materialistModel = { material: "", materialdescription: "", remarks: " ", returnid: 0, returnqty: 0, reason: "", uom: "", saleorderno: "", location: "", projectcode: "", pono: "", materialcost: 0, createdby: this.employee.employeeno };
       this.returnModel.materialList.push(this.materialistModel);
       this.material = "";
     }
@@ -368,7 +367,7 @@ export class MaterialReturnComponent implements OnInit {
       this.returnModel.materialList[this.returnModel.materialList.length - 1].material = this.material.code;
       //this.returnModel.materialList[this.returnModel.materialList.length - 1].materialdescription = this.material.name;
 
-      this.materialistModel = { material: "", materialdescription: "", remarks: " ", returnid: 0, returnqty: 0, reason: "", uom: "", saleorderno: "", location: "", createdby: this.employee.employeeno };
+      this.materialistModel = { material: "", materialdescription: "", remarks: " ", returnid: 0, returnqty: 0, reason: "", uom: "", saleorderno: "", location: "", projectcode: "", pono: "", materialcost: 0, createdby: this.employee.employeeno };
       this.returnModel.materialList.push(this.materialistModel);
       this.material = "";
     }
@@ -392,7 +391,7 @@ export class MaterialReturnComponent implements OnInit {
     //  //this.returnModel = gatepassobject;
 
     //} else {
-    this.materialistModel = { material: "", materialdescription: "", remarks: " ", returnid: 0, returnqty: 0, reason: "", uom: "", saleorderno: "", location: "", createdby: this.employee.employeeno };
+    this.materialistModel = { material: "", materialdescription: "", remarks: " ", returnid: 0, returnqty: 0, reason: "", uom: "", saleorderno: "", location: "",projectcode : "",pono : "", materialcost : 0, createdby: this.employee.employeeno };
     this.returnModel.materialList.push(this.materialistModel);
     this.material = "";
     this.reasonforReturn = "";

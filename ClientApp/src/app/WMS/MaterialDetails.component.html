@@ -72,9 +72,9 @@
           <td class="ptable-cell" style="text-align:left">{{rowData.materialid}}</td>
           <td class="ptable-cell" style="text-align:left">{{rowData.materialdescription}}</td>
           <td class="ptable-cell" style="text-align:right">{{rowData.confirmqty}}</td>
-          <td class="ptable-cell" style="text-align:right"><a style="color:#36f !important" (click)="IssuedMatDetails(rowData.materialid, 'Issue')">{{rowData.issuedqty}}</a></td>
-          <td class="ptable-cell" style="text-align:right"><a style="color:#36f !important" (click)="IssuedMatDetails(rowData.materialid, 'Reserve')">{{rowData.reservedqty}}</a></td>
-          <td class="ptable-cell" style="text-align:right"><a style="color:#36f !important" (click)="AvailableMaterialLoc(rowData.materialid)">{{rowData.availableqty}}</a></td>
+          <td class="ptable-cell" style="text-align:right"><a style="color:#36f !important;cursor:pointer;text-decoration:underline" (click)="IssuedMatDetails(rowData.materialid, 'Issue')">{{rowData.issuedqty}}</a></td>
+          <td class="ptable-cell" style="text-align:right"><a style="color:#36f !important;cursor:pointer;text-decoration:underline" (click)="IssuedMatDetails(rowData.materialid, 'Reserve')">{{rowData.reservedqty}}</a></td>
+          <td class="ptable-cell" style="text-align:right"><a style="color:#36f !important;cursor:pointer;text-decoration:underline" (click)="AvailableMaterialLoc(rowData.materialid)">{{rowData.availableqty}}</a></td>
 
 
         </tr>

@@ -47,6 +47,7 @@
         <th class="ptable-cell" style="text-align:center;">Project Id</th>
         <th class="ptable-cell" style="text-align:center;">PONo</th>
         <th class="ptable-cell" style="text-align:center;" *ngIf="viewexception">Exceptions</th>
+        <th class="ptable-cell" style="text-align:center;" *ngIf="viewexception">Edit</th>
 
 
       </tr>
@@ -62,6 +63,7 @@
         <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'projectid', 'startsWith')"></th>
         <th><input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'pono', 'startsWith')"></th>
         <th *ngIf="viewexception"><input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'exceptions', 'contains')"></th>
+        <th *ngIf="viewexception"></th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex" let-rindex=0>
@@ -77,7 +79,11 @@
         <td class="ptable-cell" style="text-align:center;">{{rowData.projectid}} </td>
         <td class="ptable-cell" style="text-align:center;">{{rowData.pono}} </td>
         <td class="ptable-cell" style="text-align:left;color:red;" *ngIf="viewexception">{{rowData.exceptions}} </td>
-        </tr>
+        <td class="ptable-cell" style="text-align:left;color:red;" *ngIf="viewexception">
+          <button *ngIf="rowData.exceptions"  type="button" icon="fa fa-edit" pButton aria-hidden="true" (click)="EditStock(rowData)"></button>
+        </td>
+        
+      </tr>
 
     </ng-template>
     <ng-template pTemplate="emptymessage">
@@ -152,4 +158,112 @@
     </div>
 
   </div>
+
+  <p-dialog header="Initial Stock Edit" [(visible)]="showadddatamodel" (onHide)="refreshsavemodel()" [modal]="true" [style]="{width: '80vw'}" [baseZIndex]="10000"
+            [draggable]="true" [resizable]="false">
+    <div class="row">
+      <div class="col-lg-3 col-md-3 col-sm-6">
+        <label class="labelheading">Material:<span style="color: red;">*</span></label>&nbsp;&nbsp;
+      </div>
+      <div class="col-lg-5 col-md-5 col-sm-6">
+        <span *ngIf="ismaterial">{{editStockModel.material}}</span>
+        <input *ngIf="!ismaterial" type="text" [(ngModel)]="editStockModel.material"  style="width:50%" class="form-control" />
+      </div>
+
+    </div>
+    <div class="row">
+      <div class="col-lg-3 col-md-3 col-sm-6">
+        <label class="labelheading">Material Description:<span style="color: red;">*</span></label>&nbsp;&nbsp;
+      </div>
+      <div class="col-lg-5 col-md-5 col-sm-6">
+        <span *ngIf="isdescription">{{editStockModel.materialdescription}}</span>
+        <input *ngIf="!isdescription"type="text" [(ngModel)]="editStockModel.materialdescription" class="form-control" />
+      </div>
+
+    </div>
+    <div class="row">
+      <div class="col-lg-3 col-md-3 col-sm-6">
+        <label class="labelheading">Store:<span style="color: red;">*</span></label>&nbsp;&nbsp;
+      </div>
+      <div class="col-lg-5 col-md-5 col-sm-6">
+        <span *ngIf="isstore">{{editStockModel.locatorname}}</span>
+        <input *ngIf="!isstore" type="text" [(ngModel)]="editStockModel.locatorname" class="form-control" />
+      </div>
+
+    </div>
+    <div class="row">
+      <div class="col-lg-3 col-md-3 col-sm-6">
+        <label class="labelheading">Rack:<span style="color: red;">*</span></label>&nbsp;&nbsp;
+      </div>
+      <div class="col-lg-5 col-md-5 col-sm-6">
+        <span *ngIf="israck">{{editStockModel.racknumber}}</span>
+        <input *ngIf="!israck" type="text" [(ngModel)]="editStockModel.racknumber" class="form-control" />
+      </div>
+
+    </div>
+    <div class="row">
+      <div class="col-lg-3 col-md-3 col-sm-6">
+        <label class="labelheading">Bin:<span style="color: red;">*</span></label>&nbsp;&nbsp;
+      </div>
+      <div class="col-lg-5 col-md-5 col-sm-6">
+        <span *ngIf="isbin">{{editStockModel.binnumber}}</span>
+        <input *ngIf="!isbin" type="text" [(ngModel)]="editStockModel.binnumber" class="form-control" />
+
+      </div>
+
+    </div>
+    <div class="row">
+      <div class="col-lg-3 col-md-3 col-sm-6">
+        <label class="labelheading">Quantity:<span style="color: red;">*</span></label>&nbsp;&nbsp;
+      </div>
+      <div class="col-lg-5 col-md-5 col-sm-6">
+        <span *ngIf="isquantity">{{editStockModel.availableqty}}</span>
+        <input *ngIf="!isquantity" type="text" pInputText pKeyFilter="pint" [(ngModel)]="editStockModel.availableqty" style="width:40%;text-align:right">
+        <!--<input *ngIf="!isquantity" type="number" style="width:40%;text-align:right" [(ngModel)]="editStockModel.availableqty" class="form-control" />-->
+
+      </div>
+
+    </div>
+    <div class="row">
+      <div class="col-lg-3 col-md-3 col-sm-6">
+        <label class="labelheading">Value:<span style="color: red;">*</span></label>&nbsp;&nbsp;
+      </div>
+      <div class="col-lg-5 col-md-5 col-sm-6">
+        <span *ngIf="isvalue">{{editStockModel.value}}</span>
+        <input *ngIf="!isvalue" type="text" pInputText pKeyFilter="money" [(ngModel)]="editStockModel.value" style="width:40%;text-align:right">
+        <!--<input *ngIf="!isvalue" type="number" style="width:40%;text-align:right" [(ngModel)]="editStockModel.value" class="form-control" />-->
+
+      </div>
+
+    </div>
+    <div class="row">
+      <div class="col-lg-3 col-md-3 col-sm-6">
+        <label class="labelheading">Project ID:<span style="color: red;">*</span></label>&nbsp;&nbsp;
+      </div>
+      <div class="col-lg-5 col-md-5 col-sm-6">
+        <span *ngIf="isprojectid">{{editStockModel.projectid}}</span>
+        <input *ngIf="!isprojectid" type="text" [(ngModel)]="editStockModel.projectid" class="form-control" />
+
+      </div>
+     
+
+    </div>
+    <div class="row">
+      <div class="col-lg-3 col-md-3 col-sm-6">
+        <label class="labelheading">PO No:<span style="color: red;">*</span></label>&nbsp;&nbsp;
+      </div>
+      <div class="col-lg-5 col-md-5 col-sm-6">
+        <span *ngIf="ispono">{{editStockModel.pono}}</span>
+        <input *ngIf="!ispono" type="text" [(ngModel)]="editStockModel.pono" class="form-control" />
+
+      </div>
+
+    </div>
+
+
+    <p-footer>
+      <button type="button" pButton icon="pi pi-check" (click)="post()" label="Submit"></button>
+      <button type="button" pButton icon="pi pi-times" (click)="showadddatamodel=false" label="Cancel" class="ui-button-secondary"></button>
+    </p-footer>
+  </p-dialog>
 

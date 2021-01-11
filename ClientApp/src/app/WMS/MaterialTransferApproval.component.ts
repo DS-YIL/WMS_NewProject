@@ -71,7 +71,7 @@ export class MaterialTransferApprovalComponent implements OnInit {
   hideapproval: boolean = false;
   returntype: string = "";
   materialapproverlistdetil: materialtransferapproverModel[] = []
-  
+  requestedid: string = "";
 
 
   ngOnInit() {
@@ -79,7 +79,7 @@ export class MaterialTransferApprovalComponent implements OnInit {
       this.employee = JSON.parse(localStorage.getItem("Employee"));
     else
       this.router.navigateByUrl("Login");
-   
+    this.requestedid = this.route.snapshot.queryParams.transferid;
     this.PoDetails = new PoDetails();
     this.StockModel = new StockModel();
     this.materialapproverlistdetil = [];
@@ -135,10 +135,21 @@ export class MaterialTransferApprovalComponent implements OnInit {
   }
   getdata() {
     this.requestList = [];
-    var typ = this.returntype;
-    this.requestList = this.requestListall.filter(function (element, index) {
-      return (element.status == typ);
-     });
+     var typ = this.returntype;
+    
+    if (!isNullOrUndefined(this.requestedid) && this.requestedid != "") {
+      var tid = this.requestedid;
+      this.requestList = this.requestListall.filter(function (element, index) {
+        return (element.status == typ && element.transferid == tid );
+      });
+      this.requestid = "";
+    }
+    else {
+      this.requestList = this.requestListall.filter(function (element, index) {
+        return (element.status == typ);
+      });
+    }
+   
 
   }
 

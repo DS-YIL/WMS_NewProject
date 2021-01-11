@@ -80,12 +80,14 @@ export class MaterialReturnDashBoardComponent implements OnInit {
   public displayItemRequestDialog; RequestDetailsSubmitted: boolean = false;
   public materialRequestDetails: materialRequestDetails;
   public rowIndex: number;
+  public emailreturnid = "";
   currentstocktype: string = "";
   ngOnInit() {
     if (localStorage.getItem("Employee"))
       this.employee = JSON.parse(localStorage.getItem("Employee"));
     else
       this.router.navigateByUrl("Login");
+    this.emailreturnid = this.route.snapshot.queryParams.returnid;
     this.StockModel = new StockModel();
     this.locationListdata();
     this.binListdata();
@@ -101,6 +103,11 @@ export class MaterialReturnDashBoardComponent implements OnInit {
     this.wmsService.GetReturnmaterialList().subscribe(data => {
       this.materialacceptListnofilter = data;
       this.materialIssueList = this.materialacceptListnofilter.filter(li => li.putawaystatus == 'Pending');
+      if (!isNullOrUndefined(this.emailreturnid) && this.emailreturnid != "") {
+        var rtnid = this.emailreturnid;
+        this.materialIssueList = this.materialIssueList.filter(li => li.returnid == rtnid);
+        this.emailreturnid = "";
+      }
      
     });
   }
@@ -230,7 +237,7 @@ export class MaterialReturnDashBoardComponent implements OnInit {
     this.StockModel.locatorid = details.storeid;
     this.StockModel.rackid = details.rackid;
     this.StockModel.binid = details.binid;
-    this.matdescription = details.materialdescription;
+    this.matdescription = details.poitemdescription;
     //this.matqty = details.receivedqty;
 
     this.StockModelForm = this.formBuilder.group({
@@ -541,6 +548,9 @@ export class MaterialReturnDashBoardComponent implements OnInit {
         this.StockModel.id = this.PoDetails.id;
         this.StockModel.binid = isNullOrUndefined(item.binid) ? 0 : item.binid;
         this.StockModel.rackid = item.rackid;
+        this.StockModel.poitemdescription = this.PoDetails.poitemdescription;
+        this.StockModel.projectcode = this.PoDetails.projectid;
+        this.StockModel.materialcost = this.PoDetails.value;
         debugger;
         binnumber = this.bindata.filter(x => x.binid == item.binid);
         storelocation = this.locationdata.filter(x => x.locatorid == item.locatorid);

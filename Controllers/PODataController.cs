@@ -243,6 +243,18 @@ namespace WMS.Controllers
 			return await this._poService.updateonholdrow(data);
 		}
 
+		/// <summary>
+		/// Update of intial stock exception data
+		/// </summary>
+		/// <param name="data"></param>
+		/// <returns></returns>
+
+		[HttpPost("updateinitialstock")]
+		public  string updateinitialstock([FromBody] StockModel data)
+		{
+			return  this._poService.updateinitialstockdata(data);
+		}
+
 		[HttpPost("qualitycheck")]
 		public async Task<string> insertqualitycheck([FromBody] List<inwardModel> data)
 		{

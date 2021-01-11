@@ -42,6 +42,8 @@ export class PoDetails {
   vehicleno: string;
   inwmasterid: string;
   poitemdescription: string;
+  projectid: string;
+  value: number;
   unitprice: number;
 }
 
@@ -216,6 +218,9 @@ export class StockModel {
   totalrecords: number;
   poitemdescription: string;
   unitprice: number;
+  projectcode: string;
+  materialcost: number;
+  stockid: number;
 }
 
 export class locataionDetailsStock {
@@ -544,6 +549,9 @@ export class materialistModelreturn {
   uom: string;
   saleorderno: string;
   location: string;
+  projectcode: string;
+  pono: string;
+  materialcost: number;
 }
 export class materialistModeltransfer {
   // gatepassmaterialid: string;
@@ -813,6 +821,9 @@ export class MaterialReturnTR {
   returnqty: number;
   remarks: string;
   requestid: string;
+  projectcode: string;
+  pono: string;
+  materialcost: number;
 }
 
 export class MaterialReturn {
