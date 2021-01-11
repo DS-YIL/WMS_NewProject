@@ -102,6 +102,7 @@ export class MaterialIssueComponent implements OnInit {
       item.itemreceiverid = this.materialissueList[this.roindex].itemreceiverid;
       item.requestid = this.materialissueList[this.roindex].requestid;
       item.requestmaterialid = this.materialissueList[this.roindex].requestmaterialid;
+      item.requesttype = "MaterialRequest";
       totalissuedqty = totalissuedqty + (item.issuedqty);
       this.FIFOvalues.issueqty = totalissuedqty;
       this.itemlocationsaveData.push(item);

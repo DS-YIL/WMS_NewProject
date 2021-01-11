@@ -906,14 +906,14 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select iss.issuedqty,sk.pono,sk.materialid,sk.itemid,sk.itemlocation,
+        ///   Looks up a localized string similar to select iss.requestid, iss.issuedqty,sk.pono,sk.materialid,sk.itemid,sk.itemlocation,
         ///(select sum(sk1.availableqty) from wms.wms_stock sk1 where sk1.materialid = sk.materialid and sk1.itemlocation = sk.itemlocation) as availableqty
         ///,sk.createddate::DATE,
         ///ygs.materialdescription
         ///from wms.wms_materialissue iss 
         ///left outer join wms.wms_stock sk on iss.itemid =sk.itemid
         ///left join wms.&quot;MaterialMasterYGS&quot; ygs on ygs.material=sk.materialid 
-        ///where iss.requestmaterialid = &apos;#requestforissueid&apos;.
+        ///where iss.requestid = &apos;#requestforissueid&apos;.
         /// </summary>
         public static string getitemlocationListBysIssueId_v1 {
             get {
@@ -989,6 +989,19 @@ namespace WMS.Common {
         public static string getLocationDetails {
             get {
                 return ResourceManager.GetString("getLocationDetails", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to select max(inv.id) as id,inv.transferid, inv.materialid , Max(stock.poitemdescription ) as poitemdescription ,sum(inv.transferqty) as transferqty,
+        ///sum(stock.availableqty) as availableqty,sum( matiss.issuedqty ) as issuedqty
+        ///from wms.wms_invtransfermaterial inv
+        ///left outer join wms.wms_stock stock on inv.materialid = stock.materialid 
+        ///left outer join wms.wms_materialissue matiss on matiss.requestid = inv.id and matiss.requesttype =&apos;STO&apos;.
+        /// </summary>
+        public static string getMatdetailsbyTransferId {
+            get {
+                return ResourceManager.GetString("getMatdetailsbyTransferId", resourceCulture);
             }
         }
         
@@ -2318,7 +2331,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select inv.transferid,emp.name as transferredby,inv.transferredon,inv.transfertype,inv.sourceplant,inv.destinationplant,inv.remarks  
+        ///   Looks up a localized string similar to select inv.transferid,emp.name as transferredby,inv.transferredon,inv.transfertype,inv.sourceplant,inv.destinationplant,inv.remarks,inv.status,inv.isporequested   
         ///from wms.wms_invstocktransfer inv 
         ///left outer join wms.employee emp  on emp.employeeno = inv.transferredby
         ///order by transferredon Desc.
@@ -2326,6 +2339,18 @@ namespace WMS.Common {
         public static string invstocktransfermainquery {
             get {
                 return ResourceManager.GetString("invstocktransfermainquery", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to select inv.transferid,emp.name as transferredby,inv.transferredon,inv.transfertype,inv.sourceplant,inv.destinationplant,inv.remarks,inv.status,inv.isporequested   
+        ///from wms.wms_invstocktransfer inv 
+        ///left outer join wms.employee emp  on emp.employeeno = inv.transferredby where  inv.transfertype =&apos;STO&apos;
+        ///order by transferredon desc.
+        /// </summary>
+        public static string invstocktransforSTO {
+            get {
+                return ResourceManager.GetString("invstocktransforSTO", resourceCulture);
             }
         }
         
@@ -2697,8 +2722,8 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to insert into wms.wms_materialissue(materialissueid,pono,itemid,requestmaterialid,itemissueddate,itemreceiverid,deleteflag,itemreturnable,approvedby,approvedon,issuedqty,approvedstatus,issuelocation)
-        ///values(default,@pono,@itemid,@requestmaterialid,@itemissueddate,@itemreceiverid,false,@itemreturnable,@approvedby,@approvedon,@issuedqty,@approvedstatus,@itemlocation).
+        ///   Looks up a localized string similar to insert into wms.wms_materialissue(materialissueid,pono,itemid,requestmaterialid,itemissueddate,itemreceiverid,deleteflag,itemreturnable,approvedby,approvedon,issuedqty,approvedstatus,issuelocation,requestid,requesttype )
+        ///values(default,@pono,@itemid,@requestmaterialid,@itemissueddate,@itemreceiverid,false,@itemreturnable,@approvedby,@approvedon,@issuedqty,@approvedstatus,@itemlocation,@requestid,@requesttype).
         /// </summary>
         public static string updateapproverstatus {
             get {
@@ -2836,6 +2861,16 @@ namespace WMS.Common {
         public static string updatepoformatlabel {
             get {
                 return ResourceManager.GetString("updatepoformatlabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to INSERT INTO wms.wms_InitiatePO(transferid,materialid,poitemdescription,poqty,scmstatus,uploadedby,requesteddate,uploadedon)
+        ///VALUES(default,@transferid,@materialid,@poitemdescription,@poqty,@scmstatus,@uploadedby,current_date).
+        /// </summary>
+        public static string updatePOInitiateDetails {
+            get {
+                return ResourceManager.GetString("updatePOInitiateDetails", resourceCulture);
             }
         }
         
