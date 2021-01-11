@@ -1212,7 +1212,7 @@ ygs.materialdescription
 from wms.wms_materialissue iss 
 left outer join wms.wms_stock sk on iss.itemid =sk.itemid
 left join wms."MaterialMasterYGS" ygs on ygs.material=sk.materialid 
-where iss.requestmaterialid = '#requestforissueid'</value>
+where iss.requestid = '#requestforissueid'</value>
   </data>
   <data name="getmaterialissuelist" xml:space="preserve">
     <value>select req.requestid,req.requesteddate,emp.name,req.issuedby,req.issuedon,

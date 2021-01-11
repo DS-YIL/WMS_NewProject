@@ -913,7 +913,7 @@ namespace WMS.Common {
         ///from wms.wms_materialissue iss 
         ///left outer join wms.wms_stock sk on iss.itemid =sk.itemid
         ///left join wms.&quot;MaterialMasterYGS&quot; ygs on ygs.material=sk.materialid 
-        ///where iss.requestmaterialid = &apos;#requestforissueid&apos;.
+        ///where iss.requestid = &apos;#requestforissueid&apos;.
         /// </summary>
         public static string getitemlocationListBysIssueId_v1 {
             get {
