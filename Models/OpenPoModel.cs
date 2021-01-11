@@ -144,14 +144,14 @@ namespace WMS.Models
 		public string soldto { get; set; }
 
 		public string lineitemno { get; set; }
-		public string partno { get;set; }
+		public string partno { get; set; }
 		public string custpo { get; set; }
 		public string codetype { get; set; }
 		public string materialbarcode { get; set; }
 		public string soiembarcode { get; set; }
 		public string plantbarcode { get; set; }
 		public string linkagebarcode { get; set; }
-		public string spbarcode { get; set; } 
+		public string spbarcode { get; set; }
 
 
 	}
@@ -286,10 +286,10 @@ namespace WMS.Models
 	}
 
 	public class GPReasonMTData
-    {
+	{
 		public string reason { get; set; }
 		public string createdby { get; set; }
-	
+
 		public DateTime createddate { get; set; }
 		public int reasonid { get; set; }
 		public string type { get; set; }
@@ -320,6 +320,8 @@ namespace WMS.Models
 		public bool deleteflag { get; set; }
 		public DateTime itemreceivedfrom { get; set; }
 		public string itemlocation { get; set; }
+		public string requestid { get; set; }
+		public string requesttype { get; set; }
 		public DateTime createddate { get; set; }
 		public string createdby { get; set; }
 		public string binnumber { get; set; }
@@ -359,10 +361,10 @@ namespace WMS.Models
 	}
 
 	public class pricedetails
-    {
+	{
 		public decimal itemamount { get; set; }
 		public decimal unitprice { get; set; }
-    }
+	}
 	public class MaterialinHand
 	{
 		public string material { get; set; }
@@ -1718,5 +1720,17 @@ public class materilaMasterYgs
 	public decimal? unitprice { get; set; }
 	public string hsncode { get; set; }
 
+
+}
+public class STOIssueModel
+{
+	public int id { get; set; }
+	public string transferid { get; set; }
+	public string materialid { get; set; }
+	public string poitemdescription { get; set; }
+	public string transferqty { get; set; }
+	public string availableqty { get; set; }
+	public string issuedqty { get; set; }
+	public string uploadedby { get; set; }
 
 }

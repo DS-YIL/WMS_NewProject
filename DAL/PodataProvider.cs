@@ -1562,7 +1562,7 @@ namespace WMS.DAL
 									//query += " where mat.pono = '" + pono + "'  and sinw.invoiceno = '" + invoiceno + "'";
 									query += " where mat.pono in ('" + poforquery + "')";
 									if (obj.asnno != null && obj.asnno != "")
-                                    {
+									{
 										query += " and mat.asnno = '" + obj.asnno + "'";
 									}
 								}
@@ -2130,10 +2130,10 @@ namespace WMS.DAL
 
 						//foreach (var item in data) { 
 						item.createddate = System.DateTime.Now;
-						
+
 						//if (data.itemid == 0)
 						//{
-						
+
 
 						//Get unit price and value from pomaterials table
 						//string getprice = WMSResource.getpricedetails.Replace("#pono", item.pono).Replace("#material", item.Material);
@@ -2142,7 +2142,7 @@ namespace WMS.DAL
 						// value = objdata.itemamount;
 						// unitprice = objdata.unitprice;
 					}
-					
+
 					string insertquery = WMSResource.insertstock;
 					int itemid = 0;
 					string materialid = item.Material;
@@ -3184,7 +3184,9 @@ namespace WMS.DAL
 										item.approvedby,
 										itemissueddate,
 										item.itemreceiverid,
-										itm.itemlocation
+										itm.itemlocation,
+										item.requestid,
+										item.requesttype
 
 									});
 									int availableqty = itm.availableqty - item.issuedqty;
@@ -3195,8 +3197,6 @@ namespace WMS.DAL
 									{
 
 									});
-
-
 								}
 
 								if (quantitytoissue <= 0)
@@ -3204,20 +3204,33 @@ namespace WMS.DAL
 									break;
 								}
 
-
 							}
 						}
 
-
 					}
-					string requestid = dataobj[0].requestid;
-					string approvedby = dataobj[0].approvedby;
-					string updaterequest = "update wms.materialrequest set issuedby = '" + approvedby + "',issuedon=current_date where requestid='" + requestid + "'";
 
-					var data2 = DB.ExecuteScalar(updaterequest, new
+					if (dataobj[0].requesttype == "MaterialRequest")
 					{
+						string requestid = dataobj[0].requestid;
+						string approvedby = dataobj[0].approvedby;
+						string updaterequest = "update wms.materialrequest set issuedby = '" + approvedby + "',issuedon=current_date where requestid='" + requestid + "'";
 
-					});
+						var data2 = DB.ExecuteScalar(updaterequest, new
+						{
+
+						});
+					}
+					if (dataobj[0].requesttype == "STO")
+					{
+						string requestid = dataobj[0].requestid;
+						string approvedby = dataobj[0].approvedby;
+						string updaterequest = "update wms.wms_invstocktransfer set status = 'Issued',requireddate=current_date where transferid='" + requestid + "'";
+
+						var data2 = DB.ExecuteScalar(updaterequest, new
+						{
+
+						});
+					}
 					Trans.Commit();
 				}
 
@@ -10945,20 +10958,20 @@ namespace WMS.DAL
 				try
 				{
 					string testgetquery = WMSResource.inhandmaterial;
-					
+
 					if (!string.IsNullOrEmpty(filters.itemlocation))
 
 						//Get materials in stock table 
-					await pgsql.OpenAsync();
+						await pgsql.OpenAsync();
 					var data = await pgsql.QueryAsync<MaterialinHand>(
 					  testgetquery, null, commandType: CommandType.Text);
 
-					foreach(var mat in data)
-                    {
+					foreach (var mat in data)
+					{
 						//if objmat is empty insert inventory data into list 
 						//If data is already present check if that data (po item description and material id) is present in the list and add data.
-						if (objmat.Count>0)
-                        {
+						if (objmat.Count > 0)
+						{
 							if (mat.receivedtype == "Put Away")
 							{
 								//If po item description is already present update material and availanle qty and value column
@@ -10966,7 +10979,8 @@ namespace WMS.DAL
 
 								{
 									decimal value = (mat.unitprice) * (mat.availableqty);
-									objmat.Where(x => x.poitemdescription == mat.poitemdescription).ToList().ForEach(w => {
+									objmat.Where(x => x.poitemdescription == mat.poitemdescription).ToList().ForEach(w =>
+									{
 										w.availableqty = w.availableqty + mat.availableqty;
 										w.value = w.value + value;
 										if (w.material.Contains(mat.material))
@@ -10980,15 +10994,15 @@ namespace WMS.DAL
 									});
 
 								}
-                                else
-                                {
+								else
+								{
 									var matdata = "select po.suppliername, matygs.hsncode from wms.wms_polist po left outer join wms.\"MaterialMasterYGS\" matygs on matygs.material ='" + mat.pono;
 									matdata += "' where po.pono='" + mat.material + "'";
 									var datamat = pgsql.QueryFirstOrDefault<MaterialinHand>(
 									 matdata, null, commandType: CommandType.Text);
 
-									if(datamat!=null)
-                                    {
+									if (datamat != null)
+									{
 										datamat.value = (mat.unitprice) * (mat.availableqty);
 										datamat.material = mat.material;
 										datamat.poitemdescription = mat.poitemdescription;
@@ -10996,26 +11010,27 @@ namespace WMS.DAL
 										datamat.availableqty = mat.availableqty;
 										objmat.Add(datamat);
 									}
-                                    else
-                                    {
+									else
+									{
 										objmat.Add(mat);
-                                    }
-									
+									}
+
 								}
 
-							
-								
+
+
 
 							}
 							else
 							{
 								//If po item description is already present update material and availanle qty and value column
-								if (objmat.Any(x => x.poitemdescription ==mat.poitemdescription))
+								if (objmat.Any(x => x.poitemdescription == mat.poitemdescription))
 
-                                    {
-									
+								{
+
 									decimal value = (mat.unitprice) * (mat.availableqty);
-									objmat.Where(x => x.poitemdescription == mat.poitemdescription).ToList().ForEach(w => {
+									objmat.Where(x => x.poitemdescription == mat.poitemdescription).ToList().ForEach(w =>
+									{
 										w.availableqty = w.availableqty + mat.availableqty;
 										w.value = w.value + value;
 										if (w.material.Contains(mat.material))
@@ -11028,26 +11043,26 @@ namespace WMS.DAL
 										}
 									});
 
-									
-			
-									}
-                                    else
-                                    {
-										mat.value = (mat.unitprice) * (mat.availableqty);
-										mat.materialdescription = "-";
-										mat.hsncode = "-";
-										mat.suppliername = "-";
-										//mat.projectname = "-";
-										objmat.Add(mat);
-									}
-                               
+
+
+								}
+								else
+								{
+									mat.value = (mat.unitprice) * (mat.availableqty);
+									mat.materialdescription = "-";
+									mat.hsncode = "-";
+									mat.suppliername = "-";
+									//mat.projectname = "-";
+									objmat.Add(mat);
+								}
+
 							}
 						}
-                        else
-                        {
+						else
+						{
 							//If data is not present in list add data directly into list
-							if(mat.receivedtype=="Put Away")
-                            {
+							if (mat.receivedtype == "Put Away")
+							{
 								var matdata = "select po.suppliername, mat.hsncode from wms.wms_polist po left outer join wms.\"MaterialMasterYGS\" matygs on matygs.material ='" + mat.pono;
 								matdata += "' where po.pono='" + mat.material + "'";
 								var datamat = pgsql.QueryFirstOrDefault<MaterialinHand>(
@@ -11061,18 +11076,18 @@ namespace WMS.DAL
 								objmat.Add(datamat);
 
 							}
-                            else
-                            {
+							else
+							{
 								mat.value = (mat.unitprice) * (mat.availableqty);
 								mat.materialdescription = "-";
 								mat.hsncode = "-";
 								mat.suppliername = "-";
 								//mat.projectname = "-";
 								objmat.Add(mat);
-                            }
-                        }
+							}
+						}
 
-                    }
+					}
 
 					return objmat;
 
@@ -12556,24 +12571,24 @@ namespace WMS.DAL
 		Review Date :<<>>   Reviewed By :<<>>
 		*/
 		public string GPReasonMTAdd(GPReasonMTData reasondata)
-        {
+		{
 			string GPResult = "Error";
 			try
 			{
-				
+
 
 				using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 				{
 					if (reasondata.reasonid != 0)
 					{
 						//Update reason in rd_reason based on reasonid
-						string updatequery = WMSResource.updateGPReason.Replace("#reason", "'"+reasondata.reason+"'").Replace("#createdby", "'" + reasondata.createdby + "'");
+						string updatequery = WMSResource.updateGPReason.Replace("#reason", "'" + reasondata.reason + "'").Replace("#createdby", "'" + reasondata.createdby + "'");
 						updatequery += "where reasonid = " + reasondata.reasonid;
 						var result1 = pgsql.Execute(updatequery);
 
 					}
-                    else
-                    {
+					else
+					{
 						string insertquery = WMSResource.insertGPReason;
 						reasondata.type = "GatePass";
 						pgsql.ExecuteScalar(insertquery, new
@@ -12584,7 +12599,7 @@ namespace WMS.DAL
 
 						});
 					}
-					
+
 					GPResult = "Success";
 				}
 			}
@@ -12594,7 +12609,7 @@ namespace WMS.DAL
 				return null;
 			}
 			return GPResult;
-        }
+		}
 
 
 
@@ -12612,7 +12627,7 @@ namespace WMS.DAL
 				using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 				{
 					string GPDataquery = WMSResource.getGPReasons;
-					var gpresult= await pgsql.QueryAsync<GPReasonMTData>(
+					var gpresult = await pgsql.QueryAsync<GPReasonMTData>(
 					  GPDataquery, null, commandType: CommandType.Text);
 					return gpresult;
 				}
@@ -12633,7 +12648,7 @@ Purpose : <<Delete Gatepass reason>>
 <param name="GPReasonMTData"></param>
 Review Date :<<>>   Reviewed By :<<>>
 */
-		public string  GPReasonMTDelete(GPReasonMTData reasondata)
+		public string GPReasonMTDelete(GPReasonMTData reasondata)
 		{
 			string GPResult = "Error";
 			try
@@ -12645,9 +12660,9 @@ Review Date :<<>>   Reviewed By :<<>>
 
 					//Update reason in rd_reason based on reasonid
 					bool isdelete = true;
-						string updatequery = WMSResource.deleteGPReason.Replace("#isdelete", "'" + isdelete + "'").Replace("#deletedby", "'" + reasondata.createdby + "'");
-						updatequery += "where reasonid = " + reasondata.reasonid;
-						var result1 = pgsql.Execute(updatequery);
+					string updatequery = WMSResource.deleteGPReason.Replace("#isdelete", "'" + isdelete + "'").Replace("#deletedby", "'" + reasondata.createdby + "'");
+					updatequery += "where reasonid = " + reasondata.reasonid;
+					var result1 = pgsql.Execute(updatequery);
 
 
 					GPResult = "Success";
@@ -12659,6 +12674,126 @@ Review Date :<<>>   Reviewed By :<<>>
 				return null;
 			}
 			return GPResult;
+		}
+
+		/*
+		Name of Function : <<getSTORequestList>>  Author :<<Prasanna>>  
+		Date of Creation <<08/01/2021>>
+		Purpose : <<get stock transferdata>>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
+		public async Task<IEnumerable<invstocktransfermodel>> getSTORequestList()
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				try
+				{
+					string materialrequestquery = WMSResource.invstocktransforSTO;
+
+					await pgsql.OpenAsync();
+					var result = await pgsql.QueryAsync<invstocktransfermodel>(
+					  materialrequestquery, null, commandType: CommandType.Text);
+					return result;
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "getSTORequestList", Ex.StackTrace.ToString());
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+			}
+		}
+
+		/*
+		Name of Function : <<getMatdetailsbyTransferId>>  Author :<<Prasanna>>  
+		Date of Creation <<08/01/2021>>
+		Purpose : <<get material deatils by transferid>>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
+		public async Task<IEnumerable<STOIssueModel>> getMatdetailsbyTransferId(string transferId, string type)
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				try
+				{
+					string materialrequestquery = WMSResource.getMatdetailsbyTransferId;
+					materialrequestquery += " where inv.transferid = '" + transferId + "' and stock.availableqty != null and stock.availableqty > 0";
+
+					if (type == "POInitiate")
+					{
+						materialrequestquery += " and stock.availableqty =0";
+					}
+					materialrequestquery += " group by inv.transferid, inv.materialid";
+					await pgsql.OpenAsync();
+					var result = await pgsql.QueryAsync<STOIssueModel>(
+					  materialrequestquery, null, commandType: CommandType.Text);
+					return result;
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "getMatdetailsbyTransferId", Ex.StackTrace.ToString());
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+			}
+		}
+
+		/*
+		Name of Function : <<STOPOInitiate>>  Author :<<Prasanna>>  
+		Date of Creation <<11/01/2021>>
+		Purpose : <<save PO Initiate details to SCM and wms>>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
+
+		public async Task<string> STOPOInitiate(List<STOIssueModel> data)
+		{
+			//send data to scm to create PO
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				try
+				{
+					//update porequest to wms.wms_invstocktransfer table
+					string updaterequest = "update wms.wms_invstocktransfer set isporequested = true where transferid='" + data[0].transferid + "'";
+
+					var data2 = pgsql.ExecuteScalar(updaterequest, new
+					{
+
+					});
+					string query = WMSResource.updatePOInitiateDetails;
+					string scmStatus = "Sucess";
+					foreach (STOIssueModel item in data)
+					{
+						var results = pgsql.ExecuteScalar(query, new
+						{
+							item.transferid,
+							item.materialid,
+							item.poitemdescription,
+							item.transferqty,
+							scmStatus,
+							item.uploadedby
+						});
+					}
+					return "Sucess";
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "STOPOInitiate", Ex.StackTrace.ToString());
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+			}
 		}
 
 	}

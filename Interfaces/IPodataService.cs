@@ -270,5 +270,9 @@ Task<string> updateonholdrow(updateonhold datamodel);
 
 		Task<IEnumerable<GPReasonMTData>> getGPReasonData();
 
+		Task<IEnumerable<invstocktransfermodel>> getSTORequestList();
+		Task<IEnumerable<STOIssueModel>> getMatdetailsbyTransferId(string transferId,string type);
+		Task<string> STOPOInitiate(List<STOIssueModel> data);
+
 	}
 }

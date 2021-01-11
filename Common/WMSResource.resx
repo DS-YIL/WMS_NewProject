@@ -262,8 +262,8 @@ left join wms.wms_stock stocks on  stocks.inwardid=inwa.inwardid
     <value>update wms.materialrequest set ackstatus=@ackstatus,ackremarks=@ackremarks where requestid=@requestid</value>
   </data>
   <data name="updateapproverstatus" xml:space="preserve">
-    <value>insert into wms.wms_materialissue(materialissueid,pono,itemid,requestmaterialid,itemissueddate,itemreceiverid,deleteflag,itemreturnable,approvedby,approvedon,issuedqty,approvedstatus,issuelocation)
-values(default,@pono,@itemid,@requestmaterialid,@itemissueddate,@itemreceiverid,false,@itemreturnable,@approvedby,@approvedon,@issuedqty,@approvedstatus,@itemlocation)</value>
+    <value>insert into wms.wms_materialissue(materialissueid,pono,itemid,requestmaterialid,itemissueddate,itemreceiverid,deleteflag,itemreturnable,approvedby,approvedon,issuedqty,approvedstatus,issuelocation,requestid,requesttype )
+values(default,@pono,@itemid,@requestmaterialid,@itemissueddate,@itemreceiverid,false,@itemreturnable,@approvedby,@approvedon,@issuedqty,@approvedstatus,@itemlocation,@requestid,@requesttype)</value>
   </data>
   <data name="updategrnnumber" xml:space="preserve">
     <value>update wms.wms_securityinward set grnnumber=@grnnumber,grndate=current_date where inwmasterid='#inw' </value>
@@ -741,7 +741,7 @@ values (@transferredby,@transferredon,@transfertype,@sourceplant,@destinationpla
 values (@transferid,@materialid,@sourcelocation,@sourceitemid,@destinationlocation,@destinationitemid,@transferqty)</value>
   </data>
   <data name="invstocktransfermainquery" xml:space="preserve">
-    <value>select inv.transferid,emp.name as transferredby,inv.transferredon,inv.transfertype,inv.sourceplant,inv.destinationplant,inv.remarks  
+    <value>select inv.transferid,emp.name as transferredby,inv.transferredon,inv.transfertype,inv.sourceplant,inv.destinationplant,inv.remarks,inv.status,inv.isporequested   
 from wms.wms_invstocktransfer inv 
 left outer join wms.employee emp  on emp.employeeno = inv.transferredby
 order by transferredon Desc</value>
@@ -1205,7 +1205,7 @@ where sk.availableqty &gt; 0  group by sk.materialid,sk.poitemdescription</value
 from wms.wms_project  where projectmanager is not null group by projectcode</value>
   </data>
   <data name="getitemlocationListBysIssueId_v1" xml:space="preserve">
-    <value>select iss.issuedqty,sk.pono,sk.materialid,sk.itemid,sk.itemlocation,
+    <value>select iss.requestid, iss.issuedqty,sk.pono,sk.materialid,sk.itemid,sk.itemlocation,
 (select sum(sk1.availableqty) from wms.wms_stock sk1 where sk1.materialid = sk.materialid and sk1.itemlocation = sk.itemlocation) as availableqty
 ,sk.createddate::DATE,
 ygs.materialdescription
@@ -1694,5 +1694,22 @@ stocktype=@stocktype,unitprice=@unitprice,hsncode=@hsncode where material ='#mat
   <data name="getpricedetails" xml:space="preserve">
     <value>select * from wms.wms_pomaterials where pono='#pono' and materialid='#material'</value>
     <comment>BG: To get unit price details from po materials table </comment>
+  </data>
+  <data name="getMatdetailsbyTransferId" xml:space="preserve">
+    <value>select max(inv.id) as id,inv.transferid, inv.materialid , Max(stock.poitemdescription ) as poitemdescription ,sum(inv.transferqty) as transferqty,
+sum(stock.availableqty) as availableqty,sum( matiss.issuedqty ) as issuedqty
+from wms.wms_invtransfermaterial inv
+left outer join wms.wms_stock stock on inv.materialid = stock.materialid 
+left outer join wms.wms_materialissue matiss on matiss.requestid = inv.id and matiss.requesttype ='STO'</value>
+  </data>
+  <data name="invstocktransforSTO" xml:space="preserve">
+    <value>select inv.transferid,emp.name as transferredby,inv.transferredon,inv.transfertype,inv.sourceplant,inv.destinationplant,inv.remarks,inv.status,inv.isporequested   
+from wms.wms_invstocktransfer inv 
+left outer join wms.employee emp  on emp.employeeno = inv.transferredby where  inv.transfertype ='STO'
+order by transferredon desc</value>
+  </data>
+  <data name="updatePOInitiateDetails" xml:space="preserve">
+    <value>INSERT INTO wms.wms_InitiatePO(transferid,materialid,poitemdescription,poqty,scmstatus,uploadedby,requesteddate,uploadedon)
+VALUES(default,@transferid,@materialid,@poitemdescription,@poqty,@scmstatus,@uploadedby,current_date)</value>
   </data>
 </root>

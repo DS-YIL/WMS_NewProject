@@ -83,7 +83,7 @@ export class NavMenuComponent implements OnInit {
     }
     //Purpose: << Security Operator >>
 
-   
+
     if (localStorage.getItem("Employee")) {
       if (localStorage.getItem("rbalist")) {
         this.rbalist = JSON.parse(localStorage.getItem("rbalist")) as rbamaster[];
@@ -134,7 +134,7 @@ export class NavMenuComponent implements OnInit {
           else {
             this.bindMenu();
           }
-          
+
         }
 
       }
@@ -165,7 +165,7 @@ export class NavMenuComponent implements OnInit {
 
   }
 
-  bindMenuForEmailNav(eurl : any) {
+  bindMenuForEmailNav(eurl: any) {
     if (eurl.includes("/Email")) {
       //this.isapprovalurl = true;
       this.gateentryid = this.route.snapshot.queryParams.pono;
@@ -1050,6 +1050,9 @@ export class NavMenuComponent implements OnInit {
           //{ label: 'Test', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/Test') }
         ]
       });
+      this.items.push({
+        label: 'Receive STO Request', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/ReceiveSTORequest')
+      });
       this.router.navigateByUrl('WMS/Home');
     }
     if (this.emp.roleid == "4") {//inventory manager
@@ -1153,14 +1156,14 @@ export class NavMenuComponent implements OnInit {
       //});
       //this.items.push({ label: 'Bin Status Report', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/BinStatusReport') });
       //this.items.push({ label: 'BarCode', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/Barcode') });
-         this.items.push({
+      this.items.push({
         label: 'Master Pages',
         icon: 'pi pi-fw pi-bars',
         style: { 'font-weight': '600' },
         items: [
           { label: 'Material Master', icon: 'pi pi-fw pi-bars', style: { 'width': '250px' }, command: () => this.router.navigateByUrl('WMS/MaterialMaster') },
           { label: 'GatePass Master', icon: 'pi pi-fw pi-bars', style: { 'width': '250px' }, command: () => this.router.navigateByUrl('WMS/GatePassMaster') },
-          
+
         ]
       });
       this.router.navigateByUrl('/WMS/Home');

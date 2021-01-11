@@ -1243,7 +1243,7 @@ namespace WMS.Controllers
 			return this._poService.updateMiscellanousReceipt(data);
 
 		}
-[HttpGet("getMaterialMasterList")]
+		[HttpGet("getMaterialMasterList")]
 		public IActionResult getMaterialMasterList()
 		{
 			return Ok(this._poService.getMaterialMasterList());
@@ -1276,6 +1276,21 @@ namespace WMS.Controllers
 
 		}
 
+		[HttpGet("getSTORequestList")]
+		public async Task<IEnumerable<invstocktransfermodel>> getSTORequestList()
+		{
+			return await this._poService.getSTORequestList();
+		}
+		[HttpGet("getMatdetailsbyTransferId")]
+		public async Task<IEnumerable<STOIssueModel>> getMatdetailsbyTransferId(string transferid, string type)
+		{
+			return await this._poService.getMatdetailsbyTransferId(transferid, type);
+		}
 
+		[HttpPost("STOPOInitiate")]
+		public async Task<string> STOPOInitiate(List<STOIssueModel> data)
+		{
+			return await this._poService.STOPOInitiate(data);
+		}
 	}
 }
