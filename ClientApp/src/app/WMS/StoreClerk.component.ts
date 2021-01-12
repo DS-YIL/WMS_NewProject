@@ -826,11 +826,29 @@ export class StoreClerkComponent implements OnInit {
         item.onholdremarks = this.onholdremarks;
       });
 
+      var emailtype = "1"
+      var qualityrequired = this.podetailsList.filter(function (element, index) {
+        return (element.qualitycheck);
+      });
+      var acceptrequired = this.podetailsList.filter(function (element, index) {
+        return (!element.qualitycheck);
+      });
+      if (qualityrequired.length > 0) {
+        emailtype = "1";
+      }
+      if (acceptrequired.length > 0) {
+        emailtype = "2";
+      }
+      if (acceptrequired.length > 0 && acceptrequired.length > 0) {
+        emailtype = "3";
+      }
+
+
       this.wmsService.insertitems(this.podetailsList).subscribe(data => {
         var responsestring = String(data);
         if (responsestring.startsWith("Saved")) {
           if (!this.isonHoldview) {
-            this.wmsService.verifythreewaymatch(this.PoDetails.pono).subscribe(info => {
+            this.wmsService.verifythreewaymatch(this.PoDetails.pono, emailtype).subscribe(info => {
               this.spinner.hide();
 
               if (info != null) {

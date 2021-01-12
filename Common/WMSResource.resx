@@ -1733,4 +1733,11 @@ where dataloaderrors is True and stockid not in (
 	select distinct receivedid::integer from wms.wms_stock where uploadbatchcode = '#code' and receivedid is not null ) 
 	and uploadbatchcode = '#code'</value>
   </data>
+  <data name="getdefaultmaterialforgatepass" xml:space="preserve">
+    <value>select sk.materialid as material,
+sum(sk.availableqty) as availableqty,
+SUM(sk.unitprice * sk.availableqty) as materialcost,sk.poitemdescription  as materialdescription 
+from wms.wms_stock  sk 
+where sk.availableqty &gt; 0  group by sk.materialid,sk.poitemdescription</value>
+  </data>
 </root>

@@ -519,6 +519,19 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to select sk.materialid as material,
+        ///sum(sk.availableqty) as availableqty,
+        ///SUM(sk.unitprice * sk.availableqty) as materialcost,sk.poitemdescription  as materialdescription 
+        ///from wms.wms_stock  sk 
+        ///where sk.availableqty &gt; 0  group by sk.materialid,sk.poitemdescription.
+        /// </summary>
+        public static string getdefaultmaterialforgatepass {
+            get {
+                return ResourceManager.GetString("getdefaultmaterialforgatepass", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to select orgdepartmentid as value, orgdepartment as text from wms.orgdepartments
         ///where boolinuse = True.
         /// </summary>

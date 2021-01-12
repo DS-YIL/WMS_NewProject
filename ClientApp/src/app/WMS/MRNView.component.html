@@ -2,7 +2,18 @@
 <div style="margin:10px;">
   <div class="card commoncardcss" style="width:100%">
     <div class="card-header">
-      <div class="row " style="    margin-top: 10px;
+      <div class="row">
+        <div class="col-lg-4 col-md-4 form-inline">
+        </div>
+        <div class="col-lg-4 col-md-4 text-center">
+          <span style="color:#428bca;font-size:18px" class="commonheadertext">
+            <i class="fa fa-check-circle-o commonheadertext"></i>&nbsp;Material Requisition Note
+          </span>
+        </div>
+        <div class="col-lg-4 col-md-4 form-inline"></div>
+
+      </div>
+      <div class="row " style="
     margin-left: 0px !important;
     margin-right: 0px !important">
         <div class="col-lg-5 col-md-4 form-inline">
@@ -27,13 +38,14 @@
     margin-left: 0px !important;
     margin-right: 0px !important">
         <!--<div class="col-md-2 col-lg-2  pt-2 labelheading" *ngIf="podetailsList.length>0">
-          PO No : <span class="labeltext">{{podetailsList[0].pono}}</span>
-        </div>-->
+      PO No : <span class="labeltext">{{podetailsList[0].pono}}</span>
+    </div>-->
         <div class="col-md-2 col-lg-2 pt-2 labelheading" style="font-weight:600;font-size:14px;color:darkblue;" *ngIf="podetailsList.length>0">
           Invoice No : <span class="labeltext">{{podetailsList[0].invoiceno}}</span>
         </div>
         <div class="col-md-3 col-lg-3 pt-2 labelheading" style="font-weight:600;font-size:14px;color:darkblue;" *ngIf="podetailsList.length>0">
-          WMS GRN No : <span class="labeltext">{{podetailsList[0].grnnumber}}</span>
+          sL
+            WMS GRN No : <span class="labeltext">{{podetailsList[0].grnnumber}}</span>
         </div>
         <div class="col-md-3 col-lg-3 pt-2 labelheading" style="font-weight:600;font-size:14px;color:darkblue;" *ngIf="podetailsList.length>0">
           <span class="text-success" *ngIf="isalreadytransferred"><span class="text-primary">Status : &nbsp;</span> Transferred</span>

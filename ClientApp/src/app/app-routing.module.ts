@@ -151,7 +151,6 @@ const routes: Routes = [{
     { path: "MaterialRequestDashboard", component: MaterialRequestDashboardComponent, canActivate: [AuthGuard] },
     { path: "MaterialReserveDashboard", component: MaterialReserveDashboardComponent, canActivate: [AuthGuard] },
     { path: "MaterialsReturnDashboard", component: MaterialsReturnDashboardComponent, canActivate: [AuthGuard] },
-
     { path: "MaterialTransferDashboard", component: MaterialTransferDashboardComponent, canActivate: [AuthGuard] },
     { path: "outinDashboard", component: OutwardinwardreportComponent, canActivate: [AuthGuard] },
     { path: "gatepassreceive", component: GatepassinwardreceiveComponent, canActivate: [AuthGuard] },

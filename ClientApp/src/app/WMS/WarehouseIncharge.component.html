@@ -1,8 +1,19 @@
 
   <div style="margin:10px;">
     <div class="card" style="width:100%;border-radius:10px; box-shadow:5px 10px #888888;min-height: 82vh; max-height: 82vh;">
-      <div class="card-header commoncardheader">
-        <div class="row " style="    margin-top: 10px;
+      <div class="card-header">
+        <div class="row">
+          <div class="col-lg-4 col-md-4 form-inline">
+          </div>
+          <div class="col-lg-4 col-md-4 text-center">
+            <span style="color:#428bca;font-size:18px" class="commonheadertext">
+              <i class="fa fa-check-circle-o commonheadertext"></i>&nbsp;Put Away
+            </span>
+          </div>
+          <div class="col-lg-4 col-md-4 form-inline"></div>
+
+        </div>
+        <div class="row " style="
     margin-left: 0px !important;
     margin-right: 0px !important">
           <div class="col-lg-5 col-md-5 form-inline">
@@ -14,8 +25,8 @@
           </div>
 
           <!--<div class="col-md-2 col-lg-2  pt-2 labelheading" *ngIf="podetailsList.length>0">
-            PO No : <span class="labeltext">{{podetailsList[0].pono}}</span>
-          </div>-->
+      PO No : <span class="labeltext">{{podetailsList[0].pono}}</span>
+    </div>-->
           <div class="col-md-2 col-lg-2 pt-2 labelheading" style="font-weight:600;font-size:14px;color:darkblue;" *ngIf="podetailsList.length>0">
             Invoice No : <span class="labeltext">{{podetailsList[0].invoiceno}}</span>
           </div>

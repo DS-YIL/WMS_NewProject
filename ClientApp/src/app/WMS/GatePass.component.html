@@ -17,9 +17,9 @@
     margin-left: 0px !important;
     margin-right: 0px !important">
         <div class="col-lg-4 col-md-4 form-inline">
-          <div *ngIf="employee.roleid!='3' && employee.roleid !='8'">
+          <div *ngIf="employee.roleid!='3' && employee.roleid !='4'  && employee.roleid !='8'">
 
-            <div *ngIf="employee.roleid!='3' && employee.roleid !='8'">
+            <div *ngIf="employee.roleid!='3' && employee.roleid !='4' && employee.roleid !='8'">
               <p-button icon="fa fa-user-plus" label="Create GatePass" (click)="openGatepassDialog('','','gatepassdialog')"></p-button>
                 <!--<span>
                   <i class="fa fa-bookmark" style="font-size: 15px"></i><label style="font-size: 15px;padding:0px; color: rgb(96, 123, 212);"> &nbsp;&nbsp;Gate Pass</label>&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" pTooltip="Create GatePass" style="border-radius: 10em!important;background-color: white; border-color:  rgb(96, 123, 212);" rounded="true" size="lg" class="my-0" (click)="openGatepassDialog('','','gatepassdialog')"> <i class="fa fa-user-plus" style="font-size: 15px;color: green;"></i></button>
@@ -41,7 +41,7 @@
 
             </div>
           </div>
-          <div *ngIf="employee.roleid=='3'">
+          <div *ngIf="employee.roleid=='3' || employee.roleid=='4'">
             <div class="form-inline">
               <label class="labelheading">Status :</label>&nbsp;&nbsp;
               <select placeholder="Status" name="Status" (change)="onSelectStatus()" [(ngModel)]="selectedStatus" class="form-control">
@@ -55,7 +55,7 @@
         </div>
         <div class="col-lg-4 col-md-4 text-center">
 
-          <div *ngIf="employee.roleid =='3' || employee.roleid =='5'">
+          <div *ngIf="employee.roleid =='3' || employee.roleid =='4' || employee.roleid =='5'">
             <span class="commonheadertext">
               <i class="fa fa-check-circle-o commonheadertext"></i>&nbsp;Gate Pass
             </span>
@@ -101,9 +101,9 @@
               <th style="text-align:center" *ngIf="employee.roleid =='5'">Approver Remarks</th>
               <th *ngIf="selectedStatus=='Issued'" style="text-align:center">Approved By</th>
               <th *ngIf="selectedStatus=='Issued'" style="text-align:center">Approved On</th>
-              <th *ngIf="employee.roleid!='3' && employee.roleid !='8'" style="text-align:center;">Edit</th>
-              <th *ngIf="employee.roleid=='3' && employee.roleid !='8'" style="text-align:center;">Print</th>
-              <th *ngIf=" employee.roleid=='3' && selectedStatus=='Issued' " style="text-align:center">Returned Date</th>
+              <th *ngIf="employee.roleid!='3' && employee.roleid != '4' && employee.roleid != '8'" style="text-align:center;">Edit</th>
+              <th *ngIf="(employee.roleid=='3' || employee.roleid =='4') && employee.roleid !='8'" style="text-align:center;">Print</th>
+              <th *ngIf=" (employee.roleid=='3' || employee.roleid =='4') && selectedStatus=='Issued' " style="text-align:center">Returned Date</th>
             </tr>
             <!--<tr>
         <th></th>
@@ -158,11 +158,11 @@
               </td>
               <td *ngIf="selectedStatus=='Issued'" class="ptable-cell" style="text-align:left">{{rowData.approvername}}</td>
               <td *ngIf="selectedStatus=='Issued'" class="ptable-cell" style="text-align:center">{{rowData.approvedon | date :  constants.dateFormat}}</td>
-              <td class="ptable-cell" *ngIf="employee.roleid!='3' && employee.roleid !='8'" style="text-align:center">
+              <td class="ptable-cell" *ngIf="employee.roleid!='3' && employee.roleid!='4' && employee.roleid !='8'" style="text-align:center">
               <button *ngIf="rowData.approverstatus!='Approved' && rowData.approverstatus!='Sent for Modification' && rowData.fmapprovedstatus!='Sent for Modification' && rowData.requestedby==employee.employeeno" type="button" icon="fa fa-edit" pButton aria-hidden="true" (click)="openGatepassDialog(rowData,ri,'gatepassdialog')"></button>
               </td>
-              <td class="ptable-cell" *ngIf="employee.roleid=='3' && employee.roleid !='8'" style="text-align:center"><button *ngIf="rowData.approverstatus=='Approved'" type="button" icon="fa fa-print" pButton aria-hidden="true" (click)="showprint(rowData)"></button></td>
-              <td *ngIf="employee.roleid=='3' && selectedStatus=='Issued'" class="ptable-cell" style="text-align:center"><button *ngIf="rowData.gatepasstype=='Returnable' && employee.roleid=='3' && rowData.approverstatus=='Approved' && rowData.status!='Full Closure' " type="button" icon="fa fa-pencil" pButton aria-hidden="true" (click)="openGatepassDialog(rowData,ri,'updateReturnedDateDialog')"></button></td>
+              <td class="ptable-cell" *ngIf="(employee.roleid=='3' || employee.roleid =='4') && employee.roleid !='8'" style="text-align:center"><button *ngIf="rowData.approverstatus=='Approved'" type="button" icon="fa fa-print" pButton aria-hidden="true" (click)="showprint(rowData)"></button></td>
+              <td *ngIf="(employee.roleid=='3' || employee.roleid =='4') && selectedStatus=='Issued'" class="ptable-cell" style="text-align:center"><button *ngIf="rowData.gatepasstype=='Returnable' && (employee.roleid=='3' || employee.roleid =='4') && rowData.approverstatus=='Approved' && rowData.status!='Full Closure' " type="button" icon="fa fa-pencil" pButton aria-hidden="true" (click)="openGatepassDialog(rowData,ri,'updateReturnedDateDialog')"></button></td>
             </tr>
             <tr *ngIf="rowData.showdetail">
               <td [attr.colspan]="getcolspan()" style="text-align:center;">
@@ -196,8 +196,8 @@
             <tr>
               <td class="ptable-cell" style="text-align: center; width: 20px;"> {{ri+1}} </td>
               <td class="ptable-cell" style="text-align:left">
-                <span *ngIf="employee.roleid !='3'">{{rowData.materialid}}</span>
-                <button *ngIf="employee.roleid !='8' && employee.roleid =='3'" type="button" class="btn btn-link" (click)="showmateriallocationList(rowData.materialid,ri+1,ri,rowData.quantity);" style="padding-left:0px;">{{rowData.materialid}}</button>
+                <span *ngIf="employee.roleid !='3' && employee.roleid !='4' ">{{rowData.materialid}}</span>
+                <button *ngIf="employee.roleid !='8' && (employee.roleid =='3' || employee.roleid =='4' )" type="button" class="btn btn-link" (click)="showmateriallocationList(rowData.materialid,ri+1,ri,rowData.quantity);" style="padding-left:0px;">{{rowData.materialid}}</button>
               </td>
               <!--<td class="ptable-cell" style="    text-align: left;width: 500px;"> {{rowData.materialdescription}} </td>-->
             <td class="ptable-cell" style="    text-align: left;width: 500px;"> {{rowData.poitemdescription}} </td>
@@ -488,7 +488,7 @@
                   <td *ngIf="rowData.materialid" class="ptable-cell" style="text-align:center">{{rowData.expecteddate | date :  constants.dateFormat}}</td>
                   <td *ngIf="gatepassModel.gatepasstype=='Returnable' && rowData.returneddate && rowData.materialid" class="ptable-cell" style="text-align:center">{{rowData.returneddate | date :  constants.dateFormat}}</td>
                   <td *ngIf="gatepassModel.gatepasstype=='Returnable'  && rowData.materialid && !rowData.returneddate" class="ptable-cell" style="text-align:center;text-align:center">
-                    <p-calendar class="mprldatepick" *ngIf="employee.roleid=='3' && !rowData.returneddate" appendTo="body" dateFormat="dd/mm/yy" [(ngModel)]="rowData.returneddate" [monthNavigator]="true" [yearNavigator]="true" yearRange="1900:2050"></p-calendar>
+                    <p-calendar class="mprldatepick" *ngIf="(employee.roleid=='3' || employee.roleid=='4') && !rowData.returneddate" appendTo="body" dateFormat="dd/mm/yy" [(ngModel)]="rowData.returneddate" [monthNavigator]="true" [yearNavigator]="true" yearRange="1900:2050"></p-calendar>
 
                     <!--<input type="date" *ngIf="employee.roleid=='7'" [value]="rowData.returneddate |  date:'yyyy-MM-dd'" min={{mindate}} max={{maxdate}} (input)="rowData.returneddate=parseDate($event.target.value)">-->
                     <!--<input *ngIf="employee.roleid=='7' && !rowData.returneddate" appendTo="body" type="date" [(ngModel)]="rowData.returneddate" [value]="rowData.returneddate |  date:'yyyy-MM-dd'" (input)="rowData.returneddate=parseDate($event.target.value)">-->

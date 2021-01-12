@@ -131,8 +131,8 @@ export class wmsService {
 
 
 
-  verifythreewaymatch(PoNo: string): Observable<any> {
-    return this.http.get<any>(this.url + 'POData/verifythreewaymatch?pono=' + PoNo, this.httpOptions);
+  verifythreewaymatch(PoNo: string, type: string): Observable<any> {
+    return this.http.get<any>(this.url + 'POData/verifythreewaymatch?pono=' + PoNo +'&type='+type, this.httpOptions);
   }
 
   getInvoiceDetails(PoNo: string): Observable<any> {
@@ -196,6 +196,8 @@ export class wmsService {
     return this.http.get<any>(this.url + 'POData/getmaterialrequestList?PONO=' + pono + '&loginid=' + loginid + '', this.httpOptions);
   }
 
+ 
+
   getreturndata(empno: any): Observable<any> {
     return this.http.get<any>(this.url + 'POData/getreturndata?empno=' + empno + '', this.httpOptions);
   }
@@ -219,6 +221,11 @@ export class wmsService {
 
   getMaterialReservelistdata(): Observable<any> {
     return this.http.get<any>(this.url + 'POData/getmaterialreserveListdata/', this.httpOptions);
+  }
+
+ 
+  getgatepassMaterialRequestlist(): Observable<any> {
+    return this.http.get<any>(this.url + 'POData/getgatepassmaterialrequestList/', this.httpOptions);
   }
 
   //materialRequestUpdate(materialRequestList: any): Observable<any> {

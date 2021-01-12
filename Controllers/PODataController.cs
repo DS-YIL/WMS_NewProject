@@ -218,12 +218,12 @@ namespace WMS.Controllers
 		}
 
 		[HttpGet("verifythreewaymatch")]
-		public async Task<OpenPoModel> verifythreewaymatching(string pono)
+		public async Task<OpenPoModel> verifythreewaymatching(string pono, string type)
 		{
 			string[] ponoandinvoice = pono.Split('-');
 			string ponodata = ponoandinvoice[0].Trim() + "-" + ponoandinvoice[1].Trim() + "-" + ponoandinvoice[2].Trim();
 			string invoiceno = ponoandinvoice[3].Trim(); ;
-			return await this._poService.VerifythreeWay(ponodata, invoiceno);
+			return await this._poService.VerifythreeWay(ponodata, invoiceno, type);
 		}
 		[HttpPost("GRNposting")]
 		public async Task<string> insertitemdata([FromBody] List<inwardModel> data)
@@ -680,6 +680,12 @@ namespace WMS.Controllers
 		public async Task<IEnumerable<IssueRequestModel>> getmaterialreserveListdata()
 		{
 			return await this._poService.MaterialReservedata();
+		}
+
+		[HttpGet("getgatepassmaterialrequestList")]
+		public async Task<IEnumerable<IssueRequestModel>> getgatepassmaterialrequestList()
+		{
+			return await this._poService.getgatepassmaterialrequestList();
 		}
 
 		[HttpGet("getempnamebycode")]

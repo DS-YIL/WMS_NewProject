@@ -58,7 +58,7 @@ namespace WMS.Interfaces
         Task<IEnumerable<T>> GetDeatilsForthreeWaymatching(string invoiceno,string pono,bool isgrn, string grnno);
         Task<IEnumerable<T>> GetDeatilsForholdgr(string status);
         Task<IEnumerable<T>> Getqualitydetails(string grnnumber);
-        Task<OpenPoModel> VerifythreeWay(string pono,string invoiceno);
+        Task<OpenPoModel> VerifythreeWay(string pono,string invoiceno, string type);
         Task<string> insertquantity(List<inwardModel> datamodel);
         Task<string> receivequantity(List<inwardModel> datamodel);
         Task<string> updateonholdrow(updateonhold datamodel);
@@ -77,6 +77,7 @@ namespace WMS.Interfaces
 		Task<IEnumerable<MaterialTransaction>> MaterialRequest(string pono, string material);
 		Task<IEnumerable<IssueRequestModel>> MaterialRequestdata(string pono, string material);
 		Task<IEnumerable<IssueRequestModel>> MaterialReservedata();
+		Task<IEnumerable<IssueRequestModel>> getgatepassmaterialrequestList();
 		int acknowledgeMaterialReceived(List<IssueRequestModel> dataobj);
 		Task<User> getempnamebycode(string empno);
 		Task<IEnumerable<IssueRequestModel>> GetMaterialissueList(string requesterid);

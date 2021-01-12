@@ -1707,7 +1707,7 @@ namespace WMS.DAL
 		 <param name="pono"></param>
 		Review Date :<<>>   Reviewed By :<<>>
 		*/
-		public async Task<OpenPoModel> VerifythreeWay(string inwmasterid, string invoiceno)
+		public async Task<OpenPoModel> VerifythreeWay(string inwmasterid, string invoiceno,string type)
 		{
 			OpenPoModel verify = new OpenPoModel();
 			sequencModel obj = new sequencModel();
@@ -1816,16 +1816,38 @@ namespace WMS.DAL
 					}
 					//if (inwardid != 0)
 
-					EmailModel emailmodel = new EmailModel();
-					//emailmodel.pono = datamodel[0].pono;
-					//emailmodel.jobcode = datamodel[0].projectname;
-					emailmodel.grnnumber = verify.grnnumber;
+					if(type == "1")
+                    {
+						EmailModel emailmodel = new EmailModel();
+						emailmodel.grnnumber = verify.grnnumber;
+						emailmodel.FrmEmailId = "ramesh.kumar@in.yokogawa.com";
+						EmailUtilities emailobj = new EmailUtilities();
+						emailobj.sendEmail(emailmodel, 2, 9);
+					}
+					else if(type == "2")
+                    {
+						EmailModel emailmodel = new EmailModel();
+						emailmodel.grnnumber = verify.grnnumber;
+						emailmodel.FrmEmailId = "ramesh.kumar@in.yokogawa.com";
+						EmailUtilities emailobj = new EmailUtilities();
+						emailobj.sendEmail(emailmodel, 20, 3);
+					}
+					else if(type == "3")
+                    {
+						EmailModel emailmodel = new EmailModel();
+						emailmodel.grnnumber = verify.grnnumber;
+						emailmodel.FrmEmailId = "ramesh.kumar@in.yokogawa.com";
+						EmailUtilities emailobj = new EmailUtilities();
+						emailobj.sendEmail(emailmodel, 2, 9);
 
-					//emailmodel.ToEmailId = "developer1@in.yokogawa.com";
-					emailmodel.FrmEmailId = "ramesh.kumar@in.yokogawa.com";
-					//emailmodel.CC = "sushma.patil@in.yokogawa.com";
-					EmailUtilities emailobj = new EmailUtilities();
-					emailobj.sendEmail(emailmodel, 2, 9);
+						EmailModel emailmodel1 = new EmailModel();
+						emailmodel1.grnnumber = verify.grnnumber;
+						emailmodel1.FrmEmailId = "ramesh.kumar@in.yokogawa.com";
+						EmailUtilities emailobj1 = new EmailUtilities();
+						emailobj1.sendEmail(emailmodel1, 20, 3);
+					}
+
+					
 
 					return verify;
 				}
@@ -6442,6 +6464,39 @@ namespace WMS.DAL
 				try
 				{
 					string materialrequestquery = WMSResource.getmaterialstoreserve;
+					await pgsql.OpenAsync();
+					var data = await pgsql.QueryAsync<IssueRequestModel>(
+					  materialrequestquery, null, commandType: CommandType.Text);
+					return data;
+
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "MaterialRequestdata", Ex.StackTrace.ToString());
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+			}
+		}
+
+		/*
+		Name of Function : <<getgatepassmaterialrequestList>>  Author :<<Ramesh>>  
+		Date of Creation <<12-01-2021>>
+		Purpose : <<Material list for gate pass>>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
+		public async Task<IEnumerable<IssueRequestModel>> getgatepassmaterialrequestList()
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+
+				try
+				{
+					string materialrequestquery = WMSResource.getdefaultmaterialforgatepass;
 					await pgsql.OpenAsync();
 					var data = await pgsql.QueryAsync<IssueRequestModel>(
 					  materialrequestquery, null, commandType: CommandType.Text);

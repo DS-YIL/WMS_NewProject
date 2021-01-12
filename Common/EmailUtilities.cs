@@ -294,6 +294,14 @@ namespace WMS.Common
 				subbody = "Please click on the below link for material return details. ";
 				link = linkurl + "WMS/Email/materialreturndashboard?returnid=" + emlSndngList.returnid.Trim();
 			}
+			else if (subjecttype == 20)
+			{
+				mailMessage.Subject = "Material Received for  GRN No. -" + emlSndngList.grnnumber;
+				//mailMessage.Subject = "Completed Quality Check for - GR No." + emlSndngList.grnnumber + "<br/>Materials of GR No - " + emlSndngList.grnnumber + "are completed quality check.";
+				subbody = "Material Received with  GRN No. : " + emlSndngList.grnnumber + " and ready for acceptance.";
+				//Redirect to Receipts Page
+				link = linkurl + "WMS/Email/GRNPosting?GRNo=" + emlSndngList.grnnumber.Trim();
+			}
 
 			if (!string.IsNullOrEmpty(emlSndngList.CC))
 				mailMessage.CC.Add(emlSndngList.CC);
