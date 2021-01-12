@@ -282,9 +282,9 @@ namespace WMS.Controllers
 							}
 
 							string queryasn = "Select Count(*) as count from wms.wms_asn where pono = '" + stag_data.purchdoc + "'";
-							int asncountcount = int.Parse(pgsql.ExecuteScalar(query2, null).ToString());
+							int asncountcount = int.Parse(pgsql.ExecuteScalar(queryasn, null).ToString());
 
-							if (Projcount == 0)
+							if (asncountcount == 0)
 							{
 								//insert wms_project ##pono,jobname,projectcode,projectname,projectmanager,
 
