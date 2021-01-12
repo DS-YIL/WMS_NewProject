@@ -705,7 +705,23 @@ export class StoreClerkComponent implements OnInit {
     this.spinner.show();
     this.PoDetails = details;
     this.inwardModel.grndate = new Date();
-    this.wmsService.verifythreewaymatch(details).subscribe(data => {
+    var emailtype = "1"
+    var qualityrequired = this.podetailsList.filter(function (element, index) {
+      return (element.qualitycheck);
+    });
+    var acceptrequired = this.podetailsList.filter(function (element, index) {
+      return (!element.qualitycheck);
+    });
+    if (qualityrequired.length > 0) {
+      emailtype = "1";
+    }
+    if (acceptrequired.length > 0) {
+      emailtype = "2";
+    }
+    if (acceptrequired.length > 0 && acceptrequired.length > 0) {
+      emailtype = "3";
+    }
+    this.wmsService.verifythreewaymatch(details, emailtype).subscribe(data => {
       //this.wmsService.verifythreewaymatch("123", "228738234", "1", "SK19VASP8781").subscribe(data => {
       this.spinner.hide();
       if (data == true) {
