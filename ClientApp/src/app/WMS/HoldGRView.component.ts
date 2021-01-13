@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { wmsService } from '../WmsServices/wms.service';
 import { constants } from '../Models/WMSConstants';
-import { Employee } from '../Models/Common.Model';
+import { Employee, printMaterial } from '../Models/Common.Model';
 import { NgxSpinnerService } from "ngx-spinner";
 import { PoDetails, BarcodeModel, inwardModel, ddlmodel, UnholdGRModel } from 'src/app/Models/WMS.Model';
 import { MessageService } from 'primeng/api';

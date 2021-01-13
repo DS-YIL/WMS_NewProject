@@ -272,6 +272,12 @@ namespace WMS.Controllers
 		{
 			return this._poService.InsertStock(data);
 		}
+		
+			[HttpPost("InsertmatSTO")]
+		public string InsertmatSTO([FromBody] List<StockModel> data)
+		{
+			return this._poService.InsertmatSTO(data);
+		}
 
 		[HttpPost("UpdateStockTransfer")]
 		public string UpdateStockTransferfunc([FromBody] List<StockModel> data)

@@ -67,7 +67,9 @@ namespace WMS.Interfaces
 		string updateinitialstockdata(StockModel datamodel);
 		
 		string InsertStock(List<StockModel> data);
-        string UpdateStockTransfer(List<StockModel> data);
+		string InsertmatSTO(List<StockModel> data);
+
+		string UpdateStockTransfer(List<StockModel> data);
 
 		string InvStockTransfer(invstocktransfermodel data);
 

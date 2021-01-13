@@ -194,6 +194,11 @@ export class wmsService {
     return this.http.post<any>(this.url + 'POData/updateitemlocation', StockModel, httpOptions);
   }
 
+  InsertmatSTO(StockModel: StockModel[]): Observable<any> {
+    const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }), responseType: 'text' as any };
+    return this.http.post<any>(this.url + 'POData/InsertmatSTO', StockModel, httpOptions);
+  }
+
   Stocktransfer(StockModel: StockModel[]): Observable<any> {
     const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }), responseType: 'text' as any };
     return this.http.post<any>(this.url + 'POData/UpdateStockTransfer', StockModel, httpOptions);
