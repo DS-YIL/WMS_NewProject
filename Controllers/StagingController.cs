@@ -113,6 +113,8 @@ namespace WMS.Controllers
 							model.materialid = Conversion.toStr(row["Material"]);
 							model.poitemdescription = Conversion.toStr(row["Short Text"]);
 							model.poquantity = Conversion.toInt(row["PO Quantity"]);
+							model.dci = Conversion.toStr(row["DCI"]);//if blank it is open po
+							model.deliveredqty = Conversion.toInt(row["Delivered Qty"]);//already delivered qty
 							model.vendorcode = Conversion.toStr(row["Vendor"]);
 							model.vendorname = Conversion.toStr(row["Vendor Name"]);
 							model.projectdefinition = Conversion.toStr(row["Project Definition"]);
@@ -131,9 +133,9 @@ namespace WMS.Controllers
 							if (string.IsNullOrEmpty(model.pono.Replace('.', '#')))
 								Error_Description += "There is NO PONO";
 							if (string.IsNullOrEmpty(model.materialid))
-								Error_Description += "No material";
+								Error_Description += ", No material";
 							if (model.poquantity < 1)
-								Error_Description += "No PO Quantity";
+								Error_Description += ", No PO Quantity";
 							if (!string.IsNullOrEmpty(Error_Description))
 							{
 								dataloaderror = true;
@@ -149,16 +151,18 @@ namespace WMS.Controllers
 							//dbcmd.CommandText = query;
 							//dbcmd.ExecuteNonQuery();
 							poitem = model.pono + "-" + model.itemno.ToString();
-							string material_n = model.poitemdescription;
-							var insertquery = "INSERT INTO wms.STAG_PO_SAP(PurchDoc,ItemDeliveryDate,Material,material_n,POQuantity,Vendor,VendorName,ProjectDefinition,Item,NetPrice,datasource,createddate,DataloadErrors ,Error_Description,uploadcode,saleorderno,solineitemno,saleordertype,codetype,costcenter,assetno,projecttext,sloc)";
-							insertquery += " VALUES(@pono, @itemdeliverydate,@materialid,@material_n,@poquantity,@vendorcode,@vendorname,@projectdefinition,@itemno,@NetPrice,'SAP',current_timestamp,@dataloaderror,@error_description,@uploadcode,@saleorderno,@solineitemno,@saleordertype,@codetype,@costcenter,@assetno,@projecttext,@sloc)";
+							string poitemdescription = model.poitemdescription;
+							var insertquery = "INSERT INTO wms.STAG_PO_SAP(PurchDoc,ItemDeliveryDate,Material,poitemdescription,POQuantity,dci,deliveredqty,Vendor,VendorName,ProjectDefinition,Item,NetPrice,datasource,createddate,DataloadErrors ,Error_Description,uploadcode,saleorderno,solineitemno,saleordertype,codetype,costcenter,assetno,projecttext,sloc)";
+							insertquery += " VALUES(@pono, @itemdeliverydate,@materialid,@poitemdescription,@poquantity,@dci,@deliveredqty,@vendorcode,@vendorname,@projectdefinition,@itemno,@NetPrice,'SAP',current_timestamp,@dataloaderror,@error_description,@uploadcode,@saleorderno,@solineitemno,@saleordertype,@codetype,@costcenter,@assetno,@projecttext,@sloc)";
 							var results = DB.ExecuteScalar(insertquery, new
 							{
 								model.pono,
 								model.itemdeliverydate,
 								model.materialid,
-								material_n,
+								poitemdescription,
 								model.poquantity,
+								model.dci,
+								model.deliveredqty,
 								model.vendorcode,
 								model.vendorname,
 								model.projectdefinition,
@@ -221,7 +225,7 @@ namespace WMS.Controllers
 				{
 
 					//string query = "select * from wms.stag_po_sap where purchdoc !='' and material !='' and poquantity !=0  ";
-					string query = "select * from wms.stag_po_sap where DataloadErrors is not True";
+					string query = "select * from wms.stag_po_sap where DataloadErrors is not True and dci!='X'";
 					pgsql.Open();
 					var stagingList = pgsql.Query<StagingModel>(
 					   query, null, commandType: CommandType.Text);
@@ -238,24 +242,26 @@ namespace WMS.Controllers
 							stag_data.materialqty = stag_data.poquantity;
 							stag_data.itemno = stag_data.item;
 							stag_data.itemamount = stag_data.NetPrice;
-							var unitprice = stag_data.unitprice / stag_data.poquantity;
+							var unitprice = stag_data.itemamount / stag_data.poquantity;
 							string materialdescquery = WMSResource.getMateDescr.Replace("#materialid", stag_data.materialid.ToString());
 							stag_data.materialdescription = pgsql.QuerySingleOrDefault<string>(
 											materialdescquery, null, commandType: CommandType.Text);
 
 							string query1 = "Select Count(*) as count from wms.wms_polist where pono = '" + stag_data.purchdoc + "'";
 							int pocount = int.Parse(pgsql.ExecuteScalar(query1, null).ToString());
+							bool isclosed = false;
 							if (pocount == 0)
 							{
 								//insert wms_polist ##pono,deliverydate,vendorid,supliername
-								var insertquery = "INSERT INTO wms.wms_polist(pono, vendorcode,suppliername,sloc,type,uploadcode)VALUES(@pono, @vendorcode,@suppliername,@sloc,'po',@uploadcode)";
+								var insertquery = "INSERT INTO wms.wms_polist(pono, vendorcode,suppliername,sloc,type,isclosed,uploadcode)VALUES(@pono, @vendorcode,@suppliername,@sloc,'po',@isclosed,@uploadcode)";
 								var results = pgsql.ExecuteScalar(insertquery, new
 								{
 									stag_data.pono,
 									stag_data.vendorcode,
 									stag_data.suppliername,
 									stag_data.sloc,
-									uploadcode
+									uploadcode,
+									isclosed
 								});
 
 							}
@@ -304,8 +310,9 @@ namespace WMS.Controllers
 
 							if (matcount == 0)
 							{
+								var wmsqty = stag_data.poquantity - stag_data.deliveredqty;
 								//insert wms_pomaterials ##pono,materialid,materialdescr,materilaqty,itemno,itemamount,item deliverydate,
-								var insertquery = "INSERT INTO wms.wms_pomaterials(pono, materialid, materialdescription,materialqty,itemno,itemamount,itemdeliverydate,saleorderno,solineitemno,saleordertype,codetype,costcenter,assetno,poitemdescription,unitprice)VALUES(@pono, @materialid, @materialdescription,@materialqty,@itemno,@itemamount,@itemdeliverydate,@saleorderno,@solineitemno,@saleordertype,@codetype,@costcenter,@assetno,@poitemdescription,@unitprice)";
+								var insertquery = "INSERT INTO wms.wms_pomaterials(pono, materialid, materialdescription,materialqty,itemno,itemamount,itemdeliverydate,saleorderno,solineitemno,saleordertype,codetype,costcenter,assetno,poitemdescription,unitprice,deliveredqty,wmsqty)VALUES(@pono, @materialid, @materialdescription,@materialqty,@itemno,@itemamount,@itemdeliverydate,@saleorderno,@solineitemno,@saleordertype,@codetype,@costcenter,@assetno,@poitemdescription,@unitprice,@deliveredqty,@wmsqty)";
 								var results = pgsql.ExecuteScalar(insertquery, new
 								{
 									stag_data.pono,
@@ -322,7 +329,9 @@ namespace WMS.Controllers
 									stag_data.costcenter,
 									stag_data.assetno,
 									stag_data.poitemdescription,
-									unitprice
+									unitprice,
+									stag_data.deliveredqty,
+									wmsqty
 								});
 							}
 							//else
