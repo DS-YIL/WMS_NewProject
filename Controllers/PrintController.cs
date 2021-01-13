@@ -29,6 +29,8 @@ namespace WMS.Controllers
             _poService = poService;
         }
 
+        //Printing label at security - Updated by -> Gayathri
+
         [HttpPost("printBarcode")]
         public string printBarcode(PrintHistoryModel model)
         {
@@ -39,7 +41,7 @@ namespace WMS.Controllers
             }
             bool result = false;
             string printResult = null;
-            path = path + model.po_invoice + "-" + string.Format("{0:ddMMyyyyhhmm}", DateTime.Now) + ".prn";
+            path = path + model.inwmasterid + "-" + string.Format("{0:ddMMyyyyhhmm}", DateTime.Now) + ".prn";
             FileMode fileType = FileMode.OpenOrCreate;
             //for (int i = 0; i < printQty; i++)
             //{
@@ -53,26 +55,27 @@ namespace WMS.Controllers
             {
                 using (TextWriter tw = new StreamWriter(fs))
                 {
-                    //tw.WriteLine("<xpml><page quantity='0' pitch='33.0 mm'></xpml>SIZE 30 mm, 30 mm");
+
+
+
+                    //tw.WriteLine("SIZE 94.10 mm, 38 mm");
                     //tw.WriteLine("GAP 3 mm, 0 mm");
-                    //tw.WriteLine("SET RIBBON ON");
                     //tw.WriteLine("DIRECTION 0,0");
                     //tw.WriteLine("REFERENCE 0,0");
                     //tw.WriteLine("OFFSET 0 mm");
                     //tw.WriteLine("SET PEEL OFF");
                     //tw.WriteLine("SET CUTTER OFF");
                     //tw.WriteLine("SET PARTIAL_CUTTER OFF");
-                    //tw.WriteLine("<xpml></page></xpml><xpml><page quantity='1' pitch='33.0 mm'></xpml>SET TEAR ON");
-                    //tw.WriteLine("ON");
+                    //tw.WriteLine("SET TEAR ON");
                     //tw.WriteLine("CLS");
-                    //tw.WriteLine("QRCODE 90,80,L,3,A,0,M2,S7,\"" + model.po_invoice + "\"");
-
+                    //tw.WriteLine("QRCODE 359,164,L,5,A,180,M2,S7,\"" + model.po_invoice + "\"");
+                    //tw.WriteLine("CODEPAGE 1252");
+                    //tw.WriteLine("TEXT 449,49,\"" + 0 + "\",180,18,6,\"" + model.po_invoice + "\"");
                     //tw.WriteLine("PRINT 1,1");
-                    //tw.WriteLine("<xpml></page></xpml><xpml><end/></xpml>");
 
 
-                    tw.WriteLine("SIZE 94.10 mm, 38 mm");
-                    tw.WriteLine("GAP 3 mm, 0 mm");
+
+                    tw.WriteLine("SIZE 97.5 mm, 38 mm");
                     tw.WriteLine("DIRECTION 0,0");
                     tw.WriteLine("REFERENCE 0,0");
                     tw.WriteLine("OFFSET 0 mm");
@@ -81,9 +84,26 @@ namespace WMS.Controllers
                     tw.WriteLine("SET PARTIAL_CUTTER OFF");
                     tw.WriteLine("SET TEAR ON");
                     tw.WriteLine("CLS");
-                    tw.WriteLine("QRCODE 359,164,L,5,A,180,M2,S7,\"" + model.po_invoice + "\"");
+                    tw.WriteLine("BOX 10,7,769,296,3");
+                    tw.WriteLine("BAR 11,63, 757, 3");
+                    tw.WriteLine("BAR 164,64, 3, 224");
+                    tw.WriteLine("BAR 165,109, 603, 3");
+                    tw.WriteLine("BAR 165,153, 603, 3");
+                    tw.WriteLine("BAR 165,245, 603, 3");
+                    tw.WriteLine("BAR 572,6, 3, 287");
                     tw.WriteLine("CODEPAGE 1252");
-                    tw.WriteLine("TEXT 449,49,\"" + 0 + "\",180,18,6,\"" + model.po_invoice + "\"");
+                    tw.WriteLine("TEXT 762,271,\"ROMAN.TTF\",180,1,8,\"Gate Entry No.\"");
+                    tw.WriteLine("TEXT 766,213,\"ROMAN.TTF\",180,1,8,\"PO No.\"");
+                    tw.WriteLine("TEXT 762,142,\"ROMAN.TTF\",180,1,8,\"Gate Entry Time\"");
+                    tw.WriteLine("TEXT 762,98,\"ROMAN.TTF\",180,1,8,\"Vehicle No.\"");
+                    tw.WriteLine("TEXT 762,46,\"ROMAN.TTF\",180,1,8,\"Transporter Details\"");
+                    tw.WriteLine("TEXT 567,281,\"ROMAN.TTF\",180,1,8,\""+model.inwmasterid+"\"");
+                    tw.WriteLine("TEXT 567,240,\"ROMAN.TTF\",180,1,8,\""+model.pono+"\"");
+                    tw.WriteLine("TEXT 567,144,\"ROMAN.TTF\",180,1,8,\""+model.gateentrytime+"\"");
+                    tw.WriteLine("TEXT 567,98,\"ROMAN.TTF\",180,1,8,\""+model.vehicleno+"\"");
+                    tw.WriteLine("TEXT 567,59,\"ROMAN.TTF\",180,1,8,\""+model.transporterdetails+"\"");
+                    tw.WriteLine("QRCODE 117,239,L,3,A,180,M2,S7,\""+model.inwmasterid+"\"");
+                    tw.WriteLine("TEXT 158,158,\"ROMAN.TTF\",180,1,7,\""+ model.inwmasterid + "\"");
                     tw.WriteLine("PRINT 1,1");
 
                 }

@@ -8,20 +8,24 @@ import { PoDetails, BarcodeModel, inwardModel, ddlmodel, UnholdGRModel } from 's
 import { MessageService } from 'primeng/api';
 import { first } from 'rxjs/operators';
 import { isNullOrUndefined } from 'util';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-HoldGRView',
-  templateUrl: './HoldGRView.component.html'
+  templateUrl: './HoldGRView.component.html',
+  providers: [DatePipe]
 })
 export class HoldGRViewComponent implements OnInit {
 
-  constructor(private messageService: MessageService, private wmsService: wmsService, private route: ActivatedRoute, private router: Router, public constants: constants, private spinner: NgxSpinnerService) { }
+  constructor(private messageService: MessageService, private wmsService: wmsService, private route: ActivatedRoute, private router: Router, private datePipe: DatePipe, public constants: constants, private spinner: NgxSpinnerService) { }
 
   public PoDetails: PoDetails;
   public podetailsList: Array<inwardModel> = [];
   public filteredpodetailsList: Array<inwardModel> = [];
   filteredpomatdetailsList: Array<inwardModel> = [];
   public employee: Employee;
+  public qty: any = 1;
+  public noOfPrint: any = 1;
   public showDetails; showQtyUpdateDialog: boolean = false;
   public disGrnBtn: boolean = true;
   public BarcodeModel: BarcodeModel;
@@ -39,6 +43,11 @@ export class HoldGRViewComponent implements OnInit {
   dtinvoiceno: string = "";
   dtvendorname: string = "";
   graction: number = 1;
+  public materialCode: any;
+  public receivedDate: any;
+  public acceptedQty: any;
+  public itemNo: any;
+  print: string = "Print";
   onholdupdatedata: UnholdGRModel;
   unholdremarks: string = "";
   unholdremarksview: string = "";
@@ -46,6 +55,8 @@ export class HoldGRViewComponent implements OnInit {
   grstatus: string = "";
   tempcol1: string = "";
   tempcol2: string = "";
+  showPrintDialog: boolean = false;
+  public printData = new printMaterial();
  
   ngOnInit() {
     if (localStorage.getItem("Employee"))
@@ -146,6 +157,34 @@ export class HoldGRViewComponent implements OnInit {
     this.dtvendorname = "";
     this.unholdremarks = "";
   }
+
+  generatelabel(details:any) {
+
+    this.showdetail = false;
+    this.showPrintDialog = true;
+    this.materialCode = details.material;
+    this.receivedDate = this.datePipe.transform(details.receiveddate, this.constants.dateFormat);
+    this.acceptedQty = details.confirmqty;
+    //this.pono = details.pono;
+    //this.receivedqty = details.receivedqty;
+    //this.invoiceNo = details.invoiceno;
+    //this.lineitemno = details.lineitemno;
+    //this.grnNo = details.grnnumber;
+    //this.noofpieces = details.receivedqty;
+
+  }
+
+  decreaseQty() {
+    if (this.qty > 1) {
+      this.qty = this.qty - 1;
+    }
+  }
+  increaseQty() {
+    if (this.qty < this.noOfPrint) {
+      this.qty = this.qty + 1;
+    }
+  }
+
   getholdgrdetails() {
     debugger;
     this.podetailsList = [];

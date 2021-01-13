@@ -71,6 +71,7 @@ export class printMaterial {
   totalboxes: any;
   boxno: any;
   serialno: any;
+  itemno: any;
   material: any;
   mscode: any;
   receivedqty: any;
@@ -83,11 +84,23 @@ export class printMaterial {
   saleorder: any;
   saleorderlineitemno: any;
   qtyrec: any;
+  projectiddef: any;
+  assetsubno: any;
+  assetno: any;
   lineitemno: any;
+  grbarcode: any;
+  linkagebarcode: any;
+  costcenter: any;
+  plantbarcode: any;
+  materialbarcode: any;
+  orderbarcode: any;
+
   plant: any;
   gr: any;
   sp: any;
   loadingdate: any;
+  materialdescription: any;
+  saleordertype: any;
   linkageno: any;
   customername: any;
   customer: any;

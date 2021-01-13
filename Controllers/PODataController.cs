@@ -157,7 +157,7 @@ namespace WMS.Controllers
 
 
 		[HttpPost("insertbarcodeandinvoiceinfo")]
-		public string insertbardata(BarcodeModel data)
+		public PrintHistoryModel insertbardata(BarcodeModel data)
 		{
 			return this._poService.InsertBarcodeInfo(data);
 		}
@@ -1019,7 +1019,11 @@ namespace WMS.Controllers
 			return await this._poService.getdirecttransferdata(empno);
 		}
 
-
+		[HttpGet("STORequestlist")]
+		public async Task<IEnumerable<STORequestdata>> STORequestlist()
+		{
+			return await this._poService.STORequestlist();
+		}
 
 		[HttpPost("Updatetransferqty")]
 		public int Updatetransferqty([FromBody] List<IssueRequestModel> obj)
@@ -1309,6 +1313,12 @@ namespace WMS.Controllers
 		public async Task<string> STOPOInitiate(List<STOIssueModel> data)
 		{
 			return await this._poService.STOPOInitiate(data);
+		}
+			[HttpGet("generateLabel")]
+		public string generateLabel(string labeldata)
+		{
+			return this._poService.generateLabel(labeldata);
+
 		}
 	}
 }

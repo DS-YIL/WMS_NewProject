@@ -71,6 +71,7 @@ import { InhandMaterialComponent } from './WMS/InhandMaterial.component';
 import { GRReportsComponent } from './WMS/GRReports.component';
 import { MiscellanousIssueComponent } from './WMS/MiscellanousIssues.component';
 import { MiscellanousReceiptsComponent } from './WMS/MiscellanousReceipts.component';
+import { ReceiveMaterialComponent } from './WMS/ReceiveMaterial.component';
 
 //admin
 import { MaterilMasterComponent } from './WMS/Admin/Materialmaster.component';
@@ -151,6 +152,7 @@ const routes: Routes = [{
     { path: "MaterialRequestDashboard", component: MaterialRequestDashboardComponent, canActivate: [AuthGuard] },
     { path: "MaterialReserveDashboard", component: MaterialReserveDashboardComponent, canActivate: [AuthGuard] },
     { path: "MaterialsReturnDashboard", component: MaterialsReturnDashboardComponent, canActivate: [AuthGuard] },
+
     { path: "MaterialTransferDashboard", component: MaterialTransferDashboardComponent, canActivate: [AuthGuard] },
     { path: "outinDashboard", component: OutwardinwardreportComponent, canActivate: [AuthGuard] },
     { path: "gatepassreceive", component: GatepassinwardreceiveComponent, canActivate: [AuthGuard] },
@@ -167,6 +169,8 @@ const routes: Routes = [{
     { path: "MaterialMaster", component: MaterilMasterComponent, canActivate: [AuthGuard] },
     { path: "GatePassMaster", component: GatePassMasterComponent, canActivate: [AuthGuard] },
     { path: "ReceiveSTORequest", component: ReceiveSTORequestComponent, canActivate: [AuthGuard] },
+     { path: "ReceiveMaterial", component: ReceiveMaterialComponent, canActivate: [AuthGuard] },
+
 
   ]
 

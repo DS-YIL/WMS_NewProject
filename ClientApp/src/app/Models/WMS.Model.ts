@@ -505,7 +505,10 @@ export class stocktransfermateriakmodel {
   destinationitemid: number;
   transferqty: number;
   mlocations: string[] = [];
-  itemlocationdata: any[] = []
+  itemlocationdata: any[] = [];
+  remarks: any="";
+  requireddate: any;
+  projectid: any="";
 }
 
 export class updateonhold {
@@ -621,6 +624,30 @@ export class DirectTransferTR {
   confirmqty: number = 0;
 }
 
+
+export class STORequestdata {
+  transferid: string;
+  transferredby: string;
+  transferredon: string;
+  transfertype: string;
+  sourceplant: string;
+  destinationplant: string;
+  showtr: boolean = false;
+  status: string;
+  materialdata: STOrequestTR[] = [];
+}
+
+export class STOrequestTR {
+  transferid: string;
+  materialid: string;
+  poitemdesc: string;
+  transferqty: any = 0;
+  projectid: string;
+  requireddate: any;
+  itemlocation: string;
+  confirmqty: string;
+}
+
 export class UserModel {
   employeeno: string;
   deptId: number;
@@ -695,6 +722,11 @@ export class PrintHistoryModel {
   po_invoice: string;
   pono: string;
   invoiceNo: string;
+  vehicleno: string;
+  gateentrytime: any;
+  transporterdetails: string;
+  result: string;
+
 }
 
 export class ManagerDashboard {
@@ -886,7 +918,7 @@ export class MateriallabelModel {
 
 
 
-}
+	}
 
 export class grReports {
   wmsgr: string;
@@ -896,7 +928,7 @@ export class grReports {
   pono: string;
 }
 
-export class pmDashboardCards {
+export class pmDashboardCards{
   totalmaterialrequest: any;
   issuedmaterialrequest: any;
   pendingmaterialrequest: any;

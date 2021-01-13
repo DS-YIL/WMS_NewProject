@@ -55,27 +55,30 @@ namespace WMS.Common
             string barcodepath = null;
             try
             {
-              
-                BarcodeWriter writer = new BarcodeWriter
+              if(barcodename!=null)
                 {
-                    Format = BarcodeFormat.QR_CODE,
-                    Options = new EncodingOptions
+                    BarcodeWriter writer = new BarcodeWriter
                     {
-                        Height = 90,
-                        Width = 100,
-                        PureBarcode = false,
-                        Margin = 1,
+                        Format = BarcodeFormat.QR_CODE,
+                        Options = new EncodingOptions
+                        {
+                            Height = 90,
+                            Width = 100,
+                            PureBarcode = false,
+                            Margin = 1,
 
-                    },
-                };
-                var bitmap = writer.Write(barcodename);
+                        },
+                    };
+                    var bitmap = writer.Write(barcodename);
 
-                // write text and generate a 2-D barcode as a bitmap
-                writer
-                    .Write(barcodename)
-                    .Save(path + barcodename +"_"+DateTime.Now+ ".bmp");
+                    // write text and generate a 2-D barcode as a bitmap
+                    writer
+                        .Write(barcodename)
+                        .Save(path + barcodename + "_" + DateTime.Now + ".bmp");
 
-                barcodepath = "./Barcodes/" + barcodename + "_" + DateTime.Now + ".bmp";
+                    barcodepath = "./Barcodes/" + barcodename + "_" + DateTime.Now + ".bmp";
+                }
+               
             }
             catch(Exception ex)
             {
@@ -90,27 +93,29 @@ namespace WMS.Common
             string barcodepath = null;
             try
             {
-
-                BarcodeWriter writer = new BarcodeWriter
+                if (qrcodename != null)
                 {
-                    Format = BarcodeFormat.QR_CODE,
-                    Options = new EncodingOptions
+                    BarcodeWriter writer = new BarcodeWriter
                     {
-                        Height = 90,
-                        Width = 100,
-                        PureBarcode = false,
-                        Margin = 1,
+                        Format = BarcodeFormat.QR_CODE,
+                        Options = new EncodingOptions
+                        {
+                            Height = 90,
+                            Width = 100,
+                            PureBarcode = false,
+                            Margin = 1,
 
-                    },
-                };
-                var bitmap = writer.Write(qrcodename);
+                        },
+                    };
+                    var bitmap = writer.Write(qrcodename);
 
-                // write text and generate a 2-D barcode as a bitmap
-                writer
-                    .Write(qrcodename)
-                    .Save(path + qrcodename + "_" + DateTime.Now + ".bmp");
+                    // write text and generate a 2-D barcode as a bitmap
+                    writer
+                        .Write(qrcodename)
+                        .Save(path + qrcodename + "_" + DateTime.Now + ".bmp");
 
-                barcodepath = "./Barcodes/" + qrcodename + "_" + DateTime.Now + ".bmp";
+                    barcodepath = "./Barcodes/" + qrcodename + "_" + DateTime.Now + ".bmp";
+                }
             }
             catch (Exception ex)
             {

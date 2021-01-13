@@ -1496,7 +1496,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select print  from wms.wms_securityinward  where pono =&apos;#pono&apos;  and invoiceno =&apos;#invno&apos;.
+        ///   Looks up a localized string similar to select * from wms.wms_securityinward  where pono =&apos;#pono&apos;  and invoiceno =&apos;#invno&apos;.
         /// </summary>
         public static string getprintdetailsforinvoice {
             get {
@@ -1785,6 +1785,15 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to select * from wms.wms_invstocktransfer where transfertype=&apos;STO&apos;.
+        /// </summary>
+        public static string getSTORequestlist {
+            get {
+                return ResourceManager.GetString("getSTORequestlist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to select ts.transferid, ts.projectcode,ts.approvallevel,ts.finalapprovallevel,ts.fromprojectcode as projectcodefrom,ts.remarks as transferremarks,emp.name as transferedby,ts.createdon as transferredon,
         ///(select emp.name as projectmanager from wms.wms_project prj 
         /// left outer join wms.employee emp on prj.projectmanager = emp.employeeno
@@ -1993,8 +2002,8 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO wms.wms_barcode(barcodeid,barcode,createddate,createdby,deleteflag,pono,invoiceno)values
-        ///(DEFAULT,@barcode,@createddate,@createdby,@deleteflag,@pono,@invoiceno)returning barcodeid.
+        ///   Looks up a localized string similar to INSERT INTO wms.wms_barcode(barcodeid,barcode,createddate,createdby,deleteflag,pono,invoiceno,inwmasterid)values
+        ///(DEFAULT,@barcode,@createddate,@createdby,@deleteflag,@pono,@invoiceno,@inwmasterid)returning barcodeid.
         /// </summary>
         public static string insertbarcodedata {
             get {
@@ -2083,8 +2092,8 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to insert into wms.wms_invstocktransfer (transferredby,transferredon,transfertype,sourceplant,destinationplant,remarks)
-        ///values (@transferredby,@transferredon,@transfertype,@sourceplant,@destinationplant,@remarks) returning transferid.
+        ///   Looks up a localized string similar to insert into wms.wms_invstocktransfer (transferredby,transferredon,transfertype,sourceplant,destinationplant,remarks,status)
+        ///values (@transferredby,@transferredon,@transfertype,@sourceplant,@destinationplant,@remarks,@status) returning transferid.
         /// </summary>
         public static string insertInvStocktransfer {
             get {
@@ -2093,12 +2102,22 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to insert into wms.wms_invtransfermaterial (transferid,materialid,sourcelocation,sourceitemid,destinationlocation,destinationitemid,transferqty)
-        ///values (@transferid,@materialid,@sourcelocation,@sourceitemid,@destinationlocation,@destinationitemid,@transferqty).
+        ///   Looks up a localized string similar to insert into wms.wms_invtransfermaterial (transferid,materialid,sourcelocation,sourceitemid,destinationlocation,destinationitemid,transferqty,poitemdesc)
+        ///values (@transferid,@materialid,@sourcelocation,@sourceitemid,@destinationlocation,@destinationitemid,@transferqty,@poitemdesc).
         /// </summary>
         public static string insertinvtransfermaterial {
             get {
                 return ResourceManager.GetString("insertinvtransfermaterial", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to insert into wms.wms_invtransfermaterial (transferid,materialid,transferqty,projectid,requireddate,poitemdesc)
+        ///values (@transferid,@materialid,@transferqty,@projectid,@requireddate,@poitemdesc).
+        /// </summary>
+        public static string insertinvtransfermaterialSTO {
+            get {
+                return ResourceManager.GetString("insertinvtransfermaterialSTO", resourceCulture);
             }
         }
         
@@ -2668,6 +2687,15 @@ namespace WMS.Common {
         public static string stocktransferinternal {
             get {
                 return ResourceManager.GetString("stocktransferinternal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to select * from wms.wms_invtransfermaterial where transferid = &apos;#transferid&apos;.
+        /// </summary>
+        public static string STOrequestedmatdetails {
+            get {
+                return ResourceManager.GetString("STOrequestedmatdetails", resourceCulture);
             }
         }
         

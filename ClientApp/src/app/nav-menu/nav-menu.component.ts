@@ -559,6 +559,7 @@ export class NavMenuComponent implements OnInit {
     this.items.push({ label: 'Material Transfer', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialTransfer') });
     this.items.push({ label: 'Material Return', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReturnfromPm') });
     this.items.push({ label: 'Direct Shipment', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/Directtransfer') });
+    this.items.push({ label: 'Receive Material', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/ReceiveMaterial') });
     this.router.navigateByUrl('WMS/Dashboard');
     this.router.navigate(['WMS/MaterialReqView'], { queryParams: { requestid: this.reqid } });
 
@@ -578,6 +579,8 @@ export class NavMenuComponent implements OnInit {
     this.items.push({ label: 'Material Transfer', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialTransfer') });
     this.items.push({ label: 'Material Return', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReturnfromPm') });
     this.items.push({ label: 'Direct Shipment', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/Directtransfer') });
+    this.items.push({ label: 'Receive Material', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/ReceiveMaterial') });
+    this.router.navigateByUrl('WMS/Dashboard');
     this.router.navigate(['WMS/MaterialReqView'], { queryParams: { requestid: this.reqid } });
     let element1: HTMLDivElement = document.getElementById("menudiv") as HTMLDivElement;
     element1.hidden = false;
@@ -1555,6 +1558,7 @@ export class NavMenuComponent implements OnInit {
       this.items.push({ label: 'Material Transfer', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialTransfer') });
       this.items.push({ label: 'Material Return', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReturnfromPm') });
       this.items.push({ label: 'Direct Shipment', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/Directtransfer') });
+      this.items.push({ label: 'Receive Material', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/ReceiveMaterial') });
       this.router.navigateByUrl('WMS/Dashboard');
     }
     if (this.emp.roleid == "6") {//dashboard
@@ -1665,6 +1669,7 @@ export class NavMenuComponent implements OnInit {
       this.items.push({ label: 'PM Dashboard', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-chart-bar', command: () => this.router.navigateByUrl('WMS/Dashboard') });
       this.items.push({ label: 'Material Transfer Approval', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/materialtransferapproval') });
       this.items.push({ label: 'Direct Shipment', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/Directtransfer') });
+      this.items.push({ label: 'Receive Material', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/ReceiveMaterial') });
       this.router.navigateByUrl('WMS/Home');
     }
     let element1: HTMLDivElement = document.getElementById("menudiv") as HTMLDivElement;

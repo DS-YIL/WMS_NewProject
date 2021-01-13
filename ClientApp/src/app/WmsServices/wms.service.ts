@@ -5,7 +5,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { constants } from '../Models/WMSConstants'
 import { Employee, Login, DynamicSearchResult, printMaterial, rbamaster } from '../Models/Common.Model';
-import { PoFilterParams, PoDetails, BarcodeModel, StockModel, materialRequestDetails, inwardModel, gatepassModel, stocktransfermodel, Materials, authUser, invstocktransfermodel, ddlmodel, locataionDetailsStock, updateonhold, materialistModel, outwardmaterialistModel, pageModel, UserDashboardDetail, UserDashboardGraphModel, UnholdGRModel, MRNsavemodel, notifymodel, materialtransferMain, materialReservetorequestModel, testcrud, PrintHistoryModel, materilaTrasFilterParams, materialRequestFilterParams, materialResFilterParams, materialRetFilterParams, outwardinwardreportModel, UserModel, WMSHttpResponse, MaterialinHand, matlocations, grReports, MateriallabelModel, ManagerDashboard, pmDashboardCards, invDashboardCards, GraphModelNew, miscellanousIssueData, inventoryFilters, MaterialMaster, GPReasonMTdata } from '../Models/WMS.Model';
+import { PoFilterParams, PoDetails, BarcodeModel, StockModel, materialRequestDetails, inwardModel, gatepassModel, stocktransfermodel, Materials, authUser, invstocktransfermodel, ddlmodel, locataionDetailsStock, updateonhold, materialistModel, outwardmaterialistModel, pageModel, UserDashboardDetail, UserDashboardGraphModel, UnholdGRModel, MRNsavemodel, notifymodel, materialtransferMain, materialReservetorequestModel, testcrud, PrintHistoryModel, materilaTrasFilterParams, materialRequestFilterParams, materialResFilterParams, materialRetFilterParams, outwardinwardreportModel, UserModel, WMSHttpResponse, MaterialinHand, matlocations, grReports, MateriallabelModel, ManagerDashboard, pmDashboardCards, invDashboardCards, GraphModelNew, miscellanousIssueData, inventoryFilters, MaterialMaster,GPReasonMTdata, materialList } from '../Models/WMS.Model';
 import { Text } from '@angular/compiler/src/i18n/i18n_ast';
 
 @Injectable({
@@ -105,8 +105,8 @@ export class wmsService {
   }
 
   insertbarcodeandinvoiceinfo(BarcodeModel: BarcodeModel): Observable<any> {
-    const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }), responseType: 'text' as any };
-    return this.http.post<any>(this.url + 'POData/insertbarcodeandinvoiceinfo', BarcodeModel, httpOptions);
+    //const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }), responseType: 'text' as any };
+    return this.http.post<any>(this.url + 'POData/insertbarcodeandinvoiceinfo', BarcodeModel, this.httpOptions);
   }
 
   insertbarcodeinfo(BarcodeModel: BarcodeModel): Observable<any> {
@@ -149,6 +149,13 @@ export class wmsService {
     material = encodeURIComponent(material);
     const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }), responseType: 'text' as any };
     return this.http.get<any>(this.url + 'POData/checkMatExists?material=' + material, httpOptions);
+  }
+
+  //Generate Material Label
+  generateLabel(labeldata: string): Observable<any> {
+    //material = encodeURIComponent(material);
+    const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }), responseType: 'text' as any };
+    return this.http.get<any>(this.url + 'POData/generateLabel?labeldata=' + labeldata, httpOptions);
   }
 
   //Get location details
@@ -212,6 +219,10 @@ export class wmsService {
   getdirecttransferdata(empno: string): Observable<any> {
     return this.http.get<any>(this.url + 'POData/getdirecttransferdata?empno=' + empno, this.httpOptions);
   }
+  STORequestlist(): Observable<any> {
+    return this.http.get<any>(this.url + 'POData/STORequestlist', this.httpOptions);
+  }
+
   getMaterialReservelist(loginid: string): Observable<any> {
     return this.http.get<any>(this.url + 'POData/GetreserveMaterilalist?reservedby=' + loginid + '', this.httpOptions);
   }

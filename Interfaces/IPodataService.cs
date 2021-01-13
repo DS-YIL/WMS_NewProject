@@ -28,6 +28,8 @@ namespace WMS.Interfaces
 		//Get direct transfer data
 		Task<IEnumerable<DirectTransferMain>> getdirecttransferdata(string empno);
 
+		Task<IEnumerable<STORequestdata>> STORequestlist();
+
 		//Get material request and issued details
 		Task<IEnumerable<ReqMatDetails>> getReqMatdetails(string materialid, string grnnumber, string pono);
 		//Get material reserve details for material tracking
@@ -53,7 +55,7 @@ namespace WMS.Interfaces
 
         string printBarcodeMaterial(printMaterial printMat);
         string updateQRcodePrintHistory(printMaterial printMat);
-        string InsertBarcodeInfo(BarcodeModel dataobj);
+		PrintHistoryModel InsertBarcodeInfo(BarcodeModel dataobj);
         //int insertInvoicedetails(iwardmasterModel obj);
         Task<IEnumerable<T>> GetDeatilsForthreeWaymatching(string invoiceno,string pono,bool isgrn, string grnno);
         Task<IEnumerable<T>> GetDeatilsForholdgr(string status);
@@ -272,7 +274,7 @@ namespace WMS.Interfaces
 		string GPReasonMTDelete(GPReasonMTData data);
 
 		Task<IEnumerable<GPReasonMTData>> getGPReasonData();
-
+string generateLabel(string labeldata);
 		Task<IEnumerable<invstocktransfermodel>> getSTORequestList();
 		Task<IEnumerable<STOIssueModel>> getMatdetailsbyTransferId(string transferId,string type);
 		Task<string> STOPOInitiate(List<STOIssueModel> data);
