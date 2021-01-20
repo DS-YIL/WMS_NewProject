@@ -924,12 +924,102 @@ namespace WMS.Models
 		public int issuedqty { get; set; }
 	}
 
-	public class employeeModel1
+	public class Employee
 	{
 		public string employeeno { get; set; }
 		public string name { get; set; }
+		public string nickname { get; set; }
+		public string shortname { get; set; }
+		public string globalempno { get; set; }
+		public string ygsaccountcode { get; set; }
+		public string domainid { get; set; }
+		public string ygscostcenter { get; set; }
+		public string costcenter { get; set; }
+		public Nullable<short> orgdepartmentid { get; set; }
+		public Nullable<byte> orgofficeid { get; set; }
+		public string sex { get; set; }
+		public bool maritalstatus { get; set; }
+		public Nullable<System.DateTime> dob { get; set; }
+		public bool boolcontract { get; set; }
+		public Nullable<System.DateTime> doj { get; set; }
+		public Nullable<System.DateTime> effectivedoj { get; set; }
+		public Nullable<System.DateTime> confirmationduedate { get; set; }
+		public Nullable<System.DateTime> confirmationdate { get; set; }
+		public Nullable<System.DateTime> dol { get; set; }
+		public Nullable<byte> departmentid { get; set; }
+		public Nullable<short> groupid { get; set; }
+		public string deptcode { get; set; }
+		public string grade { get; set; }
+		public string designation { get; set; }
+		public Nullable<short> functionalroleid { get; set; }
 		public string email { get; set; }
+		public string serialno { get; set; }
+		public string bloodgroup { get; set; }
+		public string hodempno { get; set; }
+		public bool boolhod { get; set; }
+		public Nullable<byte> blockid { get; set; }
+		public Nullable<short> floorid { get; set; }
+		public string qualification { get; set; }
+		public string qualificationstring { get; set; }
+		public bool boolfurnishedcertificates { get; set; }
+		public string prevemployment { get; set; }
+		public bool boolexecutive { get; set; }
+		public string mobileno { get; set; }
+		public Nullable<decimal> basic { get; set; }
+		public Nullable<decimal> hra { get; set; }
+		public Nullable<decimal> medicalallowance { get; set; }
+		public Nullable<decimal> specialallowance { get; set; }
+		public Nullable<decimal> transportallowance { get; set; }
+		public Nullable<decimal> traineeallowance { get; set; }
+		public Nullable<decimal> personalpay { get; set; }
+		public Nullable<decimal> professionalallowance { get; set; }
+		public Nullable<int> pfno { get; set; }
+		public Nullable<int> fpfno { get; set; }
+		public string accountsdetails { get; set; }
+		public bool boolesi { get; set; }
+		public string iciciaccno { get; set; }
+		public decimal medallbal { get; set; }
+		public Nullable<short> pickuppointid { get; set; }
+		public string homephone { get; set; }
+		public string presentaddress { get; set; }
+		public string permanentaddress { get; set; }
+		public string emergencycontactperson { get; set; }
+		public string emergencycontactno { get; set; }
+		public bool boolhasproximitycard { get; set; }
+		public Nullable<float> plstatus { get; set; }
+		public Nullable<float> leavesdeductedfromflexidaily { get; set; }
+		public Nullable<float> leavesdeductedfromflexiweekly { get; set; }
+		public byte restrictedholidaysavailed { get; set; }
+		public byte paternityleavesavailed { get; set; }
+		public string nameasinpassport { get; set; }
+		public string passportno { get; set; }
+		public string passportissuedplace { get; set; }
+		public Nullable<System.DateTime> passportissueddate { get; set; }
+		public Nullable<System.DateTime> passportexpirydate { get; set; }
+		public string addressasinpassport { get; set; }
+		public string birthplace { get; set; }
+		public string panno { get; set; }
+		public string aadhaarno { get; set; }
+		public Nullable<bool> boolkannadiga { get; set; }
+		public Nullable<byte> communityid { get; set; }
+		public string fathersname { get; set; }
+		public string spousename { get; set; }
+		public byte organizationid { get; set; }
+		public bool boolintranetenabled { get; set; }
+		public string uan { get; set; }
+		public Nullable<byte> expensecategoryid { get; set; }
+		public bool boolexpatriate { get; set; }
+		public string pwd { get; set; }
+		public Nullable<int> roleid { get; set; }
 
+	}
+
+	public class Orgdepartments
+	{
+		public int orgdepartmentid { get; set; }
+		public string orgdepartment { get; set; }
+		public string departmenthead { get; set; }
+		public bool boolinuse { get; set; }
 	}
 	public class EmailModel
 	{

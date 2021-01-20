@@ -13,6 +13,7 @@ namespace WMS.Common
 		public readonly string _PostgreconnectionString = string.Empty;
 		public readonly string _EmailLinkUrl = string.Empty;
 		public readonly string _FilePath = string.Empty;
+		public readonly string _IntranetConnectionString = string.Empty;
 		public Configurations()
 		{
 			var configurationBuilder = new ConfigurationBuilder();
@@ -25,6 +26,7 @@ namespace WMS.Common
 			_PostgreconnectionString = root.GetSection("ConnectionStrings").GetSection("PostgresConnection").Value;
 			_EmailLinkUrl = root.GetSection("ConnectionStrings").GetSection("EmailLinkUrl").Value;
 			_FilePath = root.GetSection("ConnectionStrings").GetSection("LiveFilePath").Value;
+			_IntranetConnectionString= root.GetSection("ConnectionStrings").GetSection("IntranetConnectionString").Value;
 			var appSetting = root.GetSection("ApplicationSettings");
 
 		}
@@ -46,6 +48,10 @@ namespace WMS.Common
 		public string FilePath
 		{
 			get => _FilePath;
+		}
+		public string IntranetConnectionString
+		{
+			get => _IntranetConnectionString;
 		}
 	}
 }
