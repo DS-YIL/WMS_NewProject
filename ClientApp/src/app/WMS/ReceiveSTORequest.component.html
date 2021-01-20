@@ -5,9 +5,9 @@
         <div class="col-lg-4 col-md-4 form-inline">
           <div class="form-inline">
             <label class="labelheading">Status :</label>&nbsp;&nbsp;
-            <select placeholder="Status" name="Status" (change)="onSelectStatus()" [ngModel]="selectedStatus" class="form-control">
-              <option selected value="Pending"> Pending</option>
-              <option value="Approved"> Issued</option>
+            <select placeholder="Status" name="Status" [ngModel]="selectedStatus" (change)="onSelectStatus($event)"  class="form-control">
+              <option  value="Pending"> Pending</option>
+              <option value="Issued"> Issued</option>
             </select>
           </div>
         </div>
@@ -128,7 +128,7 @@
   </div>
   <div style="height: 5px; overflow-y: scroll">
 
-    <p-dialog header="Item Location" [(visible)]="AddDialog" [contentStyle]="{'overflow-y': 'scroll', 'overflow-x': 'hidden', 'max-height': '350px','min-height':'350px'}" showEffect="fade" [modal]="true" [responsive]="true" [style]="{width: '1024px'}">
+    <p-dialog header="Item Location" [(visible)]="AddDialog" [contentStyle]="{'overflow-y': 'scroll', 'overflow-x': 'hidden', 'max-height': '350px','min-height':'350px'}" showEffect="fade" [modal]="true" [responsive]="true" [style]="{width: '1320px'}">
       <div *ngIf="showdialog && itemlocationData && itemlocationData.length>0">
         <div class="row  pl-0">
           <div class="col-lg-4 col-md-4 col-sm-4 pt-2 labelheading">

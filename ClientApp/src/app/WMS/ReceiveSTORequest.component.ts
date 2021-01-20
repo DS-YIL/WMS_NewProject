@@ -43,6 +43,7 @@ export class ReceiveSTORequestComponent implements OnInit {
       this.router.navigateByUrl("Login");
 
     this.selectedStatus = "Pending";
+    this.FIFOvalues = new FIFOValues();
     this.getSTORequestList();
   }
 
@@ -55,7 +56,8 @@ export class ReceiveSTORequestComponent implements OnInit {
     });
   }
 
-  onSelectStatus() {
+  onSelectStatus(event) {
+    this.selectedStatus = event.target.value;
     this.FilteredSTORequestList = this.STORequestList.filter(li => li.status == this.selectedStatus);
   }
 
@@ -222,6 +224,7 @@ export class ReceiveSTORequestComponent implements OnInit {
       else
         this.messageService.add({ severity: 'error', summary: '', detail: 'Material issue failed.' });
       this.showMatDetails = false;
+      this.getSTORequestList();
     });
   }
 

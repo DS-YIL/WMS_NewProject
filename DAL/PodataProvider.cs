@@ -3602,7 +3602,7 @@ namespace WMS.DAL
 					{
 						string requestid = dataobj[0].requestid;
 						string approvedby = dataobj[0].approvedby;
-						string updaterequest = "update wms.wms_invstocktransfer set status = 'Issued',requireddate=current_date where transferid='" + requestid + "'";
+						string updaterequest = "update wms.wms_invstocktransfer set status = 'Issued',issuedon=current_date where transferid='" + requestid + "'";
 
 						var data2 = DB.ExecuteScalar(updaterequest, new
 						{
