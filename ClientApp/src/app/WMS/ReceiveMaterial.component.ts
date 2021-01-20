@@ -16,8 +16,9 @@ import { ConfirmationService } from 'primeng/api';
   providers: [ ConfirmationService]
 })
 export class ReceiveMaterialComponent implements OnInit {
-  
+  public selectedStatus: string;
   storequestlist: STORequestdata[] = [];
+  requestlistSTO: STORequestdata[] = [];
   public employee: Employee;
   currentstocktype: string = "";
   public showDetails; showLocationDialog: boolean = false;
@@ -52,6 +53,7 @@ export class ReceiveMaterialComponent implements OnInit {
       this.employee = JSON.parse(localStorage.getItem("Employee"));
     else
       this.router.navigateByUrl("Login");
+    this.selectedStatus = "Pending";
     this.STORequestlist();
    
   }
@@ -64,6 +66,8 @@ export class ReceiveMaterialComponent implements OnInit {
     var empno = this.employee.employeeno;
     this.wmsService.STORequestlist().subscribe(data => {
       this.storequestlist = data;
+      this.requestlistSTO = data;
+      this.storequestlist = this.requestlistSTO.filter(li => li.status == this.selectedStatus || li.status == null);
       this.storequestlist.forEach(item => {
         item.showtr = false;
       });
@@ -348,6 +352,10 @@ export class ReceiveMaterialComponent implements OnInit {
   deleteRow(index: number) {
     this.stock.splice(index, 1);
     //this.formArr.removeAt(index);
+  }
+
+  onSelectStatus() {
+    this.storequestlist = this.requestlistSTO.filter(li => li.status == this.selectedStatus);
   }
 
   //On selection of rack updating bin

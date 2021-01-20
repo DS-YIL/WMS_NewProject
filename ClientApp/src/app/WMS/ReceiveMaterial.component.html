@@ -5,6 +5,13 @@
     margin-left: 0px !important;
     margin-right: 0px !important">
       <div class="col-lg-4 col-md-4 form-inline">
+        <div class="form-inline">
+          <label class="labelheading">Status :</label>&nbsp;&nbsp;
+          <select placeholder="Status" name="Status" (change)="onSelectStatus()" [ngModel]="selectedStatus" class="form-control">
+            <option selected value="Pending"> Pending</option>
+            <option value="Approved"> Received</option>
+          </select>
+        </div>
       </div>
       <div class="col-lg-4 col-md-4 text-center">
         <span class="commonheadertext">
@@ -45,15 +52,15 @@
       </ng-template>
       <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
         <tr>
-          <td class="ptable-cell" style="text-align:right;width:70px;">{{ri+1}}</td>
+          <td class="ptable-cell" style="text-align:right;width:150px;">{{ri+1}}</td>
 
-          <td class="ptable-cell" style="text-align: center;width: 150px;">
+          <td class="ptable-cell" style="text-align: center;width: 321px;">
             <span (click)="showattachdata(rowData)" class="btn btn-link">{{rowData.transferid}}</span>
           </td>
-          <td class="ptable-cell" style="text-align:center;width:150px;">{{rowData.transferredon | date :  constants.dateFormat}}</td>
+          <td class="ptable-cell" style="text-align:center;width:321px;">{{rowData.transferredon | date :  constants.dateFormat}}</td>
 
-          <td class="ptable-cell" style="text-align:left;width:150px;">{{rowData.remarks}}</td>
-          <td class="ptable-cell" style="text-align:left;width:100px;">{{rowData.status}}</td>
+          <td class="ptable-cell" style="text-align:left;width:321px;">{{rowData.remarks}}</td>
+          <td class="ptable-cell" style="text-align:left;width:200px;">{{rowData.status}}</td>
 
 
         </tr>
@@ -96,7 +103,7 @@
             <a *ngIf="rowData.itemlocation" href="#" [pRowToggler]="rowData">
               <i [ngClass]="expanded ? 'pi pi-fw pi-chevron-circle-down' : 'pi pi-fw pi-chevron-circle-right'" style="    vertical-align: middle;padding-bottom: .1em;color: #20f320d6"></i>
             </a>
-            <i *ngIf="!rowData.itemlocation && rowData.confirmqty != 0" class="fa fa-location-arrow" style="color:blue" pTooltip="Add Location" (click)="showDialog(rowData,ri)" aria-hidden="true"></i>
+            <i *ngIf="!rowData.itemlocation && rowData.confirmqty == 0" class="fa fa-location-arrow" style="color:blue" pTooltip="Add Location" (click)="showDialog(rowData,ri)" aria-hidden="true"></i>
 
           </td>
         </tr>
