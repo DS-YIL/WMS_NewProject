@@ -709,9 +709,8 @@ export class MaterialRequestViewComponent implements OnInit {
       this.spinner.hide();
       if (data) {
         this.ponolist = data;
-        console.log(this.ponolist)
-      }
-        
+        console.log(this.ponolist);
+      } 
       else
         this.messageService.add({ severity: 'error', summary: '', detail: 'Unable to fetch PO data' });
     });

@@ -72,7 +72,7 @@ export class ExcessInventoryMovementComponent implements OnInit {
     this.spinner.show();
     this.ExcessInventoryList = [];
     this.dynamicData = new DynamicSearchResult();
-    this.dynamicData.query = "select * from wms.stockexcessview where DaysInStock >=" + this.minDays + " and DaysInStock<=" + this.maxDays + "";
+    this.dynamicData.query = "select * from wms.stockexcessview where DaysInStock >=" + this.minDays + " and DaysInStock<=" + this.maxDays + " and availableqty > issuedqty";
     this.wmsService.GetListItems(this.dynamicData).subscribe(data => {
       this.ExcessInventoryList = data;
       this.spinner.hide();

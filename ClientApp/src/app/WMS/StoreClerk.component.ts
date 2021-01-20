@@ -149,7 +149,7 @@ export class StoreClerkComponent implements OnInit {
       return;
 
     }
-    if (data.isreceivedpreviosly && data.pendingqty > 0) {
+    if (data.pendingqty > 0) {
       if (entredvalue > data.pendingqty && !this.isnonpoentry) {
         this.messageService.add({ severity: 'error', summary: '', detail: 'Received Quantity should be less than or equal to Pending Quantity' });
         //(<HTMLInputElement>document.getElementById("receivedqty")).value = "";
@@ -157,20 +157,20 @@ export class StoreClerkComponent implements OnInit {
         return;
       }
     }
-    else if (data.isreceivedpreviosly && data.pendingqty == 0 && !this.isnonpoentry) {
+    else if (data.pendingqty == 0 && !this.isnonpoentry) {
       this.messageService.add({ severity: 'error', summary: '', detail: 'All materials received' });
       //(<HTMLInputElement>document.getElementById("receivedqty")).value = "";
       data.receivedqty = "0";
       return;
     }
-    else {
-      if (entredvalue > maxvalue && !this.isnonpoentry) {
-        this.messageService.add({ severity: 'error', summary: '', detail: 'Received Quantity should be less than or equal to Material Quantity' });
-        //(<HTMLInputElement>document.getElementById("receivedqty")).value = "";
-        data.receivedqty = "0";
-        return;
-      }
-    }
+    //else {
+    //  if (entredvalue > maxvalue && !this.isnonpoentry) {
+    //    this.messageService.add({ severity: 'error', summary: '', detail: 'Received Quantity should be less than or equal to Material Quantity' });
+    //    //(<HTMLInputElement>document.getElementById("receivedqty")).value = "";
+    //    data.receivedqty = "0";
+    //    return;
+    //  }
+    //}
 
   }
   checkconfirmqty(entredvalue, receivedqty, returnedqty, data: any) {

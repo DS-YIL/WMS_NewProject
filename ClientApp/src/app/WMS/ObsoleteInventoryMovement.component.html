@@ -11,7 +11,7 @@
       <div class="col-lg-4 col-md-4 form-inline">
         <div class="form-inline">
           <label class="labelheading">Peroid :</label>&nbsp;&nbsp;
-          <select class="form-control forms-input" [(ngModel)]="movingDays" style="width:100px !important">
+          <select class="form-control forms-input" [(ngModel)]="movingDays" (change)="getObsoleteInventoryList()" style="width:100px !important">
             <option value=1>1</option>
             <option value=2>2</option>
             <option value=3>3</option>
@@ -19,7 +19,7 @@
             <option value=4>5</option>
           </select>&nbsp;&nbsp;
         </div><span *ngIf="movingDays==1" style="font-size:14px; font-weight:600;color:darkblue;">Year</span><span *ngIf="movingDays>1" style="font-size:14px; font-weight:600;color:darkblue;">Years</span>
-        &nbsp;&nbsp;<button type="button" class="btn btn-primary btn-sm" (click)="getObsoleteInventoryList()" label="Save">Submit</button>
+
       </div>
       <div class="col-lg-4 col-md-4 text-center">
         <span style="color:#428bca;font-size:18px" class="commonheadertext">
@@ -28,7 +28,7 @@
       </div>
       <div class="col-lg-4 col-md-4 form-inline">
         <div class="col-lg-12 col-md-12">
-          <button type="button" pButton icon="pi pi-file-excel" iconPos="left" label="Export to Excel" (click)="exportExcel()" style="margin-right: 0.5em;" class="ui-button-success"></button>
+          <button type="button" pButton icon="pi pi-file-excel" iconPos="left" label="Export to Excel" (click)="exportExcel()" style="margin-right: 0.5em;float:right" class="ui-button-success"></button>
         </div>
       </div>
     </div>

@@ -65,7 +65,8 @@ namespace WMS.Interfaces
 		string updateinitialstockdata(StockModel datamodel);
 		
 		string InsertStock(List<StockModel> data);
-        string UpdateStockTransfer(List<StockModel> data);
+		string InsertStockIS(initialStock data);
+		string UpdateStockTransfer(List<StockModel> data);
 
 		string InvStockTransfer(invstocktransfermodel data);
 
@@ -161,6 +162,8 @@ namespace WMS.Interfaces
 
 		Task<IEnumerable<invstocktransfermodel>> getstocktransferdatagroup1();
 		Task<IEnumerable<ddlmodel>> pendingreceiptslist();
+		Task<IEnumerable<ddlmodel>> getInitialstockfilename();
+		
 		Task<IEnumerable<ddlmodel>> getdepartmentmasterdata();
 		Task<IEnumerable<ddlmodel>> getgrnlistforacceptance();
 		Task<IEnumerable<ddlmodel>> getgrnlistforacceptanceputaway();
@@ -276,6 +279,7 @@ namespace WMS.Interfaces
 		Task<IEnumerable<invstocktransfermodel>> getSTORequestList();
 		Task<IEnumerable<STOIssueModel>> getMatdetailsbyTransferId(string transferId,string type);
 		Task<string> STOPOInitiate(List<STOIssueModel> data);
+		Task<IEnumerable<initialStock>> GetInitialStockPutawayMaterials();
 
 	}
 }

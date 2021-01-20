@@ -107,6 +107,7 @@ import { InhandMaterialComponent } from './WMS/InhandMaterial.component';
 import { MiscellanousIssueComponent } from './WMS/MiscellanousIssues.component';
 import { MiscellanousReceiptsComponent } from './WMS/MiscellanousReceipts.component';
 import { ReceiveSTORequestComponent } from './WMS/ReceiveSTORequest.component';
+import { InitialStockPutAwayComponent } from './WMS/InitialStockPutAway.component';
 
 //admin
 import { MaterilMasterComponent } from './WMS/Admin/Materialmaster.component';
@@ -210,7 +211,8 @@ import { KeyFilterModule } from 'primeng/keyfilter';
     MiscellanousReceiptsComponent,
     MaterilMasterComponent,
     GatePassMasterComponent,
-    ReceiveSTORequestComponent
+    ReceiveSTORequestComponent,
+    InitialStockPutAwayComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

@@ -142,6 +142,7 @@ namespace WMS.Controllers
 			return this._poService.updateputawayfilename(data);
 		}
 
+		
 		[HttpPost("notifyputaway")]
 		public string notifyputawayfn(notifymodel data)
 		{
@@ -271,6 +272,12 @@ namespace WMS.Controllers
 		public string insertitemdataTostock([FromBody] List<StockModel> data)
 		{
 			return this._poService.InsertStock(data);
+		}
+
+		[HttpPost("updateitemlocationIS")]
+		public string insertitemdataTostockIS([FromBody] initialStock data)
+		{
+			return this._poService.InsertStockIS(data);
 		}
 
 		[HttpPost("UpdateStockTransfer")]
@@ -847,6 +854,13 @@ namespace WMS.Controllers
 			return await this._poService.pendingreceiptslist();
 		}
 
+		[HttpGet("getInitialstockfilename")]
+		public async Task<IEnumerable<ddlmodel>> getInitialstockfilename()
+		{
+			return await this._poService.getInitialstockfilename();
+		}
+
+
 		[HttpGet("getprojectlist")]
 		public async Task<IEnumerable<ddlmodel>> getprojectlist()
 		{
@@ -1006,6 +1020,13 @@ namespace WMS.Controllers
 		{
 			return await this._poService.gettransferdata(empno);
 		}
+
+		[HttpGet("GetInitialStockPutawayMaterials")]
+		public async Task<IEnumerable<initialStock>> GetInitialStockPutawayMaterials()
+		{
+			return await this._poService.GetInitialStockPutawayMaterials();
+		}
+
 
 		[HttpGet("gettransferdataforapproval")]
 		public async Task<IEnumerable<materialtransferMain>> gettransferdataforapproval(string empno)
