@@ -1616,7 +1616,8 @@ export class NavMenuComponent implements OnInit {
         items: [
           { label: 'Material Master', icon: 'pi pi-fw pi-bars', style: { 'width': '250px' }, command: () => this.router.navigateByUrl('WMS/MaterialMaster') },
           { label: 'GatePass Master', icon: 'pi pi-fw pi-bars', style: { 'width': '250px' }, command: () => this.router.navigateByUrl('WMS/GatePassMaster') },
-
+          { label: 'Plant Master', icon: 'pi pi-fw pi-bars', style: { 'width': '250px' }, command: () => this.router.navigateByUrl('WMS/PlantMaster') },
+          
         ]
       });
       this.router.navigateByUrl('/WMS/Home');

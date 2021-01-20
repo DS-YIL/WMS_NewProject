@@ -3409,6 +3409,8 @@ namespace WMS.DAL
 									{
 
 									});
+
+
 								}
 
 								if (quantitytoissue <= 0)
@@ -6027,23 +6029,44 @@ namespace WMS.DAL
 					var data10 = await pgsql.QueryAsync<ManagerDashboard>(acceptancecomptqry, null, commandType: CommandType.Text);
 
 					var data = new ManagerDashboard();
-					data.pendingcount = data1.Count() > 0 ? data1.FirstOrDefault().pendingcount : 0;
-					data.onholdcount = data2.Count() > 0 ? data2.FirstOrDefault().onholdcount : 0;
-					data.completedcount = data3.Count() > 0 ? data3.FirstOrDefault().completedcount : 0;
+					if(data1.Count() > 0)
+                    {
+						data.pendingcount = data1.Count() > 0 ? data1.FirstOrDefault().pendingcount : 0;
+					}
+					if(data2.Count()>0)
+                    {
+						data.onholdcount = data2.Count() > 0 ? data2.FirstOrDefault().onholdcount : 0;
+					}
+					if (data3.Count() > 0)
+					{
+						data.completedcount = data3.Count() > 0 ? data3.FirstOrDefault().completedcount : 0;
+					}
+					
 					if (data4.Count() > 0)
 					{
 						data.qualitycompcount = data4.FirstOrDefault().qualitycompcount;
 					}
+					if (data5.Count() > 0)
+					{
+						data.qualitypendcount = data5.Count() > 0 ? data5.FirstOrDefault().qualitypendcount : 0;
+					}
+					if (data6.Count() > 0)
+					{
+						data.putawaypendcount = data6.Count() > 0 ? data6.FirstOrDefault().putawaypendcount : 0;
+					}
 
-					data.qualitypendcount = data5.Count() > 0 ? data5.FirstOrDefault().qualitypendcount : 0;
 					if (data7.Count() > 0)
 					{
 						data.putawaycompcount = data7.FirstOrDefault().putawaycompcount;
 					}
-
-					data.putawaypendcount = data6.Count() > 0 ? data6.FirstOrDefault().putawaypendcount : 0;
-					data.putawayinprocount = data8.Count() > 0 ? data8.FirstOrDefault().putawayinprocount : 0;
-					data.acceptancependcount = data9.Count() > 0 ? data9.FirstOrDefault().acceptancependcount : 0;
+					if (data8.Count() > 0)
+					{
+						data.putawayinprocount = data8.Count() > 0 ? data8.FirstOrDefault().putawayinprocount : 0;
+					}
+					if (data9.Count() > 0)
+					{
+						data.acceptancependcount = data9.Count() > 0 ? data9.FirstOrDefault().acceptancependcount : 0;
+					}
 					if (data10.Count() > 0)
 					{
 						data.acceptancecompcount = data10.FirstOrDefault().acceptancecompcount;
@@ -8763,8 +8786,9 @@ namespace WMS.DAL
 						}
                         else
                         {
+							
 							//For STO directly add material data in wms_invtransfermaterial table
-							foreach(var matdata in data.materialdata)
+							foreach (var matdata in data.materialdata)
                             {
 								var poitemdesc = matdata.materialdescription;
 								string stockinsertqry = WMSResource.insertinvtransfermaterialSTO;
@@ -11171,7 +11195,7 @@ namespace WMS.DAL
 
 
 		/*
-	Name of Function : <<STORequestlist>>  Author :<<Ramesh>>  
+	Name of Function : <<STORequestlist>>  Author :<<Gayathri>>  
 	Date of Creation <<12-01-2021>>
 	Purpose : <<get STO request data>>
 	Review Date :<<>>   Reviewed By :<<>>
@@ -13189,6 +13213,51 @@ namespace WMS.DAL
 		}
 
 
+		/*
+		Name of Function : <<createplant>>  Author :<<Gayathri>>  
+		Date of Creation <<15-01-2021>>
+		Purpose : <<inserting plant name master data into rd_plant table>>
+		<param name="PlantMTdata"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
+		public string createplant(PlantMTdata reasondata)
+		{
+			string plantResult = "Error";
+			try
+			{
+
+
+				using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+				{
+					if (reasondata.plantid != 0)
+					{
+						//Update reason in rd_reason based on reasonid
+						string updatequery = WMSResource.updateplantname.Replace("#plantname", "'" + reasondata.plantname + "'").Replace("#createdby", "'" + reasondata.createdby + "'");
+						updatequery += " where plantid = " + reasondata.plantid;
+						var result1 = pgsql.Execute(updatequery);
+
+					}
+					else
+					{
+						string insertquery = WMSResource.insertplantname;
+						pgsql.ExecuteScalar(insertquery, new
+						{
+							reasondata.plantname,
+							reasondata.createdby
+
+						});
+					}
+
+					plantResult = "Success";
+				}
+			}
+			catch (Exception ex)
+			{
+				log.ErrorMessage("PODataProvider", "createplant", ex.StackTrace.ToString());
+				return null;
+			}
+			return plantResult;
+		}
 
 		/*
 	Name of Function : <<getGPReasonData>>  Author :<<Gayathri>>  
@@ -13219,6 +13288,32 @@ namespace WMS.DAL
 
 
 		/*
+	Name of Function : <<getplantnameData>>  Author :<<Gayathri>>  
+	Date of Creation <<29-12-2019>>
+	Purpose : <<Get the list of plant names>>
+	Review Date :<<>>   Reviewed By :<<>>
+	*/
+		public async Task<IEnumerable<PlantMTdata>> getplantnameData()
+		{
+			try
+			{
+				using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+				{
+					string GPDataquery = WMSResource.getPlantnames;
+					var gpresult = await pgsql.QueryAsync<PlantMTdata>(
+					  GPDataquery, null, commandType: CommandType.Text);
+					return gpresult;
+				}
+			}
+			catch (Exception ex)
+			{
+				log.ErrorMessage("PODataProvider", "getplantnameData", ex.StackTrace.ToString());
+				return null;
+			}
+			//return objgp;
+		}
+
+		/*
 Name of Function : <<GPReasonMTDelete>>  Author :<<Gayathri>>  
 Date of Creation <<29-12-2019>>
 Purpose : <<Delete Gatepass reason>>
@@ -13240,6 +13335,42 @@ Review Date :<<>>   Reviewed By :<<>>
 					string updatequery = WMSResource.deleteGPReason.Replace("#isdelete", "'" + isdelete + "'").Replace("#deletedby", "'" + reasondata.createdby + "'");
 					updatequery += "where reasonid = " + reasondata.reasonid;
 					var result1 = pgsql.Execute(updatequery);
+
+
+					GPResult = "Success";
+				}
+			}
+			catch (Exception ex)
+			{
+				log.ErrorMessage("PODataProvider", "GPReasonMTAdd", ex.StackTrace.ToString());
+				return null;
+			}
+			return GPResult;
+		}
+
+
+		/*
+Name of Function : <<PlantnameDelete>>  Author :<<Gayathri>>  
+Date of Creation <<15-01-2021>>
+Purpose : <<Delete plant name>>
+<param name="PlantMTdata"></param>
+Review Date :<<>>   Reviewed By :<<>>
+*/
+		public string PlantnameDelete(PlantMTdata plantdata)
+		{
+			string GPResult = "Error";
+			try
+			{
+
+
+				using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+				{
+
+					//Update deletedby and deletedon columns in rd_plant table based on reasonid
+					bool isdelete = true;
+					string deleteplantnames = WMSResource.deleteplantnames.Replace("#deletedby", "'" + plantdata.createdby + "'");
+					deleteplantnames += " where plantid = " + plantdata.plantid;
+					var result1 = pgsql.Execute(deleteplantnames);
 
 
 					GPResult = "Success";
@@ -13298,7 +13429,7 @@ Review Date :<<>>   Reviewed By :<<>>
 				try
 				{
 					string materialrequestquery = WMSResource.getMatdetailsbyTransferId;
-					materialrequestquery += " where inv.transferid = '" + transferId + "' and stock.availableqty != null and stock.availableqty > 0";
+					materialrequestquery += " where inv.transferid = '" + transferId + "' and stock.availableqty is not null and stock.availableqty > 0";
 
 					if (type == "POInitiate")
 					{

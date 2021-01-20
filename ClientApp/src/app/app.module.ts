@@ -112,6 +112,7 @@ import { ReceiveMaterialComponent } from './WMS/ReceiveMaterial.component';
 //admin
 import { MaterilMasterComponent } from './WMS/Admin/Materialmaster.component';
 import { GatePassMasterComponent } from './WMS/Admin/GatePassMaster .component';
+import {PlantMasterComponent } from './WMS/Admin/PlantMaster.component';
 
 ////pages
 import { LoginComponent } from './WMS/Login.component';
@@ -212,7 +213,8 @@ import { KeyFilterModule } from 'primeng/keyfilter';
     MaterilMasterComponent,
     GatePassMasterComponent,
     ReceiveSTORequestComponent,
-    ReceiveMaterialComponent
+    ReceiveMaterialComponent,
+    PlantMasterComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

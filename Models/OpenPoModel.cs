@@ -300,6 +300,18 @@ namespace WMS.Models
 		public string type { get; set; }
 	}
 
+	public class PlantMTdata
+    {
+		public int plantid { get; set; }
+		public string plantname { get; set; }
+
+		public string createdby { get; set; }
+
+		public string createdon { get; set; }
+
+	}
+	
+
 	public class StockModel
 	{
 		public int inwardid { get; set; }
@@ -1345,7 +1357,7 @@ public class STORequestdata
 	public string status { get; set; }
 	public List<STOrequestTR> materialdata { get; set; }
 
-
+	public string remarks { get; set; }
 
 }
 

@@ -275,11 +275,16 @@ namespace WMS.Interfaces
 
 		string GPReasonMTDelete(GPReasonMTData data);
 
+		string createplant(PlantMTdata data);
+
 		Task<IEnumerable<GPReasonMTData>> getGPReasonData();
-string generateLabel(string labeldata);
+		string generateLabel(string labeldata);
 		Task<IEnumerable<invstocktransfermodel>> getSTORequestList();
 		Task<IEnumerable<STOIssueModel>> getMatdetailsbyTransferId(string transferId,string type);
 		Task<string> STOPOInitiate(List<STOIssueModel> data);
+
+		Task<IEnumerable<PlantMTdata>> getplantnameData();
+		string PlantnameDelete(PlantMTdata data);
 
 	}
 }

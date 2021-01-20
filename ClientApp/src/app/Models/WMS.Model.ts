@@ -634,6 +634,7 @@ export class STORequestdata {
   destinationplant: string;
   showtr: boolean = false;
   status: string;
+  remarks: string;
   materialdata: STOrequestTR[] = [];
 }
 
@@ -986,6 +987,13 @@ export class GPReasonMTdata {
   createdby: string;
   createddate: any;
   reasonid: any;
+}
+
+export class PlantMTdata {
+  plantid: any;
+  plantname: string;
+  createdby: string;
+  createdon: any;
 }
 
 export class inventoryFilters {

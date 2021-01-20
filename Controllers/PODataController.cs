@@ -1290,6 +1290,13 @@ namespace WMS.Controllers
 
 		}
 
+		[HttpPost("createplant")]
+		public string createplant(PlantMTdata data)
+		{
+			return this._poService.createplant(data);
+
+		}
+
 		[HttpPost("GPReasonMTDelete")]
 		public string GPReasonMTDelete(GPReasonMTData data)
 		{
@@ -1301,6 +1308,20 @@ namespace WMS.Controllers
 		public async Task<IEnumerable<GPReasonMTData>> getGPReasonData()
 		{
 			return await this._poService.getGPReasonData();
+
+		}
+		
+		[HttpPost("PlantnameDelete")]
+		public string PlantnameDelete(PlantMTdata data)
+		{
+			return this._poService.PlantnameDelete(data);
+
+		}
+
+		[HttpGet("getplantnameData")]
+		public async Task<IEnumerable<PlantMTdata>> getplantnameData()
+		{
+			return await this._poService.getplantnameData();
 
 		}
 

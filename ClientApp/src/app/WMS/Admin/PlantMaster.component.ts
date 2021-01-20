@@ -6,21 +6,21 @@ import { constants } from '../../Models/WMSConstants';
 import { Employee, DynamicSearchResult, searchList } from '../../Models/Common.Model';
 import { NgxSpinnerService } from "ngx-spinner";
 import { MessageService } from 'primeng/api';
-import { GPReasonMTdata } from '../../Models/WMS.Model';
+import { GPReasonMTdata, PlantMTdata } from '../../Models/WMS.Model';
 import { ConfirmationService } from 'primeng/api';
 
 @Component({
-  selector: 'app-GatePassMaster',
-  templateUrl: './GatePassMaster.component.html'
+  selector: 'app-PlantMaster',
+  templateUrl: './PlantMaster.component.html'
 })
-export class GatePassMasterComponent implements OnInit {
+export class PlantMasterComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder, private ConfirmationService: ConfirmationService, private messageService: MessageService, private wmsService: wmsService, private route: ActivatedRoute, private router: Router, public constants: constants, private spinner: NgxSpinnerService) { }
 
   public employee: Employee;
-  public GPData= new GPReasonMTdata();
+  public plantData = new PlantMTdata();
   displaygpDialog: boolean = false;
-  GPreasonList: Array<GPReasonMTdata> = [];
+  plantList: Array<PlantMTdata> = [];
   displaygpeditDialog: boolean = false;
 
 
@@ -30,11 +30,10 @@ export class GatePassMasterComponent implements OnInit {
     else
       this.router.navigateByUrl("Login");
 
-    this.getreasonlist();
+    this.getplantnamelist();
   }
 
   opengpDialogue() {
-    this.GPreasonList = [];
     this.displaygpDialog = true;
   }
 
@@ -42,30 +41,30 @@ export class GatePassMasterComponent implements OnInit {
     this.displaygpDialog = false;
   }
 
-  //Get the list of reasons added for Gatepass
-  getreasonlist() {
-    this.wmsService.getGPReasonData().subscribe(data => {
-      this.GPreasonList = data;
+  //Get the list of plant names
+  getplantnamelist() {
+    this.wmsService.getplantnameData().subscribe(data => {
+      this.plantList = data;
     });
   }
 
-  onReasonSubmit() {
-    if (!this.GPData.reason) {
-      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Enter GP Reason' });
+  onplantnameSubmit() {
+    if (!this.plantData.plantname) {
+      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Enter Plant Name' });
       return;
     }
-    this.GPData.createdby = this.employee.employeeno;
+    this.plantData.createdby = this.employee.employeeno;
     this.spinner.show();
-    this.wmsService.GPReasonAdd(this.GPData).subscribe(data => {
+    this.wmsService.createplant(this.plantData).subscribe(data => {
       debugger;
       this.spinner.hide();
       this.displaygpDialog = false;
       if (data =="Success") {
-        this.messageService.add({ severity: 'success', summary: '', detail: 'GP Reason added successfully' });
-        this.getreasonlist();
+        this.messageService.add({ severity: 'success', summary: '', detail: 'New Plant created successfully' });
+        this.getplantnamelist();
       }
       else {
-        this.messageService.add({ severity: 'error', summary: '', detail: 'Error while adding GP Reason' });
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Error while creating new plant' });
       }
 
     });
@@ -74,31 +73,32 @@ export class GatePassMasterComponent implements OnInit {
   editreason(reason: any) {
     debugger;
     this.displaygpeditDialog = true;
-    this.GPData.reasonid = reason.reasonid;
-    this.GPData.reason = reason.reason;
+    this.plantData.plantid = reason.plantid;
+    this.plantData.plantname = reason.plantname;
+ 
   }
 
-  deletereason(reason:any) {
-    this.GPData.reasonid = reason.reasonid;
-    this.GPData.reason = reason.reason;
-    this.GPData.createdby = this.employee.employeeno;
+  deletereason(reason: any) {
+    this.plantData.plantid = reason.plantid;
+    this.plantData.plantname = reason.plantname;
+    this.plantData.createdby = this.employee.employeeno;
     this.ConfirmationService.confirm({
-      message: 'Are you sure you want to delete this GP Reason '+reason.reason,
+      message: 'Are you sure you want to delete this plant name:' + reason.plantname,
       header: 'Confirmation',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
 
         this.spinner.show();
-        this.wmsService.GPReasonDelete(this.GPData).subscribe(data => {
+        this.wmsService.PlantnameDelete(this.plantData).subscribe(data => {
           debugger;
           this.spinner.hide();
           this.displaygpDialog = false;
           if (data == "Success") {
-            this.messageService.add({ severity: 'success', summary: '', detail: 'GP Reason Deleted successfully' });
-            this.getreasonlist();
+            this.messageService.add({ severity: 'success', summary: '', detail: 'Plant Deleted successfully' });
+            this.getplantnamelist();
           }
           else {
-            this.messageService.add({ severity: 'error', summary: '', detail: 'Error while Deleting GP Reason' });
+            this.messageService.add({ severity: 'error', summary: '', detail: 'Error while Deleting Plant' });
           }
 
         });
@@ -118,23 +118,23 @@ export class GatePassMasterComponent implements OnInit {
     this.displaygpeditDialog = false;
   }
 
-  onReasonUpdate(GPData: any) {
-    if (!this.GPData.reason) {
-      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Enter GP Reason' });
+  onReasonUpdate(plantData: any) {
+    if (!this.plantData.plantname) {
+      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Enter Plant Name' });
       return;
     }
-    this.GPData.createdby = this.employee.employeeno;
+    this.plantData.createdby = this.employee.employeeno;
     this.spinner.show();
-    this.wmsService.GPReasonAdd(this.GPData).subscribe(data => {
+    this.wmsService.createplant(this.plantData).subscribe(data => {
       debugger;
       this.spinner.hide();
       this.displaygpeditDialog = false;
       if (data == "Success") {
-        this.messageService.add({ severity: 'success', summary: '', detail: 'GP Reason Updated successfully' });
-        this.getreasonlist();
+        this.messageService.add({ severity: 'success', summary: '', detail: 'Plant name Updated successfully' });
+        this.getplantnamelist();
       }
       else {
-        this.messageService.add({ severity: 'error', summary: '', detail: 'Error while Updating GP Reason' });
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Error while Updating Plant name' });
       }
 
     });

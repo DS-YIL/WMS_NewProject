@@ -1700,7 +1700,7 @@ stocktype=@stocktype,unitprice=@unitprice,hsncode=@hsncode where material ='#mat
     <comment>BG: To get unit price details from po materials table </comment>
   </data>
   <data name="getMatdetailsbyTransferId" xml:space="preserve">
-    <value>select max(inv.id) as id,inv.transferid, inv.materialid , Max(stock.poitemdescription ) as poitemdescription ,sum(inv.transferqty) as transferqty,
+    <value>select max(inv.id) as id,inv.transferid, inv.materialid , Max(stock.poitemdescription ) as poitemdescription, max(inv.transferqty) as transferqty,
 sum(stock.availableqty) as availableqty,sum( matiss.issuedqty ) as issuedqty
 from wms.wms_invtransfermaterial inv
 left outer join wms.wms_stock stock on inv.materialid = stock.materialid 
@@ -1740,7 +1740,7 @@ SUM(sk.unitprice * sk.availableqty) as materialcost,sk.poitemdescription  as mat
 from wms.wms_stock  sk 
 where sk.availableqty &gt; 0  group by sk.materialid,sk.poitemdescription</value>
   </data>
-   <data name="getSTORequestlist" xml:space="preserve">
+  <data name="getSTORequestlist" xml:space="preserve">
     <value>select * from wms.wms_invstocktransfer where transfertype='STO'</value>
   </data>
   <data name="insertinvtransfermaterialSTO" xml:space="preserve">
@@ -1750,5 +1750,16 @@ values (@transferid,@materialid,@transferqty,@projectid,@requireddate,@poitemdes
   <data name="STOrequestedmatdetails" xml:space="preserve">
     <value>select * from wms.wms_invtransfermaterial where transferid = '#transferid'</value>
   </data>
-
+  <data name="deleteplantnames" xml:space="preserve">
+    <value>update wms.wms_rd_Plant set  deletedon =current_date ,deletedby =#deletedby</value>
+  </data>
+  <data name="getPlantnames" xml:space="preserve">
+    <value>select * from wms.wms_rd_Plant where  deletedby is null</value>
+  </data>
+  <data name="insertplantname" xml:space="preserve">
+    <value>insert into wms.wms_rd_Plant(plantid ,plantname,createdby,createdon)values(default,@plantname,@createdby,current_timestamp)</value>
+  </data>
+  <data name="updateplantname" xml:space="preserve">
+    <value>update wms.wms_rd_Plant set plantname=#plantname, createdon =current_date ,createdby =#createdby</value>
+  </data>
 </root>
