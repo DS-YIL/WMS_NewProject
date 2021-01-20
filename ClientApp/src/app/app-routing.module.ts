@@ -172,8 +172,7 @@ const routes: Routes = [{
     { path: "GatePassMaster", component: GatePassMasterComponent, canActivate: [AuthGuard] },
     { path: "ReceiveSTORequest", component: ReceiveSTORequestComponent, canActivate: [AuthGuard] },
     { path: "ReceiveMaterial", component: ReceiveMaterialComponent, canActivate: [AuthGuard] },
-    { path: "PlantMaster", component: PlantMasterComponent, canActivate:[AuthGuard] }
-
+    { path: "PlantMaster", component: PlantMasterComponent, canActivate:[AuthGuard] },
     { path: "InitialStockPutAway", component: InitialStockPutAwayComponent, canActivate: [AuthGuard] }
 
   ]

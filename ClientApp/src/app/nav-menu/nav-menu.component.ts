@@ -577,7 +577,7 @@ export class NavMenuComponent implements OnInit {
             { label: 'Receipt Put Away', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/WarehouseIncharge') },
             { label: 'Initial Stock Put Away', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/InitialStockPutAway') },
             { label: 'Material Return Put Away', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReturn') },
-            { label: 'STO Material Put Away', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars' }
+            { label: 'STO Material Put Away', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/ReceiveSTORequest') }
           ]
         },
         { label: 'Notify to finance', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/Putawaynotify') }
@@ -753,7 +753,7 @@ export class NavMenuComponent implements OnInit {
             { label: 'Receipt Put Away', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/WarehouseIncharge') },
             { label: 'Initial Stock Put Away', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/InitialStockPutAway') },
             { label: 'Material Return Put Away', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReturn') },
-            { label: 'STO Material Put Away', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars' }
+            { label: 'STO Material Put Away', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/ReceiveSTORequest') }
           ]
         },
         { label: 'Notify to finance', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/Putawaynotify') }
@@ -839,7 +839,7 @@ export class NavMenuComponent implements OnInit {
             { label: 'Receipt Put Away', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/WarehouseIncharge') },
             { label: 'Initial Stock Put Away', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/InitialStockPutAway') },
             { label: 'Material Return Put Away', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReturn') },
-            { label: 'STO Material Put Away', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars' }
+            { label: 'STO Material Put Away', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/ReceiveSTORequest') }
           ]
         },
         { label: 'Notify to finance', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/Putawaynotify') }
@@ -1229,7 +1229,7 @@ export class NavMenuComponent implements OnInit {
               { label: 'Receipt Put Away', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/WarehouseIncharge') },
               { label: 'Initial Stock Put Away', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/InitialStockPutAway') },
               { label: 'Material Return Put Away', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReturn') },
-              { label: 'STO Material Put Away', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars' }
+              { label: 'STO Material Put Away', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/ReceiveSTORequest') }
             ]
           },
           { label: 'Notify to finance', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/Putawaynotify') }
@@ -1349,7 +1349,7 @@ export class NavMenuComponent implements OnInit {
               { label: 'Receipt Put Away', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/WarehouseIncharge') },
               { label: 'Initial Stock Put Away', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/InitialStockPutAway') },
               { label: 'Material Return Put Away', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReturn') },
-              { label: 'STO Material Put Away', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars' }
+              { label: 'STO Material Put Away', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/ReceiveSTORequest') }
             ]
           },
           { label: 'Notify to finance', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/Putawaynotify') }
@@ -1520,7 +1520,7 @@ export class NavMenuComponent implements OnInit {
               { label: 'Receipt Put Away', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/WarehouseIncharge') },
               { label: 'Initial Stock Put Away', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/InitialStockPutAway') },
               { label: 'Material Return Put Away', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReturn') },
-              { label: 'STO Material Put Away', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars' }
+              { label: 'STO Material Put Away', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/ReceiveSTORequest') }
             ]
           },
           { label: 'Notify to finance', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/Putawaynotify') }
@@ -1600,7 +1600,7 @@ export class NavMenuComponent implements OnInit {
               { label: 'Receipt Put Away', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/WarehouseIncharge') },
               { label: 'Initial Stock Put Away', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/InitialStockPutAway') },
               { label: 'Material Return Put Away', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReturn') },
-              { label: 'STO Material Put Away', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars' }
+              { label: 'STO Material Put Away', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/ReceiveSTORequest') }
             ]
           },
           { label: 'Notify to finance', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/Putawaynotify') }

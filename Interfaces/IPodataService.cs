@@ -71,8 +71,6 @@ namespace WMS.Interfaces
 
 		string UpdateStockTransfer(List<StockModel> data);
 		string InsertStockIS(initialStock data);
-		string UpdateStockTransfer(List<StockModel> data);
-
 		string InvStockTransfer(invstocktransfermodel data);
 
 		System.Data.DataTable GetListItems(DynamicSearchResult result);

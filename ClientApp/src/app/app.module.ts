@@ -215,7 +215,7 @@ import { KeyFilterModule } from 'primeng/keyfilter';
     GatePassMasterComponent,
     ReceiveSTORequestComponent,
     ReceiveMaterialComponent,
-    PlantMasterComponent
+    PlantMasterComponent,
     ReceiveSTORequestComponent,
     InitialStockPutAwayComponent
   ],
