@@ -107,11 +107,13 @@ import { InhandMaterialComponent } from './WMS/InhandMaterial.component';
 import { MiscellanousIssueComponent } from './WMS/MiscellanousIssues.component';
 import { MiscellanousReceiptsComponent } from './WMS/MiscellanousReceipts.component';
 import { ReceiveSTORequestComponent } from './WMS/ReceiveSTORequest.component';
+import { ReceiveMaterialComponent } from './WMS/ReceiveMaterial.component';
 import { InitialStockPutAwayComponent } from './WMS/InitialStockPutAway.component';
 
 //admin
 import { MaterilMasterComponent } from './WMS/Admin/Materialmaster.component';
 import { GatePassMasterComponent } from './WMS/Admin/GatePassMaster .component';
+import {PlantMasterComponent } from './WMS/Admin/PlantMaster.component';
 
 ////pages
 import { LoginComponent } from './WMS/Login.component';
@@ -211,6 +213,9 @@ import { KeyFilterModule } from 'primeng/keyfilter';
     MiscellanousReceiptsComponent,
     MaterilMasterComponent,
     GatePassMasterComponent,
+    ReceiveSTORequestComponent,
+    ReceiveMaterialComponent,
+    PlantMasterComponent
     ReceiveSTORequestComponent,
     InitialStockPutAwayComponent
   ],

@@ -28,6 +28,7 @@ export class SecurityHomeComponent implements OnInit {
   public PoDetails: PoDetails;
   public Poinvoicedetails: PoDetails;
   public employee: Employee;
+  public inwmasterid: string;
   public pono: any = "";
   public showDetails; disSaveBtn; showPoList: boolean = false;
   showreceivedPoList: boolean = false;
@@ -397,21 +398,23 @@ export class SecurityHomeComponent implements OnInit {
       }
       this.wmsService.insertbarcodeandinvoiceinfo(this.BarcodeModel).subscribe(data => {
         this.spinner.hide();
+        debugger;
+        this.PrintHistoryModel = data;
         this.clicked = false;
-        if (data == "0") {
+        if (this.PrintHistoryModel.result == "0") {
           this.messageService.add({ severity: 'error', summary: '', detail: 'Something went wrong' });
         }
-        else if (data == "2") {
+        else if (this.PrintHistoryModel.result  == "2") {
           this.messageService.add({ severity: 'error', summary: '', detail: 'Invoice for this PO already received' });
           this.showPrintBtn = true;
           this.print = "Print Barcode";
         }
-        else if (data == "3") {
+        else if (this.PrintHistoryModel.result  == "3") {
           this.messageService.add({ severity: 'error', summary: '', detail: 'Invoice for this PO already received' });
           this.showPrintBtn = true;
           this.print = "Re-Print Barcode";
         }
-        else if (String(data).startsWith("Error")) {
+        else if (String(this.PrintHistoryModel.result).startsWith("Error")) {
           this.messageService.add({ severity: 'error', summary: '', detail: data });
           this.getcurrentDateReceivedPOlist();
 
@@ -422,6 +425,7 @@ export class SecurityHomeComponent implements OnInit {
             this.uploadnonpodoc(data);
           }
           this.disSaveBtn = true;
+          this.inwmasterid = this.PrintHistoryModel.inwmasterid;
           //this.refresh();
           this.messageService.add({ severity: 'success', summary: '', detail: 'Invoice No. Updated' });
           this.print = "Print Barcode";
@@ -440,6 +444,8 @@ export class SecurityHomeComponent implements OnInit {
   //print barcode for created invoice
 
   printbarcode() {
+    this.spinner.show();
+    debugger;
     if (this.searchdata) {
       var po_invoiceNo = this.searchdata + "_" + this.Poinvoicedetails.invoiceno;
     }
@@ -447,17 +453,35 @@ export class SecurityHomeComponent implements OnInit {
       var po_invoiceNo = this.pono + "_" + this.Poinvoicedetails.invoiceno;
     }
     
-    this.PrintHistoryModel = new PrintHistoryModel();
+    //this.PrintHistoryModel = new PrintHistoryModel();
     this.PrintHistoryModel.reprintedby = this.employee.employeeno;
-    this.PrintHistoryModel.po_invoice = po_invoiceNo;
-    if (this.searchdata != null && this.searchdata != "") {
-      this.PrintHistoryModel.pono = this.searchdata;
-    }
-    else {
-      this.PrintHistoryModel.pono = this.pono;
-    }
+    //this.PrintHistoryModel.po_invoice = po_invoiceNo;
 
-    this.PrintHistoryModel.invoiceNo = this.Poinvoicedetails.invoiceno;
+    //if (this.multiplepo == true) {
+    // // this.PrintHistoryModel.pono = this.selectedPOs;
+    //}
+    //else {
+    //  this.PrintHistoryModel.pono = this.PoDetails.pono;
+    //}
+
+    ////this.PrintHistoryModel.asnno = this.PoDetails.asnno;
+    ////this.PrintHistoryModel.departmentid = this.PoDetails.departmentid;
+    ////this.PrintHistoryModel.inwardremarks = this.nonporemarks;
+    //this.PrintHistoryModel.vehicleno = this.Poinvoicedetails.vehicleno;
+    //this.PrintHistoryModel.transporterdetails = this.transportdetails;
+    //this.PrintHistoryModel.gateentrytime = this.PoDetails.vendorname;
+
+
+
+    //if (this.searchdata != null && this.searchdata != "") {
+    //  this.PrintHistoryModel.pono = this.searchdata;
+    //}
+    //else {
+    //  this.PrintHistoryModel.pono = this.pono;
+    //}
+
+    //this.PrintHistoryModel.invoiceNo = this.Poinvoicedetails.invoiceno;
+
     this.wmsService.printBarcode(this.PrintHistoryModel).subscribe(data => {
       this.spinner.hide();
       debugger;
@@ -475,7 +499,7 @@ export class SecurityHomeComponent implements OnInit {
         
       }
       else {
-        this.messageService.add({ severity: 'success', summary: '', detail: 'Error while printing QRCode' });
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Error while printing QRCode' });
       }
       
       //if (data)

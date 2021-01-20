@@ -24,13 +24,13 @@
             <p-button icon="fa fa-user-plus" label="Create Stock Transfer" (click)="Showadd()" *ngIf="!addprocess"></p-button>
             <p-button icon="fa fa-arrow-left" label="Back" (click)="Showlist()" *ngIf="addprocess"></p-button>
             &nbsp;&nbsp;&nbsp;<label class="labelheading" *ngIf="addprocess">Source Plant:&nbsp;</label>
-            &nbsp;&nbsp;&nbsp;<select class="form-control" [(ngModel)]="mainmodel.sourceplant" *ngIf="addprocess">
+            &nbsp;&nbsp;&nbsp;<select class="form-control" (change)="plantchange()" [(ngModel)]="mainmodel.sourceplant" *ngIf="addprocess">
               <option value="">Select plant</option>
               <option value="Plant1">Plant 1</option>
               <option value="Plant2">Plant 2</option>
             </select>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label class="labelheading" *ngIf="addprocess">Destination Plant:&nbsp;</label>
-            &nbsp;&nbsp;&nbsp;<select class="form-control" [(ngModel)]="mainmodel.destinationplant" *ngIf="addprocess">
+            &nbsp;&nbsp;&nbsp;<select class="form-control" (change)="plantchange()" [(ngModel)]="mainmodel.destinationplant" *ngIf="addprocess">
               <option value="">Select plant</option>
               <option value="Plant1">Plant 1</option>
               <option value="Plant2">Plant 2</option>
@@ -77,37 +77,52 @@
               <ng-template pTemplate="header">
                 <tr class="mprltbldata">
                   <th style="text-align:center;width:5%;">Sl.No.</th>
-                  <th style="text-align:center;width:15%;">Material</th>
-                  <th style="text-align:center;">Material Description</th>
-                  <th style="text-align:center;width:18%;">Source Location</th>
-                  <th style="text-align:center;width:18%;">Destination Location</th>
-                  <th style="text-align:center;width:9%;">Transfer Qty</th>
-                  <th style="text-align:center;width:15%;">
-                    <p-button icon="fa fa-user-plus" label="Add Material" (click)="addrows()" *ngIf="addprocess"></p-button>
+                  <th style="text-align:center;width:18%;">Material</th>
+                  <th style="text-align:center;">Item PO Description</th>
+                  <th *ngIf="!displaySTO" style="text-align:center;width:18%;">Source Location</th>
+                  <th *ngIf="!displaySTO" style="text-align:center;width:18%;">Destination Location</th>
+                  <th style="text-align:center;width:7%;">Transfer Qty</th>
+                  <th *ngIf="displaySTO" style="text-align:center;width:18%;">Project</th>
+                  <th *ngIf="displaySTO" style="text-align:center;width:18%;">Required Date</th>
+                  <th style="text-align:center;width:5%;">
+                    <p-button icon="fa fa-user-plus" pTooltip="Add Material" (click)="addrows()" *ngIf="addprocess"></p-button>
                   </th>
                 </tr>
               </ng-template>
               <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
                 <tr>
                   <td class="ptable-cell" style="text-align: center; width: 5%;">{{ri+1}}</td>
-                  <td class="ptable-cell" style="text-align:center;width:15%;">
-                    <p-dropdown [options]="combomaterial" appendTo="body" [style]="{'width':'100%'}" [filter]="true" (onChange)="setdescription($event,rowData,ri)" placeholder="Select material" optionLabel="material"></p-dropdown>
+                  <td class="ptable-cell" style="text-align:center;width:18%;">
+                    <!--<p-dropdown [options]="combomaterial" appendTo="body" [style]="{'width':'100%'}" [filter]="true" (onChange)="setdescription($event,rowData,ri)" placeholder="Select material" optionLabel="material"></p-dropdown>-->
+
+                    <p-autoComplete [(ngModel)]="rowData.materialid" placeholder="search by code" type="text" appendTo="body" [forceSelection]="true" (onSelect)="onMaterialSelected1($event, rowData,ri)" [suggestions]="filteredmats" (completeMethod)="filtermats($event,rowData)" [size]="20"
+                                    [dropdown]="true"></p-autoComplete>
                   </td>
                   <td class="ptable-cell" style="text-align:left;">
-                    <span>{{rowData.materialdescription}}</span>
+                    <p-autoComplete [(ngModel)]="rowData.materialdescription" placeholder="search by description" type="text" appendTo="body" [forceSelection]="true" (onSelect)="onDescriptionSelected(rowData,ri)" [suggestions]="filteredmatdesc" (completeMethod)="filtermatdescs($event,rowData)" [size]="40"
+                                    [dropdown]="true"></p-autoComplete>
+
+                    <!--<span>{{rowData.materialdescription}}</span>-->
                   </td>
-                  <td class="ptable-cell" style="text-align:center;width:18%;">
+                  <td *ngIf="!displaySTO" class="ptable-cell" style="text-align:center;width:18%;">
                     <p-autoComplete id="sc_{{ri+1}}" [(ngModel)]="rowData.sourcelocation" [suggestions]="matlocationsearch" placeholder="Hint: type location" [forceSelection]="true" (onSelect)="onSelectsource(rowData)" appendTo="body" (completeMethod)="search1($event,rowData,ri)" [dropdown]="true"></p-autoComplete>
                     <!--<i class="fa fa-location-arrow" style="color:blue;float:right" pTooltip="set picking location" (click)="showmateriallocationList(rowData.materialid,ri+1,ri)" aria-hidden="true"></i>-->
                   </td>
-                  <td class="ptable-cell" style="text-align:center;width:18%;">
+                  <td *ngIf="!displaySTO" class="ptable-cell" style="text-align:center;width:18%;">
                     <p-autoComplete id="dt_{{ri+1}}" [(ngModel)]="rowData.destinationlocation" [suggestions]="results1" placeholder="Hint: type location" [forceSelection]="true" (onSelect)="onSelectdest(rowData)" appendTo="body" (completeMethod)="search($event)" [dropdown]="true"></p-autoComplete>
                     <!--<i class="fa fa-location-arrow" style="color:blue;float:right" pTooltip="Add Location" (click)="settransferloction(rowData,ri)" aria-hidden="true"></i>-->
                   </td>
-                  <td class="ptable-cell" style="text-align:right;width:9%;">
-                    <input pInputText type="number" style="text-align:right" class="form-control" [min]="0" [(ngModel)]="rowData.transferqty" (change)="setqty(rowData)">
+                  <td class="ptable-cell" style="text-align:right;width:7%;">
+                    <input pInputText type="number" style="text-align:right" class="form-control" [min]="0" [(ngModel)]="rowData.transferqty" >
                   </td>
-                  <td style="text-align:center;width:15%;">
+                  <td *ngIf="displaySTO" class="ptable-cell" style="text-align:right;width:18%;">
+                    <input pInputText type="text" style="text-align:right" class="form-control" [min]="0" [(ngModel)]="rowData.projectid" >
+                  </td>
+                  <td *ngIf="displaySTO" class="ptable-cell" style="text-align:right;width:18%;">
+                    <!--<p-calendar class="mprldatepick" [(ngModel)]="materialistModel.requireddate" dateFormat="dd/mm/yy" [monthNavigator]="true" [yearNavigator]="true" yearRange="1900:2050"></p-calendar>-->
+                    <input pInputText type="date" style="text-align:right" class="form-control" [min]="0" [(ngModel)]="rowData.requireddate" >
+                  </td>
+                  <td style="text-align:center;width:5%;">
                     <button (click)="deleteRow(ri)" class="btn btn-danger" style="margin-top:10%"><i class="fa fa-trash"></i></button>
                   </td>
 
@@ -177,7 +192,7 @@
                   <th style="    text-align: center; width: 20%;background-color: #9ba5af !important;">Source location</th>
                   <th style="    text-align: center;width: 20%;background-color: #9ba5af!important">Destination Location</th>
                   <th style="    text-align: center; width: 10%;
-    background-color: #9ba5af!important">Transfer Qty</th>
+       background-color: #9ba5af!important">Transfer Qty</th>
                 </tr>
               </ng-template>
               <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
@@ -228,11 +243,19 @@
 
 
       </div>
-      <div class="card-footer" *ngIf="addprocess">
-        
-        <button type="button" class="btn btn-success" style="margin-left:45%" (click)="onsubmit1()">Submit</button>
+      <div class="row col-lg-12 col-md-12 col-sm-12 pt-2 card-footer" *ngIf="addprocess">
+        <div class="col-lg-4 col-md-4 col-sm-4">
+          <!--<label>Remarks:</label>-->
+        </div>
+        <!--<div class="col-lg-6 col-md-6 col-sm-6 ">
+  <input [(ngModel)]="rowData.remarks" class="form-control" type="text" name="{{rowData.remarks}}" />
+  </div>-->
+        <div class="col-lg-4 col-md-4 col-sm-4 "><button type="button" class="btn btn-success" (click)="onsubmit1()">Submit</button></div>
+        <div class="col-lg-4 col-md-4 col-sm-4">
+        </div>
+
       </div>
-    </div>
+      </div>
       <div style="height: 5px; overflow-y: scroll">
 
         <p-dialog header="Item Location" [(visible)]="AddDialog" [contentStyle]="{'overflow-y': 'scroll', 'overflow-x': 'hidden', 'max-height': '350px','min-height':'350px'}" showEffect="fade" [modal]="true" [responsive]="true" [style]="{width: '1024px'}">

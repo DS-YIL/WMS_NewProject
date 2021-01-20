@@ -161,20 +161,23 @@ export class ReceiveSTORequestComponent implements OnInit {
       return (element.materialid != material);
     });
     var totalissuedqty = 0;
-    this.itemlocationData.forEach(item => {
-      if (item.issuedqty)
-        item.requestforissueid = this.materialissueList[this.roindex].requestforissueid;
-      item.itemreturnable = this.materialissueList[this.roindex].itemreturnable;
-      item.approvedby = this.employee.employeeno;
-      item.itemreceiverid = this.materialissueList[this.roindex].itemreceiverid;
-      item.requestid = this.materialissueList[this.roindex].transferid;
-      item.requestmaterialid = this.materialissueList[this.roindex].requestmaterialid;
-      item.requesttype = "STO";
-      totalissuedqty = totalissuedqty + (item.issuedqty);
-      this.FIFOvalues.issueqty = totalissuedqty;
-      this.itemlocationsaveData.push(item);
+    if (this.itemlocationData.length > 0) {
+      this.itemlocationData.forEach(item => {
+        if (item.issuedqty)
+          item.requestforissueid = this.materialissueList[this.roindex].requestforissueid;
+        item.itemreturnable = this.materialissueList[this.roindex].itemreturnable;
+        item.approvedby = this.employee.employeeno;
+        item.itemreceiverid = this.materialissueList[this.roindex].itemreceiverid;
+        item.requestid = this.materialissueList[this.roindex].transferid;
+        item.requestmaterialid = this.materialissueList[this.roindex].requestmaterialid;
+        item.requesttype = "STO";
+        totalissuedqty = totalissuedqty + (item.issuedqty);
+        this.FIFOvalues.issueqty = totalissuedqty;
+        this.itemlocationsaveData.push(item);
 
-    });
+      });
+    }
+    
 
     if (totalissuedqty > this.reqqty) {
       this.messageService.add({ severity: 'error', summary: '', detail: ' Issue Qty cannot exceed Requested Qty' });

@@ -278,6 +278,15 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to update wms.wms_rd_Plant set  deletedon =current_date ,deletedby =#deletedby.
+        /// </summary>
+        public static string deleteplantnames {
+            get {
+                return ResourceManager.GetString("deleteplantnames", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to delete from wms.testcrud where id = #id.
         /// </summary>
         public static string deletetestcurd {
@@ -1045,7 +1054,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select max(inv.id) as id,inv.transferid, inv.materialid , Max(stock.poitemdescription ) as poitemdescription ,sum(inv.transferqty) as transferqty,
+        ///   Looks up a localized string similar to select max(inv.id) as id,inv.transferid, inv.materialid , Max(stock.poitemdescription ) as poitemdescription, max(inv.transferqty) as transferqty,
         ///sum(stock.availableqty) as availableqty,sum( matiss.issuedqty ) as issuedqty
         ///from wms.wms_invtransfermaterial inv
         ///left outer join wms.wms_stock stock on inv.materialid = stock.materialid 
@@ -1465,6 +1474,15 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to select * from wms.wms_rd_Plant where  deletedby is null.
+        /// </summary>
+        public static string getPlantnames {
+            get {
+                return ResourceManager.GetString("getPlantnames", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to select pono,asnno from wms.wms_securityinward where inwmasterid =&apos;#inw&apos; .
         /// </summary>
         public static string getpobyinwardmasterid {
@@ -1535,7 +1553,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select print  from wms.wms_securityinward  where pono =&apos;#pono&apos;  and invoiceno =&apos;#invno&apos;.
+        ///   Looks up a localized string similar to select * from wms.wms_securityinward  where pono =&apos;#pono&apos;  and invoiceno =&apos;#invno&apos;.
         /// </summary>
         public static string getprintdetailsforinvoice {
             get {
@@ -1832,6 +1850,15 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to select * from wms.wms_invstocktransfer where transfertype=&apos;STO&apos;.
+        /// </summary>
+        public static string getSTORequestlist {
+            get {
+                return ResourceManager.GetString("getSTORequestlist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to select ts.transferid, ts.projectcode,ts.approvallevel,ts.finalapprovallevel,ts.fromprojectcode as projectcodefrom,ts.remarks as transferremarks,emp.name as transferedby,ts.createdon as transferredon,
         ///(select emp.name as projectmanager from wms.wms_project prj 
         /// left outer join wms.employee emp on prj.projectmanager = emp.employeeno
@@ -2054,8 +2081,8 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO wms.wms_barcode(barcodeid,barcode,createddate,createdby,deleteflag,pono,invoiceno)values
-        ///(DEFAULT,@barcode,@createddate,@createdby,@deleteflag,@pono,@invoiceno)returning barcodeid.
+        ///   Looks up a localized string similar to INSERT INTO wms.wms_barcode(barcodeid,barcode,createddate,createdby,deleteflag,pono,invoiceno,inwmasterid)values
+        ///(DEFAULT,@barcode,@createddate,@createdby,@deleteflag,@pono,@invoiceno,@inwmasterid)returning barcodeid.
         /// </summary>
         public static string insertbarcodedata {
             get {
@@ -2144,8 +2171,8 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to insert into wms.wms_invstocktransfer (transferredby,transferredon,transfertype,sourceplant,destinationplant,remarks)
-        ///values (@transferredby,@transferredon,@transfertype,@sourceplant,@destinationplant,@remarks) returning transferid.
+        ///   Looks up a localized string similar to insert into wms.wms_invstocktransfer (transferredby,transferredon,transfertype,sourceplant,destinationplant,remarks,status)
+        ///values (@transferredby,@transferredon,@transfertype,@sourceplant,@destinationplant,@remarks,@status) returning transferid.
         /// </summary>
         public static string insertInvStocktransfer {
             get {
@@ -2154,12 +2181,22 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to insert into wms.wms_invtransfermaterial (transferid,materialid,sourcelocation,sourceitemid,destinationlocation,destinationitemid,transferqty)
-        ///values (@transferid,@materialid,@sourcelocation,@sourceitemid,@destinationlocation,@destinationitemid,@transferqty).
+        ///   Looks up a localized string similar to insert into wms.wms_invtransfermaterial (transferid,materialid,sourcelocation,sourceitemid,destinationlocation,destinationitemid,transferqty,poitemdesc)
+        ///values (@transferid,@materialid,@sourcelocation,@sourceitemid,@destinationlocation,@destinationitemid,@transferqty,@poitemdesc).
         /// </summary>
         public static string insertinvtransfermaterial {
             get {
                 return ResourceManager.GetString("insertinvtransfermaterial", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to insert into wms.wms_invtransfermaterial (transferid,materialid,transferqty,projectid,requireddate,poitemdesc)
+        ///values (@transferid,@materialid,@transferqty,@projectid,@requireddate,@poitemdesc).
+        /// </summary>
+        public static string insertinvtransfermaterialSTO {
+            get {
+                return ResourceManager.GetString("insertinvtransfermaterialSTO", resourceCulture);
             }
         }
         
@@ -2238,6 +2275,15 @@ namespace WMS.Common {
         public static string insertmaterialreturnquery {
             get {
                 return ResourceManager.GetString("insertmaterialreturnquery", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to insert into wms.wms_rd_Plant(plantid ,plantname,createdby,createdon)values(default,@plantname,@createdby,current_timestamp).
+        /// </summary>
+        public static string insertplantname {
+            get {
+                return ResourceManager.GetString("insertplantname", resourceCulture);
             }
         }
         
@@ -2740,6 +2786,15 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to select * from wms.wms_invtransfermaterial where transferid = &apos;#transferid&apos;.
+        /// </summary>
+        public static string STOrequestedmatdetails {
+            get {
+                return ResourceManager.GetString("STOrequestedmatdetails", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
         public static string string1 {
@@ -2930,6 +2985,15 @@ namespace WMS.Common {
         public static string updateMisQty {
             get {
                 return ResourceManager.GetString("updateMisQty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to update wms.wms_rd_Plant set plantname=#plantname, createdon =current_date ,createdby =#createdby.
+        /// </summary>
+        public static string updateplantname {
+            get {
+                return ResourceManager.GetString("updateplantname", resourceCulture);
             }
         }
         

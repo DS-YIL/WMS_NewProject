@@ -1290,10 +1290,19 @@ export class HomeComponent implements OnInit {
       this.getMaterialIssueList();
       this.getgraphdata();
       this.getmonthlygraphdata();
-      this.getCardlist();
-      this.getPMCardlist();
+      if (this.userroleid == '3') {
+        this.getCardlist();
+      }
+      if (this.userroleid == '11') {
+        this.getPMCardlist();
+      }
+      if (this.userroleid == '2') {
+        this.getInvCardlist();
+      }
+     
+     
      // this.getgraphPMdata();
-      this.getInvCardlist();
+    
       this.getmonthlyIEgraphdata();
       this.getIEgraphdata();
       this.spinner.hide();

@@ -158,7 +158,7 @@ namespace WMS.Controllers
 
 
 		[HttpPost("insertbarcodeandinvoiceinfo")]
-		public string insertbardata(BarcodeModel data)
+		public PrintHistoryModel insertbardata(BarcodeModel data)
 		{
 			return this._poService.InsertBarcodeInfo(data);
 		}
@@ -272,6 +272,12 @@ namespace WMS.Controllers
 		public string insertitemdataTostock([FromBody] List<StockModel> data)
 		{
 			return this._poService.InsertStock(data);
+		}
+		
+			[HttpPost("InsertmatSTO")]
+		public string InsertmatSTO([FromBody] List<StockModel> data)
+		{
+			return this._poService.InsertmatSTO(data);
 		}
 
 		[HttpPost("updateitemlocationIS")]
@@ -1040,7 +1046,11 @@ namespace WMS.Controllers
 			return await this._poService.getdirecttransferdata(empno);
 		}
 
-
+		[HttpGet("STORequestlist")]
+		public async Task<IEnumerable<STORequestdata>> STORequestlist()
+		{
+			return await this._poService.STORequestlist();
+		}
 
 		[HttpPost("Updatetransferqty")]
 		public int Updatetransferqty([FromBody] List<IssueRequestModel> obj)
@@ -1301,6 +1311,13 @@ namespace WMS.Controllers
 
 		}
 
+		[HttpPost("createplant")]
+		public string createplant(PlantMTdata data)
+		{
+			return this._poService.createplant(data);
+
+		}
+
 		[HttpPost("GPReasonMTDelete")]
 		public string GPReasonMTDelete(GPReasonMTData data)
 		{
@@ -1312,6 +1329,20 @@ namespace WMS.Controllers
 		public async Task<IEnumerable<GPReasonMTData>> getGPReasonData()
 		{
 			return await this._poService.getGPReasonData();
+
+		}
+		
+		[HttpPost("PlantnameDelete")]
+		public string PlantnameDelete(PlantMTdata data)
+		{
+			return this._poService.PlantnameDelete(data);
+
+		}
+
+		[HttpGet("getplantnameData")]
+		public async Task<IEnumerable<PlantMTdata>> getplantnameData()
+		{
+			return await this._poService.getplantnameData();
 
 		}
 
@@ -1330,6 +1361,12 @@ namespace WMS.Controllers
 		public async Task<string> STOPOInitiate(List<STOIssueModel> data)
 		{
 			return await this._poService.STOPOInitiate(data);
+		}
+			[HttpGet("generateLabel")]
+		public string generateLabel(string labeldata)
+		{
+			return this._poService.generateLabel(labeldata);
+
 		}
 	}
 }

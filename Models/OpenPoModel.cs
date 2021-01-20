@@ -145,14 +145,18 @@ namespace WMS.Models
 		public string soldto { get; set; }
 
 		public string lineitemno { get; set; }
-		public string partno { get; set; }
+		public string partno { get;set; }
 		public string custpo { get; set; }
 		public string codetype { get; set; }
 		public string materialbarcode { get; set; }
+		public string orderbarcode { get; set; }
 		public string soiembarcode { get; set; }
 		public string plantbarcode { get; set; }
 		public string linkagebarcode { get; set; }
-		public string spbarcode { get; set; }
+		public string spbarcode { get; set; } 
+		public string grbarcode { get; set; }
+
+
 
 
 	}
@@ -180,6 +184,7 @@ namespace WMS.Models
 		public string Materialdescription { get; set; }
 		public POList[] polist { get; set; }
 
+		public bool print { get; set; }
 		public string suppliername { get; set; }
 		public string asnno { get; set; }
 		public string inwardremarks { get; set; }
@@ -296,6 +301,18 @@ namespace WMS.Models
 		public int reasonid { get; set; }
 		public string type { get; set; }
 	}
+
+	public class PlantMTdata
+    {
+		public int plantid { get; set; }
+		public string plantname { get; set; }
+
+		public string createdby { get; set; }
+
+		public string createdon { get; set; }
+
+	}
+	
 
 	public class StockModel
 	{
@@ -1236,6 +1253,9 @@ public class invstocktransfermodel
 	public string destinationplant { get; set; }
 	public string remarks { get; set; }
 	public List<stocktransfermateriakmodel> materialdata { get; set; }
+	public string projectid { get; set; }
+	public DateTime requireddate { get; set; }
+	public string status { get; set; }
 }
 
 public class stocktransfermateriakmodel
@@ -1244,7 +1264,7 @@ public class stocktransfermateriakmodel
 	public string transferid { get; set; }
 	public int itemid { get; set; }
 	public string materialid { get; set; }
-
+	public string poitemdesc { get; set; }
 	public int binid { get; set; }
 	public int rackid { get; set; }
 	public int storeid { get; set; }
@@ -1255,6 +1275,9 @@ public class stocktransfermateriakmodel
 	public int destinationitemid { get; set; }
 	public int transferqty;
 	public string[] mlocations { get; set; }
+	public string projectid { get; set; }
+	public DateTime requireddate { get; set; }
+	public string status { get; set; }
 }
 
 public class ddlmodel
@@ -1329,6 +1352,33 @@ public class DirectTransferMain
 	public DateTime mrnon { get; set; }
 	public List<DirectTransferTR> materialdata { get; set; }
 
+}
+
+public class STORequestdata
+{
+	public string transferid { get; set; }
+	public string transferredby { get; set; }
+	public string transferredon { get; set; }
+	public string transfertype { get; set; }
+	public string sourceplant { get; set; }
+	public string destinationplant { get; set; }
+	public string status { get; set; }
+	public List<STOrequestTR> materialdata { get; set; }
+
+	public string remarks { get; set; }
+
+}
+
+public class STOrequestTR
+{
+	public string transferid { get; set; }
+	public string materialid { get; set; }
+	public string poitemdesc { get; set; }
+	public int transferqty { get; set; }
+	public string projectid { get; set; }
+	public DateTime requireddate { get; set; }
+	public string itemlocation{get;set;}
+	public int confirmqty { get; set; }
 }
 public class DirectTransferTR
 {
@@ -1461,14 +1511,18 @@ public class PrintHistoryModel
 	public string gatepassid { get; set; }
 	//public int inwmasterid { get; set; }
 	public string inwmasterid { get; set; }
-
+	public string gateentryno { get; set; }
 	public DateTime reprintedon { get; set; }
 	public string reprintedby { get; set; }
 	public int reprintcount { get; set; }
 	public int barcodeid { get; set; }
 	public string po_invoice { get; set; }
 	public string pono { get; set; }
+	public string vehicleno { get; set; }
+	public DateTime gateentrytime { get; set; }
 	public string invoiceNo { get; set; }
+	public string transporterdetails { get; set; }
+	public string result { get; set; }
 }
 
 public class materilaTrasFilterParams

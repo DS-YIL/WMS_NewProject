@@ -40,6 +40,9 @@ namespace WMS.Models
 		public string vendorname { get; set; }
 		public string projectdefinition { get; set; }
 		public int poquantity { get; set; }
+		public string dci { get; set; }
+		public int deliveredqty { get; set; }
+		public int wmsqty { get; set; }
 		public string saleorderno { get; set; }
 		public string solineitemno { get; set; }
 		public string saleordertype { get; set; }

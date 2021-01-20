@@ -159,8 +159,8 @@ where  inwmaster.pono='#pono'</value>
     <comment>Getponodetailsformaterialissue</comment>
   </data>
   <data name="insertbarcodedata" xml:space="preserve">
-    <value>INSERT INTO wms.wms_barcode(barcodeid,barcode,createddate,createdby,deleteflag,pono,invoiceno)values
-(DEFAULT,@barcode,@createddate,@createdby,@deleteflag,@pono,@invoiceno)returning barcodeid</value>
+    <value>INSERT INTO wms.wms_barcode(barcodeid,barcode,createddate,createdby,deleteflag,pono,invoiceno,inwmasterid)values
+(DEFAULT,@barcode,@createddate,@createdby,@deleteflag,@pono,@invoiceno,@inwmasterid)returning barcodeid</value>
     <comment>barcodedata insertion</comment>
   </data>
   <data name="insertinvoicedata" xml:space="preserve">
@@ -733,12 +733,12 @@ where inv.transferid = '#tid'
 group by inv.transferid, inv.materialid , inv.sourcelocation,inv.destinationlocation</value>
   </data>
   <data name="insertInvStocktransfer" xml:space="preserve">
-    <value>insert into wms.wms_invstocktransfer (transferredby,transferredon,transfertype,sourceplant,destinationplant,remarks)
-values (@transferredby,@transferredon,@transfertype,@sourceplant,@destinationplant,@remarks) returning transferid</value>
+    <value>insert into wms.wms_invstocktransfer (transferredby,transferredon,transfertype,sourceplant,destinationplant,remarks,status)
+values (@transferredby,@transferredon,@transfertype,@sourceplant,@destinationplant,@remarks,@status) returning transferid</value>
   </data>
   <data name="insertinvtransfermaterial" xml:space="preserve">
-    <value>insert into wms.wms_invtransfermaterial (transferid,materialid,sourcelocation,sourceitemid,destinationlocation,destinationitemid,transferqty)
-values (@transferid,@materialid,@sourcelocation,@sourceitemid,@destinationlocation,@destinationitemid,@transferqty)</value>
+    <value>insert into wms.wms_invtransfermaterial (transferid,materialid,sourcelocation,sourceitemid,destinationlocation,destinationitemid,transferqty,poitemdesc)
+values (@transferid,@materialid,@sourcelocation,@sourceitemid,@destinationlocation,@destinationitemid,@transferqty,@poitemdesc)</value>
   </data>
   <data name="invstocktransfermainquery" xml:space="preserve">
     <value>select inv.transferid,emp.name as transferredby,inv.transferredon,inv.transfertype,inv.sourceplant,inv.destinationplant,inv.remarks,inv.status,inv.isporequested   
@@ -1176,7 +1176,7 @@ group by gtm.materialid</value>
     <value>select * from wms.wms_barcode bar  join wms.wms_reprinthistory wr on wr.barcodeid =bar.barcodeid where bar.barcode ='#barcode'</value>
   </data>
   <data name="getprintdetailsforinvoice" xml:space="preserve">
-    <value>select print  from wms.wms_securityinward  where pono ='#pono'  and invoiceno ='#invno'</value>
+    <value>select * from wms.wms_securityinward  where pono ='#pono'  and invoiceno ='#invno'</value>
     <comment>To view whether the Invoice and PO QRcode is already printed</comment>
   </data>
   <data name="updatereprintdata" xml:space="preserve">
@@ -1699,7 +1699,7 @@ stocktype=@stocktype,unitprice=@unitprice,hsncode=@hsncode where material ='#mat
     <comment>BG: To get unit price details from po materials table </comment>
   </data>
   <data name="getMatdetailsbyTransferId" xml:space="preserve">
-    <value>select max(inv.id) as id,inv.transferid, inv.materialid , Max(stock.poitemdescription ) as poitemdescription ,sum(inv.transferqty) as transferqty,
+    <value>select max(inv.id) as id,inv.transferid, inv.materialid , Max(stock.poitemdescription ) as poitemdescription, max(inv.transferqty) as transferqty,
 sum(stock.availableqty) as availableqty,sum( matiss.issuedqty ) as issuedqty
 from wms.wms_invtransfermaterial inv
 left outer join wms.wms_stock stock on inv.materialid = stock.materialid 
@@ -1785,5 +1785,27 @@ left outer join wms.wms_rd_rack rck on rck.rackid = bin.rackid
 left outer join wms.wms_rd_locator loc on loc.locatorid = bin.locatorid
 left outer join wms.wms_stock sk  on (sk.binid = bin.binid and sk.rackid = bin.rackid and sk.storeid = bin.locatorid)
 group by bin.binid,bin.rackid,bin.locatorid,sk.materialid,sk.poitemdescription order by bin.binid asc</value>
+  </data>
+  <data name="getSTORequestlist" xml:space="preserve">
+    <value>select * from wms.wms_invstocktransfer where transfertype='STO'</value>
+  </data>
+  <data name="insertinvtransfermaterialSTO" xml:space="preserve">
+    <value>insert into wms.wms_invtransfermaterial (transferid,materialid,transferqty,projectid,requireddate,poitemdesc)
+values (@transferid,@materialid,@transferqty,@projectid,@requireddate,@poitemdesc)</value>
+  </data>
+  <data name="STOrequestedmatdetails" xml:space="preserve">
+    <value>select * from wms.wms_invtransfermaterial where transferid = '#transferid'</value>
+  </data>
+  <data name="deleteplantnames" xml:space="preserve">
+    <value>update wms.wms_rd_Plant set  deletedon =current_date ,deletedby =#deletedby</value>
+  </data>
+  <data name="getPlantnames" xml:space="preserve">
+    <value>select * from wms.wms_rd_Plant where  deletedby is null</value>
+  </data>
+  <data name="insertplantname" xml:space="preserve">
+    <value>insert into wms.wms_rd_Plant(plantid ,plantname,createdby,createdon)values(default,@plantname,@createdby,current_timestamp)</value>
+  </data>
+  <data name="updateplantname" xml:space="preserve">
+    <value>update wms.wms_rd_Plant set plantname=#plantname, createdon =current_date ,createdby =#createdby</value>
   </data>
 </root>
