@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Policy;
 using System.Threading.Tasks;
+using WMS.Models;
 
 namespace WMS.Models
 {
@@ -288,6 +289,7 @@ namespace WMS.Models
 		public string asnno { get; set; }
 		public string poitemdescription { get; set; }
 		public decimal? unitprice { get; set; }
+		public int pendingqty { get; set; }
 	}
 
 	public class GPReasonMTData
@@ -749,6 +751,7 @@ namespace WMS.Models
 	public class materialistModel
 	{
 		public string materialid { get; set; }
+		public string materialdescription { get; set; }
 		public string remarks { get; set; }
 		public int quantity { get; set; }
 		public int gatepassmaterialid { get; set; }
@@ -1179,6 +1182,10 @@ namespace WMS.Models
 		public string locatorname { get; set; }
 		public int rackid { get; set; }
 		public string racknumber { get; set; }
+
+		//for initial stock putaway
+		public int quantity { get; set; }
+       public string stocktype { get; set; }
 	}
 
 	public class Materials
@@ -1212,6 +1219,7 @@ public class safteyStockList
 {
 	public string material { get; set; }
 	public string materialdescription { get; set; }
+	public string poitemdescription { get; set; }
 	public int availableqty { get; set; }
 	public int safteystock { get; set; }
 	public int minorderqty { get; set; }
@@ -1722,6 +1730,12 @@ public class initialStock
 	public string valuestr { get; set; }
 	public string projectid { get; set; }
 	public string pono { get; set; }
+	public int? defaultstore { get; set; }
+	public int? defaultrack { get; set; }
+	public int? defaultbin { get; set; }
+	public int stockid { get; set; }
+	public List<dropdownModel> locations { get; set; }
+	public string createdby { get; set; }
 }
 public class grReports
 {

@@ -5,7 +5,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { constants } from '../Models/WMSConstants'
 import { Employee, Login, DynamicSearchResult, printMaterial, rbamaster } from '../Models/Common.Model';
-import { PoFilterParams, PoDetails, BarcodeModel, StockModel, materialRequestDetails, inwardModel, gatepassModel, stocktransfermodel, Materials, authUser, invstocktransfermodel, ddlmodel, locataionDetailsStock, updateonhold, materialistModel, outwardmaterialistModel, pageModel, UserDashboardDetail, UserDashboardGraphModel, UnholdGRModel, MRNsavemodel, notifymodel, materialtransferMain, materialReservetorequestModel, testcrud, PrintHistoryModel, materilaTrasFilterParams, materialRequestFilterParams, materialResFilterParams, materialRetFilterParams, outwardinwardreportModel, UserModel, WMSHttpResponse, MaterialinHand, matlocations, grReports, MateriallabelModel, ManagerDashboard, pmDashboardCards, invDashboardCards, GraphModelNew, miscellanousIssueData, inventoryFilters, MaterialMaster,GPReasonMTdata, materialList, PlantMTdata } from '../Models/WMS.Model';
+import { PoFilterParams, PoDetails, BarcodeModel, StockModel, materialRequestDetails, inwardModel, gatepassModel, stocktransfermodel, Materials, authUser, invstocktransfermodel, ddlmodel, locataionDetailsStock, updateonhold, materialistModel, outwardmaterialistModel, pageModel, UserDashboardDetail, UserDashboardGraphModel, UnholdGRModel, MRNsavemodel, notifymodel, materialtransferMain, materialReservetorequestModel, testcrud, PrintHistoryModel, materilaTrasFilterParams, materialRequestFilterParams, materialResFilterParams, materialRetFilterParams, outwardinwardreportModel, UserModel, WMSHttpResponse, MaterialinHand, matlocations, grReports, MateriallabelModel, ManagerDashboard, pmDashboardCards, invDashboardCards, GraphModelNew, miscellanousIssueData, inventoryFilters, MaterialMaster, GPReasonMTdata, materialList, PlantMTdata, InitialStock } from '../Models/WMS.Model';
 import { Text } from '@angular/compiler/src/i18n/i18n_ast';
 
 @Injectable({
@@ -197,6 +197,11 @@ export class wmsService {
   InsertmatSTO(StockModel: StockModel[]): Observable<any> {
     const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }), responseType: 'text' as any };
     return this.http.post<any>(this.url + 'POData/InsertmatSTO', StockModel, httpOptions);
+  }
+
+  PutawayFromInitialStock(StockModel: InitialStock): Observable<any> {
+    const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }), responseType: 'text' as any };
+    return this.http.post<any>(this.url + 'POData/updateitemlocationIS', StockModel, httpOptions);
   }
 
   Stocktransfer(StockModel: StockModel[]): Observable<any> {
@@ -478,6 +483,9 @@ export class wmsService {
   getPendingpo(): Observable<ddlmodel[]> {
     return this.http.get<ddlmodel[]>(this.url + 'POData/getpendingpos/', this.httpOptions);
   }
+  getPendingFilesforIS(): Observable<ddlmodel[]> {
+    return this.http.get<ddlmodel[]>(this.url + 'POData/getInitialstockfilename/', this.httpOptions);
+  }
   getapproverdata(empid: string): Observable<any> {
     return this.http.get<any>(this.url + 'POData/getapproverList?empid=' + empid, this.httpOptions);
   }
@@ -681,6 +689,10 @@ export class wmsService {
   //Amulya
   getinitialStockLoad(): Observable<StockModel[]> {
     return this.http.get<StockModel[]>(this.url + 'POData/getinitialstockload/', this.httpOptions);
+  }
+
+  getinitialStockMaterialForPutaway(): Observable<InitialStock[]> {
+    return this.http.get<InitialStock[]>(this.url + 'POData/GetInitialStockPutawayMaterials/', this.httpOptions);
   }
 
   posttestcrud(data: testcrud): Observable<any> {

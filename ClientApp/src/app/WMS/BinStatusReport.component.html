@@ -7,10 +7,10 @@
         <div class="col-lg-4 col-md-4 form-inline">
           <div class="form-inline">
             <label class="labelheading">Status :</label>&nbsp;&nbsp;
-            <select placeholder="Status" name="Status" (change)="onSelectStatus($event)" class="form-control">
+            <select placeholder="Status" (change)="SubmitBinStatus()" class="form-control" [(ngModel)] ="selectedStatus">
               <option selected value="filled"> Filled Bin</option>
               <option value="empty"> Empty Bin</option>
-            </select>&nbsp;&nbsp; <button type="submit" class="btn btn-primary btn-sm float-left" (click)="SubmitBinStatus()" style=" height: 35px;">Submit</button>
+            </select>
           </div>
         </div>
         <div class="col-lg-4 col-md-4 text-center">
@@ -57,6 +57,7 @@
           <th></th>
           <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'binnumber', 'contains')"></th>
           <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'material', 'contains')"></th>
+          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'materialdescription', 'contains')"></th>
           <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'availableqty', 'contains')"></th>
           <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'itemlocation', 'contains')"></th>
         </tr>
@@ -68,6 +69,7 @@
           </td>
           <td class="ptable-cell" style="text-align:left">{{rowData.binnumber}}</td>
           <td class="ptable-cell" style="  text-align: left; width: 90px">{{rowData.material}}</td>
+          <td class="ptable-cell" style="  text-align: left; width: 90px">{{rowData.materialdescription}}</td>
           <td class="ptable-cell" style="text-align:right;width:250px">{{rowData.availableqty}}</td>
           <td class="ptable-cell" style="text-align:left;width:250px">{{rowData.itemlocation}}</td>
         </tr>

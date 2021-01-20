@@ -70,7 +70,7 @@ namespace WMS.Interfaces
 		string InsertmatSTO(List<StockModel> data);
 
 		string UpdateStockTransfer(List<StockModel> data);
-
+		string InsertStockIS(initialStock data);
 		string InvStockTransfer(invstocktransfermodel data);
 
 		System.Data.DataTable GetListItems(DynamicSearchResult result);
@@ -165,6 +165,8 @@ namespace WMS.Interfaces
 
 		Task<IEnumerable<invstocktransfermodel>> getstocktransferdatagroup1();
 		Task<IEnumerable<ddlmodel>> pendingreceiptslist();
+		Task<IEnumerable<ddlmodel>> getInitialstockfilename();
+		
 		Task<IEnumerable<ddlmodel>> getdepartmentmasterdata();
 		Task<IEnumerable<ddlmodel>> getgrnlistforacceptance();
 		Task<IEnumerable<ddlmodel>> getgrnlistforacceptanceputaway();
@@ -282,6 +284,7 @@ namespace WMS.Interfaces
 		Task<IEnumerable<invstocktransfermodel>> getSTORequestList();
 		Task<IEnumerable<STOIssueModel>> getMatdetailsbyTransferId(string transferId,string type);
 		Task<string> STOPOInitiate(List<STOIssueModel> data);
+		Task<IEnumerable<initialStock>> GetInitialStockPutawayMaterials();
 
 		Task<IEnumerable<PlantMTdata>> getplantnameData();
 		string PlantnameDelete(PlantMTdata data);

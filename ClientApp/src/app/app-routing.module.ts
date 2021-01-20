@@ -78,6 +78,7 @@ import { MaterilMasterComponent } from './WMS/Admin/Materialmaster.component';
 import { GatePassMasterComponent } from './WMS/Admin/GatePassMaster .component';
 import { PlantMasterComponent } from './WMS/Admin/PlantMaster.component';
 import { ReceiveSTORequestComponent } from './WMS/ReceiveSTORequest.component';
+import { InitialStockPutAwayComponent } from './WMS/InitialStockPutAway.component';
 
 const routes: Routes = [{
   path: 'WMS',
@@ -171,8 +172,8 @@ const routes: Routes = [{
     { path: "GatePassMaster", component: GatePassMasterComponent, canActivate: [AuthGuard] },
     { path: "ReceiveSTORequest", component: ReceiveSTORequestComponent, canActivate: [AuthGuard] },
     { path: "ReceiveMaterial", component: ReceiveMaterialComponent, canActivate: [AuthGuard] },
-    { path: "PlantMaster", component: PlantMasterComponent, canActivate:[AuthGuard] }
-
+    { path: "PlantMaster", component: PlantMasterComponent, canActivate:[AuthGuard] },
+    { path: "InitialStockPutAway", component: InitialStockPutAwayComponent, canActivate: [AuthGuard] }
 
   ]
 

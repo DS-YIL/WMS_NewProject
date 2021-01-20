@@ -62,6 +62,7 @@ export class GatePassComponent implements OnInit {
   public defaultuniquematerialidescs: materialList[] = [];
   filteredmats: any[];
   filteredmatdesc: any[];
+  emailgateid: string = "";
   ngOnInit() {
     if (localStorage.getItem("Employee"))
       this.employee = JSON.parse(localStorage.getItem("Employee"));
@@ -72,6 +73,8 @@ export class GatePassComponent implements OnInit {
     if (localStorage.getItem("userroles")) {
       this.userrolelist = JSON.parse(localStorage.getItem("userroles")) as userAcessNamesModel[];
     }
+    debugger;
+    this.emailgateid = this.route.snapshot.queryParams.gatepassid;
     this.getGatePassList();
     this.GatepassTxt = "Gate Pass - Request Materials"
 
@@ -86,6 +89,7 @@ export class GatePassComponent implements OnInit {
 
     //set expected date as future date
     this.mindate = new Date(new Date().setDate(new Date().getDate() + 1));
+    this.getdefaultmaterialsforgatepass();
   }
 
 
@@ -234,7 +238,7 @@ export class GatePassComponent implements OnInit {
     }
   }
 
-  getdefaultmaterialstoreserve() {
+  getdefaultmaterialsforgatepass() {
     this.defaultmaterials = []
     this.wmsService.getgatepassMaterialRequestlist().subscribe(data => {
       this.defaultmaterials = data;
@@ -288,7 +292,6 @@ export class GatePassComponent implements OnInit {
   }
 
   setdesclist(datax: materialList[]) {
-    debugger;
     var listdata = datax;
     this.defaultmaterialidescs = [];
     listdata.forEach(item => {
@@ -301,6 +304,46 @@ export class GatePassComponent implements OnInit {
       }
 
     });
+  }
+
+  filtermats(event, data: any) {
+    if (!isNullOrUndefined(data.materialdescription) && data.materialdescription != "") {
+      var senddata = this.defaultmaterials.filter(function (element, index) {
+        return (element.materialdescription == data.materialdescription);
+      });
+      this.setmatlist(senddata);
+    }
+    else {
+      this.defaultmaterialids = this.defaultuniquematerialids;
+    }
+    this.filteredmats = [];
+    for (let i = 0; i < this.defaultmaterialids.length; i++) {
+      let brand = this.defaultmaterialids[i].material;
+      if (brand.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+        this.filteredmats.push(brand);
+      }
+
+    }
+  }
+
+  filtermatdescs(event, data: any) {
+    if (!isNullOrUndefined(data.materialid) && data.materialid != "") {
+      var senddata = this.defaultmaterials.filter(function (element, index) {
+        return (element.material == data.materialid);
+      });
+      this.setdesclist(senddata);
+    }
+    else {
+      this.defaultmaterialidescs = this.defaultuniquematerialidescs;
+    }
+    this.filteredmatdesc = [];
+    for (let i = 0; i < this.defaultmaterialidescs.length; i++) {
+      let pos = this.defaultmaterialidescs[i].materialdescription;
+      if (pos.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+        this.filteredmatdesc.push(pos);
+      }
+
+    }
   }
 
  
@@ -399,6 +442,7 @@ export class GatePassComponent implements OnInit {
     this.spinner.show();
     this.wmsService.getGatePassList().subscribe(data => {
       this.spinner.hide();
+      debugger;
       this.totalGatePassList = data;
       //filtering the based on logged in user if role id is 8(Admin)
       if (this.employee.roleid == "5") {
@@ -421,6 +465,10 @@ export class GatePassComponent implements OnInit {
         //debugger;
         this.gatepasslist = this.totalGatePassList;
       }
+      if (this.emailgateid) {
+        this.gatepasslist = this.gatepasslist.filter(li => li.gatepassid == this.emailgateid);
+      }
+
       this.gatepassModelList = [];
       this.prepareGatepassList();
       if (this.employee.roleid == '3' || this.employee.roleid == "4") {
@@ -669,6 +717,80 @@ export class GatePassComponent implements OnInit {
 
   }
 
+  onMaterialSelected1(data: any, ind: number) {
+    debugger;
+    if (!isNullOrUndefined(data.materialdescription) && data.materialdescription != "") {
+      var data1 = this.gatepassModel.materialList.filter(function (element, index) {
+        return (element.materialid == data.materialid && element.materialdescription == data.materialdescription && index != ind);
+      });
+      if (data1.length > 0) {
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Material already exist' });
+        this.gatepassModel.materialList[ind].materialid = "";
+        this.gatepassModel.materialList[ind].materialdescription = "";
+        this.gatepassModel.materialList[ind].materialcost = 0;
+        this.gatepassModel.materialList[ind].quantity = 0;
+        this.gatepassModel.materialList[ind].remarks = "";
+        return false;
+      }
+      var data2 = this.defaultmaterials.filter(function (element, index) {
+        return (element.material == data.materialid && element.materialdescription == data.materialdescription);
+      });
+      if (data2.length > 0) {
+        data.materialdescription = data2[0].materialdescription;
+        data.materialcost = data2[0].materialcost != null ? data2[0].materialcost : 0;
+        //data.availableqty = data2[0].availableqty != null ? data2[0].availableqty : 0;
+        
+      }
+    }
+    else {
+      var senddata = this.defaultmaterials.filter(function (element, index) {
+        return (element.material == data.materialid);
+      });
+      this.setdesclist(senddata);
+
+    }
+
+
+  }
+
+  onDescriptionSelected(data: any, ind: number) {
+    debugger;
+    if (!isNullOrUndefined(data.materialid) && data.materialid != "") {
+      var data1 = this.gatepassModel.materialList.filter(function (element, index) {
+        return (element.materialid == data.materialid && element.materialdescription == data.materialdescription && index != ind);
+      });
+      if (data1.length > 0) {
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Material already exist' });
+        this.gatepassModel.materialList[ind].materialid = "";
+        this.gatepassModel.materialList[ind].materialdescription = "";
+        this.gatepassModel.materialList[ind].materialcost = 0;
+        this.gatepassModel.materialList[ind].quantity = 0;
+        this.gatepassModel.materialList[ind].remarks = "";
+        return false;
+      }
+      var data2 = this.defaultmaterials.filter(function (element, index) {
+        return (element.material == data.materialid && element.materialdescription == data.materialdescription);
+      });
+      if (data2.length > 0) {
+        data.materialdescription = data2[0].materialdescription;
+        data.materialcost = data2[0].materialcost != null ? data2[0].materialcost : 0;
+        //data.availableqty = data2[0].availableqty != null ? data2[0].availableqty : 0;
+
+      }
+    }
+    else {
+      var senddata = this.defaultmaterials.filter(function (element, index) {
+        return (element.materialdescription == data.materialdescription);
+      });
+      this.setmatlist(senddata);
+
+    }
+
+
+  }
+
+  
+
   //update return dated based on role
   updateReturnedDate(gatepassobject: any) {
     this.gatepassModel = new gatepassModel();
@@ -786,11 +908,6 @@ export class GatePassComponent implements OnInit {
                   }
 
                 })
-              
-              //else {
-              //  this.materialistModel = { materialid: "", gatepassmaterialid: "0", materialdescription: "", quantity: 0, materialcost: "0", remarks: " ", expecteddate: this.date, returneddate: this.date, issuedqty: 0 };
-              //  this.gatepassModel.materialList.push(this.materialistModel);
-              //}
             }
             else {
               this.messageService.add({ severity: 'error', summary: '', detail: data });

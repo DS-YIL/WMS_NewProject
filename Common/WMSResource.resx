@@ -283,7 +283,7 @@ gate.*,mat.*,iss.*,ygs.* from wms.wms_gatepass gate
    left join wms.employee emp on emp.employeeno=gate.requestedby
     left join wms.employee appr on appr.employeeno=gate.approverid 
 	left join wms.employee emp1 on emp1.employeeno=gate.fmapproverid  
-   left join wms.wms_materialissue iss on iss.gatepassmaterialid = mat.gatepassmaterialid 
+   left join wms.wms_materialissue iss on (iss.requestid = mat.gatepassmaterialid and iss.requesttype = 'gatepass' )
    left join wms."MaterialMasterYGS" ygs on ygs.material=mat.materialid and mat.deleteflag=false 
    where gate.deleteflag=false   order by gate.gatepassid desc</value>
   </data>
@@ -300,8 +300,8 @@ gate.*,mat.*,iss.*,ygs.* from wms.wms_gatepass gate
     <value>select * from wms.wms_stock where availableqty &gt;=#availableqty limit 1</value>
   </data>
   <data name="insertgatepassmaterial" xml:space="preserve">
-    <value>insert into wms.wms_gatepassmaterial(gatepassmaterialid,gatepassid,materialid,quantity,deleteflag,remarks,materialcost,expecteddate,issuedqty)
-values(default,@gatepassid,@materialid,@quantity,@deleteflag,@remarks,@materialcost,@expecteddate,@issuedqty)</value>
+    <value>insert into wms.wms_gatepassmaterial(gatepassmaterialid,gatepassid,materialid,quantity,deleteflag,remarks,materialcost,expecteddate,issuedqty,poitemdescription)
+values(default,@gatepassid,@materialid,@quantity,@deleteflag,@remarks,@materialcost,@expecteddate,@issuedqty,@materialdescription)</value>
   </data>
   <data name="updategatepass" xml:space="preserve">
     <value>update wms.wms_gatepass set gatepasstype=@gatepasstype,status=@status,referenceno=@referenceno,vehicleno=@vehicleno,requestedby=@requestedby,vendorname=@vendorname,reasonforgatepass=@reasonforgatepass,remarks=@remarks  where gatepassid='#gatepassid'</value>
@@ -313,19 +313,18 @@ values(default,@gatepassid,@materialid,@quantity,@deleteflag,@remarks,@materialc
     <value>update wms.wms_gatepassmaterial set deleteflag='true' where gatepassmaterialid=#gatepassmaterialid</value>
   </data>
   <data name="getgatepassmaterialdetailList" xml:space="preserve">
-    <value>select (select sum(issuedqty) from wms.wms_materialissue  where gatepassmaterialid =material.gatepassmaterialid ) as issuedqty
-,(select sum(availableqty) from wms.wms_stock ws where materialid =stock.materialid ) as availableqty,
+    <value>select (select sum(issuedqty) from wms.wms_materialissue  where requestid =material.gatepassmaterialid and requesttype = 'gatepass' ) as issuedqty
+,(select sum(availableqty) from wms.wms_stock ws where materialid =stock.materialid ) as availableqty,Max(pass.requestedon) as requestedon,
 max(material.gatepassid ) as gatepassid,max(material.expecteddate) as expecteddate,max(material.gatepassmaterialid ) as gatepassmaterialid, max(emp."name") as name,max(pass.vendorname) as vendorname,
 max(pass.gatepasstype) as gatepasstype,max(pass.approverstatus) as approverstatus,
 max(pass.reasonforgatepass) as reasonforgatepass,max(pass.approverremarks ) as approverremarks,max(pass.fmapprovedstatus ) as fmapprovedstatus,max(pass.fmapproverremarks ) as fmapproverremarks,
-stock.materialid, max(pomat.poitemdescription )as materialdescription,max(pomat.poitemdescription ) as poitemdescription, max(material.materialcost )as materialcost,
+stock.materialid, max(material.poitemdescription )as materialdescription,max(material.poitemdescription ) as poitemdescription, max(material.materialcost )as materialcost,
 max(material.quantity ) as quantity,max(material.remarks ) as remarks from wms.wms_stock stock
 inner join wms.wms_gatepassmaterial material on material.materialid =stock.materialid 
 inner join wms.wms_gatepass pass on pass.gatepassid=material.gatepassid 
- left join wms.wms_materialissue wissue on wissue.gatepassmaterialid  = material.gatepassmaterialid 
+ left join wms.wms_materialissue wissue on (wissue.requestid  = material.gatepassmaterialid and wissue.requesttype = 'gatepass')
  inner join wms.employee emp on pass.requestedby=emp.employeeno
  left join wms."MaterialMasterYGS" ygs on ygs.material=material.materialid
- left join wms.wms_pomaterials pomat on pomat.material =material.materialid
  where pass.gatepassid='#gatepassid' and pass.deleteflag=false and material.deleteflag=false
  group by  material.gatepassmaterialid ,stock.materialid</value>
   </data>
@@ -418,8 +417,8 @@ where stockstatus='active' and sk.deleteflag=false and availableqty!=0</value>
     <value>update wms.wms_stock set availableqty=(availableqty-#issuedqty) where itemid=#itemid</value>
   </data>
   <data name="getASNList" xml:space="preserve">
-    <value>select asno.pono, asno.asn,po.suppliername as vendorname,asno.deliverydate from wms.wms_asn asno left outer join wms.wms_polist po
-on asno.pono = po.pono</value>
+    <value>select pomat.pono, pomat.asnno as asn,max(po.suppliername) as vendorname,pomat.itemdeliverydate as deliverydate from wms.wms_pomaterials pomat 
+left outer join wms.wms_polist po on pomat.pono = po.pono</value>
   </data>
   <data name="updatecyclecountconfig" xml:space="preserve">
     <value>update wms.cyclecountconfig set apercentage=@apercentage,bpercentage=@bpercentage,cpercentage=@cpercentage,cyclecount=@cyclecount,frequency=@frequency where id = #cid</value>
@@ -435,10 +434,11 @@ LINK:
 &lt;p style='margin-bottom:0px;'&gt;Regards,&lt;br/&gt; #sender&lt;/p&gt;&lt;/div&gt;&lt;/body&gt;&lt;/html&gt;</value>
   </data>
   <data name="getitemlocationList" xml:space="preserve">
-    <value>select distinct sum(sk.availableqty)as availableqty,sk.pono,sk.materialid,sk.itemid,sk.itemlocation,ygs.materialdescription,ygs.material,createddate::DATE
-from wms.wms_stock sk inner join wms."MaterialMasterYGS" ygs on ygs.material=sk.materialid where materialid='#materialid'
-and availableqty&gt;0 --and sk.deleteflag=false
-group by sk.itemlocation,ygs.materialdescription,ygs.material,createddate::DATE,itemid</value>
+    <value>select distinct sum(sk.availableqty)as availableqty,sk.pono,sk.materialid,sk.itemid,sk.itemlocation,sk.poitemdescription as materialdescription,sk.materialid as material,sk.createddate::DATE
+from wms.wms_stock sk where sk.materialid='#materialid'
+and sk.availableqty&gt;0 --and sk.deleteflag=false
+group by sk.itemlocation,sk.poitemdescription,sk.materialid,sk.createddate::DATE,sk.itemid</value>
+    <comment>get item locations for materials in stock</comment>
   </data>
   <data name="insertAuthUserData" xml:space="preserve">
     <value>insert into wms.auth_users(authid,employeeid,roleid,createddate,createdby,deleteflag)values(default,@employeeid,@roleid,@createddate,@createdby,@deleteflag)returning authid</value>
@@ -587,8 +587,8 @@ where sec.grnnumber ='#grn'</value>
     <value>sk left join wms."MaterialMasterYGS" ygs on ygs.material=sk.materialid</value>
   </data>
   <data name="updategatepassmaterialissue" xml:space="preserve">
-    <value>insert into wms.wms_materialissue(materialissueid,pono,itemid,gatepassmaterialid,itemissueddate,itemreceiverid,deleteflag,itemreturnable,approvedby,approvedon,issuedqty,approvedstatus)
-values(default,@pono,@itemid,@gatepassmaterialid,@itemissueddate,@itemreceiverid,false,@itemreturnable,@approvedby,@approvedon,@issuedqty,@approvedstatus)</value>
+    <value>insert into wms.wms_materialissue(materialissueid,pono,itemid,requestid,itemissueddate,itemreceiverid,deleteflag,itemreturnable,approvedby,approvedon,issuedqty,approvedstatus,requesttype)
+values(default,@pono,@itemid,@gatepassmaterialid,@itemissueddate,@itemreceiverid,false,@itemreturnable,@approvedby,@approvedon,@issuedqty,@approvedstatus,'gatepass')</value>
   </data>
   <data name="updatestockavailable" xml:space="preserve">
     <value>update wms.wms_stock set availableqty=#availableqty where itemid=#itemid</value>
@@ -626,7 +626,8 @@ VALUES(@inwmasterid,@receiveddate,@receivedby,@receivedqty,@materialid,@deletefl
   </data>
   <data name="receivequeryfornonpo" xml:space="preserve">
     <value>select sinw.invoiceno,inw.pono,inw.lineitemno,sinw.grnnumber,sinw.onhold,sinw.onholdremarks,sinw.unholdedby,sinw.receiveddate,inw.remarks as receiveremarks,inw.materialid as material,ms.materialdescription,inw.poitemdescription,inw.unitprice,
- inw.inwardid,inw.qualitychecked,inw.returnedby,inw.returnedon,inw.returnremarks,inw.receivedqty,inw.returnremarks,inw.materialqty,
+ inw.inwardid,inw.qualitychecked,inw.returnedby,inw.returnedon,inw.returnremarks,inw.receivedqty,inw.returnremarks,inw.materialqty as pendingqty,
+ (select materialqty from wms.wms_pomaterials where pono = inw.pono and itemno::integer = inw.lineitemno::integer and materialid = inw.materialid and poitemdescription = inw.poitemdescription) as materialqty,
  qc.qualitypassedqty,qc.qualityfailedqty,qc.qcby as checkedby,
  CASE
      WHEN inw.qualitycheckrequired != True and inw.returnedby is null THEN inw.receivedqty
@@ -699,12 +700,11 @@ values(default,@gatepassid,@fmapproverid,@fmapprovername,'Pending',@label)</valu
     <value>update wms.wms_gatepass set approverstatus='#approverstatus',approverremarks=@approverremarks,approvedon=current_timestamp where gatepassid=@gatepassid</value>
   </data>
   <data name="getSafteyStockList" xml:space="preserve">
-    <value>select max(mmy.material) as material,pomat.poitemdescription, max(mmy.materialdescription) as materialdescription,sum(st.availableqty) as availableqty,max(mmy.safteystock) as safteystock ,
+    <value>select max(mmy.material) as material,st.poitemdescription, max(mmy.materialdescription) as materialdescription,sum(st.availableqty) as availableqty,max(mmy.safteystock) as safteystock ,
 max(mmy.minorderqty) as minorderqty,
-(max(pomat.unitprice)  * sum(st.availableqty )) as value from wms."MaterialMasterYGS" mmy  
+(st.unitprice  * sum(st.availableqty )) as value from wms."MaterialMasterYGS" mmy  
 join wms.wms_stock st on st.materialid =mmy.material
-join wms.wms_pomaterials pomat on pomat.material =mmy.material 
-where st.availableqty &lt; mmy.safteystock group by pomat.poitemdescription</value>
+where st.availableqty &lt; mmy.safteystock group by mmy.material,st.poitemdescription,st.unitprice</value>
   </data>
   <data name="getbinlist" xml:space="preserve">
     <value>select bin.binnumber,sk.binid,sk.materialid as material,sum(sk.availableqty)as availableqty,max(sk.itemlocation)as itemlocation
@@ -767,11 +767,11 @@ where stinw.returnedby is not null and sinw.isdirecttransferred is NOT True and 
 and stinw.inwardid not in (select distinct inwardid from wms.wms_stock where inwardid is not null order by inwardid desc)</value>
   </data>
   <data name="getnonreturnablegatepassdata" xml:space="preserve">
-    <value>select Max(matis.gatepassmaterialid) gatepassmaterialid,Max(matis.itemid) itemid,Max(matis.itemissueddate) as itemissueddate,Max(ygs.materialdescription) as materialdescription,Max(emp.name) as name,
+    <value>select Max(matis.requestid) as gatepassmaterialid,Max(matis.itemid) itemid,Max(matis.itemissueddate) as itemissueddate,Max(matgt.poitemdescription) as materialdescription,Max(emp.name) as name,
 Max(matgt.gatepassid) as gatepassid,Max(matgt.materialid) as materialid,Max(matgt.materialcost) as materialcost,Max(matgt.quantity) as quantity,SUM(matis.issuedqty) issuedqty,
 Max(gt.gatepasstype) gatepasstype,Max(gt.vendorname) as vendorname,Max(gt.requestedby) as requestedby,Max(gt.requestedon) as requestedon,Max(emp3.name) as mgapprover,Max(emp4.name) as fmapprover,
-(select SUM(outwardqty) from wms.outwatdinward where gatepassmaterialid = matis.gatepassmaterialid group by gatepassmaterialid) as outwardedqty,
-(select SUM(inwardqty) from wms.outwatdinward where gatepassmaterialid = matis.gatepassmaterialid group by gatepassmaterialid) as inwardedqty,
+(select SUM(outwardqty) from wms.outwatdinward where gatepassmaterialid::text = matis.requestid::text group by gatepassmaterialid) as outwardedqty,
+(select SUM(inwardqty) from wms.outwatdinward where gatepassmaterialid::text = matis.requestid::text group by gatepassmaterialid) as inwardedqty,
 (select Max(outwarddate) from wms.outwatdinward where gatepassid = Max(matgt.gatepassid)  group by gatepassid) as outwarddate,
 (select Max(securityinwarddate) from wms.outwatdinward where gatepassid = Max(matgt.gatepassid)  group by gatepassid) as securityinwarddate,
 (select Max(approvedon) from wms.wms_gatepassapprovals where gatepassid = Max(matgt.gatepassid)  group by gatepassid) as approvedon
@@ -784,9 +784,9 @@ left join wms.employee emp2 on emp2.employeeno=matgt.inwardedby
 left join wms.employee emp3 on emp3.employeeno=gt.approverid
 left join wms.employee emp4 on emp4.employeeno=gt.fmapproverid
 left join wms."MaterialMasterYGS" ygs on ygs.material=matgt.materialid
-where matis.gatepassmaterialid  is not null and matgt.returneddate is null
-group by matis.gatepassmaterialid
-order by matis.gatepassmaterialid desc</value>
+where matis.requestid is not null and matis.requesttype = 'gatepass' and matgt.returneddate is null
+group by matis.requestid
+order by matis.requestid desc</value>
   </data>
   <data name="getstocktype" xml:space="preserve">
     <value>select stocktype from wms.stocklocation where locationid='#locationid' and location='#locationname' and storeid=#stid and rackid=#rkid and binid=#biid limit 1</value>
@@ -1094,11 +1094,13 @@ left outer join  wms.employee emp on emp.employeeno = mr.requesterid</value>
   </data>
   <data name="getMaterialReserveDashboardDetails" xml:space="preserve">
     <value>select mrs.reserveid,mrs.reservedon,mrs.ackstatus,emp.name as reservedby,mrs.remarks from wms.materialreserve mrs
-left outer join  wms.employee emp on emp.employeeno = mrs.requestedby</value>
+left outer join  wms.employee emp on emp.employeeno = mrs.reservedby</value>
+    <comment>get material reserve details</comment>
   </data>
   <data name="getMaterialReturnDashboardDetails" xml:space="preserve">
     <value>select mrt.returnid,mrt.confirmstatus,emp.name as createdby,mrt.createdon from wms.wms_materialreturn mrt
 left outer join  wms.employee emp on emp.employeeno = mrt.createdby</value>
+    <comment>get material return detail for report</comment>
   </data>
   <data name="inwardinsertquery" xml:space="preserve">
     <value>insert into wms.outwatdinward (gatepassid,gatepassmaterialid,inwarddate,inwardby,inwardremarks,inwardqty)
@@ -1330,27 +1332,25 @@ where rnd.returnid='#returnid'</value>
   </data>
   <data name="getrequestiddetail" xml:space="preserve">
     <value>select mr.requestid,mr.requesteddate,mr.ackstatus,emp.name as requestedby,mr.ackremarks,mr.remarks,mqd.materialid,mqd.requestedquantity ,mqd.returnqty,
-pomat.poitemdescription  as materialdescription,
+mqd.poitemdescription  as materialdescription,
 (select sum(issuedqty) from wms.wms_materialissue where requestmaterialid = mqd.id) as issuedquantity
 from wms.materialrequest mr
 left outer join  wms.employee emp on emp.employeeno = mr.requesterid 
-left outer join  wms.materialrequestdetails mqd on mqd.requestid =mr .requestid 
-left outer join  wms."MaterialMasterYGS" ygs on ygs.material = mqd.materialid 
-left outer join wms.wms_pomaterials pomat on pomat.materialid =mqd.materialid 
+left outer join  wms.materialrequestdetails mqd on mqd.requestid = mr.requestid 
 where  mqd.requestid='#rid'</value>
   </data>
   <data name="getreserveiddetail" xml:space="preserve">
-    <value>select ms.reserveid,ms.materialid,ygs.materialdescription,ms.reservequantity from wms.materialreservedetails ms
+    <value>select ms.reserveid,ms.materialid,ms.poitemdescription as materialdescription,ms.reservequantity from wms.materialreservedetails ms
 left outer join  wms."MaterialMasterYGS" ygs on ygs.material = ms.materialid
 left outer join wms.materialreserve mrs on mrs.reserveid = ms.reserveid 
 where ms.reserveid ='#rsid'</value>
+    <comment>get reserved material details by reserve id</comment>
   </data>
   <data name="getreturniddetail" xml:space="preserve">
-    <value>select ms.returnid,ms.materialid,ygs.materialdescription,ms.returnqty,ms.remarks
+    <value>select ms.returnid,ms.materialid,ms.poitemdescription as materialdescription,ms.returnqty,ms.remarks
 from wms.wms_materialreturndetails ms
-left outer join  wms."MaterialMasterYGS" ygs on ygs.material = ms.materialid
-left outer join wms.wms_materialreturn mrs on mrs.returnid = ms.returnid 
-where ms.returnid = '#rtid'</value>
+left outer join wms.wms_materialreturn mrs on mrs.returnid = ms.returnid</value>
+    <comment>get material return details by returnid for report</comment>
   </data>
   <data name="getitemlocationforstocktransfer" xml:space="preserve">
     <value>select sum(sk.availableqty)as availableqty,sk.materialid,sk.itemlocation,Max(ygs.materialdescription) as materialdescription 
@@ -1364,14 +1364,13 @@ group by sk.itemlocation,sk.materialid order by Max(sk.createddate)</value>
     <value>select iss.issuedqty,sk.pono,sk.materialid,sk.itemid,sk.itemlocation,
 (select sum(sk1.availableqty) from wms.wms_stock sk1 where sk1.materialid = sk.materialid and sk1.itemlocation = sk.itemlocation) as availableqty
 ,sk.createddate::DATE,
-ygs.materialdescription
+sk.poitemdescription as materialdescription
 from wms.wms_materialissue iss 
 left outer join wms.wms_stock sk on iss.itemid =sk.itemid
-left join wms."MaterialMasterYGS" ygs on ygs.material=sk.materialid 
-where iss.gatepassmaterialid = '#gatepassmaterialid'</value>
+where iss.requestid::text = '#gatepassmaterialid'::text and iss.requesttype = 'gatepass'</value>
   </data>
   <data name="getMaterialsforreceipt" xml:space="preserve">
-    <value>select mat.pono,mat.materialid as material,mat.itemno::text as lineitemno,ms.materialdescription,mat.poitemdescription,mat.unitprice,mat.materialqty,'#invoice' as invoiceno,'#inw' as inwmasterid,NULL as grnnumber,ms.qualitycheck,mat.asnno,mat.asnqty as receivedqty
+    <value>select mat.pono,mat.materialid as material,mat.itemno::text as lineitemno,ms.materialdescription,mat.poitemdescription,mat.unitprice,mat.materialqty,mat.wmsqty as pendingqty,'#invoice' as invoiceno,'#inw' as inwmasterid,NULL as grnnumber,ms.qualitycheck,mat.asnno,mat.asnqty as receivedqty
 from wms.wms_pomaterials mat
 left outer join wms."MaterialMasterYGS" ms on ms.material = mat.materialid</value>
   </data>
@@ -1661,7 +1660,7 @@ values(default, @transactiontype, @issuedqty, @reason, @remarks, @createddate, @
   </data>
   <data name="isallreceivedqueryforpo" xml:space="preserve">
     <value>select CASE
-     WHEN (select SUM(materialqty)from wms.wms_pomaterials where pono = '#pono') = SUM(confirmqty) THEN True
+     WHEN (select SUM(wmsqty)from wms.wms_pomaterials where pono = '#pono') = SUM(confirmqty) THEN True
 	 ELSE False
  END as isallreceived   
  from wms.wms_storeinward 
@@ -1739,6 +1738,53 @@ sum(sk.availableqty) as availableqty,
 SUM(sk.unitprice * sk.availableqty) as materialcost,sk.poitemdescription  as materialdescription 
 from wms.wms_stock  sk 
 where sk.availableqty &gt; 0  group by sk.materialid,sk.poitemdescription</value>
+  </data>
+  <data name="getFMapprovermail" xml:space="preserve">
+    <value>select emp.name,emp.email from wms.wms_gatepass gtp 
+left outer join wms.employee emp on gtp.fmapproverid = emp.employeeno
+where gtp.gatepassid = '#gatepassid'</value>
+  </data>
+  <data name="getRequesterEmail" xml:space="preserve">
+    <value>select emp.name,emp.email from wms.wms_gatepass gtp 
+left outer join wms.employee emp on gtp.requestedby = emp.employeeno
+where gtp.gatepassid = '#gatepassid'</value>
+  </data>
+  <data name="initialstockputawaymaterial" xml:space="preserve">
+    <value>select istk.stockid,istk.material,istk.materialdescription,stk.storeid,stk.rackid,stk.binid,istk.quantity,istk.value,istk.unitprice,istk.projectid,istk.pono,
+mat.storeid as defaultstore,mat.rackid defaultrack,mat.binid defaultbin,istk.uploadbatchcode,istk.uploadedfilename
+from wms.st_initialstock istk
+left outer join wms."MaterialMasterYGS" mat on mat.material = istk.material
+left outer join wms.wms_stock stk on (stk.receivedid = istk.stockid::text and stk.uploadbatchcode = istk.uploadbatchcode)
+where istk.dataloaderrors is True 
+and (istk.material = '') IS NOT True 
+and (istk.materialdescription = '') IS NOT True
+and  istk.quantity &lt;&gt; 0 and istk.quantity is NOT NULL
+and  istk.value &lt;&gt; 0::money and istk.value is NOT NULL
+and (istk.projectid = '') IS NOT True
+and (istk.pono = '') IS NOT True
+and istk.stockid not in (select distinct receivedid::integer from wms.wms_stock where receivedid  is not null and uploadbatchcode = istk.uploadbatchcode)</value>
+  </data>
+  <data name="getfilenamesforis" xml:space="preserve">
+    <value>Select distinct istk.uploadedfilename as value,istk.uploadedfilename as text from wms.st_initialstock istk where istk.dataloaderrors is True 
+and istk.stockid not in (select distinct receivedid::integer from wms.wms_stock where  receivedid  is not null and initialstock is True)
+and (istk.material = '') IS NOT True 
+and (istk.materialdescription = '') IS NOT True
+and  istk.quantity &lt;&gt; 0 and istk.quantity is NOT NULL
+and  istk.value &lt;&gt; 0::money and istk.value is NOT NULL
+and (istk.projectid = '') IS NOT True
+and (istk.pono = '') IS NOT True</value>
+  </data>
+  <data name="inserttoStockIS" xml:space="preserve">
+    <value>INSERT INTO wms.wms_stock(pono,binid,rackid,storeid,totalquantity,shelflife,availableqty,deleteflag,itemlocation,createddate,createdby,materialid,stcktype,receivedtype,poitemdescription,value,unitprice,receivedid,uploadbatchcode,uploadedfilename)VALUES(@pono,@binid,@rackid,@storeid,@totalquantity,@shelflife,@availableqty,@deleteflag,@itemlocation,@createddate,@createdby,@materialid,@stocktype,@receivedtype,@poitemdescription,@value,@unitprice,@receivedid,@uploadbatchcode,@uploadedfilename)returning itemid</value>
+  </data>
+  <data name="getbinlist_v1" xml:space="preserve">
+    <value>select max(bin.binnumber) as binnumber,bin.binid,sk.materialid as material,sk.poitemdescription as materialdescription,sum(sk.availableqty)as availableqty,
+(max(loc.locatorname) ||'.'|| max(rck.racknumber) || '.' || max(bin.binnumber))as itemlocation
+from wms.wms_rd_bin bin
+left outer join wms.wms_rd_rack rck on rck.rackid = bin.rackid
+left outer join wms.wms_rd_locator loc on loc.locatorid = bin.locatorid
+left outer join wms.wms_stock sk  on (sk.binid = bin.binid and sk.rackid = bin.rackid and sk.storeid = bin.locatorid)
+group by bin.binid,bin.rackid,bin.locatorid,sk.materialid,sk.poitemdescription order by bin.binid asc</value>
   </data>
   <data name="getSTORequestlist" xml:space="preserve">
     <value>select * from wms.wms_invstocktransfer where transfertype='STO'</value>

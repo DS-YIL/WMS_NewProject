@@ -10,7 +10,6 @@ import { filter } from 'rxjs/operators';
 import { isNullOrUndefined } from 'util';
 import { HttpClient } from '@angular/common/http';
 import { SelectItem } from 'primeng/api';
-import { POListComponent } from './POList.component';
 
 
 @Component({
@@ -18,22 +17,12 @@ import { POListComponent } from './POList.component';
   templateUrl: './SecurityHome.component.html'
 })
 export class SecurityHomeComponent implements OnInit {
-  cities1: SelectItem[];
-  selectedCities1: any[];
-  selectedCountries1: string[] = [];
+
   public url = "";
   @ViewChild('fileInput', { static: false })
   myInputVariable: ElementRef;
   constructor(private messageService: MessageService, private http: HttpClient, private wmsService: wmsService, private route: ActivatedRoute, private router: Router, public constants: constants, private spinner: NgxSpinnerService, @Inject('BASE_URL') baseUrl: string) {
   this.url = baseUrl;
-    //SelectItem API with label-value pairs
-    this.cities1 = [
-      { label: 'New York', value: { id: 1, name: 'New York', code: 'NY' } },
-      { label: 'Rome', value: { id: 2, name: 'Rome', code: 'RM' } },
-      { label: 'London', value: { id: 3, name: 'London', code: 'LDN' } },
-      { label: 'Istanbul', value: { id: 4, name: 'Istanbul', code: 'IST' } },
-      { label: 'Paris', value: { id: 5, name: 'Paris', code: 'PRS' } }
-    ];
   }
   public print: string = "Print Barcode";
   public PoDetails: PoDetails;
@@ -42,12 +31,10 @@ export class SecurityHomeComponent implements OnInit {
   public inwmasterid: string;
   public pono: any = "";
   public showDetails; disSaveBtn; showPoList: boolean = false;
-  showreceiveList: boolean = false;
   showreceivedPoList: boolean = false;
   public BarcodeModel: BarcodeModel;
   public currentDatePoList: Array<any> = [];
   public currentDatePoReceivedList: Array<any> = [];
-  public dynamicData: DynamicSearchResult;
   showtable: boolean = false;
   showreceivedtable: boolean = false;
   btntext: string = "";
@@ -105,7 +92,6 @@ export class SecurityHomeComponent implements OnInit {
 
     ///get department master list
     this.getdepts();
-   // this.SearchPoNo();
   }
 
   //page refresh functionality
@@ -132,38 +118,23 @@ export class SecurityHomeComponent implements OnInit {
 
   }
 
-  OnMultipleSelects($event) {
-    //console.log($event)
-    //console.log($event.target)
-    //console.log($event.target.value)
-
-    debugger;
-   //alert('hi')
+  OnMultipleSelects() {
     this.podatavisible = true;
-
-   
   }
 
   OnMultipleSelect(event: any, suppliername: string) {
     
     this.spinner.show();
-    //alert(ischecked["checked"]);
-    //Get polist data
-    debugger;
     var data = event.target.checked;
     if(data) {
       this.podatavisible = true;
       this.wmsService.getPODataList(suppliername).subscribe(data => {
-        debugger;
         this.POlist = data;
         this.multiplepo = true;
-        debugger;
-
         this.spinner.hide();
       });
     }
     else {
-      debugger;
       this.POlist = [];
       this.PoDetails.pono = '';
       this.selectedPOs = [];
@@ -175,7 +146,6 @@ export class SecurityHomeComponent implements OnInit {
 
   //close on submit
   hidepolist() {
-    //debugger;
     this.PoDetails.pono = "";
     this.podatavisible = false;
     console.log(this.selectedPOs);
@@ -190,9 +160,6 @@ export class SecurityHomeComponent implements OnInit {
         this.PoDetails.pono = this.PoDetails.pono + ',' + item.pOno;
 
       }
-      //alert(item.p)
-      //this.PoDetails.pono = this.PoDetails.pono + ',' + item.pOno;
-
     }
     )
   }
@@ -230,6 +197,8 @@ export class SecurityHomeComponent implements OnInit {
     });
   }
 
+
+  //default visibility toggle for received and expected po lists.
   showdevlist() {
     this.showtable = !this.showtable;
     if (this.showtable) {
@@ -239,6 +208,8 @@ export class SecurityHomeComponent implements OnInit {
       this.btntext = "Show";
     }
   }
+
+  //visibility toggle for received and expected po lists.
   showreceivedlist() {
     this.showreceivedtable = !this.showreceivedtable;
     if (this.showreceivedtable) {
@@ -248,6 +219,8 @@ export class SecurityHomeComponent implements OnInit {
       this.btnreceivetext = "Show";
     }
   }
+
+  //on check of po event
   pocheck() {
     this.Poinvoicedetails.vendorname = "";
     this.Poinvoicedetails.invoiceno = "";
@@ -259,6 +232,7 @@ export class SecurityHomeComponent implements OnInit {
     this.nonporemarks = "";
   }
 
+  //on check of non-po event
   nonpocheck() {
     this.PoDetails.pono = "";
     this.Poinvoicedetails.vendorname = "";
@@ -272,7 +246,7 @@ export class SecurityHomeComponent implements OnInit {
     this.transportdetails = "";
     this.nonporemarks = "";
   }
-
+  //get department list for non-po
   getdepts() {
     this.wmsService.getdepartments().subscribe(data => {
       debugger;
@@ -290,6 +264,7 @@ export class SecurityHomeComponent implements OnInit {
         this.spinner.hide();
         if (data) {
           this.PoDetails = data;
+          this.Poinvoicedetails.invoiceno = this.PoDetails.invoiceno;
           this.showDetails = true;
           //document.getElementById('valdatediv').style.display = "none";
           // document.getElementById('ponoid').style.border = "1px solid grey";
@@ -310,11 +285,13 @@ export class SecurityHomeComponent implements OnInit {
   }
 
 
+  //initialised file for api call after invoice generation
   onBasicUpload(event) {
     debugger;
     this.nonpofile = event.target.files[0];
   }
 
+  //file upload api call after invoice generation
   uploadnonpodoc(pono: string) {
     debugger;
     this.pono = pono;
@@ -328,7 +305,6 @@ export class SecurityHomeComponent implements OnInit {
         .subscribe(event => {
           this.reset();
           this.nonpofile = null;
-          //this.messageService.add({ severity: 'success', summary: '', detail: 'File uploaded' });
         });
 
     }
@@ -464,6 +440,8 @@ export class SecurityHomeComponent implements OnInit {
     }
     //this.reset();
   }
+
+  //print barcode for created invoice
 
   printbarcode() {
     this.spinner.show();

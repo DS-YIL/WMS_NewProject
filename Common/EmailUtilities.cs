@@ -9,6 +9,7 @@ using WMS.Models;
 using WMS.Common;
 using Dapper;
 using System.Data;
+using System.Globalization;
 
 namespace WMS.Common
 {
@@ -186,10 +187,10 @@ namespace WMS.Common
 				//mailMessage.Subject = "Materials Issued for Request ID" + emlSndngList.requestid;
 				//subbody = "Please find the Masterials request details below. <br/> Requested By:" + emlSndngList.requestedby + "<br/>Requested On:" + emlSndngList.requestedon;
 				//subbody = mailMessage.Subject;
-
+				string requesteddte = emlSndngList.requestedon.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
 				mailMessage.Subject = "Gatepass Materials for"+ emlSndngList.gatepasstype +"- GatePass - ID : " + emlSndngList.gatepassid;
 				string requestedby = this.getnamebyid(emlSndngList.requestedby);
-				subbody = "Please find the "+emlSndngList.gatepasstype+" Gatepass Materials details below. <br/> Requested By : <b>" + requestedby + "</b><br/>Requested On : <b>" + Conversion.ToDate(Convert.ToString(emlSndngList.requestedon), "dd/mm/yyyy") + "</b><br/>GatePass Type : <b>" + emlSndngList.gatepasstype+"</b>";
+				subbody = "Please find the "+emlSndngList.gatepasstype+" Gatepass Materials details below. <br/> Requested By : <b>" + requestedby + "</b><br/>Requested On : <b>" + requesteddte + "</b><br/>GatePass Type : <b>" + emlSndngList.gatepasstype+"</b>";
 				//subbody = mailMessage.Subject;
 				link = linkurl + "WMS/Email/GatePassPMList?GateId=" + emlSndngList.gatepassid.Trim();
 
@@ -259,10 +260,10 @@ namespace WMS.Common
 			else if (subjecttype == 16)
 
 			{
-
+				string requesteddte = emlSndngList.requestedon.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
 				mailMessage.Subject = emlSndngList.gatepasstype + " Gatepass Materials with GatePass ID -" + emlSndngList.gatepassid + "are pending for FM approval ";
-				string requestedby = this.getnamebyid(emlSndngList.requestedby);
-				subbody = "Please find the Material details below.<br/>GatePass Type : <b>" + emlSndngList.gatepasstype + "</b><br/>Approved By : <b>" + emlSndngList.approvername + "<b>";
+				string requestedby = emlSndngList.requestedby;
+				subbody = "Please find the Material details below.<br/>GatePass Type : <b>" + emlSndngList.gatepasstype + "</b><br/>Requested By : <b>" + requestedby + "</b><br/>Requested On : <b>" + requesteddte + "</b><br/>GatePass Type : <b>" + emlSndngList.gatepasstype + "</b><br/>Approved By : <b>" + emlSndngList.approvername + "<b>";
 				//subbody = mailMessage.Subject;
 				link = linkurl + "WMS/Email/GatePassFMList?GateId=" + emlSndngList.gatepassid.Trim();
 
@@ -301,6 +302,28 @@ namespace WMS.Common
 				subbody = "Material Received with  GRN No. : " + emlSndngList.grnnumber + " and ready for acceptance.";
 				//Redirect to Receipts Page
 				link = linkurl + "WMS/Email/GRNPosting?GRNo=" + emlSndngList.grnnumber.Trim();
+			}
+			else if (subjecttype == 21)
+			{
+
+				mailMessage.Subject = "Gate Pass sent for modification - GatePass  ID : " + emlSndngList.gatepassid;
+				string requestedby = this.getnamebyid(emlSndngList.approvername);
+				subbody = "Gate Pass sent for modification.GatePass  ID : " + emlSndngList.gatepassid;
+				//subbody = mailMessage.Subject;
+				link = linkurl + "WMS/Email/GatePass?GatepassId=" + emlSndngList.gatepassid.Trim();
+
+
+			}
+			else if (subjecttype == 22)
+			{
+
+				mailMessage.Subject = "Gate Pass issued - GatePass  ID : " + emlSndngList.gatepassid;
+				string requestedby = this.getnamebyid(emlSndngList.approvername);
+				subbody = "Gate Pass issued for GatePass  ID : " + emlSndngList.gatepassid;
+				//subbody = mailMessage.Subject;
+				link = linkurl + "WMS/Email/GatePass?GatepassId=" + emlSndngList.gatepassid.Trim();
+
+
 			}
 
 			if (!string.IsNullOrEmpty(emlSndngList.CC))

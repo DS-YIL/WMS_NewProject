@@ -16,17 +16,11 @@
             <div class="col-lg-6 col-md-6">
               <input type="radio" name="seccheck" (change)="nonpocheck()" /> <label class="labelheading text-dark">&nbsp;&nbsp;Non-PO</label>
             </div>
-            <!--<div class="col-lg-3 col-md-3">
-              <button type="button" class="btn btn-primary btn-sm" style="float:left;margin-left:10px;" (click)="refresh()" label="Save"><i class="fa fa-refresh"></i></button>
-            </div>-->
-
-
+        
           </div>
           <div *ngIf="ispochecked">
             <div class="row " style="margin-top:5px;">
               <div class="col-lg-12 col-md-12 col-sm-12 form-inline">
-                <!--<label class="labelheading">PO/ASN No./Supplier Name: </label>&nbsp;&nbsp;-->
-                <!--<input class="form-control" type="text" [(ngModel)]="searchdata" id="ponoid" maxlength="10">&nbsp;&nbsp;-->
                 <input class="form-control" type="text" placeholder="PO/ASN No./Supplier Name" style="width:80%" [(ngModel)]="searchdata" id="ponoid" >&nbsp;&nbsp;
 
                 <button type="button" class="btn btn-primary btn-sm" label="Save" (click)="SearchPoNo()"><i class="fa fa-search"></i></button>
@@ -35,11 +29,9 @@
             <div class="row " style="margin-top:5px;" *ngIf="!PoDetails.ispono && PoDetails.vendorname && !PoDetails.asnno">
               <div class="col-lg-12 col-md-12">
                 <label class="labelheading">Multiple PO's:</label>&nbsp;&nbsp;&nbsp;
-                <!--<p-checkbox name="group1" value="" [(ngModel)]="multiplepo" (onChange)="OnMultipleSelect($event, PoDetails.vendorname)"></p-checkbox>-->
                 <input type="checkbox" name="group1" value="" [(ngModel)]="multiplepo" (change)="OnMultipleSelect($event, PoDetails.vendorname)" />
               </div>
             </div>
-            <!--<div *ngIf="showDetails">-->
               <div>
                 <div class="row " style="margin-top:5px;" *ngIf="!PoDetails.ispono && showDetails">
                   <div class="col-lg-2 col-md-2" style="padding-right:0px">
@@ -47,7 +39,7 @@
                   </div>
                   <div class="col-lg-10 col-md-10">
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label class="labeltext">{{PoDetails.pono}}</label>
-                    <button style="padding:4px" class="btn btn-primary" *ngIf="!PoDetails.ispono && PoDetails.vendorname && !PoDetails.asnno" (click)="OnMultipleSelects($event, PoDetails.vendorname)"><i class="fa fa-edit"></i></button>
+                    <button style="padding:4px" class="btn btn-primary" *ngIf="!PoDetails.ispono && PoDetails.vendorname && !PoDetails.asnno"  (click)="OnMultipleSelects()"><i class="fa fa-edit"></i></button>
 
                   </div>
 

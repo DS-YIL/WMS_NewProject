@@ -51,9 +51,8 @@ export class GatePassApprovalList implements OnInit {
 
     //Email
     this.gatepassid = this.route.snapshot.queryParams.requestid;
+    //get material details for that requestid
     if (this.gatepassid) {
-      debugger;
-      //get material details for that requestid
       this.showApprover(this.gatepassid);
       //this.gatepasslist[0].material = this.gatepassid;
       //this.getGatePassList();
@@ -220,6 +219,8 @@ export class GatePassApprovalList implements OnInit {
     debugger;
     this.gatepassModel.approverid = this.employee.employeeno;
     this.gatepassModel.approvedby = this.employee.name;
+    this.gatepassModel.requestedby = this.materialList[0].name;
+    this.gatepassModel.requestedon = this.materialList[0].requestedon;
     this.wmsService.GatepassapproveByManager(this.gatepassModel).subscribe(data => {
       this.spinner.hide();
       this.hideApprover();
