@@ -178,6 +178,7 @@ export class GatePassApproverComponent implements OnInit {
     this.itemlocationData = [];
     if (this.constants.gatePassIssueType == "Pending") {
       this.issueqtyenable = false;
+      debugger;
       this.wmsService.getItemlocationListByMaterial(material).subscribe(data => {
         this.itemlocationData = data;
         this.showdialog = true;
@@ -187,6 +188,7 @@ export class GatePassApproverComponent implements OnInit {
     else {
       this.issueqtyenable = true;
       this.wmsService.getItemlocationListByGatepassmaterialid(gatepassmaterialid).subscribe(data => {
+        debugger;
         this.itemlocationData = data;
         this.showdialog = true;
       });

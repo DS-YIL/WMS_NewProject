@@ -184,7 +184,7 @@
               <th class="ptable-cell" style="    text-align: center;background-color: #9ba5af !important">Material</th>
               <!--<th class="ptable-cell" style="    text-align: center; width: 500px;background-color: #9ba5af !important">Material Description</th>-->
               <th class="ptable-cell" style="    text-align: center; width: 500px;background-color: #9ba5af !important">PO Item Description</th>
-              <th class="ptable-cell" style="    text-align: center;background-color: #9ba5af !important">Price</th>
+              <!--<th class="ptable-cell" style="    text-align: center;background-color: #9ba5af !important">Price</th>-->
               <th class="ptable-cell" style="    text-align: center;background-color: #9ba5af !important">Remarks</th>
               <th class="ptable-cell" style="    text-align: center;background-color: #9ba5af !important">Requested Qty</th>
               <th class="ptable-cell" style="    text-align: center;background-color: #9ba5af !important" *ngIf="employee.roleid !='8'">Issued Qty</th>
@@ -200,8 +200,8 @@
                 <button *ngIf="employee.roleid !='8' && (employee.roleid =='3' || employee.roleid =='4' )" type="button" class="btn btn-link" (click)="showmateriallocationList(rowData.materialid,ri+1,ri,rowData.quantity);" style="padding-left:0px;">{{rowData.materialid}}</button>
               </td>
               <!--<td class="ptable-cell" style="    text-align: left;width: 500px;"> {{rowData.materialdescription}} </td>-->
-            <td class="ptable-cell" style="    text-align: left;width: 500px;"> {{rowData.poitemdescription}} </td>
-              <td class="ptable-cell" style="text-align:right"><span *ngIf="rowData.materialcost">{{rowData.materialcost}}</span></td>
+            <td class="ptable-cell" style="    text-align: left;width: 500px;"> {{rowData.materialdescription}} </td>
+              <!--<td class="ptable-cell" style="text-align:right"><span *ngIf="rowData.materialcost">{{rowData.materialcost}}</span></td>-->
               <td class="ptable-cell" style="text-align:left"> {{rowData.remarks}} </td>
               <td class="ptable-cell" style="text-align:right">{{rowData.quantity}}</td>
               <td class="ptable-cell" *ngIf="employee.roleid !='8'">
@@ -241,7 +241,7 @@
 
 
 
-      <p-dialog header={{GatepassTxt}} [(visible)]="gatepassdialog" [responsive]="true" showEffect="fade" [modal]="true" [style]="{'width':'95%','overflow':'auto!important','margin-right': '0px','margin-left':'0px'}">
+      <p-dialog header={{GatepassTxt}} [(visible)]="gatepassdialog" [responsive]="true" showEffect="fade" [modal]="true" [style]="{'width':'98%','overflow':'auto!important','margin-right': '0px','margin-left':'0px'}">
         <div class="row " style="margin-top:10px">
           <div class="col-lg-2 col-md-2 col-sm-2 form-group">
             <label for="itemlocation" class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">Select Type</label>
@@ -290,74 +290,7 @@
           </div>
         </div>
 
-        <!--<b>Add Material :</b>
-        <div class="row " style="margin-top:10px">
-          <div class="col-lg-3 col-md-3 col-sm-3 form-group">
-            <label class="form-label">Material</label>
-            <div class="form-inline-list">
-              <p-autoComplete [(ngModel)]="material" [suggestions]="searchItems" field="name" (completeMethod)="bindSearchListData($event,'ItemId')"></p-autoComplete>
-            </div>
-          </div>
-          <div class="col-lg-3 col-md-3 col-sm-3 form-group">
-            <label class="form-label">Quantity</label>
-            <div class="form-inline-list">
-              <input type="number" class="form-control" [(ngModel)]="materialistModel.quantity" />
-            </div>
-          </div>
-          <div class="col-lg-3 col-md-3 col-sm-3 form-group">
-            <label class="form-label">Price(INR)</label>
-            <div class="form-inline-list">
-              <input type="text" class="form-control" [(ngModel)]="materialistModel.materialcost" />
-            </div>
-          </div>
-          <div class="col-lg-3 col-md-3 col-sm-3 form-group">
-            <label class="form-label">Remarks</label>
-            <div class="form-inline-list">
-              <input type="text" class="form-control" [(ngModel)]="materialistModel.remarks" />
-            </div>
-          </div>
-        </div>
-        <div class="row " style="margin-top:10px">
-          <div class="col-lg-3 col-md-3 col-sm-3 form-group">
-            <label class="form-label">Expected  Date</label>
-            <div class="form-inline-list">
-              <p-calendar class="mprldatepick" [(ngModel)]="materialistModel.expecteddate" dateFormat="dd/mm/yy" [monthNavigator]="true" [yearNavigator]="true" yearRange="1900:2050"></p-calendar>
-            </div>
-          </div>
-          <div class="col-lg-3 col-md-3 col-sm-3 form-group mt-4">
-            <button type="button" icon="fa fa-plus" pButton aria-hidden="true" pTooltip="Add material" (click)="addMaterial()"></button>
-          </div>
-        </div>-->
-        <!--<div class="row " style="margin-top:10px">
-          <div class="col-lg-12 col-md-12 col-sm-12">
-            <p-table *ngIf="gatepassModel.materialList.length>0" [value]="gatepassModel.materialList" [style]="{'width':'87%','height':'80%','overflow':'auto!important'}">
-              <ng-template pTemplate="header">
-                <tr class="mprltbldata">
-                  <th class="ptable-cell" style="text-align:center;width:70px">S No</th>
-                  <th class="ptable-cell" style="text-align:center">Material</th>
-                  <th class="ptable-cell" style="text-align:center;width:200px">Materia Description</th>
-                  <th class="ptable-cell" style="text-align:center">Quantity</th>
-                  <th class="ptable-cell" style="text-align:center">Price</th>
-                  <th class="ptable-cell" style="text-align:center">Remarks</th>
-                  <th class="ptable-cell" style="text-align:center">Expected Date</th>
-                  <th class="ptable-cell"></th>
-                </tr>
-              </ng-template>
-              <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex" let-rindex=0>
-                <tr>
-                  <td class="ptable-cell" style="text-align:right"> {{ri+1}} </td>
-                  <td class="ptable-cell" style="text-align:right"> {{rowData.materialid}} </td>
-                  <td class="ptable-cell" style="text-align:right"> {{rowData.materialdescription}} </td>
-                  <td class="ptable-cell" style="text-align:right"><input style="text-align:right" pInputText type="number" class="form-control" [(ngModel)]="rowData.quantity" (keyup)="checkMaterialandQty(rowData,ri)"></td>
-                  <td class="ptable-cell" style="text-align:right">{{rowData.materialcost}}</td>
-                  <td class="ptable-cell" style="text-align:left"> {{rowData.remarks}} </td>
-                  <td class="ptable-cell" style="text-align:center">{{rowData.expecteddate | date :  constants.dateFormat}}</td>
-                  <td class="ptable-cell" style="text-align:center"> <button pButton type="button" icon="fa fa-trash" class="ui-button-info" style="margin-left: 1px;" (click)="removematerial(rowData.gatepassmaterialid,ri)"></button></td>
-              </ng-template>
-            </p-table>
-          </div>
-        </div>-->
-        <!--Add and Update materials-->
+      
         <div class="row " style="margin-top:10px">
 
 
@@ -372,36 +305,42 @@
               <ng-template pTemplate="header">
                 <tr class="mprltbldata">
                   <th class="ptable-cell" style="width:60px;text-align:center">Sl. No.</th>
-                  <!--<th class="ptable-cell">Material</th>-->
-                  <th style="text-align:center" class="ptable-cell">Material</th>
-                  <th style="text-align:center" class="ptable-cell">Quantity</th>
-                  <th style="text-align:center" class="ptable-cell">Price(INR)</th>
-                  <th style="text-align:center" class="ptable-cell">Remarks</th>
-                  <th *ngIf="gatepassModel.gatepasstype=='Returnable'" style="text-align:center" class="ptable-cell">Expected Date</th>
-                  <!--<th *ngIf="gatepassModel.gatepasstype=='Returnable'" class="ptable-cell">Returned Date</th>-->
+                  <th style="text-align:center;width:250px;" class="ptable-cell">Material</th>
+                  <th style="text-align:center" class="ptable-cell">PO Item description</th>
+                  <th style="text-align:center;width:120px;" class="ptable-cell">Quantity</th>
+                  <th style="text-align:center;width:120px;" class="ptable-cell">Value(INR)</th>
+                  <th style="text-align:center;width:200px;" class="ptable-cell">Remarks</th>
+                  <th *ngIf="gatepassModel.gatepasstype=='Returnable'" style="text-align:center;width:150px;" class="ptable-cell">Expected Date</th>
                   <th style="text-align:center;width:60px;" class="ptable-cell"></th>
                 </tr>
               </ng-template>
               <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex" let-rindex=0>
                 <tr>
                   <td class="ptable-cell" style="text-align:center"> {{ri+1}} </td>
-                  <!--<td class="ptable-cell" style="text-align:right">
-                    <input [(ngModel)]="field.code" class="form-control" type="text" name="{{field[i].materialid}}" />
-                  </td>-->
                   <td class="ptable-cell" style="text-align:left;">
-
-                    <!--<input *ngIf="rowData.materialid" [(ngModel)]="rowData.materialid" class="form-control" type="text" name="{{rowData.materialid}}" />-->
-                    <p-autoComplete [(ngModel)]="rowData.materialid" type="text" appendTo="body" [forceSelection]="true"   [suggestions]="searchItems" (onSelect)="onMaterialSelected(rowData.materialid,ri)" (completeMethod)="bindSearchListData($event,'ItemId')" [size]="15"
+                    <!--<p-autoComplete [(ngModel)]="rowData.materialid" type="text" appendTo="body" [forceSelection]="true" [suggestions]="searchItems" (onSelect)="onMaterialSelected(rowData.materialid,ri)" (completeMethod)="bindSearchListData($event,'ItemId')" [size]="15"
+                  [dropdown]="true"></p-autoComplete>-->
+                    <p-autoComplete [(ngModel)]="rowData.materialid" placeholder="search by name/code" type="text" appendTo="body" [forceSelection]="true" (onSelect)="onMaterialSelected1(rowData,ri)" [suggestions]="filteredmats" (completeMethod)="filtermats($event,rowData)" [size]="20"
                                     [dropdown]="true"></p-autoComplete>
 
-                    <!--<p-autoComplete appendTo="body" *ngIf="!rowData.materialid" (onSelect)="onMaterialSelected(material)" [(ngModel)]="material" type="text" [suggestions]="searchItems" field="name" [dropdown]="true" (completeMethod)="bindSearchListData($event,'ItemId')" size="8"></p-autoComplete>-->
+
+                  </td>
+                  <td class="ptable-cell" style="text-align:left;">
+                    <p-autoComplete *ngIf="gatepassModel.gatepasstype=='Returnable'" [(ngModel)]="rowData.materialdescription" placeholder="search by description" type="text" appendTo="body" [forceSelection]="true" (onSelect)="onDescriptionSelected(rowData,ri)" [suggestions]="filteredmatdesc" (completeMethod)="filtermatdescs($event,rowData)" [size]="25"
+                                    [dropdown]="true"></p-autoComplete>
+                    <p-autoComplete *ngIf="gatepassModel.gatepasstype !=='Returnable'" [(ngModel)]="rowData.materialdescription" placeholder="search by description" type="text" appendTo="body" [forceSelection]="true" (onSelect)="onDescriptionSelected(rowData,ri)" [suggestions]="filteredmatdesc" (completeMethod)="filtermatdescs($event,rowData)" [size]="50"
+                                    [dropdown]="true"></p-autoComplete>
+                    <!--<p-autoComplete [(ngModel)]="rowData.poitemdescription" type="text" appendTo="body" [forceSelection]="true" [suggestions]="searchItems" (onSelect)="onMaterialSelected(rowData.materialid,ri)" (completeMethod)="bindSearchListData($event,'ItemId')" [size]="15"
+  [dropdown]="true"></p-autoComplete>-->
+
+
 
                   </td>
                   <td class="ptable-cell" style="text-align:right">
                     <input style="text-align:left" pInputText type="number" (blur)="onComplete(rowData.quantity , rowData.materialid,ri)" class="form-control" [(ngModel)]="rowData.quantity">
                   </td>
                   <td class="ptable-cell" style="text-align:right">
-                    <input [disabled]="true" [ngModel]="rowData.materialid && rowData.materialid?rowData.materialcost:0" class="form-control" type="text" name="{{rowData.materialcost}}" />
+                    <input [disabled]="true" [ngModel]="rowData.materialid && rowData.materialid?rowData.materialcost:0" class="form-control" pInputText pKeyFilter="money" name="{{rowData.materialcost}}" />
 
                   </td>
                   <td class="ptable-cell" style="text-align:right">
@@ -409,24 +348,12 @@
 
                   </td>
                   <td *ngIf="gatepassModel.gatepasstype=='Returnable'" class="ptable-cell" style="text-align:right">
-                    <!--<input type="date" [value]="rowData.expecteddate |  date:'yyyy-MM-dd'" min={{mindate}} max={{maxdate}} (input)="rowData.expecteddate=parseDate($event.target.value)">-->
-
-
                     <p-calendar class="mprldatepick" [(ngModel)]="rowData.expecteddate" dateFormat="dd/mm/yy" [minDate]="mindate" appendTo="body" [monthNavigator]="true" [yearNavigator]="true" yearRange="1900:2050"></p-calendar>
                   </td>
-
-                  <!--<td *ngIf="gatepassModel.gatepasstype=='Returnable'" class="ptable-cell" style="text-align:right">
-                    <p-calendar class="mprldatepick" [(ngModel)]="rowData.returneddate" dateFormat="dd/mm/yy" [monthNavigator]="true" [yearNavigator]="true" yearRange="1900:2050"></p-calendar>
-
-
-                  </td>-->
-
-
-
                   <td class="ptable-cell" style="text-align:center;width:60px;"><button pButton type="button" icon="fa fa-trash" class="ui-button-info" style="margin-left: 1px;" (click)="removematerial(rowData.gatepassmaterialid, ri)"></button></td>
 
 
-              </ng-template>
+</ng-template>
 
 
             </p-table>

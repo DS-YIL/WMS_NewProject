@@ -31,12 +31,14 @@ export class BinStatusReportComponent implements OnInit {
     else
       this.router.navigateByUrl("Login");
     this.toDate = new Date();
+    this.selectedStatus = "filled";
     this.fromDate = new Date(new Date().setDate(new Date().getDate() - 30));
     this.getBinstatusList();
 
     this.cols = [
       { field: 'BinId', header: 'Bin' },
       { field: 'Material', header: 'Material' },
+      { field: 'materialdescription', header: 'Material Description' },
       { field: 'qty', header: 'Available Quantity' },
       { field: 'ItemLocation', header: 'Item Loaction' },
       
@@ -45,32 +47,27 @@ export class BinStatusReportComponent implements OnInit {
     this.exportColumns = this.cols.map(col => ({ title: col.header, dataKey: col.field }));
   }
 
-
-  onSelectStatus(event) {
-    this.selectedStatus = event.target.value;
-
-  }
-
-
- 
-
-  //InvoiceDetails(poNo: string,qty:string)
-  //{
-  //  this.router.navigate(['/WMS/InvoiceDetails'], { queryParams: { PONO: poNo,qty:qty} });
-  //  }
   SubmitBinStatus() {
+    this.spinner.show();
     if (this.selectedStatus == "empty") {
-      this.poList = this.dataList.filter(li => li.binid == 0 && li.binnumber != null);
+      //this.poList = this.dataList.filter(li => li.binid == 0 && li.binnumber != null);
+      this.poList = this.dataList.filter(li => li.availableqty == null || li.availableqty == 0);
+      this.spinner.hide();
     }
     else if (this.selectedStatus == "filled") {
-      this.poList = this.dataList.filter(li => li.binid != 0 && li.binnumber != null);}
+     // this.poList = this.dataList.filter(li => li.binid != 0 && li.binnumber != null);
+      this.poList = this.dataList.filter(li => li.availableqty != null  && li.availableqty > 0);
+      this.spinner.hide();
+    }
+
   }
   getBinstatusList() {
     this.spinner.show();
     this.wmsService.GetBinList().subscribe(data => {
       this.spinner.hide();
       this.dataList = data;
-      this.poList = this.dataList.filter(li=>li.binid!=0 && li.binnumber!=null);
+      this.poList = this.dataList.filter(li => li.availableqty != null && li.availableqty > 0);
+      //this.poList = this.dataList.filter(li=>li.binid!=0 && li.binnumber!=null);
     });
   }
 

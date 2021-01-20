@@ -299,6 +299,7 @@ export class gatepassModel {
   approvedby: string;
   categoryid: number;
   materiallistarray: any[] = [];
+  requestedon: Date;
 }
 export class materialistModel {
   gatepassmaterialid: string;
@@ -410,6 +411,23 @@ export class ddlmodel {
   projectmanager: string;
   receiveddate: Date
 
+}
+
+export class locationdropdownModel {
+  binid: number;
+  binnumber: string;
+  locatorid: number;
+  locatorname: string;
+  rackid: number;
+  racknumber: string;
+
+  //for initial stock putaway
+  quantity: number;
+  stocktype: string;
+  isdisablestore: boolean;
+  isdisablerack: boolean;
+  isdisablebin: boolean;
+  invalidlocation: boolean;
 }
 
 export class notifymodel {
@@ -1012,4 +1030,29 @@ export class MaterialMaster {
   safterystock: number;
   unitprice: string;
   hsncode: string;
+}
+
+export class InitialStock {
+  stockid: number;
+  pono: string;
+  binid: number;
+  quantity: number;
+  rackid: number;
+  storeid: number;
+  stocktype: any;
+  itemlocation: string;
+  createddate: Date;
+  createdby: string;
+  material: string;
+  materialdescription: string;
+  value: number;
+  projectid: string;
+  uploadedfilename: string;
+  uploadbatchcode: string;
+  unitprice: number;
+  defaultstore: number;
+  defaultrack: number;
+  defaultbin: number;
+  isputaway: boolean;
+  locations: locationdropdownModel[] = [];
 }

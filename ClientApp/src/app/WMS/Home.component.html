@@ -11,11 +11,6 @@
       <div class="row" style="margin-left:5px;margin-right:5px;">
         <div class="col-lg-3 col-md-3">
           <div class="card" style="width:100%; min-height: 83vh;border-radius:10px;margin-top:10px;">
-            <!--<div class="card-header cardheadertext">
-            <span class="cardheaderdata">
-              <i class="fa fa-area-chart"></i>&nbsp;Dashboard
-            </span>
-          </div>-->
             <div class="card-body">
               <div class="row" style="margin-left:5px;">
                 <div class="col-md-6 col-lg-6 col-sm-6 col-xs-6">
@@ -97,97 +92,7 @@
               </div>
 
 
-              <!--<div class="row">
-              <div class="col-lg-6 col-md-6">
-                <div class="card" *ngIf="firstload" style="border-radius:60px;width:60px;border-color:dimgray;">
-
-                  <div class="card-body text-center" style="padding:5px;">
-                      <span><i class="fa fa-file" style="color:black;font-size:45px;margin-top:3px;"></i></span>
-                  </div>
-                </div>
-                <div class="card" *ngIf="!firstload" style="border-radius:40px;width:80px;" (click)="activeCard($event,'Receive')">
-
-                  <div class="card-body text-center" style="padding:5px;">
-                    <div class="card" style="width:60px;height:60px;border-radius:30px;background-color:cornflowerblue;margin:0 auto;">
-                      <span><i class="fa fa-file" style="color:white;font-size:45px;margin-top:3px;"></i></span>
-                    </div>
-                    </div>
-                </div>
-
-              </div>
-              <div class="col-lg-6 col-md-6">
-                <div class="card" style="border-radius:40px;width:80px;">
-
-                  <div class="card-body text-center" style="padding:5px;">
-                    <div class="card" style="width:60px;height:60px;border-radius:30px;background-color:#dc3545!important;margin:0 auto;">
-                      <span><i class="fa fa-check-square-o" style="color:white;font-size:45px;margin-top:3px;"></i></span>
-                    </div>
-                     </div>
-                </div>
-
-              </div>
-
-            </div>
-            <div class="row" style="margin-top:50px;">
-              <div class="col-lg-6 col-md-6">
-
-                <div class="card" style="border-radius:40px;width:80px;">
-
-                  <div class="card-body text-center" style="padding:5px;">
-                    <div class="card" style="width:60px;height:60px;border-radius:30px;background-color:cornflowerblue!important;margin:0 auto;">
-                      <span><i class="fa fa-arrows-alt" style="color:white;font-size:45px;margin-top:3px;"></i></span>
-                    </div>
-                   </div>
-                </div>
-
-              </div>
-              <div class="col-lg-6 col-md-6">
-                <div class="card" style="border-radius:40px;width:80px;">
-
-                  <div class="card-body text-center" style="padding:5px;">
-                    <div class="card" style="width:60px;height:60px;border-radius:30px;background-color:#dc3545!important;margin:0 auto;">
-                      <span><i class="fa fa-send-o" style="color:white;font-size:45px;margin-top:3px;"></i></span>
-                    </div>
-                    </div>
-                </div>
-
-              </div>
-
-            </div>-->
-              <!--<p-organizationChart [value]="data1" selectionMode="single" [(selection)]="selectedNode" (onNodeSelect)="onNodeSelect($event)"
-                                 styleClass="company">
-              <ng-template let-node pTemplate="person">
-                <div class="node-header p-corner-top">{{node.label}}</div>
-                <div class="node-content">
-                  <img src="./assets/wf_pending.png" width="32">
-                  <div>{{node.data.name}}</div>
-                </div>
-              </ng-template>
-              <ng-template let-node pTemplate="department">
-                {{node.label}}
-              </ng-template>
-            </p-organizationChart>-->
-              <!--<span style="font-size:larger;font-weight:600">
-              <i class="fa fa-user text-primary"></i>&nbsp;Logged In As : <span class="text-primary"> {{rolename}} </span>
-            </span>
-            <hr class="new1"/>
-            <div>
-              <span style="font-size:larger;font-weight:600">
-                <i class="fa fa-users text-primary"></i>&nbsp;Roles
-              </span>
-              <div>
-                <div *ngFor="let k of userrolelist">
-                  <div class="card" style="width:100%;border-radius:5px;background-color:ghostwhite">
-                    <div class="card-body" style="padding:2px;padding-top:5px;">
-                      <span class="text-primary" style="font-weight:600;font-size:14px;" (click)="navigatebyrole(k.roleid)"> <i class="fa fa-user text-danger"></i>&nbsp;&nbsp;&nbsp;<label style="text-decoration:underline;cursor:pointer">{{k.accessname}}</label></span>
-                    </div>
-
-                  </div>
-                </div>
-
-
-              </div>
-            </div>-->
+            
             </div>
 
           </div>
@@ -195,7 +100,7 @@
         </div>
         <div class="col-lg-9 col-md-9">
 
-          <div class="card" style="background-image: url('./assets/dashboardbc.png');;background-repeat: no-repeat;margin-top:10px;border-radius:10px;background-size: 100% 100%;">
+          <div class="card" style="background-image: url('./assets/dashboardbc.png');background-repeat: no-repeat;margin-top:10px;border-radius:10px;background-size: 100% 100%;">
             <div class="row">
 
               <div class="col-lg-6 col-md-6">
@@ -216,23 +121,8 @@
 
             </div>
 
-            <!--<img src="./assets/wmshome3.png" alt="homepage image" style="height:75vh" />-->
-            <!--<div class="card-header" style="height:20px;padding-top:2px">
-       <span class="labeltext">
-        <i class="fa fa-area-chart"></i>&nbsp;Graphical view
-       </span>
-  </div>
-    <div class="row">
-      <div class="col-lg-6 col-md-6">
-       <p-chart type="line" [data]="chartdata" [height]="350" [options]="chartoptions"></p-chart>
-      </div>
-      <div class="col-lg-6 col-md-6">
-       <p-chart type="bar" [data]="monthlychartdata" [height]="350" [options]="chartoptions1"></p-chart>
-      </div>
-    </div>-->
-            <!-- Cards -->
 
-            <div class="container" style="margin:2px" *ngIf="userroleid == 3">
+            <!--<div class="container" style="margin:2px" *ngIf="userroleid == 3">
               <div class="row">
 
                 <div class="col-lg-3 mb-3">
@@ -334,7 +224,7 @@
 
               </div>
             </div>
-            <!-- PM Cards -->
+
 
             <div class="container" style="margin:2px" *ngIf="userroleid == 11">
               <div class="row">
@@ -437,7 +327,7 @@
 
               </div>
             </div>
-            <!-- Inventory enquiry -->
+           
             <div class="container" style="margin:2px" *ngIf="userroleid == 2">
               <div class="row">
 
@@ -536,108 +426,71 @@
 
 
               </div>
-            </div>
+            </div>-->
             <!-- Cards -->
 
-            <div class="card-header" style="height:20px;padding-top:2px" *ngIf="employee.roleid!='10' && employee.roleid !='8' && employee.roleid!='4' && employee.roleid !='5' && employee.roleid!='7'  &&  employee.roleid!='9' &&  employee.roleid!='1' &&  employee.roleid!='0'">
+            <!--<div class="card-header" style="height:20px;padding-top:2px" *ngIf="employee.roleid!='10' && employee.roleid !='8' && employee.roleid!='4' && employee.roleid !='5' && employee.roleid!='7'  &&  employee.roleid!='9' &&  employee.roleid!='1'">
               <span class="labeltext">
                 <i class="fa fa-area-chart"></i>&nbsp;Graphical view
               </span>
             </div>
             <div class="row" *ngIf="employee.roleid!='10' && employee.roleid !='8' && employee.roleid!='4' && employee.roleid !='5' && employee.roleid!='7' ">
               <div class="col-lg-6 col-md-6" *ngIf="employee.roleid =='3'">
-                <!--<h5 class="text-center" *ngIf="lblmonth !== ''">Receipt Graph For Month {{lblmonth}}</h5>
-                <h5 class="text-center" *ngIf="lblmonth === ''">Monthly Receipt Graph</h5>-->
                 <h6 class="text-center">Receipt Graph</h6>
                 <p-chart type="bar" [data]="receivedchartdata" [height]="180" [options]="chartoptions1"></p-chart>
               </div>
               <div class="col-lg-6 col-md-6" *ngIf="employee.roleid =='3'">
-                <!--<h5 class="text-center" *ngIf="lblmonth !== ''">Quality Graph For Month {{lblmonth}}</h5>
-                <h5 class="text-center" *ngIf="lblmonth === ''">Monthly Quality Graph</h5>-->
                 <h6 class="text-center">Quality Graph</h6>
                 <p-chart type="bar" [data]="qualitychartdata" [height]="180" [options]="chartoptions1"></p-chart>
               </div>
               <div class="col-lg-6 col-md-6" *ngIf="employee.roleid =='3'">
-                <!--<h5 class="text-center" *ngIf="lblmonth !== ''">Acceptance Graph For Month {{lblmonth}}</h5>
-                    <h5 class="text-center" *ngIf="lblmonth === ''">Monthly Acceptance Graph</h5>-->
                 <h6 class="text-center">Acceptance Graph</h6>
                 <p-chart type="bar" [data]="acceptchartdata" [height]="180" [options]="chartoptions1"></p-chart>
               </div>
               <div class="col-lg-6 col-md-6" *ngIf="employee.roleid =='3'">
-                <!--<h5 class="text-center" *ngIf="lblmonth !== ''">PutAway Graph For Month {{lblmonth}}</h5>
-                <h5 class="text-center" *ngIf="lblmonth === ''">Monthly PutAway Graph</h5>-->
                 <h6 class="text-center">PutAway Graph</h6>
                 <p-chart type="bar" [data]="putawaychartdata" [height]="180" [options]="chartoptions1"></p-chart>
               </div>
               <div class="col-lg-6 col-md-6" *ngIf="employee.roleid =='2'">
-                <!--<h5 class="text-center" *ngIf="lblmonth !== ''">Request Graph For Month {{lblmonth}}</h5>
-                <h5 class="text-center" *ngIf="lblmonth === ''">Monthly Request Graph</h5>-->
                 <h6 class="text-center">Request Graph</h6>
                 <p-chart type="bar" [data]="requestchartdata" [height]="180" [options]="chartoptions1"></p-chart>
               </div>
               <div class="col-lg-6 col-md-6" *ngIf="employee.roleid =='2'">
-                <!--<h5 class="text-center" *ngIf="lblmonth !== ''">Return Graph For Month {{lblmonth}}</h5>
-                <h5 class="text-center" *ngIf="lblmonth === ''">Monthly Return Graph</h5>-->
                 <h6 class="text-center">Return Graph</h6>
                 <p-chart type="bar" [data]="returnchartdata" [height]="180" [options]="chartoptions1"></p-chart>
               </div>
               <div class="col-lg-6 col-md-6" *ngIf="employee.roleid =='2'">
-                <!--<h5 class="text-center" *ngIf="lblmonth !== ''">Reserve Graph For Month {{lblmonth}}</h5>
-                <h5 class="text-center" *ngIf="lblmonth === ''">Monthly Reserve Graph</h5>-->
                 <h6 class="text-center">Reserve Graph</h6>
                 <p-chart type="bar" [data]="reservechartdata" [height]="180" [options]="chartoptions1"></p-chart>
               </div>
               <div class="col-lg-6 col-md-6" *ngIf="employee.roleid =='2'">
-                <!--<h5 class="text-center" *ngIf="lblmonth !== ''">Transfer Graph For Month {{lblmonth}}</h5>
-                <h5 class="text-center" *ngIf="lblmonth === ''">Monthly Transfer Graph</h5>-->
                 <h6 class="text-center">Transfer Graph</h6>
                 <p-chart type="bar" [data]="transferchartdata" [height]="180" [options]="chartoptions1"></p-chart>
               </div>
               <div class="col-lg-6 col-md-6" *ngIf="employee.roleid =='11'">
                 <h6 class="text-center">Request Graph</h6>
-                <!--<h5 class="text-center" *ngIf="lblmonth !== ''">Request Graph For Month {{lblmonth}}</h5>
-                 <h5 class="text-center" *ngIf="lblmonth === ''">Monthly Request Graph</h5>-->
                 <p-chart type="bar" [data]="requestchartdata" [height]="180" [options]="chartoptions1"></p-chart>
               </div>
               <div class="col-lg-6 col-md-6" *ngIf="employee.roleid =='11'">
-                <!--<h5 class="text-center" *ngIf="lblmonth !== ''">Return Graph For Month {{lblmonth}}</h5>
-                  <h5 class="text-center" *ngIf="lblmonth === ''">Monthly Return Graph</h5>-->
                 <h6 class="text-center">Return Graph</h6>
                 <p-chart type="bar" [data]="returnchartdata" [height]="180" [options]="chartoptions1"></p-chart>
               </div>
               <div class="col-lg-6 col-md-6" *ngIf="employee.roleid =='11'">
-                <!--<h5 class="text-center" *ngIf="lblmonth !== ''">Reserve Graph For Month {{lblmonth}}</h5>
-                <h5 class="text-center" *ngIf="lblmonth === ''">Monthly Reserve Graph</h5>-->
                 <h6 class="text-center">Reserve Graph</h6>
                 <p-chart type="bar" [data]="reservechartdata" [height]="180" [options]="chartoptions1"></p-chart>
               </div>
               <div class="col-lg-6 col-md-6" *ngIf="employee.roleid =='11'">
-                <!--<h5 class="text-center" *ngIf="lblmonth !== ''">Transfer Graph For Month {{lblmonth}}</h5>
-                <h5 class="text-center" *ngIf="lblmonth === ''">Monthly Transfer Graph</h5>-->
                 <h6 class="text-center">Transfer Graph</h6>
                 <p-chart type="bar" [data]="transferchartdata" [height]="180" [options]="chartoptions1"></p-chart>
               </div>
-              <!--<div class="col-lg-6 col-md-6" *ngIf="employee.roleid =='11'">
-    <p-chart type="line" [data]="monthlyIEchartdata" [height]="350" [options]="chartoptions2"></p-chart>
-  </div>-->
-              <!--<div class="col-lg-6 col-md-6" *ngIf="employee.roleid =='3'">
-    <p-chart type="bar" [data]="chartdata" [height]="250" [options]="chartoptions"></p-chart>
-  </div>-->
-              <!--<div class="col-lg-6 col-md-6" *ngIf="employee.roleid =='2' ">
-    <p-chart type="bar" [data]="chartdataIE" [height]="250" [options]="chartoptions11"></p-chart>
-  </div>-->
-              <!--<div class="col-lg-6 col-md-6" *ngIf="employee.roleid =='11' ">
-    <p-chart type="bar" [data]="chartdataIE" [height]="250" [options]="chartoptions11"></p-chart>
-  </div>-->
-              <!--<div class="col-lg-6 col-md-6">
-    <p-chart type="bar" [data]="chartdataPM" [height]="250" [options]="chartoptions"></p-chart>
-  </div>-->
-            </div>
-            <!--<div class="col-lg-3 col-md-3" >
-    <p-chart type="doughnut" [data]="monthlychartdata"  ></p-chart>
-  </div>-->
+             
+            </div>-->
+           
             <!-- End Graphs -->
-            <div style="height:60vh" *ngIf="employee.roleid!='2' && employee.roleid !='3' && employee.roleid!='11' ">
+            <!--<div style="height:60vh" *ngIf="employee.roleid!='2' && employee.roleid !='3' && employee.roleid!='11' ">
+              <img src="./assets/wmshome3.png" alt="homepage image" height="100%" width="100%" />
+            </div>-->
+             <div style="height:60vh">
               <img src="./assets/wmshome3.png" alt="homepage image" height="100%" width="100%" />
             </div>
 
