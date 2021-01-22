@@ -242,12 +242,14 @@ export class ReceiveSTORequestComponent implements OnInit {
   }
 
   InitiatePO() {
+    this.spinner.show();
+    this.materialissueList[0].uploadedby = this.employee.employeeno;
     this.wmsService.STOPOInitiate(this.materialissueList).subscribe(data => {
       this.spinner.hide();
       if (data)
-        this.messageService.add({ severity: 'success', summary: '', detail: 'PO Created.' });
+        this.messageService.add({ severity: 'success', summary: '', detail: 'PO Creation Request Sent.' });
       else
-        this.messageService.add({ severity: 'error', summary: '', detail: 'PO Creation Failed.' });
+        this.messageService.add({ severity: 'error', summary: '', detail: 'PO Creation Request Failed.' });
       this.showMatDetails = false;
     });
   }

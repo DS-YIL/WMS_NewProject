@@ -5,8 +5,8 @@
         <div class="col-lg-4 col-md-4 form-inline">
           <div class="form-inline">
             <label class="labelheading">Status :</label>&nbsp;&nbsp;
-            <select placeholder="Status" name="Status" [ngModel]="selectedStatus" (change)="onSelectStatus($event)"  class="form-control">
-              <option  value="Pending"> Pending</option>
+            <select placeholder="Status" name="Status" [ngModel]="selectedStatus" (change)="onSelectStatus($event)" class="form-control">
+              <option value="Pending"> Pending</option>
               <option value="Issued"> Issued</option>
             </select>
           </div>
@@ -53,7 +53,7 @@
               <td class="ptable-cell" style="text-align:center;width:150px;">{{rowData.destinationplant}}</td>
               <td class="ptable-cell" style="text-align:center;width:100px;">{{rowData.transferredon  | date :  constants.dateFormat}}</td>
               <td class="ptable-cell" style="text-align:center;width:90px;"><button type="button" style="font-size:12px" class="btn btn-success" (click)="navigateToMatIssue(rowData)">Available Stock</button></td>
-              <td class="ptable-cell" style="text-align:center;width:90px;"><button type="button" [disabled]="rowData.isporequested?false:true" style="font-size:12px" class="btn btn-success" (click)="navigateToPOInitiate(rowData)">Create PO</button></td>
+              <td class="ptable-cell" style="text-align:center;width:90px;"><button type="button" [disabled]="rowData.isporequested==false?false:true" style="font-size:12px" class="btn btn-success" (click)="navigateToPOInitiate(rowData)">Create PO</button></td>
             </tr>
           </ng-template>
         </p-table>
@@ -221,7 +221,7 @@
             <td class="ptable-cell" style="text-align:right">
               {{ri+1}}
             </td>
-            <td class="ptable-cell" style="text-align:left;width:200px;"><button type="button" class="btn btn-link" (click)="showmateriallocationList(rowData.materialid,ri+1,ri,rowData.transferqty,rowData.issuedqty);" style="padding-left:0px;">{{rowData.materialid}}</button></td>
+            <td class="ptable-cell" style="text-align:left;width:200px;">{{rowData.materialid}}</td>
             <td class="ptable-cell" style="text-align:right">{{rowData.poitemdescription}}</td>
             <td class="ptable-cell" style="text-align:right">{{rowData.transferqty}}</td>
             <td class="ptable-cell" style="text-align:right">{{rowData.availableqty}}</td>
@@ -232,7 +232,7 @@
       <br />
 
       <div style="text-align: center;margin-top:5px;">
-        <input *ngIf="btndisable" class="btn btn-primary" (click)="InitiatePO()" type="button" value="Submit">
+        <input *ngIf="materialissueList.length>0" class="btn btn-primary" (click)="InitiatePO()" type="button" value="Initiate PO">
       </div>
     </div>
   </div>

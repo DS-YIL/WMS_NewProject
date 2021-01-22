@@ -1346,6 +1346,7 @@ public class invstocktransfermodel
 	public string projectid { get; set; }
 	public DateTime requireddate { get; set; }
 	public string status { get; set; }
+	public bool isporequested { get; set; }
 }
 
 public class stocktransfermateriakmodel
@@ -1456,6 +1457,7 @@ public class STORequestdata
 	public List<STOrequestTR> materialdata { get; set; }
 
 	public string remarks { get; set; }
+	public bool isporequested { get; set; }
 
 }
 
@@ -2028,6 +2030,7 @@ public class MPRRevision
 	public string Enduser { get; set; }
 	public List<MPRItemInfo> MPRItemInfoes { get; set; }
 	public List<MPRVendorDetail> MPRVendorDetails { get; set; }
+	public MPRDetail MPRDetail { get; set; }
 
 }
 public class MPRItemInfo
@@ -2069,4 +2072,15 @@ public partial class MPRVendorDetail
 	public string RemovedBy { get; set; }
 	public Nullable<System.DateTime> RemovedDate { get; set; }
 	public bool RemoveFlag { get; set; }
+}
+public class MPRDetail
+{
+
+	public int RequisitionId { get; set; }
+	public string DocumentNo { get; set; }
+	public Nullable<long> MPRSeqNo { get; set; }
+	public string SubmittedBy { get; set; }
+	public System.DateTime SubmittedDate { get; set; }
+	public string DocumentDescription { get; set; }
+
 }

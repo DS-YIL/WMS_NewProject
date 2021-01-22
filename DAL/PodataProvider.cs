@@ -33,6 +33,7 @@ using System.Globalization;
 using System.Net.Http;
 using System.Text;
 using Newtonsoft.Json;
+using System.Configuration;
 
 /*
     Name of namespace : <<WMS>>  Author :<<Shashikala>>  
@@ -13837,7 +13838,11 @@ Review Date :<<>>   Reviewed By :<<>>
 				try
 				{
 					string materialrequestquery = WMSResource.getMatdetailsbyTransferId;
-					materialrequestquery += " where inv.transferid = '" + transferId + "' and stock.availableqty is not null and stock.availableqty > 0";
+					materialrequestquery += " where inv.transferid = '" + transferId + "' ";
+					if (type == "MatIssue")
+					{
+						materialrequestquery += " and stock.availableqty is not null and stock.availableqty > 0";
+					}
 
 					if (type == "POInitiate")
 					{
@@ -13873,27 +13878,45 @@ Review Date :<<>>   Reviewed By :<<>>
 		public async Task<string> STOPOInitiate(List<STOIssueModel> data)
 		{
 			//send data to scm to create PO
-			var scmURL = "http://10.29.15.68:90/Api/MPR/UpdateMPR/";
-			using (var client = new HttpClient())
+
+			var mprData = new MPRRevision();
+			mprData.MPRDetail = new MPRDetail();
+			mprData.MPRItemInfoes = new List<MPRItemInfo>();
+			//mprData.IssuePurposeId = 1;
+			//mprData.DepartmentId = 1;
+			//mprData.BuyerGroupId = 1;
+			mprData.PreparedBy = data[0].uploadedby;
+			mprData.CheckedBy = config.POChecker;
+			mprData.ApprovedBy = config.POApprover;
+			foreach (STOIssueModel item in data)
 			{
-				var mprData = new MPRRevision();
-				//mprData.IssuePurposeId = 1;
-				//mprData.DepartmentId = 1;
-				//mprData.BuyerGroupId = 1;
-				mprData.PreparedBy = data[0].uploadedby;
-				mprData.CheckedBy = "140020";
-				mprData.ApprovedBy = "010606";
 				MPRItemInfo mPRItemInfo = new MPRItemInfo();
-				mPRItemInfo.Itemid = data[0].materialid;
-				mPRItemInfo.ItemDescription = data[0].poitemdescription;
-				mPRItemInfo.Quantity = Convert.ToDecimal(data[0].availableqty);
+				mPRItemInfo.Itemid = item.materialid;
+				mPRItemInfo.ItemDescription = item.poitemdescription;
+				mPRItemInfo.Quantity = Convert.ToDecimal(item.transferqty);
 				//mPRItemInfo.UnitId = 1;
 				mprData.MPRItemInfoes.Add(mPRItemInfo);
-				var json = JsonConvert.SerializeObject(mprData);
-				var content = new StringContent(json, Encoding.UTF8, "application/json");
-				var response = client.PostAsync(scmURL, content).Result;
-				string result = response.Content.ReadAsStringAsync().Result;
 			}
+			using (var client = new HttpClient())
+			{
+				StringContent content = new StringContent(JsonConvert.SerializeObject(mprData), Encoding.UTF8, "application/json");
+
+				using (var response = await client.PostAsync(config.SCMUrl, content))
+				{
+					string apiResponse = await response.Content.ReadAsStringAsync();
+					var result = JsonConvert.DeserializeObject<MPRRevision>(apiResponse);
+					if (result != null)
+					{
+						//send mail to checker and approver
+						EmailUtilities emailobj = new EmailUtilities();
+						int mprrevisionid = result.RevisionId;
+						emailobj.sendCreatePOMail(data[0].uploadedby, mprrevisionid);
+
+					}
+				}
+
+			}
+
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
 				try
@@ -13909,12 +13932,13 @@ Review Date :<<>>   Reviewed By :<<>>
 					string scmStatus = "Sucess";
 					foreach (STOIssueModel item in data)
 					{
+						int poqty =Convert.ToInt32(item.transferqty);
 						var results = pgsql.ExecuteScalar(query, new
 						{
 							item.transferid,
 							item.materialid,
 							item.poitemdescription,
-							item.transferqty,
+							poqty,
 							scmStatus,
 							item.uploadedby
 						});

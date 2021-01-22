@@ -3019,7 +3019,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO wms.wms_InitiatePO(transferid,materialid,poitemdescription,poqty,scmstatus,uploadedby,requesteddate,uploadedon)
+        ///   Looks up a localized string similar to INSERT INTO wms.wms_InitiatePO(id,transferid,materialid,poitemdescription,poqty,scmstatus,uploadedby,uploadedon)
         ///VALUES(default,@transferid,@materialid,@poitemdescription,@poqty,@scmstatus,@uploadedby,current_date).
         /// </summary>
         public static string updatePOInitiateDetails {

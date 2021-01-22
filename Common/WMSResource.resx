@@ -1712,7 +1712,7 @@ left outer join wms.employee emp  on emp.employeeno = inv.transferredby where  i
 order by transferredon desc</value>
   </data>
   <data name="updatePOInitiateDetails" xml:space="preserve">
-    <value>INSERT INTO wms.wms_InitiatePO(transferid,materialid,poitemdescription,poqty,scmstatus,uploadedby,requesteddate,uploadedon)
+    <value>INSERT INTO wms.wms_InitiatePO(id,transferid,materialid,poitemdescription,poqty,scmstatus,uploadedby,uploadedon)
 VALUES(default,@transferid,@materialid,@poitemdescription,@poqty,@scmstatus,@uploadedby,current_date)</value>
   </data>
   <data name="initialstockunionqueryforreport" xml:space="preserve">
