@@ -1311,6 +1311,19 @@ namespace WMS.Controllers
 
 		}
 
+		[HttpPost("MiscellanousReasonAdd")]
+		public string MiscellanousReasonAdd(GPReasonMTData data)
+		{
+			return this._poService.MiscellanousReasonAdd(data);
+
+		}
+		//[HttpPost("GPReasonMTAdd")]
+		//public string GPReasonMTAdd(GPReasonMTData data)
+		//{
+		//	return this._poService.GPReasonMTAdd(data);
+
+		//}
+
 		[HttpPost("createplant")]
 		public string createplant(PlantMTdata data)
 		{
@@ -1331,7 +1344,14 @@ namespace WMS.Controllers
 			return await this._poService.getGPReasonData();
 
 		}
-		
+
+		[HttpGet("getMiscellanousReasonData")]
+		public async Task<IEnumerable<GPReasonMTData>> getMiscellanousReasonData()
+		{
+			return await this._poService.getMiscellanousReasonData();
+
+		}
+
 		[HttpPost("PlantnameDelete")]
 		public string PlantnameDelete(PlantMTdata data)
 		{

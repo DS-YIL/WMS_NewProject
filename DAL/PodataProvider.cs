@@ -9036,6 +9036,7 @@ namespace WMS.DAL
 												createdby,
 
 											});
+											var poitemdesc = stck.materialdescription;
 											int sourceitemid = itm.itemid;
 											int destinationitemid = result;
 											string stockinsertqry = WMSResource.insertinvtransfermaterial;
@@ -9049,7 +9050,8 @@ namespace WMS.DAL
 												sourceitemid,
 												stck.destinationlocation,
 												destinationitemid,
-												transferqty
+												transferqty,
+												poitemdesc
 											});
 
 										}
@@ -13536,6 +13538,55 @@ namespace WMS.DAL
 
 
 		/*
+		Name of Function : <<MiscellanousReasonAdd>>  Author :<<Gayathri>>  
+		Date of Creation <<20-01-2021>>
+		Purpose : <<inserting Miscellanous reason master data into rd_reason table>>
+		<param name="GPReasonMTData"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
+		public string MiscellanousReasonAdd(GPReasonMTData reasondata)
+		{
+			string GPResult = "Error";
+			try
+			{
+
+
+				using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+				{
+					if (reasondata.reasonid != 0)
+					{
+						//Update reason in rd_reason based on reasonid
+						string updatequery = WMSResource.updateGPReason.Replace("#reason", "'" + reasondata.reason + "'").Replace("#createdby", "'" + reasondata.createdby + "'");
+						updatequery += "where reasonid = " + reasondata.reasonid;
+						var result1 = pgsql.Execute(updatequery);
+
+					}
+					else
+					{
+						string insertquery = WMSResource.insertGPReason;
+						reasondata.type = "Miscellanous";
+						pgsql.ExecuteScalar(insertquery, new
+						{
+							reasondata.reason,
+							reasondata.type,
+							reasondata.createdby
+
+						});
+					}
+
+					GPResult = "Success";
+				}
+			}
+			catch (Exception ex)
+			{
+				log.ErrorMessage("PODataProvider", "GPReasonMTAdd", ex.StackTrace.ToString());
+				return null;
+			}
+			return GPResult;
+		}
+
+
+		/*
 		Name of Function : <<createplant>>  Author :<<Gayathri>>  
 		Date of Creation <<15-01-2021>>
 		Purpose : <<inserting plant name master data into rd_plant table>>
@@ -13603,6 +13654,34 @@ namespace WMS.DAL
 			catch (Exception ex)
 			{
 				log.ErrorMessage("PODataProvider", "getGPReasonData", ex.StackTrace.ToString());
+				return null;
+			}
+			//return objgp;
+		}
+
+
+		/*
+Name of Function : <<getMiscellanousReasonData>>  Author :<<Gayathri>>  
+Date of Creation <<29-12-2019>>
+Purpose : <<Get the list of Gate Pass reasons>>
+<param name="GPReasonMTData"></param>
+Review Date :<<>>   Reviewed By :<<>>
+*/
+		public async Task<IEnumerable<GPReasonMTData>> getMiscellanousReasonData()
+		{
+			try
+			{
+				using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+				{
+					string GPDataquery = WMSResource.getMiscellanousReasons;
+					var gpresult = await pgsql.QueryAsync<GPReasonMTData>(
+					  GPDataquery, null, commandType: CommandType.Text);
+					return gpresult;
+				}
+			}
+			catch (Exception ex)
+			{
+				log.ErrorMessage("PODataProvider", "getMiscellanousReasonData", ex.StackTrace.ToString());
 				return null;
 			}
 			//return objgp;

@@ -1592,6 +1592,20 @@ public class testcrud
 	public bool ismanager { get; set; }
 }
 
+
+public class locationBarcode
+{
+	public int locatorid { get; set; }
+	public string locatorname { get; set; }
+	public int rackid { get; set; }
+	public string rackname { get; set; }
+	public int binid { get; set; }
+	public string binname { get; set; }
+	public bool isracklabel { get;set;}
+}
+
+
+
 public class PrintHistoryModel
 {
 	public int reprinthistoryid { get; set; }

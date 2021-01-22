@@ -345,7 +345,7 @@ export class StockTransferComponent implements OnInit {
     debugger;
     if (!isNullOrUndefined(data.materialdescription) && data.materialdescription != "") {
       var data1 = this.podetailsList.filter(function (element, index) {
-        return (element.materialid == data.material && element.materialdescription == data.materialdescription && index != ind);
+        return (element.materialid == data.materialid && element.materialdescription == data.materialdescription && index != ind);
       });
       if (data1.length > 0) {
         this.messageService.add({ severity: 'error', summary: '', detail: 'Material already exist' });
@@ -357,7 +357,7 @@ export class StockTransferComponent implements OnInit {
         return false;
       }
       var data2 = this.defaultmaterials.filter(function (element, index) {
-        return (element.material == data.material && element.materialdescription == data.materialdescription);
+        return (element.material == data.materialid && element.materialdescription == data.materialdescription);
       });
       if (data2.length > 0) {
         data.materialdescription = data2[0].materialdescription;
@@ -367,10 +367,10 @@ export class StockTransferComponent implements OnInit {
     }
     else {
       var senddata = this.defaultmaterials.filter(function (element, index) {
-        return (element.material == data.material);
+        return (element.material == data.materialid);
       });
       this.setdesclist(senddata);
-      this.showmateriallocationList(event, ind);
+     
       this.showmateriallocationList(event, ind);
 
     }
@@ -378,7 +378,7 @@ export class StockTransferComponent implements OnInit {
    
   }
 
-  onDescriptionSelected(data: any, ind: number) {
+  onDescriptionSelected(event:any, data: any, ind: number) {
     debugger;
     if (!isNullOrUndefined(data.material) && data.material != "") {
       var data1 = this.podetailsList.filter(function (element, index) {
@@ -407,7 +407,7 @@ export class StockTransferComponent implements OnInit {
         return (element.materialdescription == data.materialdescription);
       });
       this.setmatlist(senddata);
-
+      //this.showmateriallocationList(event, ind);
     }
 
   }
@@ -621,7 +621,7 @@ export class StockTransferComponent implements OnInit {
 
   filtermats(event, data: any) {
    
-    debugger;
+   
     if (!isNullOrUndefined(data.materialdescription) && data.materialdescription != "") {
       var senddata = this.defaultmaterials.filter(function (element, index) {
         return (element.materialdescription == data.materialdescription);
@@ -633,7 +633,7 @@ export class StockTransferComponent implements OnInit {
     }
     this.filteredmats = [];
     for (let i = 0; i < this.defaultmaterialids.length; i++) {
-      debugger;
+    
       let brand = this.defaultmaterialids[i].material;
       if (brand.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
         this.filteredmats.push(brand);
@@ -643,9 +643,10 @@ export class StockTransferComponent implements OnInit {
   }
 
   filtermatdescs(event, data: any) {
-    if (!isNullOrUndefined(data.material) && data.material != "") {
+    debugger;
+    if (!isNullOrUndefined(data.materialid) && data.materialid != "") {
       var senddata = this.defaultmaterials.filter(function (element, index) {
-        return (element.material == data.material);
+        return (element.material == data.materialid);
       });
       this.setdesclist(senddata);
     }
@@ -683,6 +684,12 @@ export class StockTransferComponent implements OnInit {
   }
   showdetails(data: any, index:any) {
     debugger;
+    if (data.transfertype == "STO") {
+      this.displaySTO = true;
+    }
+    else {
+      this.displaySTO = false;
+    }
     data.showdetail = !data.showdetail;
     this.selectedRow = index;
     this.stocktransferDetaillist = data.materialdata;
@@ -715,19 +722,25 @@ export class StockTransferComponent implements OnInit {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Select plants.' });
       return;
     }
-    //var invalidrow = this.podetailsList.filter(function (element, index) {
-    //  if (this.mainmodel.destinationplant == this.mainmodel.sourceplant) {
-    //    return (!element.sourcelocation) || (!element.destinationlocation) || (!element.transferqty) || (!element.materialid)
-    //  }
-    //  else {
-    //    return (!element.transferqty) || (!element.materialid) || (!element.projectid) || (!element.requireddate);
-    //  }
-    //  //return (!element.sourcelocation) || (!element.destinationlocation) || (!element.transferqty) || (!element.materialid) || (element.transferqty == 0);
-    //});
-    //if (invalidrow.length > 0) {
-    //  this.messageService.add({ severity: 'error', summary: '', detail: 'Fill all details.' });
-    //  return;
-    //}
+    if (this.mainmodel.destinationplant == this.mainmodel.sourceplant) {
+      var invalidrow = this.podetailsList.filter(function (element, index) {
+
+        return (!element.sourcelocation) || (!element.destinationlocation) || (!element.transferqty) || (!element.materialid)
+      });
+     
+      //return (!element.sourcelocation) || (!element.destinationlocation) || (!element.transferqty) || (!element.materialid) || (element.transferqty == 0);
+    }
+    else {
+      var invalidrow = this.podetailsList.filter(function (element, index) {
+
+        return (!element.transferqty) || (!element.materialid) || (!element.projectid) || (!element.requireddate);
+      });
+        
+      }
+    if (invalidrow.length > 0) {
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Fill all details.' });
+      return;
+    }
     if ((this.mainmodel.sourceplant) && (this.mainmodel.destinationplant) && (this.mainmodel.sourceplant == this.mainmodel.destinationplant)) {
       var dataxx = this.podetailsList.filter(function (element, index) {
         return (element.sourcelocation == element.destinationlocation);

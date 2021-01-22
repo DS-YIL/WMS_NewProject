@@ -274,12 +274,16 @@ namespace WMS.Interfaces
 	System.Data.DataTable getMaterialMasterList();
 		bool updateMaterialMaster(materilaMasterYgs material);
 		string GPReasonMTAdd(GPReasonMTData data);
+		string MiscellanousReasonAdd(GPReasonMTData data);
 
 		string GPReasonMTDelete(GPReasonMTData data);
 
 		string createplant(PlantMTdata data);
 
 		Task<IEnumerable<GPReasonMTData>> getGPReasonData();
+
+		Task<IEnumerable<GPReasonMTData>> getMiscellanousReasonData();
+
 		string generateLabel(string labeldata);
 		Task<IEnumerable<invstocktransfermodel>> getSTORequestList();
 		Task<IEnumerable<STOIssueModel>> getMatdetailsbyTransferId(string transferId,string type);

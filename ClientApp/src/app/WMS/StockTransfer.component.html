@@ -99,7 +99,7 @@
                                     [dropdown]="true"></p-autoComplete>
                   </td>
                   <td class="ptable-cell" style="text-align:left;">
-                    <p-autoComplete [(ngModel)]="rowData.materialdescription" placeholder="search by description" type="text" appendTo="body" [forceSelection]="true" (onSelect)="onDescriptionSelected(rowData,ri)" [suggestions]="filteredmatdesc" (completeMethod)="filtermatdescs($event,rowData)" [size]="40"
+                    <p-autoComplete [(ngModel)]="rowData.materialdescription" placeholder="search by description" type="text" appendTo="body" [forceSelection]="true" (onSelect)="onDescriptionSelected($event,rowData,ri)" [suggestions]="filteredmatdesc" (completeMethod)="filtermatdescs($event,rowData)" [size]="40"
                                     [dropdown]="true"></p-autoComplete>
 
                     <!--<span>{{rowData.materialdescription}}</span>-->
@@ -147,8 +147,9 @@
                   <th style="text-align:center;width:15%;">Transfer Id</th>
                   <th style="text-align:center;width:15%;">Source Plant</th>
                   <th style="text-align:center;width:15%;">Destination Plant</th>
-                  <th style="text-align:center;width:15%;">Transferred By</th>
-                  <th style="text-align:center;width:15%;">Transferred On</th>
+                  <th style="text-align:center;width:10%;">Type</th>
+                  <th style="text-align:center;width:10%;">Transferred By</th>
+                  <th style="text-align:center;width:10%;">Transferred On</th>
                   <th style="text-align:center;width:20%;">Remarks</th>
                 </tr>
               </ng-template>
@@ -164,10 +165,13 @@
                   <td class="ptable-cell" style="text-align:left;width:15%;">
                     <span>{{rowData.destinationplant}}</span>
                   </td>
-                  <td class="ptable-cell" style="text-align:left;width:15%;">
+                  <td class="ptable-cell" style="text-align:left;width:10%;">
+                    <span>{{rowData.transfertype}}</span>
+                  </td>
+                  <td class="ptable-cell" style="text-align:left;width:10%;">
                     <span>{{rowData.transferredby}}</span>
                   </td>
-                  <td class="ptable-cell" style="text-align:center;width:15%;">
+                  <td class="ptable-cell" style="text-align:center;width:10%;">
                     <span>{{rowData.transferredon | date :  constants.dateFormat}}</span>
                   </td>
                   <td class="ptable-cell" style="text-align:left;width:20%;">
@@ -175,13 +179,13 @@
                   </td>
                 </tr>
                 <tr *ngIf="rowData.showdetail">
-                  <td [attr.colspan]="7" style="text-align:center;">
+                  <td [attr.colspan]="8" style="text-align:center;">
                     <label class="labeltext">Transfer Detail</label>
                   </td>
 
                 </tr>
                 <tr *ngIf="rowData.showdetail">
-                  <td [attr.colspan]="7" style="text-align:center;">
+                  <td [attr.colspan]="8" style="text-align:center;">
                     <p-table #dt [value]="rowData.materialdata" [style]="{'width':'100%'}"
                              [scrollable]="true" scrollHeight="20vh">
                       <ng-template pTemplate="header">
@@ -189,10 +193,11 @@
                   <th style="    text-align: center; width: 5%;background-color: #9ba5af !important">Sl.No.</th>
                   <th style="    text-align: center; width: 15%;background-color: #9ba5af !important">Material</th>
                   <th style="    text-align: center;background-color: #9ba5af!important">Material Description</th>
-                  <th style="    text-align: center; width: 20%;background-color: #9ba5af !important;">Source location</th>
-                  <th style="    text-align: center;width: 20%;background-color: #9ba5af!important">Destination Location</th>
-                  <th style="    text-align: center; width: 10%;
-       background-color: #9ba5af!important">Transfer Qty</th>
+                  <th *ngIf="!displaySTO" style="    text-align: center; width: 20%;background-color: #9ba5af !important;">Source location</th>
+                  <th *ngIf="!displaySTO" style="    text-align: center;width: 20%;background-color: #9ba5af!important">Destination Location</th>
+                  <th *ngIf="displaySTO" style="    text-align: center; width: 20%;background-color: #9ba5af !important;">Project</th>
+                  <th *ngIf="displaySTO" style="    text-align: center;width: 20%;background-color: #9ba5af!important">Required Date</th>
+                  <th style="    text-align: center; width: 10%;background-color: #9ba5af!important">Transfer Qty</th>
                 </tr>
               </ng-template>
               <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
@@ -205,15 +210,23 @@
                     <span>{{rowData.materialdescription}}</span>
                   </td>
 
-                  <td class="ptable-cell" style="text-align:left;width:20%;">
+                  <td *ngIf="!displaySTO" class="ptable-cell" style="text-align:left;width:20%;">
                     <span>{{rowData.sourcelocation}}</span>
                   </td>
 
 
-                  <td class="ptable-cell" style="text-align:left;width:20%;">
+                  <td *ngIf="!displaySTO" class="ptable-cell" style="text-align:left;width:20%;">
                     <span>{{rowData.destinationlocation}}</span>
                   </td>
 
+                  <td *ngIf="displaySTO" class="ptable-cell" style="text-align:left;width:20%;">
+                    <span>{{rowData.projectid}}</span>
+                  </td>
+
+
+                  <td *ngIf="displaySTO" class="ptable-cell" style="text-align:left;width:20%;">
+                    <span>{{rowData.requireddate | date : 'dd/MM/yyyy'}}</span>
+                  </td>
 
                   <td class="ptable-cell" style="text-align:right;width:10%;">
                     <span>{{rowData.transferqty}}</span>

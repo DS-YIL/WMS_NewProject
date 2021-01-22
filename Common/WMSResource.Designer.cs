@@ -825,7 +825,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select inv.transferid, inv.materialid , Max(mat.materialdescription) as materialdescription, inv.sourcelocation ,inv.destinationlocation ,sum(inv.transferqty) as transferqty
+        ///   Looks up a localized string similar to select inv.transferid, inv.materialid , Max(mat.materialdescription) as materialdescription, inv.sourcelocation ,inv.destinationlocation ,sum(inv.transferqty) as transferqty,max(inv.projectid) as projectid, max(inv.requireddate) as requireddate
         ///from wms.wms_invtransfermaterial inv
         ///left outer join wms.&quot;MaterialMasterYGS&quot; mat on inv.materialid = mat.material
         ///where inv.transferid = &apos;#tid&apos; 
@@ -1392,6 +1392,15 @@ namespace WMS.Common {
         public static string getMiscellanousIssuesList {
             get {
                 return ResourceManager.GetString("getMiscellanousIssuesList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to select * from wms.rd_reason where reasontype =&apos;Miscellanous&apos; and deleteflag =false.
+        /// </summary>
+        public static string getMiscellanousReasons {
+            get {
+                return ResourceManager.GetString("getMiscellanousReasons", resourceCulture);
             }
         }
         

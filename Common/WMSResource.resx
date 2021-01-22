@@ -726,7 +726,7 @@ left outer join wms."MaterialMasterYGS" mat on st.materialid = mat.material
 group by st.materialid,st.transferedon order by st.transferedon desc</value>
   </data>
   <data name="getinvtransfermaterialdetail" xml:space="preserve">
-    <value>select inv.transferid, inv.materialid , Max(mat.materialdescription) as materialdescription, inv.sourcelocation ,inv.destinationlocation ,sum(inv.transferqty) as transferqty
+    <value>select inv.transferid, inv.materialid , Max(mat.materialdescription) as materialdescription, inv.sourcelocation ,inv.destinationlocation ,sum(inv.transferqty) as transferqty,max(inv.projectid) as projectid, max(inv.requireddate) as requireddate
 from wms.wms_invtransfermaterial inv
 left outer join wms."MaterialMasterYGS" mat on inv.materialid = mat.material
 where inv.transferid = '#tid' 
@@ -1807,5 +1807,8 @@ values (@transferid,@materialid,@transferqty,@projectid,@requireddate,@poitemdes
   </data>
   <data name="updateplantname" xml:space="preserve">
     <value>update wms.wms_rd_Plant set plantname=#plantname, createdon =current_date ,createdby =#createdby</value>
+  </data>
+  <data name="getMiscellanousReasons" xml:space="preserve">
+    <value>select * from wms.rd_reason where reasontype ='Miscellanous' and deleteflag =false</value>
   </data>
 </root>
