@@ -60,7 +60,7 @@ namespace WMS.DAL
                         }
                         catch (Exception Ex)
                         {
-                            log.ErrorMessage("LoginDataProvider", "validatelogincredentials", Ex.StackTrace.ToString());
+                            log.ErrorMessage("LoginDataProvider", "validatelogincredentials", Ex.StackTrace.ToString(), Ex.Message.ToString());
                             userdata = null;
                         }
                         finally
@@ -87,7 +87,7 @@ namespace WMS.DAL
                     }
                     catch (Exception Ex)
                     {
-                        log.ErrorMessage("LoginDataProvider", "validatelogincredentials", Ex.StackTrace.ToString());
+                        log.ErrorMessage("LoginDataProvider", "validatelogincredentials", Ex.StackTrace.ToString(),Ex.Message.ToString());
                         userdata = null;
                     }
                     finally

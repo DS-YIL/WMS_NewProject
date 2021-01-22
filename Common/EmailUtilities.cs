@@ -380,7 +380,7 @@ namespace WMS.Common
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("EmailUtilities", "getname", Ex.StackTrace.ToString());
+					log.ErrorMessage("EmailUtilities", "getname", Ex.StackTrace.ToString(), Ex.Message.ToString());
 					return null;
 				}
 				finally
@@ -418,7 +418,7 @@ namespace WMS.Common
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("EmailUtilities", "getname", Ex.StackTrace.ToString());
+					log.ErrorMessage("EmailUtilities", "getname", Ex.StackTrace.ToString(),Ex.Message.ToString());
 					return null;
 				}
 				finally

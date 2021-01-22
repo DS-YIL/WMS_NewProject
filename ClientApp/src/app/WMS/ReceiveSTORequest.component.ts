@@ -242,7 +242,6 @@ export class ReceiveSTORequestComponent implements OnInit {
   }
 
   InitiatePO() {
-
     this.wmsService.STOPOInitiate(this.materialissueList).subscribe(data => {
       this.spinner.hide();
       if (data)

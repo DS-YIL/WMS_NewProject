@@ -145,7 +145,7 @@ namespace WMS.Models
 		public string soldto { get; set; }
 
 		public string lineitemno { get; set; }
-		public string partno { get;set; }
+		public string partno { get; set; }
 		public string custpo { get; set; }
 		public string codetype { get; set; }
 		public string materialbarcode { get; set; }
@@ -153,7 +153,7 @@ namespace WMS.Models
 		public string soiembarcode { get; set; }
 		public string plantbarcode { get; set; }
 		public string linkagebarcode { get; set; }
-		public string spbarcode { get; set; } 
+		public string spbarcode { get; set; }
 		public string grbarcode { get; set; }
 
 
@@ -303,7 +303,7 @@ namespace WMS.Models
 	}
 
 	public class PlantMTdata
-    {
+	{
 		public int plantid { get; set; }
 		public string plantname { get; set; }
 
@@ -312,7 +312,7 @@ namespace WMS.Models
 		public string createdon { get; set; }
 
 	}
-	
+
 
 	public class StockModel
 	{
@@ -1275,7 +1275,7 @@ namespace WMS.Models
 
 		//for initial stock putaway
 		public int quantity { get; set; }
-       public string stocktype { get; set; }
+		public string stocktype { get; set; }
 	}
 
 	public class Materials
@@ -1467,7 +1467,7 @@ public class STOrequestTR
 	public int transferqty { get; set; }
 	public string projectid { get; set; }
 	public DateTime requireddate { get; set; }
-	public string itemlocation{get;set;}
+	public string itemlocation { get; set; }
 	public int confirmqty { get; set; }
 }
 public class DirectTransferTR
@@ -1601,7 +1601,7 @@ public class locationBarcode
 	public string rackname { get; set; }
 	public int binid { get; set; }
 	public string binname { get; set; }
-	public bool isracklabel { get;set;}
+	public bool isracklabel { get; set; }
 }
 
 
@@ -1919,4 +1919,154 @@ public class STOIssueModel
 	public string issuedqty { get; set; }
 	public string uploadedby { get; set; }
 
+}
+public class MPRRevision
+{
+
+	public int RevisionId { get; set; }
+	public int RequisitionId { get; set; }
+	public Nullable<byte> DepartmentId { get; set; }
+	public string ProjectManager { get; set; }
+	public string JobCode { get; set; }
+	public string JobName { get; set; }
+	public string GEPSApprovalId { get; set; }
+	public string SaleOrderNo { get; set; }
+	public string LineItemNo { get; set; }
+	public string ClientName { get; set; }
+	public string PlantLocation { get; set; }
+	public Nullable<byte> BuyerGroupId { get; set; }
+	public Nullable<decimal> TargetedSpendAmount { get; set; }
+	public string TargetedSpendRemarks { get; set; }
+	public Nullable<bool> BoolPreferredVendor { get; set; }
+	public string JustificationForSinglePreferredVendor { get; set; }
+	public Nullable<System.DateTime> DeliveryRequiredBy { get; set; }
+	public Nullable<byte> IssuePurposeId { get; set; }
+	public string DispatchLocation { get; set; }
+	public Nullable<byte> ScopeId { get; set; }
+	public Nullable<bool> TrainingRequired { get; set; }
+	public Nullable<byte> TrainingManWeeks { get; set; }
+	public string TrainingRemarks { get; set; }
+	public Nullable<bool> BoolDocumentationApplicable { get; set; }
+	public string GuaranteePeriod { get; set; }
+	public Nullable<byte> NoOfSetsOfQAP { get; set; }
+	public Nullable<bool> InspectionRequired { get; set; }
+	public string InspectionRemarks { get; set; }
+	public Nullable<byte> InspectionRequiredNew { get; set; }
+	public string InspectionComments { get; set; }
+
+	public string Remarks { get; set; }
+	public string PreparedBy { get; set; }
+	public Nullable<System.DateTime> PreparedOn { get; set; }
+	public string CheckedBy { get; set; }
+	public Nullable<System.DateTime> CheckedOn { get; set; }
+	public string CheckStatus { get; set; }
+	public string CheckerRemarks { get; set; }
+	public string ApprovedBy { get; set; }
+	public Nullable<System.DateTime> ApprovedOn { get; set; }
+	public string ApprovalStatus { get; set; }
+	public string ApproverRemarks { get; set; }
+	public string SecondApprover { get; set; }
+	public Nullable<System.DateTime> SecondApprovedOn { get; set; }
+	public string SecondApproversStatus { get; set; }
+	public string SecondApproverRemarks { get; set; }
+	public string ThirdApprover { get; set; }
+	public string ThirdApproverStatus { get; set; }
+	public Nullable<System.DateTime> ThirdApproverStatusChangedOn { get; set; }
+	public string ThirdApproverRemarks { get; set; }
+	public string PurchaseDetailsReadBy { get; set; }
+	public Nullable<System.DateTime> PurchaseDetailsReadOn { get; set; }
+	public string PurchasePersonnel { get; set; }
+	public Nullable<System.DateTime> PODate { get; set; }
+	public Nullable<System.DateTime> ExpectedDespatchDate { get; set; }
+	public string PurchasePersonnelsComments { get; set; }
+	public Nullable<System.DateTime> TechDocsReceivedDate { get; set; }
+	public Nullable<System.DateTime> CommercialOfferReceivedDate { get; set; }
+	public string OfferDetailsMailedBy { get; set; }
+	public Nullable<System.DateTime> OfferDetailsMailedOn { get; set; }
+	public Nullable<System.DateTime> OfferDetailsViewedByCheckerOn { get; set; }
+	public Nullable<System.DateTime> OfferDetailsViewedByApproverOn { get; set; }
+	public Nullable<System.DateTime> MaterialReceiptDate { get; set; }
+	public string Remarks1 { get; set; }
+	public Nullable<decimal> EstimatedCost { get; set; }
+	public Nullable<decimal> PreviousPOPrice { get; set; }
+	public Nullable<byte> PurchaseTypeId { get; set; }
+	public Nullable<byte> PreferredVendorTypeId { get; set; }
+	public Nullable<byte> StatusId { get; set; }
+	public Nullable<decimal> PurchaseCost { get; set; }
+	public Nullable<byte> RevisionNo { get; set; }
+	public bool BoolValidRevision { get; set; }
+	public Nullable<bool> MPRForOrdering { get; set; }
+	public Nullable<System.DateTime> ORequestedon { get; set; }
+	public string ORequestedBy { get; set; }
+	public string ORemarks { get; set; }
+	public string OCheckedBy { get; set; }
+	public Nullable<System.DateTime> OCheckedOn { get; set; }
+	public string OCheckStatus { get; set; }
+	public string OCheckerRemarks { get; set; }
+	public string OApprovedBy { get; set; }
+	public Nullable<System.DateTime> OApprovedOn { get; set; }
+	public string OApprovalStatus { get; set; }
+	public string OApproverRemarks { get; set; }
+	public string OSecondApprover { get; set; }
+	public Nullable<System.DateTime> OSecondApprovedOn { get; set; }
+	public string OSecondApproversStatus { get; set; }
+	public string OSecondApproverRemarks { get; set; }
+	public string OThirdApprover { get; set; }
+	public string OThirdApproverStatus { get; set; }
+	public Nullable<System.DateTime> OThirdApproverStatusChangedOn { get; set; }
+	public string OThirdApproverRemarks { get; set; }
+	public Nullable<bool> DeleteFlag { get; set; }
+	public string DeletedRemarks { get; set; }
+	public string DeletedBy { get; set; }
+	public Nullable<System.DateTime> DeletedOn { get; set; }
+	public string StorageLocation { get; set; }
+	public string soldtopartyname { get; set; }
+	public string shiptopartyname { get; set; }
+	public string Endusername { get; set; }
+	public string soldtoparty { get; set; }
+	public string shiptoparty { get; set; }
+	public string Enduser { get; set; }
+	public List<MPRItemInfo> MPRItemInfoes { get; set; }
+	public List<MPRVendorDetail> MPRVendorDetails { get; set; }
+
+}
+public class MPRItemInfo
+
+{
+	public int Itemdetailsid { get; set; }
+	public Nullable<int> RevisionId { get; set; }
+	public string Itemid { get; set; }
+	public string ItemDescription { get; set; }
+	public Nullable<decimal> Quantity { get; set; }
+	public Nullable<byte> UnitId { get; set; }
+	public string SaleOrderNo { get; set; }
+	public string SOLineItemNo { get; set; }
+	public Nullable<decimal> TargetSpend { get; set; }
+	public string ReferenceDocNo { get; set; }
+	public Nullable<bool> DeleteFlag { get; set; }
+	public string MfgPartNo { get; set; }
+	public string MfgModelNo { get; set; }
+	public Nullable<int> PAid { get; set; }
+	public Nullable<int> RepeatOrderRefId { get; set; }
+	public string PONumber { get; set; }
+	public Nullable<System.DateTime> PODate { get; set; }
+	public Nullable<decimal> POPrice { get; set; }
+	public string PORemarks { get; set; }
+	public string YGSMaterialCode { get; set; }
+	public string ProjectDefinition { get; set; }
+	public string WBS { get; set; }
+	public string SystemModel { get; set; }
+	public Nullable<int> PreviousItemdetailsid { get; set; }
+}
+
+public partial class MPRVendorDetail
+{
+	public int VendorDetailsId { get; set; }
+	public int RevisionId { get; set; }
+	public int Vendorid { get; set; }
+	public string UpdatedBy { get; set; }
+	public System.DateTime UpdatedDate { get; set; }
+	public string RemovedBy { get; set; }
+	public Nullable<System.DateTime> RemovedDate { get; set; }
+	public bool RemoveFlag { get; set; }
 }

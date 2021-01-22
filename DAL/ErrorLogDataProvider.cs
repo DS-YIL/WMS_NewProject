@@ -29,7 +29,7 @@ namespace WMS.DAL
                 }
                 catch (Exception Ex)
                 {
-                    log.ErrorMessage("APIErrorLogDataProvider", "GetLogData", Ex.StackTrace.ToString());
+                    log.ErrorMessage("APIErrorLogDataProvider", "GetLogData", Ex.StackTrace.ToString(),Ex.Message.ToString());
                     return null;
                 }
                 finally
