@@ -60,8 +60,8 @@ namespace WMS.Controllers
 				using (NpgsqlConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
 				{
 					serverPath = config.FilePath;
-					var filePath = @"D:\YILProjects\WMS\WMSFiles\POData_01_01_2021to_11_01_2021.xlsx";
-					//var filePath = serverPath + "Yil_Po_Daily_report_" + DateTime.Now.ToString("dd-MM-yyyy").Replace("-", "_") + ".xlsx";
+					//var filePath = @"D:\YILProjects\WMS\WMSFiles\POData_01_01_2021to_11_01_2021.xlsx";
+					var filePath = serverPath + "Yil_Po_Daily_report_" + DateTime.Now.ToString("dd-MM-yyyy").Replace("-", "_") + ".xlsx";
 					DB.Open();
 					var filePathstr = filePath;
 					string[] filearr = filePathstr.Split("\\");
@@ -295,7 +295,6 @@ namespace WMS.Controllers
 									stag_data.projectmanager,
 									uploadcode
 								});
-
 							}
 
 							string queryasn = "Select Count(*) as count from wms.wms_asn where pono = '" + stag_data.purchdoc + "'";
