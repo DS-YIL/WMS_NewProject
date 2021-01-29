@@ -1282,8 +1282,9 @@ namespace WMS.Models
 	{
 		public string material { get; set; }
 		public string materialdescription { get; set; }
-
+		public string poitemdesc { get; set; }
 		public bool qualitycheck { get; set; }
+		public decimal unitprice { get; set; }
 
 	}
 }
@@ -1447,13 +1448,14 @@ public class DirectTransferMain
 
 public class STORequestdata
 {
+	public int issuedqty { get; set; }
 	public string transferid { get; set; }
 	public string transferredby { get; set; }
 	public string transferredon { get; set; }
 	public string transfertype { get; set; }
 	public string sourceplant { get; set; }
 	public string destinationplant { get; set; }
-	public string status { get; set; }
+	public bool putawaystatus { get; set; }
 	public List<STOrequestTR> materialdata { get; set; }
 
 	public string remarks { get; set; }
@@ -1471,6 +1473,11 @@ public class STOrequestTR
 	public DateTime requireddate { get; set; }
 	public string itemlocation { get; set; }
 	public int confirmqty { get; set; }
+	public int issuedqty { get; set; }
+	public int itemid  { get;set;}
+	public int availableqty { get; set; }
+	public bool isissued { get; set; }
+
 }
 public class DirectTransferTR
 {

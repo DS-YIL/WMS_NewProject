@@ -2471,7 +2471,7 @@ namespace WMS.Common {
         /// <summary>
         ///   Looks up a localized string similar to select inv.transferid,emp.name as transferredby,inv.transferredon,inv.transfertype,inv.sourceplant,inv.destinationplant,inv.remarks,inv.status,inv.isporequested   
         ///from wms.wms_invstocktransfer inv 
-        ///left outer join wms.employee emp  on emp.employeeno = inv.transferredby
+        ///left outer join wms.employee emp  on emp.employeeno = inv.transferredby where inv.transfertype=&apos;#transfertype&apos;
         ///order by transferredon Desc.
         /// </summary>
         public static string invstocktransfermainquery {
@@ -2795,7 +2795,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select * from wms.wms_invtransfermaterial where transferid = &apos;#transferid&apos;.
+        ///   Looks up a localized string similar to select * from wms.wms_invtransfermaterial invtras .
         /// </summary>
         public static string STOrequestedmatdetails {
             get {

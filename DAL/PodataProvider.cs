@@ -16,7 +16,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using WMS.Common;
 using WMS.Interfaces;
+using System.Web;
 using WMS.Models;
+using System.Web;
 using Microsoft.AspNetCore.Http;
 using System.IO;
 using System.Net.Sockets;
@@ -8688,7 +8690,38 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "GetMaterialstockcombo", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
+					log.ErrorMessage("PODataProvider", "GetMaterialstockcombo", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);					return null;
+	return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+			}
+		}
+			/*
+		Name of Function : <<getMaterialforstocktransferorder>>  Author :<<Gayathri>>  
+		Date of Creation <<22/01/2021>>
+		Purpose : <<Get list of materials for pomaterials table >>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
+		public async Task<IEnumerable<Materials>> getMaterialforstocktransferorder()
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				try
+				{
+					string materialrequestquery = "select materialid as material, poitemdescription as poitemdesc,unitprice from wms.wms_pomaterials";
+
+					await pgsql.OpenAsync();
+					return await pgsql.QueryAsync<Materials>(
+					  materialrequestquery, null, commandType: CommandType.Text);
+
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "GetMaterialstockcombo", Ex.StackTrace.ToString());
 					return null;
 				}
 				finally
@@ -8698,6 +8731,7 @@ namespace WMS.DAL
 
 			}
 		}
+
 
 		/*
 		Name of Function : <<UpdateStockTransfer>>  Author :<<Ramesh>>  
@@ -9074,27 +9108,28 @@ namespace WMS.DAL
 								}
 							}
 						}
-						else
-						{
-
+                        else
+                        {
+							
 							//For STO directly add material data in wms_invtransfermaterial table
-							foreach (var matdata in data.materialdata)
-							{
-								var poitemdesc = matdata.materialdescription;
+							//foreach (var matdata in data.materialdata)
+                            //{
+								var poitemdesc = stck.materialdescription;
 								string stockinsertqry = WMSResource.insertinvtransfermaterialSTO;
 
 								var resultsxx = pgsql.ExecuteScalar(stockinsertqry, new
 								{
 									transfer.transferid,
 									stck.materialid,
-									matdata.transferqty,
-									matdata.projectid,
-									matdata.requireddate,
+									stck.transferqty,
+									stck.projectid,
+									stck.requireddate,
 									poitemdesc
 
 								});
-							}
+							//}
 
+							
 						}
 
 
@@ -9220,13 +9255,13 @@ namespace WMS.DAL
 		Purpose : <<get stock transferdata>>
 		Review Date :<<>>   Reviewed By :<<>>
 		*/
-		public async Task<IEnumerable<invstocktransfermodel>> getstocktransferdatagroup1()
+		public async Task<IEnumerable<invstocktransfermodel>> getstocktransferdatagroup1(string transfertype)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
 				try
 				{
-					string materialrequestquery = WMSResource.invstocktransfermainquery;
+					string materialrequestquery = WMSResource.invstocktransfermainquery.Replace("#transfertype",transfertype);
 
 					await pgsql.OpenAsync();
 					var result = await pgsql.QueryAsync<invstocktransfermodel>(
@@ -11538,20 +11573,42 @@ namespace WMS.DAL
 				try
 				{
 					await pgsql.OpenAsync();
+					string query = "select wi.*,(select sum(issuedqty) as issuedqty from wms.wms_materialissue where requestid = wi.transferid and requesttype = 'STO' group by requestid,requesttype limit 1) as issuedqty from wms.wms_invstocktransfer wi where wi.status ='Issued'";
 
-					string query = WMSResource.getSTORequestlist;
+
+					//string query = WMSResource.getSTORequestlist;
+					//string query = "select * from wms.wms_invstocktransfer wi ";
+					//query += " join wms.wms_materialissue wm  on wm.requestid = wi.transferid";
+					//query += " where wi.transfertype ='STO' and status ='Issued'";
+					
 					var data = await pgsql.QueryAsync<STORequestdata>(
 					   query, null, commandType: CommandType.Text);
 					if (data != null && data.Count() > 0)
 					{
 						foreach (STORequestdata dt in data)
 						{
-							string query1 = WMSResource.STOrequestedmatdetails.Replace("#transferid", dt.transferid.ToString());
+							string query1 = WMSResource.STOrequestedmatdetails;
+							query1 += "left join wms.wms_stock stock on stock.receivedid= invtras.transferid";
+							query1 += " where transferid='"+dt.transferid.ToString()+"'";
 							var datadetail = await pgsql.QueryAsync<STOrequestTR>(
 							   query1, null, commandType: CommandType.Text);
-
+							bool putawaystatus = false;
 							if (datadetail != null && datadetail.Count() > 0)
 							{
+								foreach(var matdata in datadetail)
+                                {
+									if(matdata.itemid !=0)
+                                    {
+										matdata.isissued = true;
+										putawaystatus = true;
+                                    }
+                                    else
+                                    {
+										putawaystatus = false;
+										matdata.isissued = false;
+                                    }
+									dt.putawaystatus = putawaystatus;
+                                }
 								dt.materialdata = datadetail.ToList();
 							}
 						}
@@ -13725,7 +13782,7 @@ Review Date :<<>>   Reviewed By :<<>>
 		/*
 Name of Function : <<GPReasonMTDelete>>  Author :<<Gayathri>>  
 Date of Creation <<29-12-2019>>
-Purpose : <<Delete Gatepass reason>>
+Purpose : <<Delete Gatepass/Miscellanous reason>>
 <param name="GPReasonMTData"></param>
 Review Date :<<>>   Reviewed By :<<>>
 */

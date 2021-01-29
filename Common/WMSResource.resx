@@ -743,7 +743,7 @@ values (@transferid,@materialid,@sourcelocation,@sourceitemid,@destinationlocati
   <data name="invstocktransfermainquery" xml:space="preserve">
     <value>select inv.transferid,emp.name as transferredby,inv.transferredon,inv.transfertype,inv.sourceplant,inv.destinationplant,inv.remarks,inv.status,inv.isporequested   
 from wms.wms_invstocktransfer inv 
-left outer join wms.employee emp  on emp.employeeno = inv.transferredby
+left outer join wms.employee emp  on emp.employeeno = inv.transferredby where inv.transfertype='#transfertype'
 order by transferredon Desc</value>
   </data>
   <data name="getpendingreceiptslist" xml:space="preserve">
@@ -1794,7 +1794,7 @@ group by bin.binid,bin.rackid,bin.locatorid,sk.materialid,sk.poitemdescription o
 values (@transferid,@materialid,@transferqty,@projectid,@requireddate,@poitemdesc)</value>
   </data>
   <data name="STOrequestedmatdetails" xml:space="preserve">
-    <value>select * from wms.wms_invtransfermaterial where transferid = '#transferid'</value>
+    <value>select * from wms.wms_invtransfermaterial invtras </value>
   </data>
   <data name="deleteplantnames" xml:space="preserve">
     <value>update wms.wms_rd_Plant set  deletedon =current_date ,deletedby =#deletedby</value>

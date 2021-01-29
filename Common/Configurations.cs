@@ -14,7 +14,12 @@ namespace WMS.Common
 		public readonly string _EmailLinkUrl = string.Empty;
 		public readonly string _FilePath = string.Empty;
 		public readonly string _IntranetConnectionString = string.Empty;
-		public readonly string _SCMUrl = string.Empty;
+		public readonly string _GateEntryPrintIP = string.Empty;
+		public readonly string _MaterialLabelPrintIP = string.Empty;
+		public readonly string _OnholdmaterialprintIP = string.Empty;
+		public readonly string _rackprintIP = string.Empty;
+		public readonly string _binprintIP = string.Empty;
+			public readonly string _SCMUrl = string.Empty;
 		public readonly string _POChecker = string.Empty;
 		public readonly string _POApprover = string.Empty;
 		public Configurations()
@@ -29,6 +34,11 @@ namespace WMS.Common
 			_PostgreconnectionString = root.GetSection("ConnectionStrings").GetSection("PostgresConnection").Value;
 			_EmailLinkUrl = root.GetSection("ConnectionStrings").GetSection("EmailLinkUrl").Value;
 			_FilePath = root.GetSection("ConnectionStrings").GetSection("LiveFilePath").Value;
+			_GateEntryPrintIP = root.GetSection("ConnectionStrings").GetSection("GateEntryPrintIP").Value;
+			_MaterialLabelPrintIP = root.GetSection("ConnectionStrings").GetSection("MaterialLabelPrintIP").Value;
+			_OnholdmaterialprintIP = root.GetSection("ConnectionStrings").GetSection("OnholdmaterialprintIP").Value;
+			_rackprintIP = root.GetSection("ConnectionStrings").GetSection("rackprintIP").Value;
+			_binprintIP = root.GetSection("ConnectionStrings").GetSection("binprintIP").Value;
 			_IntranetConnectionString = root.GetSection("ConnectionStrings").GetSection("IntranetConnectionString").Value;
 			_SCMUrl = root.GetSection("ConnectionStrings").GetSection("SCMUrl").Value;
 			_POChecker = root.GetSection("ConnectionStrings").GetSection("POChecker").Value;
