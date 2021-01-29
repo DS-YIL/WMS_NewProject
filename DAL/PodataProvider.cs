@@ -13846,7 +13846,7 @@ Review Date :<<>>   Reviewed By :<<>>
 
 					if (type == "POInitiate")
 					{
-						materialrequestquery += " and stock.availableqty =0";
+						materialrequestquery += " and (stock.availableqty =0 or stock.availableqty is null)";
 					}
 					materialrequestquery += " group by inv.transferid, inv.materialid";
 					await pgsql.OpenAsync();
