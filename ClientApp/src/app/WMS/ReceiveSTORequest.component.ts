@@ -170,7 +170,7 @@ export class ReceiveSTORequestComponent implements OnInit {
         item.itemreturnable = this.materialissueList[this.roindex].itemreturnable;
         item.approvedby = this.employee.employeeno;
         item.itemreceiverid = this.materialissueList[this.roindex].itemreceiverid;
-        item.requestid = this.materialissueList[this.roindex].transferid;
+        item.requestid = this.materialissueList[this.roindex].id;
         item.requestmaterialid = this.materialissueList[this.roindex].requestmaterialid;
         item.requesttype = "STO";
         totalissuedqty = totalissuedqty + (item.issuedqty);
