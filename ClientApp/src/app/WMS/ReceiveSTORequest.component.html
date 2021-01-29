@@ -53,7 +53,7 @@
               <td class="ptable-cell" style="text-align:center;width:150px;">{{rowData.destinationplant}}</td>
               <td class="ptable-cell" style="text-align:center;width:100px;">{{rowData.transferredon  | date :  constants.dateFormat}}</td>
               <td class="ptable-cell" style="text-align:center;width:90px;"><button type="button" style="font-size:12px" class="btn btn-success" (click)="navigateToMatIssue(rowData)">Available Stock</button></td>
-              <td class="ptable-cell" style="text-align:center;width:90px;"><button type="button" [disabled]="rowData.isporequested==false?false:true" style="font-size:12px" class="btn btn-success" (click)="navigateToPOInitiate(rowData)">Create PO</button></td>
+              <td class="ptable-cell" style="text-align:center;width:90px;"><button type="button" [disabled]="rowData.isporequested==false?false:true" style="font-size:12px" [ngClass]="rowData.isporequested==true ? 'btn btn-secondary' : 'btn btn-success'" (click)="navigateToPOInitiate(rowData)">Create PO</button></td>
             </tr>
           </ng-template>
         </p-table>
@@ -114,6 +114,9 @@
               <input id={{ri+1}} pInputText type="number" style="text-align:center" class="form-control" [disabled]="txtDisable" [(ngModel)]="rowData.issuedqty">
             </td>
           </tr>
+        </ng-template>
+        <ng-template pTemplate="summary">
+          <span *ngIf="materialissueList.length==0" style="color:red">No Available Quantity to Issue</span>
         </ng-template>
       </p-table>
       <br />
@@ -226,6 +229,9 @@
             <td class="ptable-cell" style="text-align:right">{{rowData.transferqty}}</td>
             <td class="ptable-cell" style="text-align:right">{{rowData.availableqty}}</td>
           </tr>
+        </ng-template>
+        <ng-template pTemplate="summary">
+          <span *ngIf="materialissueList.length==0" style="color:red">Quantity is available to issue</span>
         </ng-template>
       </p-table>
       <br />
