@@ -1700,10 +1700,10 @@ stocktype=@stocktype,unitprice=@unitprice,hsncode=@hsncode where material ='#mat
   </data>
   <data name="getMatdetailsbyTransferId" xml:space="preserve">
     <value>select max(inv.id) as id,inv.transferid, inv.materialid , Max(stock.poitemdescription ) as poitemdescription, max(inv.transferqty) as transferqty,
-sum(stock.availableqty) as availableqty,sum( matiss.issuedqty ) as issuedqty
+(select sum(issuedqty) from wms.wms_materialissue matiss  where matiss.requestid =cast(max(inv.id) as varchar ) and matiss.requesttype ='STO' ) as issuedqty,
+ (select sum(availableqty) from wms.wms_stock ws where materialid =inv.materialid ) as availableqty
 from wms.wms_invtransfermaterial inv
-left outer join wms.wms_stock stock on inv.materialid = stock.materialid 
-left outer join wms.wms_materialissue matiss on matiss.requestid = inv.transferid and matiss.requesttype ='STO'</value>
+left outer join wms.wms_stock stock on inv.materialid = stock.materialid</value>
   </data>
   <data name="invstocktransforSTO" xml:space="preserve">
     <value>select inv.transferid,emp.name as transferredby,inv.transferredon,inv.transfertype,inv.sourceplant,inv.destinationplant,inv.remarks,inv.status,inv.isporequested   

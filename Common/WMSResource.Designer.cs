@@ -1055,10 +1055,10 @@ namespace WMS.Common {
         
         /// <summary>
         ///   Looks up a localized string similar to select max(inv.id) as id,inv.transferid, inv.materialid , Max(stock.poitemdescription ) as poitemdescription, max(inv.transferqty) as transferqty,
-        ///sum(stock.availableqty) as availableqty,sum( matiss.issuedqty ) as issuedqty
+        ///(select sum(issuedqty) from wms.wms_materialissue matiss  where matiss.requestid =cast(max(inv.id) as varchar ) and matiss.requesttype =&apos;STO&apos; ) as issuedqty,
+        /// (select sum(availableqty) from wms.wms_stock ws where materialid =inv.materialid ) as availableqty
         ///from wms.wms_invtransfermaterial inv
-        ///left outer join wms.wms_stock stock on inv.materialid = stock.materialid 
-        ///left outer join wms.wms_materialissue matiss on matiss.requestid = inv.transferid and matiss.requesttype =&apos;STO&apos;.
+        ///left outer join wms.wms_stock stock on inv.materialid = stock.mate [rest of string was truncated]&quot;;.
         /// </summary>
         public static string getMatdetailsbyTransferId {
             get {
