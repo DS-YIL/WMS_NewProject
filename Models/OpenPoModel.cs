@@ -2091,3 +2091,11 @@ public class MPRDetail
 	public string DocumentDescription { get; set; }
 
 }
+
+
+public class plantddl
+{
+	public int locatorid { get; set; }
+	public string locatorname { get; set; }
+	//public int plantid { get; set; }
+}

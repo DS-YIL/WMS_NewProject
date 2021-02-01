@@ -23,6 +23,7 @@ namespace WMS.Controllers
 	[Route("[controller]")]
 	public class PrintController : ControllerBase
 	{
+        Configurations config = new Configurations();
         private IPodataService<OpenPoModel> _poService; 
         public PrintController(IPodataService<OpenPoModel> poService)
         {
@@ -116,7 +117,9 @@ namespace WMS.Controllers
                 //Convert.ToString(ConfigurationManager.AppSettings["PrinterName"].ToString());
                 //string printerName = ConfigurationManager.AppSettings["CTMajor_AdminPrinter"].ToString();
                 //string printerName = "10.29.11.25";
+
                 string printerName = "10.29.2.48";
+                printerName = config._GateEntryPrintIP;
                 PrintUtilities objIdentification = new PrintUtilities();
                 printResult = "success";
                 printResult = objIdentification.PrintQRCode(path, printerName);

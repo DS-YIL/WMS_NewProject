@@ -5,7 +5,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { constants } from '../Models/WMSConstants'
 import { Employee, Login, DynamicSearchResult, printMaterial, rbamaster, locationBarcode } from '../Models/Common.Model';
-import { PoFilterParams, PoDetails, BarcodeModel, StockModel, materialRequestDetails, inwardModel, gatepassModel, stocktransfermodel, Materials, authUser, invstocktransfermodel, ddlmodel, locataionDetailsStock, updateonhold, materialistModel, outwardmaterialistModel, pageModel, UserDashboardDetail, UserDashboardGraphModel, UnholdGRModel, MRNsavemodel, notifymodel, materialtransferMain, materialReservetorequestModel, testcrud, PrintHistoryModel, materilaTrasFilterParams, materialRequestFilterParams, materialResFilterParams, materialRetFilterParams, outwardinwardreportModel, UserModel, WMSHttpResponse, MaterialinHand, matlocations, grReports, MateriallabelModel, ManagerDashboard, pmDashboardCards, invDashboardCards, GraphModelNew, miscellanousIssueData, inventoryFilters, MaterialMaster, GPReasonMTdata, materialList, PlantMTdata, InitialStock } from '../Models/WMS.Model';
+import { PoFilterParams, PoDetails, BarcodeModel, StockModel, materialRequestDetails, inwardModel, gatepassModel, stocktransfermodel, Materials, authUser, invstocktransfermodel, ddlmodel, locataionDetailsStock, updateonhold, materialistModel, outwardmaterialistModel, pageModel, UserDashboardDetail, UserDashboardGraphModel, UnholdGRModel, MRNsavemodel, notifymodel, materialtransferMain, materialReservetorequestModel, testcrud, PrintHistoryModel, materilaTrasFilterParams, materialRequestFilterParams, materialResFilterParams, materialRetFilterParams, outwardinwardreportModel, UserModel, WMSHttpResponse, MaterialinHand, matlocations, grReports, MateriallabelModel, ManagerDashboard, pmDashboardCards, invDashboardCards, GraphModelNew, miscellanousIssueData, inventoryFilters, MaterialMaster, GPReasonMTdata, materialList, PlantMTdata, InitialStock, plantddl } from '../Models/WMS.Model';
 import { Text } from '@angular/compiler/src/i18n/i18n_ast';
 
 @Injectable({
@@ -507,14 +507,23 @@ export class wmsService {
   getMaterialforstocktransfer(): Observable<Materials[]> {
     return this.http.get<Materials[]>(this.url + 'POData/GetMaterialdatafromstock/', this.httpOptions);
   }
+
+  getMaterialforstocktransferorder(): Observable<Materials[]> {
+    return this.http.get<Materials[]>(this.url + 'POData/getMaterialforstocktransferorder/', this.httpOptions);
+  }
+
+  getplantlocdetails(): Observable<any> {
+    return this.http.get<any>(this.url + 'POData/getplantlocdetails/', this.httpOptions);
+}
+
   getstocktransferlist(): Observable<stocktransfermodel[]> {
     return this.http.get<stocktransfermodel[]>(this.url + 'POData/getstocktransferdata/', this.httpOptions);
   }
   getstocktransferlistgroup(): Observable<invstocktransfermodel[]> {
     return this.http.get<invstocktransfermodel[]>(this.url + 'POData/getstocktransferdatagroup/', this.httpOptions);
   }
-  getstocktransferlistgroup1(): Observable<invstocktransfermodel[]> {
-    return this.http.get<invstocktransfermodel[]>(this.url + 'POData/getstocktransferdatagroup1/', this.httpOptions);
+  getstocktransferlistgroup1(transfertye: string): Observable<invstocktransfermodel[]> {
+    return this.http.get<invstocktransfermodel[]>(this.url + 'POData/getstocktransferdatagroup1?transfertype=' + transfertye, this.httpOptions);
   }
 
   Stocktransfer1(StockModel: invstocktransfermodel): Observable<any> {

@@ -8721,7 +8721,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "GetMaterialstockcombo", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "GetMaterialstockcombo", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -14057,6 +14057,40 @@ Review Date :<<>>   Reviewed By :<<>>
 			}
 			return path;
 		}
+
+		/*
+		Name of Function : <<getplantlocdetails>>  Author :<<Gayathri>>  
+		Date of Creation <<28-01-2021>>
+		Purpose : <<Get plant location data>>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
+		public async Task<IEnumerable<plantddl>> getplantlocdetails()
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				try
+				{
+					string materialrequestquery = "select * from wms.wms_rd_locator where deleteflag=false order by locatorname asc";
+
+					await pgsql.OpenAsync();
+					return await pgsql.QueryAsync<plantddl>(
+					  materialrequestquery, null, commandType: CommandType.Text);
+
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "getplantlocdetails", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+			}
+		}
+
+
 
 	}
 }

@@ -460,6 +460,12 @@ export class locationddl {
   locatorname: any;
 }
 
+export class plantddl {
+  locatorid: string;
+  locatorname: string;
+  //plantid:string
+}
+
 export class binddl {
 
   binid: any;

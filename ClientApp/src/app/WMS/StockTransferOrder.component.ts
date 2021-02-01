@@ -4,7 +4,7 @@ import { wmsService } from '../WmsServices/wms.service';
 import { constants } from '../Models/WMSConstants';
 import { Employee, DynamicSearchResult, searchList } from '../Models/Common.Model';
 import { NgxSpinnerService } from "ngx-spinner";
-import { PoDetails, BarcodeModel, inwardModel, Materials, stocktransfermodel, locationddl, binddl, rackddl, StockModel, invstocktransfermodel, stocktransfermateriakmodel} from 'src/app/Models/WMS.Model';
+import { PoDetails, BarcodeModel, inwardModel, Materials, stocktransfermodel, locationddl, binddl, rackddl, StockModel, invstocktransfermodel, stocktransfermateriakmodel, plantddl} from 'src/app/Models/WMS.Model';
 import { MessageService } from 'primeng/api';
 import { first } from 'rxjs/operators';
 import { isNullOrUndefined } from 'util';
@@ -61,7 +61,10 @@ export class StockTransferOrderComponent implements OnInit {
   matid: string = "";
   matdescription: string = "";
   transferedon: Date;
- 
+  plantlist: plantddl[] = [];
+  sourceplant: plantddl;
+  destinationplant: plantddl;
+
   combomaterial: Materials[];
 
   ngOnInit() {
@@ -69,10 +72,14 @@ export class StockTransferOrderComponent implements OnInit {
       this.employee = JSON.parse(localStorage.getItem("Employee"));
     else
       this.router.navigateByUrl("Login");
+
+    this.sourceplant = new plantddl();
+    this.destinationplant = new plantddl();
+    this.plantlist = [];
     this.stocktransferlist = [];
     this.mainmodel = new invstocktransfermodel();
-    this.mainmodel.sourceplant = "Plant1";
-    this.mainmodel.destinationplant = "Plant1";
+    this.mainmodel.sourceplant = "1002";
+    this.mainmodel.destinationplant = "1003";
     this.emptytransfermodel = new stocktransfermateriakmodel();
     this.selectedbin = new binddl();
     this.selectedlocation = new locationddl();
@@ -93,21 +100,21 @@ export class StockTransferOrderComponent implements OnInit {
   }
   addrows() {
     debugger;
-    if (this.mainmodel.destinationplant == this.mainmodel.sourceplant) {
-      this.messageService.add({ severity: 'error', summary: '', detail: 'Source and destination plant cannot be same' });
-      return;
-    }
-    else {
-      var invalidrow = this.podetailsList.filter(function (element, index) {
-        debugger;
-        return (!element.transferqty) || (!element.materialid) || (!element.projectid) || (!element.requireddate);
-      });
+    //if (this.mainmodel.destinationplant == this.mainmodel.sourceplant) {
+    //  this.messageService.add({ severity: 'error', summary: '', detail: 'Source and destination plant cannot be same' });
+    //  return;
+    //}
+    //else {
+    //  var invalidrow = this.podetailsList.filter(function (element, index) {
+    //    debugger;
+    //    return (!element.transferqty) || (!element.materialid) || (!element.projectid) || (!element.requireddate);
+    //  });
 
-    }
-    if (invalidrow.length > 0) {
-      this.messageService.add({ severity: 'error', summary: '', detail: 'Fill all the details.' });
-      return;
-    }
+    //}
+    //if (invalidrow.length > 0) {
+    //  this.messageService.add({ severity: 'error', summary: '', detail: 'Fill all the details.' });
+    //  return;
+    //}
   
     this.emptytransfermodel = new stocktransfermateriakmodel();
     this.podetailsList.push(this.emptytransfermodel);
@@ -191,13 +198,25 @@ export class StockTransferOrderComponent implements OnInit {
   }
 
   Showadd() {
-    this.mainmodel.sourceplant = "Plant1";
-    this.mainmodel.destinationplant = "Plant1";
+    //this.mainmodel.sourceplant = "Plant1";
+    //this.mainmodel.destinationplant = "Plant1";
     this.displaydetail = false;
     this.selectedRow = null;
     this.addprocess = true;
+    this.getplantloc();
     this.setlocationcombinations();
   }
+
+  getplantloc() {
+    debugger;
+    this.plantlist = [];
+    this.wmsService.getplantlocdetails().subscribe(data => {
+      console.log(data);
+      this.plantlist = data;
+    });
+
+  }
+
   Showlist() {
     this.addprocess = false;
     this.podetailsList = [];
@@ -731,30 +750,30 @@ export class StockTransferOrderComponent implements OnInit {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Select plants.' });
       return;
     }
-    if (this.mainmodel.destinationplant == this.mainmodel.sourceplant) {
-      this.messageService.add({ severity: 'error', summary: '', detail: 'Source and destination plant cannot be same' });
-      return;
-    }
-    else {
-      var invalidrow = this.podetailsList.filter(function (element, index) {
-        debugger;
-        return (!element.transferqty) || (!element.materialid) || (!element.projectid) || (!element.requireddate);
-      });
+    //if (this.mainmodel.destinationplant == this.mainmodel.sourceplant) {
+    //  this.messageService.add({ severity: 'error', summary: '', detail: 'Source and destination plant cannot be same' });
+    //  return;
+    //}
+    //else {
+    //  var invalidrow = this.podetailsList.filter(function (element, index) {
+    //    debugger;
+    //    return (!element.transferqty) || (!element.materialid) || (!element.projectid) || (!element.requireddate);
+    //  });
         
-      }
-    if (invalidrow.length > 0) {
-      this.messageService.add({ severity: 'error', summary: '', detail: 'Fill all details.' });
-      return;
-    }
+    //  }
+    //if (invalidrow.length > 0) {
+    //  this.messageService.add({ severity: 'error', summary: '', detail: 'Fill all details.' });
+    //  return;
+    //}
     if ((this.mainmodel.sourceplant) && (this.mainmodel.destinationplant) && (this.mainmodel.sourceplant == this.mainmodel.destinationplant)) {
       var dataxx = this.podetailsList.filter(function (element, index) {
         return (element.sourcelocation == element.destinationlocation);
       });
-      if (dataxx.length > 0) {
-        this.messageService.add({ severity: 'error', summary: '', detail: 'Source and destination location can not be same for same source and destination plant.' });
-        return;
+      //if (dataxx.length > 0) {
+      //  this.messageService.add({ severity: 'error', summary: '', detail: 'Source and destination location can not be same for same source and destination plant.' });
+      //  return;
 
-      } 
+     // } 
     }
     var svdata = this.mainmodel;
     svdata.transferredby = this.employee.employeeno;

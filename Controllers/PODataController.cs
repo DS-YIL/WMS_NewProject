@@ -836,6 +836,12 @@ namespace WMS.Controllers
 			return await this._poService.GetMaterialstockcombo();
 		}
 
+		[HttpGet("getMaterialforstocktransferorder")]
+		public async Task<IEnumerable<Materials>> getMaterialforstocktransferorder()
+		{
+			return await this._poService.getMaterialforstocktransferorder();
+		}
+
 		[HttpGet("getstocktransferdata")]
 		public async Task<IEnumerable<stocktransferModel>> getstocktransferlist()
 		{
@@ -849,9 +855,9 @@ namespace WMS.Controllers
 		}
 
 		[HttpGet("getstocktransferdatagroup1")]
-		public async Task<IEnumerable<invstocktransfermodel>> getstocktransferlistgroup1()
+		public async Task<IEnumerable<invstocktransfermodel>> getstocktransferlistgroup1(string transfertype)
 		{
-			return await this._poService.getstocktransferdatagroup1();
+			return await this._poService.getstocktransferdatagroup1(transfertype);
 		}
 
 		[HttpGet("getpendingpos")]
@@ -1387,6 +1393,13 @@ namespace WMS.Controllers
 		{
 			return this._poService.generateLabel(labeldata);
 
+		}
+
+		[HttpGet("getplantlocdetails")]
+		public async Task<IEnumerable<plantddl>> getplantlocdetails()
+		{
+
+			return await this._poService.getplantlocdetails();
 		}
 	}
 }
