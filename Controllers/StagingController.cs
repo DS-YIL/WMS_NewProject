@@ -196,7 +196,7 @@ namespace WMS.Controllers
 						catch (Exception e)
 						{
 							var res = e;
-							log.ErrorMessage("StagingController", "uploadPoDataExcel", e.StackTrace.ToString(), "PO:" + poitem + "error:" + e.Message.ToString(),url);
+							log.ErrorMessage("StagingController", "uploadPoDataExcel", e.StackTrace.ToString(), "PO:" + poitem + "error:" + e.Message.ToString(), url);
 							continue;
 						}
 					}
@@ -216,7 +216,7 @@ namespace WMS.Controllers
 			catch (Exception e)
 			{
 				var res = e;
-				log.ErrorMessage("StagingController", "uploadPoDataExcel", e.StackTrace.ToString(), "error:" + e.Message.ToString(),url);
+				log.ErrorMessage("StagingController", "uploadPoDataExcel", e.StackTrace.ToString(), "error:" + e.Message.ToString(), url);
 			}
 			return Ok(true);
 		}
@@ -245,6 +245,7 @@ namespace WMS.Controllers
 						try
 						{
 							stag_data.pono = stag_data.purchdoc;
+							stag_data.projectmanager = stag_data.pocreatedby;
 							stag_data.deliverydate = stag_data.itemdeliverydate;
 							stag_data.vendorcode = stag_data.vendor;
 							stag_data.suppliername = stag_data.vendorname;
@@ -275,14 +276,13 @@ namespace WMS.Controllers
 									isclosed
 								});
 
-							}
-
+							}						
 							string query2 = "Select Count(*) as count from wms.wms_project where pono = '" + stag_data.purchdoc + "'";
 							int Projcount = int.Parse(pgsql.ExecuteScalar(query2, null).ToString());
 
 							if (Projcount == 0)
 							{
-								stag_data.projectmanager = stag_data.pocreatedby;
+
 								//insert wms_project ##pono,jobname,projectcode,projectname,projectmanager,
 								var insertquery = "INSERT INTO wms.wms_project(pono, jobname, projectcode,projectname,projectmanager,uploadcode)VALUES(@pono, @jobname,@projectcode,@projecttext,@projectmanager,@uploadcode)";
 								var results = pgsql.ExecuteScalar(insertquery, new
@@ -297,11 +297,14 @@ namespace WMS.Controllers
 							}
 							else
 							{
-								var updateqyery = "update wms.wms_project set projectmanager = @projectmanager  where pono = '" + stag_data.purchdoc + "'";
-								var re = Convert.ToInt32(pgsql.Execute(updateqyery, new
+								if (!string.IsNullOrEmpty(stag_data.projectmanager))
 								{
-									stag_data.projectmanager
-								}));
+									var updateqyery = "update wms.wms_project set projectmanager = @projectmanager  where pono = '" + stag_data.purchdoc + "'";
+									var re = Convert.ToInt32(pgsql.Execute(updateqyery, new
+									{
+										stag_data.projectmanager
+									}));
+								}
 							}
 
 							string queryasn = "Select Count(*) as count from wms.wms_asn where pono = '" + stag_data.purchdoc + "'";
@@ -372,7 +375,7 @@ namespace WMS.Controllers
 						catch (Exception e)
 						{
 							var res = e;
-							log.ErrorMessage("StagingController", "loadPOData", e.StackTrace.ToString(), e.Message.ToString(),url);
+							log.ErrorMessage("StagingController", "loadPOData", e.StackTrace.ToString(), e.Message.ToString(), url);
 							continue;
 						}
 					}
@@ -1042,7 +1045,7 @@ namespace WMS.Controllers
 							Trans.Rollback();
 							var res = e;
 							insertmessage += e.Message.ToString();
-							log.ErrorMessage("StagingController", "loadStockData", e.StackTrace.ToString(), e.Message.ToString(),url);
+							log.ErrorMessage("StagingController", "loadStockData", e.StackTrace.ToString(), e.Message.ToString(), url);
 							continue;
 						}
 					}
@@ -1388,7 +1391,7 @@ namespace WMS.Controllers
 					catch (Exception ex)
 					{
 						var data = ex;
-						log.ErrorMessage("StagingController", "uploadDataExcel", ex.StackTrace.ToString(), ex.Message.ToString(),url);
+						log.ErrorMessage("StagingController", "uploadDataExcel", ex.StackTrace.ToString(), ex.Message.ToString(), url);
 
 					}
 
@@ -1598,7 +1601,7 @@ namespace WMS.Controllers
 					{
 						var res = e;
 						insertmessage += e.Message.ToString();
-						log.ErrorMessage("StagingController", "loadmatlabelDatatobase", e.StackTrace.ToString(), e.Message.ToString(),url);
+						log.ErrorMessage("StagingController", "loadmatlabelDatatobase", e.StackTrace.ToString(), e.Message.ToString(), url);
 						continue;
 					}
 				}
@@ -1630,7 +1633,7 @@ namespace WMS.Controllers
 					{
 						var res = e;
 						insertmessage += e.Message.ToString();
-						log.ErrorMessage("StagingController", "load_st_serialimports", e.StackTrace.ToString(), e.Message.ToString(),url);
+						log.ErrorMessage("StagingController", "load_st_serialimports", e.StackTrace.ToString(), e.Message.ToString(), url);
 						continue;
 					}
 				}
@@ -1665,7 +1668,7 @@ namespace WMS.Controllers
 					{
 						var res = e;
 						insertmessage += e.Message.ToString();
-						log.ErrorMessage("StagingController", "load_st_qtsoimports", e.StackTrace.ToString(), e.Message.ToString(),url);
+						log.ErrorMessage("StagingController", "load_st_qtsoimports", e.StackTrace.ToString(), e.Message.ToString(), url);
 						continue;
 					}
 				}
@@ -1713,7 +1716,7 @@ namespace WMS.Controllers
 				catch (Exception e)
 				{
 					var res = e;
-					log.ErrorMessage("StagingController", "loadStockData", e.StackTrace.ToString(), e.Message.ToString(),url);
+					log.ErrorMessage("StagingController", "loadStockData", e.StackTrace.ToString(), e.Message.ToString(), url);
 
 				}
 				finally
@@ -1814,7 +1817,7 @@ namespace WMS.Controllers
 					catch (Exception e)
 					{
 						var res = e;
-						log.ErrorMessage("StagingController", "uploadMaterialDataExcel", e.StackTrace.ToString(), "error:" + e.Message.ToString(),url);
+						log.ErrorMessage("StagingController", "uploadMaterialDataExcel", e.StackTrace.ToString(), "error:" + e.Message.ToString(), url);
 						continue;
 					}
 				}
@@ -1932,7 +1935,7 @@ namespace WMS.Controllers
 						}
 						catch (Exception e)
 						{
-							log.ErrorMessage("StagingController", "UpdateEmpDepDetails", "error:" + e.StackTrace.ToString(), e.Message.ToString(),url);
+							log.ErrorMessage("StagingController", "UpdateEmpDepDetails", "error:" + e.StackTrace.ToString(), e.Message.ToString(), url);
 							continue;
 						}
 					}
@@ -2220,7 +2223,7 @@ namespace WMS.Controllers
 						}
 						catch (Exception e)
 						{
-							log.ErrorMessage("StagingController", "UpdateEmpDepDetails", "error:" + e.StackTrace.ToString(), e.Message.ToString(),url);
+							log.ErrorMessage("StagingController", "UpdateEmpDepDetails", "error:" + e.StackTrace.ToString(), e.Message.ToString(), url);
 							continue;
 						}
 					}
