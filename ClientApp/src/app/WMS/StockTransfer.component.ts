@@ -89,19 +89,22 @@ export class StockTransferComponent implements OnInit {
   }
   addrows() {
     debugger;
-    //var invalidrow = this.podetailsList.filter(function (element, index) {
-    //  if (this.mainmodel.destinationplant == this.mainmodel.sourceplant) {
-    //    return (!element.sourcelocation) || (!element.destinationlocation) || (!element.transferqty) || (!element.materialid) 
-    //  }
-    //  else {
-    //    return  (!element.transferqty) || (!element.materialid) || (!element.projectid) || (!element.requireddate);
-    //  }
-     
-    //});
-    //if (invalidrow.length > 0) {
-    //  this.messageService.add({ severity: 'error', summary: '', detail: 'Fill all details.' });
-    //  return;
-    //}
+    if (this.mainmodel.destinationplant != this.mainmodel.sourceplant) {
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Source and destination plant should be same' });
+      return;
+    }
+    else {
+      var invalidrow = this.podetailsList.filter(function (element, index) {
+        debugger;
+        return (!element.sourcelocation) || (!element.destinationlocation) || (!element.transferqty) || (!element.materialid);
+      });
+
+    }
+    if (invalidrow.length > 0) {
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Fill all the details.' });
+      return;
+    }
+
 
     this.emptytransfermodel = new stocktransfermateriakmodel();
     this.podetailsList.push(this.emptytransfermodel);
@@ -675,7 +678,7 @@ export class StockTransferComponent implements OnInit {
 
   getStocktransferdatagroup() {
     this.stocktransferlist = [];
-    this.wmsService.getstocktransferlistgroup1().subscribe(data => {
+    this.wmsService.getstocktransferlistgroup1("IST").subscribe(data => {
       debugger;
       if (data) {
         this.stocktransferlistgroup = data;
@@ -722,23 +725,19 @@ export class StockTransferComponent implements OnInit {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Select plants.' });
       return;
     }
-    if (this.mainmodel.destinationplant == this.mainmodel.sourceplant) {
-      var invalidrow = this.podetailsList.filter(function (element, index) {
-
-        return (!element.sourcelocation) || (!element.destinationlocation) || (!element.transferqty) || (!element.materialid)
-      });
-     
-      //return (!element.sourcelocation) || (!element.destinationlocation) || (!element.transferqty) || (!element.materialid) || (element.transferqty == 0);
+    if (this.mainmodel.destinationplant != this.mainmodel.sourceplant) {
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Source and destination plant should be same' });
+      return;
     }
     else {
       var invalidrow = this.podetailsList.filter(function (element, index) {
-
-        return (!element.transferqty) || (!element.materialid) || (!element.projectid) || (!element.requireddate);
+        debugger;
+        return (!element.sourcelocation) || (!element.destinationlocation) || (!element.transferqty) || (!element.materialid);
       });
-        
-      }
+
+    }
     if (invalidrow.length > 0) {
-      this.messageService.add({ severity: 'error', summary: '', detail: 'Fill all details.' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Fill all the details.' });
       return;
     }
     if ((this.mainmodel.sourceplant) && (this.mainmodel.destinationplant) && (this.mainmodel.sourceplant == this.mainmodel.destinationplant)) {
