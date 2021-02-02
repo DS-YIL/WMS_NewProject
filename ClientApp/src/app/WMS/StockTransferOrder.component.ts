@@ -91,6 +91,7 @@ export class StockTransferOrderComponent implements OnInit {
     this.rackListdata();
     //this.getStocktransferdata();
     this.getStocktransferdatagroup();
+    
   }
   
   
