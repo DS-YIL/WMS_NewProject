@@ -160,10 +160,12 @@ namespace WMS.Interfaces
 		Task<IEnumerable<safteyStockList>> getSafteyStockList();
 		Task<IEnumerable<StockModel>> GetBinList();
 		Task<IEnumerable<Materials>> GetMaterialstockcombo();
+
+		Task<IEnumerable<Materials>> getMaterialforstocktransferorder();
 		Task<IEnumerable<stocktransferModel>> getstocktransferdata();
 		Task<IEnumerable<stocktransferModel>> getstocktransferdatagroup();
 
-		Task<IEnumerable<invstocktransfermodel>> getstocktransferdatagroup1();
+		Task<IEnumerable<invstocktransfermodel>> getstocktransferdatagroup1(string transfertype);
 		Task<IEnumerable<ddlmodel>> pendingreceiptslist();
 		Task<IEnumerable<ddlmodel>> getInitialstockfilename();
 		
@@ -292,6 +294,7 @@ namespace WMS.Interfaces
 
 		Task<IEnumerable<PlantMTdata>> getplantnameData();
 		string PlantnameDelete(PlantMTdata data);
+		Task<IEnumerable<plantddl>> getplantlocdetails();
 
 	}
 }
