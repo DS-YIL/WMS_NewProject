@@ -134,6 +134,20 @@ export class StockTransferOrderComponent implements OnInit {
 
   addrows() {
     debugger;
+    if (this.sourceplant.locatorid == this.destinationplant.locatorid) {
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Source and destination plant cannot be same' });
+      return;
+    }
+    else {
+      var invalidrow = this.podetailsList.filter(function (element, index) {
+        debugger;
+        return (!element.transferqty) || (!element.materialid) || (!element.projectid) || (!element.requireddate);
+      });
+    }
+    if (invalidrow.length > 0) {
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Fill all the details.' });
+      return;
+    }
     //if (this.mainmodel.destinationplant == this.mainmodel.sourceplant) {
     //  this.messageService.add({ severity: 'error', summary: '', detail: 'Source and destination plant cannot be same' });
     //  return;
@@ -784,6 +798,23 @@ export class StockTransferOrderComponent implements OnInit {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Select plants.' });
       return;
     }
+
+    if (this.sourceplant.locatorid == this.destinationplant.locatorid) {
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Source and destination plant cannot be same' });
+      return;
+    }
+    else {
+      var invalidrow = this.podetailsList.filter(function (element, index) {
+        debugger;
+        return (!element.transferqty) || (!element.materialid) || (!element.projectid) || (!element.requireddate);
+      });
+    }
+    if (invalidrow.length > 0) {
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Fill all the details.' });
+      return;
+    }
+
+
     //if (this.mainmodel.destinationplant == this.mainmodel.sourceplant) {
     //  this.messageService.add({ severity: 'error', summary: '', detail: 'Source and destination plant cannot be same' });
     //  return;
@@ -809,6 +840,8 @@ export class StockTransferOrderComponent implements OnInit {
 
      // } 
     }
+    this.mainmodel.sourceplant = this.sourceplant.locatorname;
+    this.mainmodel.destinationplant = this.destinationplant.locatorname;
     var svdata = this.mainmodel;
     svdata.transferredby = this.employee.employeeno;
     svdata.materialdata = this.podetailsList;
