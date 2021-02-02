@@ -463,6 +463,7 @@ export class locationddl {
 export class plantddl {
   locatorid: string;
   locatorname: string;
+  storagelocationdesc: string;
   //plantid:string
 }
 

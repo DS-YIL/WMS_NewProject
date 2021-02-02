@@ -30,10 +30,10 @@
     <option value="Plant1">Plant 1</option>
     <option value="Plant2">Plant 2</option>
   </select>-->
-            <p-dropdown [options]="plantlist" [style]="{'width':'100%'}" [(ngModel)]="sourceplant" optionLabel="locatorname" (change)="plantchange()" placeholder="Select location" *ngIf="addprocess" [showClear]="true"></p-dropdown>
+            <p-dropdown [options]="plantlist" [style]="{'width':'100%'}" [(ngModel)]="sourceplant" optionLabel="storagelocationdesc" (change)="plantchange()" placeholder="Select location" *ngIf="addprocess" [showClear]="true"></p-dropdown>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label class="labelheading" *ngIf="addprocess">Destination :&nbsp;</label>
             &nbsp;&nbsp;&nbsp;
-            <p-dropdown [options]="plantlist" [style]="{'width':'100%'}" [(ngModel)]="destinationplant" optionLabel="locatorname" (change)="plantchange()" placeholder="Select location" *ngIf="addprocess" [showClear]="true"></p-dropdown>
+            <p-dropdown [options]="plantlist" [style]="{'width':'100%'}" [(ngModel)]="destinationplant" optionLabel="storagelocationdesc" (change)="plantchange()" placeholder="Select location" *ngIf="addprocess" [showClear]="true"></p-dropdown>
             <!--<select class="form-control" (change)="plantchange()" [(ngModel)]="mainmodel.destinationplant" *ngIf="addprocess">
     <option value="">Select plant</option>
     <option value="Plant1">Plant 1</option>
@@ -94,10 +94,10 @@
                 <tr>
                   <td class="ptable-cell" style="text-align: center; width: 5%;">{{ri+1}}</td>
                   <td class="ptable-cell" style="text-align:center;width:18%;">
-                    <!--<p-autoComplete appendTo="body"  placeholder="search by name/code" (onSelect)="onMaterialSelected1($event,rowData,ri)" [(ngModel)]="rowData.materialid" type="text" [suggestions]="searchItems" field="name" [forceSelection]="true" [dropdown]="true" (completeMethod)="bindSearchListDatamaterial($event,'rowData.materialid')" size="20"></p-autoComplete>-->
+                    <p-autoComplete appendTo="body"  placeholder="search by material" (onSelect)="onMaterialSelected1($event,rowData,ri)" [(ngModel)]="rowData.materialid" type="text" [suggestions]="filteredmats" field="name" [forceSelection]="true" [dropdown]="true" (completeMethod)="bindSearchListDatamaterial($event,'material')" size="20"></p-autoComplete>
 
-                    <p-autoComplete [(ngModel)]="rowData.materialid" placeholder="search by code" type="text" appendTo="body" [forceSelection]="true" (onSelect)="onMaterialSelected1($event, rowData,ri)" [suggestions]="filteredmats" (completeMethod)="filtermats($event,rowData)" [size]="20"
-                  [dropdown]="true"></p-autoComplete>
+                    <!--<p-autoComplete [(ngModel)]="rowData.materialid" placeholder="search by code" type="text" appendTo="body" [forceSelection]="true" (onSelect)="onMaterialSelected1($event, rowData,ri)" [suggestions]="filteredmats" (completeMethod)="filtermats($event,rowData)" [size]="20"
+                  [dropdown]="true"></p-autoComplete>-->
                   </td>
                   <td class="ptable-cell" style="text-align:left;">
                     <p-autoComplete [(ngModel)]="rowData.poitemdesc" placeholder="search by description" type="text" appendTo="body" [forceSelection]="true" (onSelect)="onDescriptionSelected($event,rowData,ri)" [suggestions]="filteredmatdesc" (completeMethod)="filtermatdescs($event,rowData)" [size]="40"

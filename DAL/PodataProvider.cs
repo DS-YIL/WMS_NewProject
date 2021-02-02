@@ -8712,8 +8712,9 @@ namespace WMS.DAL
 			{
 				try
 				{
-					string materialrequestquery = "select materialid as material, poitemdescription as poitemdesc,unitprice from wms.wms_pomaterials";
+					//string materialrequestquery = "select materialid as material, poitemdescription as poitemdesc,unitprice from wms.wms_pomaterials";
 
+					string materialrequestquery= "select  matmtygs .material as material,matmtygs .materialdescription as materialdescription, pomat.poitemdescription as poitemdesc, pomat.unitprice from wms.wms_pomaterials pomat right join wms.\"MaterialMasterYGS\" matmtygs on pomat.materialid = matmtygs.material limit 10";
 					await pgsql.OpenAsync();
 					return await pgsql.QueryAsync<Materials>(
 					  materialrequestquery, null, commandType: CommandType.Text);
