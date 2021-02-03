@@ -179,7 +179,7 @@ const routes: Routes = [{
     { path: "PlantMaster", component: PlantMasterComponent, canActivate:[AuthGuard] },
     { path: "InitialStockPutAway", component: InitialStockPutAwayComponent, canActivate: [AuthGuard] },
     { path: "MiscellanousReason", component: MiscellanousComponent, canActivate: [AuthGuard] },
-    { path: "StockTransferOrder", component: StockTransferOrderComponent, canActivate: [AuthGuard] }
+    { path: "StockTransferOrder", component: StockTransferOrderComponent, canActivate: [AuthGuard] },
     { path: "InitialStockPutAway", component: InitialStockPutAwayComponent, canActivate: [AuthGuard] },
     { path: "AssignProject", component: AssignProjectComponent, canActivate: [AuthGuard] },
     { path: "MaterialRequestApproval", component: MaterialRequestApprovalComponent, canActivate: [AuthGuard] }

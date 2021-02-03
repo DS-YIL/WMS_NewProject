@@ -2974,7 +2974,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "getuserauthdata", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "getuserauthdata", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -3027,7 +3027,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "getuserauthdetails", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "getuserauthdetails", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -3061,7 +3061,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "getuserauthdetailsbyrole", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "getuserauthdetailsbyrole", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -3095,7 +3095,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "getsubroledata", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "getsubroledata", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -3782,7 +3782,7 @@ namespace WMS.DAL
 				catch (Exception Ex)
 				{
 					Trans.Rollback();
-					log.ErrorMessage("PODataProvider", "mattransferapprove", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "mattransferapprove", Ex.StackTrace.ToString(),Ex.Message.ToString(), url);
 					return Ex.Message;
 				}
 				finally
@@ -3911,16 +3911,16 @@ namespace WMS.DAL
 						{
 
 						});
-						EmailModel emailmodel = new EmailModel();
+						EmailModel emailmodelx = new EmailModel();
 						//emailmodel.pono = datamodel[0].pono;
 						//emailmodel.jobcode = datamodel[0].projectname;
-						emailmodel.materialissueid = dataobj[0].materialissueid;
-						emailmodel.requestid = dataobj[0].requestid;
+						emailmodelx.materialissueid = dataobj[0].materialissueid;
+						emailmodelx.requestid = dataobj[0].requestid;
 						//emailmodel.ToEmailId = "developer1@in.yokogawa.com";
-						emailmodel.FrmEmailId = "ramesh.kumar@in.yokogawa.com";
+						emailmodelx.FrmEmailId = "ramesh.kumar@in.yokogawa.com";
 						//emailmodel.CC = "sushma.patil@in.yokogawa.com";
-						EmailUtilities emailobj = new EmailUtilities();
-						emailobj.sendEmail(emailmodel, 5, 11);
+						EmailUtilities emailobjx = new EmailUtilities();
+						emailobjx.sendEmail(emailmodelx, 5, 11);
 					}
 					if (dataobj[0].requesttype == "STO")
 					{
@@ -6026,7 +6026,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "GetItemlocationListBymterialanddesc", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "GetItemlocationListBymterialanddesc", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -8174,7 +8174,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "getprojectlisttoassign", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "getprojectlisttoassign", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -10575,7 +10575,7 @@ namespace WMS.DAL
 				}
 				catch(Exception Ex)
                 {
-					log.ErrorMessage("PODataProvider", "updateprojectmember", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "updateprojectmember", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					result = Ex.Message;
 
 				}
@@ -12052,7 +12052,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "getrequestdataforapproval", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "getrequestdataforapproval", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -12992,7 +12992,7 @@ namespace WMS.DAL
 			}
 			catch (Exception ex)
 			{
-				log.ErrorMessage("PODataProvider", "updateuserAuth", ex.StackTrace.ToString());
+				log.ErrorMessage("PODataProvider", "updateuserAuth", ex.StackTrace.ToString(), ex.Message.ToString(), url);
 				return "error";
 			}
            

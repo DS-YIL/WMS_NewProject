@@ -174,7 +174,7 @@ namespace WMS.Common
 				mailMessage.Subject = "Acknowledge for Material Received - ID" + emlSndngList.requestid;
 				subbody = "The materials recevied has been acknowdleged by < br /> Please click on below link for more details.";
 				subbody = mailMessage.Subject;
-				link = linkurl + "WMS/Email/MaterialReqView?ReqId=" + emlSndngList.requestid;
+				link = "";
 
 			}
 			//else if (subjecttype == 7)

@@ -116,7 +116,6 @@ import { MaterilMasterComponent } from './WMS/Admin/Materialmaster.component';
 import { GatePassMasterComponent } from './WMS/Admin/GatePassMaster .component';
 import { PlantMasterComponent } from './WMS/Admin/PlantMaster.component';
 import { MiscellanousComponent } from './WMS/Admin/Miscellanous.component';
-import { PlantMasterComponent } from './WMS/Admin/PlantMaster.component';
 import { AssignProjectComponent } from './WMS/AssignProject.component';
 import { MaterialRequestApprovalComponent } from './WMS/MaterialRequestApproval.component';
 
