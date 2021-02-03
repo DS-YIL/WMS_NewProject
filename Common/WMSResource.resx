@@ -283,7 +283,7 @@ gate.*,mat.*,iss.*,ygs.* from wms.wms_gatepass gate
    left join wms.employee emp on emp.employeeno=gate.requestedby
     left join wms.employee appr on appr.employeeno=gate.approverid 
 	left join wms.employee emp1 on emp1.employeeno=gate.fmapproverid  
-   left join wms.wms_materialissue iss on (iss.requestid = mat.gatepassmaterialid and iss.requesttype = 'gatepass' )
+   left join wms.wms_materialissue iss on (iss.requestid = cast(mat.gatepassmaterialid as  varchar) and iss.requesttype = 'gatepass' )
    left join wms."MaterialMasterYGS" ygs on ygs.material=mat.materialid and mat.deleteflag=false 
    where gate.deleteflag=false   order by gate.gatepassid desc</value>
   </data>
@@ -1699,14 +1699,14 @@ stocktype=@stocktype,unitprice=@unitprice,hsncode=@hsncode where material ='#mat
     <comment>BG: To get unit price details from po materials table </comment>
   </data>
   <data name="getMatdetailsbyTransferId" xml:space="preserve">
-    <value>select max(inv.id) as id,inv.transferid, inv.materialid , Max(stock.poitemdescription ) as poitemdescription, max(inv.transferqty) as transferqty,
+    <value>select max(inv.id) as id,inv.transferid, inv.materialid , Max(inv.poitemdesc) as poitemdescription, max(inv.transferqty) as transferqty,
 (select sum(issuedqty) from wms.wms_materialissue matiss  where matiss.requestid =cast(max(inv.id) as varchar ) and matiss.requesttype ='STO' ) as issuedqty,
  (select sum(availableqty) from wms.wms_stock ws where materialid =inv.materialid ) as availableqty
 from wms.wms_invtransfermaterial inv
 left outer join wms.wms_stock stock on inv.materialid = stock.materialid</value>
   </data>
   <data name="invstocktransforSTO" xml:space="preserve">
-    <value>select inv.transferid,emp.name as transferredby,inv.transferredon,inv.transfertype,inv.sourceplant,inv.destinationplant,inv.remarks,inv.status,inv.isporequested   
+    <value>select inv.transferid,emp.name as transferredby,inv.transferredon,inv.transfertype,inv.sourceplant,inv.destinationplant,inv.remarks,inv.status,inv.issuedon,inv.isporequested   
 from wms.wms_invstocktransfer inv 
 left outer join wms.employee emp  on emp.employeeno = inv.transferredby where  inv.transfertype ='STO'
 order by transferredon desc</value>

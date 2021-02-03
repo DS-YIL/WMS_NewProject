@@ -3618,7 +3618,7 @@ namespace WMS.DAL
 					}
 					if (dataobj[0].requesttype == "STO")
 					{
-						string requestid = dataobj[0].requestid;
+						string requestid = dataobj[0].transferid;
 						string approvedby = dataobj[0].approvedby;
 						string updaterequest = "update wms.wms_invstocktransfer set status = 'Issued',issuedon=current_date where transferid='" + requestid + "'";
 

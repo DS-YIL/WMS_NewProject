@@ -547,7 +547,7 @@ namespace WMS.Models
 
 		public string material { get; set; }
 		//public string materialdescription { get; set; }
-		public int transferid { get; set; }
+		public string transferid { get; set; }
 		public int confirmqty { get; set; }
 		public int reserveformaterialid { get; set; }
 		public string ackstatus { get; set; }
@@ -1347,6 +1347,7 @@ public class invstocktransfermodel
 	public string projectid { get; set; }
 	public DateTime requireddate { get; set; }
 	public string status { get; set; }
+	public DateTime issuedon { get; set; }
 	public bool isporequested { get; set; }
 }
 
