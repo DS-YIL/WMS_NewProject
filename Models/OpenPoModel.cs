@@ -2097,5 +2097,6 @@ public class plantddl
 {
 	public int locatorid { get; set; }
 	public string locatorname { get; set; }
+	public string storagelocationdesc { get; set; }
 	//public int plantid { get; set; }
 }
