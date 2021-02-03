@@ -14,6 +14,7 @@ using Npgsql;
 using NpgsqlTypes;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Data.OleDb;
 using System.Globalization;
@@ -23,6 +24,8 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using WMS.Common;
 using WMS.Models;
+using System.Data.SqlClient;
+using Microsoft.AspNetCore.Http;
 
 namespace WMS.Controllers
 {
@@ -32,9 +35,16 @@ namespace WMS.Controllers
 	{
 		Configurations config = new Configurations();
 		ErrorLogTrace log = new ErrorLogTrace();
+		string url = "";
+		private readonly IHttpContextAccessor _httpContextAccessor;
+		public StagingController(IHttpContextAccessor _httpContextAccessor)
+		{
+			this._httpContextAccessor = _httpContextAccessor;
+			url = _httpContextAccessor.HttpContext.Request.Host + _httpContextAccessor.HttpContext.Request.Path;
+		}
 		/*Name of Function : <<uploadExcel>>  Author :<<Prasanna>>  
 		Date of Creation <<02-07-2020>>
-		Purpose : <<fill podata from excel to staging table>>
+		Purpose : <<fill Open  podata from ygs SAP excel to staging table>>
 		Review Date :<<>>   Reviewed By :<<>>
 		Sourcecode Copyright : Yokogawa India Limited
 		*/
@@ -128,6 +138,7 @@ namespace WMS.Controllers
 							model.assetno = Conversion.toStr(row["Asset Number"]);
 							model.projecttext = Conversion.toStr(row["Description"]);
 							model.sloc = Conversion.toStr(row["SLoc"]);
+							model.pocreatedby = Convert.ToString(row["PO created by (User Id)"]);
 							string Error_Description = "";
 							bool dataloaderror = false;
 							if (string.IsNullOrEmpty(model.pono.Replace('.', '#')))
@@ -152,11 +163,12 @@ namespace WMS.Controllers
 							//dbcmd.ExecuteNonQuery();
 							poitem = model.pono + "-" + model.itemno.ToString();
 							string poitemdescription = model.poitemdescription;
-							var insertquery = "INSERT INTO wms.STAG_PO_SAP(PurchDoc,ItemDeliveryDate,Material,poitemdescription,POQuantity,dci,deliveredqty,Vendor,VendorName,ProjectDefinition,Item,NetPrice,datasource,createddate,DataloadErrors ,Error_Description,uploadcode,saleorderno,solineitemno,saleordertype,codetype,costcenter,assetno,projecttext,sloc)";
-							insertquery += " VALUES(@pono, @itemdeliverydate,@materialid,@poitemdescription,@poquantity,@dci,@deliveredqty,@vendorcode,@vendorname,@projectdefinition,@itemno,@NetPrice,'SAP',current_timestamp,@dataloaderror,@error_description,@uploadcode,@saleorderno,@solineitemno,@saleordertype,@codetype,@costcenter,@assetno,@projecttext,@sloc)";
+							var insertquery = "INSERT INTO wms.STAG_PO_SAP(PurchDoc,pocreatedby,ItemDeliveryDate,Material,poitemdescription,POQuantity,dci,deliveredqty,Vendor,VendorName,ProjectDefinition,Item,NetPrice,datasource,createddate,DataloadErrors ,Error_Description,uploadcode,saleorderno,solineitemno,saleordertype,codetype,costcenter,assetno,projecttext,sloc)";
+							insertquery += " VALUES(@pono,@pocreatedby, @itemdeliverydate,@materialid,@poitemdescription,@poquantity,@dci,@deliveredqty,@vendorcode,@vendorname,@projectdefinition,@itemno,@NetPrice,'SAP',current_timestamp,@dataloaderror,@error_description,@uploadcode,@saleorderno,@solineitemno,@saleordertype,@codetype,@costcenter,@assetno,@projecttext,@sloc)";
 							var results = DB.ExecuteScalar(insertquery, new
 							{
 								model.pono,
+								model.pocreatedby,
 								model.itemdeliverydate,
 								model.materialid,
 								poitemdescription,
@@ -180,12 +192,11 @@ namespace WMS.Controllers
 								model.projecttext,
 								model.sloc
 							});
-
 						}
 						catch (Exception e)
 						{
 							var res = e;
-							log.ErrorMessage("StagingController", "uploadPoDataExcel", "PO:" + poitem + "error:" + e.Message.ToString());
+							log.ErrorMessage("StagingController", "uploadPoDataExcel", e.StackTrace.ToString(), "PO:" + poitem + "error:" + e.Message.ToString(), url);
 							continue;
 						}
 					}
@@ -205,7 +216,7 @@ namespace WMS.Controllers
 			catch (Exception e)
 			{
 				var res = e;
-				log.ErrorMessage("StagingController", "uploadPoDataExcel", "error:" + e.Message.ToString());
+				log.ErrorMessage("StagingController", "uploadPoDataExcel", e.StackTrace.ToString(), "error:" + e.Message.ToString(), url);
 			}
 			return Ok(true);
 		}
@@ -234,6 +245,7 @@ namespace WMS.Controllers
 						try
 						{
 							stag_data.pono = stag_data.purchdoc;
+							stag_data.projectmanager = stag_data.pocreatedby;
 							stag_data.deliverydate = stag_data.itemdeliverydate;
 							stag_data.vendorcode = stag_data.vendor;
 							stag_data.suppliername = stag_data.vendorname;
@@ -264,13 +276,13 @@ namespace WMS.Controllers
 									isclosed
 								});
 
-							}
-
+							}						
 							string query2 = "Select Count(*) as count from wms.wms_project where pono = '" + stag_data.purchdoc + "'";
 							int Projcount = int.Parse(pgsql.ExecuteScalar(query2, null).ToString());
 
 							if (Projcount == 0)
 							{
+
 								//insert wms_project ##pono,jobname,projectcode,projectname,projectmanager,
 								var insertquery = "INSERT INTO wms.wms_project(pono, jobname, projectcode,projectname,projectmanager,uploadcode)VALUES(@pono, @jobname,@projectcode,@projecttext,@projectmanager,@uploadcode)";
 								var results = pgsql.ExecuteScalar(insertquery, new
@@ -282,8 +294,18 @@ namespace WMS.Controllers
 									stag_data.projectmanager,
 									uploadcode
 								});
-
 							}
+							//else
+							//{
+							//	if (!string.IsNullOrEmpty(stag_data.projectmanager))
+							//	{
+							//		var updateqyery = "update wms.wms_project set projectmanager = @projectmanager  where pono = '" + stag_data.purchdoc + "'";
+							//		var re = Convert.ToInt32(pgsql.Execute(updateqyery, new
+							//		{
+							//			stag_data.projectmanager
+							//		}));
+							//	}
+							//}
 
 							string queryasn = "Select Count(*) as count from wms.wms_asn where pono = '" + stag_data.purchdoc + "'";
 							int asncountcount = int.Parse(pgsql.ExecuteScalar(queryasn, null).ToString());
@@ -353,7 +375,7 @@ namespace WMS.Controllers
 						catch (Exception e)
 						{
 							var res = e;
-							log.ErrorMessage("StagingController", "loadPOData", e.StackTrace.ToString());
+							log.ErrorMessage("StagingController", "loadPOData", e.StackTrace.ToString(), e.Message.ToString(), url);
 							continue;
 						}
 					}
@@ -1023,7 +1045,7 @@ namespace WMS.Controllers
 							Trans.Rollback();
 							var res = e;
 							insertmessage += e.Message.ToString();
-							log.ErrorMessage("StagingController", "loadStockData", e.StackTrace.ToString());
+							log.ErrorMessage("StagingController", "loadStockData", e.StackTrace.ToString(), e.Message.ToString(), url);
 							continue;
 						}
 					}
@@ -1369,7 +1391,7 @@ namespace WMS.Controllers
 					catch (Exception ex)
 					{
 						var data = ex;
-						log.ErrorMessage("StagingController", "uploadDataExcel", ex.Message.ToString());
+						log.ErrorMessage("StagingController", "uploadDataExcel", ex.StackTrace.ToString(), ex.Message.ToString(), url);
 
 					}
 
@@ -1579,7 +1601,7 @@ namespace WMS.Controllers
 					{
 						var res = e;
 						insertmessage += e.Message.ToString();
-						log.ErrorMessage("StagingController", "loadmatlabelDatatobase", e.Message.ToString());
+						log.ErrorMessage("StagingController", "loadmatlabelDatatobase", e.StackTrace.ToString(), e.Message.ToString(), url);
 						continue;
 					}
 				}
@@ -1611,7 +1633,7 @@ namespace WMS.Controllers
 					{
 						var res = e;
 						insertmessage += e.Message.ToString();
-						log.ErrorMessage("StagingController", "load_st_serialimports", e.Message.ToString());
+						log.ErrorMessage("StagingController", "load_st_serialimports", e.StackTrace.ToString(), e.Message.ToString(), url);
 						continue;
 					}
 				}
@@ -1646,7 +1668,7 @@ namespace WMS.Controllers
 					{
 						var res = e;
 						insertmessage += e.Message.ToString();
-						log.ErrorMessage("StagingController", "load_st_qtsoimports", e.Message.ToString());
+						log.ErrorMessage("StagingController", "load_st_qtsoimports", e.StackTrace.ToString(), e.Message.ToString(), url);
 						continue;
 					}
 				}
@@ -1694,7 +1716,7 @@ namespace WMS.Controllers
 				catch (Exception e)
 				{
 					var res = e;
-					log.ErrorMessage("StagingController", "loadStockData", e.StackTrace.ToString());
+					log.ErrorMessage("StagingController", "loadStockData", e.StackTrace.ToString(), e.Message.ToString(), url);
 
 				}
 				finally
@@ -1795,7 +1817,7 @@ namespace WMS.Controllers
 					catch (Exception e)
 					{
 						var res = e;
-						log.ErrorMessage("StagingController", "uploadMaterialDataExcel", "error:" + e.Message.ToString());
+						log.ErrorMessage("StagingController", "uploadMaterialDataExcel", e.StackTrace.ToString(), "error:" + e.Message.ToString(), url);
 						continue;
 					}
 				}
@@ -1856,6 +1878,364 @@ namespace WMS.Controllers
 				//throw new NotImplementedException();
 
 			}
+		}
+
+		/*function : <<UpdateEmpDepDetails>>  Author :<<Prasanna>>  
+		Date of Creation <<18-01-2021>>
+		Purpose : <<to update Employee and department tables from intranet to wms>>
+		Review Date :<<>>   Reviewed By :<<>>
+		Sourcecode Copyright : Yokogawa India Limited*/
+		[HttpGet]
+		[Route("UpdateEmpDepDetails")]
+		public IActionResult UpdateEmpDepDetails()
+		{
+			try
+			{
+				using (NpgsqlConnection pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+
+				{
+					SqlConnection conn = new SqlConnection(config.IntranetConnectionString);
+					SqlCommand cmd = new SqlCommand("select * from OrgDepartments", conn);
+					conn.Open();
+					SqlDataReader dr = cmd.ExecuteReader();
+					while (dr.Read())
+					{
+						try
+						{
+							Orgdepartments dep = new Orgdepartments();
+							dep.orgdepartmentid = Convert.ToInt16(dr["OrgDepartmentId"]);
+							dep.orgdepartment = Convert.ToString(dr["OrgDepartment"]);
+							dep.departmenthead = Convert.ToString(dr["DepartmentHead"]);
+							dep.boolinuse = Convert.ToBoolean(dr["BoolInUse"]);
+							string depquery = "select count(*) from wms.orgdepartments  where orgdepartmentid = " + dr["OrgDepartmentId"] + "";
+							int depCnt = int.Parse(pgsql.ExecuteScalar(depquery, null).ToString());
+							if (depCnt == 0)
+							{
+								var insertquery = "INSERT INTO wms.orgdepartments(orgdepartmentid ,orgdepartment ,departmenthead ,boolinuse)VALUES(@orgdepartmentid ,@orgdepartment ,@departmenthead ,@boolinuse)";
+								var results = pgsql.ExecuteScalar(insertquery, new
+								{
+
+									dep.orgdepartmentid,
+									dep.orgdepartment,
+									dep.departmenthead,
+									dep.boolinuse
+								});
+							}
+							else
+							{
+								var updateqry = "update wms.orgdepartments set orgdepartment = @orgdepartment ,departmenthead = @departmenthead ,boolinuse = @boolinuse where orgdepartmentid=" + dr["OrgDepartmentId"] + "";
+								var rslt = pgsql.Execute(updateqry, new
+								{
+
+									dep.orgdepartment,
+									dep.departmenthead,
+									dep.boolinuse
+								});
+							}
+						}
+						catch (Exception e)
+						{
+							log.ErrorMessage("StagingController", "UpdateEmpDepDetails", "error:" + e.StackTrace.ToString(), e.Message.ToString(), url);
+							continue;
+						}
+					}
+					conn.Close();
+					SqlCommand empcmd = new SqlCommand("select * from Employee", conn);
+					conn.Open();
+					SqlDataReader empdr = empcmd.ExecuteReader();
+					while (empdr.Read())
+					{
+						try
+						{
+							Employee empmodel = new Employee();
+							empmodel.employeeno = Convert.ToString(empdr["EmployeeNo"]);
+							empmodel.name = Convert.ToString(empdr["Name"]);
+							empmodel.nickname = Convert.ToString(empdr["Nickname"]);
+							empmodel.shortname = Convert.ToString(empdr["ShortName"]);
+							empmodel.globalempno = Convert.ToString(empdr["GlobalEmpNo"]);
+							empmodel.ygsaccountcode = Convert.ToString(empdr["YGSAccountCode"]);
+							empmodel.domainid = Convert.ToString(empdr["DomainId"]);
+							empmodel.ygscostcenter = Convert.ToString(empdr["YGSCostCenter"]);
+							empmodel.costcenter = Convert.ToString(empdr["CostCenter"]);
+							empmodel.orgdepartmentid = string.IsNullOrEmpty(empdr["OrgDepartmentId"].ToString()) ? (Nullable<short>)null : Convert.ToInt16(empdr["OrgDepartmentId"]);
+							empmodel.orgofficeid = string.IsNullOrEmpty(empdr["OrgOfficeId"].ToString()) ? (Nullable<byte>)null : Convert.ToByte(empdr["OrgOfficeId"]);
+							empmodel.sex = Convert.ToString(empdr["Sex"]);
+							empmodel.maritalstatus = Convert.ToBoolean(empdr["MaritalStatus"]);
+							empmodel.dob = string.IsNullOrEmpty(empdr["DOB"].ToString()) ? (DateTime?)null : Convert.ToDateTime(empdr["DOB"]);
+							empmodel.boolcontract = Convert.ToBoolean(empdr["BoolContract"]);
+							empmodel.doj = string.IsNullOrEmpty(empdr["DOJ"].ToString()) ? (DateTime?)null : Convert.ToDateTime(empdr["DOJ"]);
+							empmodel.effectivedoj = string.IsNullOrEmpty(empdr["EffectiveDOJ"].ToString()) ? (DateTime?)null : Convert.ToDateTime(empdr["EffectiveDOJ"]);
+							empmodel.confirmationduedate = string.IsNullOrEmpty(empdr["ConfirmationDueDate"].ToString()) ? (DateTime?)null : Convert.ToDateTime(empdr["ConfirmationDueDate"]);
+							empmodel.confirmationdate = string.IsNullOrEmpty(empdr["ConfirmationDate"].ToString()) ? (DateTime?)null : Convert.ToDateTime(empdr["ConfirmationDate"]);
+							empmodel.dol = string.IsNullOrEmpty(empdr["DOL"].ToString()) ? (DateTime?)null : Convert.ToDateTime(empdr["DOL"]);
+							empmodel.departmentid = string.IsNullOrEmpty(empdr["DepartmentId"].ToString()) ? (Nullable<byte>)null : Convert.ToByte(empdr["DepartmentId"]);
+							empmodel.groupid = string.IsNullOrEmpty(empdr["GroupId"].ToString()) ? (Nullable<short>)null : Convert.ToInt16(empdr["GroupId"]);
+							empmodel.deptcode = Convert.ToString(empdr["DeptCode"]);
+							empmodel.grade = Convert.ToString(empdr["Grade"]);
+							empmodel.designation = Convert.ToString(empdr["Designation"]);
+							empmodel.functionalroleid = string.IsNullOrEmpty(empdr["FunctionalRoleId"].ToString()) ? (Int16?)null : Convert.ToInt16(empdr["FunctionalRoleId"]);
+							empmodel.email = Convert.ToString(empdr["EMail"]);
+							empmodel.serialno = Convert.ToString(empdr["SerialNo"]);
+							empmodel.bloodgroup = Convert.ToString(empdr["BloodGroup"]);
+							empmodel.hodempno = Convert.ToString(empdr["HODEmpNo"]);
+							empmodel.boolhod = Convert.ToBoolean(empdr["BoolHOD"]);
+							empmodel.blockid = string.IsNullOrEmpty(empdr["BlockId"].ToString()) ? (Nullable<byte>)null : Convert.ToByte(empdr["BlockId"]);
+							empmodel.floorid = string.IsNullOrEmpty(empdr["FloorId"].ToString()) ? (Nullable<short>)null : Convert.ToInt16(empdr["FloorId"]);
+							empmodel.qualification = Convert.ToString(empdr["Qualification"]);
+							empmodel.qualificationstring = Convert.ToString(empdr["QualificationString"]);
+							empmodel.boolfurnishedcertificates = Convert.ToBoolean(empdr["BoolFurnishedCertificates"]);
+							empmodel.prevemployment = Convert.ToString(empdr["PrevEmployment"]);
+							empmodel.boolexecutive = Convert.ToBoolean(empdr["BoolExecutive"]);
+							empmodel.mobileno = Convert.ToString(empdr["MobileNo"]);
+							empmodel.basic = string.IsNullOrEmpty(empdr["Basic"].ToString()) ? (Nullable<decimal>)null : Convert.ToDecimal(empdr["Basic"]);
+							empmodel.hra = string.IsNullOrEmpty(empdr["HRA"].ToString()) ? (Nullable<decimal>)null : Convert.ToDecimal(empdr["HRA"]);
+							empmodel.medicalallowance = string.IsNullOrEmpty(empdr["MedicalAllowance"].ToString()) ? (Nullable<decimal>)null : Convert.ToDecimal(empdr["MedicalAllowance"]);
+							empmodel.specialallowance = string.IsNullOrEmpty(empdr["SpecialAllowance"].ToString()) ? (Nullable<decimal>)null : Convert.ToDecimal(empdr["SpecialAllowance"]);
+							empmodel.transportallowance = string.IsNullOrEmpty(empdr["TransportAllowance"].ToString()) ? (Nullable<decimal>)null : Convert.ToDecimal(empdr["TransportAllowance"]);
+							empmodel.traineeallowance = string.IsNullOrEmpty(empdr["TraineeAllowance"].ToString()) ? (Nullable<decimal>)null : Convert.ToDecimal(empdr["TraineeAllowance"]);
+							empmodel.personalpay = string.IsNullOrEmpty(empdr["PersonalPay"].ToString()) ? (Nullable<decimal>)null : Convert.ToDecimal(empdr["PersonalPay"]);
+							empmodel.professionalallowance = string.IsNullOrEmpty(empdr["ProfessionalAllowance"].ToString()) ? (Nullable<decimal>)null : Convert.ToDecimal(empdr["ProfessionalAllowance"]);
+							empmodel.pfno = string.IsNullOrEmpty(empdr["PFNo"].ToString()) ? (Nullable<int>)null : Convert.ToInt32(empdr["PFNo"]);
+							empmodel.fpfno = string.IsNullOrEmpty(empdr["FPFNo"].ToString()) ? (Nullable<int>)null : Convert.ToInt32(empdr["FPFNo"]);
+							empmodel.accountsdetails = string.IsNullOrEmpty(empdr["AccountsDetails"].ToString()) ? (string)null : Convert.ToString(empdr["AccountsDetails"]);
+							empmodel.boolesi = Convert.ToBoolean(empdr["BoolESI"]);
+							empmodel.iciciaccno = string.IsNullOrEmpty(empdr["ICICIAccNo"].ToString()) ? (string)null : Convert.ToString(empdr["ICICIAccNo"]);
+							empmodel.medallbal = string.IsNullOrEmpty(empdr["MedAllBal"].ToString()) ? (decimal)0.0 : Convert.ToDecimal(empdr["MedAllBal"]);
+							empmodel.pickuppointid = string.IsNullOrEmpty(empdr["PickupPointId"].ToString()) ? (Nullable<short>)null : Convert.ToInt16(empdr["PickupPointId"]);
+							empmodel.homephone = Convert.ToString(empdr["HomePhone"]);
+							empmodel.presentaddress = Convert.ToString(empdr["PresentAddress"]);
+							empmodel.permanentaddress = Convert.ToString(empdr["PermanentAddress"]);
+							empmodel.emergencycontactperson = Convert.ToString(empdr["EmergencyContactPerson"]);
+							empmodel.emergencycontactno = Convert.ToString(empdr["EmergencyContactPerson"]);
+							empmodel.boolhasproximitycard = Convert.ToBoolean(empdr["BoolHasProximityCard"]);
+							empmodel.plstatus = string.IsNullOrEmpty(empdr["PLStatus"].ToString()) ? (Nullable<float>)null : float.Parse(empdr["PLStatus"].ToString());
+							empmodel.leavesdeductedfromflexidaily = string.IsNullOrEmpty(empdr["LeavesDeductedFromFlexiDaily"].ToString()) ? (Nullable<float>)null : float.Parse(empdr["LeavesDeductedFromFlexiDaily"].ToString());
+							empmodel.leavesdeductedfromflexiweekly = string.IsNullOrEmpty(empdr["LeavesDeductedFromFlexiWeekly"].ToString()) ? (Nullable<float>)null : float.Parse(empdr["LeavesDeductedFromFlexiWeekly"].ToString());
+							empmodel.restrictedholidaysavailed = string.IsNullOrEmpty(empdr["RestrictedHolidaysAvailed"].ToString()) ? (byte)0 : Convert.ToByte(empdr["RestrictedHolidaysAvailed"]);
+							empmodel.paternityleavesavailed = string.IsNullOrEmpty(empdr["PaternityLeavesAvailed"].ToString()) ? (byte)0 : Convert.ToByte(empdr["PaternityLeavesAvailed"]);
+							empmodel.nameasinpassport = Convert.ToString(empdr["NameAsInPassport"]);
+							empmodel.passportno = Convert.ToString(empdr["PassportNo"]);
+							empmodel.passportissuedplace = Convert.ToString(empdr["PassportIssuedDate"]);
+							empmodel.passportissueddate = string.IsNullOrEmpty(empdr["PassportIssuedDate"].ToString()) ? (Nullable<System.DateTime>)null : Convert.ToDateTime(empdr["PassportIssuedDate"]);
+							empmodel.passportexpirydate = string.IsNullOrEmpty(empdr["PassportExpiryDate"].ToString()) ? (Nullable<System.DateTime>)null : Convert.ToDateTime(empdr["PassportExpiryDate"]);
+							empmodel.addressasinpassport = Convert.ToString(empdr["AddressAsInPassport"]);
+							empmodel.birthplace = Convert.ToString(empdr["BirthPlace"]);
+							empmodel.panno = Convert.ToString(empdr["PanNo"]);
+							empmodel.aadhaarno = Convert.ToString(empdr["AadhaarNo"]);
+							empmodel.boolkannadiga = string.IsNullOrEmpty(empdr["BoolKannadiga"].ToString()) ? (Nullable<bool>)null : Convert.ToBoolean(empdr["BoolKannadiga"]);
+							empmodel.communityid = string.IsNullOrEmpty(empdr["CommunityId"].ToString()) ? (Nullable<byte>)null : Convert.ToByte(empdr["CommunityId"]);
+							empmodel.fathersname = Convert.ToString(empdr["FathersName"]);
+							empmodel.spousename = Convert.ToString(empdr["SpouseName"]);
+							empmodel.organizationid = string.IsNullOrEmpty(empdr["OrganizationId"].ToString()) ? (byte)0 : Convert.ToByte(empdr["OrganizationId"]);
+							empmodel.boolintranetenabled = string.IsNullOrEmpty(empdr["BoolIntranetEnabled"].ToString()) ? (bool)false : Convert.ToBoolean(empdr["BoolIntranetEnabled"]);
+							empmodel.uan = Convert.ToString(empdr["UAN"]);
+							empmodel.expensecategoryid = string.IsNullOrEmpty(empdr["ExpenseCategoryId"].ToString()) ? (Nullable<byte>)null : Convert.ToByte(empdr["ExpenseCategoryId"]);
+							empmodel.boolexpatriate = string.IsNullOrEmpty(empdr["BoolExpatriate"].ToString()) ? (bool)false : Convert.ToBoolean(empdr["BoolExpatriate"]);
+							empmodel.pwd = Convert.ToString(empdr["PWD"]);
+
+							string query1 = "select count(*) from wms.employee  where employeeno = '" + empdr["EmployeeNo"] + "'";
+							int empCnt = int.Parse(pgsql.ExecuteScalar(query1, null).ToString());
+							if (empCnt == 0)
+							{
+								var insertquery = "INSERT INTO wms.employee(employeeno ,name ,nickname ,shortname ,globalempno ,ygsaccountcode ,domainid ,ygscostcenter ,costcenter ,orgdepartmentid ,orgofficeid ,sex ,maritalstatus ,dob ,boolcontract ,doj ,effectivedoj ,confirmationduedate ,confirmationdate ,dol ,departmentid ,groupid ,deptcode ,grade ,designation ,functionalroleid ,email ,serialno ,bloodgroup ,hodempno ,boolhod ,blockid ,floorid ,qualification ,qualificationstring ,boolfurnishedcertificates ,prevemployment ,boolexecutive ,mobileno ,basic ,hra ,medicalallowance ,specialallowance ,transportallowance ,traineeallowance ,personalpay ,professionalallowance ,pfno ,fpfno ,accountsdetails ,boolesi ,iciciaccno ,medallbal ,pickuppointid ,homephone ,presentaddress ,permanentaddress ,emergencycontactperson ,emergencycontactno ,boolhasproximitycard ,plstatus ,leavesdeductedfromflexidaily ,leavesdeductedfromflexiweekly ,restrictedholidaysavailed ,paternityleavesavailed ,nameasinpassport ,passportno ,passportissuedplace ,passportissueddate ,passportexpirydate ,addressasinpassport ,birthplace ,panno ,aadhaarno ,boolkannadiga ,communityid ,fathersname ,spousename ,organizationid ,boolintranetenabled ,uan ,expensecategoryid ,boolexpatriate ,pwd ,roleid)VALUES(@employeeno ,@name ,@nickname ,@shortname ,@globalempno ,@ygsaccountcode ,@domainid ,@ygscostcenter ,@costcenter ,@orgdepartmentid ,@orgofficeid ,@sex ,@maritalstatus ,@dob ,@boolcontract ,@doj ,@effectivedoj ,@confirmationduedate ,@confirmationdate ,@dol ,@departmentid ,@groupid ,@deptcode ,@grade ,@designation ,@functionalroleid ,@email ,@serialno ,@bloodgroup ,@hodempno ,@boolhod ,@blockid ,@floorid ,@qualification ,@qualificationstring ,@boolfurnishedcertificates ,@prevemployment ,@boolexecutive ,@mobileno ,@basic ,@hra ,@medicalallowance ,@specialallowance ,@transportallowance ,@traineeallowance ,@personalpay ,@professionalallowance ,@pfno ,@fpfno ,@accountsdetails ,@boolesi ,@iciciaccno ,@medallbal ,@pickuppointid ,@homephone ,@presentaddress ,@permanentaddress ,@emergencycontactperson ,@emergencycontactno ,@boolhasproximitycard ,@plstatus ,@leavesdeductedfromflexidaily ,@leavesdeductedfromflexiweekly ,@restrictedholidaysavailed ,@paternityleavesavailed ,@nameasinpassport ,@passportno ,@passportissuedplace ,@passportissueddate ,@passportexpirydate ,@addressasinpassport ,@birthplace ,@panno ,@aadhaarno ,@boolkannadiga ,@communityid ,@fathersname ,@spousename ,@organizationid ,@boolintranetenabled ,@uan ,@expensecategoryid ,@boolexpatriate ,@pwd ,@roleid)";
+								var results = pgsql.ExecuteScalar(insertquery, new
+								{
+
+									empmodel.employeeno,
+									empmodel.name,
+									empmodel.nickname,
+									empmodel.shortname,
+									empmodel.globalempno,
+									empmodel.ygsaccountcode,
+									empmodel.domainid,
+									empmodel.ygscostcenter,
+									empmodel.costcenter,
+									empmodel.orgdepartmentid,
+									empmodel.orgofficeid,
+									empmodel.sex,
+									empmodel.maritalstatus,
+									empmodel.dob,
+									empmodel.boolcontract,
+									empmodel.doj,
+									empmodel.effectivedoj,
+									empmodel.confirmationduedate,
+									empmodel.confirmationdate,
+									empmodel.dol,
+									empmodel.departmentid,
+									empmodel.groupid,
+									empmodel.deptcode,
+									empmodel.grade,
+									empmodel.designation,
+									empmodel.functionalroleid,
+									empmodel.email,
+									empmodel.serialno,
+									empmodel.bloodgroup,
+									empmodel.hodempno,
+									empmodel.boolhod,
+									empmodel.blockid,
+									empmodel.floorid,
+									empmodel.qualification,
+									empmodel.qualificationstring,
+									empmodel.boolfurnishedcertificates,
+									empmodel.prevemployment,
+									empmodel.boolexecutive,
+									empmodel.mobileno,
+									empmodel.basic,
+									empmodel.hra,
+									empmodel.medicalallowance,
+									empmodel.specialallowance,
+									empmodel.transportallowance,
+									empmodel.traineeallowance,
+									empmodel.personalpay,
+									empmodel.professionalallowance,
+									empmodel.pfno,
+									empmodel.fpfno,
+									empmodel.accountsdetails,
+									empmodel.boolesi,
+									empmodel.iciciaccno,
+									empmodel.medallbal,
+									empmodel.pickuppointid,
+									empmodel.homephone,
+									empmodel.presentaddress,
+									empmodel.permanentaddress,
+									empmodel.emergencycontactperson,
+									empmodel.emergencycontactno,
+									empmodel.boolhasproximitycard,
+									empmodel.plstatus,
+									empmodel.leavesdeductedfromflexidaily,
+									empmodel.leavesdeductedfromflexiweekly,
+									empmodel.restrictedholidaysavailed,
+									empmodel.paternityleavesavailed,
+									empmodel.nameasinpassport,
+									empmodel.passportno,
+									empmodel.passportissuedplace,
+									empmodel.passportissueddate,
+									empmodel.passportexpirydate,
+									empmodel.addressasinpassport,
+									empmodel.birthplace,
+									empmodel.panno,
+									empmodel.aadhaarno,
+									empmodel.boolkannadiga,
+									empmodel.communityid,
+									empmodel.fathersname,
+									empmodel.spousename,
+									empmodel.organizationid,
+									empmodel.boolintranetenabled,
+									empmodel.uan,
+									empmodel.expensecategoryid,
+									empmodel.boolexpatriate,
+									empmodel.pwd,
+									empmodel.roleid
+								});
+							}
+							else
+							{
+								var updateqry = "update wms.employee set name = @name ,nickname = @nickname ,shortname = @shortname , globalempno = @globalempno ,ygsaccountcode = @ygsaccountcode , domainid = @domainid , ygscostcenter = @ygscostcenter , costcenter = @costcenter , orgdepartmentid = @orgdepartmentid , orgofficeid = @orgofficeid , sex = @sex , maritalstatus = @maritalstatus , dob = @dob , boolcontract = @boolcontract , doj = doj ,effectivedoj = @effectivedoj , confirmationduedate = @confirmationduedate , confirmationdate = @confirmationdate , dol = @dol , departmentid = @departmentid , groupid = @groupid , deptcode = @deptcode , grade = @grade , designation = @designation , functionalroleid = @functionalroleid , email = @email , serialno = @serialno , bloodgroup = @bloodgroup , hodempno = @hodempno , boolhod = @boolhod , blockid = @blockid , floorid = @floorid , qualification = @qualification , qualificationstring = @qualificationstring , boolfurnishedcertificates = @boolfurnishedcertificates , prevemployment = @prevemployment , boolexecutive = @boolexecutive , mobileno = @mobileno , basic = basic , hra = @hra ,medicalallowance = @medicalallowance , specialallowance = @specialallowance , transportallowance = @transportallowance , traineeallowance = @traineeallowance , personalpay = @personalpay , professionalallowance = @professionalallowance , pfno = @pfno , fpfno = @fpfno , accountsdetails = @accountsdetails , boolesi = @boolesi , iciciaccno = @iciciaccno , medallbal = @medallbal , pickuppointid = @pickuppointid , homephone = @homephone , presentaddress = @presentaddress , permanentaddress = @permanentaddress , emergencycontactperson = @emergencycontactperson , emergencycontactno = @emergencycontactno , boolhasproximitycard = @boolhasproximitycard , plstatus = @plstatus , leavesdeductedfromflexidaily = @leavesdeductedfromflexidaily , leavesdeductedfromflexiweekly = @leavesdeductedfromflexiweekly , restrictedholidaysavailed = @restrictedholidaysavailed , paternityleavesavailed = @paternityleavesavailed , nameasinpassport = @nameasinpassport , passportno = @passportno , passportissuedplace = @passportissuedplace , passportissueddate = @passportissueddate , passportexpirydate = @passportexpirydate , addressasinpassport = @addressasinpassport , birthplace = @birthplace , panno = @panno , aadhaarno = @aadhaarno , boolkannadiga = @boolkannadiga , communityid = @communityid , fathersname = @fathersname , spousename = @spousename , organizationid = @organizationid , boolintranetenabled = @boolintranetenabled , uan = @uan , expensecategoryid = @expensecategoryid , boolexpatriate = @boolexpatriate , pwd = @pwd, roleid = @roleid where employeeno= '" + empdr["EmployeeNo"] + "'";
+								var rslt = pgsql.Execute(updateqry, new
+								{
+
+									empmodel.name,
+									empmodel.nickname,
+									empmodel.shortname,
+									empmodel.globalempno,
+									empmodel.ygsaccountcode,
+									empmodel.domainid,
+									empmodel.ygscostcenter,
+									empmodel.costcenter,
+									empmodel.orgdepartmentid,
+									empmodel.orgofficeid,
+									empmodel.sex,
+									empmodel.maritalstatus,
+									empmodel.dob,
+									empmodel.boolcontract,
+									empmodel.doj,
+									empmodel.effectivedoj,
+									empmodel.confirmationduedate,
+									empmodel.confirmationdate,
+									empmodel.dol,
+									empmodel.departmentid,
+									empmodel.groupid,
+									empmodel.deptcode,
+									empmodel.grade,
+									empmodel.designation,
+									empmodel.functionalroleid,
+									empmodel.email,
+									empmodel.serialno,
+									empmodel.bloodgroup,
+									empmodel.hodempno,
+									empmodel.boolhod,
+									empmodel.blockid,
+									empmodel.floorid,
+									empmodel.qualification,
+									empmodel.qualificationstring,
+									empmodel.boolfurnishedcertificates,
+									empmodel.prevemployment,
+									empmodel.boolexecutive,
+									empmodel.mobileno,
+									empmodel.basic,
+									empmodel.hra,
+									empmodel.medicalallowance,
+									empmodel.specialallowance,
+									empmodel.transportallowance,
+									empmodel.traineeallowance,
+									empmodel.personalpay,
+									empmodel.professionalallowance,
+									empmodel.pfno,
+									empmodel.fpfno,
+									empmodel.accountsdetails,
+									empmodel.boolesi,
+									empmodel.iciciaccno,
+									empmodel.medallbal,
+									empmodel.pickuppointid,
+									empmodel.homephone,
+									empmodel.presentaddress,
+									empmodel.permanentaddress,
+									empmodel.emergencycontactperson,
+									empmodel.emergencycontactno,
+									empmodel.boolhasproximitycard,
+									empmodel.plstatus,
+									empmodel.leavesdeductedfromflexidaily,
+									empmodel.leavesdeductedfromflexiweekly,
+									empmodel.restrictedholidaysavailed,
+									empmodel.paternityleavesavailed,
+									empmodel.nameasinpassport,
+									empmodel.passportno,
+									empmodel.passportissuedplace,
+									empmodel.passportissueddate,
+									empmodel.passportexpirydate,
+									empmodel.addressasinpassport,
+									empmodel.birthplace,
+									empmodel.panno,
+									empmodel.aadhaarno,
+									empmodel.boolkannadiga,
+									empmodel.communityid,
+									empmodel.fathersname,
+									empmodel.spousename,
+									empmodel.organizationid,
+									empmodel.boolintranetenabled,
+									empmodel.uan,
+									empmodel.expensecategoryid,
+									empmodel.boolexpatriate,
+									empmodel.pwd,
+									empmodel.roleid
+								});
+							}
+						}
+						catch (Exception e)
+						{
+							log.ErrorMessage("StagingController", "UpdateEmpDepDetails", "error:" + e.StackTrace.ToString(), e.Message.ToString(), url);
+							continue;
+						}
+					}
+					conn.Close();
+				}
+			}
+			catch (Exception e)
+			{
+				var res = e;
+				log.ErrorMessage("StagingController", "UpdateEmpDepDetails", "error:" + e.StackTrace.ToString(), e.Message.ToString());
+			}
+			return Ok(true);
 		}
 	}
 }

@@ -846,6 +846,12 @@ namespace WMS.Controllers
 			return await this._poService.GetMaterialstockcombo();
 		}
 
+		[HttpGet("getMaterialforstocktransferorder")]
+		public async Task<IEnumerable<Materials>> getMaterialforstocktransferorder()
+		{
+			return await this._poService.getMaterialforstocktransferorder();
+		}
+
 		[HttpGet("getstocktransferdata")]
 		public async Task<IEnumerable<stocktransferModel>> getstocktransferlist()
 		{
@@ -859,9 +865,9 @@ namespace WMS.Controllers
 		}
 
 		[HttpGet("getstocktransferdatagroup1")]
-		public async Task<IEnumerable<invstocktransfermodel>> getstocktransferlistgroup1()
+		public async Task<IEnumerable<invstocktransfermodel>> getstocktransferlistgroup1(string transfertype)
 		{
-			return await this._poService.getstocktransferdatagroup1();
+			return await this._poService.getstocktransferdatagroup1(transfertype);
 		}
 
 		[HttpGet("getpendingpos")]
@@ -1371,6 +1377,19 @@ namespace WMS.Controllers
 
 		}
 
+		[HttpPost("MiscellanousReasonAdd")]
+		public string MiscellanousReasonAdd(GPReasonMTData data)
+		{
+			return this._poService.MiscellanousReasonAdd(data);
+
+		}
+		//[HttpPost("GPReasonMTAdd")]
+		//public string GPReasonMTAdd(GPReasonMTData data)
+		//{
+		//	return this._poService.GPReasonMTAdd(data);
+
+		//}
+
 		[HttpPost("createplant")]
 		public string createplant(PlantMTdata data)
 		{
@@ -1391,7 +1410,14 @@ namespace WMS.Controllers
 			return await this._poService.getGPReasonData();
 
 		}
-		
+
+		[HttpGet("getMiscellanousReasonData")]
+		public async Task<IEnumerable<GPReasonMTData>> getMiscellanousReasonData()
+		{
+			return await this._poService.getMiscellanousReasonData();
+
+		}
+
 		[HttpPost("PlantnameDelete")]
 		public string PlantnameDelete(PlantMTdata data)
 		{
@@ -1427,6 +1453,13 @@ namespace WMS.Controllers
 		{
 			return this._poService.generateLabel(labeldata);
 
+		}
+
+		[HttpGet("getplantlocdetails")]
+		public async Task<IEnumerable<plantddl>> getplantlocdetails()
+		{
+
+			return await this._poService.getplantlocdetails();
 		}
 	}
 }

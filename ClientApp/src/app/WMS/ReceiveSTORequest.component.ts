@@ -43,6 +43,7 @@ export class ReceiveSTORequestComponent implements OnInit {
       this.router.navigateByUrl("Login");
 
     this.selectedStatus = "Pending";
+    this.FIFOvalues = new FIFOValues();
     this.getSTORequestList();
   }
 
@@ -55,7 +56,8 @@ export class ReceiveSTORequestComponent implements OnInit {
     });
   }
 
-  onSelectStatus() {
+  onSelectStatus(event) {
+    this.selectedStatus = event.target.value;
     this.FilteredSTORequestList = this.STORequestList.filter(li => li.status == this.selectedStatus);
   }
 
@@ -168,8 +170,9 @@ export class ReceiveSTORequestComponent implements OnInit {
         item.itemreturnable = this.materialissueList[this.roindex].itemreturnable;
         item.approvedby = this.employee.employeeno;
         item.itemreceiverid = this.materialissueList[this.roindex].itemreceiverid;
-        item.requestid = this.materialissueList[this.roindex].transferid;
+        item.requestid = this.materialissueList[this.roindex].id;
         item.requestmaterialid = this.materialissueList[this.roindex].requestmaterialid;
+        item.transferid = this.materialissueList[this.roindex].transferid;
         item.requesttype = "STO";
         totalissuedqty = totalissuedqty + (item.issuedqty);
         this.FIFOvalues.issueqty = totalissuedqty;
@@ -222,6 +225,7 @@ export class ReceiveSTORequestComponent implements OnInit {
       else
         this.messageService.add({ severity: 'error', summary: '', detail: 'Material issue failed.' });
       this.showMatDetails = false;
+      this.getSTORequestList();
     });
   }
 
@@ -239,13 +243,14 @@ export class ReceiveSTORequestComponent implements OnInit {
   }
 
   InitiatePO() {
-
+    this.spinner.show();
+    this.materialissueList[0].uploadedby = this.employee.employeeno;
     this.wmsService.STOPOInitiate(this.materialissueList).subscribe(data => {
       this.spinner.hide();
       if (data)
-        this.messageService.add({ severity: 'success', summary: '', detail: 'PO Created.' });
+        this.messageService.add({ severity: 'success', summary: '', detail: 'PO Creation Request Sent.' });
       else
-        this.messageService.add({ severity: 'error', summary: '', detail: 'PO Creation Failed.' });
+        this.messageService.add({ severity: 'error', summary: '', detail: 'PO Creation Request Failed.' });
       this.showMatDetails = false;
     });
   }

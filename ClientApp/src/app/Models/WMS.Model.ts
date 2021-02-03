@@ -435,7 +435,9 @@ export class Materials {
 
   material: string;
   materialdescription: string;
-  qualitycheck: boolean
+  qualitycheck: boolean;
+  poitemdesc: string;
+  unitprice: any;
 
 }
 
@@ -493,6 +495,13 @@ export class locationddl {
 
   locatorid: any;
   locatorname: any;
+}
+
+export class plantddl {
+  locatorid: string;
+  locatorname: string;
+  storagelocationdesc: string;
+  //plantid:string
 }
 
 export class binddl {
@@ -561,9 +570,11 @@ export class stocktransfermateriakmodel {
   transferqty: number;
   mlocations: string[] = [];
   itemlocationdata: any[] = [];
-  remarks: any="";
+  remarks: any = "";
+  poitemdesc: any;
   requireddate: any;
-  projectid: any="";
+  projectid: any = "";
+  materialObj: any;
 }
 
 export class updateonhold {
@@ -694,10 +705,12 @@ export class STORequestdata {
   status: string;
   remarks: string;
   materialdata: STOrequestTR[] = [];
+  putawaystatus: any;
 }
 
 export class STOrequestTR {
   transferid: string;
+  serialno: any;
   materialid: string;
   poitemdesc: string;
   transferqty: any = 0;
@@ -705,6 +718,10 @@ export class STOrequestTR {
   requireddate: any;
   itemlocation: string;
   confirmqty: string;
+  issuedqty: any;
+  itemid: any;
+  availableqty: any;
+  isissued: any;
 }
 
 export class UserModel {

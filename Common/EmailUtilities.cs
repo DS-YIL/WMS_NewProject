@@ -10,6 +10,7 @@ using WMS.Common;
 using Dapper;
 using System.Data;
 using System.Globalization;
+using System.Linq.Expressions;
 
 namespace WMS.Common
 {
@@ -22,52 +23,54 @@ namespace WMS.Common
 
 		public enum Emailparameter
 		{
-			mailforqualitycheck = 1, 
-			mailforacceptance = 2, 
-			mailforputaway = 3, 
-			mailaftermaterialrequest = 4, 
+			mailforqualitycheck = 1,
+			mailforacceptance = 2,
+			mailforputaway = 3,
+			mailaftermaterialrequest = 4,
 			mailaftermaterialreserve = 5
 		}
-		public bool sendEmail(EmailModel emlSndngList, int subjecttype,int roleid=0)
+		public bool sendEmail(EmailModel emlSndngList, int subjecttype, int roleid = 0)
 		{
 			string link = "";
 			string linkurl = config.EmailLinkUrl;
 			string tomainlstring = "";
 			bool multipleemails = false;
-			if(roleid > 0)
-            {
-				try {
+			if (roleid > 0)
+			{
+				try
+				{
 					using (var DB = new NpgsqlConnection(config.PostgresConnectionString))
 					{
-						string query = WMSResource.dynamicemaildata.Replace("#roleid",roleid.ToString());
+						string query = WMSResource.dynamicemaildata.Replace("#roleid", roleid.ToString());
 
 						var result = DB.QueryAsync<authUser>(
 					   query, null, commandType: CommandType.Text);
-                        if(result != null && result.Result.Count()>0){
+						if (result != null && result.Result.Count() > 0)
+						{
 							int i = 0;
 							multipleemails = true;
 							foreach (authUser user in result.Result)
-                            {
-                                if (i > 0)
-                                {
+							{
+								if (i > 0)
+								{
 									tomainlstring += ",";
 
 								}
 								i++;
 
 								tomainlstring += user.email.Trim();
-							} 
-                        }
+							}
+						}
 
 					}
 
 
 				}
-				catch(Exception e)
+				catch (Exception e)
 
-                {
+				{
 					return false;
-                }
+				}
 				emlSndngList.ToEmailId = tomainlstring;
 
 			}
@@ -80,7 +83,7 @@ namespace WMS.Common
 			{
 				mailMessage.Subject = "Shipment Received - GateEntryNo. :" + emlSndngList.inwmasterid;
 				string receivedby = this.getnamebyid(emlSndngList.employeeno);
-				string date = Convert.ToDateTime( emlSndngList.receiveddate).ToString("dd/MM/yyyy");
+				string date = Convert.ToDateTime(emlSndngList.receiveddate).ToString("dd/MM/yyyy");
 				subbody = "Shipment for GateEntryNo. - <b>" + emlSndngList.inwmasterid + "</b> has been received.Please find the details below. <br/> Invoice No : <b>" + emlSndngList.invoiceno + "</b><br/>POs : <b>" + emlSndngList.pono + "</b><br/> Received By : <b>" + receivedby + "</b><br/> Received On : <b>" + date + "</b>";
 				link = linkurl + "WMS/Email/GRNPosting?GateEntryNo=" + emlSndngList.inwmasterid.Trim();
 
@@ -115,7 +118,7 @@ namespace WMS.Common
 			{
 				mailMessage.Subject = "Issue Request for Materials with request id:" + emlSndngList.requestid;
 				string requestedby = this.getnamebyid(emlSndngList.createdby);
-				subbody = "Please find the Material request details below. <br/> Requested By:" +requestedby + "<br/>Requested On:" + emlSndngList.createddate;
+				subbody = "Please find the Material request details below. <br/> Requested By:" + requestedby + "<br/>Requested On:" + emlSndngList.createddate;
 				//subbody += "<br/>"+ mailMessage.Subject;
 				link = linkurl + "WMS/Email/MaterialIssueDashboard?ReqId=" + emlSndngList.requestid;
 
@@ -128,8 +131,8 @@ namespace WMS.Common
 				string requestedby = this.getnamebyid(emlSndngList.createdby);
 				subbody = "Please find the Material reserve details below.<br/> Reserve id:" + emlSndngList.reserveid + " <br/> Reserved By:" + requestedby + "<br/>Reserved On:" + emlSndngList.createddate + "<br/>Reserve upto:" + emlSndngList.reserveupto + "<br/>Project code:" + emlSndngList.projectcode;
 				subbody += "<br/>";
-				if(emlSndngList.remarks != null && emlSndngList.remarks != "")
-                {
+				if (emlSndngList.remarks != null && emlSndngList.remarks != "")
+				{
 					subbody += "<br/>Remarks :" + emlSndngList.remarks;
 					subbody += "<br/>";
 				}
@@ -139,10 +142,10 @@ namespace WMS.Common
 				subbody += "<th style=\"border: 1px solid black;border-collapse:collapse;\">PO Item Description</th>";
 				subbody += "<th style=\"border: 1px solid black;border-collapse:collapse;\">Reserve Quantity</th>";
 				subbody += "</tr>";
-				foreach(MaterialTransactionDetail dt in emlSndngList.reservedata)
-                {
+				foreach (MaterialTransactionDetail dt in emlSndngList.reservedata)
+				{
 					subbody += "<tr>";
-					subbody += "<td style=\"border: 1px solid black;border-collapse:collapse;\">" + dt.materialid+"</td>";
+					subbody += "<td style=\"border: 1px solid black;border-collapse:collapse;\">" + dt.materialid + "</td>";
 					subbody += "<td style=\"border: 1px solid black;border-collapse:collapse;\">" + dt.poitemdescription + "</td>";
 					subbody += "<td style=\"border: 1px solid black;border-collapse:collapse;\">" + dt.reservedqty + "</td>";
 					subbody += "</tr>";
@@ -177,8 +180,8 @@ namespace WMS.Common
 			//else if (subjecttype == 7)
 			//{
 			//  mailMessage.Subject = "Acknowledge Materials -  Request Id" + emlSndngList.requestid;
-			 // subbody = mailMessage.Subject;
-			 // }
+			// subbody = mailMessage.Subject;
+			// }
 
 			//Admin to Approver(PM)
 
@@ -188,15 +191,15 @@ namespace WMS.Common
 				//subbody = "Please find the Masterials request details below. <br/> Requested By:" + emlSndngList.requestedby + "<br/>Requested On:" + emlSndngList.requestedon;
 				//subbody = mailMessage.Subject;
 				string requesteddte = emlSndngList.requestedon.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
-				mailMessage.Subject = "Gatepass Materials for"+ emlSndngList.gatepasstype +"- GatePass - ID : " + emlSndngList.gatepassid;
+				mailMessage.Subject = "Gatepass Materials for" + emlSndngList.gatepasstype + "- GatePass - ID : " + emlSndngList.gatepassid;
 				string requestedby = this.getnamebyid(emlSndngList.requestedby);
-				subbody = "Please find the "+emlSndngList.gatepasstype+" Gatepass Materials details below. <br/> Requested By : <b>" + requestedby + "</b><br/>Requested On : <b>" + requesteddte + "</b><br/>GatePass Type : <b>" + emlSndngList.gatepasstype+"</b>";
+				subbody = "Please find the " + emlSndngList.gatepasstype + " Gatepass Materials details below. <br/> Requested By : <b>" + requestedby + "</b><br/>Requested On : <b>" + requesteddte + "</b><br/>GatePass Type : <b>" + emlSndngList.gatepasstype + "</b>";
 				//subbody = mailMessage.Subject;
 				link = linkurl + "WMS/Email/GatePassPMList?GateId=" + emlSndngList.gatepassid.Trim();
 
 
 			}
-			
+
 
 			//Admin to Approver(MA)
 
@@ -204,7 +207,7 @@ namespace WMS.Common
 
 			{
 
-                mailMessage.Subject = "Gatepass Materials for Non-returnable - GatePass ID - " + emlSndngList.gatepassid;
+				mailMessage.Subject = "Gatepass Materials for Non-returnable - GatePass ID - " + emlSndngList.gatepassid;
 				string requestedby = this.getnamebyid(emlSndngList.requestedby);
 				subbody = "Please find the Non-returnable Materials details below. <br/> Requested By : " + requestedby + "<br/>Requested On : " + emlSndngList.requestedon + "<br/>GatePass Type : " + emlSndngList.gatepasstype;
 				//subbody = mailMessage.Subject;
@@ -212,13 +215,13 @@ namespace WMS.Common
 
 
 			}
-			
-			
+
+
 			else if (subjecttype == 10)
 			{
-                mailMessage.Subject = "Reserve material";
-                subbody = mailMessage.Subject;
-            }
+				mailMessage.Subject = "Reserve material";
+				subbody = mailMessage.Subject;
+			}
 			else if (subjecttype == 11)
 			{
 				mailMessage.Subject = "Reserve material";
@@ -354,16 +357,16 @@ namespace WMS.Common
 			if (emlSndngList.sendername == null)
 				emlSndngList.sendername = getname(emlSndngList.FrmEmailId);
 			string users = "";
-            if (multipleemails == true)
-            {
+			if (multipleemails == true)
+			{
 				users = "All";
-            }
-            else
-            {
+			}
+			else
+			{
 				users = emlSndngList.ToEmpName;
 
 			}
-			body = WMSResource.emailbody.Replace("#user", users).Replace("#subbody", subbody).Replace("#sender", emlSndngList.sendername).Replace("#link",link);
+			body = WMSResource.emailbody.Replace("#user", users).Replace("#subbody", subbody).Replace("#sender", emlSndngList.sendername).Replace("#link", link);
 			mailMessage.Body = body;
 			mailMessage.IsBodyHtml = true;
 			mailMessage.BodyEncoding = Encoding.UTF8;
@@ -375,7 +378,7 @@ namespace WMS.Common
 		}
 
 		public string getnamebyid(string employeeId)
-        {
+		{
 			string name = string.Empty;
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
@@ -399,7 +402,7 @@ namespace WMS.Common
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("EmailUtilities", "getname", Ex.StackTrace.ToString());
+					log.ErrorMessage("EmailUtilities", "getname", Ex.StackTrace.ToString(), Ex.Message.ToString());
 					return null;
 				}
 				finally
@@ -408,10 +411,10 @@ namespace WMS.Common
 				}
 
 			}
-		
 
-	
-}
+
+
+		}
 		public string getname(string emailid)
 		{
 			string name = string.Empty;
@@ -427,17 +430,17 @@ namespace WMS.Common
 					employeeModel emp = new employeeModel();
 					emp = pgsql.QueryFirstOrDefault<employeeModel>(
 					   query, null, commandType: CommandType.Text);
-					if(emp!=null)
-                    {
+					if (emp != null)
+					{
 						name = emp.name;
-						
+
 					}
 					return name;
 
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("EmailUtilities", "getname", Ex.StackTrace.ToString());
+					log.ErrorMessage("EmailUtilities", "getname", Ex.StackTrace.ToString(), Ex.Message.ToString());
 					return null;
 				}
 				finally
@@ -448,5 +451,123 @@ namespace WMS.Common
 			}
 		}
 
+		public bool sendCreatePOMail(string FrmEmailId, int RevisionId)
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				try
+				{
+					var ipaddress = "http://10.29.15.68:99/SCM/MPRForm/" + RevisionId + "";
+					EmailSend emlSndngList = new EmailSend();
+					emlSndngList.Body = "<html><meta charset=\"ISO-8859-1\"><head><link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ></head><body><div class='container'><b>Click here to redirect : </b>&nbsp<a href='" + ipaddress + "'>" + ipaddress + " </a></div></body></html>";
+					string userquery = "select email from wms.employee where employeeno ='" + FrmEmailId + "'";
+					User userdata = pgsql.QuerySingle<User>(
+					   userquery, null, commandType: CommandType.Text);
+					emlSndngList.FrmEmailId = userdata.email;
+					emlSndngList.Subject = "STO PO Created from WMS";
+					//checker
+					string quer1 = "select email from wms.employee where employeeno ='" + config.POChecker + "'";
+					User data1 = pgsql.QuerySingle<User>(
+					   quer1, null, commandType: CommandType.Text);
+					emlSndngList.ToEmailId = data1.email;
+					if (emlSndngList.FrmEmailId != "NULL" && emlSndngList.ToEmailId != "NULL")
+						this.EmailSending(emlSndngList);
+					this.EmailSending(emlSndngList);
+
+					string query2 = "select email from wms.employee where employeeno ='" + config.POApprover + "'";
+					User data2 = pgsql.QuerySingle<User>(
+					   query2, null, commandType: CommandType.Text);
+					emlSndngList.ToEmailId = data2.email;
+					if (emlSndngList.FrmEmailId != "NULL" && emlSndngList.ToEmailId != "NULL")
+						this.EmailSending(emlSndngList);
+					this.EmailSending(emlSndngList);
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("EmailUtilities", "getname", Ex.StackTrace.ToString(), Ex.Message.ToString());
+					return false;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+			}
+			return true;
+		}
+		public bool EmailSending(EmailSend emlSndngList)
+		{
+			try
+			{
+				if (!string.IsNullOrEmpty(emlSndngList.ToEmailId) && !string.IsNullOrEmpty(emlSndngList.FrmEmailId))
+				{
+					//var BCC = ConfigurationManager.AppSettings["BCC"];
+					//var SMTPServer = ConfigurationManager.AppSettings["SMTPServer"];
+					MailMessage mailMessage = new MailMessage();
+					mailMessage.From = new MailAddress(emlSndngList.FrmEmailId.Trim(), ""); //From Email Id
+					string[] ToMuliId = emlSndngList.ToEmailId.Split(',');
+					foreach (string ToEMailId in ToMuliId)
+					{
+						if (!string.IsNullOrEmpty(ToEMailId))
+							mailMessage.To.Add(new MailAddress(ToEMailId.Trim(), "")); //adding multiple TO Email Id
+					}
+					SmtpClient client = new SmtpClient();
+					if (!string.IsNullOrEmpty(emlSndngList.Subject))
+						mailMessage.Subject = emlSndngList.Subject;
+
+					if (!string.IsNullOrEmpty(emlSndngList.CC))
+					{
+						string[] CCId = emlSndngList.CC.Split(',');
+
+						foreach (string CCEmail in CCId)
+						{
+							if (!string.IsNullOrEmpty(CCEmail))
+								mailMessage.CC.Add(new MailAddress(CCEmail.Trim(), "")); //Adding Multiple CC email Id
+						}
+					}
+
+					if (!string.IsNullOrEmpty(emlSndngList.BCC))
+					{
+						string[] bccid = emlSndngList.BCC.Split(',');
+
+
+						foreach (string bccEmailId in bccid)
+						{
+							if (!string.IsNullOrEmpty(bccEmailId))
+								mailMessage.Bcc.Add(new MailAddress(bccEmailId.Trim(), "")); //Adding Multiple BCC email Id
+						}
+					}
+
+					//if (!string.IsNullOrEmpty(BCC))
+					//	mailMessage.Bcc.Add(new MailAddress(BCC.Trim(), ""));
+					mailMessage.Body = emlSndngList.Body;
+					mailMessage.IsBodyHtml = true;
+					mailMessage.BodyEncoding = Encoding.UTF8;
+					SmtpClient mailClient = new SmtpClient("10.29.15.9", 25);
+					//mailClient.EnableSsl = true;
+					mailClient.DeliveryMethod = SmtpDeliveryMethod.Network;
+					mailClient.Send(mailMessage);
+
+				}
+			}
+			catch (Exception ex)
+			{
+				log.ErrorMessage("EmailTemplate",ex.StackTrace.ToString(), "sendEmail" + ";" + emlSndngList.ToEmailId.ToString() + "", ex.ToString());
+			}
+			return true;
+		}
+
+		/*Name of Class : <<EmailSend>>  Author :<<Prasanna>>  
+	  Date of Creation <<22-01-2021>>
+	  Purpose : <<to send email>>
+	  Review Date :<<>>   Reviewed By :<<>>*/
+		public class EmailSend
+		{
+			public string FrmEmailId { get; set; }
+			public string ToEmailId { get; set; }
+			public string CC { get; set; }
+			public string BCC { get; set; }
+			public string Subject { get; set; }
+			public string Body { get; set; }
+		}
 	}
 }

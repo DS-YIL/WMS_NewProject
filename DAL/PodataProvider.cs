@@ -16,9 +16,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using WMS.Common;
 using WMS.Interfaces;
-using System.Web;
 using WMS.Models;
-using System.Web;
 using Microsoft.AspNetCore.Http;
 using System.IO;
 using System.Net.Sockets;
@@ -32,6 +30,10 @@ using ZXing.QrCode.Internal;
 using System.Data.OleDb;
 using static WMS.Common.EmailUtilities;
 using System.Globalization;
+using System.Net.Http;
+using System.Text;
+using Newtonsoft.Json;
+using System.Configuration;
 
 /*
     Name of namespace : <<WMS>>  Author :<<Shashikala>>  
@@ -57,7 +59,13 @@ namespace WMS.DAL
 		Configurations config = new Configurations();
 		ErrorLogTrace log = new ErrorLogTrace();
 
-
+		string url = "";
+		private readonly IHttpContextAccessor _httpContextAccessor;
+		public PodataProvider(IHttpContextAccessor _httpContextAccessor)
+		{
+			this._httpContextAccessor = _httpContextAccessor;
+			url = _httpContextAccessor.HttpContext.Request.Host + _httpContextAccessor.HttpContext.Request.Path;
+		}
 		/*
     Name of Function : <<CheckPoexists>>  Author :<<Ramesh>>  
     Date of Creation <<12-12-2019>>
@@ -137,7 +145,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "CheckPoexists", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "CheckPoexists", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -191,7 +199,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "getOpenPoList", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "getOpenPoList", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -224,9 +232,9 @@ namespace WMS.DAL
 					   query, null, commandType: CommandType.Text);
 					return objpo;
 				}
-				catch (Exception ex)
+				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "getPOList", ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "getPOList", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 
@@ -374,7 +382,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "getMaterialDetails", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "getMaterialDetails", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -558,7 +566,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "getPOList", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "getPOList", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -603,175 +611,175 @@ namespace WMS.DAL
 						   query, null, commandType: CommandType.Text);
 
 
-                    objprint.noofpieces = printMat.noofpieces;
-                    objprint.boxno = printMat.boxno;
-                    objprint.totalboxes = printMat.totalboxes;
-                    objprint.insprec = "Not Required";
+					objprint.noofpieces = printMat.noofpieces;
+					objprint.boxno = printMat.boxno;
+					objprint.totalboxes = printMat.totalboxes;
+					objprint.insprec = "Not Required";
 					objprint.order = objprint.saleorderno + "-" + objprint.solineitemno;
-                    objprint.qty = objprint.noofpieces + "/" + objprint.receivedqty + "ST " + objprint.boxno + "OF " + objprint.totalboxes + "BOXES";
-					
+					objprint.qty = objprint.noofpieces + "/" + objprint.receivedqty + "ST " + objprint.boxno + "OF " + objprint.totalboxes + "BOXES";
 
-                }
-                PrintUtilities objprntmat = new PrintUtilities();
-                //generate barcodes in material label
-                //Material barcode
-                printMat.materialbarcode = "./Barcodes/" + objprint.material + ".bmp";
-                var content = objprint.material;
-                objprint.materialbarcode = objprntmat.generatebarcode(printMat.materialbarcode, content);
 
-                //order barcode
-                printMat.soiembarcode = "./Barcodes/" + objprint.saleorderno + "_" + objprint.solineitemno + ".bmp";
-                content = objprint.saleorderno + "-" + objprint.solineitemno;
-                objprint.soiembarcode = objprntmat.generatebarcode(printMat.soiembarcode, content);
+				}
+				PrintUtilities objprntmat = new PrintUtilities();
+				//generate barcodes in material label
+				//Material barcode
+				printMat.materialbarcode = "./Barcodes/" + objprint.material + ".bmp";
+				var content = objprint.material;
+				objprint.materialbarcode = objprntmat.generatebarcode(printMat.materialbarcode, content);
 
-                //plant barcode
-                printMat.plantbarcode = "./Barcodes/" + objprint.plant + ".bmp";
-                content = objprint.plant;
-                objprint.plantbarcode = objprntmat.generatebarcode(printMat.plantbarcode, content);
+				//order barcode
+				printMat.soiembarcode = "./Barcodes/" + objprint.saleorderno + "_" + objprint.solineitemno + ".bmp";
+				content = objprint.saleorderno + "-" + objprint.solineitemno;
+				objprint.soiembarcode = objprntmat.generatebarcode(printMat.soiembarcode, content);
 
-                //sp barcode
-                printMat.spbarcode = "./Barcodes/" + objprint.spbarcode + ".bmp";
-                content = objprint.spbarcode;
-                objprint.spbarcode = objprntmat.generatebarcode(printMat.spbarcode, content);
+				//plant barcode
+				printMat.plantbarcode = "./Barcodes/" + objprint.plant + ".bmp";
+				content = objprint.plant;
+				objprint.plantbarcode = objprntmat.generatebarcode(printMat.plantbarcode, content);
 
-                //Linkage barcode
-                printMat.linkagebarcode = "./Barcodes/" + objprint.linkageno + ".bmp";
-                content = objprint.linkageno;
-                objprint.linkagebarcode = objprntmat.generatebarcode(printMat.linkagebarcode, content);
+				//sp barcode
+				printMat.spbarcode = "./Barcodes/" + objprint.spbarcode + ".bmp";
+				content = objprint.spbarcode;
+				objprint.spbarcode = objprntmat.generatebarcode(printMat.spbarcode, content);
 
-                int noofprints = 1;
-                bool isprint = true;
-                bool isonholdgr = false;
-                //Save data in database
-                string insertqueryforinvoice = WMSResource.insertmatbarcodelabeldata;
-                using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
-                {
-                    var results = DB.ExecuteScalar(insertqueryforinvoice, new
-                    {
-                        objprint.pono,
-                        objprint.inwardid,
-                        noofprints,
-                        objprint.noofpieces,
-                        isprint,
-                        objprint.totalboxes,
-                        objprint.boxno,
-                        objprint.receivedqty,
-                        isonholdgr,
-                        objprint.materialcodePath,
-                        objprint.soiembarcode,
-                        objprint.plantbarcode,
-                        objprint.spbarcode,
-                        objprint.linkagebarcode,
-                    });
+				//Linkage barcode
+				printMat.linkagebarcode = "./Barcodes/" + objprint.linkageno + ".bmp";
+				content = objprint.linkageno;
+				objprint.linkagebarcode = objprntmat.generatebarcode(printMat.linkagebarcode, content);
 
-                }
-            }
-            catch (Exception ex)
-            {
-                printMat.errorMsg = ex.Message;
-                log.ErrorMessage("PODataProvider", "generateBarcodeMaterial", ex.StackTrace.ToString());
-            }
-            return objprint;
-        }
+				int noofprints = 1;
+				bool isprint = true;
+				bool isonholdgr = false;
+				//Save data in database
+				string insertqueryforinvoice = WMSResource.insertmatbarcodelabeldata;
+				using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
+				{
+					var results = DB.ExecuteScalar(insertqueryforinvoice, new
+					{
+						objprint.pono,
+						objprint.inwardid,
+						noofprints,
+						objprint.noofpieces,
+						isprint,
+						objprint.totalboxes,
+						objprint.boxno,
+						objprint.receivedqty,
+						isonholdgr,
+						objprint.materialcodePath,
+						objprint.soiembarcode,
+						objprint.plantbarcode,
+						objprint.spbarcode,
+						objprint.linkagebarcode,
+					});
 
-        /*
+				}
+			}
+			catch (Exception Ex)
+			{
+				printMat.errorMsg = Ex.Message;
+				log.ErrorMessage("PODataProvider", "generateBarcodeMaterial", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
+			}
+			return objprint;
+		}
+
+		/*
        Name of Function : <<generateBarcodeMatonhold>>  Author :<<Gayathri>>  
        Date of Creation <<12-12-2019>>
        Purpose : <<Generate barcode and qrcode label required for Material label and get the get required to display on the material label>>
        <param name="printMat"></param>
        Review Date :<<>>   Reviewed By :<<>>
        */
-        public printMaterial generateBarcodeMatonhold(printMaterial printMat)
-        {
-            printMaterial objprint = new printMaterial();
-            try
-            {
-                PrintUtilities objptutlities = new PrintUtilities();
-                string path = "";
+		public printMaterial generateBarcodeMatonhold(printMaterial printMat)
+		{
+			printMaterial objprint = new printMaterial();
+			try
+			{
+				PrintUtilities objptutlities = new PrintUtilities();
+				string path = "";
 
-                path = Environment.CurrentDirectory + @"\Barcodes\";
+				path = Environment.CurrentDirectory + @"\Barcodes\";
 
-                if (!Directory.Exists(path))
-                {
-                    Directory.CreateDirectory(path);
-                }
+				if (!Directory.Exists(path))
+				{
+					Directory.CreateDirectory(path);
+				}
 
-                using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
-                {
-                    //Check if the material is already printed
-                     string query = "Select * from wms.wms_securityinward sinw join wms.wms_printstatusmaterial psmat on psmat.inwmasterid=sinw.inwmasterid where sinw.pono='" + printMat.pono + "' and sinw.invoiceno='" + printMat.invoiceno + "' and psmat.materialid='" + printMat.materialid + "'";
-                    
-                    objprint = DB.QueryFirstOrDefault<printMaterial>(
-                           query, null, commandType: CommandType.Text);
+				using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
+				{
+					//Check if the material is already printed
+					string query = "Select * from wms.wms_securityinward sinw join wms.wms_printstatusmaterial psmat on psmat.inwmasterid=sinw.inwmasterid where sinw.pono='" + printMat.pono + "' and sinw.invoiceno='" + printMat.invoiceno + "' and psmat.materialid='" + printMat.materialid + "'";
 
-
-
-                }
-                var content = printMat.grnno + "-" + printMat.materialid;
-                printMat.barcodePath = "./Barcodes/" + content + ".bmp";
-                printMat.materialcodePath = objptutlities.generatebarcode(printMat.barcodePath,content);
-
-                ////generate barcode for material code and GRN No.
-               
-                //BarcodeWriter writer = new BarcodeWriter
-                //{
-                //    Format = BarcodeFormat.QR_CODE,
-                //    Options = new EncodingOptions
-                //    {
-                //        Height = 90,
-                //        Width = 100,
-                //        PureBarcode = false,
-                //        Margin = 1,
-
-                //    },
-                //};
-                //var bitmap = writer.Write(content);
-
-                //// write text and generate a 2-D barcode as a bitmap
-                //writer
-                //    .Write(content)
-                //    .Save(path + content + ".bmp");
-
-                //printMat.barcodePath = "./Barcodes/" + content + ".bmp";
-
-                //Barcode design for material code
-                //generate barcode for material code and GRN No.
-
-                content = printMat.materialid;
-                printMat.materialcodePath = objptutlities.generateqrcode(printMat.barcodePath, content);
-
-                //BarcodeWriter writerData = new BarcodeWriter
-                //{
-                //    Format = BarcodeFormat.QR_CODE,
-                //    Options = new EncodingOptions
-                //    {
-                //        Height = 90,
-                //        Width = 100,
-                //        PureBarcode = false,
-                //        Margin = 1,
-
-                //    },
-                //};
-
-                //bitmap = writerData.Write(content);
-
-                //// write text and generate a 2-D barcode as a bitmap
-                //writer
-                //    .Write(content)
-                //    .Save(path + content + ".bmp");
-
-                //printMat.materialcodePath = "./Barcodes/" + content + ".bmp";
+					objprint = DB.QueryFirstOrDefault<printMaterial>(
+						   query, null, commandType: CommandType.Text);
 
 
 
-            }
-            catch (Exception ex)
-            {
-                printMat.errorMsg = ex.Message;
-                log.ErrorMessage("PODataProvider", "generateBarcodeMaterial", ex.StackTrace.ToString());
-            }
-            return objprint;
-        }
+				}
+				var content = printMat.grnno + "-" + printMat.materialid;
+				printMat.barcodePath = "./Barcodes/" + content + ".bmp";
+				printMat.materialcodePath = objptutlities.generatebarcode(printMat.barcodePath, content);
+
+				////generate barcode for material code and GRN No.
+
+				//BarcodeWriter writer = new BarcodeWriter
+				//{
+				//    Format = BarcodeFormat.QR_CODE,
+				//    Options = new EncodingOptions
+				//    {
+				//        Height = 90,
+				//        Width = 100,
+				//        PureBarcode = false,
+				//        Margin = 1,
+
+				//    },
+				//};
+				//var bitmap = writer.Write(content);
+
+				//// write text and generate a 2-D barcode as a bitmap
+				//writer
+				//    .Write(content)
+				//    .Save(path + content + ".bmp");
+
+				//printMat.barcodePath = "./Barcodes/" + content + ".bmp";
+
+				//Barcode design for material code
+				//generate barcode for material code and GRN No.
+
+				content = printMat.materialid;
+				printMat.materialcodePath = objptutlities.generateqrcode(printMat.barcodePath, content);
+
+				//BarcodeWriter writerData = new BarcodeWriter
+				//{
+				//    Format = BarcodeFormat.QR_CODE,
+				//    Options = new EncodingOptions
+				//    {
+				//        Height = 90,
+				//        Width = 100,
+				//        PureBarcode = false,
+				//        Margin = 1,
+
+				//    },
+				//};
+
+				//bitmap = writerData.Write(content);
+
+				//// write text and generate a 2-D barcode as a bitmap
+				//writer
+				//    .Write(content)
+				//    .Save(path + content + ".bmp");
+
+				//printMat.materialcodePath = "./Barcodes/" + content + ".bmp";
+
+
+
+			}
+			catch (Exception Ex)
+			{
+				printMat.errorMsg = Ex.Message;
+				log.ErrorMessage("PODataProvider", "generateBarcodeMaterial", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
+			}
+			return objprint;
+		}
 
 
 		/*
@@ -856,9 +864,9 @@ namespace WMS.DAL
 
 				}
 
-				catch (Exception ex)
+				catch (Exception Ex)
 				{
-					throw ex;
+					throw Ex;
 				}
 
 				if (printResult == "success")
@@ -875,10 +883,10 @@ namespace WMS.DAL
 
 
 			}
-			catch (Exception ex)
+			catch (Exception Ex)
 			{
-				printMat.errorMsg = ex.Message;
-				log.ErrorMessage("PODataProvider", "generateBarcodeMaterial", ex.StackTrace.ToString());
+				printMat.errorMsg = Ex.Message;
+				log.ErrorMessage("PODataProvider", "generateBarcodeMaterial", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 			}
 			return "success";
 		}
@@ -896,7 +904,7 @@ namespace WMS.DAL
 			PrintHistoryModel objreprint = new PrintHistoryModel();
 			try
 			{
-				
+
 				//dataobj.docfile = ;
 				using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
 				{
@@ -929,7 +937,7 @@ namespace WMS.DAL
 						objreprint.gateentrytime = data.receiveddate;
 						objreprint.vehicleno = data.vehicleno;
 						objreprint.transporterdetails = data.transporterdetails;
-						if (data.print==true)
+						if (data.print == true)
 						{
 							objreprint.result = "3";
 							return objreprint; //for invoice already exist and if data is printed
@@ -938,7 +946,7 @@ namespace WMS.DAL
 						{
 							objreprint.result = "2"; //for invoice already exist
 							return objreprint;
-							
+
 						}
 
 
@@ -970,7 +978,7 @@ namespace WMS.DAL
 								{
 									objreprint.result = "2"; //for invoice already exist
 									return objreprint;
-								
+
 								}
 								string type = "NON PO";
 								string insertpoqry = WMSResource.insertpo;
@@ -1008,9 +1016,9 @@ namespace WMS.DAL
 										//barcodeid,
 									});
 								}
-								catch (Exception ex)
+								catch (Exception Ex)
 								{
-									string msg = ex.Message;
+									string msg = Ex.Message;
 								}
 
 							}
@@ -1088,7 +1096,7 @@ namespace WMS.DAL
 
 						////}
 						//Adding the required data to reprint model
-						
+
 						objreprint.inwmasterid = dataobj.inwmasterid;
 						objreprint.pono = dataobj.pono;
 						objreprint.gateentrytime = dataobj.createddate;
@@ -1101,7 +1109,7 @@ namespace WMS.DAL
 			}
 			catch (Exception Ex)
 			{
-				log.ErrorMessage("PODataProvider", "InsertBarcodeInfo", Ex.StackTrace.ToString());
+				log.ErrorMessage("PODataProvider", "InsertBarcodeInfo", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 				string errorstring = Ex.Message;
 				if (errorstring.Contains("duplicate key"))
 				{
@@ -1112,7 +1120,7 @@ namespace WMS.DAL
 				{
 					objreprint.result = "Error:" + Ex.Message;
 					return objreprint;
-					
+
 				}
 
 			}
@@ -1141,7 +1149,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "getinvoiveforpo", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "getinvoiveforpo", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -1235,7 +1243,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "getMaterialDetails", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "getMaterialDetails", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -1269,7 +1277,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "getlocationdetails", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "getlocationdetails", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -1307,7 +1315,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "getReqMatdetails", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "getReqMatdetails", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -1347,7 +1355,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "getReserveMatdetails", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "getReserveMatdetails", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -1446,7 +1454,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "getReqMatdetails", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "getReqMatdetails", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -1480,7 +1488,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "GetDeatilsForholdgr", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "GetDeatilsForholdgr", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -1673,11 +1681,11 @@ namespace WMS.DAL
 					}
 
 
-					return datalist.OrderBy(o=>o.Material);
+					return datalist.OrderBy(o => o.Material);
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "GetDeatilsForthreeWaymatching", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "GetDeatilsForthreeWaymatching", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -1711,7 +1719,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "Getqualitydetails", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "Getqualitydetails", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -1730,7 +1738,7 @@ namespace WMS.DAL
 		 <param name="pono"></param>
 		Review Date :<<>>   Reviewed By :<<>>
 		*/
-		public async Task<OpenPoModel> VerifythreeWay(string inwmasterid, string invoiceno,string type)
+		public async Task<OpenPoModel> VerifythreeWay(string inwmasterid, string invoiceno, string type)
 		{
 			OpenPoModel verify = new OpenPoModel();
 			sequencModel obj = new sequencModel();
@@ -1839,24 +1847,24 @@ namespace WMS.DAL
 					}
 					//if (inwardid != 0)
 
-					if(type == "1")
-                    {
+					if (type == "1")
+					{
 						EmailModel emailmodel = new EmailModel();
 						emailmodel.grnnumber = verify.grnnumber;
 						emailmodel.FrmEmailId = "ramesh.kumar@in.yokogawa.com";
 						EmailUtilities emailobj = new EmailUtilities();
 						emailobj.sendEmail(emailmodel, 2, 9);
 					}
-					else if(type == "2")
-                    {
+					else if (type == "2")
+					{
 						EmailModel emailmodel = new EmailModel();
 						emailmodel.grnnumber = verify.grnnumber;
 						emailmodel.FrmEmailId = "ramesh.kumar@in.yokogawa.com";
 						EmailUtilities emailobj = new EmailUtilities();
 						emailobj.sendEmail(emailmodel, 20, 3);
 					}
-					else if(type == "3")
-                    {
+					else if (type == "3")
+					{
 						EmailModel emailmodel = new EmailModel();
 						emailmodel.grnnumber = verify.grnnumber;
 						emailmodel.FrmEmailId = "ramesh.kumar@in.yokogawa.com";
@@ -1870,13 +1878,13 @@ namespace WMS.DAL
 						emailobj1.sendEmail(emailmodel1, 20, 3);
 					}
 
-					
+
 
 					return verify;
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "VerifythreeWay", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "VerifythreeWay", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -2038,7 +2046,7 @@ namespace WMS.DAL
 				catch (Exception Ex)
 				{
 					Trans.Rollback();
-					log.ErrorMessage("PODataProvider", "insertquantity", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "insertquantity", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return Ex.Message;
 				}
 				finally
@@ -2133,7 +2141,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "insertquantity", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "insertquantity", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -2295,7 +2303,7 @@ namespace WMS.DAL
 			}
 			catch (Exception Ex)
 			{
-				log.ErrorMessage("PODataProvider", "InsertStock", Ex.StackTrace.ToString());
+				log.ErrorMessage("PODataProvider", "InsertStock", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 				return null;
 			}
 
@@ -2322,9 +2330,9 @@ namespace WMS.DAL
 				decimal? unitprice = 0;
 				using (IDbConnection pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 				{
-				
-					
-					
+
+
+
 
 
 
@@ -2344,13 +2352,13 @@ namespace WMS.DAL
 						int? binid = null;
 						bool qualitycheck = false;
 						int? binId = data.locations[0].rackid;
-						if(binId != null && binId > 0)
+						if (binId != null && binId > 0)
 						{
 							binid = Convert.ToInt32(binId);
 						}
 						//insert wms_rd_locator ##locatorname
 						int rslt = 0;
-					
+
 
 
 						var insertStorequery = "INSERT INTO wms.\"MaterialMasterYGS\" (material, materialdescription, storeid,rackid,binid,qualitycheck,stocktype,unitprice)VALUES(@materialid, @materialdescription,@locatorid,@rackid,@binid,@qualitycheck,@stocktype,@unitprice)";
@@ -2369,15 +2377,15 @@ namespace WMS.DAL
 						});
 					}
 				}
-					//Add locator in masterdata
-			   
+				//Add locator in masterdata
+
 
 				foreach (var item in data.locations)
 				{
 
 
 
-					
+
 					DateTime? createddate = System.DateTime.Now;
 					string insertquery = WMSResource.inserttoStockIS;
 					int itemid = 0;
@@ -2385,7 +2393,7 @@ namespace WMS.DAL
 					int? availableqty = item.quantity;
 					int? totalquantity = item.quantity;
 					value = data.value;
-					unitprice = data.value/ item.quantity;
+					unitprice = data.value / item.quantity;
 					string receivedtype = "Initial Stock";
 					string pono = data.pono;
 					int? storeid = item.locatorid;
@@ -2397,8 +2405,8 @@ namespace WMS.DAL
 					string uploadbatchcode = data.uploadbatchcode;
 					string uploadedfilename = data.uploadedfilename;
 					string poitemdescription = data.materialdescription;
-					if (item.binnumber != null  && item.binnumber.ToString().Trim() != "")
-                    {
+					if (item.binnumber != null && item.binnumber.ToString().Trim() != "")
+					{
 						itemlocation += "." + item.binnumber;
 
 					}
@@ -2406,7 +2414,7 @@ namespace WMS.DAL
 					{
 						result = Convert.ToInt32(DB.ExecuteScalar(insertquery, new
 						{
-						
+
 							pono,
 							item.binid,
 							item.rackid,
@@ -2452,8 +2460,8 @@ namespace WMS.DAL
 
 						}
 					}
-					
-					
+
+
 				}
 				return "Location Updated";
 
@@ -2461,7 +2469,7 @@ namespace WMS.DAL
 			catch (Exception Ex)
 			{
 				return Ex.Message;
-				log.ErrorMessage("PODataProvider", "InsertStock", Ex.StackTrace.ToString());
+				log.ErrorMessage("PODataProvider", "InsertStock", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 				return null;
 			}
 
@@ -2620,7 +2628,7 @@ namespace WMS.DAL
 			}
 			catch (Exception Ex)
 			{
-				log.ErrorMessage("PODataProvider", "InsertmatSTO", Ex.StackTrace.ToString());
+				log.ErrorMessage("PODataProvider", "InsertmatSTO", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 				return null;
 			}
 
@@ -2673,7 +2681,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "GetListItems", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "GetListItems", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -2718,7 +2726,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "GetMaterialItems", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "GetMaterialItems", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -2784,7 +2792,7 @@ namespace WMS.DAL
 			}
 			catch (Exception Ex)
 			{
-				log.ErrorMessage("PODataProvider", "IssueRequest", Ex.StackTrace.ToString());
+				log.ErrorMessage("PODataProvider", "IssueRequest", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 				return 0;
 			}
 		}
@@ -2811,7 +2819,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "getitemdeatils", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "getitemdeatils", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -2844,7 +2852,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "getitemdeatils", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "getitemdeatils", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -2887,7 +2895,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "MaterialIssue", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "MaterialIssue", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -2931,7 +2939,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "MaterialIssue", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "MaterialIssue", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -3158,7 +3166,7 @@ namespace WMS.DAL
 			}
 			catch (Exception Ex)
 			{
-				log.ErrorMessage("PODataProvider", "acknowledgeMaterialReceived", Ex.StackTrace.ToString());
+				log.ErrorMessage("PODataProvider", "acknowledgeMaterialReceived", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 				return 0;
 			}
 			//try
@@ -3181,7 +3189,7 @@ namespace WMS.DAL
 			//}
 			//catch (Exception Ex)
 			//{
-			//    log.ErrorMessage("PODataProvider", "acknowledgeMaterialReceived", Ex.StackTrace.ToString());
+			//    log.ErrorMessage("PODataProvider", "acknowledgeMaterialReceived", Ex.StackTrace.ToString(), Ex.Message.ToString(),url);
 			//    return 0;
 			//}
 
@@ -3212,7 +3220,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "GetMaterialList", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "GetMaterialList", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -3249,7 +3257,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "GetRequestList", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "GetRequestList", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -3286,7 +3294,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "GetRequestList", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "GetRequestList", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -3328,7 +3336,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "GetRequestList", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "GetRequestList", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -3374,7 +3382,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "GetRequestList", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "GetRequestList", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -3409,7 +3417,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "GetPonodetails", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "GetPonodetails", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -3513,7 +3521,7 @@ namespace WMS.DAL
 			}
 			catch (Exception Ex)
 			{
-				log.ErrorMessage("PODataProvider", "IssueRequest", Ex.StackTrace.ToString());
+				log.ErrorMessage("PODataProvider", "IssueRequest", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 				return 0;
 			}
 
@@ -3616,7 +3624,7 @@ namespace WMS.DAL
 								detail.materialid,
 								detail.requestedquantity,
 								detail.poitemdescription
-								
+
 
 							});
 
@@ -3672,7 +3680,7 @@ namespace WMS.DAL
 				catch (Exception Ex)
 				{
 					Trans.Rollback();
-					log.ErrorMessage("PODataProvider", "MaterialRequest", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "MaterialRequest", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return 0;
 				}
 				finally
@@ -3903,12 +3911,22 @@ namespace WMS.DAL
 						{
 
 						});
+						EmailModel emailmodel = new EmailModel();
+						//emailmodel.pono = datamodel[0].pono;
+						//emailmodel.jobcode = datamodel[0].projectname;
+						emailmodel.materialissueid = dataobj[0].materialissueid;
+						emailmodel.requestid = dataobj[0].requestid;
+						//emailmodel.ToEmailId = "developer1@in.yokogawa.com";
+						emailmodel.FrmEmailId = "ramesh.kumar@in.yokogawa.com";
+						//emailmodel.CC = "sushma.patil@in.yokogawa.com";
+						EmailUtilities emailobj = new EmailUtilities();
+						emailobj.sendEmail(emailmodel, 5, 11);
 					}
 					if (dataobj[0].requesttype == "STO")
 					{
-						string requestid = dataobj[0].requestid;
+						string requestid = dataobj[0].transferid;
 						string approvedby = dataobj[0].approvedby;
-						string updaterequest = "update wms.wms_invstocktransfer set status = 'Issued',requireddate=current_date where transferid='" + requestid + "'";
+						string updaterequest = "update wms.wms_invstocktransfer set status = 'Issued',issuedon=current_date where transferid='" + requestid + "'";
 
 						var data2 = DB.ExecuteScalar(updaterequest, new
 						{
@@ -3938,12 +3956,13 @@ namespace WMS.DAL
 
 				
 
+
 				return (Convert.ToInt32(result));
 			}
 			catch (Exception Ex)
 			{
 				Trans.Rollback();
-				log.ErrorMessage("PODataProvider", "updaterequestedqty", Ex.StackTrace.ToString());
+				log.ErrorMessage("PODataProvider", "updaterequestedqty", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 				return 0;
 			}
 		}
@@ -3971,7 +3990,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "GetgatepassList", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "GetgatepassList", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -4020,7 +4039,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "NonreturnGetgatepassList", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "NonreturnGetgatepassList", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -4056,7 +4075,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "outingatepassreport", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "outingatepassreport", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -4159,7 +4178,7 @@ namespace WMS.DAL
 							emailmodel.requestedon = dataobj.requestedon;
 							emailmodel.requestedby = dataobj.requestedby;
 							emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
-							
+
 
 						}
 						else if (dataobj.gatepasstype == "Non Returnable")
@@ -4257,7 +4276,7 @@ namespace WMS.DAL
 								//item.returneddate,
 								item.issuedqty,
 								item.materialdescription
-							
+
 							});
 
 						}
@@ -4290,7 +4309,7 @@ namespace WMS.DAL
 					}
 					Trans.Commit();
 					EmailUtilities emailobj = new EmailUtilities();
-					
+
 					emailmodel.gatepassid = dataobj.gatepassid;
 					emailmodel.gatepasstype = dataobj.gatepasstype;
 					emailmodel.FrmEmailId = "ramesh.kumar@in.yokogawa.com";
@@ -4304,7 +4323,7 @@ namespace WMS.DAL
 			catch (Exception Ex)
 			{
 				Trans.Rollback();
-				log.ErrorMessage("PODataProvider", "SaveOrUpdateGatepassDetails", Ex.StackTrace.ToString());
+				log.ErrorMessage("PODataProvider", "SaveOrUpdateGatepassDetails", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 				return 0;
 			}
 		}
@@ -4387,7 +4406,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "checkmaterialandqty", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "checkmaterialandqty", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return "false";
 				}
 				finally
@@ -4426,7 +4445,7 @@ namespace WMS.DAL
 			}
 			catch (Exception Ex)
 			{
-				log.ErrorMessage("PODataProvider", "deletegatepassmaterial", Ex.StackTrace.ToString());
+				log.ErrorMessage("PODataProvider", "deletegatepassmaterial", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 				return 0;
 			}
 		}
@@ -4526,7 +4545,7 @@ namespace WMS.DAL
 			}
 			catch (Exception Ex)
 			{
-				log.ErrorMessage("PODataProvider", "updategatepassapproverstatus", Ex.StackTrace.ToString());
+				log.ErrorMessage("PODataProvider", "updategatepassapproverstatus", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 				return 0;
 			}
 		}
@@ -4616,7 +4635,7 @@ namespace WMS.DAL
 						else
 						{
 							Trans.Rollback();
-							log.ErrorMessage("PODataProvider", "updategatepassapproverstatus", "No material in stock");
+							log.ErrorMessage("PODataProvider", "updategatepassapproverstatus", "No material in stock", "", url);
 							return 0;
 						}
 						model[0].approvedon = System.DateTime.Now;
@@ -4653,7 +4672,7 @@ namespace WMS.DAL
 			catch (Exception Ex)
 			{
 				Trans.Rollback();
-				log.ErrorMessage("PODataProvider", "updategatepassapproverstatus", Ex.StackTrace.ToString());
+				log.ErrorMessage("PODataProvider", "updategatepassapproverstatus", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 				return 0;
 			}
 		}
@@ -4687,7 +4706,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "GetmaterialList", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "GetmaterialList", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -4721,7 +4740,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "getGatePassApprovalHistoryList", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "getGatePassApprovalHistoryList", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -4822,7 +4841,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "updateprintstatus", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "updateprintstatus", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return 0;
 				}
 			}
@@ -4846,7 +4865,7 @@ namespace WMS.DAL
 		//}
 		//catch (Exception Ex)
 		//{
-		//    log.ErrorMessage("PODataProvider", "updateprintstatus", Ex.StackTrace.ToString());
+		//    log.ErrorMessage("PODataProvider", "updateprintstatus", Ex.StackTrace.ToString(), Ex.Message.ToString(),url);
 		//    return 0;
 		//}
 		//}
@@ -4913,7 +4932,7 @@ namespace WMS.DAL
 			}
 			catch (Exception Ex)
 			{
-				log.ErrorMessage("PODataProvider", "updategatepassapproverstatus", Ex.StackTrace.ToString());
+				log.ErrorMessage("PODataProvider", "updategatepassapproverstatus", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 				return 0;
 			}
 		}
@@ -4943,7 +4962,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "GetreportBasedCategory", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "GetreportBasedCategory", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -4980,7 +4999,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "GetreportBasedMaterial", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "GetreportBasedMaterial", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -5075,7 +5094,7 @@ namespace WMS.DAL
 
 			catch (Exception Ex)
 			{
-				log.ErrorMessage("PODataProvider", "updateABCcategorydata", Ex.StackTrace.ToString());
+				log.ErrorMessage("PODataProvider", "updateABCcategorydata", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 				return 0;
 			}
 		}
@@ -5104,7 +5123,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "GetABCCategorydata", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "GetABCCategorydata", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -5138,7 +5157,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "GetABCavailableqtyList", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "GetABCavailableqtyList", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -5172,7 +5191,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "GetEnquirydata", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "GetEnquirydata", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -5275,7 +5294,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "GetCyclecountList", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "GetCyclecountList", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -5308,7 +5327,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "GetCyclecountPendingList", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "GetCyclecountPendingList", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -5376,7 +5395,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "UpdateinsertCycleCount", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "UpdateinsertCycleCount", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return 0;
 				}
 				finally
@@ -5426,7 +5445,7 @@ namespace WMS.DAL
 			}
 			catch (Exception Ex)
 			{
-				log.ErrorMessage("PODataProvider", "UpdateCycleCountconfig", Ex.StackTrace.ToString());
+				log.ErrorMessage("PODataProvider", "UpdateCycleCountconfig", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 				return 0;
 			}
 		}
@@ -5486,7 +5505,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "GetCyclecountConfig", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "GetCyclecountConfig", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -5521,7 +5540,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "GetABCListBycategory", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "GetABCListBycategory", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -5565,7 +5584,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "GetFIFOList", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "GetFIFOList", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -5602,7 +5621,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "checkloldestmaterial", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "checkloldestmaterial", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -5658,7 +5677,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "FIFOitemsupdate", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "FIFOitemsupdate", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return 0;
 				}
 				finally
@@ -5686,14 +5705,14 @@ namespace WMS.DAL
 					string query = WMSResource.getASNList;
 					query = query + " where pomat.itemdeliverydate >= '" + deliverydate + " 00:00:00' and pomat.itemdeliverydate <= '" + deliverydate + " 23:59:59'";
 					query = query + " group by pomat.pono, pomat.asnno,pomat.itemdeliverydate order by pomat.asnno";
-					
+
 					await pgsql.OpenAsync();
 					return await pgsql.QueryAsync<OpenPoModel>(
 					   query, null, commandType: CommandType.Text);
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "getASNList", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "getASNList", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -5730,7 +5749,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "getASNList", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "getASNList", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -5761,7 +5780,7 @@ namespace WMS.DAL
 					query = query + " where pomat.itemdeliverydate >= '" + deliverydate + " 00:00:00' and pomat.itemdeliverydate <= '" + deliverydate + " 23:59:59'";
 					query = query + " group by pomat.pono, pomat.asnno,pomat.itemdeliverydate order by pomat.itemdeliverydate desc";
 
-					
+
 					await pgsql.OpenAsync();
 					var expectedrcpts = await pgsql.QueryAsync<OpenPoModel>(
 					   query, null, commandType: CommandType.Text);
@@ -5896,7 +5915,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "getASNList", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "getASNList", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -5933,7 +5952,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "GetItemlocationListBymterial", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "GetItemlocationListBymterial", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -5970,7 +5989,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "GetItemlocationListBymterial", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "GetItemlocationListBymterial", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -6049,7 +6068,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "GetItemlocationListBymterial", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "GetItemlocationListBymterial", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -6098,7 +6117,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "GetItemlocationListBymterial", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "GetItemlocationListBymterial", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -6147,7 +6166,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "GetItemlocationListBymterial", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "GetItemlocationListBymterial", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -6184,7 +6203,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "GetItemlocationListBymterial", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "GetItemlocationListBymterial", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -6268,7 +6287,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "FIFOitemsupdate", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "FIFOitemsupdate", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return 0;
 				}
 				finally
@@ -6310,7 +6329,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "assignRole", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "assignRole", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return 0;
 				}
 				finally
@@ -6341,7 +6360,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "getuserAcessList", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "getuserAcessList", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -6371,7 +6390,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "getuserroleList", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "getuserroleList", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -6467,7 +6486,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "getdashboarddata", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "getdashboarddata", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -6530,7 +6549,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "getUserdashboardgraphdata", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "getUserdashboardgraphdata", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -6599,19 +6618,19 @@ namespace WMS.DAL
 					var data10 = await pgsql.QueryAsync<ManagerDashboard>(acceptancecomptqry, null, commandType: CommandType.Text);
 
 					var data = new ManagerDashboard();
-					if(data1.Count() > 0)
-                    {
+					if (data1.Count() > 0)
+					{
 						data.pendingcount = data1.Count() > 0 ? data1.FirstOrDefault().pendingcount : 0;
 					}
-					if(data2.Count()>0)
-                    {
+					if (data2.Count() > 0)
+					{
 						data.onholdcount = data2.Count() > 0 ? data2.FirstOrDefault().onholdcount : 0;
 					}
 					if (data3.Count() > 0)
 					{
 						data.completedcount = data3.Count() > 0 ? data3.FirstOrDefault().completedcount : 0;
 					}
-					
+
 					if (data4.Count() > 0)
 					{
 						data.qualitycompcount = data4.FirstOrDefault().qualitycompcount;
@@ -6647,7 +6666,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "getManagerdashboardgraphdata", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "getManagerdashboardgraphdata", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -6700,9 +6719,9 @@ namespace WMS.DAL
 
 					return rcvdata;
 				}
-				catch (Exception ex)
+				catch (Exception Ex)
 				{
-					string msg = ex.Message;
+					string msg = Ex.Message;
 					return null;
 				}
 
@@ -6751,9 +6770,9 @@ namespace WMS.DAL
 
 					return rcvdata;
 				}
-				catch (Exception ex)
+				catch (Exception Ex)
 				{
-					string msg = ex.Message;
+					string msg = Ex.Message;
 					return null;
 				}
 
@@ -6802,9 +6821,9 @@ namespace WMS.DAL
 
 					return rcvdata;
 				}
-				catch (Exception ex)
+				catch (Exception Ex)
 				{
-					string msg = ex.Message;
+					string msg = Ex.Message;
 					return null;
 				}
 
@@ -6852,9 +6871,9 @@ namespace WMS.DAL
 
 					return rcvdata;
 				}
-				catch (Exception ex)
+				catch (Exception Ex)
 				{
-					string msg = ex.Message;
+					string msg = Ex.Message;
 					return null;
 				}
 
@@ -6903,9 +6922,9 @@ namespace WMS.DAL
 
 					return rcvdata;
 				}
-				catch (Exception ex)
+				catch (Exception Ex)
 				{
-					string msg = ex.Message;
+					string msg = Ex.Message;
 					return null;
 				}
 
@@ -6953,9 +6972,9 @@ namespace WMS.DAL
 
 					return rcvdata;
 				}
-				catch (Exception ex)
+				catch (Exception Ex)
 				{
-					string msg = ex.Message;
+					string msg = Ex.Message;
 					return null;
 				}
 
@@ -7004,9 +7023,9 @@ namespace WMS.DAL
 
 					return rcvdata;
 				}
-				catch (Exception ex)
+				catch (Exception Ex)
 				{
-					string msg = ex.Message;
+					string msg = Ex.Message;
 					return null;
 				}
 
@@ -7055,9 +7074,9 @@ namespace WMS.DAL
 
 					return rcvdata;
 				}
-				catch (Exception ex)
+				catch (Exception Ex)
 				{
-					string msg = ex.Message;
+					string msg = Ex.Message;
 					return null;
 				}
 
@@ -7115,7 +7134,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "getWeeklyUserdashboardgraphdata", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "getWeeklyUserdashboardgraphdata", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -7175,7 +7194,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "getmonthlyUserdashboardgraphdata", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "getmonthlyUserdashboardgraphdata", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -7219,7 +7238,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "MaterialRequestdata", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "MaterialRequestdata", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -7252,7 +7271,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "MaterialRequestdata", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "MaterialRequestdata", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -7285,7 +7304,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "MaterialRequestdata", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "MaterialRequestdata", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -7320,7 +7339,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "getempnamebycode", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "getempnamebycode", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -7355,7 +7374,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "getissuematerialdetails", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "getissuematerialdetails", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -7479,7 +7498,7 @@ namespace WMS.DAL
 			}
 			catch (Exception Ex)
 			{
-				log.ErrorMessage("PODataProvider", "insertResevematerial", Ex.StackTrace.ToString());
+				log.ErrorMessage("PODataProvider", "insertResevematerial", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 				return 0;
 			}
 		}
@@ -7613,7 +7632,7 @@ namespace WMS.DAL
 						emailmodel.createdby = datamodel[0].requesterid;
 						emailmodel.createddate = DateTime.Now;
 						emailmodel.reserveid = result.ToString();
-						emailmodel.reserveupto =  datamodel[0].reserveupto.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
+						emailmodel.reserveupto = datamodel[0].reserveupto.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
 						emailmodel.reservedata = reservelistformail;
 
 
@@ -7639,7 +7658,7 @@ namespace WMS.DAL
 				catch (Exception Ex)
 				{
 					Trans.Rollback();
-					log.ErrorMessage("PODataProvider", "MaterialRequest", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "MaterialRequest", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return 0;
 				}
 				finally
@@ -7675,7 +7694,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "GetReservedMaterialList", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "GetReservedMaterialList", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -7718,7 +7737,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "GetReservedMaterialList", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "GetReservedMaterialList", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -7755,7 +7774,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "getissuematerialdetails", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "getissuematerialdetails", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -7787,7 +7806,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "GetReleasedmaterialList", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "GetReleasedmaterialList", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -7820,7 +7839,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "GetmaterialdetailsByreserveid", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "GetmaterialdetailsByreserveid", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -7907,7 +7926,7 @@ namespace WMS.DAL
 			}
 			catch (Exception Ex)
 			{
-				log.ErrorMessage("PODataProvider", "updaterequestedqty", Ex.StackTrace.ToString());
+				log.ErrorMessage("PODataProvider", "updaterequestedqty", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 				return 0;
 			}
 
@@ -7963,7 +7982,7 @@ namespace WMS.DAL
 			}
 			catch (Exception Ex)
 			{
-				log.ErrorMessage("PODataProvider", "acknowledgeMaterialReceivedforreserved", Ex.StackTrace.ToString());
+				log.ErrorMessage("PODataProvider", "acknowledgeMaterialReceivedforreserved", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 				return 0;
 			}
 
@@ -7992,7 +8011,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "getSecurityreceivedList", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "getSecurityreceivedList", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -8081,7 +8100,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "insertquantitycheck", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "insertquantitycheck", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -8118,7 +8137,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "getprojectlist", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "getprojectlist", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -8193,7 +8212,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "getprojectlist", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "getprojectlist", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -8241,7 +8260,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "getmatlist", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "getmatlist", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -8279,7 +8298,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "getmatlistbyproject", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "getmatlistbyproject", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -8366,7 +8385,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "insertquantitycheck", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "insertquantitycheck", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -8399,7 +8418,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "Getlocationdata", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "Getlocationdata", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -8432,7 +8451,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "Getbindata", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "Getbindata", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -8464,7 +8483,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "Getrackdata", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "Getrackdata", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -8497,7 +8516,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "Getbindata", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "Getbindata", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -8529,7 +8548,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "Getrackdata", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "Getrackdata", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -8562,7 +8581,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "GetMaterialcombo", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "GetMaterialcombo", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -8595,7 +8614,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "getapproverList", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "getapproverList", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -8628,7 +8647,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "getgatepassByapproverList", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "getgatepassByapproverList", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -8661,7 +8680,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "Getpagesbyroleid", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "Getpagesbyroleid", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -8694,7 +8713,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "Getpages", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "Getpages", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -8728,7 +8747,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "GetInitialStockPutawayMaterials", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "GetInitialStockPutawayMaterials", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -8826,7 +8845,7 @@ namespace WMS.DAL
 			}
 			catch (Exception Ex)
 			{
-				log.ErrorMessage("PODataProvider", "GatepassapproveByMail", Ex.StackTrace.ToString());
+				log.ErrorMessage("PODataProvider", "GatepassapproveByMail", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 				return 0;
 			}
 		}
@@ -8844,8 +8863,8 @@ namespace WMS.DAL
 			{
 				var result = 0;
 				string mailto = "";
-				
-				
+
+
 
 				string updateapproverstatus = string.Empty;
 
@@ -8897,23 +8916,23 @@ namespace WMS.DAL
 								   userquery, null, commandType: CommandType.Text);
 								mailto = userdata.email;
 								if (model.approverstatus == "Approved")
-                                {
+								{
 									emailmodel.CC = mailto;
 									emailobj.sendEmail(emailmodel, 15, 3);
 								}
-                                else
-                                {
+								else
+								{
 									emailmodel.ToEmailId = mailto;
 									emailmodel.CC = "ramesh.kumar@in.yokogawa.com";
 									emailobj.sendEmail(emailmodel, 21);
 								}
-								
+
 							}
 							else
 							{
 								if (model.approverstatus == "Approved")
 								{
-									string userquery = WMSResource.getFMapprovermail.Replace("#gatepassid",model.gatepassid);
+									string userquery = WMSResource.getFMapprovermail.Replace("#gatepassid", model.gatepassid);
 									User userdata = DB.QuerySingle<User>(
 									   userquery, null, commandType: CommandType.Text);
 									mailto = userdata.email;
@@ -8923,7 +8942,7 @@ namespace WMS.DAL
 								}
 								else
 								{
-									string userquery = WMSResource.getRequesterEmail.Replace("#gatepassid", model.gatepassid); 
+									string userquery = WMSResource.getRequesterEmail.Replace("#gatepassid", model.gatepassid);
 									User userdata = DB.QuerySingle<User>(
 									   userquery, null, commandType: CommandType.Text);
 									mailto = userdata.email;
@@ -8931,7 +8950,7 @@ namespace WMS.DAL
 									emailmodel.CC = "ramesh.kumar@in.yokogawa.com";
 									emailobj.sendEmail(emailmodel, 21);
 								}
-								
+
 							}
 
 						}
@@ -9009,7 +9028,7 @@ namespace WMS.DAL
 			}
 			catch (Exception Ex)
 			{
-				log.ErrorMessage("PODataProvider", "GatepassapproveByManager", Ex.StackTrace.ToString());
+				log.ErrorMessage("PODataProvider", "GatepassapproveByManager", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 				return 0;
 			}
 		}
@@ -9035,7 +9054,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "getSafteyStockList", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "getSafteyStockList", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -9069,7 +9088,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "GetBinList", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "GetBinList", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -9101,7 +9120,39 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "GetMaterialstockcombo", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "GetMaterialstockcombo", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);					return null;
+	return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+			}
+		}
+			/*
+		Name of Function : <<getMaterialforstocktransferorder>>  Author :<<Gayathri>>  
+		Date of Creation <<22/01/2021>>
+		Purpose : <<Get list of materials for pomaterials table >>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
+		public async Task<IEnumerable<Materials>> getMaterialforstocktransferorder()
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				try
+				{
+					//string materialrequestquery = "select materialid as material, poitemdescription as poitemdesc,unitprice from wms.wms_pomaterials";
+
+					string materialrequestquery= "select  matmtygs .material as material,matmtygs .materialdescription as materialdescription, pomat.poitemdescription as poitemdesc, pomat.unitprice from wms.wms_pomaterials pomat right join wms.\"MaterialMasterYGS\" matmtygs on pomat.materialid = matmtygs.material limit 10";
+					await pgsql.OpenAsync();
+					return await pgsql.QueryAsync<Materials>(
+					  materialrequestquery, null, commandType: CommandType.Text);
+
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "GetMaterialstockcombo", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -9111,6 +9162,7 @@ namespace WMS.DAL
 
 			}
 		}
+
 
 		/*
 		Name of Function : <<UpdateStockTransfer>>  Author :<<Ramesh>>  
@@ -9249,7 +9301,7 @@ namespace WMS.DAL
 					catch (Exception Ex)
 					{
 						Trans.Rollback();
-						log.ErrorMessage("PODataProvider", "UpdateStockTransfer", Ex.StackTrace.ToString());
+						log.ErrorMessage("PODataProvider", "UpdateStockTransfer", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 						return null;
 					}
 				}
@@ -9324,8 +9376,8 @@ namespace WMS.DAL
 
 						}
 
-						if(transfer.sourceplant == transfer.destinationplant)
-                        {
+						if (transfer.sourceplant == transfer.destinationplant)
+						{
 
 							string query = "select * from wms.wms_stock where materialid ='" + stck.materialid + "' and itemlocation = '" + stck.sourcelocation + "' and availableqty > 0 order by itemid";
 
@@ -9457,6 +9509,7 @@ namespace WMS.DAL
 												createdby,
 
 											});
+											var poitemdesc = stck.materialdescription;
 											int sourceitemid = itm.itemid;
 											int destinationitemid = result;
 											string stockinsertqry = WMSResource.insertinvtransfermaterial;
@@ -9470,7 +9523,8 @@ namespace WMS.DAL
 												sourceitemid,
 												stck.destinationlocation,
 												destinationitemid,
-												transferqty
+												transferqty,
+												poitemdesc
 											});
 
 										}
@@ -9489,22 +9543,23 @@ namespace WMS.DAL
                         {
 							
 							//For STO directly add material data in wms_invtransfermaterial table
-							foreach (var matdata in data.materialdata)
-                            {
-								var poitemdesc = matdata.materialdescription;
+							//foreach (var matdata in data.materialdata)
+                            //{
+								var poitemdesc = stck.poitemdesc;
 								string stockinsertqry = WMSResource.insertinvtransfermaterialSTO;
 
 								var resultsxx = pgsql.ExecuteScalar(stockinsertqry, new
 								{
 									transfer.transferid,
 									stck.materialid,
-									matdata.transferqty,
-									matdata.projectid,
-									matdata.requireddate,
+									stck.transferqty,
+									stck.projectid,
+									stck.requireddate,
 									poitemdesc
 
 								});
-							}
+							//}
+
 							
 						}
 
@@ -9545,7 +9600,7 @@ namespace WMS.DAL
 					catch (Exception Ex)
 					{
 						Trans.Rollback();
-						log.ErrorMessage("PODataProvider", "UpdateStockTransfer1", Ex.StackTrace.ToString());
+						log.ErrorMessage("PODataProvider", "UpdateStockTransfer1", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 						return null;
 					}
 				}
@@ -9582,7 +9637,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "getstocktransferdata", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "getstocktransferdata", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -9614,7 +9669,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "getstocktransferdatagroup", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "getstocktransferdatagroup", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -9631,13 +9686,13 @@ namespace WMS.DAL
 		Purpose : <<get stock transferdata>>
 		Review Date :<<>>   Reviewed By :<<>>
 		*/
-		public async Task<IEnumerable<invstocktransfermodel>> getstocktransferdatagroup1()
+		public async Task<IEnumerable<invstocktransfermodel>> getstocktransferdatagroup1(string transfertype)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
 				try
 				{
-					string materialrequestquery = WMSResource.invstocktransfermainquery;
+					string materialrequestquery = WMSResource.invstocktransfermainquery.Replace("#transfertype",transfertype);
 
 					await pgsql.OpenAsync();
 					var result = await pgsql.QueryAsync<invstocktransfermodel>(
@@ -9661,7 +9716,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "getstocktransferdatagroup1", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "getstocktransferdatagroup1", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -9709,7 +9764,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "getgrnlistforacceptance", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "getgrnlistforacceptance", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -9754,7 +9809,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "getgrnlistforacceptanceputaway", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "getgrnlistforacceptanceputaway", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -9818,7 +9873,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "getgrnlistforacceptanceputaway", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "getgrnlistforacceptanceputaway", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -9853,7 +9908,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "getholdgrlist", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "getholdgrlist", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -9887,7 +9942,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "getgrnlistforacceptanceqc", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "getgrnlistforacceptanceqc", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -9923,7 +9978,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "getgrnlistforacceptanceqc", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "getgrnlistforacceptanceqc", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -9978,7 +10033,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "getnotifiedgrbydate", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "getnotifiedgrbydate", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -10010,7 +10065,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "pendingreceiptslist", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "pendingreceiptslist", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -10051,7 +10106,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "getInitialstockfilename", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "getInitialstockfilename", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -10087,7 +10142,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "updateonholdrow", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "updateonholdrow", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return 0;
 				}
 				finally
@@ -10240,7 +10295,7 @@ namespace WMS.DAL
 				catch (Exception Ex)
 				{
 					Trans.Rollback();
-					log.ErrorMessage("PODataProvider", "updateonholdrow", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "updateonholdrow", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return 0;
 				}
 				finally
@@ -10362,7 +10417,7 @@ namespace WMS.DAL
 				catch (Exception Ex)
 				{
 					Trans.Rollback();
-					log.ErrorMessage("PODataProvider", "mattransferapprove", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "mattransferapprove", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return 0;
 				}
 				finally
@@ -10398,7 +10453,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "mrnupdate", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "mrnupdate", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return 0;
 				}
 				finally
@@ -10435,7 +10490,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "updateonholdrow", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "updateonholdrow", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -10640,7 +10695,7 @@ namespace WMS.DAL
 						}
 						//insert wms_rd_locator ##locatorname
 						int rslt = 0;
-						
+
 
 						var insertStorequery = "INSERT INTO wms.\"MaterialMasterYGS\" (material, materialdescription, storeid,rackid,binid,qualitycheck,stocktype,unitprice)VALUES(@materialid, @materialdescription,@locatorid,@rackid,@binid,@qualitycheck,@stocktype,@unitprice)";
 						rslt = pgsql.Execute(insertStorequery, new
@@ -10729,7 +10784,7 @@ namespace WMS.DAL
 				catch (Exception Ex)
 				{
 					Trans.Rollback();
-					log.ErrorMessage("PODataProvider", "updateinitialstockdata", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "updateinitialstockdata", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return Ex.Message;
 				}
 				finally
@@ -10762,7 +10817,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "getdepartmentmasterdata", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "getdepartmentmasterdata", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -10794,7 +10849,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "getrbadetails", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "getrbadetails", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -10848,7 +10903,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "insertdatacsv", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "insertdatacsv", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return 0;
 				}
 				finally
@@ -10930,7 +10985,7 @@ namespace WMS.DAL
 				catch (Exception Ex)
 				{
 					Trans.Rollback();
-					log.ErrorMessage("PODataProvider", "updateonholdrow", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "updateonholdrow", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return 0;
 				}
 				finally
@@ -11032,7 +11087,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "updateonholdrow", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "updateonholdrow", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return 0;
 				}
 				finally
@@ -11070,7 +11125,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "getstocktype", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "getstocktype", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -11140,10 +11195,10 @@ namespace WMS.DAL
 						}
 					}
 				}
-				catch (Exception ex)
+				catch (Exception Ex)
 				{
 
-					log.ErrorMessage("PODataProvider", "UpdateMaterialReserve", ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "UpdateMaterialReserve", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return 0;
 				}
 				finally
@@ -11182,10 +11237,10 @@ namespace WMS.DAL
 					  query, null, commandType: CommandType.Text);
 
 				}
-				catch (Exception ex)
+				catch (Exception Ex)
 				{
 
-					log.ErrorMessage("PODataProvider", "getstockdetails", ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "getstockdetails", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return objstock;
 				}
 				finally
@@ -11251,9 +11306,9 @@ namespace WMS.DAL
 						}
 					}
 				}
-				catch (Exception ex)
+				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "UpdateReturnqty", ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "UpdateReturnqty", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return 0;
 				}
 
@@ -11272,14 +11327,14 @@ namespace WMS.DAL
 		public int UpdateReturnqty(List<IssueRequestModel> _listobj)
 		{
 			int result = 0;
-			
+
 			if (_listobj.Count != 0)
 			{
 				NpgsqlTransaction Trans = null;
 
 				try
 				{
-					
+
 					using (var DB = new NpgsqlConnection(config.PostgresConnectionString))
 					{
 
@@ -11344,10 +11399,10 @@ namespace WMS.DAL
 						}
 					}
 				}
-				catch (Exception ex)
+				catch (Exception Ex)
 				{
 					Trans.Rollback();
-					log.ErrorMessage("PODataProvider", "UpdateReturnqty", ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "UpdateReturnqty", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return 0;
 				}
 
@@ -11427,10 +11482,10 @@ namespace WMS.DAL
 						Trans.Commit();
 
 					}
-					catch (Exception ex)
+					catch (Exception Ex)
 					{
 						Trans.Rollback();
-						log.ErrorMessage("PODataProvider", "UpdateReturnmaterialTostock", ex.StackTrace.ToString());
+						log.ErrorMessage("PODataProvider", "UpdateReturnmaterialTostock", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 						return 0;
 
 					}
@@ -11488,9 +11543,9 @@ namespace WMS.DAL
 				//			}
 				//		}
 				//	}
-				//	catch (Exception ex)
+				//	catch (Exception Ex)
 				//	{
-				//		log.ErrorMessage("PODataProvider", "UpdateReturnmaterialTostock", ex.StackTrace.ToString());
+				//		log.ErrorMessage("PODataProvider", "UpdateReturnmaterialTostock", Ex.StackTrace.ToString(), Ex.Message.ToString(),url);
 				//		return 0;
 				//	}
 				//}
@@ -11530,9 +11585,9 @@ namespace WMS.DAL
 				}
 
 			}
-			catch (Exception ex)
+			catch (Exception Ex)
 			{
-				log.ErrorMessage("PODataProvider", "updateputawayfilename", ex.StackTrace.ToString());
+				log.ErrorMessage("PODataProvider", "updateputawayfilename", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 				return "error";
 			}
 
@@ -11582,9 +11637,9 @@ namespace WMS.DAL
 				}
 
 			}
-			catch (Exception ex)
+			catch (Exception Ex)
 			{
-				log.ErrorMessage("PODataProvider", "notifyputaway", ex.StackTrace.ToString());
+				log.ErrorMessage("PODataProvider", "notifyputaway", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 				return "error";
 			}
 
@@ -11646,9 +11701,9 @@ namespace WMS.DAL
 
 
 			}
-			catch (Exception ex)
+			catch (Exception Ex)
 			{
-				log.ErrorMessage("PODataProvider", "notifyputaway", ex.StackTrace.ToString());
+				log.ErrorMessage("PODataProvider", "notifyputaway", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 				return "error";
 			}
 
@@ -11675,10 +11730,10 @@ namespace WMS.DAL
 					return data;
 
 				}
-				catch (Exception ex)
+				catch (Exception Ex)
 				{
 
-					log.ErrorMessage("PODataProvider", "GetReturnmaterialList", ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "GetReturnmaterialList", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -11712,10 +11767,10 @@ namespace WMS.DAL
 					  query, null, commandType: CommandType.Text);
 
 				}
-				catch (Exception ex)
+				catch (Exception Ex)
 				{
 
-					log.ErrorMessage("PODataProvider", "GetReturnmaterialListForConfirm", ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "GetReturnmaterialListForConfirm", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -11749,10 +11804,10 @@ namespace WMS.DAL
 					  query, null, commandType: CommandType.Text);
 
 				}
-				catch (Exception ex)
+				catch (Exception Ex)
 				{
 
-					log.ErrorMessage("PODataProvider", "getreturndata", ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "getreturndata", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -11800,10 +11855,10 @@ namespace WMS.DAL
 					return data;
 
 				}
-				catch (Exception ex)
+				catch (Exception Ex)
 				{
 
-					log.ErrorMessage("PODataProvider", "getreturndata", ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "getreturndata", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -11836,10 +11891,10 @@ namespace WMS.DAL
 					return data;
 
 				}
-				catch (Exception ex)
+				catch (Exception Ex)
 				{
 
-					log.ErrorMessage("PODataProvider", "gettransferdata", ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "gettransferdata", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -11894,10 +11949,10 @@ namespace WMS.DAL
 					return data;
 
 				}
-				catch (Exception ex)
+				catch (Exception Ex)
 				{
 
-					log.ErrorMessage("PODataProvider", "gettransferdata", ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "gettransferdata", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -11952,10 +12007,10 @@ namespace WMS.DAL
 					return data.OrderByDescending(o => o.transferid);
 
 				}
-				catch (Exception ex)
+				catch (Exception Ex)
 				{
 
-					log.ErrorMessage("PODataProvider", "gettransferdataforapproval", ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "gettransferdataforapproval", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -12045,10 +12100,10 @@ namespace WMS.DAL
 					return data;
 
 				}
-				catch (Exception ex)
+				catch (Exception Ex)
 				{
 
-					log.ErrorMessage("PODataProvider", "gettransferdata", ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "gettransferdata", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -12073,20 +12128,42 @@ namespace WMS.DAL
 				try
 				{
 					await pgsql.OpenAsync();
+					string query = "select wi.*,(select sum(issuedqty) as issuedqty from wms.wms_materialissue where requestid = wi.transferid and requesttype = 'STO' group by requestid,requesttype limit 1) as issuedqty from wms.wms_invstocktransfer wi where wi.status ='Issued'";
+
+
+					//string query = WMSResource.getSTORequestlist;
+					//string query = "select * from wms.wms_invstocktransfer wi ";
+					//query += " join wms.wms_materialissue wm  on wm.requestid = wi.transferid";
+					//query += " where wi.transfertype ='STO' and status ='Issued'";
 					
-					string query = WMSResource.getSTORequestlist;
 					var data = await pgsql.QueryAsync<STORequestdata>(
 					   query, null, commandType: CommandType.Text);
 					if (data != null && data.Count() > 0)
 					{
 						foreach (STORequestdata dt in data)
 						{
-							string query1 = WMSResource.STOrequestedmatdetails.Replace("#transferid", dt.transferid.ToString());
+							string query1 = WMSResource.STOrequestedmatdetails;
+							query1 += "left join wms.wms_stock stock on stock.receivedid= invtras.transferid";
+							query1 += " where transferid='"+dt.transferid.ToString()+"'";
 							var datadetail = await pgsql.QueryAsync<STOrequestTR>(
 							   query1, null, commandType: CommandType.Text);
-
+							bool putawaystatus = false;
 							if (datadetail != null && datadetail.Count() > 0)
 							{
+								foreach(var matdata in datadetail)
+                                {
+									if(matdata.itemid !=0)
+                                    {
+										matdata.isissued = true;
+										putawaystatus = true;
+                                    }
+                                    else
+                                    {
+										putawaystatus = false;
+										matdata.isissued = false;
+                                    }
+									dt.putawaystatus = putawaystatus;
+                                }
 								dt.materialdata = datadetail.ToList();
 							}
 						}
@@ -12094,10 +12171,10 @@ namespace WMS.DAL
 					return data;
 
 				}
-				catch (Exception ex)
+				catch (Exception Ex)
 				{
 
-					log.ErrorMessage("PODataProvider", "STORequestlist", ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "STORequestlist", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -12145,9 +12222,9 @@ namespace WMS.DAL
 							}
 						}
 					}
-					catch (Exception ex)
+					catch (Exception Ex)
 					{
-						log.ErrorMessage("PODataProvider", "UpdateReturnqty", ex.StackTrace.ToString());
+						log.ErrorMessage("PODataProvider", "UpdateReturnqty", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 						return 0;
 					}
 				}
@@ -12218,7 +12295,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "checkMatExists", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "checkMatExists", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -12253,9 +12330,9 @@ namespace WMS.DAL
 
 					return objPO;
 				}
-				catch (Exception ex)
+				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "getPODetails", ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "getPODetails", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 			}
@@ -12286,7 +12363,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "gettestcrud", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "gettestcrud", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -12323,7 +12400,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "getinitialstock", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "getinitialstock", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -12361,7 +12438,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "getinitialstock", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "getinitialstock", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -12398,7 +12475,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "gettestcrud", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "gettestcrud", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -12560,7 +12637,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "getmatinhand", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "getmatinhand", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return objmat;
 				}
 				finally
@@ -12593,7 +12670,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "getmatinhandlocation", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "getmatinhandlocation", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -12630,7 +12707,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "getinitialstockReport", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "getinitialstockReport", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -12667,7 +12744,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "getinitialstockReport", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "getinitialstockReport", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -12705,7 +12782,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "getinitialstockReport", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "getinitialstockReport", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -12781,9 +12858,9 @@ namespace WMS.DAL
 
 
 			}
-			catch (Exception ex)
+			catch (Exception Ex)
 			{
-				log.ErrorMessage("PODataProvider", "notifyputaway", ex.StackTrace.ToString());
+				log.ErrorMessage("PODataProvider", "notifyputaway", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 				return "error";
 			}
 
@@ -12956,10 +13033,10 @@ namespace WMS.DAL
 				return result;
 			}
 
-			catch (Exception ex)
+			catch (Exception Ex)
 			{
 
-				Console.WriteLine(ex.Message);
+				Console.WriteLine(Ex.Message);
 				return "error";
 
 			}
@@ -12985,7 +13062,7 @@ namespace WMS.DAL
 			{
 				//Get inwmasterid, print status from security inward table
 				//string secquery = "select inwmasterid,print  from wms.wms_securityinward where pono ='" + model.pono + "' and invoiceno ='" + model.invoiceNo + "'";
-				string secquery = "select inwmasterid,print  from wms.wms_securityinward where inwmasterid='"+model.inwmasterid+"'";
+				string secquery = "select inwmasterid,print  from wms.wms_securityinward where inwmasterid='" + model.inwmasterid + "'";
 				var securityData = DB.QueryFirstOrDefault<inwardModel>(
 						   secquery, null, commandType: CommandType.Text);
 
@@ -13194,9 +13271,9 @@ namespace WMS.DAL
 					return "success";
 				}
 			}
-			catch (Exception ex)
+			catch (Exception Ex)
 			{
-				log.ErrorMessage("PODataProvider", "gettransferdata", ex.StackTrace.ToString());
+				log.ErrorMessage("PODataProvider", "gettransferdata", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 				return null;
 			}
 
@@ -13243,10 +13320,10 @@ namespace WMS.DAL
 					return data;
 
 				}
-				catch (Exception ex)
+				catch (Exception Ex)
 				{
 
-					log.ErrorMessage("PODataProvider", "gettransferdata", ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "gettransferdata", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -13296,7 +13373,7 @@ namespace WMS.DAL
 								}
 
 							}
-							catch (Exception ex)
+							catch (Exception Ex)
 							{
 								return null;
 							}
@@ -13305,10 +13382,10 @@ namespace WMS.DAL
 					return data.OrderByDescending(o => o.requestid);
 
 				}
-				catch (Exception ex)
+				catch (Exception Ex)
 				{
 
-					log.ErrorMessage("PODataProvider", "gettransferdata", ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "gettransferdata", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -13359,10 +13436,10 @@ namespace WMS.DAL
 					return data.OrderByDescending(o => o.reserveid);
 
 				}
-				catch (Exception ex)
+				catch (Exception Ex)
 				{
 
-					log.ErrorMessage("PODataProvider", "gettransferdata", ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "gettransferdata", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -13396,7 +13473,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "getmateriallabeldetail", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "getmateriallabeldetail", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -13450,10 +13527,10 @@ namespace WMS.DAL
 					return data;
 
 				}
-				catch (Exception ex)
+				catch (Exception Ex)
 				{
 
-					log.ErrorMessage("PODataProvider", "gettransferdata", ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "gettransferdata", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -13487,7 +13564,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "GetGRReport", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "GetGRReport", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -13514,7 +13591,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "editGRReport", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "editGRReport", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -13541,7 +13618,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "editquery", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "editquery", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -13626,7 +13703,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "getPMdashboarddata", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "getPMdashboarddata", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -13684,7 +13761,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "getUserdashboardgraphPMdata", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "getUserdashboardgraphPMdata", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -13739,7 +13816,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "getmonthlyUserdashboardIEgraphdata", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "getmonthlyUserdashboardIEgraphdata", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -13799,7 +13876,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "getUserdashboardIEgraphdata", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "getUserdashboardIEgraphdata", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -13870,7 +13947,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "getInvdashboarddata", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "getInvdashboarddata", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -13908,7 +13985,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "getMiscellanousIssueList", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "getMiscellanousIssueList", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -13954,7 +14031,7 @@ namespace WMS.DAL
 
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "miscellanousIssueDataUpdate", Ex.Message.ToString());
+					log.ErrorMessage("PODataProvider", "miscellanousIssueDataUpdate", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return false;
 				}
 				finally
@@ -13990,7 +14067,7 @@ namespace WMS.DAL
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "getMiscellanousReceiptsList", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "getMiscellanousReceiptsList", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -14079,7 +14156,7 @@ namespace WMS.DAL
 			}
 			catch (Exception Ex)
 			{
-				log.ErrorMessage("PODataProvider", "updateMiscellanousReceipt", Ex.StackTrace.ToString());
+				log.ErrorMessage("PODataProvider", "updateMiscellanousReceipt", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 				return null;
 			}
 
@@ -14159,7 +14236,7 @@ namespace WMS.DAL
 			}
 			catch (Exception Ex)
 			{
-				log.ErrorMessage("PODataProvider", "updateMaterialMaster", Ex.StackTrace.ToString());
+				log.ErrorMessage("PODataProvider", "updateMaterialMaster", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 				return false;
 			}
 			return true;
@@ -14204,9 +14281,58 @@ namespace WMS.DAL
 					GPResult = "Success";
 				}
 			}
-			catch (Exception ex)
+			catch (Exception Ex)
 			{
-				log.ErrorMessage("PODataProvider", "GPReasonMTAdd", ex.StackTrace.ToString());
+				log.ErrorMessage("PODataProvider", "GPReasonMTAdd", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
+				return null;
+			}
+			return GPResult;
+		}
+
+
+		/*
+		Name of Function : <<MiscellanousReasonAdd>>  Author :<<Gayathri>>  
+		Date of Creation <<20-01-2021>>
+		Purpose : <<inserting Miscellanous reason master data into rd_reason table>>
+		<param name="GPReasonMTData"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
+		public string MiscellanousReasonAdd(GPReasonMTData reasondata)
+		{
+			string GPResult = "Error";
+			try
+			{
+
+
+				using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+				{
+					if (reasondata.reasonid != 0)
+					{
+						//Update reason in rd_reason based on reasonid
+						string updatequery = WMSResource.updateGPReason.Replace("#reason", "'" + reasondata.reason + "'").Replace("#createdby", "'" + reasondata.createdby + "'");
+						updatequery += "where reasonid = " + reasondata.reasonid;
+						var result1 = pgsql.Execute(updatequery);
+
+					}
+					else
+					{
+						string insertquery = WMSResource.insertGPReason;
+						reasondata.type = "Miscellanous";
+						pgsql.ExecuteScalar(insertquery, new
+						{
+							reasondata.reason,
+							reasondata.type,
+							reasondata.createdby
+
+						});
+					}
+
+					GPResult = "Success";
+				}
+			}
+			catch (Exception Ex)
+			{
+				log.ErrorMessage("PODataProvider", "GPReasonMTAdd", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 				return null;
 			}
 			return GPResult;
@@ -14251,9 +14377,9 @@ namespace WMS.DAL
 					plantResult = "Success";
 				}
 			}
-			catch (Exception ex)
+			catch (Exception Ex)
 			{
-				log.ErrorMessage("PODataProvider", "createplant", ex.StackTrace.ToString());
+				log.ErrorMessage("PODataProvider", "createplant", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 				return null;
 			}
 			return plantResult;
@@ -14278,9 +14404,37 @@ namespace WMS.DAL
 					return gpresult;
 				}
 			}
-			catch (Exception ex)
+			catch (Exception Ex)
 			{
-				log.ErrorMessage("PODataProvider", "getGPReasonData", ex.StackTrace.ToString());
+				log.ErrorMessage("PODataProvider", "getGPReasonData", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
+				return null;
+			}
+			//return objgp;
+		}
+
+
+		/*
+Name of Function : <<getMiscellanousReasonData>>  Author :<<Gayathri>>  
+Date of Creation <<29-12-2019>>
+Purpose : <<Get the list of Gate Pass reasons>>
+<param name="GPReasonMTData"></param>
+Review Date :<<>>   Reviewed By :<<>>
+*/
+		public async Task<IEnumerable<GPReasonMTData>> getMiscellanousReasonData()
+		{
+			try
+			{
+				using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+				{
+					string GPDataquery = WMSResource.getMiscellanousReasons;
+					var gpresult = await pgsql.QueryAsync<GPReasonMTData>(
+					  GPDataquery, null, commandType: CommandType.Text);
+					return gpresult;
+				}
+			}
+			catch (Exception Ex)
+			{
+				log.ErrorMessage("PODataProvider", "getMiscellanousReasonData", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 				return null;
 			}
 			//return objgp;
@@ -14305,9 +14459,9 @@ namespace WMS.DAL
 					return gpresult;
 				}
 			}
-			catch (Exception ex)
+			catch (Exception Ex)
 			{
-				log.ErrorMessage("PODataProvider", "getplantnameData", ex.StackTrace.ToString());
+				log.ErrorMessage("PODataProvider", "getplantnameData", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 				return null;
 			}
 			//return objgp;
@@ -14316,7 +14470,7 @@ namespace WMS.DAL
 		/*
 Name of Function : <<GPReasonMTDelete>>  Author :<<Gayathri>>  
 Date of Creation <<29-12-2019>>
-Purpose : <<Delete Gatepass reason>>
+Purpose : <<Delete Gatepass/Miscellanous reason>>
 <param name="GPReasonMTData"></param>
 Review Date :<<>>   Reviewed By :<<>>
 */
@@ -14340,9 +14494,9 @@ Review Date :<<>>   Reviewed By :<<>>
 					GPResult = "Success";
 				}
 			}
-			catch (Exception ex)
+			catch (Exception Ex)
 			{
-				log.ErrorMessage("PODataProvider", "GPReasonMTAdd", ex.StackTrace.ToString());
+				log.ErrorMessage("PODataProvider", "GPReasonMTAdd", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 				return null;
 			}
 			return GPResult;
@@ -14376,9 +14530,9 @@ Review Date :<<>>   Reviewed By :<<>>
 					GPResult = "Success";
 				}
 			}
-			catch (Exception ex)
+			catch (Exception Ex)
 			{
-				log.ErrorMessage("PODataProvider", "GPReasonMTAdd", ex.StackTrace.ToString());
+				log.ErrorMessage("PODataProvider", "GPReasonMTAdd", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 				return null;
 			}
 			return GPResult;
@@ -14405,7 +14559,7 @@ Review Date :<<>>   Reviewed By :<<>>
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "getSTORequestList", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "getSTORequestList", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -14429,11 +14583,15 @@ Review Date :<<>>   Reviewed By :<<>>
 				try
 				{
 					string materialrequestquery = WMSResource.getMatdetailsbyTransferId;
-					materialrequestquery += " where inv.transferid = '" + transferId + "' and stock.availableqty is not null and stock.availableqty > 0";
+					materialrequestquery += " where inv.transferid = '" + transferId + "' ";
+					if (type == "MatIssue")
+					{
+						materialrequestquery += " and stock.availableqty is not null and stock.availableqty > 0";
+					}
 
 					if (type == "POInitiate")
 					{
-						materialrequestquery += " and stock.availableqty =0";
+						materialrequestquery += " and (stock.availableqty =0 or stock.availableqty is null)";
 					}
 					materialrequestquery += " group by inv.transferid, inv.materialid";
 					await pgsql.OpenAsync();
@@ -14443,7 +14601,7 @@ Review Date :<<>>   Reviewed By :<<>>
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "getMatdetailsbyTransferId", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "getMatdetailsbyTransferId", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -14461,14 +14619,54 @@ Review Date :<<>>   Reviewed By :<<>>
 		Review Date :<<>>   Reviewed By :<<>>
 		*/
 
+
 		public async Task<string> STOPOInitiate(List<STOIssueModel> data)
 		{
 			//send data to scm to create PO
+
+			var mprData = new MPRRevision();
+			mprData.MPRDetail = new MPRDetail();
+			mprData.MPRItemInfoes = new List<MPRItemInfo>();
+			//mprData.IssuePurposeId = 1;
+			//mprData.DepartmentId = 1;
+			//mprData.BuyerGroupId = 1;
+			mprData.PreparedBy = data[0].uploadedby;
+			mprData.CheckedBy = config.POChecker;
+			mprData.ApprovedBy = config.POApprover;
+			foreach (STOIssueModel item in data)
+			{
+				MPRItemInfo mPRItemInfo = new MPRItemInfo();
+				mPRItemInfo.Itemid = item.materialid;
+				mPRItemInfo.ItemDescription = item.poitemdescription;
+				mPRItemInfo.Quantity = Convert.ToDecimal(item.transferqty);
+				//mPRItemInfo.UnitId = 1;
+				mprData.MPRItemInfoes.Add(mPRItemInfo);
+			}
+			using (var client = new HttpClient())
+			{
+				StringContent content = new StringContent(JsonConvert.SerializeObject(mprData), Encoding.UTF8, "application/json");
+
+				using (var response = await client.PostAsync(config.SCMUrl, content))
+				{
+					string apiResponse = await response.Content.ReadAsStringAsync();
+					var result = JsonConvert.DeserializeObject<MPRRevision>(apiResponse);
+					if (result != null)
+					{
+						//send mail to checker and approver
+						EmailUtilities emailobj = new EmailUtilities();
+						int mprrevisionid = result.RevisionId;
+						emailobj.sendCreatePOMail(data[0].uploadedby, mprrevisionid);
+
+					}
+				}
+
+			}
+
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
 				try
 				{
-					//update porequest to wms.wms_invstocktransfer table
+					//update po request to wms.wms_invstocktransfer table
 					string updaterequest = "update wms.wms_invstocktransfer set isporequested = true where transferid='" + data[0].transferid + "'";
 
 					var data2 = pgsql.ExecuteScalar(updaterequest, new
@@ -14479,12 +14677,13 @@ Review Date :<<>>   Reviewed By :<<>>
 					string scmStatus = "Sucess";
 					foreach (STOIssueModel item in data)
 					{
+						int poqty =Convert.ToInt32(item.transferqty);
 						var results = pgsql.ExecuteScalar(query, new
 						{
 							item.transferid,
 							item.materialid,
 							item.poitemdescription,
-							item.transferqty,
+							poqty,
 							scmStatus,
 							item.uploadedby
 						});
@@ -14493,7 +14692,7 @@ Review Date :<<>>   Reviewed By :<<>>
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "STOPOInitiate", Ex.StackTrace.ToString());
+					log.ErrorMessage("PODataProvider", "STOPOInitiate", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -14512,10 +14711,10 @@ Purpose : <<Generate barcode and QRCode label>>
 Review Date :<<>>   Reviewed By :<<>>
 */
 		public string generateLabel(string labeldata)
-        {
+		{
 			string path = "";
-            try
-            {
+			try
+			{
 				path = Environment.CurrentDirectory + @"\PRNFiles\";
 
 				BarcodeWriter writer = new BarcodeWriter
@@ -14539,13 +14738,47 @@ Review Date :<<>>   Reviewed By :<<>>
 
 				path = "./Barcodes/" + labeldata + "_" + DateTime.Now + ".bmp";
 			}
-			catch(Exception ex)
-            {
-				log.ErrorMessage("PODataProvider", "GPReasonMTAdd", ex.StackTrace.ToString());
+			catch (Exception Ex)
+			{
+				log.ErrorMessage("PODataProvider", "GPReasonMTAdd", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 				return null;
 			}
 			return path;
-        }
+		}
+
+		/*
+		Name of Function : <<getplantlocdetails>>  Author :<<Gayathri>>  
+		Date of Creation <<28-01-2021>>
+		Purpose : <<Get plant location data>>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
+		public async Task<IEnumerable<plantddl>> getplantlocdetails()
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				try
+				{
+					string materialrequestquery = "select * from wms.wms_rd_locator where deleteflag=false order by locatorname asc";
+
+					await pgsql.OpenAsync();
+					return await pgsql.QueryAsync<plantddl>(
+					  materialrequestquery, null, commandType: CommandType.Text);
+
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "getplantlocdetails", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+			}
+		}
+
+
 
 	}
 }

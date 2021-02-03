@@ -164,10 +164,12 @@ namespace WMS.Interfaces
 		Task<IEnumerable<safteyStockList>> getSafteyStockList();
 		Task<IEnumerable<StockModel>> GetBinList();
 		Task<IEnumerable<Materials>> GetMaterialstockcombo();
+
+		Task<IEnumerable<Materials>> getMaterialforstocktransferorder();
 		Task<IEnumerable<stocktransferModel>> getstocktransferdata();
 		Task<IEnumerable<stocktransferModel>> getstocktransferdatagroup();
 
-		Task<IEnumerable<invstocktransfermodel>> getstocktransferdatagroup1();
+		Task<IEnumerable<invstocktransfermodel>> getstocktransferdatagroup1(string transfertype);
 		Task<IEnumerable<ddlmodel>> pendingreceiptslist();
 		Task<IEnumerable<ddlmodel>> getInitialstockfilename();
 		
@@ -281,12 +283,16 @@ namespace WMS.Interfaces
 	System.Data.DataTable getMaterialMasterList();
 		bool updateMaterialMaster(materilaMasterYgs material);
 		string GPReasonMTAdd(GPReasonMTData data);
+		string MiscellanousReasonAdd(GPReasonMTData data);
 
 		string GPReasonMTDelete(GPReasonMTData data);
 
 		string createplant(PlantMTdata data);
 
 		Task<IEnumerable<GPReasonMTData>> getGPReasonData();
+
+		Task<IEnumerable<GPReasonMTData>> getMiscellanousReasonData();
+
 		string generateLabel(string labeldata);
 		Task<IEnumerable<invstocktransfermodel>> getSTORequestList();
 		Task<IEnumerable<STOIssueModel>> getMatdetailsbyTransferId(string transferId,string type);
@@ -299,6 +305,7 @@ namespace WMS.Interfaces
 		Task<IEnumerable<authUser>> getuserauthdetails(string employeeid);
 		Task<IEnumerable<authUser>> getuserauthdetailsbyrole(int roleid);
 		Task<IEnumerable<subrolemodel>> getsubroledata();
+		Task<IEnumerable<plantddl>> getplantlocdetails();
 
 	}
 }

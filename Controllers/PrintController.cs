@@ -23,6 +23,7 @@ namespace WMS.Controllers
 	[Route("[controller]")]
 	public class PrintController : ControllerBase
 	{
+        Configurations config = new Configurations();
         private IPodataService<OpenPoModel> _poService; 
         public PrintController(IPodataService<OpenPoModel> poService)
         {
@@ -116,7 +117,9 @@ namespace WMS.Controllers
                 //Convert.ToString(ConfigurationManager.AppSettings["PrinterName"].ToString());
                 //string printerName = ConfigurationManager.AppSettings["CTMajor_AdminPrinter"].ToString();
                 //string printerName = "10.29.11.25";
+
                 string printerName = "10.29.2.48";
+                printerName = config._GateEntryPrintIP;
                 PrintUtilities objIdentification = new PrintUtilities();
                 printResult = "success";
                 printResult = objIdentification.PrintQRCode(path, printerName);
@@ -136,6 +139,79 @@ namespace WMS.Controllers
             {
                 //update count wms_reprinthistory table            
                 this._poService.updateSecurityPrintHistory(model);
+                return "success";
+            }
+            else
+            {
+                return "Error Occured";
+            }
+        }
+
+        [HttpPost("printBinLabel")]
+        public string printBinLabel(locationBarcode model)
+        {
+            string path = Environment.CurrentDirectory + @"\PRNFiles\";
+            if (!Directory.Exists(path))
+            {
+                System.IO.Directory.CreateDirectory(path);
+            }
+            bool result = false;
+            string printResult = null;
+            path = path + model.rackid + "-" + string.Format("{0:ddMMyyyyhhmm}", DateTime.Now) + ".prn";
+            FileMode fileType = FileMode.OpenOrCreate;
+            //for (int i = 0; i < printQty; i++)
+            //{
+            // if (File.Exists(path))
+            if (Directory.Exists(path))
+            {
+                fileType = FileMode.Append;
+            }
+
+            using (FileStream fs = new FileStream(path, fileType))
+            {
+                using (TextWriter tw = new StreamWriter(fs))
+                {
+
+
+                    tw.WriteLine("SIZE 17.5 mm, 20 mm");
+                    tw.WriteLine("DIRECTION 0,0");
+                    tw.WriteLine("REFERENCE 0,0");
+                    tw.WriteLine("OFFSET 0 mm");
+                    tw.WriteLine("SET PEEL OFF");
+                    tw.WriteLine("SET CUTTER OFF");
+                    tw.WriteLine("SET PARTIAL_CUTTER OFF");
+                    tw.WriteLine("SET TEAR ON");
+                    tw.WriteLine("CLS");
+                    tw.WriteLine("QRCODE 119,143,L,4,A,180,M2,S7,\"" + model.locatorid +"-"+model.rackid+"-"+model.binid+ "\"");
+                    tw.WriteLine("CODEPAGE 1252");
+                    tw.WriteLine("TEXT 119,37,\"ROMAN.TTF\",180,1,6,\"" + model.binid + "\"");
+                    tw.WriteLine("PRINT 1,1");
+
+                }
+
+
+            }
+            
+            try
+            {
+                string printerName = "10.29.2.48";
+                PrintUtilities objIdentification = new PrintUtilities();
+                printResult = "success";
+                printResult = objIdentification.PrintQRCode(path, printerName);
+
+
+
+            }
+
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            if (printResult == "success")
+            {
+                //update count wms_reprinthistory table            
+               // this._poService.updateSecurityPrintHistory(model);
                 return "success";
             }
             else

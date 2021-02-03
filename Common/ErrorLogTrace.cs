@@ -2,37 +2,45 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Npgsql;
 
 namespace WMS.Common
 {
-    public class ErrorLogTrace
-    {
-        public void ErrorMessage(string controllername, string methodname, string exception)
-        {
-            Configurations config = new Configurations();
+	public class ErrorLogTrace
+	{		
+		public void ErrorMessage(string controllername, string methodname, string stacktrace, string exception, [Optional]string url)
+		{
+			Configurations config = new Configurations();
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				pgsql.OpenAsync();
+				exception = exception.Replace("'", String.Empty);
+				string query = "insert into wms.api_error_log(controller_name,method_name,exception_message,stacktrace,occureddate,url)values('" + controllername + "', '" + methodname + "', '" + exception + "','" + stacktrace + "','" + DateTime.Now + "','" + url + "')";
+				IDbCommand selectCommand = pgsql.CreateCommand();
+				selectCommand.CommandText = query;
+				selectCommand.ExecuteNonQuery();
+				pgsql.Close();
 
-            using (NpgsqlConnection connection = new NpgsqlConnection())
-            {
-                string query = " insert into wms.api_error_log(controller_name, method_name, exception_message)";
-                query += " values(@controllername, @methodname, @exception); ";
-                connection.ConnectionString = config.PostgresConnectionString;
-                connection.Open();
-                NpgsqlCommand cmd = new NpgsqlCommand();
-                cmd.Connection = connection;
-                cmd.CommandText = query;
+			}
+		}
+	}
+	public class UrlClass
+	{
+		public string showURL(IHttpContextAccessor httpcontextaccessor)
+		{
+			var request = httpcontextaccessor.HttpContext.Request;
 
-                cmd.CommandType = CommandType.Text;
-                cmd.Parameters.Add(new NpgsqlParameter("@controllername", controllername));
-                cmd.Parameters.Add(new NpgsqlParameter("@methodname", methodname));
-                cmd.Parameters.Add(new NpgsqlParameter("@exception", exception));
-
-                cmd.ExecuteNonQuery();
-                cmd.Dispose();
-                connection.Close();
-
-            }
-        }
-    }
+			var absoluteUri = string.Concat(
+						request.Scheme,
+						"://",
+						request.Host.ToUriComponent(),
+						request.PathBase.ToUriComponent(),
+						request.Path.ToUriComponent(),
+						request.QueryString.ToUriComponent());
+			return absoluteUri;
+		}
+	}
 }

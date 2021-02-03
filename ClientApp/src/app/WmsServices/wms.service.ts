@@ -4,6 +4,8 @@ import { HttpHeaders } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { constants } from '../Models/WMSConstants'
+import { Employee, Login, DynamicSearchResult, printMaterial, rbamaster, locationBarcode } from '../Models/Common.Model';
+import { PoFilterParams, PoDetails, BarcodeModel, StockModel, materialRequestDetails, inwardModel, gatepassModel, stocktransfermodel, Materials, authUser, invstocktransfermodel, ddlmodel, locataionDetailsStock, updateonhold, materialistModel, outwardmaterialistModel, pageModel, UserDashboardDetail, UserDashboardGraphModel, UnholdGRModel, MRNsavemodel, notifymodel, materialtransferMain, materialReservetorequestModel, testcrud, PrintHistoryModel, materilaTrasFilterParams, materialRequestFilterParams, materialResFilterParams, materialRetFilterParams, outwardinwardreportModel, UserModel, WMSHttpResponse, MaterialinHand, matlocations, grReports, MateriallabelModel, ManagerDashboard, pmDashboardCards, invDashboardCards, GraphModelNew, miscellanousIssueData, inventoryFilters, MaterialMaster, GPReasonMTdata, materialList, PlantMTdata, InitialStock, plantddl } from '../Models/WMS.Model';
 import { Employee, Login, DynamicSearchResult, printMaterial, rbamaster } from '../Models/Common.Model';
 import { PoFilterParams, PoDetails, BarcodeModel, StockModel, materialRequestDetails, inwardModel, gatepassModel, stocktransfermodel, Materials, authUser, invstocktransfermodel, ddlmodel, locataionDetailsStock, updateonhold, materialistModel, outwardmaterialistModel, pageModel, UserDashboardDetail, UserDashboardGraphModel, UnholdGRModel, MRNsavemodel, notifymodel, materialtransferMain, materialReservetorequestModel, testcrud, PrintHistoryModel, materilaTrasFilterParams, materialRequestFilterParams, materialResFilterParams, materialRetFilterParams, outwardinwardreportModel, UserModel, WMSHttpResponse, MaterialinHand, matlocations, grReports, MateriallabelModel, ManagerDashboard, pmDashboardCards, invDashboardCards, GraphModelNew, miscellanousIssueData, inventoryFilters, MaterialMaster, GPReasonMTdata, materialList, PlantMTdata, InitialStock, subrolemodel, AssignProjectModel, MaterialTransaction } from '../Models/WMS.Model';
 import { Text } from '@angular/compiler/src/i18n/i18n_ast';
@@ -149,6 +151,12 @@ export class wmsService {
     material = encodeURIComponent(material);
     const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }), responseType: 'text' as any };
     return this.http.get<any>(this.url + 'POData/checkMatExists?material=' + material, httpOptions);
+  }
+
+  //Print bin QRCode
+  printBinqr(locbarcode: locationBarcode): Observable<any> {
+    const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }), responseType: 'text' as any };
+    return this.http.post<any>(this.url + 'Print/printBinLabel/', locbarcode, httpOptions);
   }
 
   //Generate Material Label
@@ -518,14 +526,23 @@ export class wmsService {
   getMaterialforstocktransfer(): Observable<Materials[]> {
     return this.http.get<Materials[]>(this.url + 'POData/GetMaterialdatafromstock/', this.httpOptions);
   }
+
+  getMaterialforstocktransferorder(): Observable<Materials[]> {
+    return this.http.get<Materials[]>(this.url + 'POData/getMaterialforstocktransferorder/', this.httpOptions);
+  }
+
+  getplantlocdetails(): Observable<any> {
+    return this.http.get<any>(this.url + 'POData/getplantlocdetails/', this.httpOptions);
+}
+
   getstocktransferlist(): Observable<stocktransfermodel[]> {
     return this.http.get<stocktransfermodel[]>(this.url + 'POData/getstocktransferdata/', this.httpOptions);
   }
   getstocktransferlistgroup(): Observable<invstocktransfermodel[]> {
     return this.http.get<invstocktransfermodel[]>(this.url + 'POData/getstocktransferdatagroup/', this.httpOptions);
   }
-  getstocktransferlistgroup1(): Observable<invstocktransfermodel[]> {
-    return this.http.get<invstocktransfermodel[]>(this.url + 'POData/getstocktransferdatagroup1/', this.httpOptions);
+  getstocktransferlistgroup1(transfertye: string): Observable<invstocktransfermodel[]> {
+    return this.http.get<invstocktransfermodel[]>(this.url + 'POData/getstocktransferdatagroup1?transfertype=' + transfertye, this.httpOptions);
   }
 
   Stocktransfer1(StockModel: invstocktransfermodel): Observable<any> {
@@ -878,6 +895,11 @@ getMaterialMasterList(): Observable<any> {
     return this.http.post<any>(this.url + 'POData/GPReasonMTAdd', data, httpOptions);
   }
 
+  MiscellanousReasonAdd(data: GPReasonMTdata): Observable<any> {
+    const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }), responseType: 'text' as any };
+    return this.http.post<any>(this.url + 'POData/MiscellanousReasonAdd', data, httpOptions);
+  }
+
   createplant(data: PlantMTdata): Observable<any> {
     const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }), responseType: 'text' as any };
     return this.http.post<any>(this.url + 'POData/createplant', data, httpOptions);
@@ -912,8 +934,10 @@ getMaterialMasterList(): Observable<any> {
   STOPOInitiate(list: any): Observable<any> {
     return this.http.post<any>(this.url + 'POData/STOPOInitiate/', list, this.httpOptions);
   }
+
+  getMiscellanousReasonData(): Observable<any> {
+    return this.http.get<any>(this.url + 'POData/getMiscellanousReasonData', this.httpOptions);
 }
-
-
+}
 
 

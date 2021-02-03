@@ -874,7 +874,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select inv.transferid, inv.materialid , Max(mat.materialdescription) as materialdescription, inv.sourcelocation ,inv.destinationlocation ,sum(inv.transferqty) as transferqty
+        ///   Looks up a localized string similar to select inv.transferid, inv.materialid , Max(mat.materialdescription) as materialdescription, inv.sourcelocation ,inv.destinationlocation ,sum(inv.transferqty) as transferqty,max(inv.projectid) as projectid, max(inv.requireddate) as requireddate
         ///from wms.wms_invtransfermaterial inv
         ///left outer join wms.&quot;MaterialMasterYGS&quot; mat on inv.materialid = mat.material
         ///where inv.transferid = &apos;#tid&apos; 
@@ -1117,11 +1117,11 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select max(inv.id) as id,inv.transferid, inv.materialid , Max(stock.poitemdescription ) as poitemdescription, max(inv.transferqty) as transferqty,
-        ///sum(stock.availableqty) as availableqty,sum( matiss.issuedqty ) as issuedqty
+        ///   Looks up a localized string similar to select max(inv.id) as id,inv.transferid, inv.materialid , Max(inv.poitemdesc) as poitemdescription, max(inv.transferqty) as transferqty,
+        ///(select sum(issuedqty) from wms.wms_materialissue matiss  where matiss.requestid =cast(max(inv.id) as varchar ) and matiss.requesttype =&apos;STO&apos; ) as issuedqty,
+        /// (select sum(availableqty) from wms.wms_stock ws where materialid =inv.materialid ) as availableqty
         ///from wms.wms_invtransfermaterial inv
-        ///left outer join wms.wms_stock stock on inv.materialid = stock.materialid 
-        ///left outer join wms.wms_materialissue matiss on matiss.requestid = inv.id and matiss.requesttype =&apos;STO&apos;.
+        ///left outer join wms.wms_stock stock on inv.materialid = stock.materialid.
         /// </summary>
         public static string getMatdetailsbyTransferId {
             get {
@@ -1473,6 +1473,15 @@ namespace WMS.Common {
         public static string getMiscellanousIssuesList {
             get {
                 return ResourceManager.GetString("getMiscellanousIssuesList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to select * from wms.rd_reason where reasontype =&apos;Miscellanous&apos; and deleteflag =false.
+        /// </summary>
+        public static string getMiscellanousReasons {
+            get {
+                return ResourceManager.GetString("getMiscellanousReasons", resourceCulture);
             }
         }
         
@@ -2596,7 +2605,7 @@ namespace WMS.Common {
         /// <summary>
         ///   Looks up a localized string similar to select inv.transferid,emp.name as transferredby,inv.transferredon,inv.transfertype,inv.sourceplant,inv.destinationplant,inv.remarks,inv.status,inv.isporequested   
         ///from wms.wms_invstocktransfer inv 
-        ///left outer join wms.employee emp  on emp.employeeno = inv.transferredby
+        ///left outer join wms.employee emp  on emp.employeeno = inv.transferredby where inv.transfertype=&apos;#transfertype&apos;
         ///order by transferredon Desc.
         /// </summary>
         public static string invstocktransfermainquery {
@@ -2606,7 +2615,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select inv.transferid,emp.name as transferredby,inv.transferredon,inv.transfertype,inv.sourceplant,inv.destinationplant,inv.remarks,inv.status,inv.isporequested   
+        ///   Looks up a localized string similar to select inv.transferid,emp.name as transferredby,inv.transferredon,inv.transfertype,inv.sourceplant,inv.destinationplant,inv.remarks,inv.status,inv.issuedon,inv.isporequested   
         ///from wms.wms_invstocktransfer inv 
         ///left outer join wms.employee emp  on emp.employeeno = inv.transferredby where  inv.transfertype =&apos;STO&apos;
         ///order by transferredon desc.
@@ -2929,7 +2938,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select * from wms.wms_invtransfermaterial where transferid = &apos;#transferid&apos;.
+        ///   Looks up a localized string similar to select * from wms.wms_invtransfermaterial invtras .
         /// </summary>
         public static string STOrequestedmatdetails {
             get {
@@ -3163,7 +3172,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO wms.wms_InitiatePO(transferid,materialid,poitemdescription,poqty,scmstatus,uploadedby,requesteddate,uploadedon)
+        ///   Looks up a localized string similar to INSERT INTO wms.wms_InitiatePO(id,transferid,materialid,poitemdescription,poqty,scmstatus,uploadedby,uploadedon)
         ///VALUES(default,@transferid,@materialid,@poitemdescription,@poqty,@scmstatus,@uploadedby,current_date).
         /// </summary>
         public static string updatePOInitiateDetails {
