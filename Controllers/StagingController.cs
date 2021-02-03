@@ -295,17 +295,17 @@ namespace WMS.Controllers
 									uploadcode
 								});
 							}
-							else
-							{
-								if (!string.IsNullOrEmpty(stag_data.projectmanager))
-								{
-									var updateqyery = "update wms.wms_project set projectmanager = @projectmanager  where pono = '" + stag_data.purchdoc + "'";
-									var re = Convert.ToInt32(pgsql.Execute(updateqyery, new
-									{
-										stag_data.projectmanager
-									}));
-								}
-							}
+							//else
+							//{
+							//	if (!string.IsNullOrEmpty(stag_data.projectmanager))
+							//	{
+							//		var updateqyery = "update wms.wms_project set projectmanager = @projectmanager  where pono = '" + stag_data.purchdoc + "'";
+							//		var re = Convert.ToInt32(pgsql.Execute(updateqyery, new
+							//		{
+							//			stag_data.projectmanager
+							//		}));
+							//	}
+							//}
 
 							string queryasn = "Select Count(*) as count from wms.wms_asn where pono = '" + stag_data.purchdoc + "'";
 							int asncountcount = int.Parse(pgsql.ExecuteScalar(queryasn, null).ToString());

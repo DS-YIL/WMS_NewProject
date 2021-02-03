@@ -16,9 +16,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using WMS.Common;
 using WMS.Interfaces;
-using System.Web;
 using WMS.Models;
-using System.Web;
 using Microsoft.AspNetCore.Http;
 using System.IO;
 using System.Net.Sockets;
@@ -9115,7 +9113,7 @@ namespace WMS.DAL
 							//For STO directly add material data in wms_invtransfermaterial table
 							//foreach (var matdata in data.materialdata)
                             //{
-								var poitemdesc = stck.materialdescription;
+								var poitemdesc = stck.poitemdesc;
 								string stockinsertqry = WMSResource.insertinvtransfermaterialSTO;
 
 								var resultsxx = pgsql.ExecuteScalar(stockinsertqry, new

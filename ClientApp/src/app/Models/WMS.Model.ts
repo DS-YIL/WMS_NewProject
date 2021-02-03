@@ -536,7 +536,8 @@ export class stocktransfermateriakmodel {
   remarks: any = "";
   poitemdesc: any;
   requireddate: any;
-  projectid: any="";
+  projectid: any = "";
+  materialObj: any;
 }
 
 export class updateonhold {
