@@ -161,9 +161,7 @@ export class GatePassApprovalList implements OnInit {
   }
 
   showApprover(gatepassid: any) {
-    //this.btnDisable = false;
     this.showApprovertab = true;
-    debugger;
     this.bindMaterilaDetails(gatepassid);
     this.getGatePassHistoryList(gatepassid);
   }

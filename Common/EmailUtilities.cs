@@ -113,7 +113,7 @@ namespace WMS.Common
 			//Inventory Manager
 			else if (subjecttype == 4)
 			{
-				mailMessage.Subject = "Request for Materials with request id:" + emlSndngList.requestid;
+				mailMessage.Subject = "Issue Request for Materials with request id:" + emlSndngList.requestid;
 				string requestedby = this.getnamebyid(emlSndngList.createdby);
 				subbody = "Please find the Material request details below. <br/> Requested By:" +requestedby + "<br/>Requested On:" + emlSndngList.createddate;
 				//subbody += "<br/>"+ mailMessage.Subject;
@@ -157,8 +157,8 @@ namespace WMS.Common
 			else if (subjecttype == 51)
 			{
 				mailMessage.Subject = "Materials Issued for Request Id" + emlSndngList.requestid ;
-				subbody = "The materials for Request Id " + emlSndngList.requestid + "has been issued.";
-				subbody += mailMessage.Subject;
+				subbody = "The materials for Request Id " + emlSndngList.requestid + " has been issued.";
+				//subbody += mailMessage.Subject;
 				link = linkurl + "WMS/Email/MaterialReqView?ReqId=" + emlSndngList.requestid;
 
 			}
@@ -323,6 +323,25 @@ namespace WMS.Common
 				//subbody = mailMessage.Subject;
 				link = linkurl + "WMS/Email/GatePass?GatepassId=" + emlSndngList.gatepassid.Trim();
 
+
+			}
+			//Project Manager to Inventoty Clerk
+			//Inventory Manager
+			else if (subjecttype == 23)
+			{
+				mailMessage.Subject = "Approval Request for Materials with request id:" + emlSndngList.requestid;
+				string requestedby = this.getnamebyid(emlSndngList.createdby);
+				subbody = "Please find the Material request details below. <br/> Requested By:" + requestedby + "<br/>Requested On:" + emlSndngList.createddate;
+				//subbody += "<br/>"+ mailMessage.Subject;
+				link = linkurl + "WMS/Email/MaterialRequestApproval?ReqId=" + emlSndngList.requestid;
+
+			}
+			else if (subjecttype == 24)
+			{
+				mailMessage.Subject = "Rejected Materials Request for Request Id" + emlSndngList.requestid;
+				subbody = "The material request for Request Id " + emlSndngList.requestid + " has been rejected.";
+				//subbody += mailMessage.Subject;
+				link = linkurl + "WMS/Email/MaterialReqView?ReqId=" + emlSndngList.requestid;
 
 			}
 

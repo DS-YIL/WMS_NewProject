@@ -11,60 +11,22 @@
           </span>
         </div>
         <div class="col-lg-4 col-md-4 form-inline"></div>
-     
-    </div>
+     </div>
       <form class="form-inline labelheading">
-        <!--<button *ngIf="isnonpoentry" type="button" class="btn btn-primary btn-sm" style="float:left;margin-left:10px;" (click)="addrows()" label="Save"><i class="fa fa-plus"></i></button>&nbsp;&nbsp;-->
         <label>Pending receipts:</label>&nbsp;&nbsp;
         <p-autoComplete [(ngModel)]="selectedpendingpono" [suggestions]="filteredpos" [ngModelOptions]="{standalone: true}" placeholder="search by supplier/PONo" [forceSelection]="false" (onSelect)="showpodata()" (change)="showpodata()" (completeMethod)="filterpos($event)" [size]="30"
                         [dropdown]="true">
         </p-autoComplete>&nbsp;&nbsp;&nbsp;&nbsp;
-        <!--<p-dropdown [options]="pendingpos" #myInput [(ngModel)]="selectedpendingpo" [ngModelOptions]="{standalone: true}" [showClear]="true" [style]="{'width':'250px'}" filter="true" placeholder="Select an invoice" optionLabel="value" (onChange)="showpodata()"></p-dropdown>&nbsp;&nbsp;-->
         <input type="checkbox" (change)="onholdchange($event)" [disabled]="grnnumber || isonHold || isallreceived" *ngIf="!isacceptance && podetailsList.length>0" [(ngModel)]="isonHoldview" [ngModelOptions]="{standalone: true}" />&nbsp;<span *ngIf="!isacceptance && podetailsList.length>0">Put On Hold</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <label class="labelheading">Pending for Acceptance:</label>&nbsp;&nbsp;
         <p-autoComplete [(ngModel)]="selectedgrnno" [suggestions]="filteredgrns" placeholder="search by supplier/GRN No" [ngModelOptions]="{standalone: true}" [forceSelection]="false" (change)="showpodata1()" (onSelect)="showpodata1()" (completeMethod)="filtergrn($event)" [size]="30"
                         [dropdown]="true">
         </p-autoComplete>
-
-
-
-        <!--<p-dropdown [options]="checkedgrnlist" #myInput1 [(ngModel)]="selectedgrn" [ngModelOptions]="{standalone: true}" [showClear]="true" [style]="{'width':'250px'}" filter="true" placeholder="Select GRN" optionLabel="text" (onChange)="showpodata1()"></p-dropdown>-->
-
       </form>
     </div>
     <div class="card-body">
-
-
-      <!--<div class="row">
-          <div class="col-lg-2 col-md-2">
-        <input type="text" [(ngModel)]="PoDetails.pono" class="form-control" />
-      </div>
-          <div class="col-lg-2 col-md-2">
-
-
-          </div>
-          <div class="col-lg-2 col-md-2">
-            <label class="labelheading">Pending receipts:</label>
-          </div>
-          <div div class="col-lg-3 col-md-3" style="margin-left:-50px">
-            <p-dropdown [options]="pendingpos" [(ngModel)]="selectedpendingpo" [showClear]="true" [style]="{'width':'250px'}" filter="true" placeholder="Select an invoice" optionLabel="value" (onChange)="showpodata()"></p-dropdown>
-          </div>
-          <div class="col-lg-1 col-md-1 labelheading">
-            <input type="checkbox" [(ngModel)]="isonHold" />On Hold
-          </div>
-          <div class="col-lg-2 col-md-2" style="margin-left:-150px;">
-            <label class="labelheading">Pending for Acceptance:</label>
-          </div>
-          <div div class="col-lg-2 col-md-2" style="margin-left:-30px">
-            <p-dropdown [options]="checkedgrnlist" [(ngModel)]="selectedgrn" [showClear]="true" [style]="{'width':'250px'}" filter="true" placeholder="Select GRN" optionLabel="text" (onChange)="showpodata1()"></p-dropdown>
-          </div>
-
-        </div>-->
-      <!--<div *ngIf="podetailsList.length>0 || isnonpoentry">
-        <hr class="new1" />
-      </div>-->
-      <div class="row" style="margin-top:0px;">
+     <div class="row" style="margin-top:0px;">
         <div class="col-lg-3 col-md-3 labelheading" style="font-weight:600;font-size:14px;color:darkblue;" *ngIf="podetailsList.length>0 || isnonpoentry">
           Invoice No : <span class="labeltext">{{lblinvoiceno}}</span>
         </div>
@@ -73,99 +35,10 @@
           <span *ngIf="!grnnumber && isonHoldview">Remarks: </span><span *ngIf="!grnnumber && isonHoldview" class="labeltext">{{onholdremarks}}&nbsp;&nbsp;<i class="btn fa fa-edit" (click)="displayBasic = true"></i></span>
         </div>
         <div class="col-lg-4 col-md-4 labelheading" style="font-weight:600;font-size:14px;color:darkblue;" *ngIf="isnonpoentry">
-          <!--<span class="labeltext" *ngIf="isallreceived && !isacceptance"></span>-->
           <button *ngIf="isnonpoentry && !grnnumber" type="button" pTooltip="Add marerial" style="border-radius: 10em!important;background-color: white;float:right; border-color: rgb(96, 123, 212);" rounded="true" size="lg" class="my-0" (click)="addrows()"> <i class="fa fa-plus" style="font-size: 15px;color: green;float:right"></i></button><label *ngIf="isnonpoentry" style="font-size: 15px;float:right;padding:0px; color: rgb(96, 123, 212);"> &nbsp;&nbsp;Add Material</label>
         </div>
-
-      </div>
-      <!--<div class="row" style="max-height: 400px;max-width:100%;overflow: scroll;position: relative; margin-top:5px;margin-left:3px;">
-        <p-table #dt [value]="podetailsList" [style]="{'width':'100%','overflow':'auto!important'}"
-                 [responsive]="true" [rows]="10"
-                 [resizableColumns]="true"
-                 columnResizeMode="expand"
-                 [paginator]="true" [rowsPerPageOptions]="[10,20,30,40]"
-                 appendTo="body">
-          <ng-template pTemplate="header">
-            <tr class="mprltbldata">
-              <th style="text-align:center;width:5%;">Sl.No.</th>
-              <th style="text-align:center;width:15%;">Material</th>
-              <th style="text-align:center;">Material Description</th>
-              <th *ngIf="!isnonpo && !qualitychecked" style="text-align:center;width:10%;">Material Qty</th>
-              <th *ngIf="!isnonpo && !qualitychecked && isreceivedbefore" style="text-align:center;width:10%;">Pending Qty</th>
-              <th style="text-align:center;width:10%;">Received Qty</th>
-              <th *ngIf="qualitychecked && !isonHold" style="text-align: center;width:10%;">Accepted Qty</th>
-              <th *ngIf="qualitychecked && !isonHold" style="text-align:center;width:10%;">Returned Qty</th>
-              <th *ngIf="qualitychecked && !isonHold" style="text-align:center;width:15%;">Remarks</th>
-              <th *ngIf="qualitychecked && !isonHold" style="text-align:center;width:10%;">Quality status</th>
-              <th *ngIf="!qualitychecked" style="text-align:center;width:10%;">QC Required</th>
-
-            </tr>
-            <tr>
-              <th></th>
-              <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'material', 'contains')"></th>
-              <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'materialdescription', 'contains')"></th>
-              <th *ngIf="!isnonpo && !qualitychecked"> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'materialqty', 'contains')"></th>
-              <th *ngIf="!isnonpo && !qualitychecked && isreceivedbefore"> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'pendingqty', 'contains')"></th>
-              <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'receivedqty', 'contains')"></th>
-              <th *ngIf="qualitychecked && !isonHold"> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'confirmqty', 'contains')"></th>
-              <th *ngIf="qualitychecked && !isonHold"> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'returnqty', 'contains')"></th>
-              <th *ngIf="qualitychecked && !isonHold"></th>
-              <th *ngIf="qualitychecked && !isonHold"></th>
-              <th *ngIf="!qualitychecked"></th>
-            </tr>
-          </ng-template>
-          <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
-
-
-            <tr>
-
-
-              <td class="ptable-cell" style="text-align:right;width:5%;">{{ri+1}}</td>
-
-              <td class="ptable-cell" style="text-align:center;width:15%;">
-                <span *ngIf="!isnonpoentry">{{rowData.material}}</span>
-                <p-dropdown [options]="combomaterial" appendTo="body" *ngIf="isnonpoentry" [style]="{'width':'100%'}" (onChange)="setdescription($event,rowData)" placeholder="Select material" optionLabel="material"></p-dropdown>
-              </td>
-              <td class="ptable-cell" style="text-align:left;width:20%;">
-                <span *ngIf="!isnonpoentry">{{rowData.materialdescription}}</span>
-                <input *ngIf="isnonpoentry" pInputText type="text" readonly id="receivedqty" class="form-control" [(ngModel)]="rowData.materialdescription">
-              </td>
-              <td class="ptable-cell" *ngIf="!isnonpo && !qualitychecked" style="text-align:center;width:20%;">
-                <span>{{rowData.materialqty}}</span>
-              </td>
-              <td class="ptable-cell" *ngIf="!isnonpo && !qualitychecked && isreceivedbefore" style="text-align:center;width:20%;">
-                <span>{{rowData.pendingqty}}</span>
-              </td>
-              <td class="ptable-cell" style="text-align:right;width:10%;">
-                <span *ngIf="!grnnumber && isallreceived">N/A</span>
-                <span *ngIf="grnnumber">{{rowData.receivedqty}}</span>
-                <input *ngIf="!grnnumber && !isallreceived" pInputText type="number" (change)="checkreceivedqty(rowData.receivedqty,rowData.confirmqty,rowData.returnqty,rowData.materialqty,rowData);" id="receivedqty" class="form-control" [(ngModel)]="rowData.receivedqty">
-              </td>
-              <td class="ptable-cell" style="text-align:right;width:10%;" *ngIf="qualitychecked && !isonHold">
-                <span *ngIf="rowData.returnedby">{{rowData.confirmqty}}</span>
-                <input *ngIf="!rowData.returnedby" pInputText type="number" (change)="checkconfirmqty(rowData.confirmqty,rowData.receivedqty,rowData.returnqty,rowData);" id="confirmqty" class="form-control" [(ngModel)]="rowData.confirmqty">
-              </td>
-              <td class="ptable-cell" style="text-align:right;width:10%;" *ngIf="qualitychecked && !isonHold">
-                <span *ngIf="rowData.returnedby">{{rowData.returnqty}}</span>
-                <input *ngIf="!rowData.returnedby" pInputText type="number" (change)="checkreturnqty(rowData.returnqty,rowData.receivedqty,rowData.confirmqty,rowData);" id="returnqty" class="form-control" [(ngModel)]="rowData.returnqty">
-              </td>
-              <td *ngIf="qualitychecked && !isonHold" style="text-align:left;width:15%;">
-                <span *ngIf="rowData.returnedby">{{rowData.returnremarks}}</span>
-                <textarea *ngIf="!rowData.returnedby" [(ngModel)]="rowData.returnremarks"></textarea>
-              </td>
-              <td style="text-align:center;width:10%;" *ngIf="qualitychecked && !isonHold">
-                <span [innerText]="getstatus(rowData)"></span>
-              </td>
-              <td style="text-align:center;width:10%;" *ngIf="!qualitychecked">
-                <input type="checkbox" [disabled]="grnnumber || isallreceived" [(ngModel)]="rowData.qualitycheck" />
-              </td>
-
-            </tr>
-          </ng-template>
-        </p-table>
-      </div>-->
-
-      <div class="row" *ngIf="!isacceptance" style="max-width:100%;position: relative; margin-top:5px;margin-left:3px;">
+     </div>
+     <div class="row" *ngIf="!isacceptance" style="max-width:100%;position: relative; margin-top:5px;margin-left:3px;">
         <p-table #dt [value]="podetailsList" [style]="{'width':'100%','overflow':'auto!important'}"
                  [responsive]="true" [rows]="10"
                  [resizableColumns]="true"
@@ -178,56 +51,34 @@
               <th style="text-align:center;width:10%;">PONo.</th>
               <th *ngIf="!isnonpo" style="text-align:center;width:8%;">line item No.</th>
               <th style="text-align:center;width:12%;">Material</th>
-               <th *ngIf="isnonpo" style="text-align:center;">Material Description</th>
+              <th *ngIf="isnonpo" style="text-align:center;">Material Description</th>
               <th *ngIf="!isnonpo" style="text-align:center;">PO Item Description</th>
               <th *ngIf="!isnonpo && !qualitychecked" style="text-align:center;width:8%;">Material Qty</th>
-              <th *ngIf="!isnonpo" style="text-align:center;width:8%;">Pending Qty</th>
+              <th *ngIf="!isnonpo && !isonHold" style="text-align:center;width:8%;">Pending Qty</th>
               <th style="text-align:center;width:10%;" *ngIf="!isonHoldview">Received Qty</th>
-              <!--<th rowspan="2" style="width:10%;text-align:center">Material Barcode</th>-->
               <th style="text-align:center;width:15%;" *ngIf="!isonHoldview">Remarks</th>
               <th style="text-align:center;width:10%;" *ngIf="!isonHoldview">QC Required</th>
               <th style="text-align:center;width:10%;" *ngIf="isnonpoentry"></th>
-
-            </tr>
-            <!--<tr>
-              <th></th>
-              <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'material', 'contains')"></th>
-              <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'materialdescription', 'contains')"></th>
-              <th *ngIf="!isnonpo"> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'materialqty', 'contains')"></th>
-              <th *ngIf="!isnonpo && isreceivedbefore"> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'pendingqty', 'contains')"></th>
-              <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'receivedqty', 'contains')"></th>
-              <th></th>
-              <th></th>
-            </tr>-->
+           </tr>
           </ng-template>
           <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
-
-
-            <tr>
-
-
-              <td class="ptable-cell" style="text-align:right;width:5%;">{{ri+1}}</td>
+           <tr>
+             <td class="ptable-cell" style="text-align:right;width:5%;">{{ri+1}}</td>
               <td class="ptable-cell" style="text-align:center;width:10%;">{{rowData.pono}}</td>
               <td *ngIf="!isnonpo" class="ptable-cell" style="text-align:center;width:8%;">{{rowData.lineitemno}}</td>
               <td class="ptable-cell" style="text-align:center;width:12%;">
                 <span *ngIf="!isnonpoentry">{{rowData.material}}</span>
                 <input *ngIf="isnonpoentry" pInputText type="text" (change)="setmatdesc(rowData)" (blur)="validate(rowData,ri)" class="form-control" [(ngModel)]="rowData.material">
-                <!--<p-dropdown [options]="combomaterial" appendTo="body" *ngIf="isnonpoentry" [style]="{'width':'100%'}" (onChange)="setdescription($event,rowData)" placeholder="Select material" optionLabel="material"></p-dropdown>-->
-                <!--<p-autoComplete *ngIf="isnonpoentry" [(ngModel)]="rowData.material" appendTo="body" [suggestions]="filteredmats" placeholder="search by material no/desc" [forceSelection]="false" (onBlur)="validate(rowData,ri)" (change)="setmatdesc(rowData)" (onSelect)="setmatdesc(rowData)" (completeMethod)="filtermats($event)" [size]="30"
-      [dropdown]="false"></p-autoComplete>-->
               </td>
               <td class="ptable-cell" style="text-align:left;">
                 <span *ngIf="!isnonpoentry && rowData.poitemdescription">{{rowData.poitemdescription}}</span>
                 <span *ngIf="!isnonpoentry && !rowData.poitemdescription">-</span>
                 <input *ngIf="isnonpoentry" pInputText type="text" readonly id="receivedqty" class="form-control" [(ngModel)]="rowData.materialdescription">
-                <!--<span *ngIf="!isnonpoentry && rowData.materialdescription">{{rowData.materialdescription}}</span>
-  <span *ngIf="!isnonpoentry && !rowData.materialdescription">-</span>
-  <input *ngIf="isnonpoentry" pInputText type="text" readonly id="receivedqty" class="form-control" [(ngModel)]="rowData.materialdescription">-->
               </td>
               <td class="ptable-cell" *ngIf="!isnonpo && !qualitychecked" style="text-align:right;width:8%;">
                 <span>{{rowData.materialqty}}</span>
               </td>
-              <td class="ptable-cell" *ngIf="!isnonpo" style="text-align:right;width:8%;">
+              <td class="ptable-cell" *ngIf="!isnonpo && !isonHold" style="text-align:right;width:8%;">
                 <span>{{rowData.pendingqty}}</span>
               </td>
               <td class="ptable-cell" style="text-align:right;width:10%;" *ngIf="!isonHoldview">
@@ -235,22 +86,17 @@
                 <span *ngIf="grnnumber">{{rowData.receivedqty}}</span>
                 <input *ngIf="!grnnumber && (!isallreceived || isnonpo)" pInputText type="number" [min]="0" (change)="checkreceivedqty(rowData.receivedqty,rowData.confirmqty,rowData.returnqty,rowData.materialqty,rowData);" id="receivedqty" class="form-control" [(ngModel)]="rowData.receivedqty">
               </td>
-              <!--<td style="    text-align: center;width: 10%;">
-                <button type="button" icon="fa fa-print" pButton aria-hidden="true" (click)="generateBarcode(rowData)"></button>
-              </td>-->
               <td style="text-align: left;width: 15%;resize: none" *ngIf="!isonHoldview">
                 <span *ngIf="grnnumber || isonHold">{{rowData.receiveremarks}}</span>
                 <textarea *ngIf="!grnnumber && !isonHold" style="resize:none" [(ngModel)]="rowData.receiveremarks"></textarea>
               </td>
               <td style="text-align:center;width:10%;" *ngIf="!isonHoldview">
-                <input type="checkbox" [disabled]="grnnumber || isallreceived || isonHold" [(ngModel)]="rowData.qualitycheck" />
+                <input type="checkbox" [disabled]="true" [(ngModel)]="rowData.qualitycheck" />
               </td>
               <td style="text-align:center;width:10%;" *ngIf="isnonpoentry">
                 <button (click)="deleteRow(ri)" class="btn btn-danger" style="margin-top:10%"><i class="fa fa-trash"></i></button>
               </td>
-
-
-            </tr>
+           </tr>
           </ng-template>
         </p-table>
       </div>
@@ -267,55 +113,27 @@
               <th style="text-align:center;width:10%;">PONo.</th>
               <th style="text-align:center;width:7%;">line item No.</th>
               <th style="text-align:center;width:12%;">Material</th>
-              <!--<th style="text-align:center;">Material Description</th>-->
               <th style="text-align:center;">PO Item Description</th>
-              <!--<th *ngIf="isreceivedbefore" style="text-align:center;width:10%;">Pending Qty</th>-->
               <th style="text-align:center;width:8%;">Received Qty</th>
               <th style="text-align: center;width:8%;">Accepted Qty</th>
               <th style="text-align:center;width:8%;">Rejected Qty</th>
               <th style="text-align:center;width:8%;">Material Barcode</th>
               <th style="text-align:center;width:15%;">Remarks</th>
               <th style="text-align:center;width:7%;">Quality status</th>
-
-
-            </tr>
-            <!--<tr>
-              <th></th>
-              <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'material', 'contains')"></th>
-              <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'materialdescription', 'contains')"></th>
-              <th *ngIf="isreceivedbefore"> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'pendingqty', 'contains')"></th>
-              <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'receivedqty', 'contains')"></th>
-              <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'confirmqty', 'contains')"></th>
-              <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'returnqty', 'contains')"></th>
-              <th></th>
-              <th></th>
-
-            </tr>-->
+           </tr>
           </ng-template>
           <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
-
-
-            <tr>
-
-
-              <td class="ptable-cell" style="text-align:right;width:5%;">{{ri+1}}</td>
+           <tr>
+             <td class="ptable-cell" style="text-align:right;width:5%;">{{ri+1}}</td>
               <td class="ptable-cell" style="text-align:center;width:10%;">{{rowData.pono}}</td>
               <td class="ptable-cell" style="text-align:center;width:7%;">{{rowData.lineitemno}}</td>
-
-              <td class="ptable-cell" style="text-align:center;width:12%;">
+             <td class="ptable-cell" style="text-align:center;width:12%;">
                 <span>{{rowData.material}}</span>
-
-              </td>
+             </td>
               <td class="ptable-cell" style="text-align:left">
-                <!--<span *ngIf="rowData.materialdescription">{{rowData.materialdescription}}</span>
-                <span *ngIf="!rowData.materialdescription">-</span>-->
                 <span *ngIf="rowData.poitemdescription">{{rowData.poitemdescription}}</span>
                 <span *ngIf="!rowData.poitemdescription">-</span>
-
-              </td>
-              <!--<td class="ptable-cell" *ngIf="isreceivedbefore" style="text-align:center;width:20%;">
-    <span>{{rowData.pendingqty}}</span>
-  </td>-->
+             </td>
               <td class="ptable-cell" style="text-align:right;width:8%;">
                 <span>{{rowData.receivedqty}}</span>
               </td>
@@ -337,42 +155,27 @@
               <td style="text-align:center;width:7%;">
                 <span [innerText]="getstatus(rowData)"></span>
               </td>
-
-
-            </tr>
+           </tr>
           </ng-template>
         </p-table>
       </div>
-
-
-
-
-    </div>
+   </div>
     <div class="card-footer" *ngIf="podetailsList.length">
       <div *ngIf="!isacceptance">
-        <!--<h6 *ngIf="isonHoldview">On hold remarks:{{onholdremarks}}</h6>-->
-        <!--<button type="button" *ngIf="grnnumber" class="btn btn-success" style="margin-left:45%" (click)="update()">Update</button>-->
         <button type="button" *ngIf="!grnnumber" class="btn btn-success" style="margin-left:45%" [disabled]="grnnumber || (isallreceived && !isnonpo) || isonHold" (click)="onsubmit()">Submit</button>
       </div>
       <div *ngIf="isacceptance">
         <button type="button" class="btn btn-success" style="margin-left:45%" [disabled]="returned" (click)="onreturnsubmit()">Submit</button>
       </div>
-
-
-
-    </div>
+   </div>
     <p-dialog header="Generate Barcode" [(visible)]="showPrintDialog" [contentStyle]="{'overflow':'visible'}" [style]="{width: '80%'}">
       <div class="row ">
-        <!--<div class="col-lg-1 col-md-1 col-sm-1 form-inline ">
-        </div>-->
         <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
           <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">PO No.:</label>
         </div>
         <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
           <input type="text" [disabled]="true" class="form-control" [(ngModel)]="pono" />
         </div>
-        <!--<div class="col-lg-1 col-md-1 col-sm-1 form-inline ">
-        </div>-->
         <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
           <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">Material Code:</label>
         </div>
@@ -385,73 +188,8 @@
         <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
           <input type="text" [disabled]="true" class="form-control" [(ngModel)]="receivedqty" />
         </div>
-        <!--<div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
-    <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">Invoice No.:</label>
-  </div>
-  <div class="col-lg-3 col-md-3 col-sm-3 form-inline ">
-    <input type="text" [disabled]="true" class="form-control" [(ngModel)]="invoiceNo" />
-  </div>-->
-      </div>
-      <!--<br />
-      <div class="row">
-        <div class="col-lg- col-md-2 col-sm-2 form-inline ">
-          <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">GRN No.:</label>
-        </div>
-        <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
-          <input type="text" [disabled]="true" class="form-control" [(ngModel)]="grnNo" />
-        </div>
-       
-        <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
-          <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">Material Code:</label>
-        </div>
-        <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
-          <input type="text" [disabled]="true" class="form-control" [(ngModel)]="materialCode" />
-        </div>
-       
-      </div>
-      <br />
-      <div class="row">
-        <div class="col-lg-1 col-md-1 col-sm-1 form-inline">
-        </div>
-
-        <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
-          <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">Received Date:</label>
-        </div>
-        <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
-          <input type="text" [disabled]="true" class="form-control" [(ngModel)]="receivedDate" />
-        </div>
-        <div class="col-lg-1 col-md-1 col-sm-1 form-inline">
-        </div>
-        <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
-          <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">Accepted Qty:</label>
-        </div>
-        <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
-          <input type="text" [disabled]="true" class="form-control" [(ngModel)]="acceptedQty" />
-        </div>
-
-      </div>
-      <br />
-      <div class="row">
-        <div class="ccol-lg-1 col-md-1 col-sm-1 form-inline">
-        </div>
-        <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
-          <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">No. of Print:</label>
-        </div>
-        <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
-          <input type="text" class="form-control" [(ngModel)]="noOfPrint" />
-        </div>
-        <div class="col-lg-1 col-md-1 col-sm-1 form-inline">
-        </div>
-        <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
-          <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">Qty:</label>
-        </div>
-        <div class="col-lg-3 col-md-3 col-sm-3 form-inline ">
-          <button (click)="decreaseQty()"></button>
-          <input type="text" class="form-control" [disabled]="true" value="{{qty}}/{{noOfPrint}}" style="width: 100px;text-align:center" />
-          <button (click)="increaseQty()">&#62;&#62;</button>
-        </div>
-      </div>-->
-      <br/>
+     </div>
+     <br />
       <div class="row">
         <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
           <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">Total No. of Boxes:</label>
@@ -459,16 +197,14 @@
         <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
           <input type="text" class="form-control" [(ngModel)]="totalboxes" />
         </div>
-
-        <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
+       <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
           <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">No. of materials in box:</label>
         </div>
         <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
           <input type="text" class="form-control" [(ngModel)]="noofpieces" style="width: 100px;text-align:center" />
           <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">/{{receivedqty}}</label>
         </div>
-
-        <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
+       <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
           <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">Box No.:</label>
         </div>
         <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
@@ -483,18 +219,9 @@
         </div>
       </div>
     </p-dialog>
-
-    <p-dialog header="Print Barcode" [(visible)]="showPrintLabel" [contentStyle]="{'overflow':'auto'}" [style]="{width: '50%'}">
+   <p-dialog header="Print Barcode" [(visible)]="showPrintLabel" [contentStyle]="{'overflow':'auto'}" [style]="{width: '50%'}">
       <form>
-        <!--<div class="row">
-          <div class="col-lg-9 col-md-9 col-sm-9"></div>
-          <div class="col-lg-3 col-md-3 col-sm-3">
-            <label><b>No. of prints:</b></label>
-            <label>{{printData.noofprint}}</label>
-          </div>
-        </div>-->
-        
-        <div class="row">
+       <div class="row">
           <div class="col-lg-1 col-md-1 col-sm-1"></div>
           <div class="col-lg-10 col-md-10 col-sm-10">
             <div><b>Ref# -</b> {{printData.pono}}</div>
@@ -619,62 +346,11 @@
               </tr>
             </table>
           </div>
-
-        </div>
-        <!--<div class="row">
-          <div class="col-lg-1 col-md-1 col-sm-1"></div>
-          <div class="col-lg-10 col-md-10 col-sm-10">
-            <table>
-              <tr>
-                <th style="outline: thin solid;width:400px;height:30px">Material Code:</th>
-                <th style="outline: thin solid;width:400px;height:30px">{{printData.materialid}}</th>
-                <th style="outline: thin solid;width:200px;height:30px" rowspan="2">
-                  <img class="images" src="{{printData.materialcodePath}}" />
-                </th>
-              </tr>
-              <tr>
-                <th style="outline: thin solid;width:400px;height:30px">30Received Date:th</th>
-                <th style="outline: thin solid;width:400px;height:30px">{{printData.receiveddate}}</th>
-              </tr>
-              <tr>
-                <th *ngIf="printData.grnno" style="outline: thin solid;width:400px;height:90px">GRN No. - Material Code : </th>
-                <th *ngIf="printData.grnno" style="outline: thin solid;width:400px;height:30px">{{printData.grnno}}- {{printData.materialid}}</th>
-                <th *ngIf="!printData.grnno" style="outline: thin solid;width:400px;height:90px">PO No. - Invoice No. : </th>
-                <th *ngIf="!printData.grnno" style="outline: thin solid;width:400px;height:30px">{{printData.pono}}- {{printData.invoiceno}}</th>
-                <th style="outline: thin solid; width: 200px; height: 90px; align-content: center" rowspan="2"><img class="images" src="{{printData.barcodePath}}" /></th>
-              
-              </tr>
-              <tr>
-                <th style="outline: thin solid;width:400px;height:30px">Quantity</th>
-                <th style="outline: thin solid;width:400px;height:30px">1/{{printData.noofprint}}</th>
-              </tr>
-            </table>
-          </div>
-        </div>-->
-        <br />
-        <!--<div class="row">
-    <div class="col-lg-3 col-md-3 col-sm-3"></div>
-    <div class="col-lg-7 col-md-7 col-sm-7">
-      <img class="images" src="{{printData.barcodePath}}" />
-    </div>
-  </div>
-  <br/><br/>
+       </div>
+       <br />
        <div class="row">
-         <div class="col-lg-3 col-md-3 col-sm-3"></div>
-         <div class="col-lg-2 col-md-2 col-sm-2">
-           <label>{{printData.receiveddate}}</label>&nbsp;&nbsp;
-
-         </div>
-         <div class="col-lg-3 col-md-3 col-sm-3"></div>
-         <div class="col-lg-2 col-md-2 col-sm-2">
-           <label>1/{{printData.noofprint}}</label>
-         </div>
-       </div>-->
-        <div class="row">
           <div class="col-lg-5 col-md-5 col-sm-5"></div>
-         
-
-          <div class="col-lg-3 col-md-3 col-sm-3">
+         <div class="col-lg-3 col-md-3 col-sm-3">
             <button type="button" class="btn btn-primary" (click)="printLabel()" label="Save">{{print}}</button>
           </div>
         </div>

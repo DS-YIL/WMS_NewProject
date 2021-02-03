@@ -44,6 +44,7 @@
           <th style="text-align:center;width:70px">Sl.No.</th>
           <!--<th style="text-align:center">PO No</th>-->
           <th style="text-align:center;width:200px;">Material</th>
+          <th style="text-align:center;width:200px;">PO Item description</th>
           <th style="text-align:center">Request Quantity</th>
           <th style="text-align:center">Available Quantity</th>
           <th style="text-align:center">Reserved Quantity</th>
@@ -53,6 +54,7 @@
           <th></th>
           <!--<th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'pono', 'contains')"></th>-->
           <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'material', 'contains')"></th>
+          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'materialdescription', 'contains')"></th>
           <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'requestedquantity', 'contains')"></th>
           <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'quantity', 'contains')"></th>
           <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'reservedqty', 'contains')"></th>
@@ -65,7 +67,8 @@
             {{ri+1}}
           </td>
           <!--<td class="ptable-cell" style="text-align:center">{{rowData.pono}}</td>-->
-          <td class="ptable-cell" style="text-align:left;width:200px;"><button type="button" class="btn btn-link" (click)="showmateriallocationList(rowData.materialid,ri+1,ri,rowData.requestedquantity,rowData.issuedqty,rowData.reservedqty,rowData.requestforissueid,rowData.requestmaterialid);" style="padding-left:0px;">{{rowData.materialid}}</button></td>
+          <td class="ptable-cell" style="text-align:left;width:200px;"><button type="button" class="btn btn-link" (click)="showmateriallocationList(rowData.materialid,ri+1,ri,rowData.requestedquantity,rowData.issuedqty,rowData.reservedqty,rowData.requestforissueid,rowData.requestmaterialid,rowData.materialdescription);" style="padding-left:0px;">{{rowData.materialid}}</button></td>
+          <td class="ptable-cell" style="text-align:left">{{rowData.materialdescription}}</td>
           <td class="ptable-cell" style="text-align:right">{{rowData.requestedquantity}}</td>
           <td class="ptable-cell" style="text-align:right">{{rowData.availableqty}}</td>
           <td class="ptable-cell" style="text-align:right">{{rowData.reservedqty}}</td>

@@ -126,13 +126,16 @@ export class HoldGRViewComponent implements OnInit {
     //}
 
     var data = this.selectedrow;
-    
-    this.spinner.show();
     this.onholdupdatedata = new UnholdGRModel();
     this.onholdupdatedata.inwmasterid = data.inwmasterid;
     this.onholdupdatedata.unholdremarks = this.unholdremarks;
     this.onholdupdatedata.unholdaction = this.graction == 1 ? true : false;
-    var msg = this.graction == 1 ? "Accepted" : "Returned";
+    var msg = this.graction == 1 ? "Released" : "Returned";
+    if (this.graction != 1 && (isNullOrUndefined(this.unholdremarks) || this.unholdremarks.trim() == "")) {
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Enter Remarks' });
+      return;
+    }
+    this.spinner.show();
     this.onholdupdatedata.unholdedby = this.employee.employeeno;
     this.wmsService.updateonholdgr(this.onholdupdatedata).subscribe(data => {
       this.spinner.hide();
@@ -192,8 +195,8 @@ export class HoldGRViewComponent implements OnInit {
     var grn = this.selectedgrnno;
     var status = this.grstatus;
     if (status == "accepted") {
-      this.tempcol1 = "Accepted By";
-      this.tempcol2 = "Accepted On";
+      this.tempcol1 = "Released By";
+      this.tempcol2 = "Released On";
     }
     else if (status == "returned") {
       this.tempcol1 = "Returned By";

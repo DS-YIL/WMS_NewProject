@@ -103,6 +103,7 @@ export class MaterialIssueComponent implements OnInit {
       item.requestid = this.materialissueList[this.roindex].requestid;
       item.requestmaterialid = this.materialissueList[this.roindex].requestmaterialid;
       item.requesttype = "MaterialRequest";
+      item.createdby = this.materialissueList[this.roindex].requesterid;
       totalissuedqty = totalissuedqty + (item.issuedqty);
       this.FIFOvalues.issueqty = totalissuedqty;
       this.itemlocationsaveData.push(item);
@@ -132,7 +133,7 @@ export class MaterialIssueComponent implements OnInit {
   }
 
   //shows list of items for particular material
-  showmateriallocationList(material, id, rowindex, qty, issuedqty, reservedqty, requestforissueid, requestmaterialid) {
+  showmateriallocationList(material, id, rowindex, qty, issuedqty, reservedqty, requestforissueid, requestmaterialid, poitemdescription: string) {
     if (issuedqty <= qty) {
       this.issueqtyenable = true;
     }
@@ -147,7 +148,7 @@ export class MaterialIssueComponent implements OnInit {
     this.itemlocationData = [];
     if (this.constants.materialIssueType == "Pending") {
       this.issueqtyenable = false;
-      this.wmsService.getItemlocationListByMaterial(material).subscribe(data => {
+      this.wmsService.getItemlocationListByMaterialanddesc(material, poitemdescription).subscribe(data => {
         this.itemlocationData = data;
         this.showdialog = true;
       });

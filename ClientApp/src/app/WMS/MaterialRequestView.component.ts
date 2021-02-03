@@ -8,10 +8,12 @@ import { NgxSpinnerService } from "ngx-spinner";
 import { materialRequestDetails, gatepassModel, materialistModel, materialList, requestData, ddlmodel, MaterialTransaction } from 'src/app/Models/WMS.Model';
 import { MessageService } from 'primeng/api';
 import { RadioButtonModule } from 'primeng/radiobutton';
+import { DatePipe, DecimalPipe } from '@angular/common';
 import { isNullOrUndefined } from 'util';
 @Component({
   selector: 'app-MaterialRequest',
-  templateUrl: './MaterialRequestView.component.html'
+  templateUrl: './MaterialRequestView.component.html',
+  providers: [DatePipe,DecimalPipe]
 })
 export class MaterialRequestViewComponent implements OnInit {
   AddDialog: boolean;
@@ -24,7 +26,7 @@ export class MaterialRequestViewComponent implements OnInit {
     projectcodes: string;
     showhistory: boolean=false;
 
-  constructor(private formBuilder: FormBuilder, private messageService: MessageService, private wmsService: wmsService, private route: ActivatedRoute, private router: Router, public constants: constants, private spinner: NgxSpinnerService) { }
+  constructor(private formBuilder: FormBuilder, private messageService: MessageService, private datePipe: DatePipe, private decimalPipe: DecimalPipe, private wmsService: wmsService, private route: ActivatedRoute, private router: Router, public constants: constants, private spinner: NgxSpinnerService) { }
 
   public requestList: MaterialTransaction[] = [];
   public suppliername: string;
@@ -91,7 +93,7 @@ export class MaterialRequestViewComponent implements OnInit {
     if (this.reqid) {
       debugger;
       //get material details for that requestid
-      this.materialList[0].material = this.reqid;
+      //this.materialList[0].material = this.reqid;
       //this.getMaterialRequestlist();
 
     }
@@ -205,12 +207,12 @@ export class MaterialRequestViewComponent implements OnInit {
     this.wmsService.getMaterialRequestlist(this.employee.employeeno, this.pono).subscribe(data => {
       this.requestList = data;
       this.spinner.hide();
-      //console.log(data);
-      //console.log(this.requestList);
-      //this.requestList.forEach(item => {
-      //  if (!item.requestedquantity)
-      //    item.requestedquantity = item.quotationqty;
-      //});
+      if (this.reqid) {
+        debugger;
+        this.requestList = this.requestList.filter(o => o.requestid == this.reqid);
+        this.reqid = null;
+      }
+    
     });
   }
 
@@ -729,6 +731,7 @@ export class MaterialRequestViewComponent implements OnInit {
 
   //received material acknowledgement
   materialAckUpdate() {
+    debugger;
     if (this.requestList.filter(li => li.status == true).length == 0) {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Select atleast  one checkbox' });
     }

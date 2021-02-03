@@ -340,7 +340,8 @@
                     <input style="text-align:left" pInputText type="number" (blur)="onComplete(rowData.quantity , rowData.materialid,ri)" class="form-control" [(ngModel)]="rowData.quantity">
                   </td>
                   <td class="ptable-cell" style="text-align:right">
-                    <input [disabled]="true" [ngModel]="rowData.materialid && rowData.materialid?rowData.materialcost:0" class="form-control" pInputText pKeyFilter="money" name="{{rowData.materialcost}}" />
+                    <span>{{rowData.materialcost | number : '1.2-2'}}</span>
+                    <!--<input [disabled]="true" [ngModel]="rowData.materialid && rowData.materialid?rowData.materialcost:0" class="form-control" pInputText pKeyFilter="money" name="{{rowData.materialcost | number : 1.2-2}}" />-->
 
                   </td>
                   <td class="ptable-cell" style="text-align:right">

@@ -566,12 +566,12 @@ namespace WMS.Models
 		public int requestedquantity { get; set; }
 		public int issuedquantity { get; set; }
 		public string pono { get; set; }
-		public DateTime requesteddate { get; set; }
+		public DateTime? requesteddate { get; set; }
 		public string approveremailid { get; set; }
 		public string approverid { get; set; }
 		public string approvedby { get; set; }
 		public string itemreceiverid { get; set; }
-		public DateTime approvedon { get; set; }
+		public DateTime? approvedon { get; set; }
 		public string approvedstatus { get; set; }
 		public bool status { get; set; }
 		public bool deleteflag { get; set; }
@@ -583,7 +583,7 @@ namespace WMS.Models
 		public string ackremarks { get; set; }
 		public string Materialdescription { get; set; }
 		public string poitemdescription { get; set; }
-		public DateTime createddate { get; set; }
+		public DateTime? createddate { get; set; }
 		public int availableqty { get; set; }
 		public string itemlocation { get; set; }
 		public int issuedqty { get; set; }
@@ -591,7 +591,7 @@ namespace WMS.Models
 		public int materialqty { get; set; }
 		public int returnqty { get; set; }
 		public string requesttype { get; set; }
-		public DateTime returnon { get; set; }
+		public DateTime? returnon { get; set; }
 		public string returnqtyaccept { get; set; }
 		public int materialissueid { get; set; }
 		public string createdby { get; set; }
@@ -760,6 +760,19 @@ namespace WMS.Models
 		public DateTime? returneddate { get; set; }
 		public int issuedqty { get; set; }
 
+	}
+
+	public class AssignProjectModel
+	{
+		public string projectcode { get; set; }
+		public string projectmanager { get; set; }
+		public string projectmanagername { get; set; }
+		public string projectmember { get; set; }
+		public string projectmembername { get; set; }
+		public string modifiedby { get; set; }
+		public string plantid { get; set; }
+		public DateTime? modifiedon { get; set; }
+		public List<User> projectmemberlist { get; set; }
 	}
 
 	public class outwardinwardreportModel
@@ -938,7 +951,7 @@ namespace WMS.Models
 	{
 		internal string createdby { get; set; }
 
-		internal DateTime createddate { get; set; }
+		internal DateTime? createddate { get; set; }
 		internal object requestid { get; set; }
 		internal string reserveid { get; set; }
 		internal string name { get; set; }
@@ -980,6 +993,7 @@ namespace WMS.Models
 		public string type { get; set; }
 		public List<MaterialTransactionDetail> reservedata { get; set; }
 		public string returnid { get; set; }
+		public bool isapproved { get; set; }
 
 
 	}
@@ -996,12 +1010,24 @@ namespace WMS.Models
 	{
 		public int authid { get; set; }
 		public string employeeid { get; set; }
+		public string employeename { get; set; }
 		public int roleid { get; set; }
 		public DateTime createddate { get; set; }
 		public string createdby { get; set; }
 		public bool deleteflag { get; set; }
 		public bool emailnotification { get; set; }
+		public bool emailccnotification { get; set; }
+		public string subroleid { get; set; }
 		public string email { get; set; }
+		public string rolename { get; set; }
+		public List<subrolemodel> subrolelist { get; set; }
+		public List<subrolemodel> selectedsubrolelist { get; set; }
+		public string requesttype { get; set; }
+		public string plantid { get; set; }
+		public DateTime? modifiedon { get; set; }
+		public string modifiedby { get; set; }
+		public bool isselected { get; set; }
+		public bool isdeleted { get; set; }
 	}
 	public class userAcessNamesModel
 	{
@@ -1011,6 +1037,7 @@ namespace WMS.Models
 		public string subroleid { get; set; }
 		public int userid { get; set; }
 		public string accessname { get; set; }
+		public string plantid { get; set; }
 	}
 	public class Enquirydata
 	{
@@ -1280,6 +1307,18 @@ public class stocktransfermateriakmodel
 	public string status { get; set; }
 }
 
+public class subrolemodel
+{
+
+	public int subroleid { get; set; }
+	public int roleid { get; set; }
+	public string subrolename { get; set; }
+	public DateTime? createddate { get; set; }
+	public string createdby { get; set; }
+	public bool deleteflag { get; set; }
+
+}
+
 public class ddlmodel
 {
 
@@ -1493,6 +1532,9 @@ public class UserDashboardDetail
 	public int reservedquantityforthisweek { get; set; }
 	public int pendingtoapproval { get; set; }
 	public int pendingcyclecountapproval { get; set; }
+	public int pendingnotifytofinance { get; set; }
+	public int pendingonhold { get; set; }
+	
 }
 
 public class testcrud
@@ -1636,20 +1678,24 @@ public class MaterialTransaction
 	public string approveremailid { get; set; }
 	public string approverid { get; set; }
 	public string requesterid { get; set; }
+	public string requestedby { get; set; }
 	public DateTime? requesteddate { get; set; }
 	public string reserveid { get; set; }
 	public List<MaterialTransactionDetail> materialdata { get; set; }
 
 	public string approvedstatus { get; set; }
-
+	public string pmapprovedstatus { get; set; }
 	public bool status { get; set; }
 	public DateTime reserveupto { get; set; }
 	public string reservedby { get; set; }
 	public DateTime? reservedon { get; set; }
 	public DateTime? requestedon { get; set; }
-	public string requestedby { get; set; }
-
 	public string chkstatus { get; set; }
+	public bool isapprovalrequired { get; set; }
+	public bool? isapproved  { get; set; }
+    public string approvalremarks { get; set; }
+    public DateTime? approvedon { get; set; }
+	public string approvalcheck { get; set; }
 }
 
 public class MaterialTransactionDetail

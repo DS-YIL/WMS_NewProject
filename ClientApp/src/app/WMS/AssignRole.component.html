@@ -1,7 +1,7 @@
 <div style="margin:10px">
-  <div class="card commoncardcss">
+  <div class="card commoncardcssnoheight">
     <div class="card-header text-center commoncardheader">
-      <div class="row m-2">
+      <!--<div class="row m-2">
         <div class="col-lg-4 col-md-4 col-sm-4">
           <label class="labelheading">Select Employee :</label>
           <p-autoComplete [(ngModel)]="selectedEmployee" field="name" appendTo="body" [suggestions]="filteredEmployees" placeholder="search by name/No" [ngModelOptions]="{standalone: true}" [forceSelection]="true" (completeMethod)="filterEmployee($event)" [size]="30" [dropdown]="true"></p-autoComplete>
@@ -21,7 +21,278 @@
         <div class="col-lg-4 col-md-4 col-sm-4">
           <button class="btn btn bg-primary" (click)="assignRole()">Assign</button>
         </div>
+      </div>-->
+      <div class="row " style="    margin-top: 10px;
+    margin-left: 0px !important;
+    margin-right: 0px !important">
+        <div class="col-lg-4 col-md-4 form-inline">
+        </div>
+        <div class="col-lg-4 col-md-4 text-center">
+          <span style="color:#428bca;font-size:18px" class="commonheadertext">
+            <i class="fa fa-check-circle-o commonheadertext"></i>&nbsp;Assign Role
+          </span>
+        </div>
+        <div class="col-lg-4 col-md-4">
+        <button class="btn btn-success btn-sm" style="margin-top:0px" (click)="showRolewisedata()">Role Wise Email Notification</button>
+          </div>
       </div>
     </div>
+    <div class="card-body">
+      <p-table #dt [value]="getlistdata" [style]="{'overflow':'auto!important','box-shadow' : '5px 5px #888888'}"
+               [scrollable]="true" scrollHeight="65vh">
+        <ng-template pTemplate="header">
+          <tr class="mprltbldata">
+            <th class="ptable-cell" style="text-align:center;width:70px;">Sl.No.</th>
+            <th class="ptable-cell" style="text-align:center;width:200px;">Employee ID</th>
+            <th class="ptable-cell" style="text-align:center;">Employee Name</th>
+            <th class="ptable-cell" style="text-align:center;width:200px">Plant</th>
+            <th style="text-align: center;width: 150px;">Edit</th>
+            <th class="ptable-cell" style="text-align:center;width:150px;">
+              <button class="btn btn-success btn-sm" (click)="showAdd()">Add</button>
+            </th>
+          </tr>
+          <tr>
+            <th></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'employeeid', 'startsWith')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'employeename', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'plantid', 'startsWith')"></th>
+            <th></th>
+            <th></th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex" let-rindex=0>
+          <tr [ngStyle]="{'background-color': (rowData.isdeleted) ? '#ccccb3' : '#ffffff'}">
+            <td class="ptable-cell" style="text-align:right;width:70px;"> {{ri+1}} </td>
+            <td class="ptable-cell" style="text-align:center;width:200px;"> {{rowData.employeeid}} </td>
+            <td class="ptable-cell" style="text-align:left;">{{rowData.employeename}} </td>
+            <td class="ptable-cell" style="text-align:center;width:200px;">{{rowData.plantid}} </td>
+            <td class="ptable-cell" style="text-align:center;width:150px;">
+              <button class="btn btn-primary btn-sm" (click)="getUserAuthdetail(rowData.employeeid,rowData.employeename,rowData.plantid)"><i class="fa fa-edit"></i></button>
+            </td>
+            <td class="ptable-cell" style="text-align:center;width:150px;">
+              <span *ngIf="rowData.isdeleted">Not in Use</span>
+              <button class="btn btn-danger btn-sm" *ngIf="!rowData.isdeleted" (click)="deleteUserauth(rowData)"><i class="fa fa-trash"></i></button>
+            </td>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="5" style="text-align:center;color:red">No Records.</td>
+          </tr>
+        </ng-template>
+      </p-table>
+
+
+    </div>
   </div>
+  <p-dialog header="Edit Role" [(visible)]="showeditdatamodel" (onHide)="refresheditmodel()" [responsive]="true" showEffect="fade" [modal]="true" [style]="{'width':'85%','overflow':'auto!important','margin-right': '0px','margin-left':'0px'}">
+    <div class="row">
+      <div class="col-lg-3 col-md-3">
+        <span class="labelheading">Employee id : <span class="labeltext">{{empid}}</span></span>
+
+      </div>
+      <div class="col-lg-5 col-md-5">
+        <span class="labelheading">Employee Name : <span class="labeltext">{{empname}}</span></span>
+
+      </div>
+      <div class="col-lg-4 col-md-4">
+        <label class="labelheading">Plant :&nbsp;</label>
+        <p-autoComplete [(ngModel)]="selectedplant" field="plantname" [suggestions]="filteredPlant" placeholder="search by plant" [ngModelOptions]="{standalone: true}" [forceSelection]="true" (completeMethod)="filterPlants($event)" [size]="30" [dropdown]="true"></p-autoComplete>
+      </div>
+    </div>
+    <p-table #dt1 [value]="getlistdetail" [style]="{'width':'100%','height':'500px','overflow':'visible!important'}">
+      <ng-template pTemplate="header">
+        <tr class="mprltbldata">
+          <th class="ptable-cell" style="text-align:center;width:70px;">Sl.No.</th>
+          <th class="ptable-cell" style="text-align:center;width:250px;">role</th>
+          <th class="ptable-cell" style="text-align:center;">Sub Role</th>
+          <th class="ptable-cell" style="text-align:center;width:150px;">Email Notification(To)</th>
+          <th class="ptable-cell" style="text-align:center;width:150px;">Email Notification(CC)</th>
+          <th class="ptable-cell" style="text-align:center;width:70px;">Not In Use</th>
+          <th class="ptable-cell" style="text-align:center;width:70px;">
+            <button class="btn btn-success btn-sm" (click)="AddNewRowedit()">Add</button>
+          </th>
+
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex" let-rindex=0>
+        <tr [ngStyle]="{'background-color': (rowData.deleteflag) ? '#ccccb3' : '#ffffff'}">
+          <td class="ptable-cell" style="text-align:center;width:70px;"> {{ri+1}} </td>
+          <td class="ptable-cell" style="text-align:left;width:250px;">
+            <span *ngIf="rowData.createddate">{{rowData.rolename}}</span>
+            <p-autoComplete [(ngModel)]="rowData.rolename" *ngIf="!rowData.createddate" placeholder="search by role" type="text" [forceSelection]="true" (onSelect)="oneditroleselect(rowData,ri)" [suggestions]="filteredroles" (completeMethod)="filterroles($event)"
+                            [dropdown]="true"></p-autoComplete>
+          </td>
+          <td class="ptable-cell" style="text-align:left;">
+            <p-multiSelect [appendTo]="body" [options]="rowData.subrolelist" [(ngModel)]="rowData.selectedsubrolelist" *ngIf="rowData.subrolelist && rowData.subrolelist.length > 0" optionLabel="subrolename" [style]="{'min-width':'300px'}"></p-multiSelect>
+          </td>
+          <td class="ptable-cell" style="text-align:center;width:150px;">
+            <input type="checkbox" [(ngModel)]="rowData.emailnotification" />
+          </td>
+          <td class="ptable-cell" style="text-align:center;width:150px;">
+            <input type="checkbox" [(ngModel)]="rowData.emailccnotification" />
+          </td>
+          <td class="ptable-cell" style="text-align:center;width:70px;">
+            <input type="checkbox" [(ngModel)]="rowData.deleteflag" />
+          </td>
+          <td class="ptable-cell" style="text-align:center;width:70px;">
+            <button pButton type="button" *ngIf="!rowData.createddate" icon="fa fa-trash" class="ui-button-danger" style="margin-left: 1px;" (click)="removerowedit(rowData, ri)"></button>
+          </td>
+         
+
+</ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="6" style="text-align:center;color:red">No Records.</td>
+        </tr>
+      </ng-template>
+    </p-table>
+
+    <p-footer>
+      <button type="button" pButton icon="pi pi-check" (click)="SubmitEdit()" label="Submit"></button>
+      <button type="button" pButton icon="pi pi-times" (click)="showeditdatamodel=false" label="Cancel" class="ui-button-secondary"></button>
+    </p-footer>
+  </p-dialog>
+
 </div>
+<p-dialog header="Add Role" [(visible)]="showadddatamodel" (onHide)="refreshsavemodel()" [modal]="true" [style]="{width: '98vw'}" [baseZIndex]="10000"
+          [draggable]="true" [resizable]="false">
+  <div class="row" style="margin-bottom:5px;">
+    <div class="col-lg-4 col-md-4 col-sm-4">
+      <label class="labelheading">Select Employee :&nbsp;</label>
+      <p-autoComplete [(ngModel)]="selectedEmployee" field="idwithname"  [suggestions]="filteredEmployees" placeholder="search by name/No" (onSelect)="CheckforEmpdata()" [ngModelOptions]="{standalone: true}" [forceSelection]="true" (completeMethod)="filterEmployee($event)" [size]="30" ></p-autoComplete>
+    </div>
+    <div class="col-lg-4 col-md-4 col-sm-4">
+      <label class="labelheading">Plant :&nbsp;</label>
+      <p-autoComplete [(ngModel)]="selectedplant" field="plantname" [suggestions]="filteredPlant" placeholder="search by plant" [ngModelOptions]="{standalone: true}" [forceSelection]="true" (completeMethod)="filterPlants($event)" [size]="30" [dropdown]="true"></p-autoComplete>
+    </div>
+  </div>
+  <p-table #dt1 [value]="getaddlistdetail" [style]="{'width':'100%','height':'500px','overflow':'visible!important'}">
+    <ng-template pTemplate="header">
+      <tr class="mprltbldata">
+        <th class="ptable-cell" style="text-align:center;width:70px;">Sl.No.</th>
+        <th class="ptable-cell" style="text-align:center;width:250px;">role</th>
+        <th class="ptable-cell" style="text-align:center;">Sub Role</th>
+        <th class="ptable-cell" style="text-align:center;width:150px;">Email Notification(To)</th>
+        <th class="ptable-cell" style="text-align:center;width:150px;">Email Notification(CC)</th>
+        <th class="ptable-cell" style="text-align:center;width:70px;">Not In Use</th>
+        <th class="ptable-cell" style="text-align:center;width:70px;">
+          <button class="btn btn-success btn-sm" (click)="AddNewRow()">Add</button>
+        </th>
+
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex" let-rindex=0>
+      <tr [ngStyle]="{'background-color': (rowData.deleteflag) ? '#ccccb3' : '#ffffff'}">
+        <td class="ptable-cell" style="text-align:left;width:70px;">
+          {{ri + 1}}
+        </td>
+        <td class="ptable-cell" style="text-align:center;width:250px;">
+          <p-autoComplete [(ngModel)]="rowData.rolename" placeholder="search by role" type="text" [forceSelection]="true" (onSelect)="onroleselect(rowData,ri)" [suggestions]="filteredroles" (completeMethod)="filterroles($event)"
+                          [dropdown]="true"></p-autoComplete>
+        </td>
+
+        <td class="ptable-cell" style="text-align:left;">
+          <p-multiSelect [appendTo]="body" [options]="rowData.subrolelist" [(ngModel)]="rowData.selectedsubrolelist" *ngIf="rowData.subrolelist && rowData.subrolelist.length > 0" optionLabel="subrolename" [style]="{'min-width':'300px'}"></p-multiSelect>
+        </td>
+        <td class="ptable-cell" style="text-align:center;width:150px;">
+          <input type="checkbox" [(ngModel)]="rowData.emailnotification" />
+        </td>
+        <td class="ptable-cell" style="text-align:center;width:150px;">
+          <input type="checkbox" [(ngModel)]="rowData.emailccnotification" />
+        </td>
+        <td class="ptable-cell" style="text-align:center;width:70px;">
+          <input type="checkbox" [(ngModel)]="rowData.deleteflag" />
+        </td>
+        <td class="ptable-cell" style="text-align:center;width:200px;">
+          <button pButton type="button" icon="fa fa-trash" class="ui-button-danger" style="margin-left: 1px;" (click)="removerow(rowData, ri)"></button>
+        </td>
+
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="4" style="text-align:center;color:red">No Records.</td>
+      </tr>
+    </ng-template>
+  </p-table>
+  <p-footer>
+    <button type="button" pButton icon="pi pi-check" (click)="submitAdd()" label="Submit"></button>
+    <button type="button" pButton icon="pi pi-times" (click)="showadddatamodel=false" label="Cancel" class="ui-button-secondary"></button>
+  </p-footer>
+</p-dialog>
+
+
+
+<p-dialog header="Email Configuration" [(visible)]="showrolewisedatamodel" (onHide)="refreshrolewisedatamodel()" [modal]="true" [style]="{width: '98vw'}" [baseZIndex]="10000"
+          [draggable]="true" [resizable]="false">
+  <div class="row" style="margin-bottom:5px;">
+    <div class="col-lg-4 col-md-4 col-sm-4">
+      <label class="labelheading">Role :&nbsp;</label>
+      <p-autoComplete [(ngModel)]="selectedrolewise"  placeholder="search by role" type="text" [forceSelection]="true" (onSelect)="getRolewisedata()" [suggestions]="filteredroles" (completeMethod)="filterroles($event)"
+                      [dropdown]="true"></p-autoComplete>
+    </div>
+  </div>
+  <p-table #dt4 [value]="getlistdatabyrole" [style]="{'width':'100%','height':'500px','overflow':'visible!important'}">
+    <ng-template pTemplate="header">
+      <tr class="mprltbldata">
+        <th class="ptable-cell" style="text-align:center;width:70px;"></th>
+        <th class="ptable-cell" style="text-align:center;width:70px;">Sl.No.</th>
+        <th class="ptable-cell" style="text-align:center;width:200px;">Employee ID</th>
+        <th class="ptable-cell" style="text-align:center;">Employee Name</th>
+        <th class="ptable-cell" style="text-align:center;;width:200px;">Plant</th>
+        <th class="ptable-cell" style="text-align:center;width:150px;">Email Notification(To)</th>
+        <th class="ptable-cell" style="text-align:center;width:150px;">Email Notification(CC)</th>
+        <th class="ptable-cell" style="text-align:center;width:70px;">Not In Use</th>
+      </tr>
+      <tr>
+        <th></th>
+        <th></th>
+        <th> <input pInputText type="text" class="form-control" (input)="dt4.filter($event.target.value, 'employeeid', 'startsWith')"></th>
+        <th> <input pInputText type="text" class="form-control" (input)="dt4.filter($event.target.value, 'employeename', 'contains')"></th>
+        <th> <input pInputText type="text" class="form-control" (input)="dt4.filter($event.target.value, 'plantid', 'startsWith')"></th>
+        <th></th>
+        <th></th>
+        <th></th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex" let-rindex=0>
+      <tr [ngStyle]="{'background-color': (rowData.deleteflag) ? '#ccccb3' : '#ffffff'}">
+        <td class="ptable-cell" style="text-align:center;width:150px;">
+          <input type="checkbox" [(ngModel)]="rowData.isselected" />
+        </td>
+        <td class="ptable-cell" style="text-align:left;width:70px;">
+          {{ri + 1}}
+        </td>
+        <td class="ptable-cell" style="text-align:center;width:200px;">
+          {{rowData.employeeid}}
+        </td>
+
+        <td class="ptable-cell" style="text-align:left;">
+          {{rowData.employeename}}
+        </td>
+        <td class="ptable-cell" style="text-align:center;;width:200px;">
+          {{rowData.plantid}}
+        </td>
+        <td class="ptable-cell" style="text-align:center;width:150px;">
+          <input type="checkbox" [disabled]="!rowData.isselected" [(ngModel)]="rowData.emailnotification" />
+        </td>
+        <td class="ptable-cell" style="text-align:center;width:150px;">
+          <input type="checkbox" [disabled]="!rowData.isselected" [(ngModel)]="rowData.emailccnotification" />
+        </td>
+        <td class="ptable-cell" style="text-align:center;width:70px;">
+          <input type="checkbox" [disabled]="!rowData.isselected" [(ngModel)]="rowData.deleteflag" />
+        </td>
+
+</ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="8" style="text-align:center;color:red">No Records.</td>
+      </tr>
+    </ng-template>
+  </p-table>
+  <p-footer>
+    <button type="button" pButton icon="pi pi-check" (click)="SubmitRolewiseEdit()" label="Submit"></button>
+    <button type="button" pButton icon="pi pi-times" (click)="showrolewisedatamodel=false" label="Cancel" class="ui-button-secondary"></button>
+  </p-footer>
+</p-dialog>
+
+

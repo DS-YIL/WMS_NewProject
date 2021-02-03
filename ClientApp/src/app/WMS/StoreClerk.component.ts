@@ -32,9 +32,9 @@ export class StoreClerkComponent implements OnInit {
   public podetailsList: Array<inwardModel> = [];
   public nonpovalidationList: Array<inwardModel> = [];
   public employee: Employee;
-  public noofpieces: any=1;
-  public totalboxes: any=1;
-  public boxno: any=1;
+  public noofpieces: any = 1;
+  public totalboxes: any = 1;
+  public boxno: any = 1;
   public showDetails; showQtyUpdateDialog: boolean = false;
   public disGrnBtn: boolean = true;
   public BarcodeModel: BarcodeModel;
@@ -80,7 +80,7 @@ export class StoreClerkComponent implements OnInit {
   public showPrintLabel: boolean = false;
   displayBasic: boolean = false;
   poinvoice: string = "";
-  grnn0: string = "";
+  grnno: string = "";
   receivedqty: string = "";
   //inwmasterid: string = "";
   gateentryid: string = "";
@@ -92,14 +92,14 @@ export class StoreClerkComponent implements OnInit {
       this.employee = JSON.parse(localStorage.getItem("Employee"));
     else
       this.router.navigateByUrl("Login");
-   
-    this.grnn0 = this.route.snapshot.queryParams.grnnumber;
+
+    this.grnno = this.route.snapshot.queryParams.grnnumber;
     this.gateentryid = this.route.snapshot.queryParams.inwmasterid;
-   
+
     this.getpendingpos();
     //Email
-    
-    
+
+
     this.invoiceForm = this.formBuilder.group({
       itemRows: this.formBuilder.array([this.initItemRows()])
     });
@@ -299,7 +299,7 @@ export class StoreClerkComponent implements OnInit {
     var pono = details.pono;
     var materialid = details.material;
     var lineitemno = details.lineitemno;
-    this.wmsService.getmateriallabeldata(pono,lineitemno,materialid).subscribe(data => {
+    this.wmsService.getmateriallabeldata(pono, lineitemno, materialid).subscribe(data => {
       if (data) {
         var strjson = JSON.stringify(data);
         alert(strjson);
@@ -309,7 +309,7 @@ export class StoreClerkComponent implements OnInit {
         alert("No data");
       }
     })
-    
+
   }
   get formArr() {
     return this.invoiceForm.get('itemRows') as FormArray;
@@ -419,10 +419,10 @@ export class StoreClerkComponent implements OnInit {
     this.wmsService.getcheckedgrnlist().subscribe(data => {
       debugger;
       this.checkedgrnlist = data;
-      if (this.grnn0) {
+      if (this.grnno) {
         debugger;
         //get material details for that PO
-        this.selectedgrnno = this.grnn0;
+        this.selectedgrnno = this.grnno;
         this.showpodata1();
 
       }
@@ -450,8 +450,8 @@ export class StoreClerkComponent implements OnInit {
       else {
         this.PoDetails.pono = this.selectedpendingpono;
       }
-     
-     
+
+
       //this.PoDetails.inwmasterid = this.selectedpendingpono;
 
       this.getponodetails(this.PoDetails.pono);
@@ -637,7 +637,7 @@ export class StoreClerkComponent implements OnInit {
           else {
             this.returned = false;
           }
-          
+
         }
         var receiveddata = this.podetailsList.filter(function (element, index) {
           return (element.isreceivedpreviosly && (element.pendingqty != element.materialqty));
@@ -784,7 +784,7 @@ export class StoreClerkComponent implements OnInit {
 
         }
         pg.resetpage();
-      
+
 
       });
 
@@ -899,7 +899,7 @@ export class StoreClerkComponent implements OnInit {
           else {
             this.messageService.add({ severity: 'error', summary: '', detail: responsestring });
           }
-          
+
         }
 
         if (responsestring.startsWith("Saved")) {
