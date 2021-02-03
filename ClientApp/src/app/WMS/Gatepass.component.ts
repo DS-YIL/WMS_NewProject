@@ -8,12 +8,12 @@ import { NgxSpinnerService } from "ngx-spinner";
 import { MessageService } from 'primeng/api';
 import { gatepassModel, materialistModel, FIFOValues, materialList } from '../Models/WMS.Model';
 import { isNullOrUndefined } from 'util';
-import { DatePipe } from '@angular/common';
+import { DatePipe, DecimalPipe } from '@angular/common';
 import { ConfirmationService } from 'primeng/api';
 @Component({
   selector: 'app-GatePass',
   templateUrl: './GatePass.component.html',
-  providers: [DatePipe]
+  providers: [DatePipe, DecimalPipe]
 })
 export class GatePassComponent implements OnInit {
   AddDialog: boolean;
@@ -22,7 +22,7 @@ export class GatePassComponent implements OnInit {
   public materialList: Array<any> = [];
   roindex: any;
   Oldestdata: any;
-  constructor(private ConfirmationService: ConfirmationService, private formBuilder: FormBuilder, private messageService: MessageService, private datePipe: DatePipe, private wmsService: wmsService, private route: ActivatedRoute, private router: Router, public constants: constants, private spinner: NgxSpinnerService) { }
+  constructor(private ConfirmationService: ConfirmationService, private formBuilder: FormBuilder, private decimalPipe: DecimalPipe, private messageService: MessageService, private datePipe: DatePipe, private wmsService: wmsService, private route: ActivatedRoute, private router: Router, public constants: constants, private spinner: NgxSpinnerService) { }
   todayDate = this.datePipe.transform(new Date(), 'yyyy-MM-dd');
   public formName: string;
   public txtName; GatepassTxt: string;
@@ -444,6 +444,9 @@ export class GatePassComponent implements OnInit {
       this.spinner.hide();
       debugger;
       this.totalGatePassList = data;
+      if (isNullOrUndefined(this.totalGatePassList)) {
+        this.totalGatePassList = [];
+      }
       //filtering the based on logged in user if role id is 8(Admin)
       if (this.employee.roleid == "5") {
         this.totalGatePassList = this.totalGatePassList.filter(li => li.requestedby == this.employee.employeeno);
@@ -1252,11 +1255,13 @@ export class GatePassComponent implements OnInit {
 
   }
   approverListdata() {
+    debugger;
 
     this.wmsService.getapproverdata(this.employee.employeeno).
       subscribe(
         res => {
-          if (!isNullOrUndefined(res[0].approverid)) {
+          debugger;
+          if (!isNullOrUndefined(res[0].approverid) && String(res[0].approverid).trim() != "") {
             this.gatepassModel.approverid = res[0].approverid;
             this.gatepassModel.managername = res[0].managername;
           }

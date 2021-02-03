@@ -1,0 +1,217 @@
+
+  <div class="card commoncardcss" style="margin:10px">
+    <div class="card-header text-center commoncardheader">
+      <div class="row " style="    margin-top: 10px;
+    margin-left: 0px !important;
+    margin-right: 0px !important">
+        <div class="col-lg-4 col-md-4 form-inline">
+          <label class="labelheading">Status:</label>&nbsp;
+          <select style="float:left" class="form-control" [(ngModel)]="returntype" (change)="getdata()">
+            <option value="Pending" selected="selected">Pending</option>
+            <option value="Approved">Approved</option>
+            <option value="Rejected">Rejected</option>
+          </select>
+        </div>
+        <div class="col-lg-4 col-md-4 text-center">
+          <span class="commonheadertext">
+            <i class="fa fa-check-circle-o commonheadertext"></i>&nbsp;Material Request Approval
+          </span>
+        </div>
+        <div class="col-lg-4 col-md-4 form-inline">
+        </div>
+      </div>
+    </div>
+    <!--<div class="card-header" style="width:250px;height:30px;margin-left:5px;padding-top:0px">
+      <span>
+        <i class="fa fa-bookmark" style="font-size: 16px"></i><label style="font-size: 15px;padding:0px; color: rgb(96, 123, 212);"> &nbsp;&nbsp;Material transfer</label>&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" pTooltip="Transfer Material" style="border-radius: 10em!important;background-color: white; border-color:  rgb(96, 123, 212);" rounded="true" size="lg" class="my-0" (click)="openGatepassDialog('','','gatepassdialog')"> <i class="fa fa-user-plus" style="font-size: 15px;color: green;"></i></button>
+
+      </span>
+    </div>-->
+    <div class="card-body" style="overflow-y:visible;padding:0px;">
+      <p-table #dt [value]="requestList" [style]="{'width':'100%'}" [scrollable]="true" scrollHeight="62vh">
+        <ng-template pTemplate="header">
+          <tr class="mprltbldata">
+            <th style="text-align:center;width:70px">Sl.No.</th>
+            <th style="text-align:center;width:150px">Request Id</th>
+            <th style="text-align:center;width:100px">Project</th>
+            <th style="text-align:center;width:150px">Requested On</th>
+            <th style="text-align:center;width:150px">Requested By</th>
+            <th style="text-align:center;width:100px">Status</th>
+            <th style="text-align:center;width:200px">Remarks</th>
+            <th style="text-align:center;width:200px" *ngIf="returntype === 'Pending'">
+              <button class="btn btn-success btn-sm" (click)="savedata()">Submit</button>
+            </th>
+          </tr>
+          <tr>
+            <th></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt1.filter($event.target.value, 'requestid', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt1.filter($event.target.value, 'projectcode', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt1.filter($event.target.value, 'requesteddate', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt1.filter($event.target.value, 'requestedby', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt1.filter($event.target.value, 'approvedstatus', 'contains')"></th>
+            <th></th>
+            <th *ngIf="returntype === 'Pending'"></th>
+
+
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
+          <tr>
+            <td class="ptable-cell" style="text-align:center;width:70px;">{{ri+1}}</td>
+            <td class="ptable-cell" style="text-align: center;width: 150px;">
+              <button type="button" class="btn btn-link" (click)="showattachtrdata(rowData)" style="padding-left:0px;text-align:center;">{{rowData.requestid}}</button>
+            </td>
+            <td class="ptable-cell" style="text-align:center;width:100px;">{{rowData.projectcode}}</td>
+            <td class="ptable-cell" style="text-align:center;width:150px;">{{rowData.requesteddate| date :  constants.dateFormat}}</td>
+            <td class="ptable-cell" style="text-align:center;width:150px;">
+              <span>{{rowData.requestedby}}</span>
+            </td>
+            <td class="ptable-cell" style="text-align:center;width:100px;">
+              <span>{{rowData.approvedstatus}}</span>
+            </td>
+            <td class="ptable-cell" style="text-align:left;width:200px;resize:none">
+              <span *ngIf="rowData.approvedon">
+                {{rowData.approvalremarks}}
+              </span>
+              <textarea *ngIf="!rowData.approvedon" [(ngModel)]="rowData.approvalremarks"></textarea>
+            </td>
+            <td class="ptable-cell" style="text-align:left;width:200px;resize:none;font-weight:600" *ngIf="returntype === 'Pending'">
+              <p-radioButton name="groupname{{ri}}" value="1" label="Approve" [(ngModel)]="rowData.approvalcheck"></p-radioButton>
+              <p-radioButton name="groupname{{ri}}" value="0" label="Reject" [(ngModel)]="rowData.approvalcheck"></p-radioButton>
+              &nbsp;&nbsp;<span style="font-size:large;font-weight:600;cursor:pointer;text-decoration:underline"(click)="noaction(rowData)">&times;</span>
+            </td>
+
+
+          </tr>
+          <tr *ngIf="rowData.showtr">
+            <td [attr.colspan]="(returntype === 'Pending') ? '8' : '7'" style="text-align:center;">
+              <label class="labeltext">Material Detail</label>
+            </td>
+
+          </tr>
+
+          <tr *ngIf="rowData.showtr">
+            <td [attr.colspan]="(returntype === 'Pending') ? '8' : '7'" style="text-align:center;">
+
+              <p-table [value]="rowData.materialdata" [style]="{'width':'100%'}">
+                <ng-template pTemplate="header">
+          <tr class="mprltbldata">
+            <th class="ptable-cell" style="width: 10%; text-align: center">Sl. No.</th>
+            <th style="text-align:center;width:30%" class="ptable-cell">Material</th>
+            <th style="text-align:center;width:50%" class="ptable-cell">PO Item Description</th>
+            <th style="text-align:center;width:20%" class="ptable-cell">Requested quantity</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex" let-rindex=0>
+          <tr>
+            <td class="ptable-cell" style="text-align:center"> {{ri+1}} </td>
+            <td class="ptable-cell" style="text-align:center;">
+              {{rowData.materialid}}
+            </td>
+            <td class="ptable-cell" style="text-align:left">
+              {{rowData.materialdescription}}
+            </td>
+            <td class="ptable-cell" style="text-align:right">
+              {{rowData.requestedquantity}}
+            </td>
+        </ng-template>
+
+
+      </p-table>
+      </td>
+
+      </tr>
+      </ng-template>
+      </p-table>
+
+
+
+      <div style="height: 5px; overflow-y: scroll">
+
+
+        <p-dialog header="Material Transfer Approval" [(visible)]="gatepassdialog" (onHide)="hideDG()" [responsive]="true" showEffect="fade" [modal]="true" [style]="{'width':'98vw','overflow':'auto!important','margin-right': '0px','margin-left':'0px'}">
+          <div class="row">
+            <div class="col-lg-8 col-md-8 form-inline">
+              <label class="labelheading">Transfer from : <span class="labeltext">{{transferedfromlbl}}</span></label>&nbsp;
+              &nbsp;&nbsp;
+              <label class="labelheading">Transfer to : <span class="labeltext">{{transferedtolbl}}</span></label>&nbsp;
+            </div>
+            <div class="col-lg-4 col-md-4 form-inline">
+              <label class="labelheading">Remarks :</label>
+              <span *ngIf="hideapproval" class="labeltext">{{approvalremarks}}</span>
+              <textarea *ngIf="!hideapproval" style="width:80%;resize:none" [(ngModel)]="approvalremarks"></textarea>
+
+            </div>
+
+          </div>
+          <div class="row " style="margin-top:10px">
+
+
+            <div class="col-lg-12 col-md-12 col-sm-12">
+
+
+              <p-table [value]="materialtransferdetil" [style]="{'width':'100%'}">
+                <ng-template pTemplate="header">
+                  <tr class="mprltbldata">
+                    <th class="ptable-cell" style="width: 10%; text-align: center">Sl. No.</th>
+                    <th style="text-align:center;width:30%" class="ptable-cell">Material</th>
+                    <th style="text-align:center;width:50%" class="ptable-cell">Material Description</th>
+                    <th style="text-align:center;width:20%" class="ptable-cell">Transfer quantity</th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex" let-rindex=0>
+                  <tr>
+                    <td class="ptable-cell" style="text-align:center"> {{ri+1}} </td>
+                    <td class="ptable-cell" style="text-align:center;">
+                      {{rowData.materialid}}
+                    </td>
+                    <td class="ptable-cell" style="text-align:left">
+                      {{rowData.materialdescription}}
+                    </td>
+                    <td class="ptable-cell" style="text-align:right">
+                      {{rowData.transferredqty}}
+                    </td>
+                  </tr>
+
+
+
+
+
+                </ng-template>
+
+
+              </p-table>
+              <table style="width:80%">
+                <tr>
+                  <th>Approver</th>
+                  <th>Status</th>
+                  <th>Date</th>
+                  <th>Remarks</th>
+                </tr>
+                <tr *ngFor="let rowx of materialapproverlistdetil">
+                  <td>{{rowx.approvername}}</td>
+                  <td>
+                    <span *ngIf="rowx.status=='Approved'" style="color:green">{{rowx.status}}</span>
+                    <span *ngIf="rowx.status=='Pending'" style="color:blue">{{rowx.status}}</span>
+                    <span *ngIf="rowx.status=='Rejected'" style="color:red">{{rowx.status}}</span>
+
+                  </td>
+                  <td>{{rowx.approvedon | date : 'dd/MM/yyyy'}}</td>
+                  <td>{{rowx.remarks}}</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+
+          <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix" *ngIf="!hideapproval">
+              <button type="button" class="ui-button-success" pButton icon="pi pi-check" (click)="approve(true)" label="Approve"></button>
+              <button type="button" class="ui-button-danger" pButton icon="fa fa-close" (click)="approve(false)" label="Reject"></button>
+            </div>
+          </p-footer>
+        </p-dialog>
+      </div>
+    </div>
+  </div>
+
+

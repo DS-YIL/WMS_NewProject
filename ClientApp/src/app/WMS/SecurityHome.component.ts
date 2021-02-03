@@ -427,7 +427,7 @@ export class SecurityHomeComponent implements OnInit {
           this.disSaveBtn = true;
           this.inwmasterid = this.PrintHistoryModel.inwmasterid;
           //this.refresh();
-          this.messageService.add({ severity: 'success', summary: '', detail: 'Invoice No. Updated' });
+          this.messageService.add({ severity: 'success', summary: '', detail: 'Shipment Received' });
           this.print = "Print Barcode";
           this.showPrintBtn = true;
           this.getcurrentDateReceivedPOlist();

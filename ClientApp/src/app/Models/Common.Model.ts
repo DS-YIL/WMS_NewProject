@@ -10,6 +10,7 @@ export class Employee {
   pwd: string;
   domainid: string;
   roleid: string;
+  plantid: string;
   
 }
 
@@ -162,8 +163,15 @@ export class rbamaster {
   masterdata_updation: boolean;
   masterdata_approval: boolean;
   printbarcodes: boolean;
-	quality_check: boolean;
+  quality_check: boolean;
   pmdashboard_view: boolean;
-  modified_on: Date
-  modified_by: string
+  modified_on: Date;
+  modified_by: string;
+  min: boolean;
+  direct_transfer_view: boolean;
+  notify_to_finance: boolean;
+  gr_process: boolean;
+  material_transfer_approval: boolean;
+  asn_view: boolean;
+  internal_stock_transfer: boolean;
 }

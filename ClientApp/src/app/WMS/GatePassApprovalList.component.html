@@ -13,18 +13,8 @@
                 <option value='Pending'>Pending</option>
                 <option value='Approved'>Approved</option>
                 <option value='Sent for Modification'>Sent for Modification</option>
-              </select>&nbsp;&nbsp; <!--<button type="submit" class="btn btn-primary btn-sm float-left" (click)="searchGatePassList()" style=" height: 35px;">Search</button>-->
+              </select>
             </div>
-        
-
-          <!--<label class="labelheading">Status :</label>&nbsp;&nbsp;
-          <select class="form-control forms-input" [(ngModel)]="approverstatus">
-            <option value="0">All</option>
-            <option value='Pending'>Pending</option>
-            <option value='Approved'>Approved</option>
-            <option value='Sent for Modification'>Sent for Modification</option>
-          </select>&nbsp;&nbsp;<button type="submit" class="btn btn-primary btn-sm float-left" (click)="searchGatePassList()" style=" height: 35px;">Search</button>-->
-
         </div>
         <div class="col-lg-4 col-md-4 text-center">
           <span class="commonheadertext">
@@ -32,9 +22,6 @@
           </span>
         </div>
         <div class="col-lg-4 col-md-4 form-inline">
-
-
-
         </div>
       </div>
     </div>
@@ -116,13 +103,6 @@
         </div>
       </div>
     </div>
-    <!--<div class="card" style="    min-height: 500px;border-radius: 10px;box-shadow: 5px 10px #888888;">
-      <div class="card-header text-center cardheadertext">
-        <span>
-          <i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;Gatepass Approval
-        </span>
-        <button type="button" icon="fa fa-arrow-left" pButton aria-hidden="true" pTooltip="Back" (click)="hideApprover()" style="float: left; height: 26px;"></button>
-      </div>-->
     <div class="card-body" style="overflow-y:scroll;padding: 0rem !important ">
       <div *ngIf="materialList.length>0">
         <div *ngIf="employee.roleid=='8' && gatepassModel.gatepasstype!='Returnable' && this.typeOfList == 'GatePassFMList'" class="row mt-2" style="padding-left:20px;">

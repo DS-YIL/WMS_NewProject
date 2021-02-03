@@ -387,11 +387,48 @@ export class FIFOValues {
   issueqty: number;
 }
 
+export class subrolemodel {
+  subroleid: number;
+  roleid: number;
+  subrolename: string
+  createddate: Date;
+  createdby: string;
+  deleteflag: boolean;
+}
+
 export class authUser {
   authid: number;
   employeeid: string;
   roleid: number;
   createdby: string;
+  employeename: string;
+  createddate: Date;
+  deleteflag: boolean;
+  emailnotification: boolean;
+  emailccnotification: boolean;
+  subroleid: string;
+  email: string;
+  rolename: string;
+  subrolelist: subrolemodel[];
+  selectedsubrolelist: subrolemodel[];
+  plantid: string;
+  requesttype: string;
+  modifiedon: Date;
+  modifiedby: string;
+  isselected: boolean;
+  isdeleted: boolean;
+}
+
+export class AssignProjectModel {
+   projectcode: string;
+   projectmanager: string;
+   projectmanagername: string;
+   projectmember: string;
+   projectmembername: string;
+   modifiedby: string;
+   modifiedon: Date;
+  projectmemberlist: UserModel[];
+  plantid: string;
 }
 
 export class Materials {
@@ -536,7 +573,8 @@ export class stocktransfermateriakmodel {
   remarks: any = "";
   poitemdesc: any;
   requireddate: any;
-  projectid: any="";
+  projectid: any = "";
+  materialObj: any;
 }
 
 export class updateonhold {
@@ -561,6 +599,9 @@ export class UserDashboardDetail {
   reservedquantityforthisweek: number;
   pendingtoapproval: number;
   pendingcyclecountapproval: number;
+  pendingnotifytofinance: number;
+  pendingonhold: number;
+
 
 }
 export class returnmaterial {
@@ -858,6 +899,7 @@ export class MaterialTransaction {
   reserveid: string;
   materialdata: MaterialTransactionDetail[] = [];
   approvedstatus: string;
+  pmapprovedstatus: string;
   status: boolean;
   reserveupto: Date;
   reservedby: string;
@@ -865,6 +907,12 @@ export class MaterialTransaction {
   requestedon: Date;
   requestedby: string;
   chkstatus: string;
+  isapprovalrequired: boolean;
+  isapproved: boolean;
+  approvalremarks: string;
+  approvedon: Date;
+  showtr: boolean = false;
+  approvalcheck: string 
 }
 
 export class MaterialTransactionDetail {

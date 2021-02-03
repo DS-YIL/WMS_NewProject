@@ -57,11 +57,21 @@ export class NavMenuComponent implements OnInit {
   gateentryid: string = "";
   inwmasterid: string = "";
   transferid: string = "";
+ 
+  
+  //variables used for rba
+  //for security
+  showHome: boolean = false;
+  showInbound: boolean = false;
+  showoutwardinward: boolean = false;
+  showoutwardinwardreturnable: boolean = false;
+  showoutwardinwardnonreturnable: boolean = false;
+  showoutbound: boolean = false;
+  
+  
   ngOnInit() {
     debugger;
-    this.cars = [
-      { label: 'Newest First', value: '!year' }
-    ];
+    this.setdefaultmenuview();
     this.notificationitems = [];
     this.loggeduserdata = [];
     this.approverstatus = "Pending";
@@ -135,20 +145,13 @@ export class NavMenuComponent implements OnInit {
             this.bindMenuForEmailNav(eurl);
           }
           else {
-            this.bindMenu();
+            //this.setmenuview();
+            this.bindMenu("default");
           }
 
         }
 
       }
-
-      //if (this.emp.roleid != "8") {
-      //  let elementx: HTMLElement = document.getElementById("btnuser1") as HTMLElement;
-      //  elementx.hidden = false;
-      //  let elementy: HTMLElement = document.getElementById("btnuser2") as HTMLElement;
-      //  elementy.hidden = false;
-      //  this.getGatePassList();
-      //}
 
     }
     else {
@@ -156,10 +159,6 @@ export class NavMenuComponent implements OnInit {
       element.hidden = true;
       let element1: HTMLDivElement = document.getElementById("menudiv") as HTMLDivElement;
       element1.hidden = true;
-      //let elementx: HTMLElement = document.getElementById("btnuser1") as HTMLElement;
-      //elementx.hidden = true;
-      //let elementy: HTMLElement = document.getElementById("btnuser2") as HTMLElement;
-      //elementy.hidden = true;
       this.router.navigateByUrl("WMS/Login");
     }
 
@@ -167,7 +166,7 @@ export class NavMenuComponent implements OnInit {
 
 
   }
-
+  
   setrolename(roleid: any) {
     var rid = roleid;
     var data1 = this.userrolelist.filter(function (element, index) {
@@ -185,16 +184,13 @@ export class NavMenuComponent implements OnInit {
 
   bindMenuForEmailNav(eurl: any) {
     if (eurl.includes("/Email")) {
-      //this.isapprovalurl = true;
-      this.gateentryid = this.route.snapshot.queryParams.pono;
-      this.gateentryid = eurl.split('=')[1];
-
       let element: HTMLElement = document.getElementById("btnuser") as HTMLElement;
       element.hidden = false;
       let element1: HTMLDivElement = document.getElementById("menudiv") as HTMLDivElement;
       element1.hidden = false;
       if (eurl.includes("/Email/GRNPosting?GateEntryNo")) {
         this.inwmasterid = this.route.snapshot.queryParams.gateentryid;
+        this.gateentryid = eurl.split('=')[1];
         if (this.gateentryid) {
 
           //redirects to Receipts page 
@@ -253,14 +249,14 @@ export class NavMenuComponent implements OnInit {
 
       //Purpose: << PM ACK >>
 
-      if (eurl.includes("/Email/MaterialReqView?ReqId")) {
-        this.reqid = this.route.snapshot.queryParams.requestid;
-        this.reqid = eurl.split('=')[1];
-        if (this.reqid) {
-          //redirects to MaterialReqView
-          //this.bindMenuForPMACKEmails();
-        }
-      }
+      //if (eurl.includes("/Email/MaterialReqView?ReqId")) {
+      //  this.reqid = this.route.snapshot.queryParams.requestid;
+      //  this.reqid = eurl.split('=')[1];
+      //  if (this.reqid) {
+      //    //redirects to MaterialReqView
+      //    //this.bindMenuForPMACKEmails();
+      //  }
+      //}
 
       //Purpose: << GatePassPM >>
 
@@ -353,6 +349,14 @@ export class NavMenuComponent implements OnInit {
           this.bindMenuForMaterialReturnputaway();
         }
       }
+      if (eurl.includes("/Email/MaterialRequestApproval?ReqId")) {
+        debugger;
+        this.transferid = eurl.split('=')[1];
+        if (this.transferid) {
+          //redirects to Receipts page 
+          this.bindMenuForRequestApproval()
+        }
+      }
       return;
     }
 
@@ -429,22 +433,75 @@ export class NavMenuComponent implements OnInit {
     localStorage.removeItem('Employee');
     localStorage.setItem('Employee', JSON.stringify(this.emp));
     this.items.push({ label: 'Home', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-home', command: () => this.router.navigateByUrl('WMS/Home'), styleClass: 'active' });
-    this.items.push({ label: 'Receipts', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GRNPosting') });
-    //this.items.push({ label: 'Quality Check', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/QualityCheck') });
-    this.items.push({ label: 'Put Away', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/WarehouseIncharge') });
-    this.items.push({ label: 'On Hold Receipts', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/HoldGRView') });
-    this.items.push({ label: 'Gate Pass', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GatePass') });
-    this.items.push({ label: 'Material Return', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReturn') });
-    this.items.push({ label: 'Material Issue', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialIssueDashboard') });
-    this.items.push({ label: 'MIN', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MRNView') });
-    this.items.push({ label: 'ASN', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/ASNView') });
     this.items.push({
-      label: 'Operations', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars',
+      label: 'Material Receipts', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars',
       items: [
-        { label: 'Print Barcode', icon: 'pi pi-fw pi-print', style: { 'width': '200px' }, command: () => this.router.navigateByUrl('WMS/PrintBarcode') },
-        { label: 'Notify to finance', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/Putawaynotify') },
-        { label: 'Receive gatepass', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/gatepassreceive') }
+        { label: 'ASN', icon: 'pi pi-fw pi-bars', style: { 'width': '200px', 'font-weight': '600' }, command: () => this.router.navigateByUrl('WMS/ASNView') },
+        { label: 'Goods Receipt', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GRNPosting') },
+        { label: 'On Hold Receipts', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/HoldGRView') },
+        {
+          label: 'Put Away',
+          icon: 'pi pi-fw pi-bars',
+          style: { 'font-weight': '600' },
+          items: [
+            { label: 'Receipt Put Away', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/WarehouseIncharge') },
+            { label: 'Initial Stock Put Away', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/InitialStockPutAway') },
+            { label: 'Material Return Put Away', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReturn') },
+            { label: 'STO Material Put Away', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/ReceiveSTORequest') }
+          ]
+        },
+        { label: 'Notify to finance', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/Putawaynotify') }
       ]
+    });
+    this.items.push({
+      label: 'Material Issue', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars',
+      items: [
+        { label: 'Material Issue', icon: 'pi pi-fw pi-bars', style: { 'width': '250px', 'font-weight': '600' }, command: () => this.router.navigateByUrl('WMS/MaterialIssueDashboard') },
+        { label: 'Gate Pass', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GatePass') },
+        { label: 'Material Requisition Note', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MRNView') },
+        { label: 'Material Tracking', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/POStatus') }
+      ]
+    });
+    this.items.push({
+      label: 'Miscellanous', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars',
+      items: [
+        {
+          label: 'Initial Stock Load',
+          icon: 'pi pi-fw pi-bars',
+          style: { 'font-weight': '600', 'width': '250px' },
+          items: [
+            { label: 'Initial Stock Load', style: { 'font-weight': '600', 'width': '230px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/InitialStock') },
+            { label: 'Report', style: { 'font-weight': '600', 'width': '230px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/InitialStockReport') }
+          ]
+        },
+        {
+          label: 'Miscellanous Trancation',
+          icon: 'pi pi-fw pi-bars',
+          style: { 'font-weight': '600', 'width': '250px' },
+          items: [
+            { label: 'Miscellanous Issues', style: { 'font-weight': '600', 'width': '230px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MiscellanousIssues') },
+            { label: 'Miscellanous Receipts', style: { 'font-weight': '600', 'width': '230px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MiscellanousReceipts') }
+          ]
+        }
+      ]
+    });
+    this.items.push({
+      label: 'Reports',
+      icon: 'pi pi-fw pi-bars',
+      style: { 'font-weight': '600' },
+      items: [
+        { label: 'Material Request', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialRequestDashboard') },
+        { label: 'Material Reserve', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReserveDashboard') },
+        { label: 'Material Return', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialsReturnDashboard') },
+        { label: 'Material Transfer', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialTransferDashboard') },
+        { label: 'Inventory Report', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/inventoryreport') },
+        { label: 'GR Report', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GRReports') },
+        { label: 'Outward/Inward Report', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/outinDashboard') },
+        { label: 'Bin Status Report', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/BinStatusReport') },
+        { label: 'Safety Stock List', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/SafetyStockList') }
+
+      ]
+
     });
     this.constants.gatePassIssueType = "Pending";
     this.router.navigate(['WMS/GatePassApprover', this.gateid]);
@@ -546,9 +603,34 @@ export class NavMenuComponent implements OnInit {
     localStorage.setItem('Employee', JSON.stringify(this.emp));
     this.items.push({ label: 'Home', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-home', command: () => this.router.navigateByUrl('WMS/Home'), styleClass: 'active' });
     this.items.push({ label: 'Quality Check', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/QualityCheck') });
+    this.items.push({
+      label: 'Reports',
+      icon: 'pi pi-fw pi-bars',
+      style: { 'font-weight': '600' },
+      items: [
+        { label: 'Inventory Report', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/inventoryreport') },
+        { label: 'Bin Status Report', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/BinStatusReport') },
+        { label: 'Material Tracking', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/POStatus') }
 
-    //this.items.push({ label: 'Quality Check', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/QualityCheck'), styleClass: 'active' });
-    //  this.router.navigateByUrl('WMS/QualityCheck');
+      ]
+
+    });
+    this.items.push({
+      label: 'Other',
+      icon: 'pi pi-fw pi-bars',
+      style: { 'font-weight': '600' },
+      items: [
+        { label: 'Material Request', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialRequestDashboard') },
+        { label: 'Material Reserve', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReserveDashboard') },
+        { label: 'Material Return', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialsReturnDashboard') },
+        { label: 'Material Transfer', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialTransferDashboard') },
+        { label: 'GR Report', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GRReports') },
+        { label: 'Outward/Inward Report', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/outinDashboard') },
+        { label: 'Safety Stock List', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/SafetyStockList') }
+      ]
+
+    });
+   
     this.router.navigate(['WMS/QualityCheck'], { queryParams: { grnnumber: this.grnno } });
     let element1: HTMLDivElement = document.getElementById("menudiv") as HTMLDivElement;
     element1.hidden = false;
@@ -647,16 +729,31 @@ export class NavMenuComponent implements OnInit {
     this.setrolename(this.emp.roleid);
     localStorage.removeItem('Employee');
     localStorage.setItem('Employee', JSON.stringify(this.emp));
+    var subroles = [];
+    if (this.userrolelist.filter(li => li.roleid == 5).length > 0) {
+      subroles = this.userrolelist.filter(li => li.roleid == 5)[0]["subroleid"];
+    }
+
     this.items.push({ label: 'Home', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-home', command: () => this.router.navigateByUrl('WMS/Home') });
+    //this.items.push({ label: 'Manager Dashboard', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-chart-bar', command: () => this.router.navigateByUrl('WMS/PMDashboard') });
     this.items.push({ label: 'MR Dashboard', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-chart-bar', command: () => this.router.navigateByUrl('WMS/Dashboard'), styleClass: 'active' });
-    this.items.push({ label: 'Material Request', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReqView') });
+    var mitem = {
+      label: 'Material Request',
+      icon: 'pi pi-fw pi-bars',
+      style: { 'font-weight': '600' },
+      items: []
+    };
+    if (subroles && subroles.includes("1"))//GatePassRequester
+      mitem.items.push({ label: 'Gate Pass', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GatePass') });
+    if (subroles && subroles.includes("2"))//Material Requestor
+      mitem.items.push({ label: 'Material Request', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReqView') });
+    if (subroles == null)//Material Requestor
+      mitem.items.push({ label: 'Material Request', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReqView') });
+    this.items.push(mitem);
     this.items.push({ label: 'Material Reserve', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReserveView') });
     this.items.push({ label: 'Material Transfer', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialTransfer') });
     this.items.push({ label: 'Material Return', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReturnfromPm') });
     this.items.push({ label: 'Direct Shipment', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/Directtransfer') });
-    this.items.push({ label: 'Receive Material', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/ReceiveMaterial') });
-   // this.items.push({ label: 'STO', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/StockTransferOrder') });
-    this.router.navigateByUrl('WMS/Dashboard');
     this.router.navigate(['WMS/MaterialReqView'], { queryParams: { requestid: this.reqid } });
 
     let element1: HTMLDivElement = document.getElementById("menudiv") as HTMLDivElement;
@@ -693,9 +790,45 @@ export class NavMenuComponent implements OnInit {
     localStorage.setItem('Employee', JSON.stringify(this.emp));
     this.items.push({ label: 'Home', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-home', command: () => this.router.navigateByUrl('WMS/Home') });
     this.items.push({ label: 'PM Dashboard', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-chart-bar', command: () => this.router.navigateByUrl('WMS/Dashboard') });
-    this.items.push({ label: 'Material Transfer Approval', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/materialtransferapproval') });
+    this.items.push({
+      label: 'Approvals',
+      icon: 'pi pi-fw pi-bars',
+      style: { 'font-weight': '600' },
+      items: [
+        { label: 'Material Request Approval', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialRequestApproval') },
+        { label: 'Material Transfer Approval', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/materialtransferapproval') }
+      ]
+
+    });
     this.items.push({ label: 'Direct Shipment', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/Directtransfer') });
+    this.items.push({ label: 'Receive Material', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/ReceiveMaterial') });
+    this.items.push({ label: 'Assign Project', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-chart-bar', command: () => this.router.navigateByUrl('WMS/AssignProject') });
     this.router.navigate(['WMS/materialtransferapproval'], { queryParams: { transferid: this.transferid } });
+    let element1: HTMLDivElement = document.getElementById("menudiv") as HTMLDivElement;
+    element1.hidden = false;
+  }
+  bindMenuForRequestApproval() {
+    this.items = [];
+    this.emp.roleid = "11";
+    this.setrolename(this.emp.roleid);
+    localStorage.removeItem('Employee');
+    localStorage.setItem('Employee', JSON.stringify(this.emp));
+    this.items.push({ label: 'Home', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-home', command: () => this.router.navigateByUrl('WMS/Home') });
+    this.items.push({ label: 'PM Dashboard', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-chart-bar', command: () => this.router.navigateByUrl('WMS/Dashboard') });
+    this.items.push({
+      label: 'Approvals',
+      icon: 'pi pi-fw pi-bars',
+      style: { 'font-weight': '600' },
+      items: [
+        { label: 'Material Request Approval', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialRequestApproval') },
+        { label: 'Material Transfer Approval', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/materialtransferapproval') }
+      ]
+
+    });
+    this.items.push({ label: 'Direct Shipment', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/Directtransfer') });
+    this.items.push({ label: 'Receive Material', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/ReceiveMaterial') });
+    this.items.push({ label: 'Assign Project', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-chart-bar', command: () => this.router.navigateByUrl('WMS/AssignProject') });
+    this.router.navigate(['WMS/MaterialRequestApproval'], { queryParams: { transferid: this.transferid } });
     let element1: HTMLDivElement = document.getElementById("menudiv") as HTMLDivElement;
     element1.hidden = false;
   }
@@ -1206,248 +1339,35 @@ export class NavMenuComponent implements OnInit {
     ];
     var page = sessionStorage.getItem("userdashboardpage");
     if (page == "Inbound") {
-      this.items = [];
-      this.items.push({ label: 'Home', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-home', command: () => this.router.navigateByUrl('WMS/Home') });
-      this.items.push({ label: 'Inbound', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/SecurityCheck'), styleClass: 'active' });
-      this.items.push({
-        label: 'Gatepass', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars',
-        items: [
-          { label: 'Returnable', style: { 'font-weight': '600', 'width': '200px' }, icon: 'pi pi-fw pi-caret-right', command: () => this.router.navigateByUrl('WMS/GatePassinout/1') },
-          { label: 'Non Returnable', style: { 'font-weight': '600', 'width': '200px' }, icon: 'pi pi-fw pi-caret-right', command: () => this.router.navigateByUrl('WMS/GatePassinout/2') },
-        ]
-      });
-      this.items.push({ label: 'Outbound', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars' });
-      this.router.navigateByUrl('WMS/SecurityCheck');
+      this.bindMenu('WMS/SecurityCheck');
     }
-    else if (page == "Putaway" || page == "Receive" || page == "Issue") {
-      this.items = [];
-      this.items.push({ label: 'Home', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-home', command: () => this.router.navigateByUrl('WMS/Home'), styleClass: 'active' });
-      this.items.push({
-        label: 'Material Receipts', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars',
-        items: [
-          { label: 'ASN', icon: 'pi pi-fw pi-bars', style: { 'width': '200px', 'font-weight': '600' }, command: () => this.router.navigateByUrl('WMS/ASNView') },
-          { label: 'Goods Receipt', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GRNPosting') },
-          { label: 'On Hold Receipts', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/HoldGRView') },
-          {
-            label: 'Put Away',
-            icon: 'pi pi-fw pi-bars',
-            style: { 'font-weight': '600' },
-            items: [
-              { label: 'Receipt Put Away', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/WarehouseIncharge') },
-              { label: 'Initial Stock Put Away', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/InitialStockPutAway') },
-              { label: 'Material Return Put Away', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReturn') },
-              { label: 'STO Material Put Away', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/ReceiveSTORequest') }
-            ]
-          },
-          { label: 'Notify to finance', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/Putawaynotify') }
-        ]
-      });
-      this.items.push({
-        label: 'Material Issue', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars',
-        items: [
-          { label: 'Material Issue', icon: 'pi pi-fw pi-bars', style: { 'width': '250px', 'font-weight': '600' }, command: () => this.router.navigateByUrl('WMS/MaterialIssueDashboard') },
-          { label: 'Gate Pass', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GatePass') },
-          { label: 'Material Requisition Note', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MRNView') },
-          { label: 'Material Tracking', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/POStatus') }
-        ]
-      });
-      this.items.push({
-        label: 'Miscellanous', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars',
-        items: [
-          {
-            label: 'Initial Stock Load',
-            icon: 'pi pi-fw pi-bars',
-            style: { 'font-weight': '600', 'width': '250px' },
-            items: [
-              { label: 'Initial Stock Load', style: { 'font-weight': '600', 'width': '230px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/InitialStock') },
-              { label: 'Report', style: { 'font-weight': '600', 'width': '230px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/InitialStockReport') }
-            ]
-          },
-          {
-            label: 'Miscellanous Trancation',
-            icon: 'pi pi-fw pi-bars',
-            style: { 'font-weight': '600', 'width': '250px' },
-            items: [
-              { label: 'Miscellanous Issues', style: { 'font-weight': '600', 'width': '230px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MiscellanousIssues') },
-              { label: 'Miscellanous Receipts', style: { 'font-weight': '600', 'width': '230px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MiscellanousReceipts') }
-            ]
-          }
-        ]
-      });
-      this.items.push({
-        label: 'Reports',
-        icon: 'pi pi-fw pi-bars',
-        style: { 'font-weight': '600' },
-        items: [
-          { label: 'Material Request', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialRequestDashboard') },
-          { label: 'Material Reserve', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReserveDashboard') },
-          { label: 'Material Return', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialsReturnDashboard') },
-          { label: 'Material Transfer', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialTransferDashboard') },
-          { label: 'Inventory Report', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/inventoryreport') },
-          { label: 'GR Report', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GRReports') },
-          { label: 'Outward/Inward Report', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/outinDashboard') },
-          { label: 'Bin Status Report', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/BinStatusReport') },
-          { label: 'Safety Stock List', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/SafetyStockList') },
-          { label: 'Print Barcode', icon: 'pi pi-fw pi-print', style: { 'width': '250px' }, command: () => this.router.navigateByUrl('WMS/PrintBarcode') },
-        ]
-
-      });
-
-
-    }
+   
     else if (page == "Quality") {
-      this.items = [];
-      this.items.push({ label: 'Home', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-home', command: () => this.router.navigateByUrl('WMS/Home') });
-      this.items.push({ label: 'Quality Check', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/QualityCheck'), styleClass: 'active' });
-      this.router.navigateByUrl('WMS/QualityCheck');
-
+      this.bindMenu('WMS/QualityCheck');
     }
     else if (page == "Reserve") {
-      this.items = [];
-      var subroles = [];
-      if (this.userrolelist.filter(li => li.roleid == 5).length > 0) {
-        subroles = this.userrolelist.filter(li => li.roleid == 5)[0]["subroleid"];
-      }
-
-      this.items.push({ label: 'Home', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-home', command: () => this.router.navigateByUrl('WMS/Home') });
-      //this.items.push({ label: 'Manager Dashboard', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-chart-bar', command: () => this.router.navigateByUrl('WMS/PMDashboard') });
-      this.items.push({ label: 'MR Dashboard', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-chart-bar', command: () => this.router.navigateByUrl('WMS/Dashboard') });
-      var mitem = {
-        label: 'Material Request',
-        icon: 'pi pi-fw pi-bars',
-        style: { 'font-weight': '600' },
-        items: []
-      };
-      if (subroles && subroles.includes("1"))//GatePassRequester
-        mitem.items.push({ label: 'Gate Pass', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GatePass') });
-      if (subroles && subroles.includes("2"))//Material Requestor
-        mitem.items.push({ label: 'Material Request', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReqView') });
-      if (subroles == null)//Material Requestor
-        mitem.items.push({ label: 'Material Request', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReqView') });
-      mitem.items.push({ label: 'STO', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/StockTransferOrder') });
-      this.items.push(mitem);
-      this.items.push({ label: 'Material Reserve', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReserveView'), styleClass: 'active' });
-      this.items.push({ label: 'Material Transfer', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialTransfer') });
-      this.items.push({ label: 'Material Return', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReturnfromPm') });
-      this.items.push({ label: 'Direct Shipment', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/Directtransfer') });
-      this.router.navigateByUrl('WMS/MaterialReserveView');
-
+      this.bindMenu('WMS/MaterialReserveView');
     }
     else if (page == "Approve") {
-      this.items = [];
-      this.items.push({ label: 'Home', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-home', command: () => this.router.navigateByUrl('WMS/Home'), styleClass: 'active' });
-      this.items.push({ label: 'Manager Approval', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GatePassPMList') });
-      this.items.push({ label: 'Finance Approval', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GatePassFMList') });
-      this.router.navigateByUrl('WMS/Home');
+      this.bindMenu('WMS/Home');
     }
     else if (page == "Count") {
-      this.items = [];
-      this.items.push({ label: 'Home', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-home', command: () => this.router.navigateByUrl('WMS/Home'), styleClass: 'active' });
-      this.items.push({
-        label: 'Material Receipts', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars',
-        items: [
-          { label: 'ASN', icon: 'pi pi-fw pi-bars', style: { 'width': '200px', 'font-weight': '600' }, command: () => this.router.navigateByUrl('WMS/ASNView') },
-          { label: 'Goods Receipt', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GRNPosting') },
-          { label: 'On Hold Receipts', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/HoldGRView') },
-          {
-            label: 'Put Away',
-            icon: 'pi pi-fw pi-bars',
-            style: { 'font-weight': '600' },
-            items: [
-              { label: 'Receipt Put Away', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/WarehouseIncharge') },
-              { label: 'Initial Stock Put Away', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/InitialStockPutAway') },
-              { label: 'Material Return Put Away', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReturn') },
-              { label: 'STO Material Put Away', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/ReceiveSTORequest') }
-            ]
-          },
-          { label: 'Notify to finance', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/Putawaynotify') }
-        ]
-      });
-      this.items.push({
-        label: 'Material Issue', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars',
-        items: [
-          { label: 'Material Issue', icon: 'pi pi-fw pi-bars', style: { 'width': '250px', 'font-weight': '600' }, command: () => this.router.navigateByUrl('WMS/MaterialIssueDashboard') },
-          { label: 'Gate Pass', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GatePass') },
-          { label: 'Material Requisition Note', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MRNView') },
-          { label: 'Material Tracking', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/POStatus') }
-        ]
-      });
-      this.items.push({
-        label: 'Miscellanous', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars',
-        items: [
-          {
-            label: 'Initial Stock Load',
-            icon: 'pi pi-fw pi-bars',
-            style: { 'font-weight': '600', 'width': '250px' },
-            items: [
-              { label: 'Initial Stock Load', style: { 'font-weight': '600', 'width': '230px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/InitialStock') },
-              { label: 'Report', style: { 'font-weight': '600', 'width': '230px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/InitialStockReport') }
-            ]
-          },
-          {
-            label: 'Miscellanous Trancation',
-            icon: 'pi pi-fw pi-bars',
-            style: { 'font-weight': '600', 'width': '250px' },
-            items: [
-              { label: 'Miscellanous Issues', style: { 'font-weight': '600', 'width': '230px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MiscellanousIssues') },
-              { label: 'Miscellanous Receipts', style: { 'font-weight': '600', 'width': '230px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MiscellanousReceipts') }
-            ]
-          }
-        ]
-      });
-      this.items.push({
-        label: 'Reports',
-        icon: 'pi pi-fw pi-bars',
-        style: { 'font-weight': '600' },
-        items: [
-          { label: 'Material Request', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialRequestDashboard') },
-          { label: 'Material Reserve', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReserveDashboard') },
-          { label: 'Material Return', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialsReturnDashboard') },
-          { label: 'Material Transfer', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialTransferDashboard') },
-          { label: 'Inventory Report', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/inventoryreport') },
-          { label: 'GR Report', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GRReports') },
-          { label: 'Outward/Inward Report', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/outinDashboard') },
-          { label: 'Bin Status Report', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/BinStatusReport') },
-          { label: 'Safety Stock List', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/SafetyStockList') },
-          { label: 'Print Barcode', icon: 'pi pi-fw pi-print', style: { 'width': '250px' }, command: () => this.router.navigateByUrl('WMS/PrintBarcode') },
-
-        ]
-
-      });
-      this.items.push({
-        label: 'Inventory Management', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars',
-        items: [
-          { label: 'Cycle count', style: { 'font-weight': '600', 'width': '230px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/Cyclecount') },
-          {
-            label: 'Inventory Ageing',
-            icon: 'pi pi-fw pi-bars',
-            style: { 'font-weight': '600' },
-            items: [
-              { label: 'Obsolete Inventory', style: { 'font-weight': '600', 'width': '200px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/ObsoleteInventoryMovement') },
-              { label: 'Excess Inventory', style: { 'font-weight': '600', 'width': '200px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/ExcessInventoryMovement') }
-            ]
-          },
-          {
-            label: 'ABC Analysis',
-            icon: 'pi pi-fw pi-bars',
-            style: { 'font-weight': '600' },
-            items: [
-              { label: 'ABC Classification', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/ABCCategory') },
-              { label: 'ABC Analysis', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/ABCAnalysis') }
-            ]
-          }
-        ]
-      });
-      this.router.navigateByUrl('WMS/Cyclecount');
+      this.bindMenu('WMS/Cyclecount');
     }
     if (page == "Putaway") {
-      this.router.navigateByUrl('WMS/WarehouseIncharge');
+      this.bindMenu('WMS/WarehouseIncharge');
     }
     if (page == "Receive") {
-      this.router.navigateByUrl('WMS/GRNPosting');
+      this.bindMenu('WMS/GRNPosting');
     }
     if (page == "Issue") {
-      this.router.navigateByUrl('WMS/MaterialIssueDashboard');
+      this.bindMenu('WMS/MaterialIssueDashboard');
+    }
+    if (page == "onhold") {
+      this.bindMenu('WMS/HoldGRView');
+    }
+    if (page == "notify") {
+      this.bindMenu('WMS/Putawaynotify');
     }
 
     sessionStorage.removeItem("userdashboardpage");
@@ -1455,8 +1375,422 @@ export class NavMenuComponent implements OnInit {
     element1.hidden = false;
   }
 
+  bindmenubyrba() {
+    this.items = [];
 
-  bindMenu() {
+
+    this.useritems = [
+      { label: 'Log Out', icon: 'pi pi-fw pi-angle-right', command: () => this.logout() }
+    ];
+    this.items.push({ label: 'Home', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-home', command: () => this.router.navigateByUrl('WMS/Home') });
+    let currentrolerba = this.rbalist.filter(o => o.roleid == parseInt(this.emp.roleid));
+    if (currentrolerba.length > 0) {
+      var rba = currentrolerba[0];
+      if (rba.inv_enquiry) {
+        this.items.push({
+          label: 'Inventory Ageing',
+          icon: 'pi pi-fw pi-bars',
+          style: { 'font-weight': '600' },
+          items: [
+            { label: 'Obsolete Inventory', style: { 'font-weight': '600', 'width': '200px' }, icon: 'pi pi-fw pi-caret-right', command: () => this.router.navigateByUrl('WMS/ObsoleteInventoryMovement') },
+            { label: 'Excess Inventory', style: { 'font-weight': '600', 'width': '200px' }, icon: 'pi pi-fw pi-caret-right', command: () => this.router.navigateByUrl('WMS/ExcessInventoryMovement') },
+          ]
+        });
+
+      }
+      if (rba.inv_reports) {
+        
+        this.items.push({ label: 'Home', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-home', command: () => this.router.navigateByUrl('WMS/Home'), styleClass: 'active' });
+        this.items.push({
+          label: 'Reports',
+          icon: 'pi pi-fw pi-bars',
+          style: { 'font-weight': '600' },
+          items: [
+            { label: 'Inventory Report', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/inventoryreport') },
+            { label: 'Bin Status Report', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/BinStatusReport') },
+            { label: 'Material Tracking', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/POStatus') }
+
+          ]
+
+        });
+        this.items.push({
+          label: 'Other',
+          icon: 'pi pi-fw pi-bars',
+          style: { 'font-weight': '600' },
+          items: [
+            { label: 'Material Request', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialRequestDashboard') },
+            { label: 'Material Reserve', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReserveDashboard') },
+            { label: 'Material Return', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialsReturnDashboard') },
+            { label: 'Material Transfer', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialTransferDashboard') },
+            { label: 'GR Report', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GRReports') },
+            { label: 'Outward/Inward Report', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/outinDashboard') },
+            { label: 'Safety Stock List', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/SafetyStockList') }
+          ]
+
+        });
+      }
+      if (rba.gate_entry) {
+        this.items.push({ label: 'Inbound', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/SecurityCheck') });
+        this.items.push({ label: 'Outbound', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars' });
+
+      }
+
+      if (rba.receive_material) {
+        this.items.push({ label: 'Receipts', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GRNPosting') });
+        this.items.push({ label: 'On Hold Receipts', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/HoldGRView') });
+
+      }
+      if (rba.put_away) {
+        this.items.push({ label: 'Put Away', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/WarehouseIncharge') });
+        this.items.push({ label: 'Material Return', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReturn') });
+
+      }
+      if (rba.material_return) {
+        this.items.push({ label: 'Material Return', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReturnfromPm') });
+
+      }
+      if (rba.material_transfer) {
+        this.items.push({ label: 'Material Transfer', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialTransfer') });
+      }
+      if (rba.gate_pass) {
+        this.items.push({ label: 'Gate Pass', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GatePass') });
+
+      }
+      if (rba.gatepass_inout) {
+        this.items.push({
+          label: 'Gatepass', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars',
+          items: [
+            { label: 'Returnable', style: { 'font-weight': '600', 'width': '200px' }, icon: 'pi pi-fw pi-caret-right', command: () => this.router.navigateByUrl('WMS/GatePassinout/1') },
+            { label: 'Non Returnable', style: { 'font-weight': '600', 'width': '200px' }, icon: 'pi pi-fw pi-caret-right', command: () => this.router.navigateByUrl('WMS/GatePassinout/2') },
+          ]
+        });
+
+      }
+      if (rba.gatepass_approval) {
+        this.items.push({ label: 'Manager Approval', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GatePassPMList') });
+        this.items.push({ label: 'Finance Approval', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GatePassFMList') });
+
+      }
+      if (rba.material_issue) {
+        this.items.push({ label: 'Gate Pass', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GatePass') });
+        this.items.push({ label: 'Material Issue', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialIssueDashboard') });
+
+      }
+      if (rba.material_request) {
+        this.items.push({ label: 'Material Request', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReqView') });
+      }
+      if (rba.material_reservation) {
+        this.items.push({ label: 'Material Reserve', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReserveView') });
+
+      }
+      if (rba.abc_classification) {
+        this.items.push({
+          label: 'ABC Analysis',
+          icon: 'pi pi-fw pi-bars',
+          style: { 'font-weight': '600' },
+          items: [
+            { label: 'ABC Classification', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-caret-right', command: () => this.router.navigateByUrl('WMS/ABCCategory') },
+            { label: 'ABC Analysis', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-caret-right', command: () => this.router.navigateByUrl('WMS/ABCAnalysis') },
+          ]
+        });
+
+      }
+      if (rba.cyclecount_configuration) {
+        this.items.push({ label: 'Cycle Count config', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/Cycleconfig') });
+
+      }
+      if (rba.cycle_counting) {
+        this.items.push({ label: 'Cycle Count', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/Cyclecount') });
+
+      }
+      if (rba.cyclecount_approval) {
+        this.items.push({ label: 'Cycle Count', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/Cyclecount') });
+
+      }
+      if (rba.admin_access) {
+        this.items.push({
+          label: 'Initial Stock Upload',
+          icon: 'pi pi-fw pi-bars',
+          style: { 'font-weight': '600' },
+          items: [
+            { label: 'Initial Stock Upload', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-caret-right', command: () => this.router.navigateByUrl('WMS/InitialStock') },
+            { label: 'Initial Stock Report', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-caret-right', command: () => this.router.navigateByUrl('WMS/InitialStockReport') },
+          ]
+        });
+
+      }
+      if (rba.masterdata_creation) {
+
+      }
+      if (rba.masterdata_updation) {
+
+      }
+      if (rba.masterdata_approval) {
+
+      }
+      if (rba.printbarcodes) {
+        this.items.push({
+          label: 'Other',
+          icon: 'pi pi-fw pi-bars',
+          style: { 'font-weight': '600' },
+          items: [
+            { label: 'FIFO LIst', icon: 'pi pi-fw pi-bars', style: { 'width': '250px' }, command: () => this.router.navigateByUrl('WMS/FIFOList') },
+            { label: 'Inventory Movement', icon: 'pi pi-fw pi-bars', style: { 'width': '250px' }, command: () => this.router.navigateByUrl('WMS/InventoryMovement') },
+            { label: 'Stores Return Note', icon: 'pi pi-fw pi-print', style: { 'width': '250px' }, command: () => this.router.navigateByUrl('WMS/StoresReturnNote') },
+            { label: 'Stock Card Print', icon: 'pi pi-fw pi-print', style: { 'width': '250px' }, command: () => this.router.navigateByUrl('WMS/StockCardPrint') },
+            { label: 'Print Barcode', icon: 'pi pi-fw pi-print', style: { 'width': '250px' }, command: () => this.router.navigateByUrl('WMS/PrintBarcode') },
+            { label: 'Material Report', icon: 'pi pi-fw pi-print', style: { 'width': '250px' }, command: () => this.router.navigateByUrl('WMS/MaterialReport') }
+            //{ label: 'Internal Stock Transfer', icon: 'pi pi-fw pi-bars', style: { 'width': '250px' }, command: () => this.router.navigateByUrl('WMS/Stocktransfer') },
+
+            //{ label: 'AssignRole', icon: 'pi pi-fw pi-bars', style: { 'width': '200px' }, command: () => this.router.navigateByUrl('WMS/AssignRole') }
+            //{ label: 'Bin Status Report', style: { 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/BinStatusReport') }
+          ]
+        });
+
+      }
+      if (rba.quality_check) {
+        this.items.push({ label: 'Quality Check', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/QualityCheck') });
+      }
+      if (rba.pmdashboard_view) {
+        this.items.push({ label: 'PM Dashboard', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-chart-bar', command: () => this.router.navigateByUrl('WMS/Dashboard') });
+      }
+      if (rba.min) {
+        this.items.push({ label: 'MIN', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MRNView') });
+
+      }
+      if (rba.direct_transfer_view) {
+        this.items.push({ label: 'Direct Shipment', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/Directtransfer') });
+
+      }
+      if (rba.notify_to_finance) {
+        this.items.push({ label: 'Notify to finance', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/Putawaynotify') });
+
+      }
+      if (rba.gr_process) {
+        this.items.push({ label: 'GR-Finance Process', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GRNotification') });
+
+      }
+      if (rba.material_transfer_approval) {
+        this.items.push({ label: 'Material Transfer Approval', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/materialtransferapproval') });
+
+      }
+      if (rba.asn_view) {
+        this.items.push({ label: 'ASN', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/ASNView') });
+
+      }
+      if (rba.internal_stock_transfer) {
+        this.items.push({ label: 'Internal Stock Transfer', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/Stocktransfer') });
+
+      }
+      let element1x: HTMLDivElement = document.getElementById("menudiv") as HTMLDivElement;
+      element1x.hidden = false;
+      if (sessionStorage.getItem("userdashboardpage")) {
+        this.nevigatefromuserdashboard();
+      }
+      else {
+        this.nevigatefromrba(rba);
+      }
+
+
+    }
+
+
+  }
+
+  nevigatefromuserdashboard() {
+    var page = sessionStorage.getItem("userdashboardpage");
+    if (page == "Inbound") {
+      this.router.navigateByUrl('WMS/SecurityCheck');
+    }
+    else if (page == "Receive") {
+      this.router.navigateByUrl('WMS/GRNPosting');
+    }
+    else if (page == "Putaway") {
+      this.router.navigateByUrl('WMS/WarehouseIncharge');
+    }
+    else if (page == "Quality") {
+      this.router.navigateByUrl('WMS/QualityCheck');
+    }
+    else if (page == "Reserve") {
+      this.router.navigateByUrl('WMS/MaterialReserveView');
+    }
+    else if (page == "Approve") {
+      this.router.navigateByUrl('WMS/Home');
+    }
+    else if (page == "Issue") {
+      this.router.navigateByUrl('WMS/MaterialIssueDashboard');
+    }
+    else if (page == "Count") {
+      this.router.navigateByUrl('WMS/Cyclecount');
+    }
+
+
+  }
+
+  nevigatefromrba(rba: rbamaster) {
+    debugger;
+    if (this.emp.roleid == "1") {
+      if (rba.gate_entry) {
+        this.router.navigateByUrl('WMS/SecurityCheck');
+      }
+      else {
+        this.router.navigateByUrl('WMS/Home');
+      }
+    }
+    if (this.emp.roleid == "2") {
+      this.router.navigateByUrl('WMS/Home');
+    }
+    if (this.emp.roleid == "3") {
+      this.router.navigateByUrl('WMS/Home');
+    }
+    if (this.emp.roleid == "4") {
+      this.router.navigateByUrl('WMS/Home');
+    }
+    if (this.emp.roleid == "5") {
+      this.router.navigateByUrl('WMS/Home');
+    }
+    if (this.emp.roleid == "6") {
+      this.router.navigateByUrl('WMS/Home');
+    }
+    if (this.emp.roleid == "7") {
+      if (rba.pmdashboard_view) {
+        this.router.navigateByUrl('WMS/Dashboard');
+      }
+      else {
+        this.router.navigateByUrl('WMS/Home');
+      }
+    }
+    if (this.emp.roleid == "8") {
+      this.router.navigateByUrl('WMS/Home');
+    }
+    if (this.emp.roleid == "9") {
+      this.router.navigateByUrl('WMS/Home');
+    }
+    if (this.emp.roleid == "10") {
+      this.router.navigateByUrl('WMS/Home');
+    }
+    if (this.emp.roleid == "11") {
+      this.router.navigateByUrl('WMS/Home');
+    }
+
+  }
+  setdefaultmenuview() {
+    //for security
+    this.showHome = false;
+    this.showInbound = false;
+    this.showoutwardinward = false;
+    this.showoutwardinwardreturnable = false;
+    this.showoutwardinwardnonreturnable = false;
+    this.showoutbound = false;
+  //
+
+  }
+  setmenuview() {
+    //for security
+    this.showHome = true;
+   
+    //
+    let currentrolerba = this.rbalist.filter(o => o.roleid == parseInt(this.emp.roleid));
+    if (currentrolerba.length > 0) {
+      var rba = currentrolerba[0];
+      if (rba.inv_enquiry) {
+
+      }
+      if (rba.inv_reports) {
+
+
+      }
+      if (rba.gate_entry) {
+        this.showInbound = true;
+        this.showoutbound = true;
+      }
+      if (rba.receive_material) {
+      }
+      if (rba.put_away) {
+       
+      }
+      if (rba.material_return) {
+       
+      }
+      if (rba.material_transfer) {
+        }
+      if (rba.gate_pass) {
+       
+      }
+      if (rba.gatepass_inout) {
+        this.showoutwardinward = true;
+        this.showoutwardinwardreturnable = true;
+        this.showoutwardinwardnonreturnable = true;
+      }
+      if (rba.gatepass_approval) {
+        
+      }
+      if (rba.material_issue) {
+       
+      }
+      if (rba.material_request) {
+       }
+      if (rba.material_reservation) {
+      
+      }
+      if (rba.abc_classification) {
+      }
+      if (rba.cyclecount_configuration) {
+      }
+      if (rba.cycle_counting) {
+      }
+      if (rba.cyclecount_approval) {
+      }
+      if (rba.admin_access) {
+
+      }
+      if (rba.masterdata_creation) {
+
+      }
+      if (rba.masterdata_updation) {
+
+      }
+      if (rba.masterdata_approval) {
+
+      }
+      if (rba.printbarcodes) {
+       
+
+      }
+      if (rba.quality_check) {
+      }
+      if (rba.pmdashboard_view) {
+      }
+      if (rba.min) {
+
+      }
+      if (rba.direct_transfer_view) {
+
+      }
+      if (rba.notify_to_finance) {
+
+      }
+      if (rba.gr_process) {
+
+      }
+      if (rba.material_transfer_approval) {
+
+      }
+      if (rba.asn_view) {
+
+      }
+      if (rba.internal_stock_transfer) {
+
+      }
+    }
+  }
+  openoutlook() {
+    window.location.href = "mailto:WMS_Project@in.yokogawa.com?subject=enter_subject&body=enter_content";
+  }
+  Nevigateafterbinding() {
+
+  }
+  bindMenu(url: string = "") {
     debugger;
     this.items = [];
 
@@ -1465,21 +1799,27 @@ export class NavMenuComponent implements OnInit {
     ];
     if (this.emp.roleid == "1") {
       this.items = [];
-      this.items.push({ label: 'Home', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-home', command: () => this.router.navigateByUrl('WMS/Home') });
-      this.items.push({ label: 'Inbound', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/SecurityCheck'), styleClass: 'active' });
+      this.items.push({ label: 'Home', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-home', visible: true, command: () => this.router.navigateByUrl('WMS/Home') });
+      this.items.push({ label: 'Inbound', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', visible: true, command: () => this.router.navigateByUrl('WMS/SecurityCheck'), styleClass: 'active' });
       this.items.push({
-        label: 'Gatepass', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars',
+        label: 'Gatepass', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', visible: true,
         items: [
-          { label: 'Returnable', style: { 'font-weight': '600', 'width': '200px' }, icon: 'pi pi-fw pi-caret-right', command: () => this.router.navigateByUrl('WMS/GatePassinout/1') },
-          { label: 'Non Returnable', style: { 'font-weight': '600', 'width': '200px' }, icon: 'pi pi-fw pi-caret-right', command: () => this.router.navigateByUrl('WMS/GatePassinout/2') },
+          { label: 'Returnable', style: { 'font-weight': '600', 'width': '200px' }, icon: 'pi pi-fw pi-caret-right', visible: true, command: () => this.router.navigateByUrl('WMS/GatePassinout/1') },
+          { label: 'Non Returnable', style: { 'font-weight': '600', 'width': '200px' }, icon: 'pi pi-fw pi-caret-right', visible: true, command: () => this.router.navigateByUrl('WMS/GatePassinout/2') },
         ]
       });
-      this.items.push({ label: 'Outbound', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars' });
-      this.router.navigateByUrl('WMS/SecurityCheck');
+      this.items.push({ label: 'Outbound', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', visible: true });
+      if (url == "default") {
+        this.router.navigateByUrl('WMS/SecurityCheck');
+      }
+      else {
+        this.router.navigateByUrl(url);
+      }
+     
     }
     if (this.emp.roleid == "2") {//inventory enquiry
       this.items = [];
-      this.items.push({ label: 'Home', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-home', command: () => this.router.navigateByUrl('WMS/Home'), styleClass: 'active' });
+      this.items.push({ label: 'Home', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-home', visible: true, command: () => this.router.navigateByUrl('WMS/Home'), styleClass: 'active' });
       this.items.push({
         label: 'Reports',
         icon: 'pi pi-fw pi-bars',
@@ -1508,10 +1848,12 @@ export class NavMenuComponent implements OnInit {
         ]
 
       });
-      
-
-      //this.items.push({ label: 'GRN Posting', icon: 'pi pi-fw pi-lock', command: () => this.router.navigateByUrl('WMS/GRNPosting') })
-      this.router.navigateByUrl('WMS/Home');
+      if (url == "default") {
+        this.router.navigateByUrl('WMS/Home');
+      }
+      else {
+        this.router.navigateByUrl(url);
+      }
     }
     if (this.emp.roleid == "3") {//inventory clerk
       this.items = [];
@@ -1587,12 +1929,12 @@ export class NavMenuComponent implements OnInit {
         ]
 
       });
-
-      //this.items.push({ label: 'Material Return', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReturn') });
-      //this.items.push({
-      //  label: 'Receive STO Request', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/ReceiveSTORequest')
-      //});
-      this.router.navigateByUrl('WMS/Home');
+      if (url == "default") {
+        this.router.navigateByUrl('WMS/Home');
+      }
+      else {
+        this.router.navigateByUrl(url);
+      }
     }
     if (this.emp.roleid == "4") {//inventory manager
       this.items = [];
@@ -1692,8 +2034,14 @@ export class NavMenuComponent implements OnInit {
           }
         ]
       });
+      if (url == "default") {
+        this.router.navigateByUrl('WMS/Home');
+      }
+      else {
+        this.router.navigateByUrl(url);
+      }
 
-      this.router.navigateByUrl('WMS/Home');
+     
     }
     if (this.emp.roleid == "5") {//project manager (Material Requester)
       this.items = [];
@@ -1724,14 +2072,24 @@ export class NavMenuComponent implements OnInit {
       this.items.push({ label: 'Material Return', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReturnfromPm') });
       this.items.push({ label: 'Direct Shipment', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/Directtransfer') });
       this.items.push({ label: 'Receive Material', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/ReceiveMaterial') });
-     // this.items.push({ label: 'STO', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/StockTransferOrder') });
-      this.router.navigateByUrl('WMS/Dashboard');
+      if (url == "default") {
+        this.router.navigateByUrl('WMS/Dashboard');
+      }
+      else {
+        this.router.navigateByUrl(url);
+      }
+
     }
     if (this.emp.roleid == "6") {//dashboard
       this.items = [];
       this.items.push({ label: 'Home', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-home', command: () => this.router.navigateByUrl('WMS/Home'), styleClass: 'active' });
       this.items.push({ label: 'PM Dashboard', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-chart-bar', command: () => this.router.navigateByUrl('WMS/Dashboard') });
-      this.router.navigateByUrl('WMS/Home');
+      if (url == "default") {
+        this.router.navigateByUrl('WMS/Home');
+      }
+      else {
+        this.router.navigateByUrl(url);
+      }
     }
     if (this.emp.roleid == "7") {//admin
       this.items = [];
@@ -1756,25 +2114,6 @@ export class NavMenuComponent implements OnInit {
           { label: 'Cycle Config', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-caret-right', command: () => this.router.navigateByUrl('WMS/Cycleconfig') },
         ]
       });
-      //this.items.push({
-      //  label: 'Other',
-      //  icon: 'pi pi-fw pi-bars',
-      //  style: { 'font-weight': '600' },
-      //  items: [
-      //    { label: 'FIFO LIst', icon: 'pi pi-fw pi-bars', style: { 'width': '250px' }, command: () => this.router.navigateByUrl('WMS/FIFOList') },
-      //    { label: 'Inventory Movement', icon: 'pi pi-fw pi-bars', style: { 'width': '250px' }, command: () => this.router.navigateByUrl('WMS/InventoryMovement') },
-      //    { label: 'Stores Return Note', icon: 'pi pi-fw pi-print', style: { 'width': '250px' }, command: () => this.router.navigateByUrl('WMS/StoresReturnNote') },
-      //    { label: 'Stock Card Print', icon: 'pi pi-fw pi-print', style: { 'width': '250px' }, command: () => this.router.navigateByUrl('WMS/StockCardPrint') },
-      //    { label: 'Print Barcode', icon: 'pi pi-fw pi-print', style: { 'width': '250px' }, command: () => this.router.navigateByUrl('WMS/PrintBarcode') },
-      //    { label: 'Material Report', icon: 'pi pi-fw pi-print', style: { 'width': '250px' }, command: () => this.router.navigateByUrl('WMS/MaterialReport') }
-      //    //{ label: 'Internal Stock Transfer', icon: 'pi pi-fw pi-bars', style: { 'width': '250px' }, command: () => this.router.navigateByUrl('WMS/Stocktransfer') },
-
-      //    //{ label: 'AssignRole', icon: 'pi pi-fw pi-bars', style: { 'width': '200px' }, command: () => this.router.navigateByUrl('WMS/AssignRole') }
-      //    //{ label: 'Bin Status Report', style: { 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/BinStatusReport') }
-      //  ]
-      //});
-      //this.items.push({ label: 'Bin Status Report', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/BinStatusReport') });
-      //this.items.push({ label: 'BarCode', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/Barcode') });
       this.items.push({
         label: 'Master Pages',
         icon: 'pi pi-fw pi-bars',
@@ -1783,62 +2122,105 @@ export class NavMenuComponent implements OnInit {
           { label: 'Material Master', icon: 'pi pi-fw pi-bars', style: { 'width': '250px' }, command: () => this.router.navigateByUrl('WMS/MaterialMaster') },
           { label: 'GatePass Master', icon: 'pi pi-fw pi-bars', style: { 'width': '250px' }, command: () => this.router.navigateByUrl('WMS/GatePassMaster') },
           { label: 'Plant Master', icon: 'pi pi-fw pi-bars', style: { 'width': '250px' }, command: () => this.router.navigateByUrl('WMS/PlantMaster') },
+          { label: 'Assign Role', icon: 'pi pi-fw pi-bars', style: { 'width': '200px' }, command: () => this.router.navigateByUrl('WMS/AssignRole') },
+          
           { label: 'Miscellanous Master', icon: 'pi pi-fw pi-bars', style: { 'width': '250px' }, command: () => this.router.navigateByUrl('WMS/MiscellanousReason') }
         ]
       });
-      this.router.navigateByUrl('/WMS/Home');
+      if (url == "default") {
+        this.router.navigateByUrl('WMS/Home');
+      }
+      else {
+        this.router.navigateByUrl(url);
+      }
     }
     if (this.emp.roleid == "8") {//Approver     
       this.items = [];
-      if (localStorage.getItem("requestedpage")) {
-        var page = localStorage.getItem('requestedpage');
-        if (page == "GatePassPMList") {
-          this.items.push({ label: 'Home', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-home', command: () => this.router.navigateByUrl('WMS/Home') });
-          this.items.push({ label: 'Manager Approval', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GatePassPMList'), styleClass: 'active' });
-          this.items.push({ label: 'Finance Approval', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GatePassFMList') });
-        }
-        else if (page == "GatePassFMList") {
-          this.items.push({ label: 'Home', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-home', command: () => this.router.navigateByUrl('WMS/Home') });
-          this.items.push({ label: 'Manager Approval', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GatePassPMList') });
-          this.items.push({ label: 'Finance Approval', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GatePassFMList'), styleClass: 'active' });
-        }
-        else {
-          this.items.push({ label: 'Home', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-home', command: () => this.router.navigateByUrl('WMS/Home'), styleClass: 'active' });
-          this.items.push({ label: 'Manager Approval', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GatePassPMList') });
-          this.items.push({ label: 'Finance Approval', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GatePassFMList') });
-        }
-        localStorage.removeItem('requestedpage');
-        this.router.navigateByUrl('WMS/' + page);
-      }
-      else {
-        this.items.push({ label: 'Home', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-home', command: () => this.router.navigateByUrl('WMS/Home'), styleClass: 'active' });
+      
+        this.items.push({ label: 'Home', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-home', command: () => this.router.navigateByUrl('WMS/Home') });
         this.items.push({ label: 'Manager Approval', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GatePassPMList') });
         this.items.push({ label: 'Finance Approval', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GatePassFMList') });
-        this.router.navigateByUrl('WMS/Home');
-      }
+        if (url == "default") {
+          this.router.navigateByUrl('WMS/Home');
+        }
+        else {
+          this.router.navigateByUrl(url);
+        }
+      
 
     }
     if (this.emp.roleid == "9") {//Quality control
       this.items = [];
       this.items.push({ label: 'Home', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-home', command: () => this.router.navigateByUrl('WMS/Home'), styleClass: 'active' });
       this.items.push({ label: 'Quality Check', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/QualityCheck') });
-      this.router.navigateByUrl('WMS/Home');
+      this.items.push({
+        label: 'Reports',
+        icon: 'pi pi-fw pi-bars',
+        style: { 'font-weight': '600' },
+        items: [
+          { label: 'Inventory Report', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/inventoryreport') },
+          { label: 'Bin Status Report', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/BinStatusReport') },
+          { label: 'Material Tracking', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/POStatus') }
+
+        ]
+
+      });
+      this.items.push({
+        label: 'Other',
+        icon: 'pi pi-fw pi-bars',
+        style: { 'font-weight': '600' },
+        items: [
+          { label: 'Material Request', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialRequestDashboard') },
+          { label: 'Material Reserve', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReserveDashboard') },
+          { label: 'Material Return', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialsReturnDashboard') },
+          { label: 'Material Transfer', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialTransferDashboard') },
+          { label: 'GR Report', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GRReports') },
+          { label: 'Outward/Inward Report', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/outinDashboard') },
+          { label: 'Safety Stock List', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/SafetyStockList') }
+        ]
+
+      });
+      if (url == "default") {
+        this.router.navigateByUrl('WMS/Home');
+      }
+      else {
+        this.router.navigateByUrl(url);
+      }
     }
     if (this.emp.roleid == "10") {//Finance
       this.items = [];
       this.items.push({ label: 'Home', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-home', command: () => this.router.navigateByUrl('WMS/Home'), });
       this.items.push({ label: 'GR-Finance Process', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GRNotification'), styleClass: 'active' });
-      this.router.navigateByUrl('WMS/GRNotification');
+      if (url == "default") {
+        this.router.navigateByUrl('WMS/GRNotification');
+      }
+      else {
+        this.router.navigateByUrl(url);
+      }
     }
-    if (this.emp.roleid == "11") {//Material Requestor
+    if (this.emp.roleid == "11") {//Project Manager
       this.items = [];
       this.items.push({ label: 'Home', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-home', command: () => this.router.navigateByUrl('WMS/Home') });
       this.items.push({ label: 'PM Dashboard', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-chart-bar', command: () => this.router.navigateByUrl('WMS/Dashboard') });
-      this.items.push({ label: 'Material Transfer Approval', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/materialtransferapproval') });
+      this.items.push({
+        label: 'Approvals',
+        icon: 'pi pi-fw pi-bars',
+        style: { 'font-weight': '600' },
+        items: [
+          { label: 'Material Request Approval', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialRequestApproval') },
+          { label: 'Material Transfer Approval', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/materialtransferapproval') }
+        ]
+
+      });
       this.items.push({ label: 'Direct Shipment', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/Directtransfer') });
       this.items.push({ label: 'Receive Material', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/ReceiveMaterial') });
-      //this.items.push({ label: 'STO', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/StockTransferOrder') });
-      this.router.navigateByUrl('WMS/Home');
+      this.items.push({ label: 'Assign Project', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-chart-bar', command: () => this.router.navigateByUrl('WMS/AssignProject') });
+      if (url == "default") {
+        this.router.navigateByUrl('WMS/Home');
+      }
+      else {
+        this.router.navigateByUrl(url);
+      }
     }
     let element1: HTMLDivElement = document.getElementById("menudiv") as HTMLDivElement;
     element1.hidden = false;

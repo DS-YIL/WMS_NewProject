@@ -67,6 +67,16 @@ export class LoginComponent implements OnInit {
    
   }
 
+  getrbalist() {
+
+    this.wmsService.getrbadata().subscribe(data => {
+      if (data.length > 0) {
+        localStorage.setItem('rbalist', JSON.stringify(data));
+      }
+    })
+
+  }
+
   //get Role list
   getRoles() {
     debugger;
@@ -112,8 +122,10 @@ export class LoginComponent implements OnInit {
               this.wmsService.getuserroleList(this.employee.employeeno).subscribe(data => {
                 if (data.length > 0) {
                   this.AcessNameList = data;
+                  this.getrbalist();
                  
                   this.employee.roleid = this.LoginForm.value.roleid;
+                  this.employee.plantid = this.AcessNameList[0].plantid;
                   this.wmsService.getpages().subscribe(datax => {
                     this.pagelist = datax;
                     localStorage.setItem('pages', JSON.stringify(this.pagelist));
@@ -139,7 +151,9 @@ export class LoginComponent implements OnInit {
               this.wmsService.getuserAcessList(this.employee.employeeno, this.LoginForm.value.roleid).subscribe(data => {
                 if (data.length > 0) {
                   this.AcessNameList = data;
+                  this.getrbalist();
                   this.employee.roleid = this.LoginForm.value.roleid;
+                  this.employee.plantid = this.AcessNameList[0].plantid;
                   this.wmsService.getpagesbyrole(parseInt(this.employee.roleid)).subscribe(datax => {
                     this.pagelist = datax;
                     localStorage.setItem('pages', JSON.stringify(this.pagelist));

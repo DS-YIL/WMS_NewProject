@@ -19,6 +19,6 @@ export class constants {
   public ItemId: searchParams = { tableName: 'wms.wms_stock', fieldId: 'materialid', fieldName: 'materialdescription', condition: " where ", fieldAliasName: "", updateColumns: "" };
   public projectcode: searchParams = { tableName: 'wms.MPRRevisions', fieldId: 'JobName', fieldName: '"JobName"', condition: " where ", fieldAliasName: "", updateColumns: "" };
   public project: searchParams = { tableName: 'wms.wms_project', fieldId: 'projectcode', fieldName: '"projectcode"', condition: " where ", fieldAliasName: "", updateColumns: "" };
-  public material: searchParams = { tableName: 'wms."MaterialMasterYGS"', fieldId: 'material', fieldName: '"material"', condition: " where ", fieldAliasName: "", updateColumns: "" };
+  public material: searchParams = { tableName: 'wms."MaterialMasterYGS"', fieldId: 'material', fieldName: 'material', condition: " where ", fieldAliasName: "", updateColumns: "" };
   public pomaterial: searchParams = { tableName: 'wms."wms_pomaterials"', fieldId: 'material', fieldName: '"poitemdescription"', condition: " where ", fieldAliasName: "", updateColumns: "" };
 }

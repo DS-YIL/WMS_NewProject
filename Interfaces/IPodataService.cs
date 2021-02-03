@@ -65,7 +65,8 @@ namespace WMS.Interfaces
         Task<string> receivequantity(List<inwardModel> datamodel);
         Task<string> updateonholdrow(updateonhold datamodel);
 		string updateinitialstockdata(StockModel datamodel);
-		
+		string updateprojectmember(AssignProjectModel datamodel);
+
 		string InsertStock(List<StockModel> data);
 		string InsertmatSTO(List<StockModel> data);
 
@@ -122,6 +123,7 @@ namespace WMS.Interfaces
 		Task<IEnumerable<OpenPoModel>> getASNList(string deliverdate);
 		Task<IEnumerable<OpenPoModel>> getASNListdata();
 		Task<IEnumerable<IssueRequestModel>> GetItemlocationListBymterial(string material);
+		Task<IEnumerable<IssueRequestModel>> GetItemlocationListBymterialanddesc(string material, string description);
 		Task<IEnumerable<IssueRequestModel>> GetItemlocationListBymterialsourcelocation(string material);
 
 
@@ -155,6 +157,8 @@ namespace WMS.Interfaces
 		int GatepassapproveByManager(gatepassModel model);
 
 		int updatematmovement(List<materialistModel> obj);
+		string updateuserAuth(List<authUser> obj);
+		string deleteuserAuth(authUser data);
 		int requesttoreserve(materialReservetorequestModel obj);
 		int insertdatacsv(ddlmodel obj);
 		Task<IEnumerable<safteyStockList>> getSafteyStockList();
@@ -193,6 +197,7 @@ namespace WMS.Interfaces
 		int mattransfer(materialtransferMain model);
 
 		int mattransferapprove(List<materialtransferMain> model);
+		string matrequestapprove(List<MaterialTransaction> model);
 		int mrnupdate(MRNsavemodel model);
 		int GatepassapproveByMail(gatepassModel model);
 		Task<IEnumerable<pageModel>> Getpagesbyroleid(int roleid);
@@ -205,6 +210,7 @@ namespace WMS.Interfaces
 		Task<IEnumerable<MaterialReturn>> getreturndata(string empno);
 		Task<IEnumerable<materialtransferMain>> gettransferdata(string empno);
 		Task<IEnumerable<materialtransferMain>> gettransferdataforapproval(string empno);
+		Task<IEnumerable<MaterialTransaction>> getrequestdataforapproval(string empno);
 		int Updatetransferqty(List<IssueRequestModel> _listobj);
 		Task<IEnumerable<UserDashboardGraphModel>> getUserdashboardgraphdata();
 		Task<IEnumerable<UserDashboardGraphModel>> getUserdashIEgraphdata();
@@ -218,6 +224,7 @@ namespace WMS.Interfaces
 
 		Task<IEnumerable<ddlmodel>> getprojectlist();
 		Task<IEnumerable<ddlmodel>> getprojectlistbymanager(string empno);
+		Task<IEnumerable<AssignProjectModel>> getprojectlisttoassign(string empno);
 		Task<IEnumerable<ddlmodel>> getmatlist(string querytext);
 		Task<IEnumerable<ddlmodel>> getmatlistbyproject(string projectcode);
 		string notifyputaway(notifymodel data);
@@ -294,6 +301,10 @@ namespace WMS.Interfaces
 
 		Task<IEnumerable<PlantMTdata>> getplantnameData();
 		string PlantnameDelete(PlantMTdata data);
+		Task<IEnumerable<authUser>> getuserauthdata();
+		Task<IEnumerable<authUser>> getuserauthdetails(string employeeid);
+		Task<IEnumerable<authUser>> getuserauthdetailsbyrole(int roleid);
+		Task<IEnumerable<subrolemodel>> getsubroledata();
 		Task<IEnumerable<plantddl>> getplantlocdetails();
 
 	}

@@ -971,6 +971,10 @@ input[type=number] {
   margin-left: 21px;
 }
 
+.maxpageheight {
+  max-height: calc(~"100vh - 50px");
+}
+
 .fullheight {
   display: flex;
   flex-direction: column;

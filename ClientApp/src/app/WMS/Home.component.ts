@@ -1182,28 +1182,102 @@ export class HomeComponent implements OnInit {
       sessionStorage.setItem("userdashboardpage", type);
     }
     if (type == "Inbound" && this.issecurityoperator) {
-      this.navigatebyrole("1");
+      if (this.employee.roleid != "1") {
+        this.navigatebyrole("1");
+      }
+      else {
+        this.router.navigateByUrl('WMS/SecurityCheck');
+      }
+     
     }
-    else if (type == "Receive" && this.isinventoryclerk) {
-      this.navigatebyrole("3");
+    else if (type == "Receive" && (this.isinventoryclerk || this.isinventorymanager)) {
+      if (this.employee.roleid != "3" && this.employee.roleid != "4") {
+        if (this.isinventorymanager) {
+          this.navigatebyrole("4");
+        }
+        else {
+          this.navigatebyrole("3");
+        }
+        
+      }
+      else {
+        this.router.navigateByUrl('WMS/GRNPosting');
+      }
     }
     else if (type == "Quality" && this.isqualityuser) {
-      this.navigatebyrole("9");
+      if (this.employee.roleid != "9") {
+        this.navigatebyrole("9");
+      }
+      else {
+        this.router.navigateByUrl('WMS/QualityCheck');
+      }
     }
-    else if (type == "Putaway" && this.isinventoryclerk) {
-      this.navigatebyrole("3");
+    else if (type == "Putaway" && (this.isinventoryclerk || this.isinventorymanager)) {
+      if (this.employee.roleid != "3" && this.employee.roleid != "4") {
+        if (this.isinventorymanager) {
+          this.navigatebyrole("4");
+        }
+        else {
+          this.navigatebyrole("3");
+        }
+      }
+      else {
+        this.router.navigateByUrl('WMS/WarehouseIncharge');
+      }
+    }
+    else if (type == "notify" || type =='onhold' && (this.isinventoryclerk || this.isinventorymanager)) {
+      if (this.employee.roleid != "3" && this.employee.roleid != "4") {
+        if (this.isinventorymanager) {
+          this.navigatebyrole("4");
+        }
+        else {
+          this.navigatebyrole("3");
+        }
+      }
+      else {
+        if (type == "notify") {
+          this.router.navigateByUrl('WMS/Putawaynotify');
+        }
+        if (type == 'onhold') {
+          this.router.navigateByUrl('WMS/HoldGRView');
+        }
+        
+      }
     }
     else if (type == "Reserve" && this.isprojectmanager) {
-      this.navigatebyrole("5");
+      if (this.employee.roleid != "5") {
+        this.navigatebyrole("5");
+      }
+      else {
+        this.router.navigateByUrl('WMS/MaterialReserveView');
+      }
     }
     else if (type == "Approve" && this.isapprover) {
-      this.navigatebyrole("8");
+      if (this.employee.roleid != "8") {
+        this.navigatebyrole("8");
+      }
     }
-    else if (type == "Issue" && this.isinventorymanager) {
-      this.navigatebyrole("4");
+    else if (type == "Issue" && (this.isinventoryclerk || this.isinventorymanager)) {
+      if (this.employee.roleid != "3" && this.employee.roleid != "4") {
+        if (this.isinventorymanager) {
+          this.navigatebyrole("4");
+        }
+        else {
+          this.navigatebyrole("3");
+        }
+      }
+      else {
+        this.router.navigateByUrl('WMS/MaterialIssueDashboard');
+      }
     }
     else if (type == "Count" && this.isinventorymanager) {
-      this.navigatebyrole("4");
+      if (this.employee.roleid != "4") {
+        this.navigatebyrole("4");
+      }
+      else {
+        this.router.navigateByUrl('WMS/Cyclecount');
+      }
+     
     }
    
    

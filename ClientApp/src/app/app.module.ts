@@ -116,6 +116,8 @@ import { MaterilMasterComponent } from './WMS/Admin/Materialmaster.component';
 import { GatePassMasterComponent } from './WMS/Admin/GatePassMaster .component';
 import { PlantMasterComponent } from './WMS/Admin/PlantMaster.component';
 import { MiscellanousComponent } from './WMS/Admin/Miscellanous.component';
+import { AssignProjectComponent } from './WMS/AssignProject.component';
+import { MaterialRequestApprovalComponent } from './WMS/MaterialRequestApproval.component';
 
 ////pages
 import { LoginComponent } from './WMS/Login.component';
@@ -221,7 +223,11 @@ import { KeyFilterModule } from 'primeng/keyfilter';
  ReceiveSTORequestComponent,
     InitialStockPutAwayComponent,
     MiscellanousComponent,
-    StockTransferOrderComponent
+    StockTransferOrderComponent,
+    ReceiveSTORequestComponent,
+    InitialStockPutAwayComponent,
+    AssignProjectComponent,
+    MaterialRequestApprovalComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

@@ -255,6 +255,11 @@ namespace WMS.Controllers
 		{
 			return  this._poService.updateinitialstockdata(data);
 		}
+		[HttpPost("updateprojectmember")]
+		public string updateprojectmember([FromBody] AssignProjectModel data)
+		{
+			return this._poService.updateprojectmember(data);
+		}
 
 		[HttpPost("qualitycheck")]
 		public async Task<string> insertqualitycheck([FromBody] List<inwardModel> data)
@@ -573,8 +578,13 @@ namespace WMS.Controllers
 		[HttpGet("GetItemLocationListByMaterial")]
 		public async Task<IEnumerable<IssueRequestModel>> getitemlocationBymaterial(string material)
 		{
-
 			return await this._poService.GetItemlocationListBymterial(material);
+		}
+		[HttpGet("GetItemLocationListByMaterialanddesc")]
+		public async Task<IEnumerable<IssueRequestModel>> getitemlocationBymaterialanddesc(string material, string description)
+		{
+
+			return await this._poService.GetItemlocationListBymterialanddesc(material, description);
 		}
 		[HttpGet("GetItemLocationListByMaterialsourcelocation")]
 		public async Task<IEnumerable<IssueRequestModel>> getitemlocationBymaterialsourcelocation(string material)
@@ -878,6 +888,11 @@ namespace WMS.Controllers
 		{
 			return await this._poService.getprojectlist();
 		}
+		[HttpGet("getprojectlisttoassign")]
+		public async Task<IEnumerable<AssignProjectModel>> getprojectlisttoassign(string empno)
+		{
+			return await this._poService.getprojectlisttoassign(empno);
+		}
 
 		[HttpGet("getprojectlistbymanager")]
 		public async Task<IEnumerable<ddlmodel>> getprojectlistbymanager(string empno)
@@ -910,6 +925,28 @@ namespace WMS.Controllers
 		public async Task<IEnumerable<ddlmodel>> getgrnlistforacceptanceputaway()
 		{
 			return await this._poService.getgrnlistforacceptanceputaway();
+		}
+
+		[HttpGet("getuserauthdata")]
+		public async Task<IEnumerable<authUser>> getuserauthdata()
+		{
+			return await this._poService.getuserauthdata();
+		}
+		[HttpGet("getuserauthdetail")]
+		public async Task<IEnumerable<authUser>> getuserauthdetail(string empno)
+		{
+			return await this._poService.getuserauthdetails(empno);
+		}
+		[HttpGet("getuserauthdetailbyrole")]
+		public async Task<IEnumerable<authUser>> getuserauthdetailbyrole(int roleid)
+		{
+			return await this._poService.getuserauthdetailsbyrole(roleid);
+		}
+
+		[HttpGet("getsubroledata")]
+		public async Task<IEnumerable<subrolemodel>> getsubroledata()
+		{
+			return await this._poService.getsubroledata();
 		}
 
 		[HttpGet("getgrnforacceptancenotify")]
@@ -1006,6 +1043,12 @@ namespace WMS.Controllers
 			return this._poService.mattransferapprove(obj);
 		}
 
+		[HttpPost("matrequestapproval")]
+		public string matrequestapprove([FromBody] List<MaterialTransaction> obj)
+		{
+			return this._poService.matrequestapprove(obj);
+		}
+
 		[HttpPost("mrnupdate")]
 		public int mrnupdate([FromBody] MRNsavemodel obj)
 		{
@@ -1044,6 +1087,12 @@ namespace WMS.Controllers
 		public async Task<IEnumerable<materialtransferMain>> gettransferdataforapproval(string empno)
 		{
 			return await this._poService.gettransferdataforapproval(empno);
+		}
+
+		[HttpGet("getrequestdataforapproval")]
+		public async Task<IEnumerable<MaterialTransaction>> getrequestdataforapproval(string empno)
+		{
+			return await this._poService.getrequestdataforapproval(empno);
 		}
 
 		[HttpGet("getdirecttransferdata")]
@@ -1122,6 +1171,17 @@ namespace WMS.Controllers
 		public string posttestcrud(testcrud data)
 		{
 			return this._poService.posttestcrud(data);
+		}
+
+		[HttpPost("updateUserauth")]
+		public string updateUserauth([FromBody] List<authUser> obj)
+		{
+			return this._poService.updateuserAuth(obj);
+		}
+		[HttpPost("deleteUserauth")]
+		public string deleteUserauth([FromBody] authUser obj)
+		{
+			return this._poService.deleteuserAuth(obj);
 		}
 		[HttpDelete("deletetestcurd/{id}")]
 		public string deletetestcurd(int id)
