@@ -76,36 +76,40 @@ namespace WMS.Controllers
 
 
 
-                    tw.WriteLine("SIZE 97.5 mm, 38 mm");
+                    tw.WriteLine("<xpml><page quantity='0' pitch='38.0 mm'></xpml>SIZE 97.5 mm, 38 mm");
                     tw.WriteLine("DIRECTION 0,0");
                     tw.WriteLine("REFERENCE 0,0");
                     tw.WriteLine("OFFSET 0 mm");
                     tw.WriteLine("SET PEEL OFF");
                     tw.WriteLine("SET CUTTER OFF");
                     tw.WriteLine("SET PARTIAL_CUTTER OFF");
-                    tw.WriteLine("SET TEAR ON");
+                    tw.WriteLine("<xpml></page></xpml><xpml><page quantity='1' pitch='38.0 mm'></xpml>SET TEAR ON");
                     tw.WriteLine("CLS");
-                    tw.WriteLine("BOX 10,7,769,296,3");
-                    tw.WriteLine("BAR 11,63, 757, 3");
-                    tw.WriteLine("BAR 164,64, 3, 224");
-                    tw.WriteLine("BAR 165,109, 603, 3");
-                    tw.WriteLine("BAR 165,153, 603, 3");
-                    tw.WriteLine("BAR 165,245, 603, 3");
-                    tw.WriteLine("BAR 572,6, 3, 287");
+                    tw.WriteLine("BOX 15,9,1137,436,4");
+                    tw.WriteLine("BAR 17,93, 1119, 4");
+                    tw.WriteLine("BAR 244,93, 4, 342");
+                    tw.WriteLine("BAR 245,161, 891, 4");
+                    tw.WriteLine("BAR 245,226, 891, 4");
+                    tw.WriteLine("BAR 245,362, 891, 4");
+                    tw.WriteLine("BAR 846,9, 4, 424");
                     tw.WriteLine("CODEPAGE 1252");
-                    tw.WriteLine("TEXT 762,271,\"ROMAN.TTF\",180,1,8,\"Gate Entry No.\"");
-                    tw.WriteLine("TEXT 766,213,\"ROMAN.TTF\",180,1,8,\"PO No.\"");
-                    tw.WriteLine("TEXT 762,142,\"ROMAN.TTF\",180,1,8,\"Gate Entry Time\"");
-                    tw.WriteLine("TEXT 762,98,\"ROMAN.TTF\",180,1,8,\"Vehicle No.\"");
-                    tw.WriteLine("TEXT 762,46,\"ROMAN.TTF\",180,1,8,\"Transporter Details\"");
-                    tw.WriteLine("TEXT 567,281,\"ROMAN.TTF\",180,1,8,\""+model.inwmasterid+"\"");
-                    tw.WriteLine("TEXT 567,240,\"ROMAN.TTF\",180,1,8,\""+model.pono+"\"");
-                    tw.WriteLine("TEXT 567,144,\"ROMAN.TTF\",180,1,8,\""+model.gateentrytime+"\"");
-                    tw.WriteLine("TEXT 567,98,\"ROMAN.TTF\",180,1,8,\""+model.vehicleno+"\"");
-                    tw.WriteLine("TEXT 567,59,\"ROMAN.TTF\",180,1,8,\""+model.transporterdetails+"\"");
-                    tw.WriteLine("QRCODE 117,239,L,3,A,180,M2,S7,\""+model.inwmasterid+"\"");
-                    tw.WriteLine("TEXT 158,158,\"ROMAN.TTF\",180,1,7,\""+ model.inwmasterid + "\"");
+                    tw.WriteLine("TEXT 1128,416,\"0\",180,8,8,\"Gate Entry No.\"");
+                    tw.WriteLine("TEXT 1133,315,\"0\",180,8,8,\"PO No.\"");
+                    tw.WriteLine("TEXT 1128,209,\"0\",180,8,8,\"Gate Entry Time\"");
+                    tw.WriteLine("TEXT 1128,144,\"0\",180,8,8,\"Vehicle No.\"");
+                    tw.WriteLine("TEXT 1128,68,\"0\",180,8,8,\"Transporter Details\"");
+                    tw.WriteLine("TEXT 839,416,\"0\",180,8,8,\"" + model.inwmasterid+"\"");
+                    tw.WriteLine("TEXT 839,213,\"0\",180,8,8,\"" + model.gateentrytime+"\"");
+                    tw.WriteLine("TEXT 839,145,\"0\",180,8,8,\"" + model.vehicleno+"\"");
+                    tw.WriteLine("TEXT 839,87,\"0\",180,8,8,\"" + model.transporterdetails+"\"");
+                    //tw.WriteLine("TEXT 839,48,\"0\",180,8,8,\"" + model.transporterdetails+"\"");
+                    tw.WriteLine("QRCODE 175,353,L,4,A,180,M2,S7,\"" + model.inwmasterid+"\"");
+                    tw.WriteLine("TEXT 235,243,\"0\",180,7,7,\"" + model.inwmasterid + "\"");
+                    tw.WriteLine("TEXT 839,354,\"0\",180,8,8,\"" + model.pono + "\"");
+                    //tw.WriteLine("TEXT 839,354,\"0\",180,8,8,\"" + model.inwmasterid + "\"");
+                    //tw.WriteLine("TEXT 1235,243,\"0\",180,7,7,\"" + model.inwmasterid + "\"");
                     tw.WriteLine("PRINT 1,1");
+                    tw.WriteLine("<xpml></page></xpml><xpml><end/></xpml>");
 
                 }
 

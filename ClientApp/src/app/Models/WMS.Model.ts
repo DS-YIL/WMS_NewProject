@@ -178,6 +178,7 @@ export class StockModel {
   lineitemno: string;
   paitemid: number;
   testindex: number;
+  receivedid: any;
   pono: string;
   grnnumber: string;
   binid: number;
@@ -710,6 +711,7 @@ export class STORequestdata {
 
 export class STOrequestTR {
   transferid: string;
+  id: any;
   serialno: any;
   materialid: string;
   poitemdesc: string;

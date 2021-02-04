@@ -316,10 +316,12 @@ namespace WMS.Models
 
 	public class StockModel
 	{
+		public int id { get; set; }
 		public int inwardid { get; set; }
 		public int stockid { get; set; }
 		public string Material { get; set; }
 		public string lineitemno { get; set; }
+		public string receivedid { get; set; }
 		public string exceptions { get; set; }
 		public string materialdescription { get; set; }
 		public string stockstatus { get; set; }
@@ -1505,6 +1507,7 @@ public class STORequestdata
 
 public class STOrequestTR
 {
+	public int id { get; set; }
 	public string transferid { get; set; }
 	public string materialid { get; set; }
 	public string poitemdesc { get; set; }
@@ -1804,6 +1807,8 @@ public class MaterialTransaction
 	public string reservedby { get; set; }
 	public DateTime? reservedon { get; set; }
 	public DateTime? requestedon { get; set; }
+	public string requestedby { get; set; }
+
 	public string chkstatus { get; set; }
 	public bool isapprovalrequired { get; set; }
 	public bool? isapproved  { get; set; }

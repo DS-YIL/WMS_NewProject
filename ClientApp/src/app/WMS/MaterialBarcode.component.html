@@ -16,9 +16,9 @@
         <div class="col-lg-3 col-md-3">
           <input type="radio" name="labelcheck" checked="checked" (change)="racklabel()" /> <label class="labelheading text-dark">&nbsp;&nbsp;Rack</label>
         </div>
-       
+
         <div class="col-lg-6 col-md-6">
-          
+
           <input type="radio" name="labelcheck" (change)="binlabel()" /> <label class="labelheading text-dark">&nbsp;&nbsp;Bin</label>
         </div>
 
@@ -29,7 +29,7 @@
         <div class="row">
           <div class="col-sm-2 col-mg-2 col-lg-2" style="font-weight:600;font-size:14px;color:darkblue;">Select Location:</div>
           <div class="col-sm-2 col-mg-2 col-lg-2">
-            <select class="form-control dropdown" [(ngModel)]="locatorid" (change)="onlocUpdate(locatorid,locatorname,false)">
+            <select class="form-control dropdown" [(ngModel)]="locatorid"  (change)="onlocUpdate(locatorid,locatorname,false)">
 
               <option *ngFor=" let loclist of locationlist" value={{loclist.locatorid}}>
                 {{loclist.locatorname}}
@@ -37,16 +37,17 @@
             </select>
           </div>
           <div class="col-sm-3 col-mg-3 col-lg-3">
-            <select class="form-control dropdown"  [(ngModel)]="rackid" (change)="onracUpdate(rackid,racknumber,false)">
-      <option selected value="0"></option>
+            <select class="form-control dropdown" [(ngModel)]="rackid" (change)="onracUpdate(rackid,racknumber,false)">
+              <option selected value="0"></option>
 
-      <option *ngFor=" let loclist of racklist " value={{loclist.rackid}}>
-        {{loclist.racknumber}}
-      </option>
-    </select>
+              <option *ngFor=" let loclist of racklist " value={{loclist.rackid}}>
+                {{loclist.racknumber}}
+              </option>
+            </select>
           </div>
           <div class="col-sm-2 col-mg-2 col-lg-2">
-            <button type="button" class="btn btn-success" (click)="PrintRacklabel()">Print Rack Label</button>
+            <!--<button type="button" class="btn btn-success" (click)="PrintRacklabel()">Print Rack Label</button>-->
+            <button type="button" class="btn btn-success" (click)="GenerateRacklabel(locatorid,rackid)">Generate Rack Label</button>
 
 
           </div>
@@ -55,48 +56,57 @@
       </div>
       <div *ngIf="isbinlabel">
         <div class="row">
-            <div class="col-sm-2 col-mg-2 col-lg-2" style="font-weight:600;font-size:14px;color:darkblue;">Select Location:</div>
-            <div class="col-sm-2 col-mg-2 col-lg-2">
-              <select class="form-control dropdown" [(ngModel)]="locatorid"  (change)="onlocUpdate(locatorid,false)">
+          <div class="col-sm-2 col-mg-2 col-lg-2" style="font-weight:600;font-size:14px;color:darkblue;">Select Location:</div>
+          <div class="col-sm-2 col-mg-2 col-lg-2">
+            <select class="form-control dropdown" [(ngModel)]="locatorid" (change)="onlocUpdate(locatorid,false)">
 
-                <option *ngFor=" let loclist of locationlist" value={{loclist.locatorid}}>
-                  {{loclist.locatorname}}
-                </option>
-              </select>
-            </div>
-            <div class="col-sm-3 col-mg-3 col-lg-3">
-              <select class="form-control dropdown" [(ngModel)]="rackid"  (change)="onrackUpdate(locatorid,rackid,false)">
-                <option selected value="0"></option>
+              <option *ngFor=" let loclist of locationlist" value={{loclist.locatorid}}>
+                {{loclist.locatorname}}
+              </option>
+            </select>
+          </div>
+          <div class="col-sm-3 col-mg-3 col-lg-3">
+            <select class="form-control dropdown" [(ngModel)]="rackid" (change)="onrackUpdate(locatorid,rackid,false)">
+              <option selected value="0"></option>
 
-                <option *ngFor=" let loclist of racklist " value={{loclist.rackid}}>
-                  {{loclist.racknumber}}
-                </option>
-              </select>
-            </div>
-            <div class="col-sm-3 col-mg-3 col-lg-3">
-              <select class="form-control dropdown" [(ngModel)]="binid">
+              <option *ngFor=" let loclist of racklist " value={{loclist.rackid}}>
+                {{loclist.racknumber}}
+              </option>
+            </select>
+          </div>
+          <div class="col-sm-3 col-mg-3 col-lg-3">
+            <select class="form-control dropdown" [(ngModel)]="binid">
 
-                <option selected value="0"></option>
-                <option *ngFor=" let loclist of binlist" value={{loclist.binid}}>
-                  {{loclist.binnumber}}
-                </option>
-              </select>
-            </div>
-            <div class="col-sm-2 col-mg-2 col-lg-2">
-
-
-
-              <button type="button" class="btn btn-success" (click)="PrintBinlabel()">Print Bin Label</button>
+              <option selected value="0"></option>
+              <option *ngFor=" let loclist of binlist" value={{loclist.binid}}>
+                {{loclist.binnumber}}
+              </option>
+            </select>
+          </div>
+          <div class="col-sm-2 col-mg-2 col-lg-2">
 
 
-            </div>
-            <div class="col-sm-2 col-mg-2 col-lg-2"></div>
-         
+
+            <button type="button" class="btn btn-success" (click)="PrintBinlabel()">Print Bin Label</button>
+
+
+          </div>
+          <div class="col-sm-2 col-mg-2 col-lg-2"></div>
+
         </div>
       </div>
+      <div *ngIf="showLabel">
+        <div class="col-sm-3 col-mg-3 col-lg-3"></div>
+        <div class="col-sm-6 col-mg-6 col-lg-6">
+          <img class="images" src="{{labelpath}}" />
+          <br />
+          <button type="button" class="btn btn-success" (click)="PrintRacklabel()">Print Rack Label</button>
+        </div>
+        <div class="col-sm-3 col-mg-3 col-lg-3"></div>
+      </div>
 
-     
 
     </div>
   </div>
+  
 

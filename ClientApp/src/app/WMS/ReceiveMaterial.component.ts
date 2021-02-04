@@ -44,6 +44,7 @@ export class ReceiveMaterialComponent implements OnInit {
   public rackdata: any[] = [];
   public binlist: any[] = [];
   public racklist: any[] = [];
+  rowGroupMetadata: any;
 
 
 
@@ -55,6 +56,9 @@ export class ReceiveMaterialComponent implements OnInit {
       this.router.navigateByUrl("Login");
     this.selectedStatus = "Pending";
     this.STORequestlist();
+    this.locationListdata();
+    this.binListdata();
+    this.rackListdata();
    
   }
 
@@ -65,14 +69,113 @@ export class ReceiveMaterialComponent implements OnInit {
   STORequestlist() {
     var empno = this.employee.employeeno;
     this.wmsService.STORequestlist().subscribe(data => {
+      debugger;
       this.storequestlist = data;
       this.requestlistSTO = data;
-      this.storequestlist = this.requestlistSTO.filter(li => li.status == this.selectedStatus || li.status == null);
+      if (this.selectedStatus == "Issued") {
+        this.storequestlist = this.requestlistSTO.filter(li => li.putawaystatus == true);
+      }
+      else {
+        this.storequestlist = this.requestlistSTO.filter(li => li.putawaystatus == false);
+      }
       this.storequestlist.forEach(item => {
         item.showtr = false;
       });
+      this.updateRowGroupMetaData();
     });
   }
+
+  updateRowGroupMetaData() {
+    debugger;
+    this.rowGroupMetadata = {};
+    if (this.storequestlist) {
+      var count = 0;
+      for (let i = 0; i < this.storequestlist.length; i++) {
+        let rowData = this.storequestlist[i].materialdata;
+        for (let j = 0; j < rowData.length; j++) {
+          let transferid = rowData[j].transferid;
+          if (i == 0) {
+            this.rowGroupMetadata[transferid] = { index: 0, size: 1 };
+            count = count + 1;
+            this.storequestlist[i].materialdata[j].serialno = count;
+          }
+          else {
+            let previousRowData = this.storequestlist[i].materialdata[j - 1];
+            let previousRowGroup = previousRowData.transferid;
+            if (transferid === previousRowGroup)
+              this.rowGroupMetadata[transferid].size++;
+            else {
+              this.rowGroupMetadata[transferid] = { index: j, size: 1 };
+              count = count + 1;
+              this.storequestlist[i].materialdata[j].serialno = count;
+            }
+
+
+          }
+        }
+      }
+    }
+  }
+
+  locationListdata() {
+    this.wmsService.getlocationdata().
+      subscribe(
+        res => {
+          //this._list = res; //save posts in array
+          this.locationlist = res;
+          let _list: any[] = [];
+          for (let i = 0; i < (res.length); i++) {
+            _list.push({
+              locatorid: res[i].locatorid,
+              locatorname: res[i].locatorname,
+            });
+          }
+          this.locationlist = _list;
+          this.locationdata = _list;
+        });
+  }
+  binListdata() {
+    debugger;
+    this.wmsService.getbindataforputaway().
+      subscribe(
+        res => {
+          //this._list = res; //save posts in array
+          this.binlist = res;
+          let _list: any[] = [];
+          for (let i = 0; i < (res.length); i++) {
+            _list.push({
+              locationid: res[i].locatorid,
+              binid: res[i].binid,
+              rackid: res[i].rackid,
+              binnumber: res[i].binnumber
+            });
+          }
+          this.binlist = _list;
+          this.bindata = _list;
+        });
+  }
+  rackListdata() {
+    debugger;
+    this.wmsService.getrackdataforputaway().
+      subscribe(
+        res => {
+          //this._list = res; //save posts in array
+          this.racklist = res;
+          let _list: any[] = [];
+          for (let i = 0; i < (res.length); i++) {
+            _list.push({
+              binid: res[i].binid,
+              rackid: res[i].rackid,
+              racknumber: res[i].racknumber,
+              locationid: res[i].locatorid
+            });
+          }
+          this.racklist = _list;
+          this.rackdata = _list;
+        });
+  }
+
+
 
   showDialog(details: any, index: number) {
     debugger;
@@ -83,8 +186,10 @@ export class ReceiveMaterialComponent implements OnInit {
     this.rowIndex = index;
     this.binid = details.binid;
     this.rackid = details.rackid;
-    this.matid = details.material;
-
+    this.matid = details.materialid;
+    this.matqty = details.issuedqty;
+    this.matdescription = details.poitemdesc;
+    
     //this.invoiceForm.controls.itemRows.value[this.invoiceForm.controls.itemRows.value.length - 1].storeid = details.storeid;
     //this.invoiceForm.controls.itemRows.value[this.invoiceForm.controls.itemRows.value.length - 1].rackid = details.rackid;
     //this.invoiceForm.controls.itemRows.value[this.invoiceForm.controls.itemRows.value.length - 1].binid = details.binid;
@@ -92,8 +197,8 @@ export class ReceiveMaterialComponent implements OnInit {
     this.StockModel.locatorid = details.storeid;
     this.StockModel.rackid = details.rackid;
     this.StockModel.binid = details.binid;
-    this.matdescription = details.poitemdescription;
-    this.matqty = details.confirmqty;
+   
+   
 
 
     this.StockModelForm = this.formBuilder.group({
@@ -257,6 +362,7 @@ export class ReceiveMaterialComponent implements OnInit {
         this.StockModel.totalquantity = this.PoDetails.materialqty;
         this.StockModel.createdby = this.employee.employeeno;
         this.StockModel.inwardid = this.PoDetails.inwardid;
+        this.StockModel.id = this.PoDetails.id;
         this.StockModel.stocktype = item.stocktype;
 
         binnumber = this.bindata.filter(x => x.binid == item.binid);
@@ -323,6 +429,7 @@ export class ReceiveMaterialComponent implements OnInit {
               this.showLocationDialog = false;
               this.messageService.add({ severity: 'success', summary: '', detail: 'Location Updated' });
               this.stock = [];
+              this.STORequestlist();
              
               // }
             });
@@ -354,8 +461,15 @@ export class ReceiveMaterialComponent implements OnInit {
     //this.formArr.removeAt(index);
   }
 
-  onSelectStatus() {
-    this.storequestlist = this.requestlistSTO.filter(li => li.status == this.selectedStatus);
+  onSelectStatus(event: any) {
+    this.selectedStatus = event.target.value;
+    if (this.selectedStatus == "Issued") {
+      this.storequestlist = this.requestlistSTO.filter(li => li.putawaystatus == true);
+    }
+    else {
+      this.storequestlist = this.requestlistSTO.filter(li => li.putawaystatus == false);
+    }
+   // this.storequestlist = this.requestlistSTO.filter(li => li.status == this.selectedStatus);
   }
 
   //On selection of rack updating bin
