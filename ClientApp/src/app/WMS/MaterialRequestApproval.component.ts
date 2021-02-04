@@ -122,7 +122,7 @@ export class MaterialRequestApprovalComponent implements OnInit {
     this.wmsService.approverequestmaterial(senddata).subscribe(data => {
       this.spinner.hide();
       if (String(data)=="saved") {
-        this.messageService.add({ severity: 'success', summary: '', detail: 'Records Updated' });
+        this.messageService.add({ severity: 'success', summary: '', detail: 'Saved successfully' });
         this.getMaterialRequestlist(this.employee.employeeno);
       }
 
