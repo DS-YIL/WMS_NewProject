@@ -7,9 +7,9 @@
       <div class="col-lg-4 col-md-4 form-inline">
         <div class="form-inline">
           <label class="labelheading">Status :</label>&nbsp;&nbsp;
-          <select placeholder="Status" name="Status" (change)="onSelectStatus()" [ngModel]="selectedStatus" class="form-control">
+          <select placeholder="Status" name="Status" (change)="onSelectStatus($event)" [ngModel]="selectedStatus" class="form-control">
             <option selected value="Pending"> Pending</option>
-            <option value="Approved"> Received</option>
+            <option value="Issued"> Received</option>
           </select>
         </div>
       </div>
@@ -32,54 +32,55 @@
     <p-table #dt [value]="storequestlist" [style]="{'width':'100%'}" [scrollable]="true" scrollHeight="62vh">
       <ng-template pTemplate="header">
         <tr class="mprltbldata">
-          <th style="text-align:center;width:70px">Sl No.</th>
-          <th style="text-align:center;width:150px">STO No.</th>
-          <th style="text-align:center;width:150px">Requested On</th>
-          <th style="text-align:center;width:150px">Remarks</th>
-          <th style="text-align:center;width:100px">Status</th>
+          <th style="text-align:center;width:30px">Sl No.</th>
+          <th style="text-align:center;width:70px">STO No.</th>
+          <th style="text-align:center;width:70px">Requested On</th>
+          <th style="text-align:center;width:100px">Remarks</th>
+          <!--<th style="text-align:center;width:100px">Status</th>-->
 
         </tr>
         <tr>
 
-          <th style="text-align:center;width:70px"></th>
-          <th style="text-align:center;width:150px"> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'stono', 'contains')"></th>
-          <th style="text-align:center;width:150px"> </th>
-          <th style="text-align:center;width:150px"> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'remarks', 'contains')"></th>
-          <th style="text-align:center;width:100px"><input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'status', 'contains')"></th>
+          <th style="text-align:center;width:30px"></th>
+          <th style="text-align:center;width:70px"> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'stono', 'contains')"></th>
+          <th style="text-align:center;width:70px"> </th>
+          <th style="text-align:center;width:100px"> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'remarks', 'contains')"></th>
+          <!--<th style="text-align:center;width:100px"><input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'status', 'contains')"></th>-->
 
 
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
         <tr>
-          <td class="ptable-cell" style="text-align:right;width:150px;">{{ri+1}}</td>
+          <td class="ptable-cell" style="text-align:center;width:30px;">{{ri+1}}</td>
 
-          <td class="ptable-cell" style="text-align: center;width: 321px;">
+          <td class="ptable-cell" style="text-align: center;width: 70px;">
             <span (click)="showattachdata(rowData)" class="btn btn-link">{{rowData.transferid}}</span>
           </td>
-          <td class="ptable-cell" style="text-align:center;width:321px;">{{rowData.transferredon | date :  constants.dateFormat}}</td>
+          <td class="ptable-cell" style="text-align:center;width:70px;">{{rowData.transferredon | date :  constants.dateFormat}}</td>
 
-          <td class="ptable-cell" style="text-align:left;width:321px;">{{rowData.remarks}}</td>
-          <td class="ptable-cell" style="text-align:left;width:200px;">{{rowData.status}}</td>
+          <td class="ptable-cell" style="text-align:left;width:100px;">{{rowData.remarks}}</td>
+          <!--<td class="ptable-cell" style="text-align:left;width:100px;">{{rowData.status}}</td>-->
 
 
         </tr>
         <tr *ngIf="rowData.showtr">
-          <td [attr.colspan]="6" style="text-align:center;">
+          <td [attr.colspan]="4" style="text-align:center;">
             <label class="labeltext">Material Detail</label>
           </td>
 
         </tr>
         <tr *ngIf="rowData.showtr">
-          <td [attr.colspan]="6" style="text-align:center;">
+          <td [attr.colspan]="4" style="text-align:center;">
 
-            <p-table [value]="rowData.materialdata" [style]="{'width':'100%'}">
+            <p-table [columns]="cols" [value]="rowData.materialdata" [style]="{'width':'100%'}" dataKey="transferid">
               <ng-template pTemplate="header">
         <tr class="mprltbldata">
           <th rowspan="2" class="ptable-cell" style="width: 10%; text-align: center">Sl. No.</th>
           <th rowspan="2" style="text-align:center;width:30%" class="ptable-cell">Material</th>
           <th rowspan="2" style="text-align:center;width:40%" class="ptable-cell">PO Item Description</th>
-          <th rowspan="2" style="text-align:center;width:20%" class="ptable-cell">Requested quantity</th>
+          <th rowspan="2" style="text-align:center;width:10%" class="ptable-cell">Requested quantity</th>
+          <th rowspan="2" style="text-align:center;width:10%" class="ptable-cell">Issued quantity</th>
           <th colspan="2" style="width:200px; text-align: center">Put Away</th>
         </tr>
         <tr class="mprltbldata">
@@ -89,7 +90,7 @@
       </ng-template>
       <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex" let-rindex=0>
         <tr>
-          <td class="ptable-cell" style="text-align:center"> {{ri+1}} </td>
+          <td class="ptable-cell" style="text-align:center"> {{rowData.serialno}} </td>
           <td class="ptable-cell" style="text-align:center;">
             {{rowData.materialid}}
           </td>
@@ -99,17 +100,30 @@
           <td class="ptable-cell" style="text-align:right">
             {{rowData.transferqty}}
           </td>
+          <td class="ptable-cell" style="text-align:right">
+            {{rowData.issuedqty}}
+          </td>
           <td colspan="2" class="ptable-cell" style="text-align:center;width:200px;">
-            <a *ngIf="rowData.itemlocation" href="#" [pRowToggler]="rowData">
+            <a *ngIf="rowData.itemlocation && rowData.isissued==true" href="#" [pRowToggler]="rowData">
               <i [ngClass]="expanded ? 'pi pi-fw pi-chevron-circle-down' : 'pi pi-fw pi-chevron-circle-right'" style="    vertical-align: middle;padding-bottom: .1em;color: #20f320d6"></i>
             </a>
-            <i *ngIf="!rowData.itemlocation && rowData.confirmqty == 0" class="fa fa-location-arrow" style="color:blue" pTooltip="Add Location" (click)="showDialog(rowData,ri)" aria-hidden="true"></i>
+            <i *ngIf="!rowData.itemlocation && rowData.isissued==false" class="fa fa-location-arrow" style="color:blue" pTooltip="Add Location" (click)="showDialog(rowData,ri)" aria-hidden="true"></i>
 
           </td>
         </tr>
       </ng-template>
 
-
+      <ng-template pTemplate="rowexpansion" let-rowData let-rowIndex="rowIndex">
+        <tr>
+          <td  colspan="5"></td>
+          <td style="text-align:right;width:100px">
+            {{rowData.availableqty}}
+          </td>
+          <td style="width:100px">
+            {{rowData.itemlocation}}
+          </td>
+        </tr>
+      </ng-template>
     </p-table>
     </td>
 

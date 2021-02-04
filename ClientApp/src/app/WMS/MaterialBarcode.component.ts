@@ -29,8 +29,12 @@ export class MaterialBarcodeComponent implements OnInit {
   public binlist: any[] = [];
   public bindata: any[] = [];
   public locatorid: any;
+  public locatornamr: string;
+  public rackname: any;
   public rackid: any;
+  public showLabel: boolean = false;
   public binid: any;
+  public labelpath: string;
   public locbarcode = new locationBarcode();
 
   ngOnInit() {
@@ -148,8 +152,10 @@ export class MaterialBarcodeComponent implements OnInit {
   }
 
   //On selection of location updating rack
-  onlocUpdate(locationid: any,issetdefault: boolean) {
+  onlocUpdate(locationid: any,locatorname:any,issetdefault: boolean) {
     debugger;
+    this.locatornamr = locatorname;
+   // alert(this.locatornamr);
    // rowData.racklist = [];
     if (this.rackdata.filter(li => li.locationid == locationid).length > 0) {
       this.racklist = [];
@@ -181,23 +187,39 @@ export class MaterialBarcodeComponent implements OnInit {
     //  }
     //});
   }
+  
+
+  GenerateRacklabel(locatorid: any, rackid: any) {
+    debugger;
+    var labeldata = locatorid + rackid;
+    this.wmsService.generateLabel(labeldata).subscribe(data => {
+      if (data == "") {
+        this.messageService.add({ severity: 'error', summary: '', detail: "Error while generating label" });
+      }
+      else {
+        this.showLabel = true;
+        this.labelpath = data;
+      }
+    });
+  }
 
   PrintBinlabel() {
     this.locbarcode.locatorid = this.locatorid;
     this.locbarcode.rackid = this.rackid;
     this.locbarcode.isracklabel = true;
     this.locbarcode.binid = this.binid;
-    //this.wmsService.checkMatExists(material).subscribe(data => {
-    //  if (data == "No material exists") {
-    //    this.messageService.add({ severity: 'error', summary: '', detail: "Material doesn't exist" });
-    //  }
-    //  else {
-    //    this.path = data;
-    //  }
-    //});
+    this.wmsService.printBinqr(this.locbarcode).subscribe(data => {
+      if (data == "success") {
+        this.messageService.add({ severity: 'success', summary: '', detail: "QRCode printed successfully" });
+      }
+      else {
+        this.path = data;
+      }
+    });
   }
 
-  GenerateBarcode(material:string) {
+  GenerateBarcode(material: string) {
+
     this.wmsService.checkMatExists(material).subscribe(data => {
       if (data == "No material exists") {
         this.messageService.add({ severity: 'error', summary: '', detail: "Material doesn't exist" });
