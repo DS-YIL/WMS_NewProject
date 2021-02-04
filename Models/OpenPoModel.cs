@@ -1807,8 +1807,6 @@ public class MaterialTransaction
 	public string reservedby { get; set; }
 	public DateTime? reservedon { get; set; }
 	public DateTime? requestedon { get; set; }
-	public string requestedby { get; set; }
-
 	public string chkstatus { get; set; }
 	public bool isapprovalrequired { get; set; }
 	public bool? isapproved  { get; set; }
