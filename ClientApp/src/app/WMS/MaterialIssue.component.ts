@@ -9,6 +9,7 @@ import { materialRequestDetails, FIFOValues } from 'src/app/Models/WMS.Model';
 import { MessageService } from 'primeng/api';
 import { ConfirmationService } from 'primeng/api';
 import { DatePipe } from '@angular/common';
+import { isNullOrUndefined } from 'util';
 @Component({
   selector: 'app-MaterialIsuue',
   templateUrl: './MaterialIssue.component.html'
@@ -89,9 +90,9 @@ export class MaterialIssueComponent implements OnInit {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Issue Qty cannot exceed available Qty.' });
       return;
     }
-    var material = this.itemlocationData[0].materialid;
+    var material = this.materialissueList[this.roindex].requestmaterialid;
     this.itemlocationsaveData = this.itemlocationsaveData.filter(function (element, index) {
-      return (element.materialid != material);
+      return (element.requestmaterialid != material);
     });
     var totalissuedqty = 0;
     this.itemlocationData.forEach(item => {
@@ -150,6 +151,7 @@ export class MaterialIssueComponent implements OnInit {
       this.issueqtyenable = false;
       this.wmsService.getItemlocationListByMaterialanddesc(material, poitemdescription).subscribe(data => {
         this.itemlocationData = data;
+        console.log(this.itemlocationData);
         this.showdialog = true;
       });
     }
@@ -180,7 +182,17 @@ export class MaterialIssueComponent implements OnInit {
     });
   }
   //check issued quantity
-  checkissueqty($event, entredvalue, maxvalue, material, createddate,rowdata: any) {
+  checkissueqty($event, entredvalue, maxvalue, material, createddate, rowdata: any) {
+    if (entredvalue < 0) {
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Enter value grater than 1' });
+      rowdata.issuedqty = 0;
+      return;
+    }
+    if (isNullOrUndefined(entredvalue) || entredvalue == 0) {
+      rowdata.issuedqty = 0;
+      return;
+    }
+   
     var id = $event.target.id;
     if (entredvalue > maxvalue) {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Please enter issue quantity less than Available quantity' });
@@ -189,7 +201,7 @@ export class MaterialIssueComponent implements OnInit {
     }
     else {
 
-      this.wmsService.checkoldestmaterial(material, createddate).subscribe(data => {
+      this.wmsService.checkoldestmaterialwithdesc(material, createddate, rowdata.materialdescription).subscribe(data => {
         this.Oldestdata = data;
         if (data != null) {
           this.alertconfirm(this.Oldestdata);

@@ -16,13 +16,17 @@ namespace WMS.Common
 			Configurations config = new Configurations();
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
-				pgsql.OpenAsync();
-				exception = exception.Replace("'", String.Empty);
-				string query = "insert into wms.api_error_log(controller_name,method_name,exception_message,stacktrace,occureddate,url)values('" + controllername + "', '" + methodname + "', '" + exception + "','" + stacktrace + "','" + DateTime.Now + "','" + url + "')";
-				IDbCommand selectCommand = pgsql.CreateCommand();
-				selectCommand.CommandText = query;
-				selectCommand.ExecuteNonQuery();
-				pgsql.Close();
+				pgsql.Open();
+				if(pgsql.State == System.Data.ConnectionState.Open)
+                {
+					exception = exception.Replace("'", String.Empty);
+					string query = "insert into wms.api_error_log(controller_name,method_name,exception_message,stacktrace,occureddate,url)values('" + controllername + "', '" + methodname + "', '" + exception + "','" + stacktrace + "','" + DateTime.Now + "','" + url + "')";
+					IDbCommand selectCommand = pgsql.CreateCommand();
+					selectCommand.CommandText = query;
+					selectCommand.ExecuteNonQuery();
+					pgsql.Close();
+				}
+				
 
 			}
 		}

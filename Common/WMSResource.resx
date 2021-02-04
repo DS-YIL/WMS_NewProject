@@ -403,7 +403,7 @@ group by category</value>
 where stockstatus='active' and sk.deleteflag=false and availableqty!=0</value>
   </data>
   <data name="checkoldestmaterial" xml:space="preserve">
-    <value>select * from wms.wms_stock where materialid='#materialid' and createddate::date&lt;'#createddate'  order by createddate asc limit 1</value>
+    <value>select * from wms.wms_stock where materialid='#materialid'  and createddate::date&lt;'#createddate'  order by createddate asc limit 1</value>
   </data>
   <data name="insertFIFOdata" xml:space="preserve">
     <value>insert into wms.wms_fifoitemdistribution(fifoid,itemid,materialid,enteredon,pono)values(default,@itemid,@materialid,current_date,@pono)</value>
@@ -1737,7 +1737,7 @@ where dataloaderrors is True and stockid not in (
 sum(sk.availableqty) as availableqty,
 SUM(sk.unitprice * sk.availableqty) as materialcost,sk.poitemdescription  as materialdescription 
 from wms.wms_stock  sk 
-where sk.availableqty &gt; 0  group by sk.materialid,sk.poitemdescription</value>
+where sk.availableqty &gt; 0 and sk.materialid is not null and sk.poitemdescription is not null  group by sk.materialid,sk.poitemdescription</value>
   </data>
   <data name="getFMapprovermail" xml:space="preserve">
     <value>select emp.name,emp.email from wms.wms_gatepass gtp 
@@ -1887,5 +1887,8 @@ group by wp.projectcode,wp.projectmanager</value>
   </data>
   <data name="getMiscellanousReasons" xml:space="preserve">
     <value>select * from wms.rd_reason where reasontype ='Miscellanous' and deleteflag =false</value>
+  </data>
+  <data name="checkoldmaterialwithdesc" xml:space="preserve">
+    <value>select * from wms.wms_stock where materialid='#materialid' and poitemdescription = '#desc' and createddate::date&lt;'#createddate'  order by createddate asc limit 1</value>
   </data>
 </root>

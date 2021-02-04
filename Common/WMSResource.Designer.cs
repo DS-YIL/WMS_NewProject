@@ -106,11 +106,20 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select * from wms.wms_stock where materialid=&apos;#materialid&apos; and createddate::date&lt;&apos;#createddate&apos;  order by createddate asc limit 1.
+        ///   Looks up a localized string similar to select * from wms.wms_stock where materialid=&apos;#materialid&apos;  and createddate::date&lt;&apos;#createddate&apos;  order by createddate asc limit 1.
         /// </summary>
         public static string checkoldestmaterial {
             get {
                 return ResourceManager.GetString("checkoldestmaterial", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to select * from wms.wms_stock where materialid=&apos;#materialid&apos; and poitemdescription = &apos;#desc&apos; and createddate::date&lt;&apos;#createddate&apos;  order by createddate asc limit 1.
+        /// </summary>
+        public static string checkoldmaterialwithdesc {
+            get {
+                return ResourceManager.GetString("checkoldmaterialwithdesc", resourceCulture);
             }
         }
         
@@ -595,7 +604,7 @@ namespace WMS.Common {
         ///sum(sk.availableqty) as availableqty,
         ///SUM(sk.unitprice * sk.availableqty) as materialcost,sk.poitemdescription  as materialdescription 
         ///from wms.wms_stock  sk 
-        ///where sk.availableqty &gt; 0  group by sk.materialid,sk.poitemdescription.
+        ///where sk.availableqty &gt; 0 and sk.materialid is not null and sk.poitemdescription is not null  group by sk.materialid,sk.poitemdescription.
         /// </summary>
         public static string getdefaultmaterialforgatepass {
             get {

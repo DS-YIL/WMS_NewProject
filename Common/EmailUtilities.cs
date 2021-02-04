@@ -347,6 +347,14 @@ namespace WMS.Common
 				link = linkurl + "WMS/Email/MaterialReqView?ReqId=" + emlSndngList.requestid;
 
 			}
+			else if (subjecttype == 25)
+			{
+				mailMessage.Subject = "Materials Issued for STO Request Id" + emlSndngList.requestid;
+				subbody = "The materials for STO Request Id " + emlSndngList.requestid + " has been issued.";
+				//subbody += mailMessage.Subject;
+				link = "";
+
+			}
 
 			if (!string.IsNullOrEmpty(emlSndngList.CC))
 				mailMessage.CC.Add(emlSndngList.CC);

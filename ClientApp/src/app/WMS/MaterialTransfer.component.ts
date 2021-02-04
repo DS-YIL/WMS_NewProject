@@ -739,7 +739,7 @@ export class MaterialTransferComponent implements OnInit {
       if (data) {
         this.AddDialog = false;
         this.gatepassdialog = false;
-        this.messageService.add({ severity: 'success', summary: '', detail: 'Material tarnsferred' });
+        this.messageService.add({ severity: 'success', summary: '', detail: 'Tarnsfer Successful' });
         this.getMaterialRequestlist(this.employee.employeeno);
       }
 

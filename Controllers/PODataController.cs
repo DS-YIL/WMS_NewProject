@@ -548,6 +548,12 @@ namespace WMS.Controllers
 
 			return this._poService.checkloldestmaterial(material, createddate);
 		}
+		[HttpGet("Checkoldestmaterialwithdesc")]
+		public ReportModel Oldestmaterialwithdesc(string material, string createddate, string description)
+		{
+
+			return this._poService.checkoldmaterialwithdesc(material, createddate, description);
+		}
 		[HttpPost("updateFIFOIssueddata")]
 		public int Oldestmaterial([FromBody] List<FIFOModel> model)
 		{

@@ -423,6 +423,10 @@ export class wmsService {
     material = encodeURIComponent(material);
     return this.http.get<any>(this.url + 'POData/Checkoldestmaterial?material=' + material + '&createddate=' + createddate, this.httpOptions);
   }
+  checkoldestmaterialwithdesc(material: any, createddate: any, materialdescription: string): Observable<any> {
+    material = encodeURIComponent(material);
+    return this.http.get<any>(this.url + 'POData/Checkoldestmaterialwithdesc?material=' + material + '&createddate=' + createddate + '&description=' + materialdescription, this.httpOptions);
+  }
   insertFIFOdata(materialIssueList: any): Observable<any> {
     return this.http.post<any>(this.url + 'POData/updateFIFOIssueddata/', materialIssueList, this.httpOptions);
   }

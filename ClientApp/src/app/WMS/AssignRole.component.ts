@@ -368,7 +368,7 @@ export class AssignRoleComponent implements OnInit {
       if (String(data) == "saved") {
         this.getUserAuth();
         this.showadddatamodel = false;
-        this.messageService.add({ severity: 'success', summary: '', detail: 'Role Updated' });
+        this.messageService.add({ severity: 'success', summary: '', detail: 'Role Assigned' });
       }
       else {
         this.messageService.add({ severity: 'error', summary: '', detail: String(data) });

@@ -62,12 +62,12 @@
             </td>
             <td class="ptable-cell" style="text-align:center;width:100px;">{{rowData.projectcode}}</td>
             <td class="ptable-cell" style="text-align:center;width:150px;">{{rowData.requesteddate| date :  constants.dateFormat}}</td>
-            <td class="ptable-cell" style="text-align:center;width:100px;">
+            <td class="ptable-cell" style="text-align:left;width:100px;">
               <span *ngIf="rowData.approvedstatus!=null">{{rowData.approvedstatus}}</span>
               <span *ngIf="rowData.approvedstatus==null">Pending</span>
             </td>
             <td class="ptable-cell" style="text-align:left;width:150px;resize:none">{{rowData.remarks}}</td>
-            <td class="ptable-cell" style="text-align:center;width:100px;">
+            <td class="ptable-cell" style="text-align:left;width:100px;">
               <span>{{rowData.pmapprovedstatus}}</span>
             </td>
             <td class="ptable-cell" style="text-align:left;width:150px;">

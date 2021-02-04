@@ -107,7 +107,7 @@ export class MaterialReturnComponent implements OnInit {
     this.wmsService.materialRequestUpdate(this.requestList).subscribe(data => {
       this.spinner.hide();
       if (data)
-        this.messageService.add({ severity: 'success', summary: '', detail: 'Material returned' });
+        this.messageService.add({ severity: 'success', summary: '', detail: 'Material return successful' });
       else
         this.messageService.add({ severity: 'error', summary: '', detail: 'Update Failed' });
 

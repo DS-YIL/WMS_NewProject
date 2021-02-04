@@ -2646,50 +2646,57 @@ namespace WMS.DAL
 		*/
 		public DataTable GetListItems(DynamicSearchResult Result)
 		{
-			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
-			{
+			
 
 				try
 				{
-					pgsql.OpenAsync();
+					using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+					{
+						pgsql.Open();
 					DataTable dataTable = new DataTable();
-					IDbCommand selectCommand = pgsql.CreateCommand();
-					string query = "";
-					if (Result.tableName == "wms.wms_project")
-					{
-						query = "select distinct projectcode,projectname from " + Result.tableName + Result.searchCondition + "";
-					}
-					if (Result.tableName == "wms.wms_stock")
-					{
-						query = "select distinct itemlocation from " + Result.tableName + Result.searchCondition + "";
-					}
-					else
-					{
-						query = "select * from " + Result.tableName + Result.searchCondition + "";
-					}
+					if (pgsql.State == System.Data.ConnectionState.Open)
+                     {
+						
+						IDbCommand selectCommand = pgsql.CreateCommand();
+						string query = "";
+						if (Result.tableName == "wms.wms_project")
+						{
+							query = "select distinct projectcode,projectname from " + Result.tableName + Result.searchCondition + "";
+						}
+						if (Result.tableName == "wms.wms_stock")
+						{
+							query = "select distinct itemlocation from " + Result.tableName + Result.searchCondition + "";
+						}
+						else
+						{
+							query = "select * from " + Result.tableName + Result.searchCondition + "";
+						}
 
-					if (!string.IsNullOrEmpty(Result.query))
-						query = Result.query;
-					selectCommand.CommandText = query;
-					IDbDataAdapter dbDataAdapter = new NpgsqlDataAdapter();
-					dbDataAdapter.SelectCommand = selectCommand;
+						if (!string.IsNullOrEmpty(Result.query))
+							query = Result.query;
+						selectCommand.CommandText = query;
+						IDbDataAdapter dbDataAdapter = new NpgsqlDataAdapter();
+						dbDataAdapter.SelectCommand = selectCommand;
 
-					DataSet dataSet = new DataSet();
+						DataSet dataSet = new DataSet();
 
-					dbDataAdapter.Fill(dataSet);
-					return dataTable = dataSet.Tables[0];
+						dbDataAdapter.Fill(dataSet);
+					    dataTable = dataSet.Tables[0];
+					  }
+					return dataTable;
+
+
+
+				   }
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider", "GetListItems", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
+					//log.ErrorMessage("PODataProvider", "GetListItems", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
-				finally
-				{
-					pgsql.Close();
-				}
+				
 				//throw new NotImplementedException();
-			}
+			
 
 		}
 
@@ -3911,16 +3918,16 @@ namespace WMS.DAL
 						{
 
 						});
-						EmailModel emailmodelx = new EmailModel();
-						//emailmodel.pono = datamodel[0].pono;
-						//emailmodel.jobcode = datamodel[0].projectname;
-						emailmodelx.materialissueid = dataobj[0].materialissueid;
-						emailmodelx.requestid = dataobj[0].requestid;
-						//emailmodel.ToEmailId = "developer1@in.yokogawa.com";
-						emailmodelx.FrmEmailId = "ramesh.kumar@in.yokogawa.com";
-						//emailmodel.CC = "sushma.patil@in.yokogawa.com";
-						EmailUtilities emailobjx = new EmailUtilities();
-						emailobjx.sendEmail(emailmodelx, 5, 11);
+						//EmailModel emailmodelx = new EmailModel();
+						////emailmodel.pono = datamodel[0].pono;
+						////emailmodel.jobcode = datamodel[0].projectname;
+						//emailmodelx.materialissueid = dataobj[0].materialissueid;
+						//emailmodelx.requestid = dataobj[0].requestid;
+						////emailmodel.ToEmailId = "developer1@in.yokogawa.com";
+						//emailmodelx.FrmEmailId = "ramesh.kumar@in.yokogawa.com";
+						////emailmodel.CC = "sushma.patil@in.yokogawa.com";
+						//EmailUtilities emailobjx = new EmailUtilities();
+						//emailobjx.sendEmail(emailmodelx,51);
 					}
 					if (dataobj[0].requesttype == "STO")
 					{
@@ -3946,11 +3953,24 @@ namespace WMS.DAL
 					EmailModel emailmodel = new EmailModel();
 					emailmodel.materialissueid = dataobj[0].materialissueid;
 					emailmodel.requestid = dataobj[0].requestid;
+					if (dataobj[0].requesttype == "STO")
+					{
+						emailmodel.requestid = dataobj[0].requestid;
+					}
 					emailmodel.FrmEmailId = "ramesh.kumar@in.yokogawa.com";
 					emailmodel.ToEmailId = mailto;
 					emailmodel.CC = mailtocc;
 					EmailUtilities emailobj = new EmailUtilities();
-					emailobj.sendEmail(emailmodel, 51);
+					if (dataobj[0].requesttype == "STO")
+					{
+						emailobj.sendEmail(emailmodel, 25);
+					}
+                    else
+                    {
+						emailobj.sendEmail(emailmodel, 51);
+
+					}
+					
 					Trans.Commit();
 				}
 
@@ -5614,7 +5634,7 @@ namespace WMS.DAL
 
 
 					pgsql.Open();
-					return pgsql.QuerySingle<ReportModel>(
+					return pgsql.QueryFirstOrDefault<ReportModel>(
 					   query, null, commandType: CommandType.Text);
 
 
@@ -5622,6 +5642,43 @@ namespace WMS.DAL
 				catch (Exception Ex)
 				{
 					log.ErrorMessage("PODataProvider", "checkloldestmaterial", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+			}
+		}
+
+		/*
+		Name of Function : <<checkloldestmaterialwithdesc>>  Author :<<Ramesh>>  
+		Date of Creation <<04-02-2021>>
+		Purpose : <<check oldest material>>
+		<param name="materialid"></param>
+		 <param name="createddate"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
+		public ReportModel checkoldmaterialwithdesc(string materialid, string createddate, string description)
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+
+				try
+				{
+					string query = WMSResource.checkoldmaterialwithdesc.Replace("#materialid", materialid).Replace("#desc", description).Replace("#createddate", Convert.ToString(createddate));
+
+
+					pgsql.Open();
+					return pgsql.QueryFirstOrDefault<ReportModel>(
+					   query, null, commandType: CommandType.Text);
+
+
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "checkloldestmaterialwithdesc", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally

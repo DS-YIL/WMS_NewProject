@@ -99,7 +99,7 @@ export class AssignProjectComponent implements OnInit {
       this.wmsService.updateProjectMember(this.getlistdata[this.currentindex]).subscribe(data => {
         this.showadddatamodel = false;
         if (String(data) == "saved") {
-          this.messageService.add({ severity: 'success', summary: '', detail: 'Project member updated' });
+          this.messageService.add({ severity: 'success', summary: '', detail: 'Project assigned' });
           this.getUserAuth();
         }
         else {

@@ -253,26 +253,35 @@ export class GatePassComponent implements OnInit {
     this.defaultmaterialids = [];
     this.defaultuniquematerialids = [];
     this.defaultuniquematerialidescs = [];
-    listdata.forEach(item => {
-      debugger;
-      var mat = item.material;
-      var desc = item.materialdescription;
-      var dt1 = this.defaultmaterialids.filter(function (element, index) {
-        return (element.material.toLowerCase() == String(mat).toLowerCase());
-      });
-      if (dt1.length == 0) {
-        this.defaultmaterialids.push(item);
-      }
-      var dt2 = this.defaultmaterialidescs.filter(function (element, index) {
-        return (element.materialdescription.toLowerCase() == String(desc).toLowerCase());
-      });
-      if (dt2.length == 0) {
-        this.defaultmaterialidescs.push(item);
-      }
+    try {
+      listdata.forEach(item => {
+        debugger;
+        var mat = item.material;
+        var desc = item.materialdescription;
+        var dt1 = this.defaultmaterialids.filter(function (element, index) {
+          return (String(element.material).toLowerCase() == String(mat).toLowerCase());
+        });
+        if (dt1.length == 0) {
+          this.defaultmaterialids.push(item);
+        }
+        var dt2 = this.defaultmaterialidescs.filter(function (element, index) {
+          return (String(element.materialdescription).toLowerCase() == String(desc).toLowerCase());
+        });
+        if (dt2.length == 0) {
+          this.defaultmaterialidescs.push(item);
+        }
 
-    });
-    this.defaultuniquematerialids = this.defaultmaterialids;
-    this.defaultuniquematerialidescs = this.defaultmaterialidescs;
+      });
+      this.defaultuniquematerialids = this.defaultmaterialids;
+      this.defaultuniquematerialidescs = this.defaultmaterialidescs;
+
+    } catch (Exception) {
+
+      alert(Exception.message)
+
+
+    } 
+   
 
   }
 
@@ -1202,7 +1211,7 @@ export class GatePassComponent implements OnInit {
     });
   }
   //check issued quantity
-  checkissueqty($event, entredvalue, maxvalue, material, createddate) {
+  checkissueqty($event, entredvalue, maxvalue, material, createddate, description: string) {
     var id = $event.target.id;
     if (entredvalue > maxvalue) {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Please enter issue quantity less than Available quantity' });
@@ -1211,7 +1220,7 @@ export class GatePassComponent implements OnInit {
     }
     else {
 
-      this.wmsService.checkoldestmaterial(material, createddate).subscribe(data => {
+      this.wmsService.checkoldestmaterialwithdesc(material, createddate, description).subscribe(data => {
         this.Oldestdata = data;
         if (data != null) {
           this.alertconfirm(this.Oldestdata);
@@ -1275,6 +1284,7 @@ export class GatePassComponent implements OnInit {
   }
 
   onSelectStatus() {
+    debugger;
     //this.selectedStatus = value;
     //if (this.employee.roleid == '3') {
     //  this.gatepassFiltered = this.gatepassModelList.filter(li => li.issuedqty == 0 && li.approverstatus == "Approved");

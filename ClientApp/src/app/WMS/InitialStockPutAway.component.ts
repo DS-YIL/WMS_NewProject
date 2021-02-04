@@ -486,7 +486,7 @@ export class InitialStockPutAwayComponent implements OnInit {
       this.wmsService.PutawayFromInitialStock(this.saveModel).subscribe(data => {
         this.spinner.hide();
         if (String(data).trim() == "Location Updated") {
-          this.messageService.add({ severity: 'success', summary: '', detail: String(data).trim() });
+          this.messageService.add({ severity: 'success', summary: '', detail: 'Put away successful' });
         }
         else {
           this.messageService.add({ severity: 'error', summary: '', detail: String(data).trim() });

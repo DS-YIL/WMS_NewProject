@@ -119,6 +119,7 @@ namespace WMS.Interfaces
 
 		Task<IEnumerable<FIFOModel>> GetFIFOList(string material);
 		ReportModel checkloldestmaterial(string materialid, string createddate);
+		ReportModel checkoldmaterialwithdesc(string materialid, string createddate, string description);
 		int FIFOitemsupdate(List<FIFOModel> model);
 		Task<IEnumerable<OpenPoModel>> getASNList(string deliverdate);
 		Task<IEnumerable<OpenPoModel>> getASNListdata();

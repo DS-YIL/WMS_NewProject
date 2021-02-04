@@ -831,7 +831,7 @@ this.updateRowGroupMetaData();
               //this.podetailsList[this.rowIndex].itemlocation = this.StockModel.itemlocation;
               this.issaveprocess = true;
               this.showLocationDialog = false;
-              this.messageService.add({ severity: 'success', summary: '', detail: 'Location Updated' });
+              this.messageService.add({ severity: 'success', summary: '', detail: 'Put away successful' });
               this.stock = [];
               //this.PoDetails = null;
               this.getcheckedgrn();

@@ -9,6 +9,8 @@ import { MessageService } from 'primeng/api';
 import { gatepassModel, materialistModel, FIFOValues, locationdetails } from '../Models/WMS.Model';
 import { DatePipe } from '@angular/common';
 import { ConfirmationService } from 'primeng/api';
+import { isNullOrUndefined } from 'util';
+import { strict } from 'assert';
 @Component({
   selector: 'app-GatePassApprover',
   templateUrl: './GatePassApproverForm.component.html',
@@ -224,7 +226,7 @@ export class GatePassApproverComponent implements OnInit {
 
     }
     else {
-      this.wmsService.checkoldestmaterial(material, createddate).subscribe(data => {
+      this.wmsService.checkoldestmaterialwithdesc(material, createddate, this.matdesc).subscribe(data => {
         this.Oldestdata = data;
         if (data != null) {
           this.alertconfirm(this.Oldestdata);
@@ -239,6 +241,14 @@ export class GatePassApproverComponent implements OnInit {
   issuematerial(itemlocationData) {
     debugger;
     var totalissuedqty = 0;
+    if (!isNullOrUndefined(this.itemlocationData)) {
+      var matid = this.materialList[this.roindex].gatepassmaterialid
+      this.issueFinalList = this.issueFinalList.filter(function (element, index) {
+        return (element.gatepassmaterialid != matid);
+      });
+    }
+   
+  
     this.itemlocationData.forEach(item => {
       if (item.issuedqty) {
         debugger;
