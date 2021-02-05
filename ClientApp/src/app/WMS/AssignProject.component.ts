@@ -131,7 +131,7 @@ export class AssignProjectComponent implements OnInit {
               if (ind > 0) {
                 item.projectmembername += ",";
               }
-              item.projectmembername += data2[0].name;
+              item.projectmembername += data2[0].idwithname;
               item.projectmemberlist.push(data2[0]);
             }
             ind++;
@@ -143,7 +143,7 @@ export class AssignProjectComponent implements OnInit {
             return (element.employeeno == emppno);
           });
           if (data2.length > 0) {
-            item.projectmembername = data2[0].name;
+            item.projectmembername = data2[0].idwithname;
             item.projectmemberlist.push(data2[0]);
           }
 

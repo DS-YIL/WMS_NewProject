@@ -737,7 +737,8 @@ export class UserModel {
   name: string;
   pwd: string;
   domainid: string;
-  email: string
+  email: string;
+  idwithname: string;
 }
 
 export class outwardinwardreportModel {

@@ -71,7 +71,10 @@
     <div class="row" style="margin-bottom:5px;overflow:visible!important;height:400px;margin-top:10px;">
       <div class="col-lg-12 col-md-12 ">
         <label class="labelheading">Select Employee :&nbsp;</label>
-        <p-multiSelect [appendTo]="body" [options]="employeeModel" [(ngModel)]="selectedEmployee"  optionLabel="name" [style]="{'min-width':'300px'}"></p-multiSelect>
+        <p-autoComplete [(ngModel)]="selectedEmployee" [suggestions]="filteredEmployees" (completeMethod)="filterEmployee($event)" styleClass="wid100"
+                        [minLength]="1" placeholder="Employees" field="idwithname" [multiple]="true">
+        </p-autoComplete>
+        <!--<p-multiSelect [appendTo]="body" [options]="employeeModel" [(ngModel)]="selectedEmployee" optionLabel="name" [style]="{'min-width':'300px'}"></p-multiSelect>-->
         <!--<p-autoComplete [(ngModel)]="selectedEmployee" field="idwithname" [suggestions]="filteredEmployees" placeholder="search by name/No" (onSelect)="CheckforEmpdata()" [ngModelOptions]="{standalone: true}" [forceSelection]="true" (completeMethod)="filterEmployee($event)" [size]="30"></p-autoComplete>-->
       </div>
     </div>
