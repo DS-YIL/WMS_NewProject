@@ -7625,7 +7625,7 @@ namespace WMS.DAL
 							detail.poitemdescription = item.materialdescription;
 							reservelistformail.Add(detail);
 
-							string itemnoquery = WMSResource.getitemiddata.Replace("#materialid", item.material);
+							string itemnoquery = WMSResource.getitemiddata.Replace("#materialid", item.material).Replace("#desc",item.materialdescription);
 							var itemData = await pgsql.QueryAsync<StockModel>(
 							itemnoquery, null, commandType: CommandType.Text);
 							int remainingqty = item.quantity;

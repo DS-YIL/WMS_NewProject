@@ -840,7 +840,7 @@ group by sk.pono, polist.suppliername,prj.projectmanager</value>
     <comment>Get PO Details</comment>
   </data>
   <data name="getitemiddata" xml:space="preserve">
-    <value>select * from wms.wms_stock where materialid='#materialid' and availableqty &gt; 0</value>
+    <value>select * from wms.wms_stock where materialid='#materialid' and poitemdescription = '#desc' and availableqty &gt; 0</value>
   </data>
   <data name="getreturndata" xml:space="preserve">
     <value>select distinct max(retmat.matreturnid) as matreturnid,max(retmat.returnid ) as returnid, 
@@ -1192,7 +1192,7 @@ sum(sk.availableqty) as availableqty,(select sum(ws1.availableqty) from wms.wms_
 SUM(sk.unitprice * sk.availableqty) as materialcost,sk.poitemdescription  as materialdescription 
 from wms.wms_stock  sk 
 left outer join wms.wms_project prj on prj.pono = sk.pono 
-where sk.availableqty &gt; 0  group by sk.materialid,sk.poitemdescription</value>
+where sk.availableqty &gt; 0 and sk.materialid is not null and sk.poitemdescription is not null  group by sk.materialid,sk.poitemdescription</value>
   </data>
   <data name="getAllprojectlist" xml:space="preserve">
     <value>select projectcode as value, projectcode as text,Max(projectmanager) as projectmanager
