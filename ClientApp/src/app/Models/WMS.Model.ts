@@ -370,6 +370,7 @@ export class outwardmaterialistModel {
   fmapprover: string;
   outwardedqty: number;
   inwardedqty: number;
+  type: string;
 }
 
 export class categoryValues {
@@ -551,6 +552,12 @@ export class invstocktransfermodel {
   destinationplant: string;
   remarks: string;
   showdetail: boolean = false;
+  vendorname: string;
+  vendorcode: string;
+  Checkstatus: boolean;
+  ackremarks: string;
+  ackstatus: string;
+  ackby: string;
   materialdata: stocktransfermateriakmodel[] = [];
 }
 
@@ -578,6 +585,7 @@ export class stocktransfermateriakmodel {
   materialObj: any;
   materialdescObj: any;
 }
+
 
 export class updateonhold {
   invoiceno: string;
@@ -725,9 +733,6 @@ export class STOrequestTR {
   itemid: any;
   availableqty: any;
   isissued: any;
-  defaultstore: number;
-  defaultrack: number;
-  defaultbin: number;
 }
 
 export class UserModel {

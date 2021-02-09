@@ -5,6 +5,7 @@ import { DashboardComponent } from './WMS/Dashboard.component';
 import { LoginComponent } from './WMS/Login.component';
 import { POListComponent } from './WMS/POList.component';
 import { SecurityHomeComponent } from './WMS/SecurityHome.component';
+import { SubContractComponent } from './WMS/SubContractinoutward.component';
 import { StoreClerkComponent } from './WMS/StoreClerk.component';
 import { WarehouseInchargeComponent } from './WMS/WarehouseIncharge.component';
 import { MaterialRequestComponent } from './WMS/MaterialRequest.component';
@@ -78,9 +79,11 @@ import { MaterilMasterComponent } from './WMS/Admin/Materialmaster.component';
 import { GatePassMasterComponent } from './WMS/Admin/GatePassMaster .component';
 import { PlantMasterComponent } from './WMS/Admin/PlantMaster.component';
 import { ReceiveSTORequestComponent } from './WMS/ReceiveSTORequest.component';
+import { ReceiveSubContractRequestComponent } from './WMS/ReceiveSubContractRequest.component';
 import { InitialStockPutAwayComponent } from './WMS/InitialStockPutAway.component';
 import { MiscellanousComponent } from './WMS/Admin/Miscellanous.component';
 import { StockTransferOrderComponent } from './WMS/StockTransferOrder.component';
+import { SubContractTransferOrderComponent } from './WMS/SubContractTransferOrder.component';
 import { AssignProjectComponent } from './WMS/AssignProject.component';
 import { MaterialRequestApprovalComponent } from './WMS/MaterialRequestApproval.component';
 
@@ -101,6 +104,7 @@ const routes: Routes = [{
     { path: "Home", component: HomeComponent, canActivate: [AuthGuard] },
     { path: "POList", component: POListComponent, canActivate: [AuthGuard] },
     { path: "SecurityCheck", component: SecurityHomeComponent, canActivate: [AuthGuard] },
+    { path: "SubContractinginout", component: SubContractComponent, canActivate: [AuthGuard] },
     { path: "GRNPosting", component: StoreClerkComponent, canActivate: [AuthGuard] },
     { path: "WarehouseIncharge", component: WarehouseInchargeComponent, canActivate: [AuthGuard] },
     { path: "MaterialRequest", component: MaterialRequestComponent, canActivate: [AuthGuard] },
@@ -175,11 +179,13 @@ const routes: Routes = [{
     { path: "MaterialMaster", component: MaterilMasterComponent, canActivate: [AuthGuard] },
     { path: "GatePassMaster", component: GatePassMasterComponent, canActivate: [AuthGuard] },
     { path: "ReceiveSTORequest", component: ReceiveSTORequestComponent, canActivate: [AuthGuard] },
+    { path: "ReceiveSubContractRequest", component: ReceiveSubContractRequestComponent, canActivate: [AuthGuard] },  
     { path: "ReceiveMaterial", component: ReceiveMaterialComponent, canActivate: [AuthGuard] },
     { path: "PlantMaster", component: PlantMasterComponent, canActivate:[AuthGuard] },
     { path: "InitialStockPutAway", component: InitialStockPutAwayComponent, canActivate: [AuthGuard] },
     { path: "MiscellanousReason", component: MiscellanousComponent, canActivate: [AuthGuard] },
     { path: "StockTransferOrder", component: StockTransferOrderComponent, canActivate: [AuthGuard] },
+    { path: "SubContractTransfer", component: SubContractTransferOrderComponent, canActivate: [AuthGuard] },
     { path: "InitialStockPutAway", component: InitialStockPutAwayComponent, canActivate: [AuthGuard] },
     { path: "AssignProject", component: AssignProjectComponent, canActivate: [AuthGuard] },
     { path: "MaterialRequestApproval", component: MaterialRequestApprovalComponent, canActivate: [AuthGuard] }

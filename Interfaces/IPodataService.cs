@@ -307,6 +307,8 @@ namespace WMS.Interfaces
 		Task<IEnumerable<authUser>> getuserauthdetailsbyrole(int roleid);
 		Task<IEnumerable<subrolemodel>> getsubroledata();
 		Task<IEnumerable<plantddl>> getplantlocdetails();
+		Task<string> updateSubcontractAcKstatus(List<invstocktransfermodel> data);
+		Task<IEnumerable<gatepassModel>> subcontractInoutList();
 
 	}
 }

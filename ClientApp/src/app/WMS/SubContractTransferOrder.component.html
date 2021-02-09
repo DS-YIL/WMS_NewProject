@@ -1,0 +1,199 @@
+<div style="margin:10px;">
+  <div class="card" style="width:100%;border-radius:10px; box-shadow:5px 10px #888888;min-height: 81vh; max-height: 81vh;">
+    <div class="card-header">
+      <h6 class="text-center">
+        <span style="color:#428bca;font-size:16px" *ngIf="addprocess">
+          <i class="fa fa-check-circle-o" style="color:#428bca; font-size:16px;font-weight:600"></i>&nbsp;Add - Sub Contract Transfer Order
+        </span>
+      </h6>
+      <div class="row " style="margin-top: 10px;margin-left: 0px !important;margin-right: 0px !important">
+        <div class="col-lg-12 col-md-12 col-xs-12 form-inline">
+          <p-button icon="fa fa-user-plus" label="Create Sub Contract Transfer" (click)="Showadd()" *ngIf="!addprocess"></p-button>
+          <p-button icon="fa fa-arrow-left" label="Back" (click)="Showlist()" *ngIf="addprocess"></p-button>
+          &nbsp;&nbsp;&nbsp;<label class="labelheading" *ngIf="addprocess">Source :&nbsp;</label>
+          &nbsp;&nbsp;&nbsp;
+
+          <p-dropdown [options]="plantlist" [style]="{'width':'100%'}" [(ngModel)]="sourceplant" optionLabel="storagelocationdesc" placeholder="Select location" *ngIf="addprocess" [showClear]="true"></p-dropdown>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label class="labelheading" *ngIf="addprocess">Vendor :&nbsp;</label>
+          &nbsp;&nbsp;&nbsp;
+          <p-autoComplete *ngIf="addprocess" appendTo="body" placeholder="Search by Vendor" [(ngModel)]="vendorObj" type="text" [suggestions]="vendorList" field="name" [forceSelection]="true" [dropdown]="true" (completeMethod)="bindSearchListDatamaterial($event,'','venderid')" size="20"></p-autoComplete>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label class="labelheading" *ngIf="addprocess">Remarks:&nbsp;</label>
+          &nbsp;&nbsp;&nbsp;<textarea type="text" [(ngModel)]="mainmodel.remarks" placeholder="Remarks" style="width:20%;resize:none" *ngIf="addprocess"></textarea>
+        </div>
+        <div class="col-lg-2 col-md-2 form-inline" *ngIf="addprocess">
+
+        </div>
+
+      </div>
+    </div>
+    <div class="card-body cardstyle" style=" overflow-y: hidden;padding-top: 0px; margin-top:5px;">
+      <div class="row" style="max-height: 400px;max-width:100%;overflow: scroll;position: relative; margin-left:3px;" *ngIf="addprocess">
+        <p-table #dt [value]="podetailsList" [style]="{'width':'100%','overflow':'auto!important'}"
+                 [responsive]="true" [rows]="10"
+                 [resizableColumns]="true"
+                 columnResizeMode="expand"
+                 [paginator]="true" [rowsPerPageOptions]="[10,20,30,40]"
+                 appendTo="body">
+          <ng-template pTemplate="header">
+            <tr class="mprltbldata">
+              <th style="text-align:center;width:5%;">Sl.No.</th>
+              <th style="text-align:center;width:15%;">Material</th>
+              <!--<th style="text-align:center;width:15%;">Material Description</th>-->
+              <th style="text-align:center;">Item PO Description</th>
+              <th style="text-align:center;width:8%;">Transfer Qty</th>
+              <th style="text-align:center;width:14%;">Project</th>
+              <th style="text-align:center;width:15%;">Required Date</th>
+              <th style="text-align:center;width:5%;">
+                <p-button icon="fa fa-user-plus" pTooltip="Add Material" (click)="addrows()" *ngIf="addprocess"></p-button>
+              </th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
+            <tr>
+              <td class="ptable-cell" style="text-align: center; width: 5%;">{{ri+1}}</td>
+              <td class="ptable-cell" style="text-align:center;width:15%;">
+                <p-autoComplete appendTo="body" placeholder="search by material" (onSelect)="onMaterialSelected1($event,rowData,ri)" [(ngModel)]="rowData.materialObj" type="text" [suggestions]="searchItems" field="name" [forceSelection]="true" [dropdown]="true" (completeMethod)="bindSearchListDatamaterial($event,rowData,'material')" size="20"></p-autoComplete>
+              </td>
+              <!--<td style="text-align:left;width:10%;"><span *ngIf="rowData.materialObj">{{rowData.materialObj.materialdescription}}</span></td>-->
+              <td class="ptable-cell" style="text-align:left;">
+                <p-autoComplete [(ngModel)]="rowData.materialdescObj" placeholder="search by description" type="text" appendTo="body" [forceSelection]="true" (onSelect)="onDescriptionSelected($event,rowData,ri)" [suggestions]="searchdescItems"  field="name" (completeMethod)="bindSearchListDatamaterialdesc($event,rowData)" [size]="40" [dropdown]="true"></p-autoComplete>
+              </td>
+              <td class="ptable-cell" style="text-align:right;width:8%;">
+                <input pInputText type="number" style="text-align:right" class="form-control" [min]="0" [(ngModel)]="rowData.transferqty">
+              </td>
+              <td class="ptable-cell" style="text-align:right;width:14%;">
+                <input pInputText type="text" style="text-align:right" class="form-control" [min]="0" [(ngModel)]="rowData.projectid">
+              </td>
+              <td class="ptable-cell" style="text-align:right;width:15%;">
+                <p-calendar [(ngModel)]="rowData.requireddate" [style]="{'width':'100%'}" [inputStyle]="{'width':'80%'}" [inline]="false"
+                            placeholder="Select Date" dateFormat="dd/mm/yy" [showIcon]="true" appendTo="body"></p-calendar>
+              </td>
+              <td style="text-align:center;width:5%;">
+                <button (click)="deleteRow(ri)" class="btn btn-danger" style="margin-top:10%"><i class="fa fa-trash"></i></button>
+              </td>
+
+            </tr>
+          </ng-template>
+        </p-table>
+
+
+      </div>
+      <div class="row cardstyle" style="height:100%;border-radius:0px;" *ngIf="!addprocess">
+        <p-table #dt [value]="stocktransferlist" [style]="{'width':'100%'}"
+                 [scrollable]="true" scrollHeight="60vh">
+          <ng-template pTemplate="header">
+            <tr class="mprltbldata">
+              <th style="text-align:center;width:5%;">Sl.No.</th>
+              <th style="text-align:center;width:15%;">Transfer Id</th>
+              <th style="text-align:center;width:15%;">Source Plant</th>
+              <th style="text-align:center;width:15%;">Vendor Code</th>
+              <th style="text-align:center;width:15%;">Vendor Name</th>
+              <!--<th style="text-align:center;width:10%;">Transferred By</th>-->
+              <th style="text-align:center;width:10%;">Transferred On</th>
+              <th style="text-align:center;width:10%;">Status</th>
+              <th style="text-align:center;width:20%;">Remarks</th>
+              <th style="text-align:center;width:15%;">Acknowledge</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
+            <tr [ngClass]="{'data-selected': selectedRow === ri}">
+              <td class="ptable-cell" style="text-align:center;width:5%;">{{ri+1}}</td>
+              <td class="ptable-cell" style="text-align:center;width:15%;">
+                <a style="cursor:pointer;color:blue;text-decoration:underline;" (click)="showdetails(rowData,ri)">{{rowData.transferid}}</a>
+              </td>
+              <td class="ptable-cell" style="text-align:left;width:15%;">
+                <span>{{rowData.sourceplant}}</span>
+              </td>
+              <td class="ptable-cell" style="text-align:center;width:15%;">
+                <span>{{rowData.vendorcode}}</span>
+              </td>
+               <td class="ptable-cell" style="text-align:center;width:15%;">
+                <span>{{rowData.vendorname}}</span>
+              </td>
+              <!--<td class="ptable-cell" style="text-align:left;width:10%;">
+                <span>{{rowData.transferredbyname}}</span>
+              </td>-->
+              <td class="ptable-cell" style="text-align:center;width:10%;">
+                <span>{{rowData.transferredon | date :  constants.dateFormat}}</span>
+              </td>
+              <td class="ptable-cell" style="text-align:left;width:10%;">
+                <span>{{rowData.status}}</span>
+              </td>
+              <td class="ptable-cell" style="text-align:left;width:20%;">
+                <span>{{rowData.remarks}}</span>
+              </td>
+              <td class="ptable-cell" style="text-align:left;width:15%;">
+                <div *ngIf="rowData.status=='Issued' && rowData.ackstatus!='Received'" class="form-inline">
+                  <p-checkbox [(ngModel)]="rowData.Checkstatus" binary="true" (click)="ackStatusChanges(ri)"></p-checkbox> &nbsp;&nbsp;
+                  <textarea type="text" style="width:140px;resize:none" class="form-control" [(ngModel)]="rowData.ackremarks"></textarea>
+                </div>
+                <div *ngIf="rowData.status=='Acknowledged' && rowData.ackstatus=='Received'" class="form-inline">
+                  &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; <textarea type="text" style="width:140px;resize:none" class="form-control" [disabled]="true" [(ngModel)]="rowData.ackremarks"></textarea>
+                </div>
+              </td>
+            </tr>
+            <tr *ngIf="rowData.showdetail">
+              <td [attr.colspan]="8" style="text-align:center;">
+                <label class="labeltext">Transfer Detail</label>
+              </td>
+            </tr>
+            <tr *ngIf="rowData.showdetail">
+              <td [attr.colspan]="8" style="text-align:center;">
+                <p-table #dt [value]="rowData.materialdata" [style]="{'width':'100%'}"
+                         [scrollable]="true" scrollHeight="20vh">
+                  <ng-template pTemplate="header">
+            <tr class="mprltbldata" style="background-color: #9ba5af !important">
+              <th style="text-align: center; width: 5%;background-color: #9ba5af !important">Sl.No.</th>
+              <th style="text-align: center; width: 15%;background-color: #9ba5af !important">Material</th>
+              <th style="text-align: center;background-color: #9ba5af!important">PO Item Description</th>
+              <th style="text-align: center; width: 20%;background-color: #9ba5af !important;">Project</th>
+              <th style="text-align: center;width: 20%;background-color: #9ba5af!important">Required Date</th>
+              <th style="text-align: center; width: 10%;background-color: #9ba5af!important">Transfer Qty</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
+            <tr>
+              <td class="ptable-cell" style="text-align:center;width:5%;">{{ri+1}}</td>
+              <td class="ptable-cell" style="text-align:center;width:15%;">
+                <span>{{rowData.materialid}}</span>
+              </td>
+              <td class="ptable-cell" style="text-align:left">
+                <span>{{rowData.materialdescription}}</span>
+              </td>
+
+              <td class="ptable-cell" style="text-align:left;width:20%;">
+                <span>{{rowData.projectid}}</span>
+              </td>
+
+
+              <td class="ptable-cell" style="text-align:center;width:20%;">
+                <span>{{rowData.requireddate | date : 'dd/MM/yyyy'}}</span>
+              </td>
+
+              <td class="ptable-cell" style="text-align:right;width:10%;">
+                <span>{{rowData.transferqty}}</span>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+        </td>
+
+        </tr>
+        </ng-template>
+        </p-table>
+      </div>
+    </div>
+    <div class="row col-lg-12 col-md-12 col-sm-12 pt-2 card-footer" *ngIf="addprocess">
+      <div class="col-lg-4 col-md-4 col-sm-4">
+      </div>
+      <div class="col-lg-4 col-md-4 col-sm-4 "><button type="button" class="btn btn-success" (click)="onsubmit()">Submit</button></div>
+      <div class="col-lg-4 col-md-4 col-sm-4">
+      </div>
+    </div>
+    <div *ngIf="!addprocess && showAck" style="text-align: center;margin-top:0px;padding-top:0px;">
+      <button type="button" class="btn btn-primary" [disabled]="btnDisable" (click)="onAcknowledge()">Acknowledge</button>
+    </div>
+  </div>
+</div>
+
+

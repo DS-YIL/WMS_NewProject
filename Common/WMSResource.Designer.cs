@@ -2016,6 +2016,18 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to select Max(matis.requestid) as gatepassmaterialid,Max(matis.itemid) itemid,Max(matis.itemissueddate) as itemissueddate,Max(matinv.poitemdesc ) as materialdescription,Max(emp.name) as name,
+        ///Max(st.transferid ) as transferid,Max(matinv.materialid ) as materialid,Max(matinv.transferqty ) as quantity,SUM(matis.issuedqty) issuedqty,
+        ///Max(st.vendorname) as vendorname,Max(st.vendorcode ) as vendorcode,Max(st.transferredby ) as transferredby,Max(st.issuedon ) as issuedon,
+        ///(select SUM(outwardqty) from wms.outwatdi [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string getSubcontractgatepassdata {
+            get {
+                return ResourceManager.GetString("getSubcontractgatepassdata", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to select * from wms.subrolemaster where roleid = #rid.
         /// </summary>
         public static string getsubrolebyroleid {
@@ -2368,8 +2380,8 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to insert into wms.wms_invstocktransfer (transferredby,transferredon,transfertype,sourceplant,destinationplant,remarks,status)
-        ///values (@transferredby,@transferredon,@transfertype,@sourceplant,@destinationplant,@remarks,@status) returning transferid.
+        ///   Looks up a localized string similar to insert into wms.wms_invstocktransfer (transferredby,transferredon,transfertype,sourceplant,destinationplant,vendorcode,vendorname,remarks,status)
+        ///values (@transferredby,@transferredon,@transfertype,@sourceplant,@destinationplant,@vendorcode,@vendorname,@remarks,@status) returning transferid.
         /// </summary>
         public static string insertInvStocktransfer {
             get {
@@ -2657,7 +2669,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select inv.transferid,emp.name as transferredby,inv.transferredon,inv.transfertype,inv.sourceplant,inv.destinationplant,inv.remarks,inv.status,inv.isporequested   
+        ///   Looks up a localized string similar to select inv.*,emp.name as transferredbyname
         ///from wms.wms_invstocktransfer inv 
         ///left outer join wms.employee emp  on emp.employeeno = inv.transferredby where inv.transfertype=&apos;#transfertype&apos;
         ///order by transferredon Desc.
@@ -3042,6 +3054,15 @@ namespace WMS.Common {
         public static string updateackstatusforreserved {
             get {
                 return ResourceManager.GetString("updateackstatusforreserved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to update wms.wms_invstocktransfer set ackstatus=@ackstatus,ackremarks=@ackremarks,ackby=@ackby,ackon=@ackon,status=@status where transferid=&apos;#transferid&apos;.
+        /// </summary>
+        public static string updateackstatusforSubcontract {
+            get {
+                return ResourceManager.GetString("updateackstatusforSubcontract", resourceCulture);
             }
         }
         

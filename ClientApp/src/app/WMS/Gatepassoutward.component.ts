@@ -291,6 +291,7 @@ export class GatePassoutwardComponent implements OnInit {
       mdata.gatepassid = this.DGgatepassid;
       mdata.remarks = this.pgremarks;
       mdata.movedby = this.employee.employeeno;
+      mdata.type = "GatePass";
       var date = this.datePipe.transform(tdate, 'yyyy-MM-dd hh:mm:ss');
       if (this.isoutward) {
         mdata.outwarddatestring = this.fromdateview1;

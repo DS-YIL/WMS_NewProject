@@ -726,15 +726,15 @@ where inv.transferid = '#tid'
 group by inv.transferid, inv.materialid , inv.sourcelocation,inv.destinationlocation</value>
   </data>
   <data name="insertInvStocktransfer" xml:space="preserve">
-    <value>insert into wms.wms_invstocktransfer (transferredby,transferredon,transfertype,sourceplant,destinationplant,remarks,status)
-values (@transferredby,@transferredon,@transfertype,@sourceplant,@destinationplant,@remarks,@status) returning transferid</value>
+    <value>insert into wms.wms_invstocktransfer (transferredby,transferredon,transfertype,sourceplant,destinationplant,vendorcode,vendorname,remarks,status)
+values (@transferredby,@transferredon,@transfertype,@sourceplant,@destinationplant,@vendorcode,@vendorname,@remarks,@status) returning transferid</value>
   </data>
   <data name="insertinvtransfermaterial" xml:space="preserve">
     <value>insert into wms.wms_invtransfermaterial (transferid,materialid,sourcelocation,sourceitemid,destinationlocation,destinationitemid,transferqty,poitemdesc)
 values (@transferid,@materialid,@sourcelocation,@sourceitemid,@destinationlocation,@destinationitemid,@transferqty,@poitemdesc)</value>
   </data>
   <data name="invstocktransfermainquery" xml:space="preserve">
-    <value>select inv.transferid,emp.name as transferredby,inv.transferredon,inv.transfertype,inv.sourceplant,inv.destinationplant,inv.remarks,inv.status,inv.isporequested   
+    <value>select inv.*,emp.name as transferredbyname
 from wms.wms_invstocktransfer inv 
 left outer join wms.employee emp  on emp.employeeno = inv.transferredby where inv.transfertype='#transfertype'
 order by transferredon Desc</value>
@@ -1922,5 +1922,26 @@ inv.issuedon,inv.isporequested
 from wms.wms_invstocktransfer inv 
 left outer join wms.employee emp  on emp.employeeno = inv.transferredby where  inv.transfertype ='STO'
 order by transferredon desc</value>
+  </data>
+  <data name="getSubcontractgatepassdata" xml:space="preserve">
+    <value>select Max(matis.requestid) as gatepassmaterialid,Max(matis.itemid) itemid,Max(matis.itemissueddate) as itemissueddate,Max(matinv.poitemdesc ) as materialdescription,Max(emp.name) as name,
+Max(st.transferid ) as transferid,Max(matinv.materialid ) as materialid,Max(matinv.transferqty ) as quantity,SUM(matis.issuedqty) issuedqty,
+Max(st.vendorname) as vendorname,Max(st.vendorcode ) as vendorcode,Max(st.transferredby ) as transferredby,Max(st.issuedon ) as issuedon,
+(select SUM(outwardqty) from wms.outwatdinward where gatepassmaterialid::text = matis.requestid::text group by gatepassmaterialid) as outwardedqty,
+(select SUM(inwardqty) from wms.outwatdinward where gatepassmaterialid::text = matis.requestid::text group by gatepassmaterialid) as inwardedqty,
+(select Max(outwarddate) from wms.outwatdinward where gatepassid = Max(matinv.transferid )  group by gatepassid) as outwarddate,
+(select Max(securityinwarddate) from wms.outwatdinward where gatepassid = Max(matinv.transferid )  group by gatepassid) as securityinwarddate,
+(select Max(approvedon) from wms.wms_gatepassapprovals where gatepassid = Max(matinv.transferid )  group by gatepassid) as approvedon
+from wms.wms_materialissue matis
+left outer join wms.wms_invtransfermaterial matinv on matinv.id::text = matis.requestid::text 
+left outer join wms.wms_invstocktransfer st on st.transferid = matinv.transferid
+left join wms.employee emp on emp.employeeno=st.transferredby 
+left join wms."MaterialMasterYGS" ygs on ygs.material=matinv.materialid
+where matis.requestid is not null and matis.requesttype = 'SubContract' and st.status='Acknowledged' 
+group by matis.requestid
+order by matis.requestid desc</value>
+  </data>
+  <data name="updateackstatusforSubcontract" xml:space="preserve">
+    <value>update wms.wms_invstocktransfer set ackstatus=@ackstatus,ackremarks=@ackremarks,ackby=@ackby,ackon=@ackon,status=@status where transferid='#transferid'</value>
   </data>
 </root>

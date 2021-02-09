@@ -1467,5 +1467,15 @@ namespace WMS.Controllers
 
 			return await this._poService.getplantlocdetails();
 		}
+		[HttpPost("updateSubcontractAcKstatus")]
+		public async Task<string> updateSubcontractAcKstatus(List<invstocktransfermodel> data)
+		{
+			return await this._poService.updateSubcontractAcKstatus(data);
+		}
+		[HttpGet("subcontractInoutList")]
+		public async Task<IEnumerable<gatepassModel>> subcontractInoutList()
+		{
+			return await this._poService.subcontractInoutList();
+		}
 	}
 }

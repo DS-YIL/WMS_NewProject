@@ -940,7 +940,14 @@ getMaterialMasterList(): Observable<any> {
 
   getMiscellanousReasonData(): Observable<any> {
     return this.http.get<any>(this.url + 'POData/getMiscellanousReasonData', this.httpOptions);
-}
+  }
+  updateSubcontractAcKstatus(ackData: any[]): Observable<any> {
+    const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }), responseType: 'text' as any };
+    return this.http.post<any>(this.url + 'POData/updateSubcontractAcKstatus/', ackData, httpOptions);
+  }
+  subcontractInoutList(): Observable<any[]> {
+    return this.http.get<any[]>(this.url + 'POData/subcontractInoutList/', this.httpOptions);
+  }
 }
 
 

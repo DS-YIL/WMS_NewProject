@@ -355,6 +355,14 @@ namespace WMS.Common
 				link = "";
 
 			}
+			else if (subjecttype == 26)
+			{
+				mailMessage.Subject = "Materials Issued for Sub Contract Request Id" + emlSndngList.requestid;
+				subbody = "The materials for Sub Contract Request Id " + emlSndngList.requestid + " has been issued.";
+				//subbody += mailMessage.Subject;
+				link = "";
+
+			}
 
 			if (!string.IsNullOrEmpty(emlSndngList.CC))
 				mailMessage.CC.Add(emlSndngList.CC);

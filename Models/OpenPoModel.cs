@@ -749,6 +749,9 @@ namespace WMS.Models
 		public string approvername { get; set; }
 
 		public DateTime? createddate { get; set; }
+		public string transferid { get; set; }
+		public string vendorcode { get; set; }
+		public DateTime issuedon { get; set; }
 	}
 	public class materialistModel
 	{
@@ -1380,6 +1383,14 @@ public class invstocktransfermodel
 	public bool? isporequested { get; set; }
 	public int transferqty { get; set; }
 	public int issuedqty { get; set; }
+	public string transferredbyname { get; set; }
+	public string vendorcode { get; set; }
+	public string vendorname { get; set; }
+	public string ackstatus { get; set; }
+	public string ackremarks { get; set; }
+	public string ackby { get; set; }
+	public DateTime ackon { get; set; }
+	public Boolean Checkstatus { get; set; }
 }
 
 public class stocktransfermateriakmodel
@@ -1588,6 +1599,7 @@ public class materialistModel
 	public int outwardqty { get; set; }
 
 	public int inwardqty { get; set; }
+	public string type { get; set; }
 }
 
 public class rbamaster
@@ -1980,7 +1992,7 @@ public class STOIssueModel
 	public string materialid { get; set; }
 	public string poitemdescription { get; set; }
 	public string transferqty { get; set; }
-	public string availableqty { get; set; }
+	public int availableqty { get; set; }
 	public string issuedqty { get; set; }
 	public string uploadedby { get; set; }
 	public string createdby { get; set; }

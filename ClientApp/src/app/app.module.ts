@@ -38,6 +38,7 @@ import { VirtualScrollerModule } from 'primeng/virtualscroller';
 import { DashboardComponent } from './WMS/Dashboard.component';
 import { POListComponent } from './WMS/POList.component';
 import { SecurityHomeComponent } from './WMS/SecurityHome.component';
+import { SubContractComponent } from './WMS/SubContractinoutward.component';
 import { StoreClerkComponent } from './WMS/StoreClerk.component';
 import { WarehouseInchargeComponent } from './WMS/WarehouseIncharge.component';
 import { MaterialRequestComponent } from './WMS/MaterialRequest.component';
@@ -107,9 +108,11 @@ import { InhandMaterialComponent } from './WMS/InhandMaterial.component';
 import { MiscellanousIssueComponent } from './WMS/MiscellanousIssues.component';
 import { MiscellanousReceiptsComponent } from './WMS/MiscellanousReceipts.component';
 import { ReceiveSTORequestComponent } from './WMS/ReceiveSTORequest.component';
+import { ReceiveSubContractRequestComponent } from './WMS/ReceiveSubContractRequest.component';
 import { ReceiveMaterialComponent } from './WMS/ReceiveMaterial.component';
 import { InitialStockPutAwayComponent } from './WMS/InitialStockPutAway.component';
 import { StockTransferOrderComponent } from './WMS/StockTransferOrder.component';
+import { SubContractTransferOrderComponent } from './WMS/SubContractTransferOrder.component';
 
 //admin
 import { MaterilMasterComponent } from './WMS/Admin/Materialmaster.component';
@@ -150,6 +153,7 @@ import { KeyFilterModule } from 'primeng/keyfilter';
     DashboardComponent,
     POListComponent,
     SecurityHomeComponent,
+    SubContractComponent,
     StoreClerkComponent,
     WarehouseInchargeComponent,
     MaterialRequestComponent,
@@ -220,11 +224,11 @@ import { KeyFilterModule } from 'primeng/keyfilter';
     ReceiveSTORequestComponent,
     ReceiveMaterialComponent,
     PlantMasterComponent,
- ReceiveSTORequestComponent,
     InitialStockPutAwayComponent,
     MiscellanousComponent,
     StockTransferOrderComponent,
-    ReceiveSTORequestComponent,
+    SubContractTransferOrderComponent,
+    ReceiveSubContractRequestComponent,
     InitialStockPutAwayComponent,
     AssignProjectComponent,
     MaterialRequestApprovalComponent
