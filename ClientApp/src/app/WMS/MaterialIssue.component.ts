@@ -184,7 +184,7 @@ export class MaterialIssueComponent implements OnInit {
   //check issued quantity
   checkissueqty($event, entredvalue, maxvalue, material, createddate, rowdata: any) {
     if (entredvalue < 0) {
-      this.messageService.add({ severity: 'error', summary: '', detail: 'Enter value grater than 1' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Enter value grater than 0' });
       rowdata.issuedqty = 0;
       return;
     }

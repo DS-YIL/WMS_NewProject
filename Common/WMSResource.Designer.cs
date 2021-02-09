@@ -115,7 +115,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select * from wms.wms_stock where materialid=&apos;#materialid&apos; and poitemdescription = &apos;#desc&apos; and createddate::date&lt;&apos;#createddate&apos;  order by createddate asc limit 1.
+        ///   Looks up a localized string similar to select * from wms.wms_stock where materialid=&apos;#materialid&apos; and lower(poitemdescription)  = Lower(&apos;#desc&apos;) and createddate::date&lt;&apos;#createddate&apos;  order by createddate asc limit 1.
         /// </summary>
         public static string checkoldmaterialwithdesc {
             get {
@@ -944,7 +944,7 @@ namespace WMS.Common {
         ///   Looks up a localized string similar to select sum(sk.availableqty)as availableqty,Max(sk.materialid) as materialid,sk.itemlocation,Max(sk.poitemdescription) as materialdescription,sk.createddate::DATE
         ///from wms.wms_stock sk 
         ///left outer join wms.&quot;MaterialMasterYGS&quot; ygs on ygs.material=sk.materialid 
-        ///where sk.materialid=&apos;#materialid&apos; and sk.poitemdescription = &apos;#desc&apos;
+        ///where sk.materialid=&apos;#materialid&apos; and lower(sk.poitemdescription)  = lower(&apos;#desc&apos;) 
         ///and sk.availableqty&gt;0 
         ///group by sk.itemlocation,sk.createddate::DATE order by sk.createddate::DATE Desc.
         /// </summary>
@@ -1056,13 +1056,13 @@ namespace WMS.Common {
         
         /// <summary>
         ///   Looks up a localized string similar to select iss.requestid, iss.issuedqty,sk.pono,sk.materialid,sk.itemid,sk.itemlocation,
-        ///(select sum(sk1.availableqty) from wms.wms_stock sk1 where sk1.materialid = sk.materialid and sK1.poitemdescription = sk.poitemdescription and sk1.itemlocation = sk.itemlocation) as availableqty
+        ///(select sum(sk1.availableqty) from wms.wms_stock sk1 where sk1.materialid = sk.materialid and lower(sK1.poitemdescription)  = lower(sk.poitemdescription)  and sk1.itemlocation = sk.itemlocation) as availableqty
         ///,sk.createddate::DATE,
         ///ygs.materialdescription
         ///from wms.wms_materialissue iss 
         ///left outer join wms.wms_stock sk on iss.itemid =sk.itemid
         ///left join wms.&quot;MaterialMasterYGS&quot; ygs on ygs.material=sk.materialid 
-        ///where iss.requestid [rest of string was truncated]&quot;;.
+        ///whe [rest of string was truncated]&quot;;.
         /// </summary>
         public static string getitemlocationListBysIssueId_v2 {
             get {
@@ -2007,11 +2007,41 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to select inv.transferid,inv.transferredby,emp.&quot;name&quot; as transferredbyname,inv.transferredon,inv.sourceplant,inv.destinationplant,inv.issuedon,inv.remarks,
+        ///case 
+        ///  when 
+        ///(select sum(matiss.issuedqty) 
+        ///  from wms.wms_invtransfermaterial wi 
+        ///  left join wms.wms_materialissue matiss on (matiss.requestid::text  = wi.id ::text and matiss.requesttype = &apos;STO&apos;)
+        ///  where wi.transferid = inv.transferid and matiss.issuedqty is not null and matiss.issuedqty &gt; 0 ) =
+        ///  (select sum(stk.totalquantity) 
+        ///  from wms.wms_i [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string getSTORequestForPutaway {
+            get {
+                return ResourceManager.GetString("getSTORequestForPutaway", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to select * from wms.wms_invstocktransfer where transfertype=&apos;STO&apos;.
         /// </summary>
         public static string getSTORequestlist {
             get {
                 return ResourceManager.GetString("getSTORequestlist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to select invtras.*,stock.itemid,stock1.unitprice,stock1.lineitemno,stock.itemlocation,stock.totalquantity as putawayqty,stock1.itemlocation as defaultlocation,
+        ///matiss.issuedqty,matiss.requestid,stock1.storeid as defaultstore,stock1.rackid as defaultrack,stock1.binid as defaultbin,
+        ///stock1.stcktype as stocktype from wms.wms_materialissue matiss 
+        ///left join wms.wms_invtransfermaterial invtras on matiss.requestid  = invtras.id ::varchar(255)
+        ///left join wms.wms_stock stock on (stock.receivedid= invtras.id ::varc [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string getSTORequestMaterialsForPutaway {
+            get {
+                return ResourceManager.GetString("getSTORequestMaterialsForPutaway", resourceCulture);
             }
         }
         

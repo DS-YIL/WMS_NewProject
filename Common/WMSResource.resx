@@ -1858,7 +1858,7 @@ subroleid=@subroleid,plantid=@plantid,modifiedon=@modifiedon,modifiedby=@modifie
     <value>select sum(sk.availableqty)as availableqty,Max(sk.materialid) as materialid,sk.itemlocation,Max(sk.poitemdescription) as materialdescription,sk.createddate::DATE
 from wms.wms_stock sk 
 left outer join wms."MaterialMasterYGS" ygs on ygs.material=sk.materialid 
-where sk.materialid='#materialid' and sk.poitemdescription = '#desc'
+where sk.materialid='#materialid' and lower(sk.poitemdescription)  = lower('#desc') 
 and sk.availableqty&gt;0 
 group by sk.itemlocation,sk.createddate::DATE order by sk.createddate::DATE Desc</value>
   </data>
@@ -1890,7 +1890,7 @@ group by wp.projectcode,wp.projectmanager</value>
     <value>select * from wms.rd_reason where reasontype ='Miscellanous' and deleteflag =false</value>
   </data>
   <data name="checkoldmaterialwithdesc" xml:space="preserve">
-    <value>select * from wms.wms_stock where materialid='#materialid' and poitemdescription = '#desc' and createddate::date&lt;'#createddate'  order by createddate asc limit 1</value>
+    <value>select * from wms.wms_stock where materialid='#materialid' and lower(poitemdescription)  = Lower('#desc') and createddate::date&lt;'#createddate'  order by createddate asc limit 1</value>
   </data>
   <data name="getMaterialforSTO" xml:space="preserve">
     <value>select wp.materialid as material,wp.poitemdescription as materialdescription,Max(wp.unitprice) as unitprice  
@@ -1904,7 +1904,7 @@ group by material ,materialdescription</value>
   </data>
   <data name="getitemlocationListBysIssueId_v2" xml:space="preserve">
     <value>select iss.requestid, iss.issuedqty,sk.pono,sk.materialid,sk.itemid,sk.itemlocation,
-(select sum(sk1.availableqty) from wms.wms_stock sk1 where sk1.materialid = sk.materialid and sK1.poitemdescription = sk.poitemdescription and sk1.itemlocation = sk.itemlocation) as availableqty
+(select sum(sk1.availableqty) from wms.wms_stock sk1 where sk1.materialid = sk.materialid and lower(sK1.poitemdescription)  = lower(sk.poitemdescription)  and sk1.itemlocation = sk.itemlocation) as availableqty
 ,sk.createddate::DATE,
 ygs.materialdescription
 from wms.wms_materialissue iss 
@@ -1923,25 +1923,30 @@ from wms.wms_invstocktransfer inv
 left outer join wms.employee emp  on emp.employeeno = inv.transferredby where  inv.transfertype ='STO'
 order by transferredon desc</value>
   </data>
-  <data name="getSubcontractgatepassdata" xml:space="preserve">
-    <value>select Max(matis.requestid) as gatepassmaterialid,Max(matis.itemid) itemid,Max(matis.itemissueddate) as itemissueddate,Max(matinv.poitemdesc ) as materialdescription,Max(emp.name) as name,
-Max(st.transferid ) as transferid,Max(matinv.materialid ) as materialid,Max(matinv.transferqty ) as quantity,SUM(matis.issuedqty) issuedqty,
-Max(st.vendorname) as vendorname,Max(st.vendorcode ) as vendorcode,Max(st.transferredby ) as transferredby,Max(st.issuedon ) as issuedon,
-(select SUM(outwardqty) from wms.outwatdinward where gatepassmaterialid::text = matis.requestid::text group by gatepassmaterialid) as outwardedqty,
-(select SUM(inwardqty) from wms.outwatdinward where gatepassmaterialid::text = matis.requestid::text group by gatepassmaterialid) as inwardedqty,
-(select Max(outwarddate) from wms.outwatdinward where gatepassid = Max(matinv.transferid )  group by gatepassid) as outwarddate,
-(select Max(securityinwarddate) from wms.outwatdinward where gatepassid = Max(matinv.transferid )  group by gatepassid) as securityinwarddate,
-(select Max(approvedon) from wms.wms_gatepassapprovals where gatepassid = Max(matinv.transferid )  group by gatepassid) as approvedon
-from wms.wms_materialissue matis
-left outer join wms.wms_invtransfermaterial matinv on matinv.id::text = matis.requestid::text 
-left outer join wms.wms_invstocktransfer st on st.transferid = matinv.transferid
-left join wms.employee emp on emp.employeeno=st.transferredby 
-left join wms."MaterialMasterYGS" ygs on ygs.material=matinv.materialid
-where matis.requestid is not null and matis.requesttype = 'SubContract' and st.status='Acknowledged' 
-group by matis.requestid
-order by matis.requestid desc</value>
+  <data name="getSTORequestForPutaway" xml:space="preserve">
+    <value>select inv.transferid,inv.transferredby,emp."name" as transferredbyname,inv.transferredon,inv.sourceplant,inv.destinationplant,inv.issuedon,inv.remarks,
+case 
+  when 
+(select sum(matiss.issuedqty) 
+  from wms.wms_invtransfermaterial wi 
+  left join wms.wms_materialissue matiss on (matiss.requestid::text  = wi.id ::text and matiss.requesttype = 'STO')
+  where wi.transferid = inv.transferid and matiss.issuedqty is not null and matiss.issuedqty &gt; 0 ) =
+  (select sum(stk.totalquantity) 
+  from wms.wms_invtransfermaterial wii 
+  left join wms.wms_stock stk on (stk.receivedid ::text  = wii.id ::text and stk.receivedtype = 'STO')
+  where wii.transferid = inv.transferid)
+  then true else false end as putawaystatus
+from wms.wms_invstocktransfer inv 
+left outer join wms.employee emp on emp.employeeno = inv.transferredby 
+where transfertype='STO'and status ='Issued' order by transferid desc</value>
   </data>
-  <data name="updateackstatusforSubcontract" xml:space="preserve">
-    <value>update wms.wms_invstocktransfer set ackstatus=@ackstatus,ackremarks=@ackremarks,ackby=@ackby,ackon=@ackon,status=@status where transferid='#transferid'</value>
+  <data name="getSTORequestMaterialsForPutaway" xml:space="preserve">
+    <value>select invtras.*,stock.itemid,stock1.unitprice,stock1.lineitemno,stock.itemlocation,stock.totalquantity as putawayqty,stock1.itemlocation as defaultlocation,
+matiss.issuedqty,matiss.requestid,stock1.storeid as defaultstore,stock1.rackid as defaultrack,stock1.binid as defaultbin,
+stock1.stcktype as stocktype from wms.wms_materialissue matiss 
+left join wms.wms_invtransfermaterial invtras on matiss.requestid  = invtras.id ::varchar(255)
+left join wms.wms_stock stock on (stock.receivedid= invtras.id ::varchar(255) and stock.receivedtype = 'STO') 
+left join wms.wms_stock stock1 on stock1.itemid = matiss.itemid 
+where invtras.transferid='#transferid' and matiss.issuedqty is not null and matiss.issuedqty &gt; 0 and matiss.requesttype = 'STO'</value>
   </data>
 </root>

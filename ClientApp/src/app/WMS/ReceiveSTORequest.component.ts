@@ -69,7 +69,7 @@ export class ReceiveSTORequestComponent implements OnInit {
     this.selectedStatus = event.target.value;
     if (this.selectedStatus == "Pending") {
       var data1 = this.STORequestList.filter(function (element, index) {
-        return (element.issuedqty == null || element.issuedqty == 0 || (element.status == 'Issued' && !element.isporequested));
+        return ((element.issuedqty == null && !element.isporequested) || (element.issuedqty == 0 && !element.isporequested) || (element.status == 'Issued' && !element.isporequested));
       });
       this.FilteredSTORequestList = data1;
     }
@@ -83,13 +83,14 @@ export class ReceiveSTORequestComponent implements OnInit {
   }
 
   navigateToMatIssue(details: any) {
+    debugger;
     this.showMatDetails = true;
     this.showavailableStock = true;
     this.materialissueList = [];
     this.transferId = details.transferid;
     this.requestedBy = details.transferredby;
     var sts = details.status;
-    if (sts = "Issued") {
+    if (sts == "Issued") {
       this.viewprocess = true;
     }
     else {
@@ -111,6 +112,16 @@ export class ReceiveSTORequestComponent implements OnInit {
 
   //check issued quantity
   checkissueqty($event, entredvalue, maxvalue, material, createddate, rowdata: any) {
+    debugger;
+    if (entredvalue < 0) {
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Enter value grater than 0' });
+      rowdata.issuedqty = 0;
+      return;
+    }
+    if (isNullOrUndefined(entredvalue) || entredvalue == 0) {
+      rowdata.issuedqty = 0;
+      return;
+    }
     var id = $event.target.id;
     if (entredvalue > maxvalue) {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Please enter issue quantity less than Available quantity' });
