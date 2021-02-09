@@ -307,6 +307,7 @@ namespace WMS.Interfaces
 		Task<IEnumerable<authUser>> getuserauthdetailsbyrole(int roleid);
 		Task<IEnumerable<subrolemodel>> getsubroledata();
 		Task<IEnumerable<plantddl>> getplantlocdetails();
+		Task<IEnumerable<STOrequestTR>> getSTORequestdatalist(string transferid);
 
 	}
 }

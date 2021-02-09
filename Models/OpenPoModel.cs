@@ -1495,6 +1495,7 @@ public class STORequestdata
 	public int issuedqty { get; set; }
 	public string transferid { get; set; }
 	public string transferredby { get; set; }
+	public string transferredbyname { get; set; }
 	public string transferredon { get; set; }
 	public string transfertype { get; set; }
 	public string sourceplant { get; set; }
@@ -1519,6 +1520,8 @@ public class STOrequestTR
 	public string itemlocation { get; set; }
 	public int confirmqty { get; set; }
 	public int issuedqty { get; set; }
+	public int totalquantity { get; set; }
+	public int putawayqty { get; set; }
 	public int itemid  { get;set;}
 	public int availableqty { get; set; }
 	public bool isissued { get; set; }
@@ -1526,6 +1529,10 @@ public class STOrequestTR
 	public int defaultstore { get; set; }
 	public int defaultrack { get; set; }
 	public int defaultbin { get; set; }
+	public string defaultlocation { get; set; }
+	public string stocktype { get; set; }
+	public decimal? unitprice { get; set; }
+	public string lineitemno { get; set; }
 
 }
 public class DirectTransferTR

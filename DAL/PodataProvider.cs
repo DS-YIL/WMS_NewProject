@@ -2499,32 +2499,7 @@ namespace WMS.DAL
 
 
 
-					//using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
-					//{
-					//	StockModel objs = new StockModel();
-					//	pgsql.Open();
-					//	string query = WMSResource.getinwardmasterid.Replace("#grnnumber", item.grnnumber);
-					//	objs = pgsql.QueryFirstOrDefault<StockModel>(
-					//	   query, null, commandType: CommandType.Text);
-					//	if (objs != null)
-					//		inwmasterid = objs.inwmasterid;
-
-					//	//foreach (var item in data) { 
-					//	item.createddate = System.DateTime.Now;
-
-					//	//if (data.itemid == 0)
-					//	//{
-
-
-					//	//Get unit price and value from pomaterials table
-					//	//string getprice = WMSResource.getpricedetails.Replace("#pono", item.pono).Replace("#material", item.Material);
-					//	//var objdata = pgsql.QueryFirstOrDefault<pricedetails>(
-					//	//	   getprice, null, commandType: CommandType.Text);
-					//	// value = objdata.itemamount;
-					//	// unitprice = objdata.unitprice;
-					//}
-
-					//string insertquery = WMSResource.insertstock;
+					
 					string insertquery = "INSERT INTO wms.wms_stock(receivedtype,receivedid,stockstatus,pono,binid,rackid ,storeid, vendorid,totalquantity,shelflife,availableqty,";
 					insertquery += "deleteflag,itemlocation,createddate,createdby,materialid,stcktype,lineitemno,poitemdescription,value,unitprice)";
 					insertquery += "VALUES(@receivedtype,@receivedid,@stockstatus,@pono,@binid,@rackid,@storeid,@vendorid,@totalquantity,@shelflife,@availableqty,@deleteflag,";
@@ -2537,6 +2512,7 @@ namespace WMS.DAL
 					value = item.confirmqty * item.unitprice;
 					unitprice = item.unitprice;
 					item.receivedtype = "STO";
+					item.createddate = DateTime.Now;
 					string receivedid = Convert.ToString(item.id);
 					using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
 					{
@@ -2554,7 +2530,6 @@ namespace WMS.DAL
 							item.shelflife,
 							item.availableqty,
 							item.deleteflag,
-							//data.itemreceivedfrom,
 							item.itemlocation,
 							item.createddate,
 							item.createdby,
@@ -3829,7 +3804,7 @@ namespace WMS.DAL
 					foreach (var item in dataobj)
 					{
 						var createdate = Convert.ToDateTime(item.createddate).ToString("yyyy-MM-dd");
-						string stockquery = "select * from wms.wms_stock where materialid = '" + item.materialid + "' and poitemdescription = '"+item.Materialdescription+"' and availableqty > 0 and itemlocation = '" + item.itemlocation + "' and createddate::DATE = '" + createdate + "' order by itemid";
+						string stockquery = "select * from wms.wms_stock where materialid = '" + item.materialid + "' and lower(poitemdescription) = lower('"+item.Materialdescription+"') and availableqty > 0 and itemlocation = '" + item.itemlocation + "' and createddate::DATE = '" + createdate + "' order by itemid";
 						var stockdata = DB.QueryAsync<StockModel>(stockquery, null, commandType: CommandType.Text);
 						if (stockdata != null)
 						{
@@ -4604,7 +4579,7 @@ namespace WMS.DAL
 					{
 
 						var createdate = Convert.ToDateTime(item.createddate).ToString("yyyy-MM-dd");
-						string stockquery = "select * from wms.wms_stock where materialid = '" + item.materialid + "' and poitemdescription = '"+item.materialdescription+"' and availableqty > 0 and itemlocation = '" + item.itemlocation + "' and createddate::DATE = '" + createdate + "' order by itemid";
+						string stockquery = "select * from wms.wms_stock where materialid = '" + item.materialid + "' and lower(poitemdescription) = lower('" + item.materialdescription + "') and availableqty > 0 and itemlocation = '" + item.itemlocation + "' and createddate::DATE = '" + createdate + "' order by itemid";
 						var stockdata = pgsql.QueryAsync<StockModel>(stockquery, null, commandType: CommandType.Text);
 						if (stockdata != null)
 						{
@@ -12185,6 +12160,44 @@ namespace WMS.DAL
 		}
 
 
+		/*
+	Name of Function : <<getSTORequestdatalist>>  Author :<<Ramesh>>  
+	Date of Creation <<09-02-2021>>
+	Purpose : <<get STO request data>>
+	Review Date :<<>>   Reviewed By :<<>>
+	*/
+		public async Task<IEnumerable<STOrequestTR>> getSTORequestdatalist(string transferid)
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				try
+				{
+					        await pgsql.OpenAsync();
+							string query1 = WMSResource.getSTORequestMaterialsForPutaway.Replace("#transferid",transferid);
+							
+							var datadetail = await pgsql.QueryAsync<STOrequestTR>(
+							query1, null, commandType: CommandType.Text);
+							
+							
+						
+					
+					return datadetail;
+
+				}
+				catch (Exception Ex)
+				{
+
+					log.ErrorMessage("PODataProvider", "getSTORequestdatalist", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+			}
+		}
+
+
 
 		/*
 	Name of Function : <<STORequestlist>>  Author :<<Gayathri>>  
@@ -12199,53 +12212,12 @@ namespace WMS.DAL
 				try
 				{
 					await pgsql.OpenAsync();
-					//string query = "select wi.*,(select sum(issuedqty) as issuedqty from wms.wms_materialissue where requestid = wi.transferid and requesttype = 'STO' group by requestid,requesttype limit 1) as issuedqty from wms.wms_invstocktransfer wi where wi.status ='Issued'";
-
-
-					string query = WMSResource.getSTORequestlist;
-					query += "and status ='Issued' order by transferid desc";
-					//string query = "select * from wms.wms_invstocktransfer wi ";
-					//query += " join wms.wms_materialissue wm  on wm.requestid = wi.transferid";
-					//query += " where wi.transfertype ='STO' and status ='Issued'";
-
+					//string query = WMSResource.getSTORequestlist;
+					//query += "and status ='Issued' order by transferid desc";
+					string query = WMSResource.getSTORequestForPutaway;
 					var data = await pgsql.QueryAsync<STORequestdata>(
 					   query, null, commandType: CommandType.Text);
-					if (data != null && data.Count() > 0)
-					{
-						foreach (STORequestdata dt in data)
-						{
-							//string query1 = WMSResource.STOrequestedmatdetails;
-							//query1 += "left join wms.wms_stock stock on stock.receivedid= invtras.transferid";
-							//query1 += " where transferid='"+dt.transferid.ToString()+"'";
-							string query1 = "select invtras.*,stock.itemid,stock.itemlocation,stock.totalquantity as putawayqty,matiss.issuedqty,matiss.requestid from wms.wms_invtransfermaterial invtras";
-							query1 += " left join wms.wms_stock stock on stock.receivedid= invtras.id ::varchar(255)";
-							query1 += " left join wms.wms_materialissue matiss on matiss.requestid  = invtras.id ::varchar(255)";
-							query1 += " where invtras.transferid='"+dt.transferid+ "' and matiss.issuedqty is not null and matiss.issuedqty > 0";
-
-							var datadetail = await pgsql.QueryAsync<STOrequestTR>(
-							   query1, null, commandType: CommandType.Text);
-							bool putawaystatus = false;
-							if (datadetail != null && datadetail.Count() > 0)
-							{
-								foreach(var matdata in datadetail)
-                                {
-									if(matdata.itemid !=0)
-                                    {
-										matdata.isissued = true;
-										putawaystatus = true;
-                                    }
-                                    else
-                                    {
-										putawaystatus = false;
-										matdata.isissued = false;
-                                    }
-									dt.putawaystatus = putawaystatus;
-                                }
-								dt.materialdata = datadetail.ToList();
-								
-							}
-						}
-					}
+					
 					return data;
 
 				}

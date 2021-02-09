@@ -1113,6 +1113,12 @@ namespace WMS.Controllers
 			return await this._poService.STORequestlist();
 		}
 
+		[HttpGet("STORequestdatalist")]
+		public async Task<IEnumerable<STOrequestTR>> STORequestdatalist(string transferid)
+		{
+			return await this._poService.getSTORequestdatalist(transferid);
+		}
+
 		[HttpPost("Updatetransferqty")]
 		public int Updatetransferqty([FromBody] List<IssueRequestModel> obj)
 		{

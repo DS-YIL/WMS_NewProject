@@ -728,6 +728,13 @@ export class STOrequestTR {
   defaultstore: number;
   defaultrack: number;
   defaultbin: number;
+  defaultlocation: number;
+  stocktype: string;
+  binid: number;
+  rackid: number;
+  unitprice: number;
+  totalquantity: number;
+  putawayqty: number;
 }
 
 export class UserModel {

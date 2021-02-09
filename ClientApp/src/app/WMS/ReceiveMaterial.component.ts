@@ -5,7 +5,7 @@ import { wmsService } from '../WmsServices/wms.service';
 import { constants } from '../Models/WMSConstants';
 import { Employee, DynamicSearchResult, searchList } from '../Models/Common.Model';
 import { NgxSpinnerService } from "ngx-spinner";
-import { materialtransferMain, materialtransferTR, materialRequestDetails, returnmaterial, gatepassModel, materialistModel, PoDetails, StockModel, materialistModelreturn, materialistModeltransfer, ddlmodel, DirectTransferMain, STORequestdata } from 'src/app/Models/WMS.Model';
+import { materialtransferMain, materialtransferTR, materialRequestDetails, returnmaterial, gatepassModel, materialistModel, PoDetails, StockModel, materialistModelreturn, materialistModeltransfer, ddlmodel, DirectTransferMain, STORequestdata, STOrequestTR } from 'src/app/Models/WMS.Model';
 import { MessageService } from 'primeng/api';
 import { isNullOrUndefined } from 'util';
 import { ConfirmationService } from 'primeng/api';
@@ -19,6 +19,7 @@ export class ReceiveMaterialComponent implements OnInit {
   public selectedStatus: string;
   storequestlist: STORequestdata[] = [];
   requestlistSTO: STORequestdata[] = [];
+  materialdatalist: STOrequestTR[] = [];
   public employee: Employee;
   currentstocktype: string = "";
   public showDetails; showLocationDialog: boolean = false;
@@ -26,6 +27,9 @@ export class ReceiveMaterialComponent implements OnInit {
   public StockModelList: Array<any> = [];
   public PoDetails: PoDetails;
   public disSaveBtn: boolean = false;
+  public putawaydiv: boolean = false;
+  public maindiv: boolean = false;
+  
   public rowIndex: number;
   issaveprocess: boolean = false;
   binid: any;
@@ -45,6 +49,7 @@ export class ReceiveMaterialComponent implements OnInit {
   public binlist: any[] = [];
   public racklist: any[] = [];
   rowGroupMetadata: any;
+  rowGroupMetadata1: any;
 
 
 
@@ -54,12 +59,34 @@ export class ReceiveMaterialComponent implements OnInit {
       this.employee = JSON.parse(localStorage.getItem("Employee"));
     else
       this.router.navigateByUrl("Login");
+
     this.selectedStatus = "Pending";
+    this.materialdatalist = [];
+    this.maindiv = true;
+    this.StockModel = new StockModel();
+    this.putawaydiv = false;
     this.STORequestlist();
+
     this.locationListdata();
     this.binListdata();
     this.rackListdata();
    
+  }
+
+  backtoreturn() {
+    this.maindiv = true;
+    this.putawaydiv = false;
+  }
+
+  getMaterialdatalist(transferid: string) {
+    this.wmsService.STORequestdatalist(transferid).subscribe(data => {
+      debugger;
+      this.materialdatalist = data;
+      this.maindiv = false;
+      this.putawaydiv = true;
+      this.updateRowGroupMetaData1();
+    });
+
   }
 
   showattachdata(data: STORequestdata) {
@@ -72,18 +99,51 @@ export class ReceiveMaterialComponent implements OnInit {
       debugger;
       this.storequestlist = data;
       this.requestlistSTO = data;
+      this.maindiv = true;
+      this.putawaydiv = false;
       if (this.selectedStatus == "Issued") {
         this.storequestlist = this.requestlistSTO.filter(li => li.putawaystatus == true);
       }
       else {
         this.storequestlist = this.requestlistSTO.filter(li => li.putawaystatus == false);
       }
-      this.storequestlist.forEach(item => {
-        item.showtr = false;
-      });
-      this.updateRowGroupMetaData();
+      //this.storequestlist.forEach(item => {
+      //  item.showtr = false;
+      //});
+      //this.updateRowGroupMetaData();
     });
   }
+  close() {
+
+  }
+
+  updateRowGroupMetaData1() {
+    debugger;
+    this.rowGroupMetadata1 = {};
+    if (this.materialdatalist) {
+      for (let i = 0; i < this.materialdatalist.length; i++) {
+        let rowData = this.materialdatalist[i];
+        let inwardidview = rowData.id;
+        if (i == 0) {
+          this.rowGroupMetadata1[inwardidview] = { index: 0, size: 1 };
+        }
+        else {
+          let previousRowData = this.materialdatalist[i - 1];
+          let previousRowGroup = previousRowData.id;
+          if (inwardidview === previousRowGroup)
+            this.rowGroupMetadata1[inwardidview].size++;
+          else {
+            this.rowGroupMetadata1[inwardidview] = { index: i, size: 1 };
+          }
+
+
+        }
+      }
+    }
+  }
+
+
+ 
 
   updateRowGroupMetaData() {
     debugger;
@@ -180,20 +240,19 @@ export class ReceiveMaterialComponent implements OnInit {
   showDialog(details: any, index: number) {
     debugger;
     this.currentstocktype = details.stocktype;
-
+    details.binid = details.defaultbin;
+    details.rackid = details.defaultrack;
+    details.storeid = details.defaultstore;
+    details.stocktype = details.stocktype;
     this.showLocationDialog = true;
     this.PoDetails = details;
+    this.PoDetails.poitemdescription = details.poitemdesc;
     this.rowIndex = index;
     this.binid = details.binid;
     this.rackid = details.rackid;
     this.matid = details.materialid;
     this.matqty = details.issuedqty;
     this.matdescription = details.poitemdesc;
-    
-    //this.invoiceForm.controls.itemRows.value[this.invoiceForm.controls.itemRows.value.length - 1].storeid = details.storeid;
-    //this.invoiceForm.controls.itemRows.value[this.invoiceForm.controls.itemRows.value.length - 1].rackid = details.rackid;
-    //this.invoiceForm.controls.itemRows.value[this.invoiceForm.controls.itemRows.value.length - 1].binid = details.binid;
-    //this.invoiceForm.controls.itemRows.value[this.invoiceForm.controls.itemRows.value.length - 1].stocktype = "Plantstock";
     this.StockModel.locatorid = details.storeid;
     this.StockModel.rackid = details.rackid;
     this.StockModel.binid = details.binid;
@@ -308,6 +367,9 @@ export class ReceiveMaterialComponent implements OnInit {
       //this.stock.push(new StockModel());
     }
   }
+  onQtyClick() {
+
+  }
 
   onSubmitStockDetails() {
     //this.onQtyClick();
@@ -350,13 +412,13 @@ export class ReceiveMaterialComponent implements OnInit {
     if (this.stock[0].rackid && this.stock[0].locatorid) {
       this.stock.forEach(item => {
         this.StockModel = new StockModel();
-        this.StockModel.material = this.PoDetails.material;
+        this.StockModel.material = this.PoDetails.materialid;
         this.StockModel.itemid = this.PoDetails.itemid;
         this.StockModel.pono = this.PoDetails.pono;
         this.StockModel.lineitemno = this.PoDetails.lineitemno;
         this.StockModel.poitemdescription = this.PoDetails.poitemdescription,
-          this.StockModel.unitprice = this.PoDetails.unitprice,
-          this.StockModel.grnnumber = this.PoDetails.grnnumber;
+        this.StockModel.unitprice = this.PoDetails.unitprice,
+        this.StockModel.grnnumber = this.PoDetails.grnnumber;
         this.StockModel.vendorid = this.PoDetails.vendorid;
         this.StockModel.paitemid = this.PoDetails.paitemid;
         this.StockModel.totalquantity = this.PoDetails.materialqty;
@@ -387,19 +449,6 @@ export class ReceiveMaterialComponent implements OnInit {
         //this.StockModel.stocklist.push(this.StockModel);
       })
 
-      //this.StockModel.stocklist.push(this.StockModel);
-      //  binnumber = this.binlist.filter(x => x.binid == this.StockModelForm.controls.binid.value);
-      //storelocation = this.locationlist.filter(x => x.locatorid == this.StockModelForm.controls.locatorid.value);
-      //  rack = this.racklist.filter(x => x.rackid == this.StockModelForm.controls.rackid.value);
-      //if (binnumber.length != 0) {
-      //  this.StockModel.binnumber = binnumber[0].binnumber;
-      //  this.StockModel.binid = binnumber[0].binid;
-      //  this.StockModel.itemlocation = storelocation[0].locatorname + "." + rack[0].racknumber + '.' + binnumber[0].binnumber;
-      //}
-      //else if (binnumber.length == 0) {
-      //  this.StockModel.binid = 1;
-      //  this.StockModel.itemlocation = storelocation[0].locatorname + "." + rack[0].racknumber;
-      //}
       var totalqty = 0;
       this.StockModelList.forEach(item => {
 

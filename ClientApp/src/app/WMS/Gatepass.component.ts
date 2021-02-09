@@ -1211,7 +1211,16 @@ export class GatePassComponent implements OnInit {
     });
   }
   //check issued quantity
-  checkissueqty($event, entredvalue, maxvalue, material, createddate, description: string) {
+  checkissueqty($event, entredvalue, maxvalue, material, createddate, description: string, rowdata : any) {
+    if (entredvalue < 0) {
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Enter value grater than 0' });
+      rowdata.issuedquantity = 0;
+      return;
+    }
+    if (isNullOrUndefined(entredvalue) || entredvalue == 0) {
+      rowdata.issuedquantity = 0;
+      return;
+    }
     var id = $event.target.id;
     if (entredvalue > maxvalue) {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Please enter issue quantity less than Available quantity' });
