@@ -3961,11 +3961,17 @@ namespace WMS.DAL
 					emailmodel.requestid = dataobj[0].requestid;
 					if (dataobj[0].requesttype == "STO")
 					{
-						emailmodel.requestid = dataobj[0].requestid;
+						emailmodel.requestid = dataobj[0].transferid;
 					}
 					emailmodel.FrmEmailId = "ramesh.kumar@in.yokogawa.com";
 					emailmodel.ToEmailId = mailto;
-					emailmodel.CC = mailtocc;
+					string mailcc = "ramesh.kumar@in.yokogawa.com";
+                    if(mailtocc != "")
+                    {
+						mailcc += "," + mailtocc;
+
+					}
+					emailmodel.CC = mailcc;
 					EmailUtilities emailobj = new EmailUtilities();
 					if (dataobj[0].requesttype == "STO")
 					{
@@ -6147,7 +6153,7 @@ namespace WMS.DAL
 		/// <param name="requestforissueid"></param>
 		/// Revised by Ramesh 10_01_2020
 		/// <returns></returns>
-		public async Task<IEnumerable<IssueRequestModel>> getItemlocationListByIssueId(string requestforissueid)
+		public async Task<IEnumerable<IssueRequestModel>> getItemlocationListByIssueId(string requestforissueid, string requesttype)
 		{
 
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -6156,7 +6162,8 @@ namespace WMS.DAL
 				try
 				{
 					//string query = WMSResource.getitemlocationListBysIssueId.Replace("#requestforissueid", requestforissueid);
-					string query = WMSResource.getitemlocationListBysIssueId_v1.Replace("#requestforissueid", requestforissueid);
+					//string query = WMSResource.getitemlocationListBysIssueId_v1.Replace("#requestforissueid", requestforissueid);
+					string query = WMSResource.getitemlocationListBysIssueId_v2.Replace("#requestforissueid", requestforissueid).Replace("#type", requesttype);
 					await pgsql.OpenAsync();
 					var data = await pgsql.QueryAsync<IssueRequestModel>(
 					 query, null, commandType: CommandType.Text);
@@ -9207,7 +9214,8 @@ namespace WMS.DAL
 				{
 					//string materialrequestquery = "select materialid as material, poitemdescription as poitemdesc,unitprice from wms.wms_pomaterials";
 
-					string materialrequestquery= "select  matmtygs .material as material,matmtygs .materialdescription as materialdescription, pomat.poitemdescription as poitemdesc, pomat.unitprice from wms.wms_pomaterials pomat right join wms.\"MaterialMasterYGS\" matmtygs on pomat.materialid = matmtygs.material limit 10";
+					//string materialrequestquery= "select  matmtygs .material as material,matmtygs .materialdescription as materialdescription, pomat.poitemdescription as poitemdesc, pomat.unitprice from wms.wms_pomaterials pomat right join wms.\"MaterialMasterYGS\" matmtygs on pomat.materialid = matmtygs.material limit 10";
+					string materialrequestquery = WMSResource.getMaterialforSTO;
 					await pgsql.OpenAsync();
 					return await pgsql.QueryAsync<Materials>(
 					  materialrequestquery, null, commandType: CommandType.Text);
@@ -9608,7 +9616,7 @@ namespace WMS.DAL
 							//For STO directly add material data in wms_invtransfermaterial table
 							//foreach (var matdata in data.materialdata)
                             //{
-								var poitemdesc = stck.poitemdesc;
+								var poitemdesc = stck.materialdescription;
 								string stockinsertqry = WMSResource.insertinvtransfermaterialSTO;
 
 								var resultsxx = pgsql.ExecuteScalar(stockinsertqry, new
@@ -12195,7 +12203,7 @@ namespace WMS.DAL
 
 
 					string query = WMSResource.getSTORequestlist;
-					query += "and status ='Issued'";
+					query += "and status ='Issued' order by transferid desc";
 					//string query = "select * from wms.wms_invstocktransfer wi ";
 					//query += " join wms.wms_materialissue wm  on wm.requestid = wi.transferid";
 					//query += " where wi.transfertype ='STO' and status ='Issued'";
@@ -12212,7 +12220,7 @@ namespace WMS.DAL
 							string query1 = "select invtras.*,stock.itemid,stock.itemlocation,stock.totalquantity as putawayqty,matiss.issuedqty,matiss.requestid from wms.wms_invtransfermaterial invtras";
 							query1 += " left join wms.wms_stock stock on stock.receivedid= invtras.id ::varchar(255)";
 							query1 += " left join wms.wms_materialissue matiss on matiss.requestid  = invtras.id ::varchar(255)";
-							query1 += " where invtras.transferid='"+dt.transferid+"'";
+							query1 += " where invtras.transferid='"+dt.transferid+ "' and matiss.issuedqty is not null and matiss.issuedqty > 0";
 
 							var datadetail = await pgsql.QueryAsync<STOrequestTR>(
 							   query1, null, commandType: CommandType.Text);
@@ -14620,8 +14628,8 @@ Review Date :<<>>   Reviewed By :<<>>
 			{
 				try
 				{
-					string materialrequestquery = WMSResource.invstocktransforSTO;
-
+					//string materialrequestquery = WMSResource.invstocktransforSTO;
+					string materialrequestquery = WMSResource.getSTOListForIssue;
 					await pgsql.OpenAsync();
 					var result = await pgsql.QueryAsync<invstocktransfermodel>(
 					  materialrequestquery, null, commandType: CommandType.Text);
@@ -14656,14 +14664,13 @@ Review Date :<<>>   Reviewed By :<<>>
 					materialrequestquery += " where inv.transferid = '" + transferId + "' ";
 					if (type == "MatIssue")
 					{
-						materialrequestquery += " and stock.availableqty is not null and stock.availableqty > 0";
+						//materialrequestquery += " and stock.availableqty is not null and stock.availableqty > 0";
 					}
-
 					if (type == "POInitiate")
 					{
-						materialrequestquery += " and (stock.availableqty =0 or stock.availableqty is null)";
+						//materialrequestquery += " and (stock.availableqty =0 or stock.availableqty is null)";
 					}
-					materialrequestquery += " group by inv.transferid, inv.materialid";
+					materialrequestquery += " group by inv.transferid, inv.materialid, inv.poitemdesc";
 					await pgsql.OpenAsync();
 					var result = await pgsql.QueryAsync<STOIssueModel>(
 					  materialrequestquery, null, commandType: CommandType.Text);
@@ -14708,7 +14715,7 @@ Review Date :<<>>   Reviewed By :<<>>
 				MPRItemInfo mPRItemInfo = new MPRItemInfo();
 				mPRItemInfo.Itemid = item.materialid;
 				mPRItemInfo.ItemDescription = item.poitemdescription;
-				mPRItemInfo.Quantity = Convert.ToDecimal(item.transferqty);
+				mPRItemInfo.Quantity = Convert.ToDecimal(item.poqty);
 				//mPRItemInfo.UnitId = 1;
 				mprData.MPRItemInfoes.Add(mPRItemInfo);
 			}
@@ -14747,7 +14754,7 @@ Review Date :<<>>   Reviewed By :<<>>
 					string scmStatus = "Sucess";
 					foreach (STOIssueModel item in data)
 					{
-						int poqty =Convert.ToInt32(item.transferqty);
+						int poqty =Convert.ToInt32(item.poqty);
 						var results = pgsql.ExecuteScalar(query, new
 						{
 							item.transferid,

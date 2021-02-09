@@ -1362,7 +1362,7 @@ group by sk.itemlocation,sk.materialid order by Max(sk.createddate)</value>
   </data>
   <data name="getItemlocationListByGatepassmaterialid_v1" xml:space="preserve">
     <value>select iss.issuedqty,sk.pono,sk.materialid,sk.itemid,sk.itemlocation,
-(select sum(sk1.availableqty) from wms.wms_stock sk1 where sk1.materialid = sk.materialid and sk1.itemlocation = sk.itemlocation) as availableqty
+(select sum(sk1.availableqty) from wms.wms_stock sk1 where sk1.materialid = sk.materialid and sK1.poitemdescription = sk.poitemdescription and sk1.itemlocation = sk.itemlocation) as availableqty
 ,sk.createddate::DATE,
 sk.poitemdescription as materialdescription
 from wms.wms_materialissue iss 
@@ -1699,11 +1699,12 @@ stocktype=@stocktype,unitprice=@unitprice,hsncode=@hsncode where material ='#mat
     <comment>BG: To get unit price details from po materials table </comment>
   </data>
   <data name="getMatdetailsbyTransferId" xml:space="preserve">
-    <value>select max(inv.id) as id,inv.transferid, inv.materialid , Max(inv.poitemdesc) as poitemdescription, max(inv.transferqty) as transferqty,
-(select sum(issuedqty) from wms.wms_materialissue matiss  where matiss.requestid =cast(max(inv.id) as varchar ) and matiss.requesttype ='STO' ) as issuedqty,
- (select sum(availableqty) from wms.wms_stock ws where materialid =inv.materialid ) as availableqty
+    <value>select max(inv.id) as id,inv.transferid, inv.materialid ,Max(nv.transferredby) as createdby, Max(inv.poitemdesc) as poitemdescription, max(inv.transferqty) as transferqty,
+(select sum(matiss.issuedqty) from wms.wms_materialissue matiss  where matiss.requestid =cast(max(inv.id) as varchar ) and matiss.requesttype ='STO' ) as issuedqty,
+ (select sum(ws.availableqty) from wms.wms_stock ws where ws.materialid =inv.materialid and ws.poitemdescription = inv.poitemdesc ) as availableqty,
+ (select sum(wi.poqty) from wms.wms_initiatepo wi  where wi.materialid = inv.materialid and wi.poitemdescription = inv.poitemdesc and wi.transferid = inv.transferid ) as poqty
 from wms.wms_invtransfermaterial inv
-left outer join wms.wms_stock stock on inv.materialid = stock.materialid</value>
+left outer join wms.wms_invstocktransfer nv on nv.transferid = inv.transferid</value>
   </data>
   <data name="invstocktransforSTO" xml:space="preserve">
     <value>select inv.transferid,emp.name as transferredby,inv.transferredon,inv.transfertype,inv.sourceplant,inv.destinationplant,inv.remarks,inv.status,inv.issuedon,inv.isporequested   
@@ -1890,5 +1891,36 @@ group by wp.projectcode,wp.projectmanager</value>
   </data>
   <data name="checkoldmaterialwithdesc" xml:space="preserve">
     <value>select * from wms.wms_stock where materialid='#materialid' and poitemdescription = '#desc' and createddate::date&lt;'#createddate'  order by createddate asc limit 1</value>
+  </data>
+  <data name="getMaterialforSTO" xml:space="preserve">
+    <value>select wp.materialid as material,wp.poitemdescription as materialdescription,Max(wp.unitprice) as unitprice  
+from wms.wms_pomaterials wp  
+where wp.materialid is not null and wp.poitemdescription is not null
+group by wp.materialid,wp.poitemdescription
+union 
+select material,materialdescription,Max(unitprice) as unitprice from wms."MaterialMasterYGS" mmy 
+where material is not null and materialdescription is not null
+group by material ,materialdescription</value>
+  </data>
+  <data name="getitemlocationListBysIssueId_v2" xml:space="preserve">
+    <value>select iss.requestid, iss.issuedqty,sk.pono,sk.materialid,sk.itemid,sk.itemlocation,
+(select sum(sk1.availableqty) from wms.wms_stock sk1 where sk1.materialid = sk.materialid and sK1.poitemdescription = sk.poitemdescription and sk1.itemlocation = sk.itemlocation) as availableqty
+,sk.createddate::DATE,
+ygs.materialdescription
+from wms.wms_materialissue iss 
+left outer join wms.wms_stock sk on iss.itemid =sk.itemid
+left join wms."MaterialMasterYGS" ygs on ygs.material=sk.materialid 
+where iss.requestid = '#requestforissueid' and iss.requesttype = '#type'</value>
+  </data>
+  <data name="getSTOListForIssue" xml:space="preserve">
+    <value>select inv.transferid,emp.name as transferredby,inv.transferredon,inv.transfertype,inv.sourceplant,inv.destinationplant,inv.remarks,inv.isporequested,
+(select SUM(wm.issuedqty) from wms.wms_materialissue wm where wm.requesttype = 'STO' and wm.requestid::text in (
+select id::text from wms.wms_invtransfermaterial wi where wi.transferid = inv.transferid)) as issuedqty,
+(select SUM(wiv.transferqty) from wms.wms_invtransfermaterial wiv where wiv.transferid = inv.transferid) as transferqty,
+inv.status,
+inv.issuedon,inv.isporequested   
+from wms.wms_invstocktransfer inv 
+left outer join wms.employee emp  on emp.employeeno = inv.transferredby where  inv.transfertype ='STO'
+order by transferredon desc</value>
   </data>
 </root>

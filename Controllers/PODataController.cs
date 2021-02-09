@@ -599,10 +599,10 @@ namespace WMS.Controllers
 			return await this._poService.GetItemlocationListBymterialsourcelocation(material);
 		}
 		[HttpGet("getItemlocationListByIssueId")]
-		public async Task<IEnumerable<IssueRequestModel>> getItemlocationListByIssueId(string requestforissueid)
+		public async Task<IEnumerable<IssueRequestModel>> getItemlocationListByIssueId(string requestforissueid, string requesttype)
 		{
 
-			return await this._poService.getItemlocationListByIssueId(requestforissueid);
+			return await this._poService.getItemlocationListByIssueId(requestforissueid, requesttype);
 		}
 
 		[HttpGet("getItemlocationListByGatepassmaterialid")]

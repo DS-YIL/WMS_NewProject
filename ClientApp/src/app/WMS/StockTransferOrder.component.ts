@@ -17,6 +17,8 @@ export class StockTransferOrderComponent implements OnInit {
   locationlist: locationddl[] = [];
   binlist: binddl[] = [];
   racklist: rackddl[] = [];
+  public searchItems: Array<searchList> = [];
+  public searchdescItems: Array<searchList> = [];
   selectedbin: binddl; selectedrack: rackddl; selectedlocation: locationddl;
   showLocationDialog: boolean;
   results: string[] = [];
@@ -83,12 +85,12 @@ export class StockTransferOrderComponent implements OnInit {
     this.selectedlocation = new locationddl();
     this.selectedrack = new rackddl();
     this.showLocationDialog = false;
-    this.getMaterials();
-    this.locationListdata();
-    this.binListdata();
-    this.rackListdata();
+    //this.locationListdata();
+    //this.binListdata();
+    //this.rackListdata();
     //this.getStocktransferdata();
     this.getStocktransferdatagroup();
+    //this.getMaterials();
 
   }
 
@@ -98,23 +100,108 @@ export class StockTransferOrderComponent implements OnInit {
     //this.formArr.removeAt(index);
   }
 
-
-  //bind materials based search
-  public bindSearchListDatamaterial(event: any, name?: string) {
+  public bindSearchListDatamaterialdesc(event: any, data: any) {
     debugger;
+    var searchTxt = event.query;
+    var matid = "";
+    if (!isNullOrUndefined(data.materialObj)) {
+      matid = data.materialObj.code;
+    }
+    if (searchTxt == undefined)
+      searchTxt = "";
+    searchTxt = searchTxt.replace('*', '%');
+    this.dynamicData = new DynamicSearchResult();
+    var query = "(select wp.poitemdescription as materialdescription";
+    query += " from wms.wms_pomaterials wp";
+    query += " where wp.poitemdescription ilike '" + searchTxt + "%' ";
+    if (!isNullOrUndefined(matid) && String(matid).trim() != "") {
+      query += " and wp.materialid  = '" + matid + "' ";
+    }
+    query += " group by wp.poitemdescription limit 50)";
+    query += " union";
+    query += " (select mmy.materialdescription";
+    query += " from wms.\"MaterialMasterYGS\" mmy";
+    query += " where mmy.materialdescription ilike '" + searchTxt + "%'";
+    if (!isNullOrUndefined(matid) && String(matid).trim() != "") {
+      query += " and mmy.material  = '" + matid + "' ";
+    }
+    query += " group by mmy.materialdescription limit 50)";
+    this.dynamicData.query = query;
+    this.filteredmats = [];
+    this.wmsService.GetListItems(this.dynamicData).subscribe(data => {
+      this.searchresult = data;
+      this.filtermatdescs = data;
+      this.searchdescItems = [];
+
+      var fName = "";
+      this.searchresult.forEach(item => {
+        fName = item["materialdescription"];
+        var value = { listName: 'matdesc', name: fName, code: fName };
+        this.searchdescItems.push(value);
+      });
+    });
+  }
+
+  public bindSearchListDatamaterial(event: any, rdata: any, name?: string ) {
+    debugger;
+    var description = "";
+    if (!isNullOrUndefined(rdata.materialdescObj)) {
+      description = rdata.materialdescObj.name;
+    }
     var searchTxt = event.query;
     if (searchTxt == undefined)
       searchTxt = "";
     searchTxt = searchTxt.replace('*', '%');
     this.dynamicData = new DynamicSearchResult();
-    this.dynamicData.tableName = this.constants[name].tableName + " ";
-    this.dynamicData.searchCondition = "" + this.constants[name].condition;
-    this.dynamicData.searchCondition += "material" + " ilike '%" + searchTxt + "%'";
-    //this.filteredmats = [];
+    var query = "(select wp.materialid as material";
+    query +=" from wms.wms_pomaterials wp";
+    query += " where wp.materialid ilike '" + searchTxt + "%' ";
+    if (!isNullOrUndefined(description) && String(description).trim() != "") {
+      query += " and wp.poitemdescription  = '" + description + "' ";
+    }
+    query += " group by wp.materialid limit 50)";
+    query +=" union";
+    query += " (select mmy.material";
+    query +=" from wms.\"MaterialMasterYGS\" mmy";
+    query += " where mmy.material ilike '" + searchTxt + "%'";
+    if (!isNullOrUndefined(description) && String(description).trim() != "") {
+      query += " and mmy.materialdescription  = '" + description + "' ";
+    }
+    query += " group by mmy.material limit 50)";
+    this.dynamicData.query = query;
+    this.filteredmats = [];
     this.wmsService.GetListItems(this.dynamicData).subscribe(data => {
+      this.searchresult = data;
       this.filteredmats = data;
+      this.searchItems = [];
+
+      var fName = "";
+      this.searchresult.forEach(item => {
+        fName = item[this.constants[name].fieldName];
+        fName = item[this.constants[name].fieldId];
+        var value = { listName: name, name: fName, code: item[this.constants[name].fieldId] };
+        this.searchItems.push(value);
+      });
     });
   }
+
+
+  //bind materials based search
+  //public bindSearchListDatamaterial(event: any, name?: string) {
+  //  debugger;
+  //  var searchTxt = event.query;
+  //  if (searchTxt == undefined)
+  //    searchTxt = "";
+  //  searchTxt = searchTxt.replace('*', '%');
+  //  this.dynamicData = new DynamicSearchResult();
+  //  this.dynamicData.tableName = this.constants[name].tableName + " ";
+  //  this.dynamicData.searchCondition = "" + this.constants[name].condition;
+  //  this.dynamicData.searchCondition += "material" + " ilike '%" + searchTxt + "%'";
+  //  //this.filteredmats = [];
+  //  this.wmsService.GetListItems(this.dynamicData).subscribe(data => {
+  //    this.filteredmats = data;
+  //  });
+  //}
 
 
   addrows() {
@@ -228,7 +315,7 @@ export class StockTransferOrderComponent implements OnInit {
     this.selectedRow = null;
     this.addprocess = true;
     this.getplantloc();
-    this.setlocationcombinations();
+    //this.setlocationcombinations();
   }
 
   getplantloc() {
@@ -391,45 +478,87 @@ export class StockTransferOrderComponent implements OnInit {
   }
 
   onMaterialSelected1(event: any, data: any, ind: number) {
-    this.podetailsList[ind].materialid = data.materialObj.material;
-    this.dynamicData = new DynamicSearchResult();
-    this.dynamicData.query = "select materialid ,materialdescription,poitemdescription as poitemdesc from wms.wms_pomaterials wp where materialid = '" + data.materialObj.material + "'";
-    this.wmsService.GetListItems(this.dynamicData).subscribe(result => {
-      this.defaultmaterialidescs = result;
-      if (this.defaultmaterialidescs.length == 0)
-        this.podetailsList[ind].poitemdesc = data.materialObj.materialdescription;
 
-      var data1 = this.podetailsList.filter(function (element, index) {
-        return (element.materialObj.material == data.materialObj.material && element.poitemdesc == data.materialObj.materialdescription && index != ind);
-      });
-      if (data1.length > 0) {
-        this.messageService.add({ severity: 'error', summary: '', detail: 'Material and  po item description already exist' });
-        this.podetailsList[ind].materialObj = "";
-        this.podetailsList[ind].materialid = "";
-        this.podetailsList[ind].poitemdesc = "";
-        return false;
-      }
+    debugger;
+    if (!isNullOrUndefined(data.materialObj)) {
+      this.podetailsList[ind].materialid = data.materialObj.code;
+    }
+    else {
+      this.podetailsList[ind].materialdescObj = null;
+      this.podetailsList[ind].materialdescription = null;
+
+    }
+    var data1 = this.podetailsList.filter(function (element, index) {
+      return (element.materialid == data.materialObj.code && element.materialdescription == data.materialdescription && index != ind);
     });
+    if (data1.length > 0) {
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Material and  po item description already exist' });
+      this.podetailsList[ind].materialObj = null;
+      this.podetailsList[ind].materialid = null;
+      this.podetailsList[ind].materialdescObj = null;
+      this.podetailsList[ind].materialdescription = null;
+      return false;
+    }
+   
+    //this.dynamicData = new DynamicSearchResult();
+    //this.dynamicData.query = "select materialid ,materialdescription,poitemdescription as poitemdesc from wms.wms_pomaterials wp where materialid = '" + data.materialObj.material + "'";
+    //this.wmsService.GetListItems(this.dynamicData).subscribe(result => {
+    //  this.defaultmaterialidescs = result;
+    //  if (this.defaultmaterialidescs.length == 0)
+    //    this.podetailsList[ind].poitemdesc = data.materialObj.materialdescription;
+
+    //  var data1 = this.podetailsList.filter(function (element, index) {
+    //    return (element.materialObj.material == data.materialObj.material && element.poitemdesc == data.materialObj.materialdescription && index != ind);
+    //  });
+    //  if (data1.length > 0) {
+    //    this.messageService.add({ severity: 'error', summary: '', detail: 'Material and  po item description already exist' });
+    //    this.podetailsList[ind].materialObj = "";
+    //    this.podetailsList[ind].materialid = "";
+    //    this.podetailsList[ind].poitemdesc = "";
+    //    return false;
+    //  }
+    //});
   }
 
 
   onDescriptionSelected(event: any, data: any, ind: number) {
-    if (!isNullOrUndefined(data.materialObj.material) && data.materialObj.material != "") {
-      if (this.defaultmaterialidescs.length > 0 && data.poitemdesc)
-        this.podetailsList[ind].poitemdesc = data.poitemdesc;
-      else
-        this.podetailsList[ind].poitemdesc = data.materialObj.materialdescription;
-      var data1 = this.podetailsList.filter(function (element, index) {
-        return (element.materialObj.material == data.materialObj.material && element.poitemdesc == data.poitemdesc && index != ind);
-      });
-      if (data1.length > 0) {
-        this.messageService.add({ severity: 'error', summary: '', detail: 'Material and  item po description already exist' });
-        this.podetailsList[ind].materialid = "";
-        this.podetailsList[ind].poitemdesc = "";
-        return false;
-      }
+    debugger;
+    if (!isNullOrUndefined(data.materialdescObj)) {
+      this.podetailsList[ind].materialdescription = data.materialdescObj.name;
+    }
+    else {
+      this.podetailsList[ind].materialObj = null;
+      this.podetailsList[ind].materialid = null;
 
     }
+    var data1 = this.podetailsList.filter(function (element, index) {
+      return (element.materialdescription == data.materialdescObj.name && element.materialid == data.materialid && index != ind);
+    });
+    if (data1.length > 0) {
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Material and  po item description already exist' });
+      this.podetailsList[ind].materialObj = null;
+      this.podetailsList[ind].materialid = null;
+      this.podetailsList[ind].materialdescObj = null;
+      this.podetailsList[ind].materialdescription = null;
+      return false;
+    }
+
+    //if (!isNullOrUndefined(data.materialObj.material) && data.materialObj.material != "") {
+    //  if (this.defaultmaterialidescs.length > 0 && data.poitemdesc)
+    //    this.podetailsList[ind].poitemdesc = data.poitemdesc;
+    //  else
+    //    this.podetailsList[ind].poitemdesc = data.materialObj.materialdescription;
+    //  var data1 = this.podetailsList.filter(function (element, index) {
+    //    return (element.materialObj.material == data.materialObj.material && element.poitemdesc == data.poitemdesc && index != ind);
+    //  });
+    //  if (data1.length > 0) {
+    //    this.messageService.add({ severity: 'error', summary: '', detail: 'Material and  item po description already exist' });
+    //    this.podetailsList[ind].materialid = "";
+    //    this.podetailsList[ind].poitemdesc = "";
+    //    return false;
+    //  }
+
+    //}
 
   }
 
@@ -569,11 +698,12 @@ export class StockTransferOrderComponent implements OnInit {
 
   //Get list of materials from pomaterials table
   getMaterials() {
+    this.spinner.show();
     this.wmsService.getMaterialforstocktransferorder().subscribe(data => {
       debugger;
       this.combomaterial = data;
       this.defaultmaterials = data;
-      this.setmatdesclist(this.defaultmaterials);
+      //this.setmatdesclist(this.defaultmaterials);
     });
   }
 
@@ -587,7 +717,7 @@ export class StockTransferOrderComponent implements OnInit {
     listdata.forEach(item => {
       debugger;
       var mat = item.material;
-      var desc = item.poitemdesc;
+      var desc = item.materialdescription;
       var dt1 = this.defaultmaterialids.filter(function (element, index) {
         return (element.material.toLowerCase() == String(mat).toLowerCase());
       });
@@ -595,8 +725,8 @@ export class StockTransferOrderComponent implements OnInit {
         this.defaultmaterialids.push(item);
       }
       var dt2 = this.defaultmaterialidescs.filter(function (element, index) {
-        if (element.poitemdesc != null) {
-          return (element.poitemdesc.toLowerCase() == String(desc).toLowerCase());
+        if (element.materialdescription != null) {
+          return (element.materialdescription.toLowerCase() == String(desc).toLowerCase());
         }
 
       });
@@ -608,6 +738,7 @@ export class StockTransferOrderComponent implements OnInit {
     debugger;
     this.defaultuniquematerialids = this.defaultmaterialids;
     this.defaultuniquematerialidescs = this.defaultmaterialidescs;
+    this.spinner.hide();
 
   }
 
@@ -668,7 +799,7 @@ export class StockTransferOrderComponent implements OnInit {
   filtermatdescs(event, data: any) {
     this.filteredmatdesc = [];
     for (let i = 0; i < this.defaultmaterialidescs.length; i++) {
-      let pos = this.defaultmaterialidescs[i].poitemdesc;
+      let pos = this.defaultmaterialidescs[i].materialdescription;
       if (pos.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
         this.filteredmatdesc.push(pos);
       }
@@ -707,9 +838,7 @@ export class StockTransferOrderComponent implements OnInit {
 
   getStocktransferdatagroup() {
     this.stocktransferlist = [];
-    this.spinner.show();
     this.wmsService.getstocktransferlistgroup1("STO").subscribe(data => {
-      this.spinner.hide();
       if (data) {
         this.stocktransferlistgroup = data;
       }
@@ -799,6 +928,8 @@ export class StockTransferOrderComponent implements OnInit {
       }
     });
   }
+
+ 
 
   plantchange() {
     // this.addprocess = true;

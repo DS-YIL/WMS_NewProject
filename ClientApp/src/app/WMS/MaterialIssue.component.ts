@@ -157,7 +157,7 @@ export class MaterialIssueComponent implements OnInit {
     }
     else {
       this.issueqtyenable = true;
-      this.wmsService.getItemlocationListByIssueId(requestmaterialid).subscribe(data => {
+      this.wmsService.getItemlocationListByIssueId(requestmaterialid, 'MaterialRequest').subscribe(data => {
         this.itemlocationData = data;
         this.showdialog = true;
       });

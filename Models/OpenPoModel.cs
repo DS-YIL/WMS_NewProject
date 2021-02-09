@@ -1313,7 +1313,7 @@ namespace WMS.Models
 		public string materialdescription { get; set; }
 		public string poitemdesc { get; set; }
 		public bool qualitycheck { get; set; }
-		public decimal unitprice { get; set; }
+		public decimal? unitprice { get; set; }
 
 	}
 }
@@ -1377,7 +1377,9 @@ public class invstocktransfermodel
 	public DateTime requireddate { get; set; }
 	public string status { get; set; }
 	public DateTime issuedon { get; set; }
-	public bool isporequested { get; set; }
+	public bool? isporequested { get; set; }
+	public int transferqty { get; set; }
+	public int issuedqty { get; set; }
 }
 
 public class stocktransfermateriakmodel
@@ -1520,6 +1522,10 @@ public class STOrequestTR
 	public int itemid  { get;set;}
 	public int availableqty { get; set; }
 	public bool isissued { get; set; }
+
+	public int defaultstore { get; set; }
+	public int defaultrack { get; set; }
+	public int defaultbin { get; set; }
 
 }
 public class DirectTransferTR
@@ -1977,6 +1983,10 @@ public class STOIssueModel
 	public string availableqty { get; set; }
 	public string issuedqty { get; set; }
 	public string uploadedby { get; set; }
+	public string createdby { get; set; }
+	public string createdbyname { get; set; }
+	public int poqty { get; set; }
+
 
 }
 public class MPRRevision

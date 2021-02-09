@@ -576,6 +576,7 @@ export class stocktransfermateriakmodel {
   requireddate: any;
   projectid: any = "";
   materialObj: any;
+  materialdescObj: any;
 }
 
 export class updateonhold {
@@ -724,6 +725,9 @@ export class STOrequestTR {
   itemid: any;
   availableqty: any;
   isissued: any;
+  defaultstore: number;
+  defaultrack: number;
+  defaultbin: number;
 }
 
 export class UserModel {

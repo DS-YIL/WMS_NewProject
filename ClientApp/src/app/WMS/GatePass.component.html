@@ -1,15 +1,4 @@
-<!--<style>
-  .ui-card-body {
-    padding: 0px !important;
-    padding-top: 0px !important;
-  }
-  .data-selected {
-    background-color: #9ba5af !important;
-  }
-  .cardstyle {
-    padding-top: 0px !important;
-  }
-</style>-->
+
 <div style="margin:10px;">
   <div class="card commoncardcss" style="width:100%;">
     <div class="card-header commoncardheader">
@@ -21,11 +10,6 @@
 
             <div *ngIf="employee.roleid!='3' && employee.roleid !='4' && employee.roleid !='8'">
               <p-button icon="fa fa-user-plus" label="Create GatePass" (click)="openGatepassDialog('','','gatepassdialog')"></p-button>
-                <!--<span>
-                  <i class="fa fa-bookmark" style="font-size: 15px"></i><label style="font-size: 15px;padding:0px; color: rgb(96, 123, 212);"> &nbsp;&nbsp;Gate Pass</label>&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" pTooltip="Create GatePass" style="border-radius: 10em!important;background-color: white; border-color:  rgb(96, 123, 212);" rounded="true" size="lg" class="my-0" (click)="openGatepassDialog('','','gatepassdialog')"> <i class="fa fa-user-plus" style="font-size: 15px;color: green;"></i></button>
-
-                </span>-->
-             
             </div>
 
           </div>
@@ -105,19 +89,7 @@
               <th *ngIf="(employee.roleid=='3' || employee.roleid =='4') && employee.roleid !='8'" style="text-align:center;">Print</th>
               <th *ngIf=" (employee.roleid=='3' || employee.roleid =='4') && selectedStatus=='Issued' " style="text-align:center">Returned Date</th>
             </tr>
-            <!--<tr>
-        <th></th>
-        <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'gatepassid', 'contains')"></th>
-        <th *ngIf="employee.roleid!='8'"> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'gatepasstype', 'contains')"></th>
-        <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'vendorname', 'contains')"></th>
-        <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'reasonforgatepass', 'contains')"></th>
-        <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'approverstatus', 'contains')"></th>
-        <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'name', 'contains')"></th>
-        <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'requestedon', 'contains')"></th>
-        <th *ngIf="employee.roleid!='4' &&  employee.roleid !='8'"> <input pInputText type="text" class="form-control"></th>
-        <th *ngIf="employee.roleid!='4' &&  employee.roleid !='8'"> <input pInputText type="text" class="form-control"></th>
-        <th *ngIf="employee.roleid=='7'"> <input pInputText type="text" class="form-control"></th>
-      </tr>-->
+           
           </ng-template>
           <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
             <tr [ngClass]="{'data-selected': selectedRow === ri}">
@@ -131,19 +103,18 @@
               </td>
               <td class="ptable-cell" style="text-align:left" *ngIf="employee.roleid!='8'">{{rowData.gatepasstype}}</td>
               <td class="ptable-cell" style="text-align:left">{{rowData.vendorname}}</td>
-              <!--<td class="ptable-cell" style="text-align:center">{{rowData.vehicleno}}</td>-->
               <td class="ptable-cell" style="text-align:left">{{rowData.reasonforgatepass}}</td>
               <td class="ptable-cell" style="text-align:left">
                 <span *ngIf="!rowData.approverstatus">Pending for Approval</span>
                 <span *ngIf="rowData.gatepasstype == 'Returnable' && selectedStatus!='Issued'">{{rowData.approverstatus}}</span>
                 <span *ngIf="rowData.gatepasstype == 'Non Returnable' && !rowData.fmapprovedon && selectedStatus!='Issued'">(PM)-{{rowData.approverstatus}}</span>
                 <span *ngIf="rowData.gatepasstype == 'Non Returnable' && rowData.fmapprovedon && selectedStatus!='Issued'">(FM)-{{rowData.fmapprovedstatus}}</span>
-                <!--<span *ngIf="rowData.approverstatus && selectedStatus=='Issued'">Issued</span>-->
+                
                 <span *ngIf="rowData.approverstatus=='Approved' && selectedStatus=='Issued'" [ngStyle]="{'color':rowData.status === 'Partial Closure' ? 'red' : 'black' }" style="color:red">{{rowData.status}}</span>
-                <!--<span *ngIf="rowData.approverstatus=='Approved' && rowData.print==false && rowData.returneddate!=null" style="color:red">Full Closure</span>-->
+                
               </td>
 
-              <!--<td class="ptable-cell" *ngIf="!rowData.approverstatus" style="text-align:left">Pending</td>-->
+              
               <td class="ptable-cell" style="text-align:left" *ngIf="employee.roleid!='5'">{{rowData.name}}</td>
               <td class="ptable-cell" style="text-align:center" *ngIf="employee.roleid!='5'">{{rowData.requestedon | date :  constants.dateFormat}}</td>
               <td class="ptable-cell" style="text-align:left" *ngIf="employee.roleid == '5'">
@@ -182,9 +153,9 @@
             <tr class="mprltbldata">
               <th class="ptable-cell" style="    text-align: center;width: 20px;background-color: #9ba5af !important">Sl.No.</th>
               <th class="ptable-cell" style="    text-align: center;background-color: #9ba5af !important">Material</th>
-              <!--<th class="ptable-cell" style="    text-align: center; width: 500px;background-color: #9ba5af !important">Material Description</th>-->
+              
               <th class="ptable-cell" style="    text-align: center; width: 500px;background-color: #9ba5af !important">PO Item Description</th>
-              <!--<th class="ptable-cell" style="    text-align: center;background-color: #9ba5af !important">Price</th>-->
+              
               <th class="ptable-cell" style="    text-align: center;background-color: #9ba5af !important">Remarks</th>
               <th class="ptable-cell" style="    text-align: center;background-color: #9ba5af !important">Requested Qty</th>
               <th class="ptable-cell" style="    text-align: center;background-color: #9ba5af !important" *ngIf="employee.roleid !='8'">Issued Qty</th>

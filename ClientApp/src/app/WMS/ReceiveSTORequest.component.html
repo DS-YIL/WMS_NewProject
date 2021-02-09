@@ -31,8 +31,8 @@
               <th style="text-align:center;width:150px">Requester Plant</th>
               <th style="text-align:center;width:100px">Requested On</th>
               <th *ngIf="selectedStatus=='Issued'" style="text-align:center;width:100px">Issued On</th>
-              <th *ngIf="selectedStatus=='Pending'" style="text-align:center;width:90px">Available Stock</th>
-              <th *ngIf="selectedStatus=='Pending'" style="text-align:center;width:90px">Create PO</th>
+              <th *ngIf="selectedStatus=='Pending' || selectedStatus=='Issued'" style="text-align:center;width:90px"></th>
+              <th *ngIf="selectedStatus=='Pending'" style="text-align:center;width:90px"></th>
             </tr>
             <tr>
               <th></th>
@@ -41,7 +41,7 @@
               <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'destinationplant', 'contains')"></th>
               <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'transferredon', 'contains')"></th>
               <th *ngIf="selectedStatus=='Issued'"></th>
-              <th *ngIf="selectedStatus=='Pending'"></th>
+              <th *ngIf="selectedStatus=='Pending' || selectedStatus=='Issued'"></th>
               <th *ngIf="selectedStatus=='Pending'"></th>
             </tr>
           </ng-template>
@@ -55,8 +55,11 @@
               <td class="ptable-cell" style="text-align:center;width:150px;">{{rowData.destinationplant}}</td>
               <td class="ptable-cell" style="text-align:center;width:100px;">{{rowData.transferredon  | date :  constants.dateFormat}}</td>
               <td *ngIf="selectedStatus=='Issued'" class="ptable-cell" style="text-align:center;width:100px;">{{rowData.issuedon  | date :  constants.dateFormat}}</td>
-              <td *ngIf="selectedStatus=='Pending'" class="ptable-cell" style="text-align:center;width:90px;"><button type="button" style="font-size:12px" class="btn btn-success" (click)="navigateToMatIssue(rowData)">Available Stock</button></td>
-              <td *ngIf="selectedStatus=='Pending'" class="ptable-cell" style="text-align:center;width:90px;"><button type="button" [disabled]="rowData.isporequested==false?false:true" style="font-size:12px" [ngClass]="rowData.isporequested==true ? 'btn btn-secondary' : 'btn btn-success'" (click)="navigateToPOInitiate(rowData)">Create PO</button></td>
+              <td *ngIf="selectedStatus=='Pending' || selectedStatus=='Issued'" class="ptable-cell" style="text-align:center;width:90px;">
+                <button type="button" style="font-size:12px" class="btn btn-success" *ngIf="rowData.status=='Pending' && !rowData.isporequested" (click)="navigateToMatIssue(rowData)">Available Stock</button>
+                <button type="button" style="font-size:12px" class="btn btn-primary" *ngIf="rowData.status=='Issued' || rowData.isporequested" (click)="navigateToMatIssue(rowData)">View</button>
+              </td>
+              <td *ngIf="selectedStatus=='Pending'" class="ptable-cell" style="text-align:center;width:90px;"><button type="button" [disabled]="rowData.isporequested==true?true:false" style="font-size:12px" [ngClass]="rowData.isporequested==true ? 'btn btn-secondary' : 'btn btn-success'" (click)="navigateToPOInitiate(rowData)">Initiate PO</button></td>
             </tr>
           </ng-template>
         </p-table>
@@ -80,7 +83,7 @@
             <label>STO No:</label>&nbsp;<span><label class="labeltext">{{transferId}}</label></span>
           </div>
           <div class="col-lg-3 col-md-3 col-sm-3 pt-2 labelheading">
-            <label>Requested By::</label>&nbsp;<span><label class="labeltext">{{requestedBy}}</label></span>
+            <label>Requested By:</label>&nbsp;<span><label class="labeltext">{{requestedBy}}</label></span>
           </div>
         </div>
       </div>
@@ -93,6 +96,7 @@
             <th style="text-align:center">Request Quantity</th>
             <th style="text-align:center">Available Quantity</th>
             <th style="text-align:center">Issue Quantity</th>
+            <th style="text-align:center" *ngIf="viewprocess">PO Quantity</th>
           </tr>
           <tr>
             <th></th>
@@ -102,6 +106,7 @@
             <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'transferqty', 'contains')"></th>
             <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'availableqty', 'contains')"></th>
             <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'issuedqty', 'contains')"></th>
+            <th *ngIf="viewprocess"></th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
@@ -109,12 +114,23 @@
             <td class="ptable-cell" style="text-align:right">
               {{ri+1}}
             </td>
-            <td class="ptable-cell" style="text-align:left;width:200px;"><button type="button" class="btn btn-link" (click)="showmateriallocationList(rowData.materialid,ri+1,ri,rowData.transferqty,rowData.issuedqty);" style="padding-left:0px;">{{rowData.materialid}}</button></td>
+            <td class="ptable-cell" style="text-align:left;width:200px;">
+              <button type="button" class="btn btn-link" *ngIf="rowData.availableqty && rowData.availableqty > 0" (click)="showmateriallocationList(rowData.materialid,ri+1,ri,rowData.transferqty,rowData.issuedqty,rowData.poitemdescription,rowData.id);" style="padding-left:0px;">{{rowData.materialid}}</button>
+              <span *ngIf="!rowData.availableqty || rowData.availableqty === 0">{{rowData.materialid}}</span>
+            </td>
             <td class="ptable-cell" style="text-align:left">{{rowData.poitemdescription}}</td>
             <td class="ptable-cell" style="text-align:right">{{rowData.transferqty}}</td>
-            <td class="ptable-cell" style="text-align:right">{{rowData.availableqty}}</td>
+            <td class="ptable-cell" style="text-align:right" *ngIf="rowData.availableqty && rowData.availableqty > 0">
+              <span>{{rowData.availableqty}}</span>
+            </td>
+            <td class="ptable-cell" style="text-align:center" *ngIf="!rowData.availableqty || rowData.availableqty === 0">
+              <span>Not Available</span>
+            </td>
             <td class="ptable-cell">
               <input id={{ri+1}} pInputText type="number" style="text-align:center" class="form-control" [disabled]="txtDisable" [(ngModel)]="rowData.issuedqty">
+            </td>
+            <td *ngIf="viewprocess" style="text-align:right">
+              {{rowData.poqty}}
             </td>
           </tr>
         </ng-template>
@@ -211,7 +227,9 @@
             <th style="text-align:center;width:200px;">Material</th>
             <th style="text-align:center">PO Item Description</th>
             <th style="text-align:center">Request Quantity</th>
+            <th style="text-align:center">Issued Quantity</th>
             <th style="text-align:center">Available Quantity</th>
+            <th style="text-align:center">PO Qty</th>
           </tr>
           <tr>
             <th></th>
@@ -219,7 +237,9 @@
             <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'material', 'contains')"></th>
             <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'poitemdescription', 'contains')"></th>
             <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'transferqty', 'contains')"></th>
+            <th></th>
             <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'availableqty', 'contains')"></th>
+            <th></th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
@@ -230,7 +250,11 @@
             <td class="ptable-cell" style="text-align:left;width:200px;">{{rowData.materialid}}</td>
             <td class="ptable-cell" style="text-align:left">{{rowData.poitemdescription}}</td>
             <td class="ptable-cell" style="text-align:right">{{rowData.transferqty}}</td>
+            <td class="ptable-cell" style="text-align:right">{{rowData.issuedqty}}</td>
             <td class="ptable-cell" style="text-align:right">{{rowData.availableqty}}</td>
+            <td class="ptable-cell" style="text-align:right">
+              <input type="number" [(ngModel)]="rowData.poqty" style="text-align:right"/>
+            </td>
           </tr>
         </ng-template>
         <ng-template pTemplate="summary">

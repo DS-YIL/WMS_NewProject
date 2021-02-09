@@ -448,9 +448,9 @@ export class wmsService {
     material = encodeURIComponent(material);
     return this.http.get<any>(this.url + 'POData/GetItemLocationListByMaterialsourcelocation?material=' + material, this.httpOptions);
   }
-  getItemlocationListByIssueId(requestforissueid: string): Observable<any> {
+  getItemlocationListByIssueId(requestforissueid: string, requesttype: string): Observable<any> {
     requestforissueid = encodeURIComponent(requestforissueid);
-    return this.http.get<any>(this.url + 'POData/getItemlocationListByIssueId?requestforissueid=' + requestforissueid, this.httpOptions);
+    return this.http.get<any>(this.url + 'POData/getItemlocationListByIssueId?requestforissueid=' + requestforissueid + '&requesttype=' + requesttype , this.httpOptions);
   }
   UpdateMaterialqty(materialList: any): Observable<any> {
     return this.http.post<any>(this.url + 'POData/updateMaterialavailabality', materialList, this.httpOptions);
@@ -934,7 +934,8 @@ getMaterialMasterList(): Observable<any> {
     return this.http.get<any>(this.url + 'POData/getMatdetailsbyTransferId?TransferId=' + transferid + '&type=' + type + '', this.httpOptions);
   }
   STOPOInitiate(list: any): Observable<any> {
-    return this.http.post<any>(this.url + 'POData/STOPOInitiate/', list, this.httpOptions);
+    const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }), responseType: 'text' as any };
+    return this.http.post<any>(this.url + 'POData/STOPOInitiate/', list, httpOptions);
   }
 
   getMiscellanousReasonData(): Observable<any> {

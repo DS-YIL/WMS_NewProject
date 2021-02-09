@@ -1,18 +1,12 @@
-<!--<style>
-  .data-selected {
-    background-color: #9ba5af !important;
-  }
-  .cardstyle {
-    padding-top: 0px !important;
-    padding-bottom: 0px !important;
-  }
-</style>-->
 <div style="margin:10px;">
   <div class="card" style="width:100%;border-radius:10px; box-shadow:5px 10px #888888;min-height: 81vh; max-height: 81vh;">
     <div class="card-header">
       <h6 class="text-center">
         <span style="color:#428bca;font-size:16px" *ngIf="addprocess">
           <i class="fa fa-check-circle-o" style="color:#428bca; font-size:16px;font-weight:600"></i>&nbsp;Add - Stock Transfer Order
+        </span>
+        <span style="color:#428bca;font-size:16px" *ngIf="!addprocess">
+          <i class="fa fa-check-circle-o" style="color:#428bca; font-size:16px;font-weight:600"></i>&nbsp;Stock Transfer Orders
         </span>
       </h6>
 
@@ -25,20 +19,10 @@
           <p-button icon="fa fa-arrow-left" label="Back" (click)="Showlist()" *ngIf="addprocess"></p-button>
           &nbsp;&nbsp;&nbsp;<label class="labelheading" *ngIf="addprocess">Source :&nbsp;</label>
           &nbsp;&nbsp;&nbsp;
-          <!--<select class="form-control" (change)="plantchange()" [(ngModel)]="mainmodel.sourceplant" *ngIf="addprocess">
-            <option value="">Select plant</option>
-            <option value="Plant1">Plant 1</option>
-            <option value="Plant2">Plant 2</option>
-          </select>-->
           <p-dropdown [options]="plantlist" [style]="{'width':'100%'}" [(ngModel)]="sourceplant" optionLabel="storagelocationdesc" (change)="plantchange()" placeholder="Select location" *ngIf="addprocess" [showClear]="true"></p-dropdown>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label class="labelheading" *ngIf="addprocess">Destination :&nbsp;</label>
           &nbsp;&nbsp;&nbsp;
           <p-dropdown [options]="plantlist" [style]="{'width':'100%'}" [(ngModel)]="destinationplant" optionLabel="storagelocationdesc" (change)="plantchange()" placeholder="Select location" *ngIf="addprocess" [showClear]="true"></p-dropdown>
-          <!--<select class="form-control" (change)="plantchange()" [(ngModel)]="mainmodel.destinationplant" *ngIf="addprocess">
-            <option value="">Select plant</option>
-            <option value="Plant1">Plant 1</option>
-            <option value="Plant2">Plant 2</option>
-          </select>-->
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label class="labelheading" *ngIf="addprocess">Remarks:&nbsp;</label>
           &nbsp;&nbsp;&nbsp;<textarea type="text" [(ngModel)]="mainmodel.remarks" placeholder="Remarks" style="width:20%;resize:none" *ngIf="addprocess"></textarea>
         </div>
@@ -80,8 +64,7 @@
           <ng-template pTemplate="header">
             <tr class="mprltbldata">
               <th style="text-align:center;width:5%;">Sl.No.</th>
-              <th style="text-align:center;width:15%;">Material</th>
-              <th style="text-align:center;width:15%;">Material Description</th>
+              <th style="text-align:center;width:20%;">Material</th>
               <th style="text-align:center;">Item PO Description</th>
               <th style="text-align:center;width:8%;">Transfer Qty</th>
               <th style="text-align:center;width:14%;">Project</th>
@@ -94,13 +77,14 @@
           <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
             <tr>
               <td class="ptable-cell" style="text-align: center; width: 5%;">{{ri+1}}</td>
-              <td class="ptable-cell" style="text-align:center;width:15%;">
-                <p-autoComplete appendTo="body" placeholder="search by material" (onSelect)="onMaterialSelected1($event,rowData,ri)" [(ngModel)]="rowData.materialObj" type="text" [suggestions]="filteredmats" field="material" [forceSelection]="true" [dropdown]="true" (completeMethod)="bindSearchListDatamaterial($event,'material')" size="20"></p-autoComplete>
+              <td class="ptable-cell" style="text-align:center;width:20%;">
+                <!--<p-autoComplete appendTo="body" placeholder="search by material" (onSelect)="onMaterialSelected1($event,rowData,ri)" [(ngModel)]="rowData.materialObj" type="text" [suggestions]="filteredmats" field="material" [forceSelection]="true" [dropdown]="true" (completeMethod)="bindSearchListDatamaterial($event,'material')" size="20"></p-autoComplete>-->
+                <p-autoComplete appendTo="body" placeholder="search by material" (onSelect)="onMaterialSelected1($event,rowData,ri)" [(ngModel)]="rowData.materialObj" type="text" [suggestions]="searchItems" field="name" [forceSelection]="true" [dropdown]="true" (completeMethod)="bindSearchListDatamaterial($event,rowData,'material')" size="20"></p-autoComplete>
               </td>
-              <td style="text-align:left;width:10%;"><span *ngIf="rowData.materialObj">{{rowData.materialObj.materialdescription}}</span></td>
               <td class="ptable-cell" style="text-align:left;">
-                <p-autoComplete [(ngModel)]="rowData.poitemdesc" placeholder="search by description" type="text" appendTo="body" [forceSelection]="true" (onSelect)="onDescriptionSelected($event,rowData,ri)" [suggestions]="filteredmatdesc"  (completeMethod)="filtermatdescs($event,rowData)" [size]="40" [dropdown]="true"></p-autoComplete>
-              </td>
+    <p-autoComplete appendTo="body"  placeholder="search by description" (onSelect)="onDescriptionSelected($event,rowData,ri)" [(ngModel)]="rowData.materialdescObj" type="text" [suggestions]="searchdescItems" field="name" [forceSelection]="true" [dropdown]="true" (completeMethod)="bindSearchListDatamaterialdesc($event,rowData)" size="30"></p-autoComplete>
+    <!--<p-autoComplete [(ngModel)]="rowData.materialdescription" placeholder="search by description" type="text" appendTo="body" [forceSelection]="true" (onSelect)="onDescriptionSelected($event,rowData,ri)" [suggestions]="filteredmatdesc"  (completeMethod)="filtermatdescs($event,rowData)" [size]="40" [dropdown]="true"></p-autoComplete>-->
+  </td>
               <td class="ptable-cell" style="text-align:right;width:8%;">
                 <input pInputText type="number" style="text-align:right" class="form-control" [min]="0" [(ngModel)]="rowData.transferqty">
               </td>
@@ -237,14 +221,14 @@
 
     </div>
     <div class="row col-lg-12 col-md-12 col-sm-12 pt-2 card-footer" *ngIf="addprocess">
-      <div class="col-lg-4 col-md-4 col-sm-4">
+      <div class="col-lg-5 col-md-5 col-sm-5">
         <!--<label>Remarks:</label>-->
       </div>
       <!--<div class="col-lg-6 col-md-6 col-sm-6 ">
       <input [(ngModel)]="rowData.remarks" class="form-control" type="text" name="{{rowData.remarks}}" />
       </div>-->
-      <div class="col-lg-4 col-md-4 col-sm-4 "><button type="button" class="btn btn-success" (click)="onsubmit1()">Submit</button></div>
-      <div class="col-lg-4 col-md-4 col-sm-4">
+      <div class="col-lg-2 col-md-2 col-sm-2 "><button type="button" class="btn btn-success" (click)="onsubmit1()">Submitx</button></div>
+      <div class="col-lg-5 col-md-5 col-sm-5">
       </div>
 
     </div>

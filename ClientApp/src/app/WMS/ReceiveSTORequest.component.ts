@@ -8,6 +8,7 @@ import { NgxSpinnerService } from "ngx-spinner";
 import { MessageService } from 'primeng/api';
 import { ConfirmationService } from 'primeng/api';
 import { DatePipe } from '@angular/common';
+import { isNullOrUndefined } from 'util';
 
 @Component({
   selector: 'app-ReceiveSTORequest',
@@ -19,6 +20,7 @@ export class ReceiveSTORequestComponent implements OnInit {
   constructor(private datePipe: DatePipe, private ConfirmationService: ConfirmationService, private messageService: MessageService, private wmsService: wmsService, private router: Router, public constants: constants, private spinner: NgxSpinnerService) { }
   public selectedStatus: string;
   public STORequestList: Array<any> = [];
+  public STOALLRequestList: Array<any> = [];
   public FilteredSTORequestList: Array<any> = [];
   public employee: Employee;
   public showMatDetails; btndisable; AddDialog; showdialog; showavailableStock: boolean = false;
@@ -34,6 +36,8 @@ export class ReceiveSTORequestComponent implements OnInit {
   public txtDisable: boolean = true;
   public itemreceiveddate: string;
   public STONO: string;
+  public matdesc: string;
+  public viewprocess: boolean = false;
 
   ngOnInit() {
     this.STORequestList = [];
@@ -43,6 +47,8 @@ export class ReceiveSTORequestComponent implements OnInit {
       this.router.navigateByUrl("Login");
 
     this.selectedStatus = "Pending";
+    this.viewprocess = false;
+    this.matdesc = "";
     this.FIFOvalues = new FIFOValues();
     this.getSTORequestList();
   }
@@ -52,13 +58,28 @@ export class ReceiveSTORequestComponent implements OnInit {
     this.STORequestList = [];
     this.wmsService.getSTORequestList().subscribe(data => {
       this.STORequestList = data;
-      this.FilteredSTORequestList = this.STORequestList.filter(li => li.status == this.selectedStatus || li.status == null);
+      var data1 = this.STORequestList.filter(function (element, index) {
+        return ((element.issuedqty == null && !element.isporequested) || (element.issuedqty == 0 && !element.isporequested) || (element.status == 'Issued' && !element.isporequested));
+      });
+      this.FilteredSTORequestList = data1;
     });
   }
 
   onSelectStatus(event) {
     this.selectedStatus = event.target.value;
-    this.FilteredSTORequestList = this.STORequestList.filter(li => li.status == this.selectedStatus);
+    if (this.selectedStatus == "Pending") {
+      var data1 = this.STORequestList.filter(function (element, index) {
+        return (element.issuedqty == null || element.issuedqty == 0 || (element.status == 'Issued' && !element.isporequested));
+      });
+      this.FilteredSTORequestList = data1;
+    }
+    else if (this.selectedStatus == "Issued") {
+      var data1 = this.STORequestList.filter(function (element, index) {
+        return (element.issuedqty == element.transferqty  || (element.isporequested));
+      });
+      this.FilteredSTORequestList = data1;
+    }
+   
   }
 
   navigateToMatIssue(details: any) {
@@ -67,6 +88,13 @@ export class ReceiveSTORequestComponent implements OnInit {
     this.materialissueList = [];
     this.transferId = details.transferid;
     this.requestedBy = details.transferredby;
+    var sts = details.status;
+    if (sts = "Issued") {
+      this.viewprocess = true;
+    }
+    else {
+      this.viewprocess = false;
+    }
     var type = "MatIssue";
     this.wmsService.getMatdetailsbyTransferId(details.transferid, type).subscribe(data => {
       this.spinner.hide();
@@ -91,7 +119,7 @@ export class ReceiveSTORequestComponent implements OnInit {
     }
     else {
 
-      this.wmsService.checkoldestmaterial(material, createddate).subscribe(data => {
+      this.wmsService.checkoldestmaterialwithdesc(material, createddate, this.matdesc).subscribe(data => {
         this.Oldestdata = data;
         if (data != null) {
           this.alertconfirm(this.Oldestdata);
@@ -121,28 +149,30 @@ export class ReceiveSTORequestComponent implements OnInit {
     });
   }
   //shows list of items for particular material
-  showmateriallocationList(material, id, rowindex, qty, issuedqty) {
+  showmateriallocationList(material, id, rowindex, qty, issuedqty, poitemdescription: string,rid : any) {
+    debugger;
     if (issuedqty <= qty) {
       this.issueqtyenable = true;
     }
     else {
       this.issueqtyenable = false;
     }
+    this.matdesc = poitemdescription;
     this.reqqty = qty;
     this.id = id;
     this.AddDialog = true;
     this.roindex = rowindex;
     this.itemlocationData = [];
-    if (this.selectedStatus == "Pending") {
+    if (this.selectedStatus == "Pending" && !this.viewprocess) {
       this.issueqtyenable = false;
-      this.wmsService.getItemlocationListByMaterial(material).subscribe(data => {
+      this.wmsService.getItemlocationListByMaterialanddesc(material, poitemdescription).subscribe(data => {
         this.itemlocationData = data;
         this.showdialog = true;
       });
     }
     else {
       this.issueqtyenable = true;
-      this.wmsService.getItemlocationListByIssueId(this.transferId).subscribe(data => {
+      this.wmsService.getItemlocationListByIssueId(String(rid), 'STO').subscribe(data => {
         this.itemlocationData = data;
         this.showdialog = true;
       });
@@ -158,9 +188,9 @@ export class ReceiveSTORequestComponent implements OnInit {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Issue Qty cannot exceed available Qty.' });
       return;
     }
-    var material = this.itemlocationData[0].materialid;
+    var material = this.materialissueList[this.roindex].id;
     this.itemlocationsaveData = this.itemlocationsaveData.filter(function (element, index) {
-      return (element.materialid != material);
+      return (element.requestid != material);
     });
     var totalissuedqty = 0;
     if (this.itemlocationData.length > 0) {
@@ -173,6 +203,7 @@ export class ReceiveSTORequestComponent implements OnInit {
         item.requestid = this.materialissueList[this.roindex].id;
         item.requestmaterialid = this.materialissueList[this.roindex].requestmaterialid;
         item.transferid = this.materialissueList[this.roindex].transferid;
+        item.createdby = this.materialissueList[this.roindex].createdby;
         item.requesttype = "STO";
         totalissuedqty = totalissuedqty + (item.issuedqty);
         this.FIFOvalues.issueqty = totalissuedqty;
@@ -231,6 +262,7 @@ export class ReceiveSTORequestComponent implements OnInit {
 
   //initiate PO Starts
   navigateToPOInitiate(details: any) {
+    debugger;
     this.showMatDetails = true;
     this.showavailableStock = false;
     this.materialissueList = [];
@@ -238,20 +270,57 @@ export class ReceiveSTORequestComponent implements OnInit {
     var type = "POInitiate";
     this.wmsService.getMatdetailsbyTransferId(details.transferid, type).subscribe(data => {
       this.spinner.hide();
+      debugger;
       this.materialissueList = data;
+      this.materialissueList = this.materialissueList.filter(li => li.issuedqty == null || li.issuedqty == 0 || li.issued < li.transferqty);
+
+      this.materialissueList.forEach(item => {
+        debugger;
+        if (isNullOrUndefined(item.transferqty)) {
+          item.transferqty = 0;
+        }
+        if (isNullOrUndefined(item.issuedqty)) {
+          item.issuedqty = 0;
+        }
+        if (isNullOrUndefined(item.availableqty)) {
+          item.availableqty = 0;
+        }
+        item.poqty = parseInt(item.transferqty) - parseInt(item.issuedqty);
+      })
+
     });
   }
 
   InitiatePO() {
-    this.spinner.show();
+    debugger;
     this.materialissueList[0].uploadedby = this.employee.employeeno;
+    var data1 = this.materialissueList.filter(function (element, index) {
+      return (isNullOrUndefined(element.poqty) || element.poqty == 0);
+    });
+    if (data1.length > 0) {
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Enter PO quantity' });
+      return;
+    }
+    var data2 = this.materialissueList.filter(function (element, index) {
+      return (element.poqty < (parseInt(element.transferqty) - parseInt(element.issuedqty)));
+    });
+    if (data2.length > 0) {
+      var mat = data2[0].materialid;
+      var matdesc = data2[0].poitemdescription;
+      var minqqty = parseInt(data2[0].transferqty) - parseInt(data2[0].issuedqty)
+      var msg = "Minimun PO quantity should be " + String(minqqty) + " for Material : " + mat + " and PO Item Description: " + matdesc+""
+      this.messageService.add({ severity: 'error', summary: '', detail: msg });
+      return;
+    }
+    this.spinner.show();
     this.wmsService.STOPOInitiate(this.materialissueList).subscribe(data => {
       this.spinner.hide();
-      if (data)
+      if (String(data) == "Sucess")
         this.messageService.add({ severity: 'success', summary: '', detail: 'PO Creation Request Sent.' });
       else
-        this.messageService.add({ severity: 'error', summary: '', detail: 'PO Creation Request Failed.' });
+        this.messageService.add({ severity: 'error', summary: '', detail: String(data) });
       this.showMatDetails = false;
+      this.getSTORequestList();
     });
   }
 

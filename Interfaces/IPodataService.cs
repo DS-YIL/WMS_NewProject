@@ -128,7 +128,7 @@ namespace WMS.Interfaces
 		Task<IEnumerable<IssueRequestModel>> GetItemlocationListBymterialsourcelocation(string material);
 
 
-		Task<IEnumerable<IssueRequestModel>> getItemlocationListByIssueId(string requestforissueid);
+		Task<IEnumerable<IssueRequestModel>> getItemlocationListByIssueId(string requestforissueid, string requesttype);
 		int updateissuedmaterial(List<IssueRequestModel> obj);
 		int assignRole(authUser authuser);
 		Task<IEnumerable<userAcessNamesModel>> getuserAcessList(string employeeid, string roleid);
