@@ -12189,37 +12189,14 @@ namespace WMS.DAL
 				try
 				{
 					await pgsql.OpenAsync();
-					//string query = "select wi.*,(select sum(issuedqty) as issuedqty from wms.wms_materialissue where requestid = wi.transferid and requesttype = 'STO' group by requestid,requesttype limit 1) as issuedqty from wms.wms_invstocktransfer wi where wi.status ='Issued'";
+					string query1 = WMSResource.getSTORequestMaterialsForPutaway.Replace("#transferid", transferid);
+
+					var datadetail = await pgsql.QueryAsync<STOrequestTR>(
+					query1, null, commandType: CommandType.Text);
 
 
-					string query = WMSResource.getSTORequestlist;
-					query += "and status ='Issued' order by transferid desc";
-					//string query = "select * from wms.wms_invstocktransfer wi ";
-					//query += " join wms.wms_materialissue wm  on wm.requestid = wi.transferid";
-					//query += " where wi.transfertype ='STO' and status ='Issued'";
 
-					var data = await pgsql.QueryAsync<STORequestdata>(
-					   query, null, commandType: CommandType.Text);
-					if (data != null && data.Count() > 0)
-					{
-						foreach (STORequestdata dt in data)
-						{
-							//string query1 = WMSResource.STOrequestedmatdetails;
-							//query1 += "left join wms.wms_stock stock on stock.receivedid= invtras.transferid";
-							//query1 += " where transferid='"+dt.transferid.ToString()+"'";
-							string query1 = "select invtras.*,stock.itemid,stock.itemlocation,stock.totalquantity as putawayqty,matiss.issuedqty,matiss.requestid from wms.wms_invtransfermaterial invtras";
-							query1 += " left join wms.wms_stock stock on stock.receivedid= invtras.id ::varchar(255)";
-							query1 += " left join wms.wms_materialissue matiss on matiss.requestid  = invtras.id ::varchar(255)";
-							query1 += " where invtras.transferid='" + dt.transferid + "' and matiss.issuedqty is not null and matiss.issuedqty > 0";
-					        await pgsql.OpenAsync();
-							string query1 = WMSResource.getSTORequestMaterialsForPutaway.Replace("#transferid",transferid);
-							
-							var datadetail = await pgsql.QueryAsync<STOrequestTR>(
-							query1, null, commandType: CommandType.Text);
-							
-							
-						
-					
+
 					return datadetail;
 
 				}
@@ -12235,6 +12212,7 @@ namespace WMS.DAL
 				}
 			}
 		}
+
 
 
 
