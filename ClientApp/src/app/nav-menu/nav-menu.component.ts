@@ -231,7 +231,18 @@ export class NavMenuComponent implements OnInit {
         this.reqid = eurl.split('=')[1];
         if (this.reqid) {
           //redirects to MaterialIssueDashboard
-          this.bindMenuForPMEmails();
+          this.bindMenuForPMEmails("material");
+        }
+      }
+
+      //Purpose: << Project Manager >>
+
+      if (eurl.includes("/Email/IssueSTOMaterial?ReqId")) {
+        this.reqid = this.route.snapshot.queryParams.requestid;
+        this.reqid = eurl.split('=')[1];
+        if (this.reqid) {
+          //redirects to MaterialIssueDashboard
+          this.bindMenuForPMEmails("sto");
         }
       }
 
@@ -640,7 +651,7 @@ export class NavMenuComponent implements OnInit {
 
   //Purpose:<<Inventory Clerk>>
 
-  bindMenuForPMEmails() {
+  bindMenuForPMEmails(type: string) {
     this.items = [];
     this.emp.roleid = "3";//project manager
     this.setrolename(this.emp.roleid);
@@ -719,10 +730,18 @@ export class NavMenuComponent implements OnInit {
       ]
 
     });
-    this.router.navigate(['WMS/MaterialIssueDashboard'], { queryParams: { requestid: this.reqid } });
+    if (type == "sto") {
+      this.router.navigate(['WMS/ReceiveSTORequest'], { queryParams: { requestid: this.reqid } });
+    }
+    else {
+      this.router.navigate(['WMS/MaterialIssueDashboard'], { queryParams: { requestid: this.reqid } });
+    }
+
+    
     let element1: HTMLDivElement = document.getElementById("menudiv") as HTMLDivElement;
     element1.hidden = false;
   }
+
   //Purpose:<<Project Manager>>
 
   bindMenuForIMEmails() {//inventory clerk

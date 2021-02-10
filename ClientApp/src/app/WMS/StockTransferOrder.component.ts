@@ -209,26 +209,27 @@ export class StockTransferOrderComponent implements OnInit {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Select source Plant' });
       return;
     }
-    else if (!this.destinationplant.locatorid) {
+    if (!this.destinationplant.locatorid) {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Select destinationplant Plant' });
       return;
     }
 
-    else if (this.sourceplant.locatorid == this.destinationplant.locatorid) {
+    if (this.sourceplant.locatorid == this.destinationplant.locatorid) {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Source and destination plant cannot be same' });
       return;
     }
 
-    else {
+    
       var invalidrow = this.podetailsList.filter(function (element, index) {
         debugger;
         return (!element.transferqty) || (!element.materialid) || (!element.projectid) || (!element.requireddate);
       });
-    }
-    if (invalidrow.length > 0) {
-      this.messageService.add({ severity: 'error', summary: '', detail: 'Fill all the details.' });
-      return;
-    }
+      if (invalidrow.length > 0) {
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Fill all the details.' });
+        return;
+      }
+    
+   
     this.emptytransfermodel = new stocktransfermateriakmodel();
     this.podetailsList.push(this.emptytransfermodel);
   }
@@ -891,11 +892,11 @@ export class StockTransferOrderComponent implements OnInit {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Source and destination plant cannot be same' });
       return;
     }
-    else {
+   
       var invalidrow = this.podetailsList.filter(function (element, index) {
         return (!element.transferqty) || (!element.materialid) || (!element.projectid) || (!element.requireddate);
       });
-    }
+    
     if (invalidrow.length > 0) {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Fill all the details.' });
       return;

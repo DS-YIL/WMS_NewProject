@@ -9381,6 +9381,8 @@ namespace WMS.DAL
 
 			StockModel obj = new StockModel();
 			string loactiontext = string.Empty;
+			string trsfrid = string.Empty;
+			string crtdby = string.Empty;
 			int x = 0;
 			invstocktransfermodel transfer = new invstocktransfermodel();
 			foreach (stocktransfermateriakmodel stck in data.materialdata)
@@ -9402,7 +9404,7 @@ namespace WMS.DAL
 							if (transfer.transfertype != "SubContract" && data.sourceplant == data.destinationplant)
 								transfer.transfertype = "IST";
 
-							if (transfer.transfertype != "SubContract" && data.sourceplant == data.destinationplant)
+							if (transfer.transfertype != "SubContract" && data.sourceplant != data.destinationplant)
 								transfer.transfertype = "STO";
 
 							transfer.sourceplant = data.sourceplant;
@@ -9425,6 +9427,8 @@ namespace WMS.DAL
 								transfer.status
 
 							});
+							trsfrid = resultsxx.ToString();
+							crtdby = transfer.transferredby;
 							transfer.transferid = resultsxx.ToString();
 
 						}
@@ -9660,7 +9664,13 @@ namespace WMS.DAL
 			}
 
 
-
+			EmailModel emailmodel = new EmailModel();
+			emailmodel.requestid = trsfrid;
+			emailmodel.createdby = crtdby;
+			emailmodel.createddate = DateTime.Now;
+			emailmodel.FrmEmailId = "ramesh.kumar@in.yokogawa.com";
+			EmailUtilities emailobj = new EmailUtilities();
+			emailobj.sendEmail(emailmodel, 27, 3);
 
 			return loactiontext = "success";
 

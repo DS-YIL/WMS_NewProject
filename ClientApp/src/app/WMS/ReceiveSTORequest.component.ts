@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { wmsService } from '../WmsServices/wms.service';
 import { constants } from '../Models/WMSConstants';
 import { Employee } from '../Models/Common.Model';
@@ -17,7 +17,7 @@ import { isNullOrUndefined } from 'util';
 
 export class ReceiveSTORequestComponent implements OnInit {
 
-  constructor(private datePipe: DatePipe, private ConfirmationService: ConfirmationService, private messageService: MessageService, private wmsService: wmsService, private router: Router, public constants: constants, private spinner: NgxSpinnerService) { }
+  constructor(private datePipe: DatePipe, private ConfirmationService: ConfirmationService, private messageService: MessageService, private wmsService: wmsService, private router: Router, private route: ActivatedRoute, public constants: constants, private spinner: NgxSpinnerService) { }
   public selectedStatus: string;
   public STORequestList: Array<any> = [];
   public STOALLRequestList: Array<any> = [];
@@ -38,14 +38,14 @@ export class ReceiveSTORequestComponent implements OnInit {
   public STONO: string;
   public matdesc: string;
   public viewprocess: boolean = false;
-
+  requestedid: string;
   ngOnInit() {
     this.STORequestList = [];
     if (localStorage.getItem("Employee"))
       this.employee = JSON.parse(localStorage.getItem("Employee"));
     else
       this.router.navigateByUrl("Login");
-
+    this.requestedid = this.route.snapshot.queryParams.requestid;
     this.selectedStatus = "Pending";
     this.viewprocess = false;
     this.matdesc = "";
@@ -62,6 +62,9 @@ export class ReceiveSTORequestComponent implements OnInit {
         return ((element.issuedqty == null && !element.isporequested) || (element.issuedqty == 0 && !element.isporequested) || (element.status == 'Issued' && !element.isporequested));
       });
       this.FilteredSTORequestList = data1;
+      if (!isNullOrUndefined(this.requestedid) && this.requestedid != "") {
+        this.FilteredSTORequestList = this.FilteredSTORequestList.filter(li => li.transferid == this.requestedid);
+      }
     });
   }
 

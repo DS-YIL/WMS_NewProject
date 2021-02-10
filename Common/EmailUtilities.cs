@@ -363,6 +363,14 @@ namespace WMS.Common
 				link = "";
 
 			}
+			else if (subjecttype == 27)
+			{
+				mailMessage.Subject = "Issue Request for STO Materials with request id:" + emlSndngList.requestid;
+				string requestedby = this.getnamebyid(emlSndngList.createdby);
+				subbody = "Please find the STO Material request details below. <br/> Requested By:" + requestedby + "<br/>Requested On:" + emlSndngList.createddate;
+				//subbody += "<br/>"+ mailMessage.Subject;
+				link = linkurl + "WMS/Email/IssueSTOMaterial?ReqId=" + emlSndngList.requestid;
+			}
 
 			if (!string.IsNullOrEmpty(emlSndngList.CC))
 				mailMessage.CC.Add(emlSndngList.CC);
