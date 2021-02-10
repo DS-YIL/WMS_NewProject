@@ -92,7 +92,7 @@ export class SubContractComponent implements OnInit {
 		this.fromdateview = this.datePipe.transform(dt, this.constants.dateFormat);
 		this.DGsubcontractid = data.transferid;
 		this.DGvendorname = data.vendorname;
-		var res = this.Subcontractlist.filter(li => li.gatepassid == data.gatepassid);
+    var res = this.Subcontractlist.filter(li => li.transferid == data.transferid);
 		this.materialListDG = JSON.parse(JSON.stringify(res)) as outwardmaterialistModel[];
 		this.showmatDialog = true;
 

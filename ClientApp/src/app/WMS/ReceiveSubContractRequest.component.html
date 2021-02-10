@@ -38,7 +38,7 @@
             <tr>
               <th></th>
               <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'transferid', 'contains')"></th>
-              <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'transferredby', 'contains')"></th>
+              <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'transferredbyname', 'contains')"></th>
               <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'vendorcode', 'contains')"></th>
               <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'vendorname', 'contains')"></th>
               <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'transferredon', 'contains')"></th>
@@ -53,7 +53,7 @@
                 {{ri+1}}
               </td>
               <td class="ptable-cell" style="text-align:center;width:100px;">{{rowData.transferid}}</td>
-              <td class="ptable-cell" style="text-align:center;width:150px;">{{rowData.transferredby}}</td>
+              <td class="ptable-cell" style="text-align:center;width:150px;">{{rowData.transferredbyname}}</td>
               <td class="ptable-cell" style="text-align:center;width:150px;">{{rowData.vendorcode}}</td>
               <td class="ptable-cell" style="text-align:center;width:150px;">{{rowData.vendorname}}</td>
               <td class="ptable-cell" style="text-align:center;width:100px;">{{rowData.transferredon  | date :  constants.dateFormat}}</td>
