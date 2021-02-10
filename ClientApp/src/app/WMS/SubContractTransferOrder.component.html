@@ -127,7 +127,7 @@
                   <p-checkbox [(ngModel)]="rowData.Checkstatus" binary="true" (click)="ackStatusChanges(ri)"></p-checkbox> &nbsp;&nbsp;
                   <textarea type="text" style="width:140px;resize:none" class="form-control" [(ngModel)]="rowData.ackremarks"></textarea>
                 </div>
-                <div *ngIf="rowData.status=='Acknowledged' && rowData.ackstatus=='Received'" class="form-inline">
+                <div *ngIf="rowData.ackstatus=='Received'" class="form-inline">
                   &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; <textarea type="text" style="width:140px;resize:none" class="form-control" [disabled]="true" [(ngModel)]="rowData.ackremarks"></textarea>
                 </div>
               </td>

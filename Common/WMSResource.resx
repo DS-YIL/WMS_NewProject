@@ -1949,4 +1949,25 @@ left join wms.wms_stock stock on (stock.receivedid= invtras.id ::varchar(255) an
 left join wms.wms_stock stock1 on stock1.itemid = matiss.itemid 
 where invtras.transferid='#transferid' and matiss.issuedqty is not null and matiss.issuedqty &gt; 0 and matiss.requesttype = 'STO'</value>
   </data>
+  <data name="getSubcontractgatepassdata" xml:space="preserve">
+    <value>select Max(matis.requestid) as gatepassmaterialid,Max(matis.itemid) itemid,Max(matis.itemissueddate) as itemissueddate,Max(matinv.poitemdesc ) as materialdescription,Max(emp.name) as name,
+Max(st.transferid ) as transferid,Max(matinv.materialid ) as materialid,Max(matinv.transferqty ) as quantity,SUM(matis.issuedqty) issuedqty,
+Max(st.vendorname) as vendorname,Max(st.vendorcode ) as vendorcode,Max(st.transferredby ) as transferredby,Max(st.issuedon ) as issuedon,
+(select SUM(outwardqty) from wms.outwatdinward where gatepassmaterialid::text = matis.requestid::text group by gatepassmaterialid) as outwardedqty,
+(select SUM(inwardqty) from wms.outwatdinward where gatepassmaterialid::text = matis.requestid::text group by gatepassmaterialid) as inwardedqty,
+(select Max(outwarddate) from wms.outwatdinward where gatepassid = Max(matinv.transferid )  group by gatepassid) as outwarddate,
+(select Max(securityinwarddate) from wms.outwatdinward where gatepassid = Max(matinv.transferid )  group by gatepassid) as securityinwarddate,
+(select Max(approvedon) from wms.wms_gatepassapprovals where gatepassid = Max(matinv.transferid )  group by gatepassid) as approvedon
+from wms.wms_materialissue matis
+left outer join wms.wms_invtransfermaterial matinv on matinv.id::text = matis.requestid::text 
+left outer join wms.wms_invstocktransfer st on st.transferid = matinv.transferid
+left join wms.employee emp on emp.employeeno=st.transferredby 
+left join wms."MaterialMasterYGS" ygs on ygs.material=matinv.materialid
+where matis.requestid is not null and matis.requesttype = 'SubContract' and (st.status!='Pending' or st.status!='Issued')
+group by matis.requestid
+order by matis.requestid desc</value>
+  </data>
+  <data name="updateackstatusforSubcontract" xml:space="preserve">
+    <value>update wms.wms_invstocktransfer set ackstatus=@ackstatus,ackremarks=@ackremarks,ackby=@ackby,ackon=@ackon,status=@status where transferid='#transferid'</value>
+  </data>
 </root>
