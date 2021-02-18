@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { wmsService } from '../WmsServices/wms.service';
 import { constants } from '../Models/WMSConstants';
 import { Employee } from '../Models/Common.Model';
@@ -8,6 +8,7 @@ import { NgxSpinnerService } from "ngx-spinner";
 import { MessageService } from 'primeng/api';
 import { ConfirmationService } from 'primeng/api';
 import { DatePipe } from '@angular/common';
+import { isNullOrUndefined } from 'util';
 
 @Component({
   selector: 'app-ReceiveSubContractRequest',
@@ -16,7 +17,7 @@ import { DatePipe } from '@angular/common';
 
 export class ReceiveSubContractRequestComponent implements OnInit {
 
-  constructor(private datePipe: DatePipe, private ConfirmationService: ConfirmationService, private messageService: MessageService, private wmsService: wmsService, private router: Router, public constants: constants, private spinner: NgxSpinnerService) { }
+  constructor(private datePipe: DatePipe, private ConfirmationService: ConfirmationService, private messageService: MessageService, private wmsService: wmsService, private router: Router, private route: ActivatedRoute, public constants: constants, private spinner: NgxSpinnerService) { }
   public selectedStatus: string;
   public STORequestList: Array<any> = [];
   public FilteredSTORequestList: Array<any> = [];
@@ -34,6 +35,9 @@ export class ReceiveSubContractRequestComponent implements OnInit {
   public txtDisable: boolean = true;
   public itemreceiveddate: string;
   public STONO: string;
+  requestedid: string;
+  vendorname: string;
+  sourcelocation: string;
 
   ngOnInit() {
     this.STORequestList = [];
@@ -41,8 +45,10 @@ export class ReceiveSubContractRequestComponent implements OnInit {
       this.employee = JSON.parse(localStorage.getItem("Employee"));
     else
       this.router.navigateByUrl("Login");
-
+    this.requestedid = this.route.snapshot.queryParams.requestid;
     this.selectedStatus = "Pending";
+    this.vendorname = "";
+    this.sourcelocation = "";
     this.FIFOvalues = new FIFOValues();
     this.getSTORequestList();
   }
@@ -51,16 +57,25 @@ export class ReceiveSubContractRequestComponent implements OnInit {
   getSTORequestList() {
     this.STORequestList = [];
     this.spinner.show();
-    this.wmsService.getstocktransferlistgroup1("SubContract").subscribe(data => {
+    this.wmsService.getSTORequestList('SubContract').subscribe(data => {
       this.spinner.hide();
       this.STORequestList = data;
       this.FilteredSTORequestList = this.STORequestList.filter(li => li.status == this.selectedStatus || li.status == null);
+      if (!isNullOrUndefined(this.requestedid) && this.requestedid != "") {
+        this.FilteredSTORequestList = this.FilteredSTORequestList.filter(li => li.transferid == this.requestedid);
+      }
     });
   }
 
   onSelectStatus(event) {
     this.selectedStatus = event.target.value;
-    this.FilteredSTORequestList = this.STORequestList.filter(li => li.status == this.selectedStatus);
+   
+    if (this.selectedStatus == "Issued") {
+      this.FilteredSTORequestList = this.STORequestList.filter(li => li.status == this.selectedStatus || li.status == "InBound" || li.status == "OutBound");
+    }
+    else {
+      this.FilteredSTORequestList = this.STORequestList.filter(li => li.status == this.selectedStatus);
+    }
   }
 
   navigateToMatIssue(details: any) {
@@ -68,9 +83,11 @@ export class ReceiveSubContractRequestComponent implements OnInit {
     this.showavailableStock = true;
     this.materialissueList = [];
     this.transferId = details.transferid;
-    this.requestedBy = details.transferredbyname;
+    this.requestedBy = details.transferredby;
+    this.vendorname = details.vendorname;
+    this.sourcelocation = details.sourceplant;
     var type = "MatIssue";
-    this.wmsService.getMatdetailsbyTransferId(details.transferid, type).subscribe(data => {
+    this.wmsService.getMatdetailsbyTransferId(details.transferid, type, 'SubContract').subscribe(data => {
       this.spinner.hide();
       this.materialissueList = data;
       this.materialissueList.forEach(item => {
@@ -92,8 +109,8 @@ export class ReceiveSubContractRequestComponent implements OnInit {
       (<HTMLInputElement>document.getElementById(id)).value = "";
     }
     else {
-
-      this.wmsService.checkoldestmaterial(material, createddate).subscribe(data => {
+      var matdesc = this.itemlocationData[0].materialdescription;
+      this.wmsService.checkoldestmaterialwithdescstore(material, createddate, matdesc, this.sourcelocation).subscribe(data => {
         this.Oldestdata = data;
         if (data != null) {
           this.alertconfirm(this.Oldestdata);
@@ -123,7 +140,8 @@ export class ReceiveSubContractRequestComponent implements OnInit {
     });
   }
   //shows list of items for particular material
-  showmateriallocationList(material, id, rowindex, qty, issuedqty) {
+  showmateriallocationList(material, id, rowindex, qty, issuedqty, description: string,rid:any) {
+    debugger;
     if (issuedqty <= qty) {
       this.issueqtyenable = true;
     }
@@ -137,14 +155,14 @@ export class ReceiveSubContractRequestComponent implements OnInit {
     this.itemlocationData = [];
     if (this.selectedStatus == "Pending") {
       this.issueqtyenable = false;
-      this.wmsService.getItemlocationListByMaterial(material).subscribe(data => {
+      this.wmsService.getItemlocationListByMaterialdescstore(material, description, this.sourcelocation).subscribe(data => {
         this.itemlocationData = data;
         this.showdialog = true;
       });
     }
     else {
       this.issueqtyenable = true;
-      this.wmsService.getItemlocationListByIssueId(this.transferId,'SubContract').subscribe(data => {
+      this.wmsService.getItemlocationListByIssueId(String(rid), 'SubContract').subscribe(data => {
         this.itemlocationData = data;
         this.showdialog = true;
       });
@@ -175,6 +193,7 @@ export class ReceiveSubContractRequestComponent implements OnInit {
         item.requestid = this.materialissueList[this.roindex].id;
         item.requestmaterialid = this.materialissueList[this.roindex].requestmaterialid;
         item.transferid = this.materialissueList[this.roindex].transferid;
+        item.createdby = this.materialissueList[this.roindex].createdby;
         item.requesttype = "SubContract";
         totalissuedqty = totalissuedqty + (item.issuedqty);
         this.FIFOvalues.issueqty = totalissuedqty;

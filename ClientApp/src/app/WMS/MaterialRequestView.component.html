@@ -273,11 +273,17 @@
   <div class="col-lg-8 col-md-8" style="background-color:lightgray">
     <label><strong><i class="fa fa-pencil-square-o "></i>&nbsp;&nbsp;Request Detail Entry</strong></label>
   </div>-->
-
-    <div class="col-lg-5 col-md-5 form-inline" style="background-color:antiquewhite">
+     <div class="col-lg-4 col-md-4 form-inline" style="background-color:antiquewhite">
       <label><strong><i class="fa fa-filter"></i>&nbsp;&nbsp;Filters&nbsp;&nbsp;|&nbsp;&nbsp;</strong></label>
+      <label class="labelheading">For Project :</label>&nbsp;&nbsp;
+      <p-autoComplete [(ngModel)]="selectedproject" field="text" appendTo="body" [suggestions]="filteredprojects" placeholder="search by name/code" [ngModelOptions]="{standalone: true}" (onSelect)="projectSelected($event)" [forceSelection]="true" (completeMethod)="filterprojects($event)" [size]="20"
+                      [dropdown]="true"></p-autoComplete>
+    </div>
+    <div class="col-lg-4 col-md-4 form-inline" style="background-color:antiquewhite">
+     
+
       <label class="labelheading">PONo :</label>&nbsp;&nbsp;
-      <p-autoComplete [(ngModel)]="selectedpono" [suggestions]="filteredpos" [ngModelOptions]="{standalone: true}" placeholder="search by PONo" [forceSelection]="false" (onSelect)="onPOSelected()" (change)="onPOSelected()" (completeMethod)="filterpos($event)" [size]="30"
+      <p-autoComplete [(ngModel)]="selectedpono" [suggestions]="filteredpos" [ngModelOptions]="{standalone: true}" placeholder="search by PONo" [forceSelection]="false" (onSelect)="onPOSelected()" (change)="onPOSelected()" (completeMethod)="filterpos($event)" [size]="20"
                       [dropdown]="true"></p-autoComplete>
 
 
@@ -292,21 +298,22 @@
 
 
     </div>
+
     <!--<div class="col-lg-8 col-md-8 form-inline" style="background-color:lightgray">
 
-      <div class="col-lg-6 col-md-6 form-inline" style="padding-bottom:10px;">
-        <label class="labelheading">For Project :</label>&nbsp;&nbsp;
-        <p-autoComplete [(ngModel)]="selectedproject" field="text" appendTo="body" [suggestions]="filteredprojects" placeholder="search by name/code" [ngModelOptions]="{standalone: true}" [forceSelection]="true" (completeMethod)="filterprojects($event)" [size]="30"
-                        [dropdown]="true"></p-autoComplete>
-      </div>
-      <div class="col-lg-6 col-md-6 form-inline" style="padding-bottom:15px;">
-        <textarea [(ngModel)]="requestremarks" style="width:80%;resize:none;padding-bottom:3px" placeholder="Remarks"></textarea>
-      </div>
+    <div class="col-lg-6 col-md-6 form-inline" style="padding-bottom:10px;">
+      <label class="labelheading">For Project :</label>&nbsp;&nbsp;
+      <p-autoComplete [(ngModel)]="selectedproject" field="text" appendTo="body" [suggestions]="filteredprojects" placeholder="search by name/code" [ngModelOptions]="{standalone: true}" [forceSelection]="true" (completeMethod)="filterprojects($event)" [size]="30"
+                      [dropdown]="true"></p-autoComplete>
+    </div>
+    <div class="col-lg-6 col-md-6 form-inline" style="padding-bottom:15px;">
+      <textarea [(ngModel)]="requestremarks" style="width:80%;resize:none;padding-bottom:3px" placeholder="Remarks"></textarea>
+    </div>
 
 
 
 
-    </div>-->
+  </div>-->
   </div>
     <!--<div class="col-lg-4 col-md-4 col-sm-4 form-group">
 
@@ -343,11 +350,7 @@
           <ng-template pTemplate="caption">
             Add Material
             <div class="row">
-              <div class="col-lg-6 col-md-6 form-inline" style="padding-bottom:10px;">
-                <label class="labelheading">For Project :</label>&nbsp;&nbsp;
-                <p-autoComplete [(ngModel)]="selectedproject" field="text" appendTo="body" [suggestions]="filteredprojects" placeholder="search by name/code" [ngModelOptions]="{standalone: true}" [forceSelection]="true" (completeMethod)="filterprojects($event)" [size]="30"
-                                [dropdown]="true"></p-autoComplete>
-              </div>
+             
               <div class="col-lg-6 col-md-6 form-inline" style="padding-bottom:15px;">
                 <textarea [(ngModel)]="requestremarks" style="width:80%;resize:none;padding-bottom:3px;resize:none" placeholder="Remarks"></textarea>
               </div>

@@ -105,7 +105,7 @@ export class WarehouseInchargeComponent implements OnInit {
   isalreadytransferred: boolean = false;
   sendmailtofinance: boolean = false;
   currentstocktype: string = "";
- 
+  requestedid: string;
   ngOnInit() {
     if (localStorage.getItem("Employee"))
       this.employee = JSON.parse(localStorage.getItem("Employee"));
@@ -116,6 +116,7 @@ export class WarehouseInchargeComponent implements OnInit {
     this.invoiceForm = this.formBuilder.group({
       itemRows: this.formBuilder.array([this.initItemRows()])
     });
+    this.requestedid = this.route.snapshot.queryParams.requestid;
     this.PoDetails = new PoDetails();
     this.StockModel = new StockModel();
     this.locationListdata();
@@ -366,6 +367,12 @@ export class WarehouseInchargeComponent implements OnInit {
     this.wmsService.getcheckedgrnlistforputaway().subscribe(data => {
       debugger;
       this.checkedgrnlist = data;
+      if (this.requestedid) {
+        debugger;
+        this.selectedgrnno = this.requestedid;
+        this.SearchGRNNo();
+
+      }
       this.spinner.hide();
     });
   }

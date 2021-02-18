@@ -503,6 +503,7 @@ export class plantddl {
   locatorid: string;
   locatorname: string;
   storagelocationdesc: string;
+  locationtype: string;
   //plantid:string
 }
 
@@ -559,6 +560,26 @@ export class invstocktransfermodel {
   ackstatus: string;
   ackby: string;
   materialdata: stocktransfermateriakmodel[] = [];
+  projectcode: string;
+  approverid: string;
+  isapprovalrequired: boolean;
+  isapproved: boolean;
+  approvedon: Date;
+  approvalremarks: string;
+  showtr: boolean = false;
+  approvalcheck: string
+  approvedstatus: string;
+  transferredbyname: string;
+  sourcelocationcode: string;
+  destinationlocationcode: string;
+}
+
+export class assignpmmodel {
+  isselected: boolean;
+  projectcode: string;
+  projectmanager: string;
+  selectedemployee: string;
+  selectedemployeeview: UserModel;
 }
 
 export class stocktransfermateriakmodel {
@@ -584,6 +605,9 @@ export class stocktransfermateriakmodel {
   projectid: any = "";
   materialObj: any;
   materialdescObj: any;
+  issuedqty: number;
+  poqty: number;
+  availableqty: number;
 }
 
 

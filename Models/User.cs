@@ -16,6 +16,7 @@ namespace WMS.Models
         public string Token { get; set; }
         public string name { get; set; }
         public string pwd { get; set; }
+        public string idwithname { get; set; }
         public string domainid { get; set; }
         public string email { get; set; }
 

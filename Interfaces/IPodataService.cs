@@ -24,6 +24,7 @@ namespace WMS.Interfaces
 
 		//Get po details
 		Task<IEnumerable<PODetails>> getPODetails(string empno);
+		Task<IEnumerable<PODetails>> getPODetailsByProjectCode(string empno, string projectcode);
 
 		//Get direct transfer data
 		Task<IEnumerable<DirectTransferMain>> getdirecttransferdata(string empno);
@@ -80,7 +81,7 @@ namespace WMS.Interfaces
 		Task<IEnumerable<inwardModel>> getitemdeatils(string grnnumber);
 		Task<IEnumerable<inwardModel>> getitemdeatilsnotif(string grnnumber);
 		Task<IEnumerable<MaterialTransaction>> MaterialRequest(string pono, string material);
-		Task<IEnumerable<IssueRequestModel>> MaterialRequestdata(string pono, string material);
+		Task<IEnumerable<IssueRequestModel>> MaterialRequestdata(string pono, string material, string projectcode);
 		Task<IEnumerable<IssueRequestModel>> MaterialReservedata();
 		Task<IEnumerable<IssueRequestModel>> getgatepassmaterialrequestList();
 		int acknowledgeMaterialReceived(List<IssueRequestModel> dataobj);
@@ -120,11 +121,14 @@ namespace WMS.Interfaces
 		Task<IEnumerable<FIFOModel>> GetFIFOList(string material);
 		ReportModel checkloldestmaterial(string materialid, string createddate);
 		ReportModel checkoldmaterialwithdesc(string materialid, string createddate, string description);
+		ReportModel checkoldmaterialwithdescstore(string materialid, string createddate, string description, string store);
 		int FIFOitemsupdate(List<FIFOModel> model);
 		Task<IEnumerable<OpenPoModel>> getASNList(string deliverdate);
 		Task<IEnumerable<OpenPoModel>> getASNListdata();
 		Task<IEnumerable<IssueRequestModel>> GetItemlocationListBymterial(string material);
 		Task<IEnumerable<IssueRequestModel>> GetItemlocationListBymterialanddesc(string material, string description);
+		Task<IEnumerable<IssueRequestModel>> GetItemLocationListByMaterialdescstore(string material, string description, string store);
+		
 		Task<IEnumerable<IssueRequestModel>> GetItemlocationListBymterialsourcelocation(string material);
 
 
@@ -172,6 +176,8 @@ namespace WMS.Interfaces
 
 		Task<IEnumerable<invstocktransfermodel>> getstocktransferdatagroup1(string transfertype);
 		Task<IEnumerable<ddlmodel>> pendingreceiptslist();
+		Task<IEnumerable<ddlmodel>> pendingstogr();
+			
 		Task<IEnumerable<ddlmodel>> getInitialstockfilename();
 		
 		Task<IEnumerable<ddlmodel>> getdepartmentmasterdata();
@@ -199,6 +205,9 @@ namespace WMS.Interfaces
 
 		int mattransferapprove(List<materialtransferMain> model);
 		string matrequestapprove(List<MaterialTransaction> model);
+		Task<WMSHttpResponse> getAvailableQtyBystore(string store, string materialid, string description);
+		string stomatrequestapprove(List<invstocktransfermodel> model);
+		string updatepm(List<assignpmmodel> model);
 		int mrnupdate(MRNsavemodel model);
 		int GatepassapproveByMail(gatepassModel model);
 		Task<IEnumerable<pageModel>> Getpagesbyroleid(int roleid);
@@ -212,6 +221,7 @@ namespace WMS.Interfaces
 		Task<IEnumerable<materialtransferMain>> gettransferdata(string empno);
 		Task<IEnumerable<materialtransferMain>> gettransferdataforapproval(string empno);
 		Task<IEnumerable<MaterialTransaction>> getrequestdataforapproval(string empno);
+		Task<IEnumerable<invstocktransfermodel>> getrequestdataforSTOapproval(string empno, string type);
 		int Updatetransferqty(List<IssueRequestModel> _listobj);
 		Task<IEnumerable<UserDashboardGraphModel>> getUserdashboardgraphdata();
 		Task<IEnumerable<UserDashboardGraphModel>> getUserdashIEgraphdata();
@@ -226,6 +236,7 @@ namespace WMS.Interfaces
 		Task<IEnumerable<ddlmodel>> getprojectlist();
 		Task<IEnumerable<ddlmodel>> getprojectlistbymanager(string empno);
 		Task<IEnumerable<AssignProjectModel>> getprojectlisttoassign(string empno);
+		Task<IEnumerable<assignpmmodel>> getprojectlisttoassignpm();
 		Task<IEnumerable<ddlmodel>> getmatlist(string querytext);
 		Task<IEnumerable<ddlmodel>> getmatlistbyproject(string projectcode);
 		string notifyputaway(notifymodel data);
@@ -295,8 +306,8 @@ namespace WMS.Interfaces
 		Task<IEnumerable<GPReasonMTData>> getMiscellanousReasonData();
 
 		string generateLabel(string labeldata);
-		Task<IEnumerable<invstocktransfermodel>> getSTORequestList();
-		Task<IEnumerable<STOIssueModel>> getMatdetailsbyTransferId(string transferId,string type);
+		Task<IEnumerable<invstocktransfermodel>> getSTORequestList(string type);
+		Task<IEnumerable<STOIssueModel>> getMatdetailsbyTransferId(string transferId,string type, string transfertype);
 		Task<string> STOPOInitiate(List<STOIssueModel> data);
 		Task<IEnumerable<initialStock>> GetInitialStockPutawayMaterials();
 

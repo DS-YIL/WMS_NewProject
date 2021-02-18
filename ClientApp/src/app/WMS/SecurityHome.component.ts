@@ -230,6 +230,8 @@ export class SecurityHomeComponent implements OnInit {
     this.isnonpochecked = false;
     this.transportdetails = "";
     this.nonporemarks = "";
+    this.refresh();
+    this.reset();
   }
 
   //on check of non-po event
@@ -245,6 +247,8 @@ export class SecurityHomeComponent implements OnInit {
     this.print = "Print Barcode";
     this.transportdetails = "";
     this.nonporemarks = "";
+    this.refresh();
+    this.reset();
   }
   //get department list for non-po
   getdepts() {

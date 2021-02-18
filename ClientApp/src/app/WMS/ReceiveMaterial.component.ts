@@ -21,6 +21,7 @@ export class ReceiveMaterialComponent implements OnInit {
   requestlistSTO: STORequestdata[] = [];
   materialdatalist: STOrequestTR[] = [];
   public employee: Employee;
+  filteredgrns: any[];
   currentstocktype: string = "";
   public showDetails; showLocationDialog: boolean = false;
   public StockModel: StockModel;
@@ -48,9 +49,11 @@ export class ReceiveMaterialComponent implements OnInit {
   public rackdata: any[] = [];
   public binlist: any[] = [];
   public racklist: any[] = [];
+  checkedgrnlist: ddlmodel[] = [];
+  selectedgrnno: string = "";
   rowGroupMetadata: any;
   rowGroupMetadata1: any;
-
+  requestedid: string;
 
 
   constructor(private messageService: MessageService, private ConfirmationService: ConfirmationService, private formBuilder: FormBuilder, private wmsService: wmsService, private route: ActivatedRoute, private router: Router, public constants: constants, private spinner: NgxSpinnerService) { }
@@ -59,18 +62,51 @@ export class ReceiveMaterialComponent implements OnInit {
       this.employee = JSON.parse(localStorage.getItem("Employee"));
     else
       this.router.navigateByUrl("Login");
-
+    this.requestedid = this.route.snapshot.queryParams.requestid;
     this.selectedStatus = "Pending";
     this.materialdatalist = [];
-    this.maindiv = true;
+    this.checkedgrnlist = [];
+    this.filteredgrns = [];
+    this.selectedgrnno = "";
+    this.maindiv = false;
     this.StockModel = new StockModel();
-    this.putawaydiv = false;
-    this.STORequestlist();
+    this.putawaydiv = true;
+    this.getcheckedgrn();
+    //this.STORequestlist();
 
     this.locationListdata();
     this.binListdata();
     this.rackListdata();
    
+  }
+
+  ////get pending to accept
+  getcheckedgrn() {
+    this.checkedgrnlist = [];
+    this.wmsService.getstogr().subscribe(data => {
+      debugger;
+      this.checkedgrnlist = data;
+      if (this.requestedid) {
+        debugger;
+        this.selectedgrnno = this.requestedid;
+        this.getMaterialdatalist(this.selectedgrnno);
+
+      }
+    });
+  }
+
+  showpodata1() {
+    this.getMaterialdatalist(this.selectedgrnno);
+  }
+  filtergrn(event) {
+    debugger;
+    this.filteredgrns = [];
+    for (let i = 0; i < this.checkedgrnlist.length; i++) {
+      let pos = this.checkedgrnlist[i].text;
+      if (pos.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+        this.filteredgrns.push(pos);
+      }
+    }
   }
 
   backtoreturn() {
@@ -82,8 +118,8 @@ export class ReceiveMaterialComponent implements OnInit {
     this.wmsService.STORequestdatalist(transferid).subscribe(data => {
       debugger;
       this.materialdatalist = data;
-      this.maindiv = false;
-      this.putawaydiv = true;
+      //this.maindiv = false;
+      //this.putawaydiv = true;
       this.updateRowGroupMetaData1();
     });
 
@@ -99,13 +135,16 @@ export class ReceiveMaterialComponent implements OnInit {
       debugger;
       this.storequestlist = data;
       this.requestlistSTO = data;
-      this.maindiv = true;
-      this.putawaydiv = false;
+      //this.maindiv = true;
+      //this.putawaydiv = false;
       if (this.selectedStatus == "Issued") {
         this.storequestlist = this.requestlistSTO.filter(li => li.putawaystatus == true);
       }
       else {
         this.storequestlist = this.requestlistSTO.filter(li => li.putawaystatus == false);
+      }
+      if (!isNullOrUndefined(this.requestedid) && this.requestedid != "") {
+        this.storequestlist = this.storequestlist.filter(li => li.transferid == this.requestedid);
       }
       //this.storequestlist.forEach(item => {
       //  item.showtr = false;
@@ -476,9 +515,11 @@ export class ReceiveMaterialComponent implements OnInit {
               //this.podetailsList[this.rowIndex].itemlocation = this.StockModel.itemlocation;
               this.issaveprocess = true;
               this.showLocationDialog = false;
-              this.messageService.add({ severity: 'success', summary: '', detail: 'Location Updated' });
+              this.messageService.add({ severity: 'success', summary: '', detail: 'Put away successful' });
               this.stock = [];
-              this.STORequestlist();
+              this.getMaterialdatalist(this.selectedgrnno);
+              this.getcheckedgrn();
+              //this.STORequestlist();
              
               // }
             });

@@ -167,7 +167,7 @@
       </div>
       <div class="col-lg-5 col-md-5 col-sm-6">
         <span *ngIf="ismaterial">{{editStockModel.material}}</span>
-        <input *ngIf="!ismaterial" type="text" [(ngModel)]="editStockModel.material"  style="width:50%" class="form-control" />
+        <input *ngIf="!ismaterial" type="text" [(ngModel)]="editStockModel.material" style="width:50%" class="form-control" />
       </div>
 
     </div>
@@ -177,7 +177,7 @@
       </div>
       <div class="col-lg-5 col-md-5 col-sm-6">
         <span *ngIf="isdescription">{{editStockModel.materialdescription}}</span>
-        <input *ngIf="!isdescription"type="text" [(ngModel)]="editStockModel.materialdescription" class="form-control" />
+        <input *ngIf="!isdescription" type="text" [(ngModel)]="editStockModel.materialdescription" class="form-control" />
       </div>
 
     </div>
@@ -245,7 +245,7 @@
         <input *ngIf="!isprojectid" type="text" [(ngModel)]="editStockModel.projectid" class="form-control" />
 
       </div>
-     
+
 
     </div>
     <div class="row">
@@ -255,6 +255,19 @@
       <div class="col-lg-5 col-md-5 col-sm-6">
         <span *ngIf="ispono">{{editStockModel.pono}}</span>
         <input *ngIf="!ispono" type="text" [(ngModel)]="editStockModel.pono" class="form-control" />
+
+      </div>
+
+    </div>
+    <div class="row">
+      <div class="col-lg-3 col-md-3 col-sm-6">
+        <label class="labelheading">Stock Type:<span style="color: red;">*</span></label>&nbsp;&nbsp;
+      </div>
+      <div class="col-lg-5 col-md-5 col-sm-6">
+        <select [(ngModel)]="editStockModel.stocktype" class="form-control">
+          <option value="Project Stock">Project Stock</option>
+          <option value="Plant Stock">Plant Stock</option>
+        </select>
 
       </div>
 

@@ -223,7 +223,7 @@ namespace WMS.Controllers
 		{
 			string[] ponoandinvoice = pono.Split('-');
 			string ponodata = ponoandinvoice[0].Trim() + "-" + ponoandinvoice[1].Trim() + "-" + ponoandinvoice[2].Trim();
-			string invoiceno = ponoandinvoice[3].Trim(); ;
+			string invoiceno = ponoandinvoice[3].Trim(); 
 			return await this._poService.VerifythreeWay(ponodata, invoiceno, type);
 		}
 		[HttpPost("GRNposting")]
@@ -385,6 +385,12 @@ namespace WMS.Controllers
 		public Task<IEnumerable<PODetails>> getPODetails(string empno)
 		{
 			return this._poService.getPODetails(empno);
+
+		}
+		[HttpGet("getPODetailsbyprojectcode")]
+		public Task<IEnumerable<PODetails>> getPODetailsbyprojectcode(string empno,string projectcode)
+		{
+			return this._poService.getPODetailsByProjectCode(empno, projectcode);
 
 		}
 
@@ -554,6 +560,12 @@ namespace WMS.Controllers
 
 			return this._poService.checkoldmaterialwithdesc(material, createddate, description);
 		}
+		[HttpGet("Checkoldestmaterialwithdescstore")]
+		public ReportModel Oldestmaterialwithdescstore(string material, string createddate, string description,string store)
+		{
+
+			return this._poService.checkoldmaterialwithdescstore(material, createddate, description, store);
+		}
 		[HttpPost("updateFIFOIssueddata")]
 		public int Oldestmaterial([FromBody] List<FIFOModel> model)
 		{
@@ -591,6 +603,12 @@ namespace WMS.Controllers
 		{
 
 			return await this._poService.GetItemlocationListBymterialanddesc(material, description);
+		}
+		[HttpGet("GetItemLocationListByMaterialdescstore")]
+		public async Task<IEnumerable<IssueRequestModel>> GetItemLocationListByMaterialdescstore(string material, string description, string store)
+		{
+
+			return await this._poService.GetItemLocationListByMaterialdescstore(material, description, store);
 		}
 		[HttpGet("GetItemLocationListByMaterialsourcelocation")]
 		public async Task<IEnumerable<IssueRequestModel>> getitemlocationBymaterialsourcelocation(string material)
@@ -700,9 +718,9 @@ namespace WMS.Controllers
 			return await this._poService.getdashboarddata();
 		}
 		[HttpGet("getmaterialrequestListdata")]
-		public async Task<IEnumerable<IssueRequestModel>> getmaterialrequestListdata(string pono = null, string loginid = null)
+		public async Task<IEnumerable<IssueRequestModel>> getmaterialrequestListdata(string pono = null, string loginid = null, string projectcode = null)
 		{
-			return await this._poService.MaterialRequestdata(pono, loginid);
+			return await this._poService.MaterialRequestdata(pono, loginid, projectcode);
 		}
 
 		[HttpGet("getmaterialreserveListdata")]
@@ -881,6 +899,11 @@ namespace WMS.Controllers
 		{
 			return await this._poService.pendingreceiptslist();
 		}
+		[HttpGet("getpendingstogr")]
+		public async Task<IEnumerable<ddlmodel>> getpendingstogr()
+		{
+			return await this._poService.pendingstogr();
+		}
 
 		[HttpGet("getInitialstockfilename")]
 		public async Task<IEnumerable<ddlmodel>> getInitialstockfilename()
@@ -898,6 +921,11 @@ namespace WMS.Controllers
 		public async Task<IEnumerable<AssignProjectModel>> getprojectlisttoassign(string empno)
 		{
 			return await this._poService.getprojectlisttoassign(empno);
+		}
+		[HttpGet("getprojectlisttoassignpm")]
+		public async Task<IEnumerable<assignpmmodel>> getprojectlisttoassignpm()
+		{
+			return await this._poService.getprojectlisttoassignpm();
 		}
 
 		[HttpGet("getprojectlistbymanager")]
@@ -1055,6 +1083,17 @@ namespace WMS.Controllers
 			return this._poService.matrequestapprove(obj);
 		}
 
+		[HttpPost("STOmatrequestapproval")]
+		public string stomatrequestapprove([FromBody] List<invstocktransfermodel> obj)
+		{
+			return this._poService.stomatrequestapprove(obj);
+		}
+		[HttpPost("updatepm")]
+		public string updatepm([FromBody] List<assignpmmodel> obj)
+		{
+			return this._poService.updatepm(obj);
+		}
+
 		[HttpPost("mrnupdate")]
 		public int mrnupdate([FromBody] MRNsavemodel obj)
 		{
@@ -1099,6 +1138,12 @@ namespace WMS.Controllers
 		public async Task<IEnumerable<MaterialTransaction>> getrequestdataforapproval(string empno)
 		{
 			return await this._poService.getrequestdataforapproval(empno);
+		}
+
+		[HttpGet("getrequestdataforSTOapproval")]
+		public async Task<IEnumerable<invstocktransfermodel>> getrequestdataforSTOapproval(string empno, string type)
+		{
+			return await this._poService.getrequestdataforSTOapproval(empno,type);
 		}
 
 		[HttpGet("getdirecttransferdata")]
@@ -1445,14 +1490,21 @@ namespace WMS.Controllers
 		}
 
 		[HttpGet("getSTORequestList")]
-		public async Task<IEnumerable<invstocktransfermodel>> getSTORequestList()
+		public async Task<IEnumerable<invstocktransfermodel>> getSTORequestList(string type)
 		{
-			return await this._poService.getSTORequestList();
+			return await this._poService.getSTORequestList(type);
 		}
-		[HttpGet("getMatdetailsbyTransferId")]
-		public async Task<IEnumerable<STOIssueModel>> getMatdetailsbyTransferId(string transferid, string type)
+
+		[HttpGet("getAvailableQtyBystore")]
+		public async Task<WMSHttpResponse> getAvailableQtyBystore(string store, string materialid, string description)
 		{
-			return await this._poService.getMatdetailsbyTransferId(transferid, type);
+			return await this._poService.getAvailableQtyBystore(store, materialid, description);
+		}
+
+		[HttpGet("getMatdetailsbyTransferId")]
+		public async Task<IEnumerable<STOIssueModel>> getMatdetailsbyTransferId(string transferid, string type, string transfertype)
+		{
+			return await this._poService.getMatdetailsbyTransferId(transferid, type, transfertype);
 		}
 
 		[HttpPost("STOPOInitiate")]

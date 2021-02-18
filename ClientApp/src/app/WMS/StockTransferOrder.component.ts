@@ -4,7 +4,7 @@ import { wmsService } from '../WmsServices/wms.service';
 import { constants } from '../Models/WMSConstants';
 import { Employee, DynamicSearchResult, searchList } from '../Models/Common.Model';
 import { NgxSpinnerService } from "ngx-spinner";
-import { Materials, stocktransfermodel, locationddl, binddl, rackddl, StockModel, invstocktransfermodel, stocktransfermateriakmodel, plantddl } from 'src/app/Models/WMS.Model';
+import { Materials, stocktransfermodel, locationddl, binddl, rackddl, StockModel, invstocktransfermodel, stocktransfermateriakmodel, plantddl, ddlmodel, WMSHttpResponse } from 'src/app/Models/WMS.Model';
 import { MessageService } from 'primeng/api';
 import { first } from 'rxjs/operators';
 import { isNullOrUndefined } from 'util';
@@ -34,10 +34,12 @@ export class StockTransferOrderComponent implements OnInit {
   public dynamicData = new DynamicSearchResult();
   public selectedlist: Array<searchList> = [];
   public searchresult: Array<object> = [];
+  public cuurentrowresponse: WMSHttpResponse;
   filteredmats: any[];
   val: any;
   filteredmatdesc: any[];
   displaySTO: boolean = false;
+  
 
   mainmodel: invstocktransfermodel;
   selectedRow: number;
@@ -66,6 +68,9 @@ export class StockTransferOrderComponent implements OnInit {
   destinationplant: plantddl;
 
   combomaterial: Materials[];
+  projectlists: ddlmodel[] = [];
+  selectedproject: ddlmodel;
+  filteredprojects: ddlmodel[] = [];
 
   ngOnInit() {
     if (localStorage.getItem("Employee"))
@@ -77,6 +82,8 @@ export class StockTransferOrderComponent implements OnInit {
     this.destinationplant = new plantddl();
     this.plantlist = [];
     this.stocktransferlist = [];
+    this.cuurentrowresponse = new WMSHttpResponse();
+    this.projectlists = [];
     this.mainmodel = new invstocktransfermodel();
     this.mainmodel.sourceplant = "1002";
     this.mainmodel.destinationplant = "1003";
@@ -85,13 +92,29 @@ export class StockTransferOrderComponent implements OnInit {
     this.selectedlocation = new locationddl();
     this.selectedrack = new rackddl();
     this.showLocationDialog = false;
-    //this.locationListdata();
-    //this.binListdata();
-    //this.rackListdata();
-    //this.getStocktransferdata();
+    this.getprojects();
     this.getStocktransferdatagroup();
-    //this.getMaterials();
 
+  }
+
+  getprojects() {
+
+    this.projectlists = [];
+    this.wmsService.getprojectlistbymanager(this.employee.employeeno).subscribe(data => {
+      debugger;
+      this.projectlists = data;
+
+    });
+  }
+  filterprojects(event) {
+    this.filteredprojects = [];
+    for (let i = 0; i < this.projectlists.length; i++) {
+      let brand = this.projectlists[i].value;
+      let pos = this.projectlists[i].projectmanager;
+      if (brand.toLowerCase().indexOf(event.query.toLowerCase()) == 0 || pos.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+        this.filteredprojects.push(this.projectlists[i]);
+      }
+    }
   }
 
 
@@ -102,6 +125,10 @@ export class StockTransferOrderComponent implements OnInit {
 
   public bindSearchListDatamaterialdesc(event: any, data: any) {
     debugger;
+    if (isNullOrUndefined(this.selectedproject) || !this.selectedproject.value) {
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Select Project' });
+      return;
+    }
     var searchTxt = event.query;
     var matid = "";
     if (!isNullOrUndefined(data.materialObj)) {
@@ -113,19 +140,23 @@ export class StockTransferOrderComponent implements OnInit {
     this.dynamicData = new DynamicSearchResult();
     var query = "(select wp.poitemdescription as materialdescription";
     query += " from wms.wms_pomaterials wp";
-    query += " where wp.poitemdescription ilike '" + searchTxt + "%' ";
+    query += " left outer join wms.wms_project prj on prj.pono = wp.pono";
+    query += " where prj.projectcode = '" + this.selectedproject.value + "' ";
+    query += " and wp.poitemdescription ilike '" + searchTxt + "%' "; 
     if (!isNullOrUndefined(matid) && String(matid).trim() != "") {
       query += " and wp.materialid  = '" + matid + "' ";
     }
     query += " group by wp.poitemdescription limit 50)";
     query += " union";
-    query += " (select mmy.materialdescription";
-    query += " from wms.\"MaterialMasterYGS\" mmy";
-    query += " where mmy.materialdescription ilike '" + searchTxt + "%'";
+    query += " (select mmy.poitemdescription as materialdescription";
+    query += " from wms.wms_stock mmy";
+    query += " left outer join wms.wms_project prj on prj.pono = mmy.pono";
+    query += " where prj.projectcode = '" + this.selectedproject.value + "' ";
+    query += " and mmy.poitemdescription ilike '" + searchTxt + "%'";
     if (!isNullOrUndefined(matid) && String(matid).trim() != "") {
-      query += " and mmy.material  = '" + matid + "' ";
+      query += " and mmy.materialid  = '" + matid + "' ";
     }
-    query += " group by mmy.materialdescription limit 50)";
+    query += " group by mmy.poitemdescription limit 50)";
     this.dynamicData.query = query;
     this.filteredmats = [];
     this.wmsService.GetListItems(this.dynamicData).subscribe(data => {
@@ -144,6 +175,10 @@ export class StockTransferOrderComponent implements OnInit {
 
   public bindSearchListDatamaterial(event: any, rdata: any, name?: string ) {
     debugger;
+    if (isNullOrUndefined(this.selectedproject) || !this.selectedproject.value) {
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Select Project' });
+      return;
+    }
     var description = "";
     if (!isNullOrUndefined(rdata.materialdescObj)) {
       description = rdata.materialdescObj.name;
@@ -154,20 +189,24 @@ export class StockTransferOrderComponent implements OnInit {
     searchTxt = searchTxt.replace('*', '%');
     this.dynamicData = new DynamicSearchResult();
     var query = "(select wp.materialid as material";
-    query +=" from wms.wms_pomaterials wp";
-    query += " where wp.materialid ilike '" + searchTxt + "%' ";
+    query += " from wms.wms_pomaterials wp";
+    query += " left outer join wms.wms_project prj on prj.pono = wp.pono";
+    query += " where prj.projectcode = '" + this.selectedproject.value + "' ";
+    query += " and wp.materialid ilike '" + searchTxt + "%' ";
     if (!isNullOrUndefined(description) && String(description).trim() != "") {
       query += " and wp.poitemdescription  = '" + description + "' ";
     }
     query += " group by wp.materialid limit 50)";
     query +=" union";
-    query += " (select mmy.material";
-    query +=" from wms.\"MaterialMasterYGS\" mmy";
-    query += " where mmy.material ilike '" + searchTxt + "%'";
+    query += " (select mmy.materialid as material";
+    query += " from wms.wms_stock mmy";
+    query += " left outer join wms.wms_project prj on prj.pono = mmy.pono";
+    query += " where prj.projectcode = '" + this.selectedproject.value + "' ";
+    query += " and mmy.materialid ilike '" + searchTxt + "%'";
     if (!isNullOrUndefined(description) && String(description).trim() != "") {
-      query += " and mmy.materialdescription  = '" + description + "' ";
+      query += " and mmy.poitemdescription  = '" + description + "' ";
     }
-    query += " group by mmy.material limit 50)";
+    query += " group by mmy.materialid limit 50)";
     this.dynamicData.query = query;
     this.filteredmats = [];
     this.wmsService.GetListItems(this.dynamicData).subscribe(data => {
@@ -203,26 +242,34 @@ export class StockTransferOrderComponent implements OnInit {
   //  });
   //}
 
+  ProjectSelected() {
+    this.podetailsList = [];
+  }
+
 
   addrows() {
-    if (!this.sourceplant.locatorid) {
-      this.messageService.add({ severity: 'error', summary: '', detail: 'Select source Plant' });
+    if (isNullOrUndefined(this.sourceplant) || !this.sourceplant.locatorid) {
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Select source location' });
       return;
     }
-    if (!this.destinationplant.locatorid) {
-      this.messageService.add({ severity: 'error', summary: '', detail: 'Select destinationplant Plant' });
+    if (isNullOrUndefined(this.sourceplant) || !this.destinationplant.locatorid) {
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Select destinationplant location' });
+      return;
+    }
+    if (isNullOrUndefined(this.selectedproject) || !this.selectedproject.value) {
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Select Project' });
       return;
     }
 
     if (this.sourceplant.locatorid == this.destinationplant.locatorid) {
-      this.messageService.add({ severity: 'error', summary: '', detail: 'Source and destination plant cannot be same' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Source and destination location cannot be same' });
       return;
     }
 
     
       var invalidrow = this.podetailsList.filter(function (element, index) {
         debugger;
-        return (!element.transferqty) || (!element.materialid) || (!element.projectid) || (!element.requireddate);
+        return (!element.transferqty) || (!element.materialid) || (!element.materialdescription) || (!element.requireddate);
       });
       if (invalidrow.length > 0) {
         this.messageService.add({ severity: 'error', summary: '', detail: 'Fill all the details.' });
@@ -326,7 +373,6 @@ export class StockTransferOrderComponent implements OnInit {
       console.log(data);
       this.plantlist = data;
     });
-
   }
 
   Showlist() {
@@ -483,11 +529,41 @@ export class StockTransferOrderComponent implements OnInit {
     debugger;
     if (!isNullOrUndefined(data.materialObj)) {
       this.podetailsList[ind].materialid = data.materialObj.code;
+      if (!isNullOrUndefined(this.podetailsList[ind].materialdescription) && this.podetailsList[ind].materialdescription != "") {
+        this.cuurentrowresponse = new WMSHttpResponse();
+        this.wmsService.getavailabilityByStore(this.sourceplant.locatorid, data.materialObj.code, this.podetailsList[ind].materialdescription).subscribe(data => {
+          debugger;
+          if (data) {
+            this.cuurentrowresponse = data;
+            if (!isNullOrUndefined(this.cuurentrowresponse.message)) {
+              this.podetailsList[ind].availableqty = parseInt(this.cuurentrowresponse.message);
+              this.podetailsList[ind].availableqty = parseInt(this.cuurentrowresponse.message);
+              if (this.podetailsList[ind].availableqty == 0) {
+                this.messageService.add({ severity: 'error', summary: '', detail: 'Material Not available in store :' + this.sourceplant.storagelocationdesc });
+              }
+            }
+            else {
+              this.podetailsList[ind].availableqty = 0;
+              this.messageService.add({ severity: 'error', summary: '', detail: 'Material Not available in store :' + this.sourceplant.storagelocationdesc });
+            }
+
+          }
+          else {
+            this.messageService.add({ severity: 'error', summary: '', detail: 'Server error' });
+          }
+         
+
+        });
+      }
+      
     }
     else {
       this.podetailsList[ind].materialdescObj = null;
       this.podetailsList[ind].materialdescription = null;
 
+    }
+    if (!isNullOrUndefined(this.selectedproject)) {
+      this.podetailsList[ind].projectid = this.selectedproject.value;
     }
     var data1 = this.podetailsList.filter(function (element, index) {
       return (element.materialid == data.materialObj.code && element.materialdescription == data.materialdescription && index != ind);
@@ -521,16 +597,58 @@ export class StockTransferOrderComponent implements OnInit {
     //});
   }
 
+  checkqty(data: any) {
+    if (data.transferqty < 0) {
+      data.transferqty = 0;
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Enter quantity greater than 0' });
+      return;
+    }
+    if (data.transferqty > data.availableqty) {
+      data.transferqty = 0;
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Transfer quantity exceeded available quantity' });
+      return;
+    }
 
+  }
   onDescriptionSelected(event: any, data: any, ind: number) {
     debugger;
     if (!isNullOrUndefined(data.materialdescObj)) {
       this.podetailsList[ind].materialdescription = data.materialdescObj.name;
+      if (!isNullOrUndefined(this.podetailsList[ind].materialid) && this.podetailsList[ind].materialid != "") {
+        this.cuurentrowresponse = new WMSHttpResponse();
+        this.wmsService.getavailabilityByStore(this.sourceplant.locatorid, this.podetailsList[ind].materialid, data.materialdescObj.name).subscribe(data => {
+          debugger;
+          if (data) {
+            this.cuurentrowresponse = data;
+            if (!isNullOrUndefined(this.cuurentrowresponse.message)) {
+              this.podetailsList[ind].availableqty = parseInt(this.cuurentrowresponse.message);
+              if (this.podetailsList[ind].availableqty == 0) {
+                this.messageService.add({ severity: 'error', summary: '', detail: 'Material Not available in store :' + this.sourceplant.locatorname });
+              }
+              
+            }
+            else {
+              this.podetailsList[ind].availableqty = 0;
+              this.messageService.add({ severity: 'error', summary: '', detail: 'Material Not available in store :' + this.sourceplant.locatorname });
+            }
+
+          }
+          else {
+            this.podetailsList[ind].availableqty = 0;
+            this.messageService.add({ severity: 'error', summary: '', detail: 'Server error' });
+          }
+
+
+        });
+      }
     }
     else {
       this.podetailsList[ind].materialObj = null;
       this.podetailsList[ind].materialid = null;
 
+    }
+    if (!isNullOrUndefined(this.selectedproject)) {
+      this.podetailsList[ind].projectid = this.selectedproject.value;
     }
     var data1 = this.podetailsList.filter(function (element, index) {
       return (element.materialdescription == data.materialdescObj.name && element.materialid == data.materialid && index != ind);
@@ -880,11 +998,20 @@ export class StockTransferOrderComponent implements OnInit {
       return;
     }
 
+    if (isNullOrUndefined(this.sourceplant)) {
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Select source locations.' });
+      return;
+    }
+    if (isNullOrUndefined(this.destinationplant)) {
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Select destination locations.' });
+      return;
+    }
     this.mainmodel.sourceplant = this.sourceplant.locatorname;
     this.mainmodel.destinationplant = this.destinationplant.locatorname;
+   
 
     if (!this.mainmodel.sourceplant || !this.mainmodel.destinationplant) {
-      this.messageService.add({ severity: 'error', summary: '', detail: 'Select plants.' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Select locations.' });
       return;
     }
 
@@ -892,9 +1019,35 @@ export class StockTransferOrderComponent implements OnInit {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Source and destination plant cannot be same' });
       return;
     }
+    if (String(this.mainmodel.sourceplant).toLowerCase().trim() == "ec c block") {
+      this.mainmodel.sourcelocationcode = "3009";
+
+    } else if (String(this.mainmodel.sourceplant).toLowerCase().trim() == "ec unit 2") {
+      this.mainmodel.sourcelocationcode = "102B";
+    }
+    else {
+      this.mainmodel.sourcelocationcode = this.sourceplant.locatorname;
+    }
+
+    if (String(this.mainmodel.destinationplant).toLowerCase().trim() == "ec c block") {
+      this.mainmodel.destinationlocationcode = "3009";
+    } else if (String(this.mainmodel.destinationplant).toLowerCase().trim() == "ec unit 2") {
+      this.mainmodel.destinationlocationcode = "102B";
+    }
+    else {
+      this.mainmodel.destinationlocationcode = this.destinationplant.locatorname;
+    }
+    if (!isNullOrUndefined(this.selectedproject)) {
+      this.mainmodel.projectcode = this.selectedproject.value;
+      this.mainmodel.approverid = this.selectedproject.projectmanager;
+    }
+    else {
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Select project.' });
+      return;
+    }
    
-      var invalidrow = this.podetailsList.filter(function (element, index) {
-        return (!element.transferqty) || (!element.materialid) || (!element.projectid) || (!element.requireddate);
+    var invalidrow = this.podetailsList.filter(function (element, index) {
+      return (!element.transferqty) || (!element.materialid) || (!element.materialdescription) || (!element.requireddate);
       });
     
     if (invalidrow.length > 0) {
@@ -915,7 +1068,7 @@ export class StockTransferOrderComponent implements OnInit {
     this.wmsService.Stocktransfer1(svdata).subscribe(data => {
       this.spinner.hide();
       if (data) {
-        this.messageService.add({ severity: 'success', summary: '', detail: 'Material transferred' });
+        this.messageService.add({ severity: 'success', summary: '', detail: 'STO Requested' });
         this.savedata = [];
         this.podetailsList = [];
         this.mainmodel = new invstocktransfermodel();
@@ -930,7 +1083,25 @@ export class StockTransferOrderComponent implements OnInit {
     });
   }
 
- 
+  onSourceChange(event) {
+    this.podetailsList = [];
+    if (this.mainmodel.destinationplant == this.mainmodel.sourceplant) {
+      this.displaySTO = false;
+    }
+    else {
+      this.displaySTO = true;
+    }
+
+  }
+  destplantchange(event) {
+    if (this.mainmodel.destinationplant == this.mainmodel.sourceplant) {
+      this.displaySTO = false;
+    }
+    else {
+      this.displaySTO = true;
+    }
+
+  }
 
   plantchange() {
     // this.addprocess = true;

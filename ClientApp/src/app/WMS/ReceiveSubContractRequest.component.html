@@ -8,12 +8,13 @@
             <select placeholder="Status" name="Status" [ngModel]="selectedStatus" (change)="onSelectStatus($event)" class="form-control">
               <option value="Pending"> Pending</option>
               <option value="Issued"> Issued</option>
+              <option value="Acknowledged">Acknowledged</option>
             </select>
           </div>
         </div>
         <div class="col-lg-4 col-md-4 text-center">
           <span style="color:#428bca;font-size:18px" class="commonheadertext">
-            <i class="fa fa-check-circle-o commonheadertext"></i>&nbsp;Stock Transfer Order  Requests
+            <i class="fa fa-check-circle-o commonheadertext"></i>&nbsp;Sub Contracting  Requests
           </span>
         </div>
         <div class="col-lg-4 col-md-4 form-inline"></div>
@@ -27,12 +28,13 @@
             <tr class="mprltbldata">
               <th style="text-align:center;width:70px">Sl.No.</th>
               <th style="text-align:center;width:100px">STO No.</th>
-              <th style="text-align: center;width:150px">Requested By</th>
-              <th style="text-align:center;width:150px">Vendor Code</th>
-              <th style="text-align:center;width:150px">Vendor Name</th>
+              <th style="text-align: center;width:170px">Requested By</th>
+              <th style="text-align:center;width:100px">Vendor Code</th>
+              <th style="text-align:center;width:180px">Vendor Name</th>
               <th style="text-align:center;width:100px">Requested On</th>
               <th style="text-align:center;width:100px">Status</th>
-              <th *ngIf="selectedStatus=='Issued'" style="text-align:center;width:100px">Issued On</th>
+              <th *ngIf="selectedStatus=='Issued' || selectedStatus=='Acknowledged'" style="text-align:center;width:100px">Issued On</th>
+              <th *ngIf="selectedStatus=='Issued' || selectedStatus=='Acknowledged'" style="text-align:center;width:90px">View</th>
               <th *ngIf="selectedStatus=='Pending'" style="text-align:center;width:90px">Issue</th>
             </tr>
             <tr>
@@ -43,7 +45,8 @@
               <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'vendorname', 'contains')"></th>
               <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'transferredon', 'contains')"></th>
               <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'status', 'contains')"></th>
-              <th *ngIf="selectedStatus=='Issued'"></th>
+              <th *ngIf="selectedStatus=='Issued' || selectedStatus=='Acknowledged'"></th>
+              <th *ngIf="selectedStatus=='Issued' || selectedStatus=='Acknowledged'"></th>
               <th *ngIf="selectedStatus=='Pending'"></th>
             </tr>
           </ng-template>
@@ -53,12 +56,13 @@
                 {{ri+1}}
               </td>
               <td class="ptable-cell" style="text-align:center;width:100px;">{{rowData.transferid}}</td>
-              <td class="ptable-cell" style="text-align:center;width:150px;">{{rowData.transferredbyname}}</td>
-              <td class="ptable-cell" style="text-align:center;width:150px;">{{rowData.vendorcode}}</td>
-              <td class="ptable-cell" style="text-align:center;width:150px;">{{rowData.vendorname}}</td>
+              <td class="ptable-cell" style="text-align:left;width:170px;">{{rowData.transferredby}}</td>
+              <td class="ptable-cell" style="text-align:center;width:100px;">{{rowData.vendorcode}}</td>
+              <td class="ptable-cell" style="text-align:left;width:180px;">{{rowData.vendorname}}</td>
               <td class="ptable-cell" style="text-align:center;width:100px;">{{rowData.transferredon  | date :  constants.dateFormat}}</td>
-              <td class="ptable-cell" style="text-align:center;width:100px;">{{rowData.status}}</td>
-              <td *ngIf="selectedStatus=='Issued'" class="ptable-cell" style="text-align:center;width:100px;">{{rowData.issuedon  | date :  constants.dateFormat}}</td>
+              <td class="ptable-cell" style="text-align:left;width:100px;">{{rowData.status}}</td>
+              <td *ngIf="selectedStatus=='Issued' || selectedStatus=='Acknowledged'" class="ptable-cell" style="text-align:center;width:100px;">{{rowData.issuedon  | date :  constants.dateFormat}}</td>
+              <td *ngIf="selectedStatus=='Issued' || selectedStatus=='Acknowledged'" class="ptable-cell" style="text-align:center;width:90px;"><button type="button" style="font-size:12px" class="btn btn-success" (click)="navigateToMatIssue(rowData)">View</button></td>
               <td *ngIf="selectedStatus=='Pending'" class="ptable-cell" style="text-align:center;width:90px;"><button type="button" style="font-size:12px" class="btn btn-success" (click)="navigateToMatIssue(rowData)">Issue</button></td>
             </tr>
           </ng-template>
@@ -85,6 +89,12 @@
           <div class="col-lg-3 col-md-3 col-sm-3 pt-2 labelheading">
             <label>Requested By:</label>&nbsp;<span><label class="labeltext">{{requestedBy}}</label></span>
           </div>
+          <div class="col-lg-3 col-md-3 col-sm-3 pt-2 labelheading">
+            <label>Source Location:</label>&nbsp;<span><label class="labeltext">{{sourcelocation}}</label></span>
+          </div>
+          <div class="col-lg-3 col-md-3 col-sm-3 pt-2 labelheading">
+            <label> Vendor Name:</label>&nbsp;<span><label class="labeltext">{{vendorname}}</label></span>
+          </div>
         </div>
       </div>
       <p-table #dt [value]="materialissueList">
@@ -93,9 +103,9 @@
             <th style="text-align:center;width:70px">Sl.No.</th>
             <th style="text-align:center;width:200px;">Material</th>
             <th style="text-align:center">PO Item Description</th>
-            <th style="text-align:center">Request Quantity</th>
-            <th style="text-align:center">Available Quantity</th>
-            <th style="text-align:center">Issue Quantity</th>
+            <th style="text-align:center;width:150px">Request Quantity</th>
+            <th style="text-align:center;width:150px">Available Quantity</th>
+            <th style="text-align:center;width:150px">Issue Quantity</th>
           </tr>
           <tr>
             <th></th>
@@ -112,20 +122,20 @@
             <td class="ptable-cell" style="text-align:right">
               {{ri+1}}
             </td>
-            <td class="ptable-cell" style="text-align:left;width:200px;">
-              <button type="button" *ngIf="rowData.availableqty && rowData.availableqty > 0 && rowData.availableqty!=null" class="btn btn-link" (click)="showmateriallocationList(rowData.materialid,ri+1,ri,rowData.transferqty,rowData.issuedqty);" style="padding-left:0px;">{{rowData.materialid}}</button>
-              <span *ngIf="(!rowData.availableqty || rowData.availableqty == 0 || rowData.availableqty==null)">{{rowData.materialid}}</span>
+            <td class="ptable-cell" style="text-align:left;width:200px;"> 
+              <button type="button" *ngIf="(rowData.availableqty && rowData.availableqty > 0 && rowData.availableqty!=null) || rowData.issuedqty > 0" class="btn btn-link" (click)="showmateriallocationList(rowData.materialid,ri+1,ri,rowData.transferqty,rowData.issuedqty,rowData.poitemdescription,rowData.id);" style="padding-left:0px;">{{rowData.materialid}}</button>
+              <span *ngIf="(!rowData.availableqty || rowData.availableqty == 0 || rowData.availableqty==null) && (!rowData.issuedqty || rowData.issuedqty == 0)">{{rowData.materialid}}</span>
             </td>
             <td class="ptable-cell" style="text-align:left">{{rowData.poitemdescription}}</td>
             <td class="ptable-cell" style="text-align:right">{{rowData.transferqty}}</td>
             <td class="ptable-cell" style="text-align:right" *ngIf="rowData.availableqty && rowData.availableqty > 0">
               <span >{{rowData.availableqty}}</span>
             </td>
-            <td class="ptable-cell" style="text-align:center"  *ngIf="!rowData.availableqty || rowData.availableqty === 0">
-              <span>Not Available</span>
+            <td class="ptable-cell" style="text-align:right"  *ngIf="!rowData.availableqty || rowData.availableqty === 0">
+              <span>0</span>
             </td>
             <td class="ptable-cell">
-              <input id={{ri+1}} pInputText type="number" style="text-align:center" class="form-control" [disabled]="txtDisable" [(ngModel)]="rowData.issuedqty">
+              <input id={{ri+1}} pInputText type="number" style="text-align:right" class="form-control" [disabled]="txtDisable" [(ngModel)]="rowData.issuedqty">
             </td>
           </tr>
         </ng-template>

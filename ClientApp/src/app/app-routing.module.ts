@@ -73,6 +73,8 @@ import { GRReportsComponent } from './WMS/GRReports.component';
 import { MiscellanousIssueComponent } from './WMS/MiscellanousIssues.component';
 import { MiscellanousReceiptsComponent } from './WMS/MiscellanousReceipts.component';
 import { ReceiveMaterialComponent } from './WMS/ReceiveMaterial.component';
+import { STOApprovalComponent } from './WMS/STOApproval.component';
+import { SubcontractApprovalComponent } from './WMS/SubcontractApproval.component';
 
 //admin
 import { MaterilMasterComponent } from './WMS/Admin/Materialmaster.component';
@@ -85,6 +87,7 @@ import { MiscellanousComponent } from './WMS/Admin/Miscellanous.component';
 import { StockTransferOrderComponent } from './WMS/StockTransferOrder.component';
 import { SubContractTransferOrderComponent } from './WMS/SubContractTransferOrder.component';
 import { AssignProjectComponent } from './WMS/AssignProject.component';
+import { AssignProjectManagerComponent } from './WMS/AssignProjectManager.component';
 import { MaterialRequestApprovalComponent } from './WMS/MaterialRequestApproval.component';
 
 const routes: Routes = [{
@@ -188,7 +191,10 @@ const routes: Routes = [{
     { path: "SubContractTransfer", component: SubContractTransferOrderComponent, canActivate: [AuthGuard] },
     { path: "InitialStockPutAway", component: InitialStockPutAwayComponent, canActivate: [AuthGuard] },
     { path: "AssignProject", component: AssignProjectComponent, canActivate: [AuthGuard] },
-    { path: "MaterialRequestApproval", component: MaterialRequestApprovalComponent, canActivate: [AuthGuard] }
+    { path: "MaterialRequestApproval", component: MaterialRequestApprovalComponent, canActivate: [AuthGuard] },
+    { path: "STOApproval", component: STOApprovalComponent, canActivate: [AuthGuard] },
+    { path: "SubcontractApproval", component: SubcontractApprovalComponent, canActivate: [AuthGuard] },
+    { path: "AssignProjectManager", component: AssignProjectManagerComponent, canActivate: [AuthGuard] }
 
   ]
 

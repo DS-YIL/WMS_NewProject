@@ -380,7 +380,7 @@ export class MaterialReserveViewComponent implements OnInit {
         this.pono = pono;
         this.displayDD = false;
         this.displaylist = true;
-        this.wmsService.getMaterialRequestlistdata(this.employee.employeeno, this.pono).subscribe(data => {
+        this.wmsService.getMaterialRequestlistdata(this.employee.employeeno, this.pono, this.selectedproject.value).subscribe(data => {
           this.materialList = data;
         });
         //this.requestMatData.suppliername = data["suppliername"];
@@ -417,8 +417,8 @@ export class MaterialReserveViewComponent implements OnInit {
       this.ponumber = suppname;
       this.pono = suppname;
       this.displayDD = false;
-      this.displaylist = true;
-      this.wmsService.getMaterialRequestlistdata(this.employee.employeeno, this.pono).subscribe(data => {
+        this.displaylist = true;
+        this.wmsService.getMaterialRequestlistdata(this.employee.employeeno, this.pono, this.selectedproject.value).subscribe(data => {
         this.materialList = data;
       });
       }
@@ -532,7 +532,7 @@ export class MaterialReserveViewComponent implements OnInit {
   //bind materials based search
   public bindSearchList(event: any, name?: string) {
     debugger;
-    this.wmsService.getMaterialRequestlistdata(this.employee.employeeno, this.pono).subscribe(data => {
+    this.wmsService.getMaterialRequestlistdata(this.employee.employeeno, this.pono, this.selectedproject.value).subscribe(data => {
 
 
       this.searchresult = data;

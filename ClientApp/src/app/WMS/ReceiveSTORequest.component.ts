@@ -38,6 +38,8 @@ export class ReceiveSTORequestComponent implements OnInit {
   public STONO: string;
   public matdesc: string;
   public viewprocess: boolean = false;
+  source: string;
+  destination: string;
   requestedid: string;
   ngOnInit() {
     this.STORequestList = [];
@@ -47,6 +49,8 @@ export class ReceiveSTORequestComponent implements OnInit {
       this.router.navigateByUrl("Login");
     this.requestedid = this.route.snapshot.queryParams.requestid;
     this.selectedStatus = "Pending";
+    this.source = "";
+    this.destination = "";
     this.viewprocess = false;
     this.matdesc = "";
     this.FIFOvalues = new FIFOValues();
@@ -56,10 +60,10 @@ export class ReceiveSTORequestComponent implements OnInit {
   //get material issue list based on loginid/7
   getSTORequestList() {
     this.STORequestList = [];
-    this.wmsService.getSTORequestList().subscribe(data => {
+    this.wmsService.getSTORequestList('STO').subscribe(data => {
       this.STORequestList = data;
       var data1 = this.STORequestList.filter(function (element, index) {
-        return ((element.issuedqty == null && !element.isporequested) || (element.issuedqty == 0 && !element.isporequested) || (element.status == 'Issued' && !element.isporequested));
+        return ((element.issuedqty == null) || (element.issuedqty == 0));
       });
       this.FilteredSTORequestList = data1;
       if (!isNullOrUndefined(this.requestedid) && this.requestedid != "") {
@@ -72,13 +76,13 @@ export class ReceiveSTORequestComponent implements OnInit {
     this.selectedStatus = event.target.value;
     if (this.selectedStatus == "Pending") {
       var data1 = this.STORequestList.filter(function (element, index) {
-        return ((element.issuedqty == null && !element.isporequested) || (element.issuedqty == 0 && !element.isporequested) || (element.status == 'Issued' && !element.isporequested));
+        return ((element.issuedqty == null) || (element.issuedqty == 0));
       });
       this.FilteredSTORequestList = data1;
     }
     else if (this.selectedStatus == "Issued") {
       var data1 = this.STORequestList.filter(function (element, index) {
-        return (element.issuedqty == element.transferqty  || (element.isporequested));
+        return (element.issuedqty != null && element.issuedqty > 0);
       });
       this.FilteredSTORequestList = data1;
     }
@@ -92,6 +96,8 @@ export class ReceiveSTORequestComponent implements OnInit {
     this.materialissueList = [];
     this.transferId = details.transferid;
     this.requestedBy = details.transferredby;
+    this.source = details.sourceplant;
+    this.destination = details.destinationplant;
     var sts = details.status;
     if (sts == "Issued") {
       this.viewprocess = true;
@@ -100,7 +106,7 @@ export class ReceiveSTORequestComponent implements OnInit {
       this.viewprocess = false;
     }
     var type = "MatIssue";
-    this.wmsService.getMatdetailsbyTransferId(details.transferid, type).subscribe(data => {
+    this.wmsService.getMatdetailsbyTransferId(details.transferid, type, 'STO').subscribe(data => {
       this.spinner.hide();
       this.materialissueList = data;
       this.materialissueList.forEach(item => {
@@ -133,7 +139,7 @@ export class ReceiveSTORequestComponent implements OnInit {
     }
     else {
 
-      this.wmsService.checkoldestmaterialwithdesc(material, createddate, this.matdesc).subscribe(data => {
+      this.wmsService.checkoldestmaterialwithdescstore(material, createddate, this.matdesc, this.source).subscribe(data => {
         this.Oldestdata = data;
         if (data != null) {
           this.alertconfirm(this.Oldestdata);
@@ -179,7 +185,7 @@ export class ReceiveSTORequestComponent implements OnInit {
     this.itemlocationData = [];
     if (this.selectedStatus == "Pending" && !this.viewprocess) {
       this.issueqtyenable = false;
-      this.wmsService.getItemlocationListByMaterialanddesc(material, poitemdescription).subscribe(data => {
+      this.wmsService.getItemlocationListByMaterialdescstore(material, poitemdescription, this.source).subscribe(data => {
         this.itemlocationData = data;
         this.showdialog = true;
       });
@@ -282,7 +288,7 @@ export class ReceiveSTORequestComponent implements OnInit {
     this.materialissueList = [];
     this.transferId = details.transferid;
     var type = "POInitiate";
-    this.wmsService.getMatdetailsbyTransferId(details.transferid, type).subscribe(data => {
+    this.wmsService.getMatdetailsbyTransferId(details.transferid, type, 'STO').subscribe(data => {
       this.spinner.hide();
       debugger;
       this.materialissueList = data;

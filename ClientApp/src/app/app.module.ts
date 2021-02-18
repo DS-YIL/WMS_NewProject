@@ -113,6 +113,8 @@ import { ReceiveMaterialComponent } from './WMS/ReceiveMaterial.component';
 import { InitialStockPutAwayComponent } from './WMS/InitialStockPutAway.component';
 import { StockTransferOrderComponent } from './WMS/StockTransferOrder.component';
 import { SubContractTransferOrderComponent } from './WMS/SubContractTransferOrder.component';
+import { STOApprovalComponent } from './WMS/STOApproval.component';
+import { SubcontractApprovalComponent } from './WMS/SubcontractApproval.component';
 
 //admin
 import { MaterilMasterComponent } from './WMS/Admin/Materialmaster.component';
@@ -120,6 +122,7 @@ import { GatePassMasterComponent } from './WMS/Admin/GatePassMaster .component';
 import { PlantMasterComponent } from './WMS/Admin/PlantMaster.component';
 import { MiscellanousComponent } from './WMS/Admin/Miscellanous.component';
 import { AssignProjectComponent } from './WMS/AssignProject.component';
+import { AssignProjectManagerComponent } from './WMS/AssignProjectManager.component';
 import { MaterialRequestApprovalComponent } from './WMS/MaterialRequestApproval.component';
 
 ////pages
@@ -231,7 +234,10 @@ import { KeyFilterModule } from 'primeng/keyfilter';
     ReceiveSubContractRequestComponent,
     InitialStockPutAwayComponent,
     AssignProjectComponent,
-    MaterialRequestApprovalComponent
+    MaterialRequestApprovalComponent,
+    STOApprovalComponent,
+    SubcontractApprovalComponent,
+    AssignProjectManagerComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

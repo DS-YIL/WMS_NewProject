@@ -34,6 +34,7 @@ namespace WMS.Common
 			string link = "";
 			string linkurl = config.EmailLinkUrl;
 			string tomainlstring = "";
+			string toccstring = "";
 			bool multipleemails = false;
 			if (roleid > 0)
 			{
@@ -48,17 +49,33 @@ namespace WMS.Common
 						if (result != null && result.Result.Count() > 0)
 						{
 							int i = 0;
+							int j = 0;
 							multipleemails = true;
 							foreach (authUser user in result.Result)
 							{
-								if (i > 0)
-								{
-									tomainlstring += ",";
+                                if (user.emailnotification == true)
+                                {
+									if (i > 0)
+									{
+										tomainlstring += ",";
 
+									}
+									i++;
+
+									tomainlstring += user.email.Trim();
 								}
-								i++;
+								if (user.emailccnotification == true)
+								{
+									if (j > 0)
+									{
+										toccstring += ",";
 
-								tomainlstring += user.email.Trim();
+									}
+									j++;
+
+									toccstring += user.email.Trim();
+								}
+
 							}
 						}
 
@@ -72,6 +89,7 @@ namespace WMS.Common
 					return false;
 				}
 				emlSndngList.ToEmailId = tomainlstring;
+				emlSndngList.CC = toccstring;
 
 			}
 			MailMessage mailMessage = new MailMessage(emlSndngList.FrmEmailId, emlSndngList.ToEmailId);
@@ -349,15 +367,15 @@ namespace WMS.Common
 			}
 			else if (subjecttype == 25)
 			{
-				mailMessage.Subject = "Materials Issued for STO Request Id" + emlSndngList.requestid;
+				mailMessage.Subject = "Materials Issued for STO Request Id " + emlSndngList.requestid;
 				subbody = "The materials for STO Request Id " + emlSndngList.requestid + " has been issued.";
 				//subbody += mailMessage.Subject;
-				link = "";
+				link = linkurl + "WMS/Email/STOMaterialPutaway?ReqId=" + emlSndngList.requestid;
 
 			}
 			else if (subjecttype == 26)
 			{
-				mailMessage.Subject = "Materials Issued for Sub Contract Request Id" + emlSndngList.requestid;
+				mailMessage.Subject = "Materials Issued for Sub Contract Request Id " + emlSndngList.requestid;
 				subbody = "The materials for Sub Contract Request Id " + emlSndngList.requestid + " has been issued.";
 				//subbody += mailMessage.Subject;
 				link = "";
@@ -371,16 +389,74 @@ namespace WMS.Common
 				//subbody += "<br/>"+ mailMessage.Subject;
 				link = linkurl + "WMS/Email/IssueSTOMaterial?ReqId=" + emlSndngList.requestid;
 			}
+			else if (subjecttype == 28)
+			{
+				mailMessage.Subject = "Issue Request for Sub Contacting Materials with request id:" + emlSndngList.requestid;
+				string requestedby = this.getnamebyid(emlSndngList.createdby);
+				subbody = "Please find the Sub Contacting Material request details below. <br/> Requested By:" + requestedby + "<br/>Requested On:" + emlSndngList.createddate;
+				//subbody += "<br/>"+ mailMessage.Subject;
+				link = linkurl + "WMS/Email/IssueSubcontractingMaterial?ReqId=" + emlSndngList.requestid;
+			}
 
-			if (!string.IsNullOrEmpty(emlSndngList.CC))
-				mailMessage.CC.Add(emlSndngList.CC);
+			else if (subjecttype == 29)
+			{
+				mailMessage.Subject = "Approval Request for Intra Unit Transfer with request id:" + emlSndngList.requestid;
+				string requestedby = this.getnamebyid(emlSndngList.createdby);
+				subbody = "Please find the Intra Unit Transfer request details below. <br/> Requested By:" + requestedby + "<br/>Requested On:" + emlSndngList.createddate;
+				//subbody += "<br/>"+ mailMessage.Subject;
+				link = linkurl + "WMS/Email/ApproveSTOMaterial?ReqId=" + emlSndngList.requestid;
+			}
+			else if (subjecttype == 30)
+			{
+				mailMessage.Subject = "Approval Request for Sub Contacting Materials with request id:" + emlSndngList.requestid;
+				string requestedby = this.getnamebyid(emlSndngList.createdby);
+				subbody = "Please find the Sub Contacting Material request details below. <br/> Requested By:" + requestedby + "<br/>Requested On:" + emlSndngList.createddate;
+				//subbody += "<br/>"+ mailMessage.Subject;
+				link = linkurl + "WMS/Email/ApprovalSubcontractingMaterial?ReqId=" + emlSndngList.requestid;
+			}
+			else if (subjecttype == 31)
+			{
+				mailMessage.Subject = "Rejected "+emlSndngList.requesttype+" Materials Request for Request Id" + emlSndngList.requestid;
+				subbody = "The material request for Request Id " + emlSndngList.requestid + " has been rejected.";
+				//subbody += mailMessage.Subject;
+				if(emlSndngList.requesttype == "STO")
+                {
+					link = linkurl + "WMS/Email/StockTransferOrder?ReqId=" + emlSndngList.requestid;
+				}
+				else if(emlSndngList.requesttype == "SubContract")
+                {
+					link = linkurl + "WMS/Email/SubContractTransferOrder?ReqId=" + emlSndngList.requestid;
+				}
+				
+
+			}
+			else if (subjecttype == 32)
+			{
+				mailMessage.Subject = "Materials Received for GRN No. -" + emlSndngList.grnnumber;
+				//mailMessage.Subject = "Completed Quality Check for - GR No." + emlSndngList.grnnumber + "<br/>Materials of GR No - " + emlSndngList.grnnumber + "are completed quality check.";
+				subbody = "Materials Received with  GRN No. : " + emlSndngList.grnnumber + " and ready to putaway.";
+				//Redirect to Receipts Page
+				link = linkurl + "WMS/Email/grnputaway?GRNo=" + emlSndngList.grnnumber.Trim();
+			}
+
+
+			
 			//mailMessage.Subject = body;
 			var body = string.Empty;
+			
+			string users = "";
+			if(config.EmailType.ToString().ToLower().Trim() == "test")
+            {
+				multipleemails = false;
+				emlSndngList.ToEmailId = "ramesh.kumar@in.yokogawa.com";
+				emlSndngList.CC = "ramesh.kumar@in.yokogawa.com";
+			}
+			if (!string.IsNullOrEmpty(emlSndngList.CC))
+				mailMessage.CC.Add(emlSndngList.CC);
 			if (emlSndngList.ToEmpName == null)
 				emlSndngList.ToEmpName = getname(emlSndngList.ToEmailId);
 			if (emlSndngList.sendername == null)
 				emlSndngList.sendername = getname(emlSndngList.FrmEmailId);
-			string users = "";
 			if (multipleemails == true)
 			{
 				users = "All";
@@ -567,7 +643,7 @@ namespace WMS.Common
 					mailMessage.IsBodyHtml = true;
 					mailMessage.BodyEncoding = Encoding.UTF8;
 					SmtpClient mailClient = new SmtpClient("10.29.15.9", 25);
-					//mailClient.EnableSsl = true;
+					mailClient.EnableSsl = true;
 					mailClient.DeliveryMethod = SmtpDeliveryMethod.Network;
 					mailClient.Send(mailMessage);
 

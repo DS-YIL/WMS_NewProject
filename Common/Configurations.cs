@@ -22,6 +22,7 @@ namespace WMS.Common
 			public readonly string _SCMUrl = string.Empty;
 		public readonly string _POChecker = string.Empty;
 		public readonly string _POApprover = string.Empty;
+		public readonly string _EmailType = string.Empty;
 		public Configurations()
 		{
 			var configurationBuilder = new ConfigurationBuilder();
@@ -43,6 +44,7 @@ namespace WMS.Common
 			_SCMUrl = root.GetSection("ConnectionStrings").GetSection("SCMUrl").Value;
 			_POChecker = root.GetSection("ConnectionStrings").GetSection("POChecker").Value;
 			_POApprover = root.GetSection("ConnectionStrings").GetSection("POApprover").Value;
+			_EmailType = root.GetSection("ConnectionStrings").GetSection("EmailType").Value;
 
 			var appSetting = root.GetSection("ApplicationSettings");
 
@@ -81,6 +83,10 @@ namespace WMS.Common
 		public string POApprover
 		{
 			get => _POApprover;
+		}
+		public string EmailType
+		{
+			get => _EmailType;
 		}
 	}
 }

@@ -380,6 +380,15 @@ namespace WMS.Models
 		public int totalrecords { get; set; }
 		public string receivedtype { get; set; }
 		public string poitemdescription { get; set; }
+		public string projectcode { get; set; }
+		public string approverid { get; set; }
+		public bool? isapprovalrequired { get; set; }
+		public bool? isapproved { get; set; }
+		public DateTime? approvedon { get; set; }
+		public string approvalremarks { get; set; }
+		public string sourcelocationcode { get; set; }
+		public string destinationlocationcode { get; set; }
+
 	}
 
 	public class pricedetails
@@ -1090,6 +1099,8 @@ namespace WMS.Models
 		public string returnid { get; set; }
 		public bool isapproved { get; set; }
 
+		public string requesttype { get; set; }
+
 
 	}
 	public class employeeModel
@@ -1110,8 +1121,8 @@ namespace WMS.Models
 		public DateTime createddate { get; set; }
 		public string createdby { get; set; }
 		public bool deleteflag { get; set; }
-		public bool emailnotification { get; set; }
-		public bool emailccnotification { get; set; }
+		public bool? emailnotification { get; set; }
+		public bool? emailccnotification { get; set; }
 		public string subroleid { get; set; }
 		public string email { get; set; }
 		public string rolename { get; set; }
@@ -1391,6 +1402,19 @@ public class invstocktransfermodel
 	public string ackby { get; set; }
 	public DateTime ackon { get; set; }
 	public Boolean Checkstatus { get; set; }
+	public string projectcode { get; set; }
+	public string approverid { get; set; }
+	public bool? isapprovalrequired { get; set; }
+	public bool? isapproved { get; set; }
+	public DateTime? approvedon { get; set; }
+	public string approvalremarks{ get; set; }
+	public bool? showtr { get; set; }
+	public string approvalcheck { get; set; }
+	public string approvedstatus { get; set; }
+	public string sourcelocationcode { get; set; }
+	public string destinationlocationcode { get; set; }
+
+
 }
 
 public class stocktransfermateriakmodel
@@ -1413,6 +1437,9 @@ public class stocktransfermateriakmodel
 	public string projectid { get; set; }
 	public DateTime requireddate { get; set; }
 	public string status { get; set; }
+	public int issuedqty { get; set; }
+	public int poqty { get; set; }
+	
 }
 
 public class subrolemodel
@@ -1577,6 +1604,16 @@ public class materialReservetorequestModel
 {
 	public string reserveid { get; set; }
 	public string requestedby { get; set; }
+}
+
+public class assignpmmodel
+{
+	public bool? isselected { get; set; }
+	public string projectcode { get; set; }
+	public string projectmanager { get; set; }
+	public string selectedemployee { get; set; }
+	public User selectedemployeeview { get; set; }
+	
 }
 
 public class materialistModel
@@ -2171,11 +2208,20 @@ public class MPRDetail
 
 }
 
+public class storagelocationmodel
+{
+	public int plant { get; set; }
+	public string storagelocation { get; set; }
+	public string descstoragelocation { get; set; }
+
+}
+
 
 public class plantddl
 {
 	public int locatorid { get; set; }
 	public string locatorname { get; set; }
 	public string storagelocationdesc { get; set; }
+	public string locationtype { get; set; }
 	//public int plantid { get; set; }
 }

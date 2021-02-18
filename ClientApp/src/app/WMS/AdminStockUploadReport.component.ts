@@ -186,7 +186,7 @@ export class AdminStockUploadReportComponent implements OnInit {
     if (!isNullOrUndefined(rowData.projectid) && String(rowData.projectid).trim() != "") {
       this.isprojectid = true;
     }
-    if (!isNullOrUndefined(rowData.pono) && String(rowData.pono).trim() != "") {
+    if (!isNullOrUndefined(rowData.pono) && String(rowData.pono).trim() != "" && String(rowData.pono).trim().toLowerCase() != "reserved") {
       this.ispono = true;
     }
 
@@ -304,11 +304,11 @@ export class AdminStockUploadReportComponent implements OnInit {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Enter value' });
       return;
     }
-    if (isNullOrUndefined(rowData.projectid) || String(rowData.projectid).trim() == "") {
+    if ((isNullOrUndefined(rowData.projectid) || String(rowData.projectid).trim() == "") && String(rowData.stocktype).trim() != "Plant Stock") {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Enter projectid' });
       return;
     }
-    if (isNullOrUndefined(rowData.pono) || String(rowData.pono).trim() == "") {
+    if (isNullOrUndefined(rowData.pono) || String(rowData.pono).trim() == "" || String(rowData.pono).trim().toLowerCase() == "reserved") {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Enter pono' });
       return;
     }

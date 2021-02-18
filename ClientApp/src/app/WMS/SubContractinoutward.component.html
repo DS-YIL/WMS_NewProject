@@ -14,7 +14,7 @@
       </div>
       <div class="col-lg-4 col-md-4 text-center">
         <span class="commonheadertext">
-          <i class="fa fa-check-circle-o commonheadertext"></i>&nbsp;Sub Contracting  - Outward
+          <i class="fa fa-check-circle-o commonheadertext"></i>&nbsp;Sub Contracting  - Outward/Inward
         </span>
       </div>
       <div class="col-lg-4 col-md-4">
@@ -32,15 +32,16 @@
         <tr class="mprltbldata">
           <th style="text-align: center; width: 70px">Sl.No.</th>
           <th style="text-align:center;width: 200px">Transfer Id</th>
-          <th style="text-align:center">Vendor Name</th>
           <th style="text-align:center;width: 300px">Vendor Code</th>
+          <th style="text-align:center">Vendor Name</th>
           <th style="text-align:center;width: 200px">Issued On</th>
         </tr>
         <tr>
           <th></th>
           <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'transferid', 'contains')"></th>
-          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'vendorname', 'contains')"></th>
           <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'vendorcode', 'contains')"></th>
+          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'vendorname', 'contains')"></th>
+
           <th></th>
         </tr>
       </ng-template>
@@ -49,9 +50,9 @@
           <td>
             {{ri+1}}
           </td>
-         <td class="ptable-cell" style="text-align:left"><button class="btn btn-link" (click)="showdetails(rowData)">{{rowData.transferid}}</button></td>
-          <td class="ptable-cell" style="text-align:left">{{rowData.vendorname}}</td>
+          <td class="ptable-cell" style="text-align:left"><button class="btn btn-link" (click)="showdetails(rowData)">{{rowData.transferid}}</button></td>
           <td class="ptable-cell" style="text-align:center">{{rowData.vendorcode}}</td>
+          <td class="ptable-cell" style="text-align:left">{{rowData.vendorname}}</td>
           <td class="ptable-cell" style="text-align:center">
             <span>{{rowData.issuedon | date :'dd/MM/yyyy'}}</span>
           </td>

@@ -237,12 +237,76 @@ export class NavMenuComponent implements OnInit {
 
       //Purpose: << Project Manager >>
 
+      if (eurl.includes("/Email/ApproveSTOMaterial?ReqId")) {
+        debugger;
+        this.transferid = eurl.split('=')[1];
+        if (this.transferid) {
+          //redirects to Receipts page 
+          this.bindMenuForRequestApproval("materialsto")
+        }
+      }
+
+      //Purpose: << Project Manager >>
+
       if (eurl.includes("/Email/IssueSTOMaterial?ReqId")) {
         this.reqid = this.route.snapshot.queryParams.requestid;
         this.reqid = eurl.split('=')[1];
         if (this.reqid) {
           //redirects to MaterialIssueDashboard
           this.bindMenuForPMEmails("sto");
+        }
+      }
+
+      if (eurl.includes("/Email/grnputaway?GRNo")) {
+        this.reqid = this.route.snapshot.queryParams.requestid;
+        this.reqid = eurl.split('=')[1];
+        if (this.reqid) {
+          //redirects to MaterialIssueDashboard
+          this.bindMenuForPMEmails("grnputaway");
+        }
+      }
+
+      //Purpose: << Project Manager >>
+
+      if (eurl.includes("/Email/ApprovalSubcontractingMaterial?ReqId")) {
+        debugger;
+        this.transferid = eurl.split('=')[1];
+        if (this.transferid) {
+          //redirects to Receipts page 
+          this.bindMenuForRequestApproval("materialsubcontract")
+        }
+      }
+
+      //Purpose: << Project Manager >>
+
+      if (eurl.includes("/Email/IssueSubcontractingMaterial?ReqId")) {
+        this.reqid = this.route.snapshot.queryParams.requestid;
+        this.reqid = eurl.split('=')[1];
+        if (this.reqid) {
+          //redirects to MaterialIssueDashboard
+          this.bindMenuForPMEmails("subcontract");
+        }
+      }
+
+      //Purpose: << Project Manager >>
+
+      if (eurl.includes("/Email/STOMaterialPutaway?ReqId")) {
+        this.reqid = this.route.snapshot.queryParams.requestid;
+        this.reqid = eurl.split('=')[1];
+        if (this.reqid) {
+          //redirects to MaterialIssueDashboard
+          this.bindMenuForPMEmails("stoputaway");
+        }
+      }
+
+      //Purpose: << Project Manager >>
+
+      if (eurl.includes("/Email/SubcontractMaterialPutaway?ReqId")) {
+        this.reqid = this.route.snapshot.queryParams.requestid;
+        this.reqid = eurl.split('=')[1];
+        if (this.reqid) {
+          //redirects to MaterialIssueDashboard
+          this.bindMenuForPMEmails("subcontractputaway");
         }
       }
 
@@ -365,7 +429,7 @@ export class NavMenuComponent implements OnInit {
         this.transferid = eurl.split('=')[1];
         if (this.transferid) {
           //redirects to Receipts page 
-          this.bindMenuForRequestApproval()
+          this.bindMenuForRequestApproval("materialrequest")
         }
       }
       return;
@@ -455,10 +519,10 @@ export class NavMenuComponent implements OnInit {
           icon: 'pi pi-fw pi-bars',
           style: { 'font-weight': '600' },
           items: [
-            { label: 'Receipt Put Away', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/WarehouseIncharge') },
-            { label: 'Initial Stock Put Away', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/InitialStockPutAway') },
-            { label: 'Material Return Put Away', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReturn') },
-            { label: 'STO Material Put Away', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/ReceiveMaterial') }
+            { label: 'Receipt Put Away', style: { 'font-weight': '600', 'width': '300px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/WarehouseIncharge') },
+            { label: 'Initial Stock Put Away', style: { 'font-weight': '600', 'width': '300px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/InitialStockPutAway') },
+            { label: 'Material Return Put Away', style: { 'font-weight': '600', 'width': '300px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReturn') },
+            { label: 'Intra Unit Transfer Put Away', style: { 'font-weight': '600', 'width': '300px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/ReceiveMaterial') }
           ]
         },
         { label: 'Notify to finance', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/Putawaynotify') }
@@ -471,7 +535,8 @@ export class NavMenuComponent implements OnInit {
         { label: 'Gate Pass', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GatePass') },
         { label: 'Material Requisition Note', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MRNView') },
         { label: 'Material Tracking', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/POStatus') },
-        { label: 'STO Material Issue', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/ReceiveSTORequest') }
+        { label: 'Intra Unit Material Issue', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/ReceiveSTORequest') },
+        { label: 'Sub Contract Material Issue', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/ReceiveSubContractRequest') }
       ]
     });
     this.items.push({
@@ -544,12 +609,13 @@ export class NavMenuComponent implements OnInit {
       items: []
     };
     if (subroles && subroles.includes("1"))//GatePassRequester
-      mitem.items.push({ label: 'Gate Pass', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GatePass') });
+      mitem.items.push({ label: 'Gate Pass', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GatePass') });
     if (subroles && subroles.includes("2"))//Material Requestor
-      mitem.items.push({ label: 'Material Request', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReqView') });
-    mitem.items.push({ label: 'STO', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/StockTransferOrder') });
+      mitem.items.push({ label: 'Material Request', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReqView') });
     if (subroles == null)//Material Requestor
-      mitem.items.push({ label: 'Material Request', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReqView') });
+      mitem.items.push({ label: 'Material Request', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReqView') });
+    mitem.items.push({ label: 'Intra Unit Transfer', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/StockTransferOrder') });
+    mitem.items.push({ label: 'Sub Contract', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/SubContractTransfer') });
     this.items.push(mitem);
     this.items.push({ label: 'Material Reserve', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReserveView') });
     this.items.push({ label: 'Material Transfer', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialTransfer') });
@@ -669,10 +735,10 @@ export class NavMenuComponent implements OnInit {
           icon: 'pi pi-fw pi-bars',
           style: { 'font-weight': '600' },
           items: [
-            { label: 'Receipt Put Away', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/WarehouseIncharge') },
-            { label: 'Initial Stock Put Away', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/InitialStockPutAway') },
-            { label: 'Material Return Put Away', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReturn') },
-            { label: 'STO Material Put Away', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/ReceiveMaterial') }
+            { label: 'Receipt Put Away', style: { 'font-weight': '600', 'width': '300px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/WarehouseIncharge') },
+            { label: 'Initial Stock Put Away', style: { 'font-weight': '600', 'width': '300px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/InitialStockPutAway') },
+            { label: 'Material Return Put Away', style: { 'font-weight': '600', 'width': '300px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReturn') },
+            { label: 'Intra Unit Transfer Put Away', style: { 'font-weight': '600', 'width': '300px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/ReceiveMaterial') }
           ]
         },
         { label: 'Notify to finance', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/Putawaynotify') }
@@ -685,7 +751,8 @@ export class NavMenuComponent implements OnInit {
         { label: 'Gate Pass', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GatePass') },
         { label: 'Material Requisition Note', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MRNView') },
         { label: 'Material Tracking', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/POStatus') },
-        { label: 'STO Material Issue', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/ReceiveSTORequest') }
+        { label: 'Intra Unit Material Issue', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/ReceiveSTORequest') },
+        { label: 'Sub Contract Material Issue', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/ReceiveSubContractRequest') }
       ]
     });
     this.items.push({
@@ -733,6 +800,18 @@ export class NavMenuComponent implements OnInit {
     if (type == "sto") {
       this.router.navigate(['WMS/ReceiveSTORequest'], { queryParams: { requestid: this.reqid } });
     }
+    else if (type == "subcontract") {
+      this.router.navigate(['WMS/ReceiveSubContractRequest'], { queryParams: { requestid: this.reqid } });
+    }
+    else if (type == "stoputaway") {
+      this.router.navigate(['WMS/ReceiveMaterial'], { queryParams: { requestid: this.reqid } });
+    }
+    else if (type == "subcontractputaway") {
+      this.router.navigate(['WMS/ReceiveMaterial'], { queryParams: { requestid: this.reqid } });
+    }
+    else if (type == "grnputaway") {
+      this.router.navigate(['WMS/WarehouseIncharge'], { queryParams: { requestid: this.reqid } });
+    }
     else {
       this.router.navigate(['WMS/MaterialIssueDashboard'], { queryParams: { requestid: this.reqid } });
     }
@@ -765,11 +844,13 @@ export class NavMenuComponent implements OnInit {
       items: []
     };
     if (subroles && subroles.includes("1"))//GatePassRequester
-      mitem.items.push({ label: 'Gate Pass', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GatePass') });
+      mitem.items.push({ label: 'Gate Pass', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GatePass') });
     if (subroles && subroles.includes("2"))//Material Requestor
-      mitem.items.push({ label: 'Material Request', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReqView') });
+      mitem.items.push({ label: 'Material Request', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReqView') });
     if (subroles == null)//Material Requestor
-      mitem.items.push({ label: 'Material Request', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReqView') });
+      mitem.items.push({ label: 'Material Request', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReqView') });
+    mitem.items.push({ label: 'Intra Unit Transfer', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/StockTransferOrder') });
+    mitem.items.push({ label: 'Sub Contract', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/SubContractTransfer') });
     this.items.push(mitem);
     this.items.push({ label: 'Material Reserve', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReserveView') });
     this.items.push({ label: 'Material Transfer', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialTransfer') });
@@ -816,17 +897,19 @@ export class NavMenuComponent implements OnInit {
       style: { 'font-weight': '600' },
       items: [
         { label: 'Material Request Approval', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialRequestApproval') },
-        { label: 'Material Transfer Approval', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/materialtransferapproval') }
+        { label: 'Material Transfer Approval', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/materialtransferapproval') },
+        { label: 'Intra Unit Transfer Approval', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/STOApproval') },
+        { label: 'Sub Contract Approval', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/SubcontractApproval') }
       ]
 
     });
     this.items.push({ label: 'Direct Shipment', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/Directtransfer') });
-    this.items.push({ label: 'Assign Project', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-chart-bar', command: () => this.router.navigateByUrl('WMS/AssignProject') });
+    this.items.push({ label: 'Assign Project', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/AssignProject') });
     this.router.navigate(['WMS/materialtransferapproval'], { queryParams: { transferid: this.transferid } });
     let element1: HTMLDivElement = document.getElementById("menudiv") as HTMLDivElement;
     element1.hidden = false;
   }
-  bindMenuForRequestApproval() {
+  bindMenuForRequestApproval(type : string) {
     this.items = [];
     this.emp.roleid = "11";
     this.setrolename(this.emp.roleid);
@@ -840,13 +923,24 @@ export class NavMenuComponent implements OnInit {
       style: { 'font-weight': '600' },
       items: [
         { label: 'Material Request Approval', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialRequestApproval') },
-        { label: 'Material Transfer Approval', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/materialtransferapproval') }
+        { label: 'Material Transfer Approval', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/materialtransferapproval') },
+        { label: 'Intra Unit Transfer Approval', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/STOApproval') },
+        { label: 'Sub Contract Approval', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/SubcontractApproval') }
       ]
 
     });
     this.items.push({ label: 'Direct Shipment', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/Directtransfer') });
-    this.items.push({ label: 'Assign Project', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-chart-bar', command: () => this.router.navigateByUrl('WMS/AssignProject') });
-    this.router.navigate(['WMS/MaterialRequestApproval'], { queryParams: { transferid: this.transferid } });
+    this.items.push({ label: 'Assign Project', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/AssignProject') });
+    if (type == "materialrequest") {
+      this.router.navigate(['WMS/MaterialRequestApproval'], { queryParams: { transferid: this.transferid } });
+    }
+    else if (type == "materialsto") {
+      this.router.navigate(['WMS/STOApproval'], { queryParams: { transferid: this.transferid } });
+    }
+    else if (type == "materialsubcontract") {
+      this.router.navigate(['WMS/SubcontractApproval'], { queryParams: { transferid: this.transferid } });
+    }
+   
     let element1: HTMLDivElement = document.getElementById("menudiv") as HTMLDivElement;
     element1.hidden = false;
   }
@@ -870,12 +964,13 @@ export class NavMenuComponent implements OnInit {
       items: []
     };
     if (subroles && subroles.includes("1"))//GatePassRequester
-      mitem.items.push({ label: 'Gate Pass', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GatePass') });
+      mitem.items.push({ label: 'Gate Pass', style: { 'font-weight': '600', 'width': '250px'  }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GatePass') });
     if (subroles && subroles.includes("2"))//Material Requestor
-      mitem.items.push({ label: 'Material Request', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReqView') });
-    mitem.items.push({ label: 'STO', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/StockTransferOrder') });
+      mitem.items.push({ label: 'Material Request', style: { 'font-weight': '600', 'width': '250px'  }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReqView') });
     if (subroles == null)//Material Requestor
-      mitem.items.push({ label: 'Material Request', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReqView') });
+      mitem.items.push({ label: 'Material Request', style: { 'font-weight': '600', 'width': '250px'  }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReqView') });
+    mitem.items.push({ label: 'Intra Unit Transfer', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/StockTransferOrder') });
+    mitem.items.push({ label: 'Sub Contract', style: { 'font-weight': '600', 'width': '250px'  }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/SubContractTransfer') });
     this.items.push(mitem);
     this.items.push({ label: 'Material Reserve', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReserveView') });
     this.items.push({ label: 'Material Transfer', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialTransfer') });
@@ -906,10 +1001,10 @@ export class NavMenuComponent implements OnInit {
           icon: 'pi pi-fw pi-bars',
           style: { 'font-weight': '600' },
           items: [
-            { label: 'Receipt Put Away', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/WarehouseIncharge') },
-            { label: 'Initial Stock Put Away', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/InitialStockPutAway') },
-            { label: 'Material Return Put Away', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReturn') },
-            { label: 'STO Material Put Away', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/ReceiveMaterial') }
+            { label: 'Receipt Put Away', style: { 'font-weight': '600', 'width': '300px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/WarehouseIncharge') },
+            { label: 'Initial Stock Put Away', style: { 'font-weight': '600', 'width': '300px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/InitialStockPutAway') },
+            { label: 'Material Return Put Away', style: { 'font-weight': '600', 'width': '300px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReturn') },
+            { label: 'Intra Unit Transfer Put Away', style: { 'font-weight': '600', 'width': '300px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/ReceiveMaterial') }
           ]
         },
         { label: 'Notify to finance', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/Putawaynotify') }
@@ -922,7 +1017,8 @@ export class NavMenuComponent implements OnInit {
         { label: 'Gate Pass', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GatePass') },
         { label: 'Material Requisition Note', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MRNView') },
         { label: 'Material Tracking', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/POStatus') },
-        { label: 'STO Material Issue', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/ReceiveSTORequest') }
+        { label: 'Intra Unit Material Issue', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/ReceiveSTORequest') },
+        { label: 'Sub Contract Material Issue', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/ReceiveSubContractRequest') }
       ]
     });
     this.items.push({
@@ -994,10 +1090,10 @@ export class NavMenuComponent implements OnInit {
           icon: 'pi pi-fw pi-bars',
           style: { 'font-weight': '600' },
           items: [
-            { label: 'Receipt Put Away', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/WarehouseIncharge') },
-            { label: 'Initial Stock Put Away', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/InitialStockPutAway') },
-            { label: 'Material Return Put Away', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReturn') },
-            { label: 'STO Material Put Away', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/ReceiveMaterial') }
+            { label: 'Receipt Put Away', style: { 'font-weight': '600', 'width': '300px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/WarehouseIncharge') },
+            { label: 'Initial Stock Put Away', style: { 'font-weight': '600', 'width': '300px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/InitialStockPutAway') },
+            { label: 'Material Return Put Away', style: { 'font-weight': '600', 'width': '300px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReturn') },
+            { label: 'Intra Unit Transfer Put Away', style: { 'font-weight': '600', 'width': '300px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/ReceiveMaterial') }
           ]
         },
         { label: 'Notify to finance', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/Putawaynotify') }
@@ -1010,7 +1106,8 @@ export class NavMenuComponent implements OnInit {
         { label: 'Gate Pass', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GatePass') },
         { label: 'Material Requisition Note', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MRNView') },
         { label: 'Material Tracking', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/POStatus') },
-        { label: 'STO Material Issue', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/ReceiveSTORequest') }
+        { label: 'Intra Unit Material Issue', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/ReceiveSTORequest') },
+        { label: 'Sub Contract Material Issue', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/ReceiveSubContractRequest') }
       ]
     });
     this.items.push({
@@ -1829,7 +1926,7 @@ export class NavMenuComponent implements OnInit {
         ]
       });
       this.items.push({ label: 'Outbound', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', visible: true });
-      this.items.push({ label: 'SubContracting', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', visible: true, command: () => this.router.navigateByUrl('WMS/SubContractinginout') });
+      this.items.push({ label: 'Sub Contracting', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', visible: true, command: () => this.router.navigateByUrl('WMS/SubContractinginout') });
 
       if (url == "default") {
         this.router.navigateByUrl('WMS/SecurityCheck');
@@ -1891,10 +1988,10 @@ export class NavMenuComponent implements OnInit {
             icon: 'pi pi-fw pi-bars',
             style: { 'font-weight': '600' },
             items: [
-              { label: 'Receipt Put Away', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/WarehouseIncharge') },
-              { label: 'Initial Stock Put Away', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/InitialStockPutAway') },
-              { label: 'Material Return Put Away', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReturn') },
-              { label: 'STO Material Put Away', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/ReceiveMaterial') }
+              { label: 'Receipt Put Away', style: { 'font-weight': '600', 'width': '300px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/WarehouseIncharge') },
+              { label: 'Initial Stock Put Away', style: { 'font-weight': '600', 'width': '300px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/InitialStockPutAway') },
+              { label: 'Material Return Put Away', style: { 'font-weight': '600', 'width': '300px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReturn') },
+              { label: 'Intra Unit Transfer Put Away', style: { 'font-weight': '600', 'width': '300px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/ReceiveMaterial') }
             ]
           },
           { label: 'Notify to finance', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/Putawaynotify') }
@@ -1907,8 +2004,8 @@ export class NavMenuComponent implements OnInit {
           { label: 'Gate Pass', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GatePass') },
           { label: 'Material Requisition Note', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MRNView') },
           { label: 'Material Tracking', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/POStatus') },
-          { label: 'STO Material Issue', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/ReceiveSTORequest') },
-          { label: 'SubContract Material Put Away', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/ReceiveSubContractRequest') }
+          { label: 'Intra Unit Material Issue', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/ReceiveSTORequest') },
+          { label: 'Sub Contract Material Issue', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/ReceiveSubContractRequest') }
         ]
       });
       this.items.push({
@@ -1974,10 +2071,10 @@ export class NavMenuComponent implements OnInit {
             icon: 'pi pi-fw pi-bars',
             style: { 'font-weight': '600' },
             items: [
-              { label: 'Receipt Put Away', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/WarehouseIncharge') },
-              { label: 'Initial Stock Put Away', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/InitialStockPutAway') },
-              { label: 'Material Return Put Away', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReturn') },
-              { label: 'STO Material Put Away', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/ReceiveMaterial') }
+              { label: 'Receipt Put Away', style: { 'font-weight': '600', 'width': '300px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/WarehouseIncharge') },
+              { label: 'Initial Stock Put Away', style: { 'font-weight': '600', 'width': '300px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/InitialStockPutAway') },
+              { label: 'Material Return Put Away', style: { 'font-weight': '600', 'width': '300px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReturn') },
+              { label: 'Intra Unit Transfer Put Away', style: { 'font-weight': '600', 'width': '300px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/ReceiveMaterial') }
             ]
           },
           { label: 'Notify to finance', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/Putawaynotify') }
@@ -1990,7 +2087,8 @@ export class NavMenuComponent implements OnInit {
           { label: 'Gate Pass', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GatePass') },
           { label: 'Material Requisition Note', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MRNView') },
           { label: 'Material Tracking', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/POStatus') },
-          { label: 'STO Material Issue', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/ReceiveSTORequest') }
+          { label: 'Intra Unit Material Issue', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/ReceiveSTORequest') },
+          { label: 'Sub Contract Material Issue', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/ReceiveSubContractRequest') }
         ]
       });
       this.items.push({
@@ -2085,13 +2183,13 @@ export class NavMenuComponent implements OnInit {
         items: []
       };
       if (subroles && subroles.includes("1"))//GatePassRequester
-        mitem.items.push({ label: 'Gate Pass', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GatePass') });
+        mitem.items.push({ label: 'Gate Pass', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GatePass') });
       if (subroles && subroles.includes("2"))//Material Requestor
-        mitem.items.push({ label: 'Material Request', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReqView') });
+        mitem.items.push({ label: 'Material Request', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReqView') });
       if (subroles == null)//Material Requestor
-        mitem.items.push({ label: 'Material Request', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReqView') });
-      mitem.items.push({ label: 'STO', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/StockTransferOrder') });
-      mitem.items.push({ label: 'SubContract', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/SubContractTransfer') });
+        mitem.items.push({ label: 'Material Request', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReqView') });
+      mitem.items.push({ label: 'Intra Unit Transfer', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/StockTransferOrder') });
+      mitem.items.push({ label: 'Sub Contract', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/SubContractTransfer') });
       this.items.push(mitem);
       this.items.push({ label: 'Material Reserve', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReserveView') });
       this.items.push({ label: 'Material Transfer', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialTransfer') });
@@ -2148,6 +2246,7 @@ export class NavMenuComponent implements OnInit {
           { label: 'GatePass Master', icon: 'pi pi-fw pi-bars', style: { 'width': '250px' }, command: () => this.router.navigateByUrl('WMS/GatePassMaster') },
           { label: 'Plant Master', icon: 'pi pi-fw pi-bars', style: { 'width': '250px' }, command: () => this.router.navigateByUrl('WMS/PlantMaster') },
           { label: 'Assign Role', icon: 'pi pi-fw pi-bars', style: { 'width': '200px' }, command: () => this.router.navigateByUrl('WMS/AssignRole') },
+          { label: 'Assign Project Manager', style: { 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/AssignProjectManager') },
           
           { label: 'Miscellanous Master', icon: 'pi pi-fw pi-bars', style: { 'width': '250px' }, command: () => this.router.navigateByUrl('WMS/MiscellanousReason') }
         ]
@@ -2233,12 +2332,14 @@ export class NavMenuComponent implements OnInit {
         style: { 'font-weight': '600' },
         items: [
           { label: 'Material Request Approval', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialRequestApproval') },
-          { label: 'Material Transfer Approval', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/materialtransferapproval') }
+          { label: 'Material Transfer Approval', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/materialtransferapproval') },
+          { label: 'Intra Unit Transfer Approval', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/STOApproval') },
+          { label: 'Sub Contract Approval', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/SubcontractApproval') }
         ]
 
       });
       this.items.push({ label: 'Direct Shipment', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/Directtransfer') });
-      this.items.push({ label: 'Assign Project', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-chart-bar', command: () => this.router.navigateByUrl('WMS/AssignProject') });
+      this.items.push({ label: 'Assign Project', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/AssignProject') });
       if (url == "default") {
         this.router.navigateByUrl('WMS/Home');
       }

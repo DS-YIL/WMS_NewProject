@@ -87,16 +87,21 @@
     margin-left: 0px !important;
     margin-right: 0px !important">
         <div class="col-lg-4 col-md-4 form-inline">
-          <button type="button" icon="fa fa-arrow-left" pButton aria-hidden="true" pTooltip="Back" (click)="backtoreturn()" style="float: left;
-    height: 26px;"></button>
+          <!--<button type="button" icon="fa fa-arrow-left" pButton aria-hidden="true" pTooltip="Back" (click)="backtoreturn()" style="float: left;
+    height: 26px;"></button>-->
+          <label class="labelheading">Pending GR's:</label>&nbsp;&nbsp;
+          <p-autoComplete [(ngModel)]="selectedgrnno" [suggestions]="filteredgrns" placeholder="search by supplier/GRN No" [ngModelOptions]="{standalone: true}" [forceSelection]="false" (change)="showpodata1()" (onSelect)="showpodata1()" (completeMethod)="filtergrn($event)" [size]="30"
+                          [dropdown]="true">
+          </p-autoComplete>
         </div>
         <div class="col-lg-4 col-md-4 text-center">
           <span class="commonheadertext">
-            <i class="fa fa-check-circle-o commonheadertext"></i>&nbsp;STO Put Away Material Details
+            <i class="fa fa-check-circle-o commonheadertext"></i>&nbsp;Intra Unit Transfer Put Away
           </span>
         </div>
-        <div class="col-lg-4 col-md-4 form-inline"></div>
+        <div class="col-lg-4 col-md-4 form-inline">
       </div>
+        </div>
     </div>
     <div class="card-body" style="margin-left:10px;margin-right:10px">
       <p-table [columns]="cols" [value]="materialdatalist" [style]="{'width':'100%'}" dataKey="id">

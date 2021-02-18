@@ -26,6 +26,7 @@ using WMS.Common;
 using WMS.Models;
 using System.Data.SqlClient;
 using Microsoft.AspNetCore.Http;
+using System.Linq;
 
 namespace WMS.Controllers
 {
@@ -192,6 +193,7 @@ namespace WMS.Controllers
 								model.projecttext,
 								model.sloc
 							});
+
 						}
 						catch (Exception e)
 						{
@@ -329,6 +331,8 @@ namespace WMS.Controllers
 
 							string query3 = "Select Count(*) as count from wms.wms_pomaterials where pono = '" + stag_data.purchdoc + "' and materialid='" + stag_data.material + "' and itemno = " + stag_data.itemno + "";
 							int matcount = int.Parse(pgsql.ExecuteScalar(query3, null).ToString());
+
+
 
 							if (matcount == 0)
 							{
@@ -708,14 +712,7 @@ namespace WMS.Controllers
 						initialstk.dataenteredby = Conversion.toStr(row["Data Entered By"]);
 						initialstk.createddate = createdate;
 						initialstk.uploadedfilename = uploadedfilename;
-						if (string.IsNullOrEmpty(initialstk.projectid) || initialstk.projectid == "")
-						{
-							initialstk.stocktype = "Plant Stock";
-						}
-						else
-						{
-							initialstk.stocktype = "Project Stock";
-						}
+						
 						initialstk.unitprice = null;
 						if (initialstk.value != null && initialstk.value > 0 && initialstk.quantity != null && initialstk.quantity > 0)
 						{
@@ -725,8 +722,26 @@ namespace WMS.Controllers
 						initialstk.category = null;
 						initialstk.uploadedby = uploadedby;
 						initialstk.uploadbatchcode = uploadcode;
+						string loctype = string.Empty;
+						if (!string.IsNullOrEmpty(initialstk.store) || initialstk.store != "")
+						{
+							string locatorquery = "select locationtype from wms.wms_rd_locator where lower(locatorname) = Lower('" + initialstk.store + "')";
+							var locationtype = DB.ExecuteScalar(locatorquery, null);
+							if (locationtype != null)
+							{
+								loctype = locationtype.ToString();
+							}
+						}
 
-
+						if (loctype == "Plant" && string.IsNullOrEmpty(initialstk.projectid) || initialstk.projectid == "")
+						{
+							initialstk.stocktype = "Plant Stock";
+						}
+						else
+                        {
+							initialstk.stocktype = "Project Stock";
+						}
+					
 						if (string.IsNullOrEmpty(initialstk.material) || initialstk.material == "")
 							Error_Description += " No Material";
 						if (string.IsNullOrEmpty(initialstk.materialdescription) || initialstk.materialdescription == "")
@@ -737,11 +752,11 @@ namespace WMS.Controllers
 							Error_Description += " No Rack";
 						if (initialstk.quantity == null || initialstk.quantity == 0)
 							Error_Description += " No Quantity";
-						if (string.IsNullOrEmpty(initialstk.projectid) || initialstk.projectid == "")
+						if ((string.IsNullOrEmpty(initialstk.projectid) || initialstk.projectid == "") && initialstk.stocktype != "Plant Stock")
 							Error_Description += " No Project Id";
-						if (string.IsNullOrEmpty(initialstk.pono) || initialstk.pono == "")
+						if (string.IsNullOrEmpty(initialstk.pono) || initialstk.pono == "" )
 							Error_Description += " No PONo";
-						if (initialstk.pono.ToString().Trim().Contains("\\") || initialstk.pono.ToString().Trim().Contains(","))
+						if (initialstk.pono.ToString().Trim().Contains("\\") || initialstk.pono.ToString().ToLower().Trim() == "reserved" || initialstk.pono.ToString().Trim().Contains("/") || initialstk.pono.ToString().Trim().Contains(","))
 							Error_Description += " Invalid PO format";
 						if (initialstk.value == null || initialstk.value == 0)
 							Error_Description += " No value";
@@ -756,7 +771,7 @@ namespace WMS.Controllers
 
 						initialstk.DataloadErrors = dataloaderror;
 						initialstk.error_description = Error_Description;
-
+						
 
 						string insertpoqry = WMSResource.InsertInitialStock;
 						var rslt = DB.Execute(insertpoqry, new
@@ -787,6 +802,69 @@ namespace WMS.Controllers
 							initialstk.uploadbatchcode,
 							initialstk.uploadedfilename
 						});
+						if(!string.IsNullOrEmpty(initialstk.pono) && initialstk.pono != "" && initialstk.pono.ToString().Trim() != "reserved")
+                        {
+							List<string> pos = new List<string>();
+                            if (initialstk.pono.Contains("/"))
+                            {
+								
+								string[] arr = initialstk.pono.Split('/');
+								pos = arr.ToList();
+							}
+							else if (initialstk.pono.Contains(","))
+                            {
+								string[] arr = initialstk.pono.Split(',');
+								pos = arr.ToList();
+							}
+                            else
+                            {
+								pos.Add(initialstk.pono);
+                            }
+							foreach(string str in pos)
+                            {
+								string pono = str.Trim();
+								string query2 = "Select Count(*) as count from wms.wms_project where pono = '" + pono + "'";
+								int Projcount = int.Parse(DB.ExecuteScalar(query2, null).ToString());
+
+								if (Projcount == 0)
+								{
+									string jobname = null;
+									string projectcode = null;
+									string projecttext = null;
+									string projectmanager = null;
+									
+									string uploadtype = "Initial Stock";
+									if (!string.IsNullOrEmpty(initialstk.projectid) && initialstk.projectid != "")
+									{
+										projectcode = initialstk.projectid;
+
+									}
+
+									string querypm = "Select Max(projectmanager) as projectmanager from wms.wms_project where  projectcode = '" + projectcode + "' group by projectmanager";
+									var rsltt = DB.ExecuteScalar(querypm, null);
+									if (rsltt != null)
+									{
+										projectmanager = rsltt.ToString();
+									}
+
+									//insert wms_project ##pono,jobname,projectcode,projectname,projectmanager,
+									var insertquery = "INSERT INTO wms.wms_project(pono, jobname, projectcode,projectname,projectmanager,uploadcode,uploadtype)VALUES(@pono, @jobname,@projectcode,@projecttext,@projectmanager,@uploadcode,@uploadtype)";
+									var results = DB.ExecuteScalar(insertquery, new
+									{
+										pono,
+										jobname,
+										projectcode,
+										projecttext,
+										projectmanager,
+										uploadcode,
+										uploadtype
+									});
+								}
+							}
+							
+						}
+
+					
 
 						rowsinserted = rowsinserted + 1;
 
@@ -883,13 +961,26 @@ namespace WMS.Controllers
 								store.createdate = DateTime.Now;
 								store.isexcelupload = true;
 								//insert wms_rd_locator ##locatorname
-								var insertStorequery = "INSERT INTO wms.wms_rd_locator(locatorid, locatorname, createdate,deleteflag,isexcelupload)VALUES(default, @locatorname,@createdate,@deleteflag,@isexcelupload) returning locatorid";
+								string locationtype = "";
+								string storagelocationdesc = store.locatorname;
+								if (store.locatorname.ToString().Trim().ToLower() == "ec c block" || store.locatorname.ToString().Trim().ToLower() == "ec unit 2")
+                                {
+									locationtype = "Project";
+
+								}
+                                else
+                                {
+									locationtype = "Plant";
+                                }
+								var insertStorequery = "INSERT INTO wms.wms_rd_locator(locatorid, locatorname, createdate,deleteflag,isexcelupload,locationtype,storagelocationdesc)VALUES(default, @locatorname,@createdate,@deleteflag,@isexcelupload,@locationtype,@storagelocationdesc) returning locatorid";
 								var Storeresults = pgsql.ExecuteScalar(insertStorequery, new
 								{
 									store.locatorname,
 									store.createdate,
 									deleteflag,
-									store.isexcelupload
+									store.isexcelupload,
+									locationtype,
+									storagelocationdesc
 								});
 								storeId = Convert.ToInt32(Storeresults);
 							}
@@ -1676,6 +1767,93 @@ namespace WMS.Controllers
 				pgsql.Close();
 			}
 			return insertmessage;
+
+		}
+
+		/*
+		function : <<loadstoragelocations>>  Author :<<Ramesh>>  
+		Date of Creation <<19-11-2020>>
+		Purpose : <<Contains metadata of staging process>>
+		Review Date :<<>>   Reviewed By :<<>>
+		Sourcecode Copyright : Yokogawa India Limited
+		*/
+
+		[HttpGet]
+		[Route("uploadStorageLocation")]
+		public IActionResult loadstoragelocations()
+		{
+
+			using (NpgsqlConnection pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				try
+				{
+
+					string query = "select * from wms.wms_rd_storagelocationplant wrs";
+					var data = pgsql.QueryAsync<storagelocationmodel>(
+					  query, null, commandType: CommandType.Text);
+					foreach(storagelocationmodel loc in data.Result)
+                    {
+						bool deleteflag = false;
+						//Add locator in masterdata
+						string storeQuery = "Select locatorid from wms.wms_rd_locator where locatorname = '" + loc.storagelocation + "'";
+						var storeId = pgsql.ExecuteScalar(storeQuery, null);
+						if (storeId == null)
+						{
+							LocationModel store = new LocationModel();
+							store.locatorname = loc.storagelocation;
+							store.createdate = DateTime.Now;
+							store.isexcelupload = false;
+							//insert wms_rd_locator ##locatorname
+							string locationtype = "";
+							string storagelocationdesc = loc.descstoragelocation;
+							if (store.locatorname.ToString().Trim().ToLower() == "ec c block" || store.locatorname.ToString().Trim().ToLower() == "ec unit 2")
+							{
+								locationtype = "Project";
+
+							}
+							else
+							{
+								locationtype = "Plant";
+							}
+							var insertStorequery = "INSERT INTO wms.wms_rd_locator(locatorid, locatorname, createdate,deleteflag,isexcelupload,locationtype,storagelocationdesc)VALUES(default, @locatorname,@createdate,@deleteflag,@isexcelupload,@locationtype,@storagelocationdesc) returning locatorid";
+							var Storeresults = pgsql.ExecuteScalar(insertStorequery, new
+							{
+								store.locatorname,
+								store.createdate,
+								deleteflag,
+								store.isexcelupload,
+								locationtype,
+								storagelocationdesc
+							});
+							storeId = Convert.ToInt32(Storeresults);
+						}
+
+					}
+
+
+
+					return Ok(true);
+
+
+				}
+				catch (Exception e)
+				{
+					return Ok(false);
+					var res = e;
+					log.ErrorMessage("StagingController", "loadStockData", e.StackTrace.ToString(), e.Message.ToString(), url);
+
+				}
+				finally
+				{
+					pgsql.Close();
+
+				}
+
+
+
+
+			}
+
 
 		}
 
