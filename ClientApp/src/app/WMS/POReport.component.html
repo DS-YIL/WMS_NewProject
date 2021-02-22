@@ -1,0 +1,151 @@
+<div style="margin:10px;">
+  <div class="card commoncardcss">
+    <div class="card-header commoncardheader">
+      <div class="row " style="    margin-top: 10px;
+    margin-left: 0px !important;
+    margin-right: 0px !important">
+        <div class="col-lg-4 col-md-4 form-inline">
+          <p-autoComplete appendTo="body" placeholder="search PONo" (onSelect)="onposelected()" (onChange)="onposelected()" [(ngModel)]="selectedpo" type="text" [suggestions]="searchItems" field="name" [forceSelection]="true" [dropdown]="true" (completeMethod)="bindSearchListDatamaterial($event)" size="20"></p-autoComplete>
+        </div>
+        <div class="col-lg-4 col-md-4 text-center">
+          <span style="color:#428bca;font-size:18px" class="commonheadertext">
+            <i class="fa fa-check-circle-o commonheadertext"></i>&nbsp;Purchase Order Report
+          </span>
+        </div>
+        <div class="col-lg-4 col-md-4">
+          <div style="float:right">
+            <button type="button" pButton icon="pi pi-file-excel" iconPos="left" label="EXCEL" (click)="exportExcel()" style="margin-right: 0.5em;" class="ui-button-success"></button>
+          </div>
+          
+        </div>
+        
+      </div>
+
+
+    </div>
+    <div class="card-body" style="overflow-y:scroll;padding:0px;margin-left:10px;margin-right:10px;">
+
+
+      <div class="row" style="margin-top: 10px;margin-left: 0px !important;margin-right: 0px !important">
+
+        <p-table [value]="getVirtuallistdata" *ngIf="showtable" [lazy]="true" (onLazyLoad)="loadCarsLazy($event)" [paginator]="true" [rows]="50" [totalRecords]="totalRecords" [loading]="loading" dataKey="pono">
+          <ng-template pTemplate="header">
+            <tr class="mprltbldata">
+              <th style="text-align:center">Material</th>
+              <th style="text-align:center">PO Item Description</th>
+              <th style="text-align:center">PO Qty</th>
+              <th style="text-align:center">Received Qty</th>
+              <th style="text-align:center">Accepted Qty</th>
+              <th style="text-align:center">Available Qty</th>
+              <th style="text-align:center">Issued (To Project)</th>
+              <th style="text-align:center">Issued (gate pass)</th>
+              <th style="text-align:center">Issued (Intra Unit transfer)</th>
+              <th style="text-align:center">Issued (Sub Contract)</th>
+              <th style="text-align:center">Reserved Qty</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex" let-columns="columns">
+            <tr class="ui-widget-header" *ngIf="rowGroupMetadata[rowData.pono].index === rowIndex">
+              <td colspan="11">
+                <span><span class="labeltext">&nbsp;PO No</span> : {{rowData.pono}} </span>
+              </td>
+            </tr>
+            <tr>
+              <td style="text-align:left;">{{rowData.materialid}}</td>
+              <td style="text-align:left;">{{rowData.poitemdescription}}</td>
+              <td style="text-align:right;">
+                <span *ngIf="rowData.initialstock">{{rowData.totalqty}}</span>
+                <span *ngIf="!rowData.initialstock">{{rowData.poqty}}</span>
+              </td>
+              <td style="text-align:right;">
+                <span *ngIf="rowData.initialstock">{{rowData.totalqty}}</span>
+                <span *ngIf="!rowData.initialstock">{{rowData.receivedqty}}</span>
+              </td>
+              <td style="text-align:right;">
+                <span *ngIf="rowData.initialstock">{{rowData.totalqty}}</span>
+                <span *ngIf="!rowData.initialstock">{{rowData.confirmqty}}</span>
+              </td>
+              <td class="text-primary" style="text-align:right;text-decoration:underline;cursor:pointer;font-weight:600">
+                <span (click)="getdetaildata(rowData,'available','Available Quanity location',rowData.availableqty)">{{rowData.availableqty}}</span>
+              </td>
+              <td class="text-primary" style="text-align:right;text-decoration:underline;cursor:pointer;font-weight:600">
+                <span (click)="getdetaildata(rowData,'issue','Issue location (For Project)',rowData.projectissue,'MaterialRequest')">{{rowData.projectissue}}</span>
+              </td>
+              <td class="text-primary" style="text-align:right;text-decoration:underline;cursor:pointer;font-weight:600">
+                <span (click)="getdetaildata(rowData,'issue','Issue location (Gate Pass)',rowData.gatepassissue,'gatepass')">{{rowData.gatepassissue}}</span>
+              </td>
+              <td class="text-primary" style="text-align:right;text-decoration:underline;cursor:pointer;font-weight:600">
+                <span (click)="getdetaildata(rowData,'issue','Issue location (Intra Stock Transfer)',rowData.stoissue,'STO')">{{rowData.stoissue}}</span>
+              </td>
+              <td class="text-primary" style="text-align:right;text-decoration:underline;cursor:pointer;font-weight:600">
+                <span (click)="getdetaildata(rowData,'issue','Issue location (Sub Contract)',rowData.stoissue,'SubContract')">{{rowData.vendorissue}}</span>
+              </td>
+              <td class="text-primary" style="text-align:right;text-decoration:underline;cursor:pointer;font-weight:600">
+                <span (click)="getdetaildata(rowData,'reserve','Reserve location',rowData.reserveqty)">{{rowData.reserveqty}}</span>
+              </td>
+              </tr>
+
+          </ng-template>
+         
+        </p-table>
+
+      </div>
+
+
+
+
+
+
+
+
+
+
+    </div>
+    <p-dialog header="{{dialogueheader}}" [(visible)]="AddDialog" [contentStyle]="{'overflow-y': 'scroll', 'overflow-x': 'hidden', 'max-height': '350px','min-height':'350px'}" showEffect="fade" [modal]="true" [responsive]="true" [style]="{width: '1320px'}">
+      <div>
+        <div class="row  pl-0">
+          <div class="col-lg-4 col-md-4 col-sm-4 pt-2 labelheading">
+            <label>Material Id :</label>&nbsp;<span><label class="labeltext">{{materialview}}</label></span>
+          </div>
+          <div class="col-lg-4 col-md-4 col-sm-4 pt-2 labelheading">
+            <label>Po Item  Desc :</label>&nbsp;<span><label class="labeltext">{{materialdescriptionview}}</label></span>
+          </div>
+
+          <div class="col-lg-2 col-md-2 col-sm-2 pt-2 labelheading">
+            <label>Qty :</label>&nbsp;<span><label class="labeltext">{{showqty}}</label></span>
+          </div>
+        </div>
+      </div>
+      <p-table #dt1 [value]="itemlocationData">
+        <ng-template pTemplate="header">
+          <tr class="mprltbldata">
+            <th style="text-align:center;width:70px">Sl.No</th>
+            <th style="text-align:center">Location</th>
+            <th style="text-align:center">Stock Type</th>
+            <th style="text-align:center">Available Qty</th>
+            <th style="text-align:center" *ngIf="currentDG==='issue'">Issue Qty</th>
+            <th style="text-align:center" *ngIf="currentDG==='reserve'">Reserve Qty</th>
+            <th style="text-align:center">Received Date</th>
+          </tr>
+
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
+          <tr>
+            <td class="ptable-cell" style="text-align:right">
+              {{ri+1}}
+            </td>
+            <td class="ptable-cell" style="text-align:center">{{rowData.itemlocation}}</td>
+            <td class="ptable-cell" style="text-align:center">{{rowData.stocktype}}</td>
+            <td class="ptable-cell" style="text-align:right">{{rowData.availableqty}}</td>
+            <td class="ptable-cell" style="text-align:right" *ngIf="currentDG==='issue'">{{rowData.issuedqty}}</td>
+            <td class="ptable-cell" style="text-align:right" *ngIf="currentDG==='reserve'">{{rowData.reserveqty}}</td>
+            <td class="ptable-cell" style="text-align:center">{{rowData.createddate | date :  constants.dateFormat}}</td>
+          </tr>
+        </ng-template>
+
+      </p-table>
+    </p-dialog>
+  </div>
+</div>
+
+  

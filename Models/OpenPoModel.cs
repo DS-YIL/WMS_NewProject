@@ -302,6 +302,30 @@ namespace WMS.Models
 		public string type { get; set; }
 	}
 
+	public class POReportModel
+	{
+		public string pono { get; set; }
+		public string materialid { get; set; }
+		public string poitemdescription { get; set; }
+		public bool? initialstock { get; set; }
+		public int poqty { get; set; }
+		public int receivedqty { get; set; }
+		public int confirmqty { get; set; }
+		public int availableqty { get; set; }
+		public int projectissue { get; set; }
+		public int gatepassissue { get; set; }
+		public int stoissue { get; set; }
+		public int vendorissue { get; set; }
+		public int reserveqty { get; set; }
+		public int totalqty { get; set; }
+		public string projectcode { get; set; }
+		public string projectmanager { get; set; }
+		public string stocktype { get; set; }
+		public string itemlocation { get; set; }
+		public DateTime? createddate { get; set; }
+		public int issuedqty { get; set; }
+	}
+
 	public class PlantMTdata
 	{
 		public int plantid { get; set; }
@@ -1051,6 +1075,7 @@ namespace WMS.Models
 		public string departmenthead { get; set; }
 		public bool boolinuse { get; set; }
 	}
+
 	public class EmailModel
 	{
 		internal string createdby { get; set; }

@@ -582,6 +582,27 @@ export class assignpmmodel {
   selectedemployeeview: UserModel;
 }
 
+export class POReportModel {
+  pono: string;
+  materialid: string;
+  poitemdescription: string;
+  initialstock: boolean;
+  poqty: number;
+  receivedqty: number;
+  confirmqty: number;
+  availableqty: number;
+  projectissue: number;
+  gatepassissue: number;
+  stoissue: number;
+  vendorissue: number;
+  reserveqty: number;
+  totalqty: number;
+  stocktype: string;
+  itemlocation: string;
+  createddate: Date;
+  issuedqty: number;
+	}
+
 export class stocktransfermateriakmodel {
   id: number;
   transferid: string;

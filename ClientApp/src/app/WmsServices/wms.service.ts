@@ -5,7 +5,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { constants } from '../Models/WMSConstants'
 import { Employee, Login, DynamicSearchResult, printMaterial, rbamaster, locationBarcode } from '../Models/Common.Model';
-import { PoFilterParams, PoDetails, BarcodeModel, StockModel, materialRequestDetails, inwardModel, gatepassModel, stocktransfermodel, Materials, authUser, invstocktransfermodel, ddlmodel, locataionDetailsStock, updateonhold, materialistModel, outwardmaterialistModel, pageModel, UserDashboardDetail, UserDashboardGraphModel, UnholdGRModel, MRNsavemodel, notifymodel, materialtransferMain, materialReservetorequestModel, testcrud, PrintHistoryModel, materilaTrasFilterParams, materialRequestFilterParams, materialResFilterParams, materialRetFilterParams, outwardinwardreportModel, UserModel, WMSHttpResponse, MaterialinHand, matlocations, grReports, MateriallabelModel, ManagerDashboard, pmDashboardCards, invDashboardCards, GraphModelNew, miscellanousIssueData, inventoryFilters, MaterialMaster, GPReasonMTdata, materialList, PlantMTdata, InitialStock, subrolemodel, AssignProjectModel, MaterialTransaction, plantddl, STOrequestTR, assignpmmodel } from '../Models/WMS.Model';
+import { PoFilterParams, PoDetails, BarcodeModel, StockModel, materialRequestDetails, inwardModel, gatepassModel, stocktransfermodel, Materials, authUser, invstocktransfermodel, ddlmodel, locataionDetailsStock, updateonhold, materialistModel, outwardmaterialistModel, pageModel, UserDashboardDetail, UserDashboardGraphModel, UnholdGRModel, MRNsavemodel, notifymodel, materialtransferMain, materialReservetorequestModel, testcrud, PrintHistoryModel, materilaTrasFilterParams, materialRequestFilterParams, materialResFilterParams, materialRetFilterParams, outwardinwardreportModel, UserModel, WMSHttpResponse, MaterialinHand, matlocations, grReports, MateriallabelModel, ManagerDashboard, pmDashboardCards, invDashboardCards, GraphModelNew, miscellanousIssueData, inventoryFilters, MaterialMaster, GPReasonMTdata, materialList, PlantMTdata, InitialStock, subrolemodel, AssignProjectModel, MaterialTransaction, plantddl, STOrequestTR, assignpmmodel, POReportModel } from '../Models/WMS.Model';
 import { Text } from '@angular/compiler/src/i18n/i18n_ast';
 
 @Injectable({
@@ -451,6 +451,9 @@ export class wmsService {
   getASNListData(): Observable<any> {
     return this.http.get<any>(this.url + 'POData/getASNListdata/', this.httpOptions);
   }
+  getpodata(emp: string, projectcode: string): Observable<any> {
+    return this.http.get<any>(this.url + 'POData/getASNListdata/', this.httpOptions);
+  }
   getItemlocationListByMaterialanddesc(material: string, poitemdescription: string): Observable<any> {
     material = encodeURIComponent(material);
     return this.http.get<any>(this.url + 'POData/GetItemLocationListByMaterialanddesc?material=' + material + '&description=' + poitemdescription, this.httpOptions);
@@ -458,6 +461,10 @@ export class wmsService {
   getItemlocationListByMaterialdescstore(material: string, poitemdescription: string, store: string): Observable<any> {
     material = encodeURIComponent(material);
     return this.http.get<any>(this.url + 'POData/GetItemLocationListByMaterialdescstore?material=' + material + '&description=' + poitemdescription + '&store=' + store, this.httpOptions);
+  }
+  getItemlocationListByMaterialdescpono(material: string, poitemdescription: string, pono: string): Observable<any> {
+    material = encodeURIComponent(material);
+    return this.http.get<any>(this.url + 'POData/GetItemLocationListByMaterialdescpono?material=' + material + '&description=' + poitemdescription + '&pono=' + pono, this.httpOptions);
   }
   getItemlocationListByMaterial(material: string): Observable<any> {
     material = encodeURIComponent(material);
@@ -641,6 +648,13 @@ export class wmsService {
 
   getmateriallistfortransfer(querytext: string): Observable<ddlmodel[]> {
     return this.http.get<ddlmodel[]>(this.url + 'POData/getmateriallistfortransfer?querytext=' + querytext, this.httpOptions);
+  }
+  getporeport(empno: string, projectcode: string, pono: string): Observable<POReportModel[]> {
+    return this.http.get<POReportModel[]>(this.url + 'POData/getporeportdata?empno=' + empno + '&projectcode=' + projectcode + '&pono='+pono, this.httpOptions);
+  }
+
+  getporeportdetail(materialid: string, description: string, pono: string, querytype: string, requesttype: string, projectcode: string, empno: string): Observable<POReportModel[]> {
+    return this.http.get<POReportModel[]>(this.url + 'POData/getporeportdetail?materialid=' + materialid + '&description=' + description + '&pono=' + pono + '&querytype=' + querytype + '&requesttype=' + requesttype + '&projectcode=' + projectcode + '&empno=' + empno, this.httpOptions);
   }
 
   getmateriallistbyproject(pcode: string): Observable<ddlmodel[]> {

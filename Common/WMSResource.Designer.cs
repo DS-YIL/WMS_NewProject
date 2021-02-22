@@ -1712,6 +1712,17 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to select ws.pono,ws.materialid,ws.poitemdescription,bool_or(ws.initialstock) as initialstock,sum(si.materialqty) as poqty,sum(ws.totalquantity) as totalqty,sum(si.receivedqty) as receivedqty,sum(si.confirmqty) as confirmqty,sum(ws.availableqty ) as availableqty,
+        ///sum(iss.issuedqty) as projectissue, sum(iss1.issuedqty) as gatepassissue,sum(iss2.issuedqty) as stoissue,sum(iss3.issuedqty) as vendorissue,sum(rsv.reservequantity) as reserveqty,
+        ///Max(prj.projectcode) as projectcode,Max(prj.projectmanager) as projec [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string getPOReportData {
+            get {
+                return ResourceManager.GetString("getPOReportData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to select * from wms.wms_pomaterials where pono=&apos;#pono&apos; and materialid=&apos;#material&apos;.
         /// </summary>
         public static string getpricedetails {
@@ -3021,6 +3032,47 @@ namespace WMS.Common {
         public static string outwardinsertquery {
             get {
                 return ResourceManager.GetString("outwardinsertquery", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to select sum(sk.availableqty)as availableqty,sk.itemlocation,sk.stcktype as stocktype,sk.createddate::DATE
+        ///from wms.wms_stock sk 
+        ///left outer join wms.wms_project prj on sk.pono = prj.pono
+        ///where sk.materialid=&apos;#materialid&apos; and lower(sk.poitemdescription)  = lower(&apos;#desc&apos;) and sk.pono = &apos;#pono&apos; and sk.availableqty&gt;0 #projectfilter #managerfilter
+        ///group by sk.itemlocation,sk.stcktype,sk.pono,sk.materialid,sk.poitemdescription,sk.createddate::DATE order by sk.createddate::DATE desc.
+        /// </summary>
+        public static string poreportitemlocationAQ {
+            get {
+                return ResourceManager.GetString("poreportitemlocationAQ", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to select sum(stk.availableqty) as availableqty,stk.itemlocation,stk.stcktype as stocktype,stk.createddate::DATE,sum(wm.issuedqty) as issuedqty
+        ///from wms.wms_materialissue wm
+        ///left outer join wms.wms_stock stk on stk.itemid = wm.itemid 
+        ///left outer join wms.wms_project prj on stk.pono = prj.pono
+        ///where stk.materialid=&apos;#materialid&apos; and lower(stk.poitemdescription)  = lower(&apos;#desc&apos;) and stk.pono = &apos;#pono&apos; and wm.issuedqty &gt; 0 and wm.requesttype = &apos;#type&apos; #projectfilter #managerfilter
+        ///group by stk.itemlocation,s [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string poreportitemlocationIQ {
+            get {
+                return ResourceManager.GetString("poreportitemlocationIQ", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to select sum(stk.availableqty) as availableqty,stk.itemlocation,stk.stcktype as stocktype,stk.createddate::DATE,sum(rm.reservequantity ) as reserveqty
+        ///from wms.materialreservedetails rm
+        ///left outer join wms.wms_stock stk on stk.itemid = rm.itemid 
+        ///left outer join wms.wms_project prj on stk.pono = prj.pono
+        ///where stk.materialid=&apos;#materialid&apos; and lower(stk.poitemdescription)  = lower(&apos;#desc&apos;) and stk.pono = &apos;#pono&apos; and rm.reservequantity &gt; 0 #projectfilter #managerfilter
+        ///group by stk.itemlocation,stk.stcktyp [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string poreportitemlocationRQ {
+            get {
+                return ResourceManager.GetString("poreportitemlocationRQ", resourceCulture);
             }
         }
         

@@ -339,6 +339,18 @@ namespace WMS.Controllers
 			return await this._poService.getitemdeatils(grnnumber);
 		}
 
+		[HttpGet("getporeportdata")]
+		public async Task<IEnumerable<POReportModel>> getporeportdata(string empno, string projectcode, string pono)
+		{
+			return await this._poService.getPOReportdata(empno, projectcode, pono);
+		}
+
+		[HttpGet("getporeportdetail")]
+		public async Task<IEnumerable<POReportModel>> getporeportdetail(string materialid, string description, string pono, string querytype, string requesttype, string projectcode, string empno)
+		{
+			return await this._poService.getPOReportdetail(materialid, description,pono, querytype, requesttype, projectcode, empno);
+		}
+
 		[HttpGet("getitemdetailsbygrnnonotif")]
 		public async Task<IEnumerable<inwardModel>> getitemdetailsbygrnnonotif(string grnnumber)
 		{
@@ -609,6 +621,12 @@ namespace WMS.Controllers
 		{
 
 			return await this._poService.GetItemLocationListByMaterialdescstore(material, description, store);
+		}
+		[HttpGet("GetItemLocationListByMaterialdescpono")]
+		public async Task<IEnumerable<IssueRequestModel>> GetItemLocationListByMaterialdescpono(string material, string description, string pono)
+		{
+
+			return await this._poService.GetItemLocationListByMaterialdescpono(material, description, pono);
 		}
 		[HttpGet("GetItemLocationListByMaterialsourcelocation")]
 		public async Task<IEnumerable<IssueRequestModel>> getitemlocationBymaterialsourcelocation(string material)

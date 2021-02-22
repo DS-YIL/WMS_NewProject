@@ -103,6 +103,7 @@ import { AdminStockUploadComponent } from './WMS/AdminStockUpload.component';
 import { AdminStockUploadReportComponent } from './WMS/AdminStockUploadReport.component';
 import { InitialStockLoadComponent } from './WMS/InitialStockLoad.component';
 import { GRReportsComponent } from './WMS/GRReports.component';
+import { POReportComponent } from './WMS/POReport.component';
 
 import { InhandMaterialComponent } from './WMS/InhandMaterial.component';
 import { MiscellanousIssueComponent } from './WMS/MiscellanousIssues.component';
@@ -237,7 +238,8 @@ import { KeyFilterModule } from 'primeng/keyfilter';
     MaterialRequestApprovalComponent,
     STOApprovalComponent,
     SubcontractApprovalComponent,
-    AssignProjectManagerComponent
+    AssignProjectManagerComponent,
+    POReportComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

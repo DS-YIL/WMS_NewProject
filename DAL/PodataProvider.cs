@@ -6330,6 +6330,41 @@ namespace WMS.DAL
 		}
 
 		/*
+		Name of Function : <<GetItemLocationListByMaterialdescpono>>  Author :<<Ramesh>>  
+		Date of Creation <<19_02_2021>>
+		Purpose : <<get itemlocation For PO Report>>
+		<param name="material,description"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
+
+		public async Task<IEnumerable<IssueRequestModel>> GetItemLocationListByMaterialdescpono(string material, string description, string pono)
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+
+				try
+				{
+					string query = WMSResource.getitemlocationbystock.Replace("#materialid", material).Replace("#desc", description).Replace("#pono", pono);
+					await pgsql.OpenAsync();
+					var data = await pgsql.QueryAsync<IssueRequestModel>(
+					  query, null, commandType: CommandType.Text);
+					return data;
+
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "GetItemLocationListByMaterialdescpono", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+			}
+		}
+
+		/*
 		Name of Function : <<getItemlocationListByIssueId>>  Author :<<Ramesh>>  
 		Date of Creation <<10_01_2020>>
 		Purpose : <<Get list of Material issued by issueid>>
@@ -8754,6 +8789,141 @@ namespace WMS.DAL
 				catch (Exception Ex)
 				{
 					log.ErrorMessage("PODataProvider", "Getlocationdata", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+			}
+		}
+
+		/*
+		Name of Function : <<getPOReportdata>>  Author :<<Ramesh>>  
+		Date of Creation <<19-02-2019>>
+		Purpose : <<Get Report data>>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
+		public async Task<IEnumerable<POReportModel>> getPOReportdata(string empno, string projectcode, string pono)
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				try
+				{
+					string materialrequestquery = WMSResource.getPOReportData;
+					if (pono != null && pono != "null")
+					{
+						materialrequestquery = materialrequestquery.Replace("#pofilter", " and ws.pono = '" + pono + "'");
+						
+					}
+                    else
+                    {
+						materialrequestquery = materialrequestquery.Replace("#pofilter", string.Empty);
+
+					}
+					if (projectcode != null && projectcode != "null")
+					{
+						materialrequestquery = materialrequestquery.Replace("#projectfilter", " and prj.projectcode = '" + projectcode + "'");
+
+					}
+					else
+					{
+						materialrequestquery = materialrequestquery.Replace("#projectfilter", string.Empty);
+
+					}
+					if (empno != null && empno != "null")
+					{
+						materialrequestquery = materialrequestquery.Replace("#managerfilter", " and prj.projectmanager = '" + empno + "'");
+					}
+					else
+					{
+						materialrequestquery = materialrequestquery.Replace("#managerfilter", string.Empty);
+
+					}
+					await pgsql.OpenAsync();
+					var data = await pgsql.QueryAsync<POReportModel>(
+					  materialrequestquery, null, commandType: CommandType.Text);
+					
+
+					return data.OrderBy(o => o.pono);
+
+					
+
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "getPOReportdata", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+			}
+		}
+
+		/*
+		Name of Function : <<getPOReportdetail>>  Author :<<Ramesh>>  
+		Date of Creation <<19-02-2019>>
+		Purpose : <<Get Report data>>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
+		public async Task<IEnumerable<POReportModel>> getPOReportdetail(string materialid, string description, string pono,string querytype,string requesttype, string projectcode, string empno)
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				try
+				{
+					string materialrequestquery = "";
+					if (querytype == "available")
+                    {
+						materialrequestquery = WMSResource.poreportitemlocationAQ.Replace("#materialid",materialid).Replace("#desc",description).Replace("#pono", pono);
+					}
+					else if(querytype == "issue")
+                    {
+						materialrequestquery = WMSResource.poreportitemlocationIQ.Replace("#materialid", materialid).Replace("#desc", description).Replace("#pono", pono).Replace("#type",requesttype);
+					}
+					else if (querytype == "reserve")
+					{
+						materialrequestquery = WMSResource.poreportitemlocationRQ.Replace("#materialid", materialid).Replace("#desc", description).Replace("#pono", pono);
+					}
+
+					
+					if (projectcode != null && projectcode != "null")
+					{
+						materialrequestquery = materialrequestquery.Replace("#projectfilter", " and prj.projectcode = '" + projectcode + "'");
+
+					}
+					else
+					{
+						materialrequestquery = materialrequestquery.Replace("#projectfilter", string.Empty);
+
+					}
+					if (empno != null && empno != "null")
+					{
+						materialrequestquery = materialrequestquery.Replace("#managerfilter", " and prj.projectmanager = '" + empno + "'");
+					}
+					else
+					{
+						materialrequestquery = materialrequestquery.Replace("#managerfilter", string.Empty);
+
+					}
+					await pgsql.OpenAsync();
+					var data = await pgsql.QueryAsync<POReportModel>(
+					  materialrequestquery, null, commandType: CommandType.Text);
+					
+					
+
+					return data.OrderBy(o => o.pono);
+
+
+
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "getPOReportdata", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally

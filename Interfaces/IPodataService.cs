@@ -82,6 +82,8 @@ namespace WMS.Interfaces
 		Task<IEnumerable<inwardModel>> getitemdeatilsnotif(string grnnumber);
 		Task<IEnumerable<MaterialTransaction>> MaterialRequest(string pono, string material);
 		Task<IEnumerable<IssueRequestModel>> MaterialRequestdata(string pono, string material, string projectcode);
+		Task<IEnumerable<POReportModel>> getPOReportdata(string empno, string projectcode, string pono);
+		Task<IEnumerable<POReportModel>> getPOReportdetail(string materialid, string description, string pono, string querytype, string requesttype, string projectcode, string empno);
 		Task<IEnumerable<IssueRequestModel>> MaterialReservedata();
 		Task<IEnumerable<IssueRequestModel>> getgatepassmaterialrequestList();
 		int acknowledgeMaterialReceived(List<IssueRequestModel> dataobj);
@@ -128,7 +130,9 @@ namespace WMS.Interfaces
 		Task<IEnumerable<IssueRequestModel>> GetItemlocationListBymterial(string material);
 		Task<IEnumerable<IssueRequestModel>> GetItemlocationListBymterialanddesc(string material, string description);
 		Task<IEnumerable<IssueRequestModel>> GetItemLocationListByMaterialdescstore(string material, string description, string store);
-		
+		Task<IEnumerable<IssueRequestModel>> GetItemLocationListByMaterialdescpono(string material, string description, string pono);
+
+
 		Task<IEnumerable<IssueRequestModel>> GetItemlocationListBymterialsourcelocation(string material);
 
 

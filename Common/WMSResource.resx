@@ -2026,6 +2026,29 @@ left outer join wms.wms_project prj on sk.pono = prj.pono
 where sk.availableqty &gt; 0 and prj.projectcode = '#projectcode' and (prj.projectmanager = '#manager' or prj.projectmember ilike '%#manager%')
 group by sk.pono, polist.suppliername,prj.projectmanager</value>
   </data>
+  <data name="getPOReportData" xml:space="preserve">
+    <value>select ws.pono,ws.materialid,ws.poitemdescription,bool_or(ws.initialstock) as initialstock,sum(si.materialqty) as poqty,sum(ws.totalquantity) as totalqty,sum(si.receivedqty) as receivedqty,sum(si.confirmqty) as confirmqty,sum(ws.availableqty ) as availableqty,
+sum(iss.issuedqty) as projectissue, sum(iss1.issuedqty) as gatepassissue,sum(iss2.issuedqty) as stoissue,sum(iss3.issuedqty) as vendorissue,sum(rsv.reservequantity) as reserveqty,
+Max(prj.projectcode) as projectcode,Max(prj.projectmanager) as projectmanager
+from wms.wms_stock ws 
+left outer join wms.wms_storeinward si on ws.inwardid = si.inwardid
+left outer join wms.wms_project prj on prj.pono = ws.pono 
+left outer join wms.wms_materialissue iss on iss.itemid = ws.itemid and iss.requesttype = 'MaterialRequest'
+left outer join wms.wms_materialissue iss1 on iss1.itemid = ws.itemid and iss.requesttype = 'gatepass'
+left outer join wms.wms_materialissue iss2 on iss2.itemid = ws.itemid and iss.requesttype = 'STO'
+left outer join wms.wms_materialissue iss3 on iss3.itemid = ws.itemid and iss.requesttype = 'SubContract'
+left outer join wms.materialreservedetails rsv on rsv.itemid = ws.itemid
+where ws.pono is not null #pofilter #projectfilter #managerfilter
+group by ws.pono,ws.materialid,ws.poitemdescription
+union 
+select ws.pono,ws.materialid,ws.poitemdescription,false as initialstock,sum(ws.materialqty) as poqty,null as totalqty,null as receivedqty,null as confirmqty,null as availableqty,
+null as projectissue, null as gatepassissue,null as stoissue,null as vendorissue,null as reserveqty,
+Max(prj.projectcode) as projectcode,Max(prj.projectmanager) as projectmanager
+from wms.wms_pomaterials ws
+left outer join wms.wms_project prj on prj.pono = ws.pono 
+where ws.pono is not null #pofilter #projectfilter #managerfilter
+group by ws.pono,ws.materialid,ws.poitemdescription</value>
+  </data>
   <data name="getProjectsforAdmin" xml:space="preserve">
     <value>select false as isselected,wp.projectcode,wp.projectmanager,
 (select json_build_object(
@@ -2045,5 +2068,28 @@ VALUES(@wmsgr, @updatedby, current_timestamp)</value>
   </data>
   <data name="updatePM" xml:space="preserve">
     <value>update wms.wms_project set projectmanager = @projectmanager where projectcode = '#projectcode'</value>
+  </data>
+  <data name="poreportitemlocationAQ" xml:space="preserve">
+    <value>select sum(sk.availableqty)as availableqty,sk.itemlocation,sk.stcktype as stocktype,sk.createddate::DATE
+from wms.wms_stock sk 
+left outer join wms.wms_project prj on sk.pono = prj.pono
+where sk.materialid='#materialid' and lower(sk.poitemdescription)  = lower('#desc') and sk.pono = '#pono' and sk.availableqty&gt;0 #projectfilter #managerfilter
+group by sk.itemlocation,sk.stcktype,sk.pono,sk.materialid,sk.poitemdescription,sk.createddate::DATE order by sk.createddate::DATE desc</value>
+  </data>
+  <data name="poreportitemlocationIQ" xml:space="preserve">
+    <value>select sum(stk.availableqty) as availableqty,stk.itemlocation,stk.stcktype as stocktype,stk.createddate::DATE,sum(wm.issuedqty) as issuedqty
+from wms.wms_materialissue wm
+left outer join wms.wms_stock stk on stk.itemid = wm.itemid 
+left outer join wms.wms_project prj on stk.pono = prj.pono
+where stk.materialid='#materialid' and lower(stk.poitemdescription)  = lower('#desc') and stk.pono = '#pono' and wm.issuedqty &gt; 0 and wm.requesttype = '#type' #projectfilter #managerfilter
+group by stk.itemlocation,stk.stcktype,stk.pono,stk.poitemdescription,stk.materialid,wm.requesttype,stk.createddate::DATE order by stk.createddate::DATE desc</value>
+  </data>
+  <data name="poreportitemlocationRQ" xml:space="preserve">
+    <value>select sum(stk.availableqty) as availableqty,stk.itemlocation,stk.stcktype as stocktype,stk.createddate::DATE,sum(rm.reservequantity ) as reserveqty
+from wms.materialreservedetails rm
+left outer join wms.wms_stock stk on stk.itemid = rm.itemid 
+left outer join wms.wms_project prj on stk.pono = prj.pono
+where stk.materialid='#materialid' and lower(stk.poitemdescription)  = lower('#desc') and stk.pono = '#pono' and rm.reservequantity &gt; 0 #projectfilter #managerfilter
+group by stk.itemlocation,stk.stcktype,stk.pono,stk.poitemdescription,stk.materialid,stk.createddate::DATE order by stk.createddate::DATE desc</value>
   </data>
 </root>
