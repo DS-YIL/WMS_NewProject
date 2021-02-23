@@ -2100,4 +2100,13 @@ group by stk.itemlocation,stk.stcktype,stk.pono,stk.poitemdescription,stk.materi
   <data name="insertmaterialdetails" xml:space="preserve">
     <value>insert into wms.wms_printstatusmaterial(id,inwmasterid,materialid,noofprint )values(default,@inwmasterid,@materialid,@noofprint)</value>
   </data>
+  <data name="getannexuredata" xml:space="preserve">
+    <value>select wi.transferid,inv.projectcode as projectid, wi.materialid , wi.poitemdesc as materialdescription, wi.transferqty ,wi.value,
+(select wp.projectmanager from wms.wms_project wp where wp.projectcode = inv.projectcode limit 1) as projectmanager,
+ssg.subconno 
+from wms.wms_invtransfermaterial wi 
+left outer join wms.wms_invstocktransfer inv on wi.transferid = inv.transferid
+left outer join wms.sto_subcontract_gr ssg on ssg.transferid = wi.transferid
+where inv.transfertype = 'SubContract'</value>
+  </data>
 </root>

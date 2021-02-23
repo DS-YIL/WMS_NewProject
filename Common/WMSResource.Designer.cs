@@ -478,7 +478,8 @@ namespace WMS.Common {
         ///ssg.subconno 
         ///from wms.wms_invtransfermaterial wi 
         ///left outer join wms.wms_invstocktransfer inv on wi.transferid = inv.transferid
-        ///left outer join wms.sto_subcontract_gr ssg on ssg.transferid = wi.transferid where inv.transfertype = &apos;SubContract&apos;.
+        ///left outer join wms.sto_subcontract_gr ssg on ssg.transferid = wi.transferid
+        ///where inv.transfertype = &apos;SubContract&apos;.
         /// </summary>
         public static string getannexuredata {
             get {
