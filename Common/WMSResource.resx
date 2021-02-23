@@ -755,10 +755,11 @@ where (stinw.confirmqty is null or stinw.confirmqty = 0) and stinw.receivedqty &
   </data>
   <data name="getgrnlistdataforputaway" xml:space="preserve">
     <value>select stinw.inwardid as value,sinw.grnnumber as text,
-sinw.suppliername as supplier
+sinw.suppliername as supplier,sinw.isdirecttransferred,sinw.invoiceno ,emp.name as mrnby,sinw.mrnon 
 from wms.wms_storeinward stinw 
 left outer join wms.wms_securityinward sinw on stinw.inwmasterid = sinw.inwmasterid 
-where stinw.returnedby is not null and sinw.isdirecttransferred is NOT True and stinw.confirmqty &gt; 0
+ left outer join wms.employee emp on emp.employeeno=sinw.mrnby
+where stinw.returnedby is not null and stinw.confirmqty &gt; 0
 and stinw.inwardid not in (select distinct inwardid from wms.wms_stock where inwardid is not null order by inwardid desc)</value>
   </data>
   <data name="getnonreturnablegatepassdata" xml:space="preserve">
@@ -2098,13 +2099,5 @@ group by stk.itemlocation,stk.stcktype,stk.pono,stk.poitemdescription,stk.materi
   </data>
   <data name="insertmaterialdetails" xml:space="preserve">
     <value>insert into wms.wms_printstatusmaterial(id,inwmasterid,materialid,noofprint )values(default,@inwmasterid,@materialid,@noofprint)</value>
-  </data>
-  <data name="getannexuredata" xml:space="preserve">
-    <value>select wi.transferid,inv.projectcode as projectid, wi.materialid , wi.poitemdesc as materialdescription, wi.transferqty ,wi.value,
-(select wp.projectmanager from wms.wms_project wp where wp.projectcode = inv.projectcode limit 1) as projectmanager,
-ssg.subconno 
-from wms.wms_invtransfermaterial wi 
-left outer join wms.wms_invstocktransfer inv on wi.transferid = inv.transferid
-left outer join wms.sto_subcontract_gr ssg on ssg.transferid = wi.transferid where inv.transfertype = 'SubContract'</value>
   </data>
 </root>

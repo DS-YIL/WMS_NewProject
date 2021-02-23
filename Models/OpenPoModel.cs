@@ -1498,13 +1498,16 @@ public class subrolemodel
 
 public class ddlmodel
 {
-
 	public string value { get; set; }
 	public string text { get; set; }
 	public string supplier { get; set; }
 	public string pos { get; set; }
 	public string projectmanager { get; set; }
 	public DateTime receiveddate { get; set; }
+	public string invoiceno { get; set; }
+	public DateTime mrnon { get; set; }
+	public string mrnby { get; set; }
+	public bool isdirecttransferred { get; set; }
 
 }
 
