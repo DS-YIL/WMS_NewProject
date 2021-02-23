@@ -8,6 +8,9 @@
 */
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -59,7 +62,7 @@ namespace WMS.Common
                 {
                     BarcodeWriter writer = new BarcodeWriter
                     {
-                        Format = BarcodeFormat.QR_CODE,
+                        Format = BarcodeFormat.CODE_128,
                         Options = new EncodingOptions
                         {
                             Height = 90,
@@ -74,9 +77,9 @@ namespace WMS.Common
                     // write text and generate a 2-D barcode as a bitmap
                     writer
                         .Write(barcodename)
-                        .Save(path + barcodename + "_" + DateTime.Now + ".bmp");
+                        .Save(@"D:\WMS_NewProject\Barcodes\" + barcodename + "_" + DateTime.Now + ".bmp");
 
-                    barcodepath = "./Barcodes/" + barcodename + "_" + DateTime.Now + ".bmp";
+                    barcodepath =  barcodename + "_" + DateTime.Now + ".bmp";
                 }
                
             }

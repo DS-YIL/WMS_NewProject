@@ -4,7 +4,7 @@ import { HttpHeaders } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { constants } from '../Models/WMSConstants'
-import { Employee, Login, DynamicSearchResult, printMaterial, rbamaster, locationBarcode } from '../Models/Common.Model';
+import { Employee, Login, DynamicSearchResult, printMaterial, rbamaster, locationBarcode, printonholdGR } from '../Models/Common.Model';
 import { PoFilterParams, PoDetails, BarcodeModel, StockModel, materialRequestDetails, inwardModel, gatepassModel, stocktransfermodel, Materials, authUser, invstocktransfermodel, ddlmodel, locataionDetailsStock, updateonhold, materialistModel, outwardmaterialistModel, pageModel, UserDashboardDetail, UserDashboardGraphModel, UnholdGRModel, MRNsavemodel, notifymodel, materialtransferMain, materialReservetorequestModel, testcrud, PrintHistoryModel, materilaTrasFilterParams, materialRequestFilterParams, materialResFilterParams, materialRetFilterParams, outwardinwardreportModel, UserModel, WMSHttpResponse, MaterialinHand, matlocations, grReports, MateriallabelModel, ManagerDashboard, pmDashboardCards, invDashboardCards, GraphModelNew, miscellanousIssueData, inventoryFilters, MaterialMaster, GPReasonMTdata, materialList, PlantMTdata, InitialStock, subrolemodel, AssignProjectModel, MaterialTransaction, plantddl, STOrequestTR, assignpmmodel, POReportModel } from '../Models/WMS.Model';
 import { Text } from '@angular/compiler/src/i18n/i18n_ast';
 
@@ -1000,6 +1000,15 @@ getMaterialMasterList(): Observable<any> {
   }
   subcontractInoutList(): Observable<any[]> {
     return this.http.get<any[]>(this.url + 'POData/subcontractInoutList/', this.httpOptions);
+  }
+   generateqronhold(printdata: printonholdGR): Observable<any> {
+    return this.http.post<any>(this.url + 'POData/generateqronhold', printdata, this.httpOptions);
+  }
+
+  printonholdmaterials(printdata: printonholdGR): Observable<any> {
+
+    const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }), responseType: 'text' as any };
+    return this.http.post<any>(this.url + 'Print/printonholdmaterials',printdata, httpOptions);
   }
 }
 

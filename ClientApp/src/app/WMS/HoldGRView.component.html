@@ -36,7 +36,7 @@
               <th style="text-align:center;width:30%;">Supplier</th>
               <th style="text-align:center;width:20%;" *ngIf="grstatus === 'hold'">Created By</th>
               <th style="text-align:center;width:15%;" *ngIf="grstatus === 'hold'">Created On</th>
-              <th style="text-align:center;width:15%;" *ngIf="grstatus === 'hold'">Material Barcode</th>
+              <!--<th style="text-align:center;width:15%;" *ngIf="grstatus === 'hold'">Material Barcode</th>-->
               <th style="text-align:center;width:20%;" *ngIf="grstatus != 'hold'">{{tempcol1}}</th>
               <th style="text-align:center;width:15%;" *ngIf="grstatus != 'hold'">{{tempcol2}}</th>
             </tr>
@@ -47,7 +47,7 @@
               <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'vendorname', 'startsWith')"></th>
               <th *ngIf="grstatus === 'hold'"> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'receivedby', 'contains')"></th>
               <th *ngIf="grstatus === 'hold'"> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'receiveddate', 'contains')"></th>
-              <th></th>
+              <!--<th></th>-->
               <th *ngIf="grstatus != 'hold'"> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'unholdedby', 'contains')"></th>
               <th *ngIf="grstatus != 'hold'"> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'unholdedon', 'contains')"></th>
             </tr>
@@ -70,9 +70,9 @@
               <td class="ptable-cell" style="text-align:center;width:15%;" *ngIf="grstatus === 'hold'">
                 <span>{{rowData.receiveddate | date : 'dd/MM/yyyy'}}</span>
               </td>
-              <td class="ptable-cell" style="text-align:center;width:15%;" *ngIf="grstatus === 'hold'">
+              <!--<td class="ptable-cell" style="text-align:center;width:15%;" *ngIf="grstatus === 'hold'">
                 <button type="button" icon="fa fa-print" pButton aria-hidden="true" (click)="generatelabel(rowData)"></button>
-              </td>
+              </td>-->
               <td class="ptable-cell" style="text-align:left;width:20%;" *ngIf="grstatus != 'hold'">
                 <span>{{rowData.unholdedby}}</span>
               </td>
@@ -151,6 +151,26 @@
   </p-footer>
 </p-dialog>
 <p-dialog header="Material Data" [(visible)]="showPrintDialog" [contentStyle]="{'overflow':'visible'}" [style]="{width: '60%'}">
+
+  <div class="row ">
+    <div class="ccol-lg-1 col-md-1 col-sm-1 form-inline">
+    </div>
+    <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
+      <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">PO No.:</label>
+    </div>
+    <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
+      <input type="text" [disabled]="true" class="form-control" [(ngModel)]="pono" />
+    </div>
+    <div class="col-lg-1 col-md-1 col-sm-1 form-inline">
+    </div>
+    <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
+      <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">Gate Entry ID.:</label>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-3 form-inline ">
+      <input type="text" [disabled]="true" class="form-control" [(ngModel)]="gateentryid" />
+    </div>
+  </div>
+  <br/>
   <div class="row ">
     <div class="ccol-lg-1 col-md-1 col-sm-1 form-inline">
     </div>
@@ -190,42 +210,61 @@
       <button (click)="increaseQty()">&#62;&#62;</button>
     </div>
   </div>
-  <div class="row" style="text-align:center">
-    <button type="button" icon="fa fa-print" pButton aria-hidden="true" style="margin-left: auto;" (click)="generatelabel(rowData)">Generate Label</button>
+  <br />
+  <div class="row col-lg-12 col-md-12 col-sm-12 form-inline" style="text-align:center">
+    <div class="col-lg-4 col-md-4 col-sm-4 form-inline">
+    </div>
+    <div class="col-lg-4 col-md-4 col-sm-4 form-inline">
+      <button type="button" pButton aria-hidden="true" style=" width: 150px;height: 30px;" (click)="printlabel()">Generate Label</button>
+    </div>
+    <div class="col-lg-4 col-md-4 col-sm-4 form-inline">
+    </div>
   </div>
 </p-dialog>
-<p-dialog header="Print Barcode" [(visible)]="showPrintLabel" [contentStyle]="{'overflow':'visible'}" [style]="{width: '80%'}">
+<p-dialog header="Print Barcode" [(visible)]="showPrintLabel" [contentStyle]="{'overflow':'visible'}" [style]="{width: '60%'}">
+  <br/>
   <div class="row">
-    <div class="col-lg-1 col-md-1 col-sm-1"></div>
-    <div class="col-lg-10 col-md-10 col-sm-10">
-      <table>
-        <tr>
-          <th style="outline: thin solid;width:400px;height:30px">Material Code:</th>
-          <th style="outline: thin solid;width:400px;height:30px">{{printData.materialid}}</th>
-          <th style="outline: thin solid;width:200px;height:30px" rowspan="2">
-            <img class="images" src="{{printData.materialcodePath}}" />
-          </th>
-        </tr>
-        <tr>
-          <th style="outline: thin solid;width:400px;height:30px">Received Date:</th>
-          <th style="outline: thin solid;width:400px;height:30px">{{printData.receiveddate}}</th>
-        </tr>
-        <tr>
-          <th *ngIf="printData.grnno" style="outline: thin solid;width:400px;height:90px">GRN No. - Material Code : </th>
-          <th *ngIf="printData.grnno" style="outline: thin solid;width:400px;height:30px">{{printData.grnno}}- {{printData.materialid}}</th>
-          <th *ngIf="!printData.grnno" style="outline: thin solid;width:400px;height:90px">PO No. - Invoice No. : </th>
-          <th *ngIf="!printData.grnno" style="outline: thin solid;width:400px;height:30px">{{printData.pono}}- {{printData.invoiceno}}</th>
-          <th style="outline: thin solid; width: 200px; height: 90px; align-content: center" rowspan="2"><img class="images" src="{{printData.barcodePath}}" /></th>
-        </tr>
-        <tr>
-          <th style="outline: thin solid;width:400px;height:30px">Quantity</th>
-          <th style="outline: thin solid;width:400px;height:30px">1/{{printData.noofprint}}</th>
-        </tr>
-      </table>
+    <div class="col-lg-6 col-md-6 col-sm-6"></div>
+    <div class="col-lg-4 col-md-4 col-sm-4">
+      <label><b>No. of Print : </b></label>{{printgr.noofprint}}
     </div>
-  </div>-->
-  <br />
-  <div class="row">
+      
+    </div>
+    <div class="row">
+      <div class="col-lg-2 col-md-2 col-sm-2"></div>
+      <div class="col-lg-8 col-md-8 col-sm-8">
+        <table>
+          <tr>
+            <th style="outline: thin solid;width:400px;height:30px">Material Code:</th>
+            <th style="outline: thin solid;width:400px;height:30px">{{printgr.materialid}}</th>
+            <th style="outline: thin solid;width:200px;height:30px" rowspan="3">
+              <img class="images" src="{{printgr.materialqrpath}}" />
+            </th>
+          </tr>
+          <tr>
+            <th style="outline: thin solid;width:400px;height:30px">Gate Entry ID:</th>
+            <th style="outline: thin solid;width:400px;height:30px">{{printgr.gateentryid}}</th>
+          </tr>
+          <tr>
+            <th style="outline: thin solid;width:400px;height:30px">Received Date:</th>
+            <th style="outline: thin solid;width:400px;height:30px">{{printgr.receiveddate}}</th>
+          </tr>
+          <tr>
+            <th *ngIf="printData.grnno" style="outline: thin solid;width:400px;height:90px">Gate Entry ID: </th>
+            <th *ngIf="printData.grnno" style="outline: thin solid;width:400px;height:30px">{{printgr.gateentryid}}</th>
+            <th *ngIf="!printData.grnno" style="outline: thin solid;width:400px;height:90px">PO No. - Invoice No. : </th>
+            <th *ngIf="!printData.grnno" style="outline: thin solid;width:400px;height:30px">{{printgr.pono}}- {{printgr.invoiceno}}</th>
+            <th style="outline: thin solid; width: 200px; height: 90px; align-content: center" rowspan="2"><img class="images" src="{{printgr.gateentryidqrpath}}" /></th>
+          </tr>
+          <tr>
+            <th style="outline: thin solid;width:400px;height:30px">Quantity</th>
+            <th style="outline: thin solid;width:400px;height:30px">1/{{printgr.noofprint}}</th>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <br />
+    <!--<div class="row">
     <div class="col-lg-3 col-md-3 col-sm-3"></div>
     <div class="col-lg-7 col-md-7 col-sm-7">
       <img class="images" src="{{printData.barcodePath}}" />
@@ -241,11 +280,11 @@
     <div class="col-lg-2 col-md-2 col-sm-2">
       <label>1/{{printData.noofprint}}</label>
     </div>
-  </div>
-  <div class="row">
-    <div class="col-lg-5 col-md-5 col-sm-5"></div>
-    <div class="col-lg-3 col-md-3 col-sm-3">
-      <button type="button" class="btn btn-primary" (click)="printLabel()" label="Save">{{print}}</button>
+  </div>-->
+    <div class="row">
+      <div class="col-lg-5 col-md-5 col-sm-5"></div>
+      <div class="col-lg-3 col-md-3 col-sm-3">
+        <button type="button" class="btn btn-primary" (click)="printLabel()" label="Save">{{print}}</button>
+      </div>
     </div>
-  </div>
 </p-dialog>

@@ -325,6 +325,8 @@ namespace WMS.Interfaces
 		Task<IEnumerable<STOrequestTR>> getSTORequestdatalist(string transferid);
 		Task<string> updateSubcontractAcKstatus(List<invstocktransfermodel> data);
 		Task<IEnumerable<gatepassModel>> subcontractInoutList();
+		printonholdGR generateqronhold(printonholdGR onholddata);
+		
 
 	}
 }

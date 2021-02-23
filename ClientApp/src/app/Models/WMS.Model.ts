@@ -631,7 +631,6 @@ export class stocktransfermateriakmodel {
   availableqty: number;
 }
 
-
 export class updateonhold {
   invoiceno: string;
   remarks: string;

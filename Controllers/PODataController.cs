@@ -1553,5 +1553,11 @@ namespace WMS.Controllers
 		{
 			return await this._poService.subcontractInoutList();
 		}
+			[HttpPost("generateqronhold")]
+		public printonholdGR generateqronhold(printonholdGR onholdprintdata)
+        {
+			return this._poService.generateqronhold(onholdprintdata);
+
+		}
 	}
 }

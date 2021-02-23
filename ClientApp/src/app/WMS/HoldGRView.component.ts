@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { wmsService } from '../WmsServices/wms.service';
 import { constants } from '../Models/WMSConstants';
-import { Employee, printMaterial } from '../Models/Common.Model';
+import { Employee, printMaterial, printonholdGR } from '../Models/Common.Model';
 import { NgxSpinnerService } from "ngx-spinner";
 import { PoDetails, BarcodeModel, inwardModel, ddlmodel, UnholdGRModel } from 'src/app/Models/WMS.Model';
 import { MessageService } from 'primeng/api';
@@ -25,6 +25,7 @@ export class HoldGRViewComponent implements OnInit {
   filteredpomatdetailsList: Array<inwardModel> = [];
   public employee: Employee;
   public qty: any = 1;
+  showPrintLabel: boolean;
   public noOfPrint: any = 1;
   public showDetails; showQtyUpdateDialog: boolean = false;
   public disGrnBtn: boolean = true;
@@ -57,6 +58,11 @@ export class HoldGRViewComponent implements OnInit {
   tempcol2: string = "";
   showPrintDialog: boolean = false;
   public printData = new printMaterial();
+  public printgr = new printonholdGR();
+  public pono: string;
+  public lineitemno: string;
+  public gateentryid: string;
+  public invoiceno: string;
  
   ngOnInit() {
     if (localStorage.getItem("Employee"))
@@ -162,19 +168,63 @@ export class HoldGRViewComponent implements OnInit {
   }
 
   generatelabel(details:any) {
-
+    debugger;
     this.showdetail = false;
     this.showPrintDialog = true;
+    this.showPrintLabel = false;
     this.materialCode = details.material;
     this.receivedDate = this.datePipe.transform(details.receiveddate, this.constants.dateFormat);
     this.acceptedQty = details.confirmqty;
-    //this.pono = details.pono;
-    //this.receivedqty = details.receivedqty;
-    //this.invoiceNo = details.invoiceno;
-    //this.lineitemno = details.lineitemno;
-    //this.grnNo = details.grnnumber;
-    //this.noofpieces = details.receivedqty;
+    this.pono = details.pono;
+    this.lineitemno = details.lineitemno;
+    this.gateentryid = details.inwmasterid;
+    this.invoiceno = details.invoiceno;
+    //this.printData.pono = details.pono;
+    //this.printData.receivedqty = details.receivedqty;
+    //this.printData.invoiceno = details.invoiceno;
+    //this.printData.lineitemno = details.lineitemno;
+    //this.printData.noofpieces = details.receivedqty;
+    
 
+  }
+
+  printlabel() {
+    debugger;
+    this.showdetail = false;
+    this.showPrintDialog = false;
+    this.showPrintLabel = true;
+    this.printgr.materialid = this.materialCode;
+    this.printgr.gateentryid = this.gateentryid;
+    this.printgr.pono = this.pono;
+    this.printgr.invoiceno = this.invoiceno;
+    this.printgr.createdby = this.employee.employeeno;
+    this.printgr.receiveddate = this.datePipe.transform(this.receivedDate, this.constants.dateFormat);
+    this.printgr.noofprint = this.noOfPrint;
+    this.wmsService.generateqronhold(this.printgr).subscribe(data => {
+      this.spinner.hide();
+      if (data) {
+        this.printgr = new printonholdGR();
+        this.printgr = data;
+
+      }
+
+    });
+
+  }
+
+  printLabel() {
+    this.wmsService.printonholdmaterials(this.printgr).subscribe(data => {
+      this.spinner.show();
+      if (data) {
+        this.printgr = new printonholdGR();
+        this.printgr = data;
+        this.spinner.hide();
+      }
+      else {
+        this.spinner.hide();
+      }
+
+    });
   }
 
   decreaseQty() {
