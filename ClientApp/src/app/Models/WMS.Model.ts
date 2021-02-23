@@ -629,6 +629,9 @@ export class stocktransfermateriakmodel {
   issuedqty: number;
   poqty: number;
   availableqty: number;
+  value: number;
+  subconno: string;
+  projectmanager: string;
 }
 
 export class updateonhold {

@@ -1128,6 +1128,20 @@ namespace WMS.Models
 
 
 	}
+
+	public class MaterialValuation
+    {
+		public int id { get; set; }
+		public string projectcode { get; set; }
+		public string pono { get; set; }
+		public string itemno { get; set; }
+		public string material { get; set; }
+		public string materialdescription { get; set; }
+		public decimal? value { get; set; }
+		public string referenceno { get; set; }
+		public int? quantity { get; set; }
+		public string currency  { get; set; }
+	}
 	public class employeeModel
 	{
 		public string name { get; set; }
@@ -1464,7 +1478,10 @@ public class stocktransfermateriakmodel
 	public string status { get; set; }
 	public int issuedqty { get; set; }
 	public int poqty { get; set; }
-	
+	public decimal? value { get; set; }
+	public string subconno { get; set; }
+	public string projectmanager { get; set; }
+
 }
 
 public class subrolemodel

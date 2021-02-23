@@ -473,6 +473,20 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to select wi.transferid,inv.projectcode as projectid, wi.materialid , wi.poitemdesc as materialdescription, wi.transferqty ,wi.value,
+        ///(select wp.projectmanager from wms.wms_project wp where wp.projectcode = inv.projectcode limit 1) as projectmanager,
+        ///ssg.subconno 
+        ///from wms.wms_invtransfermaterial wi 
+        ///left outer join wms.wms_invstocktransfer inv on wi.transferid = inv.transferid
+        ///left outer join wms.sto_subcontract_gr ssg on ssg.transferid = wi.transferid where inv.transfertype = &apos;SubContract&apos;.
+        /// </summary>
+        public static string getannexuredata {
+            get {
+                return ResourceManager.GetString("getannexuredata", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to select approverid,approvername,approvaldate as approvedon,remarks,
         ///CASE
         ///     WHEN isapproved is True THEN &apos;Approved&apos;
@@ -2540,8 +2554,8 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to insert into wms.wms_invtransfermaterial (transferid,materialid,transferqty,projectid,requireddate,poitemdesc)
-        ///values (@transferid,@materialid,@transferqty,@projectid,@requireddate,@poitemdesc).
+        ///   Looks up a localized string similar to insert into wms.wms_invtransfermaterial (transferid,materialid,transferqty,projectid,requireddate,poitemdesc,value)
+        ///values (@transferid,@materialid,@transferqty,@projectid,@requireddate,@poitemdesc,@value).
         /// </summary>
         public static string insertinvtransfermaterialSTO {
             get {
@@ -2550,8 +2564,8 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO wms.wms_materiallabeldetails(id,pono,inwardid ,noofprints ,qtyinbox ,isprint ,receivedqty ,boxno ,totalqty ,isonholdgr,matbarcodepath,soitembcpath,plantbarcodepath,spbarcode,linkagebarcodepath)
-        ///VALUES(default,@pono,@inwardid,@noofprints,@qtyinbox,@isprint,@totalboxes,@boxno,@receivedqty,@isonholdgr,@matbarcodepath,@soitembcpath,@plantbarcodepath,@spbarcode,@linkagebarcodepath) returning id.
+        ///   Looks up a localized string similar to INSERT INTO wms.wms_materiallabeldetails(id,pono,inwardid ,noofprints ,qtyinbox ,isprint ,totalboxes ,boxno ,totalqty ,isonholdgr,matbarcodepath,soitembcpath,plantbarcodepath,spbarcode,linkagebarcodepath)
+        ///VALUES(default,@pono,@inwardid,@noofprints,@qtyinbox,@isprint,@totalboxes,@boxno,@totalqty,@isonholdgr,@matbarcodepath,@soitembcpath,@plantbarcodepath,@spbarcode,@linkagebarcodepath) returning id.
         /// </summary>
         public static string insertmatbarcodelabeldata {
             get {

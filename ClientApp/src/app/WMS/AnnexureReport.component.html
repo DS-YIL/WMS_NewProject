@@ -1,0 +1,78 @@
+<div style="margin:10px;">
+  <div class="card commoncardcss">
+    <div class="card-header commoncardheader">
+      <div class="row " style="    margin-top: 10px;
+    margin-left: 0px !important;
+    margin-right: 0px !important">
+        <div class="col-lg-4 col-md-4 form-inline">
+          <p-autoComplete appendTo="body" placeholder="search PONo" (onSelect)="onposelected()" (onChange)="onposelected()" [(ngModel)]="selectedpo" type="text" [suggestions]="searchItems" field="name" [forceSelection]="true" [dropdown]="true" (completeMethod)="bindSearchListDatamaterial($event)" size="20"></p-autoComplete>
+        </div>
+        <div class="col-lg-4 col-md-4 text-center">
+          <span style="color:#428bca;font-size:18px" class="commonheadertext">
+            <i class="fa fa-check-circle-o commonheadertext"></i>&nbsp;Sub Contract Annexure Report
+          </span>
+        </div>
+        <div class="col-lg-4 col-md-4">
+          <div style="float:right">
+            <button type="button" pButton icon="pi pi-file-excel" iconPos="left" label="EXCEL" (click)="exportExcel()" style="margin-right: 0.5em;" class="ui-button-success"></button>
+          </div>
+          
+        </div>
+        
+      </div>
+
+
+    </div>
+    <div class="card-body" style="overflow-y:scroll;padding:0px;margin-left:10px;margin-right:10px;">
+
+
+      <div class="row" style="margin-top: 10px;margin-left: 0px !important;margin-right: 0px !important">
+
+        <p-table [value]="getVirtuallistdata" *ngIf="showtable" [lazy]="true" (onLazyLoad)="loadCarsLazy($event)" [paginator]="true" [rows]="50" [totalRecords]="totalRecords" [loading]="loading" dataKey="transferid">
+          <ng-template pTemplate="header">
+            <tr class="mprltbldata">
+              <th style="text-align:center;width:150px">Project ID</th>
+              <th style="text-align:center;width:200px">Material</th>
+              <th style="text-align:center">Material Description</th>
+              <th style="text-align:center;width:100px">Quantity</th>
+              <th style="text-align:center;width:100px">OUn</th>
+              <th style="text-align:center;width:100px">Total Price</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex" let-columns="columns">
+            <tr class="ui-widget-header" *ngIf="rowGroupMetadata[rowData.transferid].index === rowIndex">
+              <td colspan="6">
+                <span><span class="labeltext">&nbsp;Sub Contract Transfer ID</span> : {{rowData.transferid}} </span>
+              </td>
+            </tr>
+            <tr>
+              <td style="text-align:center;;width:150px">{{rowData.projectid}}</td>
+              <td style="text-align:left;width:200px">{{rowData.materialid}}</td>
+              <td style="text-align:left;">{{rowData.materialdescription}}</td>
+              <td style="text-align:right;width:100px">{{rowData.transferqty}}</td>
+              <td style="text-align:center;width:100px">ST</td>
+              <td style="text-align:right;width:100px">{{rowData.value}}</td>
+
+            </tr>
+
+          </ng-template>
+         
+        </p-table>
+
+      </div>
+
+
+
+
+
+
+
+
+
+
+    </div>
+
+  </div>
+</div>
+
+  

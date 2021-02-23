@@ -83,6 +83,7 @@ namespace WMS.Interfaces
 		Task<IEnumerable<MaterialTransaction>> MaterialRequest(string pono, string material);
 		Task<IEnumerable<IssueRequestModel>> MaterialRequestdata(string pono, string material, string projectcode);
 		Task<IEnumerable<POReportModel>> getPOReportdata(string empno, string projectcode, string pono);
+		Task<IEnumerable<stocktransfermateriakmodel>> getsubconannexuredata(string empno, string subconno);
 		Task<IEnumerable<POReportModel>> getPOReportdetail(string materialid, string description, string pono, string querytype, string requesttype, string projectcode, string empno);
 		Task<IEnumerable<IssueRequestModel>> MaterialReservedata(string projectcode);
 		Task<IEnumerable<IssueRequestModel>> getgatepassmaterialrequestList();

@@ -2341,7 +2341,7 @@ export class NavMenuComponent implements OnInit {
       });
       this.items.push({ label: 'Direct Shipment', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/Directtransfer') });
       this.items.push({ label: 'Assign Project', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/AssignProject') });
-      this.items.push({ label: 'PO Report', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/POReport') });
+      this.items.push({ label: 'Sub Contract Annexure', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/AnnexureReport') });
       if (url == "default") {
         this.router.navigateByUrl('WMS/Home');
       }

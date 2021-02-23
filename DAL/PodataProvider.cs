@@ -8870,6 +8870,55 @@ namespace WMS.DAL
 		}
 
 		/*
+		Name of Function : <<getsubconannexuredata>>  Author :<<Ramesh>>  
+		Date of Creation <<23-02-2019>>
+		Purpose : <<Get Report data>>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
+		public async Task<IEnumerable<stocktransfermateriakmodel>> getsubconannexuredata(string empno, string subconno)
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				try
+				{
+					string materialrequestquery = WMSResource.getannexuredata;
+					if (subconno != null && subconno != "null")
+					{
+						materialrequestquery = materialrequestquery + " and wi.transferid = '"+ subconno + "'" ;
+
+					}
+					
+					
+					
+					await pgsql.OpenAsync();
+					var data = await pgsql.QueryAsync<stocktransfermateriakmodel>(
+					  materialrequestquery, null, commandType: CommandType.Text);
+
+					if (empno != null && empno != "null")
+					{
+						data = data.Where(o => o.projectmanager == empno);
+
+					}
+
+					return data.OrderBy(o => o.projectid);
+
+
+
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "getPOReportdata", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+			}
+		}
+
+		/*
 		Name of Function : <<getPOReportdetail>>  Author :<<Ramesh>>  
 		Date of Creation <<19-02-2019>>
 		Purpose : <<Get Report data>>
@@ -10103,6 +10152,20 @@ namespace WMS.DAL
 							//{
 							var poitemdesc = stck.materialdescription;
 							string stockinsertqry = WMSResource.insertinvtransfermaterialSTO;
+							decimal? value = null;
+							string query2 = "select * from wms.material_valuation where projectcode = '"+data.projectcode+"' and material = '"+stck.materialid+"' order by id desc limit 1";
+							MaterialValuation objs1 = pgsql.QueryFirstOrDefault<MaterialValuation>(
+							   query2, null, commandType: CommandType.Text);
+							if(objs1 != null)
+                            {
+								if(objs1.value != null && objs1.value != 0 && objs1.quantity != null && objs1.quantity != 0)
+                                {
+									value = Math.Abs(Convert.ToDecimal(objs1.value)) / Math.Abs(Convert.ToInt32(objs1.quantity));
+
+								}	
+                                
+                            }
+
 
 							var resultsxx = pgsql.ExecuteScalar(stockinsertqry, new
 							{
@@ -10111,7 +10174,8 @@ namespace WMS.DAL
 								stck.transferqty,
 								stck.projectid,
 								stck.requireddate,
-								poitemdesc
+								poitemdesc,
+								value
 
 							});
 							//}

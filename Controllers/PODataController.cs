@@ -345,6 +345,12 @@ namespace WMS.Controllers
 			return await this._poService.getPOReportdata(empno, projectcode, pono);
 		}
 
+		[HttpGet("getsubconannexuredata")]
+		public async Task<IEnumerable<stocktransfermateriakmodel>> getsubconannexuredata(string empno, string subconno)
+		{
+			return await this._poService.getsubconannexuredata(empno, subconno);
+		}
+
 		[HttpGet("getporeportdetail")]
 		public async Task<IEnumerable<POReportModel>> getporeportdetail(string materialid, string description, string pono, string querytype, string requesttype, string projectcode, string empno)
 		{
