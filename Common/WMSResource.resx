@@ -760,7 +760,7 @@ from wms.wms_storeinward stinw
 left outer join wms.wms_securityinward sinw on stinw.inwmasterid = sinw.inwmasterid 
  left outer join wms.employee emp on emp.employeeno=sinw.mrnby
 where stinw.returnedby is not null and stinw.confirmqty &gt; 0
-and stinw.inwardid not in (select distinct inwardid from wms.wms_stock where inwardid is not null order by inwardid desc</value>
+and stinw.inwardid not in (select distinct inwardid from wms.wms_stock where inwardid is not null order by inwardid desc)</value>
   </data>
   <data name="getnonreturnablegatepassdata" xml:space="preserve">
     <value>select Max(matis.requestid) as gatepassmaterialid,Max(matis.itemid) itemid,Max(matis.itemissueddate) as itemissueddate,Max(matgt.poitemdescription) as materialdescription,Max(emp.name) as name,
