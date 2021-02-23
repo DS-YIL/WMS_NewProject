@@ -145,7 +145,7 @@ export class AnnexureReportComponent implements OnInit {
       const worksheet = xlsx.utils.json_to_sheet(new_list);
       const workbook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
       const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
-      this.saveAsExcelFile(excelBuffer, "POdata");
+      this.saveAsExcelFile(excelBuffer, "annexure");
     });
   }
 
