@@ -190,21 +190,31 @@
         </div>
      </div>
      <br />
+     <div class="row">
+       <div class="col-lg-2 col-md-2 col-sm-2">
+         <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">Line Item No.:</label>
+       </div>
+       <div class="col-lg-2 col-md-2 col-sm-2">
+         <input type="text" [disabled]="true" class="form-control" [(ngModel)]="lineitmno" />
+       </div>
+       <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
+         <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">Total No. of Boxes:</label>
+       </div>
+       <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
+         <input type="text" class="form-control" [(ngModel)]="totalboxes" />
+       </div>
+       <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
+         <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">No. of materials in box:</label>
+       </div>
+       <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
+         <input type="text" class="form-control" [(ngModel)]="noofpieces" style="width: 100px;text-align:center" />
+       </div>
+
+     </div>
+      <br>
       <div class="row">
+       
         <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
-          <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">Total No. of Boxes:</label>
-        </div>
-        <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
-          <input type="text" class="form-control" [(ngModel)]="totalboxes" />
-        </div>
-       <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
-          <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">No. of materials in box:</label>
-        </div>
-        <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
-          <input type="text" class="form-control" [(ngModel)]="noofpieces" style="width: 100px;text-align:center" />
-          <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">/{{receivedqty}}</label>
-        </div>
-       <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
           <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">Box No.:</label>
         </div>
         <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">

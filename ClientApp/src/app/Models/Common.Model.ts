@@ -56,6 +56,19 @@ export class POList {
   status: any;
 }
 
+export class printonholdGR {
+  materialid: any;
+  receiveddate: any;
+  invoiceno: any;
+  pono: any;
+  gateentryid: any;
+  noofprint: any;
+  materialqrpath: any;
+  gateentryidqrpath: any;
+  createdby: any;
+
+}
+
 export class printMaterial {
   materialid: any;
   receiveddate: any;

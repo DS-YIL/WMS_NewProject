@@ -611,41 +611,41 @@ namespace WMS.DAL
 						   query, null, commandType: CommandType.Text);
 
 
-					objprint.noofpieces = printMat.noofpieces;
-					objprint.boxno = printMat.boxno;
-					objprint.totalboxes = printMat.totalboxes;
-					objprint.insprec = "Not Required";
+                    objprint.noofpieces = printMat.noofpieces;
+                    objprint.boxno = printMat.boxno;
+                    objprint.totalboxes = printMat.totalboxes;
+                    objprint.insprec = "Not Required";
 					objprint.order = objprint.saleorderno + "-" + objprint.solineitemno;
-					objprint.qty = objprint.noofpieces + "/" + objprint.receivedqty + "ST " + objprint.boxno + "OF " + objprint.totalboxes + "BOXES";
+                    objprint.qty = objprint.noofpieces + "/" + printMat.receivedqty + " ST " + objprint.boxno + "OF " + objprint.totalboxes + "BOXES";
+					
 
+                }
+                PrintUtilities objprntmat = new PrintUtilities();
+                //generate barcodes in material label
+                //Material barcode
+                printMat.materialbarcode = "./Barcodes/" + objprint.materialid + ".bmp";
+                var content = objprint.materialid;
+                objprint.materialbarcode = objprntmat.generatebarcode(path, content);
 
-				}
-				PrintUtilities objprntmat = new PrintUtilities();
-				//generate barcodes in material label
-				//Material barcode
-				printMat.materialbarcode = "./Barcodes/" + objprint.material + ".bmp";
-				var content = objprint.material;
-				objprint.materialbarcode = objprntmat.generatebarcode(printMat.materialbarcode, content);
+                //order barcode
+                printMat.soiembarcode = "./Barcodes/" + objprint.saleorderno + "_" + objprint.solineitemno + ".bmp";
+                content = objprint.saleorderno + "-" + objprint.solineitemno;
+                objprint.soiembarcode = objprntmat.generatebarcode(path, content);
 
-				//order barcode
-				printMat.soiembarcode = "./Barcodes/" + objprint.saleorderno + "_" + objprint.solineitemno + ".bmp";
-				content = objprint.saleorderno + "-" + objprint.solineitemno;
-				objprint.soiembarcode = objprntmat.generatebarcode(printMat.soiembarcode, content);
+                //plant barcode
+                printMat.plantbarcode = "./Barcodes/" + objprint.plant + ".bmp";
+                content = objprint.plant;
+                objprint.plantbarcode = objprntmat.generatebarcode(path, content);
 
-				//plant barcode
-				printMat.plantbarcode = "./Barcodes/" + objprint.plant + ".bmp";
-				content = objprint.plant;
-				objprint.plantbarcode = objprntmat.generatebarcode(printMat.plantbarcode, content);
-
-				//sp barcode
-				printMat.spbarcode = "./Barcodes/" + objprint.spbarcode + ".bmp";
-				content = objprint.spbarcode;
-				objprint.spbarcode = objprntmat.generatebarcode(printMat.spbarcode, content);
+                //sp barcode
+                printMat.spbarcode = "./Barcodes/" + objprint.spbarcode + ".bmp";
+                content = objprint.spbarcode;
+                objprint.spbarcode = objprntmat.generatebarcode(path, content);
 
 				//Linkage barcode
 				printMat.linkagebarcode = "./Barcodes/" + objprint.linkageno + ".bmp";
 				content = objprint.linkageno;
-				objprint.linkagebarcode = objprntmat.generatebarcode(printMat.linkagebarcode, content);
+				objprint.linkagebarcode = objprntmat.generatebarcode(path, content);
 
 				int noofprints = 1;
 				bool isprint = true;
@@ -654,22 +654,27 @@ namespace WMS.DAL
 				string insertqueryforinvoice = WMSResource.insertmatbarcodelabeldata;
 				using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
 				{
+					int qtyinbox = objprint.noofpieces;
+					string matbarcodepath = objprint.materialcodePath;
+					string soitembcpath = objprint.soiembarcode;
+					string plantbarcodepath=objprint.plantbarcode;
+					string linkagebarcodepath = objprint.linkagebarcode;
 					var results = DB.ExecuteScalar(insertqueryforinvoice, new
 					{
 						objprint.pono,
 						objprint.inwardid,
 						noofprints,
-						objprint.noofpieces,
+						qtyinbox,
 						isprint,
 						objprint.totalboxes,
 						objprint.boxno,
 						objprint.receivedqty,
 						isonholdgr,
-						objprint.materialcodePath,
-						objprint.soiembarcode,
-						objprint.plantbarcode,
+						matbarcodepath,
+						soitembcpath,
+						plantbarcodepath,
 						objprint.spbarcode,
-						objprint.linkagebarcode,
+						linkagebarcodepath,
 					});
 
 				}
@@ -768,7 +773,7 @@ namespace WMS.DAL
 				//    .Write(content)
 				//    .Save(path + content + ".bmp");
 
-				//printMat.materialcodePath = "./Barcodes/" + content + ".bmp";
+                //printMat.materialcodePath = "./Barcodes/" + content + ".bmp";
 
 
 
@@ -904,7 +909,7 @@ namespace WMS.DAL
 			PrintHistoryModel objreprint = new PrintHistoryModel();
 			try
 			{
-
+				
 				//dataobj.docfile = ;
 				using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
 				{
@@ -15593,6 +15598,104 @@ Review Date :<<>>   Reviewed By :<<>>
 
 			}
 		}
+		
+			/*
+		Name of Function : <<generateqronhold>>  Author :<<Gayathri>>  
+		Date of Creation <<04-02-2021>>
+		Purpose : <<Generate QRCodes for onhold receipts and save data in db>>
+		<parameter :printonholdGR>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
+		public printonholdGR generateqronhold(printonholdGR onholdprintdata)
+        {
+			string path = "";
+			try
+            {
+				path = Environment.CurrentDirectory + @"\Barcodes\";
+				string inwmasterid = onholdprintdata.gateentryid;
+				//Insert data into wms_printstatusmaterial
+				using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
+				{ 
+					string getdata = "select * from wms.wms_printstatusmaterial where inwmasterid='" + onholdprintdata.gateentryid + "' and materialid ='" + onholdprintdata.materialid + "'";
+					var dataexists = DB.Execute(getdata);
+					if(dataexists==0)
+                    {
+						string insertmatonhold = WMSResource.insertmaterialdetails;
+
+
+						var results = DB.ExecuteScalar(insertmatonhold, new
+						{
+							inwmasterid,
+							onholdprintdata.materialid,
+							onholdprintdata.noofprint
+						});
+					}
+				
+
+				}
+				PrintUtilities objprint = new PrintUtilities();
+				//generate QRCodes for material and gateentryid and update in db
+				
+				string materialpath = objprint.generateqrcode(path, onholdprintdata.materialid);
+				if(materialpath!="Error")
+                {
+					onholdprintdata.materialqrpath = materialpath;
+					//Insert data in db (wms.wms_barcode table)
+					string insertbarcode = WMSResource.insertbarcodedata;
+					bool deleteflag = false;
+					string barcode = onholdprintdata.materialid;
+					using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
+					{
+						var barcodeResult = DB.Execute(insertbarcode, new
+						{
+							barcode,
+							onholdprintdata.createdby,
+							onholdprintdata.createddate,
+							deleteflag,
+							onholdprintdata.pono,
+							onholdprintdata.invoiceno,
+							inwmasterid
+
+						});
+					}
+
+
+				}
+				string gateentrypath =  objprint.generateqrcode(path, onholdprintdata.gateentryid);
+				if (materialpath != "Error")
+				{
+					onholdprintdata.materialqrpath = gateentrypath;
+					//Insert data in db (wms.wms_barcode table)
+					string insertbarcode = WMSResource.insertbarcodedata;
+					bool deleteflag = false;
+					string barcode = onholdprintdata.gateentryid;
+					onholdprintdata.createddate = DateTime.Now;
+					using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
+					{
+						var barcodeResult = DB.Execute(insertbarcode, new
+						{
+							barcode,
+							onholdprintdata.createdby,
+							onholdprintdata.createddate,
+							deleteflag,
+							onholdprintdata.pono,
+							onholdprintdata.invoiceno,
+							inwmasterid
+
+						});
+					}
+
+				}
+				return onholdprintdata;
+
+			}
+			catch (Exception Ex)
+            {
+				log.ErrorMessage("PODataProvider", "generateqronhold", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
+				return null;
+			}
+        }
+
 
 		/*
 		Name of Function : <<subcontractInoutList>>  Author :<<Prasanna>>  

@@ -2250,3 +2250,18 @@ public class plantddl
 	public string locationtype { get; set; }
 	//public int plantid { get; set; }
 }
+
+public class printonholdGR
+{
+	public string materialid { get; set; }
+	public string receiveddate { get; set; }
+	public string invoiceno { get; set; }
+	public string pono { get; set; }
+	public string gateentryid { get; set; }
+	public int noofprint { get; set; }
+	public string materialqrpath { get; set; }
+	public string gateentryidqrpath { get; set; }
+	public string createdby { get; set; }
+	public DateTime createddate { get; set; }
+
+}

@@ -33,6 +33,7 @@ export class StoreClerkComponent implements OnInit {
   public nonpovalidationList: Array<inwardModel> = [];
   public employee: Employee;
   public noofpieces: any = 1;
+  public lineitmno: any;
   public totalboxes: any = 1;
   public boxno: any = 1;
   public showDetails; showQtyUpdateDialog: boolean = false;
@@ -293,6 +294,7 @@ export class StoreClerkComponent implements OnInit {
     this.invoiceNo = details.invoiceno;
     this.grnNo = details.grnnumber;
     this.noofpieces = details.receivedqty;
+    this.lineitmno = details.lineitemno;
   }
   generatelabel(details: any) {
     debugger;
@@ -330,6 +332,7 @@ export class StoreClerkComponent implements OnInit {
     this.printData.noofpieces = this.noofpieces;
     this.printData.totalboxes = this.totalboxes;
     this.printData.receivedqty = this.receivedqty;
+    this.printData.lineitemno = this.lineitmno;
     //api call
     this.wmsService.generateBarcodeMaterial(this.printData).subscribe(data => {
       if (data) {

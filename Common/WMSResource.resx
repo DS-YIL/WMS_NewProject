@@ -2092,4 +2092,8 @@ left outer join wms.wms_project prj on stk.pono = prj.pono
 where stk.materialid='#materialid' and lower(stk.poitemdescription)  = lower('#desc') and stk.pono = '#pono' and rm.reservequantity &gt; 0 #projectfilter #managerfilter
 group by stk.itemlocation,stk.stcktype,stk.pono,stk.poitemdescription,stk.materialid,stk.createddate::DATE order by stk.createddate::DATE desc</value>
   </data>
+  <data name="insertmaterialdetails" xml:space="preserve">
+    <value>insert into wms.wms_printstatusmaterial(id,inwmasterid,materialid,noofprint )values(default,@inwmasterid,@materialid,@noofprint)</value>
+  </data>
+
 </root>
