@@ -29,7 +29,7 @@ import { HttpClient } from '@angular/common/http';
       transition('* <=> *', animate('400ms cubic-bezier(0.86, 0, 0.07, 1)'))
     ])
   ],
-  providers: [DatePipe , ConfirmationService]
+  providers: [DatePipe, ConfirmationService]
 })
 export class MRNViewComponent implements OnInit {
   isnonpo: boolean = false;
@@ -53,12 +53,18 @@ export class MRNViewComponent implements OnInit {
   isallplaced: boolean = false;
   mrnsavemodel: MRNsavemodel;
   mrnremarks: string = "";
-  isalreadytransferred: boolean = false;
+  isalreadytransferred; ShowPrint; showPrntBtn: boolean = false;
+  public selectedStatus: string;
+  public currentDate: Date;
+  public totalGRNList: ddlmodel[] = [];
+
   ngOnInit() {
     if (localStorage.getItem("Employee"))
       this.employee = JSON.parse(localStorage.getItem("Employee"));
     else
       this.router.navigateByUrl("Login");
+    this.currentDate = new Date();
+    this.selectedStatus = "Pending";
     this.PoDetails = new PoDetails();
     this.mrnsavemodel = new MRNsavemodel();
     this.selectedponomodel = new ddlmodel();
@@ -77,15 +83,15 @@ export class MRNViewComponent implements OnInit {
       { field: 'materialbarcode', header: 'Material Barcode' }
     ];
 
-    
+
   }
 
   getcheckedgrn() {
     this.spinner.show();
     this.wmsService.getcheckedgrnlistforputaway().subscribe(data => {
-      debugger;
-      this.checkedgrnlist = data;
+      this.totalGRNList = data;
       this.spinner.hide();
+      this.checkedgrnlist = this.totalGRNList.filter(li => li.isdirecttransferred != true);
     });
   }
   getprojects() {
@@ -146,6 +152,7 @@ export class MRNViewComponent implements OnInit {
 
     this.wmsService.updatemrn(this.mrnsavemodel).subscribe(data => {
       this.spinner.hide();
+      this.showPrntBtn = true;
       this.messageService.add({ severity: 'success', summary: '', detail: "Material transferred" });
       //this.getponodetails(this.selectedpendingpo.value)
 
@@ -156,14 +163,8 @@ export class MRNViewComponent implements OnInit {
 
   }
 
- 
+
   //search list option changes event
-  
- 
-
- 
-
-  
   SearchGRNNo() {
     debugger;
     this.podetailsList = [];
@@ -174,56 +175,69 @@ export class MRNViewComponent implements OnInit {
 
     }
     this.PoDetails.grnnumber = this.selectedgrnno;
-      this.isnonpo = false;
-      this.spinner.show();
-      this.wmsService.getitemdetailsbygrnno(this.PoDetails.grnnumber).subscribe(data => {
-        this.spinner.hide();
-        if (data) {
-          debugger;
-          //this.PoDetails = data[0];
-          this.podetailsList = data;
-          var itemlocationavailable = this.podetailsList.filter(function (element, index) {
-            return (element.itemlocation);
-          });
-          if (itemlocationavailable.length > 0) {
-            this.podetailsList = [];
-            this.messageService.add({ severity: 'warn', summary: '', detail: 'Materials already in stock for this GRN.' });
-            return;
-          }
-          var ponumber = this.podetailsList[0].pono;
-          this.isalreadytransferred = this.podetailsList[0].isdirecttransferred;
-          if (this.isalreadytransferred) {
-            debugger;
-            var dtlist = this.podetailsList;
-            var datax = this.projectlists.filter(function (element, index) {
-              return (element.value == dtlist[0].projectcode);
-            });
-            this.selectedponomodel = datax[0];
-            this.mrnremarks = this.podetailsList[0].mrnremarks;
-          }
-          if (ponumber.startsWith("NP")) {
-            this.isnonpo = true;
-          }
-
+    this.isnonpo = false;
+    this.spinner.show();
+    this.wmsService.getitemdetailsbygrnno(this.PoDetails.grnnumber).subscribe(data => {
+      this.spinner.hide();
+      if (data) {
+        debugger;
+        //this.PoDetails = data[0];
+        this.podetailsList = data;
+        var itemlocationavailable = this.podetailsList.filter(function (element, index) {
+          return (element.itemlocation);
+        });
+        if (itemlocationavailable.length > 0) {
+          this.podetailsList = [];
+          this.messageService.add({ severity: 'warn', summary: '', detail: 'Materials already in stock for this GRN.' });
+          return;
         }
-        else
-          this.messageService.add({ severity: 'error', summary: '', detail: 'No data for this GRN No' });
-      })
-    
-  
-     
+        var ponumber = this.podetailsList[0].pono;
+        this.isalreadytransferred = this.podetailsList[0].isdirecttransferred;
+        if (this.isalreadytransferred) {
+          debugger;
+          var dtlist = this.podetailsList;
+          var datax = this.projectlists.filter(function (element, index) {
+            return (element.value == dtlist[0].projectcode);
+          });
+          this.selectedponomodel = datax[0];
+          this.mrnremarks = this.podetailsList[0].mrnremarks;
+        }
+        if (ponumber.startsWith("NP")) {
+          this.isnonpo = true;
+        }
+
+      }
+      else
+        this.messageService.add({ severity: 'error', summary: '', detail: 'No data for this GRN No' });
+    })
   }
-  
 
+  onSelectStatus(event) {
+    this.podetailsList = [];
+    this.selectedgrnno = "";
+    this.selectedStatus = event.target.value;
+    if (this.selectedStatus == "Pending") {
+      this.checkedgrnlist = this.totalGRNList.filter(li => li.isdirecttransferred != true);     
+    }
+    else if (this.selectedStatus == "Approved") {
+      this.checkedgrnlist = this.totalGRNList.filter(li => li.isdirecttransferred == true);
+    }
+  }
 
-
- 
- 
-
- 
-
-
- 
-
-
+  PrintMRN(data: any) {
+    var grnnumber = "";
+    if (!data)
+      grnnumber = this.selectedgrnno;
+    else
+      grnnumber = data.text;
+    this.wmsService.getitemdetailsbygrnno(grnnumber).subscribe(data => {
+      this.spinner.hide();
+      this.ShowPrint = true;
+      this.podetailsList = data;
+    });
+  }
+  //back to MRN view
+  navigateToMRNView() {
+    this.ShowPrint = false
+  }
 }

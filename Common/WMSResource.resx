@@ -755,11 +755,12 @@ where (stinw.confirmqty is null or stinw.confirmqty = 0) and stinw.receivedqty &
   </data>
   <data name="getgrnlistdataforputaway" xml:space="preserve">
     <value>select stinw.inwardid as value,sinw.grnnumber as text,
-sinw.suppliername as supplier
+sinw.suppliername as supplier,sinw.isdirecttransferred,sinw.invoiceno ,emp.name as mrnby,sinw.mrnon 
 from wms.wms_storeinward stinw 
 left outer join wms.wms_securityinward sinw on stinw.inwmasterid = sinw.inwmasterid 
-where stinw.returnedby is not null and sinw.isdirecttransferred is NOT True and stinw.confirmqty &gt; 0
-and stinw.inwardid not in (select distinct inwardid from wms.wms_stock where inwardid is not null order by inwardid desc)</value>
+ left outer join wms.employee emp on emp.employeeno=sinw.mrnby
+where stinw.returnedby is not null and stinw.confirmqty &gt; 0
+and stinw.inwardid not in (select distinct inwardid from wms.wms_stock where inwardid is not null order by inwardid desc</value>
   </data>
   <data name="getnonreturnablegatepassdata" xml:space="preserve">
     <value>select Max(matis.requestid) as gatepassmaterialid,Max(matis.itemid) itemid,Max(matis.itemissueddate) as itemissueddate,Max(matgt.poitemdescription) as materialdescription,Max(emp.name) as name,
@@ -2099,5 +2100,4 @@ group by stk.itemlocation,stk.stcktype,stk.pono,stk.poitemdescription,stk.materi
   <data name="insertmaterialdetails" xml:space="preserve">
     <value>insert into wms.wms_printstatusmaterial(id,inwmasterid,materialid,noofprint )values(default,@inwmasterid,@materialid,@noofprint)</value>
   </data>
-
 </root>

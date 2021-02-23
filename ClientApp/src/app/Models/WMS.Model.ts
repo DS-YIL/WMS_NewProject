@@ -444,15 +444,18 @@ export class Materials {
 }
 
 export class ddlmodel {
-
   value: string;
   text: string;
   supplier: string;
   pos: string;
   projectmanager: string;
-  receiveddate: Date
-
+  receiveddate: Date;
+  invoiceno: string;
+  mrnon: Date;
+  isdirecttransferred: boolean;
+  mrnby: string;
 }
+
 
 export class locationdropdownModel {
   binid: number;
