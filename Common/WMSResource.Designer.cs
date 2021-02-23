@@ -952,7 +952,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select * from wms.wms_stock where materialid=&apos;#materialid&apos; and poitemdescription = &apos;#desc&apos; and availableqty &gt; 0.
+        ///   Looks up a localized string similar to select * from wms.wms_stock where materialid=&apos;#materialid&apos; and poitemdescription = &apos;#desc&apos; and availableqty &gt; 0 and stcktype = &apos;Plant Stock&apos;.
         /// </summary>
         public static string getitemiddata {
             get {
@@ -1198,12 +1198,12 @@ namespace WMS.Common {
         
         /// <summary>
         ///   Looks up a localized string similar to select max(sk.pono) as pono ,sk.materialid as material,Max(prj.projectmanager) as projectmanager,
-        ///sum(availableqty) as availableqty,
+        ///sum(sk.availableqty) as availableqty,
         ///max(sk.stcktype) as stocktype,max(po.suppliername) as suppliername,
         ///sum(sk.availableqty * sk.unitprice) as materialcost,sk.poitemdescription  as materialdescription from wms.wms_stock  sk 
         ///left outer join wms.wms_project prj on prj.pono = sk.pono
-        ///left outer join wms.wms_polist po on po.pono = sk.pono 
-        ///where sk.availableqty &gt; 0 and (prj.projectmanager = &apos;#manager&apos; or prj. [rest of string was truncated]&quot;;.
+        ///left outer join wms.wms_polist po on po.pono = sk.pono  
+        ///where sk.availableqty &gt; 0 and (prj.projectmanager = &apos;#manager&apos; or  [rest of string was truncated]&quot;;.
         /// </summary>
         public static string getmaterialdetailfprrequest {
             get {
@@ -1379,9 +1379,9 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select rd.reserveid,rd.materialid,rd.poitemdescription as materialdescription,sum(rd.reservequantity) reservedqty
+        ///   Looks up a localized string similar to select rd.reserveid,rd.itemid,rd.materialid,rd.poitemdescription as materialdescription,sum(rd.reservequantity) reservedqty
         ///from wms.materialreservedetails rd
-        ///where rd.reserveid = &apos;#reserveid&apos; group by rd.reserveid,rd.materialid,rd.poitemdescription.
+        ///where rd.reserveid = &apos;#reserveid&apos; group by rd.reserveid,rd.materialid,rd.poitemdescription,rd.itemid.
         /// </summary>
         public static string getmaterialreservedata {
             get {
@@ -1482,10 +1482,13 @@ namespace WMS.Common {
         
         /// <summary>
         ///   Looks up a localized string similar to select max(sk.pono) as pono ,sk.materialid as material,Max(prj.projectmanager) as projectmanager,
-        ///sum(sk.availableqty) as availableqty,(select sum(ws1.availableqty) from wms.wms_stock ws1 where ws1.materialid =sk.materialid and ws1.poitemdescription = sk.poitemdescription and ws1.stcktype = &apos;Plant Stock&apos;) as plantstockavailableqty,
+        ///sum(sk.availableqty) as availableqty,
+        ///(select sum(ws1.availableqty) from wms.wms_stock ws1 
+        ///left outer join wms.wms_project prj1 on prj1.pono = ws1.pono
+        ///where ws1.materialid =sk.materialid and ws1.poitemdescription = sk.poitemdescription and ws1.stcktype = &apos;Plant Stock&apos;) 
+        ///as plantstockavailableqty,
         ///SUM(sk.unitprice * sk.availableqty) as materialcost,sk.poitemdescription  as materialdescription 
-        ///from wms.wms_stock  sk 
-        ///left outer join wms.wms_project prj on prj.pono = sk [rest of string was truncated]&quot;;.
+        ///from wms. [rest of string was truncated]&quot;;.
         /// </summary>
         public static string getmaterialstoreserve {
             get {
@@ -1917,9 +1920,9 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select sum(rsv.reservequantity) as reservedqty,rsv.reserveid,rsv.poitemdescription,rsv.materialid,Max(rd.projectcode) as projectcode,Max(rd.pono) as pono from wms.materialreservedetails rsv
+        ///   Looks up a localized string similar to select sum(rsv.reservequantity) as reservedqty,rsv.itemid,rsv.reserveid,rsv.poitemdescription,rsv.materialid,Max(rd.projectcode) as projectcode,Max(rd.pono) as pono from wms.materialreservedetails rsv
         ///left outer join wms.materialreserve rd on rsv.reserveid = rd.reserveid
-        ///where rsv.reserveid = &apos;#reserveid&apos; group by rsv.reserveid,rsv.materialid,rsv.poitemdescription.
+        ///where rsv.reserveid = &apos;#reserveid&apos; group by rsv.reserveid,rsv.materialid,rsv.poitemdescription,rsv.itemid.
         /// </summary>
         public static string getreservedatabyid {
             get {

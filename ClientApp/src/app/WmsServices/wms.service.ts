@@ -258,8 +258,8 @@ export class wmsService {
     return this.http.get<any>(this.url + 'POData/getmaterialrequestListdata?PONO=' + pono + '&loginid=' + loginid + '&projectcode=' + projectcode , this.httpOptions);
   }
 
-  getMaterialReservelistdata(): Observable<any> {
-    return this.http.get<any>(this.url + 'POData/getmaterialreserveListdata/', this.httpOptions);
+  getMaterialReservelistdata(projectcode: string): Observable<any> {
+    return this.http.get<any>(this.url + 'POData/getmaterialreserveListdata?projectcode=' + projectcode, this.httpOptions);
   }
 
  

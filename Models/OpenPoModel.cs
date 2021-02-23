@@ -1123,7 +1123,7 @@ namespace WMS.Models
 		public List<MaterialTransactionDetail> reservedata { get; set; }
 		public string returnid { get; set; }
 		public bool isapproved { get; set; }
-
+		public bool isnextapprover { get; set; }
 		public string requesttype { get; set; }
 
 

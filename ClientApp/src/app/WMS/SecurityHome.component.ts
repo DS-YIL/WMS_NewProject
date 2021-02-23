@@ -261,6 +261,8 @@ export class SecurityHomeComponent implements OnInit {
   //get details based on po no
   SearchPoNo() {
     debugger;
+    this.multiplepo = false;
+    this.selectedPOs = [];
     if (this.searchdata) {
       this.disSaveBtn = false;
       this.spinner.show();

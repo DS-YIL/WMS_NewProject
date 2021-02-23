@@ -7584,14 +7584,14 @@ namespace WMS.DAL
 		Purpose : <<Material Reserve data>>
 		Review Date :<<>>   Reviewed By :<<>>
 		*/
-		public async Task<IEnumerable<IssueRequestModel>> MaterialReservedata()
+		public async Task<IEnumerable<IssueRequestModel>> MaterialReservedata(string projectcode)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
 
 				try
 				{
-					string materialrequestquery = WMSResource.getmaterialstoreserve;
+					string materialrequestquery = WMSResource.getmaterialstoreserve.Replace("#projectcode",projectcode);
 					await pgsql.OpenAsync();
 					var data = await pgsql.QueryAsync<IssueRequestModel>(
 					  materialrequestquery, null, commandType: CommandType.Text);
@@ -10933,6 +10933,7 @@ namespace WMS.DAL
 							{
 								mailto = nextmailobj[0].approveremail;
 								EmailModel emailmodel1 = new EmailModel();
+								emailmodel1.isnextapprover = true;
 								emailmodel1.transferid = data.transferid.ToString();
 								emailmodel1.transferbody = "Material Transfer request initiated for approval with Transferid :" + data.transferid.ToString();
 								//emailmodel1.ToEmailId = "developer1@in.yokogawa.com";
@@ -10948,6 +10949,7 @@ namespace WMS.DAL
 
 								mailto = data.requesteremail;
 								EmailModel emailmodel1 = new EmailModel();
+								emailmodel1.isnextapprover = false;
 								emailmodel1.transferid = data.transferid.ToString();
 								emailmodel1.transferbody = "Material Transfer request approved with Transferid :" + data.transferid.ToString();
 								//emailmodel1.ToEmailId = "developer1@in.yokogawa.com";
@@ -10972,6 +10974,7 @@ namespace WMS.DAL
 							mailto = data.requesteremail;
 							EmailModel emailmodel1 = new EmailModel();
 							emailmodel1.transferid = data.transferid.ToString();
+							emailmodel1.isnextapprover = false;
 							emailmodel1.transferbody = "Material Transfer request rejected with Transferid :" + data.transferid.ToString();
 							//emailmodel1.ToEmailId = "developer1@in.yokogawa.com";
 							emailmodel1.ToEmailId = mailto;
@@ -10987,7 +10990,15 @@ namespace WMS.DAL
 					foreach (EmailModel mdl in emailmodels)
 					{
 						EmailUtilities emailobj = new EmailUtilities();
-						emailobj.sendEmail(mdl, 18);
+                        if (mdl.isnextapprover)
+                        {
+							emailobj.sendEmail(mdl, 14);
+						}
+                        else
+                        {
+							emailobj.sendEmail(mdl, 18);
+						}
+						
 					}
 
 
@@ -11594,6 +11605,12 @@ namespace WMS.DAL
 					List<IssueRequestModel> reqdata = new List<IssueRequestModel>();
 					foreach (ReserveMaterialModel rv in datalist)
 					{
+						int reservedqty = rv.reservedqty;
+						int itemid = rv.itemid;
+
+
+						string queryxx = "update wms.wms_stock set availableqty = availableqty + " + reservedqty + " where itemid = '" + itemid + "'";
+						var results11xx = pgsql.ExecuteScalar(queryxx);
 						IssueRequestModel model = new IssueRequestModel();
 						model.quantity = rv.reservedqty;
 						model.requesteddate = System.DateTime.Now;

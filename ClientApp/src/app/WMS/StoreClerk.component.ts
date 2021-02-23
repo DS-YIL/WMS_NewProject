@@ -448,7 +448,13 @@ export class StoreClerkComponent implements OnInit {
         this.PoDetails.pono = data1[0].value;
       }
       else {
-        this.PoDetails.pono = this.selectedpendingpono;
+        if (!isNullOrUndefined(this.gateentryid)) {
+          this.PoDetails.pono = this.selectedpendingpono + "-" + this.lblinvoiceno;
+        }
+        else {
+          this.PoDetails.pono = this.selectedpendingpono;
+        }
+        
       }
 
 
@@ -537,11 +543,17 @@ export class StoreClerkComponent implements OnInit {
     this.podetailsList = [];
     this.getpendingpos();
     this.getcheckedgrn();
+   
     if (this.isacceptance) {
-      this.showpodata1();
+      if (isNullOrUndefined(this.grnno)) {
+        this.showpodata1();
+      }
+     
     }
     else {
-      this.showpodata();
+      if (isNullOrUndefined(this.gateentryid)) {
+        this.showpodata();
+      }
     }
   }
 

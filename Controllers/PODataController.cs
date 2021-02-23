@@ -742,9 +742,9 @@ namespace WMS.Controllers
 		}
 
 		[HttpGet("getmaterialreserveListdata")]
-		public async Task<IEnumerable<IssueRequestModel>> getmaterialreserveListdata()
+		public async Task<IEnumerable<IssueRequestModel>> getmaterialreserveListdata(string projectcode)
 		{
-			return await this._poService.MaterialReservedata();
+			return await this._poService.MaterialReservedata(projectcode);
 		}
 
 		[HttpGet("getgatepassmaterialrequestList")]

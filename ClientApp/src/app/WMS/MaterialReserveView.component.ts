@@ -82,13 +82,27 @@ export class MaterialReserveViewComponent implements OnInit {
     this.filteredprojects = [];
     this.reservetorequest = new materialReservetorequestModel();
     this.getMaterialReservelist();
-    this.getdefaultmaterialstoreserve();
+    //this.getdefaultmaterialstoreserve();
     this.getprojects();
   }
 
-  getdefaultmaterialstoreserve() {
-    this.defaultmaterials = []
-    this.wmsService.getMaterialReservelistdata().subscribe(data => {
+  projectSelected() {
+    debugger;
+    this.materialList = [];
+    this.ponolist = [];
+    this.defaultmaterialidescs = [];
+    this.defaultmaterialids = [];
+    this.defaultuniquematerialids = [];
+    this.defaultuniquematerialidescs = [];
+    this.defaultmaterials = [];
+    var prj = this.selectedproject.value;
+    this.getdefaultmaterialstoreserve(prj);
+
+  }
+
+  getdefaultmaterialstoreserve(projectcode: string) {
+    this.defaultmaterials = [];
+    this.wmsService.getMaterialReservelistdata(projectcode).subscribe(data => {
       this.defaultmaterials = data;
       this.setmatdesclist(this.defaultmaterials);
     });
@@ -479,6 +493,10 @@ export class MaterialReserveViewComponent implements OnInit {
 
   //add materials for gate pass
   addNewMaterial() {
+    if (isNullOrUndefined(this.selectedproject)) {
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Select Project' });
+      return;
+    }
     if (this.materialList.length <= 0) {
       this.materialistModel = { material: "", materialdescription: "", quantity: 0, materialcost: 0, availableqty: 0, remarks: " ", issuedqty: 0, requesterid: this.employee.employeeno, ReserveUpto: this.mindate, projectcode: "", };
       this.materialList.push(this.materialistModel);
@@ -719,6 +737,10 @@ export class MaterialReserveViewComponent implements OnInit {
 
   //Submit Requested quantity data
   onSubmitReqData() {
+    if (isNullOrUndefined(this.selectedproject)) {
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Select Project' });
+      return false;
+    }
     if (this.materialList.length <= 0) {
       this.messageService.add({ severity: 'error', summary: '', detail: "Add material to Request" });
     }
@@ -776,7 +798,7 @@ export class MaterialReserveViewComponent implements OnInit {
               this.materialList = [];
               this.materialmodel = [];
               this.messageService.add({ severity: 'success', summary: '', detail: 'Reserved materials Successfully' });
-              this.getdefaultmaterialstoreserve();
+              //this.getdefaultmaterialstoreserve();
               this.getMaterialReservelist();
               //this.router.navigateByUrl("/WMS/MaterialReqView/" + this.pono);
             }
