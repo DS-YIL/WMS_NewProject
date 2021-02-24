@@ -76,6 +76,7 @@ import { ReceiveMaterialComponent } from './WMS/ReceiveMaterial.component';
 import { STOApprovalComponent } from './WMS/STOApproval.component';
 import { SubcontractApprovalComponent } from './WMS/SubcontractApproval.component';
 import { POReportComponent } from './WMS/POReport.component';
+import { AnnexureReportComponent } from './WMS/AnnexureReport.component';
 
 //admin
 import { MaterilMasterComponent } from './WMS/Admin/Materialmaster.component';
@@ -196,7 +197,8 @@ const routes: Routes = [{
     { path: "STOApproval", component: STOApprovalComponent, canActivate: [AuthGuard] },
     { path: "SubcontractApproval", component: SubcontractApprovalComponent, canActivate: [AuthGuard] },
     { path: "AssignProjectManager", component: AssignProjectManagerComponent, canActivate: [AuthGuard] },
-    { path: "POReport", component: POReportComponent, canActivate: [AuthGuard] }
+    { path: "POReport", component: POReportComponent, canActivate: [AuthGuard] },
+    { path: "AnnexureReport", component: AnnexureReportComponent, canActivate: [AuthGuard] }
 
   ]
 

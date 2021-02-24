@@ -185,7 +185,7 @@
   </div>-->
     <div class="col-lg-4 col-md-4 form-inline">
       <label class="labelheading">Project :</label>
-      <p-autoComplete [(ngModel)]="selectedproject" field="text" appendTo="body" [suggestions]="filteredprojects" placeholder="search by name/code" [ngModelOptions]="{standalone: true}" [forceSelection]="true" (completeMethod)="filterprojects($event)" [size]="30"
+      <p-autoComplete [(ngModel)]="selectedproject" field="text" appendTo="body" [suggestions]="filteredprojects" (onSelect)="projectSelected($event)" placeholder="search by name/code" [ngModelOptions]="{standalone: true}" [forceSelection]="true" (completeMethod)="filterprojects($event)" [size]="30"
                       [dropdown]="true"></p-autoComplete>
     </div>
     <div class="col-lg-4 col-md-4 form-inline">
@@ -235,8 +235,8 @@
               <!--<th class="ptable-cell">Material</th>-->
               <th style="text-align:center;width:250px;" class="ptable-cell">Material</th>
               <th style="text-align:center" class="ptable-cell">PO Item Description</th>
-              <th style="text-align:center;width:130px;" class="ptable-cell">Price(INR)</th>
-              <th style="text-align:center;width:150px;" class="ptable-cell">Available Qty</th>
+              <!--<th style="text-align:center;width:130px;" class="ptable-cell">Price(INR)</th>-->
+              <th style="text-align:center;width:150px;" class="ptable-cell">Plant Stock Available Qty</th>
               <th style="text-align:center;width:150px;" class="ptable-cell">Reserve Qty</th>
               <th style="text-align:center;width:60px;" class="ptable-cell"></th>
             </tr>
@@ -261,12 +261,12 @@
                 <!--{{rowData.materialdescription}}-->
 
               </td>
-              <td class="ptable-cell" style="text-align:right">
+              <!--<td class="ptable-cell" style="text-align:right">
                 <input [disabled]="true" [(ngModel)]="rowData.materialcost" class="form-control" type="text" name="{{rowData.materialcost}}" />
 
-              </td>
+              </td>-->
               <td class="ptable-cell" style="text-align:right">
-                <input [disabled]="true" [(ngModel)]="rowData.availableqty" class="form-control" type="text" name="{{rowData.availableqty}}" />
+                <input [disabled]="true" [(ngModel)]="rowData.plantstockavailableqty" class="form-control" type="text" name="plantavailqty" />
 
               </td>
               <td class="ptable-cell" style="text-align:right">

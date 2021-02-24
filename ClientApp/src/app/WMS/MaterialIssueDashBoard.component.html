@@ -6,9 +6,7 @@
       </span>
     </div>-->
     <div class="card-header commoncardheader">
-      <div class="row " style="    margin-top: 10px;
-    margin-left: 0px !important;
-    margin-right: 0px !important">
+      <div class="row " style="margin-top: 10px; margin-left: 0px !important; margin-right: 0px !important">
         <div class="col-lg-4 col-md-4 form-inline">
           <div class="form-inline">
             <label class="labelheading">Status :</label>&nbsp;&nbsp;
@@ -16,7 +14,6 @@
               <option selected value="Pending"> Pending</option>
               <option value="Approved"> Issued</option>
             </select>
-
           </div>
         </div>
         <div class="col-lg-4 col-md-4 text-center">
@@ -53,7 +50,7 @@
               <!--<th style="text-align:center">Project Name</th>-->
               <th style="text-align: center;width:150px">Requested On</th>
               <th style="text-align:center;width:150px">Requester</th>
-              <th *ngIf="selectedStatus=='Approved'" style="text-align:center;width:100px">Print</th>
+              <!--<th *ngIf="selectedStatus=='Approved'" style="text-align:center;width:100px">Print</th>-->
             </tr>
             <tr>
               <th></th>
@@ -61,7 +58,7 @@
               <!--<th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'projectname', 'contains')"></th>-->
               <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'requesteddate', 'contains')"></th>
               <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'name', 'contains')"></th>
-              <th *ngIf="selectedStatus=='Approved'"></th>
+              <!--<th *ngIf="selectedStatus=='Approved'"></th>-->
             </tr>
           </ng-template>
           <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
@@ -73,9 +70,9 @@
               <!--<td class="ptable-cell" style="text-align:left;">{{rowData.projectname}}</td>-->
               <td class="ptable-cell" style="text-align:center;width:150px;">{{rowData.requesteddate  | date :  constants.dateFormat}}</td>
               <td class="ptable-cell" style="text-align:left;width:150px;">{{rowData.name}}</td>
-              <td *ngIf="selectedStatus=='Approved'" class="ptable-cell" style="text-align:center;width:100px;">
+              <!--<td *ngIf="selectedStatus=='Approved'" class="ptable-cell" style="text-align:center;width:100px;">
                 <input class="btn btn-primary btn-sm" (click)="PrintMaterialIssue(rowData)" type="button" value="Print">
-              </td>
+              </td>-->
             </tr>
           </ng-template>
         </p-table>

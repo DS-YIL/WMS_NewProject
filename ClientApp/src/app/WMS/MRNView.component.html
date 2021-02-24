@@ -1,122 +1,257 @@
+<div *ngIf="!ShowPrint" style="margin:10px;">
+  <div style="margin:10px;">
+    <div class="card commoncardcss" style="width:100%">
+      <div class="card-header">
+        <div class="row m-2">
+          <div class="col-lg-4 col-md-4 form-inline">
+            <div class="form-inline">
+              <label class="labelheading">Status :</label>&nbsp;&nbsp;
+              <select placeholder="Status" name="Status" (change)="onSelectStatus($event)" [ngModel]="selectedStatus" class="form-control">
+                <option selected value="Pending"> Pending</option>
+                <option value="Approved"> Issued</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-4 text-center">
+            <span style="color:#428bca;font-size:18px" class="commonheadertext">
+              <i class="fa fa-check-circle-o commonheadertext"></i>&nbsp;Material Requisition Note
+            </span>
+          </div>
+          <div class="col-lg-4 col-md-4 form-inline"></div>
+        </div>
+        <div *ngIf="selectedStatus =='Pending'" class="row m-2">
+          <div class="col-lg-5 col-md-4 form-inline">
+            <label class="labelheading">Accepted Receipts:</label>&nbsp;
+            <p-autoComplete [(ngModel)]="selectedgrnno" appendTo="body" [suggestions]="filteredgrns" (onSelect)="SearchGRNNo()" (change)="SearchGRNNo()" placeholder="search by supplier/GRN No" [ngModelOptions]="{standalone: true}" [forceSelection]="false" (completeMethod)="filtergrn($event)" [size]="30"
+                            [dropdown]="true">
+            </p-autoComplete>
+          </div>
+          <div class="col-lg-4 col-md-4 form-inline">
+            <label class="labelheading">Project :</label>&nbsp;
+            <p-autoComplete [(ngModel)]="selectedponomodel" [disabled]="isalreadytransferred" field="text" appendTo="body" [suggestions]="filteredpono" placeholder="search by name/code" [ngModelOptions]="{standalone: true}" [forceSelection]="false" (completeMethod)="filterpos($event)" [size]="30"
+                            [dropdown]="true">
+            </p-autoComplete>
+          </div>
+          <div class="col-lg-3 col-md-3 form-inline">
+            <label class="labelheading">Remarks :</label>&nbsp;
+            <textarea [(ngModel)]="mrnremarks" [disabled]="isalreadytransferred" style="width:60%;resize: none"></textarea>
+          </div>
 
-<div style="margin:10px;">
-  <div class="card commoncardcss" style="width:100%">
-    <div class="card-header">
-      <div class="row">
-        <div class="col-lg-4 col-md-4 form-inline">
         </div>
-        <div class="col-lg-4 col-md-4 text-center">
-          <span style="color:#428bca;font-size:18px" class="commonheadertext">
-            <i class="fa fa-check-circle-o commonheadertext"></i>&nbsp;Material Requisition Note
-          </span>
-        </div>
-        <div class="col-lg-4 col-md-4 form-inline"></div>
-
-      </div>
-      <div class="row " style="
-    margin-left: 0px !important;
-    margin-right: 0px !important">
-        <div class="col-lg-5 col-md-4 form-inline">
-          <label class="labelheading">Accepted Receipts:</label>&nbsp;
-          <p-autoComplete [(ngModel)]="selectedgrnno" appendTo="body" [suggestions]="filteredgrns" (onSelect)="SearchGRNNo()" (change)="SearchGRNNo()" placeholder="search by supplier/GRN No" [ngModelOptions]="{standalone: true}" [forceSelection]="false" (completeMethod)="filtergrn($event)" [size]="30"
-                          [dropdown]="true">
-          </p-autoComplete>
-        </div>
-        <div class="col-lg-4 col-md-4 form-inline">
-          <label class="labelheading">Project :</label>&nbsp;
-          <p-autoComplete [(ngModel)]="selectedponomodel" [disabled]="isalreadytransferred" field="text" appendTo="body" [suggestions]="filteredpono" placeholder="search by name/code" [ngModelOptions]="{standalone: true}" [forceSelection]="false" (completeMethod)="filterpos($event)" [size]="30"
-                          [dropdown]="true">
-          </p-autoComplete>
-        </div>
-        <div class="col-lg-3 col-md-3 form-inline">
-          <label class="labelheading">Remarks :</label>&nbsp;
-          <textarea [(ngModel)]="mrnremarks" [disabled]="isalreadytransferred" style="width:60%;resize: none"></textarea>
-        </div>
-
-      </div>
-      <div class="row " *ngIf="podetailsList.length>0" style="margin-top: 10px;
-    margin-left: 0px !important;
-    margin-right: 0px !important">
-        <!--<div class="col-md-2 col-lg-2  pt-2 labelheading" *ngIf="podetailsList.length>0">
-      PO No : <span class="labeltext">{{podetailsList[0].pono}}</span>
-    </div>-->
-        <div class="col-md-2 col-lg-2 pt-2 labelheading" style="font-weight:600;font-size:14px;color:darkblue;" *ngIf="podetailsList.length>0">
-          Invoice No : <span class="labeltext">{{podetailsList[0].invoiceno}}</span>
-        </div>
-        <div class="col-md-3 col-lg-3 pt-2 labelheading" style="font-weight:600;font-size:14px;color:darkblue;" *ngIf="podetailsList.length>0">
-          sL
+        <div class="row " *ngIf="selectedStatus =='Pending' && podetailsList.length>0" style="margin-top: 10px;margin-left: 0px !important;margin-right: 0px !important">
+          <!--<div class="col-md-2 col-lg-2  pt-2 labelheading" *ngIf="podetailsList.length>0">
+            PO No : <span class="labeltext">{{podetailsList[0].pono}}</span>
+          </div>-->
+          <div class="col-md-2 col-lg-2 pt-2 labelheading" style="font-weight:600;font-size:14px;color:darkblue;" *ngIf="podetailsList.length>0">
+            Invoice No : <span class="labeltext">{{podetailsList[0].invoiceno}}</span>
+          </div>
+          <div class="col-md-3 col-lg-3 pt-2 labelheading" style="font-weight:600;font-size:14px;color:darkblue;" *ngIf="podetailsList.length>0">
             WMS GRN No : <span class="labeltext">{{podetailsList[0].grnnumber}}</span>
-        </div>
-        <div class="col-md-3 col-lg-3 pt-2 labelheading" style="font-weight:600;font-size:14px;color:darkblue;" *ngIf="podetailsList.length>0">
-          <span class="text-success" *ngIf="isalreadytransferred"><span class="text-primary">Status : &nbsp;</span> Transferred</span>
-        </div>
+          </div>
+          <div class="col-md-3 col-lg-3 pt-2 labelheading" style="font-weight:600;font-size:14px;color:darkblue;" *ngIf="podetailsList.length>0">
+            <span class="text-success" *ngIf="isalreadytransferred"><span class="text-primary">Status : &nbsp;</span> Transferred</span>
+          </div>
 
+        </div>
       </div>
-    </div>
-    <div class="card-body" style="overflow-y:scroll">
-     
-            <p-table [columns]="cols" [scrollable]="true" scrollHeight="60vh" [value]="podetailsList" dataKey="material">
-              <ng-template pTemplate="header" let-columns>
-                <tr class="mprltbldata">
-                  <th style="width:70px;text-align:center">Sl.No.</th>
-                  <th style="width:150px;text-align:center">PONo.</th>
-                  <th style="width:200px;text-align:center">Material</th>
-                  <th style="width:100px;text-align:center">Line item no</th>
-                  <!--<th style="text-align: center">Material Description</th>-->
-                  <th style="text-align: center">PO Item Description</th>
-                  <th style="width:100px;text-align:center">Accepted Qty</th>
-                  <th style="width:200px;text-align:center" *ngIf="isalreadytransferred">Transferred By</th>
-                  <th style="width:100px;text-align:center" *ngIf="isalreadytransferred">Transferred On</th>
-                </tr>
+      <div *ngIf="selectedStatus =='Pending'" class="card-body" style="overflow-y:scroll">
+        <p-table [columns]="cols" [scrollable]="true" scrollHeight="60vh" [value]="podetailsList" dataKey="material">
+          <ng-template pTemplate="header" let-columns>
+            <tr class="mprltbldata">
+              <th style="width:70px;text-align:center">Sl.No.</th>
+              <th style="width:150px;text-align:center">PONo.</th>
+              <th style="width:200px;text-align:center">Material</th>
+              <th style="width:100px;text-align:center">Line item no</th>
+              <!--<th style="text-align: center">Material Description</th>-->
+              <th style="text-align: center">PO Item Description</th>
+              <th style="width:150px;text-align:center">Accepted Qty</th>
+              <th style="width:200px;text-align:center" *ngIf="isalreadytransferred">Transferred By</th>
+              <th style="width:100px;text-align:center" *ngIf="isalreadytransferred">Transferred On</th>
+            </tr>
 
-              </ng-template>
-              <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex" let-expanded="expanded" let-columns="columns">
-                <tr class="ui-widget-header">
+          </ng-template>
+          <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex" let-expanded="expanded" let-columns="columns">
+            <tr class="ui-widget-header">
 
-                  <td class="ptable-cell" style="text-align:center;width:70px">{{rowIndex + 1}}</td>
-                  <td class="ptable-cell" style="text-align:center;width:150px;">
-                    {{rowData.pono}}
-                  </td>
-                  <td class="ptable-cell" style="text-align:center;width:200px;" colspan="1">
-                    {{rowData.material}}
-                  </td>
-                  <td class="ptable-cell" style="text-align:center;width:100px;" colspan="1">
-                    {{rowData.lineitemno}}
-                  </td>
-                  <!--<td class="ptable-cell" style="text-align:left;">{{rowData.materialdescription}}</td>-->
-                <td class="ptable-cell" style="text-align:left;">{{rowData.poitemdescription}}</td>
-                  <td class="ptable-cell" style="text-align:right;width:100px;">{{rowData.confirmqty}}</td>
-                  <td class="ptable-cell" style="text-align:left;width:200px;" *ngIf="isalreadytransferred">{{rowData.mrnby}}</td>
-                  <td class="ptable-cell" style="text-align:center;width:100px;" *ngIf="isalreadytransferred">{{rowData.mrnon | date: 'dd/MM/yyyy'}}</td>
+              <td class="ptable-cell" style="text-align:center;width:70px">{{rowIndex + 1}}</td>
+              <td class="ptable-cell" style="text-align:center;width:150px;">
+                {{rowData.pono}}
+              </td>
+              <td class="ptable-cell" style="text-align:center;width:200px;" colspan="1">
+                {{rowData.material}}
+              </td>
+              <td class="ptable-cell" style="text-align:center;width:100px;" colspan="1">
+                {{rowData.lineitemno}}
+              </td>
+              <td class="ptable-cell" style="text-align:left;">{{rowData.poitemdescription}}</td>
+              <td class="ptable-cell" style="text-align:right;width:150px;">{{rowData.confirmqty}}</td>
+              <td class="ptable-cell" style="text-align:center;width:200px;" *ngIf="isalreadytransferred">{{rowData.mrnby}}</td>
+              <td class="ptable-cell" style="text-align:center;width:100px;" *ngIf="isalreadytransferred">{{rowData.mrnon | date: 'dd/MM/yyyy'}}</td>
+            </tr>
+          </ng-template>
 
-                </tr>
-              </ng-template>
-
-            </p-table>
-
-          
-
-
-
-
-
-
-
-         
-
+        </p-table>
         <div style="text-align: center;margin-top:5px;" *ngIf="podetailsList.length>0 && !isalreadytransferred">
           <input class="btn btn-primary btn-sm" (click)="submitmr()" type="button" value="Submit">
         </div>
-
-
-
-
-
-
-     
+        <div style="text-align: center;margin-top:5px;" *ngIf="podetailsList.length>0 && isalreadytransferred && showPrntBtn">
+          <input class="btn btn-primary btn-sm" (click)="PrintMRN('')" type="button" value="Print">
+        </div>
+      </div>
+      <div *ngIf="selectedStatus =='Approved'">
+        <div class="card-body" style="overflow-y:scroll">
+          <p-table #dt [columns]="cols" [scrollable]="true" scrollHeight="60vh" [value]="checkedgrnlist" dataKey="material">
+            <ng-template pTemplate="header" let-columns>
+              <tr class="mprltbldata">
+                <th style="width:70px;text-align:center">Sl.No.</th>
+                <th style="width:150px;text-align:center">GRN NO</th>
+                <th style="width:200px;text-align:center">Supplier</th>
+                <th style="width:100px;text-align:center">Invoice No</th>
+                <th style="width:200px;text-align:center">Transferred By</th>
+                <th style="width:100px;text-align:center">Transferred On</th>
+                <th *ngIf="selectedStatus=='Approved'" style="text-align:center;width:100px">Print</th>
+              </tr>
+              <tr>
+                <th></th>
+                <th><input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'text', 'contains')"></th>
+                <th><input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'supplier', 'contains')"></th>
+                <th><input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'invoiceno', 'contains')"></th>
+                <th><input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'mrnby', 'contains')"></th>
+                <th></th>
+                <th></th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex" let-expanded="expanded" let-columns="columns">
+              <tr class="ui-widget-header">
+                <td class="ptable-cell" style="text-align:center;width:70px">{{rowIndex + 1}}</td>
+                <td class="ptable-cell" style="text-align:center;width:150px;">{{rowData.text}}</td>
+                <td class="ptable-cell" style="text-align:center;width:200px;">{{rowData.supplier}}</td>
+                <td class="ptable-cell" style="text-align:center;width:100px;">{{rowData.invoiceno}}</td>
+                <td class="ptable-cell" style="text-align:center;width:200px;">{{rowData.mrnby}}</td>
+                <td class="ptable-cell" style="text-align:center;width:100px;">{{rowData.mrnon | date: 'dd/MM/yyyy'}}</td>
+                <td class="ptable-cell" style="text-align:center;width:100px;">
+                  <input class="btn btn-primary btn-sm" (click)="PrintMRN(rowData)" type="button" value="Print">
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+      </div>
     </div>
-
   </div>
-
 </div>
-  
+
+<div *ngIf="ShowPrint" style="margin-left:5px;margin-right:5px;">
+  <div class="col-lg-4 col-md-4 form-inline">
+    <button type="button" icon="fa fa-arrow-left" pButton aria-hidden="true" pTooltip="Back" (click)="navigateToMRNView()" style="float: left; height: 26px;"></button>
+  </div>
+  <div id="print-section">
+    <table border="1" style="margin:20px;width:85%">
+      <thead>
+        <tr>
+          <td style="width:50%">
+            <div class="row printheader" style="margin: 0px; padding-top: 5px;">
+              <div class="col-lg-4 col-md-4 col-sm-4 "><img src="../assets/banner1.jpg" height="60" width="150" /></div>
+              <div class="col-lg-3 col-md-3 col-sm-3"></div>
+              <div class="col-lg-5 col-md-5 col-sm-5 form-group">
+                <span class="form-group"><b>Yokogawa India Limited</b></span><br />
+                <span class="form-group">Plot No.96, Complex,3rd Cross, Hosur Road,</span><br />
+                <span class="form-group">Electronic City, Bengaluru, Karnataka 560100</span>
+              </div>
+            </div>
+          </td>
+          <td style="width:50%">
+            <div class=" row font-weight-bold m-2">Store Requisition</div><br />
+            <div class="p-2"><b>No:</b></div><br />
+            <div class="p-2"><b>Date:</b>&nbsp;{{currentDate | date :  constants.dateFormat}}</div>
+          </td>
+        </tr>
+        <tr>
+          <td style="width:50%">
+            <div class="row form-inline m-2">
+              <label class="form-label"><b>Purpose:</b></label>&nbsp;<br />
+            </div>
+            <div class="row form-inline m-2">
+              <label class="form-label"><b>Issued To:</b></label>&nbsp;<br />
+            </div>
+          </td>
+          <td style="width:50%">
+            <div class="row form-inline m-2">
+              <label class="form-label"><b>Job Order No:</b></label>&nbsp;
+            </div>
+            <div class="row form-inline m-2">
+              <label class="form-label"><b>Date:</b></label>&nbsp;
+            </div>
+            <div class="row form-inline m-2">
+              <label class="form-label"><b>Work Order No:</b></label>&nbsp;<br />
+            </div>
+            <div class="row form-inline m-2">
+              <label class="form-label"><b>Date:</b></label>&nbsp;<br />
+            </div>
+          </td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td colspan="2">
+            <div class="printmain">
+              <div class="row m-2">
+                <table border="1" style="width:100%">
+                  <tr>
+                    <th rowspan="2" class="ptable-cell" style="text-align:center;width:30px">Sl. No.</th>
+                    <th rowspan="2" class="ptable-cell" style="text-align:center;width:80px">Part No</th>
+                    <th rowspan="2" class="ptable-cell" style="text-align:center;width:150px">Description</th>
+                    <th colspan="3" class="ptable-cell" style="text-align:center;width:80px">Quantity</th>
+                  </tr>
+                  <tr>
+
+                    <th class="ptable-cell" style="text-align:center;width:60px">Received Qty</th>
+                    <th class="ptable-cell" style="text-align:center;width:60px">Accepted Qty</th>
+                    <th class="ptable-cell" style="text-align:center;width:60px">Unit</th>
+                  </tr>
+                  <tr *ngFor="let rowData of podetailsList;let ri = index">
+                    <td class="ptable-cell" style="text-align:left;width:30px"> {{ri+1}} </td>
+                    <td class="ptable-cell" style="text-align:center;width:80px"> {{rowData.material}} </td>
+                    <td class="ptable-cell" style="text-align:left;width:150px"> {{rowData.poitemdescription}} </td>
+                    <td class="ptable-cell" style="text-align:right;width:60px">{{rowData.receivedqty}}</td>
+                    <td class="ptable-cell" style="text-align:right;width:60px">{{rowData.confirmqty}}</td>
+                    <td class="ptable-cell" style="text-align:center;width:60px">{{rowData.unitprice}}</td>
+                  </tr>
+                </table>
+              </div>
+              <div class="row m-2">
+                <div class="col-lg-4 col-md-4 col-sm-4"></div>
+                <div class="col-lg-2 col-md-2 col-sm-2">
+                  <span style="text-align:center" *ngIf="podetailsList.length==1"><b>Total {{podetailsList.length}} Item</b></span>
+                  <span style="text-align:center" *ngIf="podetailsList.length>1"><b>Total {{podetailsList.length}} Items</b></span>
+                </div>
+              </div>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <div class="printfooter">
+          <br /><br /><br /><br />
+          <div class="row m-0">
+            <div class="col-lg-3 col-md-3 col-sm-3 form-inline">
+              <label class="form-label">Required by : </label>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-3 form-inline">
+              <label class="form-label">Authorised by : </label>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-3 form-inline">
+              <label class="form-label">Issued by : </label>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-3 form-inline">
+              <label class="form-label">Received By :</label>
+            </div>
+          </div>
+        </div>
+      </tfoot>
+    </table>
+  </div>
+  <div style="text-align: center;margin-top:5px;bottom:0;position:fixed;margin-left:45%">
+    <button class="btn btn-primary" printTitle="MRN" [useExistingCss]="true" styleSheetFile="/styles.css" [printStyle]="{h1 : {'color': 'red'}, h2 : {'border': 'solid 1px'}}" printSectionId="print-section" ngxPrint> print</button>
+  </div>
+</div>

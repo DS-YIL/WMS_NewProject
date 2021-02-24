@@ -486,11 +486,11 @@ group by pl.pono</value>
   </data>
   <data name="getmaterialdetailfprrequest" xml:space="preserve">
     <value>select max(sk.pono) as pono ,sk.materialid as material,Max(prj.projectmanager) as projectmanager,
-sum(availableqty) as availableqty,
+sum(sk.availableqty) as availableqty,
 max(sk.stcktype) as stocktype,max(po.suppliername) as suppliername,
 sum(sk.availableqty * sk.unitprice) as materialcost,sk.poitemdescription  as materialdescription from wms.wms_stock  sk 
 left outer join wms.wms_project prj on prj.pono = sk.pono
-left outer join wms.wms_polist po on po.pono = sk.pono 
+left outer join wms.wms_polist po on po.pono = sk.pono  
 where sk.availableqty &gt; 0 and (prj.projectmanager = '#manager' or prj.projectmember ilike '%#manager%')</value>
   </data>
   <data name="issuedqtydetails" xml:space="preserve">
@@ -620,7 +620,7 @@ VALUES(@inwmasterid,@receiveddate,@receivedby,@receivedqty,@materialid,@deletefl
   <data name="receivequeryfornonpo" xml:space="preserve">
     <value>select sinw.invoiceno,inw.pono,inw.lineitemno,sinw.grnnumber,sinw.onhold,sinw.onholdremarks,sinw.unholdedby,sinw.receiveddate,inw.remarks as receiveremarks,inw.materialid as material,ms.materialdescription,inw.poitemdescription,inw.unitprice,
  inw.inwardid,inw.qualitychecked,inw.returnedby,inw.returnedon,inw.returnremarks,inw.receivedqty,inw.returnremarks,inw.materialqty as pendingqty,
- (select materialqty from wms.wms_pomaterials where pono = inw.pono and itemno::integer = inw.lineitemno::integer and materialid = inw.materialid and poitemdescription = inw.poitemdescription) as materialqty,
+ (select materialqty from wms.wms_pomaterials where pono = inw.pono and itemno::integer = inw.lineitemno::integer and materialid = inw.materialid and poitemdescription = inw.poitemdescription limit 1) as materialqty,
  qc.qualitypassedqty,qc.qualityfailedqty,qc.qcby as checkedby,
  CASE
      WHEN inw.qualitycheckrequired != True and inw.returnedby is null THEN inw.receivedqty
@@ -755,10 +755,11 @@ where (stinw.confirmqty is null or stinw.confirmqty = 0) and stinw.receivedqty &
   </data>
   <data name="getgrnlistdataforputaway" xml:space="preserve">
     <value>select stinw.inwardid as value,sinw.grnnumber as text,
-sinw.suppliername as supplier
+sinw.suppliername as supplier,sinw.isdirecttransferred,sinw.invoiceno ,emp.name as mrnby,sinw.mrnon 
 from wms.wms_storeinward stinw 
 left outer join wms.wms_securityinward sinw on stinw.inwmasterid = sinw.inwmasterid 
-where stinw.returnedby is not null and sinw.isdirecttransferred is NOT True and stinw.confirmqty &gt; 0
+ left outer join wms.employee emp on emp.employeeno=sinw.mrnby
+where stinw.returnedby is not null and stinw.confirmqty &gt; 0
 and stinw.inwardid not in (select distinct inwardid from wms.wms_stock where inwardid is not null order by inwardid desc)</value>
   </data>
   <data name="getnonreturnablegatepassdata" xml:space="preserve">
@@ -842,7 +843,7 @@ group by sk.pono, polist.suppliername,prj.projectmanager,prj.projectcode</value>
     <comment>Get PO Details</comment>
   </data>
   <data name="getitemiddata" xml:space="preserve">
-    <value>select * from wms.wms_stock where materialid='#materialid' and poitemdescription = '#desc' and availableqty &gt; 0</value>
+    <value>select * from wms.wms_stock where materialid='#materialid' and poitemdescription = '#desc' and availableqty &gt; 0 and stcktype = 'Plant Stock'</value>
   </data>
   <data name="getreturndata" xml:space="preserve">
     <value>select distinct max(retmat.matreturnid) as matreturnid,max(retmat.returnid ) as returnid, 
@@ -1190,11 +1191,15 @@ group by gtm.materialid</value>
   </data>
   <data name="getmaterialstoreserve" xml:space="preserve">
     <value>select max(sk.pono) as pono ,sk.materialid as material,Max(prj.projectmanager) as projectmanager,
-sum(sk.availableqty) as availableqty,(select sum(ws1.availableqty) from wms.wms_stock ws1 where ws1.materialid =sk.materialid and ws1.poitemdescription = sk.poitemdescription and ws1.stcktype = 'Plant Stock') as plantstockavailableqty,
+sum(sk.availableqty) as availableqty,
+(select sum(ws1.availableqty) from wms.wms_stock ws1 
+left outer join wms.wms_project prj1 on prj1.pono = ws1.pono
+where ws1.materialid =sk.materialid and ws1.poitemdescription = sk.poitemdescription and ws1.stcktype = 'Plant Stock') 
+as plantstockavailableqty,
 SUM(sk.unitprice * sk.availableqty) as materialcost,sk.poitemdescription  as materialdescription 
 from wms.wms_stock  sk 
-left outer join wms.wms_project prj on prj.pono = sk.pono 
-where sk.availableqty &gt; 0 and sk.materialid is not null and sk.poitemdescription is not null  group by sk.materialid,sk.poitemdescription</value>
+left outer join wms.wms_project prj on prj.pono = sk.pono
+where sk.availableqty &gt; 0 and prj.projectcode='#projectcode' and sk.materialid is not null and sk.poitemdescription is not null  group by sk.materialid,sk.poitemdescription</value>
   </data>
   <data name="getAllprojectlist" xml:space="preserve">
     <value>select projectcode as value, projectcode as text,Max(projectmanager) as projectmanager
@@ -1237,9 +1242,9 @@ where requestid = '#requestid'</value>
   from wms.materialrequest req where (req.requesterid = '#reqid' or req.approverid = '#reqid')order by req.requestid desc</value>
   </data>
   <data name="getmaterialreservedata" xml:space="preserve">
-    <value>select rd.reserveid,rd.materialid,rd.poitemdescription as materialdescription,sum(rd.reservequantity) reservedqty
+    <value>select rd.reserveid,rd.itemid,rd.materialid,rd.poitemdescription as materialdescription,sum(rd.reservequantity) reservedqty
 from wms.materialreservedetails rd
-where rd.reserveid = '#reserveid' group by rd.reserveid,rd.materialid,rd.poitemdescription</value>
+where rd.reserveid = '#reserveid' group by rd.reserveid,rd.materialid,rd.poitemdescription,rd.itemid</value>
   </data>
   <data name="getmaterialreserves" xml:space="preserve">
     <value>select rsv.reserveid,rsv.reserveupto,rsv.pono,rsv.reservedon,rsv.projectcode,rsv.remarks,
@@ -1277,9 +1282,9 @@ where returnid = '#returnid'</value>
  where req.requestid='#requestid'</value>
   </data>
   <data name="getreservedatabyid" xml:space="preserve">
-    <value>select sum(rsv.reservequantity) as reservedqty,rsv.reserveid,rsv.poitemdescription,rsv.materialid,Max(rd.projectcode) as projectcode,Max(rd.pono) as pono from wms.materialreservedetails rsv
+    <value>select sum(rsv.reservequantity) as reservedqty,rsv.itemid,rsv.reserveid,rsv.poitemdescription,rsv.materialid,Max(rd.projectcode) as projectcode,Max(rd.pono) as pono from wms.materialreservedetails rsv
 left outer join wms.materialreserve rd on rsv.reserveid = rd.reserveid
-where rsv.reserveid = '#reserveid' group by rsv.reserveid,rsv.materialid,rsv.poitemdescription</value>
+where rsv.reserveid = '#reserveid' group by rsv.reserveid,rsv.materialid,rsv.poitemdescription,rsv.itemid</value>
   </data>
   <data name="insertmaterialrequest" xml:space="preserve">
     <value>INSERT INTO wms.materialrequest(approveremailid,approverid,pono,requesterid,requesteddate,deleteflag,projectcode,remarks,isapprovalrequired,isapproved,approvalremarks,approvedon)VALUES(@approveremailid,@approverid,@pono,@requesterid,current_date,false,@projectcode,@remarks,@isapprovalrequired,@isapproved,@approvalremarks,@approvedon) returning requestid</value>
@@ -1793,8 +1798,8 @@ group by bin.binid,bin.rackid,bin.locatorid,sk.materialid,sk.poitemdescription o
     <value>select * from wms.wms_invstocktransfer where transfertype='STO'</value>
   </data>
   <data name="insertinvtransfermaterialSTO" xml:space="preserve">
-    <value>insert into wms.wms_invtransfermaterial (transferid,materialid,transferqty,projectid,requireddate,poitemdesc)
-values (@transferid,@materialid,@transferqty,@projectid,@requireddate,@poitemdesc)</value>
+    <value>insert into wms.wms_invtransfermaterial (transferid,materialid,transferqty,projectid,requireddate,poitemdesc,value)
+values (@transferid,@materialid,@transferqty,@projectid,@requireddate,@poitemdesc,@value)</value>
   </data>
   <data name="STOrequestedmatdetails" xml:space="preserve">
     <value>select * from wms.wms_invtransfermaterial invtras </value>
@@ -2095,5 +2100,13 @@ group by stk.itemlocation,stk.stcktype,stk.pono,stk.poitemdescription,stk.materi
   <data name="insertmaterialdetails" xml:space="preserve">
     <value>insert into wms.wms_printstatusmaterial(id,inwmasterid,materialid,noofprint )values(default,@inwmasterid,@materialid,@noofprint)</value>
   </data>
-
+  <data name="getannexuredata" xml:space="preserve">
+    <value>select wi.transferid,inv.projectcode as projectid, wi.materialid , wi.poitemdesc as materialdescription, wi.transferqty ,wi.value,
+(select wp.projectmanager from wms.wms_project wp where wp.projectcode = inv.projectcode limit 1) as projectmanager,
+ssg.subconno 
+from wms.wms_invtransfermaterial wi 
+left outer join wms.wms_invstocktransfer inv on wi.transferid = inv.transferid
+left outer join wms.sto_subcontract_gr ssg on ssg.transferid = wi.transferid
+where inv.transfertype = 'SubContract'</value>
+  </data>
 </root>

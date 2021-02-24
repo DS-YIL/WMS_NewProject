@@ -5,7 +5,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { constants } from '../Models/WMSConstants'
 import { Employee, Login, DynamicSearchResult, printMaterial, rbamaster, locationBarcode, printonholdGR } from '../Models/Common.Model';
-import { PoFilterParams, PoDetails, BarcodeModel, StockModel, materialRequestDetails, inwardModel, gatepassModel, stocktransfermodel, Materials, authUser, invstocktransfermodel, ddlmodel, locataionDetailsStock, updateonhold, materialistModel, outwardmaterialistModel, pageModel, UserDashboardDetail, UserDashboardGraphModel, UnholdGRModel, MRNsavemodel, notifymodel, materialtransferMain, materialReservetorequestModel, testcrud, PrintHistoryModel, materilaTrasFilterParams, materialRequestFilterParams, materialResFilterParams, materialRetFilterParams, outwardinwardreportModel, UserModel, WMSHttpResponse, MaterialinHand, matlocations, grReports, MateriallabelModel, ManagerDashboard, pmDashboardCards, invDashboardCards, GraphModelNew, miscellanousIssueData, inventoryFilters, MaterialMaster, GPReasonMTdata, materialList, PlantMTdata, InitialStock, subrolemodel, AssignProjectModel, MaterialTransaction, plantddl, STOrequestTR, assignpmmodel, POReportModel } from '../Models/WMS.Model';
+import { PoFilterParams, PoDetails, BarcodeModel, StockModel, materialRequestDetails, inwardModel, gatepassModel, stocktransfermodel, Materials, authUser, invstocktransfermodel, ddlmodel, locataionDetailsStock, updateonhold, materialistModel, outwardmaterialistModel, pageModel, UserDashboardDetail, UserDashboardGraphModel, UnholdGRModel, MRNsavemodel, notifymodel, materialtransferMain, materialReservetorequestModel, testcrud, PrintHistoryModel, materilaTrasFilterParams, materialRequestFilterParams, materialResFilterParams, materialRetFilterParams, outwardinwardreportModel, UserModel, WMSHttpResponse, MaterialinHand, matlocations, grReports, MateriallabelModel, ManagerDashboard, pmDashboardCards, invDashboardCards, GraphModelNew, miscellanousIssueData, inventoryFilters, MaterialMaster, GPReasonMTdata, materialList, PlantMTdata, InitialStock, subrolemodel, AssignProjectModel, MaterialTransaction, plantddl, STOrequestTR, assignpmmodel, POReportModel, stocktransfermateriakmodel } from '../Models/WMS.Model';
 import { Text } from '@angular/compiler/src/i18n/i18n_ast';
 
 @Injectable({
@@ -258,8 +258,8 @@ export class wmsService {
     return this.http.get<any>(this.url + 'POData/getmaterialrequestListdata?PONO=' + pono + '&loginid=' + loginid + '&projectcode=' + projectcode , this.httpOptions);
   }
 
-  getMaterialReservelistdata(): Observable<any> {
-    return this.http.get<any>(this.url + 'POData/getmaterialreserveListdata/', this.httpOptions);
+  getMaterialReservelistdata(projectcode: string): Observable<any> {
+    return this.http.get<any>(this.url + 'POData/getmaterialreserveListdata?projectcode=' + projectcode, this.httpOptions);
   }
 
  
@@ -651,6 +651,9 @@ export class wmsService {
   }
   getporeport(empno: string, projectcode: string, pono: string): Observable<POReportModel[]> {
     return this.http.get<POReportModel[]>(this.url + 'POData/getporeportdata?empno=' + empno + '&projectcode=' + projectcode + '&pono='+pono, this.httpOptions);
+  }
+  getsubconannexure(empno: string, subconno: string): Observable<stocktransfermateriakmodel[]> {
+    return this.http.get<stocktransfermateriakmodel[]>(this.url + 'POData/getsubconannexuredata?empno=' + empno + '&subconno=' + subconno, this.httpOptions);
   }
 
   getporeportdetail(materialid: string, description: string, pono: string, querytype: string, requesttype: string, projectcode: string, empno: string): Observable<POReportModel[]> {

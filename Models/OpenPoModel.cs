@@ -1123,10 +1123,24 @@ namespace WMS.Models
 		public List<MaterialTransactionDetail> reservedata { get; set; }
 		public string returnid { get; set; }
 		public bool isapproved { get; set; }
-
+		public bool isnextapprover { get; set; }
 		public string requesttype { get; set; }
 
 
+	}
+
+	public class MaterialValuation
+    {
+		public int id { get; set; }
+		public string projectcode { get; set; }
+		public string pono { get; set; }
+		public string itemno { get; set; }
+		public string material { get; set; }
+		public string materialdescription { get; set; }
+		public decimal? value { get; set; }
+		public string referenceno { get; set; }
+		public int? quantity { get; set; }
+		public string currency  { get; set; }
 	}
 	public class employeeModel
 	{
@@ -1464,7 +1478,10 @@ public class stocktransfermateriakmodel
 	public string status { get; set; }
 	public int issuedqty { get; set; }
 	public int poqty { get; set; }
-	
+	public decimal? value { get; set; }
+	public string subconno { get; set; }
+	public string projectmanager { get; set; }
+
 }
 
 public class subrolemodel
@@ -1481,13 +1498,16 @@ public class subrolemodel
 
 public class ddlmodel
 {
-
 	public string value { get; set; }
 	public string text { get; set; }
 	public string supplier { get; set; }
 	public string pos { get; set; }
 	public string projectmanager { get; set; }
 	public DateTime receiveddate { get; set; }
+	public string invoiceno { get; set; }
+	public DateTime mrnon { get; set; }
+	public string mrnby { get; set; }
+	public bool isdirecttransferred { get; set; }
 
 }
 
