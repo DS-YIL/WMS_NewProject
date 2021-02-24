@@ -331,7 +331,7 @@ export class StockTransferOrderComponent implements OnInit {
     this.itemlocationData = [];
     debugger;
     if (material) {
-      this.wmsService.getItemlocationListByMaterialsourcelocation(material).subscribe(data => {
+      this.wmsService.getItemlocationListByMaterialsourcelocation(material,"").subscribe(data => {
         this.itemlocationData = data;
         this.podetailsList[index].itemlocationdata = data;
         this.setmatlocation(index);

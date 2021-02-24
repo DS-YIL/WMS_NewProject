@@ -660,6 +660,21 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to select wrr.locatorid,wrr.rackid,null as binid, loc.locatorname || &apos;.&apos; || wrr.racknumber as itemlocation from wms.wms_rd_rack wrr
+        ///left outer join wms.wms_rd_locator loc on wrr.locatorid = loc.locatorid 
+        ///where wrr.locatorid = #locatorid
+        ///union
+        ///select wrb.locatorid,wrb.rackid,wrb.binid as binid, loc.locatorname || &apos;.&apos; || rck.racknumber|| &apos;.&apos; || wrb.binnumber as itemlocation from wms.wms_rd_bin wrb
+        ///left outer join wms.wms_rd_rack rck on rck.rackid = wrb.rackid 
+        ///left outer join wms.wms_rd_locator loc on loc [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string getdestinationlocationforIST {
+            get {
+                return ResourceManager.GetString("getdestinationlocationforIST", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to select (select sum(issuedqty) from wms.wms_materialissue  where requestforissueid =req.requestforissueid  ) as issuedqty,max(iss.approvedstatus) as approvedstatus,max(pro.projectname)as projectname,max(req.requestforissueid)as requestforissueid,max(emp.&quot;name&quot;)as name,req.requesteddate,sk.materialid,
         ///req.requestedquantity,(select sum(availableqty) from wms.wms_stock ws where materialid =sk.materialid ) as availableqty,(select sum(reservedqty) from wms.wms_materialreserve wm where wm.materialid =sk.materiali [rest of string was truncated]&quot;;.
         /// </summary>
@@ -1020,12 +1035,11 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select sum(sk.availableqty)as availableqty,sk.materialid,sk.itemlocation,Max(ygs.materialdescription) as materialdescription 
+        ///   Looks up a localized string similar to select sum(sk.availableqty)as availableqty,sk.materialid,sk.itemlocation,sk.poitemdescription as materialdescription 
         ///from wms.wms_stock sk 
-        ///left outer join wms.&quot;MaterialMasterYGS&quot; ygs on ygs.material=sk.materialid 
-        ///where sk.materialid=&apos;#materialid&apos;
+        ///where sk.materialid=&apos;#materialid&apos; and sk.poitemdescription = &apos;#description&apos;
         ///and sk.availableqty&gt;0 
-        ///group by sk.itemlocation,sk.materialid order by Max(sk.createddate).
+        ///group by sk.itemlocation,sk.materialid,sk.poitemdescription order by Max(sk.createddate).
         /// </summary>
         public static string getitemlocationforstocktransfer {
             get {

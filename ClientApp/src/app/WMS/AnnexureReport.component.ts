@@ -137,7 +137,7 @@ export class AnnexureReportComponent implements OnInit {
         'Material': obj.materialid,
         'Material Description': obj.materialdescription,
         'Quantity': obj.transferqty,
-        'Oun': 'ST',
+        'OUn': 'ST',
         'Total Price': obj.value
       }
     });

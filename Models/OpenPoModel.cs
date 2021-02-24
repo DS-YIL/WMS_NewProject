@@ -344,6 +344,7 @@ namespace WMS.Models
 		public int inwardid { get; set; }
 		public int stockid { get; set; }
 		public string Material { get; set; }
+		public string stcktype { get; set; }
 		public string lineitemno { get; set; }
 		public string receivedid { get; set; }
 		public string exceptions { get; set; }
@@ -1354,6 +1355,7 @@ namespace WMS.Models
 		public string locatorname { get; set; }
 		public int rackid { get; set; }
 		public string racknumber { get; set; }
+		public string itemlocation { get; set; }
 
 		//for initial stock putaway
 		public int quantity { get; set; }
@@ -1367,6 +1369,7 @@ namespace WMS.Models
 		public string poitemdesc { get; set; }
 		public bool qualitycheck { get; set; }
 		public decimal? unitprice { get; set; }
+		public int? availableqty { get; set; }
 
 	}
 }

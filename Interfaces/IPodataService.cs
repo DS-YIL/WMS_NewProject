@@ -134,7 +134,7 @@ namespace WMS.Interfaces
 		Task<IEnumerable<IssueRequestModel>> GetItemLocationListByMaterialdescpono(string material, string description, string pono);
 
 
-		Task<IEnumerable<IssueRequestModel>> GetItemlocationListBymterialsourcelocation(string material);
+		Task<IEnumerable<IssueRequestModel>> GetItemlocationListBymterialsourcelocation(string material, string description);
 
 
 		Task<IEnumerable<IssueRequestModel>> getItemlocationListByIssueId(string requestforissueid, string requesttype);
@@ -155,6 +155,8 @@ namespace WMS.Interfaces
 		Task<IEnumerable<SecurityInwardreceivedModel>> getSecurityreceivedList();
 		Task<IEnumerable<dropdownModel>> Getlocationdata();
 		Task<IEnumerable<dropdownModel>> Getbindata();
+		Task<IEnumerable<dropdownModel>> Getdestinationlocationforist(int store);
+		
 		Task<IEnumerable<dropdownModel>> Getrackdata();
 		Task<IEnumerable<dropdownModel>> Getbindataforputaway();
 		Task<IEnumerable<dropdownModel>> Getrackdataforputaway();
@@ -173,7 +175,7 @@ namespace WMS.Interfaces
 		int insertdatacsv(ddlmodel obj);
 		Task<IEnumerable<safteyStockList>> getSafteyStockList();
 		Task<IEnumerable<StockModel>> GetBinList();
-		Task<IEnumerable<Materials>> GetMaterialstockcombo();
+		Task<IEnumerable<Materials>> GetMaterialstockcombo(int store);
 
 		Task<IEnumerable<Materials>> getMaterialforstocktransferorder();
 		Task<IEnumerable<stocktransferModel>> getstocktransferdata();

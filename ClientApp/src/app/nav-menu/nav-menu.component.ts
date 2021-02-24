@@ -580,6 +580,7 @@ export class NavMenuComponent implements OnInit {
       ]
 
     });
+    this.items.push({ label: 'Internal Stock Transfer', icon: 'pi pi-fw pi-bars', style: { 'font-weight': '600' }, command: () => this.router.navigateByUrl('WMS/Stocktransfer') });
     this.constants.gatePassIssueType = "Pending";
     this.router.navigate(['WMS/GatePassApprover', this.gateid]);
 
@@ -797,6 +798,7 @@ export class NavMenuComponent implements OnInit {
       ]
 
     });
+    this.items.push({ label: 'Internal Stock Transfer', icon: 'pi pi-fw pi-bars', style: { 'font-weight': '600' }, command: () => this.router.navigateByUrl('WMS/Stocktransfer') });
     if (type == "sto") {
       this.router.navigate(['WMS/ReceiveSTORequest'], { queryParams: { requestid: this.reqid } });
     }
@@ -1063,6 +1065,7 @@ export class NavMenuComponent implements OnInit {
       ]
 
     });
+    this.items.push({ label: 'Internal Stock Transfer', icon: 'pi pi-fw pi-bars', style: { 'font-weight': '600' }, command: () => this.router.navigateByUrl('WMS/Stocktransfer') });
     this.router.navigate(['WMS/MaterialReturn'], { queryParams: { returnid: this.transferid } });
 
     let element1: HTMLDivElement = document.getElementById("menudiv") as HTMLDivElement;
@@ -1152,6 +1155,7 @@ export class NavMenuComponent implements OnInit {
       ]
 
     });
+    this.items.push({ label: 'Internal Stock Transfer', icon: 'pi pi-fw pi-bars', style: { 'font-weight': '600' }, command: () => this.router.navigateByUrl('WMS/Stocktransfer') });
     if (this.gateentryid != null && this.gateentryid != "") {
       this.router.navigate(['WMS/GRNPosting'], { queryParams: { inwmasterid: this.gateentryid } });
     }
@@ -1297,8 +1301,8 @@ export class NavMenuComponent implements OnInit {
         }
         this.items.push({ label: 'FIFO LIst', icon: 'pi pi-fw pi-bars', style: { 'font-weight': '600' }, command: () => this.router.navigateByUrl('WMS/FIFOList') });
         this.items.push({ label: 'Inventory Movement', icon: 'pi pi-fw pi-bars', style: { 'font-weight': '600' }, command: () => this.router.navigateByUrl('WMS/InventoryMovement') });
-        this.items.push({ label: 'Internal Stock Transfer', icon: 'pi pi-fw pi-bars', style: { 'font-weight': '600' }, command: () => this.router.navigateByUrl('WMS/Stocktransfer') });
-        this.items.push({ label: 'Internal Stock Transfer', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/Stocktransfer') });
+        
+        
         this.items.push({
           label: 'Master Pages',
           icon: 'pi pi-fw pi-bars',
@@ -2050,6 +2054,7 @@ export class NavMenuComponent implements OnInit {
         ]
 
       });
+      this.items.push({ label: 'Internal Stock Transfer', icon: 'pi pi-fw pi-bars', style: { 'font-weight': '600' }, command: () => this.router.navigateByUrl('WMS/Stocktransfer') });
       if (url == "default") {
         this.router.navigateByUrl('WMS/Home');
       }
@@ -2157,6 +2162,7 @@ export class NavMenuComponent implements OnInit {
           }
         ]
       });
+      this.items.push({ label: 'Internal Stock Transfer', icon: 'pi pi-fw pi-bars', style: { 'font-weight': '600' }, command: () => this.router.navigateByUrl('WMS/Stocktransfer') });
       if (url == "default") {
         this.router.navigateByUrl('WMS/Home');
       }

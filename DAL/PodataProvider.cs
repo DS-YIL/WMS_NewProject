@@ -6382,14 +6382,14 @@ namespace WMS.DAL
 		/// </summary>
 		/// <param name="material"></param>
 		/// <returns></returns>
-		public async Task<IEnumerable<IssueRequestModel>> GetItemlocationListBymterialsourcelocation(string material)
+		public async Task<IEnumerable<IssueRequestModel>> GetItemlocationListBymterialsourcelocation(string material,string description)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
 
 				try
 				{
-					string query = WMSResource.getitemlocationforstocktransfer.Replace("#materialid", material);
+					string query = WMSResource.getitemlocationforstocktransfer.Replace("#materialid", material).Replace("#description",description);
 					await pgsql.OpenAsync();
 					var data = await pgsql.QueryAsync<IssueRequestModel>(
 					  query, null, commandType: CommandType.Text);
@@ -9022,6 +9022,39 @@ namespace WMS.DAL
 		}
 
 		/*
+		Name of Function : <<Getdestinationlocationforist>>  Author :<<Ramesh>>  
+		Date of Creation <<24-02-2021>>
+		Purpose : <<Get bin data>>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
+		public async Task<IEnumerable<dropdownModel>> Getdestinationlocationforist(int store)
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				try
+				{
+
+					string materialrequestquery = WMSResource.getdestinationlocationforIST.Replace("#locatorid", store.ToString());
+
+					await pgsql.OpenAsync();
+					return await pgsql.QueryAsync<dropdownModel>(
+					  materialrequestquery, null, commandType: CommandType.Text);
+
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "Getdestinationlocationforist", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+			}
+		}
+
+		/*
 		Name of Function : <<Getrackdata>>  Author :<<Shashikala>>  
 		Date of Creation <<12-12-2019>>
 		Purpose : <<Get rack data>>
@@ -9664,13 +9697,14 @@ namespace WMS.DAL
 		Purpose : <<Get list of materials for stock transfer >>
 		Review Date :<<>>   Reviewed By :<<>>
 		*/
-		public async Task<IEnumerable<Materials>> GetMaterialstockcombo()
+		public async Task<IEnumerable<Materials>> GetMaterialstockcombo(int store)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
 				try
 				{
-					string materialrequestquery = "Select distinct st.materialid as material,mat.materialdescription  from wms.wms_stock st left outer join wms.\"MaterialMasterYGS\" mat on mat.material = st.materialid";
+					string materialrequestquery = "select ws.materialid as material,ws.poitemdescription as materialdescription,sum(ws.availableqty) as availableqty from wms.wms_stock ws";
+                           materialrequestquery += " where ws.availableqty > 0 and ws.storeid = " + store+" group by ws.materialid,ws.poitemdescription";
 
 					await pgsql.OpenAsync();
 					return await pgsql.QueryAsync<Materials>(
@@ -9932,16 +9966,17 @@ namespace WMS.DAL
 								transfer.approverid = data.approverid;
 								transfer.isapprovalrequired = true;
 								transfer.isapproved = null;
+								string userquery = "select  * from wms.employee where employeeno='" + data.approverid + "'";
+								User userdata = pgsql.QuerySingle<User>(
+								   userquery, null, commandType: CommandType.Text);
+								mailto = userdata.email;
+								string userquery1 = "select  * from wms.employee where employeeno='" + data.transferredby + "'";
+								User userdata1 = pgsql.QuerySingle<User>(
+								   userquery1, null, commandType: CommandType.Text);
+								mailcc = userdata1.email;
 
-                            }
-							string userquery = "select  * from wms.employee where employeeno='" + data.approverid + "'";
-							User userdata = pgsql.QuerySingle<User>(
-							   userquery, null, commandType: CommandType.Text);
-							mailto = userdata.email;
-							string userquery1 = "select  * from wms.employee where employeeno='" + data.transferredby + "'";
-							User userdata1 = pgsql.QuerySingle<User>(
-							   userquery1, null, commandType: CommandType.Text);
-							mailcc = userdata1.email;
+							}
+							
 							string mainstockinsertqueryy = WMSResource.insertInvStocktransfer;
 							var resultsxx = pgsql.ExecuteScalar(mainstockinsertqueryy, new
 							{
@@ -9984,7 +10019,7 @@ namespace WMS.DAL
 						if (transfer.sourceplant == transfer.destinationplant)
 						{
 
-							string query = "select * from wms.wms_stock where materialid ='" + stck.materialid + "' and itemlocation = '" + stck.sourcelocation + "' and availableqty > 0 order by itemid";
+							string query = "select * from wms.wms_stock where materialid ='" + stck.materialid + "' and lower(poitemdescription) = '"+stck.materialdescription.ToLower()+"' and  itemlocation = '" + stck.sourcelocation + "' and availableqty > 0 order by itemid";
 
 							var stockdata = pgsql.QueryAsync<StockModel>(query, null, commandType: CommandType.Text);
 							if (stockdata != null)
@@ -10023,7 +10058,7 @@ namespace WMS.DAL
 									string insertqueryforstatusforqty = WMSResource.updateqtyafterissue.Replace("#itemid", Convert.ToString(itm.itemid)).Replace("#issuedqty", Convert.ToString(issuedqty));
 									var data1 = pgsql.ExecuteScalar(insertqueryforstatusforqty);
 									StockModel objs1 = new StockModel();
-									string query2 = "select * from wms.wms_stock where pono = '" + itm.pono + "' and materialid = '" + itm.materialid + "' and itemlocation = '" + stck.destinationlocation + "' order by itemid";
+									string query2 = "select * from wms.wms_stock where pono = '" + itm.pono + "' and materialid = '" + itm.materialid + "' and lower(poitemdescription) = '" + stck.materialdescription.ToLower() + "' and itemlocation = '" + stck.destinationlocation + "' order by itemid";
 									objs1 = pgsql.QueryFirstOrDefault<StockModel>(
 									   query2, null, commandType: CommandType.Text);
 									if (objs1 != null)
@@ -10073,7 +10108,7 @@ namespace WMS.DAL
 										int availableqty = issuedqty;
 										string itemlocation = stck.destinationlocation;
 										string createdby = transfer.transferredby;
-										string stocktype = itm.stocktype;
+										string stocktype = itm.stcktype;
 										int itemid = 0;
 										var result = 0;
 										result = Convert.ToInt32(pgsql.ExecuteScalar(insertqueryx, new

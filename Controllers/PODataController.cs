@@ -635,10 +635,10 @@ namespace WMS.Controllers
 			return await this._poService.GetItemLocationListByMaterialdescpono(material, description, pono);
 		}
 		[HttpGet("GetItemLocationListByMaterialsourcelocation")]
-		public async Task<IEnumerable<IssueRequestModel>> getitemlocationBymaterialsourcelocation(string material)
+		public async Task<IEnumerable<IssueRequestModel>> getitemlocationBymaterialsourcelocation(string material,string description)
 		{
 
-			return await this._poService.GetItemlocationListBymterialsourcelocation(material);
+			return await this._poService.GetItemlocationListBymterialsourcelocation(material, description);
 		}
 		[HttpGet("getItemlocationListByIssueId")]
 		public async Task<IEnumerable<IssueRequestModel>> getItemlocationListByIssueId(string requestforissueid, string requesttype)
@@ -831,6 +831,12 @@ namespace WMS.Controllers
 
 			return await this._poService.Getbindata();
 		}
+		[HttpGet("Getdestinationlocationforist")]
+		public async Task<IEnumerable<dropdownModel>> Getdestinationlocationforist(int store)
+		{
+
+			return await this._poService.Getdestinationlocationforist(store);
+		}
 		[HttpGet("getrackata")]
 		public async Task<IEnumerable<dropdownModel>> getrackata()
 		{
@@ -889,9 +895,9 @@ namespace WMS.Controllers
 			return await this._poService.GetBinList();
 		}
 		[HttpGet("GetMaterialdatafromstock")]
-		public async Task<IEnumerable<Materials>> GetMaterialstockcombo()
+		public async Task<IEnumerable<Materials>> GetMaterialstockcombo(int store)
 		{
-			return await this._poService.GetMaterialstockcombo();
+			return await this._poService.GetMaterialstockcombo(store);
 		}
 
 		[HttpGet("getMaterialforstocktransferorder")]

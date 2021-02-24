@@ -470,9 +470,9 @@ export class wmsService {
     material = encodeURIComponent(material);
     return this.http.get<any>(this.url + 'POData/GetItemLocationListByMaterial?material=' + material, this.httpOptions);
   }
-  getItemlocationListByMaterialsourcelocation(material: string): Observable<any> {
+  getItemlocationListByMaterialsourcelocation(material: string,description: string): Observable<any> {
     material = encodeURIComponent(material);
-    return this.http.get<any>(this.url + 'POData/GetItemLocationListByMaterialsourcelocation?material=' + material, this.httpOptions);
+    return this.http.get<any>(this.url + 'POData/GetItemLocationListByMaterialsourcelocation?material=' + material + '&description=' + description, this.httpOptions);
   }
   getItemlocationListByIssueId(requestforissueid: string, requesttype: string): Observable<any> {
     requestforissueid = encodeURIComponent(requestforissueid);
@@ -521,6 +521,9 @@ export class wmsService {
   getbindata(): Observable<any> {
     return this.http.get<any>(this.url + 'POData/getbindata/', this.httpOptions);
   }
+  Getdestinationlocationforist(store : number): Observable<any> {
+    return this.http.get<any>(this.url + 'POData/Getdestinationlocationforist?store='+ store, this.httpOptions);
+  }
   getrackdata(): Observable<any> {
     return this.http.get<any>(this.url + 'POData/getrackata/', this.httpOptions);
   }
@@ -551,8 +554,8 @@ export class wmsService {
   GetBinList(): Observable<any> {
     return this.http.get<any>(this.url + 'POData/GetBinList', this.httpOptions);
   }
-  getMaterialforstocktransfer(): Observable<Materials[]> {
-    return this.http.get<Materials[]>(this.url + 'POData/GetMaterialdatafromstock/', this.httpOptions);
+  getMaterialforstocktransfer(store: number): Observable<Materials[]> {
+    return this.http.get<Materials[]>(this.url + 'POData/GetMaterialdatafromstock?store='+store, this.httpOptions);
   }
 
   getMaterialforstocktransferorder(): Observable<Materials[]> {

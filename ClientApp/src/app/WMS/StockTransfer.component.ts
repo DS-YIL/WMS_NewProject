@@ -4,7 +4,7 @@ import { wmsService } from '../WmsServices/wms.service';
 import { constants } from '../Models/WMSConstants';
 import { Employee } from '../Models/Common.Model';
 import { NgxSpinnerService } from "ngx-spinner";
-import { PoDetails, BarcodeModel, inwardModel, Materials, stocktransfermodel, locationddl, binddl, rackddl, StockModel, invstocktransfermodel, stocktransfermateriakmodel} from 'src/app/Models/WMS.Model';
+import { PoDetails, BarcodeModel, inwardModel, Materials, stocktransfermodel, locationddl, binddl, rackddl, StockModel, invstocktransfermodel, stocktransfermateriakmodel, plantddl, locationdropdownModel} from 'src/app/Models/WMS.Model';
 import { MessageService } from 'primeng/api';
 import { first } from 'rxjs/operators';
 import { isNullOrUndefined } from 'util';
@@ -14,10 +14,7 @@ import { isNullOrUndefined } from 'util';
   templateUrl: './StockTransfer.component.html'
 })
 export class StockTransferComponent implements OnInit {
-  locationlist: locationddl[] = [];
-  binlist: binddl[] = [];
-  racklist: rackddl[] = [];
-  selectedbin: binddl; selectedrack: rackddl; selectedlocation: locationddl;
+  
   showLocationDialog: boolean;
   results: string[] = [];
   results1: string[];
@@ -57,6 +54,9 @@ export class StockTransferComponent implements OnInit {
   matid: string = "";
   matdescription: string = "";
   transferedon: Date;
+  plantlist: plantddl[] = [];
+  sourceplant: plantddl;
+  destlocationlist: locationdropdownModel[];
  
   combomaterial: Materials[];
 
@@ -66,20 +66,43 @@ export class StockTransferComponent implements OnInit {
     else
       this.router.navigateByUrl("Login");
     this.stocktransferlist = [];
+    this.plantlist = [];
+    this.destlocationlist = [];
+    this.sourceplant = new plantddl();
     this.mainmodel = new invstocktransfermodel();
-    this.mainmodel.sourceplant = "Plant1";
-    this.mainmodel.destinationplant = "Plant1";
     this.emptytransfermodel = new stocktransfermateriakmodel();
-    this.selectedbin = new binddl();
-    this.selectedlocation = new locationddl();
-    this.selectedrack = new rackddl();
     this.showLocationDialog = false;
-    this.getMaterials();
-    this.locationListdata();
-    this.binListdata();
-    this.rackListdata();
+    this.getplantloc();
+    
+    
     //this.getStocktransferdata();
     this.getStocktransferdatagroup();
+  }
+
+  onSourceChange(event: any) {
+    this.podetailsList = [];
+    this.getMaterials();
+    this.getdestinationdata();
+  }
+
+  getstorename(storeid: string) {
+    var storelst = this.plantlist.filter((li) => li.locatorid == storeid);
+    if (storelst.length > 0) {
+      return storelst[0].storagelocationdesc;
+    }
+    else {
+      return storeid;
+    }
+
+  }
+
+  getplantloc() {
+    debugger;
+    this.plantlist = [];
+    this.wmsService.getplantlocdetails().subscribe(data => {
+      console.log(data);
+      this.plantlist = data;
+    });
   }
   
   
@@ -88,9 +111,8 @@ export class StockTransferComponent implements OnInit {
     //this.formArr.removeAt(index);
   }
   addrows() {
-    debugger;
-    if (this.mainmodel.destinationplant != this.mainmodel.sourceplant) {
-      this.messageService.add({ severity: 'error', summary: '', detail: 'Source and destination plant should be same' });
+    if (isNullOrUndefined(this.sourceplant) || !this.sourceplant.locatorid) {
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Select source location' });
       return;
     }
     else {
@@ -118,34 +140,7 @@ export class StockTransferComponent implements OnInit {
     data.transferqty = "";
     this.showmateriallocationList(event.value.material,index);
   }
-  setlocationcombinations() {
-    this.results = [];
-    this.locationlist.forEach(item => {
-      var loc = item.locatorname;
-      if (!isNullOrUndefined(loc)) {
-        this.racklist.forEach(item => {
-          if (!isNullOrUndefined(item.racknumber)) {
-            var rac = loc + "." + item.racknumber;
-            this.results.push(rac);
-            this.binlist.forEach(item => {
-              if (!isNullOrUndefined(item.binnumber)) {
-                var bin = rac + "." + item.binnumber;
-                this.results.push(bin);
-              }
-             
-            });
-
-          }
-         
-        });
-
-      }
-     
-      
-    });
-
-
-  }
+  
 
   setmatlocation(index: number) {
     debugger;
@@ -156,13 +151,13 @@ export class StockTransferComponent implements OnInit {
     });
    
   }
-  showmateriallocationList(material: any, index: number) {
+  showmateriallocationList(data: any, index: number) {
     this.itemlocationData = [];
     debugger;
-    if (material) {
+    if (data) {
       //this.currentrowindex = rowindex;
       //this.AddDialog = true;
-      this.wmsService.getItemlocationListByMaterialsourcelocation(material).subscribe(data => {
+      this.wmsService.getItemlocationListByMaterialsourcelocation(data.materialid,data.materialdescription).subscribe(data => {
         this.itemlocationData = data;
         this.podetailsList[index].itemlocationdata = data;
         this.setmatlocation(index);
@@ -180,20 +175,12 @@ export class StockTransferComponent implements OnInit {
     this.showLocationDialog = true;
   }
 
-  cancektranferlocation() {
-    this.selectedbin = new binddl();
-    this.selectedlocation = new locationddl();
-    this.selectedrack = new rackddl();
-    this.showLocationDialog = false;
-  }
+ 
 
   Showadd() {
-    this.mainmodel.sourceplant = "Plant1";
-    this.mainmodel.destinationplant = "Plant1";
     this.displaydetail = false;
     this.selectedRow = null;
     this.addprocess = true;
-    this.setlocationcombinations();
   }
   Showlist() {
     this.addprocess = false;
@@ -203,6 +190,11 @@ export class StockTransferComponent implements OnInit {
   }
   onSelectsource(data: stocktransfermateriakmodel) {
     debugger;
+    data.availableqty = 0;
+    data.transferqty = 0;
+    data.binid = null;
+    data.rackid = null;
+    data.storeid = null;
     if ((this.mainmodel.sourceplant) && (this.mainmodel.destinationplant) && (this.mainmodel.sourceplant == this.mainmodel.destinationplant) && (data.sourcelocation == data.destinationlocation)){
       this.messageService.add({ severity: 'error', summary: '', detail: 'Source and destination location can not be same for same source and destination plant.' });
       data.sourcelocation = null;
@@ -218,108 +210,77 @@ export class StockTransferComponent implements OnInit {
       data.transferqty = 0;
       return;
     }
-    //var itmrow = data.itemlocationdata.filter((dt) => dt.material == data.materialid && dt.itemlocation == data.sourcelocation);
-    //if (itmrow.length > 0) {
-    //  data.sourceitemid = itmrow[0].itemid;
-    //}
-    //else {
-    //  data.sourceitemid = 0;
-    //}
-
-    if (data.transferqty > 0) {
-      this.setqty(data);
-    }
-
-  }
-  onSelectdest(data: stocktransfermateriakmodel) {
-    debugger;
-    if ((this.mainmodel.sourceplant) && (this.mainmodel.destinationplant) && (this.mainmodel.sourceplant == this.mainmodel.destinationplant) && (data.sourcelocation == data.destinationlocation)) {
-      data.sourcelocation = "";
-      data.destinationlocation = null;
-      data.transferqty = 0;
-      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'source and destination location can not be same for same source and destination plant.' });
-    }
-    var row1 = this.podetailsList.filter((dt) => dt.sourcelocation == data.sourcelocation && dt.materialid == data.materialid && dt.destinationlocation == data.destinationlocation);
-    if (row1.length > 1) {
-      data.sourcelocation = "";
-      data.destinationlocation = null;
-      data.transferqty = 0;
-      this.messageService.add({ severity: 'error', summary: '', detail: 'Same source and destination location for this material already exists' });
-      
-    }
-
-    var destloc = data.destinationlocation.split('.');
-    var store = destloc[0];
-    var rack = destloc[1];
-
-    var itmrow = this.locationlist.filter((dt) => dt.locatorname == store);
+    var itmrow = data.itemlocationdata.filter((dt) => dt.materialid == data.materialid && dt.materialdescription == data.materialdescription &&  dt.itemlocation == data.sourcelocation);
     if (itmrow.length > 0) {
-      data.storeid = parseInt(itmrow[0].locatorid);
-    }
-    else {
-      data.storeid = 0;
-    }
-    var itmrow1 = this.racklist.filter((dt) => dt.racknumber == rack);
-    if (itmrow1.length > 0) {
-      data.rackid = parseInt(itmrow1[0].rackid);
-    }
-    else {
-      data.rackid = 0;
-    }
-    if (destloc.length == 3) {
-      var bin = destloc[2];
-      var itmrow2 = this.binlist.filter((dt) => dt.binnumber == bin);
-      if (itmrow2.length > 0) {
-        data.binid = parseInt(itmrow2[0].binid);
-      }
-      else {
-        data.binid = 0;
-      }
-
-    }
-  }
-  setqty(data: any) {
-    debugger;
-    if (data.transferqty < 0) {
-      data.transferqty = "0";
-      this.messageService.add({ severity: 'error', summary: '', detail: 'Negative value not allowed' });
-      return;
-     
-    }
-    var loc = data.sourcelocation;
-    var row = data.itemlocationdata.filter((dt) => dt.itemlocation == loc);
-    var toatalavailqty = 0;
-    var transferedqty = 0;
-    var row1 = this.podetailsList.filter((dt) => dt.sourcelocation == loc && dt.materialid == data.materialid);
-    if (row.length > 0) {
-      toatalavailqty = row[0].availableqty;
+      data.availableqty = itmrow[0].availableqty;
     }
     
-    if (row1.length > 0) {
-      row1.forEach(item => {
-        transferedqty += item.transferqty;
-      });
-    }
 
-    if (transferedqty > toatalavailqty) {
-      data.transferqty = "0";
-      this.messageService.add({ severity: 'error', summary: '', detail: 'Transfer quantity exceeded from available quantity ' + toatalavailqty });
-
-    }
-   
   }
+
+  checkqty(data: stocktransfermateriakmodel) {
+    debugger;
+    if (data.transferqty < 0) {
+      data.transferqty = 0;
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Negative value not allowed' });
+      return;
+
+    }
+    if (data.transferqty > data.availableqty) {
+      data.transferqty = 0;
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Transfer quantity exceeded available quantity' });
+      return;
+
+    }
+     
+  }
+  onSelectdest(data: stocktransfermateriakmodel) {
+    data.binid = null;
+    data.rackid = null;
+    data.storeid = null;
+    debugger;
+    if ((data.sourcelocation == data.destinationlocation)) {
+      data.sourcelocation = "";
+      data.destinationlocation = null;
+      data.transferqty = 0;
+      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'source and destination location can not be same' });
+      return;
+    }
+    var itmrow = this.destlocationlist.filter((dt) => dt.itemlocation == data.destinationlocation);
+    if (itmrow.length > 0) {
+      data.storeid = itmrow[0].locatorid;
+      data.rackid = itmrow[0].rackid;
+      data.binid = itmrow[0].binid;
+    }
+  }
+ 
   search(event) {
     debugger;
-    this.results1 = this.results.filter((country) => country.startsWith(event.query));
+    this.results1 = [];
+    for (let i = 0; i < this.destlocationlist.length; i++) {
+
+      let brand = this.destlocationlist[i].itemlocation;
+      if (brand.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+        this.results1.push(brand);
+      }
+    }
   }
   search1(event,data : any,index : any) {
     debugger;
-    if (data.materialid) {
-      this.matlocationsearch = data.mlocations.filter((country) => country.startsWith(event.query));
+    if (data.materialid && data.materialdescription) {
+      var dt = [];
+      for (let i = 0; i < data.mlocations.length; i++) {
+
+        let brand = data.mlocations[i];
+        if (brand.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+          dt.push(brand);
+        }
+      }
+      this.matlocationsearch = dt;
     }
     else {
       data.sourcelocation = "";
-      this.messageService.add({ severity: 'error', summary: '', detail: 'Please select material.' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Please select material and description.' });
     }
     
   }
@@ -344,8 +305,18 @@ export class StockTransferComponent implements OnInit {
    
   }
 
-  onMaterialSelected1(event:any, data: any, ind: number) {
+  
+
+  onMaterialSelected1(event: any, data: stocktransfermateriakmodel, ind: number) {
     debugger;
+    data.sourcelocation = null;
+    data.destinationlocation = null;
+    data.itemlocationdata = [];
+    data.availableqty = 0;
+    data.transferqty = 0;
+    data.binid = null;
+    data.rackid = null;
+    data.storeid = null;
     if (!isNullOrUndefined(data.materialdescription) && data.materialdescription != "") {
       var data1 = this.podetailsList.filter(function (element, index) {
         return (element.materialid == data.materialid && element.materialdescription == data.materialdescription && index != ind);
@@ -354,19 +325,10 @@ export class StockTransferComponent implements OnInit {
         this.messageService.add({ severity: 'error', summary: '', detail: 'Material already exist' });
         this.podetailsList[ind].materialid = "";
         this.podetailsList[ind].materialdescription = "";
-        //this.podetailsList[ind].materialcost = 0;
-        //this.podetailsList[ind].availableqty = 0;
-        //this.podetailsList[ind].quantity = 0;
         return false;
       }
-      var data2 = this.defaultmaterials.filter(function (element, index) {
-        return (element.material == data.materialid && element.materialdescription == data.materialdescription);
-      });
-      if (data2.length > 0) {
-        data.materialdescription = data2[0].materialdescription;
-        //data.materialcost = data2[0].materialcost != null ? data2[0].materialcost : 0;
-        //data.availableqty = data2[0].availableqty != null ? data2[0].availableqty : 0;
-      }
+
+      this.showmateriallocationList(data, ind);
     }
     else {
       var senddata = this.defaultmaterials.filter(function (element, index) {
@@ -374,7 +336,7 @@ export class StockTransferComponent implements OnInit {
       });
       this.setdesclist(senddata);
      
-      this.showmateriallocationList(event, ind);
+     
 
     }
 
@@ -383,63 +345,44 @@ export class StockTransferComponent implements OnInit {
 
   onDescriptionSelected(event:any, data: any, ind: number) {
     debugger;
-    if (!isNullOrUndefined(data.material) && data.material != "") {
+    data.sourcelocation = null;
+    data.destinationlocation = null;
+    data.itemlocationdata = [];
+    data.availableqty = 0;
+    data.transferqty = 0;
+    data.binid = null;
+    data.rackid = null;
+    data.storeid = null;
+    if (!isNullOrUndefined(data.materialid) && data.materialid != "") {
       var data1 = this.podetailsList.filter(function (element, index) {
-        return (element.materialid == data.material && element.materialdescription == data.materialdescription && index != ind);
+        return (element.materialid == data.materialid && element.materialdescription == data.materialdescription && index != ind);
       });
       if (data1.length > 0) {
         this.messageService.add({ severity: 'error', summary: '', detail: 'Material and description already exist' });
         this.podetailsList[ind].materialid = "";
         this.podetailsList[ind].materialdescription = "";
-        //this.podetailsList[ind].materialcost = 0;
-        //this.podetailsList[ind].availableqty = 0;
-        //this.podetailsList[ind].quantity = 0;
         return false;
       }
-      var data2 = this.defaultmaterials.filter(function (element, index) {
-        return (element.material == data.material && element.materialdescription == data.materialdescription);
-      });
-      if (data2.length > 0) {
-        data.materialdescription = data2[0].materialdescription;
-        //data.materialcost = data2[0].materialcost != null ? data2[0].materialcost : 0;
-        //data.availableqty = data2[0].availableqty != null ? data2[0].availableqty : 0;
-      }
+      this.showmateriallocationList(data, ind);
     }
     else {
       var senddata = this.defaultmaterials.filter(function (element, index) {
         return (element.materialdescription == data.materialdescription);
       });
       this.setmatlist(senddata);
-      //this.showmateriallocationList(event, ind);
     }
 
   }
 
-
-  locationListdata() {
-    this.wmsService.getlocationdata().
+  getdestinationdata() {
+    this.destlocationlist = [];
+    this.wmsService.Getdestinationlocationforist(parseInt(this.sourceplant.locatorid)).
       subscribe(
         res => {
-          //this._list = res; //save posts in array
-          this.locationlist = res;
+          this.destlocationlist = res;
+          //this.binlist = res;
         });
   }
-  binListdata() {
-    this.wmsService.getbindata().
-      subscribe(
-        res => {
-          //this._list = res; //save posts in array
-          this.binlist = res;
-        });
-  }
-  rackListdata() {
-    this.wmsService.getrackdata().
-      subscribe(
-        res => {
-          //this._list = res; //save posts in array
-          this.racklist = res;
-        });
-  } 
 
 
   
@@ -475,34 +418,6 @@ export class StockTransferComponent implements OnInit {
       var rackid;
       var itemlocation = "";
 
-      if (!isNullOrUndefined(this.selectedbin)) {
-        binnumber = this.selectedbin.binnumber;
-        binid = this.selectedbin.binid;
-        if (!isNullOrUndefined(this.selectedrack) && !isNullOrUndefined(this.selectedlocation)) {
-          rackid = this.selectedrack.rackid;
-          var itemlocation = this.selectedlocation.locatorname + "." + this.selectedrack.racknumber + '.' + this.selectedbin.binnumber;
-        }
-        else {
-          this.messageService.add({ severity: 'error', summary: '', detail: 'Please Select location and rack' });
-          return;
-        }
-        
-      }
-      else if (!isNullOrUndefined(this.selectedrack) && isNullOrUndefined(this.selectedbin)) {
-        racknumber = this.selectedrack.racknumber;
-        rackid = this.selectedrack.rackid;
-        if (!isNullOrUndefined(this.selectedlocation)) {
-          var itemlocation = this.selectedlocation.locatorname + "." + this.selectedrack.racknumber;
-        }
-        else {
-          this.messageService.add({ severity: 'error', summary: '', detail: 'Please Select location' });
-          return;
-        }
-      }
-      else {
-        this.messageService.add({ severity: 'error', summary: '', detail: 'Please Select bin' });
-        return;
-      }
       
       data.forEach(item => {
         item.itemlocation = itemlocation;
@@ -548,7 +463,8 @@ export class StockTransferComponent implements OnInit {
   }
 
   getMaterials() {
-    this.wmsService.getMaterialforstocktransfer().subscribe(data => {
+    this.combomaterial = [];
+    this.wmsService.getMaterialforstocktransfer(parseInt(this.sourceplant.locatorid)).subscribe(data => {
       debugger;
       this.combomaterial = data;
       this.defaultmaterials = data;
@@ -721,54 +637,27 @@ export class StockTransferComponent implements OnInit {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Add materials.' });
       return;
     }
-    if (!this.mainmodel.sourceplant || !this.mainmodel.destinationplant) {
-      this.messageService.add({ severity: 'error', summary: '', detail: 'Select plants.' });
+    if (!this.sourceplant) {
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Select store.' });
       return;
     }
-    if (this.mainmodel.destinationplant != this.mainmodel.sourceplant) {
-      this.messageService.add({ severity: 'error', summary: '', detail: 'Source and destination plant should be same' });
-      return;
-    }
-    else {
+    
+    
       var invalidrow = this.podetailsList.filter(function (element, index) {
         debugger;
-        return (!element.sourcelocation) || (!element.destinationlocation) || (!element.transferqty) || (!element.materialid);
+        return (!element.sourcelocation) || (!element.destinationlocation) || (!element.transferqty) || (!element.materialid) || (!element.materialdescription);
       });
 
-    }
     if (invalidrow.length > 0) {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Fill all the details.' });
       return;
     }
-    if ((this.mainmodel.sourceplant) && (this.mainmodel.destinationplant) && (this.mainmodel.sourceplant == this.mainmodel.destinationplant)) {
-      var dataxx = this.podetailsList.filter(function (element, index) {
-        return (element.sourcelocation == element.destinationlocation);
-      });
-      if (dataxx.length > 0) {
-        this.messageService.add({ severity: 'error', summary: '', detail: 'Source and destination location can not be same for same source and destination plant.' });
-        return;
-
-      } 
-    }
+   
     var svdata = this.mainmodel;
     svdata.transferredby = this.employee.employeeno;
     svdata.materialdata = this.podetailsList;
-    //svdata.materialdata.forEach(data => {
-    //  var itmrow = data.itemlocationdata.filter((dt) => dt.material == data.materialid && dt.itemlocation == data.sourcelocation);
-    //  if (itmrow.length > 0) {
-    //    data.sourceitemid = itmrow[0].itemid;
-    //  }
-    //  else {
-    //    data.sourceitemid = 0;
-    //  }
-    //  var itmrow = data.itemlocationdata.filter((dt) => dt.material == data.materialid && dt.itemlocation == data.destinationlocation);
-    //  if (itmrow.length > 0) {
-    //    data.destinationitemid = itmrow[0].itemid;
-    //  }
-    //  else {
-    //    data.destinationitemid = 0;
-    //  }
-    //});
+    svdata.sourceplant = this.sourceplant.locatorid;
+    svdata.destinationplant = this.sourceplant.locatorid;
 
     this.wmsService.Stocktransfer1(svdata).subscribe(data => {
       debugger;
@@ -777,8 +666,6 @@ export class StockTransferComponent implements OnInit {
         this.savedata = [];
         this.podetailsList = [];
         this.mainmodel = new invstocktransfermodel();
-        this.mainmodel.sourceplant = "Plant1";
-        this.mainmodel.destinationplant = "Plant1";
         this.getStocktransferdatagroup();
         this.addprocess = false;
 

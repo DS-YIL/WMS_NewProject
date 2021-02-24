@@ -1360,12 +1360,11 @@ left outer join wms.wms_materialreturn mrs on mrs.returnid = ms.returnid</value>
     <comment>get material return details by returnid for report</comment>
   </data>
   <data name="getitemlocationforstocktransfer" xml:space="preserve">
-    <value>select sum(sk.availableqty)as availableqty,sk.materialid,sk.itemlocation,Max(ygs.materialdescription) as materialdescription 
+    <value>select sum(sk.availableqty)as availableqty,sk.materialid,sk.itemlocation,sk.poitemdescription as materialdescription 
 from wms.wms_stock sk 
-left outer join wms."MaterialMasterYGS" ygs on ygs.material=sk.materialid 
-where sk.materialid='#materialid'
+where sk.materialid='#materialid' and sk.poitemdescription = '#description'
 and sk.availableqty&gt;0 
-group by sk.itemlocation,sk.materialid order by Max(sk.createddate)</value>
+group by sk.itemlocation,sk.materialid,sk.poitemdescription order by Max(sk.createddate)</value>
   </data>
   <data name="getItemlocationListByGatepassmaterialid_v1" xml:space="preserve">
     <value>select iss.issuedqty,sk.pono,sk.materialid,sk.itemid,sk.itemlocation,
@@ -2108,5 +2107,15 @@ from wms.wms_invtransfermaterial wi
 left outer join wms.wms_invstocktransfer inv on wi.transferid = inv.transferid
 left outer join wms.sto_subcontract_gr ssg on ssg.transferid = wi.transferid
 where inv.transfertype = 'SubContract'</value>
+  </data>
+  <data name="getdestinationlocationforIST" xml:space="preserve">
+    <value>select wrr.locatorid,wrr.rackid,null as binid, loc.locatorname || '.' || wrr.racknumber as itemlocation from wms.wms_rd_rack wrr
+left outer join wms.wms_rd_locator loc on wrr.locatorid = loc.locatorid 
+where wrr.locatorid = #locatorid
+union
+select wrb.locatorid,wrb.rackid,wrb.binid as binid, loc.locatorname || '.' || rck.racknumber|| '.' || wrb.binnumber as itemlocation from wms.wms_rd_bin wrb
+left outer join wms.wms_rd_rack rck on rck.rackid = wrb.rackid 
+left outer join wms.wms_rd_locator loc on loc.locatorid = wrb.locatorid 
+where wrb.locatorid = #locatorid</value>
   </data>
 </root>

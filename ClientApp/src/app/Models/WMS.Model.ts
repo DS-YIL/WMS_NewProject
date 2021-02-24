@@ -440,6 +440,7 @@ export class Materials {
   qualitycheck: boolean;
   poitemdesc: string;
   unitprice: any;
+  availableqty: number;
 
 }
 
@@ -464,6 +465,7 @@ export class locationdropdownModel {
   locatorname: string;
   rackid: number;
   racknumber: string;
+  itemlocation: string;
 
   //for initial stock putaway
   quantity: number;
@@ -635,6 +637,7 @@ export class stocktransfermateriakmodel {
   value: number;
   subconno: string;
   projectmanager: string;
+  selecteddestinationobject: locationdropdownModel;
 }
 
 export class updateonhold {
