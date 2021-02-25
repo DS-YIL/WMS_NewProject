@@ -618,9 +618,13 @@ namespace WMS.DAL
 						objdata = DB.QueryFirstOrDefault<MateriallabelModel>(
 							   querydata, null, commandType: CommandType.Text);
 
-						string queryserial = "select * from wms.st_slno_imports where saleorderno='" + objdata.saleorderno + "' and solineitemno= '" + objdata.solineitemno + "' ";
-						objserial = DB.QueryFirstOrDefault<MateriallabelModel>(
-							   queryserial, null, commandType: CommandType.Text);
+						if(objdata !=null)
+                        {
+							string queryserial = "select * from wms.st_slno_imports where saleorderno='" + objdata.saleorderno + "' and solineitemno= '" + objdata.solineitemno + "' ";
+							objserial = DB.QueryFirstOrDefault<MateriallabelModel>(
+								   queryserial, null, commandType: CommandType.Text);
+						}
+					
 
 						
 					}
@@ -640,25 +644,39 @@ namespace WMS.DAL
 					var ygsgr = DB.QueryFirstOrDefault<string>(
 							   quesryygsgr, null, commandType: CommandType.Text);
 
-					objprint.serialno = objserial.serialno;
-					objprint.saleordertype = objdata.saleordertype;
-					objprint.customername = objdata.customername;
-					objprint.shipto = objdata.shipto;
-					objprint.shippingpoint = objdata.shippingpoint;
-					objprint.loadingdate = Convert.ToString(objdata.loadingdate);
-					objprint.projectiddef = objdata.projectiddef;
-					objprint.projecttext = objdata.projecttext;
-					objprint.partno = objdata.partno;
-					objprint.custpo = objdata.custpo;
-					objprint.costcenter = objdata.costcenter;
-					objprint.costcentertext = objdata.costcentertext;
-					objprint.saleordertypetext = objdata.saleordertypetext;
-					objprint.customercode = objdata.customercode;
-					objprint.custpolineitem = objdata.custpolineitem;
-					objprint.serviceorderno = objdata.serviceorderno;
+					//Check the length of soline item number and append Zero
+					if(objprint.solineitemno.Length<=5)
+                    {
+						int length = objprint.solineitemno.Length;
+						int countlength = 6 - length;
+						objprint.solineitemno = objprint.solineitemno.PadLeft(6, '0');
+                    }
+					if(objserial!=null)
+                    {
+						objprint.serialno = objserial.serialno ?? "-";
+					}
+					if(objdata!=null)
+                    {
+						objprint.saleordertype = objdata.saleordertype;
+						objprint.customername = objdata.customername;
+						objprint.shipto = objdata.shipto;
+						objprint.shippingpoint = objdata.shippingpoint;
+						objprint.loadingdate = Convert.ToString(objdata.loadingdate);
+						objprint.projectiddef = objdata.projectiddef;
+						objprint.projecttext = objdata.projecttext;
+						objprint.partno = objdata.partno;
+						objprint.custpo = objdata.custpo;
+						objprint.costcenter = objdata.costcenter;
+						objprint.costcentertext = objdata.costcentertext;
+						objprint.saleordertypetext = objdata.saleordertypetext;
+						objprint.customercode = objdata.customercode;
+						objprint.custpolineitem = objdata.custpolineitem;
+						objprint.serviceorderno = objdata.serviceorderno;
+					}
+					
 					objprint.grnno = printMat.grnno;
 					objprint.ygsgr = ygsgr;
-
+					objprint.currentdate= DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss");
 					objprint.noofpieces = printMat.noofpieces;
                     objprint.boxno = printMat.boxno;
                     objprint.totalboxes = printMat.totalboxes;
