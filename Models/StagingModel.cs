@@ -53,6 +53,12 @@ namespace WMS.Models
 		public string projecttext { get; set; }
 		public string sloc { get; set; }
 
+		public string mscode { get; set; }
+		public string plant { get; set; }
+		public string linkageno { get; set; }
+		public string assetsubno { get; set; }
+		public string orderno { get; set; }
+
 	}
 
 	public class StagingStockModel
@@ -148,9 +154,11 @@ namespace WMS.Models
 		public string assetsubno { get; set; }
 		public string costcenter { get; set; }
 		public string projecttext { get; set; }
-
-
-
+		public string saleordertypetext { get; set; }
+		public string customercode { get; set; }
+		public string custpolineitem { get; set; }
+		public string costcentertext { get; set; }
+	public string serviceorderno { get; set; }
 
 	}
 

@@ -193,6 +193,12 @@ namespace WMS.Controllers
 							model.projecttext = Conversion.toStr(row["Description"]);
 							model.sloc = Conversion.toStr(row["SLoc"]);
 							model.pocreatedby = Convert.ToString(row["PO created by (User Id)"]);
+							model.mscode= Convert.ToString(row["MS Code"]);
+							model.plant= Convert.ToString(row["Plnt"]);
+							model.linkageno = Convert.ToString(row["Linkage Number"]);
+							model.assetsubno = Convert.ToString(row["Asset Subnumber"]);
+							model.orderno = Convert.ToString(row["Order Number"]);
+
 							string Error_Description = "";
 							bool dataloaderror = false;
 							if (string.IsNullOrEmpty(model.pono.Replace('.', '#')))
@@ -217,8 +223,8 @@ namespace WMS.Controllers
 							//dbcmd.ExecuteNonQuery();
 							poitem = model.pono + "-" + model.itemno.ToString();
 							string poitemdescription = model.poitemdescription;
-							var insertquery = "INSERT INTO wms.STAG_PO_SAP(PurchDoc,pocreatedby,ItemDeliveryDate,Material,poitemdescription,POQuantity,dci,deliveredqty,Vendor,VendorName,ProjectDefinition,Item,NetPrice,datasource,createddate,DataloadErrors ,Error_Description,uploadcode,saleorderno,solineitemno,saleordertype,codetype,costcenter,assetno,projecttext,sloc)";
-							insertquery += " VALUES(@pono,@pocreatedby, @itemdeliverydate,@materialid,@poitemdescription,@poquantity,@dci,@deliveredqty,@vendorcode,@vendorname,@projectdefinition,@itemno,@NetPrice,'SAP',current_timestamp,@dataloaderror,@error_description,@uploadcode,@saleorderno,@solineitemno,@saleordertype,@codetype,@costcenter,@assetno,@projecttext,@sloc)";
+							var insertquery = "INSERT INTO wms.STAG_PO_SAP(PurchDoc,pocreatedby,ItemDeliveryDate,Material,poitemdescription,POQuantity,dci,deliveredqty,Vendor,VendorName,ProjectDefinition,Item,NetPrice,datasource,createddate,DataloadErrors ,Error_Description,uploadcode,saleorderno,solineitemno,saleordertype,codetype,costcenter,assetno,projecttext,sloc,mscode,plant,linkageno,assetsubno)";
+							insertquery += " VALUES(@pono,@pocreatedby, @itemdeliverydate,@materialid,@poitemdescription,@poquantity,@dci,@deliveredqty,@vendorcode,@vendorname,@projectdefinition,@itemno,@NetPrice,'SAP',current_timestamp,@dataloaderror,@error_description,@uploadcode,@saleorderno,@solineitemno,@saleordertype,@codetype,@costcenter,@assetno,@projecttext,@sloc,@mscode,@plant,@linkageno,@assetsubno)";
 							var results = DB.ExecuteScalar(insertquery, new
 							{
 								model.pono,
@@ -244,8 +250,14 @@ namespace WMS.Controllers
 								model.costcenter,
 								model.assetno,
 								model.projecttext,
-								model.sloc
+								model.sloc,
+								model.mscode,
+								model.assetsubno,
+								model.linkageno,
+								model.orderno
 							});
+
+
 
 						}
 						catch (Exception e)
@@ -338,6 +350,12 @@ namespace WMS.Controllers
 						model.projecttext = Conversion.toStr(row["Project text (Level 0)"]);
 						model.partno = Conversion.toStr(row["Material"]);
 						model.custpo = Conversion.toStr(row["PO number"]);
+						model.costcenter= Conversion.toStr(row["Cost Center"]);
+						model.costcentertext= Conversion.toStr(row["Text: Cost Center"]);
+						model.saleordertypetext= Conversion.toStr(row["Text: Sales Document Type"]);
+						model.customercode = Conversion.toStr(row["Sold-to party"]);
+						model.custpolineitem= Conversion.toStr(row["PO Item No. (Sold-to)"]);
+						model.serviceorderno = Conversion.toStr("Service Order Number");
 						model.uploadcode = uploadcode;
 						DateTime uploadedon = DateTime.Now;
 						if (string.IsNullOrEmpty(model.saleorderno))
@@ -372,7 +390,12 @@ namespace WMS.Controllers
 								uploadedon,
 								model.error_description,
 								model.isloaderror,
-								model.projecttext
+								model.projecttext,
+								model.saleordertypetext,
+								model.customercode,
+								model.custpolineitem,
+								model.costcentertext,
+								model.serviceorderno
 							});
 
 
@@ -386,7 +409,7 @@ namespace WMS.Controllers
 					//End - Gayathri
 					loadAuditLog(auditlog);
 					loadPOData(uploadcode);
-					string rsltx1 = loadlabeldatatobase(uploadcode);
+					
 					//}
 				}
 			}
@@ -504,20 +527,18 @@ namespace WMS.Controllers
 
 							}
 
-							//Gayathri - Fetch data from Staging tables and insert in po_materials table
-							string labeldataquery = "select * from  wms.st_QTSO where uploadcode='" + uploadcode + "' and saleorderno='" + stag_data.saleorderno + "' and solineitemno='" + stag_data.solineitemno + "'";
+							////Gayathri - Fetch data from Staging tables and insert in po_materials table
+							//string labeldataquery = "select * from  wms.st_QTSO where uploadcode='" + uploadcode + "' and saleorderno='" + stag_data.saleorderno + "' and solineitemno='" + stag_data.solineitemno + "'";
 
-							var qtodata = pgsql.ExecuteScalar(labeldataquery, null);
+							//var qtodata = pgsql.ExecuteScalar(labeldataquery, null);
 
-							string labelquery = "select * from wms.st_slno_imports where uploadcode='" + uploadcode + "' and saleorderno='" + stag_data.saleorderno + "' and solineitemno='" + stag_data.solineitemno + "'";
+							//string labelquery = "select * from wms.st_slno_imports where uploadcode='" + uploadcode + "' and saleorderno='" + stag_data.saleorderno + "' and solineitemno='" + stag_data.solineitemno + "'";
 
-							var stdata= pgsql.ExecuteScalar(labelquery, null);
-							//End
+							//var stdata= pgsql.ExecuteScalar(labelquery, null);
+							////End
 
 							string query3 = "Select Count(*) as count from wms.wms_pomaterials where pono = '" + stag_data.purchdoc + "' and materialid='" + stag_data.material + "' and itemno = " + stag_data.itemno + "";
 							int matcount = int.Parse(pgsql.ExecuteScalar(query3, null).ToString());
-
-
 
 							if (matcount == 0)
 							{
@@ -1479,6 +1500,7 @@ namespace WMS.Controllers
 
 
 							model.uploadcode = upcode;
+							///not required
 							string materialQueryxx = "Select materialdescription from wms.\"MaterialMasterYGS\" where material = '" + model.materialid + "'";
 							var materialdesc = DB.ExecuteScalar(materialQueryxx, null);
 							if (materialdesc == null)
@@ -1489,6 +1511,7 @@ namespace WMS.Controllers
 							{
 								model.materialdescription = materialdesc.ToString();
 							}
+							////
 
 							if (string.IsNullOrEmpty(model.po))
 								Error_Description += " No pono";
@@ -1771,101 +1794,101 @@ namespace WMS.Controllers
 						}
 						else
 						{
-							string query1 = "Select Count(*) as count from wms.wms_polist where pono = '" + stag_data.po + "'";
-							int pocount = int.Parse(pgsql.ExecuteScalar(query1, null).ToString());
-							if (pocount == 0)
-							{
-								//insert wms_polist ##pono,deliverydate,vendorid,supliername
-								string type = "po";
-								var insertquery = "INSERT INTO wms.wms_polist(pono,vendorcode,suppliername,type,uploadcode)VALUES(@po, @vendorcode,@vendorname,@type,@uploadcode)";
-								var results = pgsql.ExecuteScalar(insertquery, new
-								{
-									stag_data.po,
-									stag_data.vendorcode,
-									stag_data.vendorname,
-									type,
-									uploadcode
-								});
+							//string query1 = "Select Count(*) as count from wms.wms_polist where pono = '" + stag_data.po + "'";
+							//int pocount = int.Parse(pgsql.ExecuteScalar(query1, null).ToString());
+							//if (pocount == 0)
+							//{
+							//	//insert wms_polist ##pono,deliverydate,vendorid,supliername
+							//	string type = "po";
+							//	var insertquery = "INSERT INTO wms.wms_polist(pono,vendorcode,suppliername,type,uploadcode)VALUES(@po, @vendorcode,@vendorname,@type,@uploadcode)";
+							//	var results = pgsql.ExecuteScalar(insertquery, new
+							//	{
+							//		stag_data.po,
+							//		stag_data.vendorcode,
+							//		stag_data.vendorname,
+							//		type,
+							//		uploadcode
+							//	});
 
-							}
+							//}
 
-							string query2 = "Select Count(*) as count from wms.wms_project where pono = '" + stag_data.po + "'";
-							int Projcount = int.Parse(pgsql.ExecuteScalar(query2, null).ToString());
+							//string query2 = "Select Count(*) as count from wms.wms_project where pono = '" + stag_data.po + "'";
+							//int Projcount = int.Parse(pgsql.ExecuteScalar(query2, null).ToString());
 
-							if (Projcount == 0)
-							{
-								//insert wms_project ##pono,jobname,projectcode,projectname,projectmanager,
-								var insertquery = "INSERT INTO wms.wms_project(pono,projectcode,projectname,uploadcode)VALUES(@po,@projectcode,@description,@uploadcode)";
-								var results = pgsql.ExecuteScalar(insertquery, new
-								{
-									stag_data.po,
-									stag_data.projectcode,
-									stag_data.description,
-									uploadcode
+							//if (Projcount == 0)
+							//{
+							//	//insert wms_project ##pono,jobname,projectcode,projectname,projectmanager,
+							//	var insertquery = "INSERT INTO wms.wms_project(pono,projectcode,projectname,uploadcode)VALUES(@po,@projectcode,@description,@uploadcode)";
+							//	var results = pgsql.ExecuteScalar(insertquery, new
+							//	{
+							//		stag_data.po,
+							//		stag_data.projectcode,
+							//		stag_data.description,
+							//		uploadcode
 
-								});
+							//	});
 
-							}
+							//}
 
-							string queryasn = "Select Count(*) as count from wms.wms_asn where pono = '" + stag_data.po + "'";
-							int asncountcount = int.Parse(pgsql.ExecuteScalar(query2, null).ToString());
+							//string queryasn = "Select Count(*) as count from wms.wms_asn where pono = '" + stag_data.po + "'";
+							//int asncountcount = int.Parse(pgsql.ExecuteScalar(query2, null).ToString());
 
-							if (Projcount == 0)
-							{
-								//insert wms_project ##pono,jobname,projectcode,projectname,projectmanager,
-								deliverydate = deliverydate.AddDays(1);
-								string updatedby = "303268";
-								var insertquery = "INSERT INTO wms.wms_asn(pono,deliverydate,updatedby,updatedon,deleteflag,uploadcode) VALUES (@po,@deliverydate,@updatedby,current_date,false,@uploadcode)";
-								var results = pgsql.ExecuteScalar(insertquery, new
-								{
-									stag_data.po,
-									deliverydate,
-									updatedby,
-									uploadcode
+							//if (Projcount == 0)
+							//{
+							//	//insert wms_project ##pono,jobname,projectcode,projectname,projectmanager,
+							//	deliverydate = deliverydate.AddDays(1);
+							//	string updatedby = "303268";
+							//	var insertquery = "INSERT INTO wms.wms_asn(pono,deliverydate,updatedby,updatedon,deleteflag,uploadcode) VALUES (@po,@deliverydate,@updatedby,current_date,false,@uploadcode)";
+							//	var results = pgsql.ExecuteScalar(insertquery, new
+							//	{
+							//		stag_data.po,
+							//		deliverydate,
+							//		updatedby,
+							//		uploadcode
 
-								});
+							//	});
 
-							}
+							//}
 
-							int rsltxxx = 0;
-							string podescription = stag_data.description;
-							stag_data.soldto = stag_data.customername;
-							var insrtqry = WMSResource.insertpoformatlabel;
-							int itemno = Conversion.toInt(stag_data.polineitemno);
-							string pono = stag_data.po;
-							rsltxxx = pgsql.Execute(insrtqry, new
-							{
-								pono,
-								stag_data.materialid,
-								stag_data.materialdescription,
-								stag_data.materialqty,
-								itemno,
-								stag_data.itemdeliverydate,
-								podescription,
-								stag_data.mscode,
-								stag_data.saleorderno,
-								stag_data.solineitemno,
-								stag_data.linkageno,
-								//stag_data.material,
-								//stag_data.plant,
-								//stag_data.saleordertype,
-								//stag_data.customername,
-								//stag_data.shippingpoint,
-								//stag_data.loadingdate,
-								//stag_data.gr,
-								//stag_data.projectiddef,
-								//stag_data.partno,
-								//stag_data.custpo,
-								stag_data.grno,
-								stag_data.codetype,
-								//stag_data.shipto,
-								//stag_data.soldto,
-								stag_data.uploadcode,
-								stag_data.assetno,
-								stag_data.assetsubno,
-								stag_data.costcenter
+							//int rsltxxx = 0;
+							//string podescription = stag_data.description;
+							//stag_data.soldto = stag_data.customername;
+							//var insrtqry = WMSResource.insertpoformatlabel;
+							//int itemno = Conversion.toInt(stag_data.polineitemno);
+							//string pono = stag_data.po;
+							//rsltxxx = pgsql.Execute(insrtqry, new
+							//{
+							//	pono,
+							//	stag_data.materialid,
+							//	stag_data.materialdescription,
+							//	stag_data.materialqty,
+							//	itemno,
+							//	stag_data.itemdeliverydate,
+							//	podescription,
+							//	stag_data.mscode,
+							//	stag_data.saleorderno,
+							//	stag_data.solineitemno,
+							//	stag_data.linkageno,
+							//	//stag_data.material,
+							//	//stag_data.plant,
+							//	//stag_data.saleordertype,
+							//	//stag_data.customername,
+							//	//stag_data.shippingpoint,
+							//	//stag_data.loadingdate,
+							//	//stag_data.gr,
+							//	//stag_data.projectiddef,
+							//	//stag_data.partno,
+							//	//stag_data.custpo,
+							//	stag_data.grno,
+							//	stag_data.codetype,
+							//	//stag_data.shipto,
+							//	//stag_data.soldto,
+							//	stag_data.uploadcode,
+							//	stag_data.assetno,
+							//	stag_data.assetsubno,
+							//	stag_data.costcenter
 
-							});
+							//});
 
 
 						}
