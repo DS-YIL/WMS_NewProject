@@ -40,11 +40,17 @@
             </div>
           </td>
           <td style="width:50%">
+            <div *ngIf="materialList[0].gatepasstype=='Returnable'" class="row form-inline m-2">
+              <label class="form-label"><b>Document No:</b>&nbsp;QM3X-0854F-008</label>
+            </div>
+            <div *ngIf="materialList[0].gatepasstype=='Non Returnable'" class="row form-inline m-2">
+              <label class="form-label"><b>Document No:</b>&nbsp;QM3X-0854F-009</label>
+            </div>
             <div class="row form-inline m-2">
               <label class="form-label"><b>No:</b>&nbsp;{{materialList[0].gatepassid}}</label>
             </div>
             <div class="row form-inline m-2">
-              <label class="form-label"><b>date:</b>&nbsp;{{materialList[0].requestedon  | date :  constants.dateFormat}}</label>
+              <label class="form-label"><b>Date:</b>&nbsp;{{materialList[0].requestedon  | date :  constants.dateFormat}}</label>
             </div>
           </td>
       </thead>
