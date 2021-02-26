@@ -69,6 +69,7 @@
               <th style="text-align:center;">Item PO Description</th>
               <th style="text-align:center;width:8%;">Available Qty</th>
               <th style="text-align:center;width:8%;">Transfer Qty</th>
+              <th style="text-align:center;width:8%;">Total Price</th>
               <!--<th style="text-align:center;width:14%;">Project</th>-->
               <th style="text-align:center;width:15%;">Required Date</th>
               <th style="text-align:center;width:5%;">
@@ -84,7 +85,7 @@
                 <p-autoComplete appendTo="body" placeholder="search by material" (onSelect)="onMaterialSelected1($event,rowData,ri)" [(ngModel)]="rowData.materialObj" type="text" [suggestions]="searchItems" field="name" [forceSelection]="true" [dropdown]="true" (completeMethod)="bindSearchListDatamaterial($event,rowData,'material')" size="20"></p-autoComplete>
               </td>
               <td class="ptable-cell" style="text-align:left;">
-                <p-autoComplete appendTo="body" placeholder="search by description" (onSelect)="onDescriptionSelected($event,rowData,ri)" [(ngModel)]="rowData.materialdescObj" type="text" [suggestions]="searchdescItems" field="name" [forceSelection]="true" [dropdown]="true" (completeMethod)="bindSearchListDatamaterialdesc($event,rowData)" size="50"></p-autoComplete>
+                <p-autoComplete appendTo="body" placeholder="search by description" (onSelect)="onDescriptionSelected($event,rowData,ri)" [(ngModel)]="rowData.materialdescObj" type="text" [suggestions]="searchdescItems" field="name" [forceSelection]="true" [dropdown]="true" (completeMethod)="bindSearchListDatamaterialdesc($event,rowData)" size="40"></p-autoComplete>
                 <!--<p-autoComplete [(ngModel)]="rowData.materialdescription" placeholder="search by description" type="text" appendTo="body" [forceSelection]="true" (onSelect)="onDescriptionSelected($event,rowData,ri)" [suggestions]="filteredmatdesc"  (completeMethod)="filtermatdescs($event,rowData)" [size]="40" [dropdown]="true"></p-autoComplete>-->
               </td>
               <td class="ptable-cell" style="text-align:right;width:8%;">
@@ -92,6 +93,9 @@
               </td>
               <td class="ptable-cell" style="text-align:right;width:8%;">
                 <input pInputText type="number" style="text-align:right" class="form-control" [min]="0" [(ngModel)]="rowData.transferqty" (change)="checkqty(rowData)">
+              </td>
+              <td class="ptable-cell" style="text-align:right;width:8%;">
+                <input pInputText type="number" style="text-align:right" class="form-control" [min]="0" [(ngModel)]="rowData.value">
               </td>
               <!--<td class="ptable-cell" style="text-align:left;width:14%;">
     <input pInputText type="text" style="text-align:left" class="form-control" [min]="0" [(ngModel)]="rowData.projectid">

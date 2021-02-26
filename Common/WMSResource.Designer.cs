@@ -554,9 +554,9 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select cast(sum(ws.availableqty) as varchar) as message from wms.wms_stock ws 
-        ///left outer join wms.wms_rd_locator loc on loc.locatorid = ws.storeid 
-        ///where loc.locatorid = &apos;#store&apos; and ws.materialid = &apos;#material&apos; and Lower(ws.poitemdescription) = Lower(&apos;#description&apos;).
+        ///   Looks up a localized string similar to select cast(sum(ws.availableqty) as varchar) as message,
+        ///(select REPLACE(mv.value , &apos;,&apos;, &apos;&apos;) from wms.material_valuation mv  where mv.projectcode = &apos;#projectcode&apos; and mv.material = &apos;#material&apos; and Lower(mv.potext) = Lower(&apos;#description&apos;) order by mv.id desc limit 1) as mvprice,
+        ///(select REPLACE(mvl.quantity , &apos;,&apos;, &apos;&apos;) from wms.material_valuation mvl  where mvl.projectcode = &apos;#projectcode&apos; and mvl.material = &apos;#material&apos; and Lower(mvl.potext) = Lower(&apos;#description&apos;) order by mvl.id desc limit 1) as mvquantit [rest of string was truncated]&quot;;.
         /// </summary>
         public static string getAvailableqtybyStore {
             get {

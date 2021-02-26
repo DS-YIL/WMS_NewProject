@@ -635,6 +635,7 @@ export class stocktransfermateriakmodel {
   poqty: number;
   availableqty: number;
   value: number;
+  unitprice: number;
   subconno: string;
   projectmanager: string;
   selecteddestinationobject: locationdropdownModel;
@@ -860,6 +861,8 @@ export class matlocations {
 
 export class WMSHttpResponse {
   message: string
+  mvprice: string;
+  mvquantity: string;
 }
 
 export class PrintHistoryModel {

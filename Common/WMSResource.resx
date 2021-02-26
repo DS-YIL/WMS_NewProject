@@ -1979,9 +1979,14 @@ order by matis.requestid desc</value>
     <value>update wms.wms_invstocktransfer set ackstatus=@ackstatus,ackremarks=@ackremarks,ackby=@ackby,ackon=@ackon,status=@status where transferid='#transferid'</value>
   </data>
   <data name="getAvailableqtybyStore" xml:space="preserve">
-    <value>select cast(sum(ws.availableqty) as varchar) as message from wms.wms_stock ws 
-left outer join wms.wms_rd_locator loc on loc.locatorid = ws.storeid 
-where loc.locatorid = '#store' and ws.materialid = '#material' and Lower(ws.poitemdescription) = Lower('#description')</value>
+    <value>select cast(sum(ws.availableqty) as varchar) as message,
+(select REPLACE(mv.value , ',', '') from wms.material_valuation mv  where mv.projectcode = '#projectcode' and mv.material = '#material' and Lower(mv.potext) = Lower('#description') order by mv.id desc limit 1) as mvprice,
+(select REPLACE(mvl.quantity , ',', '') from wms.material_valuation mvl  where mvl.projectcode = '#projectcode' and mvl.material = '#material' and Lower(mvl.potext) = Lower('#description') order by mvl.id desc limit 1) as mvquantity
+from wms.wms_stock ws 
+left outer join wms.wms_rd_locator loc on loc.locatorid = ws.storeid
+left outer join wms.wms_project prj on prj.pono = ws.pono 
+where loc.locatorid = #store and ws.materialid = '#material' and Lower(ws.poitemdescription) = Lower('#description')
+and (prj.projectcode = '#projectcode' or ws.projectid = '#projectcode')</value>
   </data>
   <data name="getSTOSubConForApproval" xml:space="preserve">
     <value>select req.transferid,req.transferredon,emp."name" as transferredbyname,req.transferredby,req.projectcode,req.remarks,req.transfertype,req.sourceplant,req.destinationplant,req.vendorcode,req.vendorname, 

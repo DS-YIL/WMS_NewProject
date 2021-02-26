@@ -1526,9 +1526,9 @@ namespace WMS.Controllers
 		}
 
 		[HttpGet("getAvailableQtyBystore")]
-		public async Task<WMSHttpResponse> getAvailableQtyBystore(string store, string materialid, string description)
+		public async Task<WMSHttpResponse> getAvailableQtyBystore(string store, string materialid, string description, string projectcode)
 		{
-			return await this._poService.getAvailableQtyBystore(store, materialid, description);
+			return await this._poService.getAvailableQtyBystore(store, materialid, description, projectcode);
 		}
 
 		[HttpGet("getMatdetailsbyTransferId")]

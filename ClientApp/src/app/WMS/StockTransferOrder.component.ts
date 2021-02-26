@@ -253,7 +253,7 @@ export class StockTransferOrderComponent implements OnInit {
       return;
     }
     if (isNullOrUndefined(this.sourceplant) || !this.destinationplant.locatorid) {
-      this.messageService.add({ severity: 'error', summary: '', detail: 'Select destinationplant location' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Select destination location' });
       return;
     }
     if (isNullOrUndefined(this.selectedproject) || !this.selectedproject.value) {
@@ -269,7 +269,7 @@ export class StockTransferOrderComponent implements OnInit {
     
       var invalidrow = this.podetailsList.filter(function (element, index) {
         debugger;
-        return (!element.transferqty) || (!element.materialid) || (!element.materialdescription) || (!element.requireddate);
+        return (!element.transferqty) || (!element.materialid) || (!element.materialdescription) || (!element.requireddate) || (!element.value);
       });
       if (invalidrow.length > 0) {
         this.messageService.add({ severity: 'error', summary: '', detail: 'Fill all the details.' });
@@ -524,6 +524,8 @@ export class StockTransferOrderComponent implements OnInit {
 
   }
 
+
+
   onMaterialSelected1(event: any, data: any, ind: number) {
 
     debugger;
@@ -531,12 +533,34 @@ export class StockTransferOrderComponent implements OnInit {
       this.podetailsList[ind].materialid = data.materialObj.code;
       if (!isNullOrUndefined(this.podetailsList[ind].materialdescription) && this.podetailsList[ind].materialdescription != "") {
         this.cuurentrowresponse = new WMSHttpResponse();
-        this.wmsService.getavailabilityByStore(this.sourceplant.locatorid, data.materialObj.code, this.podetailsList[ind].materialdescription).subscribe(data => {
+        this.wmsService.getavailabilityByStore(this.sourceplant.locatorid, data.materialObj.code, this.podetailsList[ind].materialdescription, this.selectedproject.value).subscribe(data => {
           debugger;
           if (data) {
             this.cuurentrowresponse = data;
             if (!isNullOrUndefined(this.cuurentrowresponse.message)) {
               this.podetailsList[ind].availableqty = parseInt(this.cuurentrowresponse.message);
+              if (!isNullOrUndefined(this.cuurentrowresponse.mvprice) && this.cuurentrowresponse.mvprice.trim() != "" && this.cuurentrowresponse.mvprice.trim() != "0" && !isNullOrUndefined(this.cuurentrowresponse.mvquantity) && this.cuurentrowresponse.mvquantity.trim() != "" && this.cuurentrowresponse.mvquantity.trim() != "0") {
+                var price = null;
+                var qty = null;
+                try {
+                  price = parseFloat(this.cuurentrowresponse.mvprice);
+                }
+                catch{
+                  price = null;
+                }
+                try {
+                  qty = parseFloat(this.cuurentrowresponse.mvquantity);
+                }
+                catch{
+                  qty = null;
+                }
+                if (price != null && qty != null) {
+                  this.podetailsList[ind].unitprice = price / qty;
+                }
+              }
+              else {
+                this.podetailsList[ind].unitprice = 0;
+              }
               this.podetailsList[ind].availableqty = parseInt(this.cuurentrowresponse.message);
               if (this.podetailsList[ind].availableqty == 0) {
                 this.messageService.add({ severity: 'error', summary: '', detail: 'Material Not available in store :' + this.sourceplant.storagelocationdesc });
@@ -609,6 +633,8 @@ export class StockTransferOrderComponent implements OnInit {
       return;
     }
 
+    data.value = data.unitprice * data.transferqty;
+
   }
   onDescriptionSelected(event: any, data: any, ind: number) {
     debugger;
@@ -616,12 +642,34 @@ export class StockTransferOrderComponent implements OnInit {
       this.podetailsList[ind].materialdescription = data.materialdescObj.name;
       if (!isNullOrUndefined(this.podetailsList[ind].materialid) && this.podetailsList[ind].materialid != "") {
         this.cuurentrowresponse = new WMSHttpResponse();
-        this.wmsService.getavailabilityByStore(this.sourceplant.locatorid, this.podetailsList[ind].materialid, data.materialdescObj.name).subscribe(data => {
+        this.wmsService.getavailabilityByStore(this.sourceplant.locatorid, this.podetailsList[ind].materialid, data.materialdescObj.name, this.selectedproject.value).subscribe(data => {
           debugger;
           if (data) {
             this.cuurentrowresponse = data;
             if (!isNullOrUndefined(this.cuurentrowresponse.message)) {
               this.podetailsList[ind].availableqty = parseInt(this.cuurentrowresponse.message);
+              if (!isNullOrUndefined(this.cuurentrowresponse.mvprice) && this.cuurentrowresponse.mvprice.trim() != "" && this.cuurentrowresponse.mvprice.trim() != "0" && !isNullOrUndefined(this.cuurentrowresponse.mvquantity) && this.cuurentrowresponse.mvquantity.trim() != "" && this.cuurentrowresponse.mvquantity.trim() != "0") {
+                var price = null;
+                var qty = null;
+                try {
+                  price = parseFloat(this.cuurentrowresponse.mvprice);
+                }
+                catch{
+                  price = null;
+                }
+                try {
+                  qty = parseFloat(this.cuurentrowresponse.mvquantity);
+                }
+                catch{
+                  qty = null;
+                }
+                if (price != null && qty != null) {
+                  this.podetailsList[ind].unitprice = price / qty;
+                }
+              }
+              else {
+                this.podetailsList[ind].unitprice = 0;
+              }
               if (this.podetailsList[ind].availableqty == 0) {
                 this.messageService.add({ severity: 'error', summary: '', detail: 'Material Not available in store :' + this.sourceplant.locatorname });
               }
@@ -1047,7 +1095,7 @@ export class StockTransferOrderComponent implements OnInit {
     }
    
     var invalidrow = this.podetailsList.filter(function (element, index) {
-      return (!element.transferqty) || (!element.materialid) || (!element.materialdescription) || (!element.requireddate);
+      return (!element.transferqty) || (!element.materialid) || (!element.materialdescription) || (!element.requireddate) || (!element.value);
       });
     
     if (invalidrow.length > 0) {
@@ -1071,9 +1119,7 @@ export class StockTransferOrderComponent implements OnInit {
         this.messageService.add({ severity: 'success', summary: '', detail: 'STO Requested' });
         this.savedata = [];
         this.podetailsList = [];
-        this.mainmodel = new invstocktransfermodel();
-        this.mainmodel.sourceplant = "Plant1";
-        this.mainmodel.destinationplant = "Plant1";
+        this.mainmodel = new invstocktransfermodel()
         this.getStocktransferdatagroup();
         this.addprocess = false;
       }

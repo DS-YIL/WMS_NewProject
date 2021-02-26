@@ -58,6 +58,7 @@
               <th style="text-align:center;">Item PO Description</th>
               <th style="text-align:center;width:8%;">Available Qty</th>
               <th style="text-align:center;width:8%;">Transfer Qty</th>
+              <th style="text-align:center;width:8%;">Total Price</th>
               <!--<th style="text-align:center;width:14%;">Project</th>-->
               <th style="text-align:center;width:15%;">Required Date</th>
               <th style="text-align:center;width:5%;">
@@ -80,6 +81,9 @@
               </td>
               <td class="ptable-cell" style="text-align:right;width:8%;">
                 <input pInputText type="number" style="text-align:right" class="form-control" [min]="0" (change)="checkqty(rowData)" [(ngModel)]="rowData.transferqty">
+              </td>
+              <td class="ptable-cell" style="text-align:right;width:8%;">
+                <input pInputText type="number" style="text-align:right" class="form-control" [min]="0" [(ngModel)]="rowData.value">
               </td>
               <!--<td class="ptable-cell" style="text-align:left;width:14%;">
     <input pInputText type="text" style="text-align:left" class="form-control" [min]="0" [(ngModel)]="rowData.projectid">

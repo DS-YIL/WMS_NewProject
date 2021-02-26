@@ -982,8 +982,8 @@ getMaterialMasterList(): Observable<any> {
   getSTORequestList(type: string): Observable<any[]> {
     return this.http.get<any[]>(this.url + 'POData/getSTORequestList?type='+type, this.httpOptions);
   }
-  getavailabilityByStore(store: string, material: string, description: string): Observable<WMSHttpResponse> {
-    return this.http.get<WMSHttpResponse>(this.url + 'POData/getAvailableQtyBystore?store=' + store + '&materialid=' + material + '&description=' + description, this.httpOptions);
+  getavailabilityByStore(store: string, material: string, description: string, projectcode: string): Observable<WMSHttpResponse> {
+    return this.http.get<WMSHttpResponse>(this.url + 'POData/getAvailableQtyBystore?store=' + store + '&materialid=' + material + '&description=' + description + '&projectcode=' + projectcode, this.httpOptions);
   }
   getSubcontractRequestListforissue(): Observable<any[]> {
     return this.http.get<any[]>(this.url + 'POData/getSubcontractRequestListforissue/', this.httpOptions);

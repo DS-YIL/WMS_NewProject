@@ -10187,19 +10187,19 @@ namespace WMS.DAL
 							//{
 							var poitemdesc = stck.materialdescription;
 							string stockinsertqry = WMSResource.insertinvtransfermaterialSTO;
-							decimal? value = null;
-							string query2 = "select * from wms.material_valuation where projectcode = '"+data.projectcode+"' and material = '"+stck.materialid+"' order by id desc limit 1";
-							MaterialValuation objs1 = pgsql.QueryFirstOrDefault<MaterialValuation>(
-							   query2, null, commandType: CommandType.Text);
-							if(objs1 != null)
-                            {
-								if(objs1.value != null && objs1.value != 0 && objs1.quantity != null && objs1.quantity != 0)
-                                {
-									value = Math.Abs(Convert.ToDecimal(objs1.value)) / Math.Abs(Convert.ToInt32(objs1.quantity));
+							decimal? value = stck.value;
+							//string query2 = "select * from wms.material_valuation where projectcode = '"+data.projectcode+"' and material = '"+stck.materialid+"' order by id desc limit 1";
+							//MaterialValuation objs1 = pgsql.QueryFirstOrDefault<MaterialValuation>(
+							//   query2, null, commandType: CommandType.Text);
+							//if(objs1 != null)
+       //                     {
+							//	if(objs1.value != null && objs1.value != 0 && objs1.quantity != null && objs1.quantity != 0)
+       //                         {
+							//		value = Math.Abs(Convert.ToDecimal(objs1.value)) / Math.Abs(Convert.ToInt32(objs1.quantity));
 
-								}	
+							//	}	
                                 
-                            }
+       //                     }
 
 
 							var resultsxx = pgsql.ExecuteScalar(stockinsertqry, new
@@ -15428,14 +15428,14 @@ Review Date :<<>>   Reviewed By :<<>>
 		Purpose : <<get stock transferdata>>
 		Review Date :<<>>   Reviewed By :<<>>
 		*/
-		public async Task<WMSHttpResponse> getAvailableQtyBystore(string store,string materialid, string description)
+		public async Task<WMSHttpResponse> getAvailableQtyBystore(string store,string materialid, string description, string projectcode)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
 				try
 				{
 					//string materialrequestquery = WMSResource.invstocktransforSTO;
-					string materialrequestquery = WMSResource.getAvailableqtybyStore.Replace("#store", store).Replace("#material", materialid).Replace("#description", description);
+					string materialrequestquery = WMSResource.getAvailableqtybyStore.Replace("#store", store).Replace("#material", materialid).Replace("#description", description).Replace("#projectcode",projectcode);
 					await pgsql.OpenAsync();
 					var result = await pgsql.QueryAsync<WMSHttpResponse>(
 					  materialrequestquery, null, commandType: CommandType.Text);

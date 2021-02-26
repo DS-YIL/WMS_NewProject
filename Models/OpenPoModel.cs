@@ -1482,6 +1482,7 @@ public class stocktransfermateriakmodel
 	public int issuedqty { get; set; }
 	public int poqty { get; set; }
 	public decimal? value { get; set; }
+	public decimal? unitprice { get; set; }
 	public string subconno { get; set; }
 	public string projectmanager { get; set; }
 
@@ -1803,6 +1804,8 @@ public class materilaTrasFilterParams
 public class WMSHttpResponse
 {
 	public string message { get; set; }
+	public string mvprice { get; set; }
+	public string mvquantity { get; set; }
 }
 public class inventoryFilters
 {
