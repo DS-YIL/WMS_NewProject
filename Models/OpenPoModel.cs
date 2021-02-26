@@ -119,6 +119,7 @@ namespace WMS.Models
 		public string material { get; set; }
 		public string uploadcode { get; set; }
 		public string costcenter { get; set; }
+		public string currentdate { get; set; }
 		public string costcentertext { get; set; }
 		public string assetno { get; set; }
 		public string assetsubno { get; set; }
