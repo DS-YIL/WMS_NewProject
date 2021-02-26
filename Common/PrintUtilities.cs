@@ -6,10 +6,10 @@
     Version : 0.1 <change version only if there is major change - new release etc>
     Sourcecode Copyright : Yokogawa India Limited
 */
+
+
 using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -17,7 +17,6 @@ using System.Net.Sockets;
 using System.Threading.Tasks;
 using ZXing;
 using ZXing.Common;
-using ZXing.CoreCompat.System.Drawing;
 
 namespace WMS.Common
 {
@@ -60,7 +59,8 @@ namespace WMS.Common
             {
               if(barcodename!=null)
                 {
-                    BarcodeWriter writer = new BarcodeWriter
+                    
+                    var writer = new BarcodeWriter
                     {
                         Format = BarcodeFormat.CODE_128,
                         Options = new EncodingOptions
@@ -77,9 +77,9 @@ namespace WMS.Common
                     // write text and generate a 2-D barcode as a bitmap
                     writer
                         .Write(barcodename)
-                        .Save(@"D:\WMS_NewProject\Barcodes\" + barcodename + "_" + DateTime.Now + ".bmp");
+                        .Save(path+ barcodename + "_" + String.Format("{0:dd_MM_yyyy}", DateTime.Now) + ".bmp");
 
-                    barcodepath =  barcodename + "_" + DateTime.Now + ".bmp";
+                    barcodepath = path+ barcodename + "_" + DateTime.Now + ".bmp";
                 }
                
             }

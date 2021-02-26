@@ -114,10 +114,13 @@ namespace WMS.Models
 		public int noofpieces { get; set; }
 		public int totalboxes { get; set; }
 		public int boxno { get; set; }
+		public string projectname { get; set; }
 		public string serialno { get; set; }
 		public string material { get; set; }
 		public string uploadcode { get; set; }
 		public string costcenter { get; set; }
+		public string currentdate { get; set; }
+		public string costcentertext { get; set; }
 		public string assetno { get; set; }
 		public string assetsubno { get; set; }
 		public string projecttext { get; set; }
@@ -128,6 +131,7 @@ namespace WMS.Models
 		public string order { get; set; }
 		public string qty { get; set; }
 		public string saleordertype { get; set; }
+		public string saleordertypetext { get; set; }
 		public string insprec { get; set; }
 		public string shipto { get; set; }
 		public string materialdescription { get; set; }
@@ -140,6 +144,9 @@ namespace WMS.Models
 		public string loadingdate { get; set; }
 		public string linkageno { get; set; }
 		public string customername { get; set; }
+		public string customercode { get; set; }
+		public string customerpono { get; set; }
+		public string custlineitemno { get; set; }
 		public string customer { get; set; }
 		public string inwardid { get; set; }
 		public string soldto { get; set; }
@@ -149,15 +156,18 @@ namespace WMS.Models
 		public string custpo { get; set; }
 		public string codetype { get; set; }
 		public string materialbarcode { get; set; }
-		public string orderbarcode { get; set; }
+		public string orderbarcodepath { get; set; }
 		public string soiembarcode { get; set; }
-		public string plantbarcode { get; set; }
-		public string linkagebarcode { get; set; }
+		public string plantbarcodepath { get; set; }
+		public string linkagebarcodepath { get; set; }
+		public string storagebarcodepath { get; set; }
 		public string spbarcode { get; set; }
 		public string grbarcode { get; set; }
+		public string storagelocation { get; set; }
+		public string ygsgr { get; set; }
 
-
-
+		public string custpolineitem { get; set; }
+		public string serviceorderno { get; set; }
 
 	}
 

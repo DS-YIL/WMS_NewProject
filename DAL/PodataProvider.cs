@@ -23,7 +23,6 @@ using System.Net.Sockets;
 using System.Net;
 using ZXing;
 using ZXing.Common;
-using ZXing.CoreCompat.System.Drawing;
 using System.Data.SqlClient;
 using Microsoft.AspNetCore.Mvc;
 using ZXing.QrCode.Internal;
@@ -588,6 +587,8 @@ namespace WMS.DAL
 		public printMaterial generateBarcodeMaterial(printMaterial printMat)
 		{
 			printMaterial objprint = new printMaterial();
+			MateriallabelModel objserial = new MateriallabelModel();
+			MateriallabelModel objdata = new MateriallabelModel();
 			try
 			{
 
@@ -610,13 +611,78 @@ namespace WMS.DAL
 					objprint = DB.QueryFirstOrDefault<printMaterial>(
 						   query, null, commandType: CommandType.Text);
 
+					//For F-type get the based on order No.
+					if(objprint.codetype=="F")
+                    {
+						string querydata = "select * from wms.st_QTSO where serviceorderno='" + objprint.serviceorderno + "'";
+						objdata = DB.QueryFirstOrDefault<MateriallabelModel>(
+							   querydata, null, commandType: CommandType.Text);
 
-                    objprint.noofpieces = printMat.noofpieces;
+						if(objdata !=null)
+                        {
+							string queryserial = "select * from wms.st_slno_imports where saleorderno='" + objdata.saleorderno + "' and solineitemno= '" + objdata.solineitemno + "' ";
+							objserial = DB.QueryFirstOrDefault<MateriallabelModel>(
+								   queryserial, null, commandType: CommandType.Text);
+						}
+					
+
+						
+					}
+                    else
+                    {
+						string queryserial = "select * from wms.st_slno_imports where saleorderno='" + objprint.saleorderno + "' and solineitemno= '" + objprint.solineitemno + "' ";
+						objserial = DB.QueryFirstOrDefault<MateriallabelModel>(
+							   queryserial, null, commandType: CommandType.Text);
+
+						string querydata = "select * from wms.st_QTSO where saleorderno='" + objprint.saleorderno + "' and solineitemno= '" + objprint.solineitemno + "' ";
+						objdata = DB.QueryFirstOrDefault<MateriallabelModel>(
+							   querydata, null, commandType: CommandType.Text);
+					}
+
+					//Get YGS GR No.
+					string quesryygsgr = "select sapgr from wms.wms_sapgr where wmsgr='" + printMat.grnno +"'";
+					var ygsgr = DB.QueryFirstOrDefault<string>(
+							   quesryygsgr, null, commandType: CommandType.Text);
+
+					//Check the length of soline item number and append Zero
+					if(objprint.solineitemno.Length<=5)
+                    {
+						int length = objprint.solineitemno.Length;
+						int countlength = 6 - length;
+						objprint.solineitemno = objprint.solineitemno.PadLeft(6, '0');
+                    }
+					if(objserial!=null)
+                    {
+						objprint.serialno = objserial.serialno ?? "-";
+					}
+					if(objdata!=null)
+                    {
+						objprint.saleordertype = objdata.saleordertype;
+						objprint.customername = objdata.customername;
+						objprint.shipto = objdata.shipto;
+						objprint.shippingpoint = objdata.shippingpoint;
+						objprint.loadingdate = Convert.ToString(objdata.loadingdate);
+						objprint.projectiddef = objdata.projectiddef;
+						objprint.projecttext = objdata.projecttext;
+						objprint.partno = objdata.partno;
+						objprint.custpo = objdata.custpo;
+						objprint.costcenter = objdata.costcenter;
+						objprint.costcentertext = objdata.costcentertext;
+						objprint.saleordertypetext = objdata.saleordertypetext;
+						objprint.customercode = objdata.customercode;
+						objprint.custpolineitem = objdata.custpolineitem;
+						objprint.serviceorderno = objdata.serviceorderno;
+					}
+					
+					objprint.grnno = printMat.grnno;
+					objprint.ygsgr = ygsgr;
+					objprint.currentdate= DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss");
+					objprint.noofpieces = printMat.noofpieces;
                     objprint.boxno = printMat.boxno;
                     objprint.totalboxes = printMat.totalboxes;
                     objprint.insprec = "Not Required";
 					objprint.order = objprint.saleorderno + "-" + objprint.solineitemno;
-                    objprint.qty = objprint.noofpieces + "/" + printMat.receivedqty + " ST " + objprint.boxno + "OF " + objprint.totalboxes + "BOXES";
+                    objprint.qty = objprint.noofpieces + "/" + printMat.receivedqty + " ST " + objprint.boxno + " OF " + objprint.totalboxes + " BOXES";
 					
 
                 }
@@ -633,19 +699,19 @@ namespace WMS.DAL
                 objprint.soiembarcode = objprntmat.generatebarcode(path, content);
 
                 //plant barcode
-                printMat.plantbarcode = "./Barcodes/" + objprint.plant + ".bmp";
+                printMat.plantbarcodepath = "./Barcodes/" + objprint.plant + ".bmp";
                 content = objprint.plant;
-                objprint.plantbarcode = objprntmat.generatebarcode(path, content);
+                objprint.plantbarcodepath = objprntmat.generatebarcode(path, content);
 
                 //sp barcode
-                printMat.spbarcode = "./Barcodes/" + objprint.spbarcode + ".bmp";
-                content = objprint.spbarcode;
-                objprint.spbarcode = objprntmat.generatebarcode(path, content);
+                printMat.storagebarcodepath = "./Barcodes/" + objprint.spbarcode + ".bmp";
+                content = objprint.storagelocation;
+                objprint.storagebarcodepath = objprntmat.generatebarcode(path, content);
 
 				//Linkage barcode
-				printMat.linkagebarcode = "./Barcodes/" + objprint.linkageno + ".bmp";
+				printMat.linkagebarcodepath = "./Barcodes/" + objprint.linkageno + ".bmp";
 				content = objprint.linkageno;
-				objprint.linkagebarcode = objprntmat.generatebarcode(path, content);
+				objprint.linkagebarcodepath = objprntmat.generatebarcode(path, content);
 
 				int noofprints = 1;
 				bool isprint = true;
@@ -657,8 +723,9 @@ namespace WMS.DAL
 					int qtyinbox = objprint.noofpieces;
 					string matbarcodepath = objprint.materialcodePath;
 					string soitembcpath = objprint.soiembarcode;
-					string plantbarcodepath=objprint.plantbarcode;
-					string linkagebarcodepath = objprint.linkagebarcode;
+					string plantbarcodepath=objprint.plantbarcodepath;
+					string spbarcode = objprint.storagebarcodepath;
+					string linkagebarcodepath = objprint.linkagebarcodepath;
 					var results = DB.ExecuteScalar(insertqueryforinvoice, new
 					{
 						objprint.pono,
@@ -673,8 +740,11 @@ namespace WMS.DAL
 						matbarcodepath,
 						soitembcpath,
 						plantbarcodepath,
-						objprint.spbarcode,
+						spbarcode,
 						linkagebarcodepath,
+						objprint.itemno,
+						objprint.saleorderno,
+						objprint.solineitemno
 					});
 
 				}
@@ -13087,7 +13157,7 @@ namespace WMS.DAL
 						}
 						//generate barcode for material code and GRN No.
 						var content = material;
-						BarcodeWriter writer = new BarcodeWriter
+						var writer = new BarcodeWriter
 						{
 							Format = BarcodeFormat.QR_CODE,
 							Options = new EncodingOptions

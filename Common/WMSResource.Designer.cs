@@ -2580,8 +2580,8 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO wms.wms_materiallabeldetails(id,pono,inwardid ,noofprints ,qtyinbox ,isprint ,totalboxes ,boxno ,totalqty ,isonholdgr,matbarcodepath,soitembcpath,plantbarcodepath,spbarcode,linkagebarcodepath)
-        ///VALUES(default,@pono,@inwardid,@noofprints,@qtyinbox,@isprint,@totalboxes,@boxno,@totalqty,@isonholdgr,@matbarcodepath,@soitembcpath,@plantbarcodepath,@spbarcode,@linkagebarcodepath) returning id.
+        ///   Looks up a localized string similar to INSERT INTO wms.wms_materiallabeldetails(id,pono,inwardid ,noofprints ,qtyinbox ,isprint ,totalboxes ,boxno ,totalqty ,isonholdgr,matbarcodepath,soitembcpath,plantbarcodepath,spbarcode,linkagebarcodepath,receivedqty,itemno,saleorderno,solineitemno)
+        ///VALUES(default,@pono,@inwardid,@noofprints,@qtyinbox,@isprint,@totalboxes,@boxno,@totalqty,@isonholdgr,@matbarcodepath,@soitembcpath,@plantbarcodepath,@spbarcode,@linkagebarcodepath,@receivedqty,@itemno,@saleorderno,@solineitemno) returning id.
         /// </summary>
         public static string insertmatbarcodelabeldata {
             get {
@@ -2707,8 +2707,8 @@ namespace WMS.Common {
         
         /// <summary>
         ///   Looks up a localized string similar to INSERT INTO wms.st_qtso(
-        ///	id, saleorderno, solineitemno, saleordertype, customername, shipto, shippingpoint, loadingdate, projectiddef, partno, custpo, uploadcode, uploadedon,error_description,isloaderror,projecttext)
-        ///	VALUES (default, @saleorderno, @solineitemno, @saleordertype, @customername, @shipto, @shippingpoint, @loadingdate, @projectiddef, @partno, @custpo, @uploadcode, @uploadedon,@error_description,@isloaderror,@projecttext).
+        ///	id, saleorderno, solineitemno, saleordertype, customername, shipto, shippingpoint, loadingdate, projectiddef, partno, custpo, uploadcode, uploadedon,error_description,isloaderror,projecttext,saleordertypetext,customercode,custpolineitem,costcentertext,serviceorderno)
+        ///	VALUES (default, @saleorderno, @solineitemno, @saleordertype, @customername, @shipto, @shippingpoint, @loadingdate, @projectiddef, @partno, @custpo, @uploadcode, @uploadedon,@error_description,@isloaderror,@projectt [rest of string was truncated]&quot;;.
         /// </summary>
         public static string insertqtso {
             get {
