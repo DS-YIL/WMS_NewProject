@@ -193,8 +193,8 @@ namespace WMS.Controllers
 							model.projecttext = Conversion.toStr(row["Description"]);
 							model.sloc = Conversion.toStr(row["SLoc"]);
 							model.pocreatedby = Convert.ToString(row["PO created by (User Id)"]);
-							model.mscode= Convert.ToString(row["MS Code"]);
-							model.plant= Convert.ToString(row["Plnt"]);
+							model.mscode = Convert.ToString(row["MS Code"]);
+							model.plant = Convert.ToString(row["Plnt"]);
 							model.linkageno = Convert.ToString(row["Linkage Number"]);
 							model.assetsubno = Convert.ToString(row["Asset Subnumber"]);
 							model.orderno = Convert.ToString(row["Order Number"]);
@@ -350,11 +350,11 @@ namespace WMS.Controllers
 						model.projecttext = Conversion.toStr(row["Project text (Level 0)"]);
 						model.partno = Conversion.toStr(row["Material"]);
 						model.custpo = Conversion.toStr(row["PO number"]);
-						model.costcenter= Conversion.toStr(row["Cost Center"]);
-						model.costcentertext= Conversion.toStr(row["Text: Cost Center"]);
-						model.saleordertypetext= Conversion.toStr(row["Text: Sales Document Type"]);
+						model.costcenter = Conversion.toStr(row["Cost Center"]);
+						model.costcentertext = Conversion.toStr(row["Text: Cost Center"]);
+						model.saleordertypetext = Conversion.toStr(row["Text: Sales Document Type"]);
 						model.customercode = Conversion.toStr(row["Sold-to party"]);
-						model.custpolineitem= Conversion.toStr(row["PO Item No. (Sold-to)"]);
+						model.custpolineitem = Conversion.toStr(row["PO Item No. (Sold-to)"]);
 						model.serviceorderno = Conversion.toStr("Service Order Number");
 						model.uploadcode = uploadcode;
 						DateTime uploadedon = DateTime.Now;
@@ -409,7 +409,7 @@ namespace WMS.Controllers
 					//End - Gayathri
 					loadAuditLog(auditlog);
 					loadPOData(uploadcode);
-					
+
 					//}
 				}
 			}
@@ -476,7 +476,7 @@ namespace WMS.Controllers
 									isclosed
 								});
 
-							}						
+							}
 							string query2 = "Select Count(*) as count from wms.wms_project where pono = '" + stag_data.purchdoc + "'";
 							int Projcount = int.Parse(pgsql.ExecuteScalar(query2, null).ToString());
 
@@ -918,7 +918,7 @@ namespace WMS.Controllers
 						initialstk.dataenteredby = Conversion.toStr(row["Data Entered By"]);
 						initialstk.createddate = createdate;
 						initialstk.uploadedfilename = uploadedfilename;
-						
+
 						initialstk.unitprice = null;
 						if (initialstk.value != null && initialstk.value > 0 && initialstk.quantity != null && initialstk.quantity > 0)
 						{
@@ -944,10 +944,10 @@ namespace WMS.Controllers
 							initialstk.stocktype = "Plant Stock";
 						}
 						else
-                        {
+						{
 							initialstk.stocktype = "Project Stock";
 						}
-					
+
 						if (string.IsNullOrEmpty(initialstk.material) || initialstk.material == "")
 							Error_Description += " No Material";
 						if (string.IsNullOrEmpty(initialstk.materialdescription) || initialstk.materialdescription == "")
@@ -960,7 +960,7 @@ namespace WMS.Controllers
 							Error_Description += " No Quantity";
 						if ((string.IsNullOrEmpty(initialstk.projectid) || initialstk.projectid == "") && initialstk.stocktype != "Plant Stock")
 							Error_Description += " No Project Id";
-						if (string.IsNullOrEmpty(initialstk.pono) || initialstk.pono == "" )
+						if (string.IsNullOrEmpty(initialstk.pono) || initialstk.pono == "")
 							Error_Description += " No PONo";
 						if (initialstk.pono.ToString().Trim().Contains("\\") || initialstk.pono.ToString().ToLower().Trim() == "reserved" || initialstk.pono.ToString().Trim().Contains("/") || initialstk.pono.ToString().Trim().Contains(","))
 							Error_Description += " Invalid PO format";
@@ -977,7 +977,7 @@ namespace WMS.Controllers
 
 						initialstk.DataloadErrors = dataloaderror;
 						initialstk.error_description = Error_Description;
-						
+
 
 						string insertpoqry = WMSResource.InsertInitialStock;
 						var rslt = DB.Execute(insertpoqry, new
@@ -1008,26 +1008,26 @@ namespace WMS.Controllers
 							initialstk.uploadbatchcode,
 							initialstk.uploadedfilename
 						});
-						if(!string.IsNullOrEmpty(initialstk.pono) && initialstk.pono != "" && initialstk.pono.ToString().Trim() != "reserved")
-                        {
+						if (!string.IsNullOrEmpty(initialstk.pono) && initialstk.pono != "" && initialstk.pono.ToString().Trim() != "reserved")
+						{
 							List<string> pos = new List<string>();
-                            if (initialstk.pono.Contains("/"))
-                            {
-								
+							if (initialstk.pono.Contains("/"))
+							{
+
 								string[] arr = initialstk.pono.Split('/');
 								pos = arr.ToList();
 							}
 							else if (initialstk.pono.Contains(","))
-                            {
+							{
 								string[] arr = initialstk.pono.Split(',');
 								pos = arr.ToList();
 							}
-                            else
-                            {
+							else
+							{
 								pos.Add(initialstk.pono);
-                            }
-							foreach(string str in pos)
-                            {
+							}
+							foreach (string str in pos)
+							{
 								string pono = str.Trim();
 								string query2 = "Select Count(*) as count from wms.wms_project where pono = '" + pono + "'";
 								int Projcount = int.Parse(DB.ExecuteScalar(query2, null).ToString());
@@ -1038,7 +1038,7 @@ namespace WMS.Controllers
 									string projectcode = null;
 									string projecttext = null;
 									string projectmanager = null;
-									
+
 									string uploadtype = "Initial Stock";
 									if (!string.IsNullOrEmpty(initialstk.projectid) && initialstk.projectid != "")
 									{
@@ -1067,10 +1067,10 @@ namespace WMS.Controllers
 									});
 								}
 							}
-							
+
 						}
 
-					
+
 
 						rowsinserted = rowsinserted + 1;
 
@@ -1170,14 +1170,14 @@ namespace WMS.Controllers
 								string locationtype = "";
 								string storagelocationdesc = store.locatorname;
 								if (store.locatorname.ToString().Trim().ToLower() == "ec c block" || store.locatorname.ToString().Trim().ToLower() == "ec unit 2")
-                                {
+								{
 									locationtype = "Project";
 
 								}
-                                else
-                                {
+								else
+								{
 									locationtype = "Plant";
-                                }
+								}
 								var insertStorequery = "INSERT INTO wms.wms_rd_locator(locatorid, locatorname, createdate,deleteflag,isexcelupload,locationtype,storagelocationdesc)VALUES(default, @locatorname,@createdate,@deleteflag,@isexcelupload,@locationtype,@storagelocationdesc) returning locatorid";
 								var Storeresults = pgsql.ExecuteScalar(insertStorequery, new
 								{
@@ -1999,8 +1999,8 @@ namespace WMS.Controllers
 					string query = "select * from wms.wms_rd_storagelocationplant wrs";
 					var data = pgsql.QueryAsync<storagelocationmodel>(
 					  query, null, commandType: CommandType.Text);
-					foreach(storagelocationmodel loc in data.Result)
-                    {
+					foreach (storagelocationmodel loc in data.Result)
+					{
 						bool deleteflag = false;
 						//Add locator in masterdata
 						string storeQuery = "Select locatorid from wms.wms_rd_locator where locatorname = '" + loc.storagelocation + "'";
@@ -2110,8 +2110,6 @@ namespace WMS.Controllers
 					pgsql.Close();
 
 				}
-
-
 
 
 			}
@@ -2284,8 +2282,11 @@ namespace WMS.Controllers
 					SqlCommand cmd = new SqlCommand("select * from OrgDepartments", conn);
 					conn.Open();
 					SqlDataReader dr = cmd.ExecuteReader();
+					int depexceptionrows = 0;
+					int rows = 0;
 					while (dr.Read())
 					{
+						rows = rows + 1;
 						try
 						{
 							Orgdepartments dep = new Orgdepartments();
@@ -2321,16 +2322,32 @@ namespace WMS.Controllers
 						}
 						catch (Exception e)
 						{
+							depexceptionrows = depexceptionrows + 1;
 							log.ErrorMessage("StagingController", "UpdateEmpDepDetails", "error:" + e.StackTrace.ToString(), e.Message.ToString(), url);
 							continue;
 						}
 					}
+					AuditLog auditlog = new AuditLog();
+					auditlog.filename = "LoadEmpDepDetails";
+					auditlog.uploadedon = DateTime.Now;
+					auditlog.uploadedby = "Sch";
+					auditlog.uploadedto = "orgdepartments";
+					auditlog.modulename = "UpdateEmpDepDetails";
+					auditlog.totalrecords = Conversion.toInt(rows);
+					auditlog.exceptionrecords = Conversion.toInt(depexceptionrows);
+					auditlog.successrecords = Conversion.toInt(rows) - Conversion.toInt(depexceptionrows);
+					loadAuditLog(auditlog);
 					conn.Close();
+
+					//Employee
+					int Empexceptionrows = 0;
 					SqlCommand empcmd = new SqlCommand("select * from Employee", conn);
 					conn.Open();
 					SqlDataReader empdr = empcmd.ExecuteReader();
+					int emprows = 0;
 					while (empdr.Read())
 					{
+						emprows = emprows + 1;
 						try
 						{
 							Employee empmodel = new Employee();
@@ -2609,11 +2626,23 @@ namespace WMS.Controllers
 						}
 						catch (Exception e)
 						{
+							Empexceptionrows = Empexceptionrows + 1;
 							log.ErrorMessage("StagingController", "UpdateEmpDepDetails", "error:" + e.StackTrace.ToString(), e.Message.ToString(), url);
 							continue;
 						}
+
 					}
 					conn.Close();
+					AuditLog auditlog1 = new AuditLog();
+					auditlog1.filename = "LoadEmpDepDetails";
+					auditlog1.uploadedon = DateTime.Now;
+					auditlog1.uploadedby = "Sch";
+					auditlog1.uploadedto = "employee";
+					auditlog1.modulename = "UpdateEmpDepDetails";
+					auditlog1.totalrecords = Conversion.toInt(emprows);
+					auditlog1.exceptionrecords = Conversion.toInt(Empexceptionrows);
+					auditlog1.successrecords = Conversion.toInt(emprows) - Conversion.toInt(Empexceptionrows);
+					loadAuditLog(auditlog1);
 				}
 			}
 			catch (Exception e)
