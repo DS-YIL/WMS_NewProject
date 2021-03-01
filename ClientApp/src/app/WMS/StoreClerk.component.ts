@@ -86,6 +86,7 @@ export class StoreClerkComponent implements OnInit {
   //inwmasterid: string = "";
   gateentryid: string = "";
   public inwmasterid: string;
+  selectedinvoice: string;
 
   ngOnInit() {
     //this.autoCompleteObject.focusInput();
@@ -96,6 +97,7 @@ export class StoreClerkComponent implements OnInit {
 
     this.grnno = this.route.snapshot.queryParams.grnnumber;
     this.gateentryid = this.route.snapshot.queryParams.inwmasterid;
+    this.selectedinvoice = "";
 
     this.getpendingpos();
     //Email
@@ -448,14 +450,17 @@ export class StoreClerkComponent implements OnInit {
         return (element.text == selpo);
       });
       if (data1.length > 0) {
-        this.PoDetails.pono = data1[0].value;
+        this.PoDetails.pono = data1[0].text;
+        this.PoDetails.invoiceno = data1[0].value;
       }
       else {
         if (!isNullOrUndefined(this.gateentryid)) {
-          this.PoDetails.pono = this.selectedpendingpono + "-" + this.lblinvoiceno;
+          this.PoDetails.pono = this.selectedpendingpono;
+          this.PoDetails.invoiceno = this.lblinvoiceno;
         }
         else {
           this.PoDetails.pono = this.selectedpendingpono;
+          this.PoDetails.invoiceno = this.lblinvoiceno;
         }
         
       }
@@ -463,7 +468,7 @@ export class StoreClerkComponent implements OnInit {
 
       //this.PoDetails.inwmasterid = this.selectedpendingpono;
 
-      this.getponodetails(this.PoDetails.pono);
+      this.getponodetails(this.PoDetails.pono, this.PoDetails.invoiceno);
     }
     else {
 
@@ -478,7 +483,7 @@ export class StoreClerkComponent implements OnInit {
       this.spinner.show();
       this.showQtyUpdateDialog = true;
       //this.PoDetails.pono = this.selectedgrn.value;
-      this.getponodetails(this.selectedgrnno);
+      this.getponodetails(this.selectedgrnno,"");
     }
     else {
 
@@ -576,7 +581,7 @@ export class StoreClerkComponent implements OnInit {
 
   }
   ///get pending for receive material list
-  getponodetails(data) {
+  getponodetails(data,invoiceno) {
     debugger;
     this.isnonpoentry = false;
     this.qualitychecked = false;
@@ -588,7 +593,7 @@ export class StoreClerkComponent implements OnInit {
     this.isonHoldview = false;
     this.onholdremarks = "";
     this.podetailsList = [];
-    this.wmsService.Getthreewaymatchingdetails(data).subscribe(data => {
+    this.wmsService.Getthreewaymatchingdetails(data, invoiceno).subscribe(data => {
       this.spinner.hide();
       debugger;
       if (data && data.length > 0) {
@@ -736,7 +741,7 @@ export class StoreClerkComponent implements OnInit {
     if (acceptrequired.length > 0 && acceptrequired.length > 0) {
       emailtype = "3";
     }
-    this.wmsService.verifythreewaymatch(details, emailtype).subscribe(data => {
+    this.wmsService.verifythreewaymatch(details, this.PoDetails.invoiceno, emailtype).subscribe(data => {
       //this.wmsService.verifythreewaymatch("123", "228738234", "1", "SK19VASP8781").subscribe(data => {
       this.spinner.hide();
       if (data == true) {
@@ -879,7 +884,7 @@ export class StoreClerkComponent implements OnInit {
         var responsestring = String(data);
         if (responsestring.startsWith("Saved")) {
           if (!this.isonHoldview) {
-            this.wmsService.verifythreewaymatch(this.PoDetails.pono, emailtype).subscribe(info => {
+            this.wmsService.verifythreewaymatch(this.PoDetails.pono, this.PoDetails.invoiceno, emailtype).subscribe(info => {
               this.spinner.hide();
 
               if (info != null) {

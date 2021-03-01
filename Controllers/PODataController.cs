@@ -169,34 +169,45 @@ namespace WMS.Controllers
 		//}
 		//need list of items
 		[HttpGet("Getthreewaymatchingdetails")]
-		public async Task<IEnumerable<OpenPoModel>> Getdetailsforthreewaymatching(string pono)
+		public async Task<IEnumerable<OpenPoModel>> Getdetailsforthreewaymatching(string pono,string invoice)
 		{
-			bool isgrn = false;
+			bool isgrn = true;
 			string grn = "";
-			string po = pono;
-			if (pono.Contains('-'))
-			{
-				string ponodata = "";
-				string invoiceno = "";
-				string[] ponoandinvoice = pono.Split('-');
-				if (ponoandinvoice.Length == 3)
-				{
-					isgrn = true;
-					grn = po;
-				}
-				else if (ponoandinvoice.Length == 4)
-				{
-					ponodata = ponoandinvoice[0].Trim() + "-" + ponoandinvoice[1].Trim() + "-" + ponoandinvoice[2].Trim();
-					invoiceno = ponoandinvoice[3].Trim();
-				}
-
-				return await this._poService.GetDeatilsForthreeWaymatching(invoiceno, ponodata, isgrn, grn);
+			if (pono.StartsWith("GE"))
+            {
+				isgrn = false;
 
 			}
-			else
-			{
-				return null;
-			}
+            else
+            {
+				grn = pono;
+            }
+			return await this._poService.GetDeatilsForthreeWaymatching(invoice, pono, isgrn, grn);
+			//string grn = "";
+			//string po = pono;
+			//if (pono.Contains('-'))
+			//{
+			//	string ponodata = "";
+			//	string invoiceno = "";
+			//	string[] ponoandinvoice = pono.Split('-');
+			//	if (ponoandinvoice.Length == 3)
+			//	{
+			//		isgrn = true;
+			//		grn = po;
+			//	}
+			//	else if (ponoandinvoice.Length == 4)
+			//	{
+			//		ponodata = ponoandinvoice[0].Trim() + "-" + ponoandinvoice[1].Trim() + "-" + ponoandinvoice[2].Trim();
+			//		invoiceno = ponoandinvoice[3].Trim();
+			//	}
+
+				
+
+			//}
+			//else
+			//{
+			//	return null;
+			//}
 
 		}
 
@@ -219,12 +230,12 @@ namespace WMS.Controllers
 		}
 
 		[HttpGet("verifythreewaymatch")]
-		public async Task<OpenPoModel> verifythreewaymatching(string pono, string type)
+		public async Task<OpenPoModel> verifythreewaymatching(string pono, string invoiceno, string type)
 		{
-			string[] ponoandinvoice = pono.Split('-');
-			string ponodata = ponoandinvoice[0].Trim() + "-" + ponoandinvoice[1].Trim() + "-" + ponoandinvoice[2].Trim();
-			string invoiceno = ponoandinvoice[3].Trim(); 
-			return await this._poService.VerifythreeWay(ponodata, invoiceno, type);
+			//string[] ponoandinvoice = pono.Split('-');
+			//string ponodata = ponoandinvoice[0].Trim() + "-" + ponoandinvoice[1].Trim() + "-" + ponoandinvoice[2].Trim();
+			//string invoiceno = ponoandinvoice[3].Trim(); 
+			return await this._poService.VerifythreeWay(pono, invoiceno, type);
 		}
 		[HttpPost("GRNposting")]
 		public async Task<string> insertitemdata([FromBody] List<inwardModel> data)

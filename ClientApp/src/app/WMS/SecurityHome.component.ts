@@ -384,13 +384,13 @@ export class SecurityHomeComponent implements OnInit {
         return;
 
       }
-      if (this.Poinvoicedetails.invoiceno.includes("-")) {
-        this.spinner.hide();
-        this.messageService.add({ severity: 'error', summary: '', detail: 'Remove "-" from invoice no.' });
-        this.clicked = false;
-        return;
+      //if (this.Poinvoicedetails.invoiceno.includes("-")) {
+      //  this.spinner.hide();
+      //  this.messageService.add({ severity: 'error', summary: '', detail: 'Remove "-" from invoice no.' });
+      //  this.clicked = false;
+      //  return;
 
-      }
+      //}
 
       this.BarcodeModel.invoiceno = this.Poinvoicedetails.invoiceno;
 
