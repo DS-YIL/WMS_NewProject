@@ -459,7 +459,7 @@ namespace WMS.Controllers
 			return this._poService.SaveOrUpdateGatepassDetails(obj);
 		}
 		[HttpGet("checkmaterialandqty")]
-		public string check(string material = null, int qty = 0)
+		public string check(string material = null, decimal? qty = 0)
 		{
 			return this._poService.checkmaterialandqty(material, qty);
 		}
@@ -1314,7 +1314,7 @@ namespace WMS.Controllers
 		//Amulya
 
 		[HttpPost("getmaterialrequestdashboardList")]
-		public async Task<IEnumerable<materialrequestMain>> getmaterialrequestdashboardList(materialRequestFilterParams filters)
+		public async Task<IEnumerable<MaterialTransaction>> getmaterialrequestdashboardList(materialRequestFilterParams filters)
 		{
 			return await this._poService.getmaterialrequestdashboardList(filters);
 		}

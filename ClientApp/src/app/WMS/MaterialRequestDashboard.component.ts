@@ -5,7 +5,7 @@ import { wmsService } from '../WmsServices/wms.service';
 import { constants } from '../Models/WMSConstants';
 import { Employee } from '../Models/Common.Model';
 import { NgxSpinnerService } from "ngx-spinner";
-import { materialrequestMain, materialRequestDetails, materialRequestFilterParams,gatepassModel, materialistModel, materialList, requestData } from 'src/app/Models/WMS.Model';
+import { materialrequestMain, materialRequestDetails, materialRequestFilterParams,gatepassModel, materialistModel, materialList, requestData, MaterialTransaction, MaterialTransactionDetail } from 'src/app/Models/WMS.Model';
 import { MessageService } from 'primeng/api';
 import { DatePipe } from '@angular/common';
 
@@ -16,9 +16,9 @@ import { DatePipe } from '@angular/common';
 export class MaterialRequestDashboardComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder, private datePipe: DatePipe, private messageService: MessageService, private wmsService: wmsService, private route: ActivatedRoute, private router: Router, public constants: constants, private spinner: NgxSpinnerService) { }
-  public requestList: materialrequestMain[] = [];
+  public requestList: MaterialTransaction[] = [];
   public employee: Employee;
-  public materialRequestDetails: materialRequestDetails;
+  public materialRequestDetails: MaterialTransactionDetail;
   public fromDate: Date;
   public toDate: Date;
   public materilaRequestFilterParams: materialRequestFilterParams;

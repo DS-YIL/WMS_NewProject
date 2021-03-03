@@ -833,8 +833,8 @@ export class wmsService {
     return this.http.post<any>(this.url + 'POData/getMaterialtransferdetails',materialTransferFilters, this.httpOptions);
   }
   //Amulya
-  getMaterialRequestDashboardlist(materialRequestFilters: materialRequestFilterParams): Observable<any> {
-    return this.http.post<any>(this.url + 'POData/getmaterialrequestdashboardList', materialRequestFilters, this.httpOptions);
+  getMaterialRequestDashboardlist(materialRequestFilters: materialRequestFilterParams): Observable<MaterialTransaction[]> {
+    return this.http.post<MaterialTransaction[]>(this.url + 'POData/getmaterialrequestdashboardList', materialRequestFilters, this.httpOptions);
   }
   //Amulya
   getMaterialReserveDashboardlist(materialReserveFilters: materialResFilterParams): Observable<any> {

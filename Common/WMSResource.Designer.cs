@@ -783,10 +783,10 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select material.gatepassmaterialid,material.gatepassid,material.poitemdescription,emp.&quot;name&quot; as name,pass.vendorname,
+        ///   Looks up a localized string similar to select material.gatepassmaterialid,material.gatepassid,material.poitemdescription,emp.&quot;name&quot; as name,pass.vendorname,material.expecteddate,
         /// (select sum(issuedqty) from wms.wms_materialissue  where requestid::text =material.gatepassmaterialid::text and requesttype = &apos;gatepass&apos; ) as issuedqty,
         /// (select sum(availableqty) from wms.wms_stock ws where materialid =material.materialid and poitemdescription = material.poitemdescription) as availableqty,
-        /// pass.requestedon,pass.gatepasstype,pass.approverstatus,pass.reasonforgatepass,pa [rest of string was truncated]&quot;;.
+        /// pass.requestedon,pass.gatepasstype,pass.approverstatus,pas [rest of string was truncated]&quot;;.
         /// </summary>
         public static string getgatepassmaterialdetailList {
             get {
@@ -1333,8 +1333,13 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select mr.requestid,mr.requesteddate,mr.ackstatus,emp.name as requestedby,mr.ackremarks,mr.remarks from wms.materialrequest mr
-        ///left outer join  wms.employee emp on emp.employeeno = mr.requesterid.
+        ///   Looks up a localized string similar to select req.requestid,req.ackstatus,req.requesteddate,req.ackremarks,req.reserveid,req.projectcode,req.remarks,
+        ///  CASE WHEN req.ackstatus IS NULL THEN false ELSE true END AS status,req.approvalremarks,
+        ///  CASE WHEN req.issuedby IS NULL THEN &apos;Pending&apos; ELSE &apos;Issued&apos; END AS approvedstatus,
+        ///   CASE 
+        ///   WHEN (req.isapprovalrequired is true and req.isapproved is true) THEN &apos;Approved&apos;
+        ///   WHEN (req.isapprovalrequired is true and req.isapproved is false) THEN &apos;Rejected&apos;
+        ///   WHEN (req.isapprovalrequired is true an [rest of string was truncated]&quot;;.
         /// </summary>
         public static string getMaterialRequestDashboardDetails {
             get {
@@ -1399,7 +1404,14 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select mrs.reserveid,mrs.reservedon,mrs.ackstatus,emp.name as reservedby,mrs.remarks from wms.materialreserve mrs
+        ///   Looks up a localized string similar to select mrs.reserveid,mrs.reserveupto,mrs.projectcode,mrs.reservedon,mrs.ackstatus,emp.name as reservedby,mrs.remarks,
+        ///CASE
+        ///     WHEN mrs.reserveupto::date &lt; current_date THEN
+        ///	 &apos;Expired&apos;
+        ///     WHEN mrs.requestedby is NOT NULL THEN
+        ///	  &apos;Requested&apos;
+        ///	 ELSE &apos;Reserved&apos;
+        ///  END as chkstatus from wms.materialreserve mrs
         ///left outer join  wms.employee emp on emp.employeeno = mrs.reservedby.
         /// </summary>
         public static string getMaterialReserveDashboardDetails {
@@ -1527,7 +1539,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select ts.transferid, ts.projectcode,ts.remarks as transferremarks,emp.name as transferedby,ts.createdon as transferredon
+        ///   Looks up a localized string similar to select ts.transferid, ts.projectcode,ts.fromprojectcode,ts.remarks as transferremarks,emp.name as transferedby,ts.createdon as transferredon
         ///from wms.wms_transfermaterial ts
         ///left outer join wms.employee emp on emp.employeeno = ts.createdby.
         /// </summary>
@@ -1574,7 +1586,7 @@ namespace WMS.Common {
         
         /// <summary>
         ///   Looks up a localized string similar to select max(st.itemid ) as itemid, max(st.materialid) as material,max(st.poitemdescription) as poitemdescription,
-        ///st.itemlocation, SUM(st.availableqty) as availableqty,(Max(st.unitprice ) * SUM(st.availableqty)) as value,max(st.createddate ) as createddate
+        ///st.itemlocation, SUM(st.availableqty) as availableqty,(Max(st.unitprice::numeric ) * SUM(st.availableqty::numeric)) as value,max(st.createddate ) as createddate
         ///from wms.wms_stock st.
         /// </summary>
         public static string getMiscellanousIssuesList {
@@ -1906,7 +1918,7 @@ namespace WMS.Common {
         ///   Looks up a localized string similar to select req.id as requestmaterialid,req.requestedquantity,req.materialid,req.poitemdescription materialdescription,rq.requesterid,
         /// (select sum(issuedqty) from wms.wms_materialissue  where requestid::text = req.id::text and requesttype = &apos;MaterialRequest&apos;) as issuedqty,
         /// (select sum(availableqty) from wms.wms_stock ws where materialid =req.materialid and poitemdescription = req.poitemdescription ) as availableqty,
-        /// (select sum(reservequantity) from wms.materialreservedetails wm where wm.materialid =req.ma [rest of string was truncated]&quot;;.
+        /// (select sum(reservequantity) from wms.materialreservedetails wm left outer join wms.materia [rest of string was truncated]&quot;;.
         /// </summary>
         public static string getrequestdetailswithoutpo {
             get {
@@ -2017,7 +2029,7 @@ namespace WMS.Common {
         /// <summary>
         ///   Looks up a localized string similar to select ms.returnid,ms.materialid,ms.poitemdescription as materialdescription,ms.returnqty,ms.remarks
         ///from wms.wms_materialreturndetails ms
-        ///left outer join wms.wms_materialreturn mrs on mrs.returnid = ms.returnid.
+        ///left outer join wms.wms_materialreturn mrs on mrs.returnid = ms.returnid where ms.returnid = &apos;#rid&apos;.
         /// </summary>
         public static string getreturniddetail {
             get {

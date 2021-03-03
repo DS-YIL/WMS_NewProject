@@ -173,13 +173,13 @@ export class InitialStockPutAwayComponent implements OnInit {
     }
 
     if (issubmit) {
-      if (qtysum != parseInt(this.matqty)) {
+      if (qtysum != parseFloat(this.matqty)) {
         this.messageService.add({ severity: 'error', summary: '', detail: 'Put away Quantity must be equal to Stock Quantity.' });
         return false;
       }
     }
     else {
-      if (qtysum > parseInt(this.matqty)) {
+      if (qtysum > parseFloat(this.matqty)) {
         this.messageService.add({ severity: 'error', summary: '', detail: 'Put away Quantity must be equal to Stock Quantity.' });
         return false;
       }
@@ -222,7 +222,7 @@ export class InitialStockPutAwayComponent implements OnInit {
     }
 
 
-    if (qtysum > parseInt(this.matqty)) {
+    if (qtysum > parseFloat(this.matqty)) {
       data.quantity = 0;
       this.messageService.add({ severity: 'error', summary: '', detail: 'Put away Quantity must be equal to Stock Quantity.' });
       return false;
@@ -491,11 +491,14 @@ export class InitialStockPutAwayComponent implements OnInit {
         else {
           this.messageService.add({ severity: 'error', summary: '', detail: String(data).trim() });
         }
-        
+
         this.showLocationDialog = false;
         this.getMainlist();
 
       });
+    }
+    else {
+      this.spinner.hide();
     }
 
   }

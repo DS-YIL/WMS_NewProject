@@ -31,7 +31,8 @@
         <tr class="mprltbldata">
           <th style="text-align:center;width:70px">Sl.No.</th>
           <th style="text-align:center;width:150px">Transfer Id</th>
-          <th style="text-align:center;width:200px">Project Code</th>
+          <th style="text-align:center;width:150px">From Project</th>
+          <th style="text-align:center;width:150px">To Project</th>
           <th style="text-align:center;width:150px">Transferred On</th>
           <th style="text-align:center;width:150px">Transferred By</th>
           <th style="text-align:center;width:150px">Remarks</th>
@@ -41,6 +42,7 @@
 
           <th></th>
           <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'transferid', 'contains')"></th>
+          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'fromprojectcode', 'contains')"></th>
           <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'projectcode', 'contains')"></th>
           <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'transferredon', 'contains')"></th>
           <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'transferedby', 'contains')"></th>
@@ -55,7 +57,8 @@
           <td class="ptable-cell" style="text-align: center;width: 150px;">
             <span (click)="showattachdata(rowData)" class="btn btn-link">{{rowData.transferid}}</span>
           </td>
-          <td class="ptable-cell" style="text-align:center;width:200px;">{{rowData.projectcode}}</td>
+          <td class="ptable-cell" style="text-align:center;width:150px;">{{rowData.fromprojectcode}}</td>
+          <td class="ptable-cell" style="text-align:center;width:150px;">{{rowData.projectcode}}</td>
           <td class="ptable-cell" style="text-align:center;width:150px;">{{rowData.transferredon | date :  constants.dateFormat}}</td>
           <td class="ptable-cell" style="text-align:left;width:150px;">{{rowData.transferedby}}</td>
           <td class="ptable-cell" style="text-align:left;width:150px;">{{rowData.transferremarks}}</td>
@@ -63,13 +66,13 @@
 
         </tr>
         <tr *ngIf="rowData.showtr">
-          <td [attr.colspan]="6" style="text-align:center;">
+          <td [attr.colspan]="7" style="text-align:center;">
             <label class="labeltext">Material Detail</label>
           </td>
 
         </tr>
         <tr *ngIf="rowData.showtr">
-          <td [attr.colspan]="6" style="text-align:center;">
+          <td [attr.colspan]="7" style="text-align:center;">
 
             <p-table [value]="rowData.materialdata" [style]="{'width':'100%'}">
               <ng-template pTemplate="header">

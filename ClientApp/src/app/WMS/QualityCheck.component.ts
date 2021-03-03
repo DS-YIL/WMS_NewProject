@@ -74,13 +74,15 @@ export class QualityCheckComponent implements OnInit {
       return;
       //(<HTMLInputElement>document.getElementById("confirmqty")).value = "";
     }
-    if (entredvalue > receivedqty) {
+    if (entredvalue > parseFloat(receivedqty)) {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Quality Passed should be less than or equal to received quantity' });
       data.qualitypassedqty = "";
       return;
       //(<HTMLInputElement>document.getElementById("confirmqty")).value = "";
     }
-    if (entredvalue != (receivedqty - returnedqty) && receivedqty && returnedqty) {
+    var enterqty = entredvalue;
+    var diff = ((parseFloat(receivedqty) * 10000000000) - parseFloat(returnedqty) * 10000000000) / 10000000000;
+    if (enterqty != diff && parseFloat(receivedqty) && returnedqty) {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Quality Passed & Failed should be equal to Recived Quantity' });
       //(<HTMLInputElement>document.getElementById("confirmqty")).value = "";
       data.qualitypassedqty = "";
@@ -88,19 +90,22 @@ export class QualityCheckComponent implements OnInit {
     }
   }
   checkreturnqty(entredvalue, receivedqty, acceptedqty, data: any) {
+    debugger;
     if (entredvalue < 0) {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Negative number not allowed' });
       data.qualityfailedqty = "";
       return;
       //(<HTMLInputElement>document.getElementById("confirmqty")).value = "";
     }
-    if (entredvalue > receivedqty) {
+    if (entredvalue > parseFloat(receivedqty)) {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Quality failed should be less than or equal to received quantity' });
       data.qualityfailedqty = "";
       return;
       //(<HTMLInputElement>document.getElementById("returnqty")).value = "";
     }
-    if (entredvalue != (receivedqty - acceptedqty) && receivedqty && acceptedqty) {
+    var enterqty = entredvalue;
+    var diff = ((parseFloat(receivedqty) * 10000000000) - parseFloat(acceptedqty) * 10000000000) / 10000000000;
+    if (enterqty != diff && parseFloat(receivedqty) && acceptedqty) {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Quality Passed & Failed should be equal to Recived Quantity' });
       data.qualityfailedqty = "";
       return;
@@ -270,8 +275,8 @@ export class QualityCheckComponent implements OnInit {
           item.qualityfailedqty = 0;
         }
       });
-      this.recqty = this.podetailsList[0].confirmqty + this.podetailsList[0].returnqty;
-    this.totalqty = parseInt(this.podetailsList[0].receivedqty);
+    this.recqty = this.podetailsList[0].confirmqty + this.podetailsList[0].returnqty;
+    this.totalqty = parseFloat(this.podetailsList[0].receivedqty);
    
     var savedata = this.podetailsList.filter(function (element, index) {
       return ((element.qualitypassedqty != 0 || element.qualityfailedqty != 0) && !element.checkedby);
@@ -282,7 +287,7 @@ export class QualityCheckComponent implements OnInit {
       return;
     }
     var invaliddata = savedata.filter(function (element, index) {
-      return (element.qualitypassedqty + element.qualityfailedqty != parseInt(element.receivedqty));
+      return (element.qualitypassedqty + element.qualityfailedqty != parseFloat(element.receivedqty));
     });
     if (invaliddata.length > 0) {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Quality Passed & Failed should be equal to Recived Quantity.' });

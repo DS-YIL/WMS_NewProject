@@ -23,7 +23,7 @@ namespace WMS.Models
 		public string vendorname { get; set; }
 		public string JobName { get; set; }
 		public string SaleOrderNo { get; set; }
-		public float quotationqty { get; set; }
+		public decimal? quotationqty { get; set; }
 		public string invoiceno { get; set; }
 		public string projectcode { get; set; }
 		public string projectname { get; set; }
@@ -32,14 +32,14 @@ namespace WMS.Models
 		public string Materialdescription { get; set; }
 		public string poitemdescription { get; set; }
 		public string status { get; set; }
-		public int returnqty { get; set; }
+		public decimal? returnqty { get; set; }
 		public int vendorid { get; set; }
 		public string grnnumber { get; set; }
-		public int confirmqty { get; set; }
-		public int receivedqty { get; set; }
-		public int totalrecivedqty { get; set; }
+		public decimal? confirmqty { get; set; }
+		public decimal? receivedqty { get; set; }
+		public decimal? totalrecivedqty { get; set; }
 		public DateTime enteredon { get; set; }
-		public int materialqty { get; set; }
+		public decimal? materialqty { get; set; }
 		public string asn { get; set; }
 		public bool qualitycheck { get; set; }
 		public int inwardid { get; set; }
@@ -48,14 +48,14 @@ namespace WMS.Models
 		public string returnedby { get; set; }
 		public DateTime returnedon { get; set; }
 
-		public int qualitypassedqty { get; set; }
-		public int qualityfailedqty { get; set; }
+		public decimal? qualitypassedqty { get; set; }
+		public decimal? qualityfailedqty { get; set; }
 
 		public string returnremarks { get; set; }
 
 		public bool qualitychecked { get; set; }
 
-		public int pendingqty { get; set; }
+		public decimal? pendingqty { get; set; }
 
 		public bool isreceivedpreviosly { get; set; }
 
@@ -242,12 +242,12 @@ namespace WMS.Models
 		//public int inwmasterid { get; set; }
 		public string inwmasterid { get; set; }
 
-		public string quotationqty { get; set; }
-		public int receivedqty { get; set; }
+		public decimal? quotationqty { get; set; }
+		public decimal? receivedqty { get; set; }
 		public DateTime receiveddate { get; set; }
 		public string receivedby { get; set; }
-		public int returnqty { get; set; }
-		public int confirmqty { get; set; }
+		public decimal? returnqty { get; set; }
+		public decimal? confirmqty { get; set; }
 		public bool deleteflag { get; set; }
 		public string pono { get; set; }
 		public string quality { get; set; }
@@ -264,14 +264,14 @@ namespace WMS.Models
 		public string invoiceno { get; set; }
 		public bool print { get; set; }
 		public string vendorname { get; set; }
-		public int materialqty { get; set; }
+		public decimal? materialqty { get; set; }
 
 		public string asn { get; set; }
 
 		public string returnremarks { get; set; }
 
-		public int qualitypassedqty { get; set; }
-		public int qualityfailedqty { get; set; }
+		public decimal? qualitypassedqty { get; set; }
+		public decimal? qualityfailedqty { get; set; }
 
 		public bool qualitycheck { get; set; }
 		public bool onhold { get; set; }
@@ -299,7 +299,7 @@ namespace WMS.Models
 		public string asnno { get; set; }
 		public string poitemdescription { get; set; }
 		public decimal? unitprice { get; set; }
-		public int pendingqty { get; set; }
+		public decimal? pendingqty { get; set; }
 	}
 
 	public class GPReasonMTData
@@ -318,22 +318,22 @@ namespace WMS.Models
 		public string materialid { get; set; }
 		public string poitemdescription { get; set; }
 		public bool? initialstock { get; set; }
-		public int poqty { get; set; }
-		public int receivedqty { get; set; }
-		public int confirmqty { get; set; }
-		public int availableqty { get; set; }
-		public int projectissue { get; set; }
-		public int gatepassissue { get; set; }
-		public int stoissue { get; set; }
-		public int vendorissue { get; set; }
-		public int reserveqty { get; set; }
-		public int totalqty { get; set; }
+		public decimal? poqty { get; set; }
+		public decimal? receivedqty { get; set; }
+		public decimal? confirmqty { get; set; }
+		public decimal? availableqty { get; set; }
+		public decimal? projectissue { get; set; }
+		public decimal? gatepassissue { get; set; }
+		public decimal? stoissue { get; set; }
+		public decimal? vendorissue { get; set; }
+		public decimal? reserveqty { get; set; }
+		public decimal? totalqty { get; set; }
 		public string projectcode { get; set; }
 		public string projectmanager { get; set; }
 		public string stocktype { get; set; }
 		public string itemlocation { get; set; }
 		public DateTime? createddate { get; set; }
-		public int issuedqty { get; set; }
+		public decimal? issuedqty { get; set; }
 	}
 
 	public class PlantMTdata
@@ -371,9 +371,9 @@ namespace WMS.Models
 		public int rackid { get; set; }
 		public int storeid { get; set; }
 		public int vendorid { get; set; }
-		public int totalquantity { get; set; }
+		public decimal? totalquantity { get; set; }
 		public DateTime? shelflife { get; set; }
-		public int availableqty { get; set; }
+		public decimal? availableqty { get; set; }
 		public bool deleteflag { get; set; }
 		public DateTime itemreceivedfrom { get; set; }
 		public string itemlocation { get; set; }
@@ -383,7 +383,7 @@ namespace WMS.Models
 		public string createdby { get; set; }
 		public string binnumber { get; set; }
 		public string racknumber { get; set; }
-		public int confirmqty { get; set; }
+		public decimal? confirmqty { get; set; }
 		public string materialid { get; set; }
 
 		public string remarks { get; set; }
@@ -436,7 +436,7 @@ namespace WMS.Models
 		public string material { get; set; }
 		public string materialdescription { get; set; }
 		public string poitemdescription { get; set; }
-		public int availableqty { get; set; }
+		public decimal? availableqty { get; set; }
 		public string hsncode { get; set; }
 		public string suppliername { get; set; }
 		public string projectname { get; set; }
@@ -444,7 +444,7 @@ namespace WMS.Models
 		public string pono { get; set; }
 		List<matlocations> locations { get; set; }
 		public string receivedtype { get; set; }
-		public decimal unitprice { get; set; }
+		public decimal? unitprice { get; set; }
 	}
 
 	public class matlocations
@@ -470,7 +470,7 @@ namespace WMS.Models
 		public string code { get; set; }
 		public string POno { get; set; }
 		public string qty { get; set; }
-		public int quotationqty { get; set; }
+		public decimal? quotationqty { get; set; }
 		public string status { get; set; }
 	}
 
@@ -488,9 +488,9 @@ namespace WMS.Models
 		public string pono { get; set; }
 		public string invoiceno { get; set; }
 		public string grnnumber { get; set; }
-		public int receivedqty { get; set; }
-		public int confirmqty { get; set; }
-		public int returnqty { get; set; }
+		public decimal? receivedqty { get; set; }
+		public decimal? confirmqty { get; set; }
+		public decimal? returnqty { get; set; }
 		///public string receivedqty { get; set; }
 		public string returnedqty { get; set; }
 		public string confirmedqty { get; set; }
@@ -503,15 +503,15 @@ namespace WMS.Models
 		public string pono { get; set; }
 		public string grnnumber { get; set; }
 		public string materialdescription { get; set; }
-		public int totalquantity { get; set; }
-		public int issuedqty { get; set; }
-		public int reservedqty { get; set; }
-		public int availableqty { get; set; }
-		public int issued { get; set; }
+		public decimal? totalquantity { get; set; }
+		public decimal? issuedqty { get; set; }
+		public decimal? reservedqty { get; set; }
+		public decimal? availableqty { get; set; }
+		public decimal? issued { get; set; }
 		public string qtyavailable { get; set; }
 		public string materialid { get; set; }
 		public string qtytotal { get; set; }
-		public int confirmqty { get; set; }
+		public decimal? confirmqty { get; set; }
 		//public int inwmasterid { get; set; }
 		public string inwmasterid { get; set; }
 
@@ -532,8 +532,8 @@ namespace WMS.Models
 		public string jobname { get; set; }
 		public int itemid { get; set; }
 		public string inwmasterid { get; set; }
-		public int quantity { get; set; }
-		public int issuedqty { get; set; }
+		public decimal? quantity { get; set; }
+		public decimal? issuedqty { get; set; }
 		public string requesterid { get; set; }
 		public string itemreceiverid { get; set; }
 		public string approverid { get; set; }
@@ -561,7 +561,7 @@ namespace WMS.Models
 		public string gatepassrequestedby { get; set; }
 		public DateTime? gatepassrequesteddate { get; set; }
 
-		public int reservequantity { get; set; }
+		public decimal? reservequantity { get; set; }
 		public string reserveid { get; set; }
 		public DateTime? reservedon { get; set; }
 		public DateTime? reserveupto { get; set; }
@@ -594,7 +594,7 @@ namespace WMS.Models
 		public string material { get; set; }
 		//public string materialdescription { get; set; }
 		public string transferid { get; set; }
-		public int confirmqty { get; set; }
+		public decimal? confirmqty { get; set; }
 		public int reserveformaterialid { get; set; }
 		public string ackstatus { get; set; }
 		public string remarks { get; set; }
@@ -607,10 +607,10 @@ namespace WMS.Models
 
 		public string requestid { get; set; }
 		public int inwardid { get; set; }
-		public int quantity { get; set; }
-		public int quotationqty { get; set; }
-		public int requestedquantity { get; set; }
-		public int issuedquantity { get; set; }
+		public decimal? quantity { get; set; }
+		public decimal? quotationqty { get; set; }
+		public decimal? requestedquantity { get; set; }
+		public decimal? issuedquantity { get; set; }
 		public string pono { get; set; }
 		public DateTime? requesteddate { get; set; }
 		public string approveremailid { get; set; }
@@ -630,18 +630,18 @@ namespace WMS.Models
 		public string Materialdescription { get; set; }
 		public string poitemdescription { get; set; }
 		public DateTime? createddate { get; set; }
-		public int availableqty { get; set; }
+		public decimal? availableqty { get; set; }
 		public string itemlocation { get; set; }
-		public int issuedqty { get; set; }
+		public decimal? issuedqty { get; set; }
 		public string jobname { get; set; }
-		public int materialqty { get; set; }
-		public int returnqty { get; set; }
+		public decimal? materialqty { get; set; }
+		public decimal? returnqty { get; set; }
 		public string requesttype { get; set; }
 		public DateTime? returnon { get; set; }
 		public string returnqtyaccept { get; set; }
 		public int materialissueid { get; set; }
 		public string createdby { get; set; }
-		public int transferqty { get; set; }
+		public decimal? transferqty { get; set; }
 		public string projectcode { get; set; }
 		public DateTime createdon { get; set; }
 		public string confirmstatus { get; set; }
@@ -661,7 +661,7 @@ namespace WMS.Models
 		public int defaultbin { get; set; }
 
 		public string reserveid { get; set; }
-		public int reservedqty { get; set; }
+		public decimal? reservedqty { get; set; }
 
 		public string stocktype { get; set; }
 
@@ -671,7 +671,7 @@ namespace WMS.Models
 
 		public string requestmaterialid { get; set; }
 
-		public int plantstockavailableqty { get; set; }
+		public decimal? plantstockavailableqty { get; set; }
 
 		public string putawaystatus { get; set; }
 
@@ -727,9 +727,9 @@ namespace WMS.Models
 		public string pono { get; set; }
 		public int itemid { get; set; }
 		public string itemreturnable { get; set; }
-		public int issuedqty { get; set; }
+		public decimal? issuedqty { get; set; }
 		public string reprintedby { get; set; }
-		public int availableqty { get; set; }
+		public decimal? availableqty { get; set; }
 		//gate pass change
 		public string gatepassid { get; set; }
 		public string gatepasstype { get; set; }
@@ -741,7 +741,7 @@ namespace WMS.Models
 		public int gatepassmaterialid { get; set; }
 		public string materialid { get; set; }
 		public string materialdescription { get; set; }
-		public int quantity { get; set; }
+		public decimal? quantity { get; set; }
 		public string vendorname { get; set; }
 		public string name { get; set; }
 		public bool deleteflag { get; set; }
@@ -777,10 +777,10 @@ namespace WMS.Models
 		public DateTime? inwarddate { get; set; }
 		public string inwardedby { get; set; }
 		public string inwardremarks { get; set; }
-		public int outwardqty { get; set; }
-		public int outwardedqty { get; set; }
-		public int inwardqty { get; set; }
-		public int inwardedqty { get; set; }
+		public decimal? outwardqty { get; set; }
+		public decimal? outwardedqty { get; set; }
+		public decimal? inwardqty { get; set; }
+		public decimal? inwardedqty { get; set; }
 		public string itemlocation { get; set; }
 		public string mgapprover { get; set; }
 
@@ -802,12 +802,12 @@ namespace WMS.Models
 		public string materialid { get; set; }
 		public string materialdescription { get; set; }
 		public string remarks { get; set; }
-		public int quantity { get; set; }
+		public decimal? quantity { get; set; }
 		public int gatepassmaterialid { get; set; }
 		public Decimal? materialcost { get; set; }
 		public DateTime expecteddate { get; set; }
 		public DateTime? returneddate { get; set; }
-		public int issuedqty { get; set; }
+		public decimal? issuedqty { get; set; }
 
 	}
 
@@ -869,9 +869,9 @@ namespace WMS.Models
 		public string category { get; set; }
 		public string materialid { get; set; }
 		public string materialdescription { get; set; }
-		public int availableqty { get; set; }
-		public int physicalqty { get; set; }
-		public int difference { get; set; }
+		public decimal? availableqty { get; set; }
+		public decimal? physicalqty { get; set; }
+		public decimal? difference { get; set; }
 		public bool iscountprocess { get; set; }
 		public bool iscounted { get; set; }
 		public bool isapprovalprocess { get; set; }
@@ -888,7 +888,7 @@ namespace WMS.Models
 
 		public string verified_by { get; set; }
 
-		public int todayscount { get; set; }
+		public decimal? todayscount { get; set; }
 		public decimal? value { get; set; }
 
 	}
@@ -919,9 +919,9 @@ namespace WMS.Models
 		public string departmentname { get; set; }
 		public string itemlocation { get; set; }
 		public DateTime receiveddate { get; set; }
-		public int receivedqty { get; set; }
-		public int issuedqty { get; set; }
-		public int availableqty { get; set; }
+		public decimal? receivedqty { get; set; }
+		public decimal? issuedqty { get; set; }
+		public decimal? availableqty { get; set; }
 		public double unitprice { get; set; }
 		public int daysinstock { get; set; }
 		public DateTime reportdate { get; set; }
@@ -929,15 +929,15 @@ namespace WMS.Models
 		public string vendorname { get; set; }
 		public string ponumber { get; set; }
 		public string category { get; set; }
-		public int totalcost { get; set; }
+		public decimal? totalcost { get; set; }
 		public DateTime createddate { get; set; }
 	}
 	public class ABCCategoryModel
 	{
 		public int categoryid { get; set; }
 		public string categoryname { get; set; }
-		public int? minpricevalue { get; set; }
-		public int? maxpricevalue { get; set; }
+		public decimal? minpricevalue { get; set; }
+		public decimal? maxpricevalue { get; set; }
 		public string createdby { get; set; }
 		public DateTime createdon { get; set; }
 		public string updatedby { get; set; }
@@ -983,10 +983,10 @@ namespace WMS.Models
 		public string itemlocation { get; set; }
 		public DateTime shelflife { get; set; }
 		public DateTime createddate { get; set; }
-		public int availableqty { get; set; }
+		public decimal? availableqty { get; set; }
 		public string pono { get; set; }
 		public int itemid { get; set; }
-		public int issuedqty { get; set; }
+		public decimal? issuedqty { get; set; }
 	}
 
 	public class Employee
@@ -1150,7 +1150,7 @@ namespace WMS.Models
 		public string materialdescription { get; set; }
 		public decimal? value { get; set; }
 		public string referenceno { get; set; }
-		public int? quantity { get; set; }
+		public decimal? quantity { get; set; }
 		public string currency  { get; set; }
 	}
 	public class employeeModel
@@ -1199,7 +1199,7 @@ namespace WMS.Models
 	{
 		public string materialid { get; set; }
 		public string materialdescription { get; set; }
-		public int availableqty { get; set; }
+		public decimal? availableqty { get; set; }
 
 	}
 
@@ -1307,8 +1307,8 @@ namespace WMS.Models
 	}
 	public class ReserveMaterialModel
 	{
-		public int quantity { get; set; }
-		public int issuedqty { get; set; }
+		public decimal? quantity { get; set; }
+		public decimal? issuedqty { get; set; }
 		public string requesterid { get; set; }
 		public int reserveformaterialid { get; set; }
 		public string materialid { get; set; }
@@ -1316,14 +1316,14 @@ namespace WMS.Models
 		public int itemid { get; set; }
 		public DateTime reservedon { get; set; }
 		public string reservedby { get; set; }
-		public int reservedqty { get; set; }
+		public decimal? reservedqty { get; set; }
 		public string releasedby { get; set; }
 		public DateTime releasedon { get; set; }
-		public int releasedqty { get; set; }
+		public decimal? releasedqty { get; set; }
 		public string reserveid { get; set; }
 		public string pono { get; set; }
-		public int availableqty { get; set; }
-		public int releasedquantity { get; set; }
+		public decimal? availableqty { get; set; }
+		public decimal? releasedquantity { get; set; }
 		public string name { get; set; }
 		public string jobname { get; set; }
 		public Boolean itemreturnable { get; set; }
@@ -1368,7 +1368,7 @@ namespace WMS.Models
 		public string itemlocation { get; set; }
 
 		//for initial stock putaway
-		public int quantity { get; set; }
+		public decimal? quantity { get; set; }
 		public string stocktype { get; set; }
 	}
 
@@ -1419,9 +1419,9 @@ public class stocktransferModel
 	public string materialid { get; set; }
 	public string materialdescription { get; set; }
 	public string previouslocation { get; set; }
-	public int previousqty { get; set; }
+	public decimal? previousqty { get; set; }
 	public string currentlocation { get; set; }
-	public int transferedqty { get; set; }
+	public decimal? transferedqty { get; set; }
 	public DateTime transferedon { get; set; }
 	public string transferedby { get; set; }
 	public string remarks { get; set; }
@@ -1444,8 +1444,8 @@ public class invstocktransfermodel
 	public string status { get; set; }
 	public DateTime issuedon { get; set; }
 	public bool? isporequested { get; set; }
-	public int transferqty { get; set; }
-	public int issuedqty { get; set; }
+	public decimal? transferqty { get; set; }
+	public decimal? issuedqty { get; set; }
 	public string transferredbyname { get; set; }
 	public string vendorcode { get; set; }
 	public string vendorname { get; set; }
@@ -1484,13 +1484,13 @@ public class stocktransfermateriakmodel
 	public int sourceitemid { get; set; }
 	public string destinationlocation { get; set; }
 	public int destinationitemid { get; set; }
-	public int transferqty;
+	public decimal? transferqty;
 	public string[] mlocations { get; set; }
 	public string projectid { get; set; }
 	public DateTime requireddate { get; set; }
 	public string status { get; set; }
-	public int issuedqty { get; set; }
-	public int poqty { get; set; }
+	public decimal? issuedqty { get; set; }
+	public decimal? poqty { get; set; }
 	public decimal? value { get; set; }
 	public decimal? unitprice { get; set; }
 	public string subconno { get; set; }
@@ -1529,10 +1529,11 @@ public class materialtransferMain
 {
 	public string transferid { get; set; }
 	public string projectcode { get; set; }
+	public string fromprojectcode { get; set; }
 	public string projectmanagerto { get; set; }
 	public string projectcodefrom { get; set; }
 	public string projectmanagerfrom { get; set; }
-	public int transferredqty { get; set; }
+	public decimal? transferredqty { get; set; }
 	public string transferremarks { get; set; }
 
 	public string approvalremarks { get; set; }
@@ -1560,7 +1561,7 @@ public class materialtransferTR
 	public string transferid { get; set; }
 	public string materialid { get; set; }
 	public string materialdescription { get; set; }
-	public int transferredqty { get; set; }
+	public decimal? transferredqty { get; set; }
 }
 
 public class materialtransferapproverModel
@@ -1611,16 +1612,16 @@ public class STOrequestTR
 	public string transferid { get; set; }
 	public string materialid { get; set; }
 	public string poitemdesc { get; set; }
-	public int transferqty { get; set; }
+	public decimal? transferqty { get; set; }
 	public string projectid { get; set; }
 	public DateTime requireddate { get; set; }
 	public string itemlocation { get; set; }
-	public int confirmqty { get; set; }
-	public int issuedqty { get; set; }
-	public int totalquantity { get; set; }
-	public int putawayqty { get; set; }
+	public decimal? confirmqty { get; set; }
+	public decimal? issuedqty { get; set; }
+	public decimal? totalquantity { get; set; }
+	public decimal? putawayqty { get; set; }
 	public int itemid  { get;set;}
-	public int availableqty { get; set; }
+	public decimal? availableqty { get; set; }
 	public bool isissued { get; set; }
 
 	public int defaultstore { get; set; }
@@ -1683,7 +1684,7 @@ public class materialistModel
 	public string gatepassmaterialid { get; set; }
 	public string materialid { get; set; }
 	public string materialdescription { get; set; }
-	public int quantity { get; set; }
+	public decimal? quantity { get; set; }
 	public string remarks { get; set; }
 	public DateTime expecteddate { get; set; }
 	public DateTime? returneddate { get; set; }
@@ -1841,9 +1842,9 @@ public class materialrequestMR
 	public string requestid { get; set; }
 	public string materialid { get; set; }
 	public string materialdescription { get; set; }
-	public int requestedquantity { get; set; }
-	public int returnqty { get; set; }
-	public int issuedquantity { get; set; }
+	public decimal? requestedquantity { get; set; }
+	public decimal? returnqty { get; set; }
+	public decimal? issuedquantity { get; set; }
 }
 public class materialRequestFilterParams
 {
@@ -1856,9 +1857,12 @@ public class materialreserveMain
 	public string reserveid { get; set; }
 	public string reservedby { get; set; }
 	public DateTime reservedon { get; set; }
+	public DateTime reserveupto { get; set; }
 	public string status { get; set; }
+	public string projectcode { get; set; }
 	public string requestedby { get; set; }
 	public string remarks { get; set; }
+	public string chkstatus { get; set; }
 
 	public List<materialreserveMS> materialdata { get; set; }
 
@@ -1869,7 +1873,7 @@ public class materialreserveMS
 	public string requestid { get; set; }
 	public string materialid { get; set; }
 	public string materialdescription { get; set; }
-	public int reservequantity { get; set; }
+	public decimal? reservequantity { get; set; }
 }
 public class materialResFilterParams
 {
@@ -1896,7 +1900,7 @@ public class materialreturnMT
 	public string requestid { get; set; }
 	public string materialid { get; set; }
 	public string materialdescription { get; set; }
-	public int returnqty { get; set; }
+	public decimal? returnqty { get; set; }
 	public string remarks { get; set; }
 }
 public class materialRetFilterParams
@@ -1946,11 +1950,11 @@ public class MaterialTransactionDetail
 	public string materialid { get; set; }
 	public string materialdescription { get; set; }
 	public string poitemdescription { get; set; }
-	public int requestedquantity { get; set; }
+	public decimal? requestedquantity { get; set; }
 	public int itemid { get; set; }
-	public int issuedquantity { get; set; }
-	public int reservedqty { get; set; }
-	public int returnqty { get; set; }
+	public decimal? issuedquantity { get; set; }
+	public decimal? reservedqty { get; set; }
+	public decimal? returnqty { get; set; }
 	public decimal? materialcost { get; set; }
 }
 
@@ -1965,7 +1969,7 @@ public class MaterialReturnTR
 	public string projectcode { get; set; }
 	public string pono { get; set; }
 	public decimal? materialcost { get; set; }
-	public int returnqty { get; set; }
+	public decimal? returnqty { get; set; }
 	public string remarks { get; set; }
 }
 
@@ -1992,7 +1996,7 @@ public class initialStock
 	public string store { get; set; }
 	public string rack { get; set; }
 	public string bin { get; set; }
-	public int? quantity { get; set; }
+	public decimal? quantity { get; set; }
 	public string quantitystr { get; set; }
 	public string grn { get; set; }
 	public DateTime? receiveddate { get; set; }
@@ -2097,7 +2101,7 @@ public class STOIssueModel
 	public string materialid { get; set; }
 	public string poitemdescription { get; set; }
 	public string transferqty { get; set; }
-	public int availableqty { get; set; }
+	public decimal? availableqty { get; set; }
 	public string issuedqty { get; set; }
 	public string uploadedby { get; set; }
 	public string createdby { get; set; }

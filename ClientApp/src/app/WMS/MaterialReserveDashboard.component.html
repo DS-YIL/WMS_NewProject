@@ -31,7 +31,9 @@
       <ng-template pTemplate="header">
         <tr class="mprltbldata">
           <th style="text-align:center;width:70px">Sl.No.</th>
-          <th style="text-align:center;width:100px">Reserve Id</th>
+          <th style="text-align:center;width:150px">Reserve Id</th>
+          <th style="text-align:center;width:100px">Project Code</th>
+          <th style="text-align:center;width:100px">Reserve Upto</th>
           <th style="text-align:center;width:150px">Reserved On</th>
           <th style="text-align:center;width:150px">Reserved By</th>
           <th style="text-align:center;width:100px">Status</th>
@@ -43,6 +45,8 @@
 
           <th></th>
           <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'reserveid', 'contains')"></th>
+          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'projectcode', 'contains')"></th>
+          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'reserveupto', 'contains')"></th>
           <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'reservedon', 'contains')"></th>
           <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'reservedby', 'contains')"></th>
           <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'status', 'contains')"></th>
@@ -54,35 +58,38 @@
       <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
         <tr>
           <td class="ptable-cell" style="text-align:center;width:70px;">{{ri+1}}</td>
-
-          <td class="ptable-cell" style="text-align: center;width: 100px;">
+          <td class="ptable-cell" style="text-align: center;width: 150px;">
             <span (click)="showattachdata(rowData)" class="btn btn-link">{{rowData.reserveid}}</span>
             <!--<span class="btn btn-link">MARES{{rowData.reserveid}}</span>-->
 
           </td>
+          <td class="ptable-cell" style="text-align: center;width: 100px;">
+            {{rowData.projectcode}}
+          </td>
+          <td class="ptable-cell" style="text-align: center;width: 100px;">
+            {{rowData.reserveupto | date :  constants.dateFormat}}
+          </td>
+
           <td class="ptable-cell" style="text-align:center;width:150px;">{{rowData.reservedon | date :  constants.dateFormat}}</td>
           <td class="ptable-cell" style="text-align:center;width:150px;">
             <span *ngIf="rowData.reservedby">{{rowData.reservedby}}</span>
             <span *ngIf="!rowData.reservedby">-</span>
           </td>
           <td class="ptable-cell" style="text-align:center;width:100px;">
-
-            {{rowData.status}}
-            <span *ngIf="rowData.status=='received'">{{rowData.ackstatus}}</span>
-            <span *ngIf="rowData.status===null">Pending</span>
+            {{rowData.chkstatus}}
           </td>
           <td class="ptable-cell" style="text-align:center;width:100px;">{{rowData.remarks}}</td>
 
 
         </tr>
         <tr *ngIf="rowData.showtr">
-          <td [attr.colspan]="6" style="text-align:center;">
+          <td [attr.colspan]="8" style="text-align:center;">
             <label class="labeltext">Material Details</label>
           </td>
 
         </tr>
         <tr *ngIf="rowData.showtr">
-          <td [attr.colspan]="6" style="text-align:center;">
+          <td [attr.colspan]="8" style="text-align:center;">
 
             <p-table [value]="rowData.materialdata" [style]="{'width':'100%'}">
               <ng-template pTemplate="header">

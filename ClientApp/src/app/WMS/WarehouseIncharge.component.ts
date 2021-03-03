@@ -826,7 +826,7 @@ this.updateRowGroupMetaData();
         return;
       }
 
-      if (totalqty == parseInt(this.matqty)) {
+      if (totalqty == parseFloat(this.matqty)) {
         this.ConfirmationService.confirm({
           message: 'Are you sure to put away material in selected stock type?',
           accept: () => {

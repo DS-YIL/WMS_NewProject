@@ -97,7 +97,7 @@ namespace WMS.Interfaces
 		int ApproveMaterialissue(List<IssueRequestModel> dataobj);
 		Task<IEnumerable<gatepassModel>> GetgatepassList();
 		int SaveOrUpdateGatepassDetails(gatepassModel dataobj);
-		string checkmaterialandqty(string material = null, int qty = 0);
+		string checkmaterialandqty(string material = null, decimal? qty = 0);
 		int deletegatepassmaterial(int gatepassmaterialid);
 		int updategatepassapproverstatus(List<gatepassModel> model);
 		Task<IEnumerable<gatepassModel>> GetmaterialList(string gatepassid);
@@ -268,7 +268,7 @@ namespace WMS.Interfaces
 
 		Task<IEnumerable<materialtransferMain>> getMaterialtransferdetails(materilaTrasFilterParams filters);
 		//Amulya
-		Task<IEnumerable<materialrequestMain>> getmaterialrequestdashboardList(materialRequestFilterParams filters);
+		Task<IEnumerable<MaterialTransaction>> getmaterialrequestdashboardList(materialRequestFilterParams filters);
 		//Amulya
 		Task<IEnumerable<materialreserveMain>> getmaterialreservedashboardList(materialResFilterParams filters);
 		//Amulya

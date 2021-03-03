@@ -313,7 +313,7 @@ values(default,@gatepassid,@materialid,@quantity,@deleteflag,@remarks,@materialc
     <value>update wms.wms_gatepassmaterial set deleteflag='true' where gatepassmaterialid=#gatepassmaterialid</value>
   </data>
   <data name="getgatepassmaterialdetailList" xml:space="preserve">
-    <value>select material.gatepassmaterialid,material.gatepassid,material.poitemdescription,emp."name" as name,pass.vendorname,
+    <value>select material.gatepassmaterialid,material.gatepassid,material.poitemdescription,emp."name" as name,pass.vendorname,material.expecteddate,
  (select sum(issuedqty) from wms.wms_materialissue  where requestid::text =material.gatepassmaterialid::text and requesttype = 'gatepass' ) as issuedqty,
  (select sum(availableqty) from wms.wms_stock ws where materialid =material.materialid and poitemdescription = material.poitemdescription) as availableqty,
  pass.requestedon,pass.gatepasstype,pass.approverstatus,pass.reasonforgatepass,pass.approverremarks,pass.fmapprovedstatus,pass.fmapproverremarks,material.materialid,
@@ -1071,7 +1071,7 @@ group by sk.itemlocation,ygs.materialdescription,ygs.material,createddate::DATE,
     <value>insert into wms.wms_reprinthistory(reprinthistoryid,inwmasterid, reprintedon,reprintedby,reprintcount,barcodeid,noofprint )values(default,@inwmasterid,current_date,@reprintedby,@reprintcount,@barcodeid, @noofprint)returning reprinthistoryid</value>
   </data>
   <data name="getMaterialTransferDetails" xml:space="preserve">
-    <value>select ts.transferid, ts.projectcode,ts.remarks as transferremarks,emp.name as transferedby,ts.createdon as transferredon
+    <value>select ts.transferid, ts.projectcode,ts.fromprojectcode,ts.remarks as transferremarks,emp.name as transferedby,ts.createdon as transferredon
 from wms.wms_transfermaterial ts
 left outer join wms.employee emp on emp.employeeno = ts.createdby</value>
   </data>
@@ -1085,11 +1085,26 @@ sk.deleteflag=false
 group by sk.itemlocation,ygs.materialdescription,ygs.material,createddate::DATE,sk.itemid</value>
   </data>
   <data name="getMaterialRequestDashboardDetails" xml:space="preserve">
-    <value>select mr.requestid,mr.requesteddate,mr.ackstatus,emp.name as requestedby,mr.ackremarks,mr.remarks from wms.materialrequest mr
-left outer join  wms.employee emp on emp.employeeno = mr.requesterid</value>
+    <value>select req.requestid,req.ackstatus,req.requesteddate,req.ackremarks,req.reserveid,req.projectcode,req.remarks,
+  CASE WHEN req.ackstatus IS NULL THEN false ELSE true END AS status,req.approvalremarks,
+  CASE WHEN req.issuedby IS NULL THEN 'Pending' ELSE 'Issued' END AS approvedstatus,
+   CASE 
+   WHEN (req.isapprovalrequired is true and req.isapproved is true) THEN 'Approved'
+   WHEN (req.isapprovalrequired is true and req.isapproved is false) THEN 'Rejected'
+   WHEN (req.isapprovalrequired is true and req.isapproved is not true) THEN 'Pending'
+   WHEN (req.isapprovalrequired is not true) THEN 'N/A'
+   ELSE 'N/A' END AS pmapprovedstatus
+  from wms.materialrequest req </value>
   </data>
   <data name="getMaterialReserveDashboardDetails" xml:space="preserve">
-    <value>select mrs.reserveid,mrs.reservedon,mrs.ackstatus,emp.name as reservedby,mrs.remarks from wms.materialreserve mrs
+    <value>select mrs.reserveid,mrs.reserveupto,mrs.projectcode,mrs.reservedon,mrs.ackstatus,emp.name as reservedby,mrs.remarks,
+CASE
+     WHEN mrs.reserveupto::date &lt; current_date THEN
+	 'Expired'
+     WHEN mrs.requestedby is NOT NULL THEN
+	  'Requested'
+	 ELSE 'Reserved'
+  END as chkstatus from wms.materialreserve mrs
 left outer join  wms.employee emp on emp.employeeno = mrs.reservedby</value>
     <comment>get material reserve details</comment>
   </data>
@@ -1273,7 +1288,7 @@ where returnid = '#returnid'</value>
     <value>select req.id as requestmaterialid,req.requestedquantity,req.materialid,req.poitemdescription materialdescription,rq.requesterid,
  (select sum(issuedqty) from wms.wms_materialissue  where requestid::text = req.id::text and requesttype = 'MaterialRequest') as issuedqty,
  (select sum(availableqty) from wms.wms_stock ws where materialid =req.materialid and poitemdescription = req.poitemdescription ) as availableqty,
- (select sum(reservequantity) from wms.materialreservedetails wm where wm.materialid =req.materialid and poitemdescription = req.poitemdescription ) as reservedqty,
+ (select sum(reservequantity) from wms.materialreservedetails wm left outer join wms.materialreserve rsv on wm.reserveid = rsv.reserveid where  wm.materialid =req.materialid and poitemdescription = req.poitemdescription and rsv.requestedby is NOT null and  rsv.reserveupto::date &lt; current_date ) as reservedqty,
   rq.projectcode as projectname,emp.name as name,rq.requesteddate,rq.requestid,rq.pono
  from  wms.materialrequestdetails req
  left outer join wms.materialrequest rq on rq.requestid=req.requestid
@@ -1356,7 +1371,7 @@ where ms.reserveid ='#rsid'</value>
   <data name="getreturniddetail" xml:space="preserve">
     <value>select ms.returnid,ms.materialid,ms.poitemdescription as materialdescription,ms.returnqty,ms.remarks
 from wms.wms_materialreturndetails ms
-left outer join wms.wms_materialreturn mrs on mrs.returnid = ms.returnid</value>
+left outer join wms.wms_materialreturn mrs on mrs.returnid = ms.returnid where ms.returnid = '#rid'</value>
     <comment>get material return details by returnid for report</comment>
   </data>
   <data name="getitemlocationforstocktransfer" xml:space="preserve">
@@ -1651,7 +1666,7 @@ order by sweek</value>
   </data>
   <data name="getMiscellanousIssuesList" xml:space="preserve">
     <value>select max(st.itemid ) as itemid, max(st.materialid) as material,max(st.poitemdescription) as poitemdescription,
-st.itemlocation, SUM(st.availableqty) as availableqty,(Max(st.unitprice ) * SUM(st.availableqty)) as value,max(st.createddate ) as createddate
+st.itemlocation, SUM(st.availableqty) as availableqty,(Max(st.unitprice::numeric ) * SUM(st.availableqty::numeric)) as value,max(st.createddate ) as createddate
 from wms.wms_stock st</value>
   </data>
   <data name="updateMisQty" xml:space="preserve">
@@ -1766,7 +1781,7 @@ where istk.dataloaderrors is True
 and (istk.material = '') IS NOT True 
 and (istk.materialdescription = '') IS NOT True
 and  istk.quantity &lt;&gt; 0 and istk.quantity is NOT NULL
-and  istk.value &lt;&gt; 0::money and istk.value is NOT NULL
+and  istk.value &lt;&gt; 0::numeric and istk.value is NOT NULL
 and (istk.projectid = '') IS NOT True
 and (istk.pono = '') IS NOT True
 and istk.stockid not in (select distinct receivedid::integer from wms.wms_stock where receivedid  is not null and uploadbatchcode = istk.uploadbatchcode)</value>

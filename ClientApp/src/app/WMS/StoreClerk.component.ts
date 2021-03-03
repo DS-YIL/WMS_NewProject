@@ -189,7 +189,9 @@ export class StoreClerkComponent implements OnInit {
       data.confirmqty = "";
       return;
     }
-    if (entredvalue != (receivedqty - returnedqty) && receivedqty && returnedqty) {
+    var enterqty = entredvalue;
+    var diff = ((parseFloat(receivedqty) * 10000000000) - parseFloat(returnedqty) * 10000000000) / 10000000000;
+    if (enterqty != diff && receivedqty && returnedqty) {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Rejected and Accepted quantity should be equal to received qty' });
       // (<HTMLInputElement>document.getElementById("confirmqty")).value = "";
       data.confirmqty = "";
@@ -209,7 +211,9 @@ export class StoreClerkComponent implements OnInit {
       data.returnqty = "";
       return;
     }
-    if (entredvalue != (receivedqty - acceptedqty) && receivedqty && acceptedqty) {
+    var enterqty = entredvalue;
+    var diff = ((parseFloat(receivedqty) * 10000000000) - parseFloat(acceptedqty) * 10000000000) / 10000000000;
+    if (enterqty != diff && receivedqty && acceptedqty) {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Rejected and Accepted Quantity should be equal to Received Quantity' });
       //(<HTMLInputElement>document.getElementById("returnqty")).value = "";
       data.returnqty = "";
@@ -600,6 +604,7 @@ export class StoreClerkComponent implements OnInit {
         this.disGrnBtn = false;
         // this.PoDetails = data[0];
         this.podetailsList = data;
+        console.log(this.podetailsList);
         var pono = this.podetailsList[0].pono;
         this.lblpono = this.podetailsList[0].pono;
         this.lblinvoiceno = this.podetailsList[0].invoiceno;
@@ -612,7 +617,7 @@ export class StoreClerkComponent implements OnInit {
         }
         if (this.grnnumber) {
           this.podetailsList = this.podetailsList.filter(function (element, index) {
-            return (parseInt(element.receivedqty) > 0);
+            return (parseFloat(element.receivedqty) > 0);
           });
         }
         if (pono.startsWith("NP")) {
@@ -770,7 +775,7 @@ export class StoreClerkComponent implements OnInit {
     }
 
     var invaliddata = validdata.filter(function (element, index) {
-      return (element.confirmqty + element.returnqty != parseInt(element.receivedqty));
+      return (element.confirmqty + element.returnqty != parseFloat(element.receivedqty));
     });
     if (invaliddata.length > 0) {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Rejected and Accepted quantity should be equal to Received Quantity.' });

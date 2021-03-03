@@ -701,10 +701,10 @@ export class MaterialReserveViewComponent implements OnInit {
     this.maxdate = this.datePipe.transform(maxdate, "yyyy-MM-dd");
     //Get PO number list, project list and materials available
    // this.GetPONo();
-    if (this.materialList.length <= 0) {
-      this.materialistModel = { material: "", materialdescription: "", quantity: 0, materialcost: 0, remarks: " ", availableqty: 0, issuedqty: 0, requesterid: this.employee.employeeno, ReserveUpto: this.mindate, projectcode: "" };
-      this.materialList.push(this.materialistModel);
-    }
+    //if (this.materialList.length <= 0) {
+    //  this.materialistModel = { material: "", materialdescription: "", quantity: 0, materialcost: 0, remarks: " ", availableqty: 0, issuedqty: 0, requesterid: this.employee.employeeno, ReserveUpto: this.mindate, projectcode: "" };
+    //  this.materialList.push(this.materialistModel);
+    //}
   }
 
   GetPONo() {

@@ -30,21 +30,25 @@
       <ng-template pTemplate="header">
         <tr class="mprltbldata">
           <th style="text-align:center;width:70px">Sl.No.</th>
-          <th style="text-align:center;width:100px">Request Id</th>
+          <th style="text-align:center;width:150px">Request Id</th>
+          <th style="text-align:center;width:100px">Project</th>
           <th style="text-align:center;width:150px">Requested On</th>
-          <th style="text-align:center;width:150px">Requested By</th>
           <th style="text-align:center;width:100px">Status</th>
-          <th style="text-align:center;width:100px">Remarks</th>
+          <th style="text-align:center;width:150px">Remarks</th>
+          <th style="text-align:center;width:100px">PM Approval Status</th>
+          <th style="text-align:center;width:150px">PM Approval Remarks</th>
 
 
         </tr>
         <tr>
 
           <th></th>
-          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'requestid', 'contains')"></th>
-          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'requesteddate', 'contains')"></th>
-          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'requestedby', 'contains')"></th>
-          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'ackstatus', 'contains')"></th>
+          <th> <input pInputText type="text" class="form-control" (input)="dt1.filter($event.target.value, 'requestid', 'contains')"></th>
+          <th> <input pInputText type="text" class="form-control" (input)="dt1.filter($event.target.value, 'projectcode', 'contains')"></th>
+          <th> <input pInputText type="text" class="form-control" (input)="dt1.filter($event.target.value, 'requesteddate', 'contains')"></th>
+          <th> <input pInputText type="text" class="form-control" (input)="dt1.filter($event.target.value, 'approvedstatus', 'contains')"></th>
+          <th></th>
+          <th><input pInputText type="text" class="form-control" (input)="dt1.filter($event.target.value, 'pmapprovedstatus', 'contains')"></th>
           <th></th>
 
 
@@ -54,37 +58,35 @@
         <tr>
           <td class="ptable-cell" style="text-align:center;width:70px;">{{ri+1}}</td>
 
-          <td class="ptable-cell" style="text-align: center;width: 100px;">
-            <span (click)="showattachdata(rowData)" class="btn btn-link">{{rowData.requestid}}</span>
-            <!--<span class="btn btn-link">{{rowData.requestid}}</span>-->
-
+          <td class="ptable-cell" style="text-align: center;width: 150px;">
+            <button type="button" class="btn btn-link" (click)="showattachdata(rowData)" style="padding-left:0px;text-align:center;">{{rowData.requestid}}</button>
           </td>
-          <td class="ptable-cell" style="text-align:center;width:150px;">{{rowData.requesteddate | date :  constants.dateFormat}}</td>
-          <td class="ptable-cell" style="text-align:center;width:150px;">{{rowData.requestedby}}</td>
-          <td class="ptable-cell" style="text-align:center;width:100px;">
-            {{rowData.ackstatus}}
-            <!--<span *ngIf="rowData.ackstatus">{{rowData.ackstatus}}</span>-->
-            <!--<span *ngIf="!rowData.ackstatus">Pending</span>-->
-            <span *ngIf="rowData.ackstatus==null">Pending</span>
-
-            <!--<span *ngIf="rowData.materialissueid">Issued</span>-->
-            <!--<span *ngIf="!rowdata.materialissueid">pending</span>-->
-
-
+          <td class="ptable-cell" style="text-align:center;width:100px;">{{rowData.projectcode}}</td>
+          <td class="ptable-cell" style="text-align:center;width:150px;">{{rowData.requesteddate| date :  constants.dateFormat}}</td>
+          <td class="ptable-cell" style="text-align:left;width:100px;">
+            <span *ngIf="rowData.approvedstatus!=null">{{rowData.approvedstatus}}</span>
+            <span *ngIf="rowData.approvedstatus==null">Pending</span>
           </td>
-          <td class="ptable-cell" style="text-align:center;width:100px;">{{rowData.remarks}}</td>
+          <td class="ptable-cell" style="text-align:left;width:150px;resize:none">{{rowData.remarks}}</td>
+          <td class="ptable-cell" style="text-align:left;width:100px;">
+            <span>{{rowData.pmapprovedstatus}}</span>
+          </td>
+          <td class="ptable-cell" style="text-align:left;width:150px;">
+            <span>{{rowData.approvalremarks}}</span>
+          </td>
+          
 
 
 
         </tr>
         <tr *ngIf="rowData.showtr">
-          <td [attr.colspan]="6" style="text-align:center;">
+          <td [attr.colspan]="8" style="text-align:center;">
             <label class="labeltext">Material Details</label>
           </td>
 
         </tr>
         <tr *ngIf="rowData.showtr">
-          <td [attr.colspan]="6" style="text-align:center;">
+          <td [attr.colspan]="8" style="text-align:center;">
 
             <p-table [value]="rowData.materialdata" [style]="{'width':'100%'}">
               <ng-template pTemplate="header">

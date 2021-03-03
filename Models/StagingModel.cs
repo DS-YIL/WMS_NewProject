@@ -25,7 +25,7 @@ namespace WMS.Models
 		public string materialid { get; set; }
 		public string poitemdescription { get; set; }
 		public string materialdescription { get; set; }
-		public int materialqty { get; set; }
+		public decimal? materialqty { get; set; }
 		public int itemno { get; set; }
 		public int item { get; set; }
 		public decimal? itemamount { get; set; }
@@ -40,10 +40,10 @@ namespace WMS.Models
 		public string vendor { get; set; }
 		public string vendorname { get; set; }
 		public string projectdefinition { get; set; }
-		public int poquantity { get; set; }
+		public decimal? poquantity { get; set; }
 		public string dci { get; set; }
-		public int deliveredqty { get; set; }
-		public int wmsqty { get; set; }
+		public decimal? deliveredqty { get; set; }
+		public decimal? wmsqty { get; set; }
 		public string saleorderno { get; set; }
 		public string solineitemno { get; set; }
 		public string saleordertype { get; set; }
@@ -71,7 +71,7 @@ namespace WMS.Models
 		public string store { get; set; }
 		public string rack { get; set; }
 		public string bin { get; set; }
-		public int quantity { get; set; }
+		public decimal? quantity { get; set; }
 		public string grn { get; set; }
 		public DateTime receiveddate { get; set; }
 		public DateTime shelflifeexpiration { get; set; }

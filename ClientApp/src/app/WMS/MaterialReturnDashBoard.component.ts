@@ -599,7 +599,7 @@ export class MaterialReturnDashBoardComponent implements OnInit {
         this.messageService.add({ severity: 'error', summary: '', detail: 'Select Rack' });
         return;
       }
-      if (totalqty == parseInt(this.matqty)) {
+      if (totalqty == parseFloat(this.matqty)) {
         this.ConfirmationService.confirm({
           message: 'Are you sure to put away material in selected stock type?',
           accept: () => {

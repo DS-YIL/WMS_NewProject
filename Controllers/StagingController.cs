@@ -176,9 +176,9 @@ namespace WMS.Controllers
 							model.itemdeliverydate = Conversion.TodtTime(row["Item Delivery Date"]);
 							model.materialid = Conversion.toStr(row["Material"]);
 							model.poitemdescription = Conversion.toStr(row["Short Text"]);
-							model.poquantity = Conversion.toInt(row["PO Quantity"]);
+							model.poquantity = Conversion.Todecimaltype(row["PO Quantity"]);
 							model.dci = Conversion.toStr(row["DCI"]);//if blank it is open po
-							model.deliveredqty = Conversion.toInt(row["Delivered Qty"]);//already delivered qty
+							model.deliveredqty = Conversion.Todecimaltype(row["Delivered Qty"]);//already delivered qty
 							model.vendorcode = Conversion.toStr(row["Vendor"]);
 							model.vendorname = Conversion.toStr(row["Vendor Name"]);
 							model.projectdefinition = Conversion.toStr(row["Project Definition"]);
@@ -899,7 +899,7 @@ namespace WMS.Controllers
 						initialstk.store = Conversion.toStr(row["Store"]);
 						initialstk.rack = Conversion.toStr(row["Rack"]);
 						initialstk.bin = Conversion.toStr(row["Bin"]);
-						initialstk.quantity = Conversion.toInt(row["Quantity"]);
+						initialstk.quantity = Conversion.Todecimaltype(row["Quantity"]);
 						initialstk.quantitystr = Conversion.toStr(row["Quantity"]);
 						initialstk.projectid = Conversion.toStr(row["Project Id"]);
 						initialstk.pono = Conversion.toStr(row["PO No"]);

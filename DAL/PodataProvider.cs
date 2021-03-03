@@ -273,8 +273,8 @@ namespace WMS.DAL
 								result.grnnumber = mtData.grnnumber;
 								result.confirmqty = mtData.confirmqty;
 								//To get issued qty get data from material issue, material reserve and gatepassmaterial table
-								int issuedqty = 0;
-								int reservedqty = 0;
+								decimal? issuedqty = 0;
+								decimal? reservedqty = 0;
 
 								Enquirydata enquiryobj = new Enquirydata();
 								string availableQtyqry = "select sum(availableqty) as availableqty from wms.wms_stock where materialid ='" + mtData.materialid + "' and pono='" + mtData.pono + "' and inwmasterid = '" + mtData.inwmasterid + "'";
@@ -1719,7 +1719,7 @@ namespace WMS.DAL
 									if (datax.Count() > 0)
 									{
 										po.isreceivedpreviosly = true;
-										int pendingqty = 0;
+										decimal? pendingqty = 0;
 										if (datax.FirstOrDefault().confirmqty > 0)
 										{
 											pendingqty = po.pendingqty - datax.FirstOrDefault().confirmqty;
@@ -2029,7 +2029,7 @@ namespace WMS.DAL
 								qualitychecked = true;
 
 							}
-							int materialqty = item.pendingqty;
+							decimal? materialqty = item.pendingqty;
 
 							if (!isupdateprocess)
 							{
@@ -2470,8 +2470,8 @@ namespace WMS.DAL
 					string insertquery = WMSResource.inserttoStockIS;
 					int itemid = 0;
 					string materialid = data.material;
-					int? availableqty = item.quantity;
-					int? totalquantity = item.quantity;
+					decimal? availableqty = item.quantity;
+					decimal? totalquantity = item.quantity;
 					value = data.value;
 					unitprice = data.value / item.quantity;
 					string receivedtype = "Initial Stock";
@@ -3204,7 +3204,7 @@ namespace WMS.DAL
 					int requestforissueid = item.requestforissueid;
 					string requestid = item.requestid;
 					string ackremarks = item.ackremarks;
-					int issuedquantity = item.issuedquantity;
+					decimal? issuedquantity = item.issuedquantity;
 					string updateackstatus = WMSResource.updateackstatus;
 
 					using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
@@ -4054,8 +4054,8 @@ namespace WMS.DAL
 						var stockdata = DB.QueryAsync<StockModel>(stockquery, null, commandType: CommandType.Text);
 						if (stockdata != null)
 						{
-							int quantitytoissue = item.issuedqty;
-							int issuedqty = 0;
+							decimal? quantitytoissue = item.issuedqty;
+							decimal? issuedqty = 0;
 							foreach (StockModel itm in stockdata.Result)
 							{
 								string approvedstatus = string.Empty;
@@ -4113,7 +4113,7 @@ namespace WMS.DAL
 										item.requesttype
 
 									});
-									int availableqty = itm.availableqty - item.issuedqty;
+									decimal? availableqty = itm.availableqty - item.issuedqty;
 
 									string insertqueryforstatusforqty = WMSResource.updateqtyafterissue.Replace("#itemid", Convert.ToString(itm.itemid)).Replace("#issuedqty", Convert.ToString(issuedqty));
 
@@ -4594,7 +4594,7 @@ namespace WMS.DAL
 		 <param name="qty"></param>
 		Review Date :<<>>   Reviewed By :<<>>
 		*/
-		public string checkmaterialandqty(string material = null, int qty = 0)
+		public string checkmaterialandqty(string material = null, decimal? qty = 0)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
@@ -4834,9 +4834,9 @@ namespace WMS.DAL
 						var stockdata = pgsql.QueryAsync<StockModel>(stockquery, null, commandType: CommandType.Text);
 						if (stockdata != null)
 						{
-							int quantitytoissue = item.issuedqty;
-							int issuedqty = 0;
-							int totalissued = 0;
+							decimal? quantitytoissue = item.issuedqty;
+							decimal? issuedqty = 0;
+							decimal? totalissued = 0;
 							foreach (StockModel itm in stockdata.Result)
 							{
 								if (quantitytoissue <= itm.availableqty)
@@ -5632,7 +5632,7 @@ namespace WMS.DAL
 							if (seldata.Result.Count() > 0)
 							{
 								//Ramesh (08/06/2020) user count action updation 
-								obj.difference = Math.Abs(obj.physicalqty - obj.availableqty);
+								obj.difference = obj.physicalqty - obj.availableqty;
 								string insertquery = "update wms.cyclecount set category='" + obj.category + "', materialid= '" + obj.materialid + "', availableqty= " + obj.availableqty + ", physicalqty=" + obj.physicalqty + ", difference=" + obj.difference + ", status='Pending', counted_on = current_date , counted_by = 'Ramesh', verified_on = null , verified_by = null where materialid = '" + obj.materialid + "' ";
 								var result = DB.ExecuteScalar(insertquery);
 
@@ -5640,7 +5640,7 @@ namespace WMS.DAL
 							else
 							{
 								//Ramesh (08/06/2020) user count action insertion 
-								obj.difference = Math.Abs(obj.physicalqty - obj.availableqty);
+								obj.difference = obj.physicalqty - obj.availableqty;
 								string insertquery = "insert into wms.cyclecount(category, materialid, availableqty, physicalqty, difference, status, counted_on, counted_by, verified_on, verified_by) values('" + obj.category + "', '" + obj.materialid + "', " + obj.availableqty + ", " + obj.physicalqty + ", " + obj.difference + ", 'Pending', current_date , 'Ramesh', null, null)";
 								var result = DB.ExecuteScalar(insertquery);
 							}
@@ -5991,7 +5991,7 @@ namespace WMS.DAL
 								item.pono
 
 							});
-							int availableqty = item.availableqty - item.issuedqty;
+							decimal? availableqty = item.availableqty - item.issuedqty;
 
 							string insertqueryforstatusforqty = WMSResource.updateqtyafterissue.Replace("#itemid", Convert.ToString(item.itemid)).Replace("#issuedqty", Convert.ToString(item.issuedqty));
 
@@ -6673,7 +6673,7 @@ namespace WMS.DAL
 
 							//});
 
-							int availableqty = item.availableqty - item.issuedquantity;
+							decimal? availableqty = item.availableqty - item.issuedquantity;
 
 							string insertqueryforstatusforqty = WMSResource.updateqtyafterissue.Replace("#itemid", Convert.ToString(item.itemid)).Replace("#issuedqty", Convert.ToString(item.issuedqty));
 
@@ -7840,10 +7840,10 @@ namespace WMS.DAL
 							//await DB.OpenAsync();
 							var itemData = await DB.QueryAsync<StockModel>(
 							itemnoquery, null, commandType: CommandType.Text);
-							int remainingqty = item.quantity;
+							decimal? remainingqty = item.quantity;
 							itemData = itemData.OrderBy(o => o.createddate);
-							int reservedqty = item.reservedqty;
-							int Totalreservedqty = 0;
+							decimal? reservedqty = item.reservedqty;
+							decimal? Totalreservedqty = 0;
 							foreach (StockModel data in itemData)
 							{
 								if (item.pono == null)
@@ -7969,10 +7969,10 @@ namespace WMS.DAL
 							string itemnoquery = WMSResource.getitemiddata.Replace("#materialid", item.material).Replace("#desc", item.materialdescription);
 							var itemData = await pgsql.QueryAsync<StockModel>(
 							itemnoquery, null, commandType: CommandType.Text);
-							int remainingqty = item.quantity;
+							decimal? remainingqty = item.quantity;
 							itemData = itemData.OrderBy(o => o.createddate);
-							int reservedqty = item.quantity;
-							int Totalreservedqty = 0;
+							decimal? reservedqty = item.quantity;
+							decimal? Totalreservedqty = 0;
 							string insertdataqry = WMSResource.insertmaterialreservedetails;
 							foreach (StockModel data in itemData)
 							{
@@ -8301,7 +8301,7 @@ namespace WMS.DAL
 
 					int reserveformaterialid = item.reserveformaterialid;
 					string materialid = item.materialid;
-					int issuedqty = item.issuedqty;
+					decimal? issuedqty = item.issuedqty;
 					DateTime itemissueddate = System.DateTime.Now;
 
 					string updateapproverstatus = WMSResource.updateapproverstatusforrelease;
@@ -8367,7 +8367,7 @@ namespace WMS.DAL
 					int requestforissueid = item.reserveformaterialid;
 					string reserveid = item.reserveid;
 					string ackremarks = item.ackremarks;
-					int issuedquantity = item.issuedqty;
+					decimal? issuedquantity = item.issuedqty;
 					string updateackstatus = WMSResource.updateackstatusforreserved;
 
 					using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
@@ -9872,7 +9872,7 @@ namespace WMS.DAL
 							transfer.transferedqty = stck.availableqty;
 							transfer.currentlocation = stck.itemlocation;
 							transfer.remarks = stck.remarks;
-							int decavail = objs.availableqty - stck.availableqty;
+							decimal? decavail = objs.availableqty - stck.availableqty;
 
 							string query1 = "UPDATE wms.wms_stock set availableqty=" + decavail + "  where itemid = '" + stck.itemid + "'";
 							pgsql.ExecuteScalar(query1);
@@ -9882,7 +9882,7 @@ namespace WMS.DAL
 							   query2, null, commandType: CommandType.Text);
 							if (objs1 != null)
 							{
-								int availqty = objs1.availableqty + stck.availableqty;
+								decimal? availqty = objs1.availableqty + stck.availableqty;
 
 								string query4 = "UPDATE wms.wms_stock set availableqty=" + availqty + "  where pono = '" + objs.pono + "' and materialid = '" + objs.materialid + "' and itemlocation = '" + stck.itemlocation + "'";
 								pgsql.ExecuteScalar(query4);
@@ -10094,8 +10094,8 @@ namespace WMS.DAL
 							var stockdata = pgsql.QueryAsync<StockModel>(query, null, commandType: CommandType.Text);
 							if (stockdata != null)
 							{
-								int quantitytotransfer = stck.transferqty;
-								int issuedqty = 0;
+								decimal? quantitytotransfer = stck.transferqty;
+								decimal? issuedqty = 0;
 								foreach (StockModel itm in stockdata.Result)
 								{
 
@@ -10133,14 +10133,14 @@ namespace WMS.DAL
 									   query2, null, commandType: CommandType.Text);
 									if (objs1 != null)
 									{
-										int availqty = objs1.availableqty + issuedqty;
+										decimal? availqty = objs1.availableqty + issuedqty;
 
 										string query4 = "UPDATE wms.wms_stock set availableqty=" + availqty + "  where itemid = " + objs1.itemid + "";
 										pgsql.ExecuteScalar(query4);
 										string stockinsertqry = WMSResource.insertinvtransfermaterial;
 										int sourceitemid = itm.itemid;
 										int destinationitemid = objs1.itemid;
-										int transferqty = issuedqty;
+										decimal? transferqty = issuedqty;
 										var resultsxx = pgsql.ExecuteScalar(stockinsertqry, new
 										{
 											transfer.transferid,
@@ -10175,7 +10175,7 @@ namespace WMS.DAL
 											storeid = stck.storeid;
 										}
 										//int availableqty = stck.transferqty;
-										int availableqty = issuedqty;
+										decimal? availableqty = issuedqty;
 										string itemlocation = stck.destinationlocation;
 										string createdby = transfer.transferredby;
 										string stocktype = itm.stcktype;
@@ -10224,7 +10224,7 @@ namespace WMS.DAL
 											int destinationitemid = result;
 											string stockinsertqry = WMSResource.insertinvtransfermaterial;
 											stck.destinationitemid = itemid;
-											int transferqty = issuedqty;
+											decimal? transferqty = issuedqty;
 											var resultsxx = pgsql.ExecuteScalar(stockinsertqry, new
 											{
 												transfer.transferid,
@@ -11779,7 +11779,7 @@ namespace WMS.DAL
 					List<IssueRequestModel> reqdata = new List<IssueRequestModel>();
 					foreach (ReserveMaterialModel rv in datalist)
 					{
-						int reservedqty = rv.reservedqty;
+						decimal? reservedqty = rv.reservedqty;
 						int itemid = rv.itemid;
 
 
@@ -12281,7 +12281,7 @@ namespace WMS.DAL
 						{
 							foreach (var item in model)
 							{
-								int availableqty = item.confirmqty;
+								decimal? availableqty = item.confirmqty;
 								string materialid = item.material;
 								string createdby = item.createdby;
 								string returnid = item.id;
@@ -13443,7 +13443,7 @@ namespace WMS.DAL
 								if (objmat.Any(x => x.poitemdescription == mat.poitemdescription))
 
 								{
-									decimal value = (mat.unitprice) * (mat.availableqty);
+									decimal? value = (mat.unitprice) * (mat.availableqty);
 									objmat.Where(x => x.poitemdescription == mat.poitemdescription).ToList().ForEach(w =>
 									{
 										w.availableqty = w.availableqty + mat.availableqty;
@@ -13493,7 +13493,7 @@ namespace WMS.DAL
 
 								{
 
-									decimal value = (mat.unitprice) * (mat.availableqty);
+									decimal? value = (mat.unitprice) * (mat.availableqty);
 									objmat.Where(x => x.poitemdescription == mat.poitemdescription).ToList().ForEach(w =>
 									{
 										w.availableqty = w.availableqty + mat.availableqty;
@@ -14263,7 +14263,7 @@ namespace WMS.DAL
 		Review Date :<<>>   Reviewed By :<<>>
 		*/
 
-		public async Task<IEnumerable<materialrequestMain>> getmaterialrequestdashboardList(materialRequestFilterParams filterparams)
+		public async Task<IEnumerable<MaterialTransaction>> getmaterialrequestdashboardList(materialRequestFilterParams filterparams)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
@@ -14272,27 +14272,24 @@ namespace WMS.DAL
 					await pgsql.OpenAsync();
 					string query = WMSResource.getMaterialRequestDashboardDetails;
 					if (!string.IsNullOrEmpty(filterparams.ToDate))
-						query += " where mr.requesteddate::date <= '" + filterparams.ToDate + "'";
+						query += " where req.requesteddate::date <= '" + filterparams.ToDate + "'";
 					if (!string.IsNullOrEmpty(filterparams.FromDate))
-						query += "  and mr.requesteddate::date >= '" + filterparams.FromDate + "'";
-					query += " order by mr.requesterid asc";
-					var data = await pgsql.QueryAsync<materialrequestMain>(
+						query += "  and req.requesteddate::date >= '" + filterparams.FromDate + "'";
+					query += " order by req.requestid desc";
+					var data = await pgsql.QueryAsync<MaterialTransaction>(
 					   query, null, commandType: CommandType.Text);
 
 					if (data != null && data.Count() > 0)
 					{
-						foreach (materialrequestMain dt in data)
+						foreach (MaterialTransaction trans in data)
 						{
 							try
 							{
-								string query1 = WMSResource.getrequestiddetail.Replace("#rid", dt.requestid.ToString());
-								var datadetail = await pgsql.QueryAsync<materialrequestMR>(
-								   query1, null, commandType: CommandType.Text);
-
-								if (datadetail != null && datadetail.Count() > 0)
-								{
-									dt.materialdata = datadetail.ToList();
-								}
+								trans.materialdata = new List<MaterialTransactionDetail>();
+								string materialrequestdataquery = WMSResource.getmaterialrequestdata.Replace("#requestid", trans.requestid);
+								var data1 = await pgsql.QueryAsync<MaterialTransactionDetail>(
+								materialrequestdataquery, null, commandType: CommandType.Text);
+								trans.materialdata = data1.ToList();
 
 							}
 							catch (Exception Ex)
@@ -14301,7 +14298,7 @@ namespace WMS.DAL
 							}
 						}
 					}
-					return data.OrderByDescending(o => o.requestid);
+					return data;
 
 				}
 				catch (Exception Ex)
@@ -14436,7 +14433,7 @@ namespace WMS.DAL
 					{
 						foreach (materialreturnMain dt in data)
 						{
-							string query1 = WMSResource.getreturniddetail.Replace("#rtid", dt.returnid.ToString());
+							string query1 = WMSResource.getreturniddetail.Replace("#rid", dt.returnid.ToString());
 							var datadetail = await pgsql.QueryAsync<materialreturnMT>(
 							   query1, null, commandType: CommandType.Text);
 
@@ -14446,7 +14443,7 @@ namespace WMS.DAL
 							}
 						}
 					}
-					return data;
+					return data.OrderByDescending(o=>o.returnid);
 
 				}
 				catch (Exception Ex)
@@ -14934,7 +14931,7 @@ namespace WMS.DAL
 					string qry = WMSResource.updateMisQty.Replace("#IssuedQty", data.MiscellanousIssueQty).Replace("#projectid", "'" + data.ProjectId + "'").Replace("#itemid", "'" + data.itemid + "'");
 					var result1 = pgsql.Execute(qry);
 					string transactiontype = "Miscellanous Issue";
-					var issuedqty = Convert.ToInt32(data.MiscellanousIssueQty);
+					var issuedqty = Conversion.Todecimaltype(data.MiscellanousIssueQty);
 					var reason = Convert.ToInt32(data.Reason);
 					var remarks = data.Remarks;
 					DateTime createddate = DateTime.Now;

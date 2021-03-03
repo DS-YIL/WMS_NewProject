@@ -54,7 +54,7 @@
               <th *ngIf="isnonpo" style="text-align:center;">Material Description</th>
               <th *ngIf="!isnonpo" style="text-align:center;">PO Item Description</th>
               <th *ngIf="!isnonpo && !qualitychecked" style="text-align:center;width:8%;">Material Qty</th>
-              <th *ngIf="!isnonpo && !isonHold" style="text-align:center;width:8%;">Pending Qty</th>
+              <th *ngIf="!isnonpo && !isonHold && !grnnumber" style="text-align:center;width:8%;">Pending Qty</th>
               <th style="text-align:center;width:10%;" *ngIf="!isonHoldview">Received Qty</th>
               <th style="text-align:center;width:15%;" *ngIf="!isonHoldview">Remarks</th>
               <th style="text-align:center;width:10%;" *ngIf="!isonHoldview">QC Required</th>
@@ -78,7 +78,7 @@
               <td class="ptable-cell" *ngIf="!isnonpo && !qualitychecked" style="text-align:right;width:8%;">
                 <span>{{rowData.materialqty}}</span>
               </td>
-              <td class="ptable-cell" *ngIf="!isnonpo && !isonHold" style="text-align:right;width:8%;">
+              <td class="ptable-cell" *ngIf="!isnonpo && !isonHold && !grnnumber" style="text-align:right;width:8%;">
                 <span>{{rowData.pendingqty}}</span>
               </td>
               <td class="ptable-cell" style="text-align:right;width:10%;" *ngIf="!isonHoldview">

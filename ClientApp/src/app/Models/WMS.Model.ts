@@ -703,6 +703,7 @@ export class materialistModeltransfer {
 export class materialtransferMain {
   transferid: string;
   projectcode: string;
+  fromprojectcode: string;
   projectmanagerto: string;
   projectcodefrom: string;
   projectmanagerfrom: string;
@@ -909,6 +910,9 @@ export class materialrequestMain {
   ackremarks: string;
   remarks: string;
   showtr: boolean;
+  projectcode: string;
+  chkstatus: string;
+  reserveupto: Date;
   materialdata: materialrequestMR[] = [];
 }
 export class materialrequestMR {
