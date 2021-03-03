@@ -301,6 +301,7 @@ export class gatepassModel {
   categoryid: number;
   materiallistarray: any[] = [];
   requestedon: Date;
+  poitemdescription: string;
 }
 export class materialistModel {
   gatepassmaterialid: string;

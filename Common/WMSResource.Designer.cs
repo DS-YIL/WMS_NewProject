@@ -474,12 +474,12 @@ namespace WMS.Common {
         
         /// <summary>
         ///   Looks up a localized string similar to select wi.transferid,inv.projectcode as projectid, wi.materialid , wi.poitemdesc as materialdescription, wi.transferqty ,wi.value,
-        ///(select wp.projectmanager from wms.wms_project wp where wp.projectcode = inv.projectcode limit 1) as projectmanager,
+        ///(select wp.projectmanager from wms.wms_project wp where wp.projectcode = inv.projectcode and wp.projectmanager is not null limit 1) as projectmanager,
         ///ssg.subconno 
         ///from wms.wms_invtransfermaterial wi 
         ///left outer join wms.wms_invstocktransfer inv on wi.transferid = inv.transferid
         ///left outer join wms.sto_subcontract_gr ssg on ssg.transferid = wi.transferid
-        ///where inv.transfertype = &apos;SubContract&apos;.
+        ///where inv.transfe [rest of string was truncated]&quot;;.
         /// </summary>
         public static string getannexuredata {
             get {
@@ -769,12 +769,12 @@ namespace WMS.Common {
         
         /// <summary>
         ///   Looks up a localized string similar to select mat.poitemdescription as materialdescription,emp.name,emp1.name as fmapprover,iss.itemissueddate,gate.remarks as  statusremarks,appr.&quot;name&quot;  as approvername,
-        ///gate.*,mat.*,iss.*,ygs.* from wms.wms_gatepass gate
+        ///gate.*,mat.*,iss.* from wms.wms_gatepass gate
         ///   left join wms.wms_gatepassmaterial mat on gate.gatepassid=mat.gatepassid 
         ///   left join wms.employee emp on emp.employeeno=gate.requestedby
         ///    left join wms.employee appr on appr.employeeno=gate.approverid 
         ///	left join wms.employee emp1 on emp1.employeeno=gate.fmapproverid  
-        ///   left joi [rest of string was truncated]&quot;;.
+        ///   left join wms. [rest of string was truncated]&quot;;.
         /// </summary>
         public static string getgatepasslist {
             get {

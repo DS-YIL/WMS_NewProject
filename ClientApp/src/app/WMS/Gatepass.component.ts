@@ -63,6 +63,9 @@ export class GatePassComponent implements OnInit {
   filteredmats: any[];
   filteredmatdesc: any[];
   emailgateid: string = "";
+  gtptype: string = "";
+  tempreturneddate: any;
+  currdate: Date;
   ngOnInit() {
     if (localStorage.getItem("Employee"))
       this.employee = JSON.parse(localStorage.getItem("Employee"));
@@ -75,6 +78,8 @@ export class GatePassComponent implements OnInit {
     }
     debugger;
     this.emailgateid = this.route.snapshot.queryParams.gatepassid;
+    this.gtptype = "";
+    this.tempreturneddate = null;
     this.getGatePassList();
     this.GatepassTxt = "Gate Pass - Request Materials"
 
@@ -397,6 +402,8 @@ export class GatePassComponent implements OnInit {
     this.selectedRow = index;
     this.displaydetail = true;
     var gatepassId = data.gatepassid;
+    this.gtptype = data.gatepasstype;
+    this.tempreturneddate = data.returneddate;
     this.bindMaterilaDetails(gatepassId);
     data.showdetail = !data.showdetail;
 
@@ -582,22 +589,55 @@ export class GatePassComponent implements OnInit {
       this.GatepassTxt = this.gatepassModel.gatepasstype + " - " + "Request Materials";
   }
   //open gate pass dialog
-  openGatepassDialog(gatepassobject: any, gpIndx: any, dialog) {
+  openGatepassDialog(gatepassobject: any, gpIndx: any, dialogstr: string) {
     debugger;
     this.displaydetail = false;
     this.approverListdata();
-    this[dialog] = true;
+    this.gatepassdialog = true;
     this.gatepassModel = new gatepassModel();
     if (gatepassobject) {
       this.edit = true;
       this.gpIndx = gpIndx;
       this.gatepassModel = gatepassobject;
-      if (String(dialog) == 'updateReturnedDateDialog') {
+      if (dialogstr == 'updateReturnedDateDialog') {
         var matdata = [];
         var materialdata = gatepassobject.materialList;
         materialdata.forEach(item => {
           debugger;
-          var exisdata = matdata.filter(o => o.materialid == item.materialid);
+          var data2 = this.defaultmaterials.filter(function (element, index) {
+            return (element.material == item.materialid && element.materialdescription == item.materialdescription);
+          });
+          if (data2.length > 0) {
+            item.materialcost = data2[0].materialcost != null ? data2[0].materialcost : 0;
+            item.availableqty = data2[0].availableqty != null ? data2[0].availableqty : 0;
+          }
+          var exisdata = matdata.filter(o => o.materialid == item.materialid && o.materialdescription == item.materialdescription);
+
+          if (exisdata.length == 0) {
+            matdata.push(item);
+          }
+
+          this.gatepassModel.materialList = matdata;
+
+        })
+      }
+      if (dialogstr == 'gatepassdialogedit') {
+        var matdata = [];
+        var materialdata = gatepassobject.materialList;
+        materialdata.forEach(item => {
+          debugger;
+          var data2 = this.defaultmaterials.filter(function (element, index) {
+            return (element.material == item.materialid && element.materialdescription == item.materialdescription);
+          });
+          if (data2.length > 0) {
+            item.materialcost = data2[0].materialcost != null ? data2[0].materialcost : 0;
+            item.availableqty = data2[0].availableqty != null ? data2[0].availableqty : 0;
+          }
+          item.expected = new Date(item.expected);
+          var exisdata = matdata.filter(o => o.materialid == item.materialid && o.materialdescription == item.materialdescription);
+          
+          
+
           if (exisdata.length == 0) {
             matdata.push(item);
           }
@@ -1197,12 +1237,11 @@ export class GatePassComponent implements OnInit {
 
   }
   approverListdata() {
-    debugger;
-
+   
     this.wmsService.getapproverdata(this.employee.employeeno).
       subscribe(
         res => {
-          debugger;
+    
           if (!isNullOrUndefined(res[0].approverid) && String(res[0].approverid).trim() != "") {
             this.gatepassModel.approverid = res[0].approverid;
             this.gatepassModel.managername = res[0].managername;

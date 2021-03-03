@@ -795,6 +795,7 @@ namespace WMS.Models
 		public DateTime? createddate { get; set; }
 		public string transferid { get; set; }
 		public string vendorcode { get; set; }
+		public string poitemdescription { get; set; }
 		public DateTime issuedon { get; set; }
 	}
 	public class materialistModel

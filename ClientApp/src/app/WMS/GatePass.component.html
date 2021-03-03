@@ -130,7 +130,7 @@
               <td *ngIf="selectedStatus=='Issued'" class="ptable-cell" style="text-align:left">{{rowData.approvername}}</td>
               <td *ngIf="selectedStatus=='Issued'" class="ptable-cell" style="text-align:center">{{rowData.approvedon | date :  constants.dateFormat}}</td>
               <td class="ptable-cell" *ngIf="employee.roleid!='3' && employee.roleid!='4' && employee.roleid !='8'" style="text-align:center">
-              <button *ngIf="rowData.approverstatus!='Approved' && rowData.approverstatus!='Sent for Modification' && rowData.fmapprovedstatus!='Sent for Modification' && rowData.requestedby==employee.employeeno" type="button" icon="fa fa-edit" pButton aria-hidden="true" (click)="openGatepassDialog(rowData,ri,'gatepassdialog')"></button>
+              <button *ngIf="rowData.approverstatus!='Approved' && rowData.approverstatus!='Sent for Modification' && rowData.fmapprovedstatus!='Sent for Modification' && rowData.requestedby==employee.employeeno" type="button" icon="fa fa-edit" pButton aria-hidden="true" (click)="openGatepassDialog(rowData,ri,'gatepassdialogedit')"></button>
               </td>
               <td class="ptable-cell" *ngIf="(employee.roleid=='3' || employee.roleid =='4') && employee.roleid !='8'" style="text-align:center"><button *ngIf="rowData.approverstatus=='Approved'" type="button" icon="fa fa-print" pButton aria-hidden="true" (click)="showprint(rowData)"></button></td>
               <td *ngIf="(employee.roleid=='3' || employee.roleid =='4') && selectedStatus=='Issued'" class="ptable-cell" style="text-align:center"><button *ngIf="rowData.gatepasstype=='Returnable' && (employee.roleid=='3' || employee.roleid =='4') && rowData.approverstatus=='Approved' && rowData.status!='Full Closure' " type="button" icon="fa fa-pencil" pButton aria-hidden="true" (click)="openGatepassDialog(rowData,ri,'updateReturnedDateDialog')"></button></td>
@@ -159,8 +159,8 @@
               <th class="ptable-cell" style="    text-align: center;background-color: #9ba5af !important">Remarks</th>
               <th class="ptable-cell" style="    text-align: center;background-color: #9ba5af !important">Requested Qty</th>
               <th class="ptable-cell" style="    text-align: center;background-color: #9ba5af !important" *ngIf="employee.roleid !='8'">Issued Qty</th>
-              <th class="ptable-cell" style="    text-align: center;background-color: #9ba5af !important" *ngIf="employee.roleid !='8' && materialList[0].gatepasstype=='Returnable'">Expected Date</th>
-              <th *ngIf="materialList[0].gatepasstype=='Returnable' && materialList[0].returneddate!=null" class="ptable-cell" style="    text-align: center;background-color: #9ba5af !important">Returned Date</th>
+              <th class="ptable-cell" style="    text-align: center;background-color: #9ba5af !important" *ngIf="employee.roleid !='8' && gtptype =='Returnable'">Expected Date</th>
+              <th *ngIf="gtptype=='Returnable' && tempreturneddate!=null" class="ptable-cell" style="    text-align: center;background-color: #9ba5af !important">Returned Date</th>
             </tr>
           </ng-template>
           <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex" let-rindex=0>
@@ -178,8 +178,8 @@
               <td class="ptable-cell" *ngIf="employee.roleid !='8'">
                 <input pInputText type="number" style="text-align:center" class="form-control" [disabled]="txtDisable" [(ngModel)]="rowData.issuedqty">
               </td>
-              <td class="ptable-cell" style="text-align:center" *ngIf="employee.roleid !='8' && materialList[0].gatepasstype=='Returnable'">{{checkValiddate(rowData.expecteddate) | date :  constants.dateFormat}}</td>
-              <td *ngIf="materialList[0].gatepasstype=='Returnable' && rowData.returneddate" class="ptable-cell" style="text-align:center">{{checkValiddate(rowData.returneddate) | date :  constants.dateFormat}}</td>
+              <td class="ptable-cell" style="text-align:center" *ngIf="employee.roleid !='8' && gtptype=='Returnable'">{{checkValiddate(rowData.expecteddate) | date :  constants.dateFormat}}</td>
+              <td *ngIf="gtptype=='Returnable' && rowData.returneddate" class="ptable-cell" style="text-align:center">{{checkValiddate(rowData.returneddate) | date :  constants.dateFormat}}</td>
 
 </ng-template>
 

@@ -192,6 +192,8 @@ namespace WMS.DAL
 					await pgsql.OpenAsync();
 					var data = await pgsql.QueryAsync<OpenPoModel>(
 					   query, null, commandType: CommandType.Text);
+
+
 					return data;
 
 
@@ -4512,6 +4514,22 @@ namespace WMS.DAL
 							remarks
 
 						});
+
+						string userquery = "select  * from wms.employee where employeeno='" + dataobj.approverid + "'";
+						User userdata = pgsql.QuerySingle<User>(
+						   userquery, null, commandType: CommandType.Text);
+						mailto = userdata.email;
+
+						emailmodel.pono = dataobj.pono;
+						emailmodel.requestid = dataobj.requestid;
+						emailmodel.gatepassid = dataobj.gatepassid;
+						emailmodel.gatepasstype = dataobj.gatepasstype;
+						//emailmodel.ToEmailId = mailto;
+						emailmodel.ToEmailId = "ramesh.kumar@in.yokogawa.com";
+
+						emailmodel.requestedon = dataobj.requestedon;
+						emailmodel.requestedby = dataobj.requestedby;
+						emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
 
 					}
 					foreach (var item in dataobj.materialList)
