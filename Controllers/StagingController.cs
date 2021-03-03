@@ -63,8 +63,8 @@ namespace WMS.Controllers
 					serverPath = config.FilePath;
 					var filePath = serverPath + "Yil_Po_Daily_report_" + DateTime.Now.ToString("dd-MM-yyyy").Replace("-", "_") + ".xlsx";
 					//Added lines - Gayathri
-					var filePath1 = serverPath + "ZGSDR00006_QTSO-Sept-Oct2020.xlsx";
-					var filePath2 = serverPath + "ZGMMR02023_slno_imports.xlsx";
+					var filePath1 = serverPath + "ZGSDR00006_"+ DateTime.Now.ToString("dd-MM-yyyy").Replace("-", "_") + ".xlsx";
+					var filePath2 = serverPath +"ZGMMR02023_" + DateTime.Now.ToString("dd-MM-yyyy").Replace("-", "_") + ".xlsx"; 
 					//End - Gayathri
 					DB.Open();
 					var filePathstr = filePath;
@@ -96,43 +96,49 @@ namespace WMS.Controllers
 					}
 
 					//Added Lines -Gayathri
-					using (var stream2 = System.IO.File.Open(filePath1, FileMode.Open, FileAccess.Read))
-					{
-						using (var reader = ExcelReaderFactory.CreateReader(stream2))
+					if (System.IO.File.Exists(filePath1))
+                    {
+						using (var stream2 = System.IO.File.Open(filePath1, FileMode.Open, FileAccess.Read))
 						{
-
-							// 2. Use the AsDataSet extension method
-							var result = reader.AsDataSet(new ExcelDataSetConfiguration()
+							using (var reader = ExcelReaderFactory.CreateReader(stream2))
 							{
-								ConfigureDataTable = (_) => new ExcelDataTableConfiguration()
+
+								// 2. Use the AsDataSet extension method
+								var result = reader.AsDataSet(new ExcelDataSetConfiguration()
 								{
-									UseHeaderRow = true
-								}
-							});
+									ConfigureDataTable = (_) => new ExcelDataTableConfiguration()
+									{
+										UseHeaderRow = true
+									}
+								});
 
-							// The result of each spreadsheet is in result.Tables
-							dtexcel1 = result.Tables[0];
+								// The result of each spreadsheet is in result.Tables
+								dtexcel1 = result.Tables[0];
 
+							}
 						}
 					}
 
-					using (var stream3 = System.IO.File.Open(filePath2, FileMode.Open, FileAccess.Read))
+					if (System.IO.File.Exists(filePath2))
 					{
-						using (var reader = ExcelReaderFactory.CreateReader(stream3))
+						using (var stream3 = System.IO.File.Open(filePath2, FileMode.Open, FileAccess.Read))
 						{
-
-							// 2. Use the AsDataSet extension method
-							var result = reader.AsDataSet(new ExcelDataSetConfiguration()
+							using (var reader = ExcelReaderFactory.CreateReader(stream3))
 							{
-								ConfigureDataTable = (_) => new ExcelDataTableConfiguration()
+
+								// 2. Use the AsDataSet extension method
+								var result = reader.AsDataSet(new ExcelDataSetConfiguration()
 								{
-									UseHeaderRow = true
-								}
-							});
+									ConfigureDataTable = (_) => new ExcelDataTableConfiguration()
+									{
+										UseHeaderRow = true
+									}
+								});
 
-							// The result of each spreadsheet is in result.Tables
-							dtexcel2 = result.Tables[0];
+								// The result of each spreadsheet is in result.Tables
+								dtexcel2 = result.Tables[0];
 
+							}
 						}
 					}
 					//End - gayathri
@@ -280,15 +286,16 @@ namespace WMS.Controllers
 					//Added Gayathri
 					//string upcode = Guid.NewGuid().ToString();
 					int J = 0;
+					if(dtexcel2.Rows.Count>0)
+                    {
+						foreach (DataRow row in dtexcel2.Rows)
+						{
 
-					foreach (DataRow row in dtexcel2.Rows)
-					{
-
-						string Error_Description = "";
-						bool dataloaderror = false;
-						MateriallabelModel slimports = new MateriallabelModel();
-						slimports.saleorderno = Conversion.toStr(row["Sales Document"]);
-						slimports.solineitemno = Conversion.toStr(row["Sales Document Item"]);
+							string Error_Description = "";
+							bool dataloaderror = false;
+							MateriallabelModel slimports = new MateriallabelModel();
+							slimports.saleorderno = Conversion.toStr(row["Sales Document"]);
+							slimports.solineitemno = Conversion.toStr(row["Sales Document Item"]);
 
 						slimports.material = Conversion.toStr(row["Material Number"]);
 						slimports.gr = Conversion.toStr(row["Storage Location"]);
@@ -326,15 +333,19 @@ namespace WMS.Controllers
 								slimports.isloaderror
 							});
 
+							}
+
+
+
+
 						}
-
-
-
-
 					}
+					
 					int K = 0;
-					foreach (DataRow row in dtexcel1.Rows)
-					{
+					if(dtexcel1.Rows.Count>0)
+                    {
+						foreach (DataRow row in dtexcel1.Rows)
+						{
 
 						string Error_Description = "";
 						bool dataloaderror = false;
@@ -403,7 +414,9 @@ namespace WMS.Controllers
 
 
 
+						}
 					}
+					
 
 
 					//End - Gayathri
