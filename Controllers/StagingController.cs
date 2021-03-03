@@ -63,8 +63,8 @@ namespace WMS.Controllers
 					serverPath = config.FilePath;
 					var filePath = serverPath + "Yil_Po_Daily_report_" + DateTime.Now.ToString("dd-MM-yyyy").Replace("-", "_") + ".xlsx";
 					//Added lines - Gayathri
-					var filePath1 = serverPath + "ZGSDR00006_QTSO-Sept-Oct2020.xlsx";
-					var filePath2 = serverPath + "ZGMMR02023_slno_imports.xlsx";
+					var filePath1 = serverPath + "ZGSDR00006_"+ DateTime.Now.ToString("dd-MM-yyyy").Replace("-", "_") + ".xlsx";
+					var filePath2 = serverPath +"ZGMMR02023_" + DateTime.Now.ToString("dd-MM-yyyy").Replace("-", "_") + ".xlsx"; 
 					//End - Gayathri
 					DB.Open();
 					var filePathstr = filePath;
@@ -96,43 +96,49 @@ namespace WMS.Controllers
 					}
 
 					//Added Lines -Gayathri
-					using (var stream2 = System.IO.File.Open(filePath1, FileMode.Open, FileAccess.Read))
-					{
-						using (var reader = ExcelReaderFactory.CreateReader(stream2))
+					if (System.IO.File.Exists(filePath1))
+                    {
+						using (var stream2 = System.IO.File.Open(filePath1, FileMode.Open, FileAccess.Read))
 						{
-
-							// 2. Use the AsDataSet extension method
-							var result = reader.AsDataSet(new ExcelDataSetConfiguration()
+							using (var reader = ExcelReaderFactory.CreateReader(stream2))
 							{
-								ConfigureDataTable = (_) => new ExcelDataTableConfiguration()
+
+								// 2. Use the AsDataSet extension method
+								var result = reader.AsDataSet(new ExcelDataSetConfiguration()
 								{
-									UseHeaderRow = true
-								}
-							});
+									ConfigureDataTable = (_) => new ExcelDataTableConfiguration()
+									{
+										UseHeaderRow = true
+									}
+								});
 
-							// The result of each spreadsheet is in result.Tables
-							dtexcel1 = result.Tables[0];
+								// The result of each spreadsheet is in result.Tables
+								dtexcel1 = result.Tables[0];
 
+							}
 						}
 					}
 
-					using (var stream3 = System.IO.File.Open(filePath2, FileMode.Open, FileAccess.Read))
+					if (System.IO.File.Exists(filePath2))
 					{
-						using (var reader = ExcelReaderFactory.CreateReader(stream3))
+						using (var stream3 = System.IO.File.Open(filePath2, FileMode.Open, FileAccess.Read))
 						{
-
-							// 2. Use the AsDataSet extension method
-							var result = reader.AsDataSet(new ExcelDataSetConfiguration()
+							using (var reader = ExcelReaderFactory.CreateReader(stream3))
 							{
-								ConfigureDataTable = (_) => new ExcelDataTableConfiguration()
+
+								// 2. Use the AsDataSet extension method
+								var result = reader.AsDataSet(new ExcelDataSetConfiguration()
 								{
-									UseHeaderRow = true
-								}
-							});
+									ConfigureDataTable = (_) => new ExcelDataTableConfiguration()
+									{
+										UseHeaderRow = true
+									}
+								});
 
-							// The result of each spreadsheet is in result.Tables
-							dtexcel2 = result.Tables[0];
+								// The result of each spreadsheet is in result.Tables
+								dtexcel2 = result.Tables[0];
 
+							}
 						}
 					}
 					//End - gayathri
@@ -280,15 +286,16 @@ namespace WMS.Controllers
 					//Added Gayathri
 					//string upcode = Guid.NewGuid().ToString();
 					int J = 0;
+					if(dtexcel2.Rows.Count>0)
+                    {
+						foreach (DataRow row in dtexcel2.Rows)
+						{
 
-					foreach (DataRow row in dtexcel2.Rows)
-					{
-
-						string Error_Description = "";
-						bool dataloaderror = false;
-						MateriallabelModel slimports = new MateriallabelModel();
-						slimports.saleorderno = Conversion.toStr(row["Sales Document"]);
-						slimports.solineitemno = Conversion.toStr(row["Sales Document Item"]);
+							string Error_Description = "";
+							bool dataloaderror = false;
+							MateriallabelModel slimports = new MateriallabelModel();
+							slimports.saleorderno = Conversion.toStr(row["Sales Document"]);
+							slimports.solineitemno = Conversion.toStr(row["Sales Document Item"]);
 
 						slimports.material = Conversion.toStr(row["Material Number"]);
 						slimports.gr = Conversion.toStr(row["Storage Location"]);
@@ -326,15 +333,19 @@ namespace WMS.Controllers
 								slimports.isloaderror
 							});
 
+							}
+
+
+
+
 						}
-
-
-
-
 					}
+					
 					int K = 0;
-					foreach (DataRow row in dtexcel1.Rows)
-					{
+					if(dtexcel1.Rows.Count>0)
+                    {
+						foreach (DataRow row in dtexcel1.Rows)
+						{
 
 						string Error_Description = "";
 						bool dataloaderror = false;
@@ -403,7 +414,9 @@ namespace WMS.Controllers
 
 
 
+						}
 					}
+					
 
 
 					//End - Gayathri
@@ -2652,5 +2665,346 @@ namespace WMS.Controllers
 			}
 			return Ok(true);
 		}
+
+
+		/*function : <<uploadSODataExcel>>  Author :<<Gayathri>>  
+		Date of Creation <<01-03-2021>>
+		Purpose : <<Update SO data from excel>>
+		Review Date :<<>>   Reviewed By :<<>>
+		Sourcecode Copyright : Yokogawa India Limited*/
+		[HttpGet]
+		[Route("uploadSODataExcel")]
+		public IActionResult uploadSODataExcel()
+		{
+			try
+			{
+				string serverPath = "";
+				using (NpgsqlConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
+				{
+					serverPath = config.FilePath;
+					//var filePath = serverPath + "Yil_Po_Daily_report_" + DateTime.Now.ToString("dd-MM-yyyy").Replace("-", "_") + ".xlsx";
+					var filePath = @"D:\Projects\WMS\Docs\label data\QTSO_1stApril2020_31stFeb2021.xlsx";
+					DB.Open();
+					if(filePath!=null)
+                    {
+						var filePathstr = filePath;
+						string[] filearr = filePathstr.Split("\\");
+						string nameoffile = filearr[filearr.Length - 1];
+						DataTable dtexcel = new DataTable();
+						string poitem = "";
+						System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+						using (var stream1 = System.IO.File.Open(filePath, FileMode.Open, FileAccess.Read))
+						{
+							using (var reader = ExcelReaderFactory.CreateReader(stream1))
+							{
+
+								var result = reader.AsDataSet(new ExcelDataSetConfiguration()
+								{
+									ConfigureDataTable = (_) => new ExcelDataTableConfiguration()
+									{
+										UseHeaderRow = true
+									}
+								});
+
+								dtexcel = result.Tables[0];
+
+							}
+						}
+
+
+
+						string uploadcode = Guid.NewGuid().ToString();
+						int i = 0;
+						foreach (DataRow row in dtexcel.Rows)
+						{
+							SOdataExcel model = new SOdataExcel();
+
+							try
+							{
+								
+								model.sono = Conversion.toStr(row["Sales Document No."]);
+								string projectdef = Conversion.toStr(row["WBS Element (Level 2)"]);
+								if(projectdef.Length>0)
+                                {
+									model.projectdef = projectdef.Substring(0, projectdef.Length - 2);
+								}
+                                else
+                                {
+									model.projectdef = null;
+                                }
+								
+								model.soitemno = Conversion.toStr(row["Sales Order Item No."]);
+								model.serviceorderno = Conversion.toStr(row["Service Order Number"]);
+								model.customercode = Conversion.toStr(row["Sold-to party"]);
+								model.customername = Conversion.toStr(row["Name: Sold-to party"]);
+								
+
+								string error_description = "";
+								bool dataloaderror = false;
+								
+								if (string.IsNullOrEmpty(model.projectdef))
+									error_description += "There is NO Project Definition";
+								
+
+								var insertquery = "INSERT INTO wms.stag_so_sap(sono,soitemno,projectdef,serviceorderno,customercode,customername,error_description)";
+								insertquery += " VALUES(@sono, @soitemno,@projectdef,@serviceorderno,@customercode,@customername,@error_description)";
+								var results = DB.ExecuteScalar(insertquery, new
+								{
+									model.sono,
+									model.soitemno,
+									model.projectdef,
+									model.serviceorderno,
+									model.customercode,
+									model.customername,
+									error_description,
+									
+								});
+
+
+
+							}
+							catch (Exception e)
+							{
+								var res = e;
+								log.ErrorMessage("StagingController", "uploadSODataExcel", e.StackTrace.ToString(), "SO:" + model.sono + "error:" + e.Message.ToString(), url);
+								continue;
+							}
+						}
+
+						DB.Close();
+						AuditLog auditlog = new AuditLog();
+						auditlog.filename = nameoffile;
+						auditlog.filelocation = filePath;
+						auditlog.uploadedon = DateTime.Now;
+						auditlog.uploadedto = "STAG_SO_SAP";
+						auditlog.modulename = "uploadSOData";
+
+
+
+						loadAuditLog(auditlog);
+						
+					}
+				}
+				
+			}
+			catch (Exception e)
+			{
+				var res = e;
+				log.ErrorMessage("StagingController", "uploadSODataExcel", e.StackTrace.ToString(), "error:" + e.Message.ToString(), url);
+			}
+			return Ok(true);
+		}
+
+		/*function : <<uploadAssetDataExcel>>  Author :<<Gayathri>>  
+		Date of Creation <<01-03-2021>>
+		Purpose : <<Update Asset data from excel>>
+		Review Date :<<>>   Reviewed By :<<>>
+		Sourcecode Copyright : Yokogawa India Limited*/
+		[HttpGet]
+		[Route("uploadAssetDataExcel")]
+		public IActionResult uploadAssetDataExcel()
+		{
+			try
+			{
+				string serverPath = "";
+				using (NpgsqlConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
+				{
+					serverPath = config.FilePath;
+					//var filePath = serverPath + "Yil_Po_Daily_report_" + DateTime.Now.ToString("dd-MM-yyyy").Replace("-", "_") + ".xlsx";
+					var filePath = @"D:\Projects\WMS\Docs\label data\CostcenterMaster&AssetBOP2 codes.xlsx";
+					DB.Open();
+					var filePathstr = filePath;
+					string[] filearr = filePathstr.Split("\\");
+					string nameoffile = filearr[filearr.Length - 1];
+					DataTable dtexcel = new DataTable();
+					string poitem = "";
+					System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+					using (var stream1 = System.IO.File.Open(filePath, FileMode.Open, FileAccess.Read))
+					{
+						using (var reader = ExcelReaderFactory.CreateReader(stream1))
+						{
+
+							var result = reader.AsDataSet(new ExcelDataSetConfiguration()
+							{
+								ConfigureDataTable = (_) => new ExcelDataTableConfiguration()
+								{
+									UseHeaderRow = true
+								}
+							});
+
+							dtexcel = result.Tables[1];
+
+						}
+					}
+
+
+
+					string uploadcode = Guid.NewGuid().ToString();
+					int i = 0;
+					foreach (DataRow row in dtexcel.Rows)
+					{
+
+
+						try
+						{
+							AssetData model = new AssetData();
+							model.material = Conversion.toStr(row["Material"]);
+							model.materialdescription = Conversion.toStr(row["Material description"]);
+							
+
+							string error_description = "";
+							bool dataloaderror = false;
+							if (string.IsNullOrEmpty(model.material.Replace('.', '#')))
+								error_description += "There is No Material";
+							
+							var insertquery = "INSERT INTO wms.stag_asset(material,materialdescription,eror_description)";
+							insertquery += " VALUES(@material,@materialdescription, @error_description)";
+							var results = DB.ExecuteScalar(insertquery, new
+							{
+								model.material,
+								model.materialdescription,
+								error_description
+								
+							});
+
+
+
+						}
+						catch (Exception e)
+						{
+							var res = e;
+							log.ErrorMessage("StagingController", "uploadAssetDataExcel", e.StackTrace.ToString(), "PO:" + poitem + "error:" + e.Message.ToString(), url);
+							continue;
+						}
+					}
+
+					DB.Close();
+					AuditLog auditlog = new AuditLog();
+					auditlog.filename = nameoffile;
+					auditlog.filelocation = filePath;
+					auditlog.uploadedon = DateTime.Now;
+					auditlog.uploadedto = "stag_asset";
+					auditlog.modulename = "uploadAssetDataExcel";
+
+
+
+					loadAuditLog(auditlog);
+					loadPOData(uploadcode);
+
+					//}
+				}
+			}
+			catch (Exception e)
+			{
+				var res = e;
+				log.ErrorMessage("StagingController", "uploadAssetDataExcel", e.StackTrace.ToString(), "error:" + e.Message.ToString(), url);
+			}
+			return Ok(true);
+		}
+
+		/*function : <<uploadCostCenterDataExcel>>  Author :<<Gayathri>>  
+		Date of Creation <<01-03-2021>>
+		Purpose : <<Update Cost Center data from excel>>
+		Review Date :<<>>   Reviewed By :<<>>
+		Sourcecode Copyright : Yokogawa India Limited*/
+		[HttpGet]
+		[Route("uploadCostCenterDataExcel")]
+		public IActionResult uploadCostCenterDataExcel()
+		{
+			try
+			{
+				string serverPath = "";
+				using (NpgsqlConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
+				{
+					serverPath = config.FilePath;
+					//var filePath = serverPath + "Yil_Po_Daily_report_" + DateTime.Now.ToString("dd-MM-yyyy").Replace("-", "_") + ".xlsx";
+					var filePath = @"D:\Projects\WMS\Docs\label data\CostcenterMaster&AssetBOP2 codes.xlsx";
+					DB.Open();
+					var filePathstr = filePath;
+					string[] filearr = filePathstr.Split("\\");
+					string nameoffile = filearr[filearr.Length - 1];
+					DataTable dtexcel = new DataTable();
+					string poitem = "";
+					System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+					using (var stream1 = System.IO.File.Open(filePath, FileMode.Open, FileAccess.Read))
+					{
+						using (var reader = ExcelReaderFactory.CreateReader(stream1))
+						{
+
+							var result = reader.AsDataSet(new ExcelDataSetConfiguration()
+							{
+								ConfigureDataTable = (_) => new ExcelDataTableConfiguration()
+								{
+									UseHeaderRow = true
+								}
+							});
+
+							dtexcel = result.Tables[0];
+
+						}
+					}
+
+
+
+					string uploadcode = Guid.NewGuid().ToString();
+					int i = 0;
+					foreach (DataRow row in dtexcel.Rows)
+					{
+
+
+						try
+						{
+							CostCenterData model = new CostCenterData();
+							model.costcenter = Conversion.toStr(row["Cost Center "]);
+							model.shorttext = Conversion.toStr(row["Short Text "]);
+							
+							string error_description = " ";
+							bool dataloaderror = false;
+							if (string.IsNullOrEmpty(model.costcenter))
+								error_description += "There is NO Cost Center Data";
+							
+							var insertquery = "INSERT INTO wms.stag_costcenter(costcenter,shorttext,eror_description)";
+							insertquery += " VALUES(@costcenter,@shorttext, @error_description)";
+							var results = DB.ExecuteScalar(insertquery, new
+							{
+								model.costcenter,
+								model.shorttext,
+								error_description
+							});
+
+
+
+						}
+						catch (Exception e)
+						{
+							var res = e;
+							log.ErrorMessage("StagingController", "uploadCostCenterDataExcel", e.StackTrace.ToString(), "PO:" + poitem + "error:" + e.Message.ToString(), url);
+							continue;
+						}
+					}
+
+					DB.Close();
+					AuditLog auditlog = new AuditLog();
+					auditlog.filename = nameoffile;
+					auditlog.filelocation = filePath;
+					auditlog.uploadedon = DateTime.Now;
+					auditlog.uploadedto = "stag_costcenter";
+					auditlog.modulename = "uploadCostCenterDataExcel";
+
+
+
+					loadAuditLog(auditlog);
+					
+				}
+			}
+			catch (Exception e)
+			{
+				var res = e;
+				log.ErrorMessage("StagingController", "uploadCostCenterDataExcel", e.StackTrace.ToString(), "error:" + e.Message.ToString(), url);
+			}
+			return Ok(true);
+		}
+
+
 	}
 }
