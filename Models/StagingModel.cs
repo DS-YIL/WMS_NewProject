@@ -186,6 +186,28 @@ namespace WMS.Models
 		public string error_description { get; set; }
 	}
 
+	public class SOdataExcel
+	{
+		public string sono { get; set; }
+		public string projectdef { get; set; }
+		public string serviceorderno { get; set; }
+		public string soitemno { get; set; }
+		public string customercode { get; set; }
+		public string customername { get; set; }
+	}
 
+	public class CostCenterData
+    {
+		public string costcenter { get; set; }
+		public string shorttext { get; set; }
+
+	}
+
+	public class AssetData
+	{
+		public string material { get; set; }
+		public string materialdescription { get; set; }
+
+	}
 }
 
