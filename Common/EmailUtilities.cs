@@ -92,6 +92,7 @@ namespace WMS.Common
 				emlSndngList.CC = toccstring;
 
 			}
+			emlSndngList.FrmEmailId = config.FromEmailId;
 			MailMessage mailMessage = new MailMessage(emlSndngList.FrmEmailId, emlSndngList.ToEmailId);
 			SmtpClient client = new SmtpClient();
 			var subbody = string.Empty;
@@ -456,7 +457,11 @@ namespace WMS.Common
 			if (emlSndngList.ToEmpName == null)
 				emlSndngList.ToEmpName = getname(emlSndngList.ToEmailId);
 			if (emlSndngList.sendername == null)
-				emlSndngList.sendername = getname(emlSndngList.FrmEmailId);
+            {
+				//emlSndngList.sendername = getname(emlSndngList.FrmEmailId);
+				emlSndngList.sendername = string.Empty;
+			}
+				
 			if (multipleemails == true)
 			{
 				users = "All";

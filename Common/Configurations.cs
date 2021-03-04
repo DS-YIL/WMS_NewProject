@@ -23,6 +23,9 @@ namespace WMS.Common
 		public readonly string _POChecker = string.Empty;
 		public readonly string _POApprover = string.Empty;
 		public readonly string _EmailType = string.Empty;
+		public readonly string _FromEmailId = string.Empty;
+		public readonly string _FinanceEmployeeNo = string.Empty;
+		public readonly string _FinanceEmployeeName = string.Empty;
 		public Configurations()
 		{
 			var configurationBuilder = new ConfigurationBuilder();
@@ -45,6 +48,9 @@ namespace WMS.Common
 			_POChecker = root.GetSection("ConnectionStrings").GetSection("POChecker").Value;
 			_POApprover = root.GetSection("ConnectionStrings").GetSection("POApprover").Value;
 			_EmailType = root.GetSection("ConnectionStrings").GetSection("EmailType").Value;
+			_FromEmailId = root.GetSection("ConnectionStrings").GetSection("FromEmailId").Value;
+			_FinanceEmployeeNo = root.GetSection("ConnectionStrings").GetSection("FinanceEmployeeNo").Value;
+			_FinanceEmployeeName = root.GetSection("ConnectionStrings").GetSection("FinanceEmployeeName").Value;
 
 			var appSetting = root.GetSection("ApplicationSettings");
 
@@ -87,6 +93,18 @@ namespace WMS.Common
 		public string EmailType
 		{
 			get => _EmailType;
+		}
+		public string FromEmailId
+		{
+			get => _FromEmailId;
+		}
+		public string FinanceEmployeeNo
+		{
+			get => _FinanceEmployeeNo;
+		}
+		public string FinanceEmployeeName
+		{
+			get => _FinanceEmployeeName;
 		}
 	}
 }
