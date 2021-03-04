@@ -519,7 +519,6 @@ namespace WMS.Controllers
                             tw.WriteLine("BAR 26,2833, 2261, 8");
                             tw.WriteLine("BAR 27,2295, 2261, 8");
                             tw.WriteLine("BOX 20,185,2281,1774,8");
-                            tw.WriteLine("BAR 26,1696, 2253, 8");
                             tw.WriteLine("BAR 24,1581, 2253, 8");
                             tw.WriteLine("BAR 26,1414, 2253, 8");
                             tw.WriteLine("BAR 24,1177, 2253, 8");
