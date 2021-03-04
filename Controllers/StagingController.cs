@@ -258,6 +258,7 @@ namespace WMS.Controllers
 								model.projecttext,
 								model.sloc,
 								model.mscode,
+								model.plant,
 								model.assetsubno,
 								model.linkageno,
 								model.orderno
