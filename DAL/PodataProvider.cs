@@ -630,7 +630,25 @@ namespace WMS.DAL
 
 						
 					}
-                    else
+					//For N-type get data based from st_QTSO based on project definition
+					else if (objprint.codetype == "N")
+					{
+
+						string querydata = "select * from wms.st_QTSO where projectiddef='" + objprint.projectiddef + "'";
+						objdata = DB.QueryFirstOrDefault<MateriallabelModel>(
+							   querydata, null, commandType: CommandType.Text);
+
+						if (objdata != null)
+						{
+							string queryserial = "select * from wms.st_slno_imports where saleorderno='" + objdata.saleorderno + "' and solineitemno= '" + objdata.solineitemno + "' ";
+							objserial = DB.QueryFirstOrDefault<MateriallabelModel>(
+								   queryserial, null, commandType: CommandType.Text);
+						}
+
+
+
+					}
+					else
                     {
 						string queryserial = "select * from wms.st_slno_imports where saleorderno='" + objprint.saleorderno + "' and solineitemno= '" + objprint.solineitemno + "' ";
 						objserial = DB.QueryFirstOrDefault<MateriallabelModel>(
