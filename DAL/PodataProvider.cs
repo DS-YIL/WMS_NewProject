@@ -665,12 +665,15 @@ namespace WMS.DAL
 							   quesryygsgr, null, commandType: CommandType.Text);
 
 					//Check the length of soline item number and append Zero
-					if(objprint.solineitemno.Length<=5)
-                    {
-						int length = objprint.solineitemno.Length;
-						int countlength = 6 - length;
-						objprint.solineitemno = objprint.solineitemno.PadLeft(6, '0');
-                    }
+					if (printMat.solineitemno != null)
+					{
+						if (objprint.solineitemno.Length <= 5)
+						{
+							int length = objprint.solineitemno.Length;
+							int countlength = 6 - length;
+							objprint.solineitemno = objprint.solineitemno.PadLeft(6, '0');
+						}
+					}
 					if(objserial!=null)
                     {
 						objprint.serialno = objserial.serialno ?? "-";
