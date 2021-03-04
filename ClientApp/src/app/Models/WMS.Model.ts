@@ -826,9 +826,11 @@ export class outwardinwardreportModel {
   outwardby: string;
   outwardremarks: string;
   outwardqty: number;
+  outwardqtyview: number;
   inwarddate: Date;
   inwardremarks: string;
   inwardqty: number;
+  inwardqtyview: number;
   securityinwarddate: Date;
   securityinwardby: string;
   securityinwardremarks: string;

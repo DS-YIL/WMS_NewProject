@@ -35,7 +35,7 @@ export class OutwardinwardreportComponent implements OnInit {
 
   getcolspan() {
     if (this.isinward) {
-      return "4"
+      return "5"
     }
     else {
       return "5"
@@ -44,17 +44,42 @@ export class OutwardinwardreportComponent implements OnInit {
 
   showattachdata(data: outwardinwardreportModel) {
     data.materialdata = [];
-    if (this.isoutward) {
-      data.materialdata = this.materialtransferlist.filter(function (element, index) {
-        return (element.gatepassid == data.gatepassid && !isNullOrUndefined(element.outwarddate));
+    debugger;
+    var datax = this.materialtransferlist.filter(function (element, index) {
+      return (element.gatepassid == data.gatepassid);
+    });
+    
+    if (datax.length > 0) {
+      
+      datax.forEach(item => {
+        debugger;
+        var checkrow = data.materialdata.filter(function (element, index) {
+          return (element.materialid == item.materialid && element.materialdescription == item.materialdescription);
+        });
+        var dataiter = datax.filter(function (element, index) {
+          return (element.materialid == item.materialid && element.materialdescription == item.materialdescription);
+        });
+        if (checkrow.length == 0) {
+          var inwardqty = 0;
+          var outwardqty = 0;
+          dataiter.forEach(item => {
+            debugger;
+            inwardqty += item.inwardqty;
+            outwardqty += item.outwardqty;
+          });
+          item.outwardqtyview = outwardqty;
+          item.inwardqtyview = inwardqty;
+          data.materialdata.push(item);
+        }
+     
       });
-    }
-    if (this.isinward) {
-      data.materialdata = this.materialtransferlist.filter(function (element, index) {
-        return (element.gatepassid == data.gatepassid && !isNullOrUndefined(element.securityinwarddate));
-      });
+      
+
 
     }
+
+    
+   
      
     data.showtr = !data.showtr;
 

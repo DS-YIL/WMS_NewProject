@@ -263,7 +263,7 @@ export class GatePassComponent implements OnInit {
 
     } catch (Exception) {
 
-      alert(Exception.message)
+      //alert(Exception.message)
 
 
     } 

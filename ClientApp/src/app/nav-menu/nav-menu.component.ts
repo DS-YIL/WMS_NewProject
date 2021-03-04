@@ -1931,7 +1931,6 @@ export class NavMenuComponent implements OnInit {
         ]
       });
       this.items.push({ label: 'Outbound', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', visible: true });
-      this.items.push({ label: 'Sub Contracting', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', visible: true, command: () => this.router.navigateByUrl('WMS/SubContractinginout') });
 
       if (url == "default") {
         this.router.navigateByUrl('WMS/SecurityCheck');

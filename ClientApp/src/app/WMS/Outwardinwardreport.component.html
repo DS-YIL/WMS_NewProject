@@ -13,7 +13,7 @@
         </div>
         <div class="col-lg-4 col-md-4 text-center">
           <span class="commonheadertext">
-            <i class="fa fa-check-circle-o commonheadertext"></i>&nbsp;Gatepass Outward/Inward Report
+            <i class="fa fa-check-circle-o commonheadertext"></i>&nbsp;Gatepass Outward/Inward Reportx
           </span>
         </div>
         <div class="col-lg-4 col-md-4 form-inline">
@@ -37,7 +37,7 @@
             <th *ngIf="isoutward" style="text-align:center;width:200px">Outward Remarks</th>
             <th *ngIf="isinward" style="text-align:center;width:150px">Inwarded by</th>
             <th *ngIf="isinward" style="text-align:center;width:100px">Inwarded On</th>
-            <!--<th *ngIf="isinward" style="text-align:center;width:200px">Inward Remarks</th>-->
+            <th *ngIf="isinward" style="text-align:center;width:200px">Inward Remarks</th>
           </tr>
           <tr>
             <th></th>
@@ -47,7 +47,7 @@
             <th *ngIf="isoutward"> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'outwardremarks', 'contains')"></th>
             <th *ngIf="isinward"> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'securityinwardby', 'contains')"></th>
             <th *ngIf="isinward"> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'securityinwarddate', 'contains')"></th>
-            <!--<th *ngIf="isinward"> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'securityinwardremarks', 'contains')"></th>-->
+            <th *ngIf="isinward"> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'securityinwardremarks', 'contains')"></th>
 
 
 
@@ -65,7 +65,7 @@
             <td *ngIf="isoutward" class="ptable-cell" style="text-align:left;width:200px;">{{rowData.outwardremarks}}</td>
             <td *ngIf="isinward" class="ptable-cell" style="text-align:center;width:150px;">{{rowData.securityinwardby}}</td>
             <td *ngIf="isinward" class="ptable-cell" style="text-align:center;width:100px;">{{rowData.securityinwarddate | date :  constants.dateFormat}}</td>
-            <!--<td *ngIf="isinward" class="ptable-cell" style="text-align:left;width:200px;">{{rowData.securityinwardremarks}}</td>-->
+            <td *ngIf="isinward" class="ptable-cell" style="text-align:left;width:200px;">{{rowData.securityinwardremarks}}</td>
 
 
 
@@ -85,9 +85,9 @@
             <th class="ptable-cell" style="width: 10%; text-align: center">Sl. No.</th>
             <th style="text-align:center;width:30%" class="ptable-cell">Material</th>
             <th style="text-align:center;width:50%" class="ptable-cell">Material Description</th>
-            <th *ngIf="isoutward" style="text-align:center;width:20%" class="ptable-cell">Issued Quantity</th>
-            <th *ngIf="isinward" style="text-align:center;width:20%" class="ptable-cell">Outward Quantity</th>
-            <th *ngIf="isinward" style="text-align:center;width:200px">Inward Remarks</th>
+            <th  style="text-align:center;width:20%" class="ptable-cell">Issued Quantity</th>
+            <th *ngIf="isoutward" style="text-align:center;width:20%" class="ptable-cell">Outward Quantity</th>
+            <th *ngIf="isinward" style="text-align:center;width:200px">Inward Quantity</th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex" let-rindex=0>
@@ -100,12 +100,15 @@
               {{rowData.materialdescription}}
             </td>
             <td class="ptable-cell" style="text-align:right">
-              <span *ngIf="isoutward">{{rowData.issuedqty}}</span>
-              <span *ngIf="isinward">{{rowData.inwardqty}}</span>
+              <span>{{rowData.issuedqty}}</span>
             </td>
-            <td *ngIf="isinward" class="ptable-cell" style="text-align:left">
-              <span>{{rowData.securityinwardremarks}}</span>
-             
+            <td *ngIf="isoutward" class="ptable-cell" style="text-align:right">
+              <span>{{rowData.outwardqtyview}}</span>
+
+            </td>
+            <td *ngIf="isinward" class="ptable-cell" style="text-align:right">
+              <span>{{rowData.inwardqtyview}}</span>
+
             </td>
 </ng-template>
 

@@ -1586,7 +1586,7 @@ namespace WMS.Common {
         
         /// <summary>
         ///   Looks up a localized string similar to select max(st.itemid ) as itemid, max(st.materialid) as material,max(st.poitemdescription) as poitemdescription,
-        ///st.itemlocation, SUM(st.availableqty) as availableqty,(Max(st.unitprice::numeric ) * SUM(st.availableqty::numeric)) as value,max(st.createddate ) as createddate
+        ///st.itemlocation, SUM(st.availableqty) as availableqty,SUM(st.value::numeric) as value,max(st.createddate ) as createddate
         ///from wms.wms_stock st.
         /// </summary>
         public static string getMiscellanousIssuesList {

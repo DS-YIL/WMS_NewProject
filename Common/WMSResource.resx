@@ -1665,7 +1665,7 @@ order by sweek</value>
   </data>
   <data name="getMiscellanousIssuesList" xml:space="preserve">
     <value>select max(st.itemid ) as itemid, max(st.materialid) as material,max(st.poitemdescription) as poitemdescription,
-st.itemlocation, SUM(st.availableqty) as availableqty,(Max(st.unitprice::numeric ) * SUM(st.availableqty::numeric)) as value,max(st.createddate ) as createddate
+st.itemlocation, SUM(st.availableqty) as availableqty,SUM(st.value::numeric) as value,max(st.createddate ) as createddate
 from wms.wms_stock st</value>
   </data>
   <data name="updateMisQty" xml:space="preserve">

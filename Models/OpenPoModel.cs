@@ -835,15 +835,15 @@ namespace WMS.Models
 		public DateTime? outwarddate { get; set; }
 		public string outwardby { get; set; }
 		public string outwardremarks { get; set; }
-		public int outwardqty { get; set; }
+		public decimal? outwardqty { get; set; }
 		public DateTime? inwarddate { get; set; }
 		public string inwardby { get; set; }
 		public string inwardremarks { get; set; }
-		public int inwardqty { get; set; }
+		public decimal? inwardqty { get; set; }
 		public DateTime? securityinwarddate { get; set; }
 		public string securityinwardby { get; set; }
 		public string securityinwardremarks { get; set; }
-		public int issuedqty { get; set; }
+		public decimal? issuedqty { get; set; }
 
 
 	}
@@ -1689,9 +1689,9 @@ public class materialistModel
 	public string remarks { get; set; }
 	public DateTime expecteddate { get; set; }
 	public DateTime? returneddate { get; set; }
-	public int availableqty { get; set; }
+	public decimal? availableqty { get; set; }
 	public string materialcost { get; set; }
-	public int issuedqty { get; set; }
+	public decimal? issuedqty { get; set; }
 	public DateTime outwarddate { get; set; }
 	public DateTime inwarddate { get; set; }
 
@@ -1701,9 +1701,9 @@ public class materialistModel
 
 	public string movedby { get; set; }
 
-	public int outwardqty { get; set; }
+	public decimal? outwardqty { get; set; }
 
-	public int inwardqty { get; set; }
+	public decimal? inwardqty { get; set; }
 	public string type { get; set; }
 }
 
