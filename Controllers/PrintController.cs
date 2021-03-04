@@ -310,12 +310,16 @@ namespace WMS.Controllers
             string currentdate = DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss");
             //Check the length of soline item number and append Zero
 
-            if (printMat.solineitemno.Length>0 && printMat.solineitemno.Length <= 5)
+            if(printMat.solineitemno!=null)
             {
-                int length = printMat.solineitemno.Length;
-                int countlength = 6 - length;
-                printMat.solineitemno = printMat.solineitemno.PadLeft(6, '0');
+                if (printMat.solineitemno.Length <= 5)
+                {
+                    int length = printMat.solineitemno.Length;
+                    int countlength = 6 - length;
+                    printMat.solineitemno = printMat.solineitemno.PadLeft(6, '0');
+                }
             }
+           
             //for(int i=1;i<=printMat.noofprint;i++)
             //{
             if (System.IO.File.Exists(path))
@@ -807,7 +811,11 @@ namespace WMS.Controllers
                             tw.WriteLine("TEXT 2273,2471,\"0\",180,8,8,\"Customer PO No\"");
                             tw.WriteLine("TEXT 2273,2392,\"0\",180,8,8,\"& Line Item No\"");
                             tw.WriteLine("TEXT 1681,2440,\"0\",180,8,8,\"" + printMat.customername + "\"");
-                            tw.WriteLine("TEXT 2007,1338,\"0\",180,8,8,\"" + printMat.customerpono + " & " + printMat.custpolineitem + "\"");
+                            if (printMat.customerpono!=null || printMat.custpolineitem!=null)
+                            {
+                                tw.WriteLine("TEXT 2007,1338,\"0\",180,8,8,\"" + printMat.customerpono + " & " + printMat.custpolineitem + "\"");
+                            }
+                            
                             //tw.WriteLine("TEXT 2007,1450,\"0\",180,8,8,\"" + printMat.storagelocation + "\"");
                             if(printMat.storagelocation!=null)
                             {
@@ -869,7 +877,11 @@ namespace WMS.Controllers
                             tw.WriteLine("TEXT 2235,2777,\"0\",180,8,8,\"Insp Rec.\"");
                             tw.WriteLine("TEXT 2235,2256,\"0\",180,8,8,\"Ship-to:\"");
                             tw.WriteLine("TEXT 1697,4008,\"0\",180,8,8,\" " + printMat.serialno + " \"");
-                            tw.WriteLine("BARCODE 1697,3822,\"128M\",117,0,180,6,12,\"!105" + printMat.materialid + "\"");
+                            if(printMat.materialid!=null)
+                            {
+                                tw.WriteLine("BARCODE 1697,3822,\"128M\",117,0,180,6,12,\"!104" + printMat.materialid + "\"");
+                            }
+                            
                             tw.WriteLine("TEXT 1592,3894,\"0\",180,8,8,\"" + printMat.materialid + "\"");
                             tw.WriteLine("TEXT 1697,3614,\"0\",180,8,8,\"" + printMat.mscode + " \"");
                             tw.WriteLine("TEXT 1697,3492,\"0\",180,8,8,\"" + printMat.materialdescription + "\"");
@@ -889,7 +901,10 @@ namespace WMS.Controllers
                             tw.WriteLine("TEXT 2235,178,\"0\",180,8,8,\"2/2\"");
                             tw.WriteLine("TEXT 1074,159,\"0\",180,8,8,\"GR# : " + printMat.ygsgr + "\"");
                             tw.WriteLine("TEXT 1977,1840,\"0\",180,8,8,\"" + printMat.plant + "\"");
-                            tw.WriteLine("BARCODE 1151,1847,\"128M\",107,0,180,6,12,\"!105" + printMat.plant + "!1005\"");
+                            if(printMat.plant!=null)
+                            {
+                                tw.WriteLine("BARCODE 1151,1847,\"128M\",107,0,180,6,12,\"!105" + printMat.plant + "!1005\"");
+                            }
                             tw.WriteLine("TEXT 2235,1637,\"0\",180,8,8,\"#\"");
                             tw.WriteLine("TEXT 1785,1639,\"0\",180,8,8,\"Carry -in -place\"");
                             tw.WriteLine("TEXT 438,1639,\"0\",180,8,8,\"S_Loc\"");
@@ -953,9 +968,16 @@ namespace WMS.Controllers
                             tw.WriteLine("TEXT 2273,2471,\"0\",180,8,8,\"Customer PO No\"");
                             tw.WriteLine("TEXT 2273,2392,\"0\",180,8,8,\"& Line Item No\"");
                             tw.WriteLine("TEXT 1681,2614,\"0\",180,8,8,\"" + printMat.customername + "\"");
-                            tw.WriteLine("TEXT 1681,2440,\"0\",180,8,8,\"" + printMat.customerpono + " & " + printMat.custpolineitem + "\"");
+                            if(printMat.customerpono!=null && printMat.custpolineitem!=null)
+                            {
+                                tw.WriteLine("TEXT 1681,2440,\"0\",180,8,8,\"" + printMat.customerpono + " & " + printMat.custpolineitem + "\"");
+                            }
                             tw.WriteLine("TEXT 2007,1450,\"0\",180,8,8,\"" + printMat.storagelocation + "\"");
-                            tw.WriteLine("BARCODE 596,1483,\"128M\",93,0,180,4,8,\"!105" + printMat.storagelocation + "!1004\"");
+                            if (printMat.storagelocation!=null)
+                            {
+                                tw.WriteLine("BARCODE 596,1483,\"128M\",93,0,180,4,8,\"!105" + printMat.storagelocation + "!1004\"");
+                            }
+                            
                             tw.WriteLine("TEXT 564,1373,\"0\",180,8,8,\"" + printMat.storagelocation + "\"");
                             tw.WriteLine("TEXT 632,4150,\"0\",180,8,8,\"" + currentdate + "\"");
                             tw.WriteLine("PRINT 1,1");
@@ -1005,11 +1027,19 @@ namespace WMS.Controllers
                             tw.WriteLine("TEXT 2235,2777,\"0\",180,8,8,\"Insp Rec.\"");
                             tw.WriteLine("TEXT 2235,2256,\"0\",180,8,8,\"Ship-to:\"");
                             tw.WriteLine("TEXT 1697,4008,\"0\",180,8,8,\" " + printMat.serialno + " \"");
-                            tw.WriteLine("BARCODE 1697,3822,\"128M\",117,0,180,6,12,\"!105" + printMat.materialid + "\"");
+                            if(printMat.materialid!=null)
+                            {
+                                tw.WriteLine("BARCODE 1697,3822,\"128M\",117,0,180,6,12,\"!104" + printMat.materialid + "\"");
+                            }
+                            
                             tw.WriteLine("TEXT 1592,3894,\"0\",180,8,8,\"" + printMat.materialid + "\"");
                             tw.WriteLine("TEXT 1697,3614,\"0\",180,8,8,\"" + printMat.mscode + " \"");
                             tw.WriteLine("TEXT 1697,3492,\"0\",180,8,8,\"" + printMat.materialdescription + "\"");
-                            tw.WriteLine("BARCODE 1697,3260,\"128M\",71,0,180,6,12,\"!105" + printMat.saleorderno + "-" + printMat.solineitemno + " \"");
+                            if(printMat.saleorderno!=null && printMat.solineitemno!=null)
+                            {
+                                tw.WriteLine("BARCODE 1697,3260,\"128M\",71,0,180,6,12,\"!105" + printMat.saleorderno + "-" + printMat.solineitemno + " \"");
+                            }
+                            
                             tw.WriteLine("TEXT 1592,3331,\"0\",180,8,8,\"" + printMat.saleorderno + "-" + printMat.solineitemno + " \"");
                             tw.WriteLine("TEXT 1697,3095,\"0\",180,8,8,\"" + printMat.noofpieces + "/" + printMat.receivedqty + " ST " + printMat.boxno + " OF " + printMat.totalboxes + " BOXES\"");
                             tw.WriteLine("TEXT 1697,2943,\"0\",180,8,8,\" Y103 \"");
@@ -1025,7 +1055,11 @@ namespace WMS.Controllers
                             tw.WriteLine("TEXT 2235,178,\"0\",180,8,8,\"2/2\"");
                             tw.WriteLine("TEXT 1074,159,\"0\",180,8,8,\"GR# : " + printMat.ygsgr + "\"");
                             tw.WriteLine("TEXT 1977,1703,\"0\",180,8,8,\"" + printMat.plant + "\"");
-                            tw.WriteLine("BARCODE 1151,1740,\"128M\",107,0,180,6,12,\"!105" + printMat.plant + "!1005\"");
+                            if(printMat.plant!=null)
+                            {
+                                tw.WriteLine("BARCODE 1151,1740,\"128M\",107,0,180,6,12,\"!105" + printMat.plant + "!1005\"");
+                            }
+                            
                             tw.WriteLine("TEXT 2235,1521,\"0\",180,8,8,\"#\"");
                             tw.WriteLine("TEXT 1785,1524,\"0\",180,8,8,\"Carry -in -place\"");
                             tw.WriteLine("TEXT 438,1524,\"0\",180,8,8,\"S_Loc\"");
@@ -1089,15 +1123,27 @@ namespace WMS.Controllers
                             tw.WriteLine("TEXT 2273,2471,\"0\",180,8,8,\"Customer PO No\"");
                             tw.WriteLine("TEXT 2273,2392,\"0\",180,8,8,\"& Line Item No\"");
                             tw.WriteLine("TEXT 1682,2440,\"0\",180,8,8,\"" + printMat.customername + "\"");
-                            tw.WriteLine("TEXT 2007,1338,\"0\",180,8,8,\"" + printMat.customerpono + " & " + printMat.custpolineitem + "\"");
+                            if(printMat.customerpono!=null || printMat.custpolineitem!=null)
+                            {
+                                tw.WriteLine("TEXT 2007,1338,\"0\",180,8,8,\"" + printMat.customerpono + " & " + printMat.custpolineitem + "\"");
+                            }
+                            
                             //tw.WriteLine("TEXT 2007,1450,\"0\",180,8,8,\"" + printMat.storagelocation + "\"");
-                            tw.WriteLine("BARCODE 596,1392,\"128M\",93,0,180,4,8,\"!105" + printMat.storagelocation + "!1004\"");
+                            if(printMat.storagelocation!=null)
+                            {
+                                tw.WriteLine("BARCODE 596,1392,\"128M\",93,0,180,4,8,\"!105" + printMat.storagelocation + "!1004\"");
+                            }
+                            
                             tw.WriteLine("TEXT 564,1282,\"0\",180,8,8,\"" + printMat.storagelocation + "\"");
                             tw.WriteLine("TEXT 632,4150,\"0\",180,8,8,\"" + currentdate + "\"");
                             tw.WriteLine("BAR 27,2158, 2255, 8");
                             tw.WriteLine("TEXT 2255,2127,\"0\",180,8,8,\"Cost centre &\"");
                             tw.WriteLine("TEXT 2255,2048,\"0\",180,8,8,\"Cost centre Text\"");
-                            tw.WriteLine("TEXT 1697,2088,\"0\",180,9,8,\"" + printMat.costcenter + " & " + printMat.costcentertext + "\"");
+                            if(printMat.costcenter!=null || printMat.costcentertext!=null)
+                            {
+                                tw.WriteLine("TEXT 1697,2088,\"0\",180,9,8,\"" + printMat.costcenter + " & " + printMat.costcentertext + "\"");
+                            }
+                           
                             tw.WriteLine("PRINT 1,1");
                             tw.WriteLine("<xpml></page></xpml><xpml><end/></xpml>");
                         }
@@ -1143,11 +1189,19 @@ namespace WMS.Controllers
                             tw.WriteLine("TEXT 2235,2777,\"0\",180,8,8,\"Insp Rec.\"");
                             tw.WriteLine("TEXT 2235,2256,\"0\",180,8,8,\"Ship-to:\"");
                             tw.WriteLine("TEXT 1697,4008,\"0\",180,8,8,\" " + printMat.serialno + " \"");
-                            tw.WriteLine("BARCODE 1697,3822,\"128M\",117,0,180,6,12,\"!104" + printMat.materialid + "\"");
+                            if(printMat.materialid!=null)
+                            {
+                                tw.WriteLine("BARCODE 1697,3822,\"128M\",117,0,180,6,12,\"!104" + printMat.materialid + "\"");
+                            }
+                            
                             tw.WriteLine("TEXT 1592,3894,\"0\",180,8,8,\"" + printMat.materialid + "\"");
                             tw.WriteLine("TEXT 1697,3614,\"0\",180,8,8,\"" + printMat.mscode + " \"");
                             tw.WriteLine("TEXT 1697,3492,\"0\",180,8,8,\"" + printMat.materialdescription + "\"");
-                            tw.WriteLine("BARCODE 1697,3260,\"128M\",71,0,180,6,12,\"!105" + printMat.saleorderno + "-" + printMat.solineitemno + " \"");
+                            if(printMat.saleorderno!=null || printMat.solineitemno!=null)
+                            {
+                                tw.WriteLine("BARCODE 1697,3260,\"128M\",71,0,180,6,12,\"!105" + printMat.saleorderno + "-" + printMat.solineitemno + " \"");
+                            }
+                           
                             tw.WriteLine("TEXT 1592,3331,\"0\",180,8,8,\"" + printMat.saleorderno + "-" + printMat.solineitemno + " \"");
                             tw.WriteLine("TEXT 1697,3095,\"0\",180,8,8,\"" + printMat.noofpieces + "/" + printMat.receivedqty + " ST " + printMat.boxno + " OF " + printMat.totalboxes + " BOXES\"");
                             tw.WriteLine("TEXT 1697,2943,\"0\",180,8,8,\"" + printMat.saleordertype + "\"");
@@ -1163,7 +1217,11 @@ namespace WMS.Controllers
                             tw.WriteLine("TEXT 2235,178,\"0\",180,8,8,\"2/2\"");
                             tw.WriteLine("TEXT 1074,159,\"0\",180,8,8,\"GR# : " + printMat.ygsgr + "\"");
                             tw.WriteLine("TEXT 1977,1840,\"0\",180,8,8,\"" + printMat.plant + "\"");
-                            tw.WriteLine("BARCODE 1151,1847,\"128M\",107,0,180,6,12,\"!105" + printMat.plant + "!1005\"");
+                            if(printMat.plant!=null)
+                            {
+                                tw.WriteLine("BARCODE 1151,1847,\"128M\",107,0,180,6,12,\"!105" + printMat.plant + "!1005\"");
+                            }
+                            
                             tw.WriteLine("TEXT 2235,1637,\"0\",180,8,8,\"#\"");
                             tw.WriteLine("TEXT 1785,1639,\"0\",180,8,8,\"Carry -in -place\"");
                             tw.WriteLine("TEXT 438,1639,\"0\",180,8,8,\"S_Loc\"");
@@ -1227,9 +1285,17 @@ namespace WMS.Controllers
                             tw.WriteLine("TEXT 2273,2471,\"0\",180,8,8,\"Customer PO No\"");
                             tw.WriteLine("TEXT 2273,2392,\"0\",180,8,8,\"& Line Item No\"");
                             tw.WriteLine("TEXT 1681,2614,\"0\",180,8,8,\"" + printMat.customername + "\"");
-                            tw.WriteLine("TEXT 1681,2440,\"0\",180,8,8,\"" + printMat.customerpono + " & " + printMat.custpolineitem + "\"");
+                            if(printMat.customerpono!=null || printMat.custpolineitem!=null)
+                            {
+                                tw.WriteLine("TEXT 1681,2440,\"0\",180,8,8,\"" + printMat.customerpono + " & " + printMat.custpolineitem + "\"");
+                            }
+                            
                             tw.WriteLine("TEXT 2007,1450,\"0\",180,8,8,\"" + printMat.storagelocation + "\"");
-                            tw.WriteLine("BARCODE 596,1483,\"128M\",93,0,180,4,8,\"!105" + printMat.storagelocation + "!1004\"");
+                            if(printMat.storagelocation!=null)
+                            {
+                                tw.WriteLine("BARCODE 596,1483,\"128M\",93,0,180,4,8,\"!105" + printMat.storagelocation + "!1004\"");
+                            }
+                            
                             tw.WriteLine("TEXT 564,1373,\"0\",180,8,8,\"" + printMat.storagelocation + "\"");
                             tw.WriteLine("TEXT 632,4150,\"0\",180,8,8,\"" + currentdate + "\"");
                             tw.WriteLine("PRINT 1,1");
@@ -1287,6 +1353,7 @@ namespace WMS.Controllers
                 //string printerName = ConfigurationManager.AppSettings["CTMajor_AdminPrinter"].ToString();
                 //string printerName = "10.29.11.25";
                 string printerName = "10.29.11.126";
+                printerName = config._MaterialLabelPrintIP;
                 PrintUtilities objIdentification = new PrintUtilities();
                 printResult = "success";
                 printResult = objIdentification.PrintQRCode(path, printerName);
@@ -1413,16 +1480,17 @@ namespace WMS.Controllers
                             tw.WriteLine("TEXT 762,31,\"0\",180,8,8,\"Quantity\"");
                             tw.WriteLine("TEXT 567,255,\"0\",180,8,8,\"" + onholdprintdata.materialid + "\"");
                             tw.WriteLine("TEXT 567,176,\"0\",180,8,8,\"" + onholdprintdata.gateentryid + "\"");
-                            tw.WriteLine("TEXT 567,128,\"0\",180,8,8,\"" + onholdprintdata.pono + "-" + onholdprintdata.invoiceno + "\"");
+                            //tw.WriteLine("TEXT 567,128,\"0\",180,8,8,\"" + onholdprintdata.pono + "-" + onholdprintdata.invoiceno + "\"");
                             tw.WriteLine("QRCODE 125,253,L,3,A,180,M2,S7,\"" + onholdprintdata.materialid + "\"");
                             tw.WriteLine("TEXT 159,173,\"0\",180,7,7,\"" + onholdprintdata.materialid + "\"");
                             tw.WriteLine("TEXT 567,219,\"0\",180,8,8,\"" + onholdprintdata.receiveddate + "\"");
                             tw.WriteLine("TEXT 567,31,\"0\",180,8,8,\"" + i + "/" + onholdprintdata.noofprint + "\"");
-                            tw.WriteLine("BAR 600,78, 536, 4");
-                            tw.WriteLine("BAR 245,78, 357, 4");
+                            //tw.WriteLine("BAR 600,78, 536, 4");
+                            //tw.WriteLine("BAR 245,78, 357, 4");
                             tw.WriteLine("QRCODE 125,131,L,3,A,180,M2,S7,\"" + onholdprintdata.gateentryid + "\"");
                             tw.WriteLine("TEXT 163,51,\"0\",180,8,8,\"" + onholdprintdata.gateentryid + "\"");
                             tw.WriteLine("BAR 165,39, 603, 3");
+                            tw.WriteLine("TEXT 567,109,\"0\",180,6,8,\"" + onholdprintdata.pono + "-" + onholdprintdata.invoiceno + "\"");
                             tw.WriteLine("PRINT 1,1");
                             tw.WriteLine("<xpml></page></xpml><xpml><end/></xpml>");
 
