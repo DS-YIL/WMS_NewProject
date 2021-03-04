@@ -7,6 +7,7 @@ import { constants } from '../Models/WMSConstants';
 import { wmsService } from '../WmsServices/wms.service';
 import { environment } from 'src/environments/environment'
 import { pageModel, ddlmodel } from '../Models/WMS.Model';
+import { isNullOrUndefined } from 'util';
 
 @Component({
   selector: 'app-nav-menu',
@@ -1936,7 +1937,13 @@ export class NavMenuComponent implements OnInit {
         this.router.navigateByUrl('WMS/SecurityCheck');
       }
       else {
-        this.router.navigateByUrl(url);
+        if (!isNullOrUndefined(url) && url != "") {
+          this.router.navigateByUrl(url);
+        }
+        else {
+          this.router.navigateByUrl('WMS/SecurityCheck');
+        }
+        
       }
      
     }
@@ -1975,7 +1982,13 @@ export class NavMenuComponent implements OnInit {
         this.router.navigateByUrl('WMS/Home');
       }
       else {
-        this.router.navigateByUrl(url);
+        if (!isNullOrUndefined(url) && url != "") {
+          this.router.navigateByUrl(url);
+        }
+        else {
+          this.router.navigateByUrl('WMS/Home');
+        }
+
       }
     }
     if (this.emp.roleid == "3") {//inventory clerk
@@ -2050,7 +2063,6 @@ export class NavMenuComponent implements OnInit {
           { label: 'Bin Status Report', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/BinStatusReport') },
           { label: 'Safety Stock List', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/SafetyStockList') },
           { label: 'Print Barcode', icon: 'pi pi-fw pi-print', style: { 'width': '250px' }, command: () => this.router.navigateByUrl('WMS/PrintBarcode') },
-
         ]
 
       });
@@ -2059,7 +2071,13 @@ export class NavMenuComponent implements OnInit {
         this.router.navigateByUrl('WMS/Home');
       }
       else {
-        this.router.navigateByUrl(url);
+        if (!isNullOrUndefined(url) && url != "") {
+          this.router.navigateByUrl(url);
+        }
+        else {
+          this.router.navigateByUrl('WMS/Home');
+        }
+
       }
     }
     if (this.emp.roleid == "4") {//inventory manager
@@ -2167,7 +2185,13 @@ export class NavMenuComponent implements OnInit {
         this.router.navigateByUrl('WMS/Home');
       }
       else {
-        this.router.navigateByUrl(url);
+        if (!isNullOrUndefined(url) && url != "") {
+          this.router.navigateByUrl(url);
+        }
+        else {
+          this.router.navigateByUrl('WMS/Home');
+        }
+
       }
 
      
@@ -2206,7 +2230,13 @@ export class NavMenuComponent implements OnInit {
         this.router.navigateByUrl('WMS/Dashboard');
       }
       else {
-        this.router.navigateByUrl(url);
+        if (!isNullOrUndefined(url) && url != "") {
+          this.router.navigateByUrl(url);
+        }
+        else {
+          this.router.navigateByUrl('WMS/Home');
+        }
+
       }
 
     }
@@ -2218,14 +2248,19 @@ export class NavMenuComponent implements OnInit {
         this.router.navigateByUrl('WMS/Home');
       }
       else {
-        this.router.navigateByUrl(url);
+        if (!isNullOrUndefined(url) && url != "") {
+          this.router.navigateByUrl(url);
+        }
+        else {
+          this.router.navigateByUrl('WMS/Home');
+        }
+
       }
     }
     if (this.emp.roleid == "7") {//admin
       this.items = [];
       this.items.push({ label: 'Home', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-home', command: () => this.router.navigateByUrl('WMS/Home'), styleClass: 'active' });
       //this.items.push({ label: 'Gate Pass', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GatePass') });
-      this.items.push({ label: 'Internal Stock Transfer', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/Stocktransfer') });
       this.items.push({
         label: 'Initial Stock Upload',
         icon: 'pi pi-fw pi-bars',
@@ -2262,7 +2297,13 @@ export class NavMenuComponent implements OnInit {
         this.router.navigateByUrl('WMS/Home');
       }
       else {
-        this.router.navigateByUrl(url);
+        if (!isNullOrUndefined(url) && url != "") {
+          this.router.navigateByUrl(url);
+        }
+        else {
+          this.router.navigateByUrl('WMS/Home');
+        }
+
       }
     }
     if (this.emp.roleid == "8") {//Approver     
@@ -2275,7 +2316,13 @@ export class NavMenuComponent implements OnInit {
           this.router.navigateByUrl('WMS/Home');
         }
         else {
-          this.router.navigateByUrl(url);
+          if (!isNullOrUndefined(url) && url != "") {
+            this.router.navigateByUrl(url);
+          }
+          else {
+            this.router.navigateByUrl('WMS/Home');
+          }
+
         }
       
 
@@ -2315,7 +2362,13 @@ export class NavMenuComponent implements OnInit {
         this.router.navigateByUrl('WMS/Home');
       }
       else {
-        this.router.navigateByUrl(url);
+        if (!isNullOrUndefined(url) && url != "") {
+          this.router.navigateByUrl(url);
+        }
+        else {
+          this.router.navigateByUrl('WMS/Home');
+        }
+
       }
     }
     if (this.emp.roleid == "10") {//Finance
@@ -2326,7 +2379,13 @@ export class NavMenuComponent implements OnInit {
         this.router.navigateByUrl('WMS/GRNotification');
       }
       else {
-        this.router.navigateByUrl(url);
+        if (!isNullOrUndefined(url) && url != "") {
+          this.router.navigateByUrl(url);
+        }
+        else {
+          this.router.navigateByUrl('WMS/GRNotification');
+        }
+
       }
     }
     if (this.emp.roleid == "11") {//Project Manager
@@ -2352,7 +2411,13 @@ export class NavMenuComponent implements OnInit {
         this.router.navigateByUrl('WMS/Home');
       }
       else {
-        this.router.navigateByUrl(url);
+        if (!isNullOrUndefined(url) && url != "") {
+          this.router.navigateByUrl(url);
+        }
+        else {
+          this.router.navigateByUrl('WMS/Home');
+        }
+
       }
     }
     let element1: HTMLDivElement = document.getElementById("menudiv") as HTMLDivElement;

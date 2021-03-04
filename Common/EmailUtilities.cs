@@ -50,13 +50,13 @@ namespace WMS.Common
 						{
 							int i = 0;
 							int j = 0;
-							multipleemails = true;
 							foreach (authUser user in result.Result)
 							{
                                 if (user.emailnotification == true)
                                 {
 									if (i > 0)
 									{
+										multipleemails = true;
 										tomainlstring += ",";
 
 									}
@@ -93,6 +93,12 @@ namespace WMS.Common
 
 			}
 			emlSndngList.FrmEmailId = config.FromEmailId;
+			if (config.EmailType.ToString().ToLower().Trim() == "test")
+			{
+				multipleemails = false;
+				emlSndngList.ToEmailId = "ramesh.kumar@in.yokogawa.com";
+				emlSndngList.CC = "ramesh.kumar@in.yokogawa.com";
+			}
 			MailMessage mailMessage = new MailMessage(emlSndngList.FrmEmailId, emlSndngList.ToEmailId);
 			SmtpClient client = new SmtpClient();
 			var subbody = string.Empty;
@@ -446,12 +452,6 @@ namespace WMS.Common
 			var body = string.Empty;
 			
 			string users = "";
-			if(config.EmailType.ToString().ToLower().Trim() == "test")
-            {
-				multipleemails = false;
-				emlSndngList.ToEmailId = "ramesh.kumar@in.yokogawa.com";
-				emlSndngList.CC = "ramesh.kumar@in.yokogawa.com";
-			}
 			if (!string.IsNullOrEmpty(emlSndngList.CC))
 				mailMessage.CC.Add(emlSndngList.CC);
 			if (emlSndngList.ToEmpName == null)
