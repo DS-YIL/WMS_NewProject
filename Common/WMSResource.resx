@@ -2137,4 +2137,9 @@ left outer join wms.wms_rd_rack rck on rck.rackid = wrb.rackid
 left outer join wms.wms_rd_locator loc on loc.locatorid = wrb.locatorid 
 where wrb.locatorid = #locatorid</value>
   </data>
+  <data name="insertmaterialvaluation" xml:space="preserve">
+    <value>INSERT INTO wms.material_valuation
+(projectcode, pono, itemno, material, materialdescription, value, referenceno, quantity, currency, potext, uploadcode, filename)
+VALUES(@projectcode, @pono, @itemno, @material, @materialdescription, @value, @referenceno, @quantity, @currency, @potext, @uploadcode, @filename)</value>
+  </data>
 </root>

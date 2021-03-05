@@ -1153,6 +1153,9 @@ namespace WMS.Models
 		public string referenceno { get; set; }
 		public decimal? quantity { get; set; }
 		public string currency  { get; set; }
+		public string potext { get; set; }
+		public string uploadcode { get; set; }
+		public string filename { get; set; }
 	}
 	public class employeeModel
 	{

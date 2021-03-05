@@ -2679,6 +2679,17 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to INSERT INTO wms.material_valuation
+        ///(projectcode, pono, itemno, material, materialdescription, value, referenceno, quantity, currency, potext, uploadcode, filename)
+        ///VALUES(@projectcode, @pono, @itemno, @material, @materialdescription, @value, @referenceno, @quantity, @currency, @potext, @uploadcode, @filename).
+        /// </summary>
+        public static string insertmaterialvaluation {
+            get {
+                return ResourceManager.GetString("insertmaterialvaluation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to insert into wms.wms_rd_Plant(plantid ,plantname,createdby,createdon)values(default,@plantname,@createdby,current_timestamp).
         /// </summary>
         public static string insertplantname {

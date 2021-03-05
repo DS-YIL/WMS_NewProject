@@ -434,6 +434,119 @@ namespace WMS.Controllers
 			return Ok(true);
 		}
 
+		[HttpGet]
+		[Route("uploadCJI3Excel")]
+		public IActionResult loadCJI3Data()
+        {
+			List<System.IO.FileInfo> files = null;
+			string serverPath = "";
+			//Getting files from server
+			try
+			{
+
+				serverPath = @"\\ZAWMS-003\WMS_StagingFiles\CJI3\";
+				using (new NetworkConnection(serverPath, new NetworkCredential(@"ECH_Admin", "Jan@2019")))
+				{
+					var directory = new DirectoryInfo(serverPath);
+					DateTime from_date = DateTime.Now.AddDays(-7);
+					DateTime to_date = DateTime.Now;
+					files = directory.GetFiles()
+					   .Where(file => file.LastWriteTime >= from_date && file.LastWriteTime <= to_date).ToList();
+
+					string uploadguid = Guid.NewGuid().ToString();
+					using(NpgsqlConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
+                    {
+						foreach (var file in files)
+						{
+							string filename = Path.GetFileName(file.Name);
+							string storeQuery = "select filename from wms.auditlog a where Lower(filename) = Lower('" + filename + "') limit 1";
+							var fileexists = DB.ExecuteScalar(storeQuery, null);
+
+							if (fileexists == null)
+							{
+								string filePath = serverPath + filename;
+								DataTable dtexcel = new DataTable();
+								System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+								using (var stream1 = System.IO.File.Open(filePath, FileMode.Open, FileAccess.Read))
+								{
+									using (var reader = ExcelReaderFactory.CreateReader(stream1))
+									{
+
+										var result = reader.AsDataSet(new ExcelDataSetConfiguration()
+										{
+											ConfigureDataTable = (_) => new ExcelDataTableConfiguration()
+											{
+												UseHeaderRow = true
+											}
+										});
+
+										dtexcel = result.Tables[0];
+
+									}
+								}
+
+
+								string uploadcode = Guid.NewGuid().ToString();
+								foreach (DataRow row in dtexcel.Rows)
+								{
+
+									MaterialValuation model = new MaterialValuation();
+									model.projectcode = Conversion.toStr(row["Project Definition"]);
+									model.pono = Conversion.toStr(row["Purchasing Document"]);
+									model.itemno = Conversion.toStr(row["Item"]);
+									model.material = Conversion.toStr(row["Material"]);
+									model.materialdescription = Conversion.toStr(row["Material Description"]);
+									model.referenceno = Conversion.toStr(row["Ref Document Number"]);//if blank it is open po
+									model.currency = Conversion.toStr(row["Transaction Currency"]);
+									model.potext = Conversion.toStr(row["Purchase order text"]);
+									model.uploadcode = uploadguid;
+									model.filename = filename;
+									string value = Conversion.toStr(row["Val.in rep.cur."]);
+									string quantity = Conversion.toStr(row["Total quantity"]);
+									if((model.projectcode != null && model.projectcode.Trim() != "") || (model.pono != null && model.pono.Trim() != ""))
+                                    {
+										var insertquery = WMSResource.insertmaterialvaluation;
+										var results = DB.ExecuteScalar(insertquery, new
+										{
+											model.projectcode,
+											model.pono,
+											model.itemno,
+											model.material,
+											model.materialdescription,
+											value,
+											model.referenceno,
+											quantity,
+											model.currency,
+											model.potext,
+											model.uploadcode,
+											model.filename
+										});
+									}
+
+								}
+									
+
+								AuditLog auditlog = new AuditLog();
+								auditlog.filename = filename;
+								auditlog.filelocation = filePath;
+								auditlog.uploadedon = DateTime.Now;
+								auditlog.uploadedto = "wms.material_valuation";
+								auditlog.modulename = "uploadCJI3Excel";
+								loadAuditLog(auditlog);
+							}
+
+						}
+					}
+					
+				}
+			}
+			catch (Exception ex)
+			{
+				log.ErrorMessage("StagingController", "uploadCJI3Data", ex.StackTrace.ToString(), "error:" + ex.Message.ToString(), url);
+			}
+			return Ok(true);
+		}
+
 
 		/*Name of Function : <<loadPOData>>  Author :<<Prasanna>>  
 		Date of Creation <<06-07-2020>>
