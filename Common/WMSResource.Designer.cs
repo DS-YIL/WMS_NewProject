@@ -408,7 +408,7 @@ namespace WMS.Common {
         ///&lt;p&gt;
         ///LINK:
         ///&lt;a href=&quot;#link&quot;&gt;#link&lt;/a&gt;&lt;/p&gt;
-        ///&lt;p style=&apos;margin-bottom:0px;&apos;&gt;Regards,&lt;br/&gt; #sender&lt;/p&gt;&lt;/div&gt;&lt;/body&gt;&lt;/html&gt;.
+        ///&lt;p style=&apos;margin-bottom:0px;&apos;&gt;Regards&lt;br/&gt; #sender&lt;/p&gt;&lt;/div&gt;&lt;/body&gt;&lt;/html&gt;.
         /// </summary>
         public static string emailbody {
             get {

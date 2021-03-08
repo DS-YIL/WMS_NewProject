@@ -128,6 +128,9 @@ export class NavMenuComponent implements OnInit {
           this.userrolelist = JSON.parse(localStorage.getItem("allroles")) as userAcessNamesModel[];
         }
         var rid = this.emp.roleid;
+        if (isNullOrUndefined(this.userrolelist)) {
+          console.log("list1");
+        }
         var data1 = this.userrolelist.filter(function (element, index) {
           return (element.roleid == parseInt(rid));
         });
@@ -170,6 +173,9 @@ export class NavMenuComponent implements OnInit {
   
   setrolename(roleid: any) {
     var rid = roleid;
+    if (isNullOrUndefined(this.userrolelist)) {
+      console.log("list3");
+    }
     var data1 = this.userrolelist.filter(function (element, index) {
       return (element.roleid == parseInt(rid));
     });
@@ -440,6 +446,9 @@ export class NavMenuComponent implements OnInit {
   Navigatetopagefn() {
     this.loggedinas = "";
     var name = this.selectedrolename;
+    if (isNullOrUndefined(this.userrolelist)) {
+      console.log("list5");
+    }
     var data1 = this.userrolelist.filter(function (element, index) {
       return (element.accessname == name);
     });
@@ -449,6 +458,9 @@ export class NavMenuComponent implements OnInit {
       localStorage.setItem('Employee', JSON.stringify(this.emp));
       this.selectedrolename = "";
       var rid = this.emp.roleid;
+      if (isNullOrUndefined(this.userrolelist)) {
+        console.log("list6");
+      }
       var data1 = this.userrolelist.filter(function (element, index) {
         return (element.roleid == parseInt(rid));
       });
@@ -597,6 +609,9 @@ export class NavMenuComponent implements OnInit {
     localStorage.removeItem('Employee');
     localStorage.setItem('Employee', JSON.stringify(this.emp));
     var subroles = [];
+    if (isNullOrUndefined(this.userrolelist)) {
+      console.log("list7");
+    }
     if (this.userrolelist.filter(li => li.roleid == 5).length > 0) {
       subroles = this.userrolelist.filter(li => li.roleid == 5)[0]["subroleid"];
     }
@@ -833,6 +848,9 @@ export class NavMenuComponent implements OnInit {
     localStorage.removeItem('Employee');
     localStorage.setItem('Employee', JSON.stringify(this.emp));
     var subroles = [];
+    if (isNullOrUndefined(this.userrolelist)) {
+      console.log("list8");
+    }
     if (this.userrolelist.filter(li => li.roleid == 5).length > 0) {
       subroles = this.userrolelist.filter(li => li.roleid == 5)[0]["subroleid"];
     }
@@ -955,6 +973,9 @@ export class NavMenuComponent implements OnInit {
     localStorage.removeItem('Employee');
     localStorage.setItem('Employee', JSON.stringify(this.emp));
     var subroles = [];
+    if (isNullOrUndefined(this.userrolelist)) {
+      console.log("list9");
+    }
     if (this.userrolelist.filter(li => li.roleid == 5).length > 0) {
       subroles = this.userrolelist.filter(li => li.roleid == 5)[0]["subroleid"];
     }
@@ -1272,6 +1293,9 @@ export class NavMenuComponent implements OnInit {
 
       }
       else if (item.roleid == 6) {
+        if (isNullOrUndefined(this.items)) {
+          console.log("list10");
+        }
         var roles = this.items.filter(li => li.label == "PM Dashboard");
         if (roles.length == 0) {
 
@@ -1280,6 +1304,9 @@ export class NavMenuComponent implements OnInit {
         }
       }
       else if (item.roleid == 7) {
+        if (isNullOrUndefined(this.items)) {
+          console.log("list11");
+        }
         var roles = this.items.filter(li => li.label == "Gate Pass");
         var rolescc = this.items.filter(li => li.label == "Cycle Count");
 
@@ -1399,6 +1426,9 @@ export class NavMenuComponent implements OnInit {
     this.wmsService.getGatePassList().subscribe(data => {
       this.totalGatePassList = data;
       //PM
+      if (isNullOrUndefined(this.totalGatePassList)) {
+        console.log("list12");
+      }
       this.gatepassData = this.totalGatePassList.filter(li => li.approverid == this.emp.employeeno && (li.approverstatus == this.approverstatus));
       //FM
       this.gatepassData1 = this.totalGatePassList.filter(li => li.fmapproverid == this.emp.employeeno && li.approverstatus == "Approved" && li.fmapprovedstatus == this.approverstatus);
@@ -1411,6 +1441,9 @@ export class NavMenuComponent implements OnInit {
     debugger;
     this.gatepasslist = [];
     this.gatepassData.forEach(item => {
+      if (isNullOrUndefined(this.gatepasslist)) {
+        console.log("list13");
+      }
       var res = this.gatepasslist.filter(li => li.gatepassid == item.gatepassid);
       if (res.length == 0) {
         this.gatepasslist.push(item);
@@ -1427,6 +1460,9 @@ export class NavMenuComponent implements OnInit {
     debugger;
     this.gatepasslist1 = [];
     this.gatepassData1.forEach(item => {
+      if (isNullOrUndefined(this.gatepasslist1)) {
+        console.log("list14");
+      }
       var res = this.gatepasslist1.filter(li => li.gatepassid == item.gatepassid);
       if (res.length == 0) {
         this.gatepasslist1.push(item);
@@ -1505,6 +1541,9 @@ export class NavMenuComponent implements OnInit {
       { label: 'Log Out', icon: 'pi pi-fw pi-angle-right', command: () => this.logout() }
     ];
     this.items.push({ label: 'Home', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-home', command: () => this.router.navigateByUrl('WMS/Home') });
+    if (isNullOrUndefined(this.rbalist)) {
+      console.log("list15");
+    }
     let currentrolerba = this.rbalist.filter(o => o.roleid == parseInt(this.emp.roleid));
     if (currentrolerba.length > 0) {
       var rba = currentrolerba[0];
@@ -1812,6 +1851,9 @@ export class NavMenuComponent implements OnInit {
     this.showHome = true;
    
     //
+    if (isNullOrUndefined(this.rbalist)) {
+      console.log("list16");
+    }
     let currentrolerba = this.rbalist.filter(o => o.roleid == parseInt(this.emp.roleid));
     if (currentrolerba.length > 0) {
       var rba = currentrolerba[0];
@@ -2198,6 +2240,9 @@ export class NavMenuComponent implements OnInit {
     if (this.emp.roleid == "5") {//project manager (Material Requester)
       this.items = [];
       var subroles = [];
+      if (isNullOrUndefined(this.userrolelist)) {
+        console.log("list2");
+      }
       if (this.userrolelist.filter(li => li.roleid == 5).length > 0) {
         subroles = this.userrolelist.filter(li => li.roleid == 5)[0]["subroleid"];
       }

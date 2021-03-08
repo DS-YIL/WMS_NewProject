@@ -490,40 +490,52 @@ namespace WMS.Controllers
 								string uploadcode = Guid.NewGuid().ToString();
 								foreach (DataRow row in dtexcel.Rows)
 								{
-
-									MaterialValuation model = new MaterialValuation();
-									model.projectcode = Conversion.toStr(row["Project Definition"]);
-									model.pono = Conversion.toStr(row["Purchasing Document"]);
-									model.itemno = Conversion.toStr(row["Item"]);
-									model.material = Conversion.toStr(row["Material"]);
-									model.materialdescription = Conversion.toStr(row["Material Description"]);
-									model.referenceno = Conversion.toStr(row["Ref Document Number"]);//if blank it is open po
-									model.currency = Conversion.toStr(row["Transaction Currency"]);
-									model.potext = Conversion.toStr(row["Purchase order text"]);
-									model.uploadcode = uploadguid;
-									model.filename = filename;
-									string value = Conversion.toStr(row["Val.in rep.cur."]);
-									string quantity = Conversion.toStr(row["Total quantity"]);
-									if((model.projectcode != null && model.projectcode.Trim() != "") || (model.pono != null && model.pono.Trim() != ""))
+									string poitem = "";
+                                    try
                                     {
-										var insertquery = WMSResource.insertmaterialvaluation;
-										var results = DB.ExecuteScalar(insertquery, new
+										MaterialValuation model = new MaterialValuation();
+										model.projectcode = Conversion.toStr(row["Project Definition"]);
+										model.pono = Conversion.toStr(row["Purchasing Document"]);
+										model.itemno = Conversion.toStr(row["Item"]);
+										model.material = Conversion.toStr(row["Material"]);
+										model.materialdescription = Conversion.toStr(row["Material Description"]);
+										model.referenceno = Conversion.toStr(row["Ref Document Number"]);//if blank it is open po
+										model.currency = Conversion.toStr(row["Transaction Currency"]);
+										model.potext = Conversion.toStr(row["Purchase order text"]);
+										model.uploadcode = uploadguid;
+										model.filename = filename;
+										string value = Conversion.toStr(row["Val.in rep.cur."]);
+										string quantity = Conversion.toStr(row["Total quantity"]);
+										poitem = model.projectcode +"-" + model.pono+ "-" + model.itemno;
+										if ((model.projectcode != null && model.projectcode.Trim() != "") || (model.pono != null && model.pono.Trim() != ""))
 										{
-											model.projectcode,
-											model.pono,
-											model.itemno,
-											model.material,
-											model.materialdescription,
-											value,
-											model.referenceno,
-											quantity,
-											model.currency,
-											model.potext,
-											model.uploadcode,
-											model.filename
-										});
+											var insertquery = WMSResource.insertmaterialvaluation;
+											var results = DB.ExecuteScalar(insertquery, new
+											{
+												model.projectcode,
+												model.pono,
+												model.itemno,
+												model.material,
+												model.materialdescription,
+												value,
+												model.referenceno,
+												quantity,
+												model.currency,
+												model.potext,
+												model.uploadcode,
+												model.filename
+											});
+										}
+
+									}
+									catch (Exception e)
+                                    {
+										var res = e;
+										log.ErrorMessage("StagingController", "uploadCJI3Excel", e.StackTrace.ToString(), "PO:" + poitem + "error:" + e.Message.ToString(), url);
+										continue;
 									}
 
+									
 								}
 									
 
@@ -548,6 +560,469 @@ namespace WMS.Controllers
 			return Ok(true);
 		}
 
+		[HttpGet]
+		[Route("uploadZGMMR02023Excel")]
+		public IActionResult loadZGMMR02023Data()
+		{
+			List<System.IO.FileInfo> files = null;
+			string serverPath = "";
+			//Getting files from server
+			try
+			{
+
+				serverPath = @"\\ZAWMS-003\WMS_StagingFiles\ZGMMR02023\";
+				using (new NetworkConnection(serverPath, new NetworkCredential(@"ECH_Admin", "Jan@2019")))
+				{
+					var directory = new DirectoryInfo(serverPath);
+					DateTime from_date = DateTime.Now.AddDays(-7);
+					DateTime to_date = DateTime.Now;
+					files = directory.GetFiles()
+					   .Where(file => file.LastWriteTime >= from_date && file.LastWriteTime <= to_date).ToList();
+
+					string uploadguid = Guid.NewGuid().ToString();
+					using (NpgsqlConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
+					{
+						foreach (var file in files)
+						{
+							string filename = Path.GetFileName(file.Name);
+							string storeQuery = "select filename from wms.auditlog a where Lower(filename) = Lower('" + filename + "') limit 1";
+							var fileexists = DB.ExecuteScalar(storeQuery, null);
+
+							if (fileexists == null)
+							{
+								string filePath = serverPath + filename;
+								DataTable dtexcel = new DataTable();
+								System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+								using (var stream1 = System.IO.File.Open(filePath, FileMode.Open, FileAccess.Read))
+								{
+									using (var reader = ExcelReaderFactory.CreateReader(stream1))
+									{
+
+										var result = reader.AsDataSet(new ExcelDataSetConfiguration()
+										{
+											ConfigureDataTable = (_) => new ExcelDataTableConfiguration()
+											{
+												UseHeaderRow = true
+											}
+										});
+
+										dtexcel = result.Tables[0];
+
+									}
+								}
+
+
+								string uploadcode = Guid.NewGuid().ToString();
+								foreach (DataRow row in dtexcel.Rows)
+								{
+									string poitem = "";
+									try
+									{
+										string Error_Description = "";
+										bool dataloaderror = false;
+										MateriallabelModel slimports = new MateriallabelModel();
+										slimports.saleorderno = Conversion.toStr(row["Sales Document"]);
+										slimports.solineitemno = Conversion.toStr(row["Sales Document Item"]);
+										slimports.material = Conversion.toStr(row["Material Number"]);
+										slimports.gr = Conversion.toStr(row["Storage Location"]);
+										slimports.plant = Conversion.toStr(row["Plant"]);
+										slimports.serialno = Conversion.toStr(row["Serial Number"]);
+										slimports.uploadcode = uploadcode;
+										DateTime uploadedon = DateTime.Now;
+										if (string.IsNullOrEmpty(slimports.saleorderno))
+											Error_Description += " No saleorder";
+
+										if (!string.IsNullOrEmpty(Error_Description))
+										{
+											dataloaderror = true;
+											slimports.error_description = Error_Description;
+											slimports.isloaderror = dataloaderror;
+
+										}
+										poitem = slimports.saleorderno + "-" + slimports.solineitemno;
+										string soQuery = "Select saleorderno from wms.st_slno_imports where saleorderno = '" + slimports.saleorderno + "' and solineitemno = '" + slimports.solineitemno + "' and serialno = '" + slimports.serialno + "' ";
+										var so = DB.ExecuteScalar(soQuery, null);
+										if (so == null)
+										{
+											string stquery = WMSResource.insertstserialimport;
+											var rslt = DB.Execute(stquery, new
+											{
+												slimports.saleorderno,
+												slimports.solineitemno,
+												slimports.material,
+												slimports.gr,
+												slimports.plant,
+												slimports.serialno,
+												slimports.uploadcode,
+												uploadedon,
+												slimports.error_description,
+												slimports.isloaderror
+											});
+
+										}
+									}
+									catch (Exception e)
+									{
+										var res = e;
+										log.ErrorMessage("StagingController", "uploadZGMMR02023Excel", e.StackTrace.ToString(), "PO:" + poitem + "error:" + e.Message.ToString(), url);
+										continue;
+									}
+
+								}
+
+									AuditLog auditlog = new AuditLog();
+									auditlog.filename = filename;
+									auditlog.filelocation = filePath;
+									auditlog.uploadedon = DateTime.Now;
+									auditlog.uploadedto = "wms.st_slno_imports";
+									auditlog.modulename = "uploadZGMMR02023Excel";
+									loadAuditLog(auditlog);
+							}
+
+						}
+					}
+
+				}
+			}
+			catch (Exception ex)
+			{
+				log.ErrorMessage("StagingController", "uploadZGMMR02023Excel", ex.StackTrace.ToString(), "error:" + ex.Message.ToString(), url);
+			}
+			return Ok(true);
+		}
+		[HttpGet]
+		[Route("uploadZGSDR00006Excel")]
+		public IActionResult loadZGSDR00006Data()
+		{
+			List<System.IO.FileInfo> files = null;
+			string serverPath = "";
+			//Getting files from server
+			try
+			{
+
+				serverPath = @"\\ZAWMS-003\WMS_StagingFiles\ZGSDR00006\";
+				using (new NetworkConnection(serverPath, new NetworkCredential(@"ECH_Admin", "Jan@2019")))
+				{
+					var directory = new DirectoryInfo(serverPath);
+					DateTime from_date = DateTime.Now.AddDays(-7);
+					DateTime to_date = DateTime.Now;
+					files = directory.GetFiles()
+					   .Where(file => file.LastWriteTime >= from_date && file.LastWriteTime <= to_date).ToList();
+
+					string uploadguid = Guid.NewGuid().ToString();
+					using (NpgsqlConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
+					{
+						foreach (var file in files)
+						{
+							string filename = Path.GetFileName(file.Name);
+							string storeQuery = "select filename from wms.auditlog a where Lower(filename) = Lower('" + filename + "') limit 1";
+							var fileexists = DB.ExecuteScalar(storeQuery, null);
+
+							if (fileexists == null)
+							{
+								string filePath = serverPath + filename;
+								DataTable dtexcel = new DataTable();
+								System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+								using (var stream1 = System.IO.File.Open(filePath, FileMode.Open, FileAccess.Read))
+								{
+									using (var reader = ExcelReaderFactory.CreateReader(stream1))
+									{
+
+										var result = reader.AsDataSet(new ExcelDataSetConfiguration()
+										{
+											ConfigureDataTable = (_) => new ExcelDataTableConfiguration()
+											{
+												UseHeaderRow = true
+											}
+										});
+
+										dtexcel = result.Tables[0];
+
+									}
+								}
+
+
+								string uploadcode = Guid.NewGuid().ToString();
+								foreach (DataRow row in dtexcel.Rows)
+								{
+									string poitem = "";
+									try
+									{
+										string Error_Description = "";
+										bool dataloaderror = false;
+										MateriallabelModel model = new MateriallabelModel();
+										model.saleorderno = Conversion.toStr(row["Sales Document No."]);
+										model.solineitemno = Conversion.toStr(row["Sales Order Item No."]);
+										model.saleordertype = Conversion.toStr(row["Sales Document Type"]);
+										model.customername = Conversion.toStr(row["Sold-to party"]) + " " + Conversion.toStr(row["Name: Sold-to party"]);
+										model.shipto = Conversion.toStr(row["Ship-to party"]) + " " + Conversion.toStr(row["Name: Ship-to party"]);
+										model.shippingpoint = Conversion.toStr(row["Shipping Point"]) + " " + Conversion.toStr(row["Text: Shipping Point"]);
+										model.loadingdate = Conversion.TodtTime(row["Planned Billing Date"]);
+										model.projectiddef = Conversion.toStr(row["Project definition(level 0)"]);
+										model.projecttext = Conversion.toStr(row["Project text (Level 0)"]);
+										model.partno = Conversion.toStr(row["Material"]);
+										model.custpo = Conversion.toStr(row["PO number"]);
+										model.costcenter = Conversion.toStr(row["Cost Center"]);
+										model.costcentertext = Conversion.toStr(row["Text: Cost Center"]);
+										model.saleordertypetext = Conversion.toStr(row["Text: Sales Document Type"]);
+										model.customercode = Conversion.toStr(row["Sold-to party"]);
+										model.custpolineitem = Conversion.toStr(row["PO Item No. (Sold-to)"]);
+										model.serviceorderno = Conversion.toStr("Service Order Number");
+										model.uploadcode = uploadcode;
+										DateTime uploadedon = DateTime.Now;
+										if (string.IsNullOrEmpty(model.saleorderno))
+											Error_Description += " No saleorder";
+
+										if (!string.IsNullOrEmpty(Error_Description))
+										{
+											dataloaderror = true;
+											model.error_description = Error_Description;
+											model.isloaderror = dataloaderror;
+
+										}
+										poitem = model.saleorderno + "-" + model.solineitemno;
+										string soQuery = "Select saleorderno from wms.st_QTSO where saleorderno = '" + model.saleorderno + "' and solineitemno = '" + model.solineitemno + "'";
+										var so = DB.ExecuteScalar(soQuery, null);
+										if (so == null)
+										{
+											string stquery = WMSResource.insertqtso;
+											var rslt = DB.Execute(stquery, new
+											{
+												model.saleorderno,
+												model.solineitemno,
+												model.saleordertype,
+												model.customername,
+												model.shipto,
+												model.shippingpoint,
+												model.loadingdate,
+												model.projectiddef,
+												model.partno,
+												model.custpo,
+												model.uploadcode,
+												uploadedon,
+												model.error_description,
+												model.isloaderror,
+												model.projecttext,
+												model.saleordertypetext,
+												model.customercode,
+												model.custpolineitem,
+												model.costcentertext,
+												model.serviceorderno
+											});
+
+
+										}
+									}
+									catch (Exception e)
+									{
+										var res = e;
+										log.ErrorMessage("StagingController", "uploadZGSDR00006Excel", e.StackTrace.ToString(), "PO:" + poitem + "error:" + e.Message.ToString(), url);
+										continue;
+									}
+
+								}
+
+								AuditLog auditlog = new AuditLog();
+								auditlog.filename = filename;
+								auditlog.filelocation = filePath;
+								auditlog.uploadedon = DateTime.Now;
+								auditlog.uploadedto = "wms.st_slno_imports";
+								auditlog.modulename = "uploadZGSDR00006Excel";
+								loadAuditLog(auditlog);
+							}
+
+						}
+					}
+
+				}
+			}
+			catch (Exception ex)
+			{
+				log.ErrorMessage("StagingController", "uploadZGSDR00006Excel", ex.StackTrace.ToString(), "error:" + ex.Message.ToString(), url);
+			}
+			return Ok(true);
+		}
+
+		[HttpGet]
+		[Route("uploadPOExcel")]
+		public IActionResult uploadPOExcel()
+		{
+			List<System.IO.FileInfo> files = null;
+			string serverPath = "";
+			//Getting files from server
+			try
+			{
+
+				serverPath = @"\\ZAWMS-003\WMS_StagingFiles\Daily_PO\";
+				using (new NetworkConnection(serverPath, new NetworkCredential(@"ECH_Admin", "Jan@2019")))
+				{
+					var directory = new DirectoryInfo(serverPath);
+					DateTime from_date = DateTime.Now.AddDays(-7);
+					DateTime to_date = DateTime.Now;
+					files = directory.GetFiles()
+					   .Where(file => file.LastWriteTime >= from_date && file.LastWriteTime <= to_date).ToList();
+
+					string uploadguid = Guid.NewGuid().ToString();
+					using (NpgsqlConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
+					{
+						foreach (var file in files)
+						{
+							string filename = Path.GetFileName(file.Name);
+							string storeQuery = "select filename from wms.auditlog a where Lower(filename) = Lower('" + filename + "') limit 1";
+							var fileexists = DB.ExecuteScalar(storeQuery, null);
+
+							if (fileexists == null)
+							{
+								string filePath = serverPath + filename;
+								DataTable dtexcel = new DataTable();
+								System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+								using (var stream1 = System.IO.File.Open(filePath, FileMode.Open, FileAccess.Read))
+								{
+									using (var reader = ExcelReaderFactory.CreateReader(stream1))
+									{
+
+										var result = reader.AsDataSet(new ExcelDataSetConfiguration()
+										{
+											ConfigureDataTable = (_) => new ExcelDataTableConfiguration()
+											{
+												UseHeaderRow = true
+											}
+										});
+
+										dtexcel = result.Tables[0];
+
+									}
+								}
+
+
+								string uploadcode = Guid.NewGuid().ToString();
+								foreach (DataRow row in dtexcel.Rows)
+								{
+									string poitem = "";
+
+									try
+									{
+										StagingModel model = new StagingModel();
+										model.pono = Conversion.toStr(row["Purch.Doc."]);
+										model.itemdeliverydate = Conversion.TodtTime(row["Item Delivery Date"]);
+										model.materialid = Conversion.toStr(row["Material"]);
+										model.poitemdescription = Conversion.toStr(row["Short Text"]);
+										model.poquantity = Conversion.Todecimaltype(row["PO Quantity"]);
+										model.dci = Conversion.toStr(row["DCI"]);//if blank it is open po
+										model.deliveredqty = Conversion.Todecimaltype(row["Delivered Qty"]);//already delivered qty
+										model.vendorcode = Conversion.toStr(row["Vendor"]);
+										model.vendorname = Conversion.toStr(row["Vendor Name"]);
+										model.projectdefinition = Conversion.toStr(row["Project Definition"]);
+										model.itemno = Conversion.toInt(row["Item"]);
+										model.NetPrice = Conversion.Todecimaltype(row["Net Price(Inhouse)"]);//total value
+										model.saleorderno = Conversion.toStr(row["Sales Order Number"]);
+										model.solineitemno = Conversion.toStr(row["Sales Order Item Number"]);
+										model.saleordertype = Conversion.toStr(row["Type"]);
+										model.codetype = Conversion.toStr(row["A"]);
+										model.costcenter = Conversion.toStr(row["Cost Center1"]);
+										model.assetno = Conversion.toStr(row["Asset Number"]);
+										model.projecttext = Conversion.toStr(row["Description"]);
+										model.sloc = Conversion.toStr(row["SLoc"]);
+										model.pocreatedby = Convert.ToString(row["PO created by (User Id)"]);
+										model.mscode = Convert.ToString(row["MS Code"]);
+										model.plant = Convert.ToString(row["Plnt"]);
+										model.linkageno = Convert.ToString(row["Linkage Number"]);
+										model.assetsubno = Convert.ToString(row["Asset Subnumber"]);
+										model.orderno = Convert.ToString(row["Order Number"]);
+
+										string Error_Description = "";
+										bool dataloaderror = false;
+										if (string.IsNullOrEmpty(model.pono.Replace('.', '#')))
+											Error_Description += "There is NO PONO";
+										if (string.IsNullOrEmpty(model.materialid))
+											Error_Description += ", No material";
+										if (model.poquantity < 1)
+											Error_Description += ", No PO Quantity";
+										if (!string.IsNullOrEmpty(Error_Description))
+										{
+											dataloaderror = true;
+											model.dataloaderror = true;
+											model.error_description = Error_Description;
+										}
+
+
+										//var query = "INSERT INTO wms.STAG_PO_SAP (PurchDoc,ItemDeliveryDate,Material,POQuantity,Vendor,VendorName,ProjectDefinition,Item,NetPrice,datasource,createddate,DataloadErrors ,Error_Description)VALUES" +
+										//    "('" + row["po_no"].ToString() + "'," + "'" + (Convert.ToDateTime(row["item_delivery_date"])).ToString("yyyy-MM-dd") + "','" + row["ms_cd"].ToString() + "','" + row["po_quantity"].ToString() + "','" +
+										//    row["vendor_cd"].ToString() + "','" + row["vendor_n"].ToString() + "'," + "'" + row["project_definition"].ToString() + "','" + row["po_item_no"].ToString() + "','" + row["po_item_amt"].ToString() + "','SAP','" + DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss") + "'," + dataloaderror + ", '" + Error_Description + "')";
+										//NpgsqlCommand dbcmd = DB.CreateCommand();
+										//dbcmd.CommandText = query;
+										//dbcmd.ExecuteNonQuery();
+										poitem = model.pono + "-" + model.itemno.ToString();
+										string poitemdescription = model.poitemdescription;
+										var insertquery = "INSERT INTO wms.STAG_PO_SAP(PurchDoc,pocreatedby,ItemDeliveryDate,Material,poitemdescription,POQuantity,dci,deliveredqty,Vendor,VendorName,ProjectDefinition,Item,NetPrice,datasource,createddate,DataloadErrors ,Error_Description,uploadcode,saleorderno,solineitemno,saleordertype,codetype,costcenter,assetno,projecttext,sloc,mscode,plant,linkageno,assetsubno)";
+										insertquery += " VALUES(@pono,@pocreatedby, @itemdeliverydate,@materialid,@poitemdescription,@poquantity,@dci,@deliveredqty,@vendorcode,@vendorname,@projectdefinition,@itemno,@NetPrice,'SAP',current_timestamp,@dataloaderror,@error_description,@uploadcode,@saleorderno,@solineitemno,@saleordertype,@codetype,@costcenter,@assetno,@projecttext,@sloc,@mscode,@plant,@linkageno,@assetsubno)";
+										var results = DB.ExecuteScalar(insertquery, new
+										{
+											model.pono,
+											model.pocreatedby,
+											model.itemdeliverydate,
+											model.materialid,
+											poitemdescription,
+											model.poquantity,
+											model.dci,
+											model.deliveredqty,
+											model.vendorcode,
+											model.vendorname,
+											model.projectdefinition,
+											model.itemno,
+											model.NetPrice,
+											dataloaderror,
+											model.error_description,
+											uploadcode,
+											model.saleorderno,
+											model.solineitemno,
+											model.saleordertype,
+											model.codetype,
+											model.costcenter,
+											model.assetno,
+											model.projecttext,
+											model.sloc,
+											model.mscode,
+											model.plant,
+											model.assetsubno,
+											model.linkageno,
+											model.orderno
+										});
+
+
+
+									}
+									catch (Exception e)
+									{
+										var res = e;
+										log.ErrorMessage("StagingController", "uploadPoDataExcel", e.StackTrace.ToString(), "PO:" + poitem + "error:" + e.Message.ToString(), url);
+										continue;
+									}
+								}
+
+
+								AuditLog auditlog = new AuditLog();
+								auditlog.filename = filename;
+								auditlog.filelocation = filePath;
+								auditlog.uploadedon = DateTime.Now;
+								auditlog.uploadedto = "wms.STAG_PO_SAP";
+								auditlog.modulename = "uploadPOExcel";
+								loadAuditLog(auditlog);
+								loadPOData(uploadcode);
+							}
+
+						}
+					}
+
+				}
+			}
+			catch (Exception ex)
+			{
+				log.ErrorMessage("StagingController", "uploadCJI3Data", ex.StackTrace.ToString(), "error:" + ex.Message.ToString(), url);
+			}
+			return Ok(true);
+		}
+
 
 		/*Name of Function : <<loadPOData>>  Author :<<Prasanna>>  
 		Date of Creation <<06-07-2020>>
@@ -563,7 +1038,7 @@ namespace WMS.Controllers
 				{
 
 					//string query = "select * from wms.stag_po_sap where purchdoc !='' and material !='' and poquantity !=0  ";
-					string query = "select * from wms.stag_po_sap where DataloadErrors is not True and dci!='X'";
+					string query = "select * from wms.stag_po_sap where DataloadErrors is not True and dci!='X' and uploadcode = '"+ uploadcode + "' ";
 					pgsql.Open();
 					var stagingList = pgsql.Query<StagingModel>(
 					   query, null, commandType: CommandType.Text);
