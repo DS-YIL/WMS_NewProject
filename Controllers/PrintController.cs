@@ -82,51 +82,8 @@ namespace WMS.Controllers
 
 
                     //Prn code for TSC TE310 printer
-
-                    //tw.WriteLine("<xpml><page quantity='0' pitch='38.0 mm'></xpml>SIZE 97.5 mm, 38 mm");
-                    //tw.WriteLine("DIRECTION 0,0");
-                    //tw.WriteLine("REFERENCE 0,0");
-                    //tw.WriteLine("OFFSET 0 mm");
-                    //tw.WriteLine("SET PEEL OFF");
-                    //tw.WriteLine("SET CUTTER OFF");
-                    //tw.WriteLine("SET PARTIAL_CUTTER OFF");
-                    //tw.WriteLine("<xpml></page></xpml><xpml><page quantity='1' pitch='38.0 mm'></xpml>SET TEAR ON");
-                    //tw.WriteLine("CLS");
-                    //tw.WriteLine("BOX 15,9,1137,436,4");
-                    //tw.WriteLine("BAR 17,93, 1119, 4");
-                    //tw.WriteLine("BAR 244,93, 4, 342");
-                    //tw.WriteLine("BAR 245,161, 891, 4");
-                    //tw.WriteLine("BAR 245,226, 891, 4");
-                    //tw.WriteLine("BAR 245,362, 891, 4");
-                    //tw.WriteLine("BAR 846,9, 4, 424");
-                    //tw.WriteLine("CODEPAGE 1252");
-                    //tw.WriteLine("TEXT 1128,416,\"0\",180,8,8,\"Gate Entry No.\"");
-                    //tw.WriteLine("TEXT 1133,315,\"0\",180,8,8,\"PO No.\"");
-                    //tw.WriteLine("TEXT 1128,209,\"0\",180,8,8,\"Gate Entry Time\"");
-                    //tw.WriteLine("TEXT 1128,144,\"0\",180,8,8,\"Vehicle No.\"");
-                    //tw.WriteLine("TEXT 1128,68,\"0\",180,8,8,\"Transporter Details\"");
-                    //tw.WriteLine("TEXT 839,416,\"0\",180,8,8,\"" + model.inwmasterid+"\"");
-                    //tw.WriteLine("TEXT 839,213,\"0\",180,8,8,\"" + model.gateentrytime+"\"");
-                    //tw.WriteLine("TEXT 839,145,\"0\",180,8,8,\"" + model.vehicleno+"\"");
-                    //tw.WriteLine("TEXT 839,87,\"0\",180,8,8,\"" + model.transporterdetails+"\"");
-                    ////tw.WriteLine("TEXT 839,48,\"0\",180,8,8,\"" + model.transporterdetails+"\"");
-                    //tw.WriteLine("QRCODE 175,353,L,4,A,180,M2,S7,\"" + model.inwmasterid+"\"");
-                    //tw.WriteLine("TEXT 235,243,\"0\",180,7,7,\"" + model.inwmasterid + "\"");
-                    //tw.WriteLine("TEXT 839,354,\"0\",180,8,8,\"" + model.pono + "\"");
-                    ////tw.WriteLine("TEXT 839,354,\"0\",180,8,8,\"" + model.inwmasterid + "\"");
-                    ////tw.WriteLine("TEXT 1235,243,\"0\",180,7,7,\"" + model.inwmasterid + "\"");
-                    //tw.WriteLine("PRINT 1,1");
-                    //tw.WriteLine("<xpml></page></xpml><xpml><end/></xpml>");
-
-
-
-
-                    //Prn code for TSC TE210 printer
-
                     string formateddate = model.gateentrytime.ToString("dd-MM-yyyy");
-
                     tw.WriteLine("<xpml><page quantity='0' pitch='38.0 mm'></xpml>SIZE 97.5 mm, 38 mm");
-                   // tw.WriteLine("GAP 3 mm, 0 mm");
                     tw.WriteLine("DIRECTION 0,0");
                     tw.WriteLine("REFERENCE 0,0");
                     tw.WriteLine("OFFSET 0 mm");
@@ -135,31 +92,74 @@ namespace WMS.Controllers
                     tw.WriteLine("SET PARTIAL_CUTTER OFF");
                     tw.WriteLine("<xpml></page></xpml><xpml><page quantity='1' pitch='38.0 mm'></xpml>SET TEAR ON");
                     tw.WriteLine("CLS");
-                    tw.WriteLine("BOX 15,5,762,260,3");
-                    tw.WriteLine("BAR 15,49, 746, 3");
-                    tw.WriteLine("BAR 164,49, 3, 209");
-                    tw.WriteLine("BAR 165,95, 596, 3");
-                    tw.WriteLine("BAR 165,139, 596, 3");
-                    tw.WriteLine("BAR 165,208, 596, 3");
-                    tw.WriteLine("BAR 572,6, 3, 252");
+                    tw.WriteLine("BOX 21,7,1127,383,4");
+                    tw.WriteLine("BAR 23,73, 1103, 4");
+                    tw.WriteLine("BAR 244,73, 4, 309");
+                    tw.WriteLine("BAR 245,141, 881, 4");
+                    tw.WriteLine("BAR 245,206, 881, 4");
+                    tw.WriteLine("BAR 245,308, 881, 4");
+                    tw.WriteLine("BAR 846,9, 4, 373");
                     tw.WriteLine("CODEPAGE 1252");
-                    tw.WriteLine("TEXT 756,247,\"0\",180,8,8,\"Gate Entry No.\"");
-                    tw.WriteLine("TEXT 756,186,\"0\",180,8,8,\"PO No.\"");
-                    tw.WriteLine("TEXT 756,128,\"0\",180,8,8,\"Gate Entry Time\"");
-                    tw.WriteLine("TEXT 756,84,\"0\",180,8,8,\"Vehicle No.\"");
-                    tw.WriteLine("TEXT 756,35,\"0\",180,8,8,\"Transporter Details\"");
-                    tw.WriteLine("TEXT 567,248,\"0\",180,8,8,\"" + model.inwmasterid + "\"");
-                    tw.WriteLine("TEXT 567,130,\"0\",180,8,8,\"" + formateddate + "\"");
-                    tw.WriteLine("TEXT 567,84,\"0\",180,8,8,\"" + model.vehicleno + "\"");
-                    tw.WriteLine("TEXT 567,35,\"0\",180,8,8,\"" + model.transporterdetails + "\"");
+                    tw.WriteLine("TEXT 1118,365,\"0\",180,8,8,\"Gate Entry No.\"");
+                    tw.WriteLine("TEXT 1118,275,\"0\",180,8,8,\"PO No.\"");
+                    tw.WriteLine("TEXT 1118,189,\"0\",180,8,8,\"Gate Entry Time\"");
+                    tw.WriteLine("TEXT 1118,125,\"0\",180,8,8,\"Vehicle No.\"");
+                    tw.WriteLine("TEXT 1118,53,\"0\",180,8,8,\"Transporter Details\"");
+                    tw.WriteLine("TEXT 839,367,\"0\",180,8,8,\"" + model.inwmasterid + "\"");
+                    tw.WriteLine("TEXT 839,193,\"0\",180,8,8,\"" + formateddate + "\"");
+                    tw.WriteLine("TEXT 839,125,\"0\",180,8,8,\"" + model.vehicleno + "\"");
+                    tw.WriteLine("TEXT 839,53,\"0\",180,8,8,\"" + model.transporterdetails + "\"");
                     //tw.WriteLine("TEXT 839,48,\"0\",180,8,8,\"" + model.transporterdetails+"\"");
-                    tw.WriteLine("QRCODE 117,209,L,3,A,180,M2,S7,\"" + model.inwmasterid + "\"");
-                    tw.WriteLine("TEXT 158,128,\"0\",180,8,7,\"" + model.inwmasterid + "\"");
-                    tw.WriteLine("TEXT 567,199,\"0\",180,8,8,\"" + model.pono + "\"");
+                    tw.WriteLine("QRCODE 175,310,L,4,A,180,M2,S7,\"" + model.inwmasterid + "\"");
+                    tw.WriteLine("TEXT 235,199,\"0\",180,7,7,\"" + model.inwmasterid + "\"");
+                    tw.WriteLine("TEXT 839,295,\"0\",180,8,8,\"" + model.pono + "\"");
                     //tw.WriteLine("TEXT 839,354,\"0\",180,8,8,\"" + model.inwmasterid + "\"");
                     //tw.WriteLine("TEXT 1235,243,\"0\",180,7,7,\"" + model.inwmasterid + "\"");
                     tw.WriteLine("PRINT 1,1");
                     tw.WriteLine("<xpml></page></xpml><xpml><end/></xpml>");
+
+
+
+
+                   // //Prn code for TSC TE210 printer
+
+                   // string formateddate = model.gateentrytime.ToString("dd-MM-yyyy");
+
+                   // tw.WriteLine("<xpml><page quantity='0' pitch='38.0 mm'></xpml>SIZE 97.5 mm, 38 mm");
+                   //// tw.WriteLine("GAP 3 mm, 0 mm");
+                   // tw.WriteLine("DIRECTION 0,0");
+                   // tw.WriteLine("REFERENCE 0,0");
+                   // tw.WriteLine("OFFSET 0 mm");
+                   // tw.WriteLine("SET PEEL OFF");
+                   // tw.WriteLine("SET CUTTER OFF");
+                   // tw.WriteLine("SET PARTIAL_CUTTER OFF");
+                   // tw.WriteLine("<xpml></page></xpml><xpml><page quantity='1' pitch='38.0 mm'></xpml>SET TEAR ON");
+                   // tw.WriteLine("CLS");
+                   // tw.WriteLine("BOX 15,5,762,260,3");
+                   // tw.WriteLine("BAR 15,49, 746, 3");
+                   // tw.WriteLine("BAR 164,49, 3, 209");
+                   // tw.WriteLine("BAR 165,95, 596, 3");
+                   // tw.WriteLine("BAR 165,139, 596, 3");
+                   // tw.WriteLine("BAR 165,208, 596, 3");
+                   // tw.WriteLine("BAR 572,6, 3, 252");
+                   // tw.WriteLine("CODEPAGE 1252");
+                   // tw.WriteLine("TEXT 756,247,\"0\",180,8,8,\"Gate Entry No.\"");
+                   // tw.WriteLine("TEXT 756,186,\"0\",180,8,8,\"PO No.\"");
+                   // tw.WriteLine("TEXT 756,128,\"0\",180,8,8,\"Gate Entry Time\"");
+                   // tw.WriteLine("TEXT 756,84,\"0\",180,8,8,\"Vehicle No.\"");
+                   // tw.WriteLine("TEXT 756,35,\"0\",180,8,8,\"Transporter Details\"");
+                   // tw.WriteLine("TEXT 567,248,\"0\",180,8,8,\"" + model.inwmasterid + "\"");
+                   // tw.WriteLine("TEXT 567,130,\"0\",180,8,8,\"" + formateddate + "\"");
+                   // tw.WriteLine("TEXT 567,84,\"0\",180,8,8,\"" + model.vehicleno + "\"");
+                   // tw.WriteLine("TEXT 567,35,\"0\",180,8,8,\"" + model.transporterdetails + "\"");
+                   // //tw.WriteLine("TEXT 839,48,\"0\",180,8,8,\"" + model.transporterdetails+"\"");
+                   // tw.WriteLine("QRCODE 117,209,L,3,A,180,M2,S7,\"" + model.inwmasterid + "\"");
+                   // tw.WriteLine("TEXT 158,128,\"0\",180,8,7,\"" + model.inwmasterid + "\"");
+                   // tw.WriteLine("TEXT 567,199,\"0\",180,8,8,\"" + model.pono + "\"");
+                   // //tw.WriteLine("TEXT 839,354,\"0\",180,8,8,\"" + model.inwmasterid + "\"");
+                   // //tw.WriteLine("TEXT 1235,243,\"0\",180,7,7,\"" + model.inwmasterid + "\"");
+                   // tw.WriteLine("PRINT 1,1");
+                   // tw.WriteLine("<xpml></page></xpml><xpml><end/></xpml>");
 
                 }
 
@@ -172,7 +172,7 @@ namespace WMS.Controllers
                 //string printerName = ConfigurationManager.AppSettings["CTMajor_AdminPrinter"].ToString();
                 //string printerName = "10.29.11.25";
 
-                string printerName = "10.29.2.47";
+                string printerName = "10.29.2.48";
                 printerName = config._GateEntryPrintIP;
                 PrintUtilities objIdentification = new PrintUtilities();
                 printResult = "success";
