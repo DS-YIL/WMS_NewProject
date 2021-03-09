@@ -187,4 +187,5 @@ export class rbamaster {
   material_transfer_approval: boolean;
   asn_view: boolean;
   internal_stock_transfer: boolean;
+  miscellanous: boolean;
 }
