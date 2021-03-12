@@ -11657,6 +11657,96 @@ namespace WMS.DAL
 		}
 
 		/*
+		Name of Function : <<stomatrequestapprove>>  Author :<<Ramesh>>  
+		Date of Creation <<12-02-2021>>
+		Purpose : <<mat transfer approve>>
+		<param name="datamodel"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
+		public string updaterba(List<rbamaster> datamodel)
+		{
+			string result = "";
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				NpgsqlTransaction Trans = null;
+				try
+				{
+
+					pgsql.Open();
+					Trans = pgsql.BeginTransaction();
+
+					foreach (rbamaster data in datamodel)
+					{
+
+
+						string insertdataqry = WMSResource.updaterba.Replace("#roleid", data.roleid.ToString());
+						var result1 = pgsql.Execute(insertdataqry, new
+						{
+							data.inv_enquiry,
+							data.inv_reports,
+							data.gate_entry,
+							data.gate_entry_barcode,
+							data.inv_receipt_alert,
+							data.receive_material,
+							data.put_away,
+							data.material_return,
+							data.material_transfer,
+							data.gate_pass,
+							data.gatepass_inout,
+							data.gatepass_approval,
+							data.material_issue,
+							data.material_request,
+							data.material_reservation,
+							data.abc_classification,
+							data.cyclecount_configuration,
+							data.cycle_counting,
+							data.cyclecount_approval,
+							data.admin_access,
+							data.masterdata_creation,
+							data.masterdata_updation,
+							data.masterdata_approval,
+							data.printbarcodes,
+							data.modified_by,
+							data.pmdashboard_view,
+							data.quality_check,
+							data.min,
+							data.direct_transfer_view,
+							data.notify_to_finance,
+							data.gr_process,
+							data.material_transfer_approval,
+							data.asn_view,
+							data.internal_stock_transfer,
+							data.miscellanous,
+							data.materialrequest_approval,
+							data.assign_pm,
+							data.annexure_report,
+							data.initialstock_upload,
+							data.inventory_management,
+							data.all_reports
+
+						});
+
+
+	                }
+					result = "saved";
+					Trans.Commit();
+				}
+				catch (Exception Ex)
+				{
+					Trans.Rollback();
+					log.ErrorMessage("PODataProvider", "updaterba", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
+					return Ex.Message;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+			}
+			return result;
+		}
+
+		/*
 		Name of Function : <<getrbadetails>>  Author :<<Ramesh>>  
 		Date of Creation <<28/07/2020>>
 		Purpose : <<get rba details>>
@@ -11668,7 +11758,7 @@ namespace WMS.DAL
 			{
 				try
 				{
-					string materialrequestquery = "select * from wms.wms_rbamaster";
+					string materialrequestquery = "select rm.rolename,wr.* from wms.wms_rbamaster wr left outer join wms.rolemaster rm on wr.roleid = rm.roleid order by rm.roleid";
 
 					await pgsql.OpenAsync();
 					return await pgsql.QueryAsync<rbamaster>(

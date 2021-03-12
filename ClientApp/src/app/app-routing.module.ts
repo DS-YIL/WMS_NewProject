@@ -91,6 +91,7 @@ import { SubContractTransferOrderComponent } from './WMS/SubContractTransferOrde
 import { AssignProjectComponent } from './WMS/AssignProject.component';
 import { AssignProjectManagerComponent } from './WMS/AssignProjectManager.component';
 import { MaterialRequestApprovalComponent } from './WMS/MaterialRequestApproval.component';
+import { AssignRBAComponent } from './WMS/AssignRBA.component';
 
 const routes: Routes = [{
   path: 'WMS',
@@ -198,7 +199,8 @@ const routes: Routes = [{
     { path: "SubcontractApproval", component: SubcontractApprovalComponent, canActivate: [AuthGuard] },
     { path: "AssignProjectManager", component: AssignProjectManagerComponent, canActivate: [AuthGuard] },
     { path: "POReport", component: POReportComponent, canActivate: [AuthGuard] },
-    { path: "AnnexureReport", component: AnnexureReportComponent, canActivate: [AuthGuard] }
+    { path: "AnnexureReport", component: AnnexureReportComponent, canActivate: [AuthGuard] },
+    { path: "Assignrba", component: AssignRBAComponent, canActivate: [AuthGuard] }
 
   ]
 

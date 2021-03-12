@@ -2440,8 +2440,8 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to insert into wms.AuditLog(id,filename,filelocation,uploadedon,uploadedby,uploadedto,modulename,successrecords,exceptionrecords,totalrecords) 
-        /// values (default,@filename,@filelocation,@uploadedon,@uploadedby,@uploadedto,@modulename,@successrecords,@exceptionrecords,@totalrecords).
+        ///   Looks up a localized string similar to insert into wms.AuditLog(id,filename,filelocation,uploadedon,uploadedby,uploadedto,modulename,successrecords,exceptionrecords,totalrecords,uploadcode) 
+        /// values (default,@filename,@filelocation,@uploadedon,@uploadedby,@uploadedto,@modulename,@successrecords,@exceptionrecords,@totalrecords,@uploadcode).
         /// </summary>
         public static string insertauditlog {
             get {
@@ -3577,6 +3577,20 @@ namespace WMS.Common {
         public static string updateqtyafterissue {
             get {
                 return ResourceManager.GetString("updateqtyafterissue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to UPDATE wms.wms_rbamaster
+        ///SET inv_enquiry=@inv_enquiry, inv_reports=@inv_reports, gate_entry=@gate_entry, gate_entry_barcode=@gate_entry_barcode, 
+        ///inv_receipt_alert=@inv_receipt_alert, receive_material=@receive_material, put_away=@put_away, 
+        ///material_return=@material_return, material_transfer=@material_transfer, gate_pass=@gate_pass, 
+        ///gatepass_inout=@gatepass_inout, gatepass_approval=@gatepass_approval, 
+        ///material_issue=@material_issue, material_request=@material_request, material_reservation=@material_r [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string updaterba {
+            get {
+                return ResourceManager.GetString("updaterba", resourceCulture);
             }
         }
         

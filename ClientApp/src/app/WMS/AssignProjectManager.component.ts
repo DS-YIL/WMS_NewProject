@@ -99,7 +99,7 @@ export class AssignProjectManagerComponent implements OnInit {
     this.wmsService.updatepm(senddata).subscribe(data => {
       this.spinner.hide();
       if (String(data) == "saved") {
-        this.messageService.add({ severity: 'succeess', summary: '', detail: 'Project manager assigned' });
+        this.messageService.add({ severity: 'success', summary: '', detail: 'Project manager assigned' });
       }
       else {
         this.messageService.add({ severity: 'error', summary: '', detail: String(data) });

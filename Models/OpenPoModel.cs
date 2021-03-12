@@ -1714,34 +1714,50 @@ public class rbamaster
 {
 	public int id { get; set; }
 	public int roleid { get; set; }
-	public bool inv_enquiry { get; set; }
-	public bool inv_reports { get; set; }
-	public bool gate_entry { get; set; }
-	public bool gate_entry_barcode { get; set; }
-	public bool inv_receipt_alert { get; set; }
-	public bool receive_material { get; set; }
-	public bool put_away { get; set; }
-	public bool material_return { get; set; }
-	public bool material_transfer { get; set; }
-	public bool gate_pass { get; set; }
-	public bool gatepass_inout { get; set; }
-	public bool gatepass_approval { get; set; }
-	public bool material_issue { get; set; }
-	public bool material_request { get; set; }
-	public bool material_reservation { get; set; }
-	public bool abc_classification { get; set; }
-	public bool cyclecount_configuration { get; set; }
-	public bool cycle_counting { get; set; }
-	public bool cyclecount_approval { get; set; }
-	public bool admin_access { get; set; }
-	public bool masterdata_creation { get; set; }
-	public bool masterdata_updation { get; set; }
-	public bool masterdata_approval { get; set; }
-	public bool printbarcodes { get; set; }
-	public bool quality_check { get; set; }
-	public bool pmdashboard_view { get; set; }
+	public string rolename { get; set; }
+	public bool? inv_enquiry { get; set; }
+	public bool? inv_reports { get; set; }
+	public bool? gate_entry { get; set; }
+	public bool? gate_entry_barcode { get; set; }
+	public bool? inv_receipt_alert { get; set; }
+	public bool? receive_material { get; set; }
+	public bool? put_away { get; set; }
+	public bool? material_return { get; set; }
+	public bool? material_transfer { get; set; }
+	public bool? gate_pass { get; set; }
+	public bool? gatepass_inout { get; set; }
+	public bool? gatepass_approval { get; set; }
+	public bool? material_issue { get; set; }
+	public bool? material_request { get; set; }
+	public bool? material_reservation { get; set; }
+	public bool? abc_classification { get; set; }
+	public bool? cyclecount_configuration { get; set; }
+	public bool? cycle_counting { get; set; }
+	public bool? cyclecount_approval { get; set; }
+	public bool? admin_access { get; set; }
+	public bool? masterdata_creation { get; set; }
+	public bool? masterdata_updation { get; set; }
+	public bool? masterdata_approval { get; set; }
+	public bool? printbarcodes { get; set; }
+	public bool? quality_check { get; set; }
+	public bool? pmdashboard_view { get; set; }
 	public DateTime? modified_on { get; set; }
 	public string modified_by { get; set; }
+	public bool? miscellanous { get; set; }
+	public bool? materialrequest_approval { get; set; }
+	public bool? assign_pm { get; set; }
+	public bool? annexure_report { get; set; }
+	public bool? initialstock_upload { get; set; }
+	public bool? inventory_Management { get; set; }
+	public bool? all_reports { get; set; }
+	public bool? min { get; set; }
+	public bool? direct_transfer_view { get; set; }
+	public bool? notify_to_finance { get; set; }
+	public bool? gr_process { get; set; }
+	public bool? material_transfer_approval { get; set; }
+	public bool? asn_view { get; set; }
+	public bool? internal_stock_transfer { get; set; }
+	public bool? inventory_management { get; set; }
 }
 
 public class UserDashboardDetail

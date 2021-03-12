@@ -188,4 +188,10 @@ export class rbamaster {
   asn_view: boolean;
   internal_stock_transfer: boolean;
   miscellanous: boolean;
+  materialrequest_approval: boolean;
+  assign_pm: boolean;
+  annexure_report: boolean;
+  initialstock_upload: boolean;
+  inventory_Management: boolean;
+  all_reports: boolean;
 }

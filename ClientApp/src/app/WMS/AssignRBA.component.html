@@ -1,0 +1,220 @@
+<div style="margin:10px">
+  <div class="card" style="min-height:82vh; width: 100%; border-radius: 10px; box-shadow: 5px 10px #888888;">
+    <div class="card-header text-center commoncardheader">
+      <div class="row " style="    margin-top: 10px;
+    margin-left: 0px !important;
+    margin-right: 0px !important">
+        <div class="col-lg-4 col-md-4 form-inline">
+        </div>
+        <div class="col-lg-4 col-md-4 text-center">
+          <span style="color:#428bca;font-size:18px" class="commonheadertext">
+            <i class="fa fa-check-circle-o commonheadertext"></i>&nbsp;Assign RBA
+          </span>
+        </div>
+        <div class="col-lg-4 col-md-4">
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <p-table #dt [value]="getlistdata" [style]="{'overflow':'auto!important','box-shadow' : '5px 5px #888888'}"
+               [scrollable]="true" scrollHeight="65vh">
+        <ng-template pTemplate="header">
+          <tr class="mprltbldata">
+
+            <th class="ptable-cell" style="text-align:center;width:70px;">Sl.No.</th>
+            <th class="ptable-cell" style="text-align:center;width:150px;">Role</th>
+            <th class="ptable-cell" style="text-align:center;width:100px;">Inventory Enquiry</th>
+            <th class="ptable-cell" style="text-align:center;width:100px;">Inventory Report</th>
+            <th class="ptable-cell" style="text-align:center;width:100px;">Gate Entry</th>
+            <th class="ptable-cell" style="text-align:center;width:100px;">Gate Entry Barcode</th>
+            <th class="ptable-cell" style="text-align:center;width:100px;">Inventory Receipt Alert</th>
+            <th class="ptable-cell" style="text-align:center;width:100px;">Receive Material</th>
+            <th class="ptable-cell" style="text-align:center;width:100px;">Quality Check</th>
+            <th class="ptable-cell" style="text-align:center;width:100px;">MRN</th>
+            <th class="ptable-cell" style="text-align:center;width:100px;">Put Away Material</th>
+            <th class="ptable-cell" style="text-align:center;width:100px;">Material Return</th>
+            <th class="ptable-cell" style="text-align:center;width:100px;">Material Transfer</th>
+            <th class="ptable-cell" style="text-align:center;width:100px;">Material Transfer Approval</th>
+            <th class="ptable-cell" style="text-align:center;width:100px;">Gate Pass</th>
+            <th class="ptable-cell" style="text-align:center;width:100px;">Gate Pass IN/OUT</th>
+            <th class="ptable-cell" style="text-align:center;width:100px;">Gate Pass Approval</th>
+            <th class="ptable-cell" style="text-align:center;width:100px;">Material Issue</th>
+            <th class="ptable-cell" style="text-align:center;width:100px;">Material Request</th>
+            <th class="ptable-cell" style="text-align:center;width:100px;">Material Request Approval</th>
+            <th class="ptable-cell" style="text-align:center;width:100px;">Material Reservation</th>
+            <th class="ptable-cell" style="text-align:center;width:100px;">ABC Classification</th>
+            <th class="ptable-cell" style="text-align:center;width:100px;">Cyclecount Configuration</th>
+            <th class="ptable-cell" style="text-align:center;width:100px;">Cycle Counting</th>
+            <th class="ptable-cell" style="text-align:center;width:100px;">Cyclecount Approval</th>
+            <th class="ptable-cell" style="text-align:center;width:100px;">Admin Access</th>
+            <th class="ptable-cell" style="text-align:center;width:100px;">Master Creation</th>
+            <th class="ptable-cell" style="text-align:center;width:100px;">Master Updation</th>
+            <th class="ptable-cell" style="text-align:center;width:100px;">Master Approval</th>
+            <th class="ptable-cell" style="text-align:center;width:100px;">Print Barcode</th>
+            <th class="ptable-cell" style="text-align:center;width:100px;">PM Dashboard</th>
+            <th class="ptable-cell" style="text-align:center;width:100px;">Direct Shipment View</th>
+            <th class="ptable-cell" style="text-align:center;width:100px;">Notify To Finance</th>
+            <th class="ptable-cell" style="text-align:center;width:100px;">GR Process</th>
+            <th class="ptable-cell" style="text-align:center;width:100px;">ASN View</th>
+            <th class="ptable-cell" style="text-align:center;width:100px;">Internal Stock Transfer</th>
+            <th class="ptable-cell" style="text-align:center;width:100px;">Miscellanous transactions</th>
+            <th class="ptable-cell" style="text-align:center;width:100px;">Assign PM</th>
+            <th class="ptable-cell" style="text-align:center;width:100px;">Annexure Report</th>
+            <th class="ptable-cell" style="text-align:center;width:100px;">Initial Stock Upload</th>
+            <th class="ptable-cell" style="text-align:center;width:100px;">Inventory Management</th>
+            <th class="ptable-cell" style="text-align:center;width:100px;">All Reports</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex" let-rindex=0>
+          <tr>
+            <td class="ptable-cell" style="text-align:right;width:70px;">
+              {{ri+1}}
+            </td>
+            <td class="ptable-cell" style="text-align:right;width:150px;">
+              {{rowData.rolename}}
+            </td>
+            <td class="ptable-cell" style="text-align:right;width:100px;">
+              <input type="checkbox" [(ngModel)]="rowData.inv_enquiry" />
+            </td>
+            <td class="ptable-cell" style="text-align:right;width:100px;">
+              <input type="checkbox" [(ngModel)]="rowData.inv_reports" />
+            </td>
+            <td class="ptable-cell" style="text-align:right;width:100px;">
+              <input type="checkbox" [(ngModel)]="rowData.gate_entry" />
+            </td>
+            <td class="ptable-cell" style="text-align:right;width:100px;">
+              <input type="checkbox" [(ngModel)]="rowData.gate_entry_barcode" />
+            </td>
+            <td class="ptable-cell" style="text-align:right;width:100px;">
+              <input type="checkbox" [(ngModel)]="rowData.inv_receipt_alert" />
+            </td>
+            <td class="ptable-cell" style="text-align:right;width:100px;">
+              <input type="checkbox" [(ngModel)]="rowData.receive_material" />
+            </td>
+            <td class="ptable-cell" style="text-align:right;width:100px;">
+              <input type="checkbox" [(ngModel)]="rowData.quality_check" />
+            </td>
+            <td class="ptable-cell" style="text-align:right;width:100px;">
+              <input type="checkbox" [(ngModel)]="rowData.min" />
+            </td>
+            <td class="ptable-cell" style="text-align:right;width:100px;">
+              <input type="checkbox" [(ngModel)]="rowData.put_away" />
+            </td>
+            <td class="ptable-cell" style="text-align:right;width:100px;">
+              <input type="checkbox" [(ngModel)]="rowData.material_return" />
+            </td>
+            <td class="ptable-cell" style="text-align:right;width:100px;">
+              <input type="checkbox" [(ngModel)]="rowData.material_transfer" />
+            </td>
+            <td class="ptable-cell" style="text-align:right;width:100px;">
+              <input type="checkbox" [(ngModel)]="rowData.material_transfer_approval" />
+            </td>
+            <td class="ptable-cell" style="text-align:right;width:100px;">
+              <input type="checkbox" [(ngModel)]="rowData.gate_pass" />
+            </td>
+            <td class="ptable-cell" style="text-align:right;width:100px;">
+              <input type="checkbox" [(ngModel)]="rowData.gatepass_inout" />
+            </td>
+            <td class="ptable-cell" style="text-align:right;width:100px;">
+              <input type="checkbox" [(ngModel)]="rowData.gatepass_approval" />
+            </td>
+            <td class="ptable-cell" style="text-align:right;width:100px;">
+              <input type="checkbox" [(ngModel)]="rowData.material_issue" />
+            </td>
+            <td class="ptable-cell" style="text-align:right;width:100px;">
+              <input type="checkbox" [(ngModel)]="rowData.material_request" />
+            </td>
+            <td class="ptable-cell" style="text-align:right;width:100px;">
+              <input type="checkbox" [(ngModel)]="rowData.materialrequest_approval" />
+            </td>
+            <td class="ptable-cell" style="text-align:right;width:100px;">
+              <input type="checkbox" [(ngModel)]="rowData.material_reservation" />
+            </td>
+            <td class="ptable-cell" style="text-align:right;width:100px;">
+              <input type="checkbox" [(ngModel)]="rowData.abc_classification" />
+            </td>
+            <td class="ptable-cell" style="text-align:right;width:100px;">
+              <input type="checkbox" [(ngModel)]="rowData.cyclecount_configuration" />
+            </td>
+            <td class="ptable-cell" style="text-align:right;width:100px;">
+              <input type="checkbox" [(ngModel)]="rowData.cycle_counting" />
+            </td>
+            <td class="ptable-cell" style="text-align:right;width:100px;">
+              <input type="checkbox" [(ngModel)]="rowData.cyclecount_approval" />
+            </td>
+            <td class="ptable-cell" style="text-align:right;width:100px;">
+              <input type="checkbox" [(ngModel)]="rowData.admin_access" />
+            </td>
+            <td class="ptable-cell" style="text-align:right;width:100px;">
+              <input type="checkbox" [(ngModel)]="rowData.masterdata_creation" />
+            </td>
+            <td class="ptable-cell" style="text-align:right;width:100px;">
+              <input type="checkbox" [(ngModel)]="rowData.masterdata_updation" />
+            </td>
+            <td class="ptable-cell" style="text-align:right;width:100px;">
+              <input type="checkbox" [(ngModel)]="rowData.masterdata_approval" />
+            </td>
+            <td class="ptable-cell" style="text-align:right;width:100px;">
+              <input type="checkbox" [(ngModel)]="rowData.printbarcodes" />
+            </td>
+            <td class="ptable-cell" style="text-align:right;width:100px;">
+              <input type="checkbox" [(ngModel)]="rowData.pmdashboard_view" />
+            </td>
+
+            <td class="ptable-cell" style="text-align:right;width:100px;">
+              <input type="checkbox" [(ngModel)]="rowData.direct_transfer_view" />
+            </td>
+            <td class="ptable-cell" style="text-align:right;width:100px;">
+              <input type="checkbox" [(ngModel)]="rowData.notify_to_finance" />
+            </td>
+            <td class="ptable-cell" style="text-align:right;width:100px;">
+              <input type="checkbox" [(ngModel)]="rowData.gr_process" />
+            </td>
+            <td class="ptable-cell" style="text-align:right;width:100px;">
+              <input type="checkbox" [(ngModel)]="rowData.asn_view" />
+            </td>
+            <td class="ptable-cell" style="text-align:right;width:100px;">
+              <input type="checkbox" [(ngModel)]="rowData.internal_stock_transfer" />
+            </td>
+            <td class="ptable-cell" style="text-align:right;width:100px;">
+              <input type="checkbox" [(ngModel)]="rowData.miscellanous" />
+            </td>
+            <td class="ptable-cell" style="text-align:right;width:100px;">
+              <input type="checkbox" [(ngModel)]="rowData.assign_pm" />
+            </td>
+            <td class="ptable-cell" style="text-align:right;width:100px;">
+              <input type="checkbox" [(ngModel)]="rowData.annexure_report" />
+            </td>
+            <td class="ptable-cell" style="text-align:right;width:100px;">
+              <input type="checkbox" [(ngModel)]="rowData.initialstock_upload" />
+            </td>
+            <td class="ptable-cell" style="text-align:right;width:100px;">
+              <input type="checkbox" [(ngModel)]="rowData.inventory_management" />
+            </td>
+            <td class="ptable-cell" style="text-align:right;width:100px;">
+              <input type="checkbox" [(ngModel)]="rowData.all_reports" />
+            </td>
+
+</ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="3" style="text-align:center;color:red">No Records.</td>
+          </tr>
+        </ng-template>
+      </p-table>
+
+
+    </div>
+    <div class="card-footer" *ngIf="getlistdata.length">
+      <div>
+        <button type="button"  class="btn btn-success" style="margin-left:45%"  (click)="submitAdd()">Submit</button>
+      </div>
+    </div>
+  </div>
+
+
+
+</div>
+
+
+

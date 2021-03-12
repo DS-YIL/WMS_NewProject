@@ -760,6 +760,10 @@ export class wmsService {
     const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }), responseType: 'text' as any };
     return this.http.post<any>(this.url + 'POData/STOmatrequestapproval', transferdata, httpOptions);
   }
+  assignRBA(rbadata: rbamaster[]): Observable<any> {
+    const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }), responseType: 'text' as any };
+    return this.http.post<any>(this.url + 'POData/updaterba', rbadata, httpOptions);
+  }
   updatepm(transferdata: assignpmmodel[]): Observable<any> {
     const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }), responseType: 'text' as any };
     return this.http.post<any>(this.url + 'POData/updatepm', transferdata, httpOptions);

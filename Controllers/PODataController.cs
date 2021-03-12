@@ -1129,6 +1129,11 @@ namespace WMS.Controllers
 		{
 			return this._poService.stomatrequestapprove(obj);
 		}
+		[HttpPost("updaterba")]
+		public string updaterba([FromBody] List<rbamaster> obj)
+		{
+			return this._poService.updaterba(obj);
+		}
 		[HttpPost("updatepm")]
 		public string updatepm([FromBody] List<assignpmmodel> obj)
 		{

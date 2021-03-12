@@ -214,6 +214,7 @@ namespace WMS.Interfaces
 		string matrequestapprove(List<MaterialTransaction> model);
 		Task<WMSHttpResponse> getAvailableQtyBystore(string store, string materialid, string description, string projectcode);
 		string stomatrequestapprove(List<invstocktransfermodel> model);
+		string updaterba(List<rbamaster> model);
 		string updatepm(List<assignpmmodel> model);
 		int mrnupdate(MRNsavemodel model);
 		int GatepassapproveByMail(gatepassModel model);

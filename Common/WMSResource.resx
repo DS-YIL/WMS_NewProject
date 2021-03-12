@@ -1485,8 +1485,8 @@ group by st.uploadbatchcode</value>
 (@po,@polineitemno,@mscode,@saleorderno,@solineitemno,@insprec,@linkageno,@grno,@codetype,@description,@error_description,@isloaderror,@uploadcode,@vendorcode,@vendorname,@materialid,@materialdescription,@materialqty,@itemdeliverydate,@projectcode,@assetno,@assetsubno,@costcenter)</value>
   </data>
   <data name="insertauditlog" xml:space="preserve">
-    <value>insert into wms.AuditLog(id,filename,filelocation,uploadedon,uploadedby,uploadedto,modulename,successrecords,exceptionrecords,totalrecords) 
- values (default,@filename,@filelocation,@uploadedon,@uploadedby,@uploadedto,@modulename,@successrecords,@exceptionrecords,@totalrecords)</value>
+    <value>insert into wms.AuditLog(id,filename,filelocation,uploadedon,uploadedby,uploadedto,modulename,successrecords,exceptionrecords,totalrecords,uploadcode) 
+ values (default,@filename,@filelocation,@uploadedon,@uploadedby,@uploadedto,@modulename,@successrecords,@exceptionrecords,@totalrecords,@uploadcode)</value>
   </data>
   <data name="updatepoformatlabel" xml:space="preserve">
     <value>update wms.wms_pomaterials set podescription = @podescription,mscode = @mscode, saleorderno = @saleorderno,
@@ -2141,5 +2141,22 @@ where wrb.locatorid = #locatorid</value>
     <value>INSERT INTO wms.material_valuation
 (projectcode, pono, itemno, material, materialdescription, value, referenceno, quantity, currency, potext, uploadcode, filename)
 VALUES(@projectcode, @pono, @itemno, @material, @materialdescription, @value, @referenceno, @quantity, @currency, @potext, @uploadcode, @filename)</value>
+  </data>
+  <data name="updaterba" xml:space="preserve">
+    <value>UPDATE wms.wms_rbamaster
+SET inv_enquiry=@inv_enquiry, inv_reports=@inv_reports, gate_entry=@gate_entry, gate_entry_barcode=@gate_entry_barcode, 
+inv_receipt_alert=@inv_receipt_alert, receive_material=@receive_material, put_away=@put_away, 
+material_return=@material_return, material_transfer=@material_transfer, gate_pass=@gate_pass, 
+gatepass_inout=@gatepass_inout, gatepass_approval=@gatepass_approval, 
+material_issue=@material_issue, material_request=@material_request, material_reservation=@material_reservation, 
+abc_classification=@abc_classification, cyclecount_configuration=@cyclecount_configuration, cycle_counting=@cycle_counting,
+cyclecount_approval=@cyclecount_approval, admin_access=@admin_access, masterdata_creation=@masterdata_creation, 
+masterdata_updation=@masterdata_updation, masterdata_approval=@masterdata_approval, printbarcodes=@printbarcodes, modified_on=current_timestamp, 
+modified_by=@modified_by, pmdashboard_view=@pmdashboard_view, quality_check=@quality_check, min=@min, direct_transfer_view=@direct_transfer_view, 
+notify_to_finance=@notify_to_finance, gr_process=@gr_process, material_transfer_approval=@material_transfer_approval, 
+asn_view=@asn_view, internal_stock_transfer=@internal_stock_transfer, miscellanous=@miscellanous, materialrequest_approval=@materialrequest_approval, 
+assign_pm=@assign_pm, annexure_report=@annexure_report, initialstock_upload=@initialstock_upload, 
+inventory_management=@inventory_management, all_reports=@all_reports
+WHERE roleid=#roleid</value>
   </data>
 </root>

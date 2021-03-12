@@ -254,6 +254,7 @@ namespace WMS.Controllers
 					auditlog.uploadedon = DateTime.Now;
 					auditlog.uploadedto = "STAG_PO_SAP";
 					auditlog.modulename = "uploadPoData";
+					auditlog.uploadcode = uploadcode;
 
 
 					//Added Gayathri
@@ -523,6 +524,7 @@ namespace WMS.Controllers
 								auditlog.uploadedon = DateTime.Now;
 								auditlog.uploadedto = "wms.material_valuation";
 								auditlog.modulename = "uploadCJI3Excel";
+								auditlog.uploadcode = uploadcode;
 								loadAuditLog(auditlog);
 							}
 
@@ -555,6 +557,7 @@ namespace WMS.Controllers
 				{
 					serverPath = @"\\ZAWMS-003\WMS_StagingFiles\ZGMMR02023\";
 				}
+				
 				using (new NetworkConnection(serverPath, new NetworkCredential(@"ECH_Admin", "Jan@2019")))
 				{
 					var directory = new DirectoryInfo(serverPath);
@@ -660,7 +663,10 @@ namespace WMS.Controllers
 									auditlog.uploadedon = DateTime.Now;
 									auditlog.uploadedto = "wms.st_slno_imports";
 									auditlog.modulename = "uploadZGMMR02023Excel";
-									loadAuditLog(auditlog);
+								    auditlog.uploadcode = uploadcode;
+								    loadAuditLog(auditlog);
+		
+
 							}
 
 						}
@@ -818,6 +824,7 @@ namespace WMS.Controllers
 								auditlog.uploadedon = DateTime.Now;
 								auditlog.uploadedto = "wms.st_slno_imports";
 								auditlog.modulename = "uploadZGSDR00006Excel";
+								auditlog.uploadcode = uploadcode;
 								loadAuditLog(auditlog);
 							}
 
@@ -1005,6 +1012,7 @@ namespace WMS.Controllers
 									auditlog.uploadedon = DateTime.Now;
 									auditlog.uploadedto = "wms.STAG_PO_SAP";
 									auditlog.modulename = "uploadPOExcel";
+									auditlog.uploadcode = uploadcode;
 									loadAuditLog(auditlog);
 									loadPOData(uploadcode);
 								}
@@ -1196,6 +1204,7 @@ namespace WMS.Controllers
 									auditlog.uploadedon = DateTime.Now;
 									auditlog.uploadedto = "wms.STAG_PO_SAP";
 									auditlog.modulename = "uploadPOExcel";
+									auditlog.uploadcode = uploadcode;
 									loadAuditLog(auditlog);
 									loadPOData(uploadcode);
 								}
@@ -1306,6 +1315,7 @@ namespace WMS.Controllers
 									auditlog.uploadedon = DateTime.Now;
 									auditlog.uploadedto = "wms.st_slno_imports";
 									auditlog.modulename = "uploadZGSDR00006Excel";
+									auditlog.uploadcode = uploadcode;
 									loadAuditLog(auditlog);
 								}
 								else if (filename.Trim().StartsWith("ZGMMR02023"))
@@ -1393,6 +1403,7 @@ namespace WMS.Controllers
 									auditlog.uploadedon = DateTime.Now;
 									auditlog.uploadedto = "wms.st_slno_imports";
 									auditlog.modulename = "uploadZGMMR02023Excel";
+									auditlog.uploadcode = uploadcode;
 									loadAuditLog(auditlog);
 								}
 								else if (filename.Trim().StartsWith("YIL_CJI3_file"))
@@ -1474,6 +1485,7 @@ namespace WMS.Controllers
 									auditlog.uploadedon = DateTime.Now;
 									auditlog.uploadedto = "wms.material_valuation";
 									auditlog.modulename = "uploadCJI3Excel";
+									auditlog.uploadcode = uploadcode;
 									loadAuditLog(auditlog);
 								}
 							}
@@ -3128,7 +3140,8 @@ namespace WMS.Controllers
 						logdata.modulename,
 						logdata.successrecords,
 						logdata.exceptionrecords,
-						logdata.totalrecords
+						logdata.totalrecords,
+						logdata.uploadcode
 					});
 
 
@@ -3369,6 +3382,7 @@ namespace WMS.Controllers
 					auditlog.uploadedby = "Sch";
 					auditlog.uploadedto = "orgdepartments";
 					auditlog.modulename = "UpdateEmpDepDetails";
+					auditlog.uploadcode = string.Empty;
 					auditlog.totalrecords = Conversion.toInt(rows);
 					auditlog.exceptionrecords = Conversion.toInt(depexceptionrows);
 					auditlog.successrecords = Conversion.toInt(rows) - Conversion.toInt(depexceptionrows);

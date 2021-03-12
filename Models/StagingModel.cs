@@ -175,6 +175,8 @@ namespace WMS.Models
 		public int exceptionrecords { get; set; }
 		public int totalrecords { get; set; }
 
+		public string uploadcode { get; set; }
+
 	}
 	public class MaterialStage
 	{
