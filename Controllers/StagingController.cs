@@ -63,8 +63,8 @@ namespace WMS.Controllers
 					serverPath = config.FilePath;
 					var filePath = serverPath + "Yil_Po_Daily_report_" + DateTime.Now.ToString("dd-MM-yyyy").Replace("-", "_") + ".xlsx";
 					//Added lines - Gayathri
-					var filePath1 = serverPath + "ZGSDR00006_"+ DateTime.Now.ToString("dd-MM-yyyy").Replace("-", "_") + ".xlsx";
-					var filePath2 = serverPath +"ZGMMR02023_" + DateTime.Now.ToString("dd-MM-yyyy").Replace("-", "_") + ".xlsx"; 
+					//var filePath1 = serverPath + "ZGSDR00006_"+ DateTime.Now.ToString("dd-MM-yyyy").Replace("-", "_") + ".xlsx";
+					//var filePath2 = serverPath +"ZGMMR02023_" + DateTime.Now.ToString("dd-MM-yyyy").Replace("-", "_") + ".xlsx"; 
 					//End - Gayathri
 					DB.Open();
 					var filePathstr = filePath;
@@ -72,8 +72,8 @@ namespace WMS.Controllers
 					string nameoffile = filearr[filearr.Length - 1];
 					DataTable dtexcel = new DataTable();
 					//Added lines - Gayathri
-					DataTable dtexcel1 = new DataTable();
-					DataTable dtexcel2 = new DataTable();
+					//DataTable dtexcel1 = new DataTable();
+					//DataTable dtexcel2 = new DataTable();
 					//End - Gayathri
 					string poitem = "";
 					System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
@@ -95,51 +95,51 @@ namespace WMS.Controllers
 						}
 					}
 
-					//Added Lines -Gayathri
-					if (System.IO.File.Exists(filePath1))
-                    {
-						using (var stream2 = System.IO.File.Open(filePath1, FileMode.Open, FileAccess.Read))
-						{
-							using (var reader = ExcelReaderFactory.CreateReader(stream2))
-							{
+					////Added Lines -Gayathri
+					//if (System.IO.File.Exists(filePath1))
+     //               {
+					//	using (var stream2 = System.IO.File.Open(filePath1, FileMode.Open, FileAccess.Read))
+					//	{
+					//		using (var reader = ExcelReaderFactory.CreateReader(stream2))
+					//		{
 
-								// 2. Use the AsDataSet extension method
-								var result = reader.AsDataSet(new ExcelDataSetConfiguration()
-								{
-									ConfigureDataTable = (_) => new ExcelDataTableConfiguration()
-									{
-										UseHeaderRow = true
-									}
-								});
+					//			// 2. Use the AsDataSet extension method
+					//			var result = reader.AsDataSet(new ExcelDataSetConfiguration()
+					//			{
+					//				ConfigureDataTable = (_) => new ExcelDataTableConfiguration()
+					//				{
+					//					UseHeaderRow = true
+					//				}
+					//			});
 
-								// The result of each spreadsheet is in result.Tables
-								dtexcel1 = result.Tables[0];
+					//			// The result of each spreadsheet is in result.Tables
+					//			dtexcel1 = result.Tables[0];
 
-							}
-						}
-					}
+					//		}
+					//	}
+					//}
 
-					if (System.IO.File.Exists(filePath2))
-					{
-						using (var stream3 = System.IO.File.Open(filePath2, FileMode.Open, FileAccess.Read))
-						{
-							using (var reader = ExcelReaderFactory.CreateReader(stream3))
-							{
+					//if (System.IO.File.Exists(filePath2))
+					//{
+					//	using (var stream3 = System.IO.File.Open(filePath2, FileMode.Open, FileAccess.Read))
+					//	{
+					//		using (var reader = ExcelReaderFactory.CreateReader(stream3))
+					//		{
 
-								var result = reader.AsDataSet(new ExcelDataSetConfiguration()
-								{
-									ConfigureDataTable = (_) => new ExcelDataTableConfiguration()
-									{
-										UseHeaderRow = true
-									}
-								});
+					//			var result = reader.AsDataSet(new ExcelDataSetConfiguration()
+					//			{
+					//				ConfigureDataTable = (_) => new ExcelDataTableConfiguration()
+					//				{
+					//					UseHeaderRow = true
+					//				}
+					//			});
 
-								// The result of each spreadsheet is in result.Tables
-								dtexcel2 = result.Tables[0];
+					//			// The result of each spreadsheet is in result.Tables
+					//			dtexcel2 = result.Tables[0];
 
-							}
-						}
-					}
+					//		}
+					//	}
+					//}
 					
 					string uploadcode = Guid.NewGuid().ToString();
 					int i = 0;
@@ -259,137 +259,137 @@ namespace WMS.Controllers
 
 					//Added Gayathri
 					//string upcode = Guid.NewGuid().ToString();
-					int J = 0;
-					if(dtexcel2.Rows.Count>0)
-                    {
-						foreach (DataRow row in dtexcel2.Rows)
-						{
+					//int J = 0;
+					//if(dtexcel2.Rows.Count>0)
+     //               {
+					//	foreach (DataRow row in dtexcel2.Rows)
+					//	{
 
-							string Error_Description = "";
-							bool dataloaderror = false;
-							MateriallabelModel slimports = new MateriallabelModel();
-							slimports.saleorderno = Conversion.toStr(row["Sales Document"]);
-							slimports.solineitemno = Conversion.toStr(row["Sales Document Item"]);
+					//		string Error_Description = "";
+					//		bool dataloaderror = false;
+					//		MateriallabelModel slimports = new MateriallabelModel();
+					//		slimports.saleorderno = Conversion.toStr(row["Sales Document"]);
+					//		slimports.solineitemno = Conversion.toStr(row["Sales Document Item"]);
 
-						slimports.material = Conversion.toStr(row["Material Number"]);
-						slimports.gr = Conversion.toStr(row["Storage Location"]);
-						slimports.plant = Conversion.toStr(row["Plant"]);
-						slimports.serialno = Conversion.toStr(row["Serial Number"]);
-						slimports.uploadcode = uploadcode;
-						DateTime uploadedon = DateTime.Now;
-						if (string.IsNullOrEmpty(slimports.saleorderno))
-							Error_Description += " No saleorder";
+					//	slimports.material = Conversion.toStr(row["Material Number"]);
+					//	slimports.gr = Conversion.toStr(row["Storage Location"]);
+					//	slimports.plant = Conversion.toStr(row["Plant"]);
+					//	slimports.serialno = Conversion.toStr(row["Serial Number"]);
+					//	slimports.uploadcode = uploadcode;
+					//	DateTime uploadedon = DateTime.Now;
+					//	if (string.IsNullOrEmpty(slimports.saleorderno))
+					//		Error_Description += " No saleorder";
 
-						if (!string.IsNullOrEmpty(Error_Description))
-						{
-							dataloaderror = true;
-							slimports.error_description = Error_Description;
-							slimports.isloaderror = dataloaderror;
+					//	if (!string.IsNullOrEmpty(Error_Description))
+					//	{
+					//		dataloaderror = true;
+					//		slimports.error_description = Error_Description;
+					//		slimports.isloaderror = dataloaderror;
 
-						}
+					//	}
 
-						string soQuery = "Select saleorderno from wms.st_slno_imports where saleorderno = '" + slimports.saleorderno + "' and solineitemno = '" + slimports.solineitemno + "' and serialno = '" + slimports.serialno + "' ";
-						var so = DB.ExecuteScalar(soQuery, null);
-						if (so == null)
-						{
-							string stquery = WMSResource.insertstserialimport;
-							var rslt = DB.Execute(stquery, new
-							{
-								slimports.saleorderno,
-								slimports.solineitemno,
-								slimports.material,
-								slimports.gr,
-								slimports.plant,
-								slimports.serialno,
-								slimports.uploadcode,
-								uploadedon,
-								slimports.error_description,
-								slimports.isloaderror
-							});
+					//	string soQuery = "Select saleorderno from wms.st_slno_imports where saleorderno = '" + slimports.saleorderno + "' and solineitemno = '" + slimports.solineitemno + "' and serialno = '" + slimports.serialno + "' ";
+					//	var so = DB.ExecuteScalar(soQuery, null);
+					//	if (so == null)
+					//	{
+					//		string stquery = WMSResource.insertstserialimport;
+					//		var rslt = DB.Execute(stquery, new
+					//		{
+					//			slimports.saleorderno,
+					//			slimports.solineitemno,
+					//			slimports.material,
+					//			slimports.gr,
+					//			slimports.plant,
+					//			slimports.serialno,
+					//			slimports.uploadcode,
+					//			uploadedon,
+					//			slimports.error_description,
+					//			slimports.isloaderror
+					//		});
 
-							}
-
-
+					//		}
 
 
-						}
-					}
+
+
+					//	}
+					//}
 					
-					int K = 0;
-					if(dtexcel1.Rows.Count>0)
-                    {
-						foreach (DataRow row in dtexcel1.Rows)
-						{
+					//int K = 0;
+					//if(dtexcel1.Rows.Count>0)
+     //               {
+					//	foreach (DataRow row in dtexcel1.Rows)
+					//	{
 
-						string Error_Description = "";
-						bool dataloaderror = false;
-						MateriallabelModel model = new MateriallabelModel();
-						model.saleorderno = Conversion.toStr(row["Sales Document No."]);
-						model.solineitemno = Conversion.toStr(row["Sales Order Item No."]);
-						model.saleordertype = Conversion.toStr(row["Sales Document Type"]);
-						model.customername = Conversion.toStr(row["Sold-to party"]) + " " + Conversion.toStr(row["Name: Sold-to party"]);
-						model.shipto = Conversion.toStr(row["Ship-to party"]) + " " + Conversion.toStr(row["Name: Ship-to party"]);
-						model.shippingpoint = Conversion.toStr(row["Shipping Point"]) + " " + Conversion.toStr(row["Text: Shipping Point"]);
-						model.loadingdate = Conversion.TodtTime(row["Planned Billing Date"]);
-						model.projectiddef = Conversion.toStr(row["Project definition(level 0)"]);
-						model.projecttext = Conversion.toStr(row["Project text (Level 0)"]);
-						model.partno = Conversion.toStr(row["Material"]);
-						model.custpo = Conversion.toStr(row["PO number"]);
-						model.costcenter = Conversion.toStr(row["Cost Center"]);
-						model.costcentertext = Conversion.toStr(row["Text: Cost Center"]);
-						model.saleordertypetext = Conversion.toStr(row["Text: Sales Document Type"]);
-						model.customercode = Conversion.toStr(row["Sold-to party"]);
-						model.custpolineitem = Conversion.toStr(row["PO Item No. (Sold-to)"]);
-						model.serviceorderno = Conversion.toStr("Service Order Number");
-						model.uploadcode = uploadcode;
-						DateTime uploadedon = DateTime.Now;
-						if (string.IsNullOrEmpty(model.saleorderno))
-							Error_Description += " No saleorder";
+					//	string Error_Description = "";
+					//	bool dataloaderror = false;
+					//	MateriallabelModel model = new MateriallabelModel();
+					//	model.saleorderno = Conversion.toStr(row["Sales Document No."]);
+					//	model.solineitemno = Conversion.toStr(row["Sales Order Item No."]);
+					//	model.saleordertype = Conversion.toStr(row["Sales Document Type"]);
+					//	model.customername = Conversion.toStr(row["Sold-to party"]) + " " + Conversion.toStr(row["Name: Sold-to party"]);
+					//	model.shipto = Conversion.toStr(row["Ship-to party"]) + " " + Conversion.toStr(row["Name: Ship-to party"]);
+					//	model.shippingpoint = Conversion.toStr(row["Shipping Point"]) + " " + Conversion.toStr(row["Text: Shipping Point"]);
+					//	model.loadingdate = Conversion.TodtTime(row["Planned Billing Date"]);
+					//	model.projectiddef = Conversion.toStr(row["Project definition(level 0)"]);
+					//	model.projecttext = Conversion.toStr(row["Project text (Level 0)"]);
+					//	model.partno = Conversion.toStr(row["Material"]);
+					//	model.custpo = Conversion.toStr(row["PO number"]);
+					//	model.costcenter = Conversion.toStr(row["Cost Center"]);
+					//	model.costcentertext = Conversion.toStr(row["Text: Cost Center"]);
+					//	model.saleordertypetext = Conversion.toStr(row["Text: Sales Document Type"]);
+					//	model.customercode = Conversion.toStr(row["Sold-to party"]);
+					//	model.custpolineitem = Conversion.toStr(row["PO Item No. (Sold-to)"]);
+					//	model.serviceorderno = Conversion.toStr("Service Order Number");
+					//	model.uploadcode = uploadcode;
+					//	DateTime uploadedon = DateTime.Now;
+					//	if (string.IsNullOrEmpty(model.saleorderno))
+					//		Error_Description += " No saleorder";
 
-						if (!string.IsNullOrEmpty(Error_Description))
-						{
-							dataloaderror = true;
-							model.error_description = Error_Description;
-							model.isloaderror = dataloaderror;
+					//	if (!string.IsNullOrEmpty(Error_Description))
+					//	{
+					//		dataloaderror = true;
+					//		model.error_description = Error_Description;
+					//		model.isloaderror = dataloaderror;
 
-						}
+					//	}
 
-						string soQuery = "Select saleorderno from wms.st_QTSO where saleorderno = '" + model.saleorderno + "' and solineitemno = '" + model.solineitemno + "'";
-						var so = DB.ExecuteScalar(soQuery, null);
-						if (so == null)
-						{
-							string stquery = WMSResource.insertqtso;
-							var rslt = DB.Execute(stquery, new
-							{
-								model.saleorderno,
-								model.solineitemno,
-								model.saleordertype,
-								model.customername,
-								model.shipto,
-								model.shippingpoint,
-								model.loadingdate,
-								model.projectiddef,
-								model.partno,
-								model.custpo,
-								model.uploadcode,
-								uploadedon,
-								model.error_description,
-								model.isloaderror,
-								model.projecttext,
-								model.saleordertypetext,
-								model.customercode,
-								model.custpolineitem,
-								model.costcentertext,
-								model.serviceorderno
-							});
-
-
-						}
+					//	string soQuery = "Select saleorderno from wms.st_QTSO where saleorderno = '" + model.saleorderno + "' and solineitemno = '" + model.solineitemno + "'";
+					//	var so = DB.ExecuteScalar(soQuery, null);
+					//	if (so == null)
+					//	{
+					//		string stquery = WMSResource.insertqtso;
+					//		var rslt = DB.Execute(stquery, new
+					//		{
+					//			model.saleorderno,
+					//			model.solineitemno,
+					//			model.saleordertype,
+					//			model.customername,
+					//			model.shipto,
+					//			model.shippingpoint,
+					//			model.loadingdate,
+					//			model.projectiddef,
+					//			model.partno,
+					//			model.custpo,
+					//			model.uploadcode,
+					//			uploadedon,
+					//			model.error_description,
+					//			model.isloaderror,
+					//			model.projecttext,
+					//			model.saleordertypetext,
+					//			model.customercode,
+					//			model.custpolineitem,
+					//			model.costcentertext,
+					//			model.serviceorderno
+					//		});
 
 
+					//	}
 
-						}
-					}
+
+
+					//	}
+					//}
 					
 
 
@@ -466,7 +466,7 @@ namespace WMS.Controllers
 								}
 
 
-								string uploadcode = Guid.NewGuid().ToString();
+								string uploadcode = uploadguid;
 								foreach (DataRow row in dtexcel.Rows)
 								{
 									string poitem = "";
