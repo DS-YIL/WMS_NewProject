@@ -639,7 +639,7 @@ namespace WMS.Common {
         /// <summary>
         ///   Looks up a localized string similar to select sk.materialid as material,
         ///sum(sk.availableqty) as availableqty,
-        ///SUM(sk.unitprice * sk.availableqty) as materialcost,sk.poitemdescription  as materialdescription 
+        ///SUM(cast(sk.unitprice as numeric(19,4)) * cast(sk.availableqty as numeric(19,4))) as materialcost,sk.poitemdescription  as materialdescription 
         ///from wms.wms_stock  sk 
         ///where sk.availableqty &gt; 0 and sk.materialid is not null and sk.poitemdescription is not null  group by sk.materialid,sk.poitemdescription.
         /// </summary>
