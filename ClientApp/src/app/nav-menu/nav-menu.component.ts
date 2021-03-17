@@ -2616,6 +2616,7 @@ export class NavMenuComponent implements OnInit {
     localStorage.removeItem("Employee");
     localStorage.removeItem("userroles");
     sessionStorage.removeItem("userdashboardpage");
+    localStorage.removeItem("allroles");
     this.loggedin = false;
     let element: HTMLElement = document.getElementById("btnuser") as HTMLElement;
     element.hidden = true;

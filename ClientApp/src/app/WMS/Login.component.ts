@@ -147,30 +147,57 @@ export class LoginComponent implements OnInit {
               
             }
             else {
-              this.getallroles();
-              this.wmsService.getuserAcessList(this.employee.employeeno, this.LoginForm.value.roleid).subscribe(data => {
+              this.wmsService.getuserroleList(this.employee.employeeno).subscribe(data => {
                 if (data.length > 0) {
                   this.AcessNameList = data;
-                  this.getrbalist();
-                  this.employee.roleid = this.LoginForm.value.roleid;
-                  this.employee.plantid = this.AcessNameList[0].plantid;
-                  this.wmsService.getpagesbyrole(parseInt(this.employee.roleid)).subscribe(datax => {
-                    this.pagelist = datax;
-                    localStorage.setItem('pages', JSON.stringify(this.pagelist));
+                  localStorage.setItem('allroles', JSON.stringify(data));
+                  var currpageid = this.LoginForm.value.roleid;
+                  var dt1 = this.AcessNameList.filter(function (element, index) {
+                    return (element.roleid == currpageid);
                   });
-                  localStorage.setItem('Employee', JSON.stringify(this.employee));
-                  this.navpage.userloggedHandler(this.employee);
-                  //this.router.navigateByUrl("nav"); 
-                  //this.wmsService.login();
-                  //this.bindMenu();
+                  if (dt1.length > 0) {
+                    this.employee.roleid = this.LoginForm.value.roleid;
+                    this.employee.plantid = this.AcessNameList[0].plantid;
+                    this.wmsService.getpagesbyrole(parseInt(this.employee.roleid)).subscribe(datax => {
+                      this.pagelist = datax;
+                      localStorage.setItem('pages', JSON.stringify(this.pagelist));
+                    });
+                    localStorage.setItem('Employee', JSON.stringify(this.employee));
+                    this.navpage.userloggedHandler(this.employee);
+
+                  }
+                  else {
+                    this.messageService.add({ severity: 'error', summary: 'error Message', detail: 'Selected Role is not assigned to you, select Your role' });
+                  }
                 }
                 else {
-                 
-                    this.messageService.add({ severity: 'error', summary: 'error Message', detail: 'Selected Role is not assigned to you, select Your role' });
-                  
-
+                  this.messageService.add({ severity: 'error', summary: 'error Message', detail: 'Selected Role is not assigned to you, select Your role' });
                 }
               })
+            //  this.getallroles();
+            //  this.wmsService.getuserAcessList(this.employee.employeeno, this.LoginForm.value.roleid).subscribe(data => {
+            //    if (data.length > 0) {
+            //      this.AcessNameList = data;
+            //      this.getrbalist();
+            //      this.employee.roleid = this.LoginForm.value.roleid;
+            //      this.employee.plantid = this.AcessNameList[0].plantid;
+            //      this.wmsService.getpagesbyrole(parseInt(this.employee.roleid)).subscribe(datax => {
+            //        this.pagelist = datax;
+            //        localStorage.setItem('pages', JSON.stringify(this.pagelist));
+            //      });
+            //      localStorage.setItem('Employee', JSON.stringify(this.employee));
+            //      this.navpage.userloggedHandler(this.employee);
+            //      //this.router.navigateByUrl("nav"); 
+            //      //this.wmsService.login();
+            //      //this.bindMenu();
+            //    }
+            //    else {
+                 
+            //        this.messageService.add({ severity: 'error', summary: 'error Message', detail: 'Selected Role is not assigned to you, select Your role' });
+                  
+
+            //    }
+            //  })
             
 
             }
