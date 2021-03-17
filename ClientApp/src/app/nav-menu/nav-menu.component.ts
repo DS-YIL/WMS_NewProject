@@ -123,14 +123,14 @@ export class NavMenuComponent implements OnInit {
       else {
         if (localStorage.getItem("userroles")) {
           this.userrolelist = JSON.parse(localStorage.getItem("userroles")) as userAcessNamesModel[];
+
         }
-        else {
-          this.userrolelist = JSON.parse(localStorage.getItem("allroles")) as userAcessNamesModel[];
+        if (isNullOrUndefined(this.userrolelist)) {
+          alert("Selected Role is not assigned to you, select Your role");
+          this.router.navigateByUrl("WMS/Login");
         }
         var rid = this.emp.roleid;
-        if (isNullOrUndefined(this.userrolelist)) {
-          console.log("list1");
-        }
+        
         var data1 = this.userrolelist.filter(function (element, index) {
           return (element.roleid == parseInt(rid));
         });
@@ -2616,7 +2616,6 @@ export class NavMenuComponent implements OnInit {
     localStorage.removeItem("Employee");
     localStorage.removeItem("userroles");
     sessionStorage.removeItem("userdashboardpage");
-    localStorage.removeItem("allroles");
     this.loggedin = false;
     let element: HTMLElement = document.getElementById("btnuser") as HTMLElement;
     element.hidden = true;

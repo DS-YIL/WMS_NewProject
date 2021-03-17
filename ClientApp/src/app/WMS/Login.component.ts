@@ -150,7 +150,7 @@ export class LoginComponent implements OnInit {
               this.wmsService.getuserroleList(this.employee.employeeno).subscribe(data => {
                 if (data.length > 0) {
                   this.AcessNameList = data;
-                  localStorage.setItem('allroles', JSON.stringify(data));
+                  localStorage.setItem('userroles', JSON.stringify(data));
                   var currpageid = this.LoginForm.value.roleid;
                   var dt1 = this.AcessNameList.filter(function (element, index) {
                     return (element.roleid == currpageid);
