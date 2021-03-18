@@ -90,6 +90,8 @@ export class NavMenuComponent implements OnInit {
       this.isapprovalurl = true;
       let element: HTMLElement = document.getElementById("btnuser") as HTMLElement;
       element.hidden = true;
+      let elementx: HTMLElement = document.getElementById("notlogged") as HTMLElement;
+      elementx.hidden = false;
       let element1: HTMLDivElement = document.getElementById("menudiv") as HTMLDivElement;
       element1.hidden = true;
       this.router.navigateByUrl("WMS/Mailresponse");
@@ -106,6 +108,8 @@ export class NavMenuComponent implements OnInit {
       this.loggedin = true;
       let element: HTMLElement = document.getElementById("btnuser") as HTMLElement;
       element.hidden = false;
+      let elementx: HTMLElement = document.getElementById("notlogged") as HTMLElement;
+      elementx.hidden = true;
       this.emp = JSON.parse(localStorage.getItem("Employee")) as Employee;
       this.profileimage = this.imgurl + this.emp.employeeno + ".jpg";
       this.loggeduserdata.push(this.emp);
@@ -161,6 +165,8 @@ export class NavMenuComponent implements OnInit {
     else {
       let element: HTMLElement = document.getElementById("btnuser") as HTMLElement;
       element.hidden = true;
+      let elementx: HTMLElement = document.getElementById("notlogged") as HTMLElement;
+      elementx.hidden = false;
       let element1: HTMLDivElement = document.getElementById("menudiv") as HTMLDivElement;
       element1.hidden = true;
       this.router.navigateByUrl("WMS/Login");
@@ -193,6 +199,8 @@ export class NavMenuComponent implements OnInit {
     if (eurl.includes("/Email")) {
       let element: HTMLElement = document.getElementById("btnuser") as HTMLElement;
       element.hidden = false;
+      let elementx: HTMLElement = document.getElementById("notlogged") as HTMLElement;
+      elementx.hidden = true;
       let element1: HTMLDivElement = document.getElementById("menudiv") as HTMLDivElement;
       element1.hidden = false;
       if (eurl.includes("/Email/GRNPosting?GateEntryNo")) {
@@ -2619,6 +2627,8 @@ export class NavMenuComponent implements OnInit {
     this.loggedin = false;
     let element: HTMLElement = document.getElementById("btnuser") as HTMLElement;
     element.hidden = true;
+    let elementx: HTMLElement = document.getElementById("notlogged") as HTMLElement;
+    elementx.hidden = false;
     let element1: HTMLDivElement = document.getElementById("menudiv") as HTMLDivElement;
     element1.hidden = true;
     //let elementx: HTMLElement = document.getElementById("btnuser1") as HTMLElement;
