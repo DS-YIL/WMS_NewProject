@@ -34,7 +34,6 @@ export class GatePassMasterComponent implements OnInit {
   }
 
   opengpDialogue() {
-    this.GPreasonList = [];
     this.displaygpDialog = true;
   }
 

@@ -287,7 +287,7 @@
                 <td class="ptable-cell" style="text-align:center"> {{ri+1}} </td>
 
                 <td class="ptable-cell" style="text-align:left;">
-                  <select class="form-control dropdown" [(ngModel)]="rowData.locatorid" (change)="onlocUpdate(rowData.locatorid, rowData)">
+                  <select class="form-control dropdown" [(ngModel)]="rowData.locatorid" (change)="onlocUpdate(rowData.locatorid, rowData,false)">
 
                     <!--<option selected value="*ngIf=rowData.locatorid!=null"></option>-->
                     <!--*ngIf="rowData.locatorid!=null ? rowData.locatorid:'Select Stock'"-->
@@ -297,9 +297,10 @@
                   </select>
                 </td>
                 <td class="ptable-cell" style="text-align:left">
-                  <select class="form-control dropdown" [(ngModel)]="rowData.rackid" (change)="onrackUpdate(rowData.locatorid,rowData.rackid,rowData)">
+                  <select class="form-control dropdown" [(ngModel)]="rowData.rackid" (change)="onrackUpdate(rowData.locatorid,rowData.rackid,rowData,false)">
 
                     <!--<option selected value="*ngIf=rowData.rackid==null"></option>-->
+                    <option value="">Select Rack</option>
                     <option *ngFor=" let loclist of rowData.racklist " value={{loclist.rackid}}>
                       {{loclist.racknumber}}
                     </option>
@@ -307,7 +308,7 @@
                 </td>
                 <td class="ptable-cell" style="text-align:left">
                   <select class="form-control dropdown" [(ngModel)]="rowData.binid">
-
+                    <option value="">Select Bin</option>
                     <!--<option selected value="0"></option>-->
                     <option *ngFor=" let loclist of rowData.binlist" value={{loclist.binid}}>
                       {{loclist.binnumber}}

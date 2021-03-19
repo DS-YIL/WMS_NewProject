@@ -367,10 +367,10 @@ namespace WMS.Models
 
 		public int paitemid { get; set; }
 		public string pono { get; set; }
-		public int binid { get; set; }
-		public int rackid { get; set; }
-		public int storeid { get; set; }
-		public int vendorid { get; set; }
+		public int? binid { get; set; }
+		public int? rackid { get; set; }
+		public int? storeid { get; set; }
+		public int? vendorid { get; set; }
 		public decimal? totalquantity { get; set; }
 		public DateTime? shelflife { get; set; }
 		public decimal? availableqty { get; set; }

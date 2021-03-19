@@ -30,7 +30,7 @@
             <th class="ptable-cell" style="text-align:center;width:250px;">Material</th>
             <th class="ptable-cell" style="text-align:center;">Material Description</th>
             <th class="ptable-cell" style="text-align:center;width:100px;">Quantity</th>
-            <th class="ptable-cell" style="text-align:center;width:100px;">Value</th>
+            <th class="ptable-cell" style="text-align:center;width:120px;">Value</th>
             <th class="ptable-cell" style="text-align:center;width:130px;">Project Id</th>
             <th class="ptable-cell" style="text-align:center;width:130px;">PONo</th>
             <th class="ptable-cell" style="text-align:center;width:200px;">Location</th>
@@ -138,17 +138,17 @@
                 <td class="ptable-cell" style="text-align:center"> {{ri+1}} </td>
 
                 <td class="ptable-cell" style="text-align:left;">
-                  <p-autoComplete [(ngModel)]="rowData.locatorname" placeholder="search by Store" [disabled]="rowData.isdisablestore" type="text" appendTo="body" [forceSelection]="true" (onSelect)="onStoreSelect(rowData,ri)"  (change)="onStoreSelect(rowData,ri)"  [suggestions]="filteredStores" (completeMethod)="filterStore($event,rowData)" [size]="20"
+                  <p-autoComplete [(ngModel)]="rowData.locatorname" placeholder="search by Store" [disabled]="rowData.isdisablestore" type="text" appendTo="body" [forceSelection]="true" (onSelect)="onStoreSelect($event,rowData,ri)" (change)="onStoreSelect($event,rowData,ri)"  [suggestions]="filteredStores" (completeMethod)="filterStore($event,rowData)" [size]="20"
                                   [dropdown]="true"></p-autoComplete>
 
                 </td>
                 <td class="ptable-cell" style="text-align:left">
 
-                  <p-autoComplete [(ngModel)]="rowData.racknumber" placeholder="search by Rack" type="text" [disabled]="rowData.isdisablerack" appendTo="body" [forceSelection]="true" (onSelect)="onRackSelect(rowData,ri)"  (change)="onRackSelect(rowData,ri)"  [suggestions]="filteredracks" (completeMethod)="filterRack($event,rowData)" [size]="20"
+                  <p-autoComplete [(ngModel)]="rowData.racknumber" placeholder="search by Rack" type="text" [disabled]="rowData.isdisablerack" appendTo="body" [forceSelection]="true" (onSelect)="onRackSelect($event,rowData,ri)"  (blur)="onRackSelect($event,rowData,ri)"  [suggestions]="filteredracks" (completeMethod)="filterRack($event,rowData)" [size]="20"
                                   [dropdown]="true"></p-autoComplete>
                 </td>
                 <td class="ptable-cell" style="text-align:left">
-                  <p-autoComplete [(ngModel)]="rowData.binnumber" placeholder="search by Bin" type="text" [disabled]="rowData.isdisablebin" appendTo="body" [forceSelection]="true" (onSelect)="onBinSelect(rowData,ri)"  (change)="onBinSelect(rowData,ri)" [suggestions]="filteredbins" (completeMethod)="filterBin($event,rowData)" [size]="20"
+                  <p-autoComplete [(ngModel)]="rowData.binnumber" placeholder="search by Bin" type="text" [disabled]="rowData.isdisablebin" appendTo="body" [forceSelection]="true" (onSelect)="onBinSelect($event,rowData,ri)"  (blur)="onBinSelect($event,rowData,ri)" [suggestions]="filteredbins" (completeMethod)="filterBin($event,rowData)" [size]="20"
                                   [dropdown]="true"></p-autoComplete>
                 </td>
                 <td class="ptable-cell" style="text-align:left">

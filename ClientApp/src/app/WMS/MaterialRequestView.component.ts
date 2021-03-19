@@ -434,6 +434,7 @@ export class MaterialRequestViewComponent implements OnInit {
     this.suppliername = null;
     this.selectedpono = "";
     this.selectedsupplier = "";
+    this.selectedproject = null;
     this.ponumber = null;
     this.requestMatData = new requestData();
     this.materialList = [];

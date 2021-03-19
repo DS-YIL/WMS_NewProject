@@ -255,10 +255,10 @@ export class MaterialReturnDashBoardComponent implements OnInit {
       stockdata.stocktype = details.stocktype;
       this.stock.push(stockdata);
       if (stockdata.locatorid) {
-        this.onlocUpdate(stockdata.locatorid, stockdata);
+        this.onlocUpdate(stockdata.locatorid, stockdata, true);
       }
       if (stockdata.locatorid && stockdata.rackid) {
-        this.onrackUpdate(stockdata.locatorid, stockdata.rackid, stockdata);
+        this.onrackUpdate(stockdata.locatorid, stockdata.rackid, stockdata,true);
       }
       
       
@@ -415,8 +415,12 @@ export class MaterialReturnDashBoardComponent implements OnInit {
   }
 
   //On selection of location updating rack
-  onlocUpdate(locationid: any, rowData:any) {
+  onlocUpdate(locationid: any, rowData: any, isdefaultlocation: boolean) {
     debugger;
+    if (!isdefaultlocation) {
+      rowData.rackid = null;
+      rowData.binid = null;
+    }
     rowData.racklist = [];
     if (this.rackdata.filter(li => li.locationid == locationid).length > 0) {
       this.racklist = [];
@@ -433,8 +437,11 @@ export class MaterialReturnDashBoardComponent implements OnInit {
   }
 
   //On selection of rack updating bin
-  onrackUpdate(locationid: any, rackid: any, rowData:any) {
+  onrackUpdate(locationid: any, rackid: any, rowData: any, isdefaultlocation: boolean) {
     debugger;
+    if (!isdefaultlocation) {
+      rowData.binid = null;
+    }
     rowData.binlist = [];
     if (this.bindata.filter(li => li.locationid == locationid && li.rackid == rackid).length > 0) {
       this.binlist = [];
@@ -496,16 +503,24 @@ export class MaterialReturnDashBoardComponent implements OnInit {
     debugger;
     if (this.stock.length > 0) {
       debugger;
-      if (this.stock[this.stock.length - 1].locatorid == 0) {
-        this.messageService.add({ severity: 'error', summary: '', detail: 'select Location' });
+      var invalidlocation = this.stock.filter(x => x.locatorid == 0 || isNullOrUndefined(x.locatorid));
+      if (invalidlocation.length > 0) {
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Select Store' });
         return;
       }
-      if (this.stock[this.stock.length - 1].rackid == 0) {
-        this.messageService.add({ severity: 'error', summary: '', detail: 'select Rack' });
+      var invalidrack = this.stock.filter(x => x.rackid == 0 || isNullOrUndefined(x.rackid));
+      if (invalidrack.length > 0) {
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Select Rack' });
         return;
       }
-      if (this.stock[this.stock.length - 1].qty == 0 || this.stock[this.stock.length - 1].qty == null) {
-        this.messageService.add({ severity: 'error', summary: '', detail: 'Enter quantity' });
+      var invalidstocktype = this.stock.filter(x => x.stocktype == "" || isNullOrUndefined(x.stocktype));
+      if (invalidstocktype.length > 0) {
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Select Stock Type' });
+        return;
+      }
+      var invalidqty = this.stock.filter(x => x.qty == 0 || isNullOrUndefined(x.qty));
+      if (invalidqty.length > 0) {
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Enter Quantity' });
         return;
       }
       if (this.stock.length > 1) {
@@ -514,9 +529,9 @@ export class MaterialReturnDashBoardComponent implements OnInit {
             if (this.stock[data].rackid == this.stock[this.stock.length - 1].rackid) {
               if (this.stock[data].binid == this.stock[this.stock.length - 1].binid) {
                 this.messageService.add({ severity: 'error', summary: '', detail: 'Location already exists' });
-                this.stock[this.stock.length - 1].binid = 0;
-                this.stock[this.stock.length - 1].rackid = 0;
-                this.stock[this.stock.length - 1].locatorid = 0;
+                this.stock[this.stock.length - 1].binid = null;
+                this.stock[this.stock.length - 1].rackid = null;
+                this.stock[this.stock.length - 1].locatorid = null;
                 return;
               }
             }
@@ -528,7 +543,7 @@ export class MaterialReturnDashBoardComponent implements OnInit {
     var binnumber: any[] = [];
     var storelocation: any[] = [];
     var rack: any[] = [];
-    if (this.stock[0].rackid && this.stock[0].locatorid) {
+   
       this.stock.forEach(item => {
         this.StockModel = new StockModel();
         this.StockModel.material = this.PoDetails.materialid;
@@ -578,27 +593,7 @@ export class MaterialReturnDashBoardComponent implements OnInit {
 
         totalqty = totalqty + (item.confirmqty);
       })
-      var dtt = this.StockModelList.filter(function (element, index) {
-        return (element.stocktype == "");
-      });
-      if (dtt.length > 0) {
-        this.messageService.add({ severity: 'error', summary: '', detail: 'Select Stock Type' });
-        return;
-      }
-      var dttloc = this.StockModelList.filter(function (element, index) {
-        return (isNullOrUndefined(element.locatorid) || element.locatorid == "");
-      });
-      if (dttloc.length > 0) {
-        this.messageService.add({ severity: 'error', summary: '', detail: 'Select Store' });
-        return;
-      }
-      var dttrack = this.StockModelList.filter(function (element, index) {
-        return (isNullOrUndefined(element.rackid) || element.rackid == "");
-      });
-      if (dttrack.length > 0) {
-        this.messageService.add({ severity: 'error', summary: '', detail: 'Select Rack' });
-        return;
-      }
+     
       if (totalqty == parseFloat(this.matqty)) {
         this.ConfirmationService.confirm({
           message: 'Are you sure to put away material in selected stock type?',
@@ -632,13 +627,8 @@ export class MaterialReturnDashBoardComponent implements OnInit {
         this.disSaveBtn = true;
         this.messageService.add({ severity: 'error', summary: '', detail: 'Putaway Qty should be same as Return Qty' });
       }
-    }
-    else {
-      if (!this.store.name)
-        this.messageService.add({ severity: 'error', summary: '', detail: 'Select Location' });
-      else if (!this.rack.name)
-        this.messageService.add({ severity: 'error', summary: '', detail: 'Select Rack' });
-    }
+    
+   
   }
 
   onChange(value, indexid: any) {

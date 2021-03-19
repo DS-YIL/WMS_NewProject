@@ -1727,7 +1727,7 @@ namespace WMS.DAL
 
 							foreach (OpenPoModel po in data)
 							{
-								var fdata = datalist.Where(o => o.Material == po.Material && o.Materialdescription == po.Materialdescription && o.pono == po.pono && o.lineitemno == po.lineitemno && o.asnno == po.asnno).FirstOrDefault();
+								var fdata = datalist.Where(o => o.Material == po.Material && o.poitemdescription == po.poitemdescription && o.pono == po.pono && o.lineitemno == po.lineitemno && o.asnno == po.asnno).FirstOrDefault();
 								if (fdata == null)
 								{
 									string querya = "select inw.pono,inw.materialid,Max(inw.materialqty) as materialqty,SUM(inw.confirmqty) as confirmqty,SUM(inw.receivedqty) as receivedqty from wms.wms_storeinward inw";
@@ -1764,7 +1764,7 @@ namespace WMS.DAL
 									}
 									else
 									{
-										po.pendingqty = po.pendingqty;
+										po.pendingqty = po.materialqty;
 
 									}
 									datalist.Add(po);
@@ -8553,6 +8553,43 @@ namespace WMS.DAL
 					  materialrequestquery, null, commandType: CommandType.Text);
 					var senddata = data.Where(o => o.projectmanager != null);
 					return senddata;
+
+
+
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "getprojectlist", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+
+			}
+		}
+
+		/*
+		Name of Function : <<getprojectlist>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<get project list>>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
+		public async Task<IEnumerable<ddlmodel>> getgatepassreason()
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				try
+				{
+					string materialrequestquery = WMSResource.getGatePassReason;
+
+
+					await pgsql.OpenAsync();
+					var data = await pgsql.QueryAsync<ddlmodel>(
+					  materialrequestquery, null, commandType: CommandType.Text);
+					return data;
 
 
 

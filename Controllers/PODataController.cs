@@ -958,6 +958,11 @@ namespace WMS.Controllers
 		{
 			return await this._poService.getprojectlist();
 		}
+		[HttpGet("getgatepassreason")]
+		public async Task<IEnumerable<ddlmodel>> getgatepassreason()
+		{
+			return await this._poService.getgatepassreason();
+		}
 		[HttpGet("getprojectlisttoassign")]
 		public async Task<IEnumerable<AssignProjectModel>> getprojectlisttoassign(string empno)
 		{

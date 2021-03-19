@@ -795,6 +795,15 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to select reason as text,reason as value from wms.rd_reason rr where reasontype = &apos;GatePass&apos; and deleteflag is false.
+        /// </summary>
+        public static string getGatePassReason {
+            get {
+                return ResourceManager.GetString("getGatePassReason", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to sk left join wms.&quot;MaterialMasterYGS&quot; ygs on ygs.material=sk.materialid.
         /// </summary>
         public static string getgatepassunitprice {
@@ -830,8 +839,8 @@ namespace WMS.Common {
         ///from wms.wms_storeinward stinw 
         ///left outer join wms.wms_securityinward sinw on stinw.inwmasterid = sinw.inwmasterid 
         /// left outer join wms.employee emp on emp.employeeno=sinw.mrnby
-        ///where stinw.returnedby is not null and stinw.confirmqty &gt; 0
-        ///and stinw.inwardid not in (select distinct inwardid from wms.wms_stock where inwardid is not null order by inw [rest of string was truncated]&quot;;.
+        ///where stinw.returnedby is not null and sinw.mrnon is null and stinw.confirmqty &gt; 0
+        ///and stinw.inwardid not in (select distinct inwardid from wms.wms_stock where inwardid i [rest of string was truncated]&quot;;.
         /// </summary>
         public static string getgrnlistdataforputaway {
             get {

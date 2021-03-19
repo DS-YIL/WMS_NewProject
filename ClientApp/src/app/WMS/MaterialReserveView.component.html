@@ -250,13 +250,13 @@
                 <!--<input *ngIf="rowData.materialid" [(ngModel)]="rowData.materialid" class="form-control" type="text" name="{{rowData.materialid}}" />-->
                 <!--<p-autoComplete [(ngModel)]="rowData.material" type="text" appendTo="body" [suggestions]="searchItems" (onSelect)="onMaterialSelected(rowData.material,ri)" (completeMethod)="bindSearchList($event,'material')" [size]="10"
                 [dropdown]="true"></p-autoComplete>-->
-                <p-autoComplete [(ngModel)]="rowData.material" placeholder="search by name/code" type="text" appendTo="body" [forceSelection]="true" (onSelect)="onMaterialSelected1(rowData,ri)" [suggestions]="filteredmats" (completeMethod)="filtermats($event,rowData)" [size]="20"
+                <p-autoComplete [(ngModel)]="rowData.material" [style]="{'width':'80%'}" [inputStyle]="{'width':'80%'}" placeholder="search by name/code" type="text" appendTo="body" [forceSelection]="true" (onSelect)="onMaterialSelected1(rowData,ri)" [suggestions]="filteredmats" (completeMethod)="filtermats($event,rowData)" 
                                 [dropdown]="true"></p-autoComplete>
 
 
               </td>
               <td class="ptable-cell" style="text-align:left">
-                <p-autoComplete [(ngModel)]="rowData.materialdescription" placeholder="search by description" type="text" appendTo="body" [forceSelection]="true" (onSelect)="onDescriptionSelected(rowData,ri)" [suggestions]="filteredmatdesc" (completeMethod)="filtermatdescs($event,rowData)" [size]="50"
+                <p-autoComplete [(ngModel)]="rowData.materialdescription" [style]="{'width':'80%'}" [inputStyle]="{'width':'80%'}" placeholder="search by description" type="text" appendTo="body" [forceSelection]="true" (onSelect)="onDescriptionSelected(rowData,ri)" [suggestions]="filteredmatdesc" (completeMethod)="filtermatdescs($event,rowData)" 
                                 [dropdown]="true"></p-autoComplete>
                 <!--{{rowData.materialdescription}}-->
 

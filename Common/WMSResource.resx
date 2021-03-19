@@ -758,7 +758,7 @@ sinw.suppliername as supplier,sinw.isdirecttransferred,sinw.invoiceno ,emp.name 
 from wms.wms_storeinward stinw 
 left outer join wms.wms_securityinward sinw on stinw.inwmasterid = sinw.inwmasterid 
  left outer join wms.employee emp on emp.employeeno=sinw.mrnby
-where stinw.returnedby is not null and stinw.confirmqty &gt; 0
+where stinw.returnedby is not null and sinw.mrnon is null and stinw.confirmqty &gt; 0
 and stinw.inwardid not in (select distinct inwardid from wms.wms_stock where inwardid is not null order by inwardid desc)</value>
   </data>
   <data name="getnonreturnablegatepassdata" xml:space="preserve">
@@ -1777,6 +1777,8 @@ from wms.st_initialstock istk
 left outer join wms."MaterialMasterYGS" mat on mat.material = istk.material
 left outer join wms.wms_stock stk on (stk.receivedid = istk.stockid::text and stk.uploadbatchcode = istk.uploadbatchcode)
 where istk.dataloaderrors is True 
+and  istk.pono  NOT like '%/%' 
+and istk.pono  NOT like '%,%'
 and (istk.material = '') IS NOT True 
 and (istk.materialdescription = '') IS NOT True
 and  istk.quantity &lt;&gt; 0 and istk.quantity is NOT NULL
@@ -2158,5 +2160,8 @@ asn_view=@asn_view, internal_stock_transfer=@internal_stock_transfer, miscellano
 assign_pm=@assign_pm, annexure_report=@annexure_report, initialstock_upload=@initialstock_upload, 
 inventory_management=@inventory_management, all_reports=@all_reports
 WHERE roleid=#roleid</value>
+  </data>
+  <data name="getGatePassReason" xml:space="preserve">
+    <value>select reason as text,reason as value from wms.rd_reason rr where reasontype = 'GatePass' and deleteflag is false</value>
   </data>
 </root>

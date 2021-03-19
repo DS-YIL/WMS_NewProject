@@ -216,9 +216,9 @@
             <div class="form-inline-list">
               <select class="form-control forms-input" [(ngModel)]="gatepassModel.reasonforgatepass">
                 <option value=0>Select</option>
-                <option value='Sample'>Sample</option>
-                <option value='Testing/Repair'>Testing/Repair</option>
-                <option value='Others'>Others</option>
+                <option *ngFor=" let reason of reasonlist" value={{reason.value}}>
+                  {{reason.text}}
+                </option>
               </select>
             </div>
           </div>
@@ -274,15 +274,15 @@
                   <td class="ptable-cell" style="text-align:left;">
                     <!--<p-autoComplete [(ngModel)]="rowData.materialid" type="text" appendTo="body" [forceSelection]="true" [suggestions]="searchItems" (onSelect)="onMaterialSelected(rowData.materialid,ri)" (completeMethod)="bindSearchListData($event,'ItemId')" [size]="15"
     [dropdown]="true"></p-autoComplete>-->
-                    <p-autoComplete [(ngModel)]="rowData.materialid" placeholder="search by name/code" type="text" appendTo="body" [forceSelection]="true" (onSelect)="onMaterialSelected1(rowData,ri)" [suggestions]="filteredmats" (completeMethod)="filtermats($event,rowData)" [size]="20"
+                    <p-autoComplete [(ngModel)]="rowData.materialid" [style]="{'width':'80%'}" [inputStyle]="{'width':'80%'}" placeholder="search by name/code" type="text" appendTo="body" [forceSelection]="true" (onSelect)="onMaterialSelected1(rowData,ri)" [suggestions]="filteredmats" (completeMethod)="filtermats($event,rowData)"
                                     [dropdown]="true"></p-autoComplete>
 
 
                   </td>
                   <td class="ptable-cell" style="text-align:left;">
-                    <p-autoComplete *ngIf="gatepassModel.gatepasstype=='Returnable'" [(ngModel)]="rowData.materialdescription" placeholder="search by description" type="text" appendTo="body" [forceSelection]="true" (onSelect)="onDescriptionSelected(rowData,ri)" [suggestions]="filteredmatdesc" (completeMethod)="filtermatdescs($event,rowData)" [size]="25"
+                    <p-autoComplete *ngIf="gatepassModel.gatepasstype=='Returnable'" [style]="{'width':'80%'}" [inputStyle]="{'width':'80%'}" [(ngModel)]="rowData.materialdescription" placeholder="search by description" type="text" appendTo="body" [forceSelection]="true" (onSelect)="onDescriptionSelected(rowData,ri)" [suggestions]="filteredmatdesc" (completeMethod)="filtermatdescs($event,rowData)"
                                     [dropdown]="true"></p-autoComplete>
-                    <p-autoComplete *ngIf="gatepassModel.gatepasstype !=='Returnable'" [(ngModel)]="rowData.materialdescription" placeholder="search by description" type="text" appendTo="body" [forceSelection]="true" (onSelect)="onDescriptionSelected(rowData,ri)" [suggestions]="filteredmatdesc" (completeMethod)="filtermatdescs($event,rowData)" [size]="50"
+                    <p-autoComplete *ngIf="gatepassModel.gatepasstype !=='Returnable'" [style]="{'width':'80%'}" [inputStyle]="{'width':'80%'}" [(ngModel)]="rowData.materialdescription" placeholder="search by description" type="text" appendTo="body" [forceSelection]="true" (onSelect)="onDescriptionSelected(rowData,ri)" [suggestions]="filteredmatdesc" (completeMethod)="filtermatdescs($event,rowData)"
                                     [dropdown]="true"></p-autoComplete>
                     <!--<p-autoComplete [(ngModel)]="rowData.poitemdescription" type="text" appendTo="body" [forceSelection]="true" [suggestions]="searchItems" (onSelect)="onMaterialSelected(rowData.materialid,ri)" (completeMethod)="bindSearchListData($event,'ItemId')" [size]="15"
     [dropdown]="true"></p-autoComplete>-->

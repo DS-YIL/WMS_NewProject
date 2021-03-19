@@ -337,6 +337,10 @@ export class ReceiveMaterialComponent implements OnInit {
   //On selection of location updating rack
   onlocUpdate(locationid: any, rowData: any, issetdefault: boolean) {
     debugger;
+    if (!issetdefault) {
+      rowData.rackid = null; 
+      rowData.binid = null;
+    }
     rowData.racklist = [];
     if (this.rackdata.filter(li => li.locationid == locationid).length > 0) {
       this.racklist = [];
@@ -415,16 +419,24 @@ export class ReceiveMaterialComponent implements OnInit {
 
     if (this.stock.length > 0) {
       debugger;
-      if (this.stock[this.stock.length - 1].locatorid == 0 || this.stock[this.stock.length - 1].locatorid == null) {
-        this.messageService.add({ severity: 'error', summary: '', detail: 'select Location' });
+      var invalidlocation = this.stock.filter(x => x.locatorid == 0 || isNullOrUndefined(x.locatorid));
+      if (invalidlocation.length > 0) {
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Select Store' });
         return;
       }
-      if (this.stock[this.stock.length - 1].rackid == 0 || this.stock[this.stock.length - 1].rackid == 0) {
-        this.messageService.add({ severity: 'error', summary: '', detail: 'select Rack' });
+      var invalidrack = this.stock.filter(x => x.rackid == 0 || isNullOrUndefined(x.rackid));
+      if (invalidrack.length > 0) {
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Select Rack' });
         return;
       }
-      if (this.stock[this.stock.length - 1].qty == 0 || this.stock[this.stock.length - 1].qty == null) {
-        this.messageService.add({ severity: 'error', summary: '', detail: 'Enter quantity' });
+      var invalidstocktype = this.stock.filter(x => x.stocktype == "" || isNullOrUndefined(x.stocktype));
+      if (invalidstocktype.length > 0) {
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Select Stock Type' });
+        return;
+      }
+      var invalidqty = this.stock.filter(x => x.qty == 0 || isNullOrUndefined(x.qty));
+      if (invalidqty.length > 0) {
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Enter Quantity' });
         return;
       }
 
@@ -448,7 +460,6 @@ export class ReceiveMaterialComponent implements OnInit {
     var binnumber: any[] = [];
     var storelocation: any[] = [];
     var rack: any[] = [];
-    if (this.stock[0].rackid && this.stock[0].locatorid) {
       this.stock.forEach(item => {
         this.StockModel = new StockModel();
         this.StockModel.material = this.PoDetails.materialid;
@@ -475,7 +486,7 @@ export class ReceiveMaterialComponent implements OnInit {
           this.StockModel.itemlocation = storelocation[0].locatorname + "." + rack[0].racknumber + '.' + binnumber[0].binnumber;
         }
         else if (binnumber.length == 0) {
-          this.StockModel.binid = 1;
+          this.StockModel.binid = null;
           this.StockModel.itemlocation = storelocation[0].locatorname + "." + rack[0].racknumber;
         }
         this.StockModel.racknumber = storelocation[0].locatorname;
@@ -537,13 +548,7 @@ export class ReceiveMaterialComponent implements OnInit {
         this.disSaveBtn = true;
         this.messageService.add({ severity: 'error', summary: '', detail: 'Putaway Qty should be same as Accepted Qty' });
       }
-    }
-    else {
-      if (!this.store.name)
-        this.messageService.add({ severity: 'error', summary: '', detail: 'Select Location' });
-      else if (!this.rack.name)
-        this.messageService.add({ severity: 'error', summary: '', detail: 'Select Rack' });
-    }
+   
   }
 
   deleteRow(index: number) {
@@ -565,6 +570,9 @@ export class ReceiveMaterialComponent implements OnInit {
   //On selection of rack updating bin
   onrackUpdate(locationid: any, rackid: any, rowData: any, issetdefault: boolean) {
     debugger;
+    if (!issetdefault) {
+      rowData.binid = null;
+    }
     rowData.binlist = [];
     if (this.bindata.filter(li => li.locationid == locationid && li.rackid == rackid).length > 0) {
       this.binlist = [];

@@ -70,11 +70,11 @@
             <tr>
               <td class="ptable-cell" style="text-align: center; width: 5%;">{{ri+1}}</td>
               <td class="ptable-cell" style="text-align:center;width:20%;">
-                <p-autoComplete appendTo="body" placeholder="search by material" (onSelect)="onMaterialSelected1($event,rowData,ri)" [(ngModel)]="rowData.materialObj" type="text" [suggestions]="searchItems" field="name" [forceSelection]="true" [dropdown]="true" (completeMethod)="bindSearchListDatamaterial($event,rowData,'material')" size="20"></p-autoComplete>
+                <p-autoComplete appendTo="body" placeholder="search by material" [style]="{'width':'80%'}" [inputStyle]="{'width':'80%'}" (onSelect)="onMaterialSelected1($event,rowData,ri)" [(ngModel)]="rowData.materialObj" type="text" [suggestions]="searchItems" field="name" [forceSelection]="true" [dropdown]="true" (completeMethod)="bindSearchListDatamaterial($event,rowData,'material')"></p-autoComplete>
               </td>
               <!--<td style="text-align:left;width:10%;"><span *ngIf="rowData.materialObj">{{rowData.materialObj.materialdescription}}</span></td>-->
               <td class="ptable-cell" style="text-align:left;">
-                <p-autoComplete [(ngModel)]="rowData.materialdescObj" placeholder="search by description" type="text" appendTo="body" [forceSelection]="true" (onSelect)="onDescriptionSelected($event,rowData,ri)" [suggestions]="searchdescItems" field="name" (completeMethod)="bindSearchListDatamaterialdesc($event,rowData)" [size]="40" [dropdown]="true"></p-autoComplete>
+                <p-autoComplete [(ngModel)]="rowData.materialdescObj" [style]="{'width':'80%'}" [inputStyle]="{'width':'80%'}" placeholder="search by description" type="text" appendTo="body" [forceSelection]="true" (onSelect)="onDescriptionSelected($event,rowData,ri)" [suggestions]="searchdescItems" field="name" (completeMethod)="bindSearchListDatamaterialdesc($event,rowData)" [dropdown]="true"></p-autoComplete>
               </td>
               <td class="ptable-cell" style="text-align:right;width:8%;">
                 <input pInputText type="number" style="text-align:right" class="form-control" readonly [min]="0" [(ngModel)]="rowData.availableqty">
