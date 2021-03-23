@@ -587,6 +587,12 @@ namespace WMS.Models
 		public string rackname { get; set; }
 		public string binname { get; set; }
 		public string storename { get; set; }
+		public string createdby { get; set; }
+		public DateTime? createdon { get; set; }
+		public string modifieddby { get; set; }
+		public DateTime? modifiedon { get; set; }
+		public string isactive { get; set; }
+		public bool? isselected { get; set; }
 	}
 	public class IssueRequestModel
 	{

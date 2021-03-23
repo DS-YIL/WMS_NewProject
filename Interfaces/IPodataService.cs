@@ -242,6 +242,7 @@ namespace WMS.Interfaces
 		string updateputawayfilename(ddlmodel filename);
 
 		Task<IEnumerable<ddlmodel>> getprojectlist();
+		Task<IEnumerable<ddlmodel>> getprojectlistfortransfer();
 		Task<IEnumerable<ddlmodel>> getgatepassreason();
 		Task<IEnumerable<ddlmodel>> getprojectlistbymanager(string empno);
 		Task<IEnumerable<AssignProjectModel>> getprojectlisttoassign(string empno);

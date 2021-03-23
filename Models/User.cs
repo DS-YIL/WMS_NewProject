@@ -19,6 +19,7 @@ namespace WMS.Models
         public string idwithname { get; set; }
         public string domainid { get; set; }
         public string email { get; set; }
+        public string globalempno { get; set; }
 
     }
 }

@@ -233,6 +233,12 @@ export class locataionDetailsStock {
   rackname: string;
   binname: string;
   storename: string;
+  createdby: string;
+  createdon: Date;
+  modifieddby: string;
+  modifiedon: Date;
+  isactive: boolean;
+  isselected: boolean;
 }
 
 export class materialRequestDetails {

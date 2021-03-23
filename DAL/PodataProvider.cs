@@ -8572,6 +8572,44 @@ namespace WMS.DAL
 		}
 
 		/*
+		Name of Function : <<getprojectlistfortransfer>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<get project list>>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
+		public async Task<IEnumerable<ddlmodel>> getprojectlistfortransfer()
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				try
+				{
+					string materialrequestquery = WMSResource.getAllprojectlistfortransfer;
+
+
+					await pgsql.OpenAsync();
+					var data = await pgsql.QueryAsync<ddlmodel>(
+					  materialrequestquery, null, commandType: CommandType.Text);
+					var senddata = data.Where(o => o.projectmanager != null);
+					return senddata;
+
+
+
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "getprojectlistfortransfer", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+
+			}
+		}
+
+		/*
 		Name of Function : <<getprojectlist>>  Author :<<Ramesh>>  
 		Date of Creation <<12-12-2019>>
 		Purpose : <<get project list>>
@@ -8694,6 +8732,18 @@ namespace WMS.DAL
 			{
 				try
 				{
+					string globalid = DateTime.Now.Ticks.ToString();
+					string userquery = "select  * from wms.employee where employeeno='" + empno + "'";
+					User userdata = pgsql.QuerySingle<User>(
+					   userquery, null, commandType: CommandType.Text);
+					if(userdata != null)
+                    {
+						var gid = userdata.globalempno;
+						if(gid != null && gid.Trim() != "")
+                        {
+							globalid = gid;
+                        }
+                    }
 					string materialrequestquery = WMSResource.getprojectlist.Replace("#manager", empno);
 
 

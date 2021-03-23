@@ -634,6 +634,9 @@ export class wmsService {
   getprojectlist(): Observable<ddlmodel[]> {
     return this.http.get<ddlmodel[]>(this.url + 'POData/getprojectlist/', this.httpOptions);
   }
+  getprojectlistfortransfer(): Observable<ddlmodel[]> {
+    return this.http.get<ddlmodel[]>(this.url + 'POData/getprojectlistfortransfer/', this.httpOptions);
+  }
   getgatepassreason(): Observable<ddlmodel[]> {
     return this.http.get<ddlmodel[]>(this.url + 'POData/getgatepassreason/', this.httpOptions);
   }

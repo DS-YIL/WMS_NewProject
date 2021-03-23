@@ -473,6 +473,19 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to select prj.projectcode as value, prj.projectcode as text,Max(emp.employeeno) as projectmanager
+        ///from wms.wms_project prj
+        ///left outer join wms.employee emp on (emp.globalempno = prj.projectmanager or emp.employeeno = prj.projectmanager)
+        ///where emp.employeeno is not null and prj.projectcode is not null and prj.projectcode &lt;&gt; &apos;&apos;
+        ///group by prj.projectcode.
+        /// </summary>
+        public static string getAllprojectlistfortransfer {
+            get {
+                return ResourceManager.GetString("getAllprojectlistfortransfer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to select wi.transferid,inv.projectcode as projectid, wi.materialid , wi.poitemdesc as materialdescription, wi.transferqty ,wi.value,
         ///(select wp.projectmanager from wms.wms_project wp where wp.projectcode = inv.projectcode and wp.projectmanager is not null limit 1) as projectmanager,
         ///ssg.subconno 
@@ -1832,9 +1845,8 @@ namespace WMS.Common {
         ///                        &apos;idwithname&apos;, (Max((emp.name::text || &apos; (&apos;::text)) || Max(emp.employeeno::text)) || &apos;)&apos;::text
         ///                  ) limit 1) as selectedemployee
         ///from wms.wms_project wp 
-        ///left outer join wms.employee emp on emp.employeeno = wp.projectmanager
-        ///where wp.projectcode is not null
-        ///group by w [rest of string was truncated]&quot;;.
+        ///left outer join wms.employee emp on (emp.employeeno = wp.projectmanager or emp.globalempno = wp.projectmanager)
+        ///whe [rest of string was truncated]&quot;;.
         /// </summary>
         public static string getProjectsforAdmin {
             get {

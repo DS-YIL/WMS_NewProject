@@ -2082,8 +2082,8 @@ group by ws.pono,ws.materialid,ws.poitemdescription</value>
                         'idwithname', (Max((emp.name::text || ' ('::text)) || Max(emp.employeeno::text)) || ')'::text
                   ) limit 1) as selectedemployee
 from wms.wms_project wp 
-left outer join wms.employee emp on emp.employeeno = wp.projectmanager
-where wp.projectcode is not null
+left outer join wms.employee emp on (emp.employeeno = wp.projectmanager or emp.globalempno = wp.projectmanager)
+where wp.projectcode is not null and wp.projectcode &lt;&gt; ''
 group by wp.projectcode,wp.projectmanager</value>
   </data>
   <data name="insertsapGR" xml:space="preserve">
@@ -2163,5 +2163,12 @@ WHERE roleid=#roleid</value>
   </data>
   <data name="getGatePassReason" xml:space="preserve">
     <value>select reason as text,reason as value from wms.rd_reason rr where reasontype = 'GatePass' and deleteflag is false</value>
+  </data>
+  <data name="getAllprojectlistfortransfer" xml:space="preserve">
+    <value>select prj.projectcode as value, prj.projectcode as text,Max(emp.employeeno) as projectmanager
+from wms.wms_project prj
+left outer join wms.employee emp on (emp.globalempno = prj.projectmanager or emp.employeeno = prj.projectmanager)
+where emp.employeeno is not null and prj.projectcode is not null and prj.projectcode &lt;&gt; ''
+group by prj.projectcode</value>
   </data>
 </root>
