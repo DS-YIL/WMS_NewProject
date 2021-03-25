@@ -174,30 +174,30 @@ export class LoginComponent implements OnInit {
                   this.messageService.add({ severity: 'error', summary: 'error Message', detail: 'Selected Role is not assigned to you, select Your role' });
                 }
               })
-              //this.getallroles();
-              //this.wmsService.getuserAcessList(this.employee.employeeno, this.LoginForm.value.roleid).subscribe(data => {
-              //  if (data.length > 0) {
-              //    this.AcessNameList = data;
-              //    //this.getrbalist();
-              //    this.employee.roleid = this.LoginForm.value.roleid;
-              //    this.employee.plantid = this.AcessNameList[0].plantid;
-              //    this.wmsService.getpagesbyrole(parseInt(this.employee.roleid)).subscribe(datax => {
-              //      this.pagelist = datax;
-              //      localStorage.setItem('pages', JSON.stringify(this.pagelist));
-              //    });
-              //    localStorage.setItem('Employee', JSON.stringify(this.employee));
-              //    this.navpage.userloggedHandler(this.employee);
-              //    //this.router.navigateByUrl("nav"); 
-              //    //this.wmsService.login();
-              //    //this.bindMenu();
-              //  }
-              //  else {
+            //  this.getallroles();
+            //  this.wmsService.getuserAcessList(this.employee.employeeno, this.LoginForm.value.roleid).subscribe(data => {
+            //    if (data.length > 0) {
+            //      this.AcessNameList = data;
+            //      this.getrbalist();
+            //      this.employee.roleid = this.LoginForm.value.roleid;
+            //      this.employee.plantid = this.AcessNameList[0].plantid;
+            //      this.wmsService.getpagesbyrole(parseInt(this.employee.roleid)).subscribe(datax => {
+            //        this.pagelist = datax;
+            //        localStorage.setItem('pages', JSON.stringify(this.pagelist));
+            //      });
+            //      localStorage.setItem('Employee', JSON.stringify(this.employee));
+            //      this.navpage.userloggedHandler(this.employee);
+            //      //this.router.navigateByUrl("nav"); 
+            //      //this.wmsService.login();
+            //      //this.bindMenu();
+            //    }
+            //    else {
                  
-              //      this.messageService.add({ severity: 'error', summary: 'error Message', detail: 'Selected Role is not assigned to you, select Your role' });
+            //        this.messageService.add({ severity: 'error', summary: 'error Message', detail: 'Selected Role is not assigned to you, select Your role' });
                   
 
-              //  }
-              //})
+            //    }
+            //  })
             
 
             }

@@ -758,7 +758,7 @@ sinw.suppliername as supplier,sinw.isdirecttransferred,sinw.invoiceno ,emp.name 
 from wms.wms_storeinward stinw 
 left outer join wms.wms_securityinward sinw on stinw.inwmasterid = sinw.inwmasterid 
  left outer join wms.employee emp on emp.employeeno=sinw.mrnby
-where stinw.returnedby is not null and stinw.confirmqty &gt; 0
+where stinw.returnedby is not null and sinw.mrnon is null and stinw.confirmqty &gt; 0
 and stinw.inwardid not in (select distinct inwardid from wms.wms_stock where inwardid is not null order by inwardid desc)</value>
   </data>
   <data name="getnonreturnablegatepassdata" xml:space="preserve">
@@ -1777,6 +1777,8 @@ from wms.st_initialstock istk
 left outer join wms."MaterialMasterYGS" mat on mat.material = istk.material
 left outer join wms.wms_stock stk on (stk.receivedid = istk.stockid::text and stk.uploadbatchcode = istk.uploadbatchcode)
 where istk.dataloaderrors is True 
+and  istk.pono  NOT like '%/%' 
+and istk.pono  NOT like '%,%'
 and (istk.material = '') IS NOT True 
 and (istk.materialdescription = '') IS NOT True
 and  istk.quantity &lt;&gt; 0 and istk.quantity is NOT NULL
@@ -2080,8 +2082,8 @@ group by ws.pono,ws.materialid,ws.poitemdescription</value>
                         'idwithname', (Max((emp.name::text || ' ('::text)) || Max(emp.employeeno::text)) || ')'::text
                   ) limit 1) as selectedemployee
 from wms.wms_project wp 
-left outer join wms.employee emp on emp.employeeno = wp.projectmanager
-where wp.projectcode is not null
+left outer join wms.employee emp on (emp.employeeno = wp.projectmanager or emp.globalempno = wp.projectmanager)
+where wp.projectcode is not null and wp.projectcode &lt;&gt; ''
 group by wp.projectcode,wp.projectmanager</value>
   </data>
   <data name="insertsapGR" xml:space="preserve">
@@ -2159,11 +2161,80 @@ assign_pm=@assign_pm, annexure_report=@annexure_report, initialstock_upload=@ini
 inventory_management=@inventory_management, all_reports=@all_reports
 WHERE roleid=#roleid</value>
   </data>
+  <data name="getGatePassReason" xml:space="preserve">
+    <value>select reason as text,reason as value from wms.rd_reason rr where reasontype = 'GatePass' and deleteflag is false</value>
+  </data>
   <data name="getAllprojectlistfortransfer" xml:space="preserve">
     <value>select prj.projectcode as value, prj.projectcode as text,Max(emp.employeeno) as projectmanager
 from wms.wms_project prj
 left outer join wms.employee emp on (emp.globalempno = prj.projectmanager or emp.employeeno = prj.projectmanager)
 where emp.employeeno is not null and prj.projectcode is not null and prj.projectcode &lt;&gt; ''
 group by prj.projectcode</value>
+  </data>
+  <data name="getstoredata" xml:space="preserve">
+    <value>SELECT wrl.locatorid as storeid,wrl.locatorname as storename,wrl.storagelocationdesc as storedescription,wrl.createdate as createdon, emp."name" as createdby,
+emp1."name" as modifiedby,wrl.modifiedon,plt.plantname,wrl.locationtype,plt.plantid, 
+case when deleteflag is false then true
+else false 
+end as isactive, false as isselected
+from wms.wms_rd_locator wrl
+left outer join wms.wms_rd_plant plt on plt.plantid = wrl.plantid 
+left outer join wms.employee emp on emp.employeeno = wrl.createdby
+left outer join wms.employee emp1 on emp1.employeeno = wrl.modifiedby</value>
+  </data>
+  <data name="Addnewbin" xml:space="preserve">
+    <value>INSERT INTO wms.wms_rd_bin
+(locatorid, binnumber, deleteflag, createdate, rackid, createdby)
+VALUES(@storeid, @binname, false, current_date, @rackid, @createdby)</value>
+  </data>
+  <data name="Addnewrack" xml:space="preserve">
+    <value>INSERT INTO wms.wms_rd_rack
+(racknumber, locatorid, deleteflag, createdate, createdby)
+VALUES(@rackname, @storeid, false, current_date, @createdby)</value>
+  </data>
+  <data name="AddnewStore" xml:space="preserve">
+    <value>INSERT INTO wms.wms_rd_locator
+(deleteflag, createdate, locatorname,plantid,createdby, storagelocationdesc)
+VALUES(false, current_date, @storename, @plantid,@createdby ,@storedescription)</value>
+  </data>
+  <data name="getbinlistdata" xml:space="preserve">
+    <value>SELECT wrb.binid,wrb.binnumber as binname,wrb.rackid,rck.racknumber as rackname,wrb.locatorid as storeid,loc.locatorname as storename,wrb.createdate as createdon, emp."name" as createdby,
+emp1."name" as modifiedby,wrb.modifiedon,plt.plantname,plt.plantid, 
+case when wrb.deleteflag is false then true
+else false 
+end as isactive, false as isselected
+from wms.wms_rd_bin wrb 
+left outer join wms.wms_rd_rack rck on rck.rackid = wrb.rackid
+left outer join wms.wms_rd_locator loc on loc.locatorid = wrb.locatorid 
+left outer join wms.wms_rd_plant plt on plt.plantid = loc.plantid 
+left outer join wms.employee emp on emp.employeeno = wrb.createdby
+left outer join wms.employee emp1 on emp1.employeeno = wrb.modifiedby</value>
+  </data>
+  <data name="getracklist" xml:space="preserve">
+    <value>SELECT wrr.rackid , wrr.racknumber as rackname,wrr.locatorid as storeid,loc.locatorname as storename,wrr.createdate as createdon, emp."name" as createdby,
+emp1."name" as modifiedby,wrr.modifiedon,plt.plantname,plt.plantid, 
+case when wrr.deleteflag is false then true
+else false 
+end as isactive, false as isselected
+from wms.wms_rd_rack wrr 
+left outer join wms.wms_rd_locator loc on loc.locatorid = wrr.locatorid 
+left outer join wms.wms_rd_plant plt on plt.plantid = loc.plantid 
+left outer join wms.employee emp on emp.employeeno = wrr.createdby
+left outer join wms.employee emp1 on emp1.employeeno = wrr.modifiedby</value>
+  </data>
+  <data name="updatebin" xml:space="preserve">
+    <value>UPDATE wms.wms_rd_bin
+SET locatorid=@storeid, binnumber=@binname, deleteflag=@deleteflag,rackid= @rackid , modifiedby=@modifiedby, modifiedon=current_timestamp 
+WHERE binid=#binid</value>
+  </data>
+  <data name="updaterack" xml:space="preserve">
+    <value>UPDATE wms.wms_rd_rack
+SET racknumber=@rackname,locatorid=@storeid, deleteflag=@deleteflag,modifiedby=@modifiedby, modifiedon=current_timestamp 
+WHERE rackid=#rackid</value>
+  </data>
+  <data name="updateStore" xml:space="preserve">
+    <value>UPDATE wms.wms_rd_locator
+SET deleteflag=@deleteflag,locatorname=@storename,plantid=@plantid,storagelocationdesc=@storedescription,modifiedby=@modifiedby,modifiedon=current_timestamp
+WHERE locatorid=#storeid</value>
   </data>
 </root>

@@ -199,7 +199,7 @@
                     <input *ngIf="rowData.material" [(ngModel)]="rowData.material" class="form-control" type="text" name="{{rowData.material}}" />
                     <!--<p-autoComplete *ngIf="!rowData.materialid" [(ngModel)]="material" [suggestions]="searchItems" formControlName="itemlocation" field="name" [dropdown]="true" (completeMethod)="bindSearchListData($event,'StockModelForm','itemlocation',StockModelForm.controls.itemlocation.value,undefined)"></p-autoComplete>-->
 
-                    <p-autoComplete appendTo="body" *ngIf="!rowData.material" placeholder="search by name/code" (onSelect)="onMaterialSelected(material,rowData,ri)" [(ngModel)]="material" type="text" [suggestions]="searchItems" field="name" [forceSelection]="true" [dropdown]="true" (completeMethod)="bindSearchListDatamaterial($event,'material')" size="20"></p-autoComplete>
+                    <p-autoComplete appendTo="body" *ngIf="!rowData.material" [style]="{'width':'80%'}" [inputStyle]="{'width':'80%'}" placeholder="search by name/code" (onSelect)="onMaterialSelected(material,rowData,ri)" [(ngModel)]="material" type="text" [suggestions]="searchItems" field="name" [forceSelection]="true" [dropdown]="true" (completeMethod)="bindSearchListDatamaterial($event,'material')"></p-autoComplete>
                   </td>
                   <td class="ptable-cell" style="text-align:left">
                     <input style="text-align:left" pInputText type="text" class="form-control" [(ngModel)]="rowData.materialdescription">

@@ -963,10 +963,30 @@ namespace WMS.Controllers
 		{
 			return await this._poService.getprojectlistfortransfer();
 		}
+		[HttpGet("getgatepassreason")]
+		public async Task<IEnumerable<ddlmodel>> getgatepassreason()
+		{
+			return await this._poService.getgatepassreason();
+		}
 		[HttpGet("getprojectlisttoassign")]
 		public async Task<IEnumerable<AssignProjectModel>> getprojectlisttoassign(string empno)
 		{
 			return await this._poService.getprojectlisttoassign(empno);
+		}
+		[HttpGet("getstorelist")]
+		public async Task<IEnumerable<locataionDetailsStock>> getstorelist()
+		{
+			return await this._poService.getstorelist();
+		}
+		[HttpGet("getracklist")]
+		public async Task<IEnumerable<locataionDetailsStock>> getracklist()
+		{
+			return await this._poService.getracklist();
+		}
+		[HttpGet("getbinlistdata")]
+		public async Task<IEnumerable<locataionDetailsStock>> getbinlistdata()
+		{
+			return await this._poService.getbinlistdata();
 		}
 		[HttpGet("getprojectlisttoassignpm")]
 		public async Task<IEnumerable<assignpmmodel>> getprojectlisttoassignpm()
@@ -1226,6 +1246,7 @@ namespace WMS.Controllers
 		{
 			return await this._poService.gettestcrud();
 		}
+		
 		[HttpPost("getmatinhand")]
 		public async Task<IEnumerable<MaterialinHand>> getmatinhand(inventoryFilters filters)
 		{
@@ -1279,6 +1300,21 @@ namespace WMS.Controllers
 		public string posttestcrud(testcrud data)
 		{
 			return this._poService.posttestcrud(data);
+		}
+		[HttpPost("addupdatestore")]
+		public string addupdatestore(locataionDetailsStock data)
+		{
+			return this._poService.addupdatestore(data);
+		}
+		[HttpPost("addupdaterack")]
+		public string addupdaterack(locataionDetailsStock data)
+		{
+			return this._poService.addupdaterack(data);
+		}
+		[HttpPost("addupdatebin")]
+		public string addupdatebin(locataionDetailsStock data)
+		{
+			return this._poService.addupdatebin(data);
 		}
 
 		[HttpPost("updateUserauth")]

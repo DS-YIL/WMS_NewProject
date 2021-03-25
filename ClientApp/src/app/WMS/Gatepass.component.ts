@@ -6,7 +6,7 @@ import { constants } from '../Models/WMSConstants';
 import { Employee, DynamicSearchResult, searchList, userAcessNamesModel, rbamaster } from '../Models/Common.Model';
 import { NgxSpinnerService } from "ngx-spinner";
 import { MessageService } from 'primeng/api';
-import { gatepassModel, materialistModel, FIFOValues, materialList } from '../Models/WMS.Model';
+import { gatepassModel, materialistModel, FIFOValues, materialList, ddlmodel } from '../Models/WMS.Model';
 import { isNullOrUndefined } from 'util';
 import { DatePipe, DecimalPipe } from '@angular/common';
 import { ConfirmationService } from 'primeng/api';
@@ -68,12 +68,15 @@ export class GatePassComponent implements OnInit {
   gtptype: string = "";
   tempreturneddate: any;
   currdate: Date;
+  reasonlist: ddlmodel[] = [];
   ngOnInit() {
     if (localStorage.getItem("Employee"))
       this.employee = JSON.parse(localStorage.getItem("Employee"));
     else
       this.router.navigateByUrl("Login");
     this.gatepassModel = new gatepassModel();
+    this.reasonlist = [];
+    this.getgatepassreason();
     this.materialistModel = new materialistModel();
     this.selectedrba = new rbamaster();
     if (localStorage.getItem("userroles")) {
@@ -91,6 +94,7 @@ export class GatePassComponent implements OnInit {
     this.emailgateid = this.route.snapshot.queryParams.gatepassid;
     this.gtptype = "";
     this.tempreturneddate = null;
+
     this.getGatePassList();
     this.GatepassTxt = "Gate Pass - Request Materials"
 
@@ -112,6 +116,16 @@ export class GatePassComponent implements OnInit {
   resetDG() {
     this.disableGPBtn = false;
   }
+
+  getgatepassreason() {
+    this.reasonlist = [];
+    this.wmsService.getgatepassreason().subscribe(data => {
+      debugger;
+      this.reasonlist = data;
+
+    });
+  }
+  
 
 
   //Adding new material - Gayathri

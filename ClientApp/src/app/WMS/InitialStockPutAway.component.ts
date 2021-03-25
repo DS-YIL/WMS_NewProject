@@ -112,7 +112,7 @@ export class InitialStockPutAwayComponent implements OnInit {
     if (bn.length > 0) {
       initlocation.binnumber = bn[0].binnumber;
     }
-    initlocation.stocktype = "";
+    initlocation.stocktype = "Project Stock";
     initlocation.quantity = 0;
     initlocation.isdisablestore = false;
     initlocation.isdisablerack = false;
@@ -125,10 +125,17 @@ export class InitialStockPutAwayComponent implements OnInit {
 
   formvalidation(issubmit: boolean) {
     var location = this.locationlistDG.filter(function (element, index) {
-      return (isNullOrUndefined(element.locatorid) || element.locatorid == 0 || isNullOrUndefined(element.rackid) || element.rackid == 0);
+      return (isNullOrUndefined(element.locatorid) || element.locatorid == 0);
     });
     if (location.length > 0) {
-      this.messageService.add({ severity: 'error', summary: '', detail: 'Select Location.' });
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Select Store.' });
+      return false;
+    }
+    var racklocation = this.locationlistDG.filter(function (element, index) {
+      return (isNullOrUndefined(element.rackid) || element.rackid == 0);
+    });
+    if (racklocation.length > 0) {
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Select Rack.' });
       return false;
     }
     var stype = this.locationlistDG.filter(function (element, index) {
@@ -266,9 +273,9 @@ export class InitialStockPutAwayComponent implements OnInit {
 
     if (dt == true) {
       let initlocation = new locationdropdownModel();
-      initlocation.locatorid = 0;
-      initlocation.rackid = 0;
-      initlocation.binid = 0;
+      initlocation.locatorid = null;
+      initlocation.rackid = null;
+      initlocation.binid = null;
       initlocation.stocktype = "";
       initlocation.quantity = 0;
       initlocation.isdisablestore = false;
@@ -320,7 +327,7 @@ export class InitialStockPutAwayComponent implements OnInit {
         });
   }
 
-  onStoreSelect(data: locationdropdownModel, index: number) {
+  onStoreSelect(event: any,data: locationdropdownModel, index: number) {
 
     debugger;
 
@@ -331,11 +338,11 @@ export class InitialStockPutAwayComponent implements OnInit {
     }
     else {
       data.locatorname = "";
-      data.locatorid = 0;
+      data.locatorid = null;
     }
-    data.rackid = 0;
+    data.rackid = null;
     data.racknumber = "";
-    data.binid = 0;
+    data.binid = null;
     data.binnumber ="";
     data.isdisablestore = false;
     data.invalidlocation = false;
@@ -357,7 +364,7 @@ export class InitialStockPutAwayComponent implements OnInit {
 
   }
 
-  onRackSelect(data: locationdropdownModel, index: number) {
+  onRackSelect(event: any,data: locationdropdownModel, index: number) {
     var loc = this.racklist.filter(o => o.racknumber == data.racknumber && o.locatorid == data.locatorid);
     if (loc.length > 0) {
       data.racknumber = loc[0].racknumber;
@@ -365,9 +372,9 @@ export class InitialStockPutAwayComponent implements OnInit {
     }
     else {
       data.racknumber = "";
-      data.rackid = 0;
+      data.rackid = null;
     }
-    data.binid = 0;
+    data.binid = null;
     data.binnumber = "";
     data.isdisablestore = false;
     data.invalidlocation = false;
@@ -399,7 +406,7 @@ export class InitialStockPutAwayComponent implements OnInit {
   
 
   }
-  onBinSelect(data: locationdropdownModel, index: number) {
+  onBinSelect(event: any,data: locationdropdownModel, index: number) {
     var loc = this.binlist.filter(o => o.binnumber == data.binnumber && o.rackid == data.rackid && o.locatorid == data.locatorid);
     if (loc.length > 0) {
       data.binnumber = loc[0].binnumber;
@@ -408,7 +415,7 @@ export class InitialStockPutAwayComponent implements OnInit {
     }
     else {
       data.binnumber = "";
-      data.binid = 0;
+      data.binid = null;
     }
     data.invalidlocation = false;
    

@@ -229,10 +229,21 @@ export class locataionDetailsStock {
   binid: number;
   storeid: number;
   locationid: string;
+  locatorid: string;
   locationname: string;
   rackname: string;
   binname: string;
   storename: string;
+  createdby: string;
+  createdon: Date;
+  modifiedby: string;
+  modifiedon: Date;
+  isactive: boolean;
+  isselected: boolean;
+  storedescription: string;
+  locationtype: string;
+  plantid: number
+  plantname: string;
 }
 
 export class materialRequestDetails {

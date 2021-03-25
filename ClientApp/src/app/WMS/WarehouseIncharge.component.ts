@@ -169,6 +169,10 @@ export class WarehouseInchargeComponent implements OnInit {
   //On selection of location updating rack
   onlocUpdate(locationid: any, rowData: any, issetdefault: boolean) {
     debugger;
+    if (!issetdefault) {
+      rowData.rackid = null;
+      rowData.binid = null;
+    }
     rowData.racklist = [];
     if (this.rackdata.filter(li => li.locationid == locationid).length > 0) {
       this.racklist = [];
@@ -184,9 +188,13 @@ export class WarehouseInchargeComponent implements OnInit {
     
   }
 
+
   //On selection of rack updating bin
   onrackUpdate(locationid: any, rackid: any, rowData: any, issetdefault: boolean) {
     debugger;
+    if (!issetdefault) {
+      rowData.binid = null;
+    }
     rowData.binlist = [];
     if (this.bindata.filter(li => li.locationid == locationid && li.rackid == rackid).length > 0) {
       this.binlist = [];
@@ -257,9 +265,9 @@ export class WarehouseInchargeComponent implements OnInit {
               if (this.stock[data].rackid == this.stock[this.stock.length - 1].rackid) {
                 if (this.stock[data].binid == this.stock[this.stock.length - 1].binid) {
                   this.messageService.add({ severity: 'error', summary: '', detail: 'Location already exists' });
-                  this.stock[this.stock.length - 1].binid = 0;
-                  this.stock[this.stock.length - 1].rackid=0;
-                  this.stock[this.stock.length - 1].locatorid = 0;
+                  this.stock[this.stock.length - 1].binid = null;
+                  this.stock[this.stock.length - 1].rackid=null;
+                  this.stock[this.stock.length - 1].locatorid = null;
                   return;
                 }
               }
@@ -305,42 +313,29 @@ export class WarehouseInchargeComponent implements OnInit {
           }
         }
       }
-
-
-
-
-      //if (this.stock.filter(li => li.locatorid == this.stock[index].locatorid && li.rackid == this.stock[index].rackid && li.binid == this.stock[index].binid).length > 0) {
-      //  this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Location already exists' });
-      //  return;
-      //}
     }
-      //get stock type
-      this.locationdetails.storeid = this.stock[index].locatorid;
-      this.locationdetails.rackid = this.stock[index].rackid;
-    this.locationdetails.binid = this.stock[index].binid;
-    var bindetails = this.bindata.filter(x => x.binid == this.locationdetails.binid);
-    var storedetails = this.locationdata.filter(x => x.locatorid == this.locationdetails.storeid);
-    var rackdetails = this.rackdata.filter(x => x.rackid == this.locationdetails.rackid);
-    this.locationdetails.storename = storedetails[0].locatorname != null || storedetails[0].locatorname != "undefined" || storedetails[0].locatorname != "" ? storedetails[0].locatorname:0;
-    this.locationdetails.rackname = rackdetails[0].racknumber != null || rackdetails[0].racknumber != "undefined" || rackdetails[0].racknumber != "" ? rackdetails[0].racknumber : 0;
-    this.locationdetails.binname = bindetails[0].binnumber != null || bindetails[0].binnumber != "undefined" || bindetails[0].binnumber != "" ? bindetails[0].binnumber : 0;
-      this.locationdetails.locationid = this.locationdetails.storeid + '.' + this.locationdetails.rackid + '.' + this.locationdetails.binid;
-      this.locationdetails.locationname = this.locationdetails.storename + '.' + this.locationdetails.rackname + '.' + this.locationdetails.binname;
-      //service to get stock type
-      //this.wmsService.getstocktype(this.locationdetails).subscribe(data => {
-      //  debugger;
-      //  if (data) {
-      //    this.stock[index].stocktype = data;
-      //    //this.invoiceForm.controls.itemRows.value[this.invoiceForm.controls.itemRows.value.length - 1].stocktype = data;
-      //    //this.StockModel.stocktype = data;
-
-      //  }
-      //  else {
-      //    this.messageService.add({ severity: 'error', summary: '', detail: 'Unable to fetch stock type' });
-      //  }
-      //});
-
-
+     
+    //this.locationdetails.storeid = this.stock[index].locatorid;
+    //this.locationdetails.rackid = this.stock[index].rackid;
+    //this.locationdetails.binid = this.stock[index].binid;
+    //var bindetails = this.bindata.filter(x => x.binid == this.locationdetails.binid);
+    //var storedetails = this.locationdata.filter(x => x.locatorid == this.locationdetails.storeid);
+    //var rackdetails = this.rackdata.filter(x => x.rackid == this.locationdetails.rackid);
+    //if (storedetails.length > 0) {
+    //  this.locationdetails.storename = storedetails[0].locatorname != null || storedetails[0].locatorname != "undefined" || storedetails[0].locatorname != "" ? storedetails[0].locatorname : 0;
+    //}
+    //if (bindetails.length > 0) {
+    //  this.locationdetails.storename = storedetails[0].locatorname != null || storedetails[0].locatorname != "undefined" || storedetails[0].locatorname != "" ? storedetails[0].locatorname : 0;
+    //}
+    //if (bindetails.length > 0) {
+    //  this.locationdetails.storename = storedetails[0].locatorname != null || storedetails[0].locatorname != "undefined" || storedetails[0].locatorname != "" ? storedetails[0].locatorname : 0;
+    //}
+    
+    //this.locationdetails.rackname = rackdetails[0].racknumber != null || rackdetails[0].racknumber != "undefined" || rackdetails[0].racknumber != "" ? rackdetails[0].racknumber : 0;
+    //this.locationdetails.binname = bindetails[0].binnumber != null || bindetails[0].binnumber != "undefined" || bindetails[0].binnumber != "" ? bindetails[0].binnumber : 0;
+    //  this.locationdetails.locationid = this.locationdetails.storeid + '.' + this.locationdetails.rackid + '.' + this.locationdetails.binid;
+    //  this.locationdetails.locationname = this.locationdetails.storename + '.' + this.locationdetails.rackname + '.' + this.locationdetails.binname;
+    
   }
 
   deleteRow(index: number) {
@@ -726,28 +721,36 @@ this.updateRowGroupMetaData();
     
     if (this.stock.length > 0) {
       debugger;
-      if (this.stock[this.stock.length - 1].locatorid == 0 || this.stock[this.stock.length - 1].locatorid == null) {
-        this.messageService.add({ severity: 'error', summary: '', detail: 'select Location' });
+      var invalidlocation = this.stock.filter(x => x.locatorid == 0 || isNullOrUndefined(x.locatorid));
+      if (invalidlocation.length > 0) {
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Select Store' });
         return;
       }
-      if (this.stock[this.stock.length - 1].rackid == 0 || this.stock[this.stock.length - 1].rackid == 0) {
-        this.messageService.add({ severity: 'error', summary: '', detail: 'select Rack' });
+      var invalidrack = this.stock.filter(x => x.rackid == 0 || isNullOrUndefined(x.rackid));
+      if (invalidrack.length > 0) {
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Select Rack' });
         return;
       }
-      if (this.stock[this.stock.length - 1].qty == 0 || this.stock[this.stock.length - 1].qty == null) {
-        this.messageService.add({ severity: 'error', summary: '', detail: 'Enter quantity' });
+      var invalidstocktype = this.stock.filter(x => x.stocktype == "" || isNullOrUndefined(x.stocktype));
+      if (invalidstocktype.length > 0) {
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Select Stock Type' });
         return;
       }
-
+      var invalidqty = this.stock.filter(x => x.qty == 0 || isNullOrUndefined(x.qty));
+      if (invalidqty.length > 0) {
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Enter Quantity' });
+        return;
+      }
+     
       if (this.stock.length > 1) {
         for (var data = 0; data < this.stock.length - 1; data++) {
           if (this.stock[data].locatorid == this.stock[this.stock.length - 1].locatorid) {
             if (this.stock[data].rackid == this.stock[this.stock.length - 1].rackid) {
               if (this.stock[data].binid == this.stock[this.stock.length - 1].binid) {
                 this.messageService.add({ severity: 'error', summary: '', detail: 'Location already exists' });
-                this.stock[this.stock.length - 1].binid = 0;
-                this.stock[this.stock.length - 1].rackid = 0;
-                this.stock[this.stock.length - 1].locatorid = 0;
+                this.stock[this.stock.length - 1].binid = null;
+                this.stock[this.stock.length - 1].rackid = null;
+                this.stock[this.stock.length - 1].locatorid = null;
                 return;
               }
             }
@@ -755,11 +758,15 @@ this.updateRowGroupMetaData();
         }
       }
     }
+    else {
+      this.messageService.add({ severity: 'error', summary: '', detail: 'select Location' });
+      return;
+    }
     this.StockModelList = [];
     var binnumber: any[] = [];
     var storelocation: any[] = [];
     var rack: any[] = [];
-    if (this.stock[0].rackid && this.stock[0].locatorid) {
+   
       this.stock.forEach(item => {
         this.StockModel = new StockModel();
         this.StockModel.material = this.PoDetails.material;
@@ -785,7 +792,7 @@ this.updateRowGroupMetaData();
           this.StockModel.itemlocation = storelocation[0].locatorname + "." + rack[0].racknumber + '.' + binnumber[0].binnumber;
         }
         else if (binnumber.length == 0) {
-          this.StockModel.binid = 1;
+          this.StockModel.binid = null;
           this.StockModel.itemlocation = storelocation[0].locatorname + "." + rack[0].racknumber;
         }
         this.StockModel.racknumber = storelocation[0].locatorname;
@@ -794,23 +801,7 @@ this.updateRowGroupMetaData();
         this.StockModel.confirmqty = item.qty;
         this.StockModel.itemreceivedfrom = new Date();
         this.StockModelList.push(this.StockModel);
-
-        //this.StockModel.stocklist.push(this.StockModel);
       })
-
-      //this.StockModel.stocklist.push(this.StockModel);
-      //  binnumber = this.binlist.filter(x => x.binid == this.StockModelForm.controls.binid.value);
-      //storelocation = this.locationlist.filter(x => x.locatorid == this.StockModelForm.controls.locatorid.value);
-      //  rack = this.racklist.filter(x => x.rackid == this.StockModelForm.controls.rackid.value);
-      //if (binnumber.length != 0) {
-      //  this.StockModel.binnumber = binnumber[0].binnumber;
-      //  this.StockModel.binid = binnumber[0].binid;
-      //  this.StockModel.itemlocation = storelocation[0].locatorname + "." + rack[0].racknumber + '.' + binnumber[0].binnumber;
-      //}
-      //else if (binnumber.length == 0) {
-      //  this.StockModel.binid = 1;
-      //  this.StockModel.itemlocation = storelocation[0].locatorname + "." + rack[0].racknumber;
-      //}
       var totalqty = 0;
       this.StockModelList.forEach(item => {
 
@@ -873,13 +864,8 @@ this.updateRowGroupMetaData();
         this.disSaveBtn = true;
         this.messageService.add({ severity: 'error', summary: '', detail: 'Putaway Qty should be same as Accepted Qty' });
       }
-    }
-    else {
-      if (!this.store.name)
-        this.messageService.add({ severity: 'error', summary: '', detail: 'Select Location' });
-      else if (!this.rack.name)
-        this.messageService.add({ severity: 'error', summary: '', detail: 'Select Rack' });
-    }
+    
+   
   }
 
   //show alert to update location details

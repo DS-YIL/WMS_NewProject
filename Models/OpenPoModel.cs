@@ -367,10 +367,10 @@ namespace WMS.Models
 
 		public int paitemid { get; set; }
 		public string pono { get; set; }
-		public int binid { get; set; }
-		public int rackid { get; set; }
-		public int storeid { get; set; }
-		public int vendorid { get; set; }
+		public int? binid { get; set; }
+		public int? rackid { get; set; }
+		public int? storeid { get; set; }
+		public int? vendorid { get; set; }
 		public decimal? totalquantity { get; set; }
 		public DateTime? shelflife { get; set; }
 		public decimal? availableqty { get; set; }
@@ -579,14 +579,25 @@ namespace WMS.Models
 
 	public class locataionDetailsStock
 	{
-		public int rackid { get; set; }
-		public int binid { get; set; }
-		public int storeid { get; set; }
+		public int? rackid { get; set; }
+		public int? binid { get; set; }
+		public int? storeid { get; set; }
 		public string locationid { get; set; }
 		public string locationname { get; set; }
 		public string rackname { get; set; }
 		public string binname { get; set; }
 		public string storename { get; set; }
+		public string createdby { get; set; }
+		public DateTime? createdon { get; set; }
+		public string modifiedby { get; set; }
+		public DateTime? modifiedon { get; set; }
+		public bool? isactive { get; set; }
+		public bool? isselected { get; set; }
+		public string storedescription { get; set; }
+		public int? plantid { get; set; }
+		public string plantname { get; set; }
+		public string locationtype { get; set; }
+
 	}
 	public class IssueRequestModel
 	{

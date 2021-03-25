@@ -1,0 +1,107 @@
+<div style="margin:10px">
+  <div class="card commoncardcssnoheight">
+    <div class="card-header text-center commoncardheader">
+      <div class="row " style="    margin-top: 10px;
+    margin-left: 0px !important;
+    margin-right: 0px !important">
+        <div class="col-lg-4 col-md-4 form-inline">
+        </div>
+        <div class="col-lg-4 col-md-4 text-center">
+          <span style="color:#428bca;font-size:18px" class="commonheadertext">
+            <i class="fa fa-check-circle-o commonheadertext"></i>&nbsp;Store Master
+          </span>
+        </div>
+        <div class="col-lg-4 col-md-4">
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <p-table #dt [value]="getlistdata" [style]="{'overflow':'auto!important','box-shadow' : '5px 5px #888888'}"
+               [scrollable]="true" scrollHeight="65vh">
+        <ng-template pTemplate="header">
+          <tr class="mprltbldata">
+            <th class="ptable-cell" style="text-align:center;width:70px;">Sl.No.</th>
+            <th class="ptable-cell" style="text-align:center;width:150px;">Plant</th>
+            <th class="ptable-cell" style="text-align:center;width:200px;">Store Name</th>
+            <th class="ptable-cell" style="text-align:center;">Store Description</th>
+            <th class="ptable-cell" style="text-align:center;width:200px;">Created By</th>
+            <th class="ptable-cell" style="text-align:center;width:150px;">Created On</th>
+            <th style="text-align: center;width: 100px;">Is Active</th>
+            <th style="text-align: center;width: 100px;"><button class="btn btn-primary btn-sm" (click)="AddStore()"><i class="fa fa-plus"></i></button></th>
+          </tr>
+          <tr>
+            <th></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'plantname', 'startsWith')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'storename', 'startsWith')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'storedescription', 'contains')"></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex" let-rindex=0>
+          <tr>
+            <td class="ptable-cell" style="text-align:right;width:70px;"> {{ri+1}} </td>
+            <td class="ptable-cell" style="text-align:center;width:150px;"> {{rowData.plantname}} </td>
+            <td class="ptable-cell" style="text-align:left;width:200px;"> {{rowData.storename}} </td>
+            <td class="ptable-cell" style="text-align:left;"> {{rowData.storedescription}} </td>
+            <td class="ptable-cell" style="text-align:left;width:200px;">{{rowData.createdby}} </td>
+            <td class="ptable-cell" style="text-align:center;width:150px;">{{rowData.createdon | date: 'dd/MM/yyyy'}} </td>
+            <td class="ptable-cell" style="text-align:center;width:100px;">
+              <input type="checkbox" [(ngModel)]="rowData.isactive">
+            </td>
+            <td class="ptable-cell" style="text-align:center;width:100px;">
+              <button class="btn btn-primary btn-sm" (click)="EditStore(rowData,ri)"><i class="fa fa-edit"></i></button>
+            </td>
+
+</ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="4" style="text-align:center;color:red">No Records.</td>
+          </tr>
+        </ng-template>
+      </p-table>
+
+
+    </div>
+  </div>
+  <p-dialog header="Add/Edit Store" [(visible)]="showadddatamodel" (onHide)="refreshsavemodel()" [modal]="true" [style]="{width: '50vw','height' : '500px'}" [baseZIndex]="10000"
+            [draggable]="true" [resizable]="false">
+    <div class="row">
+      <div class="col-lg-6 col-md-6">
+        <label class="labelheading">Plant :&nbsp;</label>
+        <p-autoComplete [(ngModel)]="selectedplant" field="plantname" [appendTo]="body" [suggestions]="filteredPlant" [disabled]="true" placeholder="search by plant" [ngModelOptions]="{standalone: true}" [forceSelection]="true" (completeMethod)="filterPlants($event)" [size]="30" [dropdown]="true"></p-autoComplete>
+      </div>
+      <div class="col-lg-6 col-md-6">
+        <label class="labelheading">Store Name :&nbsp;</label>
+        <input type="text" class="form-control" [(ngModel)]="editModel.storename" />
+      </div>
+
+    </div>
+
+    <div class="row" style="margin-top:20px;margin-bottom:20px;">
+      <div class="col-lg-6 col-md-6">
+        <label class="labelheading">Store Description :&nbsp;</label>
+        <input type="text" class="form-control" [(ngModel)]="editModel.storedescription" />
+      </div>
+
+    </div>
+    <div class="row" style="margin-top:20px;margin-bottom:20px;" *ngIf="!isAddprocess">
+      <div class="col-lg-6 col-md-6">
+        <label class="labelheading">Active :&nbsp;</label>
+        <input type="checkbox" [(ngModel)]="editModel.isactive" />
+      </div>
+
+    </div>
+    <p-footer>
+      <button type="button" pButton icon="pi pi-check" (click)="post()" label="Submit"></button>
+      <button type="button" pButton icon="pi pi-times" (click)="showadddatamodel=false" label="Cancel" class="ui-button-secondary"></button>
+    </p-footer>
+  </p-dialog>
+
+
+</div>
+
+
+

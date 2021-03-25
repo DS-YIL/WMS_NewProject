@@ -5,7 +5,8 @@
 export const environment = {
   production: false,
   imgurl: "http://10.29.15.212:83/",
-  profileimgUrl: "http://10.29.15.77/Employee/Photos/Passport/"
+  profileimgUrl: "http://10.29.15.77/Employee/Photos/Passport/",
+  plantid : 1
 };
 
 /*
@@ -13,5 +14,5 @@ export const environment = {
  * `zone.run`, `zoneDelegate.invokeTask` for easier debugging, you can
  * import the following file, but please comment it out in production mode
  * because it will have performance impact when throw error
- */
+*/
 // import 'zone.js/dist/zone-error';  // Included with Angular CLI.

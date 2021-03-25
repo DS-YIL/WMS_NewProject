@@ -198,7 +198,7 @@
                   <tr>
                     <td class="ptable-cell" style="text-align:center"> {{ri+1}} </td>
                     <td class="ptable-cell" style="text-align:left;">
-                      <p-autoComplete appendTo="body"  placeholder="search by name/code" [(ngModel)]="rowData.material" (onSelect)="onMaterialSelected(rowData.material,rowData,ri)"  type="text" [suggestions]="searchItems" field="name" [forceSelection]="true" [dropdown]="true" (completeMethod)="bindSearchListDatamaterial($event,'material')" size="25"></p-autoComplete>
+                      <p-autoComplete appendTo="body"  placeholder="search by name/code" [(ngModel)]="rowData.material" [style]="{'width':'80%'}" [inputStyle]="{'width':'80%'}" (onSelect)="onMaterialSelected(rowData.material,rowData,ri)"  type="text" [suggestions]="searchItems" field="name" [forceSelection]="true" [dropdown]="true" (completeMethod)="bindSearchListDatamaterial($event,'material')"></p-autoComplete>
                       <!--<p-autoComplete [(ngModel)]="rowData.materialid" (onSelect)="onMaterialSelected(rowData,ri)" appendTo="body" field="code" [suggestions]="filteredmaterial" placeholder="search by name/code" [forceSelection]="true" (completeMethod)="filtermaterials($event)" [size]="25"
                                       [dropdown]="true"></p-autoComplete>-->
                      
