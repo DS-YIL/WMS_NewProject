@@ -8645,44 +8645,7 @@ namespace WMS.DAL
 
 			}
 		}
-
-		/*
-		Name of Function : <<getprojectlistfortransfer>>  Author :<<Ramesh>>  
-		Date of Creation <<12-12-2019>>
-		Purpose : <<get project list>>
-		Review Date :<<>>   Reviewed By :<<>>
-		*/
-		public async Task<IEnumerable<ddlmodel>> getprojectlistfortransfer()
-		{
-			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
-			{
-				try
-				{
-					string materialrequestquery = WMSResource.getAllprojectlistfortransfer;
-
-
-					await pgsql.OpenAsync();
-					var data = await pgsql.QueryAsync<ddlmodel>(
-					  materialrequestquery, null, commandType: CommandType.Text);
-					var senddata = data.Where(o => o.projectmanager != null);
-					return senddata;
-
-
-
-				}
-				catch (Exception Ex)
-				{
-					log.ErrorMessage("PODataProvider", "getprojectlistfortransfer", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
-					return null;
-				}
-				finally
-				{
-					pgsql.Close();
-				}
-
-
-			}
-		}
+		
 
 		/*
 		Name of Function : <<getprojectlisttoassign>>  Author :<<Ramesh>>  
