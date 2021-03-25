@@ -19,11 +19,11 @@
   
   <div class="card-body" style="overflow-y:scroll">
     <div *ngIf="materialList.length>0">
-      <div *ngIf="employee.roleid=='8'" class="row mt-2" style="padding-left:20px;">
+      <div *ngIf="selectedrba.gatepass_approval" class="row mt-2" style="padding-left:20px;">
         <button type="button" icon="fa fa-history" pButton aria-hidden="true" (click)="showHistoryList()" pTooltip="GatePass Approvals" style="float: left; height: 30px;width:30px"></button>
       </div>
       <!--<br />-->
-      <div *ngIf="employee.roleid=='8' && gatePassApprovalList.length>0 && showHistory" style="background-color:#2c898073">
+      <div *ngIf="selectedrba.gatepass_approval && gatePassApprovalList.length>0 && showHistory" style="background-color:#2c898073">
         <div class="row mt-2" style="padding-left:20px;font-weight: 600;font-size: 16px;color: #265f18;text-decoration:underline">History</div>
         <div class="row mt-2" style="padding-left:20px;">
           <div class="col-lg-3 col-md-3 col-sm-3 form-inline" style="font-weight: 600; font-size: 14px; color: darkblue; ">
@@ -79,7 +79,7 @@
         <div class="col-lg-2 col-md-2 col-sm-2 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
           Supplier:&nbsp;<span style="color:#dc3545;">{{materialList[0].vendorname}}</span>
         </div>
-        <div class="col-lg-2 col-md-2 col-sm-2 form-inline" *ngIf="employee.roleid!='8'" style="font-weight:600;font-size:14px;color:darkblue;">
+        <div class="col-lg-2 col-md-2 col-sm-2 form-inline" *ngIf="!selectedrba.gatepass_approval" style="font-weight:600;font-size:14px;color:darkblue;">
           Type:&nbsp;<span style="color:#dc3545;">{{materialList[0].gatepasstype}}</span>
         </div>
         <div class="col-lg-2 col-md-2 col-sm-2 form-inline" *ngIf="materialList[0].gatepasstype=='Returnable'" style="font-weight:600;font-size:14px;color:darkblue;">
@@ -140,8 +140,8 @@
               <th class="ptable-cell" style="text-align:center;width:350px;">PO Item Description</th>
               <th class="ptable-cell" style="text-align:center">Price</th>
               <th class="ptable-cell" style="text-align:center">Requested Qty</th>
-              <th class="ptable-cell" style="text-align:center" *ngIf="employee.roleid !='8'">Issue Qty</th>
-              <th class="ptable-cell" style="text-align:center" *ngIf="employee.roleid !='8' && materialList[0].gatepasstype=='Returnable'">Expected Date</th>
+              <th class="ptable-cell" style="text-align:center" *ngIf="!selectedrba.gatepass_approval">Issue Qty</th>
+              <th class="ptable-cell" style="text-align:center" *ngIf="!selectedrba.gatepass_approval && materialList[0].gatepasstype=='Returnable'">Expected Date</th>
               <!--<th *ngIf="materialList[0].gatepasstype=='Returnable'" class="ptable-cell" style="text-align:center">Returned Date</th>-->
               <th class="ptable-cell" style="text-align:center">Remarks</th>
             </tr>
@@ -150,17 +150,17 @@
             <tr>
               <td class="ptable-cell" style="text-align:center"> {{ri+1}} </td>
               <td class="ptable-cell" style="text-align:left">
-                <span *ngIf="employee.roleid !='3'">{{rowData.materialid}}</span>
-                <button *ngIf="employee.roleid !='8' && employee.roleid =='3'" type="button" class="btn btn-link" (click)="showmateriallocationList(rowData.materialid,rowData.materialdescription,ri+1,ri,rowData.quantity,rowData.issuedqty,rowData.reservedqty,rowData.gatepassmaterialid);" style="padding-left:0px;">{{rowData.materialid}}</button>
+                <span *ngIf="!selectedrba.material_issue">{{rowData.materialid}}</span>
+                <button *ngIf="!selectedrba.gatepass_approval && selectedrba.material_issue" type="button" class="btn btn-link" (click)="showmateriallocationList(rowData.materialid,rowData.materialdescription,ri+1,ri,rowData.quantity,rowData.issuedqty,rowData.reservedqty,rowData.gatepassmaterialid);" style="padding-left:0px;">{{rowData.materialid}}</button>
               </td>
               <td class="ptable-cell" style="text-align:left"> {{rowData.materialdescription}} </td>
               <td class="ptable-cell" style="text-align:right"><span *ngIf="rowData.materialcost">{{rowData.materialcost}}</span></td>
               <td class="ptable-cell" style="text-align:right">{{rowData.quantity}}</td>
               <td class="ptable-cell" [hidden]="true" style="text-align:right">{{rowData.itemlocation}}</td>
-              <td class="ptable-cell" *ngIf="employee.roleid !='8'">
+              <td class="ptable-cell" *ngIf="!selectedrba.gatepass_approval">
                 <input pInputText type="number" style="text-align:center" class="form-control" [disabled]="txtDisable" [(ngModel)]="rowData.issuedqty">
               </td>
-              <td class="ptable-cell" style="text-align:center" *ngIf="employee.roleid !='8' && materialList[0].gatepasstype=='Returnable'">{{checkValiddate(rowData.expecteddate)}}</td>
+              <td class="ptable-cell" style="text-align:center" *ngIf="!selectedrba.gatepass_approval && materialList[0].gatepasstype=='Returnable'">{{checkValiddate(rowData.expecteddate)}}</td>
               <!--<td *ngIf="materialList[0].gatepasstype=='Returnable' && rowData.returneddate" class="ptable-cell" style="text-align:center">{{checkValiddate(rowData.returneddate)}}</td>-->
               <td class="ptable-cell" style="text-align:left"> {{rowData.remarks}} </td>
           </ng-template>
@@ -179,7 +179,7 @@
 
       </div>
       <!--</div>-->
-      <div *ngIf="employee.roleid=='8'">
+      <div *ngIf="selectedrba.gatepass_approval">
         <div class="row">
           <div class="col-lg-1 col-md-1 col-sm-1"></div>
           <div class="col-lg-3 col-md-3 col-sm-3  form-inline" *ngIf="!btnDisable">

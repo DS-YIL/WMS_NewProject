@@ -8,6 +8,7 @@ import { wmsService } from '../WmsServices/wms.service';
 import { environment } from 'src/environments/environment'
 import { pageModel, ddlmodel } from '../Models/WMS.Model';
 import { isNullOrUndefined } from 'util';
+import { emit } from 'cluster';
 
 @Component({
   selector: 'app-nav-menu',
@@ -85,27 +86,18 @@ export class NavMenuComponent implements OnInit {
       this.urlrequstedpage = urlvals[urlvals.length - 2];
       localStorage.setItem('requestedpage', this.urlrequstedpage);
     }
-
-    if (eurl.includes("/appr")) {
-      this.isapprovalurl = true;
-      let element: HTMLElement = document.getElementById("btnuser") as HTMLElement;
-      element.hidden = true;
-      let element1: HTMLDivElement = document.getElementById("menudiv") as HTMLDivElement;
-      element1.hidden = true;
-      this.router.navigateByUrl("WMS/Mailresponse");
-      return;
-    }
-    //Purpose: << Security Operator >>
-
-
     if (localStorage.getItem("Employee")) {
-      if (localStorage.getItem("rbalist")) {
-        this.rbalist = JSON.parse(localStorage.getItem("rbalist")) as rbamaster[];
-      }
+      this.getrbalist();
+      //if (localStorage.getItem("rbalist")) {
+        
+      //  this.rbalist = JSON.parse(localStorage.getItem("rbalist")) as rbamaster[];
+      //}
 
       this.loggedin = true;
       let element: HTMLElement = document.getElementById("btnuser") as HTMLElement;
       element.hidden = false;
+      let elementx: HTMLElement = document.getElementById("notlogged") as HTMLElement;
+      elementx.hidden = true;
       this.emp = JSON.parse(localStorage.getItem("Employee")) as Employee;
       this.profileimage = this.imgurl + this.emp.employeeno + ".jpg";
       this.loggeduserdata.push(this.emp);
@@ -123,9 +115,11 @@ export class NavMenuComponent implements OnInit {
       else {
         if (localStorage.getItem("userroles")) {
           this.userrolelist = JSON.parse(localStorage.getItem("userroles")) as userAcessNamesModel[];
+
         }
-        else {
-          this.userrolelist = JSON.parse(localStorage.getItem("allroles")) as userAcessNamesModel[];
+        if (isNullOrUndefined(this.userrolelist)) {
+          alert("Selected Role is not assigned to you, select Your role");
+          this.router.navigateByUrl("WMS/Login");
         }
         var rid = this.emp.roleid;
         if (isNullOrUndefined(this.userrolelist)) {
@@ -142,15 +136,17 @@ export class NavMenuComponent implements OnInit {
 
         }
         if (sessionStorage.getItem("userdashboardpage")) {
-          this.binduserdashboardmenu();
+          //this.binduserdashboardmenu();
+          this.getrbalist();
         }
         else {
           if (eurl.includes("/Email")) {
-            this.bindMenuForEmailNav(eurl);
+            this.getrbalist(eurl);
+           
           }
           else {
-            //this.setmenuview();
-            this.bindMenu("default");
+            //this.bindMenu("default");
+            this.getrbalist();
           }
 
         }
@@ -161,6 +157,8 @@ export class NavMenuComponent implements OnInit {
     else {
       let element: HTMLElement = document.getElementById("btnuser") as HTMLElement;
       element.hidden = true;
+      let elementx: HTMLElement = document.getElementById("notlogged") as HTMLElement;
+      elementx.hidden = false;
       let element1: HTMLDivElement = document.getElementById("menudiv") as HTMLDivElement;
       element1.hidden = true;
       this.router.navigateByUrl("WMS/Login");
@@ -168,6 +166,26 @@ export class NavMenuComponent implements OnInit {
 
 
 
+
+  }
+
+  getrbalist(eurl: string = "") {
+    debugger;
+    this.wmsService.getrbadata().subscribe(data => {
+      if (data.length > 0) {
+        debugger;
+        this.rbalist = data;
+        localStorage.setItem('rbalist', JSON.stringify(data));
+        if (!isNullOrUndefined(eurl) && eurl != "") {
+          this.bindMenuForEmailNav(eurl);
+        }
+        else {
+          this.bindmenubyrba();
+        }
+        
+       
+      }
+    })
 
   }
   
@@ -190,143 +208,308 @@ export class NavMenuComponent implements OnInit {
   }
 
   bindMenuForEmailNav(eurl: any) {
+    debugger;
     if (eurl.includes("/Email")) {
       let element: HTMLElement = document.getElementById("btnuser") as HTMLElement;
       element.hidden = false;
+      let elementx: HTMLElement = document.getElementById("notlogged") as HTMLElement;
+      elementx.hidden = true;
       let element1: HTMLDivElement = document.getElementById("menudiv") as HTMLDivElement;
       element1.hidden = false;
       if (eurl.includes("/Email/GRNPosting?GateEntryNo")) {
-        this.inwmasterid = this.route.snapshot.queryParams.gateentryid;
-        this.gateentryid = eurl.split('=')[1];
-        if (this.gateentryid) {
-
-          //redirects to Receipts page 
-          this.bindMenuForEmail();
-        }
-
-
+        var found = false;
+        this.userrolelist.forEach(item => {
+          if (!found) {
+            var dt1 = this.rbalist.filter(function (element, index) {
+              return (element.receive_material && element.roleid == item.roleid);
+            });
+            if (dt1.length > 0) {
+              this.emp.roleid = String(dt1[0].roleid);
+              this.setrolename(this.emp.roleid);
+              localStorage.removeItem('Employee');
+              localStorage.setItem('Employee', JSON.stringify(this.emp));
+              found = true;
+              this.bindmenubyrba(eurl);
+              return false;
+            }
+          }
+         
+        })
+        
+        //this.inwmasterid = this.route.snapshot.queryParams.gateentryid;
+        //this.gateentryid = eurl.split('=')[1];
+        //if (this.gateentryid) {
+        //  this.bindMenuForEmail();
+        //}
       }
       //Purpose: << Receipts >>
 
-      if (eurl.includes("/Email/GRNPosting?GRNo")) {
+      else if (eurl.includes("/Email/GRNPosting?GRNo")) {
         debugger;
-        this.grnno = this.route.snapshot.queryParams.grnno;
-        this.grnno = eurl.split('=')[1];
-        if (this.grnno) {
-          //redirects to Receipts page 
-          this.bindMenuForEmail();
-        }
+        var found = false;
+        this.userrolelist.forEach(item => {
+          if (!found) {
+            var dt1 = this.rbalist.filter(function (element, index) {
+              return (element.receive_material && element.roleid == item.roleid);
+            });
+            if (dt1.length > 0) {
+              this.emp.roleid = String(dt1[0].roleid);
+              this.setrolename(this.emp.roleid);
+              localStorage.removeItem('Employee');
+              localStorage.setItem('Employee', JSON.stringify(this.emp));
+              found = true;
+              this.bindmenubyrba(eurl);
+              return false;
+            }
+          }
+       
+        })
+        //this.grnno = this.route.snapshot.queryParams.grnno;
+        //this.grnno = eurl.split('=')[1];
+        //if (this.grnno) {
+        //  //redirects to Receipts page 
+        //  this.bindMenuForEmail();
+        //}
       }
 
       //Purpose: << Quality check >>
 
-      if (eurl.includes("/Email/QualityCheck?GRNo")) {
+      else if (eurl.includes("/Email/QualityCheck?GRNo")) {
         debugger;
+        var found = false;
+        this.userrolelist.forEach(item => {
+          if (!found) {
+            var dt1 = this.rbalist.filter(function (element, index) {
+              return (element.quality_check && element.roleid == item.roleid);
+            });
+            if (dt1.length > 0) {
+              this.emp.roleid = String(dt1[0].roleid);
+              this.setrolename(this.emp.roleid);
+              localStorage.removeItem('Employee');
+              localStorage.setItem('Employee', JSON.stringify(this.emp));
+              found = true;
+              this.bindmenubyrba(eurl);
+              return false;
+            }
+          }  
+        })
+        
         //this.grnno = this.route.snapshot.queryParams.grnnumber;
-        this.grnno = this.route.snapshot.queryParams.grnnumber;
-        this.grnno = eurl.split('=')[1];
-        if (this.grnno) {
-          //redirects to QualityCheck
-          this.bindMenuForQualityCheckEmails();
-        }
+        //this.grnno = eurl.split('=')[1];
+        //if (this.grnno) {
+        //  this.bindMenuForQualityCheckEmails();
+        //}
       }
 
       //Purpose: << Project Manager >>
 
-      if (eurl.includes("/Email/MaterialIssueDashboard?ReqId")) {
-        this.reqid = this.route.snapshot.queryParams.requestid;
-        this.reqid = eurl.split('=')[1];
-        if (this.reqid) {
-          //redirects to MaterialIssueDashboard
-          this.bindMenuForPMEmails("material");
-        }
+      else if (eurl.includes("/Email/MaterialIssueDashboard?ReqId")) {
+        var found = false;
+        this.userrolelist.forEach(item => {
+          if (!found) {
+            var dt1 = this.rbalist.filter(function (element, index) {
+              return (element.material_issue && element.roleid == item.roleid);
+            });
+            if (dt1.length > 0) {
+              this.emp.roleid = String(dt1[0].roleid);
+              this.setrolename(this.emp.roleid);
+              localStorage.removeItem('Employee');
+              localStorage.setItem('Employee', JSON.stringify(this.emp));
+              found = true;
+              this.bindmenubyrba(eurl);
+              return false;
+            }
+
+          }
+         
+        })
+        //this.reqid = this.route.snapshot.queryParams.requestid;
+        //this.reqid = eurl.split('=')[1];
+        //if (this.reqid) {
+         // this.bindMenuForPMEmails("material");
+        //}
       }
 
       //Purpose: << Project Manager >>
 
-      if (eurl.includes("/Email/ApproveSTOMaterial?ReqId")) {
+      else if (eurl.includes("/Email/ApproveSTOMaterial?ReqId")) {
         debugger;
-        this.transferid = eurl.split('=')[1];
-        if (this.transferid) {
-          //redirects to Receipts page 
-          this.bindMenuForRequestApproval("materialsto")
-        }
+        this.userrolelist.forEach(item => {
+          var dt1 = this.rbalist.filter(function (element, index) {
+            return (element.materialrequest_approval && element.roleid == item.roleid);
+          });
+          if (dt1.length > 0) {
+            this.emp.roleid = String(dt1[0].roleid);
+            this.setrolename(this.emp.roleid);
+            localStorage.removeItem('Employee');
+            localStorage.setItem('Employee', JSON.stringify(this.emp));
+            this.bindmenubyrba(eurl);
+            return false;
+          }
+        })
+        //this.transferid = eurl.split('=')[1];
+        //if (this.transferid) {
+        //  this.bindMenuForRequestApproval("materialsto")
+        //}
       }
 
       //Purpose: << Project Manager >>
 
-      if (eurl.includes("/Email/IssueSTOMaterial?ReqId")) {
-        this.reqid = this.route.snapshot.queryParams.requestid;
-        this.reqid = eurl.split('=')[1];
-        if (this.reqid) {
-          //redirects to MaterialIssueDashboard
-          this.bindMenuForPMEmails("sto");
-        }
+      else if (eurl.includes("/Email/IssueSTOMaterial?ReqId")) {
+        var found = false;
+          this.userrolelist.forEach(item => {
+            if (!found) {
+              var dt1 = this.rbalist.filter(function (element, index) {
+                return (element.material_issue && element.roleid == item.roleid);
+              });
+              if (dt1.length > 0) {
+                this.emp.roleid = String(dt1[0].roleid);
+                this.setrolename(this.emp.roleid);
+                localStorage.removeItem('Employee');
+                localStorage.setItem('Employee', JSON.stringify(this.emp));
+                found = true;
+                this.bindmenubyrba(eurl);
+              }
+            }
+          })
       }
-
-      if (eurl.includes("/Email/grnputaway?GRNo")) {
-        this.reqid = this.route.snapshot.queryParams.requestid;
-        this.reqid = eurl.split('=')[1];
-        if (this.reqid) {
-          //redirects to MaterialIssueDashboard
-          this.bindMenuForPMEmails("grnputaway");
-        }
+      else if (eurl.includes("/Email/grnputaway?GRNo")) {
+        var found = false;
+        this.userrolelist.forEach(item => {
+          debugger;
+          if (!found) {
+            var dt1 = this.rbalist.filter(function (element, index) {
+              return (element.put_away && element.roleid == item.roleid);
+            });
+            if (dt1.length > 0) {
+              this.emp.roleid = String(dt1[0].roleid);
+              this.setrolename(this.emp.roleid);
+              localStorage.removeItem('Employee');
+              localStorage.setItem('Employee', JSON.stringify(this.emp));
+              found = true;
+              this.bindmenubyrba(eurl);
+            }
+          }
+         
+        })
       }
-
-      //Purpose: << Project Manager >>
-
-      if (eurl.includes("/Email/ApprovalSubcontractingMaterial?ReqId")) {
+      else if (eurl.includes("/Email/ApprovalSubcontractingMaterial?ReqId")) {
         debugger;
-        this.transferid = eurl.split('=')[1];
-        if (this.transferid) {
-          //redirects to Receipts page 
-          this.bindMenuForRequestApproval("materialsubcontract")
-        }
+        this.userrolelist.forEach(item => {
+          var dt1 = this.rbalist.filter(function (element, index) {
+            return (element.materialrequest_approval && element.roleid == item.roleid);
+          });
+          if (dt1.length > 0) {
+            this.emp.roleid = String(dt1[0].roleid);
+            this.setrolename(this.emp.roleid);
+            localStorage.removeItem('Employee');
+            localStorage.setItem('Employee', JSON.stringify(this.emp));
+            this.bindmenubyrba(eurl);
+            return false;
+          }
+        })
+        //this.transferid = eurl.split('=')[1];
+        //if (this.transferid) {
+        //  //redirects to Receipts page 
+        //  this.bindMenuForRequestApproval("materialsubcontract")
+        //}
       }
 
       //Purpose: << Project Manager >>
 
-      if (eurl.includes("/Email/IssueSubcontractingMaterial?ReqId")) {
-        this.reqid = this.route.snapshot.queryParams.requestid;
-        this.reqid = eurl.split('=')[1];
-        if (this.reqid) {
-          //redirects to MaterialIssueDashboard
-          this.bindMenuForPMEmails("subcontract");
-        }
+      else if (eurl.includes("/Email/IssueSubcontractingMaterial?ReqId")) {
+        this.userrolelist.forEach(item => {
+          var dt1 = this.rbalist.filter(function (element, index) {
+            return (element.material_issue && element.roleid == item.roleid);
+          });
+          if (dt1.length > 0) {
+            this.emp.roleid = String(dt1[0].roleid);
+            this.setrolename(this.emp.roleid);
+            localStorage.removeItem('Employee');
+            localStorage.setItem('Employee', JSON.stringify(this.emp));
+            this.bindmenubyrba(eurl);
+            return false;
+          }
+        })
+        //this.reqid = this.route.snapshot.queryParams.requestid;
+        //this.reqid = eurl.split('=')[1];
+        //if (this.reqid) {
+        //  //redirects to MaterialIssueDashboard
+        //  this.bindMenuForPMEmails("subcontract");
+        //}
       }
 
       //Purpose: << Project Manager >>
 
-      if (eurl.includes("/Email/STOMaterialPutaway?ReqId")) {
-        this.reqid = this.route.snapshot.queryParams.requestid;
-        this.reqid = eurl.split('=')[1];
-        if (this.reqid) {
-          //redirects to MaterialIssueDashboard
-          this.bindMenuForPMEmails("stoputaway");
-        }
+      else if (eurl.includes("/Email/STOMaterialPutaway?ReqId")) {
+        this.userrolelist.forEach(item => {
+          var dt1 = this.rbalist.filter(function (element, index) {
+            return (element.put_away && element.roleid == item.roleid);
+          });
+          if (dt1.length > 0) {
+            this.emp.roleid = String(dt1[0].roleid);
+            this.setrolename(this.emp.roleid);
+            localStorage.removeItem('Employee');
+            localStorage.setItem('Employee', JSON.stringify(this.emp));
+            this.bindmenubyrba(eurl);
+            return false;
+          }
+        })
+        //this.reqid = this.route.snapshot.queryParams.requestid;
+        //this.reqid = eurl.split('=')[1];
+        //if (this.reqid) {
+        //  //redirects to MaterialIssueDashboard
+        //  this.bindMenuForPMEmails("stoputaway");
+        //}
       }
 
       //Purpose: << Project Manager >>
 
-      if (eurl.includes("/Email/SubcontractMaterialPutaway?ReqId")) {
-        this.reqid = this.route.snapshot.queryParams.requestid;
-        this.reqid = eurl.split('=')[1];
-        if (this.reqid) {
-          //redirects to MaterialIssueDashboard
-          this.bindMenuForPMEmails("subcontractputaway");
-        }
+      else if (eurl.includes("/Email/SubcontractMaterialPutaway?ReqId")) {
+        this.userrolelist.forEach(item => {
+          var dt1 = this.rbalist.filter(function (element, index) {
+            return (element.put_away && element.roleid == item.roleid);
+          });
+          if (dt1.length > 0) {
+            this.emp.roleid = String(dt1[0].roleid);
+            this.setrolename(this.emp.roleid);
+            localStorage.removeItem('Employee');
+            localStorage.setItem('Employee', JSON.stringify(this.emp));
+            this.bindmenubyrba(eurl);
+            return false;
+          }
+        })
+        //this.reqid = this.route.snapshot.queryParams.requestid;
+        //this.reqid = eurl.split('=')[1];
+        //if (this.reqid) {
+        //  //redirects to MaterialIssueDashboard
+        //  this.bindMenuForPMEmails("subcontractputaway");
+        //}
       }
 
       //Purpose: << InventoryManager >>
 
-      if (eurl.includes("/Email/MaterialReqView?ReqId")) {
-        this.reqid = this.route.snapshot.queryParams.requestid;
-        this.reqid = eurl.split('=')[1];
-        // this.pono = eurl.split('=')[3];
-        if (this.reqid) {
-          //redirects to MaterialReqView
-          this.bindMenuForIMEmails();
-        }
+      else if (eurl.includes("/Email/MaterialReqView?ReqId")) {
+        this.userrolelist.forEach(item => {
+          var dt1 = this.rbalist.filter(function (element, index) {
+            return (element.material_request && element.roleid == item.roleid);
+          });
+          if (dt1.length > 0) {
+            this.emp.roleid = String(dt1[0].roleid);
+            this.setrolename(this.emp.roleid);
+            localStorage.removeItem('Employee');
+            localStorage.setItem('Employee', JSON.stringify(this.emp));
+            this.bindmenubyrba(eurl);
+            return false;
+          }
+        })
+        //this.reqid = this.route.snapshot.queryParams.requestid;
+        //this.reqid = eurl.split('=')[1];
+        //// this.pono = eurl.split('=')[3];
+        //if (this.reqid) {
+        //  //redirects to MaterialReqView
+        //  this.bindMenuForIMEmails();
+        //}
       }
 
       //Purpose: << PM ACK >>
@@ -342,13 +525,26 @@ export class NavMenuComponent implements OnInit {
 
       //Purpose: << GatePassPM >>
 
-      if (eurl.includes("/Email/GatePassPMList?GateId")) {
-        this.gateid = this.route.snapshot.queryParams.gateid;
-        this.gateid = eurl.split('=')[1];
-        if (this.gateid) {
-          //redirects to GatePassPMList
-          this.bindMenuForGatePassEmails();
-        }
+      else if (eurl.includes("/Email/GatePassPMList?GateId")) {
+        this.userrolelist.forEach(item => {
+          var dt1 = this.rbalist.filter(function (element, index) {
+            return (element.gatepass_approval && element.roleid == item.roleid);
+          });
+          if (dt1.length > 0) {
+            this.emp.roleid = String(dt1[0].roleid);
+            this.setrolename(this.emp.roleid);
+            localStorage.removeItem('Employee');
+            localStorage.setItem('Employee', JSON.stringify(this.emp));
+            this.bindmenubyrba(eurl);
+            return false;
+          }
+        })
+        //this.gateid = this.route.snapshot.queryParams.gateid;
+        //this.gateid = eurl.split('=')[1];
+        //if (this.gateid) {
+        //  //redirects to GatePassPMList
+        //  this.bindMenuForGatePassEmails();
+        //}
       }
       ////GatePassPM
       //if (eurl.includes("/Email/GatePassPMList?gateid")) {
@@ -362,121 +558,190 @@ export class NavMenuComponent implements OnInit {
       //
       //Purpose: << GatePassPM-InventoryClerk >>
 
-      if (eurl.includes("/Email/GatePass?GateId")) {
-        this.gateid = this.route.snapshot.queryParams.gateid;
-        this.gateid = eurl.split('=')[1];
-        if (this.gateid) {
-          //redirects to GatePass
-          this.bindMenuForGatePassInventoryClerkEmails();
-        }
+      else if (eurl.includes("/Email/GatePass?GateId")) {
+        this.userrolelist.forEach(item => {
+          var dt1 = this.rbalist.filter(function (element, index) {
+            return (element.material_issue && element.roleid == item.roleid);
+          });
+          if (dt1.length > 0) {
+            this.emp.roleid = String(dt1[0].roleid);
+            this.setrolename(this.emp.roleid);
+            localStorage.removeItem('Employee');
+            localStorage.setItem('Employee', JSON.stringify(this.emp));
+            this.bindmenubyrba(eurl);
+            return false;
+          }
+        })
+        //this.gateid = this.route.snapshot.queryParams.gateid;
+        //this.gateid = eurl.split('=')[1];
+        //if (this.gateid) {
+        //  //redirects to GatePass
+        //  this.bindMenuForGatePassInventoryClerkEmails();
+        //}
       }
-      if (eurl.includes("/Email/GatePass?GatepassId")) {
-        this.gateid = this.route.snapshot.queryParams.gateid;
-        this.gateid = eurl.split('=')[1];
-        if (this.gateid) {
-          //redirects to GatePass
-          this.bindMenuForGatePassUser();
-        }
+      else if (eurl.includes("/Email/GatePass?GatepassId")) {
+        this.userrolelist.forEach(item => {
+          var dt1 = this.rbalist.filter(function (element, index) {
+            return (element.gate_pass && element.roleid == item.roleid);
+          });
+          if (dt1.length > 0) {
+            this.emp.roleid = String(dt1[0].roleid);
+            this.setrolename(this.emp.roleid);
+            localStorage.removeItem('Employee');
+            localStorage.setItem('Employee', JSON.stringify(this.emp));
+            this.bindmenubyrba(eurl);
+            return false;
+          }
+        })
+        //this.gateid = this.route.snapshot.queryParams.gateid;
+        //this.gateid = eurl.split('=')[1];
+        //if (this.gateid) {
+        //  //redirects to GatePass
+        //  this.bindMenuForGatePassUser();
+        //}
       }
 
 
 
       //Purpose: << Gate Pass PM approver to FM approver >>
 
-      if (eurl.includes("/Email/GatePassFMList?GateId")) {
-        this.fmgateid = this.route.snapshot.queryParams.gateid;
-        this.fmgateid = eurl.split('=')[1];
-        if (this.fmgateid) {
-          //redirects to GatePassPMList
-          this.bindMenuForGatePassEmails();
-        }
+      else if (eurl.includes("/Email/GatePassFMList?GateId")) {
+        this.userrolelist.forEach(item => {
+          var dt1 = this.rbalist.filter(function (element, index) {
+            return (element.gatepass_approval && element.roleid == item.roleid);
+          });
+          if (dt1.length > 0) {
+            this.emp.roleid = String(dt1[0].roleid);
+            this.setrolename(this.emp.roleid);
+            localStorage.removeItem('Employee');
+            localStorage.setItem('Employee', JSON.stringify(this.emp));
+            this.bindmenubyrba(eurl);
+            return false;
+          }
+        })
+
+        //this.fmgateid = this.route.snapshot.queryParams.gateid;
+        //this.fmgateid = eurl.split('=')[1];
+        //if (this.fmgateid) {
+        //  //redirects to GatePassPMList
+        //  this.bindMenuForGatePassEmails();
+        //}
       }
 
 
       //Purpose: << Notify to Finance>>
 
-      if (eurl.includes("/Email/GRNotification?GRNo")) {
-        this.grnno = this.route.snapshot.queryParams.grnno;
-        this.grnno = eurl.split('=')[1];
-        if (this.grnno) {
-          //redirects to GatePassPMList
-          this.bindMenuFinance();
-        }
+      else if (eurl.includes("/Email/GRNotification?GRNo")) {
+        this.userrolelist.forEach(item => {
+          var dt1 = this.rbalist.filter(function (element, index) {
+            return (element.gr_process && element.roleid == item.roleid);
+          });
+          if (dt1.length > 0) {
+            this.emp.roleid = String(dt1[0].roleid);
+            this.setrolename(this.emp.roleid);
+            localStorage.removeItem('Employee');
+            localStorage.setItem('Employee', JSON.stringify(this.emp));
+            this.bindmenubyrba(eurl);
+            return false;
+          }
+        })
+        //this.grnno = this.route.snapshot.queryParams.grnno;
+        //this.grnno = eurl.split('=')[1];
+        //if (this.grnno) {
+        //  //redirects to GatePassPMList
+        //  this.bindMenuFinance();
+        //}
       }
+      else if (eurl.includes("/Email/materialtransferapproval?transferid")) {
 
-      if (eurl.includes("/Email/materialtransferapproval?transferid")) {
         debugger;
-        this.transferid = this.route.snapshot.queryParams.transferid;
-        this.transferid = eurl.split('=')[1];
-        if (this.transferid) {
-          //redirects to Receipts page 
-          this.bindMenuForMatTransfer();
-        }
+        this.userrolelist.forEach(item => {
+          var dt1 = this.rbalist.filter(function (element, index) {
+            return (element.material_transfer_approval && element.roleid == item.roleid);
+          });
+          if (dt1.length > 0) {
+            this.emp.roleid = String(dt1[0].roleid);
+            this.setrolename(this.emp.roleid);
+            localStorage.removeItem('Employee');
+            localStorage.setItem('Employee', JSON.stringify(this.emp));
+            this.bindmenubyrba(eurl);
+            return false;
+          }
+        })
+        //this.transferid = this.route.snapshot.queryParams.transferid;
+        //this.transferid = eurl.split('=')[1];
+        //if (this.transferid) {
+        //  //redirects to Receipts page 
+        //  this.bindMenuForMatTransfer();
+        //}
       }
-      if (eurl.includes("/Email/materialtransfer?transferid")) {
+      else if (eurl.includes("/Email/materialtransfer?transferid")) {
         debugger;
-        this.transferid = this.route.snapshot.queryParams.transferid;
-        this.transferid = eurl.split('=')[1];
-        if (this.transferid) {
-          //redirects to Receipts page 
-          this.bindMenuForMatTransferstatus();
-        }
+        this.userrolelist.forEach(item => {
+          var dt1 = this.rbalist.filter(function (element, index) {
+            return (element.material_transfer && element.roleid == item.roleid);
+          });
+          if (dt1.length > 0) {
+            this.emp.roleid = String(dt1[0].roleid);
+            this.setrolename(this.emp.roleid);
+            localStorage.removeItem('Employee');
+            localStorage.setItem('Employee', JSON.stringify(this.emp));
+            this.bindmenubyrba(eurl);
+            return false;
+          }
+        })
+        //this.transferid = this.route.snapshot.queryParams.transferid;
+        //this.transferid = eurl.split('=')[1];
+        //if (this.transferid) {
+        //  //redirects to Receipts page 
+        //  this.bindMenuForMatTransferstatus();
+        //}
       }
-      if (eurl.includes("/Email/materialreturndashboard?returnid")) {
+      else if (eurl.includes("/Email/materialreturndashboard?returnid")) {
         debugger;
-        this.transferid = this.route.snapshot.queryParams.returnid;
-        this.transferid = eurl.split('=')[1];
-        if (this.transferid) {
-          //redirects to Receipts page 
-          this.bindMenuForMaterialReturnputaway();
-        }
+        this.userrolelist.forEach(item => {
+          var dt1 = this.rbalist.filter(function (element, index) {
+            return (element.put_away && element.roleid == item.roleid);
+          });
+          if (dt1.length > 0) {
+            this.emp.roleid = String(dt1[0].roleid);
+            this.setrolename(this.emp.roleid);
+            localStorage.removeItem('Employee');
+            localStorage.setItem('Employee', JSON.stringify(this.emp));
+            this.bindmenubyrba(eurl);
+            return false;
+          }
+        })
+        //this.transferid = this.route.snapshot.queryParams.returnid;
+        //this.transferid = eurl.split('=')[1];
+        //if (this.transferid) {
+        //  //redirects to Receipts page 
+        //  this.bindMenuForMaterialReturnputaway();
+        //}
       }
-      if (eurl.includes("/Email/MaterialRequestApproval?ReqId")) {
+      else if (eurl.includes("/Email/MaterialRequestApproval?ReqId")) {
         debugger;
-        this.transferid = eurl.split('=')[1];
-        if (this.transferid) {
-          //redirects to Receipts page 
-          this.bindMenuForRequestApproval("materialrequest")
-        }
+        this.userrolelist.forEach(item => {
+          var dt1 = this.rbalist.filter(function (element, index) {
+            return (element.materialrequest_approval && element.roleid == item.roleid);
+          });
+          if (dt1.length > 0) {
+            this.emp.roleid = String(dt1[0].roleid);
+            this.setrolename(this.emp.roleid);
+            localStorage.removeItem('Employee');
+            localStorage.setItem('Employee', JSON.stringify(this.emp));
+            this.bindmenubyrba(eurl);
+            return false;
+          }
+        })
+        //this.transferid = eurl.split('=')[1];
+        //if (this.transferid) {
+        //  //redirects to Receipts page 
+        //  this.bindMenuForRequestApproval("materialrequest")
+        //}
       }
-      return;
     }
 
-  }
-  Navigatetopagefn() {
-    this.loggedinas = "";
-    var name = this.selectedrolename;
-    if (isNullOrUndefined(this.userrolelist)) {
-      console.log("list5");
-    }
-    var data1 = this.userrolelist.filter(function (element, index) {
-      return (element.accessname == name);
-    });
-    if (data1.length > 0) {
-      this.emp.roleid = String(data1[0].roleid);
-      localStorage.removeItem('Employee');
-      localStorage.setItem('Employee', JSON.stringify(this.emp));
-      this.selectedrolename = "";
-      var rid = this.emp.roleid;
-      if (isNullOrUndefined(this.userrolelist)) {
-        console.log("list6");
-      }
-      var data1 = this.userrolelist.filter(function (element, index) {
-        return (element.roleid == parseInt(rid));
-      });
-      if (data1.length > 0) {
-        this.rolename = data1[0].accessname;
-        if (this.rolename) {
-          this.loggedinas = "Logged in as " + this.rolename;
-        }
-        else {
-          this.loggedinas = "";
-        }
-
-      }
-      this.bindMenu();
-
-    }
   }
 
   bindMenuwithoutrole() {
@@ -504,13 +769,6 @@ export class NavMenuComponent implements OnInit {
     node.classList.add("active")
   }
 
-
-  bindemailMenu() {
-    this.items = [];
-    this.items.push({ label: 'Manager Approval', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GatePassPMList') });
-    this.items.push({ label: 'Finance Approval', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GatePassFMList') });
-    this.router.navigateByUrl('WMS/GatePassPMList');
-  }
   //Purpose:<<Inventory Clerk>>
 
   bindMenuForGatePassInventoryClerkEmails() {
@@ -1416,80 +1674,6 @@ export class NavMenuComponent implements OnInit {
 
   }
 
-  bindnonifications() {
-    this.getGatePassList();
-  }
-
-  getGatePassList() {
-    this.notif = false;
-    debugger;
-    this.wmsService.getGatePassList().subscribe(data => {
-      this.totalGatePassList = data;
-      //PM
-      if (isNullOrUndefined(this.totalGatePassList)) {
-        console.log("list12");
-      }
-      this.gatepassData = this.totalGatePassList.filter(li => li.approverid == this.emp.employeeno && (li.approverstatus == this.approverstatus));
-      //FM
-      this.gatepassData1 = this.totalGatePassList.filter(li => li.fmapproverid == this.emp.employeeno && li.approverstatus == "Approved" && li.fmapprovedstatus == this.approverstatus);
-      this.prepareGatepassList();
-      this.prepareGatepassList1();
-
-    });
-  }
-  prepareGatepassList() {
-    debugger;
-    this.gatepasslist = [];
-    this.gatepassData.forEach(item => {
-      if (isNullOrUndefined(this.gatepasslist)) {
-        console.log("list13");
-      }
-      var res = this.gatepasslist.filter(li => li.gatepassid == item.gatepassid);
-      if (res.length == 0) {
-        this.gatepasslist.push(item);
-      }
-    });
-    if (this.gatepasslist.length > 0) {
-      this.notif = true;
-      this.notifcount = this.notifcount + 1;
-      var count = this.gatepasslist.length;
-      this.notificationitems.push({ label: count + ' gate passes pending for approval as project manager', icon: 'pi pi-fw pi-angle-right', command: () => this.notifnavigation('WMS/GatePassPMList') });
-    }
-  }
-  prepareGatepassList1() {
-    debugger;
-    this.gatepasslist1 = [];
-    this.gatepassData1.forEach(item => {
-      if (isNullOrUndefined(this.gatepasslist1)) {
-        console.log("list14");
-      }
-      var res = this.gatepasslist1.filter(li => li.gatepassid == item.gatepassid);
-      if (res.length == 0) {
-        this.gatepasslist1.push(item);
-      }
-    });
-    if (this.gatepasslist1.length > 0) {
-      this.notif = true;
-      this.notifcount = this.notifcount + 1;
-      var count = this.gatepasslist1.length;
-      this.notificationitems.push({ label: count + ' gate passes pending for approval as finance manager', icon: 'pi pi-fw pi-angle-right', command: () => this.notifnavigation('WMS/GatePassFMList') });
-    }
-  }
-
-  notifnavigation(path: string) {
-    if (path.includes('GatePassPMList')) {
-      this.items.push({ label: 'Manager Approval', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GatePassPMList') });
-      this.router.navigateByUrl('WMS/GatePassPMList');
-
-    }
-    if (path.includes('GatePassFMList')) {
-      this.items.push({ label: 'Finance Approval', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GatePassFMList') });
-      this.router.navigateByUrl('WMS/GatePassFMList');
-
-    }
-
-  }
-
 
   binduserdashboardmenu() {
     this.useritems = [
@@ -1533,7 +1717,8 @@ export class NavMenuComponent implements OnInit {
     element1.hidden = false;
   }
 
-  bindmenubyrba() {
+  bindmenubyrba(eurl: string = "") {
+    debugger;
     this.items = [];
 
 
@@ -1633,8 +1818,9 @@ export class NavMenuComponent implements OnInit {
       if (rba.notify_to_finance) {
         receiptsitems.items.push({ label: 'Notify to finance', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/Putawaynotify') });
       }
-      this.items.push(matrequestitems);
-      
+      if (rba.receive_material || rba.put_away || rba.notify_to_finance) {
+        this.items.push(receiptsitems);
+      }
       if (rba.material_return) {
         this.items.push({ label: 'Material Return', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReturnfromPm') });
 
@@ -1649,16 +1835,26 @@ export class NavMenuComponent implements OnInit {
         visible: (rba.gate_pass || rba.material_request),
         items: []
       };
+      var subroles = [];
+      if (this.userrolelist.filter(li => li.roleid == 5).length > 0) {
+        subroles = this.userrolelist.filter(li => li.roleid == 5)[0]["subroleid"];
+      }
       if (rba.gate_pass) {
-        matrequestitems.items.push({ label: 'Gate Pass', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GatePass') });
+        if (subroles && subroles.includes("1"))//GatePassRequester
+          matrequestitems.items.push({ label: 'Gate Pass', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GatePass') });
 
       }
       if (rba.material_request) {
-        matrequestitems.items.push({ label: 'Material Request', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReqView') });
+        if (subroles && subroles.includes("2"))//Material Requestor
+          matrequestitems.items.push({ label: 'Material Request', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReqView') });
+        if (subroles == null)//Material Requestor
+          matrequestitems.items.push({ label: 'Material Request', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReqView') });
         matrequestitems.items.push({ label: 'Intra Unit Transfer', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/StockTransferOrder') });
         matrequestitems.items.push({ label: 'Sub Contract', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/SubContractTransfer') });
       }
-      this.items.push(matrequestitems);
+      if (rba.gate_pass || rba.material_request) {
+        this.items.push(matrequestitems);
+      }
       if (rba.gatepass_inout) {
         this.items.push({
           label: 'Gatepass', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars',
@@ -1685,8 +1881,7 @@ export class NavMenuComponent implements OnInit {
             { label: 'Sub Contract Material Issue', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/ReceiveSubContractRequest') }
           ]
         });
-      }
-     
+      }  
       if (rba.material_reservation) {
         this.items.push({ label: 'Material Reserve', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReserveView') });
 
@@ -1736,8 +1931,6 @@ export class NavMenuComponent implements OnInit {
             ]
           });
         }
-      
-      
       if (rba.cyclecount_configuration) {
         cyclecountitems.items.push({ label: 'Cycle Count config', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/Cycleconfig') });
 
@@ -1762,8 +1955,12 @@ export class NavMenuComponent implements OnInit {
           ]
         });
       }
-      this.items.push(invmanageitems);
-      this.items.push(cyclecountitems);
+      if (rba.inventory_Management) {
+        this.items.push(invmanageitems);
+      }
+      if (rba.cyclecount_configuration || rba.cycle_counting || rba.cyclecount_approval) {
+        this.items.push(cyclecountitems);
+      }
       if (rba.admin_access) {
         this.items.push({
           label: 'Master Pages',
@@ -1775,8 +1972,9 @@ export class NavMenuComponent implements OnInit {
             { label: 'Plant Master', icon: 'pi pi-fw pi-bars', style: { 'width': '250px' }, command: () => this.router.navigateByUrl('WMS/PlantMaster') },
             { label: 'Assign Role', icon: 'pi pi-fw pi-bars', style: { 'width': '200px' }, command: () => this.router.navigateByUrl('WMS/AssignRole') },
             { label: 'Assign Project Manager', style: { 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/AssignProjectManager') },
+            { label: 'Miscellanous Master', icon: 'pi pi-fw pi-bars', style: { 'width': '250px' }, command: () => this.router.navigateByUrl('WMS/MiscellanousReason') },
+            { label: 'Assign RBA', icon: 'pi pi-fw pi-bars', style: { 'width': '250px' }, command: () => this.router.navigateByUrl('WMS/Assignrba') },
 
-            { label: 'Miscellanous Master', icon: 'pi pi-fw pi-bars', style: { 'width': '250px' }, command: () => this.router.navigateByUrl('WMS/MiscellanousReason') }
           ]
         });
       }
@@ -1813,7 +2011,12 @@ export class NavMenuComponent implements OnInit {
         this.items.push({ label: 'Quality Check', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/QualityCheck') });
       }
       if (rba.pmdashboard_view) {
-        this.items.push({ label: 'PM Dashboard', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-chart-bar', command: () => this.router.navigateByUrl('WMS/Dashboard') });
+        if (this.emp.roleid == "5") {
+          this.items.push({ label: 'MR Dashboard', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-chart-bar', command: () => this.router.navigateByUrl('WMS/Dashboard') });
+        }
+        else {
+          this.items.push({ label: 'PM Dashboard', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-chart-bar', command: () => this.router.navigateByUrl('WMS/Dashboard') });
+        }
       }
       if (rba.min) {
         this.items.push({ label: 'Material Requisition Note', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MRNView') });
@@ -1823,7 +2026,6 @@ export class NavMenuComponent implements OnInit {
         this.items.push({ label: 'Direct Shipment', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/Directtransfer') });
 
       }
-     
       if (rba.gr_process) {
         this.items.push({ label: 'GR-Finance Process', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GRNotification') });
 
@@ -1845,7 +2047,9 @@ export class NavMenuComponent implements OnInit {
         matrequestapprovals.items.push({ label: 'Intra Unit Transfer Approval', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/STOApproval') });
         matrequestapprovals.items.push({ label: 'Sub Contract Approval', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/SubcontractApproval') });
       }
-      this.items.push(matrequestapprovals);
+      if (rba.material_transfer_approval || rba.materialrequest_approval) {
+        this.items.push(matrequestapprovals);
+      }
       if (rba.asn_view) {
 
       }
@@ -1888,12 +2092,18 @@ export class NavMenuComponent implements OnInit {
       }
       let element1x: HTMLDivElement = document.getElementById("menudiv") as HTMLDivElement;
       element1x.hidden = false;
-      if (sessionStorage.getItem("userdashboardpage")) {
-        this.nevigatefromuserdashboard();
+      if (!isNullOrUndefined(eurl) && eurl != "") {
+        this.nevigatefromrbaforemail(rba, eurl);
       }
       else {
-        this.nevigatefromrba(rba);
+        if (sessionStorage.getItem("userdashboardpage")) {
+          this.nevigatefromuserdashboard(rba);
+        }
+        else {
+          this.nevigatefromrba(rba);
+        }
       }
+      
 
 
     }
@@ -1901,32 +2111,42 @@ export class NavMenuComponent implements OnInit {
 
   }
 
-  nevigatefromuserdashboard() {
+
+  nevigatefromuserdashboard(rba: rbamaster) {
     var page = sessionStorage.getItem("userdashboardpage");
-    if (page == "Inbound") {
+    if (page == "Inbound" && rba.gate_entry) {
       this.router.navigateByUrl('WMS/SecurityCheck');
     }
-    else if (page == "Receive") {
-      this.router.navigateByUrl('WMS/GRNPosting');
-    }
-    else if (page == "Putaway") {
-      this.router.navigateByUrl('WMS/WarehouseIncharge');
-    }
-    else if (page == "Quality") {
+
+    else if (page == "Quality" && rba.quality_check) {
       this.router.navigateByUrl('WMS/QualityCheck');
     }
-    else if (page == "Reserve") {
+    else if (page == "Reserve" && rba.material_reservation) {
       this.router.navigateByUrl('WMS/MaterialReserveView');
     }
-    else if (page == "Approve") {
+    else if (page == "Approve" && rba.gatepass_approval) {
       this.router.navigateByUrl('WMS/Home');
     }
-    else if (page == "Issue") {
-      this.router.navigateByUrl('WMS/MaterialIssueDashboard');
-    }
-    else if (page == "Count") {
+    else if (page == "Count" && rba.cyclecount_approval) {
       this.router.navigateByUrl('WMS/Cyclecount');
     }
+    if (page == "Putaway" && rba.put_away) {
+      this.router.navigateByUrl('WMS/WarehouseIncharge');
+    }
+    if (page == "Receive" && rba.receive_material) {
+      this.router.navigateByUrl('WMS/GRNPosting');
+    }
+    if (page == "Issue" && rba.material_issue) {
+      this.router.navigateByUrl('WMS/MaterialIssueDashboard');
+    }
+    if (page == "onhold" && rba.receive_material) {
+      this.router.navigateByUrl('WMS/HoldGRView');
+    }
+    if (page == "notify" && rba.notify_to_finance) {
+      this.router.navigateByUrl('WMS/Putawaynotify');
+    }
+
+    sessionStorage.removeItem("userdashboardpage");
 
 
   }
@@ -1951,7 +2171,13 @@ export class NavMenuComponent implements OnInit {
       this.router.navigateByUrl('WMS/Home');
     }
     if (this.emp.roleid == "5") {
-      this.router.navigateByUrl('WMS/Home');
+      if (rba.pmdashboard_view) {
+        this.router.navigateByUrl('WMS/Dashboard');
+      }
+      else {
+        this.router.navigateByUrl('WMS/Home');
+      }
+      
     }
     if (this.emp.roleid == "6") {
       this.router.navigateByUrl('WMS/Home');
@@ -1978,6 +2204,235 @@ export class NavMenuComponent implements OnInit {
     }
 
   }
+
+  nevigatefromrbaforemail(rba: rbamaster,eurl: any) {
+    if (eurl.includes("/Email")) {
+      if (eurl.includes("/Email/GRNPosting?GateEntryNo")) {
+        this.inwmasterid = this.route.snapshot.queryParams.gateentryid;
+        this.gateentryid = eurl.split('=')[1];
+        if (this.gateentryid) {
+          this.router.navigate(['WMS/GRNPosting'], { queryParams: { inwmasterid: this.gateentryid } });
+        }
+      }
+      //Purpose: << Receipts >>
+
+      if (eurl.includes("/Email/GRNPosting?GRNo")) {
+        this.grnno = this.route.snapshot.queryParams.grnno;
+        this.grnno = eurl.split('=')[1];
+        if (this.grnno) {
+          this.router.navigate(['WMS/GRNPosting'], { queryParams: { grnnumber: this.grnno } });
+        }
+      }
+
+      //Purpose: << Quality check >>
+
+      if (eurl.includes("/Email/QualityCheck?GRNo")) {
+        debugger;
+        this.grnno = this.route.snapshot.queryParams.grnnumber;
+        this.grnno = eurl.split('=')[1];
+        if (this.grnno) {
+          this.router.navigate(['WMS/QualityCheck'], { queryParams: { grnnumber: this.grnno } });
+        }
+      }
+
+      //Purpose: << Project Manager >>
+
+      if (eurl.includes("/Email/MaterialIssueDashboard?ReqId")) {
+        this.reqid = this.route.snapshot.queryParams.requestid;
+        this.reqid = eurl.split('=')[1];
+        if (this.reqid) {
+          this.router.navigate(['WMS/MaterialIssueDashboard'], { queryParams: { requestid: this.reqid } });
+        }
+      }
+
+      //Purpose: << Project Manager >>
+
+      if (eurl.includes("/Email/ApproveSTOMaterial?ReqId")) {
+        debugger;
+        this.transferid = eurl.split('=')[1];
+        if (this.transferid) {
+          this.router.navigate(['WMS/STOApproval'], { queryParams: { transferid: this.transferid } });
+        }
+      }
+
+      //Purpose: << Project Manager >>
+
+      if (eurl.includes("/Email/IssueSTOMaterial?ReqId")) {
+        this.reqid = this.route.snapshot.queryParams.requestid;
+        this.reqid = eurl.split('=')[1];
+        if (this.reqid) {
+          this.router.navigate(['WMS/ReceiveSTORequest'], { queryParams: { requestid: this.reqid } });
+        }
+      }
+
+      if (eurl.includes("/Email/grnputaway?GRNo")) {
+        this.reqid = this.route.snapshot.queryParams.requestid;
+        this.reqid = eurl.split('=')[1];
+        if (this.reqid) {
+          this.router.navigate(['WMS/WarehouseIncharge'], { queryParams: { requestid: this.reqid } });
+        }
+      }
+
+      //Purpose: << Project Manager >>
+
+      if (eurl.includes("/Email/ApprovalSubcontractingMaterial?ReqId")) {
+        debugger;
+        this.transferid = eurl.split('=')[1];
+        if (this.transferid) {
+          this.router.navigate(['WMS/SubcontractApproval'], { queryParams: { transferid: this.transferid } });
+        }
+      }
+
+      //Purpose: << Project Manager >>
+
+      if (eurl.includes("/Email/IssueSubcontractingMaterial?ReqId")) {
+        this.reqid = this.route.snapshot.queryParams.requestid;
+        this.reqid = eurl.split('=')[1];
+        if (this.reqid) {
+          this.router.navigate(['WMS/ReceiveSubContractRequest'], { queryParams: { requestid: this.reqid } });
+        }
+      }
+
+      //Purpose: << Project Manager >>
+
+      if (eurl.includes("/Email/STOMaterialPutaway?ReqId")) {
+        this.reqid = this.route.snapshot.queryParams.requestid;
+        this.reqid = eurl.split('=')[1];
+        if (this.reqid) {
+          this.router.navigate(['WMS/ReceiveMaterial'], { queryParams: { requestid: this.reqid } });
+        }
+      }
+
+      //Purpose: << Project Manager >>
+
+      if (eurl.includes("/Email/SubcontractMaterialPutaway?ReqId")) {
+        this.reqid = this.route.snapshot.queryParams.requestid;
+        this.reqid = eurl.split('=')[1];
+        if (this.reqid) {
+          this.router.navigate(['WMS/ReceiveMaterial'], { queryParams: { requestid: this.reqid } });
+        }
+      }
+
+      //Purpose: << InventoryManager >>
+
+      if (eurl.includes("/Email/MaterialReqView?ReqId")) {
+        this.reqid = this.route.snapshot.queryParams.requestid;
+        this.reqid = eurl.split('=')[1];
+        // this.pono = eurl.split('=')[3];
+        if (this.reqid) {
+          this.router.navigate(['WMS/MaterialReqView'], { queryParams: { requestid: this.reqid } });
+        }
+      }
+
+      //Purpose: << PM ACK >>
+
+      //if (eurl.includes("/Email/MaterialReqView?ReqId")) {
+      //  this.reqid = this.route.snapshot.queryParams.requestid;
+      //  this.reqid = eurl.split('=')[1];
+      //  if (this.reqid) {
+      //    //redirects to MaterialReqView
+      //    //this.bindMenuForPMACKEmails();
+      //  }
+      //}
+
+      //Purpose: << GatePassPM >>
+
+      if (eurl.includes("/Email/GatePassPMList?GateId")) {
+        this.gateid = this.route.snapshot.queryParams.gateid;
+        this.gateid = eurl.split('=')[1];
+        if (this.gateid) {
+          this.router.navigate(['WMS/GatePassPMList'], { queryParams: { requestid: this.gateid } });
+          
+        }
+      }
+      ////GatePassPM
+      //if (eurl.includes("/Email/GatePassPMList?gateid")) {
+      //  this.gateid = this.route.snapshot.queryParams.gatepassid;
+      //  this.gateid = eurl.split('=')[1];
+      //  if (this.gateid) {
+      //    //redirects to GatePassPMList
+      //    this.bindMenuForGatePassEmails();
+      //  }
+      //}
+      //
+      //Purpose: << GatePassPM-InventoryClerk >>
+
+      if (eurl.includes("/Email/GatePass?GateId")) {
+        this.gateid = this.route.snapshot.queryParams.gateid;
+        this.gateid = eurl.split('=')[1];
+        if (this.gateid) {
+          this.constants.gatePassIssueType = "Pending";
+          this.router.navigate(['WMS/GatePassApprover', this.gateid]);
+        }
+      }
+      if (eurl.includes("/Email/GatePass?GatepassId")) {
+        this.gateid = this.route.snapshot.queryParams.gateid;
+        this.gateid = eurl.split('=')[1];
+        if (this.gateid) {
+          this.router.navigate(['WMS/GatePass'], { queryParams: { gatepassid: this.gateid } });
+        }
+      }
+
+
+
+      //Purpose: << Gate Pass PM approver to FM approver >>
+
+      if (eurl.includes("/Email/GatePassFMList?GateId")) {
+        this.fmgateid = this.route.snapshot.queryParams.gateid;
+        this.fmgateid = eurl.split('=')[1];
+        if (this.fmgateid) {
+          //redirects to GatePassPMList
+          this.router.navigate(['WMS/GatePassFMList'], { queryParams: { requestid: this.fmgateid } });
+         
+        }
+      }
+
+
+      //Purpose: << Notify to Finance>>
+
+      if (eurl.includes("/Email/GRNotification?GRNo")) {
+        this.grnno = this.route.snapshot.queryParams.grnno;
+        this.grnno = eurl.split('=')[1];
+        if (this.grnno) {
+          this.router.navigateByUrl('WMS/GRNotification');
+        }
+      }
+
+      if (eurl.includes("/Email/materialtransferapproval?transferid")) {
+        debugger;
+        this.transferid = this.route.snapshot.queryParams.transferid;
+        this.transferid = eurl.split('=')[1];
+        if (this.transferid) {
+          this.router.navigate(['WMS/materialtransferapproval'], { queryParams: { transferid: this.transferid } });
+        }
+      }
+      if (eurl.includes("/Email/materialtransfer?transferid")) {
+        debugger;
+        this.transferid = this.route.snapshot.queryParams.transferid;
+        this.transferid = eurl.split('=')[1];
+        if (this.transferid) {
+          this.router.navigate(['WMS/MaterialTransfer'], { queryParams: { transferid: this.transferid } });
+        }
+      }
+      if (eurl.includes("/Email/materialreturndashboard?returnid")) {
+        debugger;
+        this.transferid = this.route.snapshot.queryParams.returnid;
+        this.transferid = eurl.split('=')[1];
+        if (this.transferid) {
+          this.router.navigate(['WMS/MaterialReturn'], { queryParams: { returnid: this.transferid } });
+        }
+      }
+      if (eurl.includes("/Email/MaterialRequestApproval?ReqId")) {
+        debugger;
+        this.transferid = eurl.split('=')[1];
+        if (this.transferid) {
+          this.router.navigate(['WMS/MaterialRequestApproval'], { queryParams: { transferid: this.transferid } });
+        }
+      }
+      return;
+    }
+
+  }
   setdefaultmenuview() {
     //for security
     this.showHome = false;
@@ -1988,108 +2443,6 @@ export class NavMenuComponent implements OnInit {
     this.showoutbound = false;
   //
 
-  }
-  setmenuview() {
-    //for security
-    this.showHome = true;
-   
-    //
-    if (isNullOrUndefined(this.rbalist)) {
-      console.log("list16");
-    }
-    let currentrolerba = this.rbalist.filter(o => o.roleid == parseInt(this.emp.roleid));
-    if (currentrolerba.length > 0) {
-      var rba = currentrolerba[0];
-      if (rba.inv_enquiry) {
-
-      }
-      if (rba.inv_reports) {
-
-
-      }
-      if (rba.gate_entry) {
-        this.showInbound = true;
-        this.showoutbound = true;
-      }
-      if (rba.receive_material) {
-      }
-      if (rba.put_away) {
-       
-      }
-      if (rba.material_return) {
-       
-      }
-      if (rba.material_transfer) {
-        }
-      if (rba.gate_pass) {
-       
-      }
-      if (rba.gatepass_inout) {
-        this.showoutwardinward = true;
-        this.showoutwardinwardreturnable = true;
-        this.showoutwardinwardnonreturnable = true;
-      }
-      if (rba.gatepass_approval) {
-        
-      }
-      if (rba.material_issue) {
-       
-      }
-      if (rba.material_request) {
-       }
-      if (rba.material_reservation) {
-      
-      }
-      if (rba.abc_classification) {
-      }
-      if (rba.cyclecount_configuration) {
-      }
-      if (rba.cycle_counting) {
-      }
-      if (rba.cyclecount_approval) {
-      }
-      if (rba.admin_access) {
-
-      }
-      if (rba.masterdata_creation) {
-
-      }
-      if (rba.masterdata_updation) {
-
-      }
-      if (rba.masterdata_approval) {
-
-      }
-      if (rba.printbarcodes) {
-       
-
-      }
-      if (rba.quality_check) {
-      }
-      if (rba.pmdashboard_view) {
-      }
-      if (rba.min) {
-
-      }
-      if (rba.direct_transfer_view) {
-
-      }
-      if (rba.notify_to_finance) {
-
-      }
-      if (rba.gr_process) {
-
-      }
-      if (rba.material_transfer_approval) {
-
-      }
-      if (rba.asn_view) {
-
-      }
-      if (rba.internal_stock_transfer) {
-
-      }
-    }
   }
   openoutlook() {
     window.location.href = "mailto:WMS_Project@in.yokogawa.com?subject=enter_subject&body=enter_content";
@@ -2388,7 +2741,6 @@ export class NavMenuComponent implements OnInit {
       if (this.userrolelist.filter(li => li.roleid == 5).length > 0) {
         subroles = this.userrolelist.filter(li => li.roleid == 5)[0]["subroleid"];
       }
-
       this.items.push({ label: 'Home', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-home', command: () => this.router.navigateByUrl('WMS/Home') });
       //this.items.push({ label: 'Manager Dashboard', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-chart-bar', command: () => this.router.navigateByUrl('WMS/PMDashboard') });
       this.items.push({ label: 'MR Dashboard', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-chart-bar', command: () => this.router.navigateByUrl('WMS/Dashboard'), styleClass: 'active' });
@@ -2619,6 +2971,8 @@ export class NavMenuComponent implements OnInit {
     this.loggedin = false;
     let element: HTMLElement = document.getElementById("btnuser") as HTMLElement;
     element.hidden = true;
+    let elementx: HTMLElement = document.getElementById("notlogged") as HTMLElement;
+    elementx.hidden = false;
     let element1: HTMLDivElement = document.getElementById("menudiv") as HTMLDivElement;
     element1.hidden = true;
     //let elementx: HTMLElement = document.getElementById("btnuser1") as HTMLElement;

@@ -212,7 +212,7 @@ export class MaterialTransferComponent implements OnInit {
  
   getprojects() {
     this.spinner.show();
-    this.wmsService.getprojectlist().subscribe(data => {
+    this.wmsService.getprojectlistfortransfer().subscribe(data => {
       debugger;
       this.projectlists = data;
       this.spinner.hide();

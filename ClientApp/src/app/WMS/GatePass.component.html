@@ -6,14 +6,14 @@
     margin-left: 0px !important;
     margin-right: 0px !important">
         <div class="col-lg-4 col-md-4 form-inline">
-          <div *ngIf="employee.roleid!='3' && employee.roleid !='4'  && employee.roleid !='8'">
+          <div *ngIf="!selectedrba.material_issue  && !selectedrba.gatepass_approval">
 
-            <div *ngIf="employee.roleid!='3' && employee.roleid !='4' && employee.roleid !='8'">
+            <div *ngIf="!selectedrba.material_issue && !selectedrba.gatepass_approval">
               <p-button icon="fa fa-user-plus" label="Create GatePass" (click)="openGatepassDialog('','','gatepassdialog')"></p-button>
             </div>
 
           </div>
-          <div *ngIf="employee.roleid =='8'">
+          <div *ngIf="selectedrba.gatepass_approval">
             <div class="form-inline">
               <label class="labelheading">Status :</label>&nbsp;&nbsp;
               <select class="form-control" (change)="searchGatePassList()" [(ngModel)]="approverstatus">
@@ -25,7 +25,7 @@
 
             </div>
           </div>
-          <div *ngIf="employee.roleid=='3' || employee.roleid=='4'">
+          <div *ngIf="selectedrba.material_issue">
             <div class="form-inline">
               <label class="labelheading">Status :</label>&nbsp;&nbsp;
               <select placeholder="Status" name="Status" (change)="onSelectStatus()" [(ngModel)]="selectedStatus" class="form-control">
@@ -39,14 +39,14 @@
         </div>
         <div class="col-lg-4 col-md-4 text-center">
 
-          <div *ngIf="employee.roleid =='3' || employee.roleid =='4' || employee.roleid =='5'">
+          <div *ngIf="selectedrba.material_issue || selectedrba.gate_pass">
             <span class="commonheadertext">
               <i class="fa fa-check-circle-o commonheadertext"></i>&nbsp;Gate Pass
             </span>
 
           </div>
 
-          <div *ngIf="employee.roleid =='8'">
+          <div *ngIf="selectedrba.gatepass_approval">
             <span class="commonheadertext">
               <i class="fa fa-check-circle-o commonheadertext"></i>&nbsp;Gate Pass - Non Returnable Materials
             </span>
@@ -75,19 +75,19 @@
             <tr class="mprltbldata">
               <th style="text-align: center; width: 70px">Sl.No.</th>
               <th style="text-align:center;width:150px;">GatePass Id</th>
-              <th style="text-align:center" *ngIf="employee.roleid!='8'">Type</th>
+              <th style="text-align:center" *ngIf="!selectedrba.gatepass_approval">Type</th>
               <th style="text-align:center">Supplier</th>
               <th style="text-align:center">Reason</th>
               <th style="text-align:center">Status</th>
-              <th style="text-align:center" *ngIf="employee.roleid!='5'">Requested By</th>
-              <th style="text-align:center" *ngIf="employee.roleid!='5'">Requested On</th>
-              <th style="text-align:center" *ngIf="employee.roleid =='5'">Approver</th>
-              <th style="text-align:center" *ngIf="employee.roleid =='5'">Approver Remarks</th>
+              <th style="text-align:center" *ngIf="selectedrba.gate_pass && employee.roleid!='5'">Requested By</th>
+              <th style="text-align:center" *ngIf="selectedrba.gate_pass && employee.roleid!='5'">Requested On</th>
+              <th style="text-align:center" *ngIf="selectedrba.gate_pass && employee.roleid =='5'">Approver</th>
+              <th style="text-align:center" *ngIf="selectedrba.gate_pass && employee.roleid =='5'">Approver Remarks</th>
               <th *ngIf="selectedStatus=='Issued'" style="text-align:center">Approved By</th>
               <th *ngIf="selectedStatus=='Issued'" style="text-align:center">Approved On</th>
-              <th *ngIf="employee.roleid!='3' && employee.roleid != '4' && employee.roleid != '8'" style="text-align:center;">Edit</th>
-              <th *ngIf="(employee.roleid=='3' || employee.roleid =='4') && employee.roleid !='8'" style="text-align:center;">Print</th>
-              <th *ngIf=" (employee.roleid=='3' || employee.roleid =='4') && selectedStatus=='Issued' " style="text-align:center">Returned Date</th>
+              <th *ngIf="!selectedrba.material_issue && !selectedrba.gatepass_approval" style="text-align:center;">Edit</th>
+              <th *ngIf="selectedrba.material_issue && !selectedrba.gatepass_approval" style="text-align:center;">Print</th>
+              <th *ngIf="selectedrba.material_issue && selectedStatus=='Issued' " style="text-align:center">Returned Date</th>
             </tr>
            
           </ng-template>
@@ -98,10 +98,10 @@
               </td>
 
               <td class="ptable-cell" style="text-align:center;width:150px;">
-                <a style="cursor:pointer;color:blue;text-decoration:underline;" *ngIf="rowData.gatepassid && employee.roleid=='5'" (click)="showdetails(rowData,ri)">{{rowData.gatepassid}}</a>
-                <a *ngIf="employee.roleid!='5'" [routerLink]="['/WMS/GatePassApprover',rowData.gatepassid]" (click)="showdetails(rowData,ri)" routerLinkActive="active">{{rowData.gatepassid}}</a>
+                <a style="cursor:pointer;color:blue;text-decoration:underline;" *ngIf="rowData.gatepassid && selectedrba.gate_pass && employee.roleid=='5'" (click)="showdetails(rowData,ri)">{{rowData.gatepassid}}</a>
+                <a *ngIf="selectedrba.material_issue && employee.roleid!='5'" [routerLink]="['/WMS/GatePassApprover',rowData.gatepassid]" (click)="showdetails(rowData,ri)" routerLinkActive="active">{{rowData.gatepassid}}</a>
               </td>
-              <td class="ptable-cell" style="text-align:left" *ngIf="employee.roleid!='8'">{{rowData.gatepasstype}}</td>
+              <td class="ptable-cell" style="text-align:left" *ngIf="!selectedrba.gatepass_approval">{{rowData.gatepasstype}}</td>
               <td class="ptable-cell" style="text-align:left">{{rowData.vendorname}}</td>
               <td class="ptable-cell" style="text-align:left">{{rowData.reasonforgatepass}}</td>
               <td class="ptable-cell" style="text-align:left">
@@ -115,25 +115,25 @@
               </td>
 
               
-              <td class="ptable-cell" style="text-align:left" *ngIf="employee.roleid!='5'">{{rowData.name}}</td>
-              <td class="ptable-cell" style="text-align:center" *ngIf="employee.roleid!='5'">{{rowData.requestedon | date :  constants.dateFormat}}</td>
-              <td class="ptable-cell" style="text-align:left" *ngIf="employee.roleid == '5'">
+              <td class="ptable-cell" style="text-align:left" *ngIf="selectedrba.gate_pass && employee.roleid!='5'">{{rowData.name}}</td>
+              <td class="ptable-cell" style="text-align:center" *ngIf="selectedrba.gate_pass && employee.roleid!='5'">{{rowData.requestedon | date :  constants.dateFormat}}</td>
+              <td class="ptable-cell" style="text-align:left" *ngIf="selectedrba.gate_pass && employee.roleid == '5'">
                 <span *ngIf="!rowData.fmapprovedon && !rowData.approvedon"></span>
                 <span *ngIf="rowData.approvedon && !rowData.fmapprovedon">{{rowData.approvername}}-(PM)</span>
                 <span *ngIf="rowData.fmapprovedon">{{rowData.fmapprover}}-(FM)</span>
               </td>
-              <td class="ptable-cell" style="text-align:center" *ngIf="employee.roleid =='5'">
+              <td class="ptable-cell" style="text-align:center" *ngIf="selectedrba.gate_pass && employee.roleid =='5'">
                 <span *ngIf="!rowData.fmapprovedon && !rowData.approvedon"></span>
                 <span *ngIf="rowData.approvedon && !rowData.fmapprovedon">{{rowData.approverremarks}}</span>
                 <span *ngIf="rowData.fmapprovedon">{{rowData.fmapproverremarks}}</span>
               </td>
               <td *ngIf="selectedStatus=='Issued'" class="ptable-cell" style="text-align:left">{{rowData.approvername}}</td>
               <td *ngIf="selectedStatus=='Issued'" class="ptable-cell" style="text-align:center">{{rowData.approvedon | date :  constants.dateFormat}}</td>
-              <td class="ptable-cell" *ngIf="employee.roleid!='3' && employee.roleid!='4' && employee.roleid !='8'" style="text-align:center">
+              <td class="ptable-cell" *ngIf="!selectedrba.material_issue && !selectedrba.gatepass_approval" style="text-align:center">
               <button *ngIf="rowData.approverstatus!='Approved' && rowData.approverstatus!='Sent for Modification' && rowData.fmapprovedstatus!='Sent for Modification' && rowData.requestedby==employee.employeeno" type="button" icon="fa fa-edit" pButton aria-hidden="true" (click)="openGatepassDialog(rowData,ri,'gatepassdialogedit')"></button>
               </td>
-              <td class="ptable-cell" *ngIf="(employee.roleid=='3' || employee.roleid =='4') && employee.roleid !='8'" style="text-align:center"><button *ngIf="rowData.approverstatus=='Approved'" type="button" icon="fa fa-print" pButton aria-hidden="true" (click)="showprint(rowData)"></button></td>
-              <td *ngIf="(employee.roleid=='3' || employee.roleid =='4') && selectedStatus=='Issued'" class="ptable-cell" style="text-align:center"><button *ngIf="rowData.gatepasstype=='Returnable' && (employee.roleid=='3' || employee.roleid =='4') && rowData.approverstatus=='Approved' && rowData.status!='Full Closure' " type="button" icon="fa fa-pencil" pButton aria-hidden="true" (click)="openGatepassDialog(rowData,ri,'updateReturnedDateDialog')"></button></td>
+              <td class="ptable-cell" *ngIf="selectedrba.material_issue && !selectedrba.gatepass_approval" style="text-align:center"><button *ngIf="rowData.approverstatus=='Approved'" type="button" icon="fa fa-print" pButton aria-hidden="true" (click)="showprint(rowData)"></button></td>
+              <td *ngIf="selectedrba.material_issue && selectedStatus=='Issued'" class="ptable-cell" style="text-align:center"><button *ngIf="rowData.gatepasstype=='Returnable' && selectedrba.material_issue && rowData.approverstatus=='Approved' && rowData.status!='Full Closure' " type="button" icon="fa fa-pencil" pButton aria-hidden="true" (click)="openGatepassDialog(rowData,ri,'updateReturnedDateDialog')"></button></td>
             </tr>
             <tr *ngIf="rowData.showdetail">
               <td [attr.colspan]="getcolspan()" style="text-align:center;">
@@ -158,8 +158,8 @@
               
               <th class="ptable-cell" style="    text-align: center;background-color: #9ba5af !important">Remarks</th>
               <th class="ptable-cell" style="    text-align: center;background-color: #9ba5af !important">Requested Qty</th>
-              <th class="ptable-cell" style="    text-align: center;background-color: #9ba5af !important" *ngIf="employee.roleid !='8'">Issued Qty</th>
-              <th class="ptable-cell" style="    text-align: center;background-color: #9ba5af !important" *ngIf="employee.roleid !='8' && gtptype =='Returnable'">Expected Date</th>
+              <th class="ptable-cell" style="    text-align: center;background-color: #9ba5af !important" *ngIf="!selectedrba.gatepass_approval">Issued Qty</th>
+              <th class="ptable-cell" style="    text-align: center;background-color: #9ba5af !important" *ngIf="!selectedrba.gatepass_approval && gtptype =='Returnable'">Expected Date</th>
               <th *ngIf="gtptype=='Returnable' && tempreturneddate!=null" class="ptable-cell" style="    text-align: center;background-color: #9ba5af !important">Returned Date</th>
             </tr>
           </ng-template>
@@ -167,18 +167,18 @@
             <tr>
               <td class="ptable-cell" style="text-align: center; width: 20px;"> {{ri+1}} </td>
               <td class="ptable-cell" style="text-align:left">
-                <span *ngIf="employee.roleid !='3' && employee.roleid !='4' ">{{rowData.materialid}}</span>
-                <button *ngIf="employee.roleid !='8' && (employee.roleid =='3' || employee.roleid =='4' )" type="button" class="btn btn-link" (click)="showmateriallocationList(rowData.materialid,ri+1,ri,rowData.quantity);" style="padding-left:0px;">{{rowData.materialid}}</button>
+                <span *ngIf="!selectedrba.material_issue">{{rowData.materialid}}</span>
+                <button *ngIf="!selectedrba.gatepass_approval && (selectedrba.material_issue)" type="button" class="btn btn-link" (click)="showmateriallocationList(rowData.materialid,ri+1,ri,rowData.quantity);" style="padding-left:0px;">{{rowData.materialid}}</button>
               </td>
               <!--<td class="ptable-cell" style="    text-align: left;width: 500px;"> {{rowData.materialdescription}} </td>-->
             <td class="ptable-cell" style="    text-align: left;width: 500px;"> {{rowData.materialdescription}} </td>
               <!--<td class="ptable-cell" style="text-align:right"><span *ngIf="rowData.materialcost">{{rowData.materialcost}}</span></td>-->
               <td class="ptable-cell" style="text-align:left"> {{rowData.remarks}} </td>
               <td class="ptable-cell" style="text-align:right">{{rowData.quantity}}</td>
-              <td class="ptable-cell" *ngIf="employee.roleid !='8'">
+              <td class="ptable-cell" *ngIf="!selectedrba.gatepass_approval">
                 <input pInputText type="number" style="text-align:center" class="form-control" [disabled]="txtDisable" [(ngModel)]="rowData.issuedqty">
               </td>
-              <td class="ptable-cell" style="text-align:center" *ngIf="employee.roleid !='8' && gtptype=='Returnable'">{{checkValiddate(rowData.expecteddate) | date :  constants.dateFormat}}</td>
+              <td class="ptable-cell" style="text-align:center" *ngIf="!selectedrba.gatepass_approval && gtptype=='Returnable'">{{checkValiddate(rowData.expecteddate) | date :  constants.dateFormat}}</td>
               <td *ngIf="gtptype=='Returnable' && rowData.returneddate" class="ptable-cell" style="text-align:center">{{checkValiddate(rowData.returneddate) | date :  constants.dateFormat}}</td>
 
 </ng-template>
@@ -274,15 +274,15 @@
                   <td class="ptable-cell" style="text-align:left;">
                     <!--<p-autoComplete [(ngModel)]="rowData.materialid" type="text" appendTo="body" [forceSelection]="true" [suggestions]="searchItems" (onSelect)="onMaterialSelected(rowData.materialid,ri)" (completeMethod)="bindSearchListData($event,'ItemId')" [size]="15"
     [dropdown]="true"></p-autoComplete>-->
-                    <p-autoComplete [(ngModel)]="rowData.materialid" placeholder="search by name/code" type="text" appendTo="body" [forceSelection]="true" (onSelect)="onMaterialSelected1(rowData,ri)" [suggestions]="filteredmats" (completeMethod)="filtermats($event,rowData)" [size]="20"
+                    <p-autoComplete [(ngModel)]="rowData.materialid" [style]="{'width':'80%'}" [inputStyle]="{'width':'80%'}" placeholder="search by name/code" type="text" appendTo="body" [forceSelection]="true" (onSelect)="onMaterialSelected1(rowData,ri)" [suggestions]="filteredmats" (completeMethod)="filtermats($event,rowData)" 
                                     [dropdown]="true"></p-autoComplete>
 
 
                   </td>
                   <td class="ptable-cell" style="text-align:left;">
-                    <p-autoComplete *ngIf="gatepassModel.gatepasstype=='Returnable'" [(ngModel)]="rowData.materialdescription" placeholder="search by description" type="text" appendTo="body" [forceSelection]="true" (onSelect)="onDescriptionSelected(rowData,ri)" [suggestions]="filteredmatdesc" (completeMethod)="filtermatdescs($event,rowData)" [size]="25"
+                    <p-autoComplete *ngIf="gatepassModel.gatepasstype=='Returnable'" [style]="{'width':'80%'}" [inputStyle]="{'width':'80%'}" [(ngModel)]="rowData.materialdescription" placeholder="search by description" type="text" appendTo="body" [forceSelection]="true" (onSelect)="onDescriptionSelected(rowData,ri)" [suggestions]="filteredmatdesc" (completeMethod)="filtermatdescs($event,rowData)"
                                     [dropdown]="true"></p-autoComplete>
-                    <p-autoComplete *ngIf="gatepassModel.gatepasstype !=='Returnable'" [(ngModel)]="rowData.materialdescription" placeholder="search by description" type="text" appendTo="body" [forceSelection]="true" (onSelect)="onDescriptionSelected(rowData,ri)" [suggestions]="filteredmatdesc" (completeMethod)="filtermatdescs($event,rowData)" [size]="50"
+                    <p-autoComplete *ngIf="gatepassModel.gatepasstype !=='Returnable'" [style]="{'width':'80%'}" [inputStyle]="{'width':'80%'}" [(ngModel)]="rowData.materialdescription" placeholder="search by description" type="text" appendTo="body" [forceSelection]="true" (onSelect)="onDescriptionSelected(rowData,ri)" [suggestions]="filteredmatdesc" (completeMethod)="filtermatdescs($event,rowData)"
                                     [dropdown]="true"></p-autoComplete>
                     <!--<p-autoComplete [(ngModel)]="rowData.poitemdescription" type="text" appendTo="body" [forceSelection]="true" [suggestions]="searchItems" (onSelect)="onMaterialSelected(rowData.materialid,ri)" (completeMethod)="bindSearchListData($event,'ItemId')" [size]="15"
     [dropdown]="true"></p-autoComplete>-->
@@ -372,7 +372,7 @@
                   <td *ngIf="rowData.materialid" class="ptable-cell" style="text-align:center">{{rowData.expecteddate | date :  constants.dateFormat}}</td>
                   <td *ngIf="gatepassModel.gatepasstype=='Returnable' && rowData.returneddate && rowData.materialid" class="ptable-cell" style="text-align:center">{{rowData.returneddate | date :  constants.dateFormat}}</td>
                   <td *ngIf="gatepassModel.gatepasstype=='Returnable'  && rowData.materialid && !rowData.returneddate" class="ptable-cell" style="text-align:center;text-align:center">
-                    <p-calendar class="mprldatepick" *ngIf="(employee.roleid=='3' || employee.roleid=='4') && !rowData.returneddate" appendTo="body" dateFormat="dd/mm/yy" [(ngModel)]="rowData.returneddate" [monthNavigator]="true" [yearNavigator]="true" yearRange="1900:2050"></p-calendar>
+                    <p-calendar class="mprldatepick" *ngIf="selectedrba.material_issue && !rowData.returneddate" appendTo="body" dateFormat="dd/mm/yy" [(ngModel)]="rowData.returneddate" [monthNavigator]="true" [yearNavigator]="true" yearRange="1900:2050"></p-calendar>
 
                     <!--<input type="date" *ngIf="employee.roleid=='7'" [value]="rowData.returneddate |  date:'yyyy-MM-dd'" min={{mindate}} max={{maxdate}} (input)="rowData.returneddate=parseDate($event.target.value)">-->
                     <!--<input *ngIf="employee.roleid=='7' && !rowData.returneddate" appendTo="body" type="date" [(ngModel)]="rowData.returneddate" [value]="rowData.returneddate |  date:'yyyy-MM-dd'" (input)="rowData.returneddate=parseDate($event.target.value)">-->

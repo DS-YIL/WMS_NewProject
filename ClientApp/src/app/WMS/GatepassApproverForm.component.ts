@@ -3,7 +3,7 @@ import { FormBuilder } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { wmsService } from '../WmsServices/wms.service';
 import { constants } from '../Models/WMSConstants';
-import { Employee, DynamicSearchResult, searchList } from '../Models/Common.Model';
+import { Employee, DynamicSearchResult, searchList, rbamaster } from '../Models/Common.Model';
 import { NgxSpinnerService } from "ngx-spinner";
 import { MessageService } from 'primeng/api';
 import { gatepassModel, materialistModel, FIFOValues, locationdetails } from '../Models/WMS.Model';
@@ -43,6 +43,8 @@ export class GatePassApproverComponent implements OnInit {
   public material: string = "";
   public matdesc: string = "";
   public issueqtyenable: boolean = true;
+  rbalist: rbamaster[];
+  selectedrba: rbamaster;
   //Email
   gateid: string = "";
   ngOnInit() {
@@ -51,12 +53,21 @@ export class GatePassApproverComponent implements OnInit {
       this.employee = JSON.parse(localStorage.getItem("Employee"));
     else
       this.router.navigateByUrl("Login");
+    this.selectedrba = new rbamaster();
+    this.rbalist = [];
+    if (localStorage.getItem("rbalist")) {
+      this.rbalist = JSON.parse(localStorage.getItem("rbalist")) as rbamaster[];
+      var filterdt = this.rbalist.filter(o => o.roleid == parseInt(this.employee.roleid));
+      if (filterdt.length > 0) {
+        this.selectedrba = filterdt[0];
+      }
 
+    }
     this.route.params.subscribe(params => {
       if (params["gatepassid"]) {
         var gatepassId = params["gatepassid"]
         this.bindMaterilaDetails(gatepassId);
-        if (this.employee.roleid == "8") {
+        if (this.selectedrba.gatepass_approval) {
           this.getGatePassHistoryList(gatepassId);
         }
       }

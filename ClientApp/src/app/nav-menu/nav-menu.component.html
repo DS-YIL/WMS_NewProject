@@ -1,12 +1,11 @@
-<header>
+<!--<header>
   <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow mb-3  navclass" style="height:50px;">
     <div class="container" style="margin:0px;padding:0px;max-width: 100%">
       <div class="navbar-brand" style="padding-left: 0em;">
         <img class="" src="./assets/yokologo.png" />
         <label style="margin-left:60%;color:white;font-weight:900;font-size:larger">Warehouse Management System</label>
       </div>
-      <!--<button id="btnuser" pButton label="&nbsp;{{username}}" style="background-color: #0099cc" icon="pi pi-user" (click)="op1.toggle($event)"></button>-->
-     
+
             <div  id="btnuser" style="cursor:pointer">
               <table>
                 <tr>
@@ -27,21 +26,64 @@
                 </tr>
 
               </table>
-                
-            
+
+
            </div>
-          
-   
-     
+
+
+
     </div>
   </nav>
-</header>
+</header>-->
+  <header>
+    <img class="logo" src="./assets/yokologo.png" alt="logo" style="margin-top:-20px">
+    <nav>
+      <ul class="nav_links">
+        <li><a href="#">Warehouse Management system</a></li>
+      </ul>
+    </nav>
+    <div id="notlogged" style="cursor:pointer;margin-top:-20px">
+      <table>
+        <tr style="margin-top:0px">
+          <td rowspan="2" style="color:white;cursor:pointer">
+            <span (click)="openoutlook()"><i class="fa fa-envelope"></i><strong>&nbsp;IT Support</strong>&nbsp;</span>
+          </td>
+        </tr>
+
+      </table>
+
+
+    </div>
+    <div id="btnuser" style="cursor:pointer;margin-top:-20px">
+      <table>
+        <tr style="margin-top:0px">
+          <td rowspan="2" style="color:white;cursor:pointer">
+            <span (click)="openoutlook()"><i class="fa fa-envelope"></i><strong>&nbsp;IT Support</strong>&nbsp;</span>
+          </td>
+          <td rowspan="2" (click)="op1.toggle($event)">
+            <img src="{{profileimage}}" alt="Image not found" width="30" style="border-radius: 50%;border:3px solid white;" onerror="this.src='./assets/usericon.png';">
+          </td>
+          <td style="color:white; font-size:14px;padding-left:5px" (click)="op1.toggle($event)">
+            {{username}}
+          </td>
+        </tr>
+        <tr (click)="op1.toggle($event)">
+          <td style="color:white;font-size:12px;padding-left:5px">
+            {{loggedinas}}
+          </td>
+        </tr>
+
+      </table>
+
+
+    </div>
+  </header>
 <div style="margin-top: -20px;" id="menudiv">
-  <p-menubar [model]="items" [style]="{'background': 'linear-gradient(to bottom, #669999 0%, #669999 100%)','color':'white'}" (click) = "activeMenu($event)"></p-menubar>
+  <p-menubar [model]="items" [style]="{'background': 'linear-gradient(to bottom, #669999 0%, #669999 100%)','color':'white'}" (click)="activeMenu($event)"></p-menubar>
 </div>
 <p-overlayPanel #op1>
   <!--<p-panelMenu [model]="useritems" [style]="{'width':'150px'}"></p-panelMenu>-->
-  
+
   <p-panel [header]="loggedinas" [style]="{'text-align':'center'}">
     <img src="{{profileimage}}" alt="Image not found" width="60" style="border-radius: 50%;border:3px solid white;" onerror="this.src='./assets/usericon.png';">
     <div class="car-detail"></div>
@@ -57,6 +99,8 @@
 </p-overlayPanel>
 <p-overlayPanel #op2>
   <p-panelMenu [model]="notificationitems" [style]="{'width':'250px'}"></p-panelMenu>
+  en
+  Pa
 </p-overlayPanel>
 <p-toast position="top-right" [baseZIndex]="100000"></p-toast>
 

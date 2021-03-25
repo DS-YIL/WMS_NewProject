@@ -3,7 +3,7 @@ import { FormBuilder } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { wmsService } from '../WmsServices/wms.service';
 import { constants } from '../Models/WMSConstants';
-import { Employee, DynamicSearchResult, searchList, userAcessNamesModel } from '../Models/Common.Model';
+import { Employee, DynamicSearchResult, searchList, userAcessNamesModel, rbamaster } from '../Models/Common.Model';
 import { NgxSpinnerService } from "ngx-spinner";
 import { MessageService } from 'primeng/api';
 import { gatepassModel, materialistModel, FIFOValues, materialList } from '../Models/WMS.Model';
@@ -32,6 +32,8 @@ export class GatePassComponent implements OnInit {
   public searchItems: Array<searchList> = [];
   public selectedlist: Array<searchList> = [];
   public searchresult: Array<object> = [];
+  rbalist: rbamaster[] = [];
+  selectedrba : rbamaster;
 
   public gatepasslist: Array<any> = [];
   public totalGatePassList: Array<any> = [];
@@ -73,8 +75,17 @@ export class GatePassComponent implements OnInit {
       this.router.navigateByUrl("Login");
     this.gatepassModel = new gatepassModel();
     this.materialistModel = new materialistModel();
+    this.selectedrba = new rbamaster();
     if (localStorage.getItem("userroles")) {
       this.userrolelist = JSON.parse(localStorage.getItem("userroles")) as userAcessNamesModel[];
+    }
+    if (localStorage.getItem("rbalist")) {
+      this.rbalist = JSON.parse(localStorage.getItem("rbalist")) as rbamaster[];
+      var filterdt = this.rbalist.filter(o => o.roleid == parseInt(this.employee.roleid));
+      if (filterdt.length > 0) {
+        this.selectedrba = filterdt[0];
+      }
+      
     }
     debugger;
     this.emailgateid = this.route.snapshot.queryParams.gatepassid;
@@ -84,9 +95,9 @@ export class GatePassComponent implements OnInit {
     this.GatepassTxt = "Gate Pass - Request Materials"
 
 
-    var roles = this.userrolelist.filter(li => li.roleid == 8);
+    //var roles = this.userrolelist.filter(li => li.roleid == 8);
 
-    if (this.employee.roleid == "8") //for approver
+    if (this.selectedrba.gatepass_approval) //for approver
       this.approverstatus = "Pending";
 
     else
@@ -377,16 +388,16 @@ export class GatePassComponent implements OnInit {
 
   getcolspan() {
     var colspan = 7;
-    if (this.employee.roleid != '8') {
+    if (!this.selectedrba.gatepass_approval) {
       colspan = 8;
     }
-    if (this.employee.roleid != '8' && (this.employee.roleid != '3' && this.employee.roleid != '4')) {
+    if (!this.selectedrba.gatepass_approval && (!this.selectedrba.material_issue)) {
       colspan = 9;
     }
-    if (this.employee.roleid != '8' && (this.employee.roleid == '3' || this.employee.roleid == '4')) {
+    if (!this.selectedrba.gatepass_approval && (this.selectedrba.material_issue)) {
       colspan = 9;
     }
-    if (this.selectedStatus == "Issued" && (this.employee.roleid == '3' || this.employee.roleid == '4')) {
+    if (this.selectedStatus == "Issued" && (this.selectedrba.material_issue)) {
       colspan = colspan + 1;
     }
 
@@ -445,14 +456,14 @@ export class GatePassComponent implements OnInit {
         this.totalGatePassList = [];
       }
       //filtering the based on logged in user if role id is 8(Admin)
-      if (this.employee.roleid == "5") {
+      if (this.selectedrba.gate_pass) {
         this.totalGatePassList = this.totalGatePassList.filter(li => li.requestedby == this.employee.employeeno);
       }
       this.gatepasslist = [];
-      if (this.employee.roleid == "8") {
+      if (this.selectedrba.gatepass_approval) {
         this.gatepasslist = this.totalGatePassList.filter(li => li.gatepasstype == 'Non Returnable' && (li.approverstatus == this.approverstatus || li.approverstatus == null));
       }
-      else if (this.employee.roleid == "3" || this.employee.roleid == "4") {
+      else if (this.selectedrba.material_issue) {
         this.totalGatePassList.forEach(item => {
           if (item.gatepasstype == "Returnable" && item.approverstatus == "Approved")
             this.gatepasslist.push(item);
@@ -471,7 +482,7 @@ export class GatePassComponent implements OnInit {
 
       this.gatepassModelList = [];
       this.prepareGatepassList();
-      if (this.employee.roleid == '3' || this.employee.roleid == "4") {
+      if (this.selectedrba.material_issue) {
         this.onSelectStatus();
       }
       else {

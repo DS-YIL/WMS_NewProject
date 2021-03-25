@@ -31,6 +31,7 @@ export class DashboardComponent implements OnInit {
   public showFilterBlock; showsecDialog: boolean = false
   public POList: Array<any> = [];
   public PoDetails: PoDetails;
+  Dashboardtext: string = "";
 
   //page load event
   ngOnInit() {
@@ -41,6 +42,12 @@ export class DashboardComponent implements OnInit {
 
     this.PoFilterParams = new PoFilterParams();
     this.PoDetails = new PoDetails();
+    if (this.employee.roleid == "5") {
+      this.Dashboardtext = "MR Dashboard";
+    }
+    else {
+      this.Dashboardtext = "PM Dashboard";
+    }
 
     this.POfilterForm = this.formBuilder.group({
       PONo: ['', [Validators.required]],

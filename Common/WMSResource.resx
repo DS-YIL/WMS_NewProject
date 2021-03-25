@@ -1756,7 +1756,7 @@ where dataloaderrors is True and stockid not in (
   <data name="getdefaultmaterialforgatepass" xml:space="preserve">
     <value>select sk.materialid as material,
 sum(sk.availableqty) as availableqty,
-SUM(sk.unitprice * sk.availableqty) as materialcost,sk.poitemdescription  as materialdescription 
+SUM(cast(sk.unitprice as numeric(19,4)) * cast(sk.availableqty as numeric(19,4))) as materialcost,sk.poitemdescription  as materialdescription 
 from wms.wms_stock  sk 
 where sk.availableqty &gt; 0 and sk.materialid is not null and sk.poitemdescription is not null  group by sk.materialid,sk.poitemdescription</value>
   </data>
@@ -2158,5 +2158,12 @@ asn_view=@asn_view, internal_stock_transfer=@internal_stock_transfer, miscellano
 assign_pm=@assign_pm, annexure_report=@annexure_report, initialstock_upload=@initialstock_upload, 
 inventory_management=@inventory_management, all_reports=@all_reports
 WHERE roleid=#roleid</value>
+  </data>
+  <data name="getAllprojectlistfortransfer" xml:space="preserve">
+    <value>select prj.projectcode as value, prj.projectcode as text,Max(emp.employeeno) as projectmanager
+from wms.wms_project prj
+left outer join wms.employee emp on (emp.globalempno = prj.projectmanager or emp.employeeno = prj.projectmanager)
+where emp.employeeno is not null and prj.projectcode is not null and prj.projectcode &lt;&gt; ''
+group by prj.projectcode</value>
   </data>
 </root>

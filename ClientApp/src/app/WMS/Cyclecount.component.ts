@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { wmsService } from '../WmsServices/wms.service';
 import { constants } from '../Models/WMSConstants';
-import { Employee, DynamicSearchResult, userAcessNamesModel } from '../Models/Common.Model';
+import { Employee, DynamicSearchResult, userAcessNamesModel, rbamaster } from '../Models/Common.Model';
 import { NgxSpinnerService } from "ngx-spinner";
 import { commonComponent } from '../WmsCommon/CommonCode';
 import { categoryValues, Cyclecountconfig } from '../Models/WMS.Model';
@@ -36,6 +36,8 @@ export class CyclecountComponent implements OnInit {
   showdays: any[] = [];
   showtouser: boolean = false;
   userrolelist: userAcessNamesModel[] = [];
+  rbalist: rbamaster[] = [];
+  selectedrba: rbamaster;
  
 
   ngOnInit() {
@@ -46,16 +48,24 @@ export class CyclecountComponent implements OnInit {
     if (localStorage.getItem("userroles")) {
       this.userrolelist = JSON.parse(localStorage.getItem("userroles")) as userAcessNamesModel[];
     }
-    var roles = this.userrolelist.filter(li => li.roleid == 4);
-    if (this.employee.roleid == "4" || roles.length > 0) {
-      this.isapprover = true;
-      this.showsubmitbuttonuser = false;
-      this.showsubmitbutton = true;
+    if (localStorage.getItem("rbalist")) {
+      this.rbalist = JSON.parse(localStorage.getItem("rbalist")) as rbamaster[];
+      var filterdt = this.rbalist.filter(o => o.roleid == parseInt(this.employee.roleid));
+      if (filterdt.length > 0) {
+        this.selectedrba = filterdt[0];
+        this.setcontrols();
+      }
+      else {
+        this.isapprover = false;
+        this.showsubmitbutton = false;
+      }
+
     }
     else {
       this.isapprover = false;
       this.showsubmitbutton = false;
     }
+   
 
     this.cols = [
       { field: 'Category', header: 'Category' },
@@ -71,6 +81,18 @@ export class CyclecountComponent implements OnInit {
     this.getCyclecountConfig();
     this.getCyclecountPendingMaterialList();
    
+  }
+
+  setcontrols() {
+    if (this.selectedrba.cyclecount_approval) {
+      this.isapprover = true;
+      this.showsubmitbuttonuser = false;
+      this.showsubmitbutton = true;
+    }
+    else {
+      this.isapprover = false;
+      this.showsubmitbutton = false;
+    }
   }
 
   

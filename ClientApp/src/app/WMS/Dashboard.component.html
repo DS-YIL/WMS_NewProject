@@ -31,25 +31,21 @@
 </form>-->
   <div style="margin:10px;">
     <div class="card commoncardcss">
-      <!--<div class="card-header text-center cardheadertext">
-        <span>
-          <i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;PM Dashboard
-        </span>
-      </div>-->
-      <!--<div class="card-header commoncardheader">
-        <div class="row " style="margin-top: 10px;
+      <div class="card-header text-center commoncardheader">
+        <div class="row " style="    margin-top: 10px;
     margin-left: 0px !important;
     margin-right: 0px !important">
           <div class="col-lg-4 col-md-4 form-inline">
           </div>
           <div class="col-lg-4 col-md-4 text-center">
-            <span style="color:#428bca;font-size:18px" class="commonheadertext">
-              <i class="fa fa-check-circle-o commonheadertext"></i>&nbsp;PM Dashboard
+            <span class="commonheadertext">
+              <i class="fa fa-check-circle-o commonheadertext"></i>&nbsp;{{Dashboardtext}}
             </span>
           </div>
-          <div class="col-lg-4 col-md-4 form-inline"></div>
+          <div class="col-lg-4 col-md-4 form-inline">
+          </div>
         </div>
-      </div>-->
+      </div>
       <div class="card-body" style="overflow-y: hidden; padding-top: 0px;margin-left: 10px; margin-right: 10px">
         <div class="row" style="height:100%;border-radius:0px;margin-top:5px;">
           <p-table #dt [value]="POList" [style]="{'width':'100%'}"
@@ -104,7 +100,7 @@
                   <span *ngIf="rowData.status">{{rowData.status}}</span>
                   <span *ngIf="!rowData.status">Pending</span>
                 </td>
-                <td class="ptable-cell" style="    text-align: left;width: 300px">{{rowData.vendorname}}</td>
+                <td class="ptable-cell" style="    text-align: left;width: 300px">t-{{rowData.vendorname}}</td>
 
                 <!-- <td class="ptable-cell" style="text-align:center">{{rowData.jobName}}</td>-->
                 <!--<td class="ptable-cell" style="text-align:center;width:150px">{{checkValiddate(rowData.enteredon)}}</td>-->
@@ -118,7 +114,7 @@
           </p-table><br />
         </div>
       </div>
-      
+
     </div>
     </div>
     <p-dialog #dialog header="List View :" [(visible)]="showList" [contentStyle]="{'overflow':'visible'}">

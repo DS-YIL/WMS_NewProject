@@ -473,6 +473,19 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to select prj.projectcode as value, prj.projectcode as text,Max(emp.employeeno) as projectmanager
+        ///from wms.wms_project prj
+        ///left outer join wms.employee emp on (emp.globalempno = prj.projectmanager or emp.employeeno = prj.projectmanager)
+        ///where emp.employeeno is not null and prj.projectcode is not null and prj.projectcode &lt;&gt; &apos;&apos;
+        ///group by prj.projectcode.
+        /// </summary>
+        public static string getAllprojectlistfortransfer {
+            get {
+                return ResourceManager.GetString("getAllprojectlistfortransfer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to select wi.transferid,inv.projectcode as projectid, wi.materialid , wi.poitemdesc as materialdescription, wi.transferqty ,wi.value,
         ///(select wp.projectmanager from wms.wms_project wp where wp.projectcode = inv.projectcode and wp.projectmanager is not null limit 1) as projectmanager,
         ///ssg.subconno 
@@ -639,7 +652,7 @@ namespace WMS.Common {
         /// <summary>
         ///   Looks up a localized string similar to select sk.materialid as material,
         ///sum(sk.availableqty) as availableqty,
-        ///SUM(sk.unitprice * sk.availableqty) as materialcost,sk.poitemdescription  as materialdescription 
+        ///SUM(cast(sk.unitprice as numeric(19,4)) * cast(sk.availableqty as numeric(19,4))) as materialcost,sk.poitemdescription  as materialdescription 
         ///from wms.wms_stock  sk 
         ///where sk.availableqty &gt; 0 and sk.materialid is not null and sk.poitemdescription is not null  group by sk.materialid,sk.poitemdescription.
         /// </summary>
