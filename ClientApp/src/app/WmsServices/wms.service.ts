@@ -643,6 +643,15 @@ export class wmsService {
   getprojectlisttosiign(empno: string): Observable<AssignProjectModel[]> {
     return this.http.get<AssignProjectModel[]>(this.url + 'POData/getprojectlisttoassign?empno=' + empno, this.httpOptions);
   }
+  getstorelist(): Observable<locataionDetailsStock[]> {
+    return this.http.get<locataionDetailsStock[]>(this.url + 'POData/getstorelist', this.httpOptions);
+  }
+  getracklist(): Observable<locataionDetailsStock[]> {
+    return this.http.get<locataionDetailsStock[]>(this.url + 'POData/getracklist', this.httpOptions);
+  }
+  getbinlistdata(): Observable<locataionDetailsStock[]> {
+    return this.http.get<locataionDetailsStock[]>(this.url + 'POData/getbinlistdata', this.httpOptions);
+  }
   getprojectlisttossignPM(): Observable<assignpmmodel[]> {
     return this.http.get<assignpmmodel[]>(this.url + 'POData/getprojectlisttoassignpm/', this.httpOptions);
   }
@@ -824,6 +833,18 @@ export class wmsService {
   posttestcrud(data: testcrud): Observable<any> {
     const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }), responseType: 'text' as any };
     return this.http.post<any>(this.url + 'POData/postputtestcrud', data, httpOptions);
+  }
+  addupdatestore(data: locataionDetailsStock): Observable<any> {
+    const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }), responseType: 'text' as any };
+    return this.http.post<any>(this.url + 'POData/addupdatestore', data, httpOptions);
+  }
+  addupdaterack(data: locataionDetailsStock): Observable<any> {
+    const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }), responseType: 'text' as any };
+    return this.http.post<any>(this.url + 'POData/addupdaterack', data, httpOptions);
+  }
+  addupdatebin(data: locataionDetailsStock): Observable<any> {
+    const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }), responseType: 'text' as any };
+    return this.http.post<any>(this.url + 'POData/addupdatebin', data, httpOptions);
   }
 
   deletetestcurd(id: number): Observable<any> {

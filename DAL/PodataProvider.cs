@@ -8683,6 +8683,386 @@ namespace WMS.DAL
 			}
 		}
 		/*
+		Name of Function : <<getstorelist>>  Author :<<Ramesh>>  
+		Date of Creation <<24-03-2021>>
+		Purpose : <<get store list for master page>>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
+		public async Task<IEnumerable<locataionDetailsStock>> getstorelist()
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				try
+				{
+					string query = WMSResource.getstoredata;
+					int plantid = Conversion.toInt(config.plantid);
+
+					await pgsql.OpenAsync();
+					var data = await pgsql.QueryAsync<locataionDetailsStock>(
+					  query, null, commandType: CommandType.Text);
+					data = data.Where(o => o.plantid == plantid);
+					return data;
+
+
+
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "getstorelist", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+
+			}
+		}
+		/*
+		Name of Function : <<getracklist>>  Author :<<Ramesh>>  
+		Date of Creation <<24-03-2021>>
+		Purpose : <<get store list for master page>>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
+		public async Task<IEnumerable<locataionDetailsStock>> getracklist()
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				try
+				{
+					string query = WMSResource.getracklist;
+					int plantid = Conversion.toInt(config.plantid);
+
+					await pgsql.OpenAsync();
+					var data = await pgsql.QueryAsync<locataionDetailsStock>(
+					  query, null, commandType: CommandType.Text);
+					data = data.Where(o => o.plantid == plantid);
+					return data;
+
+
+
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "getracklist", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+
+			}
+		}
+		/*
+		Name of Function : <<getbinlist>>  Author :<<Ramesh>>  
+		Date of Creation <<24-03-2021>>
+		Purpose : <<get store list for master page>>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
+		public async Task<IEnumerable<locataionDetailsStock>> getbinlistdata()
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				try
+				{
+					string query = WMSResource.getbinlistdata;
+					int plantid = Conversion.toInt(config.plantid);
+
+					await pgsql.OpenAsync();
+					var data = await pgsql.QueryAsync<locataionDetailsStock>(
+					  query, null, commandType: CommandType.Text);
+					data = data.Where(o => o.plantid == plantid);
+					return data;
+
+
+
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "getbinlist", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+
+			}
+		}
+		/*
+		Name of Function : <<getstorelist>>  Author :<<Ramesh>>  
+		Date of Creation <<24-03-2021>>
+		Purpose : <<get store list for master page>>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
+		public string addupdatestore(locataionDetailsStock store)
+		{
+			string result = "";
+			int rslt = 0;
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				try
+				{
+					if (store.storeid == null || store.storeid == 0)
+					{
+						string insertqry = WMSResource.AddnewStore;
+						using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
+						{
+							rslt = DB.Execute(insertqry, new
+							{
+								store.storename,
+								store.plantid,
+								store.createdby,
+								store.storedescription
+							});
+
+							if (rslt == 0)
+							{
+								result = "error";
+							}
+							else
+							{
+								result = "saved";
+							}
+						}
+
+
+					}
+					else
+					{
+						string insertqry = WMSResource.updateStore.Replace("#storeid",store.storeid.ToString());
+						bool? deleteflag = false;
+                        if (store.isactive == false)
+                        {
+							deleteflag = true;
+
+						}
+						using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
+						{
+							rslt = DB.Execute(insertqry, new
+							{
+								deleteflag,
+								store.storename,
+								store.plantid,
+								store.storedescription,
+								store.modifiedby
+							});
+
+							if (rslt == 0)
+							{
+								result = "error";
+							}
+							else
+							{
+								result = "Updated";
+							}
+
+						}
+
+					}
+
+					return result;
+
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "addupdatestore", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
+					return Ex.Message.ToString();
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+
+			}
+		}
+
+		/*
+		Name of Function : <<addupdaterack>>  Author :<<Ramesh>>  
+		Date of Creation <<24-03-2021>>
+		Purpose : <<get store list for master page>>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
+		public string addupdaterack(locataionDetailsStock rack)
+		{
+			string result = "";
+			int rslt = 0;
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				try
+				{
+					if (rack.rackid == null || rack.rackid == 0)
+					{
+						string insertqry = WMSResource.Addnewrack;
+						using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
+						{
+							rslt = DB.Execute(insertqry, new
+							{
+								rack.rackname,
+								rack.storeid,
+								rack.createdby
+								
+							});
+
+							if (rslt == 0)
+							{
+								result = "error";
+							}
+							else
+							{
+								result = "saved";
+							}
+						}
+
+
+					}
+					else
+					{
+						string insertqry = WMSResource.updaterack.Replace("#rackid", rack.rackid.ToString());
+						bool? deleteflag = false;
+						if (rack.isactive == false)
+						{
+							deleteflag = true;
+
+						}
+						using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
+						{
+							rslt = DB.Execute(insertqry, new
+							{
+								rack.rackname,
+								rack.storeid,
+								deleteflag,
+								rack.modifiedby
+							});
+
+							if (rslt == 0)
+							{
+								result = "error";
+							}
+							else
+							{
+								result = "Updated";
+							}
+
+						}
+
+					}
+
+					return result;
+
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "addupdaterack", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
+					return Ex.Message.ToString();
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+
+			}
+		}
+
+		/*
+		Name of Function : <<addupdatebin>>  Author :<<Ramesh>>  
+		Date of Creation <<24-03-2021>>
+		Purpose : <<get store list for master page>>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
+		public string addupdatebin(locataionDetailsStock bin)
+		{
+			string result = "";
+			int rslt = 0;
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				try
+				{
+					if (bin.binid == null || bin.binid == 0)
+					{
+						string insertqry = WMSResource.Addnewbin;
+						using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
+						{
+							rslt = DB.Execute(insertqry, new
+							{
+								bin.storeid,
+								bin.binname,
+								bin.rackid,
+								bin.createdby
+
+							});
+
+							if (rslt == 0)
+							{
+								result = "error";
+							}
+							else
+							{
+								result = "saved";
+							}
+						}
+
+
+					}
+					else
+					{
+						string insertqry = WMSResource.updatebin.Replace("#binid", bin.binid.ToString());
+						bool? deleteflag = false;
+						if (bin.isactive == false)
+						{
+							deleteflag = true;
+
+						}
+						using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
+						{
+							rslt = DB.Execute(insertqry, new
+							{
+								bin.storeid,
+								bin.binname,
+								deleteflag,
+								bin.rackid,
+								bin.modifiedby
+							});
+
+							if (rslt == 0)
+							{
+								result = "error";
+							}
+							else
+							{
+								result = "Updated";
+							}
+
+						}
+
+					}
+
+					return result;
+
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "addupdatebin", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
+					return Ex.Message.ToString();
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+
+			}
+		}
+
+
+
+		/*
 		Name of Function : <<getprojectlisttoassignpm>>  Author :<<Ramesh>>  
 		Date of Creation <<17-02-2021>>
 		Purpose : <<get project list to assign>>

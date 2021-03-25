@@ -70,6 +70,39 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to INSERT INTO wms.wms_rd_bin
+        ///(locatorid, binnumber, deleteflag, createdate, rackid, createdby)
+        ///VALUES(@storeid, @binname, false, current_date, @rackid, @createdby).
+        /// </summary>
+        public static string Addnewbin {
+            get {
+                return ResourceManager.GetString("Addnewbin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to INSERT INTO wms.wms_rd_rack
+        ///(racknumber, locatorid, deleteflag, createdate, createdby)
+        ///VALUES(@rackname, @storeid, false, current_date, @createdby).
+        /// </summary>
+        public static string Addnewrack {
+            get {
+                return ResourceManager.GetString("Addnewrack", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to INSERT INTO wms.wms_rd_locator
+        ///(deleteflag, createdate, locatorname,plantid,createdby, storagelocationdesc)
+        ///VALUES(false, current_date, @storename, @plantid,@createdby ,@storedescription).
+        /// </summary>
+        public static string AddnewStore {
+            get {
+                return ResourceManager.GetString("AddnewStore", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to update wms.wms_sapgr set sapgr = &apos;#sapgr&apos; where wmsgr = &apos;#wmsgr&apos;.
         /// </summary>
         public static string addSAPGR {
@@ -607,6 +640,22 @@ namespace WMS.Common {
         public static string getbinlist_v1 {
             get {
                 return ResourceManager.GetString("getbinlist_v1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SELECT wrb.binid,wrb.binnumber as binname,wrb.rackid,rck.racknumber as rackname,wrb.locatorid as storeid,loc.locatorname as storename,wrb.createdate as createdon, emp.&quot;name&quot; as createdby,
+        ///emp1.&quot;name&quot; as modifiedby,wrb.modifiedon,plt.plantname,plt.plantid, 
+        ///case when wrb.deleteflag is false then true
+        ///else false 
+        ///end as isactive, false as isselected
+        ///from wms.wms_rd_bin wrb 
+        ///left outer join wms.wms_rd_rack rck on rck.rackid = wrb.rackid
+        ///left outer join wms.wms_rd_locator loc on loc.locatorid = wrb.locat [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string getbinlistdata {
+            get {
+                return ResourceManager.GetString("getbinlistdata", resourceCulture);
             }
         }
         
@@ -1902,6 +1951,23 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to SELECT wrr.rackid , wrr.racknumber as rackname,wrr.locatorid as storeid,loc.locatorname as storename,wrr.createdate as createdon, emp.&quot;name&quot; as createdby,
+        ///emp1.&quot;name&quot; as modifiedby,wrr.modifiedon,plt.plantname,plt.plantid, 
+        ///case when wrr.deleteflag is false then true
+        ///else false 
+        ///end as isactive, false as isselected
+        ///from wms.wms_rd_rack wrr 
+        ///left outer join wms.wms_rd_locator loc on loc.locatorid = wrr.locatorid 
+        ///left outer join wms.wms_rd_plant plt on plt.plantid = loc.plantid 
+        ///left outer join wms.e [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string getracklist {
+            get {
+                return ResourceManager.GetString("getracklist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to select req.reserveid,max(req.reservedon)as reservedon,req.reservedby,po.projectname,emp.&quot;name&quot; 
         /// from wms.wms_materialreserve req left join wms.openpolistview po on po.pono=req.pono 
         ///left join wms.employee emp on req.reservedby=emp.employeeno 
@@ -2152,6 +2218,23 @@ namespace WMS.Common {
         public static string getSTOListForIssue {
             get {
                 return ResourceManager.GetString("getSTOListForIssue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SELECT wrl.locatorid as storeid,wrl.locatorname as storename,wrl.storagelocationdesc as storedescription,wrl.createdate as createdon, emp.&quot;name&quot; as createdby,
+        ///emp1.&quot;name&quot; as modifiedby,wrl.modifiedon,plt.plantname,wrl.locationtype,plt.plantid, 
+        ///case when deleteflag is false then true
+        ///else false 
+        ///end as isactive, false as isselected
+        ///from wms.wms_rd_locator wrl
+        ///left outer join wms.wms_rd_plant plt on plt.plantid = wrl.plantid 
+        ///left outer join wms.employee emp on emp.employeeno = wrl.createdby
+        ///left out [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string getstoredata {
+            get {
+                return ResourceManager.GetString("getstoredata", resourceCulture);
             }
         }
         
@@ -3411,6 +3494,17 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to UPDATE wms.wms_rd_bin
+        ///SET locatorid=@storeid, binnumber=@binname, deleteflag=@deleteflag,rackid= @rackid , modifiedby=@modifiedby, modifiedon=current_timestamp 
+        ///WHERE binid=#binid.
+        /// </summary>
+        public static string updatebin {
+            get {
+                return ResourceManager.GetString("updatebin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to update wms.cyclecountconfig set apercentage=@apercentage,bpercentage=@bpercentage,cpercentage=@cpercentage,cyclecount=@cyclecount,frequency=@frequency where id = #cid.
         /// </summary>
         public static string updatecyclecountconfig {
@@ -3602,6 +3696,17 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to UPDATE wms.wms_rd_rack
+        ///SET racknumber=@rackname,locatorid=@storeid, deleteflag=@deleteflag,modifiedby=@modifiedby, modifiedon=current_timestamp 
+        ///WHERE rackid=#rackid.
+        /// </summary>
+        public static string updaterack {
+            get {
+                return ResourceManager.GetString("updaterack", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to UPDATE wms.wms_rbamaster
         ///SET inv_enquiry=@inv_enquiry, inv_reports=@inv_reports, gate_entry=@gate_entry, gate_entry_barcode=@gate_entry_barcode, 
         ///inv_receipt_alert=@inv_receipt_alert, receive_material=@receive_material, put_away=@put_away, 
@@ -3716,6 +3821,17 @@ namespace WMS.Common {
         public static string updateStockLog {
             get {
                 return ResourceManager.GetString("updateStockLog", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to UPDATE wms.wms_rd_locator
+        ///SET deleteflag=@deleteflag,locatorname=@storename,plantid=@plantid,storagelocationdesc=@storedescription,modifiedby=@modifiedby,modifiedon=current_timestamp
+        ///WHERE locatorid=#storeid.
+        /// </summary>
+        public static string updateStore {
+            get {
+                return ResourceManager.GetString("updateStore", resourceCulture);
             }
         }
         

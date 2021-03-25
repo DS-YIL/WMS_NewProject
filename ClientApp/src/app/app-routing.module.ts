@@ -92,6 +92,9 @@ import { AssignProjectComponent } from './WMS/AssignProject.component';
 import { AssignProjectManagerComponent } from './WMS/AssignProjectManager.component';
 import { MaterialRequestApprovalComponent } from './WMS/MaterialRequestApproval.component';
 import { AssignRBAComponent } from './WMS/AssignRBA.component';
+import { StoreMasterComponent } from './WMS/StoreMaster.component';
+import { RackMasterComponent } from './WMS/RackMaster.component';
+import { BinMasterComponent } from './WMS/BinMaster.component';
 
 const routes: Routes = [{
   path: 'WMS',
@@ -200,7 +203,11 @@ const routes: Routes = [{
     { path: "AssignProjectManager", component: AssignProjectManagerComponent, canActivate: [AuthGuard] },
     { path: "POReport", component: POReportComponent, canActivate: [AuthGuard] },
     { path: "AnnexureReport", component: AnnexureReportComponent, canActivate: [AuthGuard] },
-    { path: "Assignrba", component: AssignRBAComponent, canActivate: [AuthGuard] }
+    { path: "Assignrba", component: AssignRBAComponent, canActivate: [AuthGuard] },
+    { path: "StoreMaster", component: StoreMasterComponent, canActivate: [AuthGuard] },
+    { path: "RackMaster", component: RackMasterComponent, canActivate: [AuthGuard] },
+    { path: "BinMaster", component: BinMasterComponent, canActivate: [AuthGuard] }
+
 
   ]
 

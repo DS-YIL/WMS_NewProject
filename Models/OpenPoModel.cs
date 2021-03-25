@@ -579,9 +579,9 @@ namespace WMS.Models
 
 	public class locataionDetailsStock
 	{
-		public int rackid { get; set; }
-		public int binid { get; set; }
-		public int storeid { get; set; }
+		public int? rackid { get; set; }
+		public int? binid { get; set; }
+		public int? storeid { get; set; }
 		public string locationid { get; set; }
 		public string locationname { get; set; }
 		public string rackname { get; set; }
@@ -589,10 +589,15 @@ namespace WMS.Models
 		public string storename { get; set; }
 		public string createdby { get; set; }
 		public DateTime? createdon { get; set; }
-		public string modifieddby { get; set; }
+		public string modifiedby { get; set; }
 		public DateTime? modifiedon { get; set; }
-		public string isactive { get; set; }
+		public bool? isactive { get; set; }
 		public bool? isselected { get; set; }
+		public string storedescription { get; set; }
+		public int? plantid { get; set; }
+		public string plantname { get; set; }
+		public string locationtype { get; set; }
+
 	}
 	public class IssueRequestModel
 	{

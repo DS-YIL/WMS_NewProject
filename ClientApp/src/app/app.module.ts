@@ -127,6 +127,9 @@ import { AssignProjectComponent } from './WMS/AssignProject.component';
 import { AssignProjectManagerComponent } from './WMS/AssignProjectManager.component';
 import { MaterialRequestApprovalComponent } from './WMS/MaterialRequestApproval.component';
 import { AssignRBAComponent } from './WMS/AssignRBA.component';
+import { StoreMasterComponent } from './WMS/StoreMaster.component';
+import { RackMasterComponent } from './WMS/RackMaster.component';
+import { BinMasterComponent } from './WMS/BinMaster.component';
 
 ////pages
 import { LoginComponent } from './WMS/Login.component';
@@ -243,7 +246,10 @@ import { KeyFilterModule } from 'primeng/keyfilter';
     AssignProjectManagerComponent,
     POReportComponent,
     AnnexureReportComponent,
-    AssignRBAComponent
+    AssignRBAComponent,
+    StoreMasterComponent,
+    RackMasterComponent,
+    BinMasterComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

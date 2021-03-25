@@ -8,7 +8,7 @@
         </div>
         <div class="col-lg-4 col-md-4 text-center">
           <span style="color:#428bca;font-size:18px" class="commonheadertext">
-            <i class="fa fa-check-circle-o commonheadertext"></i>&nbsp;Store Master
+            <i class="fa fa-check-circle-o commonheadertext"></i>&nbsp;Bin Master
           </span>
         </div>
         <div class="col-lg-4 col-md-4">
@@ -23,7 +23,8 @@
             <th class="ptable-cell" style="text-align:center;width:70px;">Sl.No.</th>
             <th class="ptable-cell" style="text-align:center;width:150px;">Plant</th>
             <th class="ptable-cell" style="text-align:center;width:200px;">Store Name</th>
-            <th class="ptable-cell" style="text-align:center;">Store Description</th>
+            <th class="ptable-cell" style="text-align:center;">Rack Name</th>
+            <th class="ptable-cell" style="text-align:center;">Bin Name</th>
             <th class="ptable-cell" style="text-align:center;width:200px;">Created By</th>
             <th class="ptable-cell" style="text-align:center;width:150px;">Created On</th>
             <th style="text-align: center;width: 100px;">Is Active</th>
@@ -33,7 +34,8 @@
             <th></th>
             <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'plantname', 'startsWith')"></th>
             <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'storename', 'startsWith')"></th>
-            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'storedescription', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'rackname', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'binname', 'contains')"></th>
             <th></th>
             <th></th>
             <th></th>
@@ -45,7 +47,8 @@
             <td class="ptable-cell" style="text-align:right;width:70px;"> {{ri+1}} </td>
             <td class="ptable-cell" style="text-align:center;width:150px;"> {{rowData.plantname}} </td>
             <td class="ptable-cell" style="text-align:left;width:200px;"> {{rowData.storename}} </td>
-            <td class="ptable-cell" style="text-align:left;"> {{rowData.storedescription}} </td>
+            <td class="ptable-cell" style="text-align:left;"> {{rowData.rackname}} </td>
+            <td class="ptable-cell" style="text-align:left;"> {{rowData.binname}} </td>
             <td class="ptable-cell" style="text-align:left;width:200px;">{{rowData.createdby}} </td>
             <td class="ptable-cell" style="text-align:center;width:150px;">{{rowData.createdon | date: 'dd/MM/yyyy'}} </td>
             <td class="ptable-cell" style="text-align:center;width:100px;">
@@ -66,24 +69,28 @@
 
     </div>
   </div>
-  <p-dialog header="Add/Edit Store" [(visible)]="showadddatamodel" (onHide)="refreshsavemodel()" [modal]="true" [style]="{width: '50vw','height' : '500px'}" [baseZIndex]="10000"
+  <p-dialog header="Add/Edit Bin" [(visible)]="showadddatamodel" (onHide)="refreshsavemodel()" [modal]="true" [style]="{width: '50vw','overflow':'auto!important'}" [baseZIndex]="10000"
             [draggable]="true" [resizable]="false">
     <div class="row">
       <div class="col-lg-6 col-md-6">
         <label class="labelheading">Plant :&nbsp;</label>
-        <p-autoComplete [(ngModel)]="selectedplant" field="plantname" [appendTo]="body" [suggestions]="filteredPlant" [disabled]="true" placeholder="search by plant" [ngModelOptions]="{standalone: true}" [forceSelection]="true" (completeMethod)="filterPlants($event)" [size]="30" [dropdown]="true"></p-autoComplete>
+        <p-autoComplete [(ngModel)]="selectedplant" field="plantname" [appendTo]="body" [suggestions]="filteredPlant" placeholder="search by plant" [ngModelOptions]="{standalone: true}" [forceSelection]="true" (completeMethod)="filterPlants($event)" [disabled]="true" [size]="30" [dropdown]="true"></p-autoComplete>
       </div>
       <div class="col-lg-6 col-md-6">
         <label class="labelheading">Store Name :&nbsp;</label>
-        <input type="text" class="form-control" [(ngModel)]="editModel.storename" />
+        <p-autoComplete [(ngModel)]="selectedstore" field="locatorname" [appendTo]="body" [suggestions]="filteredStore" (onSelect)="getRacks()" (change)="getRacks()"  placeholder="search by Store" [ngModelOptions]="{standalone: true}" [forceSelection]="false" (completeMethod)="filterStores($event)" [size]="30" [dropdown]="true"></p-autoComplete>
       </div>
 
     </div>
 
     <div class="row" style="margin-top:20px;margin-bottom:20px;">
       <div class="col-lg-6 col-md-6">
-        <label class="labelheading">Store Description :&nbsp;</label>
-        <input type="text" class="form-control" [(ngModel)]="editModel.storedescription" />
+        <label class="labelheading">Rack :&nbsp;</label>
+        <p-autoComplete [(ngModel)]="selectedrack" field="racknumber"  [suggestions]="filteredRack" placeholder="search by Store" [ngModelOptions]="{standalone: true}" [forceSelection]="false" (completeMethod)="filterRacks($event)" [size]="30" [dropdown]="true"></p-autoComplete>
+      </div>
+      <div class="col-lg-6 col-md-6">
+        <label class="labelheading">Bin Name :&nbsp;</label>
+        <input type="text" class="form-control" [(ngModel)]="editModel.binname" />
       </div>
 
     </div>

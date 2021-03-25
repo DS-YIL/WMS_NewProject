@@ -246,6 +246,9 @@ namespace WMS.Interfaces
 		Task<IEnumerable<ddlmodel>> getgatepassreason();
 		Task<IEnumerable<ddlmodel>> getprojectlistbymanager(string empno);
 		Task<IEnumerable<AssignProjectModel>> getprojectlisttoassign(string empno);
+		Task<IEnumerable<locataionDetailsStock>> getstorelist();
+		Task<IEnumerable<locataionDetailsStock>> getracklist();
+		Task<IEnumerable<locataionDetailsStock>> getbinlistdata();
 		Task<IEnumerable<assignpmmodel>> getprojectlisttoassignpm();
 		Task<IEnumerable<ddlmodel>> getmatlist(string querytext);
 		Task<IEnumerable<ddlmodel>> getmatlistbyproject(string projectcode);
@@ -332,7 +335,11 @@ namespace WMS.Interfaces
 		Task<string> updateSubcontractAcKstatus(List<invstocktransfermodel> data);
 		Task<IEnumerable<gatepassModel>> subcontractInoutList();
 		printonholdGR generateqronhold(printonholdGR onholddata);
-		
+		string addupdatestore(locataionDetailsStock store);
+		string addupdaterack(locataionDetailsStock rack);
+		string addupdatebin(locataionDetailsStock bin);
+
+
 
 	}
 }
