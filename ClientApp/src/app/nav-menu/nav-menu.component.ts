@@ -87,7 +87,7 @@ export class NavMenuComponent implements OnInit {
       localStorage.setItem('requestedpage', this.urlrequstedpage);
     }
     if (localStorage.getItem("Employee")) {
-      this.getrbalist();
+      //this.getrbalist();
       //if (localStorage.getItem("rbalist")) {
         
       //  this.rbalist = JSON.parse(localStorage.getItem("rbalist")) as rbamaster[];
@@ -125,7 +125,7 @@ export class NavMenuComponent implements OnInit {
           alert("Selected Role is not assigned to you, select Your role");
           this.router.navigateByUrl("WMS/Login");
         }
-        var rid = this.emp.roleid;
+        var rid = this.emp.roleid; 
         
         var data1 = this.userrolelist.filter(function (element, index) {
           return (element.roleid == parseInt(rid));
@@ -2118,6 +2118,7 @@ export class NavMenuComponent implements OnInit {
 
 
   nevigatefromuserdashboard(rba: rbamaster) {
+    debugger;
     var page = sessionStorage.getItem("userdashboardpage");
     if (page == "Inbound" && rba.gate_entry) {
       this.router.navigateByUrl('WMS/SecurityCheck');

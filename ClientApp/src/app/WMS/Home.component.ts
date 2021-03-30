@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
-import { Employee, userAcessNamesModel } from '../Models/Common.Model';
+import { Employee, userAcessNamesModel, rbamaster } from '../Models/Common.Model';
 import { UserDashboardDetail, UserDashboardGraphModel, ManagerDashboard, pmDashboardCards, invDashboardCards, GraphModelNew} from '../Models/WMS.Model';
 import { wmsService } from '../WmsServices/wms.service';
 import { NgxSpinnerService } from "ngx-spinner";
@@ -21,6 +21,8 @@ export class HomeComponent implements OnInit {
   chartdataPM: any;
   lblmonth: string = "";
   monthlychartdata: any;
+  rbalist: rbamaster[] = [];
+  selectedrba: rbamaster;
   //for receipts
   receivedchartdata: any;
   receivedchartdatalist: GraphModelNew[] = [];
@@ -78,15 +80,27 @@ export class HomeComponent implements OnInit {
   public materialIssueListnofilter: Array<any> = [];
   materialforissuecount: number;
   issecurityoperator: boolean = false;
-  isinventoryinquiry: boolean = false;
-  isinventoryclerk: boolean = false;
-  isinventorymanager: boolean = false;
-  isprojectmanager: boolean = false;
-  isadmin: boolean = false;
-  isapprover: boolean = false;
+  isreceiveuser: boolean = false;
   isqualityuser: boolean = false;
+  isputawayuser: boolean = false;
+  isnotifyuser: boolean = false;
+  isreserveuser: boolean = false;
+  isissueuser: boolean = false;
+  isapprover: boolean = false;
+  isonholduser: boolean = false;
+  iscyclecountuser: boolean = false;
   selectedroleid: number;
   selectedrolename: string = "";
+  roleidforinbound: string = "";
+  roleidforreceipt: string = "";
+  roleidforqualitycheck: string = "";
+  roleidforputaway: string = "";
+  roleidfornoyify: string = "";
+  roleidforreserve: string = "";
+  roleidforapproval: string = "";
+  roleidforissue: string = "";
+  roleidforonhold: string = "";
+  roleidforcyclecount: string = "";
   //page load event
   ngOnInit() {
     debugger;
@@ -99,6 +113,19 @@ export class HomeComponent implements OnInit {
     this.monthlydashboardgraphmodel = [];
     this.monthlydashboardIEgraphmodel = [];
     this.pmdashboardgraphmodel = [];
+    this.rbalist = [];
+    this.selectedrolename = "";
+    this.roleidforinbound = "";
+    this.roleidforreceipt = "";
+    this.roleidforqualitycheck = "";
+    this.roleidforputaway = "";
+    this.roleidfornoyify = "";
+    this.roleidforreserve = "";
+    this.roleidforapproval = "";
+    this.roleidforissue = "";
+    this.roleidforonhold = "";
+    this.roleidforcyclecount = "";
+    this.selectedrba = new rbamaster();
     this.approverstatus = "Pending";
     this.materialforissuecount = 0;
     this.selectedrolename = "";
@@ -165,14 +192,16 @@ export class HomeComponent implements OnInit {
     }];
     this.getdashboarddetail();
     this.setcontroldata();
-    this.getreceivedchartdatalist();
-    this.getqualitychartdatalist();
-    this.getacceptchartdatalist();
-    this.getputawaychartdatalist();
-    this.getrequestdatalist();
-    this.getreturndatalist();
-    this.getreservedatalist();
-    this.gettransferdatalist();
+    ////////////////////////////////////////grapg functions
+    //this.getreceivedchartdatalist();
+   // this.getqualitychartdatalist();
+    //this.getacceptchartdatalist();
+   // this.getputawaychartdatalist();
+    //this.getrequestdatalist();
+    //this.getreturndatalist();
+    //this.getreservedatalist();
+    //this.gettransferdatalist();
+    /////////////////////////////////////////
    // this.defaultactive();
   }
 
@@ -255,61 +284,98 @@ export class HomeComponent implements OnInit {
 
   setcontroldata() {
     this.issecurityoperator = false;
-    this.isinventoryinquiry = false;
-    this.isinventoryclerk = false;
-    this.isinventorymanager = false;
-    this.isprojectmanager = false;
-    this.isadmin = false;
-    this.isapprover = false;
+    this.isreceiveuser = false;
     this.isqualityuser = false;
-    var data1 = this.userrolelist.filter(function (element, index) {
-      return (element.roleid == 1);
-    });
-    var data2 = this.userrolelist.filter(function (element, index) {
-      return (element.roleid == 2);
-    });
-    var data3 = this.userrolelist.filter(function (element, index) {
-      return (element.roleid == 3);
-    });
-    var data4 = this.userrolelist.filter(function (element, index) {
-      return (element.roleid == 4);
-    });
-    var data5 = this.userrolelist.filter(function (element, index) {
-      return (element.roleid == 5);
-    });
-    var data6 = this.userrolelist.filter(function (element, index) {
-      return (element.roleid == 7);
-    });
-    var data7 = this.userrolelist.filter(function (element, index) {
-      return (element.roleid == 8);
-    });
-    var data8 = this.userrolelist.filter(function (element, index) {
-      return (element.roleid == 9);
-    });
-    if (data1.length > 0) {
-      this.issecurityoperator = true;
+    this.isputawayuser = false;
+    this.isnotifyuser = false;
+    this.isreserveuser = false;
+    this.isissueuser = false;
+    this.isapprover = false;
+    this.isonholduser = false;
+    this.iscyclecountuser = false;
+    var found = false;
+   
+    if (localStorage.getItem("rbalist")) {
+      this.rbalist = JSON.parse(localStorage.getItem("rbalist")) as rbamaster[];
+      this.userrolelist.forEach(item => {
+          var dt1 = this.rbalist.filter(function (element, index) {
+            return (element.gate_entry && element.roleid == item.roleid);
+          });
+          if (dt1.length > 0) {
+            this.roleidforinbound = String(dt1[0].roleid);
+            this.issecurityoperator = true;
+        }
+        var dt2 = this.rbalist.filter(function (element, index) {
+          return (element.receive_material && element.roleid == item.roleid);
+        });
+        if (dt2.length > 0) {
+          this.roleidforreceipt = String(dt2[0].roleid);
+          this.isreceiveuser = true;
+        }
+        var dt3 = this.rbalist.filter(function (element, index) {
+          return (element.quality_check && element.roleid == item.roleid);
+        });
+        if (dt3.length > 0) {
+          this.roleidforqualitycheck = String(dt3[0].roleid);
+          this.isqualityuser = true;
+        }
+        var dt4 = this.rbalist.filter(function (element, index) {
+          return (element.put_away && element.roleid == item.roleid);
+        });
+        if (dt4.length > 0) {
+          this.roleidforputaway = String(dt4[0].roleid);
+          this.isputawayuser = true;
+        }
+        var dt5 = this.rbalist.filter(function (element, index) {
+          return (element.notify_to_finance && element.roleid == item.roleid);
+        });
+        if (dt5.length > 0) {
+          this.roleidfornoyify = String(dt5[0].roleid);
+          this.isnotifyuser = true;
+        }
+        var dt6 = this.rbalist.filter(function (element, index) {
+          return (element.material_reservation && element.roleid == item.roleid);
+        });
+        if (dt6.length > 0) {
+          this.roleidforreserve = String(dt6[0].roleid);
+          this.isreserveuser = true;
+        }
+        var dt7 = this.rbalist.filter(function (element, index) {
+          return (element.material_issue && element.roleid == item.roleid);
+        });
+        if (dt7.length > 0) {
+          this.roleidforissue = String(dt7[0].roleid);
+          this.isissueuser = true;
+        }
+        var dt8 = this.rbalist.filter(function (element, index) {
+          return (element.gatepass_approval && element.roleid == item.roleid);
+        });
+        if (dt8.length > 0) {
+          this.roleidforapproval = String(dt8[0].roleid);
+          this.isapprover = true;
+        }
+        var dt9 = this.rbalist.filter(function (element, index) {
+          return (element.receive_material && element.roleid == item.roleid);
+        });
+        if (dt9.length > 0) {
+          this.roleidforonhold = String(dt9[0].roleid);
+          this.isonholduser = true;
+        }
+        var dt10 = this.rbalist.filter(function (element, index) {
+          return (element.cyclecount_approval && element.roleid == item.roleid);
+        });
+        if (dt10.length > 0) {
+          this.roleidforcyclecount = String(dt10[0].roleid);
+          this.iscyclecountuser = true;
+        }
+
+        
+
+      })
+
+
     }
-    if (data2.length > 0) {
-      this.isinventoryinquiry = true;
-    }
-    if (data3.length > 0) {
-      this.isinventoryclerk = true;
-    }
-    if (data4.length > 0) {
-      this.isinventorymanager = true;
-    }
-    if (data5.length > 0) {
-      this.isprojectmanager = true;
-    }
-    if (data6.length > 0) {
-      this.isadmin = true;
-    }
-    if (data7.length > 0) {
-      this.isapprover = true;
-    }
-    if (data8.length > 0) {
-      this.isqualityuser = true;
-    }
+   
 
   }
 
@@ -1182,97 +1248,81 @@ export class HomeComponent implements OnInit {
       sessionStorage.setItem("userdashboardpage", type);
     }
     if (type == "Inbound" && this.issecurityoperator) {
-      if (this.employee.roleid != "1") {
-        this.navigatebyrole("1");
+      if (this.employee.roleid != this.roleidforinbound) {
+        this.navigatebyrole(this.roleidforinbound);
       }
       else {
         this.router.navigateByUrl('WMS/SecurityCheck');
       }
      
     }
-    else if (type == "Receive" && (this.isinventoryclerk || this.isinventorymanager)) {
-      if (this.employee.roleid != "3" && this.employee.roleid != "4") {
-        if (this.isinventorymanager) {
-          this.navigatebyrole("4");
-        }
-        else {
-          this.navigatebyrole("3");
-        }
-        
+    else if (type == "Receive" && (this.isreceiveuser)) {
+      if (this.employee.roleid != this.roleidforreceipt) {
+        this.navigatebyrole(this.roleidforreceipt);
       }
       else {
         this.router.navigateByUrl('WMS/GRNPosting');
       }
     }
     else if (type == "Quality" && this.isqualityuser) {
-      if (this.employee.roleid != "9") {
-        this.navigatebyrole("9");
+      if (this.employee.roleid != this.roleidforqualitycheck) {
+        this.navigatebyrole(this.roleidforqualitycheck);
       }
       else {
         this.router.navigateByUrl('WMS/QualityCheck');
       }
     }
-    else if (type == "Putaway" && (this.isinventoryclerk || this.isinventorymanager)) {
-      if (this.employee.roleid != "3" && this.employee.roleid != "4") {
-        if (this.isinventorymanager) {
-          this.navigatebyrole("4");
-        }
-        else {
-          this.navigatebyrole("3");
-        }
+    else if (type == "Putaway" && (this.isputawayuser)) {
+      if (this.employee.roleid != this.roleidforputaway) {
+        this.navigatebyrole(this.roleidforputaway);
       }
       else {
         this.router.navigateByUrl('WMS/WarehouseIncharge');
       }
     }
-    else if (type == "notify" || type =='onhold' && (this.isinventoryclerk || this.isinventorymanager)) {
-      if (this.employee.roleid != "3" && this.employee.roleid != "4") {
-        if (this.isinventorymanager) {
-          this.navigatebyrole("4");
-        }
-        else {
-          this.navigatebyrole("3");
-        }
+    else if (type == "notify" && this.isnotifyuser) {
+      if (this.employee.roleid != this.roleidfornoyify) {
+        this.navigatebyrole(this.roleidfornoyify);
       }
       else {
-        if (type == "notify") {
-          this.router.navigateByUrl('WMS/Putawaynotify');
-        }
-        if (type == 'onhold') {
-          this.router.navigateByUrl('WMS/HoldGRView');
-        }
-        
+        this.router.navigateByUrl('WMS/Putawaynotify');
       }
     }
-    else if (type == "Reserve" && this.isprojectmanager) {
-      if (this.employee.roleid != "5") {
-        this.navigatebyrole("5");
+    else if (type == 'onhold' && this.isonholduser) {
+      if (this.employee.roleid != this.roleidforonhold) {
+        this.navigatebyrole(this.roleidforonhold);
+      }
+      else {
+          this.router.navigateByUrl('WMS/HoldGRView');
+      }
+    }
+    else if (type == "Reserve" && this.isreserveuser) {
+      if (this.employee.roleid != this.roleidforreserve) {
+        this.navigatebyrole(this.roleidforreserve);
       }
       else {
         this.router.navigateByUrl('WMS/MaterialReserveView');
       }
     }
     else if (type == "Approve" && this.isapprover) {
-      if (this.employee.roleid != "8") {
-        this.navigatebyrole("8");
+      if (this.employee.roleid != this.roleidforapproval) {
+        this.navigatebyrole(this.roleidforapproval);
+      }
+      else {
+        this.router.navigateByUrl('WMS/Home');
       }
     }
-    else if (type == "Issue" && (this.isinventoryclerk || this.isinventorymanager)) {
-      if (this.employee.roleid != "3" && this.employee.roleid != "4") {
-        if (this.isinventorymanager) {
-          this.navigatebyrole("4");
-        }
-        else {
-          this.navigatebyrole("3");
-        }
+    else if (type == "Issue" && this.isissueuser) {
+      if (this.employee.roleid != this.roleidforissue) {
+          this.navigatebyrole(this.roleidforissue);
       }
       else {
         this.router.navigateByUrl('WMS/MaterialIssueDashboard');
       }
     }
-    else if (type == "Count" && this.isinventorymanager) {
-      if (this.employee.roleid != "4") {
-        this.navigatebyrole("4");
+    else if (type == "Count" && this.iscyclecountuser) {
+      if (this.employee.roleid != this.roleidforcyclecount) {
+        this.navigatebyrole(this.roleidforcyclecount);
       }
       else {
         this.router.navigateByUrl('WMS/Cyclecount');
