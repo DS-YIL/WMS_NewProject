@@ -123,6 +123,10 @@ import { MaterilMasterComponent } from './WMS/Admin/Materialmaster.component';
 import { GatePassMasterComponent } from './WMS/Admin/GatePassMaster .component';
 import { PlantMasterComponent } from './WMS/Admin/PlantMaster.component';
 import { MiscellanousComponent } from './WMS/Admin/Miscellanous.component';
+import { RoleMasterComponent } from './WMS/Admin/RoleMaster.component';
+import { SubRoleMasterComponent } from './WMS/Admin/SubRoleMaster.component';
+import { UserRoleMasterComponent } from './WMS/Admin/UserRoleMaster.component';
+import { VendorMasterComponent } from './WMS/Admin/VendorMaster.component';
 import { AssignProjectComponent } from './WMS/AssignProject.component';
 import { AssignProjectManagerComponent } from './WMS/AssignProjectManager.component';
 import { MaterialRequestApprovalComponent } from './WMS/MaterialRequestApproval.component';
@@ -235,6 +239,10 @@ import { KeyFilterModule } from 'primeng/keyfilter';
     PlantMasterComponent,
     InitialStockPutAwayComponent,
     MiscellanousComponent,
+    RoleMasterComponent,
+    SubRoleMasterComponent,
+    UserRoleMasterComponent,
+    VendorMasterComponent,
     StockTransferOrderComponent,
     SubContractTransferOrderComponent,
     ReceiveSubContractRequestComponent,

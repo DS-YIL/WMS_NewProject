@@ -43,7 +43,7 @@ namespace WMS.Interfaces
 		string checkMatExists(string material);
 
 		Task<IEnumerable<MaterialDetails>> getMaterialDetails(string grnNo);
-		
+
 
 		OpenPoModel CheckPoexists(string PONO);
 
@@ -52,19 +52,19 @@ namespace WMS.Interfaces
 		string getstocktype(locataionDetailsStock locdetails);
 		printMaterial generateBarcodeMaterial(printMaterial printMat);
 
-        printMaterial generateBarcodeMatonhold(printMaterial printMat);
+		printMaterial generateBarcodeMatonhold(printMaterial printMat);
 
-        string printBarcodeMaterial(printMaterial printMat);
-        string updateQRcodePrintHistory(printMaterial printMat);
+		string printBarcodeMaterial(printMaterial printMat);
+		string updateQRcodePrintHistory(printMaterial printMat);
 		PrintHistoryModel InsertBarcodeInfo(BarcodeModel dataobj);
-        //int insertInvoicedetails(iwardmasterModel obj);
-        Task<IEnumerable<T>> GetDeatilsForthreeWaymatching(string invoiceno,string pono,bool isgrn, string grnno);
-        Task<IEnumerable<T>> GetDeatilsForholdgr(string status);
-        Task<IEnumerable<T>> Getqualitydetails(string grnnumber);
-        Task<OpenPoModel> VerifythreeWay(string pono,string invoiceno, string type);
-        Task<string> insertquantity(List<inwardModel> datamodel);
-        Task<string> receivequantity(List<inwardModel> datamodel);
-        Task<string> updateonholdrow(updateonhold datamodel);
+		//int insertInvoicedetails(iwardmasterModel obj);
+		Task<IEnumerable<T>> GetDeatilsForthreeWaymatching(string invoiceno, string pono, bool isgrn, string grnno);
+		Task<IEnumerable<T>> GetDeatilsForholdgr(string status);
+		Task<IEnumerable<T>> Getqualitydetails(string grnnumber);
+		Task<OpenPoModel> VerifythreeWay(string pono, string invoiceno, string type);
+		Task<string> insertquantity(List<inwardModel> datamodel);
+		Task<string> receivequantity(List<inwardModel> datamodel);
+		Task<string> updateonholdrow(updateonhold datamodel);
 		string updateinitialstockdata(StockModel datamodel);
 		string updateprojectmember(AssignProjectModel datamodel);
 
@@ -156,7 +156,7 @@ namespace WMS.Interfaces
 		Task<IEnumerable<dropdownModel>> Getlocationdata();
 		Task<IEnumerable<dropdownModel>> Getbindata();
 		Task<IEnumerable<dropdownModel>> Getdestinationlocationforist(int store);
-		
+
 		Task<IEnumerable<dropdownModel>> Getrackdata();
 		Task<IEnumerable<dropdownModel>> Getbindataforputaway();
 		Task<IEnumerable<dropdownModel>> Getrackdataforputaway();
@@ -184,9 +184,9 @@ namespace WMS.Interfaces
 		Task<IEnumerable<invstocktransfermodel>> getstocktransferdatagroup1(string transfertype);
 		Task<IEnumerable<ddlmodel>> pendingreceiptslist();
 		Task<IEnumerable<ddlmodel>> pendingstogr();
-			
+
 		Task<IEnumerable<ddlmodel>> getInitialstockfilename();
-		
+
 		Task<IEnumerable<ddlmodel>> getdepartmentmasterdata();
 		Task<IEnumerable<ddlmodel>> getgrnlistforacceptance();
 		Task<IEnumerable<ddlmodel>> getgrnlistforacceptanceputaway();
@@ -305,7 +305,7 @@ namespace WMS.Interfaces
 		bool miscellanousIssueDataUpdate(miscellanousIssueData data);
 		Task<IEnumerable<StockModel>> getMiscellanousReceiptsList();
 		string updateMiscellanousReceipt(StockModel item);
-	System.Data.DataTable getMaterialMasterList();
+		System.Data.DataTable getMaterialMasterList();
 		bool updateMaterialMaster(materilaMasterYgs material);
 		string GPReasonMTAdd(GPReasonMTData data);
 		string MiscellanousReasonAdd(GPReasonMTData data);
@@ -320,7 +320,7 @@ namespace WMS.Interfaces
 
 		string generateLabel(string labeldata);
 		Task<IEnumerable<invstocktransfermodel>> getSTORequestList(string type);
-		Task<IEnumerable<STOIssueModel>> getMatdetailsbyTransferId(string transferId,string type, string transfertype);
+		Task<IEnumerable<STOIssueModel>> getMatdetailsbyTransferId(string transferId, string type, string transfertype);
 		Task<string> STOPOInitiate(List<STOIssueModel> data);
 		Task<IEnumerable<initialStock>> GetInitialStockPutawayMaterials();
 
@@ -338,7 +338,10 @@ namespace WMS.Interfaces
 		string addupdatestore(locataionDetailsStock store);
 		string addupdaterack(locataionDetailsStock rack);
 		string addupdatebin(locataionDetailsStock bin);
-
+		public bool updateVendorMaster(vendorMaster vendormaster);
+		public bool updateRole(roleMaster roleMaster);
+		public bool updateSubRole(subrolemodel subrolemaster);
+		public bool updateUserRole(userRoles userRoles);
 
 
 	}

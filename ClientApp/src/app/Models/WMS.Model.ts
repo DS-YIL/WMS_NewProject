@@ -434,13 +434,13 @@ export class authUser {
 }
 
 export class AssignProjectModel {
-   projectcode: string;
-   projectmanager: string;
-   projectmanagername: string;
-   projectmember: string;
-   projectmembername: string;
-   modifiedby: string;
-   modifiedon: Date;
+  projectcode: string;
+  projectmanager: string;
+  projectmanagername: string;
+  projectmember: string;
+  projectmembername: string;
+  modifiedby: string;
+  modifiedon: Date;
   projectmemberlist: UserModel[];
   plantid: string;
 }
@@ -618,7 +618,7 @@ export class POReportModel {
   itemlocation: string;
   createddate: Date;
   issuedqty: number;
-	}
+}
 
 export class stocktransfermateriakmodel {
   id: number;
@@ -1008,7 +1008,7 @@ export class MaterialTransaction {
   approvalremarks: string;
   approvedon: Date;
   showtr: boolean = false;
-  approvalcheck: string 
+  approvalcheck: string
 }
 
 export class MaterialTransactionDetail {
@@ -1097,7 +1097,7 @@ export class MateriallabelModel {
 
 
 
-	}
+}
 
 export class grReports {
   wmsgr: string;
@@ -1107,7 +1107,7 @@ export class grReports {
   pono: string;
 }
 
-export class pmDashboardCards{
+export class pmDashboardCards {
   totalmaterialrequest: any;
   issuedmaterialrequest: any;
   pendingmaterialrequest: any;
@@ -1216,3 +1216,34 @@ export class InitialStock {
   isputaway: boolean;
   locations: locationdropdownModel[] = [];
 }
+
+export class VendorMaster {
+  vendorid: number;
+  vendorname: string;
+  vendorcode: string;
+  street: string;
+  contactno: string;
+  faxno: string;
+  emailid: string;
+  updatedby: string;
+}
+export class roleMaster {
+  roleid: number;
+  rolename: string="";
+  subroleid: number;
+  subrolename: string;
+  accessname: string;
+  createdby: string;
+  deleteflag: boolean;
+}
+
+export class userRoles {
+  userid: number;
+  roleid: number;
+  accessname: string;
+  createdby: string;
+  createddate: Date;
+  deleteflag: boolean;
+}
+
+

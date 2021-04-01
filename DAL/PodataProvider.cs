@@ -614,21 +614,21 @@ namespace WMS.DAL
 						   query, null, commandType: CommandType.Text);
 
 					//For F-type get the based on order No.
-					if(objprint.codetype=="F")
-                    {
+					if (objprint.codetype == "F")
+					{
 						string querydata = "select * from wms.st_QTSO where serviceorderno='" + objprint.serviceorderno + "'";
 						objdata = DB.QueryFirstOrDefault<MateriallabelModel>(
 							   querydata, null, commandType: CommandType.Text);
 
-						if(objdata !=null)
-                        {
+						if (objdata != null)
+						{
 							string queryserial = "select * from wms.st_slno_imports where saleorderno='" + objdata.saleorderno + "' and solineitemno= '" + objdata.solineitemno + "' ";
 							objserial = DB.QueryFirstOrDefault<MateriallabelModel>(
 								   queryserial, null, commandType: CommandType.Text);
 						}
-					
 
-						
+
+
 					}
 					//For N-type get data based from st_QTSO based on project definition
 					else if (objprint.codetype == "N")
@@ -649,7 +649,7 @@ namespace WMS.DAL
 
 					}
 					else
-                    {
+					{
 						string queryserial = "select * from wms.st_slno_imports where saleorderno='" + objprint.saleorderno + "' and solineitemno= '" + objprint.solineitemno + "' ";
 						objserial = DB.QueryFirstOrDefault<MateriallabelModel>(
 							   queryserial, null, commandType: CommandType.Text);
@@ -660,7 +660,7 @@ namespace WMS.DAL
 					}
 
 					//Get YGS GR No.
-					string quesryygsgr = "select sapgr from wms.wms_sapgr where wmsgr='" + printMat.grnno +"'";
+					string quesryygsgr = "select sapgr from wms.wms_sapgr where wmsgr='" + printMat.grnno + "'";
 					var ygsgr = DB.QueryFirstOrDefault<string>(
 							   quesryygsgr, null, commandType: CommandType.Text);
 
@@ -674,12 +674,12 @@ namespace WMS.DAL
 							objprint.solineitemno = objprint.solineitemno.PadLeft(6, '0');
 						}
 					}
-					if(objserial!=null)
-                    {
+					if (objserial != null)
+					{
 						objprint.serialno = objserial.serialno ?? "-";
 					}
-					if(objdata!=null)
-                    {
+					if (objdata != null)
+					{
 						objprint.saleordertype = objdata.saleordertype;
 						objprint.customername = objdata.customername;
 						objprint.shipto = objdata.shipto;
@@ -696,40 +696,40 @@ namespace WMS.DAL
 						objprint.custpolineitem = objdata.custpolineitem;
 						objprint.serviceorderno = objdata.serviceorderno;
 					}
-					
+
 					objprint.grnno = printMat.grnno;
 					objprint.ygsgr = ygsgr;
-					objprint.currentdate= DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss");
+					objprint.currentdate = DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss");
 					objprint.noofpieces = printMat.noofpieces;
-                    objprint.boxno = printMat.boxno;
-                    objprint.totalboxes = printMat.totalboxes;
-                    objprint.insprec = "Not Required";
+					objprint.boxno = printMat.boxno;
+					objprint.totalboxes = printMat.totalboxes;
+					objprint.insprec = "Not Required";
 					objprint.order = objprint.saleorderno + "-" + objprint.solineitemno;
-                    objprint.qty = objprint.noofpieces + "/" + printMat.receivedqty + " ST " + objprint.boxno + " OF " + objprint.totalboxes + " BOXES";
-					
+					objprint.qty = objprint.noofpieces + "/" + printMat.receivedqty + " ST " + objprint.boxno + " OF " + objprint.totalboxes + " BOXES";
 
-                }
-                PrintUtilities objprntmat = new PrintUtilities();
-                //generate barcodes in material label
-                //Material barcode
-                printMat.materialbarcode = "./Barcodes/" + objprint.materialid + ".bmp";
-                var content = objprint.materialid;
-                objprint.materialbarcode = objprntmat.generatebarcode(path, content);
 
-                //order barcode
-                printMat.soiembarcode = "./Barcodes/" + objprint.saleorderno + "_" + objprint.solineitemno + ".bmp";
-                content = objprint.saleorderno + "-" + objprint.solineitemno;
-                objprint.soiembarcode = objprntmat.generatebarcode(path, content);
+				}
+				PrintUtilities objprntmat = new PrintUtilities();
+				//generate barcodes in material label
+				//Material barcode
+				printMat.materialbarcode = "./Barcodes/" + objprint.materialid + ".bmp";
+				var content = objprint.materialid;
+				objprint.materialbarcode = objprntmat.generatebarcode(path, content);
 
-                //plant barcode
-                printMat.plantbarcodepath = "./Barcodes/" + objprint.plant + ".bmp";
-                content = objprint.plant;
-                objprint.plantbarcodepath = objprntmat.generatebarcode(path, content);
+				//order barcode
+				printMat.soiembarcode = "./Barcodes/" + objprint.saleorderno + "_" + objprint.solineitemno + ".bmp";
+				content = objprint.saleorderno + "-" + objprint.solineitemno;
+				objprint.soiembarcode = objprntmat.generatebarcode(path, content);
 
-                //sp barcode
-                printMat.storagebarcodepath = "./Barcodes/" + objprint.spbarcode + ".bmp";
-                content = objprint.storagelocation;
-                objprint.storagebarcodepath = objprntmat.generatebarcode(path, content);
+				//plant barcode
+				printMat.plantbarcodepath = "./Barcodes/" + objprint.plant + ".bmp";
+				content = objprint.plant;
+				objprint.plantbarcodepath = objprntmat.generatebarcode(path, content);
+
+				//sp barcode
+				printMat.storagebarcodepath = "./Barcodes/" + objprint.spbarcode + ".bmp";
+				content = objprint.storagelocation;
+				objprint.storagebarcodepath = objprntmat.generatebarcode(path, content);
 
 				//Linkage barcode
 				printMat.linkagebarcodepath = "./Barcodes/" + objprint.linkageno + ".bmp";
@@ -746,7 +746,7 @@ namespace WMS.DAL
 					int qtyinbox = objprint.noofpieces;
 					string matbarcodepath = objprint.materialcodePath;
 					string soitembcpath = objprint.soiembarcode;
-					string plantbarcodepath=objprint.plantbarcodepath;
+					string plantbarcodepath = objprint.plantbarcodepath;
 					string spbarcode = objprint.storagebarcodepath;
 					string linkagebarcodepath = objprint.linkagebarcodepath;
 					var results = DB.ExecuteScalar(insertqueryforinvoice, new
@@ -866,7 +866,7 @@ namespace WMS.DAL
 				//    .Write(content)
 				//    .Save(path + content + ".bmp");
 
-                //printMat.materialcodePath = "./Barcodes/" + content + ".bmp";
+				//printMat.materialcodePath = "./Barcodes/" + content + ".bmp";
 
 
 
@@ -1002,7 +1002,7 @@ namespace WMS.DAL
 			PrintHistoryModel objreprint = new PrintHistoryModel();
 			try
 			{
-				
+
 				//dataobj.docfile = ;
 				using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
 				{
@@ -1880,13 +1880,13 @@ namespace WMS.DAL
 								verify.grnnumber = grnnumber;
 								int id = obj.id;
 								string updateseqnumber = WMSResource.updateseqnumber;
-								
-									var results1 = DB.ExecuteScalar(updateseqnumber, new
-									{
-										grnnextsequence,
-										id,
 
-									});
+								var results1 = DB.ExecuteScalar(updateseqnumber, new
+								{
+									grnnextsequence,
+									id,
+
+								});
 								string wmsgr = grnnumber;
 								string updatedby = info.receivedby;
 								string insertspgr = WMSResource.insertsapGR;
@@ -1898,7 +1898,7 @@ namespace WMS.DAL
 
 								});
 							}
-							
+
 						}
 
 
@@ -2602,7 +2602,7 @@ namespace WMS.DAL
 
 
 
-					
+
 					string insertquery = "INSERT INTO wms.wms_stock(receivedtype,receivedid,stockstatus,pono,binid,rackid ,storeid, vendorid,totalquantity,shelflife,availableqty,";
 					insertquery += "deleteflag,itemlocation,createddate,createdby,materialid,stcktype,lineitemno,poitemdescription,value,unitprice)";
 					insertquery += "VALUES(@receivedtype,@receivedid,@stockstatus,@pono,@binid,@rackid,@storeid,@vendorid,@totalquantity,@shelflife,@availableqty,@deleteflag,";
@@ -4005,7 +4005,7 @@ namespace WMS.DAL
 					pgsql.Open();
 					Trans = pgsql.BeginTransaction();
 
-					
+
 					foreach (assignpmmodel data in datamodel)
 					{
 						string projectmanager = data.selectedemployeeview.employeeno;
@@ -4013,13 +4013,13 @@ namespace WMS.DAL
 						var result1 = pgsql.Execute(insertdataqry, new
 						{
 							projectmanager
-						});	
+						});
 
 					}
 
 					result = "saved";
 					Trans.Commit();
-					
+
 
 
 
@@ -4064,7 +4064,7 @@ namespace WMS.DAL
 					foreach (var item in dataobj)
 					{
 						var createdate = Convert.ToDateTime(item.createddate).ToString("yyyy-MM-dd");
-						string stockquery = "select * from wms.wms_stock where materialid = '" + item.materialid + "' and lower(poitemdescription) = lower('"+item.Materialdescription+"') and availableqty > 0 and itemlocation = '" + item.itemlocation + "' and createddate::DATE = '" + createdate + "' order by itemid";
+						string stockquery = "select * from wms.wms_stock where materialid = '" + item.materialid + "' and lower(poitemdescription) = lower('" + item.Materialdescription + "') and availableqty > 0 and itemlocation = '" + item.itemlocation + "' and createddate::DATE = '" + createdate + "' order by itemid";
 						var stockdata = DB.QueryAsync<StockModel>(stockquery, null, commandType: CommandType.Text);
 						if (stockdata != null)
 						{
@@ -5962,7 +5962,7 @@ namespace WMS.DAL
 
 				try
 				{
-					string query = WMSResource.checkoldmaterialwithstore.Replace("#materialid", materialid).Replace("#store",store).Replace("#desc", description).Replace("#createddate", Convert.ToString(createddate));
+					string query = WMSResource.checkoldmaterialwithstore.Replace("#materialid", materialid).Replace("#store", store).Replace("#desc", description).Replace("#createddate", Convert.ToString(createddate));
 
 
 					pgsql.Open();
@@ -6404,7 +6404,7 @@ namespace WMS.DAL
 
 				try
 				{
-					string query = WMSResource.getitemlocationbystock.Replace("#materialid", material).Replace("#desc", description).Replace("#store",store);
+					string query = WMSResource.getitemlocationbystock.Replace("#materialid", material).Replace("#desc", description).Replace("#store", store);
 					await pgsql.OpenAsync();
 					var data = await pgsql.QueryAsync<IssueRequestModel>(
 					  query, null, commandType: CommandType.Text);
@@ -6472,14 +6472,14 @@ namespace WMS.DAL
 		/// </summary>
 		/// <param name="material"></param>
 		/// <returns></returns>
-		public async Task<IEnumerable<IssueRequestModel>> GetItemlocationListBymterialsourcelocation(string material,string description)
+		public async Task<IEnumerable<IssueRequestModel>> GetItemlocationListBymterialsourcelocation(string material, string description)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
 
 				try
 				{
-					string query = WMSResource.getitemlocationforstocktransfer.Replace("#materialid", material).Replace("#description",description);
+					string query = WMSResource.getitemlocationforstocktransfer.Replace("#materialid", material).Replace("#description", description);
 					await pgsql.OpenAsync();
 					var data = await pgsql.QueryAsync<IssueRequestModel>(
 					  query, null, commandType: CommandType.Text);
@@ -7651,7 +7651,7 @@ namespace WMS.DAL
 					}
 					if (projectcode != null && projectcode != "undefined" && projectcode != "null")
 					{
-						materialrequestquery = materialrequestquery + " and prj.projectcode = '"+ projectcode + "'";
+						materialrequestquery = materialrequestquery + " and prj.projectcode = '" + projectcode + "'";
 					}
 					materialrequestquery = materialrequestquery + " group by  sk.poitemdescription, sk.materialid";
 					await pgsql.OpenAsync();
@@ -7686,7 +7686,7 @@ namespace WMS.DAL
 
 				try
 				{
-					string materialrequestquery = WMSResource.getmaterialstoreserve.Replace("#projectcode",projectcode);
+					string materialrequestquery = WMSResource.getmaterialstoreserve.Replace("#projectcode", projectcode);
 					await pgsql.OpenAsync();
 					var data = await pgsql.QueryAsync<IssueRequestModel>(
 					  materialrequestquery, null, commandType: CommandType.Text);
@@ -8645,7 +8645,7 @@ namespace WMS.DAL
 
 			}
 		}
-		
+
 
 		/*
 		Name of Function : <<getprojectlisttoassign>>  Author :<<Ramesh>>  
@@ -8835,10 +8835,10 @@ namespace WMS.DAL
 					}
 					else
 					{
-						string insertqry = WMSResource.updateStore.Replace("#storeid",store.storeid.ToString());
+						string insertqry = WMSResource.updateStore.Replace("#storeid", store.storeid.ToString());
 						bool? deleteflag = false;
-                        if (store.isactive == false)
-                        {
+						if (store.isactive == false)
+						{
 							deleteflag = true;
 
 						}
@@ -8907,7 +8907,7 @@ namespace WMS.DAL
 								rack.rackname,
 								rack.storeid,
 								rack.createdby
-								
+
 							});
 
 							if (rslt == 0)
@@ -9117,14 +9117,14 @@ namespace WMS.DAL
 					string userquery = "select  * from wms.employee where employeeno='" + empno + "'";
 					User userdata = pgsql.QuerySingle<User>(
 					   userquery, null, commandType: CommandType.Text);
-					if(userdata != null)
-                    {
+					if (userdata != null)
+					{
 						var gid = userdata.globalempno;
-						if(gid != null && gid.Trim() != "")
-                        {
+						if (gid != null && gid.Trim() != "")
+						{
 							globalid = gid;
-                        }
-                    }
+						}
+					}
 					string materialrequestquery = WMSResource.getprojectlist.Replace("#manager", empno);
 
 
@@ -9280,7 +9280,7 @@ namespace WMS.DAL
 								item.returnqty
 
 							});
-							
+
 							if (item.pono.StartsWith("NP"))
 							{
 								string closepoqry = WMSResource.closepoquery.Replace("#pono", item.pono);
@@ -9376,10 +9376,10 @@ namespace WMS.DAL
 					if (pono != null && pono != "null")
 					{
 						materialrequestquery = materialrequestquery.Replace("#pofilter", " and ws.pono = '" + pono + "'");
-						
+
 					}
-                    else
-                    {
+					else
+					{
 						materialrequestquery = materialrequestquery.Replace("#pofilter", string.Empty);
 
 					}
@@ -9405,11 +9405,11 @@ namespace WMS.DAL
 					await pgsql.OpenAsync();
 					var data = await pgsql.QueryAsync<POReportModel>(
 					  materialrequestquery, null, commandType: CommandType.Text);
-					
+
 
 					return data.OrderBy(o => o.pono);
 
-					
+
 
 				}
 				catch (Exception Ex)
@@ -9440,12 +9440,12 @@ namespace WMS.DAL
 					string materialrequestquery = WMSResource.getannexuredata;
 					if (subconno != null && subconno != "null")
 					{
-						materialrequestquery = materialrequestquery + " and wi.transferid = '"+ subconno + "'" ;
+						materialrequestquery = materialrequestquery + " and wi.transferid = '" + subconno + "'";
 
 					}
-					
-					
-					
+
+
+
 					await pgsql.OpenAsync();
 					var data = await pgsql.QueryAsync<stocktransfermateriakmodel>(
 					  materialrequestquery, null, commandType: CommandType.Text);
@@ -9480,7 +9480,7 @@ namespace WMS.DAL
 		Purpose : <<Get Report data>>
 		Review Date :<<>>   Reviewed By :<<>>
 		*/
-		public async Task<IEnumerable<POReportModel>> getPOReportdetail(string materialid, string description, string pono,string querytype,string requesttype, string projectcode, string empno)
+		public async Task<IEnumerable<POReportModel>> getPOReportdetail(string materialid, string description, string pono, string querytype, string requesttype, string projectcode, string empno)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
@@ -9488,19 +9488,19 @@ namespace WMS.DAL
 				{
 					string materialrequestquery = "";
 					if (querytype == "available")
-                    {
-						materialrequestquery = WMSResource.poreportitemlocationAQ.Replace("#materialid",materialid).Replace("#desc",description).Replace("#pono", pono);
+					{
+						materialrequestquery = WMSResource.poreportitemlocationAQ.Replace("#materialid", materialid).Replace("#desc", description).Replace("#pono", pono);
 					}
-					else if(querytype == "issue")
-                    {
-						materialrequestquery = WMSResource.poreportitemlocationIQ.Replace("#materialid", materialid).Replace("#desc", description).Replace("#pono", pono).Replace("#type",requesttype);
+					else if (querytype == "issue")
+					{
+						materialrequestquery = WMSResource.poreportitemlocationIQ.Replace("#materialid", materialid).Replace("#desc", description).Replace("#pono", pono).Replace("#type", requesttype);
 					}
 					else if (querytype == "reserve")
 					{
 						materialrequestquery = WMSResource.poreportitemlocationRQ.Replace("#materialid", materialid).Replace("#desc", description).Replace("#pono", pono);
 					}
 
-					
+
 					if (projectcode != null && projectcode != "null")
 					{
 						materialrequestquery = materialrequestquery.Replace("#projectfilter", " and prj.projectcode = '" + projectcode + "'");
@@ -9523,8 +9523,8 @@ namespace WMS.DAL
 					await pgsql.OpenAsync();
 					var data = await pgsql.QueryAsync<POReportModel>(
 					  materialrequestquery, null, commandType: CommandType.Text);
-					
-					
+
+
 
 					return data.OrderBy(o => o.pono);
 
@@ -10249,7 +10249,7 @@ namespace WMS.DAL
 				try
 				{
 					string materialrequestquery = "select ws.materialid as material,ws.poitemdescription as materialdescription,sum(ws.availableqty) as availableqty from wms.wms_stock ws";
-                           materialrequestquery += " where ws.availableqty > 0 and ws.storeid = " + store+" group by ws.materialid,ws.poitemdescription";
+					materialrequestquery += " where ws.availableqty > 0 and ws.storeid = " + store + " group by ws.materialid,ws.poitemdescription";
 
 					await pgsql.OpenAsync();
 					return await pgsql.QueryAsync<Materials>(
@@ -10505,8 +10505,8 @@ namespace WMS.DAL
 							transfer.sourcelocationcode = data.sourcelocationcode;
 							transfer.destinationlocationcode = data.destinationlocationcode;
 							transfer.status = "Pending";
-							if(transfer.transfertype == "STO" || transfer.transfertype == "SubContract")
-                            {
+							if (transfer.transfertype == "STO" || transfer.transfertype == "SubContract")
+							{
 								transfer.projectcode = data.projectcode;
 								transfer.approverid = data.approverid;
 								transfer.isapprovalrequired = true;
@@ -10521,7 +10521,7 @@ namespace WMS.DAL
 								mailcc = userdata1.email;
 
 							}
-							
+
 							string mainstockinsertqueryy = WMSResource.insertInvStocktransfer;
 							var resultsxx = pgsql.ExecuteScalar(mainstockinsertqueryy, new
 							{
@@ -10547,8 +10547,8 @@ namespace WMS.DAL
 							trsfrid = resultsxx.ToString();
 							crtdby = transfer.transferredby;
 							transfer.transferid = resultsxx.ToString();
-							if(transfer.transfertype == "STO" || transfer.transfertype == "SubContract")
-                            {
+							if (transfer.transfertype == "STO" || transfer.transfertype == "SubContract")
+							{
 								string stogrinsert = WMSResource.insertstosubcontrctgr;
 								var resultsxx1 = pgsql.ExecuteScalar(stogrinsert, new
 								{
@@ -10557,14 +10557,14 @@ namespace WMS.DAL
 
 								});
 							}
-							
+
 
 						}
 
 						if (transfer.sourceplant == transfer.destinationplant)
 						{
 
-							string query = "select * from wms.wms_stock where materialid ='" + stck.materialid + "' and lower(poitemdescription) = '"+stck.materialdescription.ToLower()+"' and  itemlocation = '" + stck.sourcelocation + "' and availableqty > 0 order by itemid";
+							string query = "select * from wms.wms_stock where materialid ='" + stck.materialid + "' and lower(poitemdescription) = '" + stck.materialdescription.ToLower() + "' and  itemlocation = '" + stck.sourcelocation + "' and availableqty > 0 order by itemid";
 
 							var stockdata = pgsql.QueryAsync<StockModel>(query, null, commandType: CommandType.Text);
 							if (stockdata != null)
@@ -10737,14 +10737,14 @@ namespace WMS.DAL
 							//MaterialValuation objs1 = pgsql.QueryFirstOrDefault<MaterialValuation>(
 							//   query2, null, commandType: CommandType.Text);
 							//if(objs1 != null)
-       //                     {
+							//                     {
 							//	if(objs1.value != null && objs1.value != 0 && objs1.quantity != null && objs1.quantity != 0)
-       //                         {
+							//                         {
 							//		value = Math.Abs(Convert.ToDecimal(objs1.value)) / Math.Abs(Convert.ToInt32(objs1.quantity));
 
 							//	}	
-                                
-       //                     }
+
+							//                     }
 
 
 							var resultsxx = pgsql.ExecuteScalar(stockinsertqry, new
@@ -10765,7 +10765,7 @@ namespace WMS.DAL
 
 
 
-						
+
 						Trans.Commit();
 						x++;
 
@@ -10779,10 +10779,10 @@ namespace WMS.DAL
 				}
 			}
 
-			if(requesttyp == "STO" || requesttyp == "SubContract")
-            {
-				
-				
+			if (requesttyp == "STO" || requesttyp == "SubContract")
+			{
+
+
 
 				EmailModel emailmodel = new EmailModel();
 				emailmodel.requestid = trsfrid;
@@ -10790,19 +10790,19 @@ namespace WMS.DAL
 				emailmodel.FrmEmailId = "ramesh.kumar@in.yokogawa.com";
 				emailmodel.ToEmailId = mailto;
 				emailmodel.createddate = DateTime.Now;
-				
+
 				EmailUtilities emailobj = new EmailUtilities();
-				if(requesttyp == "STO")
-                {
+				if (requesttyp == "STO")
+				{
 					emailobj.sendEmail(emailmodel, 29);
 				}
-                else
-                {
+				else
+				{
 					emailobj.sendEmail(emailmodel, 30);
 				}
-				
+
 			}
-			
+
 
 			return loactiontext = "success";
 
@@ -11633,15 +11633,15 @@ namespace WMS.DAL
 					foreach (EmailModel mdl in emailmodels)
 					{
 						EmailUtilities emailobj = new EmailUtilities();
-                        if (mdl.isnextapprover)
-                        {
+						if (mdl.isnextapprover)
+						{
 							emailobj.sendEmail(mdl, 14);
 						}
-                        else
-                        {
+						else
+						{
 							emailobj.sendEmail(mdl, 18);
 						}
-						
+
 					}
 
 
@@ -12045,10 +12045,10 @@ namespace WMS.DAL
 
 								}
 
-								string querypm = "Select Max(projectmanager) as projectmanager from wms.wms_project where  projectcode = '"+projectcode+"' group by projectmanager";
+								string querypm = "Select Max(projectmanager) as projectmanager from wms.wms_project where  projectcode = '" + projectcode + "' group by projectmanager";
 								var rsltt = pgsql.ExecuteScalar(querypm, null);
-								if(rsltt != null)
-                                {
+								if (rsltt != null)
+								{
 									projectmanager = rsltt.ToString();
 								}
 
@@ -12195,7 +12195,7 @@ namespace WMS.DAL
 						});
 
 
-	                }
+					}
 					result = "saved";
 					Trans.Commit();
 				}
@@ -12228,7 +12228,7 @@ namespace WMS.DAL
 				{
 					string materialrequestquery = "select rm.rolename,wr.* from wms.wms_rbamaster wr left outer join wms.rolemaster rm on wr.roleid = rm.roleid order by rm.roleid";
 
-				    await pgsql.OpenAsync();
+					await pgsql.OpenAsync();
 					return await pgsql.QueryAsync<rbamaster>(
 					  materialrequestquery, null, commandType: CommandType.Text);
 
@@ -12786,7 +12786,7 @@ namespace WMS.DAL
 
 							Trans.Commit();
 							EmailModel emailmodel = new EmailModel();
-							emailmodel.returnid = rslt.ToString(); 
+							emailmodel.returnid = rslt.ToString();
 							emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
 							emailmodel.CC = "ramesh.kumar@in.yokogawa.com";
 							EmailUtilities emailobj = new EmailUtilities();
@@ -13470,7 +13470,7 @@ namespace WMS.DAL
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
-				string materialrequestquery = WMSResource.getSTOSubConForApproval.Replace("#reqid", empno).Replace("#type",type);
+				string materialrequestquery = WMSResource.getSTOSubConForApproval.Replace("#reqid", empno).Replace("#type", type);
 
 				try
 				{
@@ -13611,7 +13611,7 @@ namespace WMS.DAL
 					string query = WMSResource.getSTORequestForPutaway;
 					var data = await pgsql.QueryAsync<STORequestdata>(
 					   query, null, commandType: CommandType.Text);
-					
+
 					return data;
 
 				}
@@ -13797,7 +13797,7 @@ namespace WMS.DAL
 				try
 				{
 					await pgsql.OpenAsync();
-					string getpoquery = WMSResource.getPODetailsByProjectCode.Replace("#manager", empno).Replace("#projectcode",projectcode);
+					string getpoquery = WMSResource.getPODetailsByProjectCode.Replace("#manager", empno).Replace("#projectcode", projectcode);
 
 					var objPO = await pgsql.QueryAsync<PODetails>(
 					   getpoquery, null, commandType: CommandType.Text);
@@ -14997,7 +14997,7 @@ namespace WMS.DAL
 							}
 						}
 					}
-					return data.OrderByDescending(o=>o.returnid);
+					return data.OrderByDescending(o => o.returnid);
 
 				}
 				catch (Exception Ex)
@@ -16024,7 +16024,7 @@ Review Date :<<>>   Reviewed By :<<>>
 				try
 				{
 					//string materialrequestquery = WMSResource.invstocktransforSTO;
-					string materialrequestquery = WMSResource.getSTOListForIssue.Replace("#type",type);
+					string materialrequestquery = WMSResource.getSTOListForIssue.Replace("#type", type);
 					await pgsql.OpenAsync();
 					var result = await pgsql.QueryAsync<invstocktransfermodel>(
 					  materialrequestquery, null, commandType: CommandType.Text);
@@ -16049,14 +16049,14 @@ Review Date :<<>>   Reviewed By :<<>>
 		Purpose : <<get stock transferdata>>
 		Review Date :<<>>   Reviewed By :<<>>
 		*/
-		public async Task<WMSHttpResponse> getAvailableQtyBystore(string store,string materialid, string description, string projectcode)
+		public async Task<WMSHttpResponse> getAvailableQtyBystore(string store, string materialid, string description, string projectcode)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
 				try
 				{
 					//string materialrequestquery = WMSResource.invstocktransforSTO;
-					string materialrequestquery = WMSResource.getAvailableqtybyStore.Replace("#store", store).Replace("#material", materialid).Replace("#description", description).Replace("#projectcode",projectcode);
+					string materialrequestquery = WMSResource.getAvailableqtybyStore.Replace("#store", store).Replace("#material", materialid).Replace("#description", description).Replace("#projectcode", projectcode);
 					await pgsql.OpenAsync();
 					var result = await pgsql.QueryAsync<WMSHttpResponse>(
 					  materialrequestquery, null, commandType: CommandType.Text);
@@ -16087,7 +16087,7 @@ Review Date :<<>>   Reviewed By :<<>>
 			{
 				try
 				{
-					string materialrequestquery = WMSResource.getMatdetailsbyTransferId.Replace("#transfertype",transfertype);
+					string materialrequestquery = WMSResource.getMatdetailsbyTransferId.Replace("#transfertype", transfertype);
 					materialrequestquery += " where inv.transferid = '" + transferId + "' ";
 					if (type == "MatIssue")
 					{
@@ -16335,28 +16335,28 @@ Review Date :<<>>   Reviewed By :<<>>
 
 			}
 		}
-		
-			/*
-		Name of Function : <<generateqronhold>>  Author :<<Gayathri>>  
-		Date of Creation <<04-02-2021>>
-		Purpose : <<Generate QRCodes for onhold receipts and save data in db>>
-		<parameter :printonholdGR>
-		Review Date :<<>>   Reviewed By :<<>>
-		*/
+
+		/*
+	Name of Function : <<generateqronhold>>  Author :<<Gayathri>>  
+	Date of Creation <<04-02-2021>>
+	Purpose : <<Generate QRCodes for onhold receipts and save data in db>>
+	<parameter :printonholdGR>
+	Review Date :<<>>   Reviewed By :<<>>
+	*/
 		public printonholdGR generateqronhold(printonholdGR onholdprintdata)
-        {
+		{
 			string path = "";
 			try
-            {
+			{
 				path = Environment.CurrentDirectory + @"\Barcodes\";
 				string inwmasterid = onholdprintdata.gateentryid;
 				//Insert data into wms_printstatusmaterial
 				using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
-				{ 
+				{
 					string getdata = "select * from wms.wms_printstatusmaterial where inwmasterid='" + onholdprintdata.gateentryid + "' and materialid ='" + onholdprintdata.materialid + "'";
 					var dataexists = DB.Execute(getdata);
-					if(dataexists==0)
-                    {
+					if (dataexists == 0)
+					{
 						string insertmatonhold = WMSResource.insertmaterialdetails;
 
 
@@ -16367,15 +16367,15 @@ Review Date :<<>>   Reviewed By :<<>>
 							onholdprintdata.noofprint
 						});
 					}
-				
+
 
 				}
 				PrintUtilities objprint = new PrintUtilities();
 				//generate QRCodes for material and gateentryid and update in db
-				
+
 				string materialpath = objprint.generateqrcode(path, onholdprintdata.materialid);
-				if(materialpath!="Error")
-                {
+				if (materialpath != "Error")
+				{
 					onholdprintdata.materialqrpath = materialpath;
 					//Insert data in db (wms.wms_barcode table)
 					string insertbarcode = WMSResource.insertbarcodedata;
@@ -16398,7 +16398,7 @@ Review Date :<<>>   Reviewed By :<<>>
 
 
 				}
-				string gateentrypath =  objprint.generateqrcode(path, onholdprintdata.gateentryid);
+				string gateentrypath = objprint.generateqrcode(path, onholdprintdata.gateentryid);
 				if (materialpath != "Error")
 				{
 					onholdprintdata.materialqrpath = gateentrypath;
@@ -16427,11 +16427,11 @@ Review Date :<<>>   Reviewed By :<<>>
 
 			}
 			catch (Exception Ex)
-            {
+			{
 				log.ErrorMessage("PODataProvider", "generateqronhold", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 				return null;
 			}
-        }
+		}
 
 
 		/*
@@ -16466,6 +16466,198 @@ Review Date :<<>>   Reviewed By :<<>>
 				}
 
 			}
+		}
+
+
+
+		/*Name of Function : <<UpdateVendorMaster>>  Author :<<Prasanna>>  
+		Date of Creation <<29/03/2021>>
+		Purpose : <<Update VendorMaster >>
+		<param name="type"></param>
+		Review Date :<<>>   Reviewed By :<<>>*/
+
+		public bool updateVendorMaster(vendorMaster vendormaster)
+		{
+			try
+			{
+				DateTime updatedOn = DateTime.Now;
+				using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+				{
+					if (vendormaster.vendorid == null || vendormaster.vendorid == 0)
+					{
+						var insertStorequery = WMSResource.insertVendorMaster;
+						var rslt = pgsql.Execute(insertStorequery, new
+						{
+							vendormaster.vendorname,
+							vendormaster.vendorcode,
+							vendormaster.faxno,
+							vendormaster.contactno,
+							vendormaster.street,
+							vendormaster.emailid,
+							vendormaster.updatedby,
+							updatedOn
+
+						});
+					}
+					else
+					{
+						string updateQry = WMSResource.updateVendorMaster.Replace("#vendorid", Convert.ToString(vendormaster.vendorid));
+
+						var results = pgsql.ExecuteScalar(updateQry, new
+						{
+							vendormaster.vendorname,
+							vendormaster.vendorcode,
+							vendormaster.faxno,
+							vendormaster.contactno,
+							vendormaster.street,
+							vendormaster.emailid,
+							vendormaster.updatedby,
+							updatedOn
+
+						});
+					}
+				}
+			}
+			catch (Exception Ex)
+			{
+				log.ErrorMessage("PODataProvider", "updateVendorMaster", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
+				return false;
+			}
+			return true;
+		}
+		/*Name of Function : <<updateRole>>  Author :<<Prasanna>>  
+		Date of Creation <<29/03/2021>>
+		Purpose : <<Update Role master table>>
+		<param name="type"></param>
+		Review Date :<<>>   Reviewed By :<<>>*/
+		public bool updateRole(roleMaster roleMaster)
+		{
+			try
+			{
+				DateTime createddate = DateTime.Now;
+				using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+				{
+					if (roleMaster.roleid == null || roleMaster.roleid == 0)
+					{
+						var insertStorequery = WMSResource.insertRoleMaster;
+						var rslt = pgsql.Execute(insertStorequery, new
+						{
+							roleMaster.rolename,
+							createddate,
+							roleMaster.createdby
+
+						});
+					}
+					else
+					{
+						string updateQry = WMSResource.updateRoleMaster.Replace("#roleid", Convert.ToString(roleMaster.roleid));
+
+						var results = pgsql.ExecuteScalar(updateQry, new
+						{
+							roleMaster.rolename,
+							createddate,
+							roleMaster.createdby
+						});
+					}
+				}
+			}
+			catch (Exception Ex)
+			{
+				log.ErrorMessage("PODataProvider", "updateRole", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
+				return false;
+			}
+			return true;
+		}
+
+		/*Name of Function : <<updateSubRole>>  Author :<<Prasanna>>  
+		Date of Creation <<29/03/2021>>
+		Purpose : <<Update subRole master table>>
+		<param name="type"></param>
+		Review Date :<<>>   Reviewed By :<<>>*/
+		public bool updateSubRole(subrolemodel subrolemaster)
+		{
+			try
+			{
+				DateTime createddate = DateTime.Now;
+				using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+				{
+					if (subrolemaster.subroleid == null || subrolemaster.subroleid == 0)
+					{
+						var insertStorequery = WMSResource.insertSubRoleMaster;
+						var rslt = pgsql.Execute(insertStorequery, new
+						{
+							subrolemaster.roleid,
+							subrolemaster.subrolename,
+							createddate,
+							subrolemaster.createdby
+						});
+					}
+					else
+					{
+						string updateQry = WMSResource.updateSubRoleMaster.Replace("#subroleid", Convert.ToString(subrolemaster.subroleid));
+
+						var results = pgsql.ExecuteScalar(updateQry, new
+						{
+							subrolemaster.roleid,
+							subrolemaster.subrolename,
+							createddate,
+							subrolemaster.createdby
+						});
+					}
+				}
+			}
+			catch (Exception Ex)
+			{
+				log.ErrorMessage("PODataProvider", "updateSubRole", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
+				return false;
+			}
+			return true;
+		}
+
+		/*Name of Function : <<updateUserRole>>  Author :<<Prasanna>>  
+		Date of Creation <<29/03/2021>>
+		Purpose : <<Update userrole master table>>
+		<param name="type"></param>
+		Review Date :<<>>   Reviewed By :<<>>*/
+		public bool updateUserRole(userRoles userRoles)
+		{
+			try
+			{
+				DateTime createddate = DateTime.Now;
+				using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+				{
+					if (userRoles.userid == null || userRoles.userid == 0)
+					{
+						var insertStorequery = WMSResource.insertUserRole;
+						var rslt = pgsql.Execute(insertStorequery, new
+						{
+							userRoles.roleid,
+							userRoles.accessname,
+							createddate,
+							userRoles.createdby
+						});
+					}
+					else
+					{
+						string updateQry = WMSResource.updateUserRole.Replace("#userid", Convert.ToString(userRoles.userid));
+
+						var results = pgsql.ExecuteScalar(updateQry, new
+						{
+							userRoles.roleid,
+							userRoles.accessname,
+							createddate,
+							userRoles.createdby
+
+						});
+					}
+				}
+			}
+			catch (Exception Ex)
+			{
+				log.ErrorMessage("PODataProvider", "updateUserRole", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
+				return false;
+			}
+			return true;
 		}
 	}
 }
