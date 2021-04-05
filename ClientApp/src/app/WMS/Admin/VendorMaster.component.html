@@ -30,6 +30,7 @@
           <th><input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'emailid', 'contains')"></th>
           <th><input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'street', 'contains')"></th>
           <th></th>
+          <th></th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">

@@ -1980,7 +1980,7 @@ export class NavMenuComponent implements OnInit {
             { label: 'Rack Master', icon: 'pi pi-fw pi-bars', style: { 'width': '250px' }, command: () => this.router.navigateByUrl('WMS/RackMaster') },
             { label: 'Bin Master', icon: 'pi pi-fw pi-bars', style: { 'width': '250px' }, command: () => this.router.navigateByUrl('WMS/BinMaster') },
               { label: 'Role Master', icon: 'pi pi-fw pi-bars', style: { 'width': '250px' }, command: () => this.router.navigateByUrl('WMS/RoleMaster') },
-            { label: 'Sub Role Master', icon: 'pi pi-fw pi-bars', style: { 'width': '250px' }, command: () => this.router.navigateByUrl('WMS/SubRoleMaster') },
+            //{ label: 'Sub Role Master', icon: 'pi pi-fw pi-bars', style: { 'width': '250px' }, command: () => this.router.navigateByUrl('WMS/SubRoleMaster') },
             { label: 'User Role Master', icon: 'pi pi-fw pi-bars', style: { 'width': '250px' }, command: () => this.router.navigateByUrl('WMS/UserRoleMaster') },
             { label: 'Vendor Master', icon: 'pi pi-fw pi-bars', style: { 'width': '250px' }, command: () => this.router.navigateByUrl('WMS/VendorMaster') },
           ]
@@ -2842,7 +2842,7 @@ export class NavMenuComponent implements OnInit {
           { label: 'Rack Master', icon: 'pi pi-fw pi-bars', style: { 'width': '250px' }, command: () => this.router.navigateByUrl('WMS/RackMaster') },
           { label: 'Bin Master', icon: 'pi pi-fw pi-bars', style: { 'width': '250px' }, command: () => this.router.navigateByUrl('WMS/BinMaster') },
             { label: 'Role Master', icon: 'pi pi-fw pi-bars', style: { 'width': '250px' }, command: () => this.router.navigateByUrl('WMS/RoleMaster') },
-          { label: 'Sub Role Master', icon: 'pi pi-fw pi-bars', style: { 'width': '250px' }, command: () => this.router.navigateByUrl('WMS/SubRoleMaster') },
+          //{ label: 'Sub Role Master', icon: 'pi pi-fw pi-bars', style: { 'width': '250px' }, command: () => this.router.navigateByUrl('WMS/SubRoleMaster') },
           { label: 'User Role Master', icon: 'pi pi-fw pi-bars', style: { 'width': '250px' }, command: () => this.router.navigateByUrl('WMS/UserRoleMaster') },
           { label: 'Vendor Master', icon: 'pi pi-fw pi-bars', style: { 'width': '250px' }, command: () => this.router.navigateByUrl('WMS/VendorMaster') },
         ]
