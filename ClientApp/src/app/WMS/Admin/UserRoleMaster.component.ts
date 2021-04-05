@@ -23,6 +23,7 @@ export class UserRoleMasterComponent implements OnInit {
   public RoleList: Array<any> = [];
   public roleid: number = 0;
   public accessname: string;
+  public deleteflag: boolean;
 
   ngOnInit() {
     if (localStorage.getItem("Employee"))
@@ -39,6 +40,7 @@ export class UserRoleMasterComponent implements OnInit {
     this.roleData = new userRoles();
     this.roleid = 0;
     this.accessname = "";
+    this.deleteflag = true;
     this.displayDialog = true;
   }
 
@@ -60,7 +62,7 @@ export class UserRoleMasterComponent implements OnInit {
   getuserRolelist() {
     this.spinner.show();
     this.dynamicData = new DynamicSearchResult();
-    this.dynamicData.query = "Select u.*,rm.rolename,emp.name as name from wms.userroles u inner join wms.rolemaster rm on rm.roleid=u.roleid inner join wms.employee emp on emp.employeeno = u.createdby where u.deleteflag =false or u.deleteflag is null order by u.userid desc";
+    this.dynamicData.query = "Select u.*,rm.rolename,emp.name as name from wms.userroles u inner join wms.rolemaster rm on rm.roleid=u.roleid inner join wms.employee emp on emp.employeeno = u.createdby order by u.userid desc";
     this.wmsService.GetListItems(this.dynamicData).subscribe(data => {
       this.userRoleList = data;
       this.spinner.hide();
@@ -80,7 +82,7 @@ export class UserRoleMasterComponent implements OnInit {
     this.roleData.createdby = this.employee.employeeno;
     this.roleData.roleid = this.roleid;
     this.roleData.accessname = this.accessname;
-    this.roleData.deleteflag = false;;
+    this.roleData.deleteflag = !this.deleteflag;
     this.spinner.show();
     this.wmsService.updateUserRole(this.roleData).subscribe(data => {
       this.spinner.hide();
@@ -100,5 +102,6 @@ export class UserRoleMasterComponent implements OnInit {
     this.roleData = data;
     this.roleid = data.roleid;
     this.accessname = data.accessname;
+    this.deleteflag = !data.deleteflag;
   }
 }

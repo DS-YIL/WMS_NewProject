@@ -26,6 +26,7 @@ export class VendorMasterComponent implements OnInit {
   public contactno: string;
   public faxno: string;
   public emailid: string;
+  public deleteflag: boolean;
 
   ngOnInit() {
     if (localStorage.getItem("Employee"))
@@ -46,6 +47,7 @@ export class VendorMasterComponent implements OnInit {
     this.contactno = "";
     this.faxno = "";
     this.emailid = "";
+    this.deleteflag = true;
     this.displayDialog = true;
   }
 
@@ -57,7 +59,7 @@ export class VendorMasterComponent implements OnInit {
   getVendorlist() {
     this.spinner.show();
     this.dynamicData = new DynamicSearchResult();
-    this.dynamicData.query = "select * from wms.vendormaster where deleteflag =false order by vendorid desc";
+    this.dynamicData.query = "select * from wms.vendormaster order by vendorid desc";
     this.wmsService.GetListItems(this.dynamicData).subscribe(data => {
       this.vendorList = data;
       this.spinner.hide();
@@ -79,6 +81,7 @@ export class VendorMasterComponent implements OnInit {
     this.vendorDetails.contactno = this.contactno;
     this.vendorDetails.faxno = this.faxno;
     this.vendorDetails.emailid = this.emailid;
+    this.vendorDetails.deleteflag = !this.deleteflag;
     this.vendorDetails.updatedby = this.employee.employeeno;
     this.spinner.show();
     this.wmsService.updateVendorMaster(this.vendorDetails).subscribe(data => {
@@ -104,6 +107,7 @@ export class VendorMasterComponent implements OnInit {
     this.contactno = vendor.contactno;
     this.faxno = vendor.faxno;
     this.emailid = vendor.emailid;
+    this.deleteflag = !vendor.deleteflag;
   }
 
 

@@ -20,6 +20,9 @@ export class RoleMasterComponent implements OnInit {
   public displayDialog: boolean = false;
   public roleList: Array<any> = [];
   public dynamicData: DynamicSearchResult;
+  public rolename: string;
+  public deleteflag: boolean;
+
 
   ngOnInit() {
     if (localStorage.getItem("Employee"))
@@ -32,6 +35,8 @@ export class RoleMasterComponent implements OnInit {
 
   opengpDialogue() {
     this.roleData = new roleMaster();
+    this.rolename = ""
+    this.deleteflag = true;
     this.displayDialog = true;
   }
 
@@ -44,7 +49,7 @@ export class RoleMasterComponent implements OnInit {
   getRolelist() {
     this.spinner.show();
     this.dynamicData = new DynamicSearchResult();
-    this.dynamicData.query = "select rm.*,emp.name as name from wms.rolemaster rm inner join wms.employee emp on emp.employeeno = rm.createdby where rm.deleteflag =false or rm.deleteflag is null order by roleid desc";
+    this.dynamicData.query = "select rm.*,emp.name as name from wms.rolemaster rm inner join wms.employee emp on emp.employeeno = rm.createdby  order by roleid desc";
     this.wmsService.GetListItems(this.dynamicData).subscribe(data => {
       this.roleList = data;
       this.spinner.hide();
@@ -52,11 +57,13 @@ export class RoleMasterComponent implements OnInit {
   }
 
   onroleSubmit() {
-    if (!this.roleData.rolename) {
+    if (!this.rolename) {
       this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Enter Role Name' });
       return;
     }
     this.roleData.createdby = this.employee.employeeno;
+    this.roleData.rolename = this.rolename;
+    this.roleData.deleteflag = !this.deleteflag ;
     this.spinner.show();
     this.wmsService.updateRole(this.roleData).subscribe(data => {
       this.spinner.hide();
@@ -74,7 +81,10 @@ export class RoleMasterComponent implements OnInit {
 
   editRole(data: any) {
     this.displayDialog = true;
-    this.roleData = data;
+    this.roleData = new roleMaster();
+    this.roleData.roleid = data.roleid;
+    this.rolename = data.rolename;
+    this.deleteflag = !data.deleteflag;
   }
 
 }

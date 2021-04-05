@@ -1226,6 +1226,7 @@ export class VendorMaster {
   faxno: string;
   emailid: string;
   updatedby: string;
+  deleteflag: boolean;
 }
 export class roleMaster {
   roleid: number;

@@ -16495,7 +16495,8 @@ Review Date :<<>>   Reviewed By :<<>>
 							vendormaster.street,
 							vendormaster.emailid,
 							vendormaster.updatedby,
-							updatedOn
+							updatedOn,
+							vendormaster.deleteflag
 
 						});
 					}
@@ -16512,7 +16513,8 @@ Review Date :<<>>   Reviewed By :<<>>
 							vendormaster.street,
 							vendormaster.emailid,
 							vendormaster.updatedby,
-							updatedOn
+							updatedOn,
+							vendormaster.deleteflag
 
 						});
 					}
@@ -16544,7 +16546,8 @@ Review Date :<<>>   Reviewed By :<<>>
 						{
 							roleMaster.rolename,
 							createddate,
-							roleMaster.createdby
+							roleMaster.createdby,
+							roleMaster.deleteflag
 
 						});
 					}
@@ -16556,7 +16559,8 @@ Review Date :<<>>   Reviewed By :<<>>
 						{
 							roleMaster.rolename,
 							createddate,
-							roleMaster.createdby
+							roleMaster.createdby,
+							roleMaster.deleteflag
 						});
 					}
 				}
@@ -16589,7 +16593,8 @@ Review Date :<<>>   Reviewed By :<<>>
 							subrolemaster.roleid,
 							subrolemaster.subrolename,
 							createddate,
-							subrolemaster.createdby
+							subrolemaster.createdby,
+							subrolemaster.deleteflag
 						});
 					}
 					else
@@ -16601,7 +16606,8 @@ Review Date :<<>>   Reviewed By :<<>>
 							subrolemaster.roleid,
 							subrolemaster.subrolename,
 							createddate,
-							subrolemaster.createdby
+							subrolemaster.createdby,
+							subrolemaster.deleteflag
 						});
 					}
 				}
@@ -16634,7 +16640,8 @@ Review Date :<<>>   Reviewed By :<<>>
 							userRoles.roleid,
 							userRoles.accessname,
 							createddate,
-							userRoles.createdby
+							userRoles.createdby,
+							userRoles.deleteflag
 						});
 					}
 					else
@@ -16646,7 +16653,8 @@ Review Date :<<>>   Reviewed By :<<>>
 							userRoles.roleid,
 							userRoles.accessname,
 							createddate,
-							userRoles.createdby
+							userRoles.createdby,
+							userRoles.deleteflag
 
 						});
 					}

@@ -2917,7 +2917,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO wms.rolemaster(roleid,rolename,createddate,createdby )VALUES(default,@rolename,@createddate,@createdby).
+        ///   Looks up a localized string similar to INSERT INTO wms.rolemaster(roleid,rolename,createddate,createdby,deleteflag )VALUES(default,@rolename,@createddate,@createdby,@deleteflag).
         /// </summary>
         public static string insertRoleMaster {
             get {
@@ -2977,7 +2977,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO wms.subrolemaster(subroleid,roleid,subrolename,createddate,createdby)VALUES(default,@roleid,@subrolename,@createddate,@createdby).
+        ///   Looks up a localized string similar to INSERT INTO wms.subrolemaster(subroleid,roleid,subrolename,createddate,createdby,deleteflag)VALUES(default,@roleid,@subrolename,@createddate,@createdby,@deleteflag).
         /// </summary>
         public static string insertSubRoleMaster {
             get {
@@ -3015,8 +3015,8 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO wms.userroles (userid,roleid, accessname , createddate ,createdby )
-        ///VALUES(default, @roleid,@accessname,@createddate,@createdby).
+        ///   Looks up a localized string similar to INSERT INTO wms.userroles (userid,roleid, accessname , createddate ,createdby,deleteflag )
+        ///VALUES(default, @roleid,@accessname,@createddate,@createdby,deleteflag).
         /// </summary>
         public static string insertUserRole {
             get {
@@ -3025,8 +3025,8 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO wms.vendormaster (vendorid, vendorcode , vendorname ,faxno ,contactno ,street ,emailid,updatedby,updatedon )
-        ///VALUES(default, @vendorcode,@vendorname,@faxno,@contactno,@street,@emailid,@updatedby,@updatedon).
+        ///   Looks up a localized string similar to INSERT INTO wms.vendormaster (vendorid, vendorcode , vendorname ,faxno ,contactno ,street ,emailid,updatedby,updatedon,deleteflag )
+        ///VALUES(default, @vendorcode,@vendorname,@faxno,@contactno,@street,@emailid,@updatedby,@updatedon,@deleteflag).
         /// </summary>
         public static string insertVendorMaster {
             get {
@@ -3817,7 +3817,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to UPDATE  wms.rolemaster set  rolename=@rolename,createddate = @createddate,createdby = @createdby where roleid =&apos;#roleid&apos;.
+        ///   Looks up a localized string similar to UPDATE  wms.rolemaster set  rolename=@rolename,createddate = @createddate,createdby = @createdby,deleteflag=@deleteflag where roleid =&apos;#roleid&apos;.
         /// </summary>
         public static string updateRoleMaster {
             get {
@@ -3892,7 +3892,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to UPDATE  wms.subrolemaster set  roleid=@roleid,subrolename=@subrolename,createddate = @createddate,createdby = @createdby where subroleid =&apos;#subroleid&apos;.
+        ///   Looks up a localized string similar to UPDATE  wms.subrolemaster set  roleid=@roleid,subrolename=@subrolename,createddate = @createddate,createdby = @createdby,deleteflag=@deleteflag where subroleid =&apos;#subroleid&apos;.
         /// </summary>
         public static string updateSubRoleMaster {
             get {
@@ -3929,7 +3929,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to UPDATE  wms.userroles set  roleid=@roleid,accessname=@accessname,createddate = @createddate,createdby = @createdby where userid =&apos;#userid&apos;.
+        ///   Looks up a localized string similar to UPDATE  wms.userroles set  roleid=@roleid,accessname=@accessname,createddate = @createddate,createdby = @createdby,deleteflag=@deleteflag where userid =&apos;#userid&apos;.
         /// </summary>
         public static string updateUserRole {
             get {
@@ -3939,7 +3939,7 @@ namespace WMS.Common {
         
         /// <summary>
         ///   Looks up a localized string similar to UPDATE  wms.vendormaster set  vendorcode=@vendorcode,vendorname = @vendorname,faxno = @faxno,contactno=@contactno,street=@street,
-        ///emailid=@emailid,updatedby=@updatedby,updatedon =@updatedon where vendorid =&apos;#vendorid&apos;.
+        ///emailid=@emailid,updatedby=@updatedby,updatedon =@updatedon,deleteflag=@deleteflag where vendorid =&apos;#vendorid&apos;.
         /// </summary>
         public static string updateVendorMaster {
             get {

@@ -2347,6 +2347,7 @@ public class vendorMaster
 	public string emailid { get; set; }
 	public string updatedby { get; set; }
 	public DateTime updatedon { get; set; }
+	public bool deleteflag { get; set; }
 }
 
 public class roleMaster
@@ -2355,15 +2356,18 @@ public class roleMaster
 	public string rolename { get; set; }
 	public string createdby { get; set; }
 	public DateTime createddate { get; set; }
+	public bool deleteflag { get; set; }
 }
 
 
 
 
-public class userRoles{
+public class userRoles
+{
 	public int userid { get; set; }
 	public int roleid { get; set; }
 	public string accessname { get; set; }
 	public string createdby { get; set; }
 	public DateTime createddate { get; set; }
+	public bool deleteflag { get; set; }
 }
