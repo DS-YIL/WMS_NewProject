@@ -251,7 +251,7 @@
               </div>
 
               <div *ngIf="showtable">
-                <p-table *ngIf="showPoList" [value]="currentDatePoList" [style]="{'width':'95%','height':'80%','overflow':'auto!important','box-shadow' : '5px 5px #888888'}">
+                <p-table *ngIf="showPoList" [value]="currentDatePoList" [style]="{'width':'98%','height':'80%','overflow':'auto!important','box-shadow' : '5px 5px #888888'}">
                   <ng-template pTemplate="header">
                     <tr class="sectbldata1" style="background-color:aqua !important">
                       <th class="ptable-cell" style="text-align:center;width:10%;">Sl.No.</th>
@@ -275,7 +275,7 @@
                 </p-table>
               </div>
               <div *ngIf="showreceivedtable" style="margin-top:10px;">
-                <p-table *ngIf="showreceivedPoList" [value]="currentDatePoReceivedList" [style]="{'width':'95%','height':'80%','overflow':'auto!important','box-shadow' : '5px 5px #888888'}">
+                <p-table *ngIf="showreceivedPoList" [value]="currentDatePoReceivedList" [style]="{'width':'98%','height':'80%','overflow':'auto!important','box-shadow' : '5px 5px #888888'}">
                   <ng-template pTemplate="header">
                     <tr class="sectbldata">
                       <th class="ptable-cell" style="text-align:center;width:10%;">Sl.No.</th>
@@ -283,6 +283,7 @@
                       <th class="ptable-cell" style="text-align:center;width:20%;">Invoice No.</th>
                       <th class="ptable-cell" style="text-align:center">Supplier Name</th>
                       <th class="ptable-cell" style="text-align:center;width:20%;">Received By</th>
+                      <th class="ptable-cell" style="text-align:center;width:8%;"></th>
                       <!--<th class="ptable-cell" style="text-align:center">Delivery Date</th>-->
                     </tr>
                   </ng-template>
@@ -290,15 +291,16 @@
                     <tr>
                       <td class="ptable-cell" style="text-align:center;width:10%;"> {{ri+1}} </td>
                       <td class="ptable-cell" style="text-align:center;width:20%;"> {{rowData.pono}}</td>
-                      <td class="ptable-cell" style="text-align:left;width:20%;"> {{rowData.invoiceno}} </td>
+                      <td class="ptable-cell" style="text-align:left;width:20%;"> {{rowData.invoiceno}}</td>
                       <td class="ptable-cell" style="text-align:left">
                         {{rowData.suppliername}}
                       </td>
                       <td class="ptable-cell" style="text-align:left;width:20%;">{{rowData.receivedby}}</td>
+                      <td class="ptable-cell" style="text-align:center;width:8%;"><button class="btn btn-primary" (click)="printbarcodeafterreceive(rowData)"><i class="fa fa-print" pTooltip="Print Gate Entry Label"></i></button></td>
 </ng-template>
                   <ng-template pTemplate="emptymessage">
                     <tr>
-                      <td colspan="5" style="text-align:center;color:red">No received notifications for today.</td>
+                      <td colspan="6" style="text-align:center;color:red">No received notifications for today.</td>
                     </tr>
                   </ng-template>
                 </p-table>

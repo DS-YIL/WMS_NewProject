@@ -790,8 +790,8 @@ namespace WMS.Common {
         ///and (istk.material = &apos;&apos;) IS NOT True 
         ///and (istk.materialdescription = &apos;&apos;) IS NOT True
         ///and  istk.quantity &lt;&gt; 0 and istk.quantity is NOT NULL
-        ///and  istk.value &lt;&gt; 0::money and istk.value is NOT NULL
-        ///and (istk.projectid = &apos;&apos;) IS NOT [rest of string was truncated]&quot;;.
+        ///and  istk.value::NUMERIC &lt;&gt; 0 and istk.value is NOT NULL
+        ///and (istk.projectid = &apos;&apos;) IS N [rest of string was truncated]&quot;;.
         /// </summary>
         public static string getfilenamesforis {
             get {
@@ -2169,7 +2169,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select sl.pono,emp.name as receivedby,sl.asnno as asn,sl.invoiceno,sl.suppliername
+        ///   Looks up a localized string similar to select sl.inwmasterid,sl.pono,sl.invoicedate,sl.vehicleno ,sl.transporterdetails ,emp.name as receivedby,sl.asnno as asn,sl.invoiceno,sl.suppliername
         ///from wms.wms_securityinward sl 
         ///left outer join wms.employee emp on sl.receivedby = emp.employeeno.
         /// </summary>

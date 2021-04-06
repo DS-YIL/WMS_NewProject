@@ -1366,6 +1366,10 @@ namespace WMS.Models
 		public string receivedby { get; set; }
 
 		public string invoiceno { get; set; }
+		public string inwmasterid { get; set; }
+		public DateTime? invoicedate { get; set; }
+		public string vehicleno { get; set; }
+		public string transporterdetails { get; set; }
 
 		public string asn { get; set; }
 

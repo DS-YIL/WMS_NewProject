@@ -71,6 +71,7 @@ export class SecurityHomeComponent implements OnInit {
     this.deliverycount = "0";
     this.receivedcount = "0";
     this.todatsdate = new Date();
+    this.PrintHistoryModel = new PrintHistoryModel();
     this.router.events.pipe(
       filter((event: RouterEvent) => event instanceof NavigationEnd)
     ).subscribe(() => {
@@ -96,14 +97,16 @@ export class SecurityHomeComponent implements OnInit {
 
   //page refresh functionality
   refresh() {
+    this.disSaveBtn = false;
+    this.showDetails = false;
+    this.showPrintBtn = false;
     this.PoDetails = new PoDetails();
     this.Poinvoicedetails = new PoDetails();
     this.nonporemarks = "";
     this.transportdetails = "";
     this.searchdata = "";
     this.selecteddept = null;
-    this.disSaveBtn = false;
-    this.showDetails = false;
+   
   }
 
   getsuppliername(data: any) {
@@ -262,9 +265,16 @@ export class SecurityHomeComponent implements OnInit {
   SearchPoNo() {
     debugger;
     this.multiplepo = false;
+    this.Poinvoicedetails.vendorname = "";
+    this.Poinvoicedetails.vehicleno = "";
+    this.Poinvoicedetails.invoiceno = "";
+    this.transportdetails = "";
+    this.nonporemarks = "";
+    this.PoDetails.pono = "";
     this.selectedPOs = [];
     if (this.searchdata) {
       this.disSaveBtn = false;
+      this.showPrintBtn = false;
       this.spinner.show();
       this.wmsService.getPoDetails(this.searchdata).subscribe(data => {
         this.spinner.hide();
@@ -449,6 +459,32 @@ export class SecurityHomeComponent implements OnInit {
 
   //print barcode for created invoice
 
+  printbarcodeafterreceive(data: any) {
+    debugger;
+    //this.spinner.show();
+    this.PrintHistoryModel.reprintedby = this.employee.employeeno;
+    this.PrintHistoryModel.inwmasterid = data.inwmasterid;
+    this.PrintHistoryModel.pono = data.pono;
+    this.PrintHistoryModel.gateentrytime = data.invoicedate;
+    this.PrintHistoryModel.vehicleno = data.vehicleno;
+    this.PrintHistoryModel.transporterdetails = data.transporterdetails;
+
+
+
+    this.wmsService.printBarcode(this.PrintHistoryModel).subscribe(data => {
+      this.spinner.hide();
+      debugger;
+      if (data == "success") {
+        this.messageService.add({ severity: 'success', summary: '', detail: 'QRCode Printed Successfully' });
+      }
+      else {
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Error while printing QRCode' });
+      }
+    })
+
+  }
+
+
   printbarcode() {
     this.spinner.show();
     debugger;
@@ -492,16 +528,17 @@ export class SecurityHomeComponent implements OnInit {
       this.spinner.hide();
       debugger;
       if (data == "success") {
+        this.refresh()
         this.messageService.add({ severity: 'success', summary: '', detail: 'QRCode Printed Successfully' });
-        this.print = "Re-Print Barcode";
-        if (this.pono.startswith("NP")) {
-          this.showPrintBtn = false;
-          this.refresh();
-        }
-        else {
+        ////this.print = "Re-Print Barcode";
+        //if (this.pono.startswith("NP")) {
+        //  this.showPrintBtn = false;
+        //  this.refresh();
+        //}
+        //else {
           
-          this.refresh();
-        }
+        //  this.refresh();
+        //}
         
       }
       else {

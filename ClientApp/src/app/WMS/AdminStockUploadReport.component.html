@@ -187,7 +187,7 @@
       </div>
       <div class="col-lg-5 col-md-5 col-sm-6">
         <span *ngIf="isstore">{{editStockModel.locatorname}}</span>
-        <input *ngIf="!isstore" type="text" [(ngModel)]="editStockModel.locatorname" class="form-control" />
+        <input *ngIf="!isstore" type="text" [(ngModel)]="editStockModel.locatorname" class="form-control" readonly/>
       </div>
 
     </div>
@@ -197,7 +197,7 @@
       </div>
       <div class="col-lg-5 col-md-5 col-sm-6">
         <span *ngIf="israck">{{editStockModel.racknumber}}</span>
-        <input *ngIf="!israck" type="text" [(ngModel)]="editStockModel.racknumber" class="form-control" />
+        <input *ngIf="!israck" type="text" [(ngModel)]="editStockModel.racknumber" class="form-control" readonly/>
       </div>
 
     </div>
@@ -207,7 +207,7 @@
       </div>
       <div class="col-lg-5 col-md-5 col-sm-6">
         <span *ngIf="isbin">{{editStockModel.binnumber}}</span>
-        <input *ngIf="!isbin" type="text" [(ngModel)]="editStockModel.binnumber" class="form-control" />
+        <input *ngIf="!isbin" type="text" [(ngModel)]="editStockModel.binnumber" class="form-control" readonly/>
 
       </div>
 
