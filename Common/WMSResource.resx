@@ -502,7 +502,7 @@ where sk.availableqty &gt; 0 and (prj.projectmanager = '#manager' or prj.project
   group by req.requestforissueid,iss.materialissueid</value>
   </data>
   <data name="getsecurityreceivedlist" xml:space="preserve">
-    <value>select sl.pono,emp.name as receivedby,sl.asnno as asn,sl.invoiceno,sl.suppliername
+    <value>select sl.inwmasterid,sl.pono,sl.invoicedate,sl.vehicleno ,sl.transporterdetails ,emp.name as receivedby,sl.asnno as asn,sl.invoiceno,sl.suppliername
 from wms.wms_securityinward sl 
 left outer join wms.employee emp on sl.receivedby = emp.employeeno</value>
   </data>
@@ -1793,7 +1793,7 @@ and istk.stockid not in (select distinct receivedid::integer from wms.wms_stock 
 and (istk.material = '') IS NOT True 
 and (istk.materialdescription = '') IS NOT True
 and  istk.quantity &lt;&gt; 0 and istk.quantity is NOT NULL
-and  istk.value &lt;&gt; 0::money and istk.value is NOT NULL
+and  istk.value::NUMERIC &lt;&gt; 0 and istk.value is NOT NULL
 and (istk.projectid = '') IS NOT True
 and (istk.pono = '') IS NOT True</value>
   </data>

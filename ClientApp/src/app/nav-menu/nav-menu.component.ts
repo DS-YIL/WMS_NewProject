@@ -2061,17 +2061,6 @@ export class NavMenuComponent implements OnInit {
       if (rba.asn_view) {
 
       }
-      if (rba.internal_stock_transfer) {
-        this.items.push({ label: 'Internal Stock Transfer', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/Stocktransfer') });
-
-      }
-      if (rba.assign_pm) {
-        this.items.push({ label: 'Assign Project', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/AssignProject') });
-       
-      }
-      if (rba.annexure_report) {
-        this.items.push({ label: 'Sub Contract Annexure', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/AnnexureReport') });
-      }
       if (rba.miscellanous) {
         this.items.push({
           label: 'Miscellanous', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars',
@@ -2098,6 +2087,18 @@ export class NavMenuComponent implements OnInit {
         });
 
       }
+      if (rba.internal_stock_transfer) {
+        this.items.push({ label: 'Internal Stock Transfer', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/Stocktransfer') });
+
+      }
+      if (rba.assign_pm) {
+        this.items.push({ label: 'Assign Project', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/AssignProject') });
+       
+      }
+      if (rba.annexure_report) {
+        this.items.push({ label: 'Sub Contract Annexure', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/AnnexureReport') });
+      }
+     
       let element1x: HTMLDivElement = document.getElementById("menudiv") as HTMLDivElement;
       element1x.hidden = false;
       if (!isNullOrUndefined(eurl) && eurl != "") {
