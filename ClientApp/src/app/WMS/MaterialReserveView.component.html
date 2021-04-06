@@ -185,7 +185,7 @@
   </div>-->
     <div class="col-lg-4 col-md-4 form-inline">
       <label class="labelheading">Project :</label>
-      <p-autoComplete [(ngModel)]="selectedproject" field="text" appendTo="body" [suggestions]="filteredprojects" (onSelect)="projectSelected($event)" placeholder="search by name/code" [ngModelOptions]="{standalone: true}" [forceSelection]="true" (completeMethod)="filterprojects($event)" [size]="30"
+      <p-autoComplete [(ngModel)]="selectedproject" field="text" appendTo="body" [suggestions]="filteredprojects" (onSelect)="projectSelected()" placeholder="search by name/code" [ngModelOptions]="{standalone: true}" [forceSelection]="true" (completeMethod)="filterprojects($event)" [size]="30"
                       [dropdown]="true"></p-autoComplete>
     </div>
     <div class="col-lg-4 col-md-4 form-inline">

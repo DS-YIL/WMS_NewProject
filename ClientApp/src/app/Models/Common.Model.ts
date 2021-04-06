@@ -120,7 +120,8 @@ export class printMaterial {
   customer: any;
 
   partno: any;
-
+  codetype: any;
+  shippingpoint: any;
 }
 
 export class searchParams {

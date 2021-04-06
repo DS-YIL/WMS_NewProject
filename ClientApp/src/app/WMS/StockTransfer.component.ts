@@ -59,6 +59,12 @@ export class StockTransferComponent implements OnInit {
   destlocationlist: locationdropdownModel[];
  
   combomaterial: Materials[];
+  locationlist: Array<any> = [];
+  racklist: Array<any> = [];
+  selectedrack: any;
+  binlist: Array<any> = [];
+  selectedbin: any;
+  selectedlocation: any;
 
   ngOnInit() {
     if (localStorage.getItem("Employee"))
@@ -701,6 +707,8 @@ export class StockTransferComponent implements OnInit {
       // }
     });
   }
+  cancektranferlocation() {
 
+  }
 
 }
