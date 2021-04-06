@@ -1153,7 +1153,7 @@ namespace WMS.Models
 	}
 
 	public class MaterialValuation
-    {
+	{
 		public int id { get; set; }
 		public string projectcode { get; set; }
 		public string pono { get; set; }
@@ -1163,7 +1163,7 @@ namespace WMS.Models
 		public decimal? value { get; set; }
 		public string referenceno { get; set; }
 		public decimal? quantity { get; set; }
-		public string currency  { get; set; }
+		public string currency { get; set; }
 		public string potext { get; set; }
 		public string uploadcode { get; set; }
 		public string filename { get; set; }
@@ -1478,7 +1478,7 @@ public class invstocktransfermodel
 	public bool? isapprovalrequired { get; set; }
 	public bool? isapproved { get; set; }
 	public DateTime? approvedon { get; set; }
-	public string approvalremarks{ get; set; }
+	public string approvalremarks { get; set; }
 	public bool? showtr { get; set; }
 	public string approvalcheck { get; set; }
 	public string approvedstatus { get; set; }
@@ -1639,7 +1639,7 @@ public class STOrequestTR
 	public decimal? issuedqty { get; set; }
 	public decimal? totalquantity { get; set; }
 	public decimal? putawayqty { get; set; }
-	public int itemid  { get;set;}
+	public int itemid { get; set; }
 	public decimal? availableqty { get; set; }
 	public bool isissued { get; set; }
 
@@ -1692,7 +1692,7 @@ public class assignpmmodel
 	public string projectmanager { get; set; }
 	public string selectedemployee { get; set; }
 	public User selectedemployeeview { get; set; }
-	
+
 }
 
 public class materialistModel
@@ -1794,7 +1794,7 @@ public class UserDashboardDetail
 	public int pendingcyclecountapproval { get; set; }
 	public int pendingnotifytofinance { get; set; }
 	public int pendingonhold { get; set; }
-	
+
 }
 
 public class testcrud
@@ -1971,9 +1971,9 @@ public class MaterialTransaction
 	public DateTime? requestedon { get; set; }
 	public string chkstatus { get; set; }
 	public bool isapprovalrequired { get; set; }
-	public bool? isapproved  { get; set; }
-    public string approvalremarks { get; set; }
-    public DateTime? approvedon { get; set; }
+	public bool? isapproved { get; set; }
+	public string approvalremarks { get; set; }
+	public DateTime? approvedon { get; set; }
 	public string approvalcheck { get; set; }
 }
 
@@ -2339,4 +2339,39 @@ public class printonholdGR
 	public string createdby { get; set; }
 	public DateTime createddate { get; set; }
 
+}
+public class vendorMaster
+{
+	public int vendorid { get; set; }
+	public string vendorname { get; set; }
+	public string vendorcode { get; set; }
+	public string street { get; set; }
+	public string contactno { get; set; }
+	public string faxno { get; set; }
+	public string emailid { get; set; }
+	public string updatedby { get; set; }
+	public DateTime updatedon { get; set; }
+	public bool deleteflag { get; set; }
+}
+
+public class roleMaster
+{
+	public int roleid { get; set; }
+	public string rolename { get; set; }
+	public string createdby { get; set; }
+	public DateTime createddate { get; set; }
+	public bool deleteflag { get; set; }
+}
+
+
+
+
+public class userRoles
+{
+	public int userid { get; set; }
+	public int roleid { get; set; }
+	public string accessname { get; set; }
+	public string createdby { get; set; }
+	public DateTime createddate { get; set; }
+	public bool deleteflag { get; set; }
 }

@@ -142,7 +142,7 @@ namespace WMS.Controllers
 			return this._poService.updateputawayfilename(data);
 		}
 
-		
+
 		[HttpPost("notifyputaway")]
 		public string notifyputawayfn(notifymodel data)
 		{
@@ -169,19 +169,19 @@ namespace WMS.Controllers
 		//}
 		//need list of items
 		[HttpGet("Getthreewaymatchingdetails")]
-		public async Task<IEnumerable<OpenPoModel>> Getdetailsforthreewaymatching(string pono,string invoice)
+		public async Task<IEnumerable<OpenPoModel>> Getdetailsforthreewaymatching(string pono, string invoice)
 		{
 			bool isgrn = true;
 			string grn = "";
 			if (pono.StartsWith("GE"))
-            {
+			{
 				isgrn = false;
 
 			}
-            else
-            {
+			else
+			{
 				grn = pono;
-            }
+			}
 			return await this._poService.GetDeatilsForthreeWaymatching(invoice, pono, isgrn, grn);
 			//string grn = "";
 			//string po = pono;
@@ -201,7 +201,7 @@ namespace WMS.Controllers
 			//		invoiceno = ponoandinvoice[3].Trim();
 			//	}
 
-				
+
 
 			//}
 			//else
@@ -262,9 +262,9 @@ namespace WMS.Controllers
 		/// <returns></returns>
 
 		[HttpPost("updateinitialstock")]
-		public  string updateinitialstock([FromBody] StockModel data)
+		public string updateinitialstock([FromBody] StockModel data)
 		{
-			return  this._poService.updateinitialstockdata(data);
+			return this._poService.updateinitialstockdata(data);
 		}
 		[HttpPost("updateprojectmember")]
 		public string updateprojectmember([FromBody] AssignProjectModel data)
@@ -289,8 +289,8 @@ namespace WMS.Controllers
 		{
 			return this._poService.InsertStock(data);
 		}
-		
-			[HttpPost("InsertmatSTO")]
+
+		[HttpPost("InsertmatSTO")]
 		public string InsertmatSTO([FromBody] List<StockModel> data)
 		{
 			return this._poService.InsertmatSTO(data);
@@ -365,7 +365,7 @@ namespace WMS.Controllers
 		[HttpGet("getporeportdetail")]
 		public async Task<IEnumerable<POReportModel>> getporeportdetail(string materialid, string description, string pono, string querytype, string requesttype, string projectcode, string empno)
 		{
-			return await this._poService.getPOReportdetail(materialid, description,pono, querytype, requesttype, projectcode, empno);
+			return await this._poService.getPOReportdetail(materialid, description, pono, querytype, requesttype, projectcode, empno);
 		}
 
 		[HttpGet("getitemdetailsbygrnnonotif")]
@@ -417,7 +417,7 @@ namespace WMS.Controllers
 
 		}
 		[HttpGet("getPODetailsbyprojectcode")]
-		public Task<IEnumerable<PODetails>> getPODetailsbyprojectcode(string empno,string projectcode)
+		public Task<IEnumerable<PODetails>> getPODetailsbyprojectcode(string empno, string projectcode)
 		{
 			return this._poService.getPODetailsByProjectCode(empno, projectcode);
 
@@ -590,7 +590,7 @@ namespace WMS.Controllers
 			return this._poService.checkoldmaterialwithdesc(material, createddate, description);
 		}
 		[HttpGet("Checkoldestmaterialwithdescstore")]
-		public ReportModel Oldestmaterialwithdescstore(string material, string createddate, string description,string store)
+		public ReportModel Oldestmaterialwithdescstore(string material, string createddate, string description, string store)
 		{
 
 			return this._poService.checkoldmaterialwithdescstore(material, createddate, description, store);
@@ -646,7 +646,7 @@ namespace WMS.Controllers
 			return await this._poService.GetItemLocationListByMaterialdescpono(material, description, pono);
 		}
 		[HttpGet("GetItemLocationListByMaterialsourcelocation")]
-		public async Task<IEnumerable<IssueRequestModel>> getitemlocationBymaterialsourcelocation(string material,string description)
+		public async Task<IEnumerable<IssueRequestModel>> getitemlocationBymaterialsourcelocation(string material, string description)
 		{
 
 			return await this._poService.GetItemlocationListBymterialsourcelocation(material, description);
@@ -1214,7 +1214,7 @@ namespace WMS.Controllers
 		[HttpGet("getrequestdataforSTOapproval")]
 		public async Task<IEnumerable<invstocktransfermodel>> getrequestdataforSTOapproval(string empno, string type)
 		{
-			return await this._poService.getrequestdataforSTOapproval(empno,type);
+			return await this._poService.getrequestdataforSTOapproval(empno, type);
 		}
 
 		[HttpGet("getdirecttransferdata")]
@@ -1246,7 +1246,7 @@ namespace WMS.Controllers
 		{
 			return await this._poService.gettestcrud();
 		}
-		
+
 		[HttpPost("getmatinhand")]
 		public async Task<IEnumerable<MaterialinHand>> getmatinhand(inventoryFilters filters)
 		{
@@ -1599,7 +1599,7 @@ namespace WMS.Controllers
 		{
 			return await this._poService.STOPOInitiate(data);
 		}
-			[HttpGet("generateLabel")]
+		[HttpGet("generateLabel")]
 		public string generateLabel(string labeldata)
 		{
 			return this._poService.generateLabel(labeldata);
@@ -1622,11 +1622,32 @@ namespace WMS.Controllers
 		{
 			return await this._poService.subcontractInoutList();
 		}
-			[HttpPost("generateqronhold")]
+		[HttpPost("generateqronhold")]
 		public printonholdGR generateqronhold(printonholdGR onholdprintdata)
-        {
+		{
 			return this._poService.generateqronhold(onholdprintdata);
 
+		}
+
+		[HttpPost("updateVendorMaster")]
+		public bool updateVendorMaster(vendorMaster vendormaster)
+		{
+			return this._poService.updateVendorMaster(vendormaster);
+		}
+		[HttpPost("updateRole")]
+		public bool updateRole(roleMaster rolemaster)
+		{
+			return this._poService.updateRole(rolemaster);
+		}
+		[HttpPost("updateSubRole")]
+		public bool updateSubRole(subrolemodel subrolemaster)
+		{
+			return this._poService.updateSubRole(subrolemaster);
+		}
+		[HttpPost("updateUserRole")]
+		public bool updateUserRole(userRoles userRole)
+		{
+			return this._poService.updateUserRole(userRole);
 		}
 	}
 }

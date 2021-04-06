@@ -2237,4 +2237,31 @@ WHERE rackid=#rackid</value>
 SET deleteflag=@deleteflag,locatorname=@storename,plantid=@plantid,storagelocationdesc=@storedescription,modifiedby=@modifiedby,modifiedon=current_timestamp
 WHERE locatorid=#storeid</value>
   </data>
+  <data name="insertRoleMaster" xml:space="preserve">
+    <value>INSERT INTO wms.rolemaster(roleid,rolename,createddate,createdby,deleteflag )VALUES(default,@rolename,@createddate,@createdby,@deleteflag)</value>
+  </data>
+  <data name="insertSubRoleMaster" xml:space="preserve">
+    <value>INSERT INTO wms.subrolemaster(subroleid,roleid,subrolename,createddate,createdby,deleteflag)VALUES(default,@roleid,@subrolename,@createddate,@createdby,@deleteflag)</value>
+  </data>
+  <data name="insertUserRole" xml:space="preserve">
+    <value>INSERT INTO wms.userroles (userid,roleid, accessname , createddate ,createdby,deleteflag )
+VALUES(default, @roleid,@accessname,@createddate,@createdby,deleteflag)</value>
+  </data>
+  <data name="insertVendorMaster" xml:space="preserve">
+    <value>INSERT INTO wms.vendormaster (vendorid, vendorcode , vendorname ,faxno ,contactno ,street ,emailid,updatedby,updatedon,deleteflag )
+VALUES(default, @vendorcode,@vendorname,@faxno,@contactno,@street,@emailid,@updatedby,@updatedon,@deleteflag)</value>
+  </data>
+  <data name="updateRoleMaster" xml:space="preserve">
+    <value>UPDATE  wms.rolemaster set  rolename=@rolename,createddate = @createddate,createdby = @createdby,deleteflag=@deleteflag where roleid ='#roleid'</value>
+  </data>
+  <data name="updateSubRoleMaster" xml:space="preserve">
+    <value>UPDATE  wms.subrolemaster set  roleid=@roleid,subrolename=@subrolename,createddate = @createddate,createdby = @createdby,deleteflag=@deleteflag where subroleid ='#subroleid'</value>
+  </data>
+  <data name="updateUserRole" xml:space="preserve">
+    <value>UPDATE  wms.userroles set  roleid=@roleid,accessname=@accessname,createddate = @createddate,createdby = @createdby,deleteflag=@deleteflag where userid ='#userid'</value>
+  </data>
+  <data name="updateVendorMaster" xml:space="preserve">
+    <value>UPDATE  wms.vendormaster set  vendorcode=@vendorcode,vendorname = @vendorname,faxno = @faxno,contactno=@contactno,street=@street,
+emailid=@emailid,updatedby=@updatedby,updatedon =@updatedon,deleteflag=@deleteflag where vendorid ='#vendorid'</value>
+  </data>
 </root>

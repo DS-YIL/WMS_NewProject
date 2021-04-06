@@ -2917,6 +2917,15 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to INSERT INTO wms.rolemaster(roleid,rolename,createddate,createdby,deleteflag )VALUES(default,@rolename,@createddate,@createdby,@deleteflag).
+        /// </summary>
+        public static string insertRoleMaster {
+            get {
+                return ResourceManager.GetString("insertRoleMaster", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to INSERT INTO wms.wms_sapgr
         ///(wmsgr, updatedby, updatedon)
         ///VALUES(@wmsgr, @updatedby, current_timestamp).
@@ -2968,6 +2977,15 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to INSERT INTO wms.subrolemaster(subroleid,roleid,subrolename,createddate,createdby,deleteflag)VALUES(default,@roleid,@subrolename,@createddate,@createdby,@deleteflag).
+        /// </summary>
+        public static string insertSubRoleMaster {
+            get {
+                return ResourceManager.GetString("insertSubRoleMaster", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to INSERT INTO wms.wms_stock(pono,binid,rackid,storeid,totalquantity,shelflife,availableqty,deleteflag,itemlocation,createddate,createdby,materialid,stcktype,receivedtype,poitemdescription,value,unitprice,receivedid,uploadbatchcode,uploadedfilename)VALUES(@pono,@binid,@rackid,@storeid,@totalquantity,@shelflife,@availableqty,@deleteflag,@itemlocation,@createddate,@createdby,@materialid,@stocktype,@receivedtype,@poitemdescription,@value,@unitprice,@receivedid,@uploadbatchcode,@uploadedfilename)returning itemid.
         /// </summary>
         public static string inserttoStockIS {
@@ -2993,6 +3011,26 @@ namespace WMS.Common {
         public static string inserttransfermaterials {
             get {
                 return ResourceManager.GetString("inserttransfermaterials", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to INSERT INTO wms.userroles (userid,roleid, accessname , createddate ,createdby,deleteflag )
+        ///VALUES(default, @roleid,@accessname,@createddate,@createdby,deleteflag).
+        /// </summary>
+        public static string insertUserRole {
+            get {
+                return ResourceManager.GetString("insertUserRole", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to INSERT INTO wms.vendormaster (vendorid, vendorcode , vendorname ,faxno ,contactno ,street ,emailid,updatedby,updatedon,deleteflag )
+        ///VALUES(default, @vendorcode,@vendorname,@faxno,@contactno,@street,@emailid,@updatedby,@updatedon,@deleteflag).
+        /// </summary>
+        public static string insertVendorMaster {
+            get {
+                return ResourceManager.GetString("insertVendorMaster", resourceCulture);
             }
         }
         
@@ -3779,6 +3817,15 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to UPDATE  wms.rolemaster set  rolename=@rolename,createddate = @createddate,createdby = @createdby,deleteflag=@deleteflag where roleid =&apos;#roleid&apos;.
+        /// </summary>
+        public static string updateRoleMaster {
+            get {
+                return ResourceManager.GetString("updateRoleMaster", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to update wms.wms_securityinward set print=#print,  printedon =current_date, printedby =&apos;#printedby&apos;, where pono =&apos;#pono&apos;  and invoiceno =&apos;#invno&apos;.
         /// </summary>
         public static string updateSecurityinwardprint {
@@ -3845,6 +3892,15 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to UPDATE  wms.subrolemaster set  roleid=@roleid,subrolename=@subrolename,createddate = @createddate,createdby = @createdby,deleteflag=@deleteflag where subroleid =&apos;#subroleid&apos;.
+        /// </summary>
+        public static string updateSubRoleMaster {
+            get {
+                return ResourceManager.GetString("updateSubRoleMaster", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to insert into wms.wms_stock(itemid,materialid,itemlocation,availableqty,createddate,createdby,receivedid,stcktype,storeid,rackid,binid,pono,projectid,receivedtype,poitemdescription,value,unitprice)values(default,@materialid,@itemlocation,@availableqty,current_timestamp,@createdby,@returnid,@stocktype,@storeid,@rackid,@binid,@pono,@projectcode,@receivedtype,@poitemdescription,@materialcost,@unitprice).
         /// </summary>
         public static string updatetostockbyinvmanger {
@@ -3869,6 +3925,25 @@ namespace WMS.Common {
         public static string updatetransferdata {
             get {
                 return ResourceManager.GetString("updatetransferdata", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to UPDATE  wms.userroles set  roleid=@roleid,accessname=@accessname,createddate = @createddate,createdby = @createdby,deleteflag=@deleteflag where userid =&apos;#userid&apos;.
+        /// </summary>
+        public static string updateUserRole {
+            get {
+                return ResourceManager.GetString("updateUserRole", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to UPDATE  wms.vendormaster set  vendorcode=@vendorcode,vendorname = @vendorname,faxno = @faxno,contactno=@contactno,street=@street,
+        ///emailid=@emailid,updatedby=@updatedby,updatedon =@updatedon,deleteflag=@deleteflag where vendorid =&apos;#vendorid&apos;.
+        /// </summary>
+        public static string updateVendorMaster {
+            get {
+                return ResourceManager.GetString("updateVendorMaster", resourceCulture);
             }
         }
         

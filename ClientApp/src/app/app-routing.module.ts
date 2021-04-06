@@ -82,6 +82,10 @@ import { AnnexureReportComponent } from './WMS/AnnexureReport.component';
 import { MaterilMasterComponent } from './WMS/Admin/Materialmaster.component';
 import { GatePassMasterComponent } from './WMS/Admin/GatePassMaster .component';
 import { PlantMasterComponent } from './WMS/Admin/PlantMaster.component';
+import { RoleMasterComponent } from './WMS/Admin/RoleMaster.component';
+import { SubRoleMasterComponent } from './WMS/Admin/SubRoleMaster.component';
+import { UserRoleMasterComponent } from './WMS/Admin/UserRoleMaster.component';
+import { VendorMasterComponent } from './WMS/Admin/VendorMaster.component';
 import { ReceiveSTORequestComponent } from './WMS/ReceiveSTORequest.component';
 import { ReceiveSubContractRequestComponent } from './WMS/ReceiveSubContractRequest.component';
 import { InitialStockPutAwayComponent } from './WMS/InitialStockPutAway.component';
@@ -95,6 +99,8 @@ import { AssignRBAComponent } from './WMS/AssignRBA.component';
 import { StoreMasterComponent } from './WMS/StoreMaster.component';
 import { RackMasterComponent } from './WMS/RackMaster.component';
 import { BinMasterComponent } from './WMS/BinMaster.component';
+import { roleMaster, VendorMaster } from './Models/WMS.Model';
+
 
 const routes: Routes = [{
   path: 'WMS',
@@ -190,7 +196,11 @@ const routes: Routes = [{
     { path: "ReceiveSTORequest", component: ReceiveSTORequestComponent, canActivate: [AuthGuard] },
     { path: "ReceiveSubContractRequest", component: ReceiveSubContractRequestComponent, canActivate: [AuthGuard] },  
     { path: "ReceiveMaterial", component: ReceiveMaterialComponent, canActivate: [AuthGuard] },
-    { path: "PlantMaster", component: PlantMasterComponent, canActivate:[AuthGuard] },
+    { path: "PlantMaster", component: PlantMasterComponent, canActivate: [AuthGuard] },
+    { path: "RoleMaster", component: RoleMasterComponent, canActivate: [AuthGuard] },
+    { path: "SubRoleMaster", component: SubRoleMasterComponent, canActivate: [AuthGuard] },
+    { path: "UserRoleMaster", component: UserRoleMasterComponent, canActivate: [AuthGuard] },
+    { path: "VendorMaster", component: VendorMasterComponent, canActivate: [AuthGuard] },
     { path: "InitialStockPutAway", component: InitialStockPutAwayComponent, canActivate: [AuthGuard] },
     { path: "MiscellanousReason", component: MiscellanousComponent, canActivate: [AuthGuard] },
     { path: "StockTransferOrder", component: StockTransferOrderComponent, canActivate: [AuthGuard] },
