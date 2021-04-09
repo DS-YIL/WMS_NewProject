@@ -71,7 +71,7 @@
     <div class="row">
       <div class="col-lg-6 col-md-6">
         <label class="labelheading">Plant :&nbsp;</label>
-        <p-autoComplete [(ngModel)]="selectedplant" field="plantname" [appendTo]="body" [suggestions]="filteredPlant" [disabled]="true" placeholder="search by plant" [ngModelOptions]="{standalone: true}" [forceSelection]="true" (completeMethod)="filterPlants($event)" [size]="30" [dropdown]="true"></p-autoComplete>
+        <p-autoComplete [(ngModel)]="selectedplant" field="plantname"  [suggestions]="filteredPlant" [disabled]="true" placeholder="search by plant" [ngModelOptions]="{standalone: true}" [forceSelection]="true" (completeMethod)="filterPlants($event)" [size]="30" [dropdown]="true"></p-autoComplete>
       </div>
       <div class="col-lg-6 col-md-6">
         <label class="labelheading">Store Name :&nbsp;</label>

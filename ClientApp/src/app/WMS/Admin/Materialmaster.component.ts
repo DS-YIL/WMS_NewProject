@@ -11,6 +11,7 @@ import { MaterialMaster } from '../../Models/WMS.Model';
 @Component({
   selector: 'app-MaterialMaster',
   templateUrl: './MaterialMaster.component.html'
+
 })
 export class MaterilMasterComponent implements OnInit {
 
