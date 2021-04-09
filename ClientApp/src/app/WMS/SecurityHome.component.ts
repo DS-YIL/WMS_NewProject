@@ -358,15 +358,15 @@ export class SecurityHomeComponent implements OnInit {
           this.clicked = false;
           return;
         }
-        if (!isNullOrUndefined(this.selecteddept)) {
-          this.BarcodeModel.departmentid = parseInt(this.selecteddept.value);
-        }
-        else {
-          this.messageService.add({ severity: 'error', summary: '', detail: 'Select Department' });
-          this.spinner.hide();
-          this.clicked = false;
-          return;
-        }
+        //if (!isNullOrUndefined(this.selecteddept)) {
+        //  this.BarcodeModel.departmentid = parseInt(this.selecteddept.value);
+        //}
+        //else {
+        //  this.messageService.add({ severity: 'error', summary: '', detail: 'Select Department' });
+        //  this.spinner.hide();
+        //  this.clicked = false;
+        //  return;
+        //}
         this.BarcodeModel.suppliername = this.Poinvoicedetails.vendorname;
       }
       else {

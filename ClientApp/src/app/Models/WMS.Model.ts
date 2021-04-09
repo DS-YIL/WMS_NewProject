@@ -313,6 +313,7 @@ export class gatepassModel {
   materiallistarray: any[] = [];
   requestedon: Date;
   poitemdescription: string;
+  otherreason: string;
 }
 export class materialistModel {
   gatepassmaterialid: string;

@@ -63,7 +63,11 @@
               <td class="ptable-cell" style="text-align:center"><button class="btn btn-link" *ngIf="rowData.gatepassid" (click)="showApprover(rowData.gatepassid)">{{rowData.gatepassid}}</button></td>
               <td class="ptable-cell" style="text-align:left">{{rowData.gatepasstype}}</td>
               <td class="ptable-cell" style="text-align:left">{{rowData.vendorname}}</td>
-              <td class="ptable-cell" style="text-align:left">{{rowData.reasonforgatepass}}</td>
+              <td class="ptable-cell" style="text-align:left">
+                <span *ngIf="rowData.reasonforgatepass && rowData.reasonforgatepass === 'Other'"> {{rowData.otherreason}}</span>
+                <span *ngIf="rowData.reasonforgatepass && rowData.reasonforgatepass != 'Other'"> {{rowData.reasonforgatepass}}</span>
+
+              </td>
               <td class="ptable-cell" *ngIf="rowData.approverstatus && typeOfList == 'GatePassPMList'" style="text-align:left">{{rowData.approverstatus}}</td>
               <td class="ptable-cell" *ngIf="!rowData.approverstatus && typeOfList == 'GatePassPMList'" style="text-align:left">Pending</td>
               
@@ -174,7 +178,10 @@
             Type:&nbsp;<span style="color:#dc3545;">{{materialList[0].gatepasstype}}</span>
           </div>
           <div class="col-lg-2 col-md-2 col-sm-2 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
-            Reason:&nbsp;<span style="color:#dc3545;">{{materialList[0].reasonforgatepass}}</span>
+            Reason:
+            <span style="color:#dc3545;" *ngIf="materialList[0].reasonforgatepass === 'Other'"> {{materialList[0].otherreason}}</span>
+            <span style="color:#dc3545;" *ngIf="materialList[0].reasonforgatepass != 'Other'"> {{materialList[0].reasonforgatepass}}</span>
+
           </div>
           <div class="col-lg-2 col-md-2 col-sm-2 form-inline" *ngIf="gatepassModel.approverstatus && btnDisable && typeOfList == 'GatePassPMList'" style="font-weight:600;font-size:14px;color:darkblue;">
             <label>

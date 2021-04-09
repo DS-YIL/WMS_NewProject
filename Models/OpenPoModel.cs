@@ -808,6 +808,7 @@ namespace WMS.Models
 		public string vendorcode { get; set; }
 		public string poitemdescription { get; set; }
 		public DateTime issuedon { get; set; }
+		public string otherreason { get; set; }
 	}
 	public class materialistModel
 	{

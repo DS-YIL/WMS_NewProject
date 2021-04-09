@@ -69,11 +69,15 @@ export class GatePassComponent implements OnInit {
   tempreturneddate: any;
   currdate: Date;
   reasonlist: ddlmodel[] = [];
+  isotherreason: boolean = false;
+  otherreason: string = "";
   ngOnInit() {
     if (localStorage.getItem("Employee"))
       this.employee = JSON.parse(localStorage.getItem("Employee"));
     else
       this.router.navigateByUrl("Login");
+    this.isotherreason = false;
+    this.otherreason = "";
     this.gatepassModel = new gatepassModel();
     this.reasonlist = [];
     this.getgatepassreason();
@@ -223,6 +227,13 @@ export class GatePassComponent implements OnInit {
 
 
   }
+  onreasonchanged(event) {
+    this.isotherreason = false;
+   var rsn = event.target.value;
+    if (rsn == "Other") {
+      this.isotherreason = true;
+   }
+ }
 
   onComplete(qty: any, avlqty: any, index: any) {
     if (qty == 0 || qty < 0) {
@@ -623,6 +634,12 @@ export class GatePassComponent implements OnInit {
     if (gatepassobject) {
       this.edit = true;
       this.gpIndx = gpIndx;
+      if (!isNullOrUndefined(gatepassobject.reasonforgatepass) && gatepassobject.reasonforgatepass == "Other") {
+        this.isotherreason = true;
+      }
+      else {
+        this.isotherreason = false;
+      }
       this.gatepassModel = gatepassobject;
       if (dialogstr == 'updateReturnedDateDialog') {
         var matdata = [];
@@ -675,7 +692,9 @@ export class GatePassComponent implements OnInit {
      
     } else {
       this.gatepassModel.gatepasstype = "0";
+      this.isotherreason = false;
       this.gatepassModel.reasonforgatepass = "0";
+      this.gatepassModel.otherreason = "";
       this.materialistModel = { materialid: "", gatepassmaterialid: "0", materialdescription: "", quantity: 0, materialcost: 0, remarks: " ", expecteddate: this.date, returneddate: this.date, issuedqty: 0, showdetail: false, materiallistdata: [] };
       this.gatepassModel.materialList.push(this.materialistModel);
       this.material = "";
@@ -864,6 +883,19 @@ export class GatePassComponent implements OnInit {
     if (this.gatepassModel.gatepasstype != "0") {
       if (this.gatepassModel.materialList.length > 0) {
         //loop all the materiallist
+        if (isNullOrUndefined(this.gatepassModel.reasonforgatepass) || this.gatepassModel.reasonforgatepass.trim() == "0") {
+          this.messageService.add({ severity: 'error', summary: '', detail: 'Select reason' });
+          this.disableGPBtn = false;
+          return false;
+        }
+        if (this.gatepassModel.reasonforgatepass.trim() == "Other" && this.gatepassModel.otherreason.trim() == "") {
+          this.messageService.add({ severity: 'error', summary: '', detail: 'Enter reason' });
+          this.disableGPBtn = false;
+          return false;
+        }
+        if (this.gatepassModel.reasonforgatepass.trim() != "Other") {
+          this.gatepassModel.otherreason = "";
+        }
         for (var i = 0; i < this.gatepassModel.materialList.length; i++) {
           this.gatepassModel.materialList[i].expecteddate = this.gatepassModel.materialList[i].expecteddate != null ? new Date(this.gatepassModel.materialList[i].expecteddate).toLocaleDateString() : undefined;
           this.gatepassModel.materialList[i].returneddate = this.gatepassModel.materialList[i].returneddate != null ? new Date(this.gatepassModel.materialList[i].returneddate).toLocaleDateString() : undefined;

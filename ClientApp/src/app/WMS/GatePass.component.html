@@ -103,7 +103,11 @@
               </td>
               <td class="ptable-cell" style="text-align:left" *ngIf="!selectedrba.gatepass_approval">{{rowData.gatepasstype}}</td>
               <td class="ptable-cell" style="text-align:left">{{rowData.vendorname}}</td>
-              <td class="ptable-cell" style="text-align:left">{{rowData.reasonforgatepass}}</td>
+              <td class="ptable-cell" style="text-align:left">
+                <span *ngIf="rowData.reasonforgatepass && rowData.reasonforgatepass === 'Other'"> {{rowData.otherreason}}</span>
+                <span *ngIf="rowData.reasonforgatepass && rowData.reasonforgatepass != 'Other'"> {{rowData.reasonforgatepass}}</span>
+               
+              </td>
               <td class="ptable-cell" style="text-align:left">
                 <span *ngIf="!rowData.approverstatus">Pending for Approval</span>
                 <span *ngIf="rowData.gatepasstype == 'Returnable' && selectedStatus!='Issued'">{{rowData.approverstatus}}</span>
@@ -214,7 +218,7 @@
           <div class="col-lg-2 col-md-2 col-sm-2 form-group">
             <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">Reason</label>
             <div class="form-inline-list">
-              <select class="form-control forms-input" [(ngModel)]="gatepassModel.reasonforgatepass">
+              <select class="form-control forms-input" [(ngModel)]="gatepassModel.reasonforgatepass" (change)="onreasonchanged($event)">
                 <option value=0>Select</option>
                 <option *ngFor=" let reason of reasonlist" value={{reason.value}}>
                   {{reason.text}}
@@ -222,11 +226,17 @@
               </select>
             </div>
           </div>
-         
+          <div class="col-lg-2 col-md-2 col-sm-2 form-group" *ngIf="isotherreason">
+            <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">Other</label>
+            <div class="form-inline-list">
+                 <textarea [(ngModel)] ="gatepassModel.otherreason"></textarea>
+            </div>
+          </div>
+
           <div class="col-lg-2 col-md-2 col-sm-2 form-group">
             <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">Supplier</label>
             <div class="form-inline-list">
-              <input type="text" class="form-control" maxlength="30"  [(ngModel)]="gatepassModel.vendorname" />
+              <input type="text" class="form-control" maxlength="30" [(ngModel)]="gatepassModel.vendorname" />
             </div>
           </div>
           <div class="col-lg-2 col-md-2 col-sm-2 form-group">

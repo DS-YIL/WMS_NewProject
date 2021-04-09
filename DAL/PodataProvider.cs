@@ -4411,7 +4411,8 @@ namespace WMS.DAL
 							dataobj.requestid,
 							dataobj.fmapprovedstatus,
 							dataobj.approverstatus,
-							remarks
+							remarks,
+							dataobj.otherreason
 
 						});
 						dataobj.gatepassid = gatepassid.ToString();

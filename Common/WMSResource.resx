@@ -287,7 +287,7 @@ gate.*,mat.*,iss.* from wms.wms_gatepass gate
    where gate.deleteflag=false   order by gate.gatepassid desc</value>
   </data>
   <data name="insertgatepassdata" xml:space="preserve">
-    <value>insert into wms.wms_gatepass(gatepassid, gatepasstype, status, referenceno, vehicleno, requestedby, requestedon,deleteflag,vendorname,print,reasonforgatepass,approverid,fmapproverid,fmapprovedstatus,approverstatus,remarks)values(default,@gatepasstype,@status,@referenceno,@vehicleno, @requestedby,@requestedon,@deleteflag,@vendorname,'true',@reasonforgatepass,@approverid,@fmapproverid,@fmapprovedstatus,@approverstatus,@remarks)returning gatepassid</value>
+    <value>insert into wms.wms_gatepass(gatepassid, gatepasstype, status, referenceno, vehicleno, requestedby, requestedon,deleteflag,vendorname,print,reasonforgatepass,approverid,fmapproverid,fmapprovedstatus,approverstatus,remarks,otherreason)values(default,@gatepasstype,@status,@referenceno,@vehicleno, @requestedby,@requestedon,@deleteflag,@vendorname,'true',@reasonforgatepass,@approverid,@fmapproverid,@fmapprovedstatus,@approverstatus,@remarks,@otherreason)returning gatepassid</value>
   </data>
   <data name="checkmaterial" xml:space="preserve">
     <value>select * from wms.wms_stock where materialid='#materialid' limit 1</value>
@@ -315,7 +315,7 @@ values(default,@gatepassid,@materialid,@quantity,@deleteflag,@remarks,@materialc
     <value>select material.gatepassmaterialid,material.gatepassid,material.poitemdescription,emp."name" as name,pass.vendorname,material.expecteddate,
  (select sum(issuedqty) from wms.wms_materialissue  where requestid::text =material.gatepassmaterialid::text and requesttype = 'gatepass' ) as issuedqty,
  (select sum(availableqty) from wms.wms_stock ws where materialid =material.materialid and poitemdescription = material.poitemdescription) as availableqty,
- pass.requestedon,pass.gatepasstype,pass.approverstatus,pass.reasonforgatepass,pass.approverremarks,pass.fmapprovedstatus,pass.fmapproverremarks,material.materialid,
+ pass.otherreason,pass.requestedon,pass.gatepasstype,pass.approverstatus,pass.reasonforgatepass,pass.approverremarks,pass.fmapprovedstatus,pass.fmapproverremarks,material.materialid,
  material.poitemdescription as materialdescription,material.poitemdescription,material.materialcost,material.quantity,material.remarks
  from wms.wms_gatepassmaterial material
  left outer join wms.wms_gatepass pass on pass.gatepassid = material.gatepassid

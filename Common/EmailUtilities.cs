@@ -346,7 +346,7 @@ namespace WMS.Common
 			{
 
 				mailMessage.Subject = "Gate Pass issued - GatePass  ID : " + emlSndngList.gatepassid;
-				string requestedby = this.getnamebyid(emlSndngList.approvername);
+				//string requestedby = this.getnamebyid(emlSndngList.approvername);
 				subbody = "Gate Pass issued for GatePass  ID : " + emlSndngList.gatepassid;
 				//subbody = mailMessage.Subject;
 				link = linkurl + "WMS/Email/GatePass?GatepassId=" + emlSndngList.gatepassid.Trim();
