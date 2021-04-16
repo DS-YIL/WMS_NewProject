@@ -656,15 +656,19 @@ export class GatePassComponent implements OnInit {
         doc.autoTable(this.exportColumns, this.gatepassprintmodel, {
           theme: 'grid',
           headerStyles: {
-            lineWidth: 0.5,
-            lineColor: [211, 211, 211],
+            lineWidth: 0.3,
+            lineColor: [72, 72, 72],
             fontStyle: 'bold',
             halign: 'left',    //'center' or 'right'
             fillColor: [255, 255, 255],
             textColor: [78, 53, 73], //Black     
             //textColor: [255, 255, 255], //White     
-            fontSize: 12,
+            fontSize: 10,
           },
+          bodyStyles: {
+            lineWidth: 0.3,
+            lineColor: [72, 72, 72]
+          }
         });
 
         //var reportTitle = "Device Report" + device + model + make;
