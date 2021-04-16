@@ -595,10 +595,21 @@ export class GatePassComponent implements OnInit {
         else if (gatepassobject.gatepasstype == "Non Returnable") {
           doc.text("Document No: QM3X-0854F-009 ", 125, 45);
         }
+        if (isNullOrUndefined(gatepassobject.vendorname)) {
+          doc.text("Representing:", 12, 52);
+        }
+        else {
+          doc.text("Representing: " + gatepassobject.vendorname + " ", 12, 52);
+        }
 
-        doc.text("Representing: " + gatepassobject.vendorname + " ", 12, 52);
+       
         doc.text("No: " + gatepassobject.gatepassid + " ", 125, 52);
-        doc.text("Document Ref: " + gatepassobject.referenceno + " ", 12, 59);
+        if (isNullOrUndefined(gatepassobject.referenceno)) {
+          doc.text("Document Ref:", 12, 59);
+        }
+        else {
+          doc.text("Document Ref: " + gatepassobject.referenceno + " ", 12, 59);
+        }
         var dt = this.datePipe.transform(gatepassobject.requestedon, 'dd/MM/yyyy');
         doc.text("Document Ref Date: " + dt + " ", 125, 59);
         doc.line(10, 62, 200, 62);
@@ -618,10 +629,22 @@ export class GatePassComponent implements OnInit {
         doc.line(10, pageHeight - 30, 200, pageHeight - 30);
        
         if (gatepassobject.gatepasstype == "Returnable") {
-          doc.text("Authorized by: " + gatepassobject.approvername, 12, pageHeight - 22);
+          if (isNullOrUndefined(gatepassobject.approvername)) {
+            doc.text("Authorized by: ", 12, pageHeight - 22);
+          }
+          else {
+            doc.text("Authorized by: " + gatepassobject.approvername, 12, pageHeight - 22);
+          }
+          
         }
         else if (gatepassobject.gatepasstype == "Non Returnable") {
-          doc.text("Authorized by: " + gatepassobject.fmapprover, 12, pageHeight - 22);
+          if (isNullOrUndefined(gatepassobject.fmapprover)) {
+            doc.text("Authorized by: ", 12, pageHeight - 22);
+          }
+          else {
+            doc.text("Authorized by: " + gatepassobject.fmapprover, 12, pageHeight - 22);
+          }
+         
         }
         doc.text("Prepared by:" + gatepassobject.name, 12, pageHeight - 15);
         doc.text("Signature of the Receiver", 145, pageHeight - 15);
@@ -630,7 +653,19 @@ export class GatePassComponent implements OnInit {
           margin: { top: 60 },
         })
         var page = this;
-        doc.autoTable(this.exportColumns, this.gatepassprintmodel);
+        doc.autoTable(this.exportColumns, this.gatepassprintmodel, {
+          theme: 'grid',
+          headerStyles: {
+            lineWidth: 0.5,
+            lineColor: [211, 211, 211],
+            fontStyle: 'bold',
+            halign: 'left',    //'center' or 'right'
+            fillColor: [255, 255, 255],
+            textColor: [78, 53, 73], //Black     
+            //textColor: [255, 255, 255], //White     
+            fontSize: 12,
+          },
+        });
 
         //var reportTitle = "Device Report" + device + model + make;
         //var splitTitle = doc.splitTextToSize(reportTitle, 180);
