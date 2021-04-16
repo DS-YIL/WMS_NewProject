@@ -36,7 +36,7 @@ export class GatePassApprovalList implements OnInit {
   public typeOfList: string;
   public showHistory: boolean = false;
   //Email
-  gatepassid: string = ""
+  gatepassid: string = "";
 
   ngOnInit() {
     if (localStorage.getItem("Employee"))

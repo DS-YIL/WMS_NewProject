@@ -389,7 +389,7 @@ export class SecurityHomeComponent implements OnInit {
       }
       else {
         this.spinner.hide();
-        this.messageService.add({ severity: 'error', summary: '', detail: 'Enter Invoice No.' });
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Enter Invoice/DC No.' });
         this.clicked = false;
         return;
 

@@ -366,6 +366,7 @@ export class wmsService {
     return this.http.get<any>(this.url + 'POData/checkmaterialandqty?material=' + material + '&qty=' + qty + '', httpOptions);
   }
   getstockdetails(pono: string, materialid: string): Observable<any> {
+    materialid = encodeURIComponent(materialid);
     return this.http.get<any>(this.url + 'POData/getstockdetails?pono=' + pono + '&materialid=' + materialid + '', this.httpOptions);
   }
 
@@ -436,10 +437,12 @@ export class wmsService {
   }
   checkoldestmaterialwithdesc(material: any, createddate: any, materialdescription: string): Observable<any> {
     material = encodeURIComponent(material);
+    materialdescription = encodeURIComponent(materialdescription);
     return this.http.get<any>(this.url + 'POData/Checkoldestmaterialwithdesc?material=' + material + '&createddate=' + createddate + '&description=' + materialdescription, this.httpOptions);
   }
   checkoldestmaterialwithdescstore(material: any, createddate: any, materialdescription: string, store: string): Observable<any> {
     material = encodeURIComponent(material);
+    materialdescription = encodeURIComponent(materialdescription);
     return this.http.get<any>(this.url + 'POData/Checkoldestmaterialwithdescstore?material=' + material + '&createddate=' + createddate + '&description=' + materialdescription + '&store=' + store, this.httpOptions);
   }
   insertFIFOdata(materialIssueList: any): Observable<any> {
@@ -456,14 +459,17 @@ export class wmsService {
   }
   getItemlocationListByMaterialanddesc(material: string, poitemdescription: string): Observable<any> {
     material = encodeURIComponent(material);
+    poitemdescription = encodeURIComponent(poitemdescription);
     return this.http.get<any>(this.url + 'POData/GetItemLocationListByMaterialanddesc?material=' + material + '&description=' + poitemdescription, this.httpOptions);
   }
   getItemlocationListByMaterialdescstore(material: string, poitemdescription: string, store: string): Observable<any> {
     material = encodeURIComponent(material);
+    poitemdescription = encodeURIComponent(poitemdescription);
     return this.http.get<any>(this.url + 'POData/GetItemLocationListByMaterialdescstore?material=' + material + '&description=' + poitemdescription + '&store=' + store, this.httpOptions);
   }
   getItemlocationListByMaterialdescpono(material: string, poitemdescription: string, pono: string): Observable<any> {
     material = encodeURIComponent(material);
+    poitemdescription = encodeURIComponent(poitemdescription);
     return this.http.get<any>(this.url + 'POData/GetItemLocationListByMaterialdescpono?material=' + material + '&description=' + poitemdescription + '&pono=' + pono, this.httpOptions);
   }
   getItemlocationListByMaterial(material: string): Observable<any> {
@@ -472,6 +478,7 @@ export class wmsService {
   }
   getItemlocationListByMaterialsourcelocation(material: string, description: string): Observable<any> {
     material = encodeURIComponent(material);
+    description = encodeURIComponent(description);
     return this.http.get<any>(this.url + 'POData/GetItemLocationListByMaterialsourcelocation?material=' + material + '&description=' + description, this.httpOptions);
   }
   getItemlocationListByIssueId(requestforissueid: string, requesttype: string): Observable<any> {
@@ -657,6 +664,7 @@ export class wmsService {
   }
 
   getmateriallabeldata(pono: string, lineitemno: number, materialid: string): Observable<MateriallabelModel> {
+    materialid = encodeURIComponent(materialid);
     return this.http.get<MateriallabelModel>(this.url + 'POData/getmateriallabeldata?pono=' + pono + '&lineitemno=' + lineitemno + '&materialid=' + materialid, this.httpOptions);
   }
 
@@ -675,6 +683,8 @@ export class wmsService {
   }
 
   getporeportdetail(materialid: string, description: string, pono: string, querytype: string, requesttype: string, projectcode: string, empno: string): Observable<POReportModel[]> {
+    materialid = encodeURIComponent(materialid);
+    description = encodeURIComponent(description);
     return this.http.get<POReportModel[]>(this.url + 'POData/getporeportdetail?materialid=' + materialid + '&description=' + description + '&pono=' + pono + '&querytype=' + querytype + '&requesttype=' + requesttype + '&projectcode=' + projectcode + '&empno=' + empno, this.httpOptions);
   }
 
@@ -803,6 +813,7 @@ export class wmsService {
     return this.http.post<MaterialinHand[]>(this.url + 'POData/getmatinhand', inventoryFilters, this.httpOptions);
   }
   getmatinhandlocations(poitemdescription: string): Observable<matlocations[]> {
+    poitemdescription = encodeURIComponent(poitemdescription);
     return this.http.get<matlocations[]>(this.url + 'POData/getmatinhandlocation?poitemdescription=' + poitemdescription, this.httpOptions);
   }
 
@@ -1014,6 +1025,8 @@ export class wmsService {
     return this.http.get<any[]>(this.url + 'POData/getSTORequestList?type=' + type, this.httpOptions);
   }
   getavailabilityByStore(store: string, material: string, description: string, projectcode: string): Observable<WMSHttpResponse> {
+    material = encodeURIComponent(material);
+    description = encodeURIComponent(description);
     return this.http.get<WMSHttpResponse>(this.url + 'POData/getAvailableQtyBystore?store=' + store + '&materialid=' + material + '&description=' + description + '&projectcode=' + projectcode, this.httpOptions);
   }
   getSubcontractRequestListforissue(): Observable<any[]> {

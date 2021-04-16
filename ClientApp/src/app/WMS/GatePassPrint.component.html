@@ -91,10 +91,14 @@
           <div class="row m-0">
 
             <div class="col-lg-3 col-md-3 col-sm-3 form-inline">
-              <label class="form-label">Authorised by : </label>
+              <label class="form-label">
+                Authorised by :&nbsp;
+                <span *ngIf="materialList[0].gatepasstype == 'Returnable'">{{materialList[0].approvedby}}</span>
+                <span *ngIf="materialList[0].gatepasstype == 'Non Returnable'">{{materialList[0].fmapprovedby}}</span>
+              </label>
             </div>
             <div class="col-lg-3 col-md-3 col-sm-3 form-inline">
-              <label class="form-label">Prepared by : </label>
+              <label class="form-label">Prepared by :&nbsp;{{materialList[0].name}} </label>
             </div>
             <div class="col-lg-4 col-md-4 col-sm-4 form-inline">
               <label class="form-label">Signature of the Receiver :</label>

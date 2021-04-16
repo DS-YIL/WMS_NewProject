@@ -4412,7 +4412,8 @@ namespace WMS.DAL
 							dataobj.fmapprovedstatus,
 							dataobj.approverstatus,
 							remarks,
-							dataobj.otherreason
+							dataobj.otherreason,
+							dataobj.isnonproject
 
 						});
 						dataobj.gatepassid = gatepassid.ToString();
@@ -4580,6 +4581,7 @@ namespace WMS.DAL
 								item.materialcost,
 								item.expecteddate,
 								item.returneddate,
+								item.materialdescription
 
 							});
 
@@ -10064,8 +10066,12 @@ namespace WMS.DAL
 								mailto = userdata.email;
 								if (model.approverstatus == "Approved")
 								{
-									emailmodel.CC = mailto;
-									emailobj.sendEmail(emailmodel, 15, 3);
+									if(model.isnonproject != true)
+                                    {
+										emailmodel.CC = mailto;
+										emailobj.sendEmail(emailmodel, 15, 3);
+									}
+									
 								}
 								else
 								{
@@ -10140,14 +10146,19 @@ namespace WMS.DAL
 
 							if (model.fmapprovedstatus == "Approved")
 							{
-								string userquery = WMSResource.getFMapprovermail.Replace("#gatepassid", model.gatepassid);
-								User userdata = DB.QuerySingle<User>(
-								   userquery, null, commandType: CommandType.Text);
-								mailto = userdata.email;
-								emailobj.sendEmail(emailmodel, 15, 3);
+								if (model.isnonproject != true)
+                                {
+									string userquery = WMSResource.getFMapprovermail.Replace("#gatepassid", model.gatepassid);
+									User userdata = DB.QuerySingle<User>(
+									   userquery, null, commandType: CommandType.Text);
+									mailto = userdata.email;
+									emailobj.sendEmail(emailmodel, 15, 3);
+								}
+									
 							}
 							else
 							{
+								
 								string userquery = WMSResource.getRequesterEmail.Replace("#gatepassid", model.gatepassid); ;
 								User userdata = DB.QuerySingle<User>(
 								   userquery, null, commandType: CommandType.Text);

@@ -809,6 +809,8 @@ namespace WMS.Models
 		public string poitemdescription { get; set; }
 		public DateTime issuedon { get; set; }
 		public string otherreason { get; set; }
+
+		public bool? isnonproject { get; set; }
 	}
 	public class materialistModel
 	{

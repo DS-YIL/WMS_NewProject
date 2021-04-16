@@ -1694,9 +1694,9 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select Max(matis.requestid) as gatepassmaterialid,Max(matis.itemid) itemid,Max(matis.itemissueddate) as itemissueddate,Max(matgt.poitemdescription) as materialdescription,Max(emp.name) as name,
+        ///   Looks up a localized string similar to (select Max(matis.requestid) as gatepassmaterialid,Max(matis.itemid) itemid,Max(matis.itemissueddate) as itemissueddate,Max(matgt.poitemdescription) as materialdescription,Max(emp.name) as name,
         ///Max(matgt.gatepassid) as gatepassid,Max(matgt.materialid) as materialid,Max(matgt.materialcost) as materialcost,Max(matgt.quantity) as quantity,SUM(matis.issuedqty) issuedqty,
-        ///Max(gt.gatepasstype) as gatepasstype,Max(gt.vendorname) as vendorname,Max(gt.requestedby) as requestedby,Max(gt.requestedon) as requestedon, [rest of string was truncated]&quot;;.
+        ///Max(gt.gatepasstype) as gatepasstype,Max(gt.vendorname) as vendorname,Max(gt.requestedby) as requestedby,Max(gt.requestedon) as requestedon [rest of string was truncated]&quot;;.
         /// </summary>
         public static string getnonreturnablegatepassdata {
             get {
@@ -2614,7 +2614,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to insert into wms.wms_gatepass(gatepassid, gatepasstype, status, referenceno, vehicleno, requestedby, requestedon,deleteflag,vendorname,print,reasonforgatepass,approverid,fmapproverid,fmapprovedstatus,approverstatus,remarks,otherreason)values(default,@gatepasstype,@status,@referenceno,@vehicleno, @requestedby,@requestedon,@deleteflag,@vendorname,&apos;true&apos;,@reasonforgatepass,@approverid,@fmapproverid,@fmapprovedstatus,@approverstatus,@remarks,@otherreason)returning gatepassid.
+        ///   Looks up a localized string similar to insert into wms.wms_gatepass(gatepassid, gatepasstype, status, referenceno, vehicleno, requestedby, requestedon,deleteflag,vendorname,print,reasonforgatepass,approverid,fmapproverid,fmapprovedstatus,approverstatus,remarks,otherreason,isnonproject )values(default,@gatepasstype,@status,@referenceno,@vehicleno, @requestedby,@requestedon,@deleteflag,@vendorname,&apos;true&apos;,@reasonforgatepass,@approverid,@fmapproverid,@fmapprovedstatus,@approverstatus,@remarks,@otherreason,@isnonproject)returning gatepassid.
         /// </summary>
         public static string insertgatepassdata {
             get {
@@ -3220,11 +3220,10 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select outin.gatepassid,outin.gatepassmaterialid,gtm.materialid,mat.materialdescription,outin.outwarddate,emp1.name as outwardby,
+        ///   Looks up a localized string similar to select outin.gatepassid,outin.gatepassmaterialid,gtm.materialid,gtm.poitemdescription as materialdescription,outin.outwarddate,emp1.name as outwardby,
         ///outin.outwardremarks,outin.outwardqty,outin.inwarddate,emp3.name as inwardby,outin.inwardremarks,outin.inwardqty,
         ///outin.securityinwarddate,emp2.name as securityinwardby,outin.securityinwardremarks,
-        ///(select SUM(issuedqty) from wms.wms_materialissue where requestid::text = outin.gatepassmaterialid::text and requesttype = &apos;gatepass&apos; group by gatepassmaterialid) as issuedqty
-        ///from [rest of string was truncated]&quot;;.
+        ///(select SUM(issuedqty) from wms.wms_materialissue where requestid::text = outin.gatepassmaterialid::text and requesttype = &apos;gatepass&apos; group by gatepassmateriali [rest of string was truncated]&quot;;.
         /// </summary>
         public static string outinreportquery {
             get {
@@ -3589,7 +3588,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to update wms.wms_gatepassmaterial set gatepassid=@gatepassid,materialid=@materialid,quantity=@quantity,remarks=@remarks,materialcost=@materialcost,expecteddate=@expecteddate,returneddate=@returneddate where gatepassmaterialid=#gatepassmaterialid.
+        ///   Looks up a localized string similar to update wms.wms_gatepassmaterial set gatepassid=@gatepassid,materialid=@materialid,quantity=@quantity,remarks=@remarks,materialcost=@materialcost,expecteddate=@expecteddate,returneddate=@returneddate,poitemdescription=@materialdescription where gatepassmaterialid=#gatepassmaterialid.
         /// </summary>
         public static string updategatepassmaterial {
             get {

@@ -86,7 +86,7 @@
               <th *ngIf="selectedStatus=='Issued'" style="text-align:center">Approved By</th>
               <th *ngIf="selectedStatus=='Issued'" style="text-align:center">Approved On</th>
               <th *ngIf="!selectedrba.material_issue && !selectedrba.gatepass_approval" style="text-align:center;">Edit</th>
-              <th *ngIf="selectedrba.material_issue && !selectedrba.gatepass_approval" style="text-align:center;">Print</th>
+              <th *ngIf="(selectedrba.material_issue || selectedrba.gate_pass) && !selectedrba.gatepass_approval" style="text-align:center;">Print</th>
               <th *ngIf="selectedrba.material_issue && selectedStatus=='Issued' " style="text-align:center">Returned Date</th>
             </tr>
            
@@ -136,7 +136,7 @@
               <td class="ptable-cell" *ngIf="!selectedrba.material_issue && !selectedrba.gatepass_approval" style="text-align:center">
               <button *ngIf="rowData.approverstatus!='Approved' && rowData.approverstatus!='Sent for Modification' && rowData.fmapprovedstatus!='Sent for Modification' && rowData.requestedby==employee.employeeno" type="button" icon="fa fa-edit" pButton aria-hidden="true" (click)="openGatepassDialog(rowData,ri,'gatepassdialogedit')"></button>
               </td>
-              <td class="ptable-cell" *ngIf="selectedrba.material_issue && !selectedrba.gatepass_approval" style="text-align:center"><button *ngIf="rowData.approverstatus=='Approved'" type="button" icon="fa fa-print" pButton aria-hidden="true" (click)="showprint(rowData)"></button></td>
+              <td class="ptable-cell" *ngIf="(selectedrba.material_issue || selectedrba.gate_pass) && !selectedrba.gatepass_approval" style="text-align:center"><button *ngIf="rowData.approverstatus=='Approved'" type="button" icon="fa fa-print" pButton aria-hidden="true" (click)="showprint(rowData)"></button></td>
               <td *ngIf="selectedrba.material_issue && selectedStatus=='Issued'" class="ptable-cell" style="text-align:center"><button *ngIf="rowData.gatepasstype=='Returnable' && selectedrba.material_issue && rowData.approverstatus=='Approved' && rowData.status!='Full Closure' " type="button" icon="fa fa-pencil" pButton aria-hidden="true" (click)="openGatepassDialog(rowData,ri,'updateReturnedDateDialog')"></button></td>
             </tr>
             <tr *ngIf="rowData.showdetail">
@@ -206,6 +206,15 @@
       <p-dialog header={{GatepassTxt}} [(visible)]="gatepassdialog" [responsive]="true" showEffect="fade" [modal]="true" [style]="{'width':'98%','overflow':'auto!important','margin-right': '0px','margin-left':'0px'}">
         <div class="row " style="margin-top:10px">
           <div class="col-lg-2 col-md-2 col-sm-2 form-group">
+            <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">Material Type</label>
+            <div class="form-inline-list">
+              <select class="form-control forms-input" [(ngModel)]="materialtype" (change)="materialtypechanged($event)">
+                <option value='project'>Project</option>
+                <option value='nonproject'>Non Project</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-lg-2 col-md-2 col-sm-2 form-group">
             <label for="itemlocation" class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">Select Type</label>
             <div class="form-inline-list">
               <select class="form-control forms-input" [(ngModel)]="gatepassModel.gatepasstype" (change)="gatePassChange()">
@@ -229,7 +238,7 @@
           <div class="col-lg-2 col-md-2 col-sm-2 form-group" *ngIf="isotherreason">
             <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">Other</label>
             <div class="form-inline-list">
-                 <textarea [(ngModel)] ="gatepassModel.otherreason"></textarea>
+              <textarea [(ngModel)]="gatepassModel.otherreason"></textarea>
             </div>
           </div>
 
@@ -270,7 +279,7 @@
                   <th class="ptable-cell" style="width:60px;text-align:center">Sl. No.</th>
                   <th style="text-align:center;width:250px;" class="ptable-cell">Material</th>
                   <th style="text-align:center" class="ptable-cell">PO Item description</th>
-                  <th style="text-align:center;width:120px;" class="ptable-cell">Available Qty</th>
+                  <th style="text-align:center;width:120px;" class="ptable-cell" *ngIf="!gatepassModel.isnonproject">Available Qty</th>
                   <th style="text-align:center;width:120px;" class="ptable-cell">Quantity</th>
                   <!--<th style="text-align:center;width:120px;" class="ptable-cell">Value(INR)</th>-->
                   <th style="text-align:center;width:200px;" class="ptable-cell">Remarks</th>
@@ -283,28 +292,27 @@
                   <td class="ptable-cell" style="text-align:center"> {{ri+1}} </td>
                   <td class="ptable-cell" style="text-align:left;">
                     <!--<p-autoComplete [(ngModel)]="rowData.materialid" type="text" appendTo="body" [forceSelection]="true" [suggestions]="searchItems" (onSelect)="onMaterialSelected(rowData.materialid,ri)" (completeMethod)="bindSearchListData($event,'ItemId')" [size]="15"
-    [dropdown]="true"></p-autoComplete>-->
-                    <p-autoComplete [(ngModel)]="rowData.materialid" [style]="{'width':'80%'}" [inputStyle]="{'width':'80%'}" placeholder="search by name/code" type="text" appendTo="body" [forceSelection]="true" (onSelect)="onMaterialSelected1(rowData,ri)" [suggestions]="filteredmats" (completeMethod)="filtermats($event,rowData)"
+  [dropdown]="true"></p-autoComplete>-->
+                    <p-autoComplete *ngIf="!gatepassModel.isnonproject" [(ngModel)]="rowData.materialid" [style]="{'width':'80%'}" [inputStyle]="{'width':'80%'}" placeholder="search by name/code" type="text" appendTo="body" [forceSelection]="true" (onSelect)="onMaterialSelected1(rowData,ri)" [suggestions]="filteredmats" (completeMethod)="filtermats($event,rowData)"
                                     [dropdown]="true"></p-autoComplete>
+                    <input type="text" *ngIf="gatepassModel.isnonproject" (blur)="onmaterialchanged(rowData,ri)" class="form-control"  [(ngModel)]="rowData.materialid" />
 
 
                   </td>
                   <td class="ptable-cell" style="text-align:left;">
-                    <p-autoComplete *ngIf="gatepassModel.gatepasstype=='Returnable'" [style]="{'width':'80%'}" [inputStyle]="{'width':'80%'}" [(ngModel)]="rowData.materialdescription" placeholder="search by description" type="text" appendTo="body" [forceSelection]="true" (onSelect)="onDescriptionSelected(rowData,ri)" [suggestions]="filteredmatdesc" (completeMethod)="filtermatdescs($event,rowData)"
+                    <p-autoComplete  *ngIf="gatepassModel.gatepasstype=='Returnable' && !gatepassModel.isnonproject" [style]="{'width':'80%'}" [inputStyle]="{'width':'80%'}" [(ngModel)]="rowData.materialdescription" placeholder="search by description" type="text" appendTo="body" [forceSelection]="true" (onSelect)="onDescriptionSelected(rowData,ri)" [suggestions]="filteredmatdesc" (completeMethod)="filtermatdescs($event,rowData)"
                                     [dropdown]="true"></p-autoComplete>
-                    <p-autoComplete *ngIf="gatepassModel.gatepasstype !=='Returnable'" [style]="{'width':'80%'}" [inputStyle]="{'width':'80%'}" [(ngModel)]="rowData.materialdescription" placeholder="search by description" type="text" appendTo="body" [forceSelection]="true" (onSelect)="onDescriptionSelected(rowData,ri)" [suggestions]="filteredmatdesc" (completeMethod)="filtermatdescs($event,rowData)"
+                    <p-autoComplete *ngIf="gatepassModel.gatepasstype !=='Returnable' && !gatepassModel.isnonproject" [style]="{'width':'80%'}" [inputStyle]="{'width':'80%'}" [(ngModel)]="rowData.materialdescription" placeholder="search by description" type="text" appendTo="body" [forceSelection]="true" (onSelect)="onDescriptionSelected(rowData,ri)" [suggestions]="filteredmatdesc" (completeMethod)="filtermatdescs($event,rowData)"
                                     [dropdown]="true"></p-autoComplete>
-                    <!--<p-autoComplete [(ngModel)]="rowData.poitemdescription" type="text" appendTo="body" [forceSelection]="true" [suggestions]="searchItems" (onSelect)="onMaterialSelected(rowData.materialid,ri)" (completeMethod)="bindSearchListData($event,'ItemId')" [size]="15"
-    [dropdown]="true"></p-autoComplete>-->
-
-
-
+                    <input type="text" *ngIf="gatepassModel.isnonproject" (blur)="ondescriptionchanged(rowData,ri)" class="form-control" [(ngModel)]="rowData.materialdescription" />
+                 
                   </td>
-                  <td class="ptable-cell" style="text-align:right">
+                  <td class="ptable-cell" style="text-align:right" *ngIf="!gatepassModel.isnonproject">
                     <span>{{rowData.availableqty}}</span>
                   </td>
                   <td class="ptable-cell" style="text-align:right">
-                    <input style="text-align:left" pInputText type="number" (blur)="onComplete(rowData.quantity , rowData.availableqty,ri)" class="form-control" [(ngModel)]="rowData.quantity">
+                    <input *ngIf="!gatepassModel.isnonproject" style="text-align:left" pInputText type="number" (blur)="onComplete(rowData.quantity , rowData.availableqty,ri)" class="form-control" [(ngModel)]="rowData.quantity">
+                    <input *ngIf="gatepassModel.isnonproject" style="text-align:left" pInputText type="number"  class="form-control" [(ngModel)]="rowData.quantity">
                   </td>
                   <!--<td class="ptable-cell" style="text-align:right">
                     <span>{{rowData.materialcost | number : '1.2-2'}}</span>

@@ -276,6 +276,12 @@ export class locationdetails {
   issueddate: Date;
   materialid: any;
 }
+export class gatepassprintdoc {
+  slno: string;
+  materialdescription: string;
+  quantity: string;
+  remarks: string;
+}
 
 export class gatepassModel {
   issuedqty: number;
@@ -294,6 +300,8 @@ export class gatepassModel {
   materialid: string;
   quantity: number
   name: string;
+  fmapprover: string;
+  approvername: string;
   vendorname: string;
   deleteflag: boolean;
   materialList: Array<materialistModel> = [];
@@ -314,6 +322,7 @@ export class gatepassModel {
   requestedon: Date;
   poitemdescription: string;
   otherreason: string;
+  isnonproject: boolean;
 }
 export class materialistModel {
   gatepassmaterialid: string;

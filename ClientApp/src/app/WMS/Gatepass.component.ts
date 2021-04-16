@@ -6,7 +6,7 @@ import { constants } from '../Models/WMSConstants';
 import { Employee, DynamicSearchResult, searchList, userAcessNamesModel, rbamaster } from '../Models/Common.Model';
 import { NgxSpinnerService } from "ngx-spinner";
 import { MessageService } from 'primeng/api';
-import { gatepassModel, materialistModel, FIFOValues, materialList, ddlmodel } from '../Models/WMS.Model';
+import { gatepassModel, materialistModel, FIFOValues, materialList, ddlmodel, gatepassprintdoc } from '../Models/WMS.Model';
 import { isNullOrUndefined } from 'util';
 import { DatePipe, DecimalPipe } from '@angular/common';
 import { ConfirmationService } from 'primeng/api';
@@ -71,13 +71,27 @@ export class GatePassComponent implements OnInit {
   reasonlist: ddlmodel[] = [];
   isotherreason: boolean = false;
   otherreason: string = "";
+  materialtype: string;
+  exportColumns: any[];
+  cols: any[];
+  gatepassprintmodel: gatepassprintdoc[] = [];
   ngOnInit() {
     if (localStorage.getItem("Employee"))
       this.employee = JSON.parse(localStorage.getItem("Employee"));
     else
       this.router.navigateByUrl("Login");
+    this.gatepassprintmodel = [];
+    this.cols = [
+      { field: 'slno', header: 'Sl.No.' },
+      { field: 'materialdescription', header: 'Material Description' },
+      { field: 'quantity', header: 'Quantity' },
+      { field: 'remarks', header: 'Remarks' },
+    ];
+
+    this.exportColumns = this.cols.map(col => ({ title: col.header, dataKey: col.field }));
     this.isotherreason = false;
     this.otherreason = "";
+    this.materialtype = "project";
     this.gatepassModel = new gatepassModel();
     this.reasonlist = [];
     this.getgatepassreason();
@@ -139,7 +153,22 @@ export class GatePassComponent implements OnInit {
     debugger;
     if (this.gatepassModel.materialList.length > 0) {
       if (isNullOrUndefined(this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].materialid) || this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].materialid == "") {
-        this.messageService.add({ severity: 'error', summary: '', detail: 'Select Material from list' });
+        if (this.gatepassModel.isnonproject) {
+          this.messageService.add({ severity: 'error', summary: '', detail: 'Enter material' });
+        }
+        else{
+          this.messageService.add({ severity: 'error', summary: '', detail: 'Select material from list' });
+        }
+        
+        return false;
+      }
+      if (isNullOrUndefined(this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].materialdescription) || this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].materialdescription == "") {
+        if (this.gatepassModel.isnonproject) {
+          this.messageService.add({ severity: 'error', summary: '', detail: 'Enter material description' });
+        }
+        else {
+          this.messageService.add({ severity: 'error', summary: '', detail: 'Select material description from list' });
+        }
         return false;
       }
       else if (this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].quantity <= 0) {
@@ -168,7 +197,7 @@ export class GatePassComponent implements OnInit {
       }
 
     }
-
+    
     //if (this.gatepassModel.materialList.length == 0 || isNullOrUndefined(this.material)) {
     //  this.materialistModel = { materialid: "", gatepassmaterialid: "0", materialdescription: "", quantity: 0, materialcost: "0", remarks: " ", expecteddate: this.date, returneddate: this.date, issuedqty: 0 };
     //  this.gatepassModel.materialList.push(this.materialistModel);
@@ -425,6 +454,9 @@ export class GatePassComponent implements OnInit {
     if (this.selectedStatus == "Issued" && (this.selectedrba.material_issue)) {
       colspan = colspan + 1;
     }
+    if (this.selectedrba.gate_pass) {
+      colspan = colspan + 1;
+    }
 
     return colspan;
 
@@ -489,6 +521,7 @@ export class GatePassComponent implements OnInit {
         this.gatepasslist = this.totalGatePassList.filter(li => li.gatepasstype == 'Non Returnable' && (li.approverstatus == this.approverstatus || li.approverstatus == null));
       }
       else if (this.selectedrba.material_issue) {
+        this.totalGatePassList = this.totalGatePassList.filter(li => li.isnonproject != true);
         this.totalGatePassList.forEach(item => {
           if (item.gatepasstype == "Returnable" && item.approverstatus == "Approved")
             this.gatepasslist.push(item);
@@ -530,7 +563,7 @@ export class GatePassComponent implements OnInit {
     this.gatepassModelList = [];
     this.prepareGatepassList();
   }
-  exportPdf() {
+  exportPdf(gatepassobject: gatepassModel,materialarray : any[]) {
     // debugger;
     import("jspdf").then(jsPDF => {
       import("jspdf-autotable").then(x => {
@@ -542,7 +575,7 @@ export class GatePassComponent implements OnInit {
         var pageWidth = doc.internal.pageSize.width || doc.internal.pageSize.getWidth();
         doc.setDrawColor(0);
         doc.setFillColor(255, 255, 255);
-        doc.rect(10, 10, 190, 52, 'FD');
+        doc.rect(10, 10, 190, pageHeight-20, 'FD');
         var img = new Image()
         img.src = './assets/banner1.jpg'
         doc.addImage(img, 'jpg', 12, 12, 40, 15);
@@ -553,13 +586,51 @@ export class GatePassComponent implements OnInit {
         doc.setFontSize(12);
         doc.text("Electronic city, Banglore - 560100", 120, 27);
         doc.line(10, 30, 200, 30);
-        doc.text("Gate Pass [Type] Items", pageWidth / 2, 36, 'center');
+        doc.text("Gate Pass [" + gatepassobject.gatepasstype + " Items]", pageWidth / 2, 36, 'center');
         doc.line(10, 40, 200, 40);
-        doc.text("Name of the Person : [Name] ", 12, 45);
-        doc.text("No: [No] ", 125, 45);
-        doc.text("Representing: [Representing] ", 12, 52);
-        doc.text("Document Ref Date: [Date] ", 12, 59);
+        doc.text("Name of the Person : " + gatepassobject.name + " ", 12, 45);
+        if (gatepassobject.gatepasstype == "Returnable") {
+          doc.text("Document No: QM3X-0854F-008 ", 125, 45);
+        }
+        else if (gatepassobject.gatepasstype == "Non Returnable") {
+          doc.text("Document No: QM3X-0854F-009 ", 125, 45);
+        }
 
+        doc.text("Representing: " + gatepassobject.vendorname + " ", 12, 52);
+        doc.text("No: " + gatepassobject.gatepassid + " ", 125, 52);
+        doc.text("Document Ref: " + gatepassobject.referenceno + " ", 12, 59);
+        var dt = this.datePipe.transform(gatepassobject.requestedon, 'dd/MM/yyyy');
+        doc.text("Document Ref Date: " + dt + " ", 125, 59);
+        doc.line(10, 62, 200, 62);
+        this.gatepassprintmodel = [];
+        var sln = 1;
+        materialarray.forEach(element => {
+          let obj = new gatepassprintdoc();
+          obj.slno = String(sln);
+          obj.materialdescription = String(element.materialdescription);
+          obj.quantity = String(element.quantity);
+          obj.remarks = String(element.remarks)
+          this.gatepassprintmodel.push(obj);
+          sln = sln + 1;
+
+        })
+       
+        doc.line(10, pageHeight - 30, 200, pageHeight - 30);
+       
+        if (gatepassobject.gatepasstype == "Returnable") {
+          doc.text("Authorized by: " + gatepassobject.approvername, 12, pageHeight - 22);
+        }
+        else if (gatepassobject.gatepasstype == "Non Returnable") {
+          doc.text("Authorized by: " + gatepassobject.fmapprover, 12, pageHeight - 22);
+        }
+        doc.text("Prepared by:" + gatepassobject.name, 12, pageHeight - 15);
+        doc.text("Signature of the Receiver", 145, pageHeight - 15);
+        doc.autoTable({
+          columnStyles: { 0: { halign: 'center' } }, // Cells in first column centered and green
+          margin: { top: 60 },
+        })
+        var page = this;
+        doc.autoTable(this.exportColumns, this.gatepassprintmodel);
 
         //var reportTitle = "Device Report" + device + model + make;
         //var splitTitle = doc.splitTextToSize(reportTitle, 180);
@@ -582,6 +653,16 @@ export class GatePassComponent implements OnInit {
       })
     })
   }
+  alignCol(cell, data) {
+  var col = data.column.index;
+  if (col == 0 || col == 2) {
+    cell.styles.halign = 'right';
+
+    console.log('2 data.column.index', data.column.index);
+    console.log('cell', cell);
+    console.log('data', data);
+  }
+}
 
   //prepare list based on gate pass id
   prepareGatepassList() {
@@ -623,6 +704,17 @@ export class GatePassComponent implements OnInit {
   gatePassChange() {
     if (this.gatepassModel.gatepasstype != "0")
       this.GatepassTxt = this.gatepassModel.gatepasstype + " - " + "Request Materials";
+  }
+  materialtypechanged(event: any) {
+    var val = event.target.value;
+    if (val == "nonproject") {
+      this.gatepassModel.isnonproject = true;
+    }
+    else {
+      this.gatepassModel.isnonproject = false;
+    }
+    this.gatepassModel.materialList = [];
+    this.addNewMaterial();
   }
   //open gate pass dialog
   openGatepassDialog(gatepassobject: any, gpIndx: any, dialogstr: string) {
@@ -691,6 +783,12 @@ export class GatePassComponent implements OnInit {
       
      
     } else {
+      if (this.materialtype == "nonproject") {
+        this.gatepassModel.isnonproject = true;
+      }
+      else {
+        this.gatepassModel.isnonproject = false;
+      }
       this.gatepassModel.gatepasstype = "0";
       this.isotherreason = false;
       this.gatepassModel.reasonforgatepass = "0";
@@ -763,6 +861,41 @@ export class GatePassComponent implements OnInit {
     var data = this.gatepasslistmodel.find(li => li.materialid == material);
     console.log(this.gatepasslistmodel);
     this.gatepassModel.materialList[index].materialcost = data["materialcost"] != null ? data["materialcost"] : 0;
+
+  }
+
+  onmaterialchanged(data: any, ind: number) {
+    if (!isNullOrUndefined(data.materialdescription) && data.materialdescription != "") {
+      var data1 = this.gatepassModel.materialList.filter(function (element, index) {
+        return (element.materialid == data.materialid && element.materialdescription == data.materialdescription && index != ind);
+      });
+      if (data1.length > 0) {
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Material already exist' });
+        this.gatepassModel.materialList[ind].materialid = "";
+        this.gatepassModel.materialList[ind].materialdescription = "";
+        this.gatepassModel.materialList[ind].materialcost = 0;
+        this.gatepassModel.materialList[ind].quantity = 0;
+        this.gatepassModel.materialList[ind].remarks = "";
+        return false;
+      }
+    }
+   
+  }
+  ondescriptionchanged(data: any, ind: number) {
+    if (!isNullOrUndefined(data.materialid) && data.materialid != "") {
+      var data1 = this.gatepassModel.materialList.filter(function (element, index) {
+        return (element.materialid == data.materialid && element.materialdescription == data.materialdescription && index != ind);
+      });
+      if (data1.length > 0) {
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Material already exist' });
+        this.gatepassModel.materialList[ind].materialid = "";
+        this.gatepassModel.materialList[ind].materialdescription = "";
+        this.gatepassModel.materialList[ind].materialcost = 0;
+        this.gatepassModel.materialList[ind].quantity = 0;
+        this.gatepassModel.materialList[ind].remarks = "";
+        return false;
+      }
+    }
 
   }
 
@@ -905,11 +1038,30 @@ export class GatePassComponent implements OnInit {
         var invalidrcvmat = this.gatepassModel.materialList.filter(function (element, index) {
             return (isNullOrUndefined(element.materialid) || element.materialid == "");
         });
+       
         var invalidrcvquantity = this.gatepassModel.materialList.filter(function (element, index) {
           return (element.quantity <= 0 || isNullOrUndefined(element.quantity));
         });
         if (invalidrcvmat.length > 0) {
-          this.messageService.add({ severity: 'error', summary: '', detail: 'Select Material from list' });
+          if (this.gatepassModel.isnonproject) {
+            this.messageService.add({ severity: 'error', summary: '', detail: 'Enter Material' });
+          }
+          else {
+            this.messageService.add({ severity: 'error', summary: '', detail: 'Select Material from list' });
+          }
+          this.disableGPBtn = false;
+          return false;
+        }
+        var invaliddescription = this.gatepassModel.materialList.filter(function (element, index) {
+          return (isNullOrUndefined(element.materialdescription) || String(element.materialdescription).trim() == "");
+        });
+        if (invaliddescription.length > 0) {
+          if (this.gatepassModel.isnonproject) {
+            this.messageService.add({ severity: 'error', summary: '', detail: 'Enter material description' });
+          }
+          else {
+            this.messageService.add({ severity: 'error', summary: '', detail: 'Select material description from list' });
+          }
           this.disableGPBtn = false;
           return false;
         }
@@ -1197,9 +1349,16 @@ export class GatePassComponent implements OnInit {
 
   //showing print page
   showprint(gatepassobject: gatepassModel) {
-    //this.exportPdf();
-    this.router.navigate(['/WMS/GatePassPrint', gatepassobject.gatepassid]);
+    var materialarray = [];
+    this.wmsService.gatepassmaterialdetail(gatepassobject.gatepassid).subscribe(data => {
+      materialarray = data;
+      this.exportPdf(gatepassobject, materialarray);
+    });
+   
+    //this.router.navigate(['/WMS/GatePassPrint', gatepassobject.gatepassid]);
   }
+
+ 
 
   //shows list of items for particular material
   showmateriallocationList(material, id, rowindex) {
