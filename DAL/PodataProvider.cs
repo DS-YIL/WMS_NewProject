@@ -10071,6 +10071,12 @@ namespace WMS.DAL
 										emailmodel.CC = mailto;
 										emailobj.sendEmail(emailmodel, 15, 3);
 									}
+                                    else
+                                    {
+                                        emailmodel.ToEmailId = mailto;
+                                        emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
+                                        emailobj.sendEmail(emailmodel, 33);
+                                    }
 									
 								}
 								else
@@ -10153,6 +10159,16 @@ namespace WMS.DAL
 									   userquery, null, commandType: CommandType.Text);
 									mailto = userdata.email;
 									emailobj.sendEmail(emailmodel, 15, 3);
+								}
+                                else
+                                {
+									string userquery = WMSResource.getRequesterEmail.Replace("#gatepassid", model.gatepassid); ;
+									User userdata = DB.QuerySingle<User>(
+									   userquery, null, commandType: CommandType.Text);
+									mailto = userdata.email;
+									emailmodel.ToEmailId = mailto;
+									emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
+									emailobj.sendEmail(emailmodel, 33);
 								}
 									
 							}

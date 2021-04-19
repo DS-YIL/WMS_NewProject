@@ -347,7 +347,7 @@ namespace WMS.Common
 
 				mailMessage.Subject = "Gate Pass issued - GatePass  ID : " + emlSndngList.gatepassid;
 				//string requestedby = this.getnamebyid(emlSndngList.approvername);
-				subbody = "Gate Pass issued for GatePass  ID : " + emlSndngList.gatepassid;
+				subbody = "Gate Pass issued for GatePass  ID : " + emlSndngList.gatepassid + " and ready for outward.";
 				//subbody = mailMessage.Subject;
 				link = linkurl + "WMS/Email/GatePass?GatepassId=" + emlSndngList.gatepassid.Trim();
 
@@ -445,9 +445,20 @@ namespace WMS.Common
 				//Redirect to Receipts Page
 				link = linkurl + "WMS/Email/grnputaway?GRNo=" + emlSndngList.grnnumber.Trim();
 			}
+			else if (subjecttype == 33)
+			{
+
+				mailMessage.Subject = "Gate Pass approved - GatePass  ID : " + emlSndngList.gatepassid;
+				//string requestedby = this.getnamebyid(emlSndngList.approvername);
+				subbody = "Gate Pass approved for GatePass  ID : " + emlSndngList.gatepassid + " and ready for outward.";
+				//subbody = mailMessage.Subject;
+				link = linkurl + "WMS/Email/GatePass?GatepassId=" + emlSndngList.gatepassid.Trim();
 
 
-			
+			}
+
+
+
 			//mailMessage.Subject = body;
 			var body = string.Empty;
 			

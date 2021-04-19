@@ -619,10 +619,17 @@ export class GatePassComponent implements OnInit {
           let obj = new gatepassprintdoc();
           obj.slno = String(sln);
           obj.materialdescription = String(element.materialdescription);
-          obj.quantity = String(element.quantity);
+          if (gatepassobject.isnonproject) {
+            obj.quantity = String(element.quantity);
+          }
+          else {
+            obj.quantity = String(element.issuedqty);
+          }
           obj.remarks = String(element.remarks)
-          this.gatepassprintmodel.push(obj);
-          sln = sln + 1;
+          if (!isNullOrUndefined(obj.quantity) && obj.quantity.trim() != "0" && obj.quantity.trim() != "null" && obj.quantity.trim() != "NULL") {
+            this.gatepassprintmodel.push(obj);
+            sln = sln + 1;
+          }
 
         })
        
