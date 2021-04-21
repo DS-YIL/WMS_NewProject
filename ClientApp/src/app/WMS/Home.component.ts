@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { Employee, userAcessNamesModel, rbamaster } from '../Models/Common.Model';
-import { UserDashboardDetail, UserDashboardGraphModel, ManagerDashboard, pmDashboardCards, invDashboardCards, GraphModelNew} from '../Models/WMS.Model';
+import { UserDashboardDetail, UserDashboardGraphModel, ManagerDashboard, pmDashboardCards, invDashboardCards, GraphModelNew, DashBoardFilters } from '../Models/WMS.Model';
 import { wmsService } from '../WmsServices/wms.service';
 import { NgxSpinnerService } from "ngx-spinner";
 import { DatePipe } from '@angular/common';
@@ -28,7 +28,7 @@ export class HomeComponent implements OnInit {
   receivedchartdatalist: GraphModelNew[] = [];
   qualitychartdata: any;
   qualitychartdatalist: GraphModelNew[] = [];
-  acceptchartdata:any;
+  acceptchartdata: any;
   acceptchartdatalist: GraphModelNew[] = [];
   putawaychartdata: any;
   putawaychartdatalist: GraphModelNew[] = [];
@@ -45,9 +45,9 @@ export class HomeComponent implements OnInit {
   weeklychartdata: any;
   piedata: any;
   data1: TreeNode[];
-  constructor(private router: Router, private wmsService: wmsService, private spinner: NgxSpinnerService, private datePipe: DatePipe, private navpage: NavMenuComponent, private apppage: AppComponent ) {
-   }
-  cardDetailslistdata: ManagerDashboard[] = [];
+  constructor(private router: Router, private wmsService: wmsService, private spinner: NgxSpinnerService, private datePipe: DatePipe, private navpage: NavMenuComponent, private apppage: AppComponent) {
+  }
+  cardDetailslistdata: ManagerDashboard;
   pmCardDetailslistdata: pmDashboardCards[] = [];
   invCardDetailslistdata: invDashboardCards[] = [];
   public employee: Employee;
@@ -101,12 +101,27 @@ export class HomeComponent implements OnInit {
   roleidforissue: string = "";
   roleidforonhold: string = "";
   roleidforcyclecount: string = "";
+  totlReceiptsCnt: number;
+  totalQulityCnt: number;
+  totalAcceptanceCnt: number;
+  totalputawayCnt: number;
+  public fromDate: Date;
+  public toDate: Date;
+  public DashBoardFilters: DashBoardFilters;
   //page load event
   ngOnInit() {
-    debugger;
+    if (localStorage.getItem("Employee"))
+      this.employee = JSON.parse(localStorage.getItem("Employee"));
+    else
+      this.router.navigateByUrl("Login");
+
+    this.DashBoardFilters = new DashBoardFilters();
+    this.fromDate = new Date(new Date().setDate(new Date().getDate() - 30));
+    this.toDate = new Date();
+
     this.firstload = true;
     this.lblmonth = "";
-    this.monthlist = ["","January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+    this.monthlist = ["", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
     this.dashboardmodel = new UserDashboardDetail();
     this.dashboardgraphmodel = [];
     this.dashboardIEgraphmodel = [];
@@ -130,13 +145,8 @@ export class HomeComponent implements OnInit {
     this.materialforissuecount = 0;
     this.selectedrolename = "";
     this.selectedroleid = 0;
-    if (localStorage.getItem("Employee"))
-      this.employee = JSON.parse(localStorage.getItem("Employee"));
-    else
-      this.router.navigateByUrl("Login");
-
+    this.cardDetailslistdata = new ManagerDashboard();
     this.userroleid = this.employee.roleid;
-   
 
     if (localStorage.getItem("userroles")) {
       this.isroleselected = false;
@@ -153,7 +163,7 @@ export class HomeComponent implements OnInit {
     }
     if (this.userroleid != "0") {
       var roleid = this.userroleid;
-     
+
       var data1 = this.userrolelist.filter(function (element, index) {
         return (element.roleid == parseInt(roleid));
       });
@@ -166,7 +176,7 @@ export class HomeComponent implements OnInit {
     else {
       this.rolename = "-";
     }
-   
+
 
     this.data1 = [{
       label: 'Receipts',
@@ -185,28 +195,34 @@ export class HomeComponent implements OnInit {
             label: 'Tax',
             styleClass: 'department-cfo'
           }
-         ],
+          ],
         }
-      
+
       ]
     }];
     this.getdashboarddetail();
     this.setcontroldata();
     ////////////////////////////////////////grapg functions
-    //this.getreceivedchartdatalist();
-   // this.getqualitychartdatalist();
-    //this.getacceptchartdatalist();
-   // this.getputawaychartdatalist();
-    //this.getrequestdatalist();
-    //this.getreturndatalist();
-    //this.getreservedatalist();
-    //this.gettransferdatalist();
+    if (this.userroleid == "3") {//iventory clerk
+      this.getreceivedchartdatalist();
+      this.getqualitychartdatalist();
+      this.getacceptchartdatalist();
+      this.getputawaychartdatalist();
+    }
+    if (this.userroleid == "2" || this.userroleid == "11"){//2:iventory enquiry 11:PM
+      this.getrequestdatalist();
+      this.getreturndatalist();
+      this.getreservedatalist();
+      this.gettransferdatalist();
+    }
     /////////////////////////////////////////
-   // this.defaultactive();
+    // this.defaultactive();
   }
 
   getreceivedchartdatalist() {
-    this.wmsService.getreceivedgraphdata().subscribe(data => {
+    this.DashBoardFilters.fromDate = this.datePipe.transform(this.fromDate, "yyyy-MM-dd");
+    this.DashBoardFilters.toDate = this.datePipe.transform(this.toDate, "yyyy-MM-dd");
+    this.wmsService.getreceivedgraphdata(this.DashBoardFilters).subscribe(data => {
       if (data != null) {
         this.receivedchartdatalist = data;
         this.setReceivedgraph();
@@ -215,7 +231,9 @@ export class HomeComponent implements OnInit {
 
   }
   getqualitychartdatalist() {
-    this.wmsService.getqualitygraphdata().subscribe(data => {
+    this.DashBoardFilters.fromDate = this.datePipe.transform(this.fromDate, "yyyy-MM-dd");
+    this.DashBoardFilters.toDate = this.datePipe.transform(this.toDate, "yyyy-MM-dd");
+    this.wmsService.getqualitygraphdata(this.DashBoardFilters).subscribe(data => {
       if (data != null) {
         this.qualitychartdatalist = data;
         this.setQualitygraph();
@@ -224,7 +242,9 @@ export class HomeComponent implements OnInit {
 
   }
   getacceptchartdatalist() {
-    this.wmsService.getacceptgraphdata().subscribe(data => {
+    this.DashBoardFilters.fromDate = this.datePipe.transform(this.fromDate, "yyyy-MM-dd");
+    this.DashBoardFilters.toDate = this.datePipe.transform(this.toDate, "yyyy-MM-dd");
+    this.wmsService.getacceptgraphdata(this.DashBoardFilters).subscribe(data => {
       if (data != null) {
         this.acceptchartdatalist = data;
         this.setAcceptgraph();
@@ -233,7 +253,9 @@ export class HomeComponent implements OnInit {
 
   }
   getputawaychartdatalist() {
-    this.wmsService.getputawaygraphdata().subscribe(data => {
+    this.DashBoardFilters.fromDate = this.datePipe.transform(this.fromDate, "yyyy-MM-dd");
+    this.DashBoardFilters.toDate = this.datePipe.transform(this.toDate, "yyyy-MM-dd");
+    this.wmsService.getputawaygraphdata(this.DashBoardFilters).subscribe(data => {
       if (data != null) {
         this.putawaychartdatalist = data;
         this.setPutawaygraph();
@@ -243,7 +265,9 @@ export class HomeComponent implements OnInit {
   }
 
   getrequestdatalist() {
-    this.wmsService.getrequestgraphdata().subscribe(data => {
+    this.DashBoardFilters.fromDate = this.datePipe.transform(this.fromDate, "yyyy-MM-dd");
+    this.DashBoardFilters.toDate = this.datePipe.transform(this.toDate, "yyyy-MM-dd");
+    this.wmsService.getrequestgraphdata(this.DashBoardFilters).subscribe(data => {
       if (data != null) {
         this.requestchartdatalist = data;
         this.setRequestgraph();
@@ -253,7 +277,9 @@ export class HomeComponent implements OnInit {
   }
 
   getreturndatalist() {
-    this.wmsService.getreturngraphdata().subscribe(data => {
+    this.DashBoardFilters.fromDate = this.datePipe.transform(this.fromDate, "yyyy-MM-dd");
+    this.DashBoardFilters.toDate = this.datePipe.transform(this.toDate, "yyyy-MM-dd");
+    this.wmsService.getreturngraphdata(this.DashBoardFilters).subscribe(data => {
       if (data != null) {
         this.returnchartdatalist = data;
         this.setReturngraph();
@@ -263,7 +289,7 @@ export class HomeComponent implements OnInit {
   }
 
   getreservedatalist() {
-    this.wmsService.getreservegraphdata().subscribe(data => {
+    this.wmsService.getreservegraphdata(this.DashBoardFilters).subscribe(data => {
       if (data != null) {
         this.reservechartdatalist = data;
         this.setReservegraph();
@@ -273,7 +299,7 @@ export class HomeComponent implements OnInit {
   }
 
   gettransferdatalist() {
-    this.wmsService.gettransfergraphdata().subscribe(data => {
+    this.wmsService.gettransfergraphdata(this.DashBoardFilters).subscribe(data => {
       if (data != null) {
         this.transferchartdatalist = data;
         this.setTransfergraph();
@@ -294,16 +320,16 @@ export class HomeComponent implements OnInit {
     this.isonholduser = false;
     this.iscyclecountuser = false;
     var found = false;
-   
+
     if (localStorage.getItem("rbalist")) {
       this.rbalist = JSON.parse(localStorage.getItem("rbalist")) as rbamaster[];
       this.userrolelist.forEach(item => {
-          var dt1 = this.rbalist.filter(function (element, index) {
-            return (element.gate_entry && element.roleid == item.roleid);
-          });
-          if (dt1.length > 0) {
-            this.roleidforinbound = String(dt1[0].roleid);
-            this.issecurityoperator = true;
+        var dt1 = this.rbalist.filter(function (element, index) {
+          return (element.gate_entry && element.roleid == item.roleid);
+        });
+        if (dt1.length > 0) {
+          this.roleidforinbound = String(dt1[0].roleid);
+          this.issecurityoperator = true;
         }
         var dt2 = this.rbalist.filter(function (element, index) {
           return (element.receive_material && element.roleid == item.roleid);
@@ -369,13 +395,13 @@ export class HomeComponent implements OnInit {
           this.iscyclecountuser = true;
         }
 
-        
+
 
       })
 
 
     }
-   
+
 
   }
 
@@ -389,7 +415,7 @@ export class HomeComponent implements OnInit {
       localStorage.removeItem('Employee');
       localStorage.setItem('Employee', JSON.stringify(this.employee));
       this.navpage.changemenu();
-      
+
     }
   }
 
@@ -420,8 +446,8 @@ export class HomeComponent implements OnInit {
       if (data != null) {
 
         this.dashboardgraphmodel = data;
-    // console.log(this.dashboardgraphmodel)
-        this.setgraph('Receive'); 
+        // console.log(this.dashboardgraphmodel)
+        this.setgraph('Receive');
       }
       this.spinner.hide();
     })
@@ -435,7 +461,7 @@ export class HomeComponent implements OnInit {
       if (data != null) {
 
         this.dashboardIEgraphmodel = data;
-         //console.log(this.dashboardIEgraphmodel)
+        //console.log(this.dashboardIEgraphmodel)
         this.setgraphIE('Request')
       }
       this.spinner.hide();
@@ -446,7 +472,7 @@ export class HomeComponent implements OnInit {
   getmonthlygraphdata() {
 
     this.spinner.show();
-    this.wmsService.getmonthlydashgraphdata().subscribe(data => {
+    this.wmsService.getmonthlydashgraphdata(this.DashBoardFilters).subscribe(data => {
       if (data != null) {
 
         this.monthlydashboardgraphmodel = data;
@@ -473,7 +499,7 @@ export class HomeComponent implements OnInit {
         this.monthlydashboardIEgraphmodel = data;
         this.setmonthlyIEgraph('Request');
 
-       // console.log(this.monthlydashboardIEgraphmodel )
+        // console.log(this.monthlydashboardIEgraphmodel )
       }
       this.spinner.hide();
     })
@@ -501,8 +527,8 @@ export class HomeComponent implements OnInit {
       lblmessage = "materials put away in past seven days."
 
     }
-      var pid = []
-      var count = []
+    var pid = []
+    var count = []
     var gdata = this.dashboardgraphmodel.filter(function (elementx, index) {
       return (elementx.type == type);
     });
@@ -515,25 +541,25 @@ export class HomeComponent implements OnInit {
       });
     }
 
-      this.chartdata = {
+    this.chartdata = {
 
-        labels: pid,
-        datasets: [
-          {
-            label: lblmessage,
-            backgroundColor: '#334b80',
-            //backgroundColor: 'rgba(0,255,0,0.5)',
-            borderColor: '#7CB342',
-            data: count
-          },
-        ]
+      labels: pid,
+      datasets: [
+        {
+          label: lblmessage,
+          backgroundColor: '#334b80',
+          //backgroundColor: 'rgba(0,255,0,0.5)',
+          borderColor: '#7CB342',
+          data: count
+        },
+      ]
 
-      }
-      this.chartoptions = { scales: { yAxes: [{ ticks: { beginAtZero: true, userCallback: function (label, index, labels) { if (Math.floor(label) === label) { return label; } }, } }] } }
+    }
+    this.chartoptions = { scales: { yAxes: [{ ticks: { beginAtZero: true, userCallback: function (label, index, labels) { if (Math.floor(label) === label) { return label; } }, } }] } }
 
 
-    
-   // console.log(this.dashboardgraphmodel);
+
+    // console.log(this.dashboardgraphmodel);
   }
 
   setgraphIE(type: string) {
@@ -574,7 +600,7 @@ export class HomeComponent implements OnInit {
         {
           label: lblmessage,
           backgroundColor: '#334b80',
-         // backgroundColor: 'rgba(0,255,0,0.5)',
+          // backgroundColor: 'rgba(0,255,0,0.5)',
           borderColor: '#7CB342',
           data: count
         },
@@ -589,7 +615,6 @@ export class HomeComponent implements OnInit {
   }
 
   setmonthlygraph(type: string) {
-    debugger;
     this.monthlychartdata = null;
     var lblmessage = "";
     var lblmessage1 = "";
@@ -614,8 +639,8 @@ export class HomeComponent implements OnInit {
       lblmessage3 = "Monthly put aways"
 
     }
-   
-    
+
+
     var pid = []
     var count = []
     var count1 = []
@@ -648,7 +673,7 @@ export class HomeComponent implements OnInit {
     //  });
     //}
     this.monthlychartdata = {
-      
+
       labels: pid,
       datasets: [
         {
@@ -690,11 +715,9 @@ export class HomeComponent implements OnInit {
   }
 
   setReceivedgraph() {
-    debugger;
-   
     this.receivedchartdata = null;
     var lblmessage = "Total";
-    var lblmessage1 = "Received";
+    var lblmessage1 = "Completed";
     var lblmessage2 = "Pending";
     var pid = [];
     var total = [];
@@ -736,8 +759,8 @@ export class HomeComponent implements OnInit {
           borderColor: '#555961',
           data: pending
         }
-        
-      
+
+
       ]
 
     }
@@ -747,13 +770,12 @@ export class HomeComponent implements OnInit {
 
 
   }
-  
+
   setQualitygraph() {
-    debugger;
 
     this.qualitychartdata = null;
     var lblmessage = "Total";
-    var lblmessage1 = "Received";
+    var lblmessage1 = "Completed";
     var lblmessage2 = "Pending";
     var pid = [];
     var total = [];
@@ -809,11 +831,9 @@ export class HomeComponent implements OnInit {
 
 
   setAcceptgraph() {
-    debugger;
-
     this.acceptchartdata = null;
     var lblmessage = "Total";
-    var lblmessage1 = "Received";
+    var lblmessage1 = "Completed";
     var lblmessage2 = "Pending";
     var pid = [];
     var total = [];
@@ -869,11 +889,9 @@ export class HomeComponent implements OnInit {
 
 
   setPutawaygraph() {
-    debugger;
-
     this.putawaychartdata = null;
     var lblmessage = "Total";
-    var lblmessage1 = "Received";
+    var lblmessage1 = "Completed";
     var lblmessage2 = "Pending";
     var pid = [];
     var total = [];
@@ -929,11 +947,9 @@ export class HomeComponent implements OnInit {
 
 
   setRequestgraph() {
-    debugger;
-
     this.requestchartdata = null;
     var lblmessage = "Total";
-    var lblmessage1 = "Received";
+    var lblmessage1 = "Completed";
     var lblmessage2 = "Pending";
     var pid = [];
     var total = [];
@@ -990,11 +1006,9 @@ export class HomeComponent implements OnInit {
 
 
   setReturngraph() {
-    debugger;
-
     this.returnchartdata = null;
     var lblmessage = "Total";
-    var lblmessage1 = "Received";
+    var lblmessage1 = "Completed";
     var lblmessage2 = "Pending";
     var pid = [];
     var total = [];
@@ -1051,11 +1065,9 @@ export class HomeComponent implements OnInit {
 
 
   setReservegraph() {
-    debugger;
-
     this.reservechartdata = null;
     var lblmessage = "Total";
-    var lblmessage1 = "Received";
+    var lblmessage1 = "Completed";
     var lblmessage2 = "Pending";
     var pid = [];
     var total = [];
@@ -1112,11 +1124,10 @@ export class HomeComponent implements OnInit {
 
 
   setTransfergraph() {
-    debugger;
 
     this.transferchartdata = null;
     var lblmessage = "Total";
-    var lblmessage1 = "Received";
+    var lblmessage1 = "Completed";
     var lblmessage2 = "Pending";
     var pid = [];
     var total = [];
@@ -1171,11 +1182,11 @@ export class HomeComponent implements OnInit {
   }
 
   setmonthlyIEgraph(type: string) {
-    debugger;
+
     this.monthlyIEchartdata = null;
     var lblmessage = "";
-   
-    if (type == "Request" ) {
+
+    if (type == "Request") {
       lblmessage = "Monthly Request Materials"
     }
 
@@ -1192,7 +1203,7 @@ export class HomeComponent implements OnInit {
     }
 
     this.monthlyIEchartdata = {
-      
+
       labels: pid,
       datasets: [
         {
@@ -1207,13 +1218,13 @@ export class HomeComponent implements OnInit {
     }
     this.chartoptions2 = { scales: { yAxes: [{ ticks: { beginAtZero: true, userCallback: function (label, index, labels) { if (Math.floor(label) === label) { return label; } }, } }] } }
 
-   // console.log(this.monthlydashboardIEgraphmodel );
+    // console.log(this.monthlydashboardIEgraphmodel );
 
 
   }
 
   activeCard1(event, type: string) {
-    debugger;
+
     this.firstload = false;
     this.nodes.forEach(item => {
       item.classList.remove("cardactive");
@@ -1227,10 +1238,10 @@ export class HomeComponent implements OnInit {
     this.setmonthlygraph(type);
     this.setmonthlyIEgraph(type);
     this.setgraphIE(type);
-    
+
   }
   activeCard(event, type: string) {
-    debugger;
+
     this.firstload = false;
     this.nodes.forEach(item => {
       item.classList.remove("cardactive");
@@ -1254,7 +1265,7 @@ export class HomeComponent implements OnInit {
       else {
         this.router.navigateByUrl('WMS/SecurityCheck');
       }
-     
+
     }
     else if (type == "Receive" && (this.isreceiveuser)) {
       if (this.employee.roleid != this.roleidforreceipt) {
@@ -1293,7 +1304,7 @@ export class HomeComponent implements OnInit {
         this.navigatebyrole(this.roleidforonhold);
       }
       else {
-          this.router.navigateByUrl('WMS/HoldGRView');
+        this.router.navigateByUrl('WMS/HoldGRView');
       }
     }
     else if (type == "Reserve" && this.isreserveuser) {
@@ -1314,7 +1325,7 @@ export class HomeComponent implements OnInit {
     }
     else if (type == "Issue" && this.isissueuser) {
       if (this.employee.roleid != this.roleidforissue) {
-          this.navigatebyrole(this.roleidforissue);
+        this.navigatebyrole(this.roleidforissue);
       }
       else {
         this.router.navigateByUrl('WMS/MaterialIssueDashboard');
@@ -1327,10 +1338,10 @@ export class HomeComponent implements OnInit {
       else {
         this.router.navigateByUrl('WMS/Cyclecount');
       }
-     
+
     }
-   
-   
+
+
     //this.setgraph(type);
     //this.setmonthlygraph(type);
 
@@ -1342,7 +1353,7 @@ export class HomeComponent implements OnInit {
 
   getGatePassList() {
     this.notif = false;
-    debugger;
+
     this.wmsService.getGatePassList().subscribe(data => {
       if (data) {
         this.totalGatePassList = data;
@@ -1353,12 +1364,12 @@ export class HomeComponent implements OnInit {
         this.prepareGatepassList();
         this.prepareGatepassList1();
       }
-      
+
 
     });
   }
   prepareGatepassList() {
-    debugger;
+
     this.gatepasslist = [];
     this.gatepassData.forEach(item => {
       var res = this.gatepasslist.filter(li => li.gatepassid == item.gatepassid);
@@ -1373,7 +1384,7 @@ export class HomeComponent implements OnInit {
     }
   }
   prepareGatepassList1() {
-    debugger;
+
     this.gatepasslist1 = [];
     this.gatepassData1.forEach(item => {
       var res = this.gatepasslist1.filter(li => li.gatepassid == item.gatepassid);
@@ -1385,17 +1396,17 @@ export class HomeComponent implements OnInit {
       this.notif = true;
       this.notifcount = this.notifcount + this.gatepasslist1.length;
       var count = this.gatepasslist1.length;
-      
+
     }
   }
 
   getMaterialIssueList() {
     this.wmsService.getMaterialIssueLlist(this.employee.employeeno).subscribe(data => {
-      debugger;
+
       this.materialIssueListnofilter = data;
       this.materialIssueList = this.materialIssueListnofilter.filter(li => li.requeststatus == 'Pending');
       this.materialforissuecount = this.materialIssueList.length;
-      
+
     });
   }
 
@@ -1407,7 +1418,6 @@ export class HomeComponent implements OnInit {
       if (data != null) {
 
         this.dashboardmodel = data;
-
         //console.log(this.dashboardmodel) 
       }
       this.getGatePassList();
@@ -1423,26 +1433,31 @@ export class HomeComponent implements OnInit {
       if (this.userroleid == '2') {
         this.getInvCardlist();
       }
-     
-     
-     // this.getgraphPMdata();
-    
+
+
+      // this.getgraphPMdata();
+
       this.getmonthlyIEgraphdata();
       this.getIEgraphdata();
       this.spinner.hide();
-      })
+    })
 
-    
+
   }
 
 
   getCardlist() {
-    this.cardDetailslistdata = [];
+    this.cardDetailslistdata = new ManagerDashboard();
+    this.DashBoardFilters.fromDate = this.datePipe.transform(this.fromDate, "yyyy-MM-dd");
+    this.DashBoardFilters.toDate = this.datePipe.transform(this.toDate, "yyyy-MM-dd");
     this.spinner.show();
-    this.wmsService.getCardlist().subscribe(data => {
+    this.wmsService.getCardlist(this.DashBoardFilters).subscribe(data => {
       this.cardDetailslistdata = data;
-
-       //console.log(this.cardDetailslistdata)
+      this.totlReceiptsCnt = this.cardDetailslistdata.completedcount + this.cardDetailslistdata.pendingcount;
+      this.totalQulityCnt = this.cardDetailslistdata.qualitycompcount + this.cardDetailslistdata.qualitypendcount;
+      this.totalAcceptanceCnt = this.cardDetailslistdata.acceptancecompcount + this.cardDetailslistdata.acceptancependcount;
+      this.totalputawayCnt = this.cardDetailslistdata.putawaycompcount + this.cardDetailslistdata.putawaypendcount
+      //console.log(this.cardDetailslistdata)
 
       this.spinner.hide();
     });
@@ -1451,10 +1466,10 @@ export class HomeComponent implements OnInit {
   getPMCardlist() {
     this.pmCardDetailslistdata = [];
     this.spinner.show();
-    this.wmsService.getPMCardlist().subscribe(data => {
+    this.wmsService.getPMCardlist(this.DashBoardFilters).subscribe(data => {
       this.pmCardDetailslistdata = data;
 
-     // console.log(this.pmCardDetailslistdata)
+      // console.log(this.pmCardDetailslistdata)
 
       this.spinner.hide();
     });
@@ -1464,7 +1479,7 @@ export class HomeComponent implements OnInit {
   getInvCardlist() {
     this.invCardDetailslistdata = [];
     this.spinner.show();
-    this.wmsService.getInvCardlist().subscribe(data => {
+    this.wmsService.getInvCardlist(this.DashBoardFilters).subscribe(data => {
       this.invCardDetailslistdata = data;
 
       //console.log(this.invCardDetailslistdata)
@@ -1473,6 +1488,31 @@ export class HomeComponent implements OnInit {
     });
   }
 
+  updateDashBoardData() {
+    this.spinner.show();
+    if (this.userroleid == "3") {//Inventory clerk
+      this.getCardlist();
+      this.getreceivedchartdatalist();
+      this.getqualitychartdatalist();
+      this.getacceptchartdatalist();
+      this.getputawaychartdatalist();
+    }
+    if (this.userroleid == "2") {//Inventory enquiry
+      this.getInvCardlist();
+      this.getrequestdatalist();
+      this.getreturndatalist();
+      this.getreservedatalist();
+      this.gettransferdatalist();
+    }
+    if (this.userroleid == "11") {//project manager
+      this.getPMCardlist();
+      this.getrequestdatalist();
+      this.getreturndatalist();
+      this.getreservedatalist();
+      this.gettransferdatalist();
+    }
+    this.spinner.hide();
+  }
   //getgraphPMdata() {
 
   //  this.spinner.show();
@@ -1544,13 +1584,5 @@ export class HomeComponent implements OnInit {
   //    ]
 
   //  }
-  //  this.chartoptions = { scales: { yAxes: [{ ticks: { beginAtZero: true, userCallback: function (label, index, labels) { if (Math.floor(label) === label) { return label; } }, } }] } }
-  //  console.log(this.chartdataPM)
-
-
-
-  //}
-
+  //  this.chartoptions = { scales: { yAxes: [{ ticks: { beginAt
 }
-
-

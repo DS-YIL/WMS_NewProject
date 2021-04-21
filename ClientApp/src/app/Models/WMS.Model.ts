@@ -1258,5 +1258,10 @@ export class userRoles {
   createddate: Date;
   deleteflag: boolean;
 }
+export class DashBoardFilters {
+  fromDate: string;
+  toDate: string;
+}
+
 
 

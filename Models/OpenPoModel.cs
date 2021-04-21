@@ -1293,7 +1293,12 @@ namespace WMS.Models
 		public string materialid { get; set; }
 
 		public string reserveid { get; set; }
-
+		public string status { get; set; }
+		public string qcby { get; set; }
+		public string issuedby { get; set; }
+		public string issuedon { get; set; }
+		public string confirmstatus { get; set; }
+		public DateTime? approvaldate { get; set; }
 	}
 
 	public class UserDashboardGraphModel
@@ -2088,8 +2093,8 @@ public class pmDashboardCards
 	public int pendingmaterialreturn { get; set; }
 	public int totalmaterialreserved { get; set; }
 	public int totalmaterialreturned { get; set; }
-
-
+	public int totalmaterialtransfer { get; set; }
+	public int approvedmaterialtransfer { get; set; }
 
 }
 //invDashboardCards
@@ -2103,6 +2108,8 @@ public class invDashboardCards
 	public int totalmaterialreturn { get; set; }
 	public int totalmaterialtransfer { get; set; }
 	public int approvedmaterialtransfer { get; set; }
+	public int approvedmaterialreturn { get; set; }
+	public int pendingmaterialreturn { get; set; }
 }
 public class miscellanousIssueData
 {
@@ -2379,4 +2386,9 @@ public class userRoles
 	public string createdby { get; set; }
 	public DateTime createddate { get; set; }
 	public bool deleteflag { get; set; }
+}
+public class DashBoardFilters
+{
+	public string fromDate { get; set; }
+	public string toDate { get; set; }
 }

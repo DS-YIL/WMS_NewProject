@@ -5,7 +5,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { constants } from '../Models/WMSConstants'
 import { Employee, Login, DynamicSearchResult, printMaterial, rbamaster, locationBarcode, printonholdGR } from '../Models/Common.Model';
-import { PoFilterParams, PoDetails, BarcodeModel, StockModel, materialRequestDetails, inwardModel, gatepassModel, stocktransfermodel, Materials, authUser, invstocktransfermodel, ddlmodel, locataionDetailsStock, updateonhold, materialistModel, outwardmaterialistModel, pageModel, UserDashboardDetail, UserDashboardGraphModel, UnholdGRModel, MRNsavemodel, notifymodel, materialtransferMain, materialReservetorequestModel, testcrud, PrintHistoryModel, materilaTrasFilterParams, materialRequestFilterParams, materialResFilterParams, materialRetFilterParams, outwardinwardreportModel, UserModel, WMSHttpResponse, MaterialinHand, matlocations, grReports, MateriallabelModel, ManagerDashboard, pmDashboardCards, invDashboardCards, GraphModelNew, miscellanousIssueData, inventoryFilters, MaterialMaster, GPReasonMTdata, materialList, PlantMTdata, InitialStock, subrolemodel, AssignProjectModel, MaterialTransaction, plantddl, STOrequestTR, assignpmmodel, POReportModel, stocktransfermateriakmodel, VendorMaster, roleMaster, userRoles } from '../Models/WMS.Model';
+import { PoFilterParams, PoDetails, BarcodeModel, StockModel, materialRequestDetails, inwardModel, gatepassModel, stocktransfermodel, Materials, authUser, invstocktransfermodel, ddlmodel, locataionDetailsStock, updateonhold, materialistModel, outwardmaterialistModel, pageModel, UserDashboardDetail, UserDashboardGraphModel, UnholdGRModel, MRNsavemodel, notifymodel, materialtransferMain, materialReservetorequestModel, testcrud, PrintHistoryModel, materilaTrasFilterParams, materialRequestFilterParams, materialResFilterParams, materialRetFilterParams, outwardinwardreportModel, UserModel, WMSHttpResponse, MaterialinHand, matlocations, grReports, MateriallabelModel, ManagerDashboard, pmDashboardCards, invDashboardCards, GraphModelNew, miscellanousIssueData, inventoryFilters, MaterialMaster, GPReasonMTdata, materialList, PlantMTdata, InitialStock, subrolemodel, AssignProjectModel, MaterialTransaction, plantddl, STOrequestTR, assignpmmodel, POReportModel, stocktransfermateriakmodel, VendorMaster, roleMaster, userRoles, DashBoardFilters } from '../Models/WMS.Model';
 import { Text } from '@angular/compiler/src/i18n/i18n_ast';
 
 @Injectable({
@@ -765,8 +765,8 @@ export class wmsService {
     return this.http.get<UserDashboardGraphModel[]>(this.url + 'POData/getUserdashIEgraphdata/', this.httpOptions);
   }
 
-  getmonthlydashgraphdata(): Observable<UserDashboardGraphModel[]> {
-    return this.http.get<UserDashboardGraphModel[]>(this.url + 'POData/getmonthlyUserdashgraphdata/', this.httpOptions);
+  getmonthlydashgraphdata(DashBoardFilters: DashBoardFilters): Observable<UserDashboardGraphModel[]> {
+    return this.http.post<UserDashboardGraphModel[]>(this.url + 'POData/getmonthlyUserdashgraphdata/', DashBoardFilters, this.httpOptions);
   }
   getweeklydashgraphdata(): Observable<UserDashboardGraphModel[]> {
     return this.http.get<UserDashboardGraphModel[]>(this.url + 'POData/getweeklyUserdashgraphdata/', this.httpOptions);
@@ -897,8 +897,8 @@ export class wmsService {
     return this.http.get<UserDashboardGraphModel[]>(this.url + 'POData/getManagerdashboardgraphdata/', this.httpOptions);
   }
 
-  getCardlist(): Observable<any> {
-    return this.http.get<ManagerDashboard>(this.url + 'POData/getManagerdashboardgraphdata/', this.httpOptions);
+  getCardlist(DashBoardFilters: DashBoardFilters): Observable<any> {
+    return this.http.post<any>(this.url + 'POData/getManagerdashboardgraphdata/', DashBoardFilters, this.httpOptions);
   }
 
 
@@ -921,48 +921,49 @@ export class wmsService {
     return this.http.get<grReports>(this.url + 'POData/addEditReports?wmsgr=' + wmsgr, this.httpOptions);
   }
 
-  getPMCardlist(): Observable<any> {
-    return this.http.get<pmDashboardCards>(this.url + 'POData/getPMdashboarddata/', this.httpOptions);
+  getPMCardlist(DashBoardFilters: DashBoardFilters): Observable<any> {
+    return this.http.post<pmDashboardCards>(this.url + 'POData/getPMdashboarddata/', DashBoardFilters, this.httpOptions);
   }
+
 
   getmonthlyUserdashboardIEgraphdata(): Observable<UserDashboardGraphModel[]> {
     return this.http.get<UserDashboardGraphModel[]>(this.url + 'POData/getmonthlyUserdashboardIEgraphdata/', this.httpOptions);
   }
-  getInvCardlist(): Observable<any> {
-    return this.http.get<invDashboardCards>(this.url + 'POData/getInvdashboarddata/', this.httpOptions);
+  getInvCardlist(DashBoardFilters: DashBoardFilters): Observable<any> {
+    return this.http.post<invDashboardCards>(this.url + 'POData/getInvdashboarddata/', DashBoardFilters, this.httpOptions);
   }
 
   getPMdashgraphdata(): Observable<UserDashboardGraphModel[]> {
     return this.http.get<UserDashboardGraphModel[]>(this.url + 'POData/getUserdashboardgraphPMdata/', this.httpOptions);
   }
 
-  getreceivedgraphdata(): Observable<GraphModelNew[]> {
-    return this.http.get<GraphModelNew[]>(this.url + 'POData/getReceivedgraph/', this.httpOptions);
+  getreceivedgraphdata(DashBoardFilters: DashBoardFilters): Observable<any> {
+    return this.http.post<any>(this.url + 'POData/getReceivedgraph/', DashBoardFilters, this.httpOptions);
   }
-  getqualitygraphdata(): Observable<GraphModelNew[]> {
-    return this.http.get<GraphModelNew[]>(this.url + 'POData/getQualitygraph/', this.httpOptions);
+  getqualitygraphdata(DashBoardFilters: DashBoardFilters): Observable<any> {
+    return this.http.post<any>(this.url + 'POData/getQualitygraph/', DashBoardFilters, this.httpOptions);
   }
-  getacceptgraphdata(): Observable<GraphModelNew[]> {
-    return this.http.get<GraphModelNew[]>(this.url + 'POData/getAcceptgraph/', this.httpOptions);
+  getacceptgraphdata(DashBoardFilters: DashBoardFilters): Observable<any> {
+    return this.http.post<any>(this.url + 'POData/getAcceptgraph/', DashBoardFilters, this.httpOptions);
   }
-  getputawaygraphdata(): Observable<GraphModelNew[]> {
-    return this.http.get<GraphModelNew[]>(this.url + 'POData/getPutawaygraph/', this.httpOptions);
-  }
-
-  getrequestgraphdata(): Observable<GraphModelNew[]> {
-    return this.http.get<GraphModelNew[]>(this.url + 'POData/getRequestgraph/', this.httpOptions);
+  getputawaygraphdata(DashBoardFilters: DashBoardFilters): Observable<any> {
+    return this.http.post<any>(this.url + 'POData/getPutawaygraph/', DashBoardFilters, this.httpOptions);
   }
 
-  getreturngraphdata(): Observable<GraphModelNew[]> {
-    return this.http.get<GraphModelNew[]>(this.url + 'POData/getReturngraph/', this.httpOptions);
+  getrequestgraphdata(DashBoardFilters: DashBoardFilters): Observable<GraphModelNew[]> {
+    return this.http.post<GraphModelNew[]>(this.url + 'POData/getRequestgraph/', DashBoardFilters, this.httpOptions);
   }
 
-  getreservegraphdata(): Observable<GraphModelNew[]> {
-    return this.http.get<GraphModelNew[]>(this.url + 'POData/getReservegraph/', this.httpOptions);
+  getreturngraphdata(DashBoardFilters: DashBoardFilters): Observable<GraphModelNew[]> {
+    return this.http.post<GraphModelNew[]>(this.url + 'POData/getReturngraph/', DashBoardFilters, this.httpOptions);
   }
 
-  gettransfergraphdata(): Observable<GraphModelNew[]> {
-    return this.http.get<GraphModelNew[]>(this.url + 'POData/getTransfergraph/', this.httpOptions);
+  getreservegraphdata(DashBoardFilters: DashBoardFilters): Observable<GraphModelNew[]> {
+    return this.http.post<GraphModelNew[]>(this.url + 'POData/getReservegraph/', DashBoardFilters, this.httpOptions);
+  }
+
+  gettransfergraphdata(DashBoardFilters: DashBoardFilters): Observable<GraphModelNew[]> {
+    return this.http.post<GraphModelNew[]>(this.url + 'POData/getTransfergraph/', DashBoardFilters, this.httpOptions);
   }
 
 

@@ -1634,11 +1634,7 @@ VALUES(default,@pono,@inwardid,@noofprints,@qtyinbox,@isprint,@totalboxes,@boxno
     where  saleorderno = '#sono' and solineitemno = '#solineitemno'</value>
   </data>
   <data name="dataforreceivedgraph" xml:space="preserve">
-    <value>Select date_part('year', current_date::date) as syear,
-date_part('month', current_date::date) as smonth,
-inwmasterid,date_part('week', receiveddate::date) AS sweek,receiveddate,grnnumber from wms.wms_securityinward
-where receiveddate &gt;= (select date_trunc('month', current_date))
-order by sweek</value>
+    <value>Select date_part('year', current_date::date) as syear, date_part('month', current_date::date) as smonth, inwmasterid,date_part('week', receiveddate::date) AS sweek, receiveddate,grnnumber from wms.wms_securityinward where receiveddate &gt;='fromdate' and receiveddate&lt;= 'todate' and onhold is NOT True and (holdgrstatus is NULL or holdgrstatus = 'accepted') order by sweek</value>
   </data>
   <data name="dataforacceptgraph" xml:space="preserve">
     <value>Select date_part('year', current_date::date) as syear,
@@ -1648,46 +1644,22 @@ where receiveddate &gt;= (select date_trunc('month', current_date))
 order by sweek</value>
   </data>
   <data name="dataforputawaygraph" xml:space="preserve">
-    <value>Select date_part('year', current_date::date) as syear,
-date_part('month', current_date::date) as smonth,
-inwmasterid,date_part('week', createddate::date) AS sweek,createddate,initialstock  from wms.wms_stock
-where createddate &gt;= (select date_trunc('month', current_date))
-order by sweek</value>
+    <value>select date_part('year', current_date::date) as syear, date_part('month', current_date::date) as smonth,date_part('week', max(stinw.receiveddate) ::date) AS sweek,max(stinw.inwardid) as inwardid ,'Pending' as status from wms.wms_storeinward stinw join wms.wms_securityinward sinw on stinw.inwmasterid = sinw.inwmasterid where stinw.returnedby is not null and sinw.isdirecttransferred is NOT true and stinw.inwardid not in (select distinct inwardid from wms.wms_stock where inwardid is not null order by inwardid desc) and stinw.receiveddate &gt;='fromdate' and stinw.receiveddate&lt;= 'todate' group by sinw.grnnumber union select date_part('year', current_date::date) as syear, date_part('month', current_date::date) as smonth,date_part('week', max(stinw.receiveddate) ::date) AS sweek,max(stinw.inwardid) as inwardid , 'Received' as status from wms.wms_storeinward stinw join wms.wms_securityinward sinw on stinw.inwmasterid = sinw.inwmasterid where stinw.returnedby is not null and sinw.isdirecttransferred is NOT true and stinw.inwardid in (select distinct inwardid from wms.wms_stock where inwardid is not null order by inwardid desc) and stinw.receiveddate &gt;='fromdate' and stinw.receiveddate&lt;= 'todate' group by sinw.grnnumber order by sweek</value>
   </data>
   <data name="dataforqualitygraph" xml:space="preserve">
-    <value>Select date_part('year', current_date::date) as syear,
-date_part('month', current_date::date) as smonth,
-inwmasterid,date_part('week', receiveddate::date) AS sweek,receiveddate,qualitychecked from wms.wms_storeinward
-where receiveddate &gt;= (select date_trunc('month', current_date))
-order by sweek</value>
+    <value>Select date_part('year', current_date::date) as syear, date_part('month', current_date::date) as smonth, inwmasterid,date_part('week', max(receiveddate)::date) AS sweek,max(receiveddate) as receiveddate,bool_or(qualitychecked) as qualitychecked,max(confirmqty ) as confirmqty, max(qc.qcby) as qcby from wms.wms_storeinward stinw left outer join wms.wms_qualitycheck qc on qc.inwardid=stinw.inwardid where stinw.receiveddate &gt;='fromdate' and stinw.receiveddate&lt;= 'todate' and stinw.qualitycheckrequired =true and stinw.receivedqty &gt; 0 group by inwmasterid order by sweek</value>
   </data>
   <data name="dataforrequestgraph" xml:space="preserve">
-    <value>Select date_part('year', current_date::date) as syear,
-date_part('month', current_date::date) as smonth,
-date_part('week', requesteddate::date) AS sweek,requesteddate,requestid from wms.materialrequest
-where requesteddate &gt;= (select date_trunc('month', current_date))
-order by sweek</value>
+    <value>Select date_part('year', current_date::date) as syear, date_part('month', current_date::date) as smonth, date_part('week', requesteddate::date) AS sweek,requesteddate,requestid,issuedby,issuedon from wms.materialrequest where requesteddate &gt;='fromdate' and requesteddate&lt;= 'todate' order by sweek</value>
   </data>
   <data name="dataforreservegraph" xml:space="preserve">
-    <value>Select date_part('year', current_date::date) as syear,
-date_part('month', current_date::date) as smonth,
-date_part('week', reservedon::date) AS sweek,reservedon,reserveid from wms.materialreserve
-where reservedon &gt;= (select date_trunc('month', current_date))
-order by sweek</value>
+    <value>Select date_part('year', current_date::date) as syear, date_part('month', current_date::date) as smonth, date_part('week', reservedon::date) AS sweek,reservedon,reserveid from wms.materialreserve where reservedon &gt;='fromdate' and reservedon&lt;= 'todate' order by sweek</value>
   </data>
   <data name="dataforreturngraph" xml:space="preserve">
-    <value>Select date_part('year', current_date::date) as syear,
-date_part('month', current_date::date) as smonth,
-date_part('week', createdon::date) AS sweek,createdon,returnid from wms.wms_materialreturn
-where createdon &gt;= (select date_trunc('month', current_date))
-order by sweek</value>
+    <value>Select date_part('year', current_date::date) as syear, date_part('month', current_date::date) as smonth, date_part('week', createdon::date) AS sweek,createdon,returnid,confirmstatus from wms.wms_materialreturn where createdon &gt;='fromdate' and createdon&lt;= 'todate' order by sweek</value>
   </data>
   <data name="datafortransfergraph" xml:space="preserve">
-    <value>Select date_part('year', current_date::date) as syear,
-date_part('month', current_date::date) as smonth,
-date_part('week', createdon::date) AS sweek,createdon,materialid from wms.wms_transfermaterial
-where createdon &gt;= (select date_trunc('month', current_date))
-order by sweek</value>
+    <value>Select date_part('year', current_date::date) as syear, date_part('month', current_date::date) as smonth, date_part('week', createdon::date) AS sweek,createdon,materialid, tr.transferid,max(tra.approvaldate) as approvaldate from wms.wms_transfermaterial tr left join wms.wms_materialtransferapproval tra on tr.transferid = tra.transferid where createdon &gt;='fromdate' and createdon&lt;= 'todate' group by tr.transferid order by sweek</value>
   </data>
   <data name="getMiscellanousIssuesList" xml:space="preserve">
     <value>select max(st.itemid ) as itemid, max(st.materialid) as material,max(st.poitemdescription) as poitemdescription,

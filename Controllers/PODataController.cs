@@ -705,23 +705,23 @@ namespace WMS.Controllers
 			return await this._poService.getUserdashIEgraphdata();
 		}
 
-		[HttpGet("getManagerdashboardgraphdata")]
-		public async Task<ManagerDashboard> getManagerdashboardgraphdata()
+		[HttpPost("getManagerdashboardgraphdata")]
+		public async Task<ManagerDashboard> getManagerdashboardgraphdata( DashBoardFilters filters)
 		{
-			return await this._poService.getManagerdashboardgraphdata();
+			return await this._poService.getManagerdashboardgraphdata(filters);
 
 		}
 
-		[HttpGet("getweeklyUserdashgraphdata")]
-		public async Task<IEnumerable<UserDashboardGraphModel>> getWeeklyUserdashboardgraphdata()
+		[HttpPost("getweeklyUserdashgraphdata")]
+		public async Task<IEnumerable<UserDashboardGraphModel>> getWeeklyUserdashboardgraphdata(DashBoardFilters filters)
 		{
-			return await this._poService.getWeeklyUserdashboardgraphdata();
+			return await this._poService.getWeeklyUserdashboardgraphdata(filters);
 		}
 
-		[HttpGet("getmonthlyUserdashgraphdata")]
-		public async Task<IEnumerable<UserDashboardGraphModel>> getmonthlyUserdashboardgraphdata()
+		[HttpPost("getmonthlyUserdashgraphdata")]
+		public async Task<IEnumerable<UserDashboardGraphModel>> getmonthlyUserdashboardgraphdata(DashBoardFilters filters)
 		{
-			return await this._poService.getmonthlyUserdashboardgraphdata();
+			return await this._poService.getmonthlyUserdashboardgraphdata(filters);
 		}
 		[HttpGet("Getpagesbyrole")]
 		public async Task<IEnumerable<pageModel>> Getpagesbyrole(int roleid)
@@ -1399,10 +1399,10 @@ namespace WMS.Controllers
 			return await this._poService.addEditReports(wmsgr);
 		}
 
-		[HttpGet("getPMdashboarddata")]
-		public async Task<pmDashboardCards> getPMdashboarddata()
+		[HttpPost("getPMdashboarddata")]
+		public async Task<pmDashboardCards> getPMdashboarddata(DashBoardFilters filters)
 		{
-			return await this._poService.getPMdashboarddata();
+			return await this._poService.getPMdashboarddata(filters);
 
 		}
 		[HttpGet("getmonthlyUserdashboardIEgraphdata")]
@@ -1411,10 +1411,10 @@ namespace WMS.Controllers
 			return await this._poService.getmonthlyUserdashboardIEgraphdata();
 		}
 
-		[HttpGet("getInvdashboarddata")]
-		public async Task<invDashboardCards> getInvdashboarddata()
+		[HttpPost("getInvdashboarddata")]
+		public async Task<invDashboardCards> getInvdashboarddata(DashBoardFilters filters)
 		{
-			return await this._poService.getInvdashboarddata();
+			return await this._poService.getInvdashboarddata(filters);
 
 		}
 		[HttpGet("getUserdashboardgraphPMdata")]
@@ -1424,59 +1424,59 @@ namespace WMS.Controllers
 			return await this._poService.getUserdashboardgraphPMdata();
 		}
 
-		[HttpGet("getReceivedgraph")]
-		public async Task<IEnumerable<GraphModelNew>> getWeeklyUserdashboardReceive()
+		[HttpPost("getReceivedgraph")]
+		public async Task<IEnumerable<GraphModelNew>> getWeeklyUserdashboardReceive(DashBoardFilters filters)
 		{
 
-			return await this._poService.getWeeklyUserdashboardReceive();
+			return await this._poService.getWeeklyUserdashboardReceive(filters);
 		}
 
-		[HttpGet("getQualitygraph")]
-		public async Task<IEnumerable<GraphModelNew>> getWeeklyUserdashboardQuality()
+		[HttpPost("getQualitygraph")]
+		public async Task<IEnumerable<GraphModelNew>> getWeeklyUserdashboardQuality(DashBoardFilters filters)
 		{
 
-			return await this._poService.getWeeklyUserdashboardQuality();
+			return await this._poService.getWeeklyUserdashboardQuality(filters);
 		}
 
-		[HttpGet("getAcceptgraph")]
-		public async Task<IEnumerable<GraphModelNew>> getWeeklyUserdashboardAccept()
+		[HttpPost("getAcceptgraph")]
+		public async Task<IEnumerable<GraphModelNew>> getWeeklyUserdashboardAccept(DashBoardFilters filters)
 		{
 
-			return await this._poService.getWeeklyUserdashboardAccept();
+			return await this._poService.getWeeklyUserdashboardAccept(filters);
 		}
-		[HttpGet("getPutawaygraph")]
-		public async Task<IEnumerable<GraphModelNew>> getWeeklyUserdashboardPutaway()
+		[HttpPost("getPutawaygraph")]
+		public async Task<IEnumerable<GraphModelNew>> getWeeklyUserdashboardPutaway(DashBoardFilters filters)
 		{
 
-			return await this._poService.getWeeklyUserdashboardPutaway();
-		}
-
-		[HttpGet("getRequestgraph")]
-		public async Task<IEnumerable<GraphModelNew>> getWeeklyUserdashboardRequest()
-		{
-
-			return await this._poService.getWeeklyUserdashboardRequest();
+			return await this._poService.getWeeklyUserdashboardPutaway( filters);
 		}
 
-		[HttpGet("getReturngraph")]
-		public async Task<IEnumerable<GraphModelNew>> getWeeklyUserdashboardReturn()
+		[HttpPost("getRequestgraph")]
+		public async Task<IEnumerable<GraphModelNew>> getWeeklyUserdashboardRequest(DashBoardFilters filters)
 		{
 
-			return await this._poService.getWeeklyUserdashboardReturn();
+			return await this._poService.getWeeklyUserdashboardRequest(filters);
 		}
 
-		[HttpGet("getReservegraph")]
-		public async Task<IEnumerable<GraphModelNew>> getWeeklyUserdashboardReserve()
+		[HttpPost("getReturngraph")]
+		public async Task<IEnumerable<GraphModelNew>> getWeeklyUserdashboardReturn(DashBoardFilters filters)
 		{
 
-			return await this._poService.getWeeklyUserdashboardReserve();
+			return await this._poService.getWeeklyUserdashboardReturn(filters);
 		}
 
-		[HttpGet("getTransfergraph")]
-		public async Task<IEnumerable<GraphModelNew>> getWeeklyUserdashboardtransfer()
+		[HttpPost("getReservegraph")]
+		public async Task<IEnumerable<GraphModelNew>> getWeeklyUserdashboardReserve(DashBoardFilters filters)
 		{
 
-			return await this._poService.getWeeklyUserdashboardtransfer();
+			return await this._poService.getWeeklyUserdashboardReserve(filters);
+		}
+
+		[HttpPost("getTransfergraph")]
+		public async Task<IEnumerable<GraphModelNew>> getWeeklyUserdashboardtransfer(DashBoardFilters filters)
+		{
+
+			return await this._poService.getWeeklyUserdashboardtransfer(filters);
 		}
 
 		[HttpGet("getMiscellanousIssueList/{initialstock}")]

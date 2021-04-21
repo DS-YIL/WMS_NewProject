@@ -222,11 +222,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Select date_part(&apos;year&apos;, current_date::date) as syear,
-        ///date_part(&apos;month&apos;, current_date::date) as smonth,
-        ///inwmasterid,date_part(&apos;week&apos;, createddate::date) AS sweek,createddate,initialstock  from wms.wms_stock
-        ///where createddate &gt;= (select date_trunc(&apos;month&apos;, current_date))
-        ///order by sweek.
+        ///   Looks up a localized string similar to select date_part(&apos;year&apos;, current_date::date) as syear, date_part(&apos;month&apos;, current_date::date) as smonth,date_part(&apos;week&apos;, max(stinw.receiveddate) ::date) AS sweek,max(stinw.inwardid) as inwardid ,&apos;Pending&apos; as status from wms.wms_storeinward stinw join wms.wms_securityinward sinw on stinw.inwmasterid = sinw.inwmasterid where stinw.returnedby is not null and sinw.isdirecttransferred is NOT true and stinw.inwardid not in (select distinct inwardid from wms.wms_stock where inwardid is not null order by inwardid  [rest of string was truncated]&quot;;.
         /// </summary>
         public static string dataforputawaygraph {
             get {
@@ -235,11 +231,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Select date_part(&apos;year&apos;, current_date::date) as syear,
-        ///date_part(&apos;month&apos;, current_date::date) as smonth,
-        ///inwmasterid,date_part(&apos;week&apos;, receiveddate::date) AS sweek,receiveddate,qualitychecked from wms.wms_storeinward
-        ///where receiveddate &gt;= (select date_trunc(&apos;month&apos;, current_date))
-        ///order by sweek.
+        ///   Looks up a localized string similar to Select date_part(&apos;year&apos;, current_date::date) as syear, date_part(&apos;month&apos;, current_date::date) as smonth, inwmasterid,date_part(&apos;week&apos;, max(receiveddate)::date) AS sweek,max(receiveddate) as receiveddate,bool_or(qualitychecked) as qualitychecked,max(confirmqty ) as confirmqty, max(qc.qcby) as qcby from wms.wms_storeinward stinw left outer join wms.wms_qualitycheck qc on qc.inwardid=stinw.inwardid where stinw.receiveddate &gt;=&apos;fromdate&apos; and stinw.receiveddate&lt;= &apos;todate&apos; and stinw.qualitycheckrequired =true and  [rest of string was truncated]&quot;;.
         /// </summary>
         public static string dataforqualitygraph {
             get {
@@ -248,11 +240,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Select date_part(&apos;year&apos;, current_date::date) as syear,
-        ///date_part(&apos;month&apos;, current_date::date) as smonth,
-        ///inwmasterid,date_part(&apos;week&apos;, receiveddate::date) AS sweek,receiveddate,grnnumber from wms.wms_securityinward
-        ///where receiveddate &gt;= (select date_trunc(&apos;month&apos;, current_date))
-        ///order by sweek.
+        ///   Looks up a localized string similar to Select date_part(&apos;year&apos;, current_date::date) as syear, date_part(&apos;month&apos;, current_date::date) as smonth, inwmasterid,date_part(&apos;week&apos;, receiveddate::date) AS sweek, receiveddate,grnnumber from wms.wms_securityinward where receiveddate &gt;=&apos;fromdate&apos; and receiveddate&lt;= &apos;todate&apos; and onhold is NOT True and (holdgrstatus is NULL or holdgrstatus = &apos;accepted&apos;) order by sweek.
         /// </summary>
         public static string dataforreceivedgraph {
             get {
@@ -261,11 +249,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Select date_part(&apos;year&apos;, current_date::date) as syear,
-        ///date_part(&apos;month&apos;, current_date::date) as smonth,
-        ///date_part(&apos;week&apos;, requesteddate::date) AS sweek,requesteddate,requestid from wms.materialrequest
-        ///where requesteddate &gt;= (select date_trunc(&apos;month&apos;, current_date))
-        ///order by sweek.
+        ///   Looks up a localized string similar to Select date_part(&apos;year&apos;, current_date::date) as syear, date_part(&apos;month&apos;, current_date::date) as smonth, date_part(&apos;week&apos;, requesteddate::date) AS sweek,requesteddate,requestid,issuedby,issuedon from wms.materialrequest where requesteddate &gt;=&apos;fromdate&apos; and requesteddate&lt;= &apos;todate&apos; order by sweek.
         /// </summary>
         public static string dataforrequestgraph {
             get {
@@ -274,11 +258,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Select date_part(&apos;year&apos;, current_date::date) as syear,
-        ///date_part(&apos;month&apos;, current_date::date) as smonth,
-        ///date_part(&apos;week&apos;, reservedon::date) AS sweek,reservedon,reserveid from wms.materialreserve
-        ///where reservedon &gt;= (select date_trunc(&apos;month&apos;, current_date))
-        ///order by sweek.
+        ///   Looks up a localized string similar to Select date_part(&apos;year&apos;, current_date::date) as syear, date_part(&apos;month&apos;, current_date::date) as smonth, date_part(&apos;week&apos;, reservedon::date) AS sweek,reservedon,reserveid from wms.materialreserve where reservedon &gt;=&apos;fromdate&apos; and reservedon&lt;= &apos;todate&apos; order by sweek.
         /// </summary>
         public static string dataforreservegraph {
             get {
@@ -287,11 +267,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Select date_part(&apos;year&apos;, current_date::date) as syear,
-        ///date_part(&apos;month&apos;, current_date::date) as smonth,
-        ///date_part(&apos;week&apos;, createdon::date) AS sweek,createdon,returnid from wms.wms_materialreturn
-        ///where createdon &gt;= (select date_trunc(&apos;month&apos;, current_date))
-        ///order by sweek.
+        ///   Looks up a localized string similar to Select date_part(&apos;year&apos;, current_date::date) as syear, date_part(&apos;month&apos;, current_date::date) as smonth, date_part(&apos;week&apos;, createdon::date) AS sweek,createdon,returnid,confirmstatus from wms.wms_materialreturn where createdon &gt;=&apos;fromdate&apos; and createdon&lt;= &apos;todate&apos; order by sweek.
         /// </summary>
         public static string dataforreturngraph {
             get {
@@ -300,11 +276,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Select date_part(&apos;year&apos;, current_date::date) as syear,
-        ///date_part(&apos;month&apos;, current_date::date) as smonth,
-        ///date_part(&apos;week&apos;, createdon::date) AS sweek,createdon,materialid from wms.wms_transfermaterial
-        ///where createdon &gt;= (select date_trunc(&apos;month&apos;, current_date))
-        ///order by sweek.
+        ///   Looks up a localized string similar to Select date_part(&apos;year&apos;, current_date::date) as syear, date_part(&apos;month&apos;, current_date::date) as smonth, date_part(&apos;week&apos;, createdon::date) AS sweek,createdon,materialid, tr.transferid,max(tra.approvaldate) as approvaldate from wms.wms_transfermaterial tr left join wms.wms_materialtransferapproval tra on tr.transferid = tra.transferid where createdon &gt;=&apos;fromdate&apos; and createdon&lt;= &apos;todate&apos; group by tr.transferid order by sweek.
         /// </summary>
         public static string datafortransfergraph {
             get {
