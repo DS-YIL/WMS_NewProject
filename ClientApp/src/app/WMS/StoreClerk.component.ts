@@ -87,6 +87,7 @@ export class StoreClerkComponent implements OnInit {
   gateentryid: string = "";
   public inwmasterid: string;
   selectedinvoice: string;
+  isasnreceived: boolean = false;
 
   ngOnInit() {
     //this.autoCompleteObject.focusInput();
@@ -98,7 +99,7 @@ export class StoreClerkComponent implements OnInit {
     this.grnno = this.route.snapshot.queryParams.grnnumber;
     this.gateentryid = this.route.snapshot.queryParams.inwmasterid;
     this.selectedinvoice = "";
-
+    this.isasnreceived = false;
     this.getpendingpos();
     //Email
 
@@ -153,8 +154,14 @@ export class StoreClerkComponent implements OnInit {
 
     }
     if (data.pendingqty > 0) {
-      if (entredvalue > data.pendingqty && !this.isnonpoentry) {
+      if (entredvalue > data.pendingqty && !this.isnonpoentry && !this.isasnreceived) {
         this.messageService.add({ severity: 'error', summary: '', detail: 'Received Quantity should be less than or equal to Pending Quantity' });
+        //(<HTMLInputElement>document.getElementById("receivedqty")).value = "";
+        data.receivedqty = "0";
+        return;
+      }
+      if (entredvalue > data.asnqty && !this.isnonpoentry && this.isasnreceived) {
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Received Quantity should be less than or equal to ASN Quantity' });
         //(<HTMLInputElement>document.getElementById("receivedqty")).value = "";
         data.receivedqty = "0";
         return;
@@ -595,6 +602,7 @@ export class StoreClerkComponent implements OnInit {
     this.isnonpo = false;
     this.isonHold = false;
     this.isonHoldview = false;
+    this.isasnreceived = false;
     this.onholdremarks = "";
     this.podetailsList = [];
     this.wmsService.Getthreewaymatchingdetails(data, invoiceno).subscribe(data => {
@@ -612,6 +620,7 @@ export class StoreClerkComponent implements OnInit {
         this.isonHold = this.podetailsList[0].onhold;
         this.isonHoldview = this.podetailsList[0].onhold;
         this.onholdremarks = this.podetailsList[0].onholdremarks;
+        this.isasnreceived = this.podetailsList[0].isasn;
         if (pono.startsWith("NP") && !this.grnnumber && !this.isonHold) {
           this.isnonpoentry = true;
         }
@@ -846,6 +855,26 @@ export class StoreClerkComponent implements OnInit {
             this.messageService.add({ severity: 'error', summary: '', detail: 'Enter Received quantity' });
             return;
           }
+          if (this.isasnreceived) {
+            var invalidrcv = this.podetailsList.filter(function (element, index) {
+              return (parseInt(element.receivedqty) > element.asnqty);
+            });
+            if (invalidrcv.length > 0) {
+              this.messageService.add({ severity: 'error', summary: '', detail: 'Received Quantity should be less than or equal to ASN Quantity' });
+              return;
+            }
+          }
+          else {
+            var invalidrcv = this.podetailsList.filter(function (element, index) {
+              return (parseInt(element.receivedqty) > element.pendingqty);
+            });
+            if (invalidrcv.length > 0) {
+              this.messageService.add({ severity: 'error', summary: '', detail: 'Received Quantity should be less than or equal to Pending Quantity' });
+              return;
+            }
+
+          }
+         
 
         }
 

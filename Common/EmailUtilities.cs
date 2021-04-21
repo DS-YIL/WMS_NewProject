@@ -452,7 +452,20 @@ namespace WMS.Common
 				//string requestedby = this.getnamebyid(emlSndngList.approvername);
 				subbody = "Gate Pass approved for GatePass  ID : " + emlSndngList.gatepassid + " and ready for outward.";
 				//subbody = mailMessage.Subject;
+				link = linkurl + "WMS/Email/GatePass?NPGatepassId=" + emlSndngList.gatepassid.Trim();
+				//link = linkurl + "WMS/Email/GatePass?GateId=" + emlSndngList.gatepassid.Trim();
+
+
+			}
+			else if (subjecttype == 34)
+			{
+
+				mailMessage.Subject = "Gate Pass approved - GatePass  ID : " + emlSndngList.gatepassid;
+				//string requestedby = this.getnamebyid(emlSndngList.approvername);
+				subbody = "Gate Pass approved for GatePass  ID : " + emlSndngList.gatepassid + " and ready for outward.";
+				//subbody = mailMessage.Subject;
 				link = linkurl + "WMS/Email/GatePass?GatepassId=" + emlSndngList.gatepassid.Trim();
+				
 
 
 			}

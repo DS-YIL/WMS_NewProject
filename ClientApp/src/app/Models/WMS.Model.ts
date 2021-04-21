@@ -169,6 +169,8 @@ export class inwardModel {
   stocktype: string;
   poitemdescription: string;
   unitprice: number;
+  asnqty: number;
+  isasn: boolean;
 }
 
 

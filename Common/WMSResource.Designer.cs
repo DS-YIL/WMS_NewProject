@@ -415,7 +415,7 @@ namespace WMS.Common {
         /// <summary>
         ///   Looks up a localized string similar to select auth.employeeid,rl.email,auth.emailnotification,emailccnotification from  wms.auth_users auth
         /// left outer join wms.employee rl on auth.employeeid = rl.employeeno 
-        /// where auth.roleid = #roleid and (auth.emailnotification is true or auth.emailccnotification is true) and auth.deleteflag is not True.
+        /// where auth.roleid = #roleid and rl.email &lt;&gt; &apos;&apos; and rl.email is not null and (auth.emailnotification is true or auth.emailccnotification is true) and auth.deleteflag is not True.
         /// </summary>
         public static string dynamicemaildata {
             get {
@@ -1583,9 +1583,12 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select mat.pono,mat.materialid as material,mat.itemno::text as lineitemno,ms.materialdescription,mat.poitemdescription,mat.unitprice,mat.materialqty,mat.wmsqty as pendingqty,&apos;#invoice&apos; as invoiceno,&apos;#inw&apos; as inwmasterid,NULL as grnnumber,true as qualitycheck,mat.asnno,mat.asnqty as receivedqty
-        ///from wms.wms_pomaterials mat
-        ///left outer join wms.&quot;MaterialMasterYGS&quot; ms on ms.material = mat.materialid.
+        ///   Looks up a localized string similar to select mat.pono,mat.materialid as material,mat.itemno::text as lineitemno,ms.materialdescription,mat.poitemdescription,mat.unitprice,mat.materialqty,
+        ///case 
+        ///when mat.wmsqty &gt; 0 then mat.wmsqty
+        ///else (select wmsqty from wms.wms_pomaterials wp where pono = mat.pono and materialid = mat.materialid and itemno = mat.itemno and wmsqty is not null and wmsqty &gt; 0 limit 1)
+        ///end as pendingqty,
+        ///&apos;#invoice&apos; as invoiceno,&apos;#inw&apos; as inwmasterid,NULL as grnnumber,true as qualitycheck,mat.asnno,mat.asnqty,0 as receivedqty        /// [rest of string was truncated]&quot;;.
         /// </summary>
         public static string getMaterialsforreceipt {
             get {

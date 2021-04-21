@@ -98,8 +98,8 @@
               </td>
 
               <td class="ptable-cell" style="text-align:center;width:150px;">
-                <a style="cursor:pointer;color:blue;text-decoration:underline;" *ngIf="rowData.gatepassid && selectedrba.gate_pass && employee.roleid=='5'" (click)="showdetails(rowData,ri)">{{rowData.gatepassid}}</a>
-                <a *ngIf="selectedrba.material_issue && employee.roleid!='5'" [routerLink]="['/WMS/GatePassApprover',rowData.gatepassid]" (click)="showdetails(rowData,ri)" routerLinkActive="active">{{rowData.gatepassid}}</a>
+                <a style="cursor:pointer;color:blue;text-decoration:underline;" *ngIf="rowData.gatepassid && selectedrba.gate_pass && employee.roleid=='5' || rowData.isnonproject" (click)="showdetails(rowData,ri)">{{rowData.gatepassid}}</a>
+                <a *ngIf="selectedrba.material_issue && employee.roleid!='5' && !rowData.isnonproject" [routerLink]="['/WMS/GatePassApprover',rowData.gatepassid]" (click)="showdetails(rowData,ri)" routerLinkActive="active">{{rowData.gatepassid}}</a>
               </td>
               <td class="ptable-cell" style="text-align:left" *ngIf="!selectedrba.gatepass_approval">{{rowData.gatepasstype}}</td>
               <td class="ptable-cell" style="text-align:left">{{rowData.vendorname}}</td>
@@ -114,7 +114,10 @@
                 <span *ngIf="rowData.gatepasstype == 'Non Returnable' && !rowData.fmapprovedon && selectedStatus!='Issued'">(PM)-{{rowData.approverstatus}}</span>
                 <span *ngIf="rowData.gatepasstype == 'Non Returnable' && rowData.fmapprovedon && selectedStatus!='Issued'">(FM)-{{rowData.fmapprovedstatus}}</span>
                 
-                <span *ngIf="rowData.approverstatus=='Approved' && selectedStatus=='Issued'" [ngStyle]="{'color':rowData.status === 'Partial Closure' ? 'red' : 'black' }" style="color:red">{{rowData.status}}</span>
+                <span *ngIf="rowData.approverstatus=='Approved' && selectedStatus=='Issued'" [ngStyle]="{'color':rowData.status === 'Partial Closure' ? 'red' : 'black' }" style="color:red">
+                  <span *ngIf="rowData.isnonproject">Approved</span>
+                  <span *ngIf="!rowData.isnonproject">{{rowData.status}}</span>
+                </span>
                 
               </td>
 

@@ -514,6 +514,7 @@ export class GatePassComponent implements OnInit {
       }
       //filtering the based on logged in user if role id is 8(Admin)
       if (this.selectedrba.gate_pass) {
+
         this.totalGatePassList = this.totalGatePassList.filter(li => li.requestedby == this.employee.employeeno);
       }
       this.gatepasslist = [];
@@ -521,7 +522,7 @@ export class GatePassComponent implements OnInit {
         this.gatepasslist = this.totalGatePassList.filter(li => li.gatepasstype == 'Non Returnable' && (li.approverstatus == this.approverstatus || li.approverstatus == null));
       }
       else if (this.selectedrba.material_issue) {
-        this.totalGatePassList = this.totalGatePassList.filter(li => li.isnonproject != true);
+        //this.totalGatePassList = this.totalGatePassList.filter(li => li.isnonproject != true);
         this.totalGatePassList.forEach(item => {
           if (item.gatepasstype == "Returnable" && item.approverstatus == "Approved")
             this.gatepasslist.push(item);
@@ -536,6 +537,15 @@ export class GatePassComponent implements OnInit {
       }
       if (this.emailgateid) {
         this.gatepasslist = this.gatepasslist.filter(li => li.gatepassid == this.emailgateid);
+        if (this.gatepasslist) {
+          if (this.gatepasslist[0].isnonproject == true) {
+            this.selectedStatus = "Issued";
+          }
+          else {
+            this.selectedStatus = "Pending";
+          }
+        }
+       
       }
 
       this.gatepassModelList = [];
@@ -1529,10 +1539,10 @@ export class GatePassComponent implements OnInit {
     //}
     this.constants.gatePassIssueType = this.selectedStatus;
     if (this.selectedStatus == "Pending") {
-      this.gatepassFiltered = this.gatepassModelList.filter(li => li.issuedqty == 0 && li.approverstatus == "Approved");
+      this.gatepassFiltered = this.gatepassModelList.filter(li => li.issuedqty == 0 && li.approverstatus == "Approved" && li.isnonproject != true);
     }
     else if (this.selectedStatus == "Issued") {
-      this.gatepassFiltered = this.gatepassModelList.filter(li => li.issuedqty > 0);
+      this.gatepassFiltered = this.gatepassModelList.filter(li => li.issuedqty > 0 || li.isnonproject == true);
     }
   }
 

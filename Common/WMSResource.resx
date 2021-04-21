@@ -622,6 +622,7 @@ VALUES(@inwmasterid,@receiveddate,@receivedby,@receivedqty,@materialid,@deletefl
     <value>select sinw.invoiceno,inw.pono,inw.lineitemno,sinw.grnnumber,sinw.onhold,sinw.onholdremarks,sinw.unholdedby,sinw.receiveddate,inw.remarks as receiveremarks,inw.materialid as material,ms.materialdescription,inw.poitemdescription,inw.unitprice,
  inw.inwardid,inw.qualitychecked,inw.returnedby,inw.returnedon,inw.returnremarks,inw.receivedqty,inw.returnremarks,inw.materialqty as pendingqty,
  (select materialqty from wms.wms_pomaterials where pono = inw.pono and itemno::integer = inw.lineitemno::integer and materialid = inw.materialid and poitemdescription = inw.poitemdescription limit 1) as materialqty,
+ (select asnqty from wms.wms_pomaterials where pono = inw.pono and itemno::integer = inw.lineitemno::integer and materialid = inw.materialid and poitemdescription = inw.poitemdescription limit 1) as asnqty,
  qc.qualitypassedqty,qc.qualityfailedqty,qc.qcby as checkedby,
  CASE
      WHEN inw.qualitycheckrequired != True and inw.returnedby is null THEN inw.receivedqty
@@ -1410,7 +1411,12 @@ left outer join wms.wms_stock sk on iss.itemid =sk.itemid
 where iss.requestid::text = '#gatepassmaterialid'::text and iss.requesttype = 'gatepass'</value>
   </data>
   <data name="getMaterialsforreceipt" xml:space="preserve">
-    <value>select mat.pono,mat.materialid as material,mat.itemno::text as lineitemno,ms.materialdescription,mat.poitemdescription,mat.unitprice,mat.materialqty,mat.wmsqty as pendingqty,'#invoice' as invoiceno,'#inw' as inwmasterid,NULL as grnnumber,true as qualitycheck,mat.asnno,mat.asnqty as receivedqty
+    <value>select mat.pono,mat.materialid as material,mat.itemno::text as lineitemno,ms.materialdescription,mat.poitemdescription,mat.unitprice,mat.materialqty,
+case 
+when mat.wmsqty &gt; 0 then mat.wmsqty
+else (select wmsqty from wms.wms_pomaterials wp where pono = mat.pono and materialid = mat.materialid and itemno = mat.itemno and wmsqty is not null and wmsqty &gt; 0 limit 1)
+end as pendingqty,
+'#invoice' as invoiceno,'#inw' as inwmasterid,NULL as grnnumber,true as qualitycheck,mat.asnno,mat.asnqty,0 as receivedqty
 from wms.wms_pomaterials mat
 left outer join wms."MaterialMasterYGS" ms on ms.material = mat.materialid</value>
   </data>
@@ -1445,7 +1451,7 @@ where stk.uploadbatchcode = '#code'</value>
   <data name="dynamicemaildata" xml:space="preserve">
     <value>select auth.employeeid,rl.email,auth.emailnotification,emailccnotification from  wms.auth_users auth
  left outer join wms.employee rl on auth.employeeid = rl.employeeno 
- where auth.roleid = #roleid and (auth.emailnotification is true or auth.emailccnotification is true) and auth.deleteflag is not True</value>
+ where auth.roleid = #roleid and rl.email &lt;&gt; '' and rl.email is not null and (auth.emailnotification is true or auth.emailccnotification is true) and auth.deleteflag is not True</value>
   </data>
   <data name="initialstockExceptions" xml:space="preserve">
     <value>select stockid,material,materialdescription,store as locatorname,rack as racknumber,bin as binnumber,quantity as availableqty,value,projectid,pono,shelflifeexpiration as shelflife,

@@ -43,31 +43,39 @@ namespace WMS.DAL
             //UserPrincipal user = null;
             if (user != null)
             {
-                if (ctx.ValidateCredentials(DomainId, pwd))
+                try
                 {
-
-                    using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+                    if (ctx.ValidateCredentials(DomainId, pwd))
                     {
 
-                        try
+                        using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
                         {
-                            pgsql.Open();
-                            string query = "select  * from wms.employee where domainid='" + id.ToUpper() + "'";
-                            data = pgsql.QuerySingle<User>(
-                               query, null, commandType: CommandType.Text);
-                            data.Password = pwd;
-                            userdata.Add(data);
-                        }
-                        catch (Exception Ex)
-                        {
-                            log.ErrorMessage("LoginDataProvider", "validatelogincredentials", Ex.StackTrace.ToString(), Ex.Message.ToString());
-                            userdata = null;
-                        }
-                        finally
-                        {
-                            pgsql.Close();
+
+                            try
+                            {
+                                pgsql.Open();
+                                string query = "select  * from wms.employee where domainid='" + id.ToUpper() + "'";
+                                data = pgsql.QuerySingle<User>(
+                                   query, null, commandType: CommandType.Text);
+                                data.Password = pwd;
+                                userdata.Add(data);
+                            }
+                            catch (Exception Ex)
+                            {
+                                log.ErrorMessage("LoginDataProvider", "validatelogincredentials", Ex.StackTrace.ToString(), Ex.Message.ToString());
+                                userdata = null;
+                            }
+                            finally
+                            {
+                                pgsql.Close();
+                            }
                         }
                     }
+                    }
+                catch(Exception Ex)
+                {
+                    log.ErrorMessage("LoginDataProvider", "validatelogincredentials", Ex.StackTrace.ToString(), Ex.Message.ToString());
+                    userdata = null;
                 }
 
             }

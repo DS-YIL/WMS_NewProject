@@ -308,68 +308,74 @@ export class MaterialRequestViewComponent implements OnInit {
 
   //Submit Requested quantity data
   onSubmitReqData() {
+    debugger;
     if (this.materialList.length <= 0) {
       this.messageService.add({ severity: 'error', summary: '', detail: "Add material to Request" });
     }
     else {
-      debugger;
-      if (this.materialList[this.materialList.length - 1].material == "" || this.materialList[this.materialList.length - 1].material == null) {
+      var datax2 = this.materialList.filter(function (element, index) {
+        return (isNullOrUndefined(element.material) || element.material == "");
+      });
+      if (datax2.length > 0) {
         this.messageService.add({ severity: 'error', summary: '', detail: 'Add Material' });
         return false;
       }
-      else if (this.materialList[this.materialList.length - 1].quantity == 0) {
-        this.messageService.add({ severity: 'error', summary: '', detail: 'Enter Quantity' });
+      var datax4 = this.materialList.filter(function (element, index) {
+        return (isNullOrUndefined(element.materialdescription) || element.materialdescription == "");
+      });
+      if (datax4.length > 0) {
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Add Material Description' });
         return false;
       }
-      else if (this.materialList[this.materialList.length - 1].quantity > 0) {
-        if (this.materialList[this.materialList.length - 1].availableqty < this.materialList[this.materialList.length - 1].quantity) {
-          this.messageService.add({ severity: 'error', summary: '', detail: "Requested Qty cannot exceed available qty" });
-          this.materialList[this.materialList.length - 1].quantity = 0;
-          return false;
+      var datax1 = this.materialList.filter(function (element, index) {
+        return (element.quantity > 0);
+      });
+      if (datax1.length == 0) {
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Enter Request Quantity' });
+        return false;
+      }
+      var datax3 = this.materialList.filter(function (element, index) {
+        return (element.availableqty < element.availableqty);
+      });
+      if (datax3.length > 0) {
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Requested Qty cannot exceed available qty' });
+        return false;
+      }
+      if (isNullOrUndefined(this.selectedproject)) {
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Select Project' });
+        return false;
+      }
+      this.spinner.show();
+      this.btnreq = false;
+      this.materialList.forEach(item => {
+        item.requesterid = this.employee.employeeno;
+        item.remarks = this.requestremarks;
+        item.projectcode = this.selectedproject.value;
+        if (item.quantity == null)
+          item.quantity = 0;
+      })
+
+      this.materialList = this.materialList.filter(function (element, index) {
+        return (element.quantity > 0);
+      });
+      this.wmsService.materialRequestUpdate(this.materialList).subscribe(data => {
+        this.spinner.hide();
+        if (data) {
+          this.requestDialog = false;
+          //this.getdefaultmaterialstorequest();
+          this.getMaterialRequestlist();
+          this.btnreq = true;
+          this.messageService.add({ severity: 'success', summary: '', detail: 'Request sent' });
+          //this.router.navigateByUrl("/WMS/MaterialReqView/" + this.pono);
         }
         else {
-          //submit requested data
-          if (isNullOrUndefined(this.selectedproject)) {
-            this.messageService.add({ severity: 'error', summary: '', detail: 'Select Project' });
-            return false;
-          }
-          this.spinner.show();
-          this.btnreq = false;
-          this.materialList.forEach(item => {
-            item.requesterid = this.employee.employeeno;
-            item.remarks = this.requestremarks;
-            item.projectcode = this.selectedproject.value;
-            if (item.quantity == null)
-              item.quantity = 0;
-          })
-          var data1 = this.materialList.filter(function (element, index) {
-            return (element.quantity > 0);
-          });
-          if (data1.length == 0) {
-            this.messageService.add({ severity: 'error', summary: '', detail: 'Enter Request Quantity' });
-            return false;
-          }
-          this.materialList = this.materialList.filter(function (element, index) {
-            return (element.quantity > 0);
-          });
-          this.wmsService.materialRequestUpdate(this.materialList).subscribe(data => {
-            this.spinner.hide();
-            if (data) {
-              this.requestDialog = false;
-              //this.getdefaultmaterialstorequest();
-              this.getMaterialRequestlist();
-              this.btnreq = true;
-              this.messageService.add({ severity: 'success', summary: '', detail: 'Request sent' });
-              //this.router.navigateByUrl("/WMS/MaterialReqView/" + this.pono);
-            }
-            else {
-              this.btnreq = true;
-              this.messageService.add({ severity: 'error', summary: '', detail: 'Error while sending Request' });
-            }
-
-          });
+          this.btnreq = true;
+          this.messageService.add({ severity: 'error', summary: '', detail: 'Error while sending Request' });
         }
-      }
+
+      });
+    
+      
     }
   }
 

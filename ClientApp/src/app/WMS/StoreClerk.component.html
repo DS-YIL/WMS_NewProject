@@ -49,24 +49,25 @@
             <tr class="mprltbldata">
               <th style="text-align:center;width:5%;">Sl.No.</th>
               <th style="text-align:center;width:10%;">PONo.</th>
-              <th *ngIf="!isnonpo" style="text-align:center;width:8%;">line item No.</th>
-              <th style="text-align:center;width:12%;">Material</th>
+              <th *ngIf="!isnonpo" style="text-align:center;width:5%;">item No.</th>
+              <th style="text-align:center;width:10%;">Material</th>
               <th *ngIf="isnonpo" style="text-align:center;">Material Description</th>
               <th *ngIf="!isnonpo" style="text-align:center;">PO Item Description</th>
               <th *ngIf="!isnonpo && !qualitychecked" style="text-align:center;width:8%;">Material Qty</th>
               <th *ngIf="!isnonpo && !isonHold && !grnnumber" style="text-align:center;width:8%;">Pending Qty</th>
+              <th *ngIf="!isnonpo && !isonHold && isasnreceived" style="text-align:center;width:5%;">ASN Qty</th>
               <th style="text-align:center;width:10%;" *ngIf="!isonHoldview">Received Qty</th>
               <th style="text-align:center;width:15%;" *ngIf="!isonHoldview">Remarks</th>
               <th style="text-align:center;width:10%;" *ngIf="!isonHoldview">QC Required</th>
               <th style="text-align:center;width:10%;" *ngIf="isnonpoentry"></th>
-           </tr>
+            </tr>
           </ng-template>
           <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
-           <tr>
-             <td class="ptable-cell" style="text-align:right;width:5%;">{{ri+1}}</td>
+            <tr>
+              <td class="ptable-cell" style="text-align:right;width:5%;">{{ri+1}}</td>
               <td class="ptable-cell" style="text-align:center;width:10%;">{{rowData.pono}}</td>
-              <td *ngIf="!isnonpo" class="ptable-cell" style="text-align:center;width:8%;">{{rowData.lineitemno}}</td>
-              <td class="ptable-cell" style="text-align:center;width:12%;">
+              <td *ngIf="!isnonpo" class="ptable-cell" style="text-align:center;width:5%;">{{rowData.lineitemno}}</td>
+              <td class="ptable-cell" style="text-align:center;width:10%;">
                 <span *ngIf="!isnonpoentry">{{rowData.material}}</span>
                 <input *ngIf="isnonpoentry" pInputText type="text" (change)="setmatdesc(rowData)" (blur)="validate(rowData,ri)" class="form-control" [(ngModel)]="rowData.material">
               </td>
@@ -80,6 +81,9 @@
               </td>
               <td class="ptable-cell" *ngIf="!isnonpo && !isonHold && !grnnumber" style="text-align:right;width:8%;">
                 <span>{{rowData.pendingqty}}</span>
+              </td>
+              <td class="ptable-cell" *ngIf="!isnonpo && !isonHold && isasnreceived" style="text-align:right;width:5%;">
+                <span>{{rowData.asnqty}}</span>
               </td>
               <td class="ptable-cell" style="text-align:right;width:10%;" *ngIf="!isonHoldview">
                 <span *ngIf="!grnnumber && !isnonpo && isallreceived">N/A</span>
@@ -96,7 +100,7 @@
               <td style="text-align:center;width:10%;" *ngIf="isnonpoentry">
                 <button (click)="deleteRow(ri)" class="btn btn-danger" style="margin-top:10%"><i class="fa fa-trash"></i></button>
               </td>
-           </tr>
+            </tr>
           </ng-template>
         </p-table>
       </div>

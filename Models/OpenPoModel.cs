@@ -41,6 +41,7 @@ namespace WMS.Models
 		public DateTime enteredon { get; set; }
 		public decimal? materialqty { get; set; }
 		public string asn { get; set; }
+		public decimal? asnqty { get; set; }
 		public bool qualitycheck { get; set; }
 		public int inwardid { get; set; }
 		public string remarks { get; set; }
@@ -92,6 +93,7 @@ namespace WMS.Models
 		public bool issupplier { get; set; }
 
 		public decimal? unitprice { get; set; }
+
 
 	}
 

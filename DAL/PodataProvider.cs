@@ -1727,6 +1727,14 @@ namespace WMS.DAL
 
 							foreach (OpenPoModel po in data)
 							{
+								if (obj.asnno != null && obj.asnno != "")
+								{
+									po.isasn = true;
+								}
+                                else
+                                {
+									po.isasn = false;
+								}
 								var fdata = datalist.Where(o => o.Material == po.Material && o.poitemdescription == po.poitemdescription && o.pono == po.pono && o.lineitemno == po.lineitemno && o.asnno == po.asnno).FirstOrDefault();
 								if (fdata == null)
 								{
@@ -10073,10 +10081,11 @@ namespace WMS.DAL
 									}
                                     else
                                     {
-                                        emailmodel.ToEmailId = mailto;
                                         emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
-                                        emailobj.sendEmail(emailmodel, 33);
-                                    }
+                                        emailobj.sendEmail(emailmodel, 33, 3);
+										emailmodel.ToEmailId = mailto;
+										emailobj.sendEmail(emailmodel, 34);
+									}
 									
 								}
 								else
@@ -10162,13 +10171,15 @@ namespace WMS.DAL
 								}
                                 else
                                 {
-									string userquery = WMSResource.getRequesterEmail.Replace("#gatepassid", model.gatepassid); ;
+									
+									emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
+									emailobj.sendEmail(emailmodel, 33, 3);
+									string userquery = WMSResource.getRequesterEmail.Replace("#gatepassid", model.gatepassid);
 									User userdata = DB.QuerySingle<User>(
 									   userquery, null, commandType: CommandType.Text);
 									mailto = userdata.email;
 									emailmodel.ToEmailId = mailto;
-									emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
-									emailobj.sendEmail(emailmodel, 33);
+									emailobj.sendEmail(emailmodel, 34);
 								}
 									
 							}

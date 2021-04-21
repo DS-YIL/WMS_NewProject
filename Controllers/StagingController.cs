@@ -2407,6 +2407,241 @@ namespace WMS.Controllers
 
 
 		/*
+		function : <<loadStockData>>  Author :<<Ramesh>>  
+		Date of Creation <<16-09-2020>>
+		Purpose : <<upload stock data from staging to base tables>>
+		Review Date :<<>>   Reviewed By :<<>>
+		Sourcecode Copyright : Yokogawa India Limited
+		*/
+		public string fixloadStockData()
+		{
+			string insertmessage = "";
+			using (NpgsqlConnection pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+
+			{
+				{
+
+					string query = "select * from wms.st_initialstock si where dataloaderrors is true and Lower(error_description) = Lower(' no rack')";
+					pgsql.Open();
+					var stagingList = pgsql.Query<StagingStockModel>(
+					   query, null, commandType: CommandType.Text);
+
+					int rowinserted = 0;
+					
+					DateTime currentdate = DateTime.Now;
+
+					foreach (StagingStockModel stag_data in stagingList)
+					{
+						NpgsqlTransaction Trans = null;
+						try
+						{
+							// add master table data for store,rack,bin
+
+							Trans = pgsql.BeginTransaction();
+							bool deleteflag = false;
+							//Add locator in masterdata
+							string storeQuery = "Select locatorid from wms.wms_rd_locator where locatorname = '" + stag_data.store + "'";
+							var storeId = pgsql.ExecuteScalar(storeQuery, null);
+							if (storeId == null)
+							{
+								LocationModel store = new LocationModel();
+								store.locatorname = stag_data.store;
+								store.createdate = DateTime.Now;
+								store.isexcelupload = true;
+								//insert wms_rd_locator ##locatorname
+								string locationtype = "";
+								string storagelocationdesc = store.locatorname;
+								if (store.locatorname.ToString().Trim().ToLower() == "ec c block" || store.locatorname.ToString().Trim().ToLower() == "ec unit 2")
+								{
+									locationtype = "Project";
+
+								}
+								else
+								{
+									locationtype = "Plant";
+								}
+								var insertStorequery = "INSERT INTO wms.wms_rd_locator(locatorid, locatorname, createdate,deleteflag,isexcelupload,locationtype,storagelocationdesc)VALUES(default, @locatorname,@createdate,@deleteflag,@isexcelupload,@locationtype,@storagelocationdesc) returning locatorid";
+								var Storeresults = pgsql.ExecuteScalar(insertStorequery, new
+								{
+									store.locatorname,
+									store.createdate,
+									deleteflag,
+									store.isexcelupload,
+									locationtype,
+									storagelocationdesc
+								});
+								storeId = Convert.ToInt32(Storeresults);
+							}
+
+							//Add rack masterdata
+							string rackQuery = "Select rackid from wms.wms_rd_rack where racknumber = '" + stag_data.rack + "' and locatorid=" + storeId + "";
+							var rackId = pgsql.ExecuteScalar(rackQuery, null);
+							if (rackId == null)
+							{
+								LocationModel store = new LocationModel();
+								store.racknumber = stag_data.rack;
+								store.locatorid = Convert.ToInt32(storeId);
+								store.createdate = DateTime.Now;
+								store.isexcelupload = true;
+								//insert wms_rd_locator ##locatorname
+								var insertRackquery = "INSERT INTO wms.wms_rd_rack(rackid,racknumber, locatorid,createdate,deleteflag,isexcelupload)VALUES(default,@racknumber,@locatorid,@createdate,@deleteflag,@isexcelupload)returning rackid";
+								var rackresults = pgsql.ExecuteScalar(insertRackquery, new
+								{
+									store.racknumber,
+									store.locatorid,
+									store.createdate,
+									deleteflag,
+									store.isexcelupload
+								});
+								rackId = Convert.ToInt32(rackresults);
+							}
+
+							//Add Bin masterdata if not exist
+							string binQuery = "Select binid from wms.wms_rd_bin where binnumber = '" + stag_data.bin + "' and locatorid=" + storeId + " and rackid=" + rackId + "";
+							var binId = pgsql.ExecuteScalar(binQuery, null);
+							if (binId == null && (stag_data.bin != null && stag_data.bin != ""))
+							{
+								LocationModel store = new LocationModel();
+								store.binnumber = stag_data.bin;
+								store.locatorid = Convert.ToInt32(storeId);
+								store.rackid = Convert.ToInt32(rackId);
+								store.createdate = DateTime.Now;
+								store.isexcelupload = true;
+								//insert wms_rd_locator ##locatorname
+								var insertbinQuery = "INSERT INTO wms.wms_rd_bin(binid,binnumber, locatorid,rackid,createdate,deleteflag,isexcelupload)VALUES(default,@binnumber,@locatorid,@rackid,@createdate,@deleteflag,@isexcelupload) returning binid";
+								var binresults = pgsql.ExecuteScalar(insertbinQuery, new
+								{
+									store.binnumber,
+									store.locatorid,
+									store.rackid,
+									store.createdate,
+									deleteflag,
+									store.isexcelupload
+								});
+								binId = Convert.ToInt32(binresults);
+
+							}
+
+
+
+
+
+
+							//Add material master data
+							string materialQuery = "Select material from wms.\"MaterialMasterYGS\" where material = '" + stag_data.material + "'";
+							var materialid = pgsql.ExecuteScalar(materialQuery, null);
+							if (materialid == null)
+							{
+								LocationModel store = new LocationModel();
+								store.materialid = stag_data.material;
+								store.materialdescription = stag_data.materialdescription;
+								store.isexcelupload = true;
+								store.locatorid = Convert.ToInt32(storeId);
+								store.rackid = Convert.ToInt32(rackId);
+								int? binid = null;
+								bool qualitycheck = false;
+								if (binId != null)
+								{
+									binid = Convert.ToInt32(binId);
+								}
+								//insert wms_rd_locator ##locatorname
+								int rslt = 0;
+								var insertStorequery = "INSERT INTO wms.\"MaterialMasterYGS\" (material, materialdescription, storeid,rackid,binid,qualitycheck,stocktype,unitprice)VALUES(@materialid, @materialdescription,@locatorid,@rackid,@binid,@qualitycheck,@stocktype,@unitprice)";
+								rslt = pgsql.Execute(insertStorequery, new
+								{
+									store.materialid,
+									store.materialdescription,
+									store.locatorid,
+									store.rackid,
+									binid,
+									qualitycheck,
+									stag_data.stocktype,
+									stag_data.unitprice
+
+
+								});
+							}
+
+
+							StockModel stock = new StockModel();
+							stock.storeid = Convert.ToInt32(storeId);
+							stock.rackid = Convert.ToInt32(rackId);
+							stock.binid = Convert.ToInt32(binId);
+							stock.totalquantity = stag_data.quantity;
+							stock.availableqty = stag_data.quantity;
+							stock.shelflife = stag_data.shelflifeexpiration;
+							stock.createddate = currentdate;
+							stock.materialid = stag_data.material;
+							stock.poitemdescription = stag_data.materialdescription;
+							stock.initialstock = true;
+							string itemlocation = stag_data.store + "." + stag_data.rack;
+							if (stag_data.bin != "" && stag_data.bin != null)
+							{
+								itemlocation += "." + stag_data.bin;
+
+							}
+							int? bindata = null;
+							if (stock.binid > 0)
+							{
+								bindata = stock.binid;
+
+							}
+
+							//insert wms_stock ##storeid, binid,rackid,totalquantity,shelflife ,createddate,materialid ,initialstock
+							var insertquery = "INSERT INTO wms.wms_stock(storeid, binid,rackid,itemlocation,totalquantity,availableqty,shelflife ,createddate,materialid ,initialstock,stcktype,unitprice,value,pono,projectid,createdby,uploadbatchcode,uploadedfilename,poitemdescription)VALUES(@storeid, @bindata,@rackid,@itemlocation,@totalquantity,@availableqty,@shelflife ,@createddate,@materialid ,@initialstock,@stocktype,@unitprice,@value,@pono,@projectid,@uploadedby,@uploadcode,@uploadedfilename,@poitemdescription)";
+							string uploadcode = stag_data.uploadbatchcode;
+							var results = pgsql.ExecuteScalar(insertquery, new
+							{
+								stock.storeid,
+								bindata,
+								stock.rackid,
+								itemlocation,
+								stock.totalquantity,
+								stock.availableqty,
+								stock.shelflife,
+								stock.createddate,
+								stock.materialid,
+								stock.initialstock,
+								stag_data.stocktype,
+								stag_data.unitprice,
+								stag_data.value,
+								stag_data.pono,
+								stag_data.projectid,
+								stag_data.uploadedby,
+								uploadcode,
+								stag_data.uploadedfilename,
+								stock.poitemdescription
+							});
+
+							Trans.Commit();
+							rowinserted = rowinserted + 1;
+
+
+
+
+						}
+						catch (Exception e)
+						{
+							Trans.Rollback();
+							var res = e;
+							insertmessage += e.Message.ToString();
+							log.ErrorMessage("StagingController", "loadStockData", e.StackTrace.ToString(), e.Message.ToString(), url);
+							continue;
+						}
+					}
+					//insertmessage = "-To Database - Inserted_rows_to_Stock_Table:" + rowinserted.ToString();
+					insertmessage = "-Success Records:" + rowinserted.ToString();
+					pgsql.Close();
+
+					//throw new NotImplementedException();
+				}
+			}
+			return insertmessage;
+
+		}
+
+
+		/*
        function : <<loadStockData>>  Author :<<Ramesh>>  
        Date of Creation <<20-11-2020>>
        Purpose : <<upload material label data from excel to staging>>
@@ -4032,6 +4267,150 @@ namespace WMS.Controllers
 
 					loadAuditLog(auditlog);
 					
+				}
+			}
+			catch (Exception e)
+			{
+				var res = e;
+				log.ErrorMessage("StagingController", "uploadCostCenterDataExcel", e.StackTrace.ToString(), "error:" + e.Message.ToString(), url);
+			}
+			return Ok(true);
+		}
+
+		/*function : <<uploadCostCenterDataExcel>>  Author :<<Gayathri>>  
+		Date of Creation <<01-03-2021>>
+		Purpose : <<Update Cost Center data from excel>>
+		Review Date :<<>>   Reviewed By :<<>>
+		Sourcecode Copyright : Yokogawa India Limited*/
+		[HttpGet]
+		[Route("updateProjectCode")]
+		public IActionResult updateProjectCode()
+		{
+			try
+			{
+				using (NpgsqlConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
+				{
+					string testgetquery = "select pono,projectid,uploadbatchcode from wms.wms_stock ws where uploadedfilename is not null";
+
+
+					DB.OpenAsync();
+					var data = DB.QueryAsync<StockModel>(
+					  testgetquery, null, commandType: CommandType.Text);
+
+					foreach (StockModel mdl in data.Result)
+					{
+						string pono = mdl.pono;
+						string query2 = "Select Count(*) as count from wms.wms_project where pono = '" + pono + "'";
+						int Projcount = int.Parse(DB.ExecuteScalar(query2, null).ToString());
+
+						if (Projcount == 0)
+						{
+							string jobname = null;
+							string projectcode = null;
+							string projecttext = null;
+							string projectmanager = null;
+
+							string uploadtype = "Initial Stock";
+							if (!string.IsNullOrEmpty(mdl.projectid) && mdl.projectid != "")
+							{
+								projectcode = mdl.projectid;
+
+							}
+
+							string querypm = "Select Max(projectmanager) as projectmanager from wms.wms_project where  projectcode = '" + projectcode + "' group by projectmanager";
+							var rsltt = DB.ExecuteScalar(querypm, null);
+							if (rsltt != null)
+							{
+								projectmanager = rsltt.ToString();
+							}
+							string uploadcode = mdl.uploadbatchcode;
+							//insert wms_project ##pono,jobname,projectcode,projectname,projectmanager,
+							var insertquery = "INSERT INTO wms.wms_project(pono, jobname, projectcode,projectname,projectmanager,uploadcode,uploadtype)VALUES(@pono, @jobname,@projectcode,@projecttext,@projectmanager,@uploadcode,@uploadtype)";
+							var results = DB.ExecuteScalar(insertquery, new
+							{
+								pono,
+								jobname,
+								projectcode,
+								projecttext,
+								projectmanager,
+								uploadcode,
+								uploadtype
+							});
+						}
+					}
+
+				}
+			}
+			catch (Exception e)
+			{
+				var res = e;
+				log.ErrorMessage("StagingController", "uploadCostCenterDataExcel", e.StackTrace.ToString(), "error:" + e.Message.ToString(), url);
+			}
+			return Ok(true);
+		}
+
+		/*function : <<uploadCostCenterDataExcel>>  Author :<<Gayathri>>  
+		Date of Creation <<01-03-2021>>
+		Purpose : <<Update Cost Center data from excel>>
+		Review Date :<<>>   Reviewed By :<<>>
+		Sourcecode Copyright : Yokogawa India Limited*/
+		[HttpGet]
+		[Route("updateauthuser")]
+		public IActionResult updateauthuser()
+		{
+			try
+			{
+				using (NpgsqlConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
+				{
+					string testgetquery = "select pono,projectid,uploadbatchcode from wms.wms_stock ws where uploadedfilename is not null";
+
+
+					DB.OpenAsync();
+					var data = DB.QueryAsync<StockModel>(
+					  testgetquery, null, commandType: CommandType.Text);
+
+					foreach (StockModel mdl in data.Result)
+					{
+						string pono = mdl.pono;
+						string query2 = "Select Count(*) as count from wms.wms_project where pono = '" + pono + "'";
+						int Projcount = int.Parse(DB.ExecuteScalar(query2, null).ToString());
+
+						if (Projcount == 0)
+						{
+							string jobname = null;
+							string projectcode = null;
+							string projecttext = null;
+							string projectmanager = null;
+
+							string uploadtype = "Initial Stock";
+							if (!string.IsNullOrEmpty(mdl.projectid) && mdl.projectid != "")
+							{
+								projectcode = mdl.projectid;
+
+							}
+
+							string querypm = "Select Max(projectmanager) as projectmanager from wms.wms_project where  projectcode = '" + projectcode + "' group by projectmanager";
+							var rsltt = DB.ExecuteScalar(querypm, null);
+							if (rsltt != null)
+							{
+								projectmanager = rsltt.ToString();
+							}
+							string uploadcode = mdl.uploadbatchcode;
+							//insert wms_project ##pono,jobname,projectcode,projectname,projectmanager,
+							var insertquery = "INSERT INTO wms.wms_project(pono, jobname, projectcode,projectname,projectmanager,uploadcode,uploadtype)VALUES(@pono, @jobname,@projectcode,@projecttext,@projectmanager,@uploadcode,@uploadtype)";
+							var results = DB.ExecuteScalar(insertquery, new
+							{
+								pono,
+								jobname,
+								projectcode,
+								projecttext,
+								projectmanager,
+								uploadcode,
+								uploadtype
+							});
+						}
+					}
+
 				}
 			}
 			catch (Exception e)

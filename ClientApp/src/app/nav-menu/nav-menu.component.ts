@@ -603,6 +603,28 @@ export class NavMenuComponent implements OnInit {
         //}
       }
 
+      else if (eurl.includes("/Email/GatePass?NPGatepassId")) {
+        this.userrolelist.forEach(item => {
+          var dt1 = this.rbalist.filter(function (element, index) {
+            return (element.material_issue && element.roleid == item.roleid);
+          });
+          if (dt1.length > 0) {
+            this.emp.roleid = String(dt1[0].roleid);
+            this.setrolename(this.emp.roleid);
+            localStorage.removeItem('Employee');
+            localStorage.setItem('Employee', JSON.stringify(this.emp));
+            this.bindmenubyrba(eurl);
+            return false;
+          }
+        })
+        //this.gateid = this.route.snapshot.queryParams.gateid;
+        //this.gateid = eurl.split('=')[1];
+        //if (this.gateid) {
+        //  //redirects to GatePass
+        //  this.bindMenuForGatePassUser();
+        //}
+      }
+
 
 
       //Purpose: << Gate Pass PM approver to FM approver >>
@@ -2376,6 +2398,13 @@ export class NavMenuComponent implements OnInit {
         }
       }
       if (eurl.includes("/Email/GatePass?GatepassId")) {
+        this.gateid = this.route.snapshot.queryParams.gateid;
+        this.gateid = eurl.split('=')[1];
+        if (this.gateid) {
+          this.router.navigate(['WMS/GatePass'], { queryParams: { gatepassid: this.gateid } });
+        }
+      }
+      if (eurl.includes("/Email/GatePass?NPGatepassId")) {
         this.gateid = this.route.snapshot.queryParams.gateid;
         this.gateid = eurl.split('=')[1];
         if (this.gateid) {
