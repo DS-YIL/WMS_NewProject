@@ -97,7 +97,7 @@ namespace WMS.Controllers
 
 					////Added Lines -Gayathri
 					//if (System.IO.File.Exists(filePath1))
-     //               {
+					//               {
 					//	using (var stream2 = System.IO.File.Open(filePath1, FileMode.Open, FileAccess.Read))
 					//	{
 					//		using (var reader = ExcelReaderFactory.CreateReader(stream2))
@@ -140,7 +140,7 @@ namespace WMS.Controllers
 					//		}
 					//	}
 					//}
-					
+
 					string uploadcode = Guid.NewGuid().ToString();
 					int i = 0;
 					foreach (DataRow row in dtexcel.Rows)
@@ -261,7 +261,7 @@ namespace WMS.Controllers
 					//string upcode = Guid.NewGuid().ToString();
 					//int J = 0;
 					//if(dtexcel2.Rows.Count>0)
-     //               {
+					//               {
 					//	foreach (DataRow row in dtexcel2.Rows)
 					//	{
 
@@ -314,10 +314,10 @@ namespace WMS.Controllers
 
 					//	}
 					//}
-					
+
 					//int K = 0;
 					//if(dtexcel1.Rows.Count>0)
-     //               {
+					//               {
 					//	foreach (DataRow row in dtexcel1.Rows)
 					//	{
 
@@ -390,7 +390,7 @@ namespace WMS.Controllers
 
 					//	}
 					//}
-					
+
 
 
 					//End - Gayathri
@@ -411,7 +411,7 @@ namespace WMS.Controllers
 		[HttpGet]
 		[Route("uploadCJI3Excel")]
 		public IActionResult loadCJI3Data()
-        {
+		{
 			List<System.IO.FileInfo> files = null;
 			string serverPath = "";
 			//Getting files from server
@@ -421,8 +421,8 @@ namespace WMS.Controllers
 				{
 					serverPath = @"\\ZAWMS-001\WMS_StagingFiles\CJI3\";
 				}
-                else
-                {
+				else
+				{
 					serverPath = @"\\ZAWMS-003\WMS_StagingFiles\CJI3\";
 				}
 				using (new NetworkConnection(serverPath, new NetworkCredential(@"ECH_Admin", "Jan@2019")))
@@ -434,8 +434,8 @@ namespace WMS.Controllers
 					   .Where(file => file.LastWriteTime >= from_date && file.LastWriteTime <= to_date).ToList();
 
 					string uploadguid = Guid.NewGuid().ToString();
-					using(NpgsqlConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
-                    {
+					using (NpgsqlConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
+					{
 						foreach (var file in files)
 						{
 							string filename = Path.GetFileName(file.Name);
@@ -470,8 +470,8 @@ namespace WMS.Controllers
 								foreach (DataRow row in dtexcel.Rows)
 								{
 									string poitem = "";
-                                    try
-                                    {
+									try
+									{
 										MaterialValuation model = new MaterialValuation();
 										model.projectcode = Conversion.toStr(row["Project Definition"]);
 										model.pono = Conversion.toStr(row["Purchasing Document"]);
@@ -485,7 +485,7 @@ namespace WMS.Controllers
 										model.filename = filename;
 										string value = Conversion.toStr(row["Val.in rep.cur."]);
 										string quantity = Conversion.toStr(row["Total quantity"]);
-										poitem = model.projectcode +"-" + model.pono+ "-" + model.itemno;
+										poitem = model.projectcode + "-" + model.pono + "-" + model.itemno;
 										if ((model.projectcode != null && model.projectcode.Trim() != "") || (model.pono != null && model.pono.Trim() != ""))
 										{
 											var insertquery = WMSResource.insertmaterialvaluation;
@@ -508,15 +508,15 @@ namespace WMS.Controllers
 
 									}
 									catch (Exception e)
-                                    {
+									{
 										var res = e;
 										log.ErrorMessage("StagingController", "uploadCJI3Excel", e.StackTrace.ToString(), "PO:" + poitem + "error:" + e.Message.ToString(), url);
 										continue;
 									}
 
-									
+
 								}
-									
+
 
 								AuditLog auditlog = new AuditLog();
 								auditlog.filename = filename;
@@ -530,7 +530,7 @@ namespace WMS.Controllers
 
 						}
 					}
-					
+
 				}
 			}
 			catch (Exception ex)
@@ -557,7 +557,7 @@ namespace WMS.Controllers
 				{
 					serverPath = @"\\ZAWMS-003\WMS_StagingFiles\ZGMMR02023\";
 				}
-				
+
 				using (new NetworkConnection(serverPath, new NetworkCredential(@"ECH_Admin", "Jan@2019")))
 				{
 					var directory = new DirectoryInfo(serverPath);
@@ -657,15 +657,15 @@ namespace WMS.Controllers
 
 								}
 
-									AuditLog auditlog = new AuditLog();
-									auditlog.filename = filename;
-									auditlog.filelocation = filePath;
-									auditlog.uploadedon = DateTime.Now;
-									auditlog.uploadedto = "wms.st_slno_imports";
-									auditlog.modulename = "uploadZGMMR02023Excel";
-								    auditlog.uploadcode = uploadcode;
-								    loadAuditLog(auditlog);
-		
+								AuditLog auditlog = new AuditLog();
+								auditlog.filename = filename;
+								auditlog.filelocation = filePath;
+								auditlog.uploadedon = DateTime.Now;
+								auditlog.uploadedto = "wms.st_slno_imports";
+								auditlog.modulename = "uploadZGMMR02023Excel";
+								auditlog.uploadcode = uploadcode;
+								loadAuditLog(auditlog);
+
 
 							}
 
@@ -872,7 +872,7 @@ namespace WMS.Controllers
 						{
 							string filename = Path.GetFileName(file.Name);
 							if (filename.Trim().StartsWith("Yil_Po_Daily_report"))
-                            {
+							{
 								string storeQuery = "select filename from wms.auditlog a where Lower(filename) = Lower('" + filename + "') limit 1";
 								var fileexists = DB.ExecuteScalar(storeQuery, null);
 
@@ -1017,7 +1017,7 @@ namespace WMS.Controllers
 									loadPOData(uploadcode);
 								}
 							}
-							
+
 
 						}
 					}
@@ -1071,8 +1071,8 @@ namespace WMS.Controllers
 								string filePath = serverPath + filename;
 								DataTable dtexcel = new DataTable();
 								System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
-                                if (filename.Trim().StartsWith("Yil_Po_Daily_report"))
-                                {
+								if (filename.Trim().StartsWith("Yil_Po_Daily_report"))
+								{
 									using (var stream1 = System.IO.File.Open(filePath, FileMode.Open, FileAccess.Read))
 									{
 										using (var reader = ExcelReaderFactory.CreateReader(stream1))
@@ -1209,7 +1209,7 @@ namespace WMS.Controllers
 									loadPOData(uploadcode);
 								}
 								else if (filename.Trim().StartsWith("ZGSDR00006"))
-                                {
+								{
 									using (var stream1 = System.IO.File.Open(filePath, FileMode.Open, FileAccess.Read))
 									{
 										using (var reader = ExcelReaderFactory.CreateReader(stream1))
@@ -1319,7 +1319,7 @@ namespace WMS.Controllers
 									loadAuditLog(auditlog);
 								}
 								else if (filename.Trim().StartsWith("ZGMMR02023"))
-                                {
+								{
 									using (var stream1 = System.IO.File.Open(filePath, FileMode.Open, FileAccess.Read))
 									{
 										using (var reader = ExcelReaderFactory.CreateReader(stream1))
@@ -1407,7 +1407,7 @@ namespace WMS.Controllers
 									loadAuditLog(auditlog);
 								}
 								else if (filename.Trim().StartsWith("YIL_CJI3_file"))
-                                {
+								{
 									using (var stream1 = System.IO.File.Open(filePath, FileMode.Open, FileAccess.Read))
 									{
 										using (var reader = ExcelReaderFactory.CreateReader(stream1))
@@ -1517,7 +1517,7 @@ namespace WMS.Controllers
 				{
 
 					//string query = "select * from wms.stag_po_sap where purchdoc !='' and material !='' and poquantity !=0  ";
-					string query = "select * from wms.stag_po_sap where DataloadErrors is not True and dci!='X' and uploadcode = '"+ uploadcode + "' ";
+					string query = "select * from wms.stag_po_sap where DataloadErrors is not True and dci!='X' and uploadcode = '" + uploadcode + "' ";
 					pgsql.Open();
 					var stagingList = pgsql.Query<StagingModel>(
 					   query, null, commandType: CommandType.Text);
@@ -1576,7 +1576,7 @@ namespace WMS.Controllers
 									uploadcode
 								});
 							}
-							
+
 
 							string queryasn = "Select Count(*) as count from wms.wms_asn where pono = '" + stag_data.purchdoc + "'";
 							int asncountcount = int.Parse(pgsql.ExecuteScalar(queryasn, null).ToString());
@@ -1628,7 +1628,7 @@ namespace WMS.Controllers
 									wmsqty
 								});
 							}
-						
+
 						}
 						catch (Exception e)
 						{
@@ -2427,7 +2427,7 @@ namespace WMS.Controllers
 					   query, null, commandType: CommandType.Text);
 
 					int rowinserted = 0;
-					
+
 					DateTime currentdate = DateTime.Now;
 
 					foreach (StagingStockModel stag_data in stagingList)
@@ -3957,8 +3957,8 @@ namespace WMS.Controllers
 					//var filePath = serverPath + "Yil_Po_Daily_report_" + DateTime.Now.ToString("dd-MM-yyyy").Replace("-", "_") + ".xlsx";
 					var filePath = @"D:\Projects\WMS\Docs\label data\QTSO_1stApril2020_31stFeb2021.xlsx";
 					DB.Open();
-					if(filePath!=null)
-                    {
+					if (filePath != null)
+					{
 						var filePathstr = filePath;
 						string[] filearr = filePathstr.Split("\\");
 						string nameoffile = filearr[filearr.Length - 1];
@@ -3993,30 +3993,30 @@ namespace WMS.Controllers
 
 							try
 							{
-								
+
 								model.sono = Conversion.toStr(row["Sales Document No."]);
 								string projectdef = Conversion.toStr(row["WBS Element (Level 2)"]);
-								if(projectdef.Length>0)
-                                {
+								if (projectdef.Length > 0)
+								{
 									model.projectdef = projectdef.Substring(0, projectdef.Length - 2);
 								}
-                                else
-                                {
+								else
+								{
 									model.projectdef = null;
-                                }
-								
+								}
+
 								model.soitemno = Conversion.toStr(row["Sales Order Item No."]);
 								model.serviceorderno = Conversion.toStr(row["Service Order Number"]);
 								model.customercode = Conversion.toStr(row["Sold-to party"]);
 								model.customername = Conversion.toStr(row["Name: Sold-to party"]);
-								
+
 
 								string error_description = "";
 								bool dataloaderror = false;
-								
+
 								if (string.IsNullOrEmpty(model.projectdef))
 									error_description += "There is NO Project Definition";
-								
+
 
 								var insertquery = "INSERT INTO wms.stag_so_sap(sono,soitemno,projectdef,serviceorderno,customercode,customername,error_description)";
 								insertquery += " VALUES(@sono, @soitemno,@projectdef,@serviceorderno,@customercode,@customername,@error_description)";
@@ -4029,7 +4029,7 @@ namespace WMS.Controllers
 									model.customercode,
 									model.customername,
 									error_description
-									
+
 								});
 
 
@@ -4054,10 +4054,10 @@ namespace WMS.Controllers
 
 
 						loadAuditLog(auditlog);
-						
+
 					}
 				}
-				
+
 			}
 			catch (Exception e)
 			{
@@ -4122,13 +4122,13 @@ namespace WMS.Controllers
 							AssetData model = new AssetData();
 							model.material = Conversion.toStr(row["Material"]);
 							model.materialdescription = Conversion.toStr(row["Material description"]);
-							
+
 
 							string error_description = "";
 							bool dataloaderror = false;
 							if (string.IsNullOrEmpty(model.material.Replace('.', '#')))
 								error_description += "There is No Material";
-							
+
 							var insertquery = "INSERT INTO wms.stag_asset(material,materialdescription,eror_description)";
 							insertquery += " VALUES(@material,@materialdescription, @error_description)";
 							var results = DB.ExecuteScalar(insertquery, new
@@ -4136,7 +4136,7 @@ namespace WMS.Controllers
 								model.material,
 								model.materialdescription,
 								error_description
-								
+
 							});
 
 
@@ -4229,12 +4229,12 @@ namespace WMS.Controllers
 							CostCenterData model = new CostCenterData();
 							model.costcenter = Conversion.toStr(row["Cost Center "]);
 							model.shorttext = Conversion.toStr(row["Short Text "]);
-							
+
 							string error_description = " ";
 							bool dataloaderror = false;
 							if (string.IsNullOrEmpty(model.costcenter))
 								error_description += "There is NO Cost Center Data";
-							
+
 							var insertquery = "INSERT INTO wms.stag_costcenter(costcenter,shorttext,eror_description)";
 							insertquery += " VALUES(@costcenter,@shorttext, @error_description)";
 							var results = DB.ExecuteScalar(insertquery, new
@@ -4266,7 +4266,7 @@ namespace WMS.Controllers
 
 
 					loadAuditLog(auditlog);
-					
+
 				}
 			}
 			catch (Exception e)
@@ -4421,6 +4421,160 @@ namespace WMS.Controllers
 			return Ok(true);
 		}
 
+
+		/*Name of Function : <<uploadExcel>>  Author :<<Prasanna>>  
+		Date of Creation <<22-04-2021>>
+		Purpose : <<upload project master details from ygs SAP excel to staging table>>
+		Review Date :<<>>   Reviewed By :<<>>
+		Sourcecode Copyright : Yokogawa India Limited
+		*/
+
+		[HttpGet]
+		[Route("uploadProjectMaster")]
+		public IActionResult uploadProjectMaster()
+		{
+			try
+			{
+				string serverPath = "";
+				using (NpgsqlConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
+				{
+					serverPath = config.FilePath;
+					var filePath = serverPath + "PM_List_All_SO" + DateTime.Now.ToString("dd-MM-yyyy").Replace("-", "_") + ".xlsx";
+					//var filePath = @"D:\YILProjects\WMS\WMSFiles\PM_List_All_SO.xlsx";
+					DB.Open();
+					var filePathstr = filePath;
+					string[] filearr = filePathstr.Split("\\");
+					string nameoffile = filearr[filearr.Length - 1];
+					DataTable dtexcel = new DataTable();
+
+					string poitem = "";
+					System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+					using (var stream1 = System.IO.File.Open(filePath, FileMode.Open, FileAccess.Read))
+					{
+						using (var reader = ExcelReaderFactory.CreateReader(stream1))
+						{
+
+							var result = reader.AsDataSet(new ExcelDataSetConfiguration()
+							{
+								ConfigureDataTable = (_) => new ExcelDataTableConfiguration()
+								{
+									UseHeaderRow = true
+								}
+							});
+
+							dtexcel = result.Tables[0];
+
+						}
+					}
+
+
+					string uploadcode = Guid.NewGuid().ToString();
+					int i = 0;
+					foreach (DataRow row in dtexcel.Rows)
+					{
+
+
+						try
+						{
+							StagingModel model = new StagingModel();
+							model.projectcode = Conversion.toStr(row["Project Definition"]);
+							model.description = Conversion.toStr(row["Description"]);
+							model.dateofcreation = Conversion.TodtTime(row["Date of Creation"]);
+							model.globalpmno = Conversion.toStr(row["Project Manager"]);
+							model.ProjectManagerName = Conversion.toStr(row["Project Manager Name"]);
+							if (!string.IsNullOrEmpty(model.globalpmno))
+							{
+								string empIdQuery = "select employeeno from wms.employee where globalempno = '" + model.globalpmno + "'";
+								model.projectmanager = DB.QuerySingleOrDefault<string>(
+												empIdQuery, null, commandType: CommandType.Text);
+							}
+							string Error_Description = "";
+							bool dataloaderror = false;
+							if (string.IsNullOrEmpty(model.projectcode.Replace('.', '#')))
+								Error_Description += "There is NO Project Code";
+							if (string.IsNullOrEmpty(model.globalpmno))
+								Error_Description += ", No Project Manager";
+
+							if (!string.IsNullOrEmpty(Error_Description))
+							{
+								dataloaderror = true;
+								model.dataloaderror = true;
+								model.error_description = Error_Description;
+							}
+
+							var insertquery = "INSERT INTO wms.stag_projectmaster(projectcode,description,dateofcreation,globalpmno,projectmanager,ProjectManagerName,datasource,createddate,DataloadErrors ,Error_Description,uploadcode)";
+							insertquery += " VALUES(@projectcode,@description, @dateofcreation,@globalpmno,@projectmanager,@ProjectManagerName,'SAP',current_timestamp,@dataloaderror,@error_description,@uploadcode)";
+							var results = DB.ExecuteScalar(insertquery, new
+							{
+								model.projectcode,
+								model.description,
+								model.dateofcreation,
+								model.globalpmno,
+								model.projectmanager,
+								model.ProjectManagerName,
+								dataloaderror,
+								model.error_description,
+								uploadcode
+							});
+						}
+						catch (Exception e)
+						{
+							var res = e;
+							log.ErrorMessage("StagingController", "uploadProjectMaster", e.StackTrace.ToString(), "PO:" + poitem + "error:" + e.Message.ToString(), url);
+							continue;
+						}
+					}
+
+					DB.Close();
+					AuditLog auditlog = new AuditLog();
+					auditlog.filename = nameoffile;
+					auditlog.filelocation = filePath;
+					auditlog.uploadedon = DateTime.Now;
+					auditlog.uploadedto = "STAG_ProjectMaster_SAP";
+					auditlog.modulename = "uploadProjectMaster";
+					auditlog.uploadcode = uploadcode;
+
+					loadAuditLog(auditlog);
+					loadProjectMasterData(uploadcode);
+				}
+			}
+			catch (Exception e)
+			{
+				var res = e;
+				log.ErrorMessage("StagingController", "uploadProjectMaster", e.StackTrace.ToString(), "error:" + e.Message.ToString(), url);
+			}
+			return Ok(true);
+		}
+		/*Name of Function : <<loadProjectMasterData>>  Author :<<Prasanna>>  
+		Date of Creation <<22-04-2021>>
+		Purpose : <<fill po data from staging to base table>>
+		Review Date :<<>>   Reviewed By :<<>>
+		Sourcecode Copyright : Yokogawa India Limited
+		*/
+		public IActionResult loadProjectMasterData(string uploadcode)
+		{
+			using (NpgsqlConnection pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+
+			{
+				try
+				{
+
+					string query = "UPDATE wms.wms_project SET projectmanager = wms.stag_projectmaster.projectmanager FROM wms.stag_projectmaster WHERE wms.stag_projectmaster.projectcode = wms.wms_project.projectcode ";
+					pgsql.Open();
+					NpgsqlCommand command = new NpgsqlCommand(query, pgsql);
+					Int64 count = (Int64)command.ExecuteNonQuery();
+				}
+				catch (Exception e)
+				{
+					var res = e;
+					log.ErrorMessage("StagingController", "loadProjectMasterData", e.StackTrace.ToString(), e.Message.ToString(), url);
+
+				}
+				pgsql.Close();
+			}
+			return Ok(true);
+
+		}
 
 	}
 }

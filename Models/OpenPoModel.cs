@@ -693,7 +693,7 @@ namespace WMS.Models
 		public string saleorderno { get; set; }
 		public string location { get; set; }
 		public string projectid { get; set; }
-
+		public bool initialstock { get; set; }
 
 	}
 

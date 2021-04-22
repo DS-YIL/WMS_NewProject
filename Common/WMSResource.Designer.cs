@@ -1035,7 +1035,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select sum(sk.availableqty)as availableqty,Max(sk.materialid) as materialid,sk.itemlocation,Max(sk.poitemdescription) as materialdescription,sk.createddate::DATE
+        ///   Looks up a localized string similar to select sum(sk.availableqty)as availableqty,Max(sk.materialid) as materialid,sk.itemlocation,Max(sk.poitemdescription) as materialdescription,sk.createddate::DATE,bool_or(sk.initialstock) as initialstock 
         ///from wms.wms_stock sk 
         ///left outer join wms.&quot;MaterialMasterYGS&quot; ygs on ygs.material=sk.materialid 
         ///where sk.materialid=&apos;#materialid&apos; and lower(sk.poitemdescription)  = lower(&apos;#desc&apos;) 

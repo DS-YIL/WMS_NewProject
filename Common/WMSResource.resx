@@ -1875,7 +1875,7 @@ returning authid</value>
 subroleid=@subroleid,plantid=@plantid,modifiedon=@modifiedon,modifiedby=@modifiedby where authid = #aid</value>
   </data>
   <data name="getitemlocationbymaterialdesc" xml:space="preserve">
-    <value>select sum(sk.availableqty)as availableqty,Max(sk.materialid) as materialid,sk.itemlocation,Max(sk.poitemdescription) as materialdescription,sk.createddate::DATE
+    <value>select sum(sk.availableqty)as availableqty,Max(sk.materialid) as materialid,sk.itemlocation,Max(sk.poitemdescription) as materialdescription,sk.createddate::DATE,bool_or(sk.initialstock) as initialstock 
 from wms.wms_stock sk 
 left outer join wms."MaterialMasterYGS" ygs on ygs.material=sk.materialid 
 where sk.materialid='#materialid' and lower(sk.poitemdescription)  = lower('#desc') 

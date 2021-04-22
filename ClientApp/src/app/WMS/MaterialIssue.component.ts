@@ -36,7 +36,7 @@ export class MaterialIssueComponent implements OnInit {
   public displayItemRequestDialog; RequestDetailsSubmitted: boolean = false;
   public materialRequestDetails: materialRequestDetails;
   public requestId: string;
-  public pono: string="";
+  public pono: string = "";
   public Oldestdata: FIFOValues;
   public itemlocationData: Array<any> = [];
   public itemlocationsaveData: Array<any> = [];
@@ -50,7 +50,7 @@ export class MaterialIssueComponent implements OnInit {
   public issueqtyenable: boolean = true;
   //Email
   reqid: string = "";
- // materialissueList: string = "";
+  // materialissueList: string = "";
   ngOnInit() {
     if (localStorage.getItem("Employee"))
       this.employee = JSON.parse(localStorage.getItem("Employee"));
@@ -62,7 +62,7 @@ export class MaterialIssueComponent implements OnInit {
     if (this.reqid) {
       debugger;
       //get material details for that requestid
-     // this.materialissueList[0].requestid = this.reqid;
+      // this.materialissueList[0].requestid = this.reqid;
       this.getmaterialIssueListbyrequestid();
 
     }
@@ -90,6 +90,21 @@ export class MaterialIssueComponent implements OnInit {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Issue Qty cannot exceed available Qty.' });
       return;
     }
+    var data2 = this.itemlocationData.filter(function (element) {
+      return element.initialstock == true && !(element.issuedqty);
+    });
+    if (data2.length > 0) {
+      this.showAlert();
+    }
+    if (data2.length == 0) {
+      this.issueOnconfirm();
+    }
+  }
+  Cancel() {
+    this.AddDialog = false;
+  }
+
+  issueOnconfirm() {
     var material = this.materialissueList[this.roindex].requestmaterialid;
     this.itemlocationsaveData = this.itemlocationsaveData.filter(function (element, index) {
       return (element.requestmaterialid != material);
@@ -129,10 +144,20 @@ export class MaterialIssueComponent implements OnInit {
     this.btndisable = true;
 
   }
-  Cancel() {
-    this.AddDialog = false;
+  showAlert() {
+    this.ConfirmationService.confirm({
+      message: 'You are not issued from initial stock, Would you like to continue? ',
+      header: 'Confirmation',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        this.messageService.add({ severity: 'info', summary: '', detail: 'You have accepted' });
+        this.issueOnconfirm();
+      },
+      reject: () => {
+        //this.messageService.add({ severity: 'info', summary: '', detail: 'You have ignored' });
+      }
+    });
   }
-
   //shows list of items for particular material
   showmateriallocationList(material, id, rowindex, qty, issuedqty, reservedqty, requestforissueid, requestmaterialid, poitemdescription: string) {
     if (issuedqty <= qty) {
@@ -192,7 +217,7 @@ export class MaterialIssueComponent implements OnInit {
       rowdata.issuedqty = 0;
       return;
     }
-   
+
     var id = $event.target.id;
     if (entredvalue > maxvalue) {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Please enter issue quantity less than Available quantity' });
@@ -277,7 +302,7 @@ export class MaterialIssueComponent implements OnInit {
     this.itemlocationsaveData = this.itemlocationsaveData.filter(function (element, index) {
       return (element.issuedqty > 0);
     });
-   
+
 
     this.wmsService.approvematerialrequest(this.itemlocationsaveData).subscribe(data => {
       this.spinner.hide();

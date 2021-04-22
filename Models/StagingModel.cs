@@ -58,6 +58,10 @@ namespace WMS.Models
 		public string linkageno { get; set; }
 		public string assetsubno { get; set; }
 		public string orderno { get; set; }
+		public string description { get; set; }
+		public DateTime? dateofcreation { get; set; }
+		public string ProjectManagerName { get; set; }
+		public string globalpmno { get; set; }
 
 	}
 
