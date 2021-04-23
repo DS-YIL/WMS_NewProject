@@ -137,7 +137,7 @@
 
 
         </div>
-        <div *ngIf="userroleid == '2' || userroleid == '3' || userroleid == '11'" class="row mt-2 col-lg-12 col-xs-12 col-sm-12 form-inline">
+        <!--<div *ngIf="userroleid == '2' || userroleid == '3' || userroleid == '11'" class="row mt-2 col-lg-12 col-xs-12 col-sm-12 form-inline">
           <div class="col-lg-2 col-xs-2 col-sm-2 form-inline">
             <label class="labelheading"> From Date :</label>&nbsp;
             <p-calendar class="mprldatepick" dateFormat="dd/mm/yy" [(ngModel)]="fromDate" [monthNavigator]="true" [yearNavigator]="true" yearRange="1900:2050"></p-calendar>
@@ -149,9 +149,9 @@
           <div class=" mt-4 col-lg-2 col-xs-2 col-sm-2  form-inline">
             <button type="button" class="btn btn-primary" (click)="updateDashBoardData()">Submit</button>
           </div>
-        </div><br />
+        </div>--><br />
 
-        <div class="container" style="margin:2px" *ngIf="userroleid == '3'">
+        <!--<div class="container" style="margin:2px" *ngIf="userroleid == '3'">
 
           <div class="row mt-2">
             <div class="col-lg-3 mb-3">
@@ -463,10 +463,10 @@
 
 
           </div>
-        </div>
+        </div>-->
         <!-- Cards -->
 
-        <div class="card-header" style="height:20px;padding-top:2px" *ngIf="employee.roleid!=0 && employee.roleid!='10' && employee.roleid !='8' && employee.roleid!='4' && employee.roleid !='5' && employee.roleid!='7'  &&  employee.roleid!='9' &&  employee.roleid!='1'">
+        <!--<div class="card-header" style="height:20px;padding-top:2px" *ngIf="employee.roleid!=0 && employee.roleid!='10' && employee.roleid !='8' && employee.roleid!='4' && employee.roleid !='5' && employee.roleid!='7'  &&  employee.roleid!='9' &&  employee.roleid!='1'">
           <span class="labeltext">
             <i class="fa fa-area-chart"></i>&nbsp;Graphical view
           </span>
@@ -521,13 +521,13 @@
             <p-chart type="bar" [data]="transferchartdata" [height]="180" [options]="chartoptions1"></p-chart>
           </div>
 
-        </div>
+        </div>-->
 
         <!-- End Graphs -->
         <!--<div style="height:60vh" *ngIf="employee.roleid!='2' && employee.roleid !='3' && employee.roleid!='11' ">
           <img src="./assets/wmshome3.png" alt="homepage image" height="100%" width="100%" />
         </div>-->
-        <div *ngIf="userroleid != '2' && userroleid != '3' && userroleid != '11'" style="height:60vh">
+        <div style="height:60vh">
           <img src="./assets/wmshome3.png" alt="homepage image" height="100%" width="100%" />
         </div>
 
