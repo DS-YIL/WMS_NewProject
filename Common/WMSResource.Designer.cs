@@ -2366,7 +2366,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select distinct rl.roleid,rm.rolename as accessname,rl.subroleid,rl.plantid  from wms.v_getAccessList rl
+        ///   Looks up a localized string similar to select distinct rl.roleid,rm.rolename as accessname,rl.subroleid,rl.plantid,rl.isdelegatemember  from wms.v_getAccessList rl
         ///left outer join wms.rolemaster rm on rl.roleid = rm.roleid
         ///where rl.employeeid = &apos;#employeeid&apos;.
         /// </summary>
@@ -2530,9 +2530,9 @@ namespace WMS.Common {
         
         /// <summary>
         ///   Looks up a localized string similar to insert into wms.auth_users
-        ///(authid,employeeid,roleid,createddate,createdby,deleteflag,emailnotification,emailccnotification,subroleid,plantid)
+        ///(authid,employeeid,roleid,createddate,createdby,deleteflag,emailnotification,emailccnotification,subroleid,plantid,isdelegatemember )
         ///values
-        ///(default,@employeeid,@roleid,@createddate,@createdby,@deleteflag,@emailnotification,@emailccnotification,@subroleid,@plantid)
+        ///(default,@employeeid,@roleid,@createddate,@createdby,@deleteflag,@emailnotification,@emailccnotification,@subroleid,@plantid,@isdelegatemember)
         ///returning authid.
         /// </summary>
         public static string insertAuthUser {
@@ -3497,7 +3497,7 @@ namespace WMS.Common {
         
         /// <summary>
         ///   Looks up a localized string similar to update wms.auth_users set deleteflag=@deleteflag,emailnotification=@emailnotification,emailccnotification= @emailccnotification,
-        ///subroleid=@subroleid,plantid=@plantid,modifiedon=@modifiedon,modifiedby=@modifiedby where authid = #aid.
+        ///subroleid=@subroleid,plantid=@plantid,isdelegatemember=@isdelegatemember,modifiedon=@modifiedon,modifiedby=@modifiedby where authid = #aid.
         /// </summary>
         public static string updateauthuser {
             get {

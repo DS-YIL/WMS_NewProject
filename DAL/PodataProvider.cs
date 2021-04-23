@@ -14475,7 +14475,8 @@ namespace WMS.DAL
 								model.emailnotification,
 								model.emailccnotification,
 								subroleid,
-								model.plantid
+								model.plantid,
+								model.isdelegatemember
 							});
 
 						}
@@ -14490,6 +14491,7 @@ namespace WMS.DAL
 								model.emailccnotification,
 								subroleid,
 								model.plantid,
+								model.isdelegatemember,
 								model.modifiedon,
 								model.modifiedby
 							});

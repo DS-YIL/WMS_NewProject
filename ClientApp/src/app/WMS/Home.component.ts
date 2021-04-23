@@ -412,6 +412,7 @@ export class HomeComponent implements OnInit {
     });
     if (data1.length > 0) {
       this.employee.roleid = String(data1[0].roleid);
+      this.employee.isdelegatemember = data1[0].isdelegatemember;
       localStorage.removeItem('Employee');
       localStorage.setItem('Employee', JSON.stringify(this.employee));
       this.navpage.changemenu();

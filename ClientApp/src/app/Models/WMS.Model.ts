@@ -443,6 +443,7 @@ export class authUser {
   modifiedby: string;
   isselected: boolean;
   isdeleted: boolean;
+  isdelegatemember: boolean;
 }
 
 export class AssignProjectModel {

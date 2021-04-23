@@ -1204,6 +1204,7 @@ namespace WMS.Models
 		public string modifiedby { get; set; }
 		public bool isselected { get; set; }
 		public bool isdeleted { get; set; }
+		public bool isdelegatemember { get; set; }
 	}
 	public class userAcessNamesModel
 	{
@@ -1214,6 +1215,8 @@ namespace WMS.Models
 		public int userid { get; set; }
 		public string accessname { get; set; }
 		public string plantid { get; set; }
+		public bool isdelegatemember { get; set; }
+		
 	}
 	public class Enquirydata
 	{

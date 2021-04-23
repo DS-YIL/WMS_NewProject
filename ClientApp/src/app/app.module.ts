@@ -134,6 +134,8 @@ import { AssignRBAComponent } from './WMS/AssignRBA.component';
 import { StoreMasterComponent } from './WMS/StoreMaster.component';
 import { RackMasterComponent } from './WMS/RackMaster.component';
 import { BinMasterComponent } from './WMS/BinMaster.component';
+import { AssignPMComponent } from './WMS/AssignPM.component';
+import { AssignIMComponent } from './WMS/AssignInventoryManage.component';
 
 ////pages
 import { LoginComponent } from './WMS/Login.component';
@@ -257,7 +259,9 @@ import { KeyFilterModule } from 'primeng/keyfilter';
     AssignRBAComponent,
     StoreMasterComponent,
     RackMasterComponent,
-    BinMasterComponent
+    BinMasterComponent,
+    AssignPMComponent,
+    AssignIMComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

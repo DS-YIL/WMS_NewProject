@@ -809,7 +809,7 @@ order by matgt.gatepassmaterialid desc)</value>
     <value>select stocktype from wms.stocklocation where locationid='#locationid' and location='#locationname' and storeid=#stid and rackid=#rkid and binid=#biid limit 1</value>
   </data>
   <data name="getuserroles" xml:space="preserve">
-    <value>select distinct rl.roleid,rm.rolename as accessname,rl.subroleid,rl.plantid  from wms.v_getAccessList rl
+    <value>select distinct rl.roleid,rm.rolename as accessname,rl.subroleid,rl.plantid,rl.isdelegatemember  from wms.v_getAccessList rl
 left outer join wms.rolemaster rm on rl.roleid = rm.roleid
 where rl.employeeid = '#employeeid'</value>
   </data>
@@ -1865,14 +1865,14 @@ order by au.roleid</value>
   </data>
   <data name="insertAuthUser" xml:space="preserve">
     <value>insert into wms.auth_users
-(authid,employeeid,roleid,createddate,createdby,deleteflag,emailnotification,emailccnotification,subroleid,plantid)
+(authid,employeeid,roleid,createddate,createdby,deleteflag,emailnotification,emailccnotification,subroleid,plantid,isdelegatemember )
 values
-(default,@employeeid,@roleid,@createddate,@createdby,@deleteflag,@emailnotification,@emailccnotification,@subroleid,@plantid)
+(default,@employeeid,@roleid,@createddate,@createdby,@deleteflag,@emailnotification,@emailccnotification,@subroleid,@plantid,@isdelegatemember)
 returning authid</value>
   </data>
   <data name="updateauthuser" xml:space="preserve">
     <value>update wms.auth_users set deleteflag=@deleteflag,emailnotification=@emailnotification,emailccnotification= @emailccnotification,
-subroleid=@subroleid,plantid=@plantid,modifiedon=@modifiedon,modifiedby=@modifiedby where authid = #aid</value>
+subroleid=@subroleid,plantid=@plantid,isdelegatemember=@isdelegatemember,modifiedon=@modifiedon,modifiedby=@modifiedby where authid = #aid</value>
   </data>
   <data name="getitemlocationbymaterialdesc" xml:space="preserve">
     <value>select sum(sk.availableqty)as availableqty,Max(sk.materialid) as materialid,sk.itemlocation,Max(sk.poitemdescription) as materialdescription,sk.createddate::DATE,bool_or(sk.initialstock) as initialstock 

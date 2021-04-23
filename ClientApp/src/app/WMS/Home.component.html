@@ -2,524 +2,544 @@
   <div class="col-xs-12 col-sm-12 col-md-12" style="background-image: url('./assets/WMShome.png');height:520px;background-repeat: no-repeat;">
   </div>
 </div>-->
-  <!--<div style="height:85vh" *ngIf="isroleselected">
-    <img src="./assets/wmshome3.png" alt="homepage image" height="100%" width="100%" />
+<!--<div style="height:85vh" *ngIf="isroleselected">
+  <img src="./assets/wmshome3.png" alt="homepage image" height="100%" width="100%" />
 
-  </div>-->
-  <!--<div style="background-image: url('./assets/dashboardbc.png'); height:90vh;background-repeat: no-repeat;width:100vw; background-size: cover;background-repeat: no-repeat;">-->
-    <div class="fullheight" style="background-image: url('./assets/dashboardbc.png');background-repeat: no-repeat;background-size: 100% 100%;">
-      <div class="row" style="margin-left:5px;margin-right:5px;">
-        <div class="col-lg-3 col-md-3">
-          <div class="card" style="width:100%; min-height: 83vh;border-radius:10px;margin-top:10px;max-height:83vh;overflow:scroll">
-            <div class="card-body">
-              <div class="row" style="margin-left:5px;">
-                <div class="col-md-6 col-lg-6 col-sm-6 col-xs-6">
-                  <div class="circle p-overlay-badge p-mr-5" (click)="activeCard($event,'Inbound')">
-                    <img src="./assets/inbound.png" width="40" style="margin-left:10px;margin-top:10px;">
-                    <span class="p-badge" *ngIf="issecurityoperator">{{dashboardmodel.pendingshipments}}</span>
-                  </div>
-                  <div>
-                    <label style="margin-bottom:0px;">Inbound</label>
-                  </div>
-                  <div class="rectangle"></div>
-                  <div class="triangle-down"></div>
-                  <div class="circle p-overlay-badge p-mr-5" (click)="activeCard($event,'Receive')">
-                    <img src="./assets/wf_info.PNG" width="60">
-                    <span class="p-badge" *ngIf="isreceiveuser">{{dashboardmodel.pendingtoreceive}}</span>
-                  </div>
-                  <div>
-                    <label style="margin-bottom:0px;">Receipts</label>
-
-                  </div>
-                  <div class="rectangle"></div>
-                  <div class="triangle-down"></div>
-                  <div class="circle p-overlay-badge p-mr-5" (click)="activeCard($event,'Quality')">
-                    <img src="./assets/wf_Suspense.png" width="60">
-                    <span class="p-badge" *ngIf="isqualityuser">{{dashboardmodel.pendingtoqualitycheck}}</span>
-                  </div>
-                  <div>
-                    <label style="margin-bottom:0px;">Quality</label>
-                  </div>
-                  <div class="rectangle"></div>
-                  <div class="triangle-down"></div>
-                  <div class="circle p-overlay-badge p-mr-5" (click)="activeCard($event,'Putaway')">
-                    <img src="./assets/wf_save.png" width="60">
-                    <span class="p-badge" *ngIf="isputawayuser">{{dashboardmodel.pendingtoputaway}}</span>
-                  </div>
-                  <div>
-                    <label style="margin-bottom:0px;">Put away</label>
-                  </div>
-                  <div class="rectangle"></div>
-                  <div class="triangle-down"></div>
-                  <div class="circle p-overlay-badge p-mr-5" (click)="activeCard($event,'notify')">
-                    <img src="./assets/send-email-icon.jpg" width="60">
-                    <span class="p-badge" *ngIf="isnotifyuser">{{dashboardmodel.pendingnotifytofinance}}</span>
-                  </div>
-                  <div>
-                    <label style="margin-bottom:0px;">Notify to Finance</label>
-                  </div>
-
-
-                </div>
-                <div class="col-md-6 col-lg-6 col-sm-6 col-xs-6">
-                  <div class="circle p-overlay-badge p-mr-5" (click)="activeCard($event,'Reserve')">
-                    <img src="./assets/wf_2.png" width="60">
-                    <span class="p-badge" *ngIf="isreserveuser">{{dashboardmodel.reservedquantityforthisweek}}</span>
-                  </div>
-                  <div>
-                    <label style="margin-bottom:0px;">Reserves</label>
-
-                  </div>
-                  <div class="rectangle"></div>
-                  <div class="triangle-down"></div>
-                  <div class="circle p-overlay-badge p-mr-5" (click)="activeCard($event,'Approve')">
-                    <img src="./assets/wf_approved.png" width="60">
-                    <span class="p-badge" *ngIf="isapprover">{{notifcount}}</span>
-                  </div>
-                  <div>
-                    <label style="margin-bottom:0px;">Approval</label>
-                  </div>
-                  <div class="rectangle"></div>
-                  <div class="triangle-down"></div>
-                  <div class="circle p-overlay-badge p-mr-5" (click)="activeCard($event,'Issue')">
-                    <img src="./assets/wf_ReviewQuotation.PNG" width="60">
-                    <span class="p-badge" *ngIf="isissueuser">{{materialforissuecount}}</span>
-                  </div>
-                  <div>
-                    <label style="margin-bottom:0px;">Material Issue</label>
-                  </div>
-                  <div class="circle p-overlay-badge p-mr-5" style="margin-top:5vh;" (click)="activeCard($event,'onhold')">
-                    <img src="./assets/wf_pending.png" width="60">
-                    <span class="p-badge" *ngIf="isonholduser">{{dashboardmodel.pendingonhold}}</span>
-                  </div>
-                  <div>
-                    <label style="margin-bottom:0px;">On Hold Receipts</label>
-                  </div>
-                  <div class="circle p-overlay-badge p-mr-5" style="margin-top:5vh;" (click)="activeCard($event,'Count')">
-                    <img src="./assets/wf_pending.png" width="60">
-                    <span class="p-badge" *ngIf="iscyclecountuser">{{dashboardmodel.pendingcyclecountapproval}}</span>
-                  </div>
-                  <div>
-                    <label style="margin-bottom:0px;">Cycle count</label>
-                  </div>
-
-
-                </div>
+</div>-->
+<!--<div style="background-image: url('./assets/dashboardbc.png'); height:90vh;background-repeat: no-repeat;width:100vw; background-size: cover;background-repeat: no-repeat;">-->
+<div class="fullheight" style="background-image: url('./assets/dashboardbc.png');background-repeat: no-repeat;background-size: 100% 100%;">
+  <div class="row" style="margin-left:5px;margin-right:5px;">
+    <div class="col-lg-3 col-md-3">
+      <div class="card" style="width:100%; min-height: 83vh;border-radius:10px;margin-top:10px;max-height:83vh;overflow:scroll">
+        <div class="card-body">
+          <div class="row" style="margin-left:5px;">
+            <div class="col-md-6 col-lg-6 col-sm-6 col-xs-6">
+              <div class="circle p-overlay-badge p-mr-5" (click)="activeCard($event,'Inbound')">
+                <img src="./assets/inbound.png" width="40" style="margin-left:10px;margin-top:10px;">
+                <span class="p-badge" *ngIf="issecurityoperator">{{dashboardmodel.pendingshipments}}</span>
+              </div>
+              <div>
+                <label style="margin-bottom:0px;">Inbound</label>
+              </div>
+              <div class="rectangle"></div>
+              <div class="triangle-down"></div>
+              <div class="circle p-overlay-badge p-mr-5" (click)="activeCard($event,'Receive')">
+                <img src="./assets/wf_info.PNG" width="60">
+                <span class="p-badge" *ngIf="isreceiveuser">{{dashboardmodel.pendingtoreceive}}</span>
+              </div>
+              <div>
+                <label style="margin-bottom:0px;">Receipts</label>
 
               </div>
+              <div class="rectangle"></div>
+              <div class="triangle-down"></div>
+              <div class="circle p-overlay-badge p-mr-5" (click)="activeCard($event,'Quality')">
+                <img src="./assets/wf_Suspense.png" width="60">
+                <span class="p-badge" *ngIf="isqualityuser">{{dashboardmodel.pendingtoqualitycheck}}</span>
+              </div>
+              <div>
+                <label style="margin-bottom:0px;">Quality</label>
+              </div>
+              <div class="rectangle"></div>
+              <div class="triangle-down"></div>
+              <div class="circle p-overlay-badge p-mr-5" (click)="activeCard($event,'Putaway')">
+                <img src="./assets/wf_save.png" width="60">
+                <span class="p-badge" *ngIf="isputawayuser">{{dashboardmodel.pendingtoputaway}}</span>
+              </div>
+              <div>
+                <label style="margin-bottom:0px;">Put away</label>
+              </div>
+              <div class="rectangle"></div>
+              <div class="triangle-down"></div>
+              <div class="circle p-overlay-badge p-mr-5" (click)="activeCard($event,'notify')">
+                <img src="./assets/send-email-icon.jpg" width="60">
+                <span class="p-badge" *ngIf="isnotifyuser">{{dashboardmodel.pendingnotifytofinance}}</span>
+              </div>
+              <div>
+                <label style="margin-bottom:0px;">Notify to Finance</label>
+              </div>
 
+
+            </div>
+            <div class="col-md-6 col-lg-6 col-sm-6 col-xs-6">
+              <div class="circle p-overlay-badge p-mr-5" (click)="activeCard($event,'Reserve')">
+                <img src="./assets/wf_2.png" width="60">
+                <span class="p-badge" *ngIf="isreserveuser">{{dashboardmodel.reservedquantityforthisweek}}</span>
+              </div>
+              <div>
+                <label style="margin-bottom:0px;">Reserves</label>
+
+              </div>
+              <div class="rectangle"></div>
+              <div class="triangle-down"></div>
+              <div class="circle p-overlay-badge p-mr-5" (click)="activeCard($event,'Approve')">
+                <img src="./assets/wf_approved.png" width="60">
+                <span class="p-badge" *ngIf="isapprover">{{notifcount}}</span>
+              </div>
+              <div>
+                <label style="margin-bottom:0px;">Approval</label>
+              </div>
+              <div class="rectangle"></div>
+              <div class="triangle-down"></div>
+              <div class="circle p-overlay-badge p-mr-5" (click)="activeCard($event,'Issue')">
+                <img src="./assets/wf_ReviewQuotation.PNG" width="60">
+                <span class="p-badge" *ngIf="isissueuser">{{materialforissuecount}}</span>
+              </div>
+              <div>
+                <label style="margin-bottom:0px;">Material Issue</label>
+              </div>
+              <div class="circle p-overlay-badge p-mr-5" style="margin-top:5vh;" (click)="activeCard($event,'onhold')">
+                <img src="./assets/wf_pending.png" width="60">
+                <span class="p-badge" *ngIf="isonholduser">{{dashboardmodel.pendingonhold}}</span>
+              </div>
+              <div>
+                <label style="margin-bottom:0px;">On Hold Receipts</label>
+              </div>
+              <div class="circle p-overlay-badge p-mr-5" style="margin-top:5vh;" (click)="activeCard($event,'Count')">
+                <img src="./assets/wf_pending.png" width="60">
+                <span class="p-badge" *ngIf="iscyclecountuser">{{dashboardmodel.pendingcyclecountapproval}}</span>
+              </div>
+              <div>
+                <label style="margin-bottom:0px;">Cycle count</label>
+              </div>
 
 
             </div>
 
+          </div>
+
+
+
+        </div>
+
+      </div>
+
+    </div>
+    <div class="col-lg-9 col-md-9">
+
+      <div class="card" style="background-image: url('./assets/dashboardbc.png');background-repeat: no-repeat;margin-top:10px;border-radius:10px;background-size: 100% 100%;">
+        <div class="row">
+
+          <div class="col-lg-6 col-md-6">
+
+          </div>
+          <div class="col-lg-2 col-md-2 ">
+            <label class="labelheading" style="float:right">Switch Role:</label>
+          </div>
+          <div class="col-lg-4 col-md-4">
+            <select class="form-control forms-input" style="width:100% !important;" (change)="Navigatetopagefn()" [(ngModel)]="selectedrolename">
+              <option value="">Select Role</option>
+              <option *ngFor="let data of userrolelist">
+                {{data.accessname}}
+              </option>
+            </select>
+          </div>
+
+
+        </div>
+        <div *ngIf="userroleid == '2' || userroleid == '3' || userroleid == '11'" class="row mt-2 col-lg-12 col-xs-12 col-sm-12 form-inline">
+          <div class="col-lg-2 col-xs-2 col-sm-2 form-inline">
+            <label class="labelheading"> From Date :</label>&nbsp;
+            <p-calendar class="mprldatepick" dateFormat="dd/mm/yy" [(ngModel)]="fromDate" [monthNavigator]="true" [yearNavigator]="true" yearRange="1900:2050"></p-calendar>
+          </div>
+          <div class="col-lg-2 col-xs-2 col-sm-2  form-inline">
+            <label class="labelheading "> To Date :</label>&nbsp;
+            <p-calendar class="mprldatepick" dateFormat="dd/mm/yy" [(ngModel)]="toDate" [monthNavigator]="true" [yearNavigator]="true" yearRange="1900:2050"></p-calendar>
+          </div>
+          <div class=" mt-4 col-lg-2 col-xs-2 col-sm-2  form-inline">
+            <button type="button" class="btn btn-primary" (click)="updateDashBoardData()">Submit</button>
+          </div>
+        </div><br />
+
+        <div class="container" style="margin:2px" *ngIf="userroleid == '3'">
+
+          <div class="row mt-2">
+            <div class="col-lg-3 mb-3">
+              <div class="card" style="width: 14rem;height:6rem;border: 2px solid #6e6969;border-radius: 8px;">
+                <div class="card-body" style="background: #c4bcbc; ">
+                  <h5 class="labelheading" style="font-size:15px">Receipts</h5>
+                  <div class="card-link">
+                    <div class="row justify-content-around">
+                      <div>
+                        <label>Total:</label>
+                        <span class="labelheading">{{totlReceiptsCnt}}</span>
+                      </div>
+                      <div>
+                        <label>Completed:</label>
+                        <span class="labelheading">{{cardDetailslistdata.completedcount}}</span>
+                      </div>
+                      <div>
+                        <label>Pending:</label>
+                        <span class="labelheading">{{cardDetailslistdata.pendingcount}}</span>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-3 mb-3">
+              <div class="card" style="width: 14rem;height:6rem;border: 2px solid #6e6969;border-radius: 8px;">
+                <div class="card-body" style="background: #c4bcbc; ">
+                  <h5 class="labelheading" style="font-size:15px">Quality</h5>
+                  <div class="card-link">
+                    <div class="row justify-content-around">
+                      <div>
+                        <label>Total :</label>
+                        <span *ngIf="totalQulityCnt" class="labelheading">{{totalQulityCnt}}</span>
+                      </div>
+                      <div>
+                        <label>Completed :</label>
+                        <span class="labelheading">{{cardDetailslistdata.qualitycompcount}}</span>
+                      </div>
+                      <div>
+                        <label>Pending :</label>
+                        <span class="labelheading">{{cardDetailslistdata.qualitypendcount}}</span>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-3 mb-3">
+              <div class="card" style="width: 14rem;height:6rem;border: 2px solid #6e6969;border-radius: 8px;">
+                <div class="card-body" style="background: #c4bcbc; ">
+                  <h5 class="labelheading" style="font-size:15px">Acceptance</h5>
+                  <div class="card-link">
+                    <div class="row justify-content-around">
+                      <div>
+                        <label>Total :</label>
+                        <span *ngIf="totalAcceptanceCnt" class="labelheading">{{totalAcceptanceCnt}}</span>
+                      </div>
+                      <div>
+                        <label>Completed :</label>
+                        <span class="labelheading">{{cardDetailslistdata.acceptancecompcount}}</span>
+                      </div>
+                      <div>
+                        <label>Pending :</label>
+                        <span class="labelheading">{{cardDetailslistdata.acceptancependcount}}</span>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-3 mb-3">
+              <div class="card" style="width: 14rem;height:6rem;border: 2px solid #6e6969;border-radius: 8px;">
+                <div class="card-body" style="background: #c4bcbc; ">
+                  <h5 class="labelheading" style="font-size:15px">Put Away</h5>
+                  <div class="card-link">
+                    <div class="row justify-content-around">
+                      <div>
+                        <label>Total :</label>
+                        <span *ngIf="totalputawayCnt" class="labelheading">{{totalputawayCnt}}</span>
+                      </div>
+                      <div>
+                        <label>Completed :</label>
+                        <span class="labelheading">{{cardDetailslistdata.putawaycompcount}}</span>
+                      </div>
+                      <div>
+                        <label>Pending :</label>
+                        <span class="labelheading">{{cardDetailslistdata.putawaypendcount}}</span>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+
+        <div class="container" style="margin:2px" *ngIf="userroleid == '11'">
+          <div class="row">
+
+            <div class="col-lg-3 mb-3">
+              <div class="card" style="width: 12rem;height:6rem;border: 2px solid #6e6969;border-radius: 8px;">
+                <div class="card-body" style="background: #c4bcbc; ">
+                  <h5 class="labelheading" style="font-size:15px">Material Request</h5>
+                  <div class="card-link">
+                    <div class="row justify-content-around">
+
+                      <div>
+                        <label>Total:</label>
+                        <span class="labelheading">{{pmCardDetailslistdata.totalmaterialrequest}}</span>
+                      </div>
+
+                      <div>
+                        <label>Issued:</label>
+                        <span class="labelheading">{{pmCardDetailslistdata.issuedmaterialrequest}}</span>
+                      </div>
+                      <div>
+                        <label>Pending:</label>
+                        <span class="labelheading">{{pmCardDetailslistdata.pendingmaterialrequest}}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+            <div class="col-lg-3 mb-3">
+              <div class="card" style="width: 12rem;height:6rem;border: 2px solid #6e6969;border-radius: 8px;">
+                <div class="card-body" style="background: #c4bcbc; ">
+                  <h5 class="labelheading" style="font-size:15px">Material Return</h5>
+                  <div class="card-link">
+                    <div class="row justify-content-around">
+
+                      <div>
+                        <label>Total:</label>
+                        <span class="labelheading">{{pmCardDetailslistdata.totalmaterialreturn}}</span>
+                      </div>
+                      <div>
+                        <label>Approved:</label>
+                        <span class="labelheading">{{pmCardDetailslistdata.approvedmaterialreturn}}</span>
+                      </div>
+                      <div>
+                        <label>Pending:</label>
+                        <span class="labelheading">{{pmCardDetailslistdata.pendingmaterialreturn}}</span>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+            <div class="col-lg-3 mb-3">
+              <div class="card" style="width: 12rem;height:6rem;border: 2px solid #6e6969;border-radius: 8px;">
+                <div class="card-body" style="background: #c4bcbc; ">
+                  <h5 class="labelheading" style="font-size:15px">Material Reserved</h5>
+                  <div class="card-link">
+                    <div class="row justify-content-around">
+
+                      <div class="col-sm-6">
+                        <label>Total :</label>
+                        <span class="labelheading">{{pmCardDetailslistdata.totalmaterialreserved}}</span>
+                      </div>
+
+
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+            <div class="col-lg-3 mb-3">
+              <div class="card" style="width: 12rem;height:6rem;border: 2px solid #6e6969;border-radius: 8px;">
+                <div class="card-body" style="background: #c4bcbc; ">
+                  <h5 class="labelheading" style="font-size:15px">Material Transfer</h5>
+                  <div class="card-link">
+                    <div class="row justify-content-around">
+                      <div>
+                        <label>Total :</label>
+                        <span class="labelheading">{{pmCardDetailslistdata.totalmaterialtransfer}}</span>
+                      </div>
+
+                      <div>
+                        <label>Approved :</label>
+                        <span class="labelheading">{{pmCardDetailslistdata.approvedmaterialtransfer}}</span>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+
+          </div>
+        </div>
+
+        <div class="container" style="margin:2px" *ngIf="userroleid == '2'">
+          <div class="row">
+
+            <div class="col-lg-3 mb-3">
+              <div class="card" style="width: 12rem;height:6rem;border: 2px solid #6e6969;border-radius: 8px;">
+                <div class="card-body" style="background: #c4bcbc; ">
+                  <h5 class="labelheading" style="font-size:15px">Material Request</h5>
+                  <div class="card-link">
+                    <div class="row justify-content-around">
+
+                      <div>
+                        <label>Total:</label>
+                        <span class="labelheading">{{invCardDetailslistdata.totalmaterialrequests}}</span>
+                      </div>
+
+                      <div>
+                        <label>Issued:</label>
+                        <span class="labelheading">{{invCardDetailslistdata.issuedmaterialrequests}}</span>
+                      </div>
+                      <div>
+                        <label>Pending:</label>
+                        <span class="labelheading">{{invCardDetailslistdata.pendingmaterialrequests}}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-3 mb-3">
+              <div class="card" style="width: 12rem;height:6rem;border: 2px solid #6e6969;border-radius: 8px;">
+                <div class="card-body" style="background: #c4bcbc; ">
+                  <h5 class="labelheading" style="font-size:15px">Material Return</h5>
+                  <div class="card-link">
+                    <div class="row justify-content-around">
+                      <div>
+                        <label>Total:</label>
+                        <span class="labelheading">{{invCardDetailslistdata.totalmaterialreturn}}</span>
+                      </div>
+                      <div>
+                        <label>Approved:</label>
+                        <span class="labelheading">{{invCardDetailslistdata.approvedmaterialreturn}}</span>
+                      </div>
+                      <div>
+                        <label>Pending:</label>
+                        <span class="labelheading">{{invCardDetailslistdata.pendingmaterialreturn}}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 mb-3">
+              <div class="card" style="width: 12rem;height:6rem;border: 2px solid #6e6969;border-radius: 8px;">
+                <div class="card-body" style="background: #c4bcbc; ">
+                  <h5 class="labelheading" style="font-size:15px">Material Reserved</h5>
+                  <div class="card-link">
+                    <div class="row justify-content-around">
+
+                      <div>
+                        <label>Total:</label>
+                        <span class="labelheading">{{invCardDetailslistdata.totalmaterialreserved}}</span>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+
+
+
+            <div class="col-lg-3 mb-3">
+              <div class="card" style="width: 12rem;height:6rem;border: 2px solid #6e6969;border-radius: 8px;">
+                <div class="card-body" style="background: #c4bcbc; ">
+                  <h5 class="labelheading" style="font-size:15px">Material Transfer</h5>
+                  <div class="card-link">
+                    <div class="row justify-content-around">
+
+                      <div>
+                        <label>Total :</label>
+                        <span class="labelheading">{{invCardDetailslistdata.totalmaterialtransfer}}</span>
+                      </div>
+
+                      <div>
+                        <label>Approved :</label>
+                        <span class="labelheading">{{invCardDetailslistdata.approvedmaterialtransfer}}</span>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+
+          </div>
+        </div>
+        <!-- Cards -->
+
+        <div class="card-header" style="height:20px;padding-top:2px" *ngIf="employee.roleid!=0 && employee.roleid!='10' && employee.roleid !='8' && employee.roleid!='4' && employee.roleid !='5' && employee.roleid!='7'  &&  employee.roleid!='9' &&  employee.roleid!='1'">
+          <span class="labeltext">
+            <i class="fa fa-area-chart"></i>&nbsp;Graphical view
+          </span>
+        </div>
+        <div class="row" *ngIf="employee.roleid!='10' && employee.roleid !='8' && employee.roleid!='4' && employee.roleid !='5' && employee.roleid!='7' ">
+          <div class="col-lg-6 col-md-6" *ngIf="employee.roleid =='3'">
+            <h6 class="text-center">Receipt Graph</h6>
+            <p-chart type="bar" [data]="receivedchartdata" [height]="180" [options]="chartoptions1"></p-chart>
+          </div>
+          <div class="col-lg-6 col-md-6" *ngIf="employee.roleid =='3'">
+            <h6 class="text-center">Quality Graph</h6>
+            <p-chart type="bar" [data]="qualitychartdata" [height]="180" [options]="chartoptions1"></p-chart>
+          </div>
+          <div class="col-lg-6 col-md-6" *ngIf="employee.roleid =='3'">
+            <h6 class="text-center">Acceptance Graph</h6>
+            <p-chart type="bar" [data]="acceptchartdata" [height]="180" [options]="chartoptions1"></p-chart>
+          </div>
+          <div class="col-lg-6 col-md-6" *ngIf="employee.roleid =='3'">
+            <h6 class="text-center">PutAway Graph</h6>
+            <p-chart type="bar" [data]="putawaychartdata" [height]="180" [options]="chartoptions1"></p-chart>
+          </div>
+          <div class="col-lg-6 col-md-6" *ngIf="employee.roleid =='2'">
+            <h6 class="text-center">Request Graph</h6>
+            <p-chart type="bar" [data]="requestchartdata" [height]="180" [options]="chartoptions1"></p-chart>
+          </div>
+          <div class="col-lg-6 col-md-6" *ngIf="employee.roleid =='2'">
+            <h6 class="text-center">Return Graph</h6>
+            <p-chart type="bar" [data]="returnchartdata" [height]="180" [options]="chartoptions1"></p-chart>
+          </div>
+          <div class="col-lg-6 col-md-6" *ngIf="employee.roleid =='2'">
+            <h6 class="text-center">Reserve Graph</h6>
+            <p-chart type="bar" [data]="reservechartdata" [height]="180" [options]="chartoptions1"></p-chart>
+          </div>
+          <div class="col-lg-6 col-md-6" *ngIf="employee.roleid =='2'">
+            <h6 class="text-center">Transfer Graph</h6>
+            <p-chart type="bar" [data]="transferchartdata" [height]="180" [options]="chartoptions1"></p-chart>
+          </div>
+          <div class="col-lg-6 col-md-6" *ngIf="employee.roleid =='11'">
+            <h6 class="text-center">Request Graph</h6>
+            <p-chart type="bar" [data]="requestchartdata" [height]="180" [options]="chartoptions1"></p-chart>
+          </div>
+          <div class="col-lg-6 col-md-6" *ngIf="employee.roleid =='11'">
+            <h6 class="text-center">Return Graph</h6>
+            <p-chart type="bar" [data]="returnchartdata" [height]="180" [options]="chartoptions1"></p-chart>
+          </div>
+          <div class="col-lg-6 col-md-6" *ngIf="employee.roleid =='11'">
+            <h6 class="text-center">Reserve Graph</h6>
+            <p-chart type="bar" [data]="reservechartdata" [height]="180" [options]="chartoptions1"></p-chart>
+          </div>
+          <div class="col-lg-6 col-md-6" *ngIf="employee.roleid =='11'">
+            <h6 class="text-center">Transfer Graph</h6>
+            <p-chart type="bar" [data]="transferchartdata" [height]="180" [options]="chartoptions1"></p-chart>
           </div>
 
         </div>
-        <div class="col-lg-9 col-md-9">
 
-          <div class="card" style="background-image: url('./assets/dashboardbc.png');background-repeat: no-repeat;margin-top:10px;border-radius:10px;background-size: 100% 100%;">
-            <div class="row">
-
-              <div class="col-lg-6 col-md-6">
-
-              </div>
-              <div class="col-lg-2 col-md-2 ">
-                <label class="labelheading" style="float:right">Switch Role:</label>
-              </div>
-              <div class="col-lg-4 col-md-4">
-                <select class="form-control forms-input" style="width:100% !important;" (change)="Navigatetopagefn()" [(ngModel)]="selectedrolename">
-                  <option value="">Select Role</option>
-                  <option *ngFor="let data of userrolelist">
-                    {{data.accessname}}
-                  </option>
-                </select>
-              </div>
-
-
-            </div>
-
-
-            <!--<div class="container" style="margin:2px" *ngIf="userroleid == 3">
-              <div class="row">
-
-                <div class="col-lg-3 mb-3">
-                  <div class="card" style="width: 12rem;height:6rem;border: 2px solid #6e6969;border-radius: 8px;">
-                    <div class="card-body" style="background: #c4bcbc; ">
-                      <h5 class="labelheading" style="font-size:15px">Receipts</h5>
-                      <div class="card-link">
-                        <div class="row justify-content-around">
-
-                          <div >
-                            <label> Total :</label>
-                            <span class="labelheading">{{cardDetailslistdata.completedcount}}</span>
-                          </div>
-
-                          <div >
-                            <label>Pending :</label>
-                            <span class="labelheading">{{cardDetailslistdata.pendingcount}}</span>
-                          </div>
-
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-
-                <div class="col-lg-3 mb-3">
-                  <div class="card" style="width: 12rem;height:6rem;border: 2px solid #6e6969;border-radius: 8px;">
-                    <div class="card-body" style="background: #c4bcbc; ">
-                      <h5 class="labelheading" style="font-size:15px">Quality</h5>
-                      <div class="card-link">
-                        <div class="row justify-content-around">
-
-                          <div >
-                            <label>Total :</label>
-                            <span class="labelheading">{{cardDetailslistdata.qualitycompcount}}</span>
-                          </div>
-
-                          <div >
-                            <label>Pending :</label>
-                            <span class="labelheading">{{cardDetailslistdata.qualitypendcount}}</span>
-                          </div>
-
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-
-                <div class="col-lg-3 mb-3">
-                  <div class="card" style="width: 12rem;height:6rem;border: 2px solid #6e6969;border-radius: 8px;">
-                    <div class="card-body" style="background: #c4bcbc; ">
-                      <h5 class="labelheading" style="font-size:15px">Acceptance</h5>
-                      <div class="card-link">
-                        <div class="row justify-content-around">
-
-                          <div>
-                            <label>Total :</label>
-                            <span class="labelheading">{{cardDetailslistdata.acceptancecompcount}}</span>
-                          </div>
-
-                          <div >
-                            <label>Pending :</label>
-                            <span class="labelheading">{{cardDetailslistdata.acceptancependcount}}</span>
-                          </div>
-
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-
-                <div class="col-lg-3 mb-3">
-                  <div class="card" style="width: 12rem;height:6rem;border: 2px solid #6e6969;border-radius: 8px;">
-                    <div class="card-body" style="background: #c4bcbc; ">
-                      <h5 class="labelheading" style="font-size:15px">Put Away</h5>
-                      <div class="card-link">
-                        <div class="row justify-content-around">
-
-                          <div >
-                            <label>Total :</label>
-                            <span class="labelheading">{{cardDetailslistdata.putawaycompcount}}</span>
-                          </div>
-
-                          <div >
-                            <label>Pending :</label>
-                            <span class="labelheading">{{cardDetailslistdata.putawaypendcount}}</span>
-                          </div>
-
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-
-
-              </div>
-            </div>
-
-
-            <div class="container" style="margin:2px" *ngIf="userroleid == 11">
-              <div class="row">
-
-                <div class="col-lg-3 mb-3">
-                  <div class="card" style="width: 12rem;height:6rem;border: 2px solid #6e6969;border-radius: 8px;">
-                    <div class="card-body" style="background: #c4bcbc; ">
-                      <h5 class="labelheading" style="font-size:15px">Material Request</h5>
-                      <div class="card-link">
-                        <div class="row justify-content-around">
-
-                          <div>
-                            <label>Total:</label>
-                            <span class="labelheading">{{pmCardDetailslistdata.totalmaterialrequest}}</span>
-                          </div>
-
-                          <div>
-                            <label>Issued:</label>
-                            <span class="labelheading">{{pmCardDetailslistdata.issuedmaterialrequest}}</span>
-                          </div>
-                          <div>
-                            <label>Pending:</label>
-                            <span class="labelheading">{{pmCardDetailslistdata.pendingmaterialrequest}}</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-
-                <div class="col-lg-3 mb-3">
-                  <div class="card" style="width: 12rem;height:6rem;border: 2px solid #6e6969;border-radius: 8px;">
-                    <div class="card-body" style="background: #c4bcbc; ">
-                      <h5 class="labelheading" style="font-size:15px">Material Return</h5>
-                      <div class="card-link">
-                        <div class="row justify-content-around">
-
-                          <div>
-                            <label>Total:</label>
-                            <span class="labelheading">{{pmCardDetailslistdata.totalmaterialreturn}}</span>
-                          </div>
-                          <div>
-                            <label>Approved:</label>
-                            <span class="labelheading">{{pmCardDetailslistdata.approvedmaterialreturn}}</span>
-                          </div>
-                          <div>
-                            <label>Pending:</label>
-                            <span class="labelheading">{{pmCardDetailslistdata.pendingmaterialreturn}}</span>
-                          </div>
-
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-
-                <div class="col-lg-3 mb-3">
-                  <div class="card" style="width: 12rem;height:6rem;border: 2px solid #6e6969;border-radius: 8px;">
-                    <div class="card-body" style="background: #c4bcbc; ">
-                      <h5 class="labelheading" style="font-size:15px">Material Reserved</h5>
-                      <div class="card-link">
-                        <div class="row justify-content-around">
-
-                          <div class="col-sm-6">
-                            <label>Total :</label>
-                            <span class="labelheading">{{pmCardDetailslistdata.totalmaterialreserved}}</span>
-                          </div>
-
-
-
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-
-                <div class="col-lg-3 mb-3">
-                  <div class="card" style="width: 12rem;height:6rem;border: 2px solid #6e6969;border-radius: 8px;">
-                    <div class="card-body" style="background: #c4bcbc; ">
-                      <h5 class="labelheading" style="font-size:15px">Material Returned</h5>
-                      <div class="card-link">
-                        <div class="row justify-content-around">
-
-                          <div class="col-sm-6">
-                            <label>Total :</label>
-                            <span class="labelheading">{{pmCardDetailslistdata.totalmaterialreturned}}</span>
-                          </div>
-
-
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-
-
-              </div>
-            </div>
-           
-            <div class="container" style="margin:2px" *ngIf="userroleid == 2">
-              <div class="row">
-
-                <div class="col-lg-3 mb-3">
-                  <div class="card" style="width: 12rem;height:6rem;border: 2px solid #6e6969;border-radius: 8px;">
-                    <div class="card-body" style="background: #c4bcbc; ">
-                      <h5 class="labelheading" style="font-size:15px">Material Request</h5>
-                      <div class="card-link">
-                        <div class="row justify-content-around">
-
-                          <div>
-                            <label>Total:</label>
-                            <span class="labelheading">{{invCardDetailslistdata.totalmaterialrequests}}</span>
-                          </div>
-
-                          <div>
-                            <label>Issued:</label>
-                            <span class="labelheading">{{invCardDetailslistdata.issuedmaterialrequests}}</span>
-                          </div>
-                          <div>
-                            <label>Pending:</label>
-                            <span class="labelheading">{{invCardDetailslistdata.pendingmaterialrequests}}</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-
-                <div class="col-lg-3 mb-3">
-                  <div class="card" style="width: 12rem;height:6rem;border: 2px solid #6e6969;border-radius: 8px;">
-                    <div class="card-body" style="background: #c4bcbc; ">
-                      <h5 class="labelheading" style="font-size:15px">Material Reserve</h5>
-                      <div class="card-link">
-                        <div class="row justify-content-around">
-
-                          <div>
-                            <label>Total:</label>
-                            <span class="labelheading">{{invCardDetailslistdata.totalmaterialreserved}}</span>
-                          </div>
-
-
-
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-
-                <div class="col-lg-3 mb-3">
-                  <div class="card" style="width: 12rem;height:6rem;border: 2px solid #6e6969;border-radius: 8px;">
-                    <div class="card-body" style="background: #c4bcbc; ">
-                      <h5 class="labelheading" style="font-size:15px">Material Return</h5>
-                      <div class="card-link">
-                        <div class="row justify-content-around">
-
-                          <div>
-                            <label>Total :</label>
-                            <span class="labelheading">{{invCardDetailslistdata.totalmaterialreturn}}</span>
-                          </div>
-
-
-
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-
-                <div class="col-lg-3 mb-3">
-                  <div class="card" style="width: 12rem;height:6rem;border: 2px solid #6e6969;border-radius: 8px;">
-                    <div class="card-body" style="background: #c4bcbc; ">
-                      <h5 class="labelheading" style="font-size:15px">Material Transfer</h5>
-                      <div class="card-link">
-                        <div class="row justify-content-around">
-
-                          <div>
-                            <label>Total :</label>
-                            <span class="labelheading">{{invCardDetailslistdata.totalmaterialtransfer}}</span>
-                          </div>
-
-                          <div>
-                            <label>Approved :</label>
-                            <span class="labelheading">{{invCardDetailslistdata.approvedmaterialtransfer}}</span>
-                          </div>
-
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-
-
-              </div>
-            </div>-->
-            <!-- Cards -->
-
-            <!--<div class="card-header" style="height:20px;padding-top:2px" *ngIf="employee.roleid!='10' && employee.roleid !='8' && employee.roleid!='4' && employee.roleid !='5' && employee.roleid!='7'  &&  employee.roleid!='9' &&  employee.roleid!='1'">
-              <span class="labeltext">
-                <i class="fa fa-area-chart"></i>&nbsp;Graphical view
-              </span>
-            </div>
-            <div class="row" *ngIf="employee.roleid!='10' && employee.roleid !='8' && employee.roleid!='4' && employee.roleid !='5' && employee.roleid!='7' ">
-              <div class="col-lg-6 col-md-6" *ngIf="employee.roleid =='3'">
-                <h6 class="text-center">Receipt Graph</h6>
-                <p-chart type="bar" [data]="receivedchartdata" [height]="180" [options]="chartoptions1"></p-chart>
-              </div>
-              <div class="col-lg-6 col-md-6" *ngIf="employee.roleid =='3'">
-                <h6 class="text-center">Quality Graph</h6>
-                <p-chart type="bar" [data]="qualitychartdata" [height]="180" [options]="chartoptions1"></p-chart>
-              </div>
-              <div class="col-lg-6 col-md-6" *ngIf="employee.roleid =='3'">
-                <h6 class="text-center">Acceptance Graph</h6>
-                <p-chart type="bar" [data]="acceptchartdata" [height]="180" [options]="chartoptions1"></p-chart>
-              </div>
-              <div class="col-lg-6 col-md-6" *ngIf="employee.roleid =='3'">
-                <h6 class="text-center">PutAway Graph</h6>
-                <p-chart type="bar" [data]="putawaychartdata" [height]="180" [options]="chartoptions1"></p-chart>
-              </div>
-              <div class="col-lg-6 col-md-6" *ngIf="employee.roleid =='2'">
-                <h6 class="text-center">Request Graph</h6>
-                <p-chart type="bar" [data]="requestchartdata" [height]="180" [options]="chartoptions1"></p-chart>
-              </div>
-              <div class="col-lg-6 col-md-6" *ngIf="employee.roleid =='2'">
-                <h6 class="text-center">Return Graph</h6>
-                <p-chart type="bar" [data]="returnchartdata" [height]="180" [options]="chartoptions1"></p-chart>
-              </div>
-              <div class="col-lg-6 col-md-6" *ngIf="employee.roleid =='2'">
-                <h6 class="text-center">Reserve Graph</h6>
-                <p-chart type="bar" [data]="reservechartdata" [height]="180" [options]="chartoptions1"></p-chart>
-              </div>
-              <div class="col-lg-6 col-md-6" *ngIf="employee.roleid =='2'">
-                <h6 class="text-center">Transfer Graph</h6>
-                <p-chart type="bar" [data]="transferchartdata" [height]="180" [options]="chartoptions1"></p-chart>
-              </div>
-              <div class="col-lg-6 col-md-6" *ngIf="employee.roleid =='11'">
-                <h6 class="text-center">Request Graph</h6>
-                <p-chart type="bar" [data]="requestchartdata" [height]="180" [options]="chartoptions1"></p-chart>
-              </div>
-              <div class="col-lg-6 col-md-6" *ngIf="employee.roleid =='11'">
-                <h6 class="text-center">Return Graph</h6>
-                <p-chart type="bar" [data]="returnchartdata" [height]="180" [options]="chartoptions1"></p-chart>
-              </div>
-              <div class="col-lg-6 col-md-6" *ngIf="employee.roleid =='11'">
-                <h6 class="text-center">Reserve Graph</h6>
-                <p-chart type="bar" [data]="reservechartdata" [height]="180" [options]="chartoptions1"></p-chart>
-              </div>
-              <div class="col-lg-6 col-md-6" *ngIf="employee.roleid =='11'">
-                <h6 class="text-center">Transfer Graph</h6>
-                <p-chart type="bar" [data]="transferchartdata" [height]="180" [options]="chartoptions1"></p-chart>
-              </div>
-             
-            </div>-->
-           
-            <!-- End Graphs -->
-            <!--<div style="height:60vh" *ngIf="employee.roleid!='2' && employee.roleid !='3' && employee.roleid!='11' ">
-              <img src="./assets/wmshome3.png" alt="homepage image" height="100%" width="100%" />
-            </div>-->
-             <div style="height:60vh">
-              <img src="./assets/wmshome3.png" alt="homepage image" height="100%" width="100%" />
-            </div>
-
-          </div>
-
-
-          </div>
+        <!-- End Graphs -->
+        <!--<div style="height:60vh" *ngIf="employee.roleid!='2' && employee.roleid !='3' && employee.roleid!='11' ">
+          <img src="./assets/wmshome3.png" alt="homepage image" height="100%" width="100%" />
+        </div>-->
+        <div *ngIf="userroleid != '2' && userroleid != '3' && userroleid != '11'" style="height:60vh">
+          <img src="./assets/wmshome3.png" alt="homepage image" height="100%" width="100%" />
+        </div>
 
       </div>
 
 
-
-
     </div>
+
+  </div>
+
+
+
+
+</div>
 

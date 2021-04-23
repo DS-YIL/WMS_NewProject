@@ -59,8 +59,8 @@ export class NavMenuComponent implements OnInit {
   gateentryid: string = "";
   inwmasterid: string = "";
   transferid: string = "";
- 
-  
+
+
   //variables used for rba
   //for security
   showHome: boolean = false;
@@ -69,8 +69,8 @@ export class NavMenuComponent implements OnInit {
   showoutwardinwardreturnable: boolean = false;
   showoutwardinwardnonreturnable: boolean = false;
   showoutbound: boolean = false;
-  
-  
+
+
   ngOnInit() {
     debugger;
     this.setdefaultmenuview();
@@ -89,7 +89,7 @@ export class NavMenuComponent implements OnInit {
     if (localStorage.getItem("Employee")) {
       //this.getrbalist();
       //if (localStorage.getItem("rbalist")) {
-        
+
       //  this.rbalist = JSON.parse(localStorage.getItem("rbalist")) as rbamaster[];
       //}
 
@@ -125,8 +125,8 @@ export class NavMenuComponent implements OnInit {
           alert("Selected Role is not assigned to you, select Your role");
           this.router.navigateByUrl("WMS/Login");
         }
-        var rid = this.emp.roleid; 
-        
+        var rid = this.emp.roleid;
+
         var data1 = this.userrolelist.filter(function (element, index) {
           return (element.roleid == parseInt(rid));
         });
@@ -144,7 +144,7 @@ export class NavMenuComponent implements OnInit {
         else {
           if (eurl.includes("/Email")) {
             this.getrbalist(eurl);
-           
+
           }
           else {
             //this.bindMenu("default");
@@ -184,13 +184,13 @@ export class NavMenuComponent implements OnInit {
         else {
           this.bindmenubyrba();
         }
-        
-       
+
+
       }
     })
 
   }
-  
+
   setrolename(roleid: any) {
     var rid = roleid;
     if (isNullOrUndefined(this.userrolelist)) {
@@ -235,9 +235,9 @@ export class NavMenuComponent implements OnInit {
               return false;
             }
           }
-         
+
         })
-        
+
         //this.inwmasterid = this.route.snapshot.queryParams.gateentryid;
         //this.gateentryid = eurl.split('=')[1];
         //if (this.gateentryid) {
@@ -264,7 +264,7 @@ export class NavMenuComponent implements OnInit {
               return false;
             }
           }
-       
+
         })
         //this.grnno = this.route.snapshot.queryParams.grnno;
         //this.grnno = eurl.split('=')[1];
@@ -293,9 +293,9 @@ export class NavMenuComponent implements OnInit {
               this.bindmenubyrba(eurl);
               return false;
             }
-          }  
+          }
         })
-        
+
         //this.grnno = this.route.snapshot.queryParams.grnnumber;
         //this.grnno = eurl.split('=')[1];
         //if (this.grnno) {
@@ -323,12 +323,12 @@ export class NavMenuComponent implements OnInit {
             }
 
           }
-         
+
         })
         //this.reqid = this.route.snapshot.queryParams.requestid;
         //this.reqid = eurl.split('=')[1];
         //if (this.reqid) {
-         // this.bindMenuForPMEmails("material");
+        // this.bindMenuForPMEmails("material");
         //}
       }
 
@@ -359,21 +359,21 @@ export class NavMenuComponent implements OnInit {
 
       else if (eurl.includes("/Email/IssueSTOMaterial?ReqId")) {
         var found = false;
-          this.userrolelist.forEach(item => {
-            if (!found) {
-              var dt1 = this.rbalist.filter(function (element, index) {
-                return (element.material_issue && element.roleid == item.roleid);
-              });
-              if (dt1.length > 0) {
-                this.emp.roleid = String(dt1[0].roleid);
-                this.setrolename(this.emp.roleid);
-                localStorage.removeItem('Employee');
-                localStorage.setItem('Employee', JSON.stringify(this.emp));
-                found = true;
-                this.bindmenubyrba(eurl);
-              }
+        this.userrolelist.forEach(item => {
+          if (!found) {
+            var dt1 = this.rbalist.filter(function (element, index) {
+              return (element.material_issue && element.roleid == item.roleid);
+            });
+            if (dt1.length > 0) {
+              this.emp.roleid = String(dt1[0].roleid);
+              this.setrolename(this.emp.roleid);
+              localStorage.removeItem('Employee');
+              localStorage.setItem('Employee', JSON.stringify(this.emp));
+              found = true;
+              this.bindmenubyrba(eurl);
             }
-          })
+          }
+        })
       }
       else if (eurl.includes("/Email/grnputaway?GRNo")) {
         var found = false;
@@ -392,7 +392,7 @@ export class NavMenuComponent implements OnInit {
               this.bindmenubyrba(eurl);
             }
           }
-         
+
         })
       }
       else if (eurl.includes("/Email/ApprovalSubcontractingMaterial?ReqId")) {
@@ -1007,7 +1007,7 @@ export class NavMenuComponent implements OnInit {
       ]
 
     });
-   
+
     this.router.navigate(['WMS/QualityCheck'], { queryParams: { grnnumber: this.grnno } });
     let element1: HTMLDivElement = document.getElementById("menudiv") as HTMLDivElement;
     element1.hidden = false;
@@ -1116,7 +1116,7 @@ export class NavMenuComponent implements OnInit {
       this.router.navigate(['WMS/MaterialIssueDashboard'], { queryParams: { requestid: this.reqid } });
     }
 
-    
+
     let element1: HTMLDivElement = document.getElementById("menudiv") as HTMLDivElement;
     element1.hidden = false;
   }
@@ -1207,12 +1207,33 @@ export class NavMenuComponent implements OnInit {
 
     });
     this.items.push({ label: 'Direct Shipment', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/Directtransfer') });
-    this.items.push({ label: 'Assign Project', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/AssignProject') });
-    this.router.navigate(['WMS/materialtransferapproval'], { queryParams: { transferid: this.transferid } });
+    if (this.emp.isdelegatemember) {
+      this.items.push({
+        label: 'Delegation',
+        style: { 'font-weight': '600' },
+        icon: 'pi pi-fw pi-bars',
+        items: [
+          { label: 'Team Members', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/AssignProject') }
+        ]
+
+      });
+    }
+    if (!this.emp.isdelegatemember) {
+      this.items.push({
+        label: 'Delegation',
+        style: { 'font-weight': '600' },
+        icon: 'pi pi-fw pi-bars',
+        items: [
+          { label: 'Project Manager', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/AssignPM') },
+          { label: 'Team Members', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/AssignProject') }
+        ]
+
+      });
+    } this.router.navigate(['WMS/materialtransferapproval'], { queryParams: { transferid: this.transferid } });
     let element1: HTMLDivElement = document.getElementById("menudiv") as HTMLDivElement;
     element1.hidden = false;
   }
-  bindMenuForRequestApproval(type : string) {
+  bindMenuForRequestApproval(type: string) {
     this.items = [];
     this.emp.roleid = "11";
     this.setrolename(this.emp.roleid);
@@ -1233,8 +1254,29 @@ export class NavMenuComponent implements OnInit {
 
     });
     this.items.push({ label: 'Direct Shipment', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/Directtransfer') });
-    this.items.push({ label: 'Assign Project', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/AssignProject') });
-    if (type == "materialrequest") {
+    if (this.emp.isdelegatemember) {
+      this.items.push({
+        label: 'Delegation',
+        style: { 'font-weight': '600' },
+        icon: 'pi pi-fw pi-bars',
+        items: [
+          { label: 'Team Members', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/AssignProject') }
+        ]
+
+      });
+    }
+    if (!this.emp.isdelegatemember) {
+      this.items.push({
+        label: 'Delegation',
+        style: { 'font-weight': '600' },
+        icon: 'pi pi-fw pi-bars',
+        items: [
+          { label: 'Project Manager', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/AssignPM') },
+          { label: 'Team Members', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/AssignProject') }
+        ]
+
+      });
+    } if (type == "materialrequest") {
       this.router.navigate(['WMS/MaterialRequestApproval'], { queryParams: { transferid: this.transferid } });
     }
     else if (type == "materialsto") {
@@ -1243,7 +1285,7 @@ export class NavMenuComponent implements OnInit {
     else if (type == "materialsubcontract") {
       this.router.navigate(['WMS/SubcontractApproval'], { queryParams: { transferid: this.transferid } });
     }
-   
+
     let element1: HTMLDivElement = document.getElementById("menudiv") as HTMLDivElement;
     element1.hidden = false;
   }
@@ -1474,7 +1516,7 @@ export class NavMenuComponent implements OnInit {
 
     let element1: HTMLDivElement = document.getElementById("menudiv") as HTMLDivElement;
     element1.hidden = false;
-   
+
 
   }
 
@@ -1611,8 +1653,8 @@ export class NavMenuComponent implements OnInit {
         }
         this.items.push({ label: 'FIFO LIst', icon: 'pi pi-fw pi-bars', style: { 'font-weight': '600' }, command: () => this.router.navigateByUrl('WMS/FIFOList') });
         this.items.push({ label: 'Inventory Movement', icon: 'pi pi-fw pi-bars', style: { 'font-weight': '600' }, command: () => this.router.navigateByUrl('WMS/InventoryMovement') });
-        
-        
+
+
         this.items.push({
           label: 'Master Pages',
           icon: 'pi pi-fw pi-bars',
@@ -1707,7 +1749,7 @@ export class NavMenuComponent implements OnInit {
     if (page == "Inbound") {
       this.bindMenu('WMS/SecurityCheck');
     }
-   
+
     else if (page == "Quality") {
       this.bindMenu('WMS/QualityCheck');
     }
@@ -1761,17 +1803,17 @@ export class NavMenuComponent implements OnInit {
           label: 'Inventory Reports',
           icon: 'pi pi-fw pi-bars',
           style: { 'font-weight': '600' },
-            items: [
-              { label: 'Inventory Report', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/inventoryreport') },
-              { label: 'Bin Status Report', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/BinStatusReport') },
-              { label: 'Material Tracking', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/POStatus') }
+          items: [
+            { label: 'Inventory Report', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/inventoryreport') },
+            { label: 'Bin Status Report', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/BinStatusReport') },
+            { label: 'Material Tracking', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/POStatus') }
 
-            ]
+          ]
         });
 
       }
       if (rba.inv_reports) {
-        
+
         this.items.push({
           label: 'Other',
           icon: 'pi pi-fw pi-bars',
@@ -1905,7 +1947,7 @@ export class NavMenuComponent implements OnInit {
             { label: 'Sub Contract Material Issue', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/ReceiveSubContractRequest') }
           ]
         });
-      }  
+      }
       if (rba.material_reservation) {
         this.items.push({ label: 'Material Reserve', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReserveView') });
 
@@ -1946,15 +1988,15 @@ export class NavMenuComponent implements OnInit {
           ]
         });
         invmanageitems.items.push({
-            label: 'ABC Analysis',
-            icon: 'pi pi-fw pi-bars',
-            style: { 'font-weight': '600' },
-            items: [
-              { label: 'ABC Classification', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-caret-right', command: () => this.router.navigateByUrl('WMS/ABCCategory') },
-              { label: 'ABC Analysis', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-caret-right', command: () => this.router.navigateByUrl('WMS/ABCAnalysis') },
-            ]
-          });
-        }
+          label: 'ABC Analysis',
+          icon: 'pi pi-fw pi-bars',
+          style: { 'font-weight': '600' },
+          items: [
+            { label: 'ABC Classification', style: { 'font-weight': '600', 'width': '250px' }, icon: 'pi pi-fw pi-caret-right', command: () => this.router.navigateByUrl('WMS/ABCCategory') },
+            { label: 'ABC Analysis', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-caret-right', command: () => this.router.navigateByUrl('WMS/ABCAnalysis') },
+          ]
+        });
+      }
       if (rba.cyclecount_configuration) {
         cyclecountitems.items.push({ label: 'Cycle Count config', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/Cycleconfig') });
 
@@ -2001,7 +2043,7 @@ export class NavMenuComponent implements OnInit {
             { label: 'Store Master', icon: 'pi pi-fw pi-bars', style: { 'width': '250px' }, command: () => this.router.navigateByUrl('WMS/StoreMaster') },
             { label: 'Rack Master', icon: 'pi pi-fw pi-bars', style: { 'width': '250px' }, command: () => this.router.navigateByUrl('WMS/RackMaster') },
             { label: 'Bin Master', icon: 'pi pi-fw pi-bars', style: { 'width': '250px' }, command: () => this.router.navigateByUrl('WMS/BinMaster') },
-              { label: 'Role Master', icon: 'pi pi-fw pi-bars', style: { 'width': '250px' }, command: () => this.router.navigateByUrl('WMS/RoleMaster') },
+            { label: 'Role Master', icon: 'pi pi-fw pi-bars', style: { 'width': '250px' }, command: () => this.router.navigateByUrl('WMS/RoleMaster') },
             //{ label: 'Sub Role Master', icon: 'pi pi-fw pi-bars', style: { 'width': '250px' }, command: () => this.router.navigateByUrl('WMS/SubRoleMaster') },
             { label: 'User Role Master', icon: 'pi pi-fw pi-bars', style: { 'width': '250px' }, command: () => this.router.navigateByUrl('WMS/UserRoleMaster') },
             { label: 'Vendor Master', icon: 'pi pi-fw pi-bars', style: { 'width': '250px' }, command: () => this.router.navigateByUrl('WMS/VendorMaster') },
@@ -2112,14 +2154,38 @@ export class NavMenuComponent implements OnInit {
         this.items.push({ label: 'Internal Stock Transfer', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/Stocktransfer') });
 
       }
+      if (!this.emp.isdelegatemember && this.emp.roleid == "4") {
+        this.items.push({ label: 'Delegation', icon: 'pi pi-fw pi-bars', style: { 'font-weight': '600' }, command: () => this.router.navigateByUrl('WMS/AssignInventoryManager') });
+      }
       if (rba.assign_pm) {
-        this.items.push({ label: 'Assign Project', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/AssignProject') });
-       
+        if (this.emp.isdelegatemember && this.emp.roleid == "11") {
+          this.items.push({
+            label: 'Delegation',
+            style: { 'font-weight': '600' },
+            icon: 'pi pi-fw pi-bars',
+            items: [
+              { label: 'Team Members', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/AssignProject') }
+            ]
+
+          });
+        }
+        if (!this.emp.isdelegatemember && this.emp.roleid == "11") {
+          this.items.push({
+            label: 'Delegation',
+            style: { 'font-weight': '600' },
+            icon: 'pi pi-fw pi-bars',
+            items: [
+              { label: 'Project Manager', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/AssignPM') },
+              { label: 'Team Members', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/AssignProject') }
+            ]
+
+          });
+        }
       }
       if (rba.annexure_report) {
         this.items.push({ label: 'Sub Contract Annexure', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/AnnexureReport') });
       }
-     
+
       let element1x: HTMLDivElement = document.getElementById("menudiv") as HTMLDivElement;
       element1x.hidden = false;
       if (!isNullOrUndefined(eurl) && eurl != "") {
@@ -2133,7 +2199,7 @@ export class NavMenuComponent implements OnInit {
           this.nevigatefromrba(rba);
         }
       }
-      
+
 
 
     }
@@ -2208,7 +2274,7 @@ export class NavMenuComponent implements OnInit {
       else {
         this.router.navigateByUrl('WMS/Home');
       }
-      
+
     }
     if (this.emp.roleid == "6") {
       this.router.navigateByUrl('WMS/Home');
@@ -2373,7 +2439,7 @@ export class NavMenuComponent implements OnInit {
         this.gateid = eurl.split('=')[1];
         if (this.gateid) {
           this.router.navigate(['WMS/GatePassPMList'], { queryParams: { requestid: this.gateid } });
-          
+
         }
       }
       ////GatePassPM
@@ -2421,7 +2487,7 @@ export class NavMenuComponent implements OnInit {
         if (this.fmgateid) {
           //redirects to GatePassPMList
           this.router.navigate(['WMS/GatePassFMList'], { queryParams: { requestid: this.fmgateid } });
-         
+
         }
       }
 
@@ -2479,7 +2545,7 @@ export class NavMenuComponent implements OnInit {
     this.showoutwardinwardreturnable = false;
     this.showoutwardinwardnonreturnable = false;
     this.showoutbound = false;
-  //
+    //
 
   }
   openoutlook() {
@@ -2518,9 +2584,9 @@ export class NavMenuComponent implements OnInit {
         else {
           this.router.navigateByUrl('WMS/SecurityCheck');
         }
-        
+
       }
-     
+
     }
     if (this.emp.roleid == "2") {//inventory enquiry
       this.items = [];
@@ -2755,6 +2821,11 @@ export class NavMenuComponent implements OnInit {
         ]
       });
       this.items.push({ label: 'Internal Stock Transfer', icon: 'pi pi-fw pi-bars', style: { 'font-weight': '600' }, command: () => this.router.navigateByUrl('WMS/Stocktransfer') });
+      if (!this.emp.isdelegatemember) {
+        this.items.push({ label: 'Delegation', icon: 'pi pi-fw pi-bars', style: { 'font-weight': '600' }, command: () => this.router.navigateByUrl('WMS/AssignInventoryManager') });
+      }
+
+
       if (url == "default") {
         this.router.navigateByUrl('WMS/Home');
       }
@@ -2768,7 +2839,7 @@ export class NavMenuComponent implements OnInit {
 
       }
 
-     
+
     }
     if (this.emp.roleid == "5") {//project manager (Material Requester)
       this.items = [];
@@ -2801,7 +2872,7 @@ export class NavMenuComponent implements OnInit {
       this.items.push({ label: 'Material Transfer', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialTransfer') });
       this.items.push({ label: 'Material Return', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MaterialReturnfromPm') });
       this.items.push({ label: 'Direct Shipment', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/Directtransfer') });
-      
+
       if (url == "default") {
         this.router.navigateByUrl('WMS/Dashboard');
       }
@@ -2870,7 +2941,7 @@ export class NavMenuComponent implements OnInit {
           { label: 'Store Master', icon: 'pi pi-fw pi-bars', style: { 'width': '250px' }, command: () => this.router.navigateByUrl('WMS/StoreMaster') },
           { label: 'Rack Master', icon: 'pi pi-fw pi-bars', style: { 'width': '250px' }, command: () => this.router.navigateByUrl('WMS/RackMaster') },
           { label: 'Bin Master', icon: 'pi pi-fw pi-bars', style: { 'width': '250px' }, command: () => this.router.navigateByUrl('WMS/BinMaster') },
-            { label: 'Role Master', icon: 'pi pi-fw pi-bars', style: { 'width': '250px' }, command: () => this.router.navigateByUrl('WMS/RoleMaster') },
+          { label: 'Role Master', icon: 'pi pi-fw pi-bars', style: { 'width': '250px' }, command: () => this.router.navigateByUrl('WMS/RoleMaster') },
           //{ label: 'Sub Role Master', icon: 'pi pi-fw pi-bars', style: { 'width': '250px' }, command: () => this.router.navigateByUrl('WMS/SubRoleMaster') },
           { label: 'User Role Master', icon: 'pi pi-fw pi-bars', style: { 'width': '250px' }, command: () => this.router.navigateByUrl('WMS/UserRoleMaster') },
           { label: 'Vendor Master', icon: 'pi pi-fw pi-bars', style: { 'width': '250px' }, command: () => this.router.navigateByUrl('WMS/VendorMaster') },
@@ -2891,23 +2962,23 @@ export class NavMenuComponent implements OnInit {
     }
     if (this.emp.roleid == "8") {//Approver     
       this.items = [];
-      
-        this.items.push({ label: 'Home', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-home', command: () => this.router.navigateByUrl('WMS/Home') });
-        this.items.push({ label: 'Manager Approval', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GatePassPMList') });
-        this.items.push({ label: 'Finance Approval', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GatePassFMList') });
-        if (url == "default") {
-          this.router.navigateByUrl('WMS/Home');
+
+      this.items.push({ label: 'Home', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-home', command: () => this.router.navigateByUrl('WMS/Home') });
+      this.items.push({ label: 'Manager Approval', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GatePassPMList') });
+      this.items.push({ label: 'Finance Approval', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GatePassFMList') });
+      if (url == "default") {
+        this.router.navigateByUrl('WMS/Home');
+      }
+      else {
+        if (!isNullOrUndefined(url) && url != "") {
+          this.router.navigateByUrl(url);
         }
         else {
-          if (!isNullOrUndefined(url) && url != "") {
-            this.router.navigateByUrl(url);
-          }
-          else {
-            this.router.navigateByUrl('WMS/Home');
-          }
-
+          this.router.navigateByUrl('WMS/Home');
         }
-      
+
+      }
+
 
     }
     if (this.emp.roleid == "9") {//Quality control
@@ -2988,7 +3059,29 @@ export class NavMenuComponent implements OnInit {
 
       });
       this.items.push({ label: 'Direct Shipment', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/Directtransfer') });
-      this.items.push({ label: 'Assign Project', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/AssignProject') });
+      if (this.emp.isdelegatemember) {
+        this.items.push({
+          label: 'Delegation',
+          style: { 'font-weight': '600' },
+          icon: 'pi pi-fw pi-bars',
+          items: [
+            { label: 'Team Members', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/AssignProject') }
+          ]
+
+        });
+      }
+      if (!this.emp.isdelegatemember) {
+        this.items.push({
+          label: 'Delegation',
+          style: { 'font-weight': '600' },
+          icon: 'pi pi-fw pi-bars',
+          items: [
+            { label: 'Project Manager', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/AssignPM') },
+            { label: 'Team Members', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/AssignProject') }
+          ]
+
+        });
+      }
       this.items.push({ label: 'Sub Contract Annexure', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/AnnexureReport') });
       if (url == "default") {
         this.router.navigateByUrl('WMS/Home');
