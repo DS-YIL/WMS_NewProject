@@ -238,10 +238,10 @@ namespace WMS.Interfaces
 		Task<IEnumerable<UserDashboardGraphModel>> getUserdashboardgraphdata();
 		Task<IEnumerable<UserDashboardGraphModel>> getUserdashIEgraphdata();
 
-		Task<ManagerDashboard> getManagerdashboardgraphdata();
-		Task<IEnumerable<UserDashboardGraphModel>> getWeeklyUserdashboardgraphdata();
+		Task<ManagerDashboard> getManagerdashboardgraphdata(DashBoardFilters filters);
+		Task<IEnumerable<UserDashboardGraphModel>> getWeeklyUserdashboardgraphdata(DashBoardFilters filters);
 
-		Task<IEnumerable<UserDashboardGraphModel>> getmonthlyUserdashboardgraphdata();
+		Task<IEnumerable<UserDashboardGraphModel>> getmonthlyUserdashboardgraphdata(DashBoardFilters filters);
 
 		string updateputawayfilename(ddlmodel filename);
 
@@ -290,21 +290,21 @@ namespace WMS.Interfaces
 		Task<IEnumerable<grReports>> addEditReports(string wmsgr);
 
 		string EditReports(grReports data);
-		Task<pmDashboardCards> getPMdashboarddata();
+		Task<pmDashboardCards> getPMdashboarddata(DashBoardFilters filters);
 		Task<IEnumerable<UserDashboardGraphModel>> getmonthlyUserdashboardIEgraphdata();
 
-		Task<invDashboardCards> getInvdashboarddata();
+		Task<invDashboardCards> getInvdashboarddata(DashBoardFilters filters);
 
 		Task<IEnumerable<UserDashboardGraphModel>> getUserdashboardgraphPMdata();
 
-		Task<IEnumerable<GraphModelNew>> getWeeklyUserdashboardReceive();
-		Task<IEnumerable<GraphModelNew>> getWeeklyUserdashboardQuality();
-		Task<IEnumerable<GraphModelNew>> getWeeklyUserdashboardAccept();
-		Task<IEnumerable<GraphModelNew>> getWeeklyUserdashboardPutaway();
-		Task<IEnumerable<GraphModelNew>> getWeeklyUserdashboardRequest();
-		Task<IEnumerable<GraphModelNew>> getWeeklyUserdashboardReturn();
-		Task<IEnumerable<GraphModelNew>> getWeeklyUserdashboardReserve();
-		Task<IEnumerable<GraphModelNew>> getWeeklyUserdashboardtransfer();
+		Task<IEnumerable<GraphModelNew>> getWeeklyUserdashboardReceive(DashBoardFilters filters);
+		Task<IEnumerable<GraphModelNew>> getWeeklyUserdashboardQuality(DashBoardFilters filters);
+		Task<IEnumerable<GraphModelNew>> getWeeklyUserdashboardAccept(DashBoardFilters filters);
+		Task<IEnumerable<GraphModelNew>> getWeeklyUserdashboardPutaway(DashBoardFilters filters);
+		Task<IEnumerable<GraphModelNew>> getWeeklyUserdashboardRequest(DashBoardFilters filters);
+		Task<IEnumerable<GraphModelNew>> getWeeklyUserdashboardReturn(DashBoardFilters filters);
+		Task<IEnumerable<GraphModelNew>> getWeeklyUserdashboardReserve(DashBoardFilters filters);
+		Task<IEnumerable<GraphModelNew>> getWeeklyUserdashboardtransfer(DashBoardFilters filters);
 		Task<IEnumerable<StockModel>> getMiscellanousIssueList(bool initialStock);
 		Task<IEnumerable<StockModel>> getMiscellanousIssueListdata(string initialStock,string pono, string projectid);
 		bool miscellanousIssueDataUpdate(miscellanousIssueData data);

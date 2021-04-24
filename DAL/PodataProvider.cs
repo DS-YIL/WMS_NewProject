@@ -1181,7 +1181,6 @@ namespace WMS.DAL
 							emailmodel.grnnumber = dataobj.grnnumber;
 							emailmodel.employeeno = dataobj.receivedby;
 							emailmodel.inwmasterid = dataobj.inwmasterid;
-							emailmodel.FrmEmailId = "ramesh.kumar@in.yokogawa.com";
 							EmailUtilities emailobj = new EmailUtilities();
 							emailobj.sendEmail(emailmodel, 1, 3);
 
@@ -1731,8 +1730,8 @@ namespace WMS.DAL
 								{
 									po.isasn = true;
 								}
-                                else
-                                {
+								else
+								{
 									po.isasn = false;
 								}
 								var fdata = datalist.Where(o => o.Material == po.Material && o.poitemdescription == po.poitemdescription && o.pono == po.pono && o.lineitemno == po.lineitemno && o.asnno == po.asnno).FirstOrDefault();
@@ -1962,7 +1961,6 @@ namespace WMS.DAL
 					{
 						EmailModel emailmodel = new EmailModel();
 						emailmodel.grnnumber = verify.grnnumber;
-						emailmodel.FrmEmailId = "ramesh.kumar@in.yokogawa.com";
 						EmailUtilities emailobj = new EmailUtilities();
 						emailobj.sendEmail(emailmodel, 2, 9);
 					}
@@ -1970,7 +1968,6 @@ namespace WMS.DAL
 					{
 						EmailModel emailmodel = new EmailModel();
 						emailmodel.grnnumber = verify.grnnumber;
-						emailmodel.FrmEmailId = "ramesh.kumar@in.yokogawa.com";
 						EmailUtilities emailobj = new EmailUtilities();
 						emailobj.sendEmail(emailmodel, 20, 3);
 					}
@@ -1978,13 +1975,11 @@ namespace WMS.DAL
 					{
 						EmailModel emailmodel = new EmailModel();
 						emailmodel.grnnumber = verify.grnnumber;
-						emailmodel.FrmEmailId = "ramesh.kumar@in.yokogawa.com";
 						EmailUtilities emailobj = new EmailUtilities();
 						emailobj.sendEmail(emailmodel, 2, 9);
 
 						EmailModel emailmodel1 = new EmailModel();
 						emailmodel1.grnnumber = verify.grnnumber;
-						emailmodel1.FrmEmailId = "ramesh.kumar@in.yokogawa.com";
 						EmailUtilities emailobj1 = new EmailUtilities();
 						emailobj1.sendEmail(emailmodel1, 20, 3);
 					}
@@ -3254,7 +3249,6 @@ namespace WMS.DAL
 						EmailModel emailmodel = new EmailModel();
 						emailmodel.pono = item.pono;
 						emailmodel.requestid = item.requestid;
-						emailmodel.FrmEmailId = "ramesh.kumar@in.yokogawa.com";
 						EmailUtilities emailobj = new EmailUtilities();
 						emailobj.sendEmail(emailmodel, 6, 3);
 					}
@@ -3591,7 +3585,6 @@ namespace WMS.DAL
 							emailmodel.material = item.material;
 							emailmodel.createdby = item.requesterid;
 							emailmodel.createddate = item.requesteddate;
-							emailmodel.FrmEmailId = "ramesh.kumar@in.yokogawa.com";
 							EmailUtilities emailobj = new EmailUtilities();
 							emailobj.sendEmail(emailmodel, 4, 3);
 						}
@@ -3738,7 +3731,6 @@ namespace WMS.DAL
 						emailmodel.material = materials;
 						emailmodel.createdby = dataobj[0].requesterid;
 						emailmodel.createddate = DateTime.Now;
-						emailmodel.FrmEmailId = "ramesh.kumar@in.yokogawa.com";
 
 						EmailUtilities emailobj = new EmailUtilities();
 						if (mainmodel.isapprovalrequired)
@@ -3830,7 +3822,6 @@ namespace WMS.DAL
 						emailmodel.jobcode = data.projectcode;
 						emailmodel.createdby = data.requesterid;
 						emailmodel.createddate = Convert.ToDateTime(data.requesteddate);
-						emailmodel.FrmEmailId = "ramesh.kumar@in.yokogawa.com";
 						if (data.isapproved == true)
 						{
 							emailmodel.isapproved = true;
@@ -3932,7 +3923,6 @@ namespace WMS.DAL
 						emailmodel.createdby = data.transferredby;
 						emailmodel.requesttype = data.transfertype;
 						emailmodel.createddate = Convert.ToDateTime(data.transferredon);
-						emailmodel.FrmEmailId = "ramesh.kumar@in.yokogawa.com";
 						if (data.isapproved == true)
 						{
 							emailmodel.isapproved = true;
@@ -4206,7 +4196,6 @@ namespace WMS.DAL
 					{
 						emailmodel.requestid = dataobj[0].transferid;
 					}
-					emailmodel.FrmEmailId = "ramesh.kumar@in.yokogawa.com";
 					emailmodel.ToEmailId = mailto;
 
 					Trans.Commit();
@@ -4454,7 +4443,7 @@ namespace WMS.DAL
 
 							emailmodel.requestedon = dataobj.requestedon;
 							emailmodel.requestedby = dataobj.requestedby;
-							emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
+
 
 
 						}
@@ -4501,7 +4490,7 @@ namespace WMS.DAL
 
 							emailmodel.requestedon = dataobj.requestedon;
 							emailmodel.requestedby = dataobj.requestedby;
-							emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
+
 
 						}
 
@@ -4545,7 +4534,6 @@ namespace WMS.DAL
 
 						emailmodel.requestedon = dataobj.requestedon;
 						emailmodel.requestedby = dataobj.requestedby;
-						emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
 
 					}
 					foreach (var item in dataobj.materialList)
@@ -4605,7 +4593,6 @@ namespace WMS.DAL
 
 					emailmodel.gatepassid = dataobj.gatepassid;
 					emailmodel.gatepasstype = dataobj.gatepasstype;
-					emailmodel.FrmEmailId = "ramesh.kumar@in.yokogawa.com";
 					emailobj.sendEmail(emailmodel, 8);
 
 				}
@@ -4954,7 +4941,6 @@ namespace WMS.DAL
 					EmailModel emailmodel = new EmailModel();
 					emailmodel.gatepassid = model[0].gatepassid.ToString();
 					emailmodel.ToEmailId = mailto;
-					emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
 					emailobj.sendEmail(emailmodel, 22);
 					Trans.Commit();
 					return returndata;
@@ -6385,6 +6371,7 @@ namespace WMS.DAL
 					await pgsql.OpenAsync();
 					var data = await pgsql.QueryAsync<IssueRequestModel>(
 					  query, null, commandType: CommandType.Text);
+					data= data.OrderByDescending(o => o.initialstock);
 					return data;
 
 
@@ -6859,10 +6846,28 @@ namespace WMS.DAL
 				{
 					string query = WMSResource.getuserroles.Replace("#employeeid", employeeid);
 					await pgsql.OpenAsync();
-					return await pgsql.QueryAsync<userAcessNamesModel>(
+					var result = await pgsql.QueryAsync<userAcessNamesModel>(
 					  query, null, commandType: CommandType.Text);
-
-
+					List<userAcessNamesModel> AcList = new List<userAcessNamesModel>();
+					AcList = result.ToList();
+					var MatRes = AcList.Where(li => li.roleid == 5).ToList();
+					var InvRes = AcList.Where(li => li.roleid == 2).ToList();
+					if (MatRes.Count() == 0)
+					{
+						userAcessNamesModel res = new userAcessNamesModel();
+						res.roleid = 5;
+						res.accessname = "Material Requester";
+						res.subroleid = "1,2";
+						AcList.Add(res);
+					}
+					if (InvRes.Count() == 0)
+					{
+						userAcessNamesModel res1 = new userAcessNamesModel();
+						res1.roleid = 2;
+						res1.accessname = "Inventory Enquiry";
+						AcList.Add(res1);
+					}
+					return AcList;
 				}
 				catch (Exception Ex)
 				{
@@ -7042,7 +7047,7 @@ namespace WMS.DAL
 		Purpose : <<get Manager  dashboard graph data>>
 		Review Date :<<>>   Reviewed By :<<>>
 		*/
-		public async Task<ManagerDashboard> getManagerdashboardgraphdata()
+		public async Task<ManagerDashboard> getManagerdashboardgraphdata(DashBoardFilters filters)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
@@ -7052,35 +7057,35 @@ namespace WMS.DAL
 				{
 
 					//Get count of po and invoice for pending receipts
-					string penqry = "select count(*) as pendingcount from wms.wms_securityinward where receiveddate> now() - interval '1 month' and grnnumber is null and onhold is null ";
+					string penqry = "select count(*) as pendingcount from wms.wms_securityinward where receiveddate>= '" + filters.fromDate + "' and receiveddate<= '" + filters.toDate + "' and grnnumber is null and  onhold is NOT True and (holdgrstatus is NULL or holdgrstatus =  'accepted') ";
 
 					//Get count of po and invoice for on hold receipts
-					string onholdqry = "select count(*) as onholdcount from wms.wms_securityinward where receiveddate> now() - interval '1 month' and grnnumber is null and onhold = true ";
+					string onholdqry = "select count(*) as onholdcount from wms.wms_securityinward where receiveddate>= '" + filters.fromDate + "' and receiveddate<= '" + filters.toDate + "' and grnnumber is null and onhold = true ";
 
 					//Get count of po and invoice for complete receipts
-					string completeqry = "select count(*) as completedcount from wms.wms_securityinward where receiveddate> now() - interval '1 month' and grnnumber is not null and onhold is null ";
+					string completeqry = "select count(*) as completedcount from wms.wms_securityinward where receiveddate>= '" + filters.fromDate + "' and receiveddate<= '" + filters.toDate + "' and grnnumber is not null and onhold is null ";
 
 					//Get count of quality check completed
-					string qualitycompl = "select count(*),COUNT(*) OVER () as  qualitycompcount from wms.wms_storeinward where receiveddate> now() - interval '1 month'  and qualitychecked =true group by inwmasterid";
+					string qualitycompl = "select count(*),COUNT(*) OVER () as  qualitycompcount from wms.wms_storeinward where receiveddate>= '" + filters.fromDate + "' and receiveddate<= '" + filters.toDate + "'  and qualitychecked =true group by inwmasterid";
 
 					//Get count of quality check pending
-					string qualitypending = "select count(*),COUNT(*) OVER () as qualitypendcount from wms.wms_storeinward where receiveddate> now() - interval '1 month' and qualitycheckrequired =true and qualitychecked is null group by inwmasterid";
+					string qualitypending = "select count(*),COUNT(*) OVER () as qualitypendcount from wms.wms_storeinward stinw left outer join wms.wms_qualitycheck qc on qc.inwardid = stinw.inwardid where stinw.receiveddate>= '" + filters.fromDate + "' and stinw.receiveddate<= '" + filters.toDate + "'  and stinw.qualitycheckrequired =true and stinw.receivedqty > 0 and qc.qcby is null  group by inwmasterid";
 
 					//Get count of pending GRN's - putaway 
 					//string putawaypend = " select count(*),COUNT(*) OVER () as putawaypendcount from wms.wms_securityinward secinw  where secinw.inwmasterid not in (select distinct inwmasterid  from wms.wms_stock where inwmasterid is not null order by inwmasterid desc) and receiveddate> now() - interval '1 month' group by secinw.inwmasterid ";
-					string putawaypend = " select sinw.grnnumber,COUNT(*) OVER() as putawaypendcount from wms.wms_storeinward stinw join wms.wms_securityinward sinw on stinw.inwmasterid = sinw.inwmasterid where stinw.returnedby is not null and sinw.isdirecttransferred is NOT true and stinw.inwardid not in (select distinct inwardid from wms.wms_stock where inwardid is not null and createddate > now() - interval '1 month'  order by inwardid desc)  group by sinw.grnnumber";
+					string putawaypend = " select sinw.grnnumber,COUNT(*) OVER() as putawaypendcount from wms.wms_storeinward stinw join wms.wms_securityinward sinw on stinw.inwmasterid = sinw.inwmasterid where stinw.returnedby is not null and sinw.isdirecttransferred is NOT true and stinw.inwardid not in (select distinct inwardid from wms.wms_stock where inwardid is not null   order by inwardid desc) and stinw.receiveddate>= '" + filters.fromDate + "' and stinw.receiveddate<= '" + filters.toDate + "' group by sinw.grnnumber";
 
 					//Get count of completed GRN's - putaway 
-					string putawaycomp = " select sinw.grnnumber,COUNT(*) OVER () as putawaycompcount from wms.wms_storeinward stinw  join wms.wms_securityinward sinw on stinw.inwmasterid = sinw.inwmasterid where stinw.returnedby is not null and sinw.isdirecttransferred is NOT true and stinw.inwardid  in (select distinct inwardid from wms.wms_stock where inwardid is not null and createddate> now() - interval '1 month'  order by inwardid desc) group by sinw.grnnumber";
+					string putawaycomp = " select sinw.grnnumber,COUNT(*) OVER () as putawaycompcount from wms.wms_storeinward stinw  join wms.wms_securityinward sinw on stinw.inwmasterid = sinw.inwmasterid where stinw.returnedby is not null and sinw.isdirecttransferred is NOT true and stinw.inwardid  in (select distinct inwardid from wms.wms_stock where inwardid is not null   order by inwardid desc) and stinw.receiveddate>= '" + filters.fromDate + "' and stinw.receiveddate<= '" + filters.toDate + "' group by sinw.grnnumber";
 
 					//Get count of In progress GRN's - putaway
-					string putawayinprogres = " select sinw.grnnumber,COUNT(*) OVER () as putawayinprocount from wms.wms_storeinward stinw join wms.wms_securityinward sinw on stinw.inwmasterid = sinw.inwmasterid where stinw.returnedby is not null and sinw.isdirecttransferred is NOT true and stinw.inwardid not in (select distinct inwardid from wms.wms_stock where inwardid is not null and createddate> now() - interval '1 month'  order by inwardid desc)  group by sinw.grnnumber";
+					string putawayinprogres = " select sinw.grnnumber,COUNT(*) OVER () as putawayinprocount from wms.wms_storeinward stinw join wms.wms_securityinward sinw on stinw.inwmasterid = sinw.inwmasterid where stinw.returnedby is not null and sinw.isdirecttransferred is NOT true and stinw.inwardid not in (select distinct inwardid from wms.wms_stock where inwardid is not null   order by inwardid desc) and stinw.receiveddate>= '" + filters.fromDate + "' and stinw.receiveddate<= '" + filters.toDate + "'  group by sinw.grnnumber";
 
 					//Get count of pending GRN's - Acceptance 
-					string acceptancepenqry = "select count(*),COUNT(*) OVER () as acceptancependcount from wms.wms_storeinward stin where receiveddate> now() - interval '1 month' and returnqty is null and confirmqty is null   group by(inwmasterid)";
+					string acceptancepenqry = "select count(*),COUNT(*) OVER () as acceptancependcount from wms.wms_storeinward stin where receiveddate>= '" + filters.fromDate + "' and receiveddate<= '" + filters.toDate + "' and returnqty is null and confirmqty is null   group by(inwmasterid)";
 
 					//Get count of Accepted GRN's - Acceptance 
-					string acceptancecomptqry = "select count(*),COUNT(*) OVER () as acceptancecompcount from wms.wms_storeinward stin where receiveddate> now() - interval '1 month' and returnqty is not null and confirmqty is not null  group by(inwmasterid)";
+					string acceptancecomptqry = "select count(*),COUNT(*) OVER () as acceptancecompcount from wms.wms_storeinward stin where receiveddate>= '" + filters.fromDate + "' and receiveddate<= '" + filters.toDate + "' and returnqty is not null and confirmqty is not null  group by(inwmasterid)";
 
 					var data1 = await pgsql.QueryAsync<ManagerDashboard>(penqry, null, commandType: CommandType.Text);
 					var data2 = await pgsql.QueryAsync<ManagerDashboard>(onholdqry, null, commandType: CommandType.Text);
@@ -7155,20 +7160,21 @@ namespace WMS.DAL
 
 
 
+
 		/*
-       Name of Function : <<getWeeklyUserdashboardgraphdata>>  Author :<<LP>>  
+       Name of Function : <<getWeeklyUserdashboardReceive>>  Author :<<LP>>  
        Date of Creation <<12-12-2019>>
        Purpose : <<get Weekly User dashboard graphdata>>
        Review Date :<<>>   Reviewed By :<<>>
        */
-		public async Task<IEnumerable<GraphModelNew>> getWeeklyUserdashboardReceive()
+		public async Task<IEnumerable<GraphModelNew>> getWeeklyUserdashboardReceive(DashBoardFilters filters)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
 				try
 				{
 					List<GraphModelNew> rcvdata = new List<GraphModelNew>();
-					string rcvquery = WMSResource.dataforreceivedgraph;
+					string rcvquery = WMSResource.dataforreceivedgraph.Replace("fromdate", filters.fromDate).Replace("todate", filters.toDate);
 					var data1 = await pgsql.QueryAsync<GraphModelNew>(rcvquery, null, commandType: CommandType.Text);
 					if (data1 != null && data1.Count() > 0)
 					{
@@ -7207,19 +7213,19 @@ namespace WMS.DAL
 
 
 		/*
-      Name of Function : <<getWeeklyUserdashboardgraphdata>>  Author :<<LP>>  
+      Name of Function : <<getWeeklyUserdashboardQuality>>  Author :<<LP>>  
       Date of Creation <<12-12-2019>>
       Purpose : <<get Weekly User dashboard graphdata>>
       Review Date :<<>>   Reviewed By :<<>>
       */
-		public async Task<IEnumerable<GraphModelNew>> getWeeklyUserdashboardQuality()
+		public async Task<IEnumerable<GraphModelNew>> getWeeklyUserdashboardQuality(DashBoardFilters filters)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
 				try
 				{
 					List<GraphModelNew> rcvdata = new List<GraphModelNew>();
-					string rcvquery = WMSResource.dataforqualitygraph;
+					string rcvquery = WMSResource.dataforqualitygraph.Replace("fromdate", filters.fromDate).Replace("todate", filters.toDate); ;
 					var data1 = await pgsql.QueryAsync<GraphModelNew>(rcvquery, null, commandType: CommandType.Text);
 					if (data1 != null && data1.Count() > 0)
 					{
@@ -7236,8 +7242,8 @@ namespace WMS.DAL
 								obj.smonth = grph.smonth;
 								obj.syear = grph.syear;
 								obj.total = data1.Where(o => o.sweek == grph.sweek).Count().ToString();
-								obj.received = data1.Where(o => o.sweek == grph.sweek && o.qualitychecked != null).Count().ToString();
-								obj.pending = data1.Where(o => o.sweek == grph.sweek && o.qualitychecked == null).Count().ToString();
+								obj.received = data1.Where(o => o.sweek == grph.sweek && o.qcby != null).Count().ToString();
+								obj.pending = data1.Where(o => o.sweek == grph.sweek && o.qcby == null).Count().ToString();
 								rcvdata.Add(obj);
 								i++;
 							}
@@ -7258,19 +7264,19 @@ namespace WMS.DAL
 
 
 		/*
-    Name of Function : <<getWeeklyUserdashboardgraphdata>>  Author :<<LP>>  
+    Name of Function : <<getWeeklyUserdashboardAccept>>  Author :<<LP>>  
     Date of Creation <<12-12-2019>>
     Purpose : <<get Weekly User dashboard graphdata>>
     Review Date :<<>>   Reviewed By :<<>>
     */
-		public async Task<IEnumerable<GraphModelNew>> getWeeklyUserdashboardAccept()
+		public async Task<IEnumerable<GraphModelNew>> getWeeklyUserdashboardAccept(DashBoardFilters filters)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
 				try
 				{
 					List<GraphModelNew> rcvdata = new List<GraphModelNew>();
-					string rcvquery = WMSResource.dataforqualitygraph;
+					string rcvquery = WMSResource.dataforqualitygraph.Replace("fromdate", filters.fromDate).Replace("todate", filters.toDate); ;
 					var data1 = await pgsql.QueryAsync<GraphModelNew>(rcvquery, null, commandType: CommandType.Text);
 					if (data1 != null && data1.Count() > 0)
 					{
@@ -7308,19 +7314,19 @@ namespace WMS.DAL
 		}
 
 		/*
-   Name of Function : <<getWeeklyUserdashboardgraphdata>>  Author :<<LP>>  
+   Name of Function : <<getWeeklyUserdashboardPutaway>>  Author :<<LP>>  
    Date of Creation <<12-12-2019>>
    Purpose : <<get Weekly User dashboard graphdata>>
    Review Date :<<>>   Reviewed By :<<>>
    */
-		public async Task<IEnumerable<GraphModelNew>> getWeeklyUserdashboardPutaway()
+		public async Task<IEnumerable<GraphModelNew>> getWeeklyUserdashboardPutaway(DashBoardFilters filters)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
 				try
 				{
 					List<GraphModelNew> rcvdata = new List<GraphModelNew>();
-					string rcvquery = WMSResource.dataforputawaygraph;
+					string rcvquery = WMSResource.dataforputawaygraph.Replace("fromdate", filters.fromDate).Replace("todate", filters.toDate);
 					var data1 = await pgsql.QueryAsync<GraphModelNew>(rcvquery, null, commandType: CommandType.Text);
 					if (data1 != null && data1.Count() > 0)
 					{
@@ -7337,8 +7343,8 @@ namespace WMS.DAL
 								obj.smonth = grph.smonth;
 								obj.syear = grph.syear;
 								obj.total = data1.Where(o => o.sweek == grph.sweek).Count().ToString();
-								obj.received = data1.Where(o => o.sweek == grph.sweek && o.initialstock != null).Count().ToString();
-								obj.pending = data1.Where(o => o.sweek == grph.sweek && o.initialstock == null).Count().ToString();
+								obj.received = data1.Where(o => o.sweek == grph.sweek && o.status == "Received").Count().ToString();
+								obj.pending = data1.Where(o => o.sweek == grph.sweek && o.status == "Pending").Count().ToString();
 								rcvdata.Add(obj);
 								i++;
 							}
@@ -7359,19 +7365,19 @@ namespace WMS.DAL
 
 
 		/*
-   Name of Function : <<getWeeklyUserdashboardgraphdata>>  Author :<<LP>>  
+   Name of Function : <<getWeeklyUserdashboardRequest>>  Author :<<LP>>  
    Date of Creation <<12-12-2019>>
    Purpose : <<get Weekly User dashboard graphdata>>
    Review Date :<<>>   Reviewed By :<<>>
    */
-		public async Task<IEnumerable<GraphModelNew>> getWeeklyUserdashboardRequest()
+		public async Task<IEnumerable<GraphModelNew>> getWeeklyUserdashboardRequest(DashBoardFilters filters)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
 				try
 				{
 					List<GraphModelNew> rcvdata = new List<GraphModelNew>();
-					string rcvquery = WMSResource.dataforrequestgraph;
+					string rcvquery = WMSResource.dataforrequestgraph.Replace("fromdate", filters.fromDate).Replace("todate", filters.toDate);
 					var data1 = await pgsql.QueryAsync<GraphModelNew>(rcvquery, null, commandType: CommandType.Text);
 					if (data1 != null && data1.Count() > 0)
 					{
@@ -7388,8 +7394,8 @@ namespace WMS.DAL
 								obj.smonth = grph.smonth;
 								obj.syear = grph.syear;
 								obj.total = data1.Where(o => o.sweek == grph.sweek).Count().ToString();
-								obj.received = data1.Where(o => o.sweek == grph.sweek && o.requestid != null).Count().ToString();
-								obj.pending = data1.Where(o => o.sweek == grph.sweek && o.requestid == null).Count().ToString();
+								obj.received = data1.Where(o => o.sweek == grph.sweek && o.issuedon != null && o.requestid != null).Count().ToString();
+								obj.pending = data1.Where(o => o.sweek == grph.sweek && o.issuedon == null && o.requestid != null).Count().ToString();
 								rcvdata.Add(obj);
 								i++;
 							}
@@ -7409,19 +7415,19 @@ namespace WMS.DAL
 		}
 
 		/*
-   Name of Function : <<getWeeklyUserdashboardgraphdata>>  Author :<<LP>>  
+   Name of Function : <<getWeeklyUserdashboardReturn>>  Author :<<LP>>  
    Date of Creation <<12-12-2019>>
    Purpose : <<get Weekly User dashboard graphdata>>
    Review Date :<<>>   Reviewed By :<<>>
    */
-		public async Task<IEnumerable<GraphModelNew>> getWeeklyUserdashboardReturn()
+		public async Task<IEnumerable<GraphModelNew>> getWeeklyUserdashboardReturn(DashBoardFilters filters)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
 				try
 				{
 					List<GraphModelNew> rcvdata = new List<GraphModelNew>();
-					string rcvquery = WMSResource.dataforreturngraph;
+					string rcvquery = WMSResource.dataforreturngraph.Replace("fromdate", filters.fromDate).Replace("todate", filters.toDate); ;
 					var data1 = await pgsql.QueryAsync<GraphModelNew>(rcvquery, null, commandType: CommandType.Text);
 					if (data1 != null && data1.Count() > 0)
 					{
@@ -7438,8 +7444,8 @@ namespace WMS.DAL
 								obj.smonth = grph.smonth;
 								obj.syear = grph.syear;
 								obj.total = data1.Where(o => o.sweek == grph.sweek).Count().ToString();
-								obj.received = data1.Where(o => o.sweek == grph.sweek && o.returnid != null).Count().ToString();
-								obj.pending = data1.Where(o => o.sweek == grph.sweek && o.returnid == null).Count().ToString();
+								obj.received = data1.Where(o => o.sweek == grph.sweek && o.returnid != null && o.confirmstatus == "Accepted").Count().ToString();
+								obj.pending = data1.Where(o => o.sweek == grph.sweek && o.returnid != null && o.confirmstatus == null).Count().ToString();
 								rcvdata.Add(obj);
 								i++;
 							}
@@ -7460,19 +7466,19 @@ namespace WMS.DAL
 
 
 		/*
-  Name of Function : <<getWeeklyUserdashboardgraphdata>>  Author :<<LP>>  
+  Name of Function : <<getWeeklyUserdashboardReserve>>  Author :<<LP>>  
   Date of Creation <<12-12-2019>>
   Purpose : <<get Weekly User dashboard graphdata>>
   Review Date :<<>>   Reviewed By :<<>>
   */
-		public async Task<IEnumerable<GraphModelNew>> getWeeklyUserdashboardReserve()
+		public async Task<IEnumerable<GraphModelNew>> getWeeklyUserdashboardReserve(DashBoardFilters filters)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
 				try
 				{
 					List<GraphModelNew> rcvdata = new List<GraphModelNew>();
-					string rcvquery = WMSResource.dataforreservegraph;
+					string rcvquery = WMSResource.dataforreservegraph.Replace("fromdate", filters.fromDate).Replace("todate", filters.toDate); ;
 					var data1 = await pgsql.QueryAsync<GraphModelNew>(rcvquery, null, commandType: CommandType.Text);
 					if (data1 != null && data1.Count() > 0)
 					{
@@ -7511,19 +7517,19 @@ namespace WMS.DAL
 
 
 		/*
-  Name of Function : <<getWeeklyUserdashboardgraphdata>>  Author :<<LP>>  
+  Name of Function : <<getWeeklyUserdashboardtransfer>>  Author :<<LP>>  
   Date of Creation <<12-12-2019>>
   Purpose : <<get Weekly User dashboard graphdata>>
   Review Date :<<>>   Reviewed By :<<>>
   */
-		public async Task<IEnumerable<GraphModelNew>> getWeeklyUserdashboardtransfer()
+		public async Task<IEnumerable<GraphModelNew>> getWeeklyUserdashboardtransfer(DashBoardFilters filters)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
 				try
 				{
 					List<GraphModelNew> rcvdata = new List<GraphModelNew>();
-					string rcvquery = WMSResource.datafortransfergraph;
+					string rcvquery = WMSResource.datafortransfergraph.Replace("fromdate", filters.fromDate).Replace("todate", filters.toDate); ;
 					var data1 = await pgsql.QueryAsync<GraphModelNew>(rcvquery, null, commandType: CommandType.Text);
 					if (data1 != null && data1.Count() > 0)
 					{
@@ -7540,8 +7546,8 @@ namespace WMS.DAL
 								obj.smonth = grph.smonth;
 								obj.syear = grph.syear;
 								obj.total = data1.Where(o => o.sweek == grph.sweek).Count().ToString();
-								obj.received = data1.Where(o => o.sweek == grph.sweek && o.materialid != null).Count().ToString();
-								obj.pending = data1.Where(o => o.sweek == grph.sweek && o.materialid == null).Count().ToString();
+								obj.received = data1.Where(o => o.sweek == grph.sweek && o.approvaldate != null).Count().ToString();
+								obj.pending = data1.Where(o => o.sweek == grph.sweek && o.approvaldate == null).Count().ToString();
 								rcvdata.Add(obj);
 								i++;
 							}
@@ -7568,7 +7574,7 @@ namespace WMS.DAL
         Purpose : <<get Weekly User dashboard graphdata>>
         Review Date :<<>>   Reviewed By :<<>>
         */
-		public async Task<IEnumerable<UserDashboardGraphModel>> getWeeklyUserdashboardgraphdata()
+		public async Task<IEnumerable<UserDashboardGraphModel>> getWeeklyUserdashboardgraphdata(DashBoardFilters filters)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
@@ -7627,7 +7633,7 @@ namespace WMS.DAL
 		Purpose : <<get monthly User dashboard graphdata>>
 		Review Date :<<>>   Reviewed By :<<>>
 		*/
-		public async Task<IEnumerable<UserDashboardGraphModel>> getmonthlyUserdashboardgraphdata()
+		public async Task<IEnumerable<UserDashboardGraphModel>> getmonthlyUserdashboardgraphdata(DashBoardFilters filters)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
@@ -8145,10 +8151,6 @@ namespace WMS.DAL
 						emailmodel.reserveupto = datamodel[0].reserveupto.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
 						emailmodel.reservedata = reservelistformail;
 
-
-						//emailmodel.ToEmailId = "developer1@in.yokogawa.com";
-						emailmodel.FrmEmailId = "ramesh.kumar@in.yokogawa.com";
-						//emailmodel.CC = "sushma.patil@in.yokogawa.com";
 						EmailUtilities emailobj = new EmailUtilities();
 						emailobj.sendEmail(emailmodel, Conversion.toInt(Emailparameter.mailaftermaterialreserve), 3);
 						Trans.Commit();
@@ -8598,7 +8600,6 @@ namespace WMS.DAL
 						emailmodel.pono = datamodel[0].pono;
 						emailmodel.jobcode = datamodel[0].projectname;
 						emailmodel.grnnumber = datamodel[0].grnnumber;
-						emailmodel.FrmEmailId = "ramesh.kumar@in.yokogawa.com";
 						EmailUtilities emailobj = new EmailUtilities();
 						emailobj.sendEmail(emailmodel, 3, 3);
 					}
@@ -10139,7 +10140,6 @@ namespace WMS.DAL
 							emailmodel.requestedby = model.requestedby;
 							emailmodel.requestedon = model.requestedon;
 
-							emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
 							EmailUtilities emailobj = new EmailUtilities();
 							if (model.gatepasstype == "Returnable")
 							{
@@ -10149,19 +10149,18 @@ namespace WMS.DAL
 								mailto = userdata.email;
 								if (model.approverstatus == "Approved")
 								{
-									if(model.isnonproject != true)
-                                    {
+									if (model.isnonproject != true)
+									{
 										emailmodel.CC = mailto;
 										emailobj.sendEmail(emailmodel, 15, 3);
 									}
-                                    else
-                                    {
-                                        emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
-                                        emailobj.sendEmail(emailmodel, 33, 3);
+									else
+									{
+										emailobj.sendEmail(emailmodel, 33, 3);
 										emailmodel.ToEmailId = mailto;
 										emailobj.sendEmail(emailmodel, 34);
 									}
-									
+
 								}
 								else
 								{
@@ -10235,23 +10234,23 @@ namespace WMS.DAL
 							emailmodel.approverstatus = model.fmapprovedstatus;
 							emailmodel.requestedby = model.requestedby;
 							emailmodel.requestedon = model.requestedon;
-							emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
+
 							EmailUtilities emailobj = new EmailUtilities();
 
 							if (model.fmapprovedstatus == "Approved")
 							{
 								if (model.isnonproject != true)
-                                {
+								{
 									string userquery = WMSResource.getFMapprovermail.Replace("#gatepassid", model.gatepassid);
 									User userdata = DB.QuerySingle<User>(
 									   userquery, null, commandType: CommandType.Text);
 									mailto = userdata.email;
 									emailobj.sendEmail(emailmodel, 15, 3);
 								}
-                                else
-                                {
-									
-									emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
+								else
+								{
+
+
 									emailobj.sendEmail(emailmodel, 33, 3);
 									string userquery = WMSResource.getRequesterEmail.Replace("#gatepassid", model.gatepassid);
 									User userdata = DB.QuerySingle<User>(
@@ -10260,11 +10259,11 @@ namespace WMS.DAL
 									emailmodel.ToEmailId = mailto;
 									emailobj.sendEmail(emailmodel, 34);
 								}
-									
+
 							}
 							else
 							{
-								
+
 								string userquery = WMSResource.getRequesterEmail.Replace("#gatepassid", model.gatepassid); ;
 								User userdata = DB.QuerySingle<User>(
 								   userquery, null, commandType: CommandType.Text);
@@ -10905,7 +10904,6 @@ namespace WMS.DAL
 				EmailModel emailmodel = new EmailModel();
 				emailmodel.requestid = trsfrid;
 				emailmodel.createdby = crtdby;
-				emailmodel.FrmEmailId = "ramesh.kumar@in.yokogawa.com";
 				emailmodel.ToEmailId = mailto;
 				emailmodel.createddate = DateTime.Now;
 
@@ -11626,7 +11624,7 @@ namespace WMS.DAL
 							emailmodel.transferbody = "Material Transfer request initiated for approval with Transferid :" + datamodel.transferid.ToString();
 							//emailmodel.ToEmailId = "developer1@in.yokogawa.com";
 							emailmodel.ToEmailId = mailto;
-							emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
+
 							EmailUtilities emailobj = new EmailUtilities();
 							emailobj.sendEmail(emailmodel, 14);
 						}
@@ -12667,7 +12665,7 @@ namespace WMS.DAL
 			List<ReserveMaterialModel> _listobj = new List<ReserveMaterialModel>();
 			EmailUtilities emailobj = new EmailUtilities();
 			EmailModel emailmodel = new EmailModel();
-			emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
+
 			emailmodel.CC = "sushma.patil@in.yokogawa.com";
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
@@ -12905,7 +12903,7 @@ namespace WMS.DAL
 							Trans.Commit();
 							EmailModel emailmodel = new EmailModel();
 							emailmodel.returnid = rslt.ToString();
-							emailmodel.FrmEmailId = "developer1@in.yokogawa.com";
+
 							emailmodel.CC = "ramesh.kumar@in.yokogawa.com";
 							EmailUtilities emailobj = new EmailUtilities();
 							emailobj.sendEmail(emailmodel, 19, 3);
@@ -13140,7 +13138,6 @@ namespace WMS.DAL
 						result = "saved";
 						EmailModel emailmodel = new EmailModel();
 						emailmodel.jobcode = data.grnnumber;
-						emailmodel.FrmEmailId = "ramesh.kumar@in.yokogawa.com";
 						EmailUtilities emailobj = new EmailUtilities();
 						emailobj.sendEmail(emailmodel, 13, 10);
 
@@ -13208,7 +13205,6 @@ namespace WMS.DAL
 
 				EmailModel emailmodel = new EmailModel();
 				emailmodel.jobcode = grns;
-				emailmodel.FrmEmailId = "ramesh.kumar@in.yokogawa.com";
 				EmailUtilities emailobj = new EmailUtilities();
 				emailobj.sendEmail(emailmodel, 13, 10);
 
@@ -14641,7 +14637,8 @@ namespace WMS.DAL
 								model.emailnotification,
 								model.emailccnotification,
 								subroleid,
-								model.plantid
+								model.plantid,
+								model.isdelegatemember
 							});
 
 						}
@@ -14656,6 +14653,7 @@ namespace WMS.DAL
 								model.emailccnotification,
 								subroleid,
 								model.plantid,
+								model.isdelegatemember,
 								model.modifiedon,
 								model.modifiedby
 							});
@@ -15309,7 +15307,7 @@ namespace WMS.DAL
 		//    throw new NotImplementedException();
 		//}
 
-		public async Task<pmDashboardCards> getPMdashboarddata()
+		public async Task<pmDashboardCards> getPMdashboarddata(DashBoardFilters filters)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
@@ -15319,28 +15317,32 @@ namespace WMS.DAL
 				{
 
 					//Get count of total material requested
-					string totalqry = " select count(*) as totalmaterialrequest from  wms.materialrequest where requesteddate> now() - interval '1 month' and requestid is not null ";
+					string totalqry = " select count(*) as totalmaterialrequest from  wms.materialrequest where requesteddate>='" + filters.fromDate + "' and requesteddate<= '" + filters.toDate + "' and requestid is not null ";
 
 					//Get count of issued material requested
-					string issuedqry = "select count(*) as issuedmaterialrequest from  wms.materialrequest where issuedon > now() - interval '1 month' and requestid is not null ";
+					string issuedqry = "select count(*) as issuedmaterialrequest from  wms.materialrequest where requesteddate>='" + filters.fromDate + "' and requesteddate<= '" + filters.toDate + "' and issuedon >= '" + filters.fromDate + "' and issuedon<= '" + filters.toDate + "' and requestid is not null ";
 
 					//Get count of pending material requested
-					string pendingqry = "select  count(*) OVER () as pendingmaterialrequest from  wms.materialrequest req join wms.materialreserve res on req.reserveid =res.reserveid is not null where reservedon > now() - interval '1 month' and requestid is not null ";
+					string pendingqry = "select  count(*) as pendingmaterialrequest from  wms.materialrequest  where requesteddate >='" + filters.fromDate + "' and requesteddate<= '" + filters.toDate + "' and issuedon is null and requestid is not null ";
 
 					//Get count of total material return
-					string materialtotalreturndqry = "select count(*) as totalmaterialreturn from  wms.wms_materialreturn where createdon > now() - interval '1 month' and returnid is not null";
+					string materialtotalreturndqry = "select count(*) as totalmaterialreturn from  wms.wms_materialreturn where createdon >='" + filters.fromDate + "' and createdon<= '" + filters.toDate + "' and returnid is not null";
 
 					//Get count of approved material return
-					string materialappreturndqry = "select count(*) as approvedmaterialreturn from  wms.wms_materialreturn where createdon > now() - interval '1 month' and returnid is not null and confirmstatus ='Accepted'";
+					string materialappreturndqry = "select count(*) as approvedmaterialreturn from  wms.wms_materialreturn where createdon >='" + filters.fromDate + "' and createdon<= '" + filters.toDate + "' and returnid is not null and confirmstatus ='Accepted'";
 
 					//Get count of pending material return 
-					string materialpendreturndqry = " select count(*) as pendingmaterialreturn from  wms.wms_materialreturn where createdon > now() - interval '1 month' and returnid is not null and confirmstatus is null ";
+					string materialpendreturndqry = " select count(*) as pendingmaterialreturn from  wms.wms_materialreturn where createdon >='" + filters.fromDate + "' and createdon<= '" + filters.toDate + "' and returnid is not null and confirmstatus is null ";
 
 					//Get count of total material reserved 
-					string materialreservededqry = "select count(*) as totalmaterialreserved from  wms.materialreserve where reservedon > now() - interval '1 month' and reserveid is not null";
+					string materialreservededqry = "select count(*) as totalmaterialreserved from  wms.materialreserve where reservedon >='" + filters.fromDate + "' and reservedon<= '" + filters.toDate + "' and reserveid is not null";
 
 					//Get count of total material returned
-					string materialreturnedqry = "select count(*) as totalmaterialreturned from   wms.wms_materialreturn where createdon > now() - interval '1 month' and returnid is not null and confirmstatus ='Accepted'";
+					//string materialreturnedqry = "select count(*) as totalmaterialreturned from   wms.wms_materialreturn where createdon >='" + filters.fromDate + "' and createdon<= '" + filters.toDate + "' and returnid is not null and confirmstatus ='Accepted'";
+					string materialtotaltransferqry = "select count(*) as totalmaterialtransfer from   wms.wms_transfermaterial where createdon >='" + filters.fromDate + "' and createdon<= '" + filters.toDate + "'";
+
+					//Get count of approved material transfer 
+					string materialtransferapprovedqry = "select count(*) as approvedmaterialtransfer from wms.wms_materialtransferapproval tra join wms.wms_transfermaterial tr on tr.transferid = tra.transferid where tr.createdon >= '" + filters.fromDate + "' and tr.createdon <= '" + filters.toDate + "' and tra.approvaldate >= '" + filters.fromDate + "' and tra.approvaldate<= '" + filters.toDate + "' and tra.approverid is not null and tra.approvallevel =2  ";
 
 
 					var data1 = await pgsql.QueryAsync<pmDashboardCards>(totalqry, null, commandType: CommandType.Text);
@@ -15350,7 +15352,8 @@ namespace WMS.DAL
 					var data5 = await pgsql.QueryAsync<pmDashboardCards>(materialappreturndqry, null, commandType: CommandType.Text);
 					var data6 = await pgsql.QueryAsync<pmDashboardCards>(materialpendreturndqry, null, commandType: CommandType.Text);
 					var data7 = await pgsql.QueryAsync<pmDashboardCards>(materialreservededqry, null, commandType: CommandType.Text);
-					var data8 = await pgsql.QueryAsync<pmDashboardCards>(materialreturnedqry, null, commandType: CommandType.Text);
+					var data8 = await pgsql.QueryAsync<pmDashboardCards>(materialtotaltransferqry, null, commandType: CommandType.Text);
+					var data9 = await pgsql.QueryAsync<pmDashboardCards>(materialtransferapprovedqry, null, commandType: CommandType.Text);
 
 					var data = new pmDashboardCards();
 					data.totalmaterialrequest = data1.Count() > 0 ? data1.FirstOrDefault().totalmaterialrequest : 0;
@@ -15370,8 +15373,8 @@ namespace WMS.DAL
 					//}
 
 					data.totalmaterialreserved = data7.Count() > 0 ? data7.FirstOrDefault().totalmaterialreserved : 0;
-					data.totalmaterialreturned = data8.Count() > 0 ? data8.FirstOrDefault().totalmaterialreturned : 0;
-
+					data.totalmaterialtransfer = data8.Count() > 0 ? data8.FirstOrDefault().totalmaterialtransfer : 0;
+					data.approvedmaterialtransfer = data9.Count() > 0 ? data9.FirstOrDefault().approvedmaterialtransfer : 0;
 
 
 					return data;
@@ -15562,7 +15565,7 @@ namespace WMS.DAL
 			}
 		}
 
-		public async Task<invDashboardCards> getInvdashboarddata()
+		public async Task<invDashboardCards> getInvdashboarddata(DashBoardFilters filters)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
@@ -15571,37 +15574,48 @@ namespace WMS.DAL
 				try
 				{
 
+
 					//Get count of total material requested
-					string totalqry = " select count(*) as totalmaterialrequests from  wms.materialrequest where requesteddate> now() - interval '1 month' and requestid is not null ";
+					string totalqry = " select count(*) as totalmaterialrequests from  wms.materialrequest where requesteddate>='" + filters.fromDate + "' and requesteddate<= '" + filters.toDate + "' and requestid is not null ";
 
 					//Get count of issued material requested
-					string issuedqry = "select count(*) as issuedmaterialrequests from  wms.materialrequest where issuedon > now() - interval '1 month' and requestid is not null ";
+					string issuedqry = "select count(*) as issuedmaterialrequests from  wms.materialrequest where requesteddate>='" + filters.fromDate + "' and requesteddate<= '" + filters.toDate + "' and issuedon >='" + filters.fromDate + "' and issuedon<= '" + filters.toDate + "' and requestid is not null ";
+
+					//string issuedqry = "select count(*) as issuedmaterialrequests from  wms.materialrequest where issuedon >='" + filters.fromDate + "' and issuedon<= '" + filters.toDate + "' and requestid is not null ";
 
 					//Get count of pending material requested
-					string pendingqry = "select  count(*) OVER () as pendingmaterialrequests from  wms.materialrequest req join wms.materialreserve res on req.reserveid =res.reserveid is not null where reservedon > now() - interval '1 month' and requestid is not null ";
+					string pendingqry = "select  count(*) as pendingmaterialrequests from  wms.materialrequest  where requesteddate >='" + filters.fromDate + "' and requesteddate<= '" + filters.toDate + "' and issuedon is null and requestid is not null ";
+
+					//string pendingqry = "select  count(*) OVER () as pendingmaterialrequests from  wms.materialrequest req join wms.materialreserve res on req.reserveid =res.reserveid is not null where reservedon >='" + filters.fromDate + "' and reservedon<= '" + filters.toDate + "' and requestid is not null ";
 
 					//Get count of total material reserved 
-					string materialreservededqry = "select count(*) as totalmaterialreserved from  wms.materialreserve where reservedon > now() - interval '1 month' and reserveid is not null";
+					string materialreservededqry = "select count(*) as totalmaterialreserved from  wms.materialreserve where reservedon >='" + filters.fromDate + "' and reservedon<= '" + filters.toDate + "' and reserveid is not null";
 
 					//Get count of total material return
-					string materialtotalreturndqry = "select count(*) as totalmaterialreturn from  wms.wms_materialreturn where createdon > now() - interval '1 month' and returnid is not null";
+					string materialtotalreturndqry = "select count(*) as totalmaterialreturn from  wms.wms_materialreturn where createdon >='" + filters.fromDate + "' and createdon<= '" + filters.toDate + "' and returnid is not null";
+
+					//Get count of approved material return
+					string materialappreturndqry = "select count(*) as approvedmaterialreturn from  wms.wms_materialreturn where createdon >='" + filters.fromDate + "' and createdon<= '" + filters.toDate + "' and returnid is not null and confirmstatus ='Accepted'";
+
+					//Get count of pending material return 
+					string materialpendreturndqry = " select count(*) as pendingmaterialreturn from  wms.wms_materialreturn where createdon >='" + filters.fromDate + "' and createdon<= '" + filters.toDate + "' and returnid is not null and confirmstatus is null ";
+
 
 					//Get count of total material transfer 
-					string materialtotaltransferqry = "select count(*) as totalmaterialtransfer from   wms.wms_transfermaterial where createdon > now() - interval '1 month' and materialid is not null";
+					string materialtotaltransferqry = "select count(*) as totalmaterialtransfer from   wms.wms_transfermaterial where createdon >='" + filters.fromDate + "' and createdon<= '" + filters.toDate + "'";
 
 					//Get count of approved material transfer 
-					string materialtransferapprovedqry = "select count(*) as approvedmaterialtransfer from wms.wms_materialtransferapproval where approvaldate > now() - interval '1 month' and approverid is not null  ";
-
-
-
+					string materialtransferapprovedqry = "select count(*) as approvedmaterialtransfer from wms.wms_materialtransferapproval tra join wms.wms_transfermaterial tr on tr.transferid = tra.transferid where tr.createdon >= '" + filters.fromDate + "' and tr.createdon <= '" + filters.toDate + "' and tra.approvaldate >= '" + filters.fromDate + "' and tra.approvaldate<= '" + filters.toDate + "' and tra.approverid is not null  and tra.approvallevel =2";
 
 					var data1 = await pgsql.QueryAsync<invDashboardCards>(totalqry, null, commandType: CommandType.Text);
 					var data2 = await pgsql.QueryAsync<invDashboardCards>(issuedqry, null, commandType: CommandType.Text);
 					var data3 = await pgsql.QueryAsync<invDashboardCards>(pendingqry, null, commandType: CommandType.Text);
 					var data4 = await pgsql.QueryAsync<invDashboardCards>(materialreservededqry, null, commandType: CommandType.Text);
 					var data5 = await pgsql.QueryAsync<invDashboardCards>(materialtotalreturndqry, null, commandType: CommandType.Text);
-					var data6 = await pgsql.QueryAsync<invDashboardCards>(materialtotaltransferqry, null, commandType: CommandType.Text);
-					var data7 = await pgsql.QueryAsync<invDashboardCards>(materialtransferapprovedqry, null, commandType: CommandType.Text);
+					var data6 = await pgsql.QueryAsync<invDashboardCards>(materialappreturndqry, null, commandType: CommandType.Text);
+					var data7 = await pgsql.QueryAsync<invDashboardCards>(materialpendreturndqry, null, commandType: CommandType.Text);
+					var data8 = await pgsql.QueryAsync<invDashboardCards>(materialtotaltransferqry, null, commandType: CommandType.Text);
+					var data9 = await pgsql.QueryAsync<invDashboardCards>(materialtransferapprovedqry, null, commandType: CommandType.Text);
 
 					var data = new invDashboardCards();
 					data.totalmaterialrequests = data1.Count() > 0 ? data1.FirstOrDefault().totalmaterialrequests : 0;
@@ -15613,8 +15627,11 @@ namespace WMS.DAL
 					}
 
 					data.totalmaterialreturn = data5.Count() > 0 ? data5.FirstOrDefault().totalmaterialreturn : 0;
-					data.totalmaterialtransfer = data6.Count() > 0 ? data6.FirstOrDefault().totalmaterialtransfer : 0;
-					data.approvedmaterialtransfer = data7.Count() > 0 ? data7.FirstOrDefault().approvedmaterialtransfer : 0;
+					data.approvedmaterialreturn = data6.Count() > 0 ? data6.FirstOrDefault().approvedmaterialreturn : 0;
+					data.pendingmaterialreturn = data7.Count() > 0 ? data7.FirstOrDefault().pendingmaterialreturn : 0;
+
+					data.totalmaterialtransfer = data8.Count() > 0 ? data8.FirstOrDefault().totalmaterialtransfer : 0;
+					data.approvedmaterialtransfer = data9.Count() > 0 ? data9.FirstOrDefault().approvedmaterialtransfer : 0;
 
 
 
@@ -15632,6 +15649,7 @@ namespace WMS.DAL
 
 			}
 		}
+
 
 		/* Name of Function : <<get initial stock>>  Author :<<prasanna>>  
 		 Date of Creation <<21-12-2019>>

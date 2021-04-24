@@ -100,7 +100,8 @@ import { StoreMasterComponent } from './WMS/StoreMaster.component';
 import { RackMasterComponent } from './WMS/RackMaster.component';
 import { BinMasterComponent } from './WMS/BinMaster.component';
 import { roleMaster, VendorMaster } from './Models/WMS.Model';
-
+import { AssignPMComponent } from './WMS/AssignPM.component';
+import { AssignIMComponent } from './WMS/AssignInventoryManage.component';
 
 const routes: Routes = [{
   path: 'WMS',
@@ -216,7 +217,10 @@ const routes: Routes = [{
     { path: "Assignrba", component: AssignRBAComponent, canActivate: [AuthGuard] },
     { path: "StoreMaster", component: StoreMasterComponent, canActivate: [AuthGuard] },
     { path: "RackMaster", component: RackMasterComponent, canActivate: [AuthGuard] },
-    { path: "BinMaster", component: BinMasterComponent, canActivate: [AuthGuard] }
+    { path: "BinMaster", component: BinMasterComponent, canActivate: [AuthGuard] },
+    { path: "AssignPM", component: AssignPMComponent, canActivate: [AuthGuard] },
+    { path: "AssignInventoryManager", component: AssignIMComponent, canActivate: [AuthGuard] },
+    
 
 
   ]

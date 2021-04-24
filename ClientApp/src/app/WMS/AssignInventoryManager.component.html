@@ -1,0 +1,88 @@
+<div class="card" style="min-height: 500px;border-radius: 10px;box-shadow: 5px 10px #888888;">
+  <div class="card-header text-center cardheadertext">
+    <span><i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;Delegate Inventory Manager</span>
+  </div>
+  <div class="card-body" style="overflow-y:hidden;padding:0px;margin-left:40px;margin-right:40px">
+    <button type="submit" pButton class="ui-button-primary mt-2" (click)="showAdd('')" label="Delegate Inventory Manager"></button>
+    <div class="mt-2">
+      <p-table #dt [value]="getlistdata" [style]="{'overflow':'auto!important','box-shadow' : '5px 5px #888888'}"
+               [scrollable]="true" scrollHeight="65vh">
+        <ng-template pTemplate="header">
+          <tr class="mprltbldata">
+            <th class="ptable-cell" style="text-align:center;width:70px;">Sl.No.</th>
+            <th class="ptable-cell" style="text-align:center;width:200px;">Employee ID</th>
+            <th class="ptable-cell" style="text-align:center;">Employee Name</th>
+            <th style="text-align: center;width: 150px;">Delegate Member</th>
+            <th style="text-align: center;width: 150px;">Edit</th>
+            <th style="text-align: center;width: 150px;">Delete</th>
+          </tr>
+          <tr>
+            <th></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'employeeid', 'startsWith')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'employeename', 'contains')"></th>
+            <th></th>
+            <th></th>
+            <th></th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex" let-rindex=0>
+          <tr [ngStyle]="{'background-color': (rowData.isdeleted) ? '#ccccb3' : '#ffffff'}">
+            <td class="ptable-cell" style="text-align:right;width:70px;"> {{ri+1}} </td>
+            <td class="ptable-cell" style="text-align:center;width:200px;"> {{rowData.employeeid}} </td>
+            <td class="ptable-cell" style="text-align:left;">{{rowData.employeename}} </td>
+            <td class="ptable-cell" style="text-align:center;width:150px;">
+              <span *ngIf="rowData.isdelegatemember">Yes</span>
+              <span *ngIf="!rowData.isdelegatemember">No</span>
+            </td>
+            <td class="ptable-cell" style="text-align:center;width:150px;">
+              <button class="btn btn-primary btn-sm" (click)="EditUser(rowData)"><i class="fa fa-edit"></i></button>
+            </td>
+            <td class="ptable-cell" style="text-align:center;width:150px;">
+              <span *ngIf="rowData.isdeleted">Not in Use</span>
+              <button class="btn btn-danger btn-sm" *ngIf="!rowData.isdeleted" (click)="deleteUserauth(rowData)"><i class="fa fa-trash"></i></button>
+            </td>
+</ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="5" style="text-align:center;color:red">No Records.</td>
+          </tr>
+        </ng-template>
+      </p-table>
+
+
+    </div>
+  </div>
+
+</div>
+<p-dialog header="Add/Edit Delegation" [(visible)]="showadddatamodel" (onHide)="refreshsavemodel()" [modal]="true" [style]="{width: '70vw'}" [baseZIndex]="10000"
+          [draggable]="true" [resizable]="false">
+  <div class="row m-2">
+    <div *ngIf="!IsEdit" class="col-lg-4 col-md-4 col-sm-4">
+      <label class="labelheading">Select Employee :&nbsp;</label>
+      <p-autoComplete [(ngModel)]="selectedEmployee" field="idwithname" [suggestions]="filteredEmployees" placeholder="search by name/No" (onSelect)="CheckforEmpdata()" [ngModelOptions]="{standalone: true}" [forceSelection]="true" (completeMethod)="filterEmployee($event)" [size]="30"></p-autoComplete>
+    </div>
+    <div *ngIf="IsEdit" class="col-lg-5 col-md-5">
+      <span class="labelheading">Employee id : <span class="labeltext">{{authUser.employeeid}}</span></span>&nbsp;&nbsp;
+      <span class="labelheading">Employee Name : <span class="labeltext">{{authUser.employeename}}</span></span>
+    </div>
+    <div class="col-lg-2 col-md-2 col-sm-2">
+      <label class="labelheading">Email Notification(To) :&nbsp;</label>
+      <input type="checkbox" [(ngModel)]="authUser.emailnotification" />
+    </div>
+    <div class="col-lg-2 col-md-2 col-sm-2">
+      <label class="labelheading">Email Notification(CC) :&nbsp;</label>
+      <input type="checkbox" [(ngModel)]="authUser.emailccnotification" />
+    </div>
+    <div class="col-lg-2 col-md-2 col-sm-2">
+      <label class="labelheading">Not In Use :&nbsp;</label>
+      <input type="checkbox" [(ngModel)]="authUser.deleteflag" />
+    </div>
+  </div><br /><br /><br /><br />
+  <p-footer>
+    <button type="button" pButton icon="pi pi-check" (click)="submitAdd()" label="Submit"></button>
+    <button type="button" pButton icon="pi pi-times" (click)="showadddatamodel=false" label="Cancel" class="ui-button-secondary"></button>
+  </p-footer>
+</p-dialog>
+
+
+

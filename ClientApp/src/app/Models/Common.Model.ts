@@ -11,16 +11,18 @@ export class Employee {
   domainid: string;
   roleid: string;
   plantid: string;
-  
+  isdelegatemember: boolean;
+
 }
 
 export class userAcessNamesModel {
-    authid: number;
-    employeeid: number;
-   roleid: number;
-   userid: number;
-   accessname: string
-	}
+  authid: number;
+  employeeid: number;
+  roleid: number;
+  userid: number;
+  accessname: string;
+  isdelegatemember: boolean;
+}
 
 export class Login {
   Username: string;

@@ -445,6 +445,7 @@ export class authUser {
   modifiedby: string;
   isselected: boolean;
   isdeleted: boolean;
+  isdelegatemember: boolean;
 }
 
 export class AssignProjectModel {
@@ -1272,5 +1273,10 @@ export class userRoles {
   createddate: Date;
   deleteflag: boolean;
 }
+export class DashBoardFilters {
+  fromDate: string;
+  toDate: string;
+}
+
 
 
