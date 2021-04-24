@@ -423,6 +423,13 @@ namespace WMS.Controllers
 
 		}
 
+		[HttpGet("getPODetailsbyprojectcodeformiscissue")]
+		public Task<IEnumerable<PODetails>> getPODetailsbyprojectcodeformiscissue(string projectcode)
+		{
+			return this._poService.getPODetailsbyprojectcodeformiscissue(projectcode);
+
+		}
+
 		[HttpPost("approvematerialrequest")]
 		public int approvematerial([FromBody] List<IssueRequestModel> data)
 		{
@@ -633,6 +640,12 @@ namespace WMS.Controllers
 
 			return await this._poService.GetItemlocationListBymterialanddesc(material, description);
 		}
+		[HttpGet("GetItemLocationListByMaterialanddescpo")]
+		public async Task<IEnumerable<IssueRequestModel>> getitemlocationBymaterialanddescpo(string material, string description,string projectid,string pono)
+		{
+
+			return await this._poService.GetItemlocationListBymterialanddescpo(material, description, projectid, pono);
+		}
 		[HttpGet("GetItemLocationListByMaterialdescstore")]
 		public async Task<IEnumerable<IssueRequestModel>> GetItemLocationListByMaterialdescstore(string material, string description, string store)
 		{
@@ -756,6 +769,11 @@ namespace WMS.Controllers
 		public async Task<IEnumerable<IssueRequestModel>> getmaterialrequestListdata(string pono = null, string loginid = null, string projectcode = null)
 		{
 			return await this._poService.MaterialRequestdata(pono, loginid, projectcode);
+		}
+		[HttpGet("getmaterialrequestforgatepass")]
+		public async Task<IEnumerable<IssueRequestModel>> getmaterialrequestforgatepass(string pono, string projectcode)
+		{
+			return await this._poService.MaterialRequestdataforgatepass(pono, projectcode);
 		}
 
 		[HttpGet("getmaterialreserveListdata")]
@@ -1254,9 +1272,9 @@ namespace WMS.Controllers
 		}
 
 		[HttpGet("getmatinhandlocation")]
-		public async Task<IEnumerable<matlocations>> getmatinhandlocation(string poitemdescription)
+		public async Task<IEnumerable<matlocations>> getmatinhandlocation(string poitemdescription, string materialid, string projectid)
 		{
-			return await this._poService.getmatinhandlocation(poitemdescription);
+			return await this._poService.getmatinhandlocation(poitemdescription, materialid,projectid);
 		}
 		[HttpGet("getinitialstock")]
 		public async Task<IEnumerable<StockModel>> getinitialstock(string code)
@@ -1485,6 +1503,18 @@ namespace WMS.Controllers
 			return await this._poService.getMiscellanousIssueList(initialstock);
 		}
 
+		[HttpGet("getMiscellanousIssueListdata")]
+		public async Task<IEnumerable<StockModel>> getMiscellanousIssueListdata(string initialstock, string pono, string projectid)
+		{
+			return await this._poService.getMiscellanousIssueListdata(initialstock,pono,projectid);
+		}
+
+		[HttpGet("getMiscellanousIssueListdatahistory")]
+		public async Task<IEnumerable<StockModel>> getMiscellanousIssueListdatahistory()
+		{
+			return await this._poService.getMiscellanousIssueListdatahistory();
+		}
+
 		[HttpGet("getMiscellanousReceiptsList")]
 		public async Task<IEnumerable<StockModel>> getMiscellanousReceiptsList()
 		{
@@ -1494,6 +1524,19 @@ namespace WMS.Controllers
 		public bool miscellanousIssueDataUpdate(miscellanousIssueData misData)
 		{
 			return this._poService.miscellanousIssueDataUpdate(misData);
+
+		}
+
+		[HttpPost("updatestocklocationdata")]
+		public string updatelocationdata(matlocations misData)
+		{
+			return this._poService.updatelocationdata(misData);
+
+		}
+		[HttpPost("multiplemiscellanousIssueDataUpdate")]
+		public string multiplemiscellanousIssueDataUpdate(List<miscellanousIssueData> misData)
+		{
+			return this._poService.multiplemiscellanousIssueDataUpdate(misData);
 
 		}
 		[HttpPost("updateMiscellanousReceipt")]

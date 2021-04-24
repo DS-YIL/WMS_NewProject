@@ -1921,20 +1921,46 @@ export class NavMenuComponent implements OnInit {
           ]
         });
       }
+      if (rba.miscellanous) {
+        this.items.push({
+          label: 'Miscellanous', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars',
+          items: [
+            {
+              label: 'Initial Stock Load',
+              icon: 'pi pi-fw pi-bars',
+              style: { 'font-weight': '600', 'width': '250px' },
+              items: [
+                { label: 'Initial Stock Load', style: { 'font-weight': '600', 'width': '230px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/InitialStock') },
+                { label: 'Report', style: { 'font-weight': '600', 'width': '230px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/InitialStockReport') }
+              ]
+            },
+            {
+              label: 'Miscellanous Trancation',
+              icon: 'pi pi-fw pi-bars',
+              style: { 'font-weight': '600', 'width': '250px' },
+              items: [
+                { label: 'Miscellanous Issues', style: { 'font-weight': '600', 'width': '230px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MiscellanousIssues') },
+                { label: 'Miscellanous Receipts', style: { 'font-weight': '600', 'width': '230px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MiscellanousReceipts') }
+              ]
+            }
+          ]
+        });
+
+      }
       var invmanageitems = {
         label: 'Inventory Management',
         icon: 'pi pi-fw pi-bars',
         style: { 'font-weight': '600' },
-        visible: (rba.inventory_Management),
+        visible: (rba.inventory_management),
         items: []
       };
-      var cyclecountitems = {
-        label: 'Cycle Count',
-        icon: 'pi pi-fw pi-bars',
-        style: { 'font-weight': '600' },
-        visible: (rba.cyclecount_configuration || rba.cycle_counting || rba.cyclecount_approval),
-        items: []
-      };
+      //var cyclecountitems = {
+      //  label: 'Cycle Count',
+      //  icon: 'pi pi-fw pi-bars',
+      //  style: { 'font-weight': '600' },
+      //  visible: (rba.cyclecount_configuration || rba.cycle_counting || rba.cyclecount_approval),
+      //  items: []
+      //};
       if (rba.abc_classification) {
         this.items.push({
           label: 'ABC Analysis',
@@ -1955,36 +1981,36 @@ export class NavMenuComponent implements OnInit {
             ]
           });
         }
-      if (rba.cyclecount_configuration) {
-        cyclecountitems.items.push({ label: 'Cycle Count config', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/Cycleconfig') });
+      //if (rba.cyclecount_configuration) {
+      //  cyclecountitems.items.push({ label: 'Cycle Count config', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/Cycleconfig') });
 
-      }
-      if (rba.cycle_counting) {
-        cyclecountitems.items.push({ label: 'Cycle Count', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/Cyclecount') });
+      //}
+      //if (rba.cycle_counting) {
+      //  cyclecountitems.items.push({ label: 'Cycle Count', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/Cyclecount') });
 
-      }
-      if (rba.cyclecount_approval) {
-        cyclecountitems.items.push({ label: 'Cycle Count Approval', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/Cyclecount') });
+      //}
+      //if (rba.cyclecount_approval) {
+      //  cyclecountitems.items.push({ label: 'Cycle Count Approval', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/Cyclecount') });
 
-      }
-      invmanageitems.items.push(cyclecountitems);
-      if (rba.inventory_Management) {
+      //}
+      //invmanageitems.items.push(cyclecountitems);
+      if (rba.inventory_management) {
         invmanageitems.items.push({
           label: 'Inventory Ageing',
           icon: 'pi pi-fw pi-bars',
-          style: { 'font-weight': '600' },
+          style: {'font-weight': '600', 'width': '200px' },
           items: [
             { label: 'Obsolete Inventory', style: { 'font-weight': '600', 'width': '200px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/ObsoleteInventoryMovement') },
             { label: 'Excess Inventory', style: { 'font-weight': '600', 'width': '200px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/ExcessInventoryMovement') }
           ]
         });
       }
-      if (rba.inventory_Management) {
-        this.items.push(invmanageitems);
-      }
-      if (rba.cyclecount_configuration || rba.cycle_counting || rba.cyclecount_approval) {
-        this.items.push(cyclecountitems);
-      }
+      //if (rba.inventory_management) {
+      //  this.items.push(invmanageitems);
+      //}
+      //if (rba.cyclecount_configuration || rba.cycle_counting || rba.cyclecount_approval) {
+      //  this.items.push(cyclecountitems);
+      //}
       if (rba.admin_access) {
         this.items.push({
           label: 'Master Pages',
@@ -1995,7 +2021,7 @@ export class NavMenuComponent implements OnInit {
             { label: 'GatePass Reason Master', icon: 'pi pi-fw pi-bars', style: { 'width': '250px' }, command: () => this.router.navigateByUrl('WMS/GatePassMaster') },
             { label: 'Plant Master', icon: 'pi pi-fw pi-bars', style: { 'width': '250px' }, command: () => this.router.navigateByUrl('WMS/PlantMaster') },
             { label: 'Assign Role', icon: 'pi pi-fw pi-bars', style: { 'width': '200px' }, command: () => this.router.navigateByUrl('WMS/AssignRole') },
-            { label: 'Assign Project Manager', style: { 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/AssignProjectManager') },
+            //{ label: 'PM Master', style: { 'width': '250px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/AssignProjectManager') },
             { label: 'Miscellanous Master', icon: 'pi pi-fw pi-bars', style: { 'width': '250px' }, command: () => this.router.navigateByUrl('WMS/MiscellanousReason') },
             { label: 'Assign RBA', icon: 'pi pi-fw pi-bars', style: { 'width': '250px' }, command: () => this.router.navigateByUrl('WMS/Assignrba') },
             { label: 'Store Master', icon: 'pi pi-fw pi-bars', style: { 'width': '250px' }, command: () => this.router.navigateByUrl('WMS/StoreMaster') },
@@ -2082,32 +2108,7 @@ export class NavMenuComponent implements OnInit {
       if (rba.asn_view) {
 
       }
-      if (rba.miscellanous) {
-        this.items.push({
-          label: 'Miscellanous', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars',
-          items: [
-            {
-              label: 'Initial Stock Load',
-              icon: 'pi pi-fw pi-bars',
-              style: { 'font-weight': '600', 'width': '250px' },
-              items: [
-                { label: 'Initial Stock Load', style: { 'font-weight': '600', 'width': '230px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/InitialStock') },
-                { label: 'Report', style: { 'font-weight': '600', 'width': '230px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/InitialStockReport') }
-              ]
-            },
-            {
-              label: 'Miscellanous Trancation',
-              icon: 'pi pi-fw pi-bars',
-              style: { 'font-weight': '600', 'width': '250px' },
-              items: [
-                { label: 'Miscellanous Issues', style: { 'font-weight': '600', 'width': '230px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MiscellanousIssues') },
-                { label: 'Miscellanous Receipts', style: { 'font-weight': '600', 'width': '230px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MiscellanousReceipts') }
-              ]
-            }
-          ]
-        });
-
-      }
+     
       if (rba.internal_stock_transfer) {
         this.items.push({ label: 'Internal Stock Transfer', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/Stocktransfer') });
 

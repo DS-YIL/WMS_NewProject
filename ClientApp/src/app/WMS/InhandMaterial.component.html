@@ -15,14 +15,17 @@
     
 
     <div class="row" style="margin-top:0px;">
-      <div class="col-lg-4 col-md-4 form-inline m-2" style="margin: 0rem !important;">
-        <div class="form-inline">
-          <label class="labelheading">Location :</label>&nbsp;&nbsp;
-          <select [(ngModel)]="inventoryFilters.itemlocation" class="form-control" (change)="getlist()">
-            <option value="">All</option>
-            <option *ngFor="let ca of locationList" [ngValue]="ca.itemlocation">{{ca.itemlocation}}</option>
-          </select>
-        </div>
+      <!--<div class="col-lg-4 col-md-4 form-inline m-2" style="margin: 0rem !important;">
+    <div class="form-inline">
+      <label class="labelheading">Location :</label>&nbsp;&nbsp;
+      <select [(ngModel)]="inventoryFilters.itemlocation" class="form-control" (change)="getlist()">
+        <option value="">All</option>
+        <option *ngFor="let ca of locationList" [ngValue]="ca.itemlocation">{{ca.itemlocation}}</option>
+      </select>
+    </div>
+  </div>-->
+      <div class="col-lg-2 col-md-2">
+        <button type="button" pButton icon="pi pi-file-excel" iconPos="left" label="Export to Excel" (click)="exportExcel()" style="margin-right: 0.5em;" class="ui-button-success"></button>
       </div>
       <div class="col-lg-2 col-md-2 labelheading" style="font-weight:600;font-size:14px;color:darkblue;">
         Total Inventory :<span class="labeltext">{{totalLength}}</span>
@@ -30,9 +33,7 @@
       <div class="col-lg-3 col-md-3 labelheading" style="font-weight: 600;font-size: 14px;color: darkblue; ">
         Total Value :<span class="labeltext">{{totalLengthValues | number : '1.2-2'}}</span>
       </div>
-      <div class="col-lg-2 col-md-2">
-        <button type="button" pButton icon="pi pi-file-excel" iconPos="left" label="Export to Excel" (click)="exportExcel()" style="margin-right: 0.5em;" class="ui-button-success"></button>
-      </div>
+
     </div>
 
 
@@ -96,17 +97,32 @@
   </div>
 
 </div>
-<p-dialog header="Material Locations" [(visible)]="showadddatamodel" (onHide)="refreshsavemodel()" [modal]="true" [style]="{width: '60vw'}" [baseZIndex]="10000"
+<p-dialog header="Material Locations" [(visible)]="showadddatamodel" (onHide)="refreshsavemodel()" [modal]="true" [style]="{width: '90vw'}" [baseZIndex]="10000"
           [draggable]="false" [resizable]="false">
   <div class="row">
-    <div class="col-lg-4 col-md-4">
+    <div class="col-lg-3 col-md-3">
+      <div class="form-inline">
+        <label class="labelheading">Project:</label>&nbsp;&nbsp;
+        <label class="labeltext"><span>{{lblproject}}</span></label>&nbsp;&nbsp;
+      </div>
+
+    </div>
+    <div class="col-lg-3 col-md-3">
+      <div class="form-inline">
+        <label class="labelheading">PONo:</label>&nbsp;&nbsp;
+        <label class="labeltext"><span>{{lblpono}}</span></label>&nbsp;&nbsp;
+      </div>
+
+    </div>
+    <div class="col-lg-3 col-md-3">
       <div class="form-inline">
         <label class="labelheading">Material:</label>&nbsp;&nbsp;
         <label class="labeltext"><span>{{lblmaterial}}</span></label>&nbsp;&nbsp;
       </div>
 
     </div>
-    <div class="col-lg-8 col-md-8">
+
+    <div class="col-lg-3 col-md-3">
       <div class="form-inline" style="float:right">
         <label class="labelheading">PO Item Description:</label>&nbsp;&nbsp;
         <label class="labeltext"><span>{{lblmaterialdesc}}</span></label>&nbsp;&nbsp;
@@ -116,27 +132,51 @@
 
   </div>
 
+  <div style="min-height:65vh;overflow:scroll;">
+    <p-table #dt1 [value]="getlocationlistdata">
+      <ng-template pTemplate="header">
+        <tr class="mprltbldata">
+          <th class="ptable-cell" style="text-align:center;width:70px;">Sl.No.</th>
+          <!--<th class="ptable-cell" style="text-align:center;">Location</th>-->
+          <th class="ptable-cell" style="text-align:center;">Store</th>
+          <th class="ptable-cell" style="text-align:center;">Rack</th>
+          <th class="ptable-cell" style="text-align:center;">Bin</th>
+          <th class="ptable-cell" style="text-align:center;width:150px">Available Qty</th>
+          <th class="ptable-cell" style="text-align:center;width:150px">Edit</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex" let-rindex=0>
+        <tr>
+          <td class="ptable-cell" style="text-align:right;width:70px;"> {{ri + 1}} </td>
+          <td class="ptable-cell" style="text-align:left;">
+            <p-autoComplete [(ngModel)]="rowData.locatorname" placeholder="search by Store" [disabled]="!rowData.isedit" type="text" [forceSelection]="true" (onSelect)="onStoreSelect($event,rowData,ri)" (change)="onStoreSelect($event,rowData,ri)" [suggestions]="filteredStores" (completeMethod)="filterStore($event,rowData)" [size]="20"
+                            [dropdown]="true"></p-autoComplete>
 
-  <p-table #dt1 [value]="getlocationlistdata" [style]="{'overflow':'auto!important','box-shadow' : '5px 5px #888888'}"
-           [scrollable]="true" scrollHeight="65vh">
-    <ng-template pTemplate="header">
-      <tr class="mprltbldata">
-        <th class="ptable-cell" style="text-align:center;width:70px;">Sl.No.</th>
-        <th class="ptable-cell" style="text-align:center;">Location</th>
-        <th class="ptable-cell" style="text-align:center;">Available Qty</th>
-      </tr>
-    </ng-template>
-    <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex" let-rindex=0>
-      <tr>
-        <td class="ptable-cell" style="text-align:right;width:70px;"> {{ri + 1}} </td>
-        <td class="ptable-cell" style="text-align:left;"> {{rowData.itemlocation}} </td>
-        <td class="ptable-cell" style="text-align:right;">{{rowData.quantity}} </td>
-      </tr>
-    </ng-template>
-    <ng-template pTemplate="emptymessage">
-      <tr>
-        <td colspan="4" style="text-align:center;color:red">No Records.</td>
-      </tr>
-    </ng-template>
-  </p-table>
+          </td>
+          <td class="ptable-cell" style="text-align:left">
+
+            <p-autoComplete [(ngModel)]="rowData.racknumber" placeholder="search by Rack" type="text" [disabled]="!rowData.isedit" [forceSelection]="true" (onSelect)="onRackSelect($event,rowData,ri)" (blur)="onRackSelect($event,rowData,ri)" [suggestions]="filteredracks" (completeMethod)="filterRack($event,rowData)" [size]="20"
+                            [dropdown]="true"></p-autoComplete>
+          </td>
+          <td class="ptable-cell" style="text-align:left">
+            <p-autoComplete [(ngModel)]="rowData.binnumber" placeholder="search by Bin" type="text" [disabled]="!rowData.isedit" [forceSelection]="true" (onSelect)="onBinSelect($event,rowData,ri)" (blur)="onBinSelect($event,rowData,ri)" [suggestions]="filteredbins" (completeMethod)="filterBin($event,rowData)" [size]="20"
+                            [dropdown]="true"></p-autoComplete>
+          </td>
+          <!--<td class="ptable-cell" style="text-align:left;"> {{rowData.itemlocation}} </td>-->
+          <td class="ptable-cell" style="text-align:right;;width:150px">{{rowData.quantity}} </td>
+          <td class="ptable-cell" style="text-align:center;;width:150px">
+            <button class="btn btn-primary btn-sm" *ngIf="!rowData.isedit" (click)="Editlocation(rowData)"><i class="fa fa-edit"></i></button>
+            <button class="btn btn-success btn-sm" *ngIf="rowData.isedit" (click)="saveloc(rowData)"><i class="fa fa-check"></i></button>&nbsp;&nbsp;
+            <button class="btn btn-danger btn-sm" *ngIf="rowData.isedit" (click)="cancelloc(rowData)"><i class="fa fa-times"></i></button>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="4" style="text-align:center;color:red">No Records.</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+ 
 </p-dialog>

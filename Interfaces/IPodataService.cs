@@ -21,10 +21,12 @@ namespace WMS.Interfaces
 
 		//Location Details
 		Task<IEnumerable<LocationDetails>> getlocationdetails(string materialid, string grnnumber);
+		string updatelocationdata(matlocations dataobj);
 
 		//Get po details
 		Task<IEnumerable<PODetails>> getPODetails(string empno);
 		Task<IEnumerable<PODetails>> getPODetailsByProjectCode(string empno, string projectcode);
+		Task<IEnumerable<PODetails>> getPODetailsbyprojectcodeformiscissue(string projectcode);
 
 		//Get direct transfer data
 		Task<IEnumerable<DirectTransferMain>> getdirecttransferdata(string empno);
@@ -82,6 +84,7 @@ namespace WMS.Interfaces
 		Task<IEnumerable<inwardModel>> getitemdeatilsnotif(string grnnumber);
 		Task<IEnumerable<MaterialTransaction>> MaterialRequest(string pono, string material);
 		Task<IEnumerable<IssueRequestModel>> MaterialRequestdata(string pono, string material, string projectcode);
+		Task<IEnumerable<IssueRequestModel>> MaterialRequestdataforgatepass(string pono, string projectcode);
 		Task<IEnumerable<POReportModel>> getPOReportdata(string empno, string projectcode, string pono);
 		Task<IEnumerable<stocktransfermateriakmodel>> getsubconannexuredata(string empno, string subconno);
 		Task<IEnumerable<POReportModel>> getPOReportdetail(string materialid, string description, string pono, string querytype, string requesttype, string projectcode, string empno);
@@ -130,6 +133,7 @@ namespace WMS.Interfaces
 		Task<IEnumerable<OpenPoModel>> getASNListdata();
 		Task<IEnumerable<IssueRequestModel>> GetItemlocationListBymterial(string material);
 		Task<IEnumerable<IssueRequestModel>> GetItemlocationListBymterialanddesc(string material, string description);
+		Task<IEnumerable<IssueRequestModel>> GetItemlocationListBymterialanddescpo(string material, string description, string projectid, string pono);
 		Task<IEnumerable<IssueRequestModel>> GetItemLocationListByMaterialdescstore(string material, string description, string store);
 		Task<IEnumerable<IssueRequestModel>> GetItemLocationListByMaterialdescpono(string material, string description, string pono);
 
@@ -257,7 +261,7 @@ namespace WMS.Interfaces
 
 		Task<IEnumerable<testcrud>> gettestcrud();
 		Task<IEnumerable<MaterialinHand>> getmatinhand(inventoryFilters filters);
-		Task<IEnumerable<matlocations>> getmatinhandlocation(string material);
+		Task<IEnumerable<matlocations>> getmatinhandlocation(string material, string materialid, string projectid);
 		Task<IEnumerable<StockModel>> getinitialstock(string code);
 		Task<IEnumerable<StockModel>> getinitialstockall(string code);
 		Task<IEnumerable<StockModel>> getinitialstockEX(string code);
@@ -302,7 +306,9 @@ namespace WMS.Interfaces
 		Task<IEnumerable<GraphModelNew>> getWeeklyUserdashboardReserve();
 		Task<IEnumerable<GraphModelNew>> getWeeklyUserdashboardtransfer();
 		Task<IEnumerable<StockModel>> getMiscellanousIssueList(bool initialStock);
+		Task<IEnumerable<StockModel>> getMiscellanousIssueListdata(string initialStock,string pono, string projectid);
 		bool miscellanousIssueDataUpdate(miscellanousIssueData data);
+		string multiplemiscellanousIssueDataUpdate(List<miscellanousIssueData> data);
 		Task<IEnumerable<StockModel>> getMiscellanousReceiptsList();
 		string updateMiscellanousReceipt(StockModel item);
 		System.Data.DataTable getMaterialMasterList();
@@ -343,6 +349,7 @@ namespace WMS.Interfaces
 		public bool updateSubRole(subrolemodel subrolemaster);
 		public bool updateUserRole(userRoles userRoles);
 
+		Task<IEnumerable<StockModel>> getMiscellanousIssueListdatahistory();
 
 	}
 }

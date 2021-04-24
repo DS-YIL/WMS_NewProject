@@ -75,19 +75,32 @@ export class GatePassComponent implements OnInit {
   exportColumns: any[];
   cols: any[];
   gatepassprintmodel: gatepassprintdoc[] = [];
+  filteredprojects: ddlmodel[] = [];
+  selectedproject: ddlmodel;
+  projectlists: ddlmodel[] = [];
+  selectedpono: string = "";
+  filteredpos: any[];
+  ponolist: any[];
+  iseditprocess: boolean = false;
   ngOnInit() {
     if (localStorage.getItem("Employee"))
       this.employee = JSON.parse(localStorage.getItem("Employee"));
     else
       this.router.navigateByUrl("Login");
     this.gatepassprintmodel = [];
+    this.iseditprocess = false;
     this.cols = [
       { field: 'slno', header: 'Sl.No.' },
       { field: 'materialdescription', header: 'Material Description' },
       { field: 'quantity', header: 'Quantity' },
       { field: 'remarks', header: 'Remarks' },
     ];
-
+    this.getprojects();
+    this.selectedproject = null;
+    this.filteredprojects = [];
+    this.selectedpono = "";
+    this.filteredpos = [];
+    this.projectlists = [];
     this.exportColumns = this.cols.map(col => ({ title: col.header, dataKey: col.field }));
     this.isotherreason = false;
     this.otherreason = "";
@@ -127,7 +140,7 @@ export class GatePassComponent implements OnInit {
 
     //set expected date as future date
     this.mindate = new Date(new Date().setDate(new Date().getDate() + 1));
-    this.getdefaultmaterialsforgatepass();
+    //this.getdefaultmaterialsforgatepass();
   }
 
 
@@ -143,7 +156,83 @@ export class GatePassComponent implements OnInit {
 
     });
   }
-  
+
+
+  projectSelected(event: any) {
+    debugger;
+    this.filteredpos = [];
+    this.selectedpono = null;
+    var prj = this.selectedproject.value;
+    this.GetPONo(prj);
+  }
+
+  GetPONo(projectcode: string) {
+    this.ponolist = [];
+    this.wmsService.getPODetailsbyprojectcode(this.employee.employeeno, projectcode).subscribe(data => {
+      this.spinner.hide();
+      if (data) {
+        this.ponolist = data;
+        if (this.ponolist && this.ponolist.length == 0) {
+          this.messageService.add({ severity: 'error', summary: '', detail: 'POs not available in stock for selected project.' });
+        }
+      }
+      else
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Server error' });
+    });
+  }
+
+  onPOSelected() {
+    debugger;
+    this.gatepassModel.materialList = [];
+    var pono = this.selectedpono;
+    if (this.ponolist.filter(li => li.pono == pono).length > 0) {
+
+      this.wmsService.getMaterialRequestlistdataforgp(pono, this.selectedproject.value).subscribe(data => {
+        this.gatepassModel.materialList = data;
+        if (this.gatepassModel.materialList && this.gatepassModel.materialList.length == 0) {
+          this.messageService.add({ severity: 'error', summary: '', detail: 'Materials not available in stock for selected po.' });
+        }
+      });
+
+
+
+    }
+   
+  }
+  getprojects() {
+
+    this.wmsService.getprojectlistbymanager(this.employee.employeeno).subscribe(data => {
+      debugger;
+      this.projectlists = data;
+
+    });
+  }
+  filterprojects(event) {
+    this.filteredprojects = [];
+    for (let i = 0; i < this.projectlists.length; i++) {
+      let brand = this.projectlists[i].value;
+      let pos = this.projectlists[i].projectmanager;
+      if (brand.toLowerCase().indexOf(event.query.toLowerCase()) == 0 || pos.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+        this.filteredprojects.push(this.projectlists[i]);
+      }
+    }
+  }
+
+  filterpos(event) {
+    debugger;
+    if (isNullOrUndefined(this.selectedproject)) {
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Select Project' });
+      return;
+    }
+    this.filteredpos = [];
+    for (let i = 0; i < this.ponolist.length; i++) {
+      let pos = this.ponolist[i].pono;
+      if (pos.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+        this.filteredpos.push(pos);
+      }
+
+    }
+  }
 
 
   //Adding new material - Gayathri
@@ -181,14 +270,14 @@ export class GatePassComponent implements OnInit {
       }
       else {
         debugger;
-        this.materialistModel = { materialid: "", gatepassmaterialid: "0", materialdescription: "", quantity: 0, materialcost: 0, remarks: " ", expecteddate: this.date, returneddate: this.date, issuedqty: 0, showdetail: false, materiallistdata: [] };
+        this.materialistModel = { materialid: "", gatepassmaterialid: "0", materialdescription: "", quantity: 0, materialcost: 0, remarks: " ", expecteddate: this.date, returneddate: this.date, issuedqty: 0, showdetail: false, materiallistdata: [], availableqty:0 };
         this.gatepassModel.materialList.push(this.materialistModel);
       }
 
     }
     else {
       if (this.gatepassModel.materialList.length <= 0) {
-        this.materialistModel = { materialid: "", gatepassmaterialid: "0", materialdescription: "", quantity: 0, materialcost: 0, remarks: " ", expecteddate: this.date, returneddate: this.date, issuedqty: 0, showdetail: false, materiallistdata: [] };
+        this.materialistModel = { materialid: "", gatepassmaterialid: "0", materialdescription: "", quantity: 0, materialcost: 0, remarks: " ", expecteddate: this.date, returneddate: this.date, issuedqty: 0, showdetail: false, materiallistdata: [], availableqty:0 };
         this.gatepassModel.materialList.push(this.materialistModel);
       }
       else {
@@ -198,61 +287,7 @@ export class GatePassComponent implements OnInit {
 
     }
     
-    //if (this.gatepassModel.materialList.length == 0 || isNullOrUndefined(this.material)) {
-    //  this.materialistModel = { materialid: "", gatepassmaterialid: "0", materialdescription: "", quantity: 0, materialcost: "0", remarks: " ", expecteddate: this.date, returneddate: this.date, issuedqty: 0 };
-    //  this.gatepassModel.materialList.push(this.materialistModel);
-    //  this.material = "";
-    //}
-    ////check if materiallist is empty and gatepass materialid is null
-    //else if (!this.material && !this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].materialid) {
-    //  this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'please Add Material' });
-    //  return false;
-    //}
-    //else if (this.gatepassModel.gatepasstype == "Returnable" && this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].expecteddate == undefined) {
-    //  this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Please select Expected Date' });
-    //  return false;
-    //}
-    //else {
-    //  //Check if material code is already entered
-    //  if (this.gatepassModel.materialList.filter(li => li.materialid == this.material.code && li.gatepassmaterialid != "0").length > 0) {
-    //    this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Material already exist' });
-    //    return false;
-    //  }
-
-    //  debugger;
-    //  this.gatePassChange();
-    //  if (this.material) {
-    //    this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].materialid = this.material.code;
-    //    this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].materialdescription = this.material.name;
-    //    this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].expecteddate = new Date(this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].expecteddate).toLocaleDateString();
-    //    this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].returneddate = this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].returneddate != null ? new Date(this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].returneddate).toLocaleDateString() : undefined;
-
-    //    // this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].returneddate = this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].expecteddate;
-    //  }
-    //  if (this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].materialid && this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].quantity) {
-    //    this.wmsService.checkMaterialandQty(this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].materialid, this.materialistModel.quantity).subscribe(data => {
-    //      if (data == "true") {
-
-    //        this.materialistModel = { materialid: "", gatepassmaterialid: "0", materialdescription: "", quantity: 0, materialcost: "0", remarks: " ", expecteddate: this.date, returneddate: this.date, issuedqty: 0 };
-    //        this.gatepassModel.materialList.push(this.materialistModel);
-    //        this.material = "";
-
-    //        //alert(this.gatepassModel.materialList[1].materialid);
-    //      }
-    //      else
-    //        this.messageService.add({ severity: 'error', summary: 'Error Message', detail: data });
-    //    });
-    //  }
-    //  else {
-    //    if (!this.materialistModel.materialid)
-    //      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'select material from list' });
-    //    else if (!this.materialistModel.quantity)
-    //      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Enter Quantity' });
-    //  }
-
-
-    //}
-
+   
 
 
   }
@@ -733,6 +768,7 @@ export class GatePassComponent implements OnInit {
           material.gatepassmaterialid = result[i].gatepassmaterialid;
           material.materialid = result[i].materialid;
           material.materialdescription = result[i].materialdescription;
+          material.availableqty = result[i].availableqty;
           material.quantity = result[i].quantity;
           material.materialcost = result[i].materialcost;
           material.remarks = result[i].remarks;
@@ -765,20 +801,35 @@ export class GatePassComponent implements OnInit {
     var val = event.target.value;
     if (val == "nonproject") {
       this.gatepassModel.isnonproject = true;
+      this.selectedpono = "";
+      this.selectedproject = null;
+      this.filteredprojects = [];
+      this.filteredpos = []
+      this.gatepassModel.materialList = [];
+      this.addNewMaterial();
+     
     }
     else {
       this.gatepassModel.isnonproject = false;
+      this.selectedpono = "";
+      this.selectedproject = null;
+      this.filteredprojects = [];
+      this.filteredpos = []
+      this.gatepassModel.materialList = [];
     }
-    this.gatepassModel.materialList = [];
-    this.addNewMaterial();
+   
   }
   //open gate pass dialog
   openGatepassDialog(gatepassobject: any, gpIndx: any, dialogstr: string) {
     debugger;
     this.displaydetail = false;
+    this.iseditprocess = false;
     this.approverListdata();
     this.gatepassdialog = true;
     this.gatepassModel = new gatepassModel();
+    this.selectedproject = null;
+    this.selectedpono = "";
+
     if (gatepassobject) {
       this.edit = true;
       this.gpIndx = gpIndx;
@@ -789,6 +840,7 @@ export class GatePassComponent implements OnInit {
         this.isotherreason = false;
       }
       this.gatepassModel = gatepassobject;
+     
       if (dialogstr == 'updateReturnedDateDialog') {
         var matdata = [];
         var materialdata = gatepassobject.materialList;
@@ -814,15 +866,30 @@ export class GatePassComponent implements OnInit {
       if (dialogstr == 'gatepassdialogedit') {
         var matdata = [];
         var materialdata = gatepassobject.materialList;
-        materialdata.forEach(item => {
-          debugger;
-          var data2 = this.defaultmaterials.filter(function (element, index) {
-            return (element.material == item.materialid && element.materialdescription == item.materialdescription);
+        if (this.gatepassModel.projectid) {
+          var pid = this.gatepassModel.projectid;
+          var data2 = this.projectlists.filter(function (element, index) {
+            return (element.value == pid);
           });
           if (data2.length > 0) {
-            item.materialcost = data2[0].materialcost != null ? data2[0].materialcost : 0;
-            item.availableqty = data2[0].availableqty != null ? data2[0].availableqty : 0;
+            this.selectedproject = data2[0];
           }
+        }
+        if (this.gatepassModel.pono) {
+
+          this.selectedpono = this.gatepassModel.pono;
+
+        }
+        this.iseditprocess = true;
+        materialdata.forEach(item => {
+          debugger;
+          //var data2 = this.defaultmaterials.filter(function (element, index) {
+          //  return (element.material == item.materialid && element.materialdescription == item.materialdescription);
+          //});
+          //if (data2.length > 0) {
+          //  item.materialcost = data2[0].materialcost != null ? data2[0].materialcost : 0;
+          //  item.availableqty = data2[0].availableqty != null ? data2[0].availableqty : 0;
+          //}
           item.expected = new Date(item.expected);
           var exisdata = matdata.filter(o => o.materialid == item.materialid && o.materialdescription == item.materialdescription);
           
@@ -849,8 +916,8 @@ export class GatePassComponent implements OnInit {
       this.isotherreason = false;
       this.gatepassModel.reasonforgatepass = "0";
       this.gatepassModel.otherreason = "";
-      this.materialistModel = { materialid: "", gatepassmaterialid: "0", materialdescription: "", quantity: 0, materialcost: 0, remarks: " ", expecteddate: this.date, returneddate: this.date, issuedqty: 0, showdetail: false, materiallistdata: [] };
-      this.gatepassModel.materialList.push(this.materialistModel);
+      //this.materialistModel = { materialid: "", gatepassmaterialid: "0", materialdescription: "", quantity: 0, materialcost: 0, remarks: " ", expecteddate: this.date, returneddate: this.date, issuedqty: 0, showdetail: false, materiallistdata: [] };
+      //this.gatepassModel.materialList.push(this.materialistModel);
       this.material = "";
     }
     this.gatePassChange();
@@ -1038,7 +1105,14 @@ export class GatePassComponent implements OnInit {
     }
   }
 
+  onCostchange(data: any) {
+    if (data.materialcost < 0) {
+      this.messageService.add({ severity: 'success', summary: '', detail: 'Value must be grater than 0' });
+      data.materialcost = 0;
+      return;
 
+    }
+  }
   //saving gatepass details
   onSubmitgatepassDetails() {
     debugger;
@@ -1096,14 +1170,14 @@ export class GatePassComponent implements OnInit {
         });
        
         var invalidrcvquantity = this.gatepassModel.materialList.filter(function (element, index) {
-          return (element.quantity <= 0 || isNullOrUndefined(element.quantity));
+          return (element.quantity > 0);
         });
         if (invalidrcvmat.length > 0) {
           if (this.gatepassModel.isnonproject) {
             this.messageService.add({ severity: 'error', summary: '', detail: 'Enter Material' });
           }
           else {
-            this.messageService.add({ severity: 'error', summary: '', detail: 'Select Material from list' });
+            this.messageService.add({ severity: 'error', summary: '', detail: 'Material not defined' });
           }
           this.disableGPBtn = false;
           return false;
@@ -1116,12 +1190,12 @@ export class GatePassComponent implements OnInit {
             this.messageService.add({ severity: 'error', summary: '', detail: 'Enter material description' });
           }
           else {
-            this.messageService.add({ severity: 'error', summary: '', detail: 'Select material description from list' });
+            this.messageService.add({ severity: 'error', summary: '', detail: 'Material description not defined' });
           }
           this.disableGPBtn = false;
           return false;
         }
-        if (invalidrcvquantity.length > 0) {
+        if (invalidrcvquantity.length == 0) {
           this.messageService.add({ severity: 'error', summary: '', detail: 'Enter Quantity' });
           this.disableGPBtn = false;
           return false;
@@ -1136,15 +1210,52 @@ export class GatePassComponent implements OnInit {
             return false;
           }
         }
-
-        
+        if (this.gatepassModel.isnonproject) {
+          var invalidqty = this.gatepassModel.materialList.filter(function (element, index) {
+            return (isNullOrUndefined(element.quantity) || element.quantity <= 0);
+          });
+          if (invalidqty.length > 0) {
+            this.messageService.add({ severity: 'error', summary: '', detail: 'Enter quantity' });
+            this.disableGPBtn = false;
+            return false;
+          }
+        }
+        var invalidqty = this.gatepassModel.materialList.filter(function (element, index) {
+          return (element.quantity > 0 && isNullOrUndefined(element.materialcost) || element.materialcost <= 0);
+        });
+        if (invalidqty.length > 0) {
+          this.messageService.add({ severity: 'error', summary: '', detail: 'Enter Value' });
+          this.disableGPBtn = false;
+          return false;
+        }
+        if (!this.gatepassModel.isnonproject) {
+          var invalidqty1 = this.gatepassModel.materialList.filter(function (element, index) {
+            return (element.quantity > element.availableqty);
+          });
+          if (invalidqty1.length > 0) {
+            this.messageService.add({ severity: 'error', summary: '', detail: 'Request quantity can not exceed available quantity.' });
+            this.disableGPBtn = false;
+            return false;
+          }
+        }
+      
+        if (invalidqty.length > 0) {
+          this.messageService.add({ severity: 'error', summary: '', detail: 'Enter Value' });
+          this.disableGPBtn = false;
+          return false;
+        }
        
-
-        if (this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].quantity > 0) {
+        this.gatepassModel.materialList  = this.gatepassModel.materialList.filter(function (element, index) {
+          return (element.quantity > 0);
+        });
 
           this.spinner.show();
-          this.gatepassModel.requestedby = this.employee.employeeno;
-          this.gatepassModel.requestedby = this.employee.employeeno;
+        this.gatepassModel.requestedby = this.employee.employeeno;
+        if (!this.gatepassModel.isnonproject) {
+          this.gatepassModel.projectid = this.selectedproject.value;
+          this.gatepassModel.pono = this.selectedpono;
+        }
+        
           this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].expecteddate = this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].expecteddate != null ? new Date(this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].expecteddate).toLocaleDateString() : undefined;
           this.spinner.show();
           debugger;
@@ -1168,7 +1279,7 @@ export class GatePassComponent implements OnInit {
           //check if for that material quanity exists or not
           
 
-        }
+        
       }
       else {
         this.messageService.add({ severity: 'error', summary: '', detail: 'Add Material to create Gate Pass' });
@@ -1185,220 +1296,7 @@ export class GatePassComponent implements OnInit {
 
 
 
-    //// var isvalid = true;
-    ////this.gatepassModel.materialList.forEach(item => {
-    ////  item.expecteddate = item.expecteddate != null ? new Date(item.expecteddate).toLocaleDateString() : undefined;
-    ////  this.wmsService.checkMaterialandQty(item.materialid, item.quantity).subscribe(data => {
-    ////    if (data == "true") {
-    ////      debugger;
-    ////    }
-    ////    else {
-    ////      debugger;
-    ////      isvalid = false;
-    ////      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: data + " for " + item.materialid });
-    ////      item.quantity = 0;
-    ////      //this.spinner.hide();
-    ////      return;
-    ////    }
-
-    ////  })
-    ////})
-
-    ////var pg = this;
-    ////setTimeout(function () {
-    ////  if (isvalid == true) {
-    ////    pg.wmsService.saveoreditgatepassmaterial(pg.gatepassModel).subscribe(data => {
-    ////      pg.gatepassdialog = false;
-    ////      pg.updateReturnedDateDialog = false;
-    ////      pg.getGatePassList();
-    ////      if (data)
-    ////        //pg.spinner.hide();
-    ////        pg.messageService.add({ severity: 'success', summary: 'Success Message', detail: 'Gate Pass Created Successfully' });
-    ////    });
-    ////  }
-    ////}, 2000);
-
-
-
-
-
-    //if (this.gatepassModel.materialList.length == 0) {
-    // // this.spinner.hide();
-    //  this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Add materials to create GatePass' });
-    //  return false;
-    //}
-
-    //else if (this.gatepassModel.gatepasstype != "0") {
-    //  this.gatepassModel.requestedby = this.employee.employeeno;
-    //  //check if materiallist is empty and gatepass materialid is null
-    //  if (!this.material && !this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].materialid) {
-    //    this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Add Material' });
-    //    //this.spinner.hide();
-    //    return false;
-    //  }
-    //  else if (this.gatepassModel.gatepasstype == "Returnable" && this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].expecteddate == undefined) {
-    //    this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Select Expected Date' });
-    //    //this.spinner.hide();
-    //    return false;
-    //  }
-    //  else if (this.material) {
-    //    if (this.gatepassModel.materialList.filter(li => li.materialid == this.material.code && li.gatepassmaterialid != "0").length > 0) {
-    //      //alert("entered");
-    //      //console.log(this.gatepassModel);
-    //      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Material already exist' });
-    //      //this.spinner.hide();
-    //      return false;
-    //    }
-
-    //    //alert(this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].returneddate);
-    //    this.gatePassChange();
-    //    if (this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].materialid == "" && !isNullOrUndefined(this.material.code)) {
-    //      this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].materialid = this.material.code;
-    //      this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].materialdescription = this.material.name;
-    //      this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].expecteddate = new Date(this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].expecteddate).toLocaleDateString();
-    //      this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].returneddate = this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].returneddate != null ? new Date(this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].returneddate).toLocaleDateString() : undefined;
-
-    //      if (this.materialistModel.materialid && this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].quantity) {
-    //        this.wmsService.checkMaterialandQty(this.material.code, this.materialistModel.quantity).subscribe(data => {
-    //          if (data == "true") {
-    //            // this.gatepassModel.materialList.push(this.materialistModel);
-    //            //this.gatepassModel.materialList.push(this.materialistModel);
-    //            //this.materialistModel = new materialistModel();
-    //            this.material = "";
-    //            this.wmsService.saveoreditgatepassmaterial(this.gatepassModel).subscribe(data => {
-    //              this.gatepassdialog = false;
-    //              this.updateReturnedDateDialog = false;
-    //              this.getGatePassList()
-    //              if (data)
-    //                // this.spinner.hide();
-    //                this.messageService.add({ severity: 'success', summary: 'Success Message', detail: 'Gate Pass Created Successfully' });
-    //            })
-    //          }
-    //          else
-    //            //this.spinner.hide();
-    //            this.messageService.add({ severity: 'error', summary: 'Error Message', detail: data });
-    //        });
-    //      }
-    //      else {
-    //        //this.spinner.hide();
-    //        if (!this.materialistModel.materialid)
-    //          this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'select material from list' });
-    //        else if (!this.materialistModel.quantity)
-    //          this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Enter Quantity' });
-    //      }
-    //    }
-    //    else {
-    //      debugger;
-    //      console.log(this.gatepassModel);
-    //      var isvalid = true;
-    //      this.gatepassModel.materialList.forEach(item => {
-    //        item.expecteddate = item.expecteddate != null ? new Date(item.expecteddate).toLocaleDateString() : undefined;
-    //        this.wmsService.checkMaterialandQty(item.materialid, item.quantity).subscribe(data => {
-    //          if (data == "true") {
-    //            debugger;
-    //          }
-    //          else {
-    //            debugger;
-    //            isvalid = false;
-    //            this.messageService.add({ severity: 'error', summary: 'Error Message', detail: data + " for " + item.materialid });
-    //            //this.spinner.hide();
-    //            return;
-    //          }
-
-    //        })
-    //      })
-
-    //      var pg = this;
-    //      setTimeout(function () {
-    //        if (isvalid == true) {
-    //          pg.wmsService.saveoreditgatepassmaterial(pg.gatepassModel).subscribe(data => {
-    //            pg.gatepassdialog = false;
-    //            pg.updateReturnedDateDialog = false;
-    //            pg.getGatePassList();
-    //            if (data)
-    //              //pg.spinner.hide();
-    //              pg.messageService.add({ severity: 'success', summary: 'Success Message', detail: 'Gate Pass Created Successfully' });
-    //          });
-    //        }
-    //      }, 2000);
-
-    //    }
-    //  }
-    //  else {
-    //    debugger;
-    //    console.log(this.gatepassModel);
-    //    var isvalid = true;
-    //    this.gatepassModel.materialList.forEach(item => {
-    //      item.expecteddate = item.expecteddate != null ? new Date(item.expecteddate).toLocaleDateString() : undefined;
-    //       this.wmsService.checkMaterialandQty(item.materialid, item.quantity).subscribe(data => {
-    //        if (data == "true") {
-    //          debugger;
-    //        }
-    //        else {
-    //          debugger;
-    //          isvalid = false;
-    //          this.messageService.add({ severity: 'error', summary: 'Error Message', detail: data + " for " + item.materialid });
-    //          //this.spinner.hide();
-    //          return;
-    //        }
-
-    //      })
-    //    }
-
-
-    //    )
-    //    ////for (var i = 0; i < this.gatepassModel.materialList.length; i++) {
-    //    ////  this.gatepassModel.materialList[i].expecteddate = this.gatepassModel.materialList[i].expecteddate != null ? new Date(this.gatepassModel.materialList[i].expecteddate).toLocaleDateString() : undefined;
-    //    ////  //this.gatepassModel.materialList[i].returneddate = this.gatepassModel.materialList[i].returneddate != null ? new Date(this.gatepassModel.materialList[i].returneddate).toLocaleDateString() : undefined;
-    //    ////  await this.wmsService.checkMaterialandQty(this.gatepassModel.materialList[i].materialid, this.gatepassModel.materialList[i].quantity).subscribe(data => {
-    //    ////    if (data == "true") {
-    //    ////      debugger;
-    //    ////    }
-    //    ////    else {
-    //    ////      debugger;
-    //    ////      isvalid = false;
-    //    ////      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: data });
-    //    ////      return ;
-    //    ////    }
-
-    //    ////  })
-
-
-    //    ////}
-    //    var pg = this;
-    //    setTimeout(function () {
-    //      if (isvalid == true) {
-    //        pg.wmsService.saveoreditgatepassmaterial(pg.gatepassModel).subscribe(data => {
-    //          pg.gatepassdialog = false;
-    //          pg.updateReturnedDateDialog = false;
-    //          pg.getGatePassList();
-    //          if (data)
-    //            //pg.spinner.hide();
-    //            pg.messageService.add({ severity: 'success', summary: 'Success Message', detail: 'Gate Pass Created Successfully' });
-    //        });
-    //      }
-    //    }, 2000);
-
-    //    //if (isvalid == true) {
-
-    //    //  await this.wmsService.saveoreditgatepassmaterial(this.gatepassModel).subscribe(data => {
-    //    //    this.gatepassdialog = false;
-    //    //    this.updateReturnedDateDialog = false;
-    //    //    this.getGatePassList();
-    //    //    if (data)
-    //    //      this.messageService.add({ severity: 'success', summary: 'Success Message', detail: 'Gate Pass Created Successfully' });
-    //    //  })
-    //    //}
-
-    //  }
-
-
-    //}
-
-    //else {
-    //  //this.spinner.hide();
-    //  this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Select Type' });
-    //}
+   
 
 
   }
@@ -1539,7 +1437,7 @@ export class GatePassComponent implements OnInit {
     //}
     this.constants.gatePassIssueType = this.selectedStatus;
     if (this.selectedStatus == "Pending") {
-      this.gatepassFiltered = this.gatepassModelList.filter(li => li.issuedqty == 0 && li.approverstatus == "Approved" && li.isnonproject != true);
+      this.gatepassFiltered = this.gatepassModelList.filter(li => (li.issuedqty == 0 || isNullOrUndefined(li.issuedqty)) && li.approverstatus == "Approved" && li.isnonproject != true);
     }
     else if (this.selectedStatus == "Issued") {
       this.gatepassFiltered = this.gatepassModelList.filter(li => li.issuedqty > 0 || li.isnonproject == true);

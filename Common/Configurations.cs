@@ -27,6 +27,8 @@ namespace WMS.Common
 		public readonly string _FinanceEmployeeNo = string.Empty;
 		public readonly string _FinanceEmployeeName = string.Empty;
 		public readonly string _plantid = string.Empty;
+		public readonly string _FinanceApproverEmail = string.Empty;
+		
 		public Configurations()
 		{
 			var configurationBuilder = new ConfigurationBuilder();
@@ -53,6 +55,7 @@ namespace WMS.Common
 			_FinanceEmployeeNo = root.GetSection("ConnectionStrings").GetSection("FinanceEmployeeNo").Value;
 			_FinanceEmployeeName = root.GetSection("ConnectionStrings").GetSection("FinanceEmployeeName").Value;
 			_plantid = root.GetSection("ConnectionStrings").GetSection("plantid").Value;
+			_FinanceApproverEmail = root.GetSection("ConnectionStrings").GetSection("FinanceApproverEmail").Value;
 
 			var appSetting = root.GetSection("ApplicationSettings");
 
@@ -111,6 +114,10 @@ namespace WMS.Common
 		public string plantid
 		{
 			get => _plantid;
+		}
+		public string FinanceApproverEmail
+		{
+			get => _FinanceApproverEmail;
 		}
 	}
 }

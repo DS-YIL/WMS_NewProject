@@ -193,6 +193,6 @@ export class rbamaster {
   assign_pm: boolean;
   annexure_report: boolean;
   initialstock_upload: boolean;
-  inventory_Management: boolean;
+  inventory_management: boolean;
   all_reports: boolean;
 }

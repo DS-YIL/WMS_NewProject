@@ -122,6 +122,8 @@ export class GatePassApproverComponent implements OnInit {
   updategatepassapproverstatus() {
     debugger;
     this.gatepassModel.gatepassid = this.materialList[0].gatepassid;
+    this.gatepassModel.projectid = this.materialList[0].gatepassid;
+    this.gatepassModel.pono = this.materialList[0].pono;
     //this.materialList.forEach(item => {
     //  item.pono = this.gatepassModel.pono;
     //})
@@ -192,7 +194,9 @@ export class GatePassApproverComponent implements OnInit {
     if (this.constants.gatePassIssueType == "Pending") {
       this.issueqtyenable = false;
       debugger;
-      this.wmsService.getItemlocationListByMaterialanddesc(material, description).subscribe(data => {
+      var projectid = this.materialList[0].projectid;
+      var pono = this.materialList[0].pono;
+      this.wmsService.getItemlocationListByMaterialanddescpo(material, description, projectid, pono).subscribe(data => {
         this.itemlocationData = data;
         this.showdialog = true;
       });
@@ -275,6 +279,8 @@ export class GatePassApproverComponent implements OnInit {
         item.approverremarks = this.materialList[this.roindex].approverremarks;
         item.fmapproverremarks = this.materialList[this.roindex].fmapproverremarks;
         item.itemreceiverid = this.materialList[this.roindex].itemreceiverid;
+        item.projectid = this.materialList[this.roindex].projectid;
+        item.pono = this.materialList[this.roindex].pono;
         item.requesttype = "GPRequest";
         totalissuedqty = totalissuedqty + (item.issuedqty);
         this.issueFinalList.push(item);

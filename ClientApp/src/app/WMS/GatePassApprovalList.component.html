@@ -133,40 +133,19 @@
               Remarks:&nbsp;<span style="color:#dc3545;">{{item.approverremarks}}</span>
             </div>
           </div>
-          <!--<div class="row mt-2" style="padding-left:20px;">
-        <div class="col-lg-3 col-md-3 col-sm-3 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
-          Second Approver:&nbsp;<span style="color:#dc3545;">{{gatePassApprovalList[1].approvername}}</span>
-        </div>
-        <div class="col-lg-2 col-md-2 col-sm-2 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
-          Status:&nbsp;<span style="color:#dc3545;">{{gatePassApprovalList[1].approverstatus}}</span>
-        </div>
-        <div class="col-lg-2 col-md-2 col-sm-2 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
-          Status Updated on:&nbsp;<span style="color:#dc3545;">{{gatePassApprovalList[1].approvedon  | date :  constants.dateFormat}}</span>
-        </div>
-        <div class="col-lg-4 col-md-4 col-sm-4 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
-          Remarks:&nbsp;<span style="color:#dc3545;">{{gatePassApprovalList[1].remarks}}</span>
-        </div>
-      </div>
-      <div class="row mt-2 pb-2" style="padding-left:20px;">
-        <div class="col-lg-3 col-md-3 col-sm-3 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
-          Third Approver:&nbsp;<span style="color:#dc3545;">{{gatePassApprovalList[2].approvername}}</span>
-        </div>
-        <div class="col-lg-2 col-md-2 col-sm-2 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
-          Status:&nbsp;<span style="color:#dc3545;">{{gatePassApprovalList[2].approverstatus}}</span>
-        </div>
-        <div class="col-lg-2 col-md-2 col-sm-2 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
-          Status Updated on:&nbsp;<span style="color:#dc3545;">{{gatePassApprovalList[2].approvedon  | date :  constants.dateFormat}}</span>
-        </div>
-        <div class="col-lg-4 col-md-4 col-sm-4 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
-          Remarks:&nbsp;<span style="color:#dc3545;">{{gatePassApprovalList[2].remarks}}</span>
-        </div>
-      </div>-->
+          
         </div>
 
 
         <div class="row" style="padding-left:20px;">
           <div class="col-lg-2 col-md-2 col-sm-2 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
             GatePass Id:&nbsp;<span style="color:#dc3545;">{{materialList[0].gatepassid}}</span>
+          </div>
+          <div class="col-lg-2 col-md-2 col-sm-2 form-inline" style="font-weight:600;font-size:14px;color:darkblue;" *ngIf="!materialList[0].isnonproject">
+            Project:&nbsp;<span style="color:#dc3545;">{{materialList[0].projectid}}</span>
+          </div>
+          <div class="col-lg-2 col-md-2 col-sm-2 form-inline" style="font-weight:600;font-size:14px;color:darkblue;" *ngIf="!materialList[0].isnonproject">
+            PONO:&nbsp;<span style="color:#dc3545;">{{materialList[0].pono}}</span>
           </div>
           <div class="col-lg-2 col-md-2 col-sm-2 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
             Requester:&nbsp;<span style="color:#dc3545;">{{materialList[0].name}}</span>
@@ -203,6 +182,7 @@
               Status:&nbsp;<span style="color:#dc3545;">Pending</span>
             </label>
           </div>
+
         </div>
         <!--<br />-->
         <div class="row" style="padding-left:20px;">

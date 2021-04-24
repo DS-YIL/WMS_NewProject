@@ -325,6 +325,8 @@ export class gatepassModel {
   poitemdescription: string;
   otherreason: string;
   isnonproject: boolean;
+  projectid: string;
+  pono: string;
 }
 export class materialistModel {
   gatepassmaterialid: string;
@@ -335,7 +337,7 @@ export class materialistModel {
   expecteddate: any;
   returneddate: any;
   materialcost: number;
-  //availableqty: number;
+  availableqty: number;
   issuedqty: number;
   showdetail: boolean;
 
@@ -882,8 +884,16 @@ export class MaterialinHand {
 }
 
 export class matlocations {
+  storeid: number;
+  rackid: number;
+  binid: number;
+  locatorname: string;
+  racknumber: string;
+  binnumber: string;
   itemlocation: string
-  quantity: number
+  quantity: number;
+  isedit: boolean = false;
+  itemids: string;
 }
 
 export class WMSHttpResponse {
@@ -1170,6 +1180,10 @@ export class miscellanousIssueData {
   Remarks: string;
   ProjectId: string;
   createdby: string;
+  isselected: boolean;
+  issuedqty: number;
+  pono: string;
+  itemlocation: string;
 }
 
 export class GPReasonMTdata {

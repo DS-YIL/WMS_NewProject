@@ -1,55 +1,174 @@
-<div class="card" style="min-height: 500px;border-radius: 10px;box-shadow: 5px 10px #888888;">
-  <div class="card-header text-center cardheadertext">
-    <span><i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;Miscellanous Issues</span>
-  </div>
-  <div class="card-body" style="overflow-y:hidden;padding:0px;margin-left:40px;margin-right:40px">
-    <div class="col-lg-4 col-md-4 form-inline m-2">
-      <div class="form-inline">
-        <label class="labelheading">Stock :</label>&nbsp;&nbsp;
-        <select [(ngModel)]="initialStock" class="form-control" (change)="getMiscellanousIssueList()">
-          <option value=false>All</option>
-          <option value=true>Initial Stock</option>
-        </select>
+<div class="card" style="min-height: 82vh; width: 100%; border-radius: 10px; box-shadow: 5px 10px #888888;">
+  <div class="card-header commoncardheader">
+    <div class="row " style="    margin-top: 10px;
+    margin-left: 0px !important;
+    margin-right: 0px !important">
+      <div class="col-lg-4 col-md-4 form-inline">
+        <button type="button" *ngIf="ishistoryview" class="btn btn-sm btn-primary"  (click)="createmiscissue()">Create Misc. Issue</button>
       </div>
+      <div class="col-lg-4 col-md-4 text-center">
+        <span style="color:#428bca;font-size:18px" class="commonheadertext">
+          <i class="fa fa-check-circle-o commonheadertext"></i>&nbsp;Miscellanous Issues
+        </span>
+      </div>
+      <div class="col-lg-4 col-md-4 form-inline">
+        <div style="float:right">
+          <button type="button" *ngIf="!ishistoryview" class="btn btn-sm btn-primary" (click)="viewhistory()">View Misc. Issue History</button>
+        </div>
+        
+      </div>
+
     </div>
-    <br />
-    <p-table #dt [value]="IssueList" [paginator]="true" [rows]="10" [resizableColumns]="true" [responsive]="true">
-      <ng-template pTemplate="header">
-        <tr class="mprltbldata">
-          <th style="text-align:center;width:70px">S.No</th>
-          <th style="text-align:center;width:150px">Material</th>
-          <!--<th style="text-align:center;width:180px">Material Description</th>-->
-          <th style="text-align:center;width:180px">PO Item Description</th>
-          <th style="text-align:center;width:90px">Storage Location</th>
-          <th style="text-align:center;width:90px">Available Quantity</th>
-          <th style="text-align:center;width:90px">Value</th>
-          <th style="text-align:center;width:90px">Issue</th>
-        </tr>
-        <tr>
-          <th></th>
-          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'material', 'contains')"></th>
-          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'poitemdescription', 'contains')"></th>
-          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'itemlocation', 'contains')"></th>
-          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'availableqty', 'contains')"></th>
-          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'value', 'contains')"></th>
-          <th></th>
-        </tr>
-      </ng-template>
-      <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
-        <tr>
-          <td class="ptable-cell" style="text-align:center">{{ri+1}}</td>
-          <td class="ptable-cell" style="text-align:left">{{rowData.material}}</td>
-          <!--<td class="ptable-cell" style="text-align:left">{{rowData.materialdescription}}</td>-->
-        <td class="ptable-cell" style="text-align:left">{{rowData.poitemdescription}}</td>
-          <td class="ptable-cell" style="text-align:right">{{rowData.itemlocation}}</td>
-          <td class="ptable-cell" style="text-align:right">{{rowData.availableqty}}</td>
-          <td class="ptable-cell" style="text-align:right">{{rowData.value}}</td>
-          <td class="ptable-cell" style="text-align: center">
-            <input class="btn btn-primary btn-sm" (click)="showIssueDialog(rowData)" type="button" value="Issue">
-          </td>
-        </tr>
-      </ng-template>
-    </p-table>
+  </div>
+  <!--<div class="card-header text-center cardheadertext">
+    <span><i class="fa fa-check-circle-o" style="color:white; font-size:20px;"></i>&nbsp;Miscellanous Issues</span>
+  </div>-->
+  <div class="card-body" style="overflow-y:hidden;padding:0px;margin-left:40px;margin-right:40px">
+    <div *ngIf="!ishistoryview">
+      <div class="row" style="padding:10px;">
+        <div class="col-lg-3 col-md-3 form-inline">
+          <div class="form-inline">
+            <label class="labelheading">Stock :</label>&nbsp;&nbsp;
+            <select [(ngModel)]="initialStock" class="form-control" (change)="getMiscellanousIssueList()">
+              <option value=false>All</option>
+              <option value=true>Initial Stock</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-3 form-inline">
+          <label class="labelheading">Project :</label>&nbsp;&nbsp;
+          <p-autoComplete [(ngModel)]="selectedprojectmodel" field="text" appendTo="body" [suggestions]="filteredproject" placeholder="search by name/code" [ngModelOptions]="{standalone: true}" (onSelect)="projectSelected($event)" [forceSelection]="true" (completeMethod)="filterprojects($event)" [size]="20"
+                          [dropdown]="true"></p-autoComplete>
+
+        </div>
+        <div class="col-lg-3 col-md-3 form-inline">
+
+
+          <label class="labelheading">PONo :</label>&nbsp;&nbsp;
+          <p-autoComplete [(ngModel)]="selectedponomodel" [suggestions]="filteredpono" [ngModelOptions]="{standalone: true}" placeholder="search by PONo" [forceSelection]="false" (onSelect)="onPOSelected()" (change)="onPOSelected()" (completeMethod)="filterpos($event)" [size]="20"
+                          [dropdown]="true"></p-autoComplete>
+
+
+
+        </div>
+        <div class="col-lg-3 col-md-3 form-inline">
+          <label class="labelheading">Reason:</label>&nbsp;&nbsp;
+          <label class="labeltext">
+            <select [(ngModel)]="issuereason" class="form-control">
+              <option value="">Select</option>
+              <option *ngFor="let ca of ReasonList" [ngValue]="ca.reasonid">{{ca.reason}}</option>
+            </select>
+          </label>&nbsp;&nbsp;
+        </div>
+      </div>
+
+
+      <p-table #dt [value]="IssueList" [paginator]="true" [rows]="10" [resizableColumns]="true" [responsive]="true">
+        <ng-template pTemplate="header">
+          <tr class="mprltbldata">
+            <th style="text-align:center;width:70px">S.No</th>
+            <!--<th style="text-align:center;width:150px">Project id</th>
+        <th style="text-align:center;width:150px">PO No</th>-->
+            <th style="text-align:center;width:200px">Material</th>
+            <!--<th style="text-align:center;width:180px">Material Description</th>-->
+            <th style="text-align:center;">PO Item Description</th>
+            <th style="text-align:center;width:200px">Storage Location</th>
+            <th style="text-align:center;width:150px">Available Quantity</th>
+            <th style="text-align:center;width:150px">Value</th>
+            <th style="text-align:center;width:150px">Issue Qty</th>
+          </tr>
+          <tr>
+            <th></th>
+            <!--<th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'projectid', 'startsWith')"></th>
+        <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'pono', 'startsWith')"></th>-->
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'material', 'startsWith')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'poitemdescription', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'itemlocation', 'startsWith')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'availableqty', 'startsWith')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'value', 'startsWith')"></th>
+            <th></th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
+          <tr>
+            <td class="ptable-cell" style="text-align:center">{{ri+1}}</td>
+            <!--<td class="ptable-cell" style="text-align:left">{{rowData.projectid}}</td>
+        <td class="ptable-cell" style="text-align:left">{{rowData.pono}}</td>-->
+            <td class="ptable-cell" style="text-align:left">{{rowData.material}}</td>
+            <!--<td class="ptable-cell" style="text-align:left">{{rowData.materialdescription}}</td>-->
+            <td class="ptable-cell" style="text-align:left">{{rowData.poitemdescription}}</td>
+            <td class="ptable-cell" style="text-align:left">{{rowData.itemlocation}}</td>
+            <td class="ptable-cell" style="text-align:right">{{rowData.availableqty}}</td>
+            <td class="ptable-cell" style="text-align:right">{{rowData.value}}</td>
+            <td class="ptable-cell" style="text-align: center">
+              <!--<input class="btn btn-primary btn-sm" (click)="showIssueDialog(rowData)" type="button" value="Issue">-->
+              <input type="number" class="form-control" (blur)="onComplete(rowData.issuedqty ,rowData.availableqty,rowData)" [(ngModel)]="rowData.issuedqty" />
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+
+    </div>
+    <div *ngIf="ishistoryview">
+      <p-table #dt1 [value]="IssueHistoryList" [paginator]="true" [rows]="10">
+        <ng-template pTemplate="header">
+          <tr class="mprltbldata">
+            <th style="text-align:center;width:70px">S.No</th>
+            <th style="text-align:center;width:150px">Project id</th>
+            <th style="text-align:center;width:150px">PO No</th>
+            <th style="text-align:center;width:150px">Material</th>
+            <th style="text-align:center;">PO Item Description</th>
+            <th style="text-align:center;width:200px">Storage Location</th>
+            <th style="text-align:center;width:70px">Avl. Qty</th>
+            <th style="text-align:center;width:100px">Value</th>
+            <th style="text-align:center;width:70px">Issue Qty</th>
+            <th style="text-align:center;width:100px">Issued On</th>
+            <th style="text-align:center;width:100px">Issued By</th>
+          </tr>
+          <tr>
+            <th></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt1.filter($event.target.value, 'projectid', 'startsWith')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt1.filter($event.target.value, 'pono', 'startsWith')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt1.filter($event.target.value, 'material', 'startsWith')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt1.filter($event.target.value, 'poitemdescription', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt1.filter($event.target.value, 'itemlocation', 'startsWith')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt1.filter($event.target.value, 'availableqty', 'startsWith')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt1.filter($event.target.value, 'value', 'startsWith')"></th>
+            <th></th>
+            <th></th>
+            <th><input pInputText type="text" class="form-control" (input)="dt1.filter($event.target.value, 'issuedby', 'startsWith')"></th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
+          <tr>
+            <td class="ptable-cell" style="text-align:center">{{ri+1}}</td>
+            <td class="ptable-cell" style="text-align:left">{{rowData.projectid}}</td>
+            <td class="ptable-cell" style="text-align:left">{{rowData.pono}}</td>
+            <td class="ptable-cell" style="text-align:left">{{rowData.material}}</td>
+            <td class="ptable-cell" style="text-align:left">{{rowData.poitemdescription}}</td>
+            <td class="ptable-cell" style="text-align:left">{{rowData.itemlocation}}</td>
+            <td class="ptable-cell" style="text-align:right">{{rowData.availableqty}}</td>
+            <td class="ptable-cell" style="text-align:right">{{rowData.value}}</td>
+            <td class="ptable-cell" style="text-align: right">
+              {{rowData.issuedqty}}
+            </td>
+            <td class="ptable-cell" style="text-align: center">
+              {{rowData.issueddate | date : 'dd/MM/yyyy'}}
+            </td>
+            <td class="ptable-cell" style="text-align: left">
+              {{rowData.issuedby}}
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+
+    </div>
+   
+  </div>
+  <div class="card-footer" *ngIf="IssueList.length">
+    
+      <button type="button" class="btn btn-success" style="margin-left:45%"  (click)="issuemiscellenious()">Submit</button>
+   
   </div>
 </div>
 

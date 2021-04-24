@@ -1945,7 +1945,15 @@ namespace WMS.Controllers
 						initialstk.material = Conversion.toStr(row["Material"]);
 						initialstk.materialdescription = Conversion.toStr(row["Material Description"]);
 						initialstk.store = Conversion.toStr(row["Store"]);
+						if (string.IsNullOrEmpty(initialstk.store) && initialstk.store.ToString().Trim() == "")
+						{
+							initialstk.store = "EC C BLOCK";
+						}
 						initialstk.rack = Conversion.toStr(row["Rack"]);
+						if (string.IsNullOrEmpty(initialstk.rack) || initialstk.rack.ToString().Trim() == "")
+						{
+							initialstk.rack = "ON FLOOR";
+						}
 						initialstk.bin = Conversion.toStr(row["Bin"]);
 						initialstk.quantity = Conversion.Todecimaltype(row["Quantity"]);
 						initialstk.quantitystr = Conversion.toStr(row["Quantity"]);
@@ -1972,6 +1980,10 @@ namespace WMS.Controllers
 						{
 							initialstk.unitprice = initialstk.value / initialstk.quantity;
 
+						}
+						if (initialstk.value != null && initialstk.value < 0 && initialstk.quantity != null && initialstk.quantity < 0)
+						{
+							initialstk.unitprice = initialstk.value / initialstk.quantity;
 						}
 						initialstk.category = null;
 						initialstk.uploadedby = uploadedby;
@@ -2413,6 +2425,8 @@ namespace WMS.Controllers
 		Review Date :<<>>   Reviewed By :<<>>
 		Sourcecode Copyright : Yokogawa India Limited
 		*/
+		[HttpGet]
+		[Route("fixStocklocation")]
 		public string fixloadStockData()
 		{
 			string insertmessage = "";
@@ -2421,7 +2435,7 @@ namespace WMS.Controllers
 			{
 				{
 
-					string query = "select * from wms.st_initialstock si where dataloaderrors is true and Lower(error_description) = Lower(' no rack')";
+					string query = "select * from wms.st_initialstock si where dataloaderrors is true and Lower(error_description) = Lower(' no store no rack')";
 					pgsql.Open();
 					var stagingList = pgsql.Query<StagingStockModel>(
 					   query, null, commandType: CommandType.Text);
@@ -2439,6 +2453,8 @@ namespace WMS.Controllers
 
 							Trans = pgsql.BeginTransaction();
 							bool deleteflag = false;
+							stag_data.store = "EC C BLOCK";
+							stag_data.rack = "ON FLOOR";
 							//Add locator in masterdata
 							string storeQuery = "Select locatorid from wms.wms_rd_locator where locatorname = '" + stag_data.store + "'";
 							var storeId = pgsql.ExecuteScalar(storeQuery, null);
@@ -4357,6 +4373,78 @@ namespace WMS.Controllers
 		[HttpGet]
 		[Route("updateauthuser")]
 		public IActionResult updateauthuser()
+		{
+			try
+			{
+				using (NpgsqlConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
+				{
+					string testgetquery = "select pono,projectid,uploadbatchcode from wms.wms_stock ws where uploadedfilename is not null";
+
+
+					DB.OpenAsync();
+					var data = DB.QueryAsync<StockModel>(
+					  testgetquery, null, commandType: CommandType.Text);
+
+					foreach (StockModel mdl in data.Result)
+					{
+						string pono = mdl.pono;
+						string query2 = "Select Count(*) as count from wms.wms_project where pono = '" + pono + "'";
+						int Projcount = int.Parse(DB.ExecuteScalar(query2, null).ToString());
+
+						if (Projcount == 0)
+						{
+							string jobname = null;
+							string projectcode = null;
+							string projecttext = null;
+							string projectmanager = null;
+
+							string uploadtype = "Initial Stock";
+							if (!string.IsNullOrEmpty(mdl.projectid) && mdl.projectid != "")
+							{
+								projectcode = mdl.projectid;
+
+							}
+
+							string querypm = "Select Max(projectmanager) as projectmanager from wms.wms_project where  projectcode = '" + projectcode + "' group by projectmanager";
+							var rsltt = DB.ExecuteScalar(querypm, null);
+							if (rsltt != null)
+							{
+								projectmanager = rsltt.ToString();
+							}
+							string uploadcode = mdl.uploadbatchcode;
+							//insert wms_project ##pono,jobname,projectcode,projectname,projectmanager,
+							var insertquery = "INSERT INTO wms.wms_project(pono, jobname, projectcode,projectname,projectmanager,uploadcode,uploadtype)VALUES(@pono, @jobname,@projectcode,@projecttext,@projectmanager,@uploadcode,@uploadtype)";
+							var results = DB.ExecuteScalar(insertquery, new
+							{
+								pono,
+								jobname,
+								projectcode,
+								projecttext,
+								projectmanager,
+								uploadcode,
+								uploadtype
+							});
+						}
+					}
+
+				}
+			}
+			catch (Exception e)
+			{
+				var res = e;
+				log.ErrorMessage("StagingController", "uploadCostCenterDataExcel", e.StackTrace.ToString(), "error:" + e.Message.ToString(), url);
+			}
+			return Ok(true);
+		}
+
+		/*function : <<uploadCostCenterDataExcel>>  Author :<<Gayathri>>  
+		Date of Creation <<01-03-2021>>
+		Purpose : <<Update Cost Center data from excel>>
+		Review Date :<<>>   Reviewed By :<<>>
+		Sourcecode Copyright : Yokogawa India Limited*/
+		[HttpGet]
+		[Route("updateuseraccess")]
+		public IActionResult updateuseraccess()
 		{
 			try
 			{

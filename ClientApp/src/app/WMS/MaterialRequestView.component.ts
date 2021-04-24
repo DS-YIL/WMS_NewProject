@@ -395,7 +395,7 @@ export class MaterialRequestViewComponent implements OnInit {
         this.displaylist = true;
 
       this.wmsService.getMaterialRequestlistdata(this.employee.employeeno, this.pono, this.selectedproject.value).subscribe(data => {
-          this.materialList = data;
+        this.gatepassModel.materialList = data;
         });
        
       

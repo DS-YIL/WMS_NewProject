@@ -425,6 +425,10 @@ namespace WMS.Models
 		public string approvalremarks { get; set; }
 		public string sourcelocationcode { get; set; }
 		public string destinationlocationcode { get; set; }
+		public bool isselected { get; set; }
+		public decimal? issuedqty { get; set; }
+		public DateTime? issueddate { get; set; }
+		public string issuedby { get; set; }
 
 	}
 
@@ -451,8 +455,16 @@ namespace WMS.Models
 
 	public class matlocations
 	{
+		public int? storeid { get; set; }
+		public string locatorname { get; set; }
+		public int? rackid { get; set; }
+		public string racknumber { get; set; }
+		public int? binid {get;set;}
+		public string binnumber { get; set; }
 		public string itemlocation { get; set; }
 		public int quantity { get; set; }
+		public string itemids { get; set; }
+
 	}
 	public class trackstatusModel
 	{
@@ -584,6 +596,7 @@ namespace WMS.Models
 		public int? rackid { get; set; }
 		public int? binid { get; set; }
 		public int? storeid { get; set; }
+		public int? itemid { get; set; }
 		public string locationid { get; set; }
 		public string locationname { get; set; }
 		public string rackname { get; set; }
@@ -599,6 +612,7 @@ namespace WMS.Models
 		public int? plantid { get; set; }
 		public string plantname { get; set; }
 		public string locationtype { get; set; }
+		public string itemlocation { get; set; }
 
 	}
 	public class IssueRequestModel
@@ -813,6 +827,7 @@ namespace WMS.Models
 		public string otherreason { get; set; }
 
 		public bool? isnonproject { get; set; }
+		public string projectid { get; set; }
 	}
 	public class materialistModel
 	{
@@ -2111,10 +2126,13 @@ public class miscellanousIssueData
 	public string materialdescription { get; set; }
 	public string availableqty { get; set; }
 	public string MiscellanousIssueQty { get; set; }
+	public decimal? issuedqty { get; set; }
 	public string Reason { get; set; }
 	public string Remarks { get; set; }
 	public string ProjectId { get; set; }
+	public string pono { get; set; }
 	public string createdby { get; set; }
+	public string itemlocation { get; set; }
 }
 
 public class materilaMasterYgs

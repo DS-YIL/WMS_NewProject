@@ -72,7 +72,7 @@ export class GatePassApprovalList implements OnInit {
         this.prepareGatepassList();
       }
       if (this.typeOfList == "GatePassFMList") {
-        this.gatepassData = this.totalGatePassList.filter(li => li.fmapproverid == this.employee.employeeno && li.approverstatus == "Approved" && li.fmapprovedstatus == this.approverstatus && li.gatepasstype == "Non Returnable");
+        this.gatepassData = this.totalGatePassList.filter(li => li.approverstatus == "Approved" && li.fmapprovedstatus == this.approverstatus && li.gatepasstype == "Non Returnable");
         this.prepareGatepassList();
       }
     });
@@ -140,7 +140,7 @@ export class GatePassApprovalList implements OnInit {
         this.prepareGatepassList();
       }
       if (this.typeOfList == "GatePassFMList") {
-        this.gatepassData = this.totalGatePassList.filter(li => li.fmapproverid == this.employee.employeeno && li.approverstatus == "Approved" && li.fmapprovedstatus == this.approverstatus && li.gatepasstype == "Non Returnable");
+        this.gatepassData = this.totalGatePassList.filter(li => li.approverstatus == "Approved" && li.fmapprovedstatus == this.approverstatus && li.gatepasstype == "Non Returnable");
         this.prepareGatepassList();
       }
     }
@@ -149,7 +149,7 @@ export class GatePassApprovalList implements OnInit {
         if (this.typeOfList == "GatePassPMList")
           this.gatepassData = this.totalGatePassList.filter(li => li.approverid == this.employee.employeeno);
         if (this.typeOfList == "GatePassFMList")
-          this.gatepassData = this.totalGatePassList.filter(li => li.fmapproverid == this.employee.employeeno && li.approverstatus == "Approved" && li.gatepasstype == "Non Returnable");
+          this.gatepassData = this.totalGatePassList.filter(li => li.approverstatus == "Approved" && li.gatepasstype == "Non Returnable");
 
         this.prepareGatepassList();
       }

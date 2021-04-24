@@ -8,7 +8,7 @@
         </div>
         <div class="col-lg-4 col-md-4 text-center">
           <span style="color:#428bca;font-size:18px" class="commonheadertext">
-            <i class="fa fa-check-circle-o commonheadertext"></i>&nbsp;Assign project Manager
+            <i class="fa fa-check-circle-o commonheadertext"></i>&nbsp;project Manager Master
           </span>
         </div>
         <div class="col-lg-4 col-md-4">
@@ -21,13 +21,13 @@
         <ng-template pTemplate="header">
           <tr class="mprltbldata">
             <th class="ptable-cell" style="text-align:center;width:70px;">Sl.No.</th>
-            <th class="ptable-cell" style="text-align:center;width:70px;">Select</th>
+            <!--<th class="ptable-cell" style="text-align:center;width:70px;">Select</th>-->
             <th class="ptable-cell" style="text-align:center;width:150px;">Project Code</th>
             <th class="ptable-cell" style="text-align:center;width:300px;">Project Manager</th>
           </tr>
           <tr>
             <th></th>
-            <th></th>
+            <!--<th></th>-->
             <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'projectcode', 'startsWith')"></th>
             <th></th>
           </tr>
@@ -35,14 +35,15 @@
         <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex" let-rindex=0>
           <tr>
             <td class="ptable-cell" style="text-align:right;width:70px;"> {{ri+1}} </td>
-            <td class="ptable-cell" style="text-align:center;width:70px;">
+            <!--<td class="ptable-cell" style="text-align:center;width:70px;">
               <input type="checkbox" [(ngModel)]="rowData.isselected" />
-            </td>
+            </td>-->
             <td class="ptable-cell" style="text-align:center;width:150px;"> {{rowData.projectcode}} </td>
             <td class="ptable-cell" style="text-align:left;width:300px;">
-              <p-autoComplete [(ngModel)]="rowData.selectedemployeeview" appendTo="body" [forceSelection]="true" [suggestions]="filteredEmployees" (completeMethod)="filterEmployee($event)" [size]="80"
+              {{rowData.selectedemployeeview.idwithname}}
+              <!--<p-autoComplete [(ngModel)]="rowData.selectedemployeeview" appendTo="body" [forceSelection]="true" [suggestions]="filteredEmployees" (completeMethod)="filterEmployee($event)" [size]="80"
                               [minLength]="1" placeholder="Employee" field="idwithname" [multiple]="false">
-              </p-autoComplete>
+              </p-autoComplete>-->
             </td>
 
         </ng-template>
@@ -55,11 +56,11 @@
 
 
     </div>
-    <div class="card-footer" *ngIf="getlistdata.length">
+    <!--<div class="card-footer" *ngIf="getlistdata.length">
       <div>
         <button type="button"  class="btn btn-success" style="margin-left:45%"  (click)="submitAdd()">Submit</button>
       </div>
-    </div>
+    </div>-->
   </div>
 
 

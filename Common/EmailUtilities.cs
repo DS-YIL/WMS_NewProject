@@ -89,6 +89,10 @@ namespace WMS.Common
 					return false;
 				}
 				emlSndngList.ToEmailId = tomainlstring;
+				if(emlSndngList.ToEmailId == "")
+                {
+					emlSndngList.ToEmailId = "ramesh.kumar@in.yokogawa.com";
+				}
 				emlSndngList.CC = toccstring;
 
 			}
@@ -196,7 +200,7 @@ namespace WMS.Common
 			{
 				//Acknowledge for Material received - ID
 
-				mailMessage.Subject = "Acknowledge for Material Received - ID" + emlSndngList.requestid;
+				mailMessage.Subject = "Acknowledge for Material Received - ID " + emlSndngList.requestid;
 				subbody = "The materials recevied has been acknowdleged by < br /> Please click on below link for more details.";
 				subbody = mailMessage.Subject;
 				link = "";
@@ -486,7 +490,7 @@ namespace WMS.Common
 				emlSndngList.sendername = string.Empty;
 			}
 				
-			if (multipleemails == true)
+			if (multipleemails == true || subjecttype == 16)
 			{
 				users = "All";
 			}

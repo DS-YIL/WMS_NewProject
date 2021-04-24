@@ -9,7 +9,7 @@ import { MessageService } from 'primeng/api';
 import { ConfirmationService } from 'primeng/api';
 import { isNullOrUndefined } from 'util';
 import { HttpClient } from '@angular/common/http';
-import { testcrud, WMSHttpResponse, MaterialinHand, matlocations, inventoryFilters } from '../Models/WMS.Model';
+import { testcrud, WMSHttpResponse, MaterialinHand, matlocations, inventoryFilters, locationdropdownModel } from '../Models/WMS.Model';
 import { DatePipe } from '@angular/common';
 
 @Component({
@@ -37,6 +37,20 @@ export class InhandMaterialComponent implements OnInit {
   public locationList: Array<any> = [];
   public dynamicData: DynamicSearchResult;
   currentDate = new Date();
+  locationlist: locationdropdownModel[] = [];
+  binlist: locationdropdownModel[] = [];
+  binlistbyrack: locationdropdownModel[] = [];
+  racklist: locationdropdownModel[] = [];
+  racklistbystore: locationdropdownModel[] = [];
+  locationlistDG: locationdropdownModel[] = [];
+  filteredStores: any[];
+  filteredracks: any[];
+  filteredbins: any[];
+  tempmatloc: matlocations;
+  tempdescription: string;
+  temprowdata: MaterialinHand;
+  lblproject: string = "";
+  lblpono: string = "";
 
   ngOnInit() {
     if (localStorage.getItem("Employee"))
@@ -44,7 +58,18 @@ export class InhandMaterialComponent implements OnInit {
     else
       this.router.navigateByUrl("Login");
     this.response = new WMSHttpResponse();
+    this.lblproject = "";
+    this.lblpono = "";
     this.inventoryFilters = new inventoryFilters();
+    this.tempdescription = "";
+    this.temprowdata = new MaterialinHand();
+    this.filteredStores = [];
+    this.tempmatloc = new matlocations();
+    this.filteredracks = [];
+    this.filteredbins = [];
+    this.locationListdata();
+    this.binListdata();
+    this.rackListdata();
     this.getItemLocationsList();
     this.getlist();
 
@@ -63,17 +88,232 @@ export class InhandMaterialComponent implements OnInit {
     this.lblmaterial = "";
     this.lblmaterialdesc = "";
   }
+  Editlocation(data: matlocations) {
+    this.tempmatloc = Object.assign({}, data);
+    data.isedit = true;
+  }
+  cancelloc(data: matlocations) {
+    debugger;
+    data.storeid = this.tempmatloc.storeid;
+    data.locatorname = this.tempmatloc.locatorname;
+    data.binid = this.tempmatloc.binid;
+    data.binnumber = this.tempmatloc.binnumber;
+    data.rackid = this.tempmatloc.rackid;
+    data.racknumber = this.tempmatloc.racknumber;
+    this.tempmatloc = null;
+    data.isedit = false;
+  }
+  saveloc(data: matlocations) {
+    var itemloc = "";
+    if (isNullOrUndefined(data.storeid) || data.storeid == 0) {
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Select Store.' });
+      return;
+    }
+    else {
+      var storedata = this.locationlist.filter(function (element, index) {
+        return (element.locatorid == data.storeid);
+      });
+      if (storedata.length > 0) {
+        itemloc += storedata[0].locatorname;
+      }
+      else {
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Invalid store.' });
+        return;
+      }
 
+    }
+    if (isNullOrUndefined(data.rackid) || data.rackid == 0) {
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Select Store.' });
+      return;
+    }
+    else {
+      var rackdata = this.racklist.filter(function (element, index) {
+        return (element.locatorid == data.storeid && element.rackid == data.rackid);
+      });
+      if (rackdata.length > 0) {
+        itemloc += "." + rackdata[0].racknumber;
+      }
+      else {
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Selected rack is not available in store ' + itemloc });
+        return;
+      }
+    }
+    if (isNullOrUndefined(data.binid) || data.binid == 0) {
+
+    }
+    else {
+      var bindata = this.binlist.filter(function (element, index) {
+        return (element.locatorid == data.storeid && element.rackid == data.rackid && element.binid == data.binid);
+      });
+      if (bindata.length > 0) {
+        itemloc += "." + bindata[0].binnumber;
+      }
+      else {
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Selected bin is not available in rack ' + itemloc });
+        return;
+      }
+    }
+    this.wmsService.updatestocklocation(data).subscribe(data => {
+      if (String(data) == "saved") {
+        this.messageService.add({ severity: 'success', summary: '', detail: 'Location Updated Successfully' });
+        //this.showadddatamodel = false;
+        this.getlocations(this.tempdescription, this.temprowdata);
+
+      }
+      else {
+        this.messageService.add({ severity: 'success', summary: '', detail: 'Location Update failed' });
+      }
+    });
+  }
+
+  locationListdata() {
+    this.wmsService.getlocationdata().
+      subscribe(
+        res => {
+          this.locationlist = res;
+        });
+  }
+  binListdata() {
+    debugger;
+    this.wmsService.getbindataforputaway().
+      subscribe(
+        res => {
+          this.binlist = res;
+        });
+  }
+  rackListdata() {
+    debugger;
+    this.wmsService.getrackdataforputaway().
+      subscribe(
+        res => {
+          this.racklist = res;
+        });
+  }
+  filterStore(event: any, data: matlocations) {
+    this.filteredStores = [];
+
+    for (let i = 0; i < this.locationlist.length; i++) {
+      let lid = String(this.locationlist[i].locatorid);
+      let lname = this.locationlist[i].locatorname;
+      if (lid.toLowerCase().indexOf(event.query.toLowerCase()) == 0 || lname.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+        this.filteredStores.push(lname);
+      }
+
+    }
+
+  }
+
+  filterRack(event: any, data: matlocations) {
+    debugger;
+    let senddata = [];
+    if (!isNullOrUndefined(data.storeid) && data.storeid != 0) {
+      senddata = this.racklist.filter(function (element, index) {
+        return (element.locatorid == data.storeid);
+      });
+    }
+    else {
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Select Store.' });
+      return;
+    }
+    this.filteredracks = [];
+    for (let i = 0; i < senddata.length; i++) {
+      let lid = String(senddata[i].rackid);
+      let lname = senddata[i].racknumber;
+      if (lid.toLowerCase().indexOf(event.query.toLowerCase()) == 0 || lname.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+        this.filteredracks.push(lname);
+      }
+
+    }
+
+
+  }
+  filterBin(event: any, data: matlocations) {
+    let senddata = [];
+    debugger;
+    if (!isNullOrUndefined(data.rackid) && data.rackid != 0 && !isNullOrUndefined(data.storeid) && data.storeid != 0) {
+      senddata = this.binlist.filter(function (element, index) {
+        return (element.locatorid == data.storeid && element.rackid == data.rackid);
+      });
+    }
+    else {
+
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Select Store/Rack.' });
+      return;
+    }
+    this.filteredbins = [];
+    for (let i = 0; i < senddata.length; i++) {
+      let lid = String(senddata[i].binid);
+      let lname = senddata[i].binnumber;
+      if (lid.toLowerCase().indexOf(event.query.toLowerCase()) == 0 || lname.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+        this.filteredbins.push(lname);
+      }
+
+    }
+
+  }
   getlocations(poitemdescription: string, data: MaterialinHand) {
     this.getlocationlistdata = [];
     this.lblmaterial = data.material;
     this.lblmaterialdesc = poitemdescription;
+    this.lblproject = data.projectname;
+    this.lblpono = data.pono;
+    this.tempdescription = poitemdescription;
+    this.temprowdata = Object.assign({}, data); 
     this.spinner.show();
-    this.wmsService.getmatinhandlocations(poitemdescription).subscribe(data => {
+    this.wmsService.getmatinhandlocations(poitemdescription, data.material, data.projectname).subscribe(data => {
       this.getlocationlistdata = data;
       this.showadddatamodel = true;
       this.spinner.hide();
     });
+
+  }
+
+  onStoreSelect(event: any, data: matlocations, index: number) {
+
+    debugger;
+
+    var loc = this.locationlist.filter(o => o.locatorname == data.locatorname);
+    if (loc.length > 0) {
+      data.locatorname = loc[0].locatorname;
+      data.storeid = loc[0].locatorid;
+    }
+    else {
+      data.locatorname = "";
+      data.storeid = null;
+    }
+
+    data.rackid = null;
+    data.racknumber = "";
+    data.binid = null;
+    data.binnumber = "";
+
+  }
+
+  onRackSelect(event: any, data: matlocations, index: number) {
+    var loc = this.racklist.filter(o => o.racknumber == data.racknumber && o.locatorid == data.storeid);
+    if (loc.length > 0) {
+      data.racknumber = loc[0].racknumber;
+      data.rackid = loc[0].rackid;
+    }
+    else {
+      data.racknumber = "";
+      data.rackid = null;
+    }
+    data.binid = null;
+    data.binnumber = "";
+  }
+
+  onBinSelect(event: any, data: matlocations, index: number) {
+    var loc = this.binlist.filter(o => o.binnumber == data.binnumber && o.rackid == data.rackid && o.locatorid == data.storeid);
+    if (loc.length > 0) {
+      data.binnumber = loc[0].binnumber;
+      data.binid = loc[0].binid;
+
+    }
+    else {
+      data.binnumber = "";
+      data.binid = null;
+    }
 
   }
 

@@ -90,6 +90,11 @@ export class wmsService {
     return this.http.get<any[]>(this.url + 'POData/getPODetailsbyprojectcode?empno=' + empno + '&projectcode=' + projectcode, this.httpOptions);
   }
 
+  //Get PO Details by code
+  getPODetailsbyprojectcodeformisc(projectcode: string): Observable<any[]> {
+    return this.http.get<any[]>(this.url + 'POData/getPODetailsbyprojectcodeformiscissue?projectcode=' + projectcode, this.httpOptions);
+  }
+
   //Get Material Details
   getMatDetails(): Observable<any[]> {
     return this.http.get<any[]>(this.url + 'POData/getMatDetails', this.httpOptions);
@@ -199,6 +204,10 @@ export class wmsService {
     const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }), responseType: 'text' as any };
     return this.http.post<any>(this.url + 'POData/insertreturn', inwardModel, httpOptions);
   }
+  updatestocklocation(location: matlocations): Observable<any> {
+    const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }), responseType: 'text' as any };
+    return this.http.post<any>(this.url + 'POData/updatestocklocationdata', location, httpOptions);
+  }
 
   InsertStock(StockModel: StockModel[]): Observable<any> {
     const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }), responseType: 'text' as any };
@@ -256,6 +265,9 @@ export class wmsService {
   }
   getMaterialRequestlistdata(loginid: string, pono: string, projectcode: string): Observable<any> {
     return this.http.get<any>(this.url + 'POData/getmaterialrequestListdata?PONO=' + pono + '&loginid=' + loginid + '&projectcode=' + projectcode, this.httpOptions);
+  }
+  getMaterialRequestlistdataforgp(pono: string, projectcode: string): Observable<any> {
+    return this.http.get<any>(this.url + 'POData/getmaterialrequestforgatepass?pono=' + pono + '&projectcode=' + projectcode, this.httpOptions);
   }
 
   getMaterialReservelistdata(projectcode: string): Observable<any> {
@@ -461,6 +473,11 @@ export class wmsService {
     material = encodeURIComponent(material);
     poitemdescription = encodeURIComponent(poitemdescription);
     return this.http.get<any>(this.url + 'POData/GetItemLocationListByMaterialanddesc?material=' + material + '&description=' + poitemdescription, this.httpOptions);
+  }
+  getItemlocationListByMaterialanddescpo(material: string, poitemdescription: string, projectid: string, pono: string): Observable<any> {
+    material = encodeURIComponent(material);
+    poitemdescription = encodeURIComponent(poitemdescription);
+    return this.http.get<any>(this.url + 'POData/GetItemLocationListByMaterialanddescpo?material=' + material + '&description=' + poitemdescription + '&projectid=' + projectid+'&pono='+pono, this.httpOptions);
   }
   getItemlocationListByMaterialdescstore(material: string, poitemdescription: string, store: string): Observable<any> {
     material = encodeURIComponent(material);
@@ -812,9 +829,10 @@ export class wmsService {
   getmatinhand(inventoryFilters: inventoryFilters): Observable<MaterialinHand[]> {
     return this.http.post<MaterialinHand[]>(this.url + 'POData/getmatinhand', inventoryFilters, this.httpOptions);
   }
-  getmatinhandlocations(poitemdescription: string): Observable<matlocations[]> {
+  getmatinhandlocations(poitemdescription: string, material: string, projectid: string): Observable<matlocations[]> {
     poitemdescription = encodeURIComponent(poitemdescription);
-    return this.http.get<matlocations[]>(this.url + 'POData/getmatinhandlocation?poitemdescription=' + poitemdescription, this.httpOptions);
+    material = encodeURIComponent(material);
+    return this.http.get<matlocations[]>(this.url + 'POData/getmatinhandlocation?poitemdescription=' + poitemdescription + '&materialid=' + material + '&projectid=' + projectid, this.httpOptions);
   }
 
   getinitialStock(uploadcode: string): Observable<StockModel[]> {
@@ -965,9 +983,20 @@ export class wmsService {
     return this.http.get<GraphModelNew[]>(this.url + 'POData/getTransfergraph/', this.httpOptions);
   }
 
-
   getMiscellanousIssueList(initialstock: boolean): Observable<any> {
     return this.http.get<any>(this.url + 'POData/getMiscellanousIssueList/' + initialstock, this.httpOptions);
+  }
+
+  getMiscellanousIssueListwithfilter(initialstock: boolean, pono: string, projectid: string): Observable<any> {
+    var istk = "False"
+    if (initialstock) {
+      istk = "True"
+    }
+    return this.http.get<any>(this.url + 'POData/getMiscellanousIssueListdata?initialstock=' + istk + '&pono=' + pono + '&projectid=' + projectid, this.httpOptions);
+  }
+
+  getMiscellanousIssueListdatahistory(): Observable<any> {
+    return this.http.get<any>(this.url + 'POData/getMiscellanousIssueListdatahistory/', this.httpOptions);
   }
 
   getMiscellanousReceiptsList(): Observable<any> {
@@ -975,6 +1004,10 @@ export class wmsService {
   }
   miscellanousIssueDataUpdate(data: miscellanousIssueData): Observable<any> {
     return this.http.post<any>(this.url + 'POData/miscellanousIssueDataUpdate', data, this.httpOptions);
+  }
+  multiplemiscellanousIssueDataUpdate(data: miscellanousIssueData[]): Observable<any> {
+    const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }), responseType: 'text' as any };
+    return this.http.post<any>(this.url + 'POData/multiplemiscellanousIssueDataUpdate', data, httpOptions);
   }
   miscellanousReceiptDataUpdate(data: StockModel): Observable<any> {
     const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }), responseType: 'text' as any };
