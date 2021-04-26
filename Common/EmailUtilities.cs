@@ -100,8 +100,8 @@ namespace WMS.Common
 			if (config.EmailType.ToString().ToLower().Trim() == "test")
 			{
 				multipleemails = false;
-				emlSndngList.ToEmailId = "ramesh.kumar@in.yokogawa.com";
-				emlSndngList.CC = "ramesh.kumar@in.yokogawa.com";
+				emlSndngList.ToEmailId = "sushma.patil@in.yokogawa.com";
+				emlSndngList.CC = "ramesh.kumar@in.yokogawa.com,Developer@in.yokogawa.com";
 			}
 			MailMessage mailMessage = new MailMessage(emlSndngList.FrmEmailId, emlSndngList.ToEmailId);
 			SmtpClient client = new SmtpClient();

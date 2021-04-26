@@ -416,12 +416,13 @@ export class HomeComponent implements OnInit {
       localStorage.removeItem('Employee');
       localStorage.setItem('Employee', JSON.stringify(this.employee));
       this.navpage.changemenu();
+      //this.apppage.loggedhandlerapp();
 
     }
   }
 
   navigatebyrole(roleid: string) {
-
+    this.setddl(roleid);
     this.employee.roleid = roleid;
     localStorage.removeItem('Employee');
     localStorage.setItem('Employee', JSON.stringify(this.employee));
@@ -1241,6 +1242,15 @@ export class HomeComponent implements OnInit {
     this.setgraphIE(type);
 
   }
+  setddl(roleid : any){
+  var data1 = this.userrolelist.filter(function (element, index) {
+    return (element.roleid == parseInt(roleid));
+  });
+  if (data1.length > 0) {
+    this.rolename = data1[0].accessname;
+    this.selectedrolename = this.rolename;
+  }
+}
   activeCard(event, type: string) {
 
     this.firstload = false;
@@ -1361,7 +1371,7 @@ export class HomeComponent implements OnInit {
         //PM
         this.gatepassData = this.totalGatePassList.filter(li => li.approverid == this.employee.employeeno && (li.approverstatus == this.approverstatus));
         //FM
-        this.gatepassData1 = this.totalGatePassList.filter(li => li.fmapproverid == this.employee.employeeno && li.approverstatus == "Approved" && li.fmapprovedstatus == this.approverstatus && li.gatepasstype == "Non Returnable");
+        this.gatepassData1 = this.totalGatePassList.filter(li => li.approverstatus == "Approved" && li.fmapprovedstatus == this.approverstatus && li.gatepasstype == "Non Returnable");
         this.prepareGatepassList();
         this.prepareGatepassList1();
       }

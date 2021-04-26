@@ -74,6 +74,10 @@ export class wmsService {
     // POData / GetOpenPoList?pono = 2999930 & vendorid=12
     return this.http.get<any[]>(this.url + 'POData/GetOpenPoList?loginid=' + PoFilterParams.loginid + '&pono=' + PoFilterParams.PONo + '&docno=' + PoFilterParams.DocumentNo + '&vendorid=' + PoFilterParams.venderid + '', this.httpOptions);
   }
+  getPMDashboard(PoFilterParams: PoFilterParams): Observable<any[]> {
+    // POData / GetOpenPoList?pono = 2999930 & vendorid=12
+    return this.http.get<any[]>(this.url + 'POData/GetPMdashboard?loginid=' + PoFilterParams.loginid, this.httpOptions);
+  }
 
   getPONumbers(postatus: string): Observable<any[]> {
     return this.http.get<any[]>(this.url + 'POData/GetPOList?postatus=' + postatus, this.httpOptions);
@@ -269,9 +273,12 @@ export class wmsService {
   getMaterialRequestlistdataforgp(pono: string, projectcode: string): Observable<any> {
     return this.http.get<any>(this.url + 'POData/getmaterialrequestforgatepass?pono=' + pono + '&projectcode=' + projectcode, this.httpOptions);
   }
+  getMaterialRequestlistdataforgpandstore(pono: string, projectcode: string, store: string): Observable<any> {
+    return this.http.get<any>(this.url + 'POData/getmaterialrequestforsto?pono=' + pono + '&projectcode=' + projectcode + '&store=' + store, this.httpOptions);
+  }
 
-  getMaterialReservelistdata(projectcode: string): Observable<any> {
-    return this.http.get<any>(this.url + 'POData/getmaterialreserveListdata?projectcode=' + projectcode, this.httpOptions);
+  getMaterialReservelistdata(): Observable<any> {
+    return this.http.get<any>(this.url + 'POData/getmaterialreserveListdata_v1', this.httpOptions);
   }
 
 
@@ -479,10 +486,10 @@ export class wmsService {
     poitemdescription = encodeURIComponent(poitemdescription);
     return this.http.get<any>(this.url + 'POData/GetItemLocationListByMaterialanddescpo?material=' + material + '&description=' + poitemdescription + '&projectid=' + projectid+'&pono='+pono, this.httpOptions);
   }
-  getItemlocationListByMaterialdescstore(material: string, poitemdescription: string, store: string): Observable<any> {
+  getItemlocationListByMaterialdescstore(material: string, poitemdescription: string, projectcode: string, pono: string, store: string): Observable<any> {
     material = encodeURIComponent(material);
     poitemdescription = encodeURIComponent(poitemdescription);
-    return this.http.get<any>(this.url + 'POData/GetItemLocationListByMaterialdescstore?material=' + material + '&description=' + poitemdescription + '&store=' + store, this.httpOptions);
+    return this.http.get<any>(this.url + 'POData/GetItemLocationListByMaterialdescstore?material=' + material + '&description=' + poitemdescription + '&store=' + store + '&projectid=' + projectcode + '&pono=' + pono, this.httpOptions);
   }
   getItemlocationListByMaterialdescpono(material: string, poitemdescription: string, pono: string): Observable<any> {
     material = encodeURIComponent(material);
@@ -518,6 +525,11 @@ export class wmsService {
   deleteAuthUser(authuser: authUser): Observable<any> {
     const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }), responseType: 'text' as any };
     return this.http.post<any>(this.url + 'POData/deleteUserauth/', authuser, httpOptions);
+  }
+
+  deletedeligatePM(authuser: authUser): Observable<any> {
+    const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }), responseType: 'text' as any };
+    return this.http.post<any>(this.url + 'POData/deletedeligatePM/', authuser, httpOptions);
   }
 
   getuserAcessList(employeeId: any, roleid: any): Observable<any> {

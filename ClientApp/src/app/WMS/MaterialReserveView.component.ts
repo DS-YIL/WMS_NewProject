@@ -102,7 +102,7 @@ export class MaterialReserveViewComponent implements OnInit {
 
   getdefaultmaterialstoreserve(projectcode: string) {
     this.defaultmaterials = [];
-    this.wmsService.getMaterialReservelistdata(projectcode).subscribe(data => {
+    this.wmsService.getMaterialReservelistdata().subscribe(data => {
       this.defaultmaterials = data;
       this.setmatdesclist(this.defaultmaterials);
     });
@@ -484,7 +484,7 @@ export class MaterialReserveViewComponent implements OnInit {
       this.materialList[index].quantity = 0;
       return false;
     }
-    if (reqqty > plantstockavailableqty) {
+    if (reqqty > avqty) {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Requested quantity not available in Plant Stock : ' + String(plantstockavailableqty) });
       this.materialList[index].quantity = 0;
       return false;

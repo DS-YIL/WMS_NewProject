@@ -41,6 +41,8 @@ export class ReceiveSTORequestComponent implements OnInit {
   source: string;
   destination: string;
   requestedid: string;
+  pcode: string;
+  pono: string;
   ngOnInit() {
     this.STORequestList = [];
     if (localStorage.getItem("Employee"))
@@ -98,6 +100,8 @@ export class ReceiveSTORequestComponent implements OnInit {
     this.requestedBy = details.transferredby;
     this.source = details.sourceplant;
     this.destination = details.destinationplant;
+    this.pcode = details.projectcode;
+    this.pono = details.pono;
     var sts = details.status;
     if (sts == "Issued") {
       this.viewprocess = true;
@@ -185,7 +189,7 @@ export class ReceiveSTORequestComponent implements OnInit {
     this.itemlocationData = [];
     if (this.selectedStatus == "Pending" && !this.viewprocess) {
       this.issueqtyenable = false;
-      this.wmsService.getItemlocationListByMaterialdescstore(material, poitemdescription, this.source).subscribe(data => {
+      this.wmsService.getItemlocationListByMaterialdescstore(material, poitemdescription, this.pcode, this.pono, this.source).subscribe(data => {
         this.itemlocationData = data;
         this.showdialog = true;
       });
@@ -266,6 +270,11 @@ export class ReceiveSTORequestComponent implements OnInit {
     this.itemlocationsaveData = this.itemlocationsaveData.filter(function (element, index) {
       return (element.issuedqty > 0);
     });
+
+    this.itemlocationsaveData.forEach(item => {
+      item.projectid = this.pcode;
+      item.pono = this.pono;
+    })
 
     this.wmsService.approvematerialrequest(this.itemlocationsaveData).subscribe(data => {
       this.spinner.hide();

@@ -152,6 +152,7 @@ import { PanelModule } from 'primeng/panel';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { FieldsetModule } from 'primeng/fieldset';
 import { KeyFilterModule } from 'primeng/keyfilter';
+import { DataSharingService } from './datasharing.service';
 @Injectable
   ({
     providedIn: 'root',
@@ -310,7 +311,7 @@ import { KeyFilterModule } from 'primeng/keyfilter';
     //  { path: '', component: LoginComponent, pathMatch: 'full' },
     // ])
   ],
-  providers: [MessageService, ConfirmationService, HttpClientModule, DatePipe],
+  providers: [MessageService, ConfirmationService, HttpClientModule, DatePipe, DataSharingService],
   entryComponents: [ConfirmationDialogComponent],
   bootstrap: [AppComponent]
 })

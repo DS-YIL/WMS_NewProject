@@ -42,13 +42,7 @@ export class DashboardComponent implements OnInit {
 
     this.PoFilterParams = new PoFilterParams();
     this.PoDetails = new PoDetails();
-    if (this.employee.roleid == "5") {
-      this.Dashboardtext = "MR Dashboard";
-    }
-    else {
-      this.Dashboardtext = "PM Dashboard";
-    }
-
+    this.Dashboardtext = "PM Dashboard";
     this.POfilterForm = this.formBuilder.group({
       PONo: ['', [Validators.required]],
       venderid: ['', [Validators.required]],
@@ -74,7 +68,7 @@ export class DashboardComponent implements OnInit {
     this.PoFilterParams.loginid =this.employee.employeeno;
     this.wmsService.getPOList(this.PoFilterParams).subscribe(data => {
       this.POList = data;
-      this.POList = this.POList.filter(li => li.materialqty > 0);
+      this.POList = this.POList.filter(li => li.materialqty > 0 && li.availableqty <= li.materialqty);
       this.loading = false;
       this.spinner.hide();
     })

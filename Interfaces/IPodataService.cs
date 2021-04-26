@@ -8,6 +8,7 @@ namespace WMS.Interfaces
 	public interface IPodataService<T>
 	{
 		Task<IEnumerable<T>> getOpenPoList(string loginid, string pono = null, string docno = null, string vendorid = null);
+		Task<IEnumerable<T>> getdashboardlist(string loginid);
 
 		Task<IEnumerable<POList>> getPOList(string postatus);
 
@@ -85,10 +86,12 @@ namespace WMS.Interfaces
 		Task<IEnumerable<MaterialTransaction>> MaterialRequest(string pono, string material);
 		Task<IEnumerable<IssueRequestModel>> MaterialRequestdata(string pono, string material, string projectcode);
 		Task<IEnumerable<IssueRequestModel>> MaterialRequestdataforgatepass(string pono, string projectcode);
+		Task<IEnumerable<IssueRequestModel>> MaterialRequestdataforsto(string pono, string projectcode, string store);
 		Task<IEnumerable<POReportModel>> getPOReportdata(string empno, string projectcode, string pono);
 		Task<IEnumerable<stocktransfermateriakmodel>> getsubconannexuredata(string empno, string subconno);
 		Task<IEnumerable<POReportModel>> getPOReportdetail(string materialid, string description, string pono, string querytype, string requesttype, string projectcode, string empno);
 		Task<IEnumerable<IssueRequestModel>> MaterialReservedata(string projectcode);
+		Task<IEnumerable<IssueRequestModel>> MaterialReservedata_v1();
 		Task<IEnumerable<IssueRequestModel>> getgatepassmaterialrequestList();
 		int acknowledgeMaterialReceived(List<IssueRequestModel> dataobj);
 		Task<User> getempnamebycode(string empno);
@@ -134,7 +137,7 @@ namespace WMS.Interfaces
 		Task<IEnumerable<IssueRequestModel>> GetItemlocationListBymterial(string material);
 		Task<IEnumerable<IssueRequestModel>> GetItemlocationListBymterialanddesc(string material, string description);
 		Task<IEnumerable<IssueRequestModel>> GetItemlocationListBymterialanddescpo(string material, string description, string projectid, string pono);
-		Task<IEnumerable<IssueRequestModel>> GetItemLocationListByMaterialdescstore(string material, string description, string store);
+		Task<IEnumerable<IssueRequestModel>> GetItemLocationListByMaterialdescstore(string material, string description, string store, string projectid, string pono);
 		Task<IEnumerable<IssueRequestModel>> GetItemLocationListByMaterialdescpono(string material, string description, string pono);
 
 
@@ -175,6 +178,7 @@ namespace WMS.Interfaces
 		int updatematmovement(List<materialistModel> obj);
 		string updateuserAuth(List<authUser> obj);
 		string deleteuserAuth(authUser data);
+		string deletedeligatePM(authUser data);
 		int requesttoreserve(materialReservetorequestModel obj);
 		int insertdatacsv(ddlmodel obj);
 		Task<IEnumerable<safteyStockList>> getSafteyStockList();

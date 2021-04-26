@@ -270,14 +270,14 @@ export class GatePassComponent implements OnInit {
       }
       else {
         debugger;
-        this.materialistModel = { materialid: "", gatepassmaterialid: "0", materialdescription: "", quantity: 0, materialcost: 0, remarks: " ", expecteddate: this.date, returneddate: this.date, issuedqty: 0, showdetail: false, materiallistdata: [], availableqty:0 };
+        this.materialistModel = { materialid: "", gatepassmaterialid: "0", materialdescription: "", quantity: 0, materialcost: 0, remarks: " ", expecteddate: this.date, returneddate: this.date, issuedqty: 0, showdetail: false, materiallistdata: [], availableqty: 0, unitprice:0 };
         this.gatepassModel.materialList.push(this.materialistModel);
       }
 
     }
     else {
       if (this.gatepassModel.materialList.length <= 0) {
-        this.materialistModel = { materialid: "", gatepassmaterialid: "0", materialdescription: "", quantity: 0, materialcost: 0, remarks: " ", expecteddate: this.date, returneddate: this.date, issuedqty: 0, showdetail: false, materiallistdata: [], availableqty:0 };
+        this.materialistModel = { materialid: "", gatepassmaterialid: "0", materialdescription: "", quantity: 0, materialcost: 0, remarks: " ", expecteddate: this.date, returneddate: this.date, issuedqty: 0, showdetail: false, materiallistdata: [], availableqty: 0, unitprice:0 };
         this.gatepassModel.materialList.push(this.materialistModel);
       }
       else {
@@ -299,7 +299,7 @@ export class GatePassComponent implements OnInit {
    }
  }
 
-  onComplete(qty: any, avlqty: any, index: any) {
+  onComplete(qty: any, avlqty: any, index: any, data: any) {
     if (qty == 0 || qty < 0) {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Quantity must be Greater than zero' });
       this.gatepassModel.materialList[index].quantity = 0;
@@ -310,6 +310,7 @@ export class GatePassComponent implements OnInit {
       this.gatepassModel.materialList[index].quantity = 0;
       return;
     }
+    data.materialcost = qty * data.unitprice;
     //else {
     //  this.wmsService.checkMaterialandQty(material, qty).subscribe(data => {
     //    if (data == "true") {
@@ -610,8 +611,10 @@ export class GatePassComponent implements OnInit {
   }
   exportPdf(gatepassobject: gatepassModel,materialarray : any[]) {
     // debugger;
+    debugger;
     import("jspdf").then(jsPDF => {
       import("jspdf-autotable").then(x => {
+        debugger;
         const doc = new jsPDF.default(0, 0);
         var device = "";
         var model = "";
@@ -661,6 +664,7 @@ export class GatePassComponent implements OnInit {
         this.gatepassprintmodel = [];
         var sln = 1;
         materialarray.forEach(element => {
+          debugger;
           let obj = new gatepassprintdoc();
           obj.slno = String(sln);
           obj.materialdescription = String(element.materialdescription);
@@ -707,6 +711,7 @@ export class GatePassComponent implements OnInit {
         var page = this;
         doc.autoTable(this.exportColumns, this.gatepassprintmodel, {
           theme: 'grid',
+          styles: { overflow: 'linebreak', cellWidth: 'wrap' },
           headerStyles: {
             lineWidth: 0.3,
             lineColor: [72, 72, 72],
@@ -771,6 +776,7 @@ export class GatePassComponent implements OnInit {
           material.availableqty = result[i].availableqty;
           material.quantity = result[i].quantity;
           material.materialcost = result[i].materialcost;
+          material.unitprice = result[i].unitprice;
           material.remarks = result[i].remarks;
           material.showdetail = false;
           material.expecteddate = new Date(result[i].expecteddate);

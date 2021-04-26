@@ -1,36 +1,4 @@
-/*a.navbar-brand {
-  white-space: normal;
-  text-align: center;
-  word-break: break-all;
-}
 
-html {
-  font-size: 14px;
-}
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-
-.box-shadow {
-  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
-}
-.navclass {*/
-  /*background: linear-gradient(to bottom, #0099cc 0%, #9900ff 100%);*/
-  /*background: linear-gradient(to bottom, #3366ff 0%, #669999 100%);
-}
-
-.navtext {
-    color: white;
-    font-size: larger;
-    font-family: Arial, Helvetica, sans-serif;
-}
-
-:host >>> .active {
-  background-color: lightgray;
-}*/
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap');
 
 * {
@@ -77,16 +45,4 @@ header {
         color: lightslategray;
       }
 
-/*btnuser {*/
-  /*padding: 9px 25px;*/
-  /*background-color: rgba(0,136, 169, 1);
-  border: none;
-  border-radius: 50px;
-  cursor: pointer;
-  transition: all 0.3s ease 0s;
-}
-
-  button :hover {
-    background-color: rgba(0,136, 169, 0.8);
-  }*/
 

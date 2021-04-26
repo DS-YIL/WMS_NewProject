@@ -65,7 +65,7 @@ export class AssignPMComponent implements OnInit {
     this.spinner.show();
     this.getlistdata = [];
     this.dynamicData = new DynamicSearchResult();
-    this.dynamicData.query = "select au.*,emp.name as employeename,au.deleteflag as isdeleted from wms.auth_users au  left outer join wms.employee emp on emp.employeeno = au.employeeid where au.roleid = 11  order by au.authid desc";
+    this.dynamicData.query = "select au.*,emp.name as employeename,au.deleteflag as isdeleted from wms.auth_users au  left outer join wms.employee emp on emp.employeeno = au.employeeid where au.isdelegatemember is true and au.createdby='" + this.employee.employeeno + "'  order by au.authid desc";
     this.wmsService.GetListItems(this.dynamicData).subscribe(data => {
       this.getlistdata = data;
       this.spinner.hide();
@@ -108,14 +108,14 @@ export class AssignPMComponent implements OnInit {
       return;
     }
     var data = this.getlistdata.filter(li => li.employeeid == this.selectedEmployee.employeeno)[0];
-    if (!this.IsEdit && data && !data.isdelegatemember) {
-      this.messageService.add({ severity: 'error', summary: '', detail: 'Employee Already PM ' });
-      return;
-    }
-    if (!this.IsEdit && data && data.isdelegatemember) {
-      this.messageService.add({ severity: 'error', summary: '', detail: 'Employee Already Delegated as PM' });
-      return;
-    }
+    //if (!this.IsEdit && data && !data.isdelegatemember) {
+    //  this.messageService.add({ severity: 'error', summary: '', detail: 'Employee Already PM ' });
+    //  return;
+    //}
+    //if (!this.IsEdit && data && data.isdelegatemember) {
+    //  this.messageService.add({ severity: 'error', summary: '', detail: 'Employee Already Delegated as PM' });
+    //  return;
+    //}
    
     this.getaddlistdetail = [];
     this.authUser.roleid = 11;
@@ -166,11 +166,11 @@ export class AssignPMComponent implements OnInit {
 
   CheckforEmpdata() {
     var empid = this.selectedEmployee.employeeno;
-    var data2 = this.getlistdata.filter(function (element, index) {
-      if (element.employeeid == empid)
-        this.messageService.add({ severity: 'error', summary: '', detail: "Delagation Added Already" });
-      return true;
-    });
+    //var data2 = this.getlistdata.filter(function (element, index) {
+    //  if (element.employeeid == empid)
+    //    this.messageService.add({ severity: 'error', summary: '', detail: "Delagation Added Already" });
+    //  return true;
+    //});
 
   }
 

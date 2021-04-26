@@ -38,6 +38,8 @@ export class ReceiveSubContractRequestComponent implements OnInit {
   requestedid: string;
   vendorname: string;
   sourcelocation: string;
+  pcode: string = "";
+  pono: string = "";
 
   ngOnInit() {
     this.STORequestList = [];
@@ -86,6 +88,8 @@ export class ReceiveSubContractRequestComponent implements OnInit {
     this.requestedBy = details.transferredby;
     this.vendorname = details.vendorname;
     this.sourcelocation = details.sourceplant;
+    this.pcode = details.projectcode;
+    this.pono = details.pono;
     var type = "MatIssue";
     this.wmsService.getMatdetailsbyTransferId(details.transferid, type, 'SubContract').subscribe(data => {
       this.spinner.hide();
@@ -155,7 +159,7 @@ export class ReceiveSubContractRequestComponent implements OnInit {
     this.itemlocationData = [];
     if (this.selectedStatus == "Pending") {
       this.issueqtyenable = false;
-      this.wmsService.getItemlocationListByMaterialdescstore(material, description, this.sourcelocation).subscribe(data => {
+      this.wmsService.getItemlocationListByMaterialdescstore(material, description, this.pcode, this.pono, this.sourcelocation).subscribe(data => {
         this.itemlocationData = data;
         this.showdialog = true;
       });
@@ -236,6 +240,10 @@ export class ReceiveSubContractRequestComponent implements OnInit {
     this.itemlocationsaveData = this.itemlocationsaveData.filter(function (element, index) {
       return (element.issuedqty > 0);
     });
+    this.itemlocationsaveData.forEach(item => {
+      item.projectid = this.pcode;
+      item.pono = this.pono;
+    })
 
     this.wmsService.approvematerialrequest(this.itemlocationsaveData).subscribe(data => {
       this.spinner.hide();

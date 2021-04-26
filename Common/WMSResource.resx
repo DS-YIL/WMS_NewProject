@@ -173,7 +173,7 @@ VALUES(default,@pono,@invoiceno,@invoicedate,@receivedby,@receiveddate,@deletefl
     <comment>insert material request data</comment>
   </data>
   <data name="openpolist" xml:space="preserve">
-    <value>select  max(track.enteredon) as enteredon,max(pr.projectcode)as projectcode,max(wp.pono) as pono,min(track.status)as status,max(wp.suppliername )as vendorname,max(pr.jobname) as jobname,  (select  SUM(materialqty) from wms.wms_pomaterials where pono =wp.pono )  as materialqty, (select SUM(confirmqty) from wms.wms_storeinward where inwmasterid in (select inwmasterid from wms.wms_securityinward where pono = wp.pono)) as receivedqty from wms.wms_polist wp left join wms.wms_trackstatus track on track.pono=wp.pono left join wms.wms_project  pr on pr.pono =wp.pono  where projectmanager='#projectmanager'</value>
+    <value>select  max(track.enteredon) as enteredon,max(pr.projectcode)as projectcode,max(wp.pono) as pono,min(track.status)as status,max(wp.suppliername )as vendorname,max(pr.jobname) as jobname,  (select  SUM(materialqty) from wms.wms_pomaterials where pono =wp.pono )  as materialqty,(select  SUM(availableqty) from wms.wms_stock ws where ws.pono =wp.pono )  as availableqty,  (select SUM(confirmqty) from wms.wms_storeinward where inwmasterid in (select inwmasterid from wms.wms_securityinward where pono = wp.pono)) as receivedqty from wms.wms_polist wp left join wms.wms_trackstatus track on track.pono=wp.pono left join wms.wms_project  pr on pr.pono =wp.pono  where projectmanager='#projectmanager'</value>
     <comment>getopenpono list</comment>
   </data>
   <data name="Getdetailsforthreewaymatching" xml:space="preserve">
@@ -281,7 +281,11 @@ where  inw.invoiceno='#invoiceno' and openpo.pono='#pono' group by grnnumber</va
 gate.*,mat.*,iss.*,
 case when gate.isnonproject is not true 
      then (select sum(ws.availableqty::decimal(19,5)) from wms.wms_stock ws where ws.projectid = gate.projectid and ws.pono = gate.pono and ws.materialid = mat.materialid and ws.poitemdescription = mat.poitemdescription group by ws.projectid,ws.pono,ws.materialid,ws.poitemdescription)
-     else 0 end as availableqty from wms.wms_gatepass gate
+     else 0 end as availableqty,
+      case when gate.isnonproject is not true
+  then (select max(unitprice) from wms.wms_stock ws1 where ws1.projectid = gate.projectid and ws1.pono = gate.pono and ws1.materialid = mat.materialid and ws1.poitemdescription = mat.poitemdescription)
+  else 0 end as unitprice
+     from wms.wms_gatepass gate
    left join wms.wms_gatepassmaterial mat on gate.gatepassid=mat.gatepassid 
    left join wms.employee emp on emp.employeeno=gate.requestedby
     left join wms.employee appr on appr.employeeno=gate.approverid 
@@ -320,6 +324,9 @@ values(default,@gatepassid,@materialid,@quantity,@deleteflag,@remarks,@materialc
  case when pass.isnonproject is not true
   then (select sum(availableqty) from wms.wms_stock ws where projectid = pass.projectid and pono = pass.pono and materialid =material.materialid and poitemdescription = material.poitemdescription)
   else 0 end as availableqty,
+  case when pass.isnonproject is not true
+  then (select max(unitprice) from wms.wms_stock ws where projectid = pass.projectid and pono = pass.pono and materialid =material.materialid and poitemdescription = material.poitemdescription)
+  else 0 end as unitprice,
  pass.otherreason,pass.requestedon,pass.gatepasstype,pass.approverstatus,pass.reasonforgatepass,pass.approverremarks,pass.fmapprovedstatus,pass.fmapproverremarks,material.materialid,
  material.poitemdescription as materialdescription,material.poitemdescription,material.materialcost,material.quantity,material.remarks,pass.isnonproject,emp1."name" as approvedby,emp2."name" as fmapprovedby,
  pass.isnonproject,pass.projectid,pass.pono
@@ -736,8 +743,8 @@ where inv.transferid = '#tid'
 group by inv.transferid,inv.id,inv.materialid,inv.materialid ,inv.poitemdesc, inv.sourcelocation,inv.destinationlocation</value>
   </data>
   <data name="insertInvStocktransfer" xml:space="preserve">
-    <value>insert into wms.wms_invstocktransfer (transferredby,transferredon,transfertype,sourceplant,destinationplant,vendorcode,vendorname,remarks,status,projectcode,approverid,isapprovalrequired,isapproved,approvedon,approvalremarks,sourcelocationcode,destinationlocationcode)
-values (@transferredby,@transferredon,@transfertype,@sourceplant,@destinationplant,@vendorcode,@vendorname,@remarks,@status,@projectcode,@approverid,@isapprovalrequired,@isapproved,@approvedon,@approvalremarks,@sourcelocationcode,@destinationlocationcode) returning transferid</value>
+    <value>insert into wms.wms_invstocktransfer (transferredby,transferredon,transfertype,sourceplant,destinationplant,vendorcode,vendorname,remarks,status,projectcode,approverid,isapprovalrequired,isapproved,approvedon,approvalremarks,sourcelocationcode,destinationlocationcode,pono)
+values (@transferredby,@transferredon,@transfertype,@sourceplant,@destinationplant,@vendorcode,@vendorname,@remarks,@status,@projectcode,@approverid,@isapprovalrequired,@isapproved,@approvedon,@approvalremarks,@sourcelocationcode,@destinationlocationcode,@pono) returning transferid</value>
   </data>
   <data name="insertinvtransfermaterial" xml:space="preserve">
     <value>insert into wms.wms_invtransfermaterial (transferid,materialid,sourcelocation,sourceitemid,destinationlocation,destinationitemid,transferqty,poitemdesc)
@@ -870,7 +877,7 @@ group by sk.pono, polist.suppliername,prj.projectmanager,prj.projectcode</value>
     <comment>Get PO Details</comment>
   </data>
   <data name="getitemiddata" xml:space="preserve">
-    <value>select * from wms.wms_stock where materialid='#materialid' and poitemdescription = '#desc' and availableqty &gt; 0 and stcktype = 'Plant Stock'</value>
+    <value>select * from wms.wms_stock where materialid='#materialid' and poitemdescription = '#desc' and availableqty &gt; 0 and stcktype = 'Plant Stock' order by itemid desc</value>
   </data>
   <data name="getreturndata" xml:space="preserve">
     <value>select distinct max(retmat.matreturnid) as matreturnid,max(retmat.returnid ) as returnid, 
@@ -1283,9 +1290,9 @@ where requestid = '#requestid'</value>
   from wms.materialrequest req where (req.requesterid = '#reqid' or req.approverid = '#reqid')order by req.requestid desc</value>
   </data>
   <data name="getmaterialreservedata" xml:space="preserve">
-    <value>select rd.reserveid,rd.itemid,rd.materialid,rd.poitemdescription as materialdescription,sum(rd.reservequantity) reservedqty
+    <value>select rd.reserveid,rd.materialid,rd.poitemdescription as materialdescription,sum(rd.reservequantity) reservedqty
 from wms.materialreservedetails rd
-where rd.reserveid = '#reserveid' group by rd.reserveid,rd.materialid,rd.poitemdescription,rd.itemid</value>
+where rd.reserveid = '#reserveid' group by rd.reserveid,rd.materialid,rd.poitemdescription</value>
   </data>
   <data name="getmaterialreserves" xml:space="preserve">
     <value>select rsv.reserveid,rsv.reserveupto,rsv.pono,rsv.reservedon,rsv.projectcode,rsv.remarks,
@@ -1733,6 +1740,7 @@ stocktype=@stocktype,unitprice=@unitprice,hsncode=@hsncode where material ='#mat
   </data>
   <data name="getMatdetailsbyTransferId" xml:space="preserve">
     <value>select max(inv.id) as id,inv.transferid, inv.materialid ,Max(nv.transferredby) as createdby, Max(inv.poitemdesc) as poitemdescription, max(inv.transferqty) as transferqty,
+Max(nv.projectcode ) as projectcode,Max(nv.pono) as pono,
 (select sum(matiss.issuedqty) from wms.wms_materialissue matiss  where matiss.requestid =cast(max(inv.id) as varchar ) and matiss.requesttype ='#transfertype' ) as issuedqty,
  (select sum(ws.availableqty) from wms.wms_stock ws where ws.materialid =inv.materialid and ws.poitemdescription = inv.poitemdesc ) as availableqty,
  (select sum(wi.poqty) from wms.wms_initiatepo wi  where wi.materialid = inv.materialid and wi.poitemdescription = inv.poitemdesc and wi.transferid = inv.transferid ) as poqty
@@ -1952,7 +1960,7 @@ where iss.requestid = '#requestforissueid' and iss.requesttype = '#type'</value>
 (select SUM(wm.issuedqty) from wms.wms_materialissue wm where wm.requesttype = '#type' and wm.requestid::text in (
 select id::text from wms.wms_invtransfermaterial wi where wi.transferid = inv.transferid)) as issuedqty,
 (select SUM(wiv.transferqty) from wms.wms_invtransfermaterial wiv where wiv.transferid = inv.transferid) as transferqty,
-inv.status,inv.vendorcode,inv.vendorname,
+inv.status,inv.vendorcode,inv.vendorname,inv.projectcode ,inv.pono,
 inv.issuedon,inv.isporequested   
 from wms.wms_invstocktransfer inv 
 left outer join wms.employee emp  on emp.employeeno = inv.transferredby
@@ -2026,7 +2034,7 @@ left outer join wms.employee emp on emp.employeeno= req.transferredby
 where req.isapprovalrequired is true and req.approverid = '#reqid' and req.transfertype = '#type' order by req.transferid desc</value>
   </data>
   <data name="getSTOSubconMatDetails" xml:space="preserve">
-    <value>select dt.id ,dt.transferid ,dt.materialid ,dt.transferqty ,dt.poitemdesc as materialdescription,
+    <value>select dt.id ,dt.transferid ,dt.materialid ,dt.transferqty ,dt.poitemdesc as materialdescription,dt.value,
 (select sum(issuedqty) from wms.wms_materialissue where requestid::text = dt.id::text and requesttype = '#type') as issuedquantity
 from wms.wms_invtransfermaterial dt 
 where dt.transferid = '#requestid'</value>
@@ -2045,7 +2053,7 @@ where stk.materialid='#materialid' and loc.locatorname = '#store' and lower(stk.
 from wms.wms_stock sk 
 left outer join wms."MaterialMasterYGS" ygs on ygs.material=sk.materialid
 left outer join wms.wms_rd_locator loc on sk.storeid = loc.locatorid 
-where sk.materialid='#materialid' and lower(sk.poitemdescription)  = lower('#desc') and loc.locatorname = '#store'
+where sk.materialid='#materialid' and lower(sk.poitemdescription)  = lower('#desc') and loc.locatorname = '#store' and sk.projectid = '#project' and sk.pono = '#pono'
 and sk.availableqty&gt;0 
 group by sk.itemlocation,sk.stcktype,sk.createddate::DATE order by sk.createddate::DATE Desc</value>
   </data>
@@ -2318,7 +2326,7 @@ group by ws.projectid,ws.materialid,ws.pono,ws.poitemdescription,ws.itemlocation
   <data name="getmaterialsforgatepass" xml:space="preserve">
     <value>select  sk.materialid,sk.poitemdescription  as materialdescription,
 sum(sk.availableqty) as availableqty,
-sum(sk.availableqty * sk.unitprice) as materialcost from wms.wms_stock  sk  
+max(sk.unitprice) as unitprice from wms.wms_stock  sk  
 where sk.availableqty &gt; 0 and sk.projectid = '#projectid' and sk.pono = '#pono' group by sk.poitemdescription, sk.materialid</value>
   </data>
   <data name="getitemlocationbymaterialdescpo" xml:space="preserve">
@@ -2327,5 +2335,27 @@ from wms.wms_stock sk
 where sk.materialid='#materialid' and lower(sk.poitemdescription)  = lower('#desc') and sk.projectid = '#projectid' and sk.pono = '#pono'
 and sk.availableqty&gt;0 
 group by sk.itemlocation,sk.createddate::DATE order by sk.createddate::DATE Desc</value>
+  </data>
+  <data name="getmaterialsforsto" xml:space="preserve">
+    <value>select  sk.materialid,sk.poitemdescription  as materialdescription,
+sum(sk.availableqty) as availableqty,
+max(sk.unitprice) as unitprice from wms.wms_stock  sk  
+where sk.availableqty &gt; 0 and sk.projectid = '#projectid' and sk.pono = '#pono' and sk.storeid = #storeid group by sk.poitemdescription, sk.materialid</value>
+  </data>
+  <data name="getplantstockmaterials" xml:space="preserve">
+    <value>select sk.materialid as material,
+sum(sk.availableqty) as availableqty,sk.poitemdescription  as materialdescription 
+from wms.wms_stock  sk 
+where sk.availableqty &gt; 0  and sk.stcktype = 'Plant Stock' and sk.materialid is not null and sk.poitemdescription is not null  group by sk.materialid,sk.poitemdescription</value>
+  </data>
+  <data name="PMDashboardqry" xml:space="preserve">
+    <value>select wp.projectcode,wp.pono,max(polist.suppliername) as vendorname,
+(select  SUM(pm.materialqty::decimal(19,5)) from wms.wms_pomaterials pm where pm.pono =wp.pono)  as materialqty,
+(select  SUM(ws.confirmqty::decimal(19,5)) from wms.wms_storeinward ws where ws.pono =wp.pono) as receivedqty,
+(select  SUM(ws2.availableqty::decimal(19,5)) from wms.wms_stock ws2  where ws2.pono =wp.pono)  as availableqty
+from wms.wms_project wp 
+left outer join wms.wms_polist polist on polist.pono = wp.pono
+where wp.projectmanager = '#projectmanager'
+group by wp.projectcode,wp.pono</value>
   </data>
 </root>

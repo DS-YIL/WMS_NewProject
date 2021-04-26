@@ -12,7 +12,7 @@ namespace WMS.Models
 	{
 		public int rfqsplititemid { get; set; }
 		public string departmentname { get; set; }
-
+		public decimal? availableqty { get; set; }
 		public bool isreceived { get; set; }
 
 		public string securitypo { get; set; }
@@ -93,6 +93,8 @@ namespace WMS.Models
 		public bool issupplier { get; set; }
 
 		public decimal? unitprice { get; set; }
+
+		public decimal? initialstockavailableqty { get; set; }
 
 
 	}
@@ -674,6 +676,7 @@ namespace WMS.Models
 		public string confirmstatus { get; set; }
 		public Decimal? materialcost { get; set; }
 		public Decimal? value { get; set; }
+		public Decimal? unitprice { get; set; }
 
 		public string issuedby { get; set; }
 
@@ -785,6 +788,7 @@ namespace WMS.Models
 		public string remarks { get; set; }
 
 		public Decimal? materialcost { get; set; }
+		public Decimal? unitprice { get; set; }
 		public DateTime? expecteddate { get; set; }
 		public DateTime? returneddate { get; set; }
 		public string approvedby { get; set; }
@@ -1512,6 +1516,7 @@ public class invstocktransfermodel
 	public string approvedstatus { get; set; }
 	public string sourcelocationcode { get; set; }
 	public string destinationlocationcode { get; set; }
+	public string pono { get; set; }
 
 
 }
@@ -1539,6 +1544,7 @@ public class stocktransfermateriakmodel
 	public decimal? issuedqty { get; set; }
 	public decimal? poqty { get; set; }
 	public decimal? value { get; set; }
+	public decimal? materialcost { get; set; }
 	public decimal? unitprice { get; set; }
 	public string subconno { get; set; }
 	public string projectmanager { get; set; }
@@ -2175,6 +2181,8 @@ public class STOIssueModel
 	public string createdby { get; set; }
 	public string createdbyname { get; set; }
 	public int poqty { get; set; }
+	public string projectcode { get; set; }
+	public string pono { get; set; }
 
 
 }

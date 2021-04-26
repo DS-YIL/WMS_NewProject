@@ -1563,9 +1563,18 @@ namespace WMS.Controllers
 
 							if (Projcount == 0)
 							{
+								string projectmember = null;
+
+
+								string querypmb = "Select Max(projectmember) as projectmember from wms.wms_project where  projectcode = '" + stag_data.projectcode + "' group by projectmanager";
+								var rslttmb = pgsql.ExecuteScalar(querypmb, null);
+								if (rslttmb != null)
+								{
+									projectmember = rslttmb.ToString();
+								}
 
 								//insert wms_project ##pono,jobname,projectcode,projectname,projectmanager,
-								var insertquery = "INSERT INTO wms.wms_project(pono, jobname, projectcode,projectname,projectmanager,uploadcode)VALUES(@pono, @jobname,@projectcode,@projecttext,@projectmanager,@uploadcode)";
+								var insertquery = "INSERT INTO wms.wms_project(pono, jobname, projectcode,projectname,projectmanager,uploadcode,projectmember)VALUES(@pono, @jobname,@projectcode,@projecttext,@projectmanager,@uploadcode,@projectmember)";
 								var results = pgsql.ExecuteScalar(insertquery, new
 								{
 									stag_data.pono,
@@ -1573,8 +1582,10 @@ namespace WMS.Controllers
 									stag_data.projectcode,
 									stag_data.projecttext,
 									stag_data.projectmanager,
-									uploadcode
+									uploadcode,
+									projectmember
 								});
+								
 							}
 
 
@@ -1945,15 +1956,7 @@ namespace WMS.Controllers
 						initialstk.material = Conversion.toStr(row["Material"]);
 						initialstk.materialdescription = Conversion.toStr(row["Material Description"]);
 						initialstk.store = Conversion.toStr(row["Store"]);
-						if (string.IsNullOrEmpty(initialstk.store) && initialstk.store.ToString().Trim() == "")
-						{
-							initialstk.store = "EC C BLOCK";
-						}
 						initialstk.rack = Conversion.toStr(row["Rack"]);
-						if (string.IsNullOrEmpty(initialstk.rack) || initialstk.rack.ToString().Trim() == "")
-						{
-							initialstk.rack = "ON FLOOR";
-						}
 						initialstk.bin = Conversion.toStr(row["Bin"]);
 						initialstk.quantity = Conversion.Todecimaltype(row["Quantity"]);
 						initialstk.quantitystr = Conversion.toStr(row["Quantity"]);
@@ -2012,10 +2015,10 @@ namespace WMS.Controllers
 							Error_Description += " No Material";
 						if (string.IsNullOrEmpty(initialstk.materialdescription) || initialstk.materialdescription == "")
 							Error_Description += " No Material Description";
-						if (string.IsNullOrEmpty(initialstk.store) || initialstk.store == "")
-							Error_Description += " No Store";
-						if (string.IsNullOrEmpty(initialstk.rack) || initialstk.rack == "")
-							Error_Description += " No Rack";
+						//if (string.IsNullOrEmpty(initialstk.store) || initialstk.store == "")
+						//	Error_Description += " No Store";
+						//if (string.IsNullOrEmpty(initialstk.rack) || initialstk.rack == "")
+						//	Error_Description += " No Rack";
 						if (initialstk.quantity == null || initialstk.quantity == 0)
 							Error_Description += " No Quantity";
 						if ((string.IsNullOrEmpty(initialstk.projectid) || initialstk.projectid == "") && initialstk.stocktype != "Plant Stock")
@@ -2098,6 +2101,7 @@ namespace WMS.Controllers
 									string projectcode = null;
 									string projecttext = null;
 									string projectmanager = null;
+									string projectmember = null;
 
 									string uploadtype = "Initial Stock";
 									if (!string.IsNullOrEmpty(initialstk.projectid) && initialstk.projectid != "")
@@ -2112,9 +2116,15 @@ namespace WMS.Controllers
 									{
 										projectmanager = rsltt.ToString();
 									}
+									string querypmb = "Select Max(projectmember) as projectmember from wms.wms_project where  projectcode = '" + projectcode + "' group by projectmanager";
+									var rslttmb = DB.ExecuteScalar(querypmb, null);
+									if (rslttmb != null)
+									{
+										projectmember = rslttmb.ToString();
+									}
 
 									//insert wms_project ##pono,jobname,projectcode,projectname,projectmanager,
-									var insertquery = "INSERT INTO wms.wms_project(pono, jobname, projectcode,projectname,projectmanager,uploadcode,uploadtype)VALUES(@pono, @jobname,@projectcode,@projecttext,@projectmanager,@uploadcode,@uploadtype)";
+									var insertquery = "INSERT INTO wms.wms_project(pono, jobname, projectcode,projectname,projectmanager,uploadcode,uploadtype,projectmember)VALUES(@pono, @jobname,@projectcode,@projecttext,@projectmanager,@uploadcode,@uploadtype,@projectmember)";
 									var results = DB.ExecuteScalar(insertquery, new
 									{
 										pono,
@@ -2123,7 +2133,8 @@ namespace WMS.Controllers
 										projecttext,
 										projectmanager,
 										uploadcode,
-										uploadtype
+										uploadtype,
+										projectmember
 									});
 								}
 							}
@@ -2198,7 +2209,7 @@ namespace WMS.Controllers
 			{
 				{
 
-					string query = "select * from wms.st_initialstock where material  !='' and materialdescription !='' and store !='' and rack !='' and quantity  !='0' and dataloaderrors=false and uploadbatchcode = '" + batchcode + "'";
+					string query = "select * from wms.st_initialstock where material  !='' and materialdescription !='' and quantity  !='0' and dataloaderrors=false and uploadbatchcode = '" + batchcode + "'";
 					pgsql.Open();
 					var stagingList = pgsql.Query<StagingStockModel>(
 					   query, null, commandType: CommandType.Text);
@@ -2214,6 +2225,16 @@ namespace WMS.Controllers
 						try
 						{
 							// add master table data for store,rack,bin
+							if(stag_data.store == null && stag_data.store.Trim() == "")
+                            {
+								stag_data.store = "EC C BLOCK";
+
+							}
+							if (stag_data.rack == null && stag_data.rack.Trim() == "")
+							{
+								stag_data.rack = "ON FLOOR";
+
+							}
 
 							Trans = pgsql.BeginTransaction();
 							bool deleteflag = false;
@@ -4325,6 +4346,7 @@ namespace WMS.Controllers
 							string projectcode = null;
 							string projecttext = null;
 							string projectmanager = null;
+							string projectmember = null;
 
 							string uploadtype = "Initial Stock";
 							if (!string.IsNullOrEmpty(mdl.projectid) && mdl.projectid != "")
@@ -4339,9 +4361,15 @@ namespace WMS.Controllers
 							{
 								projectmanager = rsltt.ToString();
 							}
+							string querypmb = "Select Max(projectmember) as projectmember from wms.wms_project where  projectcode = '" + projectcode + "' group by projectmanager";
+							var rslttmb = DB.ExecuteScalar(querypmb, null);
+							if (rslttmb != null)
+							{
+								projectmember = rslttmb.ToString();
+							}
 							string uploadcode = mdl.uploadbatchcode;
 							//insert wms_project ##pono,jobname,projectcode,projectname,projectmanager,
-							var insertquery = "INSERT INTO wms.wms_project(pono, jobname, projectcode,projectname,projectmanager,uploadcode,uploadtype)VALUES(@pono, @jobname,@projectcode,@projecttext,@projectmanager,@uploadcode,@uploadtype)";
+							var insertquery = "INSERT INTO wms.wms_project(pono, jobname, projectcode,projectname,projectmanager,uploadcode,uploadtype,projectmember)VALUES(@pono, @jobname,@projectcode,@projecttext,@projectmanager,@uploadcode,@uploadtype,@projectmember)";
 							var results = DB.ExecuteScalar(insertquery, new
 							{
 								pono,
@@ -4350,7 +4378,8 @@ namespace WMS.Controllers
 								projecttext,
 								projectmanager,
 								uploadcode,
-								uploadtype
+								uploadtype,
+								projectmember
 							});
 						}
 					}
@@ -4397,6 +4426,7 @@ namespace WMS.Controllers
 							string projectcode = null;
 							string projecttext = null;
 							string projectmanager = null;
+							string projectmember = null;
 
 							string uploadtype = "Initial Stock";
 							if (!string.IsNullOrEmpty(mdl.projectid) && mdl.projectid != "")
@@ -4411,9 +4441,15 @@ namespace WMS.Controllers
 							{
 								projectmanager = rsltt.ToString();
 							}
+							string querypmb = "Select Max(projectmember) as projectmember from wms.wms_project where  projectcode = '" + projectcode + "' group by projectmanager";
+							var rslttmb = DB.ExecuteScalar(querypmb, null);
+							if (rslttmb != null)
+							{
+								projectmember = rslttmb.ToString();
+							}
 							string uploadcode = mdl.uploadbatchcode;
 							//insert wms_project ##pono,jobname,projectcode,projectname,projectmanager,
-							var insertquery = "INSERT INTO wms.wms_project(pono, jobname, projectcode,projectname,projectmanager,uploadcode,uploadtype)VALUES(@pono, @jobname,@projectcode,@projecttext,@projectmanager,@uploadcode,@uploadtype)";
+							var insertquery = "INSERT INTO wms.wms_project(pono, jobname, projectcode,projectname,projectmanager,uploadcode,uploadtype,projectmember)VALUES(@pono, @jobname,@projectcode,@projecttext,@projectmanager,@uploadcode,@uploadtype,@projectmember)";
 							var results = DB.ExecuteScalar(insertquery, new
 							{
 								pono,
@@ -4422,7 +4458,8 @@ namespace WMS.Controllers
 								projecttext,
 								projectmanager,
 								uploadcode,
-								uploadtype
+								uploadtype,
+								projectmember
 							});
 						}
 					}
@@ -4469,6 +4506,7 @@ namespace WMS.Controllers
 							string projectcode = null;
 							string projecttext = null;
 							string projectmanager = null;
+							string projectmember = null;
 
 							string uploadtype = "Initial Stock";
 							if (!string.IsNullOrEmpty(mdl.projectid) && mdl.projectid != "")
@@ -4483,9 +4521,15 @@ namespace WMS.Controllers
 							{
 								projectmanager = rsltt.ToString();
 							}
+							string querypmb = "Select Max(projectmember) as projectmember from wms.wms_project where  projectcode = '" + projectcode + "' group by projectmanager";
+							var rslttmb = DB.ExecuteScalar(querypmb, null);
+							if (rslttmb != null)
+							{
+								projectmember = rslttmb.ToString();
+							}
 							string uploadcode = mdl.uploadbatchcode;
 							//insert wms_project ##pono,jobname,projectcode,projectname,projectmanager,
-							var insertquery = "INSERT INTO wms.wms_project(pono, jobname, projectcode,projectname,projectmanager,uploadcode,uploadtype)VALUES(@pono, @jobname,@projectcode,@projecttext,@projectmanager,@uploadcode,@uploadtype)";
+							var insertquery = "INSERT INTO wms.wms_project(pono, jobname, projectcode,projectname,projectmanager,uploadcode,uploadtype,projectmember)VALUES(@pono, @jobname,@projectcode,@projecttext,@projectmanager,@uploadcode,@uploadtype,@projectmember)";
 							var results = DB.ExecuteScalar(insertquery, new
 							{
 								pono,
@@ -4494,7 +4538,8 @@ namespace WMS.Controllers
 								projecttext,
 								projectmanager,
 								uploadcode,
-								uploadtype
+								uploadtype,
+								projectmember
 							});
 						}
 					}

@@ -39,6 +39,9 @@ export class SubContractTransferOrderComponent implements OnInit {
   sourceplant: plantddl;
   public vendorObj: any;
   public showAck; btnDisable: boolean = false;
+  ponolist: any[] = [];
+  selectedpono: string = "";
+  filteredpos: any[];
 
 
   ngOnInit() {
@@ -197,6 +200,61 @@ export class SubContractTransferOrderComponent implements OnInit {
 
   ProjectSelected() {
     this.podetailsList = [];
+    this.ponolist = [];
+    var prj = this.selectedproject.value;
+    this.GetPONo(prj);
+  }
+  GetPONo(projectcode: string) {
+
+    this.wmsService.getPODetailsbyprojectcode(this.employee.employeeno, projectcode).subscribe(data => {
+      this.spinner.hide();
+      if (data) {
+        this.ponolist = data;
+        console.log(this.ponolist);
+      }
+      else
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Unable to fetch PO data' });
+    });
+  }
+
+  onPOSelected() {
+    this.podetailsList = [];
+    debugger;
+    if (isNullOrUndefined(this.sourceplant.locatorid)) {
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Select Source' });
+      this.selectedpono = "";
+      return;
+    }
+    var pono = this.selectedpono;
+    if (this.ponolist.filter(li => li.pono == pono).length > 0) {
+
+      this.wmsService.getMaterialRequestlistdataforgpandstore(pono, this.selectedproject.value, this.sourceplant.locatorid).subscribe(data => {
+        this.podetailsList = data;
+      });
+    }
+
+  }
+  filterpos(event) {
+    debugger;
+    if (isNullOrUndefined(this.selectedproject)) {
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Select Project' });
+      return;
+    }
+    if (isNullOrUndefined(this.sourceplant.locatorid)) {
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Select Source' });
+      this.selectedpono = "";
+      return;
+    }
+
+    this.filteredpos = [];
+
+    for (let i = 0; i < this.ponolist.length; i++) {
+      let pos = this.ponolist[i].pono;
+      if (pos.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+        this.filteredpos.push(pos);
+      }
+
+    }
   }
 
   addrows() {
@@ -357,7 +415,7 @@ export class SubContractTransferOrderComponent implements OnInit {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Transfer quantity exceeded available quantity' });
       return;
     }
-    data.value = data.unitprice * data.transferqty;
+    data.materialcost = data.unitprice * data.transferqty;
 
   }
   onDescriptionSelected(event: any, data: any, ind: number) {
@@ -467,6 +525,7 @@ export class SubContractTransferOrderComponent implements OnInit {
 
 
   onsubmit() {
+    debugger;
     if (this.podetailsList.length == 0) {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Add materials.' });
       return;
@@ -490,8 +549,18 @@ export class SubContractTransferOrderComponent implements OnInit {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Select project.' });
       return;
     }
+    if (!isNullOrUndefined(this.selectedpono)) {
+      this.mainmodel.pono = this.selectedpono;
+    }
+    var volidentry = this.podetailsList.filter(function (element, index) {
+      return (element.transferqty > 0)
+    });
+    if (volidentry.length == 0) {
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Enter tranfer quantity.' });
+      return;
+    }
     var invalidrow = this.podetailsList.filter(function (element, index) {
-      return (!element.transferqty) || (!element.materialid) || (!element.materialdescription) || (!element.requireddate) || (!element.value);
+      return (element.transferqty > 0) && ((!element.materialid) || (!element.materialdescription) || (!element.requireddate) || (!element.materialcost));
     });
 
     if (invalidrow.length > 0) {
@@ -507,6 +576,9 @@ export class SubContractTransferOrderComponent implements OnInit {
     else {
       this.mainmodel.sourcelocationcode = this.sourceplant.locatorname;
     }
+    this.podetailsList = this.podetailsList.filter(function (element, index) {
+      return (element.transferqty > 0)
+    });
 
 
     this.mainmodel.transferredby = this.employee.employeeno;

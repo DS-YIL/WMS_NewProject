@@ -154,12 +154,12 @@
             </ng-template>
 
           </p-table>
-          <p-footer>
+          <!--<p-footer>
             <div class="ui-dialog-buttonpane ui-helper-clearfix" *ngIf="showreservebtn">
               <button type="button" pButton icon="fa fa-check" class="ui-button-success" (click)="Request()" label="Request"></button>
             </div>
 
-          </p-footer>
+          </p-footer>-->
 
         </p-dialog>
       </div>
@@ -266,7 +266,7 @@
 
               </td>-->
               <td class="ptable-cell" style="text-align:right">
-                <input [disabled]="true" [(ngModel)]="rowData.plantstockavailableqty" class="form-control" type="text" name="plantavailqty" />
+                <input [disabled]="true" [(ngModel)]="rowData.availableqty" class="form-control" type="text" name="plantavailqty" />
 
               </td>
               <td class="ptable-cell" style="text-align:right">

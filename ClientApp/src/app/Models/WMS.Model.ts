@@ -337,6 +337,7 @@ export class materialistModel {
   expecteddate: any;
   returneddate: any;
   materialcost: number;
+  unitprice: number;
   availableqty: number;
   issuedqty: number;
   showdetail: boolean;
@@ -346,6 +347,7 @@ export class materialistModel {
 
 export class materialList {
   material: string;
+  materialid: string;
   materialdescription: string;
   quantity: number = 0;
   remarks: string;
@@ -356,6 +358,7 @@ export class materialList {
   stocktype: string;
   projectcode: string;
   plantstockavailableqty: number;
+  pono: string;
 
 }
 
@@ -604,6 +607,7 @@ export class invstocktransfermodel {
   transferredbyname: string;
   sourcelocationcode: string;
   destinationlocationcode: string;
+  pono: string;
 }
 
 export class assignpmmodel {
@@ -663,6 +667,7 @@ export class stocktransfermateriakmodel {
   availableqty: number;
   value: number;
   unitprice: number;
+  materialcost: number;
   subconno: string;
   projectmanager: string;
   selecteddestinationobject: locationdropdownModel;

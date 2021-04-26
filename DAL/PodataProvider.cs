@@ -211,6 +211,38 @@ namespace WMS.DAL
 			}
 		}
 
+		public async Task<IEnumerable<OpenPoModel>> getdashboardlist(string loginid)
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+
+				try
+				{
+					string query = WMSResource.PMDashboardqry.Replace("#projectmanager", loginid);
+					
+
+					await pgsql.OpenAsync();
+					var data = await pgsql.QueryAsync<OpenPoModel>(
+					   query, null, commandType: CommandType.Text);
+
+
+					return data;
+
+
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "getOpenPoList", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+				//throw new NotImplementedException();
+			}
+		}
+
 		/*
 		Name of Function : <<getPODataList>>  Author :<<Gayathri>>  
 		Date of Creation <<12-12-2019>>
@@ -3697,7 +3729,7 @@ namespace WMS.DAL
 							MaterialTransactionDetail detail = new MaterialTransactionDetail();
 							detail.id = Guid.NewGuid().ToString();
 							detail.requestid = result.ToString();
-							detail.materialid = item.material;
+							detail.materialid = item.materialid;
 							detail.requestedquantity = item.quantity;
 							detail.poitemdescription = item.Materialdescription;
 							detail.materialcost = item.materialcost;
@@ -4062,7 +4094,7 @@ namespace WMS.DAL
 					foreach (var item in dataobj)
 					{
 						var createdate = Convert.ToDateTime(item.createddate).ToString("yyyy-MM-dd");
-						string stockquery = "select * from wms.wms_stock where materialid = '" + item.materialid + "' and lower(poitemdescription) = lower('" + item.Materialdescription + "') and availableqty > 0 and itemlocation = '" + item.itemlocation + "' and createddate::DATE = '" + createdate + "' order by itemid";
+						string stockquery = "select * from wms.wms_stock where projectid='"+item.projectid+"' and pono='"+item.pono+"' and materialid = '" + item.materialid + "' and lower(poitemdescription) = lower('" + item.Materialdescription + "') and availableqty > 0 and itemlocation = '" + item.itemlocation + "' and createddate::DATE = '" + createdate + "' order by itemid";
 						var stockdata = DB.QueryAsync<StockModel>(stockquery, null, commandType: CommandType.Text);
 						if (stockdata != null)
 						{
@@ -6435,14 +6467,14 @@ namespace WMS.DAL
 		Review Date :<<>>   Reviewed By :<<>>
 		*/
 
-		public async Task<IEnumerable<IssueRequestModel>> GetItemLocationListByMaterialdescstore(string material, string description, string store)
+		public async Task<IEnumerable<IssueRequestModel>> GetItemLocationListByMaterialdescstore(string material, string description, string store, string projectid, string pono)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
 
 				try
 				{
-					string query = WMSResource.getitemlocationbystock.Replace("#materialid", material).Replace("#desc", description).Replace("#store", store);
+					string query = WMSResource.getitemlocationbystock.Replace("#materialid", material).Replace("#desc", description).Replace("#store", store).Replace("#project",projectid).Replace("#pono",pono);
 					await pgsql.OpenAsync();
 					var data = await pgsql.QueryAsync<IssueRequestModel>(
 					  query, null, commandType: CommandType.Text);
@@ -6852,6 +6884,7 @@ namespace WMS.DAL
 					AcList = result.ToList();
 					var MatRes = AcList.Where(li => li.roleid == 5).ToList();
 					var InvRes = AcList.Where(li => li.roleid == 2).ToList();
+					var aaprRes = AcList.Where(li => li.roleid == 8).ToList();
 					if (MatRes.Count() == 0)
 					{
 						userAcessNamesModel res = new userAcessNamesModel();
@@ -6867,6 +6900,27 @@ namespace WMS.DAL
 						res1.accessname = "Inventory Enquiry";
 						AcList.Add(res1);
 					}
+					if (aaprRes.Count() == 0)
+					{
+						string empstr = config.FinanceEmployeeNo;
+						string querypm = "select employeeno from wms.employee e where hodempno = '" + employeeid + "'";
+						var rsltt = pgsql.ExecuteScalar(querypm, null);
+						if (rsltt != null)
+						{
+							userAcessNamesModel res1 = new userAcessNamesModel();
+							res1.roleid = 8;
+							res1.accessname = "Approver";
+							AcList.Add(res1);
+						}
+						else if (empstr.Contains(employeeid))
+                        {
+							userAcessNamesModel res1 = new userAcessNamesModel();
+							res1.roleid = 8;
+							res1.accessname = "Approver";
+							AcList.Add(res1);
+						}
+					}
+					
 					return AcList;
 				}
 				catch (Exception Ex)
@@ -7765,6 +7819,41 @@ namespace WMS.DAL
 
 			}
 		}
+
+		/*
+	Name of Function : <<MaterialRequestdata>>  Author :<<Ramesh>>  
+	Date of Creation <<12-12-2019>>
+	Purpose : <<Material Request data>>
+	<param name="approverid"></param>
+	 <param name="pono"></param>
+	Review Date :<<>>   Reviewed By :<<>>
+	*/
+		public async Task<IEnumerable<IssueRequestModel>> MaterialRequestdataforsto(string pono, string projectcode,string store)
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+
+				try
+				{
+					string materialrequestquery = WMSResource.getmaterialsforsto.Replace("#projectid", projectcode).Replace("#pono", pono).Replace("#storeid",store);
+					await pgsql.OpenAsync();
+					var data = await pgsql.QueryAsync<IssueRequestModel>(
+					  materialrequestquery, null, commandType: CommandType.Text);
+					return data.Where(o => o.availableqty > 0);
+
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "MaterialRequestdataforgatepass", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+			}
+		}
 		/*
 		Name of Function : <<MaterialReservedata>>  Author :<<Ramesh>>  
 		Date of Creation <<12-12-2019>>
@@ -7779,6 +7868,39 @@ namespace WMS.DAL
 				try
 				{
 					string materialrequestquery = WMSResource.getmaterialstoreserve.Replace("#projectcode", projectcode);
+					await pgsql.OpenAsync();
+					var data = await pgsql.QueryAsync<IssueRequestModel>(
+					  materialrequestquery, null, commandType: CommandType.Text);
+					return data;
+
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "MaterialRequestdata", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+			}
+		}
+
+		/*
+		Name of Function : <<MaterialReservedata>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<Material Reserve data>>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
+		public async Task<IEnumerable<IssueRequestModel>> MaterialReservedata_v1()
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+
+				try
+				{
+					string materialrequestquery = WMSResource.getplantstockmaterials;
 					await pgsql.OpenAsync();
 					var data = await pgsql.QueryAsync<IssueRequestModel>(
 					  materialrequestquery, null, commandType: CommandType.Text);
@@ -10628,6 +10750,7 @@ namespace WMS.DAL
 								transfer.approverid = data.approverid;
 								transfer.isapprovalrequired = true;
 								transfer.isapproved = null;
+								transfer.pono = data.pono;
 								string userquery = "select  * from wms.employee where employeeno='" + data.approverid + "'";
 								User userdata = pgsql.QuerySingle<User>(
 								   userquery, null, commandType: CommandType.Text);
@@ -10658,7 +10781,8 @@ namespace WMS.DAL
 								transfer.approvedon,
 								transfer.approvalremarks,
 								transfer.sourcelocationcode,
-								transfer.destinationlocationcode
+								transfer.destinationlocationcode,
+								transfer.pono
 
 							});
 							trsfrid = resultsxx.ToString();
@@ -10849,7 +10973,7 @@ namespace WMS.DAL
 							//{
 							var poitemdesc = stck.materialdescription;
 							string stockinsertqry = WMSResource.insertinvtransfermaterialSTO;
-							decimal? value = stck.value;
+							decimal? value = stck.materialcost;
 							//string query2 = "select * from wms.material_valuation where projectcode = '"+data.projectcode+"' and material = '"+stck.materialid+"' order by id desc limit 1";
 							//MaterialValuation objs1 = pgsql.QueryFirstOrDefault<MaterialValuation>(
 							//   query2, null, commandType: CommandType.Text);
@@ -12466,7 +12590,7 @@ namespace WMS.DAL
 						model.approveremailid = null;
 						model.approverid = null;
 						model.pono = rv.pono;
-						model.material = rv.materialid;
+						model.materialid = rv.materialid;
 						model.requesterid = obj.requestedby;
 						model.requestedquantity = 0;
 						model.projectcode = rv.projectcode;
@@ -14548,6 +14672,8 @@ namespace WMS.DAL
 		<param name="data"></param>
 		Review Date :<<>>   Reviewed By :<<>>
 		*/
+
+
 		public string deleteuserAuth(authUser data)
 		{
 			string result = "";
@@ -14562,6 +14688,39 @@ namespace WMS.DAL
 						data.modifiedon,
 						data.modifiedby
 					});
+					result = "deleted";
+				}
+
+
+			}
+			catch (Exception ex)
+			{
+				result = ex.Message;
+			}
+
+
+			return result;
+
+		}
+
+
+		/*
+		Name of Function : <<deletedeligatePM>>  Author :<<Ramesh>>  
+		Date of Creation <<27-01-2021>>
+		Purpose : <<User role setting>>
+		<param name="data"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
+		public string deletedeligatePM(authUser data)
+		{
+			string result = "";
+			try
+			{
+				using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
+				{
+					data.modifiedon = DateTime.Now;
+					string updatequery = "delete from wms.auth_users where authid = " + data.authid + "";
+					var resultsx = DB.ExecuteScalar(updatequery);
 					result = "deleted";
 				}
 
@@ -14626,7 +14785,7 @@ namespace WMS.DAL
 						if (model.authid == 0)
 						{
 							string insertquery = WMSResource.insertAuthUser;
-							model.createdby = model.modifiedby;
+							model.createdby = model.createdby;
 							var results = DB.ExecuteScalar(insertquery, new
 							{
 								model.employeeid,

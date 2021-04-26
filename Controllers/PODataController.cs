@@ -33,6 +33,11 @@ namespace WMS.Controllers
 		{
 			return await this._poService.getOpenPoList(loginid, pono, docno, vendorid);
 		}
+		[HttpGet("GetPMdashboard")]
+		public async Task<IEnumerable<OpenPoModel>> GetPMdashboard(string loginid)
+		{
+			return await this._poService.getdashboardlist(loginid);
+		}
 		//Get list of PO 
 		[HttpGet("GetPOList")]
 		public async Task<IEnumerable<POList>> GetPoNo(string postatus)
@@ -647,10 +652,10 @@ namespace WMS.Controllers
 			return await this._poService.GetItemlocationListBymterialanddescpo(material, description, projectid, pono);
 		}
 		[HttpGet("GetItemLocationListByMaterialdescstore")]
-		public async Task<IEnumerable<IssueRequestModel>> GetItemLocationListByMaterialdescstore(string material, string description, string store)
+		public async Task<IEnumerable<IssueRequestModel>> GetItemLocationListByMaterialdescstore(string material, string description, string store, string projectid, string pono)
 		{
 
-			return await this._poService.GetItemLocationListByMaterialdescstore(material, description, store);
+			return await this._poService.GetItemLocationListByMaterialdescstore(material, description, store, projectid, pono);
 		}
 		[HttpGet("GetItemLocationListByMaterialdescpono")]
 		public async Task<IEnumerable<IssueRequestModel>> GetItemLocationListByMaterialdescpono(string material, string description, string pono)
@@ -775,11 +780,22 @@ namespace WMS.Controllers
 		{
 			return await this._poService.MaterialRequestdataforgatepass(pono, projectcode);
 		}
+		[HttpGet("getmaterialrequestforsto")]
+		public async Task<IEnumerable<IssueRequestModel>> getmaterialrequestforsto(string pono, string projectcode,string store)
+		{
+			return await this._poService.MaterialRequestdataforsto(pono, projectcode, store);
+		}
 
 		[HttpGet("getmaterialreserveListdata")]
 		public async Task<IEnumerable<IssueRequestModel>> getmaterialreserveListdata(string projectcode)
 		{
 			return await this._poService.MaterialReservedata(projectcode);
+		}
+
+		[HttpGet("getmaterialreserveListdata_v1")]
+		public async Task<IEnumerable<IssueRequestModel>> getmaterialreserveListdata_v1()
+		{
+			return await this._poService.MaterialReservedata_v1();
 		}
 
 		[HttpGet("getgatepassmaterialrequestList")]
@@ -1344,6 +1360,11 @@ namespace WMS.Controllers
 		public string deleteUserauth([FromBody] authUser obj)
 		{
 			return this._poService.deleteuserAuth(obj);
+		}
+		[HttpPost("deletedeligatePM")]
+		public string deletedeligatePM([FromBody] authUser obj)
+		{
+			return this._poService.deletedeligatePM(obj);
 		}
 		[HttpDelete("deletetestcurd/{id}")]
 		public string deletetestcurd(int id)

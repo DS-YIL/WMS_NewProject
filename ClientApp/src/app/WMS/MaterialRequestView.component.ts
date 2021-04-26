@@ -245,12 +245,14 @@ export class MaterialRequestViewComponent implements OnInit {
   }
 
   //Check for requested qty
-  onComplete(reqqty: number, avqty: number, material: any, index) {
+  onComplete(reqqty: number, avqty: number, material: any, index,data : any) {
     if (avqty < reqqty) {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Requested qty cannot exceed available qty' });
       this.materialList[index].quantity = 0;
       return false;
     }
+    data.materialcost = reqqty * data.unitprice;
+
   }
 
 //Add rows
@@ -261,7 +263,7 @@ export class MaterialRequestViewComponent implements OnInit {
       return;
     }
     if (this.materialList.length <= 0) {
-      this.materialistModel = { material: "", materialdescription: "", quantity: 0, materialcost: 0, availableqty: 0, remarks: " ", issuedqty: 0, requesterid: this.employee.employeeno, stocktype: "", projectcode: "", plantstockavailableqty:0 };
+      this.materialistModel = { material: "", materialid: "", materialdescription: "", quantity: 0, materialcost: 0, availableqty: 0, remarks: " ", issuedqty: 0, requesterid: this.employee.employeeno, stocktype: "", projectcode: "", plantstockavailableqty: 0, pono:"" };
       this.materialList.push(this.materialistModel);
     }
     else {
@@ -286,7 +288,7 @@ export class MaterialRequestViewComponent implements OnInit {
           return false;
         });
       }
-      this.materialistModel = { material: "", materialdescription: "", quantity: 0, materialcost: 0, availableqty: 0, remarks: " ", issuedqty: 0, requesterid: this.employee.employeeno, stocktype: "", projectcode: "", plantstockavailableqty: 0 };
+      this.materialistModel = { material: "", materialid: "", materialdescription: "", quantity: 0, materialcost: 0, availableqty: 0, remarks: " ", issuedqty: 0, requesterid: this.employee.employeeno, stocktype: "", projectcode: "", plantstockavailableqty: 0,pono:"" };
       this.materialList.push(this.materialistModel);
     }
    
@@ -314,7 +316,7 @@ export class MaterialRequestViewComponent implements OnInit {
     }
     else {
       var datax2 = this.materialList.filter(function (element, index) {
-        return (isNullOrUndefined(element.material) || element.material == "");
+        return (isNullOrUndefined(element.materialid) || element.materialid == "");
       });
       if (datax2.length > 0) {
         this.messageService.add({ severity: 'error', summary: '', detail: 'Add Material' });
@@ -351,6 +353,7 @@ export class MaterialRequestViewComponent implements OnInit {
         item.requesterid = this.employee.employeeno;
         item.remarks = this.requestremarks;
         item.projectcode = this.selectedproject.value;
+        item.pono = this.selectedpono;
         if (item.quantity == null)
           item.quantity = 0;
       })
@@ -394,9 +397,14 @@ export class MaterialRequestViewComponent implements OnInit {
         this.displayDD = false;
         this.displaylist = true;
 
-      this.wmsService.getMaterialRequestlistdata(this.employee.employeeno, this.pono, this.selectedproject.value).subscribe(data => {
-        this.gatepassModel.materialList = data;
-        });
+      //this.wmsService.getMaterialRequestlistdata(this.employee.employeeno, this.pono, this.selectedproject.value).subscribe(data => {
+      //  this.materialList = data;
+      //});
+      this.wmsService.getMaterialRequestlistdataforgp(this.pono, this.selectedproject.value).subscribe(data => {
+        this.materialList = data;
+      });
+
+      
        
       
       
@@ -739,7 +747,7 @@ export class MaterialRequestViewComponent implements OnInit {
     this.defaultmaterials = [];
     var prj = this.selectedproject.value;
     this.GetPONo(prj);
-    this.getdefaultmaterialstorequest(prj);
+    //this.getdefaultmaterialstorequest(prj);
   }
 
   GetPONo(projectcode: string) {
