@@ -12,7 +12,7 @@
             <th class="ptable-cell" style="text-align:center;width:70px;">Sl.No.</th>
             <th class="ptable-cell" style="text-align:center;width:200px;">Employee ID</th>
             <th class="ptable-cell" style="text-align:center;">Employee Name</th>
-            <th class="ptable-cell" style="text-align:center;">Delegate Member</th>
+            <th class="ptable-cell" style="text-align:center;;width:150px">Delegate Member</th>
             <th style="text-align: center;width: 150px;">Edit</th>
             <th style="text-align: center;width: 150px;">Delete</th>
           </tr>
@@ -41,7 +41,7 @@
               <span *ngIf="rowData.isdeleted">Not in Use</span>
               <button class="btn btn-danger btn-sm" *ngIf="!rowData.isdeleted" (click)="deleteUserauth(rowData)"><i class="fa fa-trash"></i></button>
             </td>
-</ng-template>
+        </ng-template>
         <ng-template pTemplate="emptymessage">
           <tr>
             <td colspan="5" style="text-align:center;color:red">No Records.</td>
