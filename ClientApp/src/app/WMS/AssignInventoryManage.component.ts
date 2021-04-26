@@ -65,7 +65,7 @@ export class AssignIMComponent implements OnInit {
     this.spinner.show();
     this.getlistdata = [];
     this.dynamicData = new DynamicSearchResult();
-    this.dynamicData.query = "select au.*,emp.name as employeename,au.deleteflag as isdeleted from wms.auth_users au  left outer join wms.employee emp on emp.employeeno = au.employeeid where au.roleid = 4 order by au.authid desc";
+    this.dynamicData.query = "select au.*,emp.name as employeename,au.deleteflag as isdeleted from wms.auth_users au  left outer join wms.employee emp on emp.employeeno = au.employeeid where au.roleid = 4 and au.createdby='" + this.employee.employeeno + "' order by au.authid desc";
     this.wmsService.GetListItems(this.dynamicData).subscribe(data => {
       this.getlistdata = data;
       this.spinner.hide();
