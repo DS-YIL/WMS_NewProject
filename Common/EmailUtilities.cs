@@ -323,7 +323,7 @@ namespace WMS.Common
 			}
 			else if (subjecttype == 19)
 			{
-				mailMessage.Subject = "Material reurn with return id :" + emlSndngList.returnid;
+				mailMessage.Subject = "Material return with return id :" + emlSndngList.returnid;
 				subbody = "Please click on the below link for material return details. ";
 				link = linkurl + "WMS/Email/materialreturndashboard?returnid=" + emlSndngList.returnid.Trim();
 			}

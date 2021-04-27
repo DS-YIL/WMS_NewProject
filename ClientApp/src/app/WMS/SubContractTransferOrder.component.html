@@ -98,7 +98,7 @@
   </td>-->
               <td class="ptable-cell" style="text-align:right;width:15%;">
                 <p-calendar [(ngModel)]="rowData.requireddate" [style]="{'width':'100%'}" [inputStyle]="{'width':'80%'}" [inline]="false"
-                            placeholder="Select Date" dateFormat="dd/mm/yy" [showIcon]="true" appendTo="body"></p-calendar>
+                            placeholder="Select Date" dateFormat="dd/mm/yy" [showIcon]="true" appendTo="body" [minDate]="minDate"></p-calendar>
               </td>
               <!--<td style="text-align:center;width:5%;">
                 <button (click)="deleteRow(ri)" class="btn btn-danger" style="margin-top:10%"><i class="fa fa-trash"></i></button>
@@ -225,6 +225,10 @@
     </div>
     <div class="row col-lg-12 col-md-12 col-sm-12 pt-2 card-footer" *ngIf="addprocess">
       <div class="col-lg-5 col-md-5 col-sm-5">
+        <div class="form-inline">
+          <label><strong>Remarks:<span style="color:red">*</span></strong>&nbsp;</label>
+          <textarea type="text" [(ngModel)]="mainmodel.remarks" placeholder="Remarks" style="width:80%;resize:none" *ngIf="addprocess"></textarea>
+        </div>
       </div>
       <div class="col-lg-2 col-md-2 col-sm-2 ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" class="btn btn-success" (click)="onsubmit()">Submit</button></div>
       <div class="col-lg-5 col-md-5 col-sm-5">

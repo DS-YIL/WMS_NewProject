@@ -111,7 +111,7 @@
               <td class="ptable-cell" style="text-align:right;width:15%;">
                 <!--<p-calendar class="mprldatepick" [(ngModel)]="materialistModel.requireddate" dateFormat="dd/mm/yy" [monthNavigator]="true" [yearNavigator]="true" yearRange="1900:2050"></p-calendar>-->
                 <p-calendar [(ngModel)]="rowData.requireddate" [style]="{'width':'100%'}" [inputStyle]="{'width':'80%'}" [inline]="false"
-                            placeholder="Select Date" dateFormat="dd/mm/yy" [showIcon]="true" appendTo="body"></p-calendar>
+                            placeholder="Select Date" dateFormat="dd/mm/yy" [showIcon]="true" appendTo="body" [minDate]="minDate"></p-calendar>
                 <!--<input pInputText type="date" style="text-align:right" class="form-control" [min]="0" [(ngModel)]="rowData.requireddate">-->
               </td>
               <!--<td style="text-align:center;width:5%;">
@@ -250,12 +250,15 @@
     </div>
     <div class="row col-lg-12 col-md-12 col-sm-12 pt-2 card-footer" *ngIf="addprocess">
       <div class="col-lg-5 col-md-5 col-sm-5">
-        <!--<label>Remarks:</label>-->
+        <div class="form-inline">
+          <label><strong>Remarks:<span style="color:red">*</span></strong>&nbsp;</label>
+          <textarea type="text" [(ngModel)]="mainmodel.remarks" placeholder="Remarks" style="width:80%;resize:none" *ngIf="addprocess"></textarea>
+        </div>
       </div>
       <!--<div class="col-lg-6 col-md-6 col-sm-6 ">
-      <input [(ngModel)]="rowData.remarks" class="form-control" type="text" name="{{rowData.remarks}}" />
-      </div>-->
-    <div class="col-lg-2 col-md-2 col-sm-2 ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" class="btn btn-success" (click)="onsubmit1()">Submit</button></div>
+  <input [(ngModel)]="rowData.remarks" class="form-control" type="text" name="{{rowData.remarks}}" />
+  </div>-->
+      <div class="col-lg-2 col-md-2 col-sm-2 ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" class="btn btn-success" (click)="onsubmit1()">Submit</button></div>
       <div class="col-lg-5 col-md-5 col-sm-5">
       </div>
 

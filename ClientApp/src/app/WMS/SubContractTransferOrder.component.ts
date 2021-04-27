@@ -42,6 +42,7 @@ export class SubContractTransferOrderComponent implements OnInit {
   ponolist: any[] = [];
   selectedpono: string = "";
   filteredpos: any[];
+  minDate: Date;
 
 
   ngOnInit() {
@@ -49,7 +50,7 @@ export class SubContractTransferOrderComponent implements OnInit {
       this.employee = JSON.parse(localStorage.getItem("Employee"));
     else
       this.router.navigateByUrl("Login");
-
+    this.minDate = new Date();
     this.sourceplant = new plantddl();
     this.plantlist = [];
     this.stocktransferlist = [];
@@ -536,6 +537,10 @@ export class SubContractTransferOrderComponent implements OnInit {
     }
     if (isNullOrUndefined(this.vendorObj)) {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Select Vendor.' });
+      return;
+    }
+    if (isNullOrUndefined(this.mainmodel.remarks) || this.mainmodel.remarks.trim() == "") {
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Enter Remarks.' });
       return;
     }
     this.mainmodel.sourceplant = this.sourceplant.locatorname;

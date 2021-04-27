@@ -8,10 +8,12 @@ import { Materials, stocktransfermodel, locationddl, binddl, rackddl, StockModel
 import { MessageService } from 'primeng/api';
 import { first } from 'rxjs/operators';
 import { isNullOrUndefined } from 'util';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-StockTransferOrder',
-  templateUrl: './StockTransferOrder.component.html'
+  templateUrl: './StockTransferOrder.component.html',
+  providers: [DatePipe]
 })
 export class StockTransferOrderComponent implements OnInit {
   locationlist: locationddl[] = [];
@@ -35,6 +37,7 @@ export class StockTransferOrderComponent implements OnInit {
   public selectedlist: Array<searchList> = [];
   public searchresult: Array<object> = [];
   public cuurentrowresponse: WMSHttpResponse;
+  minDate: Date;
   filteredmats: any[];
   val: any;
   filteredmatdesc: any[];
@@ -46,7 +49,7 @@ export class StockTransferOrderComponent implements OnInit {
   
 
 
-  constructor(private messageService: MessageService, private wmsService: wmsService, private route: ActivatedRoute, private router: Router, public constants: constants, private spinner: NgxSpinnerService) { }
+  constructor(private messageService: MessageService, private wmsService: wmsService, private route: ActivatedRoute, private datePipe: DatePipe, private router: Router, public constants: constants, private spinner: NgxSpinnerService) { }
 
   public podetailsList: Array<stocktransfermateriakmodel> = [];
   public employee: Employee;
@@ -82,6 +85,7 @@ export class StockTransferOrderComponent implements OnInit {
     else
       this.router.navigateByUrl("Login");
 
+    this.minDate = new Date();
     this.sourceplant = new plantddl();
     this.destinationplant = new plantddl();
     this.plantlist = [];
@@ -91,6 +95,7 @@ export class StockTransferOrderComponent implements OnInit {
     this.mainmodel = new invstocktransfermodel();
     this.mainmodel.sourceplant = "1002";
     this.mainmodel.destinationplant = "1003";
+    this.mainmodel.remarks = "";
     this.emptytransfermodel = new stocktransfermateriakmodel();
     this.selectedbin = new binddl();
     this.selectedlocation = new locationddl();
@@ -1122,6 +1127,10 @@ export class StockTransferOrderComponent implements OnInit {
 
     if (!this.mainmodel.sourceplant || !this.mainmodel.destinationplant) {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Select locations.' });
+      return;
+    }
+    if (isNullOrUndefined(this.mainmodel.remarks) || this.mainmodel.remarks.trim() == "") {
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Enter Remarks.' });
       return;
     }
 
