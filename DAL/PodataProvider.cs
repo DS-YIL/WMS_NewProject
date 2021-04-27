@@ -6885,7 +6885,7 @@ namespace WMS.DAL
 					var MatRes = AcList.Where(li => li.roleid == 5).ToList();
 					var InvRes = AcList.Where(li => li.roleid == 2).ToList();
 					var aaprRes = AcList.Where(li => li.roleid == 8).ToList();
-					if (MatRes.Count() == 0)
+					if (MatRes.Count() == 0 && employeeid != "000000")
 					{
 						userAcessNamesModel res = new userAcessNamesModel();
 						res.roleid = 5;
@@ -6893,14 +6893,14 @@ namespace WMS.DAL
 						res.subroleid = "1,2";
 						AcList.Add(res);
 					}
-					if (InvRes.Count() == 0)
+					if (InvRes.Count() == 0 && employeeid != "000000")
 					{
 						userAcessNamesModel res1 = new userAcessNamesModel();
 						res1.roleid = 2;
 						res1.accessname = "Inventory Enquiry";
 						AcList.Add(res1);
 					}
-					if (aaprRes.Count() == 0)
+					if (aaprRes.Count() == 0 && employeeid != "000000")
 					{
 						string empstr = config.FinanceEmployeeNo;
 						string querypm = "select employeeno from wms.employee e where hodempno = '" + employeeid + "'";

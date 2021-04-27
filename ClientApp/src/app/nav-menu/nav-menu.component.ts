@@ -10,6 +10,7 @@ import { environment } from 'src/environments/environment'
 import { pageModel, ddlmodel } from '../Models/WMS.Model';
 import { isNullOrUndefined } from 'util';
 import { emit } from 'cluster';
+import * as $ from 'jquery';
 
 @Component({
   selector: 'app-nav-menu',
@@ -97,10 +98,13 @@ export class NavMenuComponent implements OnInit {
     }
     if (localStorage.getItem("Employee")) {
       this.loggedin = true;
-      let element: HTMLElement = document.getElementById("btnuser") as HTMLElement;
-      element.hidden = false;
-      let elementx: HTMLElement = document.getElementById("notlogged") as HTMLElement;
-      elementx.hidden = true;
+      //let element: HTMLElement = document.getElementById("btnuser") as HTMLElement;
+      //element.hidden = false;
+      //let elementx: HTMLElement = document.getElementById("notlogged") as HTMLElement;
+      //elementx.hidden = true;
+      $("#btnuser").show();
+      $("#notlogged").hide();
+      $("#menudiv").show();
       this.emp = JSON.parse(localStorage.getItem("Employee")) as Employee;
       this.dataSharingService.imageurlshare.next(this.imgurl + this.emp.employeeno + ".jpg");
       this.loggeduserdata.push(this.emp);
@@ -113,7 +117,7 @@ export class NavMenuComponent implements OnInit {
       this.dataSharingService.usernameshare.next(this.emp.name);
       if (localStorage.getItem("userroles") && this.emp.roleid == "0") {
         this.userrolelist = JSON.parse(localStorage.getItem("userroles")) as userAcessNamesModel[];
-        this.bindMenuwithoutrole();
+        this.getrbalistforwithoutrole();
       }
       else {
         if (localStorage.getItem("userroles")) {
@@ -159,12 +163,16 @@ export class NavMenuComponent implements OnInit {
 
     }
     else {
-      let element: HTMLElement = document.getElementById("btnuser") as HTMLElement;
-      element.hidden = true;
-      let elementx: HTMLElement = document.getElementById("notlogged") as HTMLElement;
-      elementx.hidden = false;
-      let element1: HTMLDivElement = document.getElementById("menudiv") as HTMLDivElement;
-      element1.hidden = true;
+      //let element: HTMLElement = document.getElementById("btnuser") as HTMLElement;
+      //element.hidden = true;
+      //let elementx: HTMLElement = document.getElementById("notlogged") as HTMLElement;
+      //elementx.hidden = false;
+      //let element1: HTMLDivElement = document.getElementById("menudiv") as HTMLDivElement;
+      //element1.hidden = true;
+      $("#btnuser").hide();
+      $("#notlogged").show();
+      $("#menudiv").hide();
+
       this.router.navigateByUrl("WMS/Login");
     }
   }
@@ -183,6 +191,18 @@ export class NavMenuComponent implements OnInit {
         }
 
 
+      }
+    })
+
+  }
+  getrbalistforwithoutrole() {
+    debugger;
+    this.wmsService.getrbadata().subscribe(data => {
+      if (data.length > 0) {
+        debugger;
+        this.rbalist = data;
+        localStorage.setItem('rbalist', JSON.stringify(data));
+        this.bindMenuwithoutrole();
       }
     })
 
@@ -207,12 +227,15 @@ export class NavMenuComponent implements OnInit {
   bindMenuForEmailNav(eurl: any) {
     debugger;
     if (eurl.includes("/Email")) {
-      let element: HTMLElement = document.getElementById("btnuser") as HTMLElement;
-      element.hidden = false;
-      let elementx: HTMLElement = document.getElementById("notlogged") as HTMLElement;
-      elementx.hidden = true;
-      let element1: HTMLDivElement = document.getElementById("menudiv") as HTMLDivElement;
-      element1.hidden = false;
+      //let element: HTMLElement = document.getElementById("btnuser") as HTMLElement;
+      //element.hidden = false;
+      //let elementx: HTMLElement = document.getElementById("notlogged") as HTMLElement;
+      //elementx.hidden = true;
+      //let element1: HTMLDivElement = document.getElementById("menudiv") as HTMLDivElement;
+      //element1.hidden = false;
+      $("#btnuser").show();
+      $("#notlogged").hide();
+      $("#menudiv").show();
       if (eurl.includes("/Email/GRNPosting?GateEntryNo")) {
         var found = false;
         this.userrolelist.forEach(item => {
@@ -610,9 +633,13 @@ export class NavMenuComponent implements OnInit {
       { label: 'Log Out', icon: 'pi pi-fw pi-angle-right', command: () => this.logout() }
     ];
     this.items.push({ label: 'Home', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-home', command: () => this.router.navigateByUrl('WMS/Home'), styleClass: 'active' });
-    let element1: HTMLDivElement = document.getElementById("menudiv") as HTMLDivElement;
-    element1.hidden = false;
+    //let element1: HTMLDivElement = document.getElementById("menudiv") as HTMLDivElement;
+    //element1.hidden = false;
+    this.dataSharingService.meniitems.next(this.items);
+    this.dataSharingService.loggedroleshare.next("");
+    $("#menudiv").show();
     this.router.navigateByUrl("WMS/Home");
+   
   }
   activeMenu(event) {
     let node;
@@ -1027,9 +1054,10 @@ export class NavMenuComponent implements OnInit {
         this.items.push({ label: 'Sub Contract Annexure', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/AnnexureReport') });
       }
 
-      let element1x: HTMLDivElement = document.getElementById("menudiv") as HTMLDivElement;
-      element1x.hidden = false;
+      //let element1x: HTMLDivElement = document.getElementById("menudiv") as HTMLDivElement;
+      //element1x.hidden = false;
       this.dataSharingService.meniitems.next(this.items);
+      $("#menudiv").show();
       if (!isNullOrUndefined(eurl) && eurl != "") {
         this.nevigatefromrbaforemail(rba, eurl);
       }
@@ -1067,20 +1095,23 @@ export class NavMenuComponent implements OnInit {
     else if (page == "Count" && rba.cyclecount_approval) {
       this.router.navigateByUrl('WMS/Cyclecount');
     }
-    if (page == "Putaway" && rba.put_away) {
+    else if (page == "Putaway" && rba.put_away) {
       this.router.navigateByUrl('WMS/WarehouseIncharge');
     }
-    if (page == "Receive" && rba.receive_material) {
+    else if (page == "Receive" && rba.receive_material) {
       this.router.navigateByUrl('WMS/GRNPosting');
     }
-    if (page == "Issue" && rba.material_issue) {
+    else if (page == "Issue" && rba.material_issue) {
       this.router.navigateByUrl('WMS/MaterialIssueDashboard');
     }
-    if (page == "onhold" && rba.receive_material) {
+    else if (page == "onhold" && rba.receive_material) {
       this.router.navigateByUrl('WMS/HoldGRView');
     }
-    if (page == "notify" && rba.notify_to_finance) {
+    else if (page == "notify" && rba.notify_to_finance) {
       this.router.navigateByUrl('WMS/Putawaynotify');
+    }
+    else {
+      this.router.navigateByUrl('WMS/Home');
     }
 
     sessionStorage.removeItem("userdashboardpage");
@@ -1097,45 +1128,42 @@ export class NavMenuComponent implements OnInit {
         this.router.navigateByUrl('WMS/Home');
       }
     }
-    if (this.emp.roleid == "2") {
+    else if (this.emp.roleid == "2") {
       this.router.navigateByUrl('WMS/Home');
     }
-    if (this.emp.roleid == "3") {
+    else if (this.emp.roleid == "3") {
       this.router.navigateByUrl('WMS/Home');
     }
-    if (this.emp.roleid == "4") {
+    else if (this.emp.roleid == "4") {
       this.router.navigateByUrl('WMS/Home');
     }
-    if (this.emp.roleid == "5") {
+    else if (this.emp.roleid == "5") {
+        this.router.navigateByUrl('WMS/Home');
+      }
+    else if (this.emp.roleid == "6") {
+      this.router.navigateByUrl('WMS/Home');
+    }
+    else if (this.emp.roleid == "7") {
       if (rba.pmdashboard_view) {
         this.router.navigateByUrl('WMS/Dashboard');
       }
       else {
         this.router.navigateByUrl('WMS/Home');
       }
-
     }
-    if (this.emp.roleid == "6") {
+    else if (this.emp.roleid == "8") {
       this.router.navigateByUrl('WMS/Home');
     }
-    if (this.emp.roleid == "7") {
-      if (rba.pmdashboard_view) {
-        this.router.navigateByUrl('WMS/Dashboard');
-      }
-      else {
-        this.router.navigateByUrl('WMS/Home');
-      }
-    }
-    if (this.emp.roleid == "8") {
+    else if (this.emp.roleid == "9") {
       this.router.navigateByUrl('WMS/Home');
     }
-    if (this.emp.roleid == "9") {
+    else if (this.emp.roleid == "10") {
       this.router.navigateByUrl('WMS/Home');
     }
-    if (this.emp.roleid == "10") {
+    else if (this.emp.roleid == "11") {
       this.router.navigateByUrl('WMS/Home');
     }
-    if (this.emp.roleid == "11") {
+    else{
       this.router.navigateByUrl('WMS/Home');
     }
 
@@ -1394,22 +1422,27 @@ export class NavMenuComponent implements OnInit {
     localStorage.removeItem("userroles");
     sessionStorage.removeItem("userdashboardpage");
     this.loggedin = false;
-    let element: HTMLElement = document.getElementById("btnuser") as HTMLElement;
-    element.hidden = true;
-    let elementx: HTMLElement = document.getElementById("notlogged") as HTMLElement;
-    elementx.hidden = false;
-    let element1: HTMLDivElement = document.getElementById("menudiv") as HTMLDivElement;
-    element1.hidden = true;
+    //let element: HTMLElement = document.getElementById("btnuser") as HTMLElement;
+    //element.hidden = true;
+    //let elementx: HTMLElement = document.getElementById("notlogged") as HTMLElement;
+    //elementx.hidden = false;
+    //let element1: HTMLDivElement = document.getElementById("menudiv") as HTMLDivElement;
+    //element1.hidden = true;
+    $("#btnuser").hide();
+    $("#notlogged").show();
+    $("#menudiv").hide();
     this.overlaymodel.hide();
     this.router.navigateByUrl("WMS/Login");
   }
   userloggedHandler(emp: Employee) {
     debugger;
+    $("#menudiv").show();
     this.loggedin = true;
     this.ngOnInit();
   }
   changemenu() {
     debugger;
+    $("#menudiv").show();
     this.ngOnInit();
 
   }

@@ -1252,7 +1252,7 @@ export class HomeComponent implements OnInit {
   }
 }
   activeCard(event, type: string) {
-
+    debugger;
     this.firstload = false;
     this.nodes.forEach(item => {
       item.classList.remove("cardactive");
@@ -1274,7 +1274,7 @@ export class HomeComponent implements OnInit {
         this.navigatebyrole(this.roleidforinbound);
       }
       else {
-        this.router.navigateByUrl('WMS/SecurityCheck');
+        this.router.navigateByUrl(decodeURIComponent('WMS/SecurityCheck'));
       }
 
     }
