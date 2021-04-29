@@ -1585,7 +1585,7 @@ namespace WMS.Controllers
 									uploadcode,
 									projectmember
 								});
-								
+
 							}
 
 
@@ -2225,8 +2225,8 @@ namespace WMS.Controllers
 						try
 						{
 							// add master table data for store,rack,bin
-							if(stag_data.store == null && stag_data.store.Trim() == "")
-                            {
+							if (stag_data.store == null && stag_data.store.Trim() == "")
+							{
 								stag_data.store = "EC C BLOCK";
 
 							}
@@ -4566,115 +4566,135 @@ namespace WMS.Controllers
 		[Route("uploadProjectMaster")]
 		public IActionResult uploadProjectMaster()
 		{
+
+			List<System.IO.FileInfo> files = null;
+			string serverPath = "";
+			//Getting files from server
 			try
 			{
-				string serverPath = "";
-				using (NpgsqlConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
+				if (config.EmailType.ToString().ToLower().Trim() == "test")
 				{
-					serverPath = config.FilePath;
-					var filePath = serverPath + "PM_List_All_SO" + DateTime.Now.ToString("dd-MM-yyyy").Replace("-", "_") + ".xlsx";
-					//var filePath = @"D:\YILProjects\WMS\WMSFiles\PM_List_All_SO.xlsx";
-					DB.Open();
-					var filePathstr = filePath;
-					string[] filearr = filePathstr.Split("\\");
-					string nameoffile = filearr[filearr.Length - 1];
-					DataTable dtexcel = new DataTable();
+					serverPath = @"\\ZAWMS-001\WMS_StagingFiles\Daily_PM_Files\";
+				}
+				else
+				{
+					serverPath = @"\\ZAWMS-003\WMS_StagingFiles\Daily_PM_Files\";
+				}
+				using (new NetworkConnection(serverPath, new NetworkCredential(@"ECH_Admin", "Jan@2019")))
+				{
+					var directory = new DirectoryInfo(serverPath);
+					DateTime from_date = DateTime.Now.AddDays(-7);
+					DateTime to_date = DateTime.Now;
+					files = directory.GetFiles()
+					   .Where(file => file.LastWriteTime >= from_date && file.LastWriteTime <= to_date).ToList();
 
-					string poitem = "";
-					System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
-					using (var stream1 = System.IO.File.Open(filePath, FileMode.Open, FileAccess.Read))
+					string uploadguid = Guid.NewGuid().ToString();
+					using (NpgsqlConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
 					{
-						using (var reader = ExcelReaderFactory.CreateReader(stream1))
+						foreach (var file in files)
 						{
+							string filename = Path.GetFileName(file.Name);
+							string storeQuery = "select filename from wms.auditlog a where Lower(filename) = Lower('" + filename + "') limit 1";
+							var fileexists = DB.ExecuteScalar(storeQuery, null);
 
-							var result = reader.AsDataSet(new ExcelDataSetConfiguration()
+							if (fileexists == null)
 							{
-								ConfigureDataTable = (_) => new ExcelDataTableConfiguration()
+								string filePath = serverPath + filename;
+								DataTable dtexcel = new DataTable();
+								System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+								using (var stream1 = System.IO.File.Open(filePath, FileMode.Open, FileAccess.Read))
 								{
-									UseHeaderRow = true
+									using (var reader = ExcelReaderFactory.CreateReader(stream1))
+									{
+
+										var result = reader.AsDataSet(new ExcelDataSetConfiguration()
+										{
+											ConfigureDataTable = (_) => new ExcelDataTableConfiguration()
+											{
+												UseHeaderRow = true
+											}
+										});
+
+										dtexcel = result.Tables[0];
+
+									}
 								}
-							});
 
-							dtexcel = result.Tables[0];
 
+								string uploadcode = Guid.NewGuid().ToString();
+								foreach (DataRow row in dtexcel.Rows)
+								{
+
+									StagingModel model = new StagingModel();
+									try
+									{
+										model.projectcode = Conversion.toStr(row["Project Definition"]);
+										model.description = Conversion.toStr(row["Description"]);
+										model.dateofcreation = Conversion.TodtTime(row["Date of Creation"]);
+										model.globalpmno = Conversion.toStr(row["Project Manager"]);
+										model.ProjectManagerName = Conversion.toStr(row["Project Manager Name"]);
+										if (!string.IsNullOrEmpty(model.globalpmno))
+										{
+											string empIdQuery = "select employeeno from wms.employee where globalempno = '" + model.globalpmno + "'";
+											model.projectmanager = DB.QuerySingleOrDefault<string>(
+															empIdQuery, null, commandType: CommandType.Text);
+										}
+										string Error_Description = "";
+										bool dataloaderror = false;
+										if (string.IsNullOrEmpty(model.projectcode.Replace('.', '#')))
+											Error_Description += "There is NO Project Code";
+										if (string.IsNullOrEmpty(model.globalpmno))
+											Error_Description += ", No Project Manager";
+
+										if (!string.IsNullOrEmpty(Error_Description))
+										{
+											dataloaderror = true;
+											model.dataloaderror = true;
+											model.error_description = Error_Description;
+										}
+
+										var insertquery = "INSERT INTO wms.stag_projectmaster(projectcode,description,dateofcreation,globalpmno,projectmanager,ProjectManagerName,datasource,createddate,DataloadErrors ,Error_Description,uploadcode)";
+										insertquery += " VALUES(@projectcode,@description, @dateofcreation,@globalpmno,@projectmanager,@ProjectManagerName,'SAP',current_timestamp,@dataloaderror,@error_description,@uploadcode)";
+										var results = DB.ExecuteScalar(insertquery, new
+										{
+											model.projectcode,
+											model.description,
+											model.dateofcreation,
+											model.globalpmno,
+											model.projectmanager,
+											model.ProjectManagerName,
+											dataloaderror,
+											model.error_description,
+											uploadcode
+										});
+									}
+									catch (Exception e)
+									{
+										var res = e;
+										log.ErrorMessage("StagingController", "uploadProjectMaster", e.StackTrace.ToString(), "projectcode:" + model.projectcode + "error:" + e.Message.ToString(), url);
+										continue;
+									}
+
+									DB.Close();
+									AuditLog auditlog = new AuditLog();
+									auditlog.filename = filename;
+									auditlog.filelocation = filePath;
+									auditlog.uploadedon = DateTime.Now;
+									auditlog.uploadedto = "STAG_ProjectMaster_SAP";
+									auditlog.modulename = "uploadProjectMaster";
+									auditlog.uploadcode = uploadcode;
+
+									loadAuditLog(auditlog);
+									loadProjectMasterData(uploadcode);
+								}
+							}
 						}
 					}
-
-
-					string uploadcode = Guid.NewGuid().ToString();
-					int i = 0;
-					foreach (DataRow row in dtexcel.Rows)
-					{
-
-
-						try
-						{
-							StagingModel model = new StagingModel();
-							model.projectcode = Conversion.toStr(row["Project Definition"]);
-							model.description = Conversion.toStr(row["Description"]);
-							model.dateofcreation = Conversion.TodtTime(row["Date of Creation"]);
-							model.globalpmno = Conversion.toStr(row["Project Manager"]);
-							model.ProjectManagerName = Conversion.toStr(row["Project Manager Name"]);
-							if (!string.IsNullOrEmpty(model.globalpmno))
-							{
-								string empIdQuery = "select employeeno from wms.employee where globalempno = '" + model.globalpmno + "'";
-								model.projectmanager = DB.QuerySingleOrDefault<string>(
-												empIdQuery, null, commandType: CommandType.Text);
-							}
-							string Error_Description = "";
-							bool dataloaderror = false;
-							if (string.IsNullOrEmpty(model.projectcode.Replace('.', '#')))
-								Error_Description += "There is NO Project Code";
-							if (string.IsNullOrEmpty(model.globalpmno))
-								Error_Description += ", No Project Manager";
-
-							if (!string.IsNullOrEmpty(Error_Description))
-							{
-								dataloaderror = true;
-								model.dataloaderror = true;
-								model.error_description = Error_Description;
-							}
-
-							var insertquery = "INSERT INTO wms.stag_projectmaster(projectcode,description,dateofcreation,globalpmno,projectmanager,ProjectManagerName,datasource,createddate,DataloadErrors ,Error_Description,uploadcode)";
-							insertquery += " VALUES(@projectcode,@description, @dateofcreation,@globalpmno,@projectmanager,@ProjectManagerName,'SAP',current_timestamp,@dataloaderror,@error_description,@uploadcode)";
-							var results = DB.ExecuteScalar(insertquery, new
-							{
-								model.projectcode,
-								model.description,
-								model.dateofcreation,
-								model.globalpmno,
-								model.projectmanager,
-								model.ProjectManagerName,
-								dataloaderror,
-								model.error_description,
-								uploadcode
-							});
-						}
-						catch (Exception e)
-						{
-							var res = e;
-							log.ErrorMessage("StagingController", "uploadProjectMaster", e.StackTrace.ToString(), "PO:" + poitem + "error:" + e.Message.ToString(), url);
-							continue;
-						}
-					}
-
-					DB.Close();
-					AuditLog auditlog = new AuditLog();
-					auditlog.filename = nameoffile;
-					auditlog.filelocation = filePath;
-					auditlog.uploadedon = DateTime.Now;
-					auditlog.uploadedto = "STAG_ProjectMaster_SAP";
-					auditlog.modulename = "uploadProjectMaster";
-					auditlog.uploadcode = uploadcode;
-
-					loadAuditLog(auditlog);
-					loadProjectMasterData(uploadcode);
 				}
 			}
-			catch (Exception e)
+			catch (Exception ex)
 			{
-				var res = e;
-				log.ErrorMessage("StagingController", "uploadProjectMaster", e.StackTrace.ToString(), "error:" + e.Message.ToString(), url);
+				log.ErrorMessage("StagingController", "uploadProjectMaster", ex.StackTrace.ToString(), "error:" + ex.Message.ToString(), url);
 			}
 			return Ok(true);
 		}
