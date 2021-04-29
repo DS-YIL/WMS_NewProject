@@ -12,7 +12,7 @@ import { DatePipe, DecimalPipe } from '@angular/common';
 import { isNullOrUndefined } from 'util';
 @Component({
   selector: 'app-MaterialRequest',
-  templateUrl: './MaterialRequestView.component.html',
+  templateUrl: './MaterialRequestView.component.html', 
   providers: [DatePipe,DecimalPipe]
 })
 export class MaterialRequestViewComponent implements OnInit {
@@ -73,6 +73,7 @@ export class MaterialRequestViewComponent implements OnInit {
   selectedsupplier: string = "";
   filteredpos: any[];
   filteredsuppliers: any[];
+  selectedmuliplepo: any[];
   //Email
   reqid: string = "";
   ngOnInit() {
@@ -98,7 +99,7 @@ export class MaterialRequestViewComponent implements OnInit {
 
     }
 
-
+    this.selectedmuliplepo = [];
    
     //this.getdefaultmaterialstorequest();
     this.getprojects();
@@ -353,7 +354,6 @@ export class MaterialRequestViewComponent implements OnInit {
         item.requesterid = this.employee.employeeno;
         item.remarks = this.requestremarks;
         item.projectcode = this.selectedproject.value;
-        item.pono = this.selectedpono;
         if (item.quantity == null)
           item.quantity = 0;
       })
@@ -388,41 +388,58 @@ export class MaterialRequestViewComponent implements OnInit {
     debugger;
     this.materialList = [];
     this.selectedsupplier = "";
-    var pono = this.selectedpono;
-    if (this.ponolist.filter(li => li.pono == pono).length > 0) {
-    
-        //var data = this.ponolist.find(li => li.pono == pono);
-        //this.suppliername = data["suppliername"];
+    var pono = "";
+    this.displayDD = false;
+    this.displaylist = true;
+    if (this.selectedmuliplepo && this.selectedmuliplepo.length > 0) {
+      var i = 0;
+      this.selectedmuliplepo.forEach(item => {
+        if (i > 0) {
+          pono += ",";
+        }
+        pono += "'"+item.pono+"'";
+        i++;
+      });
+      this.wmsService.getMaterialRequestlistdataforgp(pono, this.selectedproject.value).subscribe(data => {
+        this.materialList = data;
         this.pono = pono;
         this.displayDD = false;
         this.displaylist = true;
-
-      //this.wmsService.getMaterialRequestlistdata(this.employee.employeeno, this.pono, this.selectedproject.value).subscribe(data => {
-      //  this.materialList = data;
-      //});
-      this.wmsService.getMaterialRequestlistdataforgp(this.pono, this.selectedproject.value).subscribe(data => {
-        this.materialList = data;
       });
+    }
+   
+    //if (this.ponolist.filter(li => li.pono == pono).length > 0) {
+    //    this.pono = pono;
+    //    this.displayDD = false;
+    //    this.displaylist = true;
+
+    //  //this.wmsService.getMaterialRequestlistdata(this.employee.employeeno, this.pono, this.selectedproject.value).subscribe(data => {
+    //  //  this.materialList = data;
+    //  //});
+    //  this.wmsService.getMaterialRequestlistdataforgp(this.pono, this.selectedproject.value).subscribe(data => {
+    //    this.materialList = data;
+    //  });
 
       
        
       
       
-    }
-    else {
-      this.requestMatData.suppliername == null;
-      this.displayDD = true;
-      this.pono = null;
-      this.displaylist = false;
+    //}
+    //else {
+    //  this.requestMatData.suppliername == null;
+    //  this.displayDD = true;
+    //  this.pono = null;
+    //  this.displaylist = false;
      
      
-    }
+    //}
   }
 
   onSupplierSelected() {
     debugger;
     this.materialList = [];
     this.selectedpono = "";
+    this.selectedmuliplepo = [];
     var pono = this.selectedsupplier;
     if (this.ponolist.filter(li => li.suppliername == pono).length > 0) {
       this.pono = pono;
@@ -447,6 +464,7 @@ export class MaterialRequestViewComponent implements OnInit {
   close() {
     this.suppliername = null;
     this.selectedpono = "";
+    this.selectedmuliplepo = [];
     this.selectedsupplier = "";
     this.selectedproject = null;
     this.ponumber = null;
@@ -458,6 +476,7 @@ export class MaterialRequestViewComponent implements OnInit {
   resetmaterial() {
     this.suppliername = null;
     this.selectedpono = "";
+    this.selectedmuliplepo = [];
     this.selectedsupplier = "";
     this.ponumber = null;
     this.requestMatData = new requestData();
@@ -737,6 +756,7 @@ export class MaterialRequestViewComponent implements OnInit {
     this.filteredpos = [];
     this.filteredsuppliers = [];
     this.selectedpono = null;
+    this.selectedmuliplepo = [];
     this.selectedsupplier = null;
     this.materialList = [];
     this.ponolist = [];

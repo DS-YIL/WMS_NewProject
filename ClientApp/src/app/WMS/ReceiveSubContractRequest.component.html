@@ -101,6 +101,7 @@
         <ng-template pTemplate="header">
           <tr class="mprltbldata">
             <th style="text-align:center;width:70px">Sl.No.</th>
+            <th style="text-align:center;width:150px">PONo</th>
             <th style="text-align:center;width:200px;">Material</th>
             <th style="text-align:center">PO Item Description</th>
             <th style="text-align:center;width:150px">Request Quantity</th>
@@ -110,7 +111,8 @@
           <tr>
             <th></th>
             <!--<th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'pono', 'contains')"></th>-->
-            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'material', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'pono', 'startsWith')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'material', 'startsWith')"></th>
             <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'poitemdescription', 'contains')"></th>
             <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'transferqty', 'contains')"></th>
             <!--<th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'availableqty', 'contains')"></th>-->
@@ -122,18 +124,21 @@
             <td class="ptable-cell" style="text-align:right">
               {{ri+1}}
             </td>
-            <td class="ptable-cell" style="text-align:left;width:200px;"> 
-              <button type="button" *ngIf="(rowData.availableqty && rowData.availableqty > 0 && rowData.availableqty!=null) || rowData.issuedqty > 0" class="btn btn-link" (click)="showmateriallocationList(rowData.materialid,ri+1,ri,rowData.transferqty,rowData.issuedqty,rowData.poitemdescription,rowData.id);" style="padding-left:0px;">{{rowData.materialid}}</button>
+            <td class="ptable-cell" style="text-align:right">
+              {{rowData.pono}}
+            </td>
+            <td class="ptable-cell" style="text-align:left;width:200px;">
+              <button type="button" *ngIf="(rowData.availableqty && rowData.availableqty > 0 && rowData.availableqty!=null) || rowData.issuedqty > 0" class="btn btn-link" (click)="showmateriallocationList(rowData.materialid,ri+1,ri,rowData.transferqty,rowData.issuedqty,rowData.poitemdescription,rowData.id,rowData.pono);" style="padding-left:0px;">{{rowData.materialid}}</button>
               <span *ngIf="(!rowData.availableqty || rowData.availableqty == 0 || rowData.availableqty==null) && (!rowData.issuedqty || rowData.issuedqty == 0)">{{rowData.materialid}}</span>
             </td>
             <td class="ptable-cell" style="text-align:left">{{rowData.poitemdescription}}</td>
             <td class="ptable-cell" style="text-align:right">{{rowData.transferqty}}</td>
             <!--<td class="ptable-cell" style="text-align:right" *ngIf="rowData.availableqty && rowData.availableqty > 0">
-              <span >{{rowData.availableqty}}</span>
-            </td>
-            <td class="ptable-cell" style="text-align:right"  *ngIf="!rowData.availableqty || rowData.availableqty === 0">
-              <span>0</span>
-            </td>-->
+    <span >{{rowData.availableqty}}</span>
+  </td>
+  <td class="ptable-cell" style="text-align:right"  *ngIf="!rowData.availableqty || rowData.availableqty === 0">
+    <span>0</span>
+  </td>-->
             <td class="ptable-cell">
               <input id={{ri+1}} pInputText type="number" style="text-align:right" class="form-control" [disabled]="txtDisable" [(ngModel)]="rowData.issuedqty">
             </td>

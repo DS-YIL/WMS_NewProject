@@ -144,7 +144,7 @@ export class ReceiveSubContractRequestComponent implements OnInit {
     });
   }
   //shows list of items for particular material
-  showmateriallocationList(material, id, rowindex, qty, issuedqty, description: string,rid:any) {
+  showmateriallocationList(material, id, rowindex, qty, issuedqty, description: string, rid: any, pono: string) {
     debugger;
     if (issuedqty <= qty) {
       this.issueqtyenable = true;
@@ -159,7 +159,7 @@ export class ReceiveSubContractRequestComponent implements OnInit {
     this.itemlocationData = [];
     if (this.selectedStatus == "Pending") {
       this.issueqtyenable = false;
-      this.wmsService.getItemlocationListByMaterialdescstore(material, description, this.pcode, this.pono, this.sourcelocation).subscribe(data => {
+      this.wmsService.getItemlocationListByMaterialdescstore(material, description, this.pcode,pono, this.sourcelocation).subscribe(data => {
         this.itemlocationData = data;
         this.showdialog = true;
       });
@@ -192,6 +192,7 @@ export class ReceiveSubContractRequestComponent implements OnInit {
           item.requestforissueid = this.materialissueList[this.roindex].requestforissueid;
         item.itemreturnable = this.materialissueList[this.roindex].itemreturnable;
         item.approvedby = this.employee.employeeno;
+        item.pono = this.materialissueList[this.roindex].pono;
         item.createdby = this.STORequestList[0].transferredby;
         item.itemreceiverid = this.materialissueList[this.roindex].itemreceiverid;
         item.requestid = this.materialissueList[this.roindex].id;
@@ -242,7 +243,6 @@ export class ReceiveSubContractRequestComponent implements OnInit {
     });
     this.itemlocationsaveData.forEach(item => {
       item.projectid = this.pcode;
-      item.pono = this.pono;
     })
 
     this.wmsService.approvematerialrequest(this.itemlocationsaveData).subscribe(data => {

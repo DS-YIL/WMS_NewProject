@@ -832,6 +832,7 @@ namespace WMS.Models
 
 		public bool? isnonproject { get; set; }
 		public string projectid { get; set; }
+
 	}
 	public class materialistModel
 	{
@@ -844,6 +845,7 @@ namespace WMS.Models
 		public DateTime expecteddate { get; set; }
 		public DateTime? returneddate { get; set; }
 		public decimal? issuedqty { get; set; }
+		public decimal? pono { get; set; }
 
 	}
 
@@ -1548,6 +1550,7 @@ public class stocktransfermateriakmodel
 	public decimal? unitprice { get; set; }
 	public string subconno { get; set; }
 	public string projectmanager { get; set; }
+	public string pono { get; set; }
 
 }
 
@@ -2025,6 +2028,7 @@ public class MaterialTransactionDetail
 	public decimal? reservedqty { get; set; }
 	public decimal? returnqty { get; set; }
 	public decimal? materialcost { get; set; }
+	public string pono { get; set; }
 }
 
 public class MaterialReturnTR

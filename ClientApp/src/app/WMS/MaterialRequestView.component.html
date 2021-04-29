@@ -257,8 +257,9 @@
 
 
       <label class="labelheading">PONo :</label>&nbsp;&nbsp;
-      <p-autoComplete [(ngModel)]="selectedpono" [suggestions]="filteredpos" [ngModelOptions]="{standalone: true}" placeholder="search by PONo" [forceSelection]="false" (onSelect)="onPOSelected()" (change)="onPOSelected()" (completeMethod)="filterpos($event)" [size]="20"
-                      [dropdown]="true"></p-autoComplete>
+      <p-multiSelect [appendTo]="body" [options]="ponolist" [(ngModel)]="selectedmuliplepo" optionLabel="pono" [style]="{'min-width':'300px'}" (onChange)="onPOSelected()"></p-multiSelect>
+      <!--<p-autoComplete [(ngModel)]="selectedpono" [suggestions]="filteredpos" [ngModelOptions]="{standalone: true}" placeholder="search by PONo" [forceSelection]="false" (onSelect)="onPOSelected()" (change)="onPOSelected()" (completeMethod)="filterpos($event)" [size]="20"
+                      [dropdown]="true"></p-autoComplete>-->
 
 
 
@@ -414,7 +415,8 @@
             <tr class="mprltbldata">
               <th class="ptable-cell" style="width:60px;text-align:center">Sl.No.</th>
               <!--<th class="ptable-cell">Material</th>-->
-              <th style="text-align:center;width:250px;" class="ptable-cell">Material</th>
+              <th style="text-align:center;width:120px;" class="ptable-cell">PONo</th>
+              <th style="text-align:center;width:200px;" class="ptable-cell">Material</th>
               <th style="text-align:center" class="ptable-cell">PO Item Description</th>
               <th style="text-align:center;width:130px;" class="ptable-cell">Unit Price(INR)</th>
               <th style="text-align:center;width:150px;" class="ptable-cell">Available Qty</th>
@@ -427,7 +429,11 @@
           <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex" let-rindex=0>
             <tr>
               <td class="ptable-cell" style="text-align:center"> {{ri+1}} </td>
+              <td class="ptable-cell" style="text-align:left">
 
+                {{rowData.pono}}
+
+              </td>
               <td class="ptable-cell" style="text-align:left;">
                 {{rowData.materialid}}
 

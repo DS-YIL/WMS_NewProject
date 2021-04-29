@@ -307,6 +307,7 @@ export class gatepassModel {
   vendorname: string;
   deleteflag: boolean;
   materialList: Array<materialistModel> = [];
+  tempmaterialList: Array<materialistModel> = [];
   approverremarks: string;
   approverstatus: string;
   fmapprovedstatus: string;
@@ -341,6 +342,7 @@ export class materialistModel {
   availableqty: number;
   issuedqty: number;
   showdetail: boolean;
+  pono: string;
 
   materiallistdata: any[] = [];
 }
@@ -671,6 +673,7 @@ export class stocktransfermateriakmodel {
   subconno: string;
   projectmanager: string;
   selecteddestinationobject: locationdropdownModel;
+  pono: string;
 }
 
 export class updateonhold {

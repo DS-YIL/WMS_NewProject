@@ -173,7 +173,7 @@ export class ReceiveSTORequestComponent implements OnInit {
     });
   }
   //shows list of items for particular material
-  showmateriallocationList(material, id, rowindex, qty, issuedqty, poitemdescription: string,rid : any) {
+  showmateriallocationList(material, id, rowindex, qty, issuedqty, poitemdescription: string, rid: any, pono: string) {
     debugger;
     if (issuedqty <= qty) {
       this.issueqtyenable = true;
@@ -189,7 +189,7 @@ export class ReceiveSTORequestComponent implements OnInit {
     this.itemlocationData = [];
     if (this.selectedStatus == "Pending" && !this.viewprocess) {
       this.issueqtyenable = false;
-      this.wmsService.getItemlocationListByMaterialdescstore(material, poitemdescription, this.pcode, this.pono, this.source).subscribe(data => {
+      this.wmsService.getItemlocationListByMaterialdescstore(material, poitemdescription, this.pcode, pono, this.source).subscribe(data => {
         this.itemlocationData = data;
         this.showdialog = true;
       });
@@ -228,6 +228,7 @@ export class ReceiveSTORequestComponent implements OnInit {
         item.requestmaterialid = this.materialissueList[this.roindex].requestmaterialid;
         item.transferid = this.materialissueList[this.roindex].transferid;
         item.createdby = this.materialissueList[this.roindex].createdby;
+        item.pono = this.materialissueList[this.roindex].pono;
         item.requesttype = "STO";
         totalissuedqty = totalissuedqty + (item.issuedqty);
         this.FIFOvalues.issueqty = totalissuedqty;
@@ -273,7 +274,6 @@ export class ReceiveSTORequestComponent implements OnInit {
 
     this.itemlocationsaveData.forEach(item => {
       item.projectid = this.pcode;
-      item.pono = this.pono;
     })
 
     this.wmsService.approvematerialrequest(this.itemlocationsaveData).subscribe(data => {

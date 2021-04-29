@@ -161,7 +161,7 @@ export class MaterialIssueComponent implements OnInit {
     });
   }
   //shows list of items for particular material
-  showmateriallocationList(material, id, rowindex, qty, issuedqty, reservedqty, requestforissueid, requestmaterialid, poitemdescription: string) {
+  showmateriallocationList(material, id, rowindex, qty, issuedqty, reservedqty, requestforissueid, requestmaterialid, poitemdescription: string, pono: string) {
     if (issuedqty <= qty) {
       this.issueqtyenable = true;
     }
@@ -177,7 +177,6 @@ export class MaterialIssueComponent implements OnInit {
     if (this.constants.materialIssueType == "Pending") {
       this.issueqtyenable = false;
       var pid = this.materialissueList[0].projectname;
-      var pono = this.materialissueList[0].pono;
       this.wmsService.getItemlocationListByMaterialanddescpo(material, poitemdescription,pid,pono).subscribe(data => {
         this.itemlocationData = data;
         console.log(this.itemlocationData);

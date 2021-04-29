@@ -39,8 +39,9 @@
           <!--&nbsp;&nbsp;&nbsp;&nbsp;<label class="labelheading" *ngIf="addprocess">Remarks:&nbsp;</label>
           &nbsp;&nbsp;&nbsp;<textarea type="text" [(ngModel)]="mainmodel.remarks" placeholder="Remarks" style="width:15%;resize:none" *ngIf="addprocess"></textarea>-->
           &nbsp;&nbsp;&nbsp;&nbsp;<label class="labelheading" *ngIf="addprocess">PONO :</label>
-          &nbsp;&nbsp;&nbsp; <p-autoComplete [(ngModel)]="selectedpono" [suggestions]="filteredpos" *ngIf="addprocess" [ngModelOptions]="{standalone: true}" placeholder="search by PONo" [forceSelection]="false" (onSelect)="onPOSelected()" (change)="onPOSelected()" (completeMethod)="filterpos($event)" [size]="20"
-                                             [dropdown]="true"></p-autoComplete>
+          &nbsp;&nbsp;&nbsp;<p-multiSelect [appendTo]="body" *ngIf="addprocess" [options]="ponolist" [(ngModel)]="selectedmuliplepo" optionLabel="pono" [style]="{'min-width':'200px'}" (onChange)="onPOSelected()"></p-multiSelect>
+          <!--<p-autoComplete [(ngModel)]="selectedpono" [suggestions]="filteredpos" *ngIf="addprocess" [ngModelOptions]="{standalone: true}" placeholder="search by PONo" [forceSelection]="false" (onSelect)="onPOSelected()" (change)="onPOSelected()" (completeMethod)="filterpos($event)" [size]="20"
+                                             [dropdown]="true"></p-autoComplete>-->
         </div>
 
       </div>
@@ -56,7 +57,8 @@
           <ng-template pTemplate="header">
             <tr class="mprltbldata">
               <th style="text-align:center;width:5%;">Sl.No.</th>
-              <th style="text-align:center;width:20%;">Material</th>
+              <th style="text-align:center;width:10%;">PONo</th>
+              <th style="text-align:center;width:15%;">Material</th>
               <!--<th style="text-align:center;width:15%;">Material Description</th>-->
               <th style="text-align:center;">Item PO Description</th>
               <th style="text-align:center;width:8%;">Available Qty</th>
@@ -66,21 +68,22 @@
               <!--<th style="text-align:center;width:14%;">Project</th>-->
               <th style="text-align:center;width:15%;">Required Date</th>
               <!--<th style="text-align:center;width:5%;">
-                <p-button icon="fa fa-user-plus" pTooltip="Add Material" (click)="addrows()" *ngIf="addprocess"></p-button>
-              </th>-->
+    <p-button icon="fa fa-user-plus" pTooltip="Add Material" (click)="addrows()" *ngIf="addprocess"></p-button>
+  </th>-->
             </tr>
           </ng-template>
           <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
             <tr>
               <td class="ptable-cell" style="text-align: center; width: 5%;">{{ri+1}}</td>
-              <td class="ptable-cell" style="text-align:center;width:20%;">
+              <td class="ptable-cell" style="text-align: center; width: 10%;">{{rowData.pono}}</td>
+              <td class="ptable-cell" style="text-align:center;width:15%;">
                 {{rowData.materialid}}
                 <!--<p-autoComplete appendTo="body" placeholder="search by material" [style]="{'width':'80%'}" [inputStyle]="{'width':'80%'}" (onSelect)="onMaterialSelected1($event,rowData,ri)" [(ngModel)]="rowData.materialObj" type="text" [suggestions]="searchItems" field="name" [forceSelection]="true" [dropdown]="true" (completeMethod)="bindSearchListDatamaterial($event,rowData,'material')"></p-autoComplete>-->
               </td>
-            <td class="ptable-cell" style="text-align:left;">
-              {{rowData.materialdescription}}
-              <!--<p-autoComplete [(ngModel)]="rowData.materialdescObj" [style]="{'width':'80%'}" [inputStyle]="{'width':'80%'}" placeholder="search by description" type="text" appendTo="body" [forceSelection]="true" (onSelect)="onDescriptionSelected($event,rowData,ri)" [suggestions]="searchdescItems" field="name" (completeMethod)="bindSearchListDatamaterialdesc($event,rowData)" [dropdown]="true"></p-autoComplete>-->
-            </td>
+              <td class="ptable-cell" style="text-align:left;">
+                {{rowData.materialdescription}}
+                <!--<p-autoComplete [(ngModel)]="rowData.materialdescObj" [style]="{'width':'80%'}" [inputStyle]="{'width':'80%'}" placeholder="search by description" type="text" appendTo="body" [forceSelection]="true" (onSelect)="onDescriptionSelected($event,rowData,ri)" [suggestions]="searchdescItems" field="name" (completeMethod)="bindSearchListDatamaterialdesc($event,rowData)" [dropdown]="true"></p-autoComplete>-->
+              </td>
               <td class="ptable-cell" style="text-align:right;width:8%;">
                 <input pInputText type="number" style="text-align:right" class="form-control" readonly [min]="0" [(ngModel)]="rowData.availableqty">
               </td>
@@ -101,8 +104,8 @@
                             placeholder="Select Date" dateFormat="dd/mm/yy" [showIcon]="true" appendTo="body" [minDate]="minDate"></p-calendar>
               </td>
               <!--<td style="text-align:center;width:5%;">
-                <button (click)="deleteRow(ri)" class="btn btn-danger" style="margin-top:10%"><i class="fa fa-trash"></i></button>
-              </td>-->
+    <button (click)="deleteRow(ri)" class="btn btn-danger" style="margin-top:10%"><i class="fa fa-trash"></i></button>
+  </td>-->
 
             </tr>
           </ng-template>

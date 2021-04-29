@@ -42,6 +42,7 @@ export class SubContractTransferOrderComponent implements OnInit {
   ponolist: any[] = [];
   selectedpono: string = "";
   filteredpos: any[];
+  selectedmuliplepo: any[] = [];
   minDate: Date;
 
 
@@ -54,6 +55,7 @@ export class SubContractTransferOrderComponent implements OnInit {
     this.sourceplant = new plantddl();
     this.plantlist = [];
     this.stocktransferlist = [];
+    this.selectedmuliplepo = [];
     this.projectlists = [];
     this.mainmodel = new invstocktransfermodel();
     this.cuurentrowresponse= new WMSHttpResponse();
@@ -226,14 +228,24 @@ export class SubContractTransferOrderComponent implements OnInit {
       this.selectedpono = "";
       return;
     }
-    var pono = this.selectedpono;
-    if (this.ponolist.filter(li => li.pono == pono).length > 0) {
+    var pono = "";
+    if (this.selectedmuliplepo && this.selectedmuliplepo.length > 0) {
+      var i = 0;
+      this.selectedmuliplepo.forEach(item => {
+        if (i > 0) {
+          pono += ",";
+        }
+        pono += "'" + item.pono + "'";
+        i++;
+      });
+
 
       this.wmsService.getMaterialRequestlistdataforgpandstore(pono, this.selectedproject.value, this.sourceplant.locatorid).subscribe(data => {
         this.podetailsList = data;
       });
-    }
 
+    }
+    
   }
   filterpos(event) {
     debugger;
@@ -554,9 +566,9 @@ export class SubContractTransferOrderComponent implements OnInit {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Select project.' });
       return;
     }
-    if (!isNullOrUndefined(this.selectedpono)) {
-      this.mainmodel.pono = this.selectedpono;
-    }
+    //if (!isNullOrUndefined(this.selectedpono)) {
+    //  this.mainmodel.pono = this.selectedpono;
+    //}
     var volidentry = this.podetailsList.filter(function (element, index) {
       return (element.transferqty > 0)
     });

@@ -19,6 +19,7 @@ export class StockTransferOrderComponent implements OnInit {
   locationlist: locationddl[] = [];
   binlist: binddl[] = [];
   racklist: rackddl[] = [];
+  selectedmuliplepo: any[];
   public searchItems: Array<searchList> = [];
   public searchdescItems: Array<searchList> = [];
   selectedbin: binddl; selectedrack: rackddl; selectedlocation: locationddl;
@@ -90,6 +91,7 @@ export class StockTransferOrderComponent implements OnInit {
     this.destinationplant = new plantddl();
     this.plantlist = [];
     this.stocktransferlist = [];
+    this.selectedmuliplepo = [];
     this.cuurentrowresponse = new WMSHttpResponse();
     this.projectlists = [];
     this.mainmodel = new invstocktransfermodel();
@@ -151,15 +153,27 @@ export class StockTransferOrderComponent implements OnInit {
     if (isNullOrUndefined(this.sourceplant.locatorid)) {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Select Source' });
       this.selectedpono = "";
+      this.selectedmuliplepo = [];
       return;
     }
-    var pono = this.selectedpono;
-    if (this.ponolist.filter(li => li.pono == pono).length > 0) {
-
-      this.wmsService.getMaterialRequestlistdataforgpandstore(pono, this.selectedproject.value, this.sourceplant.locatorid).subscribe(data => {
-        this.podetailsList = data;
+    var pono = "";
+    if (this.selectedmuliplepo && this.selectedmuliplepo.length > 0) {
+      var i = 0;
+      this.selectedmuliplepo.forEach(item => {
+        if (i > 0) {
+          pono += ",";
+        }
+        pono += "'" + item.pono + "'";
+        i++;
       });
+     
+
+        this.wmsService.getMaterialRequestlistdataforgpandstore(pono, this.selectedproject.value, this.sourceplant.locatorid).subscribe(data => {
+          this.podetailsList = data;
+        });
+      
     }
+   
    
   }
 
@@ -1164,13 +1178,13 @@ export class StockTransferOrderComponent implements OnInit {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Select project.' });
       return;
     }
-    if (!isNullOrUndefined(this.selectedpono)) {
-      this.mainmodel.pono = this.selectedpono;
-    }
-    else {
-      this.messageService.add({ severity: 'error', summary: '', detail: 'Select pono.' });
-      return;
-    }
+    //if (!isNullOrUndefined(this.selectedpono)) {
+    //  this.mainmodel.pono = this.selectedpono;
+    //}
+    //else {
+    //  this.messageService.add({ severity: 'error', summary: '', detail: 'Select pono.' });
+    //  return;
+    //}
 
     var volidentry = this.podetailsList.filter(function (element, index) {
       return (element.transferqty > 0)

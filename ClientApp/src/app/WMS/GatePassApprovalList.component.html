@@ -144,9 +144,6 @@
           <div class="col-lg-2 col-md-2 col-sm-2 form-inline" style="font-weight:600;font-size:14px;color:darkblue;" *ngIf="!materialList[0].isnonproject">
             Project:&nbsp;<span style="color:#dc3545;">{{materialList[0].projectid}}</span>
           </div>
-          <div class="col-lg-2 col-md-2 col-sm-2 form-inline" style="font-weight:600;font-size:14px;color:darkblue;" *ngIf="!materialList[0].isnonproject">
-            PONO:&nbsp;<span style="color:#dc3545;">{{materialList[0].pono}}</span>
-          </div>
           <div class="col-lg-2 col-md-2 col-sm-2 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
             Requester:&nbsp;<span style="color:#dc3545;">{{materialList[0].name}}</span>
           </div>
@@ -208,6 +205,7 @@
             <ng-template pTemplate="header">
               <tr class="mprltbldata">
                 <th class="ptable-cell" style="text-align:center;width:60px;">Sl.No.</th>
+                <th class="ptable-cell" style="text-align:center;width:150px;" *ngIf="!materialList[0].isnonproject">PONo.</th>
                 <th class="ptable-cell" style="text-align:center">Material</th>
                 <th class="ptable-cell" style="text-align:center;width:350px;">PO Item Description</th>
                 <th class="ptable-cell" style="text-align:center">Price</th>
@@ -223,7 +221,8 @@
             <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex" let-rindex=0>
               <tr>
                 <td class="ptable-cell" style="text-align:center"> {{ri+1}} </td>
-                <td class="ptable-cell" style="text-align:left"> <span *ngIf="employee.roleid =='8'">{{rowData.materialid}}</span><button *ngIf="employee.roleid !='8'" type="button" class="btn btn-link"  style="padding-left:0px;">{{rowData.materialid}}</button></td>
+                <td class="ptable-cell" style="text-align:center" *ngIf="!materialList[0].isnonproject"> {{rowData.pono}} </td>
+                <td class="ptable-cell" style="text-align:left"> <span *ngIf="employee.roleid =='8'">{{rowData.materialid}}</span><button *ngIf="employee.roleid !='8'" type="button" class="btn btn-link" style="padding-left:0px;">{{rowData.materialid}}</button></td>
                 <td class="ptable-cell" style="text-align:left"> {{rowData.materialdescription}} </td>
                 <td class="ptable-cell" style="text-align:right"><span *ngIf="rowData.materialcost">{{rowData.materialcost}}</span></td>
                 <td class="ptable-cell" style="text-align:right">{{rowData.quantity}}</td>
@@ -233,7 +232,7 @@
                 <td class="ptable-cell" style="text-align:center" *ngIf="employee.roleid !='8' && materialList[0].gatepasstype=='Returnable'">{{checkValiddate(rowData.expecteddate)}}</td>
                 <!--<td *ngIf="materialList[0].gatepasstype=='Returnable' && rowData.returneddate" class="ptable-cell" style="text-align:center">{{checkValiddate(rowData.returneddate)}}</td>-->
                 <td class="ptable-cell" style="text-align:left"> {{rowData.remarks}} </td>
-            </ng-template>
+</ng-template>
           </p-table>
         </div>
         <!--</div>-->

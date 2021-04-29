@@ -165,7 +165,7 @@ export class GatePassApproverComponent implements OnInit {
   }
 
   //shows list of items for particular material
-  showmateriallocationList(material, description, id, rowindex, qty, issuedqty, reservedqty, gatepassmaterialid) {
+  showmateriallocationList(material, description, id, rowindex, qty, issuedqty, reservedqty, gatepassmaterialid, pono: string) {
     debugger;
     if (issuedqty <= qty) {
       this.issueqtyenable = true;
@@ -195,7 +195,6 @@ export class GatePassApproverComponent implements OnInit {
       this.issueqtyenable = false;
       debugger;
       var projectid = this.materialList[0].projectid;
-      var pono = this.materialList[0].pono;
       this.wmsService.getItemlocationListByMaterialanddescpo(material, description, projectid, pono).subscribe(data => {
         this.itemlocationData = data;
         this.showdialog = true;
