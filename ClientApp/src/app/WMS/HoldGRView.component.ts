@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { wmsService } from '../WmsServices/wms.service';
 import { constants } from '../Models/WMSConstants';
-import { Employee, printMaterial, printonholdGR } from '../Models/Common.Model';
+import { Employee, printMaterial, printonholdGR, DynamicSearchResult } from '../Models/Common.Model';
 import { NgxSpinnerService } from "ngx-spinner";
 import { PoDetails, BarcodeModel, inwardModel, ddlmodel, UnholdGRModel } from 'src/app/Models/WMS.Model';
 import { MessageService } from 'primeng/api';
@@ -19,6 +19,7 @@ export class HoldGRViewComponent implements OnInit {
 
   constructor(private messageService: MessageService, private wmsService: wmsService, private route: ActivatedRoute, private router: Router, private datePipe: DatePipe, public constants: constants, private spinner: NgxSpinnerService) { }
 
+  public dynamicData = new DynamicSearchResult();
   public PoDetails: PoDetails;
   public podetailsList: Array<inwardModel> = [];
   public filteredpodetailsList: Array<inwardModel> = [];
@@ -63,13 +64,16 @@ export class HoldGRViewComponent implements OnInit {
   public lineitemno: string;
   public gateentryid: string;
   public invoiceno: string;
- 
+  public locationMasterList: Array<any> = [];
+  public printerid; inwardid: any;
+
   ngOnInit() {
     if (localStorage.getItem("Employee"))
       this.employee = JSON.parse(localStorage.getItem("Employee"));
     else
       this.router.navigateByUrl("Login");
 
+    this.printerid = "";
     this.grstatus = "hold";
     this.filteredpodetailsList = [];
     this.filteredpomatdetailsList = [];
@@ -81,10 +85,21 @@ export class HoldGRViewComponent implements OnInit {
     this.inwardModel.receiveddate = new Date();
     this.inwardModel.qcdate = new Date();
     this.getholdgrdetails();
+    this.getLocationMasterList();
   }
-  
-  
 
+
+  //get Location Master List
+  getLocationMasterList() {
+    this.spinner.show();
+    this.locationMasterList = [];
+    this.dynamicData = new DynamicSearchResult();
+    this.dynamicData.query = "select  * from wms.PrinterLocationmaster where type='OnHold' and deleteflag !=true order by printerid";
+    this.wmsService.GetListItems(this.dynamicData).subscribe(data => {
+      this.locationMasterList = data;
+      this.spinner.hide();
+    })
+  }
   getcheckedgrnforqc() {
     this.spinner.show();
     this.wmsService.getholdgrlist().subscribe(data => {
@@ -106,7 +121,7 @@ export class HoldGRViewComponent implements OnInit {
     this.filteredpomatdetailsList = [];
     this.selectedrow = data;
     this.dtpono = data.pono;
-    this.dtinvoiceno= data.invoiceno;
+    this.dtinvoiceno = data.invoiceno;
     this.dtvendorname = data.vendorname;
     this.unholdremarksview = data.unholdremarks;
     this.filteredpomatdetailsList = this.podetailsList.filter(o => o.inwmasterid == data.inwmasterid);
@@ -150,14 +165,14 @@ export class HoldGRViewComponent implements OnInit {
       this.selectedrow = new inwardModel();
       //this.getponodetails(this.selectedpendingpo.value)
       this.getholdgrdetails();
-      
+
     })
 
 
 
 
   }
-  
+
   hideDG() {
     this.dtpono = "";
     this.dtinvoiceno = "";
@@ -167,8 +182,8 @@ export class HoldGRViewComponent implements OnInit {
     this.unholdremarks = "";
   }
 
-  generatelabel(details:any) {
-    debugger;
+  generatelabel(details: any) {
+    this.printerid = "";
     this.showdetail = false;
     this.showPrintDialog = true;
     this.showPrintLabel = false;
@@ -179,35 +194,40 @@ export class HoldGRViewComponent implements OnInit {
     this.lineitemno = details.lineitemno;
     this.gateentryid = details.inwmasterid;
     this.invoiceno = details.invoiceno;
+    this.inwardid = details.inwardid;
     //this.printData.pono = details.pono;
     //this.printData.receivedqty = details.receivedqty;
     //this.printData.invoiceno = details.invoiceno;
     //this.printData.lineitemno = details.lineitemno;
     //this.printData.noofpieces = details.receivedqty;
-    
+
 
   }
 
   printlabel() {
-    debugger;
-    this.showdetail = false;
-    this.showPrintDialog = false;
-    this.showPrintLabel = true;
+    if (!this.printerid) {
+      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Select Location' });
+      return;
+    }
+   
     this.printgr.materialid = this.materialCode;
     this.printgr.gateentryid = this.gateentryid;
     this.printgr.pono = this.pono;
     this.printgr.invoiceno = this.invoiceno;
     this.printgr.createdby = this.employee.employeeno;
-    this.printgr.receiveddate = this.datePipe.transform(this.receivedDate, this.constants.dateFormat);
+    this.printgr.receiveddate = this.receivedDate;
     this.printgr.noofprint = this.noOfPrint;
+    this.printgr.printerid = this.printerid;
+    this.printgr.inwardid = this.inwardid;
     this.wmsService.generateqronhold(this.printgr).subscribe(data => {
       this.spinner.hide();
+      this.showdetail = false;
+      this.showPrintDialog = false;
+      this.showPrintLabel = true;
       if (data) {
         this.printgr = new printonholdGR();
         this.printgr = data;
-
       }
-
     });
 
   }
@@ -268,7 +288,7 @@ export class HoldGRViewComponent implements OnInit {
         })
 
       }
-     
+
     })
   }
 

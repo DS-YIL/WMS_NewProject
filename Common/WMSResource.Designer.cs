@@ -2760,8 +2760,8 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO wms.wms_materiallabeldetails(id,pono,inwardid ,noofprints ,qtyinbox ,isprint ,totalboxes ,boxno ,totalqty ,isonholdgr,matbarcodepath,soitembcpath,plantbarcodepath,spbarcode,linkagebarcodepath,receivedqty,itemno,saleorderno,solineitemno)
-        ///VALUES(default,@pono,@inwardid,@noofprints,@qtyinbox,@isprint,@totalboxes,@boxno,@totalqty,@isonholdgr,@matbarcodepath,@soitembcpath,@plantbarcodepath,@spbarcode,@linkagebarcodepath,@receivedqty,@itemno,@saleorderno,@solineitemno) returning id.
+        ///   Looks up a localized string similar to INSERT INTO wms.wms_materiallabeldetails(id,pono,inwardid ,noofprints ,qtyinbox ,isprint ,totalboxes ,boxno ,isonholdgr,matbarcodepath,soitembcpath,plantbarcodepath,spbarcode,linkagebarcodepath,receivedqty,itemno,saleorderno,solineitemno,printerid)
+        ///VALUES(default,@pono,@inwardid,@noofprints,@qtyinbox,@isprint,@totalboxes,@boxno,@isonholdgr,@matbarcodepath,@soitembcpath,@plantbarcodepath,@spbarcode,@linkagebarcodepath,@receivedqty,@itemno,@saleorderno,@solineitemno,@printerid) returning id.
         /// </summary>
         public static string insertmatbarcodelabeldata {
             get {
@@ -2770,7 +2770,8 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to insert into wms.wms_printstatusmaterial(id,inwmasterid,materialid,noofprint )values(default,@inwmasterid,@materialid,@noofprint).
+        ///   Looks up a localized string similar to insert into wms.wms_printstatusmaterial(id,inwmasterid,inwardid,printedon,printedby,printcount,isprint,printerid,materialid,noofprint)
+        ///values(default,@inwmasterid,@inwardid,current_date,@printedby,@printcount,@isprint,@printerid,@materialid,@noofprint).
         /// </summary>
         public static string insertmaterialdetails {
             get {
@@ -2958,6 +2959,16 @@ namespace WMS.Common {
         public static string insertreprintcount {
             get {
                 return ResourceManager.GetString("insertreprintcount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to insert into wms.wms_reprinthistory(reprinthistoryid,gatepassid,reprintedon,reprintedby,
+        ///reprintcount,barcodeid, noofprint, inwmasterid,inwardid,printerid)values(default,@gatepassid,current_date,@reprintedby,@reprintcount,@barcodeid,@noofprint,@inwmasterid,@inwardid,@printerid)returning reprinthistoryid.
+        /// </summary>
+        public static string insertReprintHistory {
+            get {
+                return ResourceManager.GetString("insertReprintHistory", resourceCulture);
             }
         }
         
@@ -3437,8 +3448,8 @@ namespace WMS.Common {
         
         /// <summary>
         ///   Looks up a localized string similar to select sinw.invoiceno,inw.pono,inw.lineitemno,sinw.grnnumber,sinw.onhold,sinw.onholdremarks,sinw.unholdedby,sinw.receiveddate,inw.remarks as receiveremarks,inw.materialid as material,ms.materialdescription,inw.poitemdescription,inw.unitprice,
-        /// inw.inwardid,inw.qualitychecked,inw.returnedby,inw.returnedon,inw.returnremarks,inw.receivedqty,inw.returnremarks,inw.materialqty as pendingqty,
-        /// (select materialqty from wms.wms_pomaterials where pono = inw.pono and itemno::integer = inw.lineitemno::integer and mat [rest of string was truncated]&quot;;.
+        /// inw.inwardid,inw.inwmasterid,inw.qualitychecked,inw.returnedby,inw.returnedon,inw.returnremarks,inw.receivedqty,inw.returnremarks,inw.materialqty as pendingqty,
+        /// (select materialqty from wms.wms_pomaterials where pono = inw.pono and itemno::integer = inw.lineitemno: [rest of string was truncated]&quot;;.
         /// </summary>
         public static string receivequeryfornonpo {
             get {

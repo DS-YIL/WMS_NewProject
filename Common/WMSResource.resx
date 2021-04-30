@@ -635,7 +635,7 @@ VALUES(@inwmasterid,@receiveddate,@receivedby,@receivedqty,@materialid,@deletefl
   </data>
   <data name="receivequeryfornonpo" xml:space="preserve">
     <value>select sinw.invoiceno,inw.pono,inw.lineitemno,sinw.grnnumber,sinw.onhold,sinw.onholdremarks,sinw.unholdedby,sinw.receiveddate,inw.remarks as receiveremarks,inw.materialid as material,ms.materialdescription,inw.poitemdescription,inw.unitprice,
- inw.inwardid,inw.qualitychecked,inw.returnedby,inw.returnedon,inw.returnremarks,inw.receivedqty,inw.returnremarks,inw.materialqty as pendingqty,
+ inw.inwardid,inw.inwmasterid,inw.qualitychecked,inw.returnedby,inw.returnedon,inw.returnremarks,inw.receivedqty,inw.returnremarks,inw.materialqty as pendingqty,
  (select materialqty from wms.wms_pomaterials where pono = inw.pono and itemno::integer = inw.lineitemno::integer and materialid = inw.materialid and poitemdescription = inw.poitemdescription limit 1) as materialqty,
  (select asnqty from wms.wms_pomaterials where pono = inw.pono and itemno::integer = inw.lineitemno::integer and materialid = inw.materialid and poitemdescription = inw.poitemdescription limit 1) as asnqty,
  qc.qualitypassedqty,qc.qualityfailedqty,qc.qcby as checkedby,
@@ -1639,8 +1639,8 @@ prj.projectmanager</value>
 	VALUES (default, @saleorderno, @solineitemno, @saleordertype, @customername, @shipto, @shippingpoint, @loadingdate, @projectiddef, @partno, @custpo, @uploadcode, @uploadedon,@error_description,@isloaderror,@projecttext,@saleordertypetext,@customercode,@custpolineitem,@costcentertext,@serviceorderno)</value>
   </data>
   <data name="insertmatbarcodelabeldata" xml:space="preserve">
-    <value>INSERT INTO wms.wms_materiallabeldetails(id,pono,inwardid ,noofprints ,qtyinbox ,isprint ,totalboxes ,boxno ,totalqty ,isonholdgr,matbarcodepath,soitembcpath,plantbarcodepath,spbarcode,linkagebarcodepath,receivedqty,itemno,saleorderno,solineitemno)
-VALUES(default,@pono,@inwardid,@noofprints,@qtyinbox,@isprint,@totalboxes,@boxno,@totalqty,@isonholdgr,@matbarcodepath,@soitembcpath,@plantbarcodepath,@spbarcode,@linkagebarcodepath,@receivedqty,@itemno,@saleorderno,@solineitemno) returning id</value>
+    <value>INSERT INTO wms.wms_materiallabeldetails(id,pono,inwardid ,noofprints ,qtyinbox ,isprint ,totalboxes ,boxno ,isonholdgr,matbarcodepath,soitembcpath,plantbarcodepath,spbarcode,linkagebarcodepath,receivedqty,itemno,saleorderno,solineitemno,printerid)
+VALUES(default,@pono,@inwardid,@noofprints,@qtyinbox,@isprint,@totalboxes,@boxno,@isonholdgr,@matbarcodepath,@soitembcpath,@plantbarcodepath,@spbarcode,@linkagebarcodepath,@receivedqty,@itemno,@saleorderno,@solineitemno,@printerid) returning id</value>
   </data>
   <data name="insertstserialimport" xml:space="preserve">
     <value>INSERT INTO wms.st_slno_imports(
@@ -2141,7 +2141,8 @@ where stk.materialid='#materialid' and lower(stk.poitemdescription)  = lower('#d
 group by stk.itemlocation,stk.stcktype,stk.pono,stk.poitemdescription,stk.materialid,stk.createddate::DATE order by stk.createddate::DATE desc</value>
   </data>
   <data name="insertmaterialdetails" xml:space="preserve">
-    <value>insert into wms.wms_printstatusmaterial(id,inwmasterid,materialid,noofprint )values(default,@inwmasterid,@materialid,@noofprint)</value>
+    <value>insert into wms.wms_printstatusmaterial(id,inwmasterid,inwardid,printedon,printedby,printcount,isprint,printerid,materialid,noofprint)
+values(default,@inwmasterid,@inwardid,current_date,@printedby,@printcount,@isprint,@printerid,@materialid,@noofprint)</value>
   </data>
   <data name="getannexuredata" xml:space="preserve">
     <value>select wi.transferid,inv.projectcode as projectid, wi.materialid , wi.poitemdesc as materialdescription, wi.transferqty ,wi.value,
@@ -2362,5 +2363,9 @@ group by wp.projectcode,wp.pono</value>
   </data>
   <data name="deletegatepassmaterials" xml:space="preserve">
     <value>delete from wms.wms_gatepassmaterial where gatepassid = '#gatepassid'</value>
+  </data>
+  <data name="insertReprintHistory" xml:space="preserve">
+    <value>insert into wms.wms_reprinthistory(reprinthistoryid,gatepassid,reprintedon,reprintedby,
+reprintcount,barcodeid, noofprint, inwmasterid,inwardid,printerid)values(default,@gatepassid,current_date,@reprintedby,@reprintcount,@barcodeid,@noofprint,@inwmasterid,@inwardid,@printerid)returning reprinthistoryid</value>
   </data>
 </root>

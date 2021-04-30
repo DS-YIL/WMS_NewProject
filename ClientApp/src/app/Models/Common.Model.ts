@@ -68,6 +68,8 @@ export class printonholdGR {
   materialqrpath: any;
   gateentryidqrpath: any;
   createdby: any;
+  printerid: any;
+  inwardid: any;
 
 }
 
@@ -124,6 +126,8 @@ export class printMaterial {
   partno: any;
   codetype: any;
   shippingpoint: any;
+  printerid: any;
+  inwmasterid: any;
 }
 
 export class searchParams {
