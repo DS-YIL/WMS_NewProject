@@ -431,6 +431,7 @@ namespace WMS.Models
 		public decimal? issuedqty { get; set; }
 		public DateTime? issueddate { get; set; }
 		public string issuedby { get; set; }
+		public int stlogid { get; set; }
 
 	}
 

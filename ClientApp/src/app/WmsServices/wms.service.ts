@@ -841,10 +841,10 @@ export class wmsService {
   getmatinhand(inventoryFilters: inventoryFilters): Observable<MaterialinHand[]> {
     return this.http.post<MaterialinHand[]>(this.url + 'POData/getmatinhand', inventoryFilters, this.httpOptions);
   }
-  getmatinhandlocations(poitemdescription: string, material: string, projectid: string): Observable<matlocations[]> {
+  getmatinhandlocations(poitemdescription: string, material: string, projectid: string, pono: string): Observable<matlocations[]> {
     poitemdescription = encodeURIComponent(poitemdescription);
     material = encodeURIComponent(material);
-    return this.http.get<matlocations[]>(this.url + 'POData/getmatinhandlocation?poitemdescription=' + poitemdescription + '&materialid=' + material + '&projectid=' + projectid, this.httpOptions);
+    return this.http.get<matlocations[]>(this.url + 'POData/getmatinhandlocation?poitemdescription=' + poitemdescription + '&materialid=' + material + '&projectid=' + projectid+'&pono='+pono, this.httpOptions);
   }
 
   getinitialStock(uploadcode: string): Observable<StockModel[]> {
@@ -1006,6 +1006,10 @@ export class wmsService {
       istk = "True"
     }
     return this.http.get<any>(this.url + 'POData/getMiscellanousIssueListdata?initialstock=' + istk + '&pono=' + pono + '&projectid=' + projectid, this.httpOptions);
+  }
+
+  getMiscellanousIssueListwithoutfilter(): Observable<any> {
+    return this.http.get<any>(this.url + 'POData/getMiscellanousIssueListdatanofilter/', this.httpOptions);
   }
 
   getMiscellanousIssueListdatahistory(): Observable<any> {

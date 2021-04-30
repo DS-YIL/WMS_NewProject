@@ -173,7 +173,7 @@ VALUES(default,@pono,@invoiceno,@invoicedate,@receivedby,@receiveddate,@deletefl
     <comment>insert material request data</comment>
   </data>
   <data name="openpolist" xml:space="preserve">
-    <value>select  max(track.enteredon) as enteredon,max(pr.projectcode)as projectcode,max(wp.pono) as pono,min(track.status)as status,max(wp.suppliername )as vendorname,max(pr.jobname) as jobname,  (select  SUM(materialqty) from wms.wms_pomaterials where pono =wp.pono )  as materialqty,(select  SUM(availableqty) from wms.wms_stock ws where ws.pono =wp.pono )  as availableqty,  (select SUM(confirmqty) from wms.wms_storeinward where inwmasterid in (select inwmasterid from wms.wms_securityinward where pono = wp.pono)) as receivedqty from wms.wms_polist wp left join wms.wms_trackstatus track on track.pono=wp.pono left join wms.wms_project  pr on pr.pono =wp.pono  where projectmanager='#projectmanager'</value>
+    <value>select  max(track.enteredon) as enteredon,max(pr.projectcode)as projectcode,max(wp.pono) as pono,min(track.status)as status,max(wp.suppliername )as vendorname,max(pr.jobname) as jobname,  (select  SUM(materialqty) from wms.wms_pomaterials where pono =wp.pono )  as materialqty,(select  SUM(availableqty) from wms.wms_stock ws where ws.pono =wp.pono )  as availableqty,  (select SUM(confirmqty) from wms.wms_storeinward where inwmasterid in (select inwmasterid from wms.wms_securityinward where pono = wp.pono)) as receivedqty from wms.wms_polist wp left join wms.wms_trackstatus track on track.pono=wp.pono left join wms.wms_project  pr on pr.pono =wp.pono  where (projectmanager='#projectmanager' or projectmanager = (select au.createdby from wms.auth_users au where au.isdelegatemember is true and au.deleteflag is not true and au.employeeid = '#projectmanager' limit 1))</value>
     <comment>getopenpono list</comment>
   </data>
   <data name="Getdetailsforthreewaymatching" xml:space="preserve">
@@ -951,7 +951,7 @@ where inwardid = '#inwardid'</value>
   </data>
   <data name="getprojectlist" xml:space="preserve">
     <value>select projectcode as value, projectcode as text,Max(projectmanager) as projectmanager
-from wms.wms_project  where (projectmanager = '#manager' or projectmember ilike '%#manager%') group by projectcode</value>
+from wms.wms_project  where projectmanager is not null and (projectmanager = '#manager' or projectmanager =(select au.createdby from wms.auth_users au where au.isdelegatemember is true and au.deleteflag is not true and au.employeeid = '#manager' limit 1)  or projectmember ilike '%#manager%') group by projectcode</value>
   </data>
   <data name="getitemsfornotifypage" xml:space="preserve">
     <value>select inwa.inwardid,bin.binnumber, rack.racknumber, loc.locatorname,mat.rackid,mat.binid,
@@ -1207,8 +1207,8 @@ emp.name as transferedby,ts.createdon as transferredon,
 from wms.wms_materialtransferapproval app
 left outer join wms.wms_transfermaterial ts on ts.transferid = app.transferid
 left outer join wms.employee emp on emp.employeeno = ts.createdby
-where (app.approvallevel = ts.approvallevel and app.isapproved is null and app.approverid = '#approver') 
-or (app.isapproved is not null and app.approverid = '#approver')</value>
+where (app.approvallevel = ts.approvallevel and app.isapproved is null and (app.approverid = '#approver'  or app.approverid = (select au.createdby from wms.auth_users au where au.isdelegatemember is true and au.deleteflag is not true and au.employeeid = '#approver' limit 1))) 
+or (app.isapproved is not null and (app.approverid = '#approver' or app.approverid = (select au.createdby from wms.auth_users au where au.isdelegatemember is true and au.deleteflag is not true and au.employeeid = '#approver' limit 1)))</value>
   </data>
   <data name="getmaterialsbyprojectcode" xml:space="preserve">
     <value>select gtm.materialid as value,Max(mat.materialdescription) as text from wms.wms_materialissue mi
@@ -1577,7 +1577,7 @@ prj.projectmanager
 from wms.wms_securityinward ts
 left outer join wms.employee emp on emp.employeeno = ts.mrnby
 left outer join wms.wms_project prj on prj.projectcode = ts.projectcode
-where ts.mrnby is not null and prj.projectmanager = '#empno'
+where ts.mrnby is not null and prj.projectmanager is not null and (prj.projectmanager = '#empno' or prj.projectmanager = (select au.createdby from wms.auth_users au where au.isdelegatemember is true and au.deleteflag is not true and au.employeeid = '#empno' limit 1))
 group by ts.inwmasterid, ts.projectcode,ts.mrnremarks ,ts.grnnumber,
 prj.projectmanager</value>
   </data>
@@ -1913,7 +1913,7 @@ req.isapprovalrequired,req.approverid,req.isapproved,req.approvalremarks,req.app
 CASE WHEN req.isapproved is True THEN 'Approved' WHEN req.isapproved is False THEN 'Rejected' ELSE 'Pending' END AS approvedstatus
 from wms.materialrequest req 
 left outer join wms.employee emp on emp.employeeno= req.requesterid 
-where req.isapprovalrequired is true and req.approverid = '#reqid' order by req.requestid desc</value>
+where req.isapprovalrequired is true and (req.approverid = '#reqid' or req.approverid = (select au.createdby from wms.auth_users au where au.isdelegatemember is true and au.deleteflag is not true and au.employeeid = '#reqid' limit 1)) order by req.requestid desc</value>
   </data>
   <data name="getprojecttoassign" xml:space="preserve">
     <value>select wp.projectcode,wp.projectmanager,Max(emp."name") as projectmanagername,Max(wp.projectmember) as projectmember,
@@ -2033,7 +2033,7 @@ req.isapprovalrequired,req.approverid,req.isapproved,req.approvalremarks,req.app
 CASE WHEN req.isapproved is True THEN 'Approved' WHEN req.isapproved is False THEN 'Rejected' ELSE 'Pending' END AS approvedstatus
 from wms.wms_invstocktransfer req 
 left outer join wms.employee emp on emp.employeeno= req.transferredby 
-where req.isapprovalrequired is true and req.approverid = '#reqid' and req.transfertype = '#type' order by req.transferid desc</value>
+where req.isapprovalrequired is true and (req.approverid = '#reqid' or req.approverid = (select au.createdby from wms.auth_users au where au.isdelegatemember is true and au.deleteflag is not true and au.employeeid = '#reqid' limit 1)) and req.transfertype = '#type' order by req.transferid desc</value>
   </data>
   <data name="getSTOSubconMatDetails" xml:space="preserve">
     <value>select dt.id ,dt.transferid ,dt.materialid ,dt.transferqty ,dt.poitemdesc as materialdescription,dt.value,
@@ -2288,10 +2288,10 @@ VALUES(default, @vendorcode,@vendorname,@faxno,@contactno,@street,@emailid,@upda
 emailid=@emailid,updatedby=@updatedby,updatedon =@updatedon,deleteflag=@deleteflag where vendorid ='#vendorid'</value>
   </data>
   <data name="inventoryreportqry" xml:space="preserve">
-    <value>select st.materialid as material,st.poitemdescription,st.projectid as projectname,sum(st.availableqty::decimal(19,5)) as availableqty,sum(st.availableqty::decimal(19,5) * st.unitprice::decimal(19,5)) as value,string_agg(st.pono, ', ') as pono,string_agg(pl.suppliername , ', ') as suppliername,max(mat.hsncode) as hsncode from wms.wms_stock st
+    <value>select st.materialid as material,st.poitemdescription,st.projectid as projectname,sum(st.availableqty::decimal(19,5)) as availableqty,sum(st.availableqty::decimal(19,5) * st.unitprice::decimal(19,5)) as value,st.pono,string_agg(pl.suppliername , ', ') as suppliername,max(mat.hsncode) as hsncode from wms.wms_stock st
 left outer join wms."MaterialMasterYGS" mat on mat.material = st.materialid
 left outer join wms.wms_polist pl on pl.pono = st.pono 
-group by st.poitemdescription,st.materialid,st.projectid</value>
+group by st.poitemdescription,st.materialid,st.projectid,st.pono</value>
   </data>
   <data name="inhandmatwithoutproject" xml:space="preserve">
     <value>select max(stk.storeid) as storeid ,max(stk.rackid) as rackid ,max(stk.binid) as binid,
@@ -2316,7 +2316,7 @@ group by sk.pono, polist.suppliername,prj.projectmanager</value>
     <value>update wms.wms_stock set storeid = @storeid, rackid = @rackid, binid = @binid,itemlocation = @itemlocation where itemid in ( #itemid)</value>
   </data>
   <data name="getMiscIssuedlist" xml:space="preserve">
-    <value>select ws.projectid,ws.materialid as material,ws.pono,poitemdescription,ws.itemlocation,sum(ws.availableqty::decimal(19,5)) as availableqty,
+    <value>select max(sl.stlogid)as stlogid,ws.projectid,ws.materialid as material,ws.pono,poitemdescription,ws.itemlocation,sum(ws.availableqty::decimal(19,5)) as availableqty,
 sum(ws.availableqty::decimal(19,5) * ws.unitprice::decimal(19,5) ) as value,sum(sl.issuedqty::decimal(19,5)) as issuedqty,
 max(sl.createddate) as issueddate, max(emp."name") as issuedby
 from wms.wms_stocklog sl 

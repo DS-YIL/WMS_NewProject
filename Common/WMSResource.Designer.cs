@@ -371,9 +371,7 @@ namespace WMS.Common {
         ///from wms.wms_securityinward ts
         ///left outer join wms.employee emp on emp.employeeno = ts.mrnby
         ///left outer join wms.wms_project prj on prj.projectcode = ts.projectcode
-        ///where ts.mrnby is not null and prj.projectmanager = &apos;#empno&apos;
-        ///group by ts.inwmasterid, ts.projectcode,ts.mrnremarks ,ts.grnnumber,
-        ///prj.projectmanager.
+        ///where ts.mrnby is not null and prj.projectmanager is not null and (prj.projectmanager = &apos;#empno&apos; or prj.projectmanager = (select au.createdby from wms.auth_users au where au.isdelegatemember is true and au.dele [rest of string was truncated]&quot;;.
         /// </summary>
         public static string directtransferreportmainquery {
             get {
@@ -1691,13 +1689,13 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select ws.projectid,ws.materialid as material,ws.pono,poitemdescription,ws.itemlocation,sum(ws.availableqty::decimal(19,5)) as availableqty,
+        ///   Looks up a localized string similar to select max(sl.stlogid)as stlogid,ws.projectid,ws.materialid as material,ws.pono,poitemdescription,ws.itemlocation,sum(ws.availableqty::decimal(19,5)) as availableqty,
         ///sum(ws.availableqty::decimal(19,5) * ws.unitprice::decimal(19,5) ) as value,sum(sl.issuedqty::decimal(19,5)) as issuedqty,
         ///max(sl.createddate) as issueddate, max(emp.&quot;name&quot;) as issuedby
         ///from wms.wms_stocklog sl 
         ///left outer join wms.wms_stock ws on ws.itemid = sl.itemid 
         ///left outer join wms.employee emp on emp.employeeno = sl.createdby 
-        ///where sl.transactiontype =  [rest of string was truncated]&quot;;.
+        ///w [rest of string was truncated]&quot;;.
         /// </summary>
         public static string getMiscIssuedlist {
             get {
@@ -1909,7 +1907,7 @@ namespace WMS.Common {
         
         /// <summary>
         ///   Looks up a localized string similar to select projectcode as value, projectcode as text,Max(projectmanager) as projectmanager
-        ///from wms.wms_project  where (projectmanager = &apos;#manager&apos; or projectmember ilike &apos;%#manager%&apos;) group by projectcode.
+        ///from wms.wms_project  where projectmanager is not null and (projectmanager = &apos;#manager&apos; or projectmanager =(select au.createdby from wms.auth_users au where au.isdelegatemember is true and au.deleteflag is not true and au.employeeid = &apos;#manager&apos; limit 1)  or projectmember ilike &apos;%#manager%&apos;) group by projectcode.
         /// </summary>
         public static string getprojectlist {
             get {
@@ -3099,10 +3097,10 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select st.materialid as material,st.poitemdescription,st.projectid as projectname,sum(st.availableqty::decimal(19,5)) as availableqty,sum(st.availableqty::decimal(19,5) * st.unitprice::decimal(19,5)) as value,string_agg(st.pono, &apos;, &apos;) as pono,string_agg(pl.suppliername , &apos;, &apos;) as suppliername,max(mat.hsncode) as hsncode from wms.wms_stock st
+        ///   Looks up a localized string similar to select st.materialid as material,st.poitemdescription,st.projectid as projectname,sum(st.availableqty::decimal(19,5)) as availableqty,sum(st.availableqty::decimal(19,5) * st.unitprice::decimal(19,5)) as value,st.pono,string_agg(pl.suppliername , &apos;, &apos;) as suppliername,max(mat.hsncode) as hsncode from wms.wms_stock st
         ///left outer join wms.&quot;MaterialMasterYGS&quot; mat on mat.material = st.materialid
         ///left outer join wms.wms_polist pl on pl.pono = st.pono 
-        ///group by st.poitemdescription,st. [rest of string was truncated]&quot;;.
+        ///group by st.poitemdescription,st.materialid,st.projectid,st [rest of string was truncated]&quot;;.
         /// </summary>
         public static string inventoryreportqry {
             get {
