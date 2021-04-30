@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { wmsService } from '../WmsServices/wms.service';
 import { constants } from '../Models/WMSConstants';
-import { Employee, printMaterial } from '../Models/Common.Model';
+import { Employee, printMaterial, DynamicSearchResult } from '../Models/Common.Model';
 import { NgxSpinnerService } from "ngx-spinner";
 import { PoDetails, BarcodeModel, inwardModel, Materials, ddlmodel, updateonhold } from 'src/app/Models/WMS.Model';
 import { MessageService, ConfirmationService } from 'primeng/api';
@@ -23,6 +23,7 @@ export class StoreClerkComponent implements OnInit {
   @ViewChild('myInput1', { static: false }) ddlgrndata: any;
   constructor(private messageService: MessageService, private wmsService: wmsService, private formBuilder: FormBuilder, private route: ActivatedRoute, private datePipe: DatePipe, private router: Router, public constants: constants, private spinner: NgxSpinnerService) { }
 
+  public dynamicData = new DynamicSearchResult();
   public pono: string;
   public invoiceNo: string;
   public qty: any = 1;
@@ -88,6 +89,8 @@ export class StoreClerkComponent implements OnInit {
   public inwmasterid: string;
   selectedinvoice: string;
   isasnreceived: boolean = false;
+  public locationMasterList: Array<any> = [];
+  public printerid; inwardid: any;
 
   ngOnInit() {
     //this.autoCompleteObject.focusInput();
@@ -100,7 +103,9 @@ export class StoreClerkComponent implements OnInit {
     this.gateentryid = this.route.snapshot.queryParams.inwmasterid;
     this.selectedinvoice = "";
     this.isasnreceived = false;
+    this.printerid = "";
     this.getpendingpos();
+    this.getLocationMasterList();
     //Email
 
 
@@ -119,6 +124,17 @@ export class StoreClerkComponent implements OnInit {
     this.inwardModel.qcdate = new Date();
   }
 
+  //get Location Master List
+  getLocationMasterList() {
+    this.spinner.show();
+    this.locationMasterList = [];
+    this.dynamicData = new DynamicSearchResult();
+    this.dynamicData.query = "select  * from wms.PrinterLocationmaster where type='GR' and deleteflag !=true order by printerid";
+    this.wmsService.GetListItems(this.dynamicData).subscribe(data => {
+      this.locationMasterList = data;
+      this.spinner.hide();
+    })
+  }
   initItemRows() {
     return this.formBuilder.group({
       itemname: [''],
@@ -299,6 +315,7 @@ export class StoreClerkComponent implements OnInit {
   generateBarcode(details: any) {
     debugger;
     this.showPrintDialog = true;
+    this.printerid = "";
     this.materialCode = details.material;
     this.receivedDate = this.datePipe.transform(details.receiveddate, this.constants.dateFormat);
     this.acceptedQty = details.confirmqty;
@@ -308,6 +325,8 @@ export class StoreClerkComponent implements OnInit {
     this.grnNo = details.grnnumber;
     this.noofpieces = details.receivedqty;
     this.lineitmno = details.lineitemno;
+    this.inwardid = details.inwardid;
+    this.inwmasterid = details.inwmasterid;
   }
   generatelabel(details: any) {
     debugger;
@@ -332,9 +351,10 @@ export class StoreClerkComponent implements OnInit {
   }
 
   GenerateBarcode() {
-    debugger;
-    this.showPrintDialog = false;
-    this.showPrintLabel = true;
+    if (!this.printerid) {
+      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Select Location' });
+      return;
+    }
     this.printData.materialid = this.materialCode;
     this.printData.invoiceno = this.podetailsList[0].invoiceno;
     this.printData.grnno = this.podetailsList[0].grnnumber;
@@ -346,8 +366,15 @@ export class StoreClerkComponent implements OnInit {
     this.printData.totalboxes = this.totalboxes;
     this.printData.receivedqty = this.receivedqty;
     this.printData.lineitemno = this.lineitmno;
+    this.printData.inwardid = this.inwardid;
+    this.printData.printerid = this.printerid;
+    this.printData.inwmasterid = this.inwmasterid;
+    this.spinner.show();
     //api call
     this.wmsService.generateBarcodeMaterial(this.printData).subscribe(data => {
+      this.spinner.hide();
+      this.showPrintDialog = false;
+      this.showPrintLabel = true;
       if (data) {
         debugger;
         this.printData = data;
@@ -376,6 +403,9 @@ export class StoreClerkComponent implements OnInit {
     this.printData.noofprint = this.noOfPrint;
     this.printData.receiveddate = this.receivedDate;
     this.printData.printedby = this.employee.employeeno;
+    this.printData.inwardid = this.inwardid;
+    this.printData.printerid = this.printerid;
+    this.printData.inwmasterid = this.inwmasterid;
     //api call
     this.wmsService.printBarcodeMaterial(this.printData).subscribe(data => {
       if (data) {

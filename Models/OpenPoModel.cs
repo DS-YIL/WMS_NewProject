@@ -152,7 +152,7 @@ namespace WMS.Models
 		public string customerpono { get; set; }
 		public string custlineitemno { get; set; }
 		public string customer { get; set; }
-		public string inwardid { get; set; }
+		public int inwardid { get; set; }
 		public string soldto { get; set; }
 
 		public string lineitemno { get; set; }
@@ -172,6 +172,8 @@ namespace WMS.Models
 
 		public string custpolineitem { get; set; }
 		public string serviceorderno { get; set; }
+		public int printerid { get; set; }
+		public string inwmasterid { get; set; }
 
 	}
 
@@ -462,7 +464,7 @@ namespace WMS.Models
 		public string locatorname { get; set; }
 		public int? rackid { get; set; }
 		public string racknumber { get; set; }
-		public int? binid {get;set;}
+		public int? binid { get; set; }
 		public string binnumber { get; set; }
 		public string itemlocation { get; set; }
 		public int quantity { get; set; }
@@ -899,6 +901,9 @@ namespace WMS.Models
 		public DateTime reprintedon { get; set; }
 		public string reprintedby { get; set; }
 		public int reprintcount { get; set; }
+		public int inwardid { get; set; }
+		public int noofprint { get; set; }
+		public int printerid { get; set; }
 	}
 
 	public class CycleCountList
@@ -1238,7 +1243,7 @@ namespace WMS.Models
 		public string accessname { get; set; }
 		public string plantid { get; set; }
 		public bool isdelegatemember { get; set; }
-		
+
 	}
 	public class Enquirydata
 	{
@@ -2384,6 +2389,15 @@ public class printonholdGR
 	public string gateentryidqrpath { get; set; }
 	public string createdby { get; set; }
 	public DateTime createddate { get; set; }
+	public int inwardid { get; set; }
+	public int printerid { get; set; }
+	public string printedby { get; set; }
+	public int printcount { get; set; }
+	public bool isprint { get; set; }
+	public DateTime printedon { get; set; }
+	public string  inwmasterid { get; set; }
+	public string reprintedby { get; set; }
+
 
 }
 public class vendorMaster

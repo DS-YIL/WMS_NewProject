@@ -11,7 +11,7 @@
           </span>
         </div>
         <div class="col-lg-4 col-md-4 form-inline"></div>
-     </div>
+      </div>
       <form class="form-inline labelheading">
         <label>Pending receipts:</label>&nbsp;&nbsp;
         <p-autoComplete [(ngModel)]="selectedpendingpono" [suggestions]="filteredpos" [ngModelOptions]="{standalone: true}" placeholder="search by supplier/PONo" [forceSelection]="false" (onSelect)="showpodata()" (change)="showpodata()" (completeMethod)="filterpos($event)" [size]="30"
@@ -26,7 +26,7 @@
       </form>
     </div>
     <div class="card-body">
-     <div class="row" style="margin-top:0px;">
+      <div class="row" style="margin-top:0px;">
         <div class="col-lg-3 col-md-3 labelheading" style="font-weight:600;font-size:14px;color:darkblue;" *ngIf="podetailsList.length>0 || isnonpoentry">
           Invoice No : <span class="labeltext">{{lblinvoiceno}}</span>
         </div>
@@ -37,8 +37,8 @@
         <div class="col-lg-4 col-md-4 labelheading" style="font-weight:600;font-size:14px;color:darkblue;" *ngIf="isnonpoentry">
           <button *ngIf="isnonpoentry && !grnnumber" type="button" pTooltip="Add marerial" style="border-radius: 10em!important;background-color: white;float:right; border-color: rgb(96, 123, 212);" rounded="true" size="lg" class="my-0" (click)="addrows()"> <i class="fa fa-plus" style="font-size: 15px;color: green;float:right"></i></button><label *ngIf="isnonpoentry" style="font-size: 15px;float:right;padding:0px; color: rgb(96, 123, 212);"> &nbsp;&nbsp;Add Material</label>
         </div>
-     </div>
-     <div class="row" *ngIf="!isacceptance" style="max-width:100%;position: relative; margin-top:5px;margin-left:3px;">
+      </div>
+      <div class="row" *ngIf="!isacceptance" style="max-width:100%;position: relative; margin-top:5px;margin-left:3px;">
         <p-table #dt [value]="podetailsList" [style]="{'width':'100%','overflow':'auto!important'}"
                  [responsive]="true" [rows]="10"
                  [resizableColumns]="true"
@@ -124,20 +124,20 @@
               <th style="text-align:center;width:8%;">Material Barcode</th>
               <th style="text-align:center;width:15%;">Remarks</th>
               <th style="text-align:center;width:7%;">Quality status</th>
-           </tr>
+            </tr>
           </ng-template>
           <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
-           <tr>
-             <td class="ptable-cell" style="text-align:right;width:5%;">{{ri+1}}</td>
+            <tr>
+              <td class="ptable-cell" style="text-align:right;width:5%;">{{ri+1}}</td>
               <td class="ptable-cell" style="text-align:center;width:10%;">{{rowData.pono}}</td>
               <td class="ptable-cell" style="text-align:center;width:7%;">{{rowData.lineitemno}}</td>
-             <td class="ptable-cell" style="text-align:center;width:12%;">
+              <td class="ptable-cell" style="text-align:center;width:12%;">
                 <span>{{rowData.material}}</span>
-             </td>
+              </td>
               <td class="ptable-cell" style="text-align:left">
                 <span *ngIf="rowData.poitemdescription">{{rowData.poitemdescription}}</span>
                 <span *ngIf="!rowData.poitemdescription">-</span>
-             </td>
+              </td>
               <td class="ptable-cell" style="text-align:right;width:8%;">
                 <span>{{rowData.receivedqty}}</span>
               </td>
@@ -159,11 +159,11 @@
               <td style="text-align:center;width:7%;">
                 <span [innerText]="getstatus(rowData)"></span>
               </td>
-           </tr>
+            </tr>
           </ng-template>
         </p-table>
       </div>
-   </div>
+    </div>
     <div class="card-footer" *ngIf="podetailsList.length">
       <div *ngIf="!isacceptance">
         <button type="button" *ngIf="!grnnumber" class="btn btn-success" style="margin-left:45%" [disabled]="grnnumber || (isallreceived && !isnonpo) || isonHold" (click)="onsubmit()">Submit</button>
@@ -171,7 +171,7 @@
       <div *ngIf="isacceptance">
         <button type="button" class="btn btn-success" style="margin-left:45%" [disabled]="returned" (click)="onreturnsubmit()">Submit</button>
       </div>
-   </div>
+    </div>
     <p-dialog header="Generate Barcode" [(visible)]="showPrintDialog" [contentStyle]="{'overflow':'visible'}" [style]="{width: '80%'}">
       <div class="row ">
         <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
@@ -192,37 +192,48 @@
         <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
           <input type="text" [disabled]="true" class="form-control" [(ngModel)]="receivedqty" />
         </div>
-     </div>
-     <br />
-     <div class="row">
-       <div class="col-lg-2 col-md-2 col-sm-2">
-         <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">Line Item No.:</label>
-       </div>
-       <div class="col-lg-2 col-md-2 col-sm-2">
-         <input type="text" [disabled]="true" class="form-control" [(ngModel)]="lineitmno" />
-       </div>
-       <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
-         <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">Total No. of Boxes:</label>
-       </div>
-       <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
-         <input type="text" class="form-control" [(ngModel)]="totalboxes" />
-       </div>
-       <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
-         <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">No. of materials in box:</label>
-       </div>
-       <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
-         <input type="text" class="form-control" [(ngModel)]="noofpieces" style="width: 100px;text-align:center" />
-       </div>
+      </div>
+      <br />
+      <div class="row">
+        <div class="col-lg-2 col-md-2 col-sm-2">
+          <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">Line Item No.:</label>
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-2">
+          <input type="text" [disabled]="true" class="form-control" [(ngModel)]="lineitmno" />
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
+          <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">Total No. of Boxes:</label>
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
+          <input type="text" class="form-control" [(ngModel)]="totalboxes" />
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
+          <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">No. of materials in box:</label>
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
+          <input type="text" class="form-control" [(ngModel)]="noofpieces" style="width: 100px;text-align:center" />
+        </div>
 
-     </div>
+      </div>
       <br>
       <div class="row">
-       
+
         <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
           <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">Box No.:</label>
         </div>
         <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
           <input type="text" class="form-control" [(ngModel)]="boxno" />
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
+          <label class="labelheading">Location :</label>
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
+          <select [(ngModel)]="printerid" class="form-control">
+            <option disabled value=""> -- Select Location -- </option>
+            <option *ngFor=" let loc of locationMasterList " value={{loc.printerid}}>
+              {{loc.location}}
+            </option>
+          </select>
         </div>
       </div>
       <br>
@@ -233,9 +244,9 @@
         </div>
       </div>
     </p-dialog>
-   <p-dialog header="Print Barcode" [(visible)]="showPrintLabel" [contentStyle]="{'overflow':'auto'}" [style]="{width: '50%'}">
+    <p-dialog header="Print Barcode" [(visible)]="showPrintLabel" [contentStyle]="{'overflow':'auto'}" [style]="{width: '50%'}">
       <form>
-       <div class="row">
+        <div class="row">
           <div class="col-lg-1 col-md-1 col-sm-1"></div>
           <div class="col-lg-10 col-md-10 col-sm-10">
             <div><b>Ref# -</b> {{printData.pono}}</div>
@@ -360,11 +371,11 @@
               </tr>
             </table>
           </div>
-       </div>
-       <br />
-       <div class="row">
+        </div>
+        <br />
+        <div class="row">
           <div class="col-lg-5 col-md-5 col-sm-5"></div>
-         <div class="col-lg-3 col-md-3 col-sm-3">
+          <div class="col-lg-3 col-md-3 col-sm-3">
             <button type="button" class="btn btn-primary" (click)="printLabel()" label="Save">{{print}}</button>
           </div>
         </div>
