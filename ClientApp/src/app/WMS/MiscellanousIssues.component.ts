@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormArray, FormControl, ValidatorFn } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { wmsService } from '../WmsServices/wms.service';
@@ -6,7 +6,7 @@ import { constants } from '../Models/WMSConstants';
 import { Employee, DynamicSearchResult, searchList } from '../Models/Common.Model';
 import { NgxSpinnerService } from "ngx-spinner";
 import { miscellanousIssueData, ddlmodel } from 'src/app/Models/WMS.Model';
-import { MessageService } from 'primeng/api';
+import { MessageService, LazyLoadEvent } from 'primeng/api';
 import { isNullOrUndefined } from 'util';
 
 @Component({
@@ -16,7 +16,6 @@ import { isNullOrUndefined } from 'util';
 export class MiscellanousIssueComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder, private messageService: MessageService, private wmsService: wmsService, private route: ActivatedRoute, private router: Router, public constants: constants, private spinner: NgxSpinnerService) { }
-
   public IssueList: Array<any> = [];
   public IssueHistoryList: Array<any> = [];
   public ReasonList: Array<any> = [];
@@ -34,27 +33,40 @@ export class MiscellanousIssueComponent implements OnInit {
   filteredpono: any[] = [];
   issuereason: string = "";
   ishistoryview: boolean = false;
+  getVirtuallistdata: any[] = [];
+  getVirtualhistorylistdata: any[] = [];
+  loading: boolean;
+  loadinghistory: boolean;
+  totalRecords: number;
+  totalhistoryRecords: number;
+  displaymaintable: boolean = false;
+  displayhistorytable: boolean = false;
 
   ngOnInit() {
     if (localStorage.getItem("Employee"))
       this.employee = JSON.parse(localStorage.getItem("Employee"));
     else
       this.router.navigateByUrl("Login");
-
+    this.displaymaintable = false;
+    this.displayhistorytable = false;
     this.MisData = new miscellanousIssueData();
     this.ishistoryview = false;
+    this.loading = true;
+    this.loadinghistory = true;
     this.projectlists = [];
     this.IssueHistoryList = [];
     this.saveMisData = [];
     this.filteredproject = [];
+    this.getVirtuallistdata = [];
     this.selectedprojectmodel = new ddlmodel();
     this.polist = [];
     this.filteredpono = [];
     this.selectedponomodel = null;
     this.issuereason = "";
-    this.getprojects();
+    //this.getprojects();
+    this.getallstockmaterials();
     this.getMisIssueReasonList();
-    this.getMiscellanousIssueListhistory();
+    //this.getMiscellanousIssueListhistory();
     //this.getMiscellanousIssueList();
   }
 
@@ -77,17 +89,26 @@ export class MiscellanousIssueComponent implements OnInit {
   }
 
   createmiscissue() {
+    this.displaymaintable = true;
+    this.displayhistorytable = false;
     this.ishistoryview = false;
   }
   viewhistory() {
+    this.displaymaintable = false;
+    this.displayhistorytable = true;
     this.ishistoryview = true;
+    this.getMiscellanousIssueListhistory();
   }
   getMiscellanousIssueListhistory() {
     this.IssueHistoryList = [];
+    this.getVirtualhistorylistdata = [];
     this.spinner.show();
+    this.displayhistorytable = false;
     this.wmsService.getMiscellanousIssueListdatahistory().subscribe(data => {
       this.spinner.hide();
       this.IssueHistoryList = data;
+      this.displayhistorytable = true;
+      this.totalhistoryRecords = this.IssueHistoryList.length;
     });
   }
   getprojects() {
@@ -125,21 +146,31 @@ export class MiscellanousIssueComponent implements OnInit {
     }
 
   }
+  
   resetpage() {
-    this.IssueList = [];
+    //this.IssueList = [];
     this.selectedponomodel = null;
     this.selectedprojectmodel = null;
     this.issuereason = "";
     this.initialStock = true;
+    this.displaymaintable = false;
+    this.loading = true;
+    this.getVirtuallistdata = [];
+    this.getallstockmaterials();
   }
 
   issuemiscellenious() {
+    debugger;
     this.saveMisData = [];
     var invalidrcv = this.IssueList.filter(function (element, index) {
       return (!isNullOrUndefined(element.issuedqty) && element.issuedqty != 0 );
     });
     if (invalidrcv.length == 0) {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Enter Issue quantity' });
+      return;
+    }
+    if (!this.issuereason || this.issuereason == "") {
+      this.messageService.add({ severity: 'error', summary: 'Error Message', detail: 'Select Reason' });
       return;
     }
     var invalidrcv1 = this.IssueList.filter(function (element, index) {
@@ -149,10 +180,10 @@ export class MiscellanousIssueComponent implements OnInit {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Issue quanity can not exceed available quantity.' });
       return;
     }
-    this.IssueList = this.IssueList.filter(function (element, index) {
+    var finallist = this.IssueList.filter(function (element, index) {
       return (element.issuedqty > 0);
     });
-    this.IssueList.forEach(item => {
+    finallist.forEach(item => {
       let dt = new miscellanousIssueData();
       dt.ProjectId = item.projectid;
       dt.pono = item.pono;
@@ -161,6 +192,7 @@ export class MiscellanousIssueComponent implements OnInit {
       dt.itemlocation = item.itemlocation;
       dt.createdby = this.employee.employeeno;
       dt.issuedqty = item.issuedqty;
+      dt.Reason = this.issuereason;
       this.saveMisData.push(dt);
 
     });
@@ -170,7 +202,7 @@ export class MiscellanousIssueComponent implements OnInit {
       if (String(data) == "saved") {
         this.messageService.add({ severity: 'success', summary: '', detail: 'Issued' });
         this.resetpage();
-        this.getMiscellanousIssueListhistory();
+        //this.getMiscellanousIssueListhistory();
       }
       else {
         this.messageService.add({ severity: 'error', summary: '', detail: 'Issue Failed' });
@@ -223,6 +255,46 @@ export class MiscellanousIssueComponent implements OnInit {
       if (this.IssueList.length == 0) {
         this.messageService.add({ severity: 'error', summary: '', detail: 'Material not available in stock.' });
       }
+    });
+
+  }
+
+  //loadLazy(event: LazyLoadEvent) {
+  //  debugger;
+  //  this.loading = true;
+  //  setTimeout(() => {
+  //    if (this.IssueList) {
+  //      this.getVirtuallistdata = this.IssueList.slice(event.first, (event.first + event.rows));
+  //      this.loading = false;
+  //    }
+  //  }, 1000);
+  //}
+  //loadhistoryLazy(event: LazyLoadEvent) {
+  //  debugger;
+  //  this.loadinghistory = true;
+  //  setTimeout(() => {
+  //    if (this.IssueHistoryList) {
+  //      this.getVirtualhistorylistdata = this.IssueHistoryList.slice(event.first, (event.first + event.rows));
+  //      this.loadinghistory = false;
+  //    }
+  //  }, 1000);
+  //}
+
+  getallstockmaterials() {
+    this.spinner.show();
+    this.IssueList = [];
+    this.displaymaintable = false;
+    this.wmsService.getMiscellanousIssueListwithoutfilter().subscribe(data => {
+    
+      this.IssueList = data;
+      this.totalRecords = this.IssueList.length;
+      this.displaymaintable = true;
+        this.spinner.hide();
+      if (this.IssueList.length == 0) {
+        
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Material not available in stock.' });
+      }
+
     });
 
   }

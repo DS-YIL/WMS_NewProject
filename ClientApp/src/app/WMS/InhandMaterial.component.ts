@@ -260,7 +260,7 @@ export class InhandMaterialComponent implements OnInit {
     this.tempdescription = poitemdescription;
     this.temprowdata = Object.assign({}, data); 
     this.spinner.show();
-    this.wmsService.getmatinhandlocations(poitemdescription, data.material, data.projectname).subscribe(data => {
+    this.wmsService.getmatinhandlocations(poitemdescription, data.material, data.projectname, data.pono).subscribe(data => {
       this.getlocationlistdata = data;
       this.showadddatamodel = true;
       this.spinner.hide();

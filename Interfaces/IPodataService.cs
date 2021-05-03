@@ -265,7 +265,7 @@ namespace WMS.Interfaces
 
 		Task<IEnumerable<testcrud>> gettestcrud();
 		Task<IEnumerable<MaterialinHand>> getmatinhand(inventoryFilters filters);
-		Task<IEnumerable<matlocations>> getmatinhandlocation(string material, string materialid, string projectid);
+		Task<IEnumerable<matlocations>> getmatinhandlocation(string material, string materialid, string projectid,string pono);
 		Task<IEnumerable<StockModel>> getinitialstock(string code);
 		Task<IEnumerable<StockModel>> getinitialstockall(string code);
 		Task<IEnumerable<StockModel>> getinitialstockEX(string code);
@@ -311,6 +311,7 @@ namespace WMS.Interfaces
 		Task<IEnumerable<GraphModelNew>> getWeeklyUserdashboardtransfer(DashBoardFilters filters);
 		Task<IEnumerable<StockModel>> getMiscellanousIssueList(bool initialStock);
 		Task<IEnumerable<StockModel>> getMiscellanousIssueListdata(string initialStock,string pono, string projectid);
+		Task<IEnumerable<StockModel>> getMiscellanousIssueListdatanofilter();
 		bool miscellanousIssueDataUpdate(miscellanousIssueData data);
 		string multiplemiscellanousIssueDataUpdate(List<miscellanousIssueData> data);
 		Task<IEnumerable<StockModel>> getMiscellanousReceiptsList();

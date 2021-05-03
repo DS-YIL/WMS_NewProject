@@ -4729,6 +4729,186 @@ namespace WMS.Controllers
 
 		}
 
+
+		/* Name of Function : <<miscellanousIssueDataUpdatek>>  Author :<<prasanna>>  
+		 Date of Creation <<21-12-2019>>
+		 Purpose : <<miscellanousIssueDataUpdate>>
+		 <param name="datamodel"></param>
+		 Review Date :<<>>   Reviewed By :<<>>
+		 */
+		[HttpGet]
+		[Route("uploadmiscissue")]
+		public string multiplemiscellanousIssueDataUpdate()
+		{
+			using (var DB = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				string result = "";
+
+				try
+				{
+					//var filePath = serverPath + "Yil_Po_Daily_report_" + DateTime.Now.ToString("dd-MM-yyyy").Replace("-", "_") + ".xlsx";
+					var filePath = @"D:\A_StagingTable\Miscissued_insert.xlsx";
+					DB.Open();
+					var filePathstr = filePath;
+					string[] filearr = filePathstr.Split("\\");
+					string nameoffile = filearr[filearr.Length - 1];
+					DataTable dtexcel = new DataTable();
+					string poitem = "";
+					System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+					using (var stream1 = System.IO.File.Open(filePath, FileMode.Open, FileAccess.Read))
+					{
+						using (var reader = ExcelReaderFactory.CreateReader(stream1))
+						{
+
+							var resultxx = reader.AsDataSet(new ExcelDataSetConfiguration()
+							{
+								ConfigureDataTable = (_) => new ExcelDataTableConfiguration()
+								{
+									UseHeaderRow = true
+								}
+							});
+
+							dtexcel = resultxx.Tables[0];
+
+						}
+					}
+					string uploadcode = Guid.NewGuid().ToString();
+
+					int i = 0;
+					foreach (DataRow row in dtexcel.Rows)
+					{
+						i++;
+						miscellanousIssueData item = new miscellanousIssueData();
+						item.ProjectId = Conversion.toStr(row["Project"]);
+						item.pono = Conversion.toStr(row["PONO"]);
+						item.material = Conversion.toStr(row["Material"]);
+						item.materialdescription = Conversion.toStr(row["Description"]);
+						item.issuedqty = Conversion.Todecimaltype(row["Issuedqty"]);
+						string materialdescription = null;
+						if (item.materialdescription != null)
+						{
+							materialdescription = item.materialdescription.Replace("\'", "''");
+						}
+						string querypmb = "select sum(si.quantity::decimal(19,5)) as quantity ";
+						querypmb += " from wms.st_initialstock si  where si.projectid = '"+ item.ProjectId + "' and si.pono = '" + item.pono + "'";
+						querypmb +=  " and si.material = '" + item.material + "' and si.materialdescription = '"+ materialdescription + "'";
+						querypmb += " group by si.projectid,si.pono,si.material,si.materialdescription";
+						var rslttmb = DB.ExecuteScalar(querypmb, null);
+						decimal? decmresult = null;
+						if (rslttmb != null)
+						{
+							decmresult =  Conversion.Todecimaltype(rslttmb);
+						}
+
+						
+							string stockquery = "";
+							if (item.ProjectId != null && item.ProjectId.Trim() != "" && item.pono != null && item.pono.Trim() != "")
+							{
+								stockquery = "select * from wms.wms_stock where materialid = '" + item.material + "' and lower(poitemdescription) = lower('" + materialdescription + "') and availableqty > 0 and  projectid = '" + item.ProjectId + "' and pono = '" + item.pono + "' order by itemid";
+							}
+							else
+							{
+								stockquery = "select * from wms.wms_stock where materialid = '" + item.material + "' and lower(poitemdescription) = lower('" + materialdescription + "') and availableqty > 0 ";
+								if (item.ProjectId == null || item.ProjectId.Trim() == "")
+								{
+									stockquery += " and (projectid is null or projectid = '')";
+								}
+								else
+								{
+									stockquery += " and projectid = '" + item.ProjectId + "'";
+
+								}
+								if (item.pono == null || item.pono.Trim() == "")
+								{
+									stockquery += " and (pono is null or pono = '')";
+								}
+								else
+								{
+									stockquery += " and pono = '" + item.pono + "'";
+
+								}
+								stockquery += " order by itemid";
+							}
+							var stockdata = DB.QueryAsync<StockModel>(stockquery, null, commandType: CommandType.Text);
+							if (stockdata != null)
+							{
+								decimal? quantitytoissue = item.issuedqty;
+								decimal? issuedqty = 0;
+								foreach (StockModel itm in stockdata.Result)
+								{
+									DateTime approvedon = System.DateTime.Now;
+									string materialid = item.material;
+									if (quantitytoissue <= itm.availableqty)
+									{
+										issuedqty = quantitytoissue;
+									}
+									else
+									{
+										issuedqty = itm.availableqty;
+									}
+
+									quantitytoissue = quantitytoissue - issuedqty;
+									string insertqueryforstatusforqty = WMSResource.updateqtyafterissue.Replace("#itemid", Convert.ToString(itm.itemid)).Replace("#issuedqty", Convert.ToString(issuedqty));
+									var data1 = DB.ExecuteScalar(insertqueryforstatusforqty, new
+									{
+
+									});
+									string transactiontype = "Miscellanous Issue";
+									int reason = 2;
+									string remarks = "";
+								    string createdby = "140020";
+									DateTime createddate = DateTime.Now;
+									string insertpry = WMSResource.updateStockLog;
+									string projectid = item.ProjectId;
+
+									DB.ExecuteScalar(insertpry, new
+									{
+										itm.itemid,
+										transactiontype,
+										issuedqty,
+										reason,
+										remarks,
+										createddate,
+										createdby,
+										projectid,
+										item.pono,
+										uploadcode
+									});
+
+									if (quantitytoissue <= 0)
+									{
+										break;
+									}
+
+
+								}
+
+
+
+							}
+						
+
+					}
+
+
+					result = "saved";
+				}
+
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "miscellanousIssueDataUpdate", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
+					result = "";
+					return result;
+				}
+				finally
+				{
+					DB.Close();
+				}
+				return result;
+			}
+		}
+
+
 	}
 }
 

@@ -26,7 +26,7 @@
   <div class="card-body" style="overflow-y:hidden;padding:0px;margin-left:40px;margin-right:40px">
     <div *ngIf="!ishistoryview">
       <div class="row" style="padding:10px;">
-        <div class="col-lg-3 col-md-3 form-inline">
+        <!--<div class="col-lg-3 col-md-3 form-inline">
           <div class="form-inline">
             <label class="labelheading">Stock :</label>&nbsp;&nbsp;
             <select [(ngModel)]="initialStock" class="form-control" (change)="getMiscellanousIssueList()">
@@ -50,8 +50,8 @@
 
 
 
-        </div>
-        <div class="col-lg-3 col-md-3 form-inline">
+        </div>-->
+        <!--<div class="col-lg-3 col-md-3 form-inline">
           <label class="labelheading">Reason:</label>&nbsp;&nbsp;
           <label class="labeltext">
             <select [(ngModel)]="issuereason" class="form-control">
@@ -59,28 +59,30 @@
               <option *ngFor="let ca of ReasonList" [ngValue]="ca.reasonid">{{ca.reason}}</option>
             </select>
           </label>&nbsp;&nbsp;
-        </div>
+        </div>-->
       </div>
 
-
-      <p-table #dt [value]="IssueList" [paginator]="true" [rows]="10" [resizableColumns]="true" [responsive]="true">
+      <div *ngIf="!displaymaintable">
+          <h4 class="tex-primary text-center">Loading please wait....</h4>
+      </div>
+      <p-table #dt [value]="IssueList" [paginator]="true" [rows]="10" [resizableColumns]="true" [responsive]="true" *ngIf="displaymaintable">
         <ng-template pTemplate="header">
           <tr class="mprltbldata">
             <th style="text-align:center;width:70px">S.No</th>
-            <!--<th style="text-align:center;width:150px">Project id</th>
-        <th style="text-align:center;width:150px">PO No</th>-->
-            <th style="text-align:center;width:200px">Material</th>
+            <th style="text-align:center;width:120px">Project id</th>
+            <th style="text-align:center;width:120px">PO No</th>
+            <th style="text-align:center;width:150px">Material</th>
             <!--<th style="text-align:center;width:180px">Material Description</th>-->
             <th style="text-align:center;">PO Item Description</th>
-            <th style="text-align:center;width:200px">Storage Location</th>
+            <th style="text-align:center;width:180px">Storage Location</th>
             <th style="text-align:center;width:150px">Available Quantity</th>
             <th style="text-align:center;width:150px">Value</th>
             <th style="text-align:center;width:150px">Issue Qty</th>
           </tr>
           <tr>
             <th></th>
-            <!--<th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'projectid', 'startsWith')"></th>
-        <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'pono', 'startsWith')"></th>-->
+            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'projectid', 'startsWith')"></th>
+        <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'pono', 'startsWith')"></th>
             <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'material', 'startsWith')"></th>
             <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'poitemdescription', 'contains')"></th>
             <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'itemlocation', 'startsWith')"></th>
@@ -92,8 +94,8 @@
         <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
           <tr>
             <td class="ptable-cell" style="text-align:center">{{ri+1}}</td>
-            <!--<td class="ptable-cell" style="text-align:left">{{rowData.projectid}}</td>
-        <td class="ptable-cell" style="text-align:left">{{rowData.pono}}</td>-->
+            <td class="ptable-cell" style="text-align:left">{{rowData.projectid}}</td>
+        <td class="ptable-cell" style="text-align:left">{{rowData.pono}}</td>
             <td class="ptable-cell" style="text-align:left">{{rowData.material}}</td>
             <!--<td class="ptable-cell" style="text-align:left">{{rowData.materialdescription}}</td>-->
             <td class="ptable-cell" style="text-align:left">{{rowData.poitemdescription}}</td>
@@ -110,7 +112,10 @@
 
     </div>
     <div *ngIf="ishistoryview">
-      <p-table #dt1 [value]="IssueHistoryList" [paginator]="true" [rows]="10">
+      <div *ngIf="!displayhistorytable">
+        <h4 class="text-primary text-center">Loading please wait....</h4>
+      </div>
+      <p-table #dt1 [value]="IssueHistoryList" [paginator]="true" [rows]="10" *ngIf="displayhistorytable">
         <ng-template pTemplate="header">
           <tr class="mprltbldata">
             <th style="text-align:center;width:70px">S.No</th>
@@ -165,10 +170,25 @@
     </div>
    
   </div>
-  <div class="card-footer" *ngIf="IssueList.length">
+  <div class="card-footer" *ngIf="IssueList.length && !ishistoryview">
+    <div class="row">
+      <div class="col-lg-5 col-md-5 form-inline">
+        <label class="labelheading" style="margin-left:50px;">Reason:</label>&nbsp;&nbsp;
+        <label class="labeltext">
+          <select [(ngModel)]="issuereason" class="form-control">
+            <option value="">Select</option>
+            <option *ngFor="let ca of ReasonList" [ngValue]="ca.reasonid">{{ca.reason}}</option>
+          </select>
+        </label>&nbsp;&nbsp;
+      </div>
+      <div class="col-lg-1 col-md-1 form-inline">
+        <button type="button" class="btn btn-success" (click)="issuemiscellenious()">Submit</button>
+      </div>
+    </div>
     
-      <button type="button" class="btn btn-success" style="margin-left:45%"  (click)="issuemiscellenious()">Submit</button>
+
    
+
   </div>
 </div>
 

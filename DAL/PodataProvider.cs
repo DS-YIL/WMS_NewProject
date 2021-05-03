@@ -1767,9 +1767,11 @@ namespace WMS.DAL
 								{
 									po.isasn = false;
 								}
-								string descriptionstr = "";
-								if (!string.IsNullOrEmpty(po.poitemdescription))
+								string descriptionstr = null;
+								if (po.poitemdescription!= null)
+                                {
 									descriptionstr = po.poitemdescription.Replace("\'", "''");
+								}
 								var fdata = datalist.Where(o => o.Material == po.Material && o.poitemdescription == descriptionstr && o.pono == po.pono && o.lineitemno == po.lineitemno && o.asnno == po.asnno).FirstOrDefault();
 								if (fdata == null)
 								{
@@ -4099,8 +4101,12 @@ namespace WMS.DAL
 					foreach (var item in dataobj)
 					{
 						var createdate = Convert.ToDateTime(item.createddate).ToString("yyyy-MM-dd");
-						string descriptionstr = item.Materialdescription.Replace("\'", "''");
-						string stockquery = "select * from wms.wms_stock where projectid='" + item.projectid + "' and pono='" + item.pono + "' and materialid = '" + item.materialid + "' and lower(poitemdescription) = lower('" + descriptionstr + "') and availableqty > 0 and itemlocation = '" + item.itemlocation + "' and createddate::DATE = '" + createdate + "' order by itemid";
+						string descriptionstr = null;
+						if (item.Materialdescription != null)
+                        {
+							descriptionstr = item.Materialdescription.Replace("\'", "''");
+						}
+						string stockquery = "select * from wms.wms_stock where projectid='"+item.projectid+"' and pono='"+item.pono+"' and materialid = '" + item.materialid + "' and lower(poitemdescription) = lower('" + descriptionstr + "') and availableqty > 0 and itemlocation = '" + item.itemlocation + "' and createddate::DATE = '" + createdate + "' order by itemid";
 						var stockdata = DB.QueryAsync<StockModel>(stockquery, null, commandType: CommandType.Text);
 						if (stockdata != null)
 						{
@@ -4899,8 +4905,11 @@ namespace WMS.DAL
 					{
 
 						var createdate = Convert.ToDateTime(item.createddate).ToString("yyyy-MM-dd");
-						item.materialdescription = item.materialdescription.Replace("\'", "''");
-						string stockquery = "select * from wms.wms_stock where projectid='" + item.projectid + "' and pono = '" + item.pono + "' and materialid = '" + item.materialid + "' and lower(poitemdescription) = lower('" + item.materialdescription + "') and availableqty > 0 and itemlocation = '" + item.itemlocation + "' and createddate::DATE = '" + createdate + "' order by itemid";
+						if (item.materialdescription != null)
+						{
+							item.materialdescription = item.materialdescription.Replace("\'", "''");
+						}
+						string stockquery = "select * from wms.wms_stock where projectid='"+item.projectid+"' and pono = '"+item.pono+"' and materialid = '" + item.materialid + "' and lower(poitemdescription) = lower('" + item.materialdescription + "') and availableqty > 0 and itemlocation = '" + item.itemlocation + "' and createddate::DATE = '" + createdate + "' order by itemid";
 						var stockdata = pgsql.QueryAsync<StockModel>(stockquery, null, commandType: CommandType.Text);
 						if (stockdata != null)
 						{
@@ -5976,7 +5985,11 @@ namespace WMS.DAL
 
 				try
 				{
-					string descriptionstr = description.Replace("\'", "''");
+					string descriptionstr = null;
+					if (description != null)
+					{
+						descriptionstr = description.Replace("\'", "''");
+					}
 					string query = WMSResource.checkoldmaterialwithdesc.Replace("#materialid", materialid).Replace("#desc", descriptionstr).Replace("#createddate", Convert.ToString(createddate));
 
 
@@ -6014,7 +6027,11 @@ namespace WMS.DAL
 
 				try
 				{
-					string descriptionstr = description.Replace("\'", "''");
+					string descriptionstr = null;
+					if (description != null)
+					{
+						descriptionstr = description.Replace("\'", "''");
+					}
 					string query = WMSResource.checkoldmaterialwithstore.Replace("#materialid", materialid).Replace("#store", store).Replace("#desc", descriptionstr).Replace("#createddate", Convert.ToString(createddate));
 
 
@@ -6420,7 +6437,11 @@ namespace WMS.DAL
 
 				try
 				{
-					string descriptionstr = description.Replace("\'", "''");
+					string descriptionstr = null;
+					if (description != null)
+					{
+						descriptionstr = description.Replace("\'", "''");
+					}
 					string query = WMSResource.getitemlocationbymaterialdesc.Replace("#materialid", material).Replace("#desc", descriptionstr);
 					await pgsql.OpenAsync();
 					var data = await pgsql.QueryAsync<IssueRequestModel>(
@@ -6459,8 +6480,12 @@ namespace WMS.DAL
 
 				try
 				{
-					description = description.Replace("\'", "''");
-					string query = WMSResource.getitemlocationbymaterialdescpo.Replace("#materialid", material).Replace("#desc", description).Replace("#projectid", projectid).Replace("#pono", pono);
+					string descriptionstr = null;
+					if (description != null)
+					{
+						descriptionstr = description.Replace("\'", "''");
+					}
+					string query = WMSResource.getitemlocationbymaterialdescpo.Replace("#materialid", material).Replace("#desc", descriptionstr).Replace("#projectid",projectid).Replace("#pono",pono);
 					await pgsql.OpenAsync();
 					var data = await pgsql.QueryAsync<IssueRequestModel>(
 					  query, null, commandType: CommandType.Text);
@@ -6497,8 +6522,12 @@ namespace WMS.DAL
 
 				try
 				{
-					string descriptionstr = description.Replace("\'", "''");
-					string query = WMSResource.getitemlocationbystock.Replace("#materialid", material).Replace("#desc", descriptionstr).Replace("#store", store).Replace("#project", projectid).Replace("#pono", pono);
+					string descriptionstr = null;
+					if (description != null)
+					{
+						descriptionstr = description.Replace("\'", "''");
+					}
+					string query = WMSResource.getitemlocationbystock.Replace("#materialid", material).Replace("#desc", descriptionstr).Replace("#store", store).Replace("#project",projectid).Replace("#pono",pono);
 					await pgsql.OpenAsync();
 					var data = await pgsql.QueryAsync<IssueRequestModel>(
 					  query, null, commandType: CommandType.Text);
@@ -6533,7 +6562,11 @@ namespace WMS.DAL
 
 				try
 				{
-					string descriptionstr = description.Replace("\'", "''");
+					string descriptionstr = null;
+					if (description != null)
+					{
+						descriptionstr = description.Replace("\'", "''");
+					}
 					string query = WMSResource.getitemlocationbystock.Replace("#materialid", material).Replace("#desc", descriptionstr).Replace("#pono", pono);
 					await pgsql.OpenAsync();
 					var data = await pgsql.QueryAsync<IssueRequestModel>(
@@ -6574,7 +6607,11 @@ namespace WMS.DAL
 
 				try
 				{
-					string descriptionstr = description.Replace("\'", "''");
+					string descriptionstr = null;
+					if (description != null)
+					{
+						descriptionstr = description.Replace("\'", "''");
+					}
 					string query = WMSResource.getitemlocationforstocktransfer.Replace("#materialid", material).Replace("#description", descriptionstr);
 					await pgsql.OpenAsync();
 					var data = await pgsql.QueryAsync<IssueRequestModel>(
@@ -8226,7 +8263,11 @@ namespace WMS.DAL
 							detail.itemid = item.itemid;
 							detail.poitemdescription = item.materialdescription;
 							reservelistformail.Add(detail);
-							string descriptionstr = item.materialdescription.Replace("\'", "''");
+							string descriptionstr = null;
+							if (item.materialdescription != null)
+							{
+								descriptionstr = item.materialdescription.Replace("\'", "''");
+							}
 							string itemnoquery = WMSResource.getitemiddata.Replace("#materialid", item.material).Replace("#desc", descriptionstr);
 							var itemData = await pgsql.QueryAsync<StockModel>(
 							itemnoquery, null, commandType: CommandType.Text);
@@ -9688,7 +9729,18 @@ namespace WMS.DAL
 
 					if (empno != null && empno != "null")
 					{
-						data = data.Where(o => o.projectmanager == empno);
+						string querypmb = "select au.createdby as approverid from wms.auth_users au where au.isdelegatemember is true and au.deleteflag is not true and au.employeeid = '" + empno + "' limit 1";
+						var rslttmb = pgsql.ExecuteScalar(querypmb, null);
+						if(rslttmb == null)
+                        {
+							data = data.Where(o => o.projectmanager == empno);
+						}
+                        else
+                        {
+							string pmanager = rslttmb.ToString();
+							data = data.Where(o => o.projectmanager == empno || o.projectmanager == pmanager);
+						}
+						
 
 					}
 
@@ -10832,7 +10884,11 @@ namespace WMS.DAL
 
 						if (transfer.sourceplant == transfer.destinationplant)
 						{
-							string descriptionstr = stck.materialdescription.Replace("\'", "''");
+							string descriptionstr = null;
+							if (stck.materialdescription != null)
+							{
+								descriptionstr = stck.materialdescription.Replace("\'", "''");
+							}
 
 							string query = "select * from wms.wms_stock where materialid ='" + stck.materialid + "' and lower(poitemdescription) = '" + descriptionstr.ToLower() + "' and  itemlocation = '" + stck.sourcelocation + "' and availableqty > 0 order by itemid";
 
@@ -10873,7 +10929,11 @@ namespace WMS.DAL
 									string insertqueryforstatusforqty = WMSResource.updateqtyafterissue.Replace("#itemid", Convert.ToString(itm.itemid)).Replace("#issuedqty", Convert.ToString(issuedqty));
 									var data1 = pgsql.ExecuteScalar(insertqueryforstatusforqty);
 									StockModel objs1 = new StockModel();
-									string descriptionstr1 = stck.materialdescription.Replace("\'", "''");
+									string descriptionstr1 = null;
+									if (stck.materialdescription != null)
+									{
+										descriptionstr1 = stck.materialdescription.Replace("\'", "''");
+									}
 									string query2 = "select * from wms.wms_stock where pono = '" + itm.pono + "' and materialid = '" + itm.materialid + "' and lower(poitemdescription) = '" + descriptionstr1.ToLower() + "' and itemlocation = '" + stck.destinationlocation + "' order by itemid";
 									objs1 = pgsql.QueryFirstOrDefault<StockModel>(
 									   query2, null, commandType: CommandType.Text);
@@ -11832,8 +11892,22 @@ namespace WMS.DAL
 						string currentdatestr = todayDate.ToString("yyyy-MM-dd");
 						if (data.isapproved)
 						{
+							string delegatemanager = "";
+							string querypmb = "select au.createdby as approverid from wms.auth_users au where au.isdelegatemember is true and au.deleteflag is not true and au.employeeid = '" + data.approverid + "' limit 1";
+							var rslttmb = pgsql.ExecuteScalar(querypmb, null);
+							
+
 							string query = "update wms.wms_materialtransferapproval set approvaldate ='" + currentdatestr + "'";
-							query += " ,isapproved = " + data.isapproved + ", remarks = '" + data.approvalremarks + "'  where transferid = '" + data.transferid + "' and approverid = '" + data.approverid + "'";
+							if (rslttmb == null)
+							{
+								query += " ,isapproved = " + data.isapproved + ", remarks = '" + data.approvalremarks + "'  where transferid = '" + data.transferid + "' and approverid = '" + data.approverid + "'";
+							}
+                            else
+                            {
+								delegatemanager = rslttmb.ToString();
+								query += " ,isapproved = " + data.isapproved + ", remarks = '" + data.approvalremarks + "'  where transferid = '" + data.transferid + "' and (approverid = '" + data.approverid + "' or approverid = '" + delegatemanager + "' )";
+							}
+							
 
 							var rslt = pgsql.ExecuteScalar(query);
 							int nextlevel = data.approvallevel + 1;
@@ -11877,8 +11951,20 @@ namespace WMS.DAL
 						}
 						else if (!data.isapproved)
 						{
+							string delegatemanager = "";
+							string querypmb = "select au.createdby as approverid from wms.auth_users au where au.isdelegatemember is true and au.deleteflag is not true and au.employeeid = '" + data.approverid + "' limit 1";
+							var rslttmb = pgsql.ExecuteScalar(querypmb, null);
 							string query = "update wms.wms_materialtransferapproval set approvaldate ='" + currentdatestr + "'";
-							query += " ,isapproved = " + data.isapproved + ", remarks = '" + data.approvalremarks + "'  where transferid = '" + data.transferid + "' and approverid = '" + data.approverid + "'";
+							if (rslttmb == null)
+							{
+								query += " ,isapproved = " + data.isapproved + ", remarks = '" + data.approvalremarks + "'  where transferid = '" + data.transferid + "' and approverid = '" + data.approverid + "'";
+							}
+							else
+							{
+								delegatemanager = rslttmb.ToString();
+								query += " ,isapproved = " + data.isapproved + ", remarks = '" + data.approvalremarks + "'  where transferid = '" + data.transferid + "' and (approverid = '" + data.approverid + "' or approverid = '" + delegatemanager + "')";
+							}
+							
 
 							var rslt = pgsql.ExecuteScalar(query);
 
@@ -14470,26 +14556,42 @@ namespace WMS.DAL
 		Purpose : <<get Materials in stock locations>>
 		Review Date :<<>>   Reviewed By :<<>>
 		*/
-		public async Task<IEnumerable<matlocations>> getmatinhandlocation(string poitemdescription, string materialid, string projectid)
+		public async Task<IEnumerable<matlocations>> getmatinhandlocation(string poitemdescription,string materialid, string projectid,string pono)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
 				try
 				{
-					string descriptionstr = poitemdescription.Replace("\'", "''");
+					string descriptionstr = null;
+					if (poitemdescription != null)
+					{
+						descriptionstr = poitemdescription.Replace("\'", "''");
+					}
 					string testgetquery = "";
-					if (projectid != null && projectid != "")
-					{
-						testgetquery = WMSResource.inhandmateriallocation.Replace("#poitemdescription", descriptionstr).Replace("#materialid", materialid).Replace("#projectid", projectid);
-
-					}
-					else
-					{
+			
 						testgetquery = WMSResource.inhandmatwithoutproject.Replace("#poitemdescription", descriptionstr).Replace("#materialid", materialid);
-						testgetquery += " and (stk.projectid is null or stk.projectid = '') group by stk.itemlocation";
+						if (projectid != null && projectid != "")
+						{
+							testgetquery += " and stk.projectid = '" + projectid + "'";
 
+						}
+                        else
+                        {
+							testgetquery += " and (stk.projectid is null or stk.projectid = '')";
+						}
+						if (pono != null && pono != "")
+						{
+							testgetquery += " and stk.pono = '" + pono + "'";
 
-					}
+						}
+						else
+						{
+							testgetquery += " and (stk.pono is null or stk.pono = '')";
+						}
+						testgetquery += "  group by stk.itemlocation";
+						
+						
+					
 
 					await pgsql.OpenAsync();
 					var data = await pgsql.QueryAsync<matlocations>(
@@ -15952,6 +16054,47 @@ namespace WMS.DAL
 			}
 		}
 
+		/* Name of Function : <<getMiscellanousIssueListdatanofilter>>  Author :<<Ramesh>>  
+		 Date of Creation <<30-04-2021>>
+		 Purpose : <<get  initial stock for MiscellanousIssues list>>
+		 <param name="datamodel"></param>
+		 Review Date :<<>>   Reviewed By :<<>>
+		 */
+
+		public async Task<IEnumerable<StockModel>> getMiscellanousIssueListdatanofilter()
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+
+				try
+				{
+					//string query = WMSResource.getMiscellanousIssuesList;
+					//if (initialStock)
+					//	query += " where st.initialstock=true group by st.poitemdescription, st.itemlocation";
+					//else
+					//	query += " group by st.poitemdescription,st.itemlocation";
+					string query1 = " select max(itemid) as itemid,projectid,materialid as material,pono,poitemdescription,itemlocation,sum(availableqty) as availableqty,sum(availableqty::decimal(19,5) * unitprice::decimal(19,5) ) as value from wms.wms_stock ws where availableqty > 0";
+						   query1 += " and initialstock=true group by projectid,materialid,pono,poitemdescription,itemlocation";
+					
+					await pgsql.OpenAsync();
+					var result = await pgsql.QueryAsync<StockModel>(
+					  query1, null, commandType: CommandType.Text);
+					return result;
+
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "getMiscellanousIssueList", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+			}
+		}
+
 
 		/* Name of Function : <<get initial stock>>  Author :<<prasanna>>  
 		 Date of Creation <<21-12-2019>>
@@ -16050,27 +16193,58 @@ namespace WMS.DAL
 				try
 				{
 					string uploadcode = Guid.NewGuid().ToString();
-					foreach (var item in dataobj)
-					{
-						string materialdescription = item.materialdescription.Replace("\'", "''");
-						string stockquery = "select * from wms.wms_stock where materialid = '" + item.material + "' and lower(poitemdescription) = lower('" + materialdescription + "') and availableqty > 0 and itemlocation = '" + item.itemlocation + "' and  projectid = '" + item.ProjectId + "' and pono = '" + item.pono + "' order by itemid";
-						var stockdata = DB.QueryAsync<StockModel>(stockquery, null, commandType: CommandType.Text);
-						if (stockdata != null)
+                    foreach (var item in dataobj)
+                    {
+						string materialdescription = null;
+						if (item.materialdescription != null)
 						{
-							decimal? quantitytoissue = item.issuedqty;
-							decimal? issuedqty = 0;
-							foreach (StockModel itm in stockdata.Result)
+							materialdescription = item.materialdescription.Replace("\'", "''");
+						}
+						string stockquery = "";
+						if(item.ProjectId != null && item.ProjectId.Trim() != "" && item.pono != null && item.pono.Trim() != "")
+                        {
+							stockquery = "select * from wms.wms_stock where materialid = '" + item.material + "' and lower(poitemdescription) = lower('" + materialdescription + "') and availableqty > 0 and itemlocation = '" + item.itemlocation + "' and  projectid = '" + item.ProjectId + "' and pono = '" + item.pono + "' order by itemid";
+						}
+                        else
+                        {
+							stockquery = "select * from wms.wms_stock where materialid = '" + item.material + "' and lower(poitemdescription) = lower('" + materialdescription + "') and availableqty > 0 and itemlocation = '" + item.itemlocation + "' ";
+							if(item.ProjectId == null || item.ProjectId.Trim() == "")
+                            {
+								stockquery += " and (projectid is null or projectid = '')";  
+                            }
+                            else
+                            {
+								stockquery +=  " and projectid = '" + item.ProjectId + "'";
+
+							}
+							if (item.pono == null || item.pono.Trim() == "")
 							{
-								DateTime approvedon = System.DateTime.Now;
-								string materialid = item.material;
-								if (quantitytoissue <= itm.availableqty)
-								{
-									issuedqty = quantitytoissue;
-								}
-								else
-								{
-									issuedqty = itm.availableqty;
-								}
+								stockquery += " and (pono is null or pono = '')";
+							}
+							else
+							{
+								stockquery += " and pono = '" + item.pono + "'";
+
+							}
+							stockquery += " order by itemid";
+						}
+                        var stockdata = DB.QueryAsync<StockModel>(stockquery, null, commandType: CommandType.Text);
+                        if (stockdata != null)
+                        {
+                            decimal? quantitytoissue = item.issuedqty;
+                            decimal? issuedqty = 0;
+                            foreach (StockModel itm in stockdata.Result)
+                            {
+                                DateTime approvedon = System.DateTime.Now;
+                                string materialid = item.material;
+                                if (quantitytoissue <= itm.availableqty)
+                                {
+                                    issuedqty = quantitytoissue;
+                                }
+                                else
+                                {
+                                    issuedqty = itm.availableqty;
+                                }
 
 								quantitytoissue = quantitytoissue - issuedqty;
 								string insertqueryforstatusforqty = WMSResource.updateqtyafterissue.Replace("#itemid", Convert.ToString(itm.itemid)).Replace("#issuedqty", Convert.ToString(issuedqty));
@@ -16716,7 +16890,11 @@ Review Date :<<>>   Reviewed By :<<>>
 				try
 				{
 					//string materialrequestquery = WMSResource.invstocktransforSTO;
-					string descriptionstr = description.Replace("\'", "''");
+					string descriptionstr = null;
+					if (description != null)
+					{
+						descriptionstr = description.Replace("\'", "''");
+					}
 					string materialrequestquery = WMSResource.getAvailableqtybyStore.Replace("#store", store).Replace("#material", materialid).Replace("#description", descriptionstr).Replace("#projectcode", projectcode);
 					await pgsql.OpenAsync();
 					var result = await pgsql.QueryAsync<WMSHttpResponse>(

@@ -1288,9 +1288,9 @@ namespace WMS.Controllers
 		}
 
 		[HttpGet("getmatinhandlocation")]
-		public async Task<IEnumerable<matlocations>> getmatinhandlocation(string poitemdescription, string materialid, string projectid)
+		public async Task<IEnumerable<matlocations>> getmatinhandlocation(string poitemdescription, string materialid, string projectid,string pono)
 		{
-			return await this._poService.getmatinhandlocation(poitemdescription, materialid,projectid);
+			return await this._poService.getmatinhandlocation(poitemdescription, materialid,projectid,pono);
 		}
 		[HttpGet("getinitialstock")]
 		public async Task<IEnumerable<StockModel>> getinitialstock(string code)
@@ -1528,6 +1528,11 @@ namespace WMS.Controllers
 		public async Task<IEnumerable<StockModel>> getMiscellanousIssueListdata(string initialstock, string pono, string projectid)
 		{
 			return await this._poService.getMiscellanousIssueListdata(initialstock,pono,projectid);
+		}
+		[HttpGet("getMiscellanousIssueListdatanofilter")]
+		public async Task<IEnumerable<StockModel>> getMiscellanousIssueListdatanofilter()
+		{
+			return await this._poService.getMiscellanousIssueListdatanofilter();
 		}
 
 		[HttpGet("getMiscellanousIssueListdatahistory")]
