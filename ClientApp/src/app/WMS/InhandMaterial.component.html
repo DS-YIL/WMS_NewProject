@@ -51,6 +51,7 @@
           <th class="ptable-cell" style="text-align:center;">Project Code</th>
           <th class="ptable-cell" style="text-align:center;">Supplier Name</th>
           <th class="ptable-cell" style="text-align:center;">HSN Code</th>
+          <th class="ptable-cell" style="text-align:center;">Sale Order No</th>
           <th class="ptable-cell" style="text-align:center;">Available Qty</th>
           <th class="ptable-cell" style="text-align:center;">Value(in Rs.)</th>
           <th class="ptable-cell" style="text-align:center;"><span *ngIf="inventoryFilters.itemlocation">Location</span></th>
@@ -64,6 +65,7 @@
           <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'projectname', 'contains')"></th>
           <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'suppliername', 'contains')"></th>
           <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'hsncode', 'contains')"></th>
+          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'saleorderno', 'contains')"></th>
           <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'availableqty', 'startsWith')"></th>
           <th><input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'value', 'startsWith')"></th>
           <th></th>
@@ -79,6 +81,7 @@
           <td class="ptable-cell" style="text-align:left;">{{rowData.projectname}} </td>
           <td class="ptable-cell" style="text-align:left;">{{rowData.suppliername}} </td>
           <td class="ptable-cell" style="text-align:center;">{{rowData.hsncode}} </td>
+          <td class="ptable-cell" style="text-align:center;">{{rowData.saleorderno}} </td>
           <td class="ptable-cell" style="text-align:right;">{{rowData.availableqty}} </td>
           <td class="ptable-cell" style="text-align:right;">{{rowData.value | number : '1.2-2'}} </td>
           <td class="ptable-cell" style="text-align:center;">
