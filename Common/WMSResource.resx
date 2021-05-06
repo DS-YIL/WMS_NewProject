@@ -243,7 +243,7 @@ max(req.ackremarks)as ackremarks,max(req.reserveid)as reserveid,max(req.projectc
   <data name="queryforitemdetails" xml:space="preserve">
     <value>select inwa.inwardid,inwa.lineitemno,inwa.inwardid as inwardidview,bin.binnumber, rack.racknumber, loc.locatorname,mat.rackid,mat.binid,inwa.poitemdescription,inwa.unitprice,
  mat.storeid,stocks.itemlocation,stocks.availableqty,stocks.itemid,inw.grnnumber,inwa.pono,inwa.pono as securitypo,inw.invoiceno,inw.receiveddate,
- inw.isdirecttransferred,inw.projectcode,emp.name as mrnby,inw.mrnon,inw.mrnremarks,
+ inw.isdirecttransferred,inw.projectcode,emp.name as mrnby,inw.mrnon,inw.mrnremarks,inwa.saleorderno,inwa.solineitemno,inwa.projectid,
  inwa.materialqty,inwa.materialid as material, mat.materialdescription,mat.stocktype,inwa.receivedqty,inwa.confirmqty,inwa.returnqty 
  from wms.wms_securityinward inw
 left join wms.wms_storeinward inwa on inw.inwmasterid=inwa.inwmasterid
@@ -618,8 +618,8 @@ values(default,@pono,@itemid,@gatepassmaterialid,@itemissueddate,@itemreceiverid
   where stinw.qualitycheckrequired is True and secinw.grnnumber = '#grnno'</value>
   </data>
   <data name="receiveforinvoice" xml:space="preserve">
-    <value>INSERT INTO wms.wms_storeinward(inwmasterid,receiveddate,receivedby,receivedqty,materialid,deleteflag,qualitycheckrequired,qualitychecked,materialqty,remarks,pono,lineitemno,poitemdescription,unitprice)
-VALUES(@inwmasterid,@receiveddate,@receivedby,@receivedqty,@materialid,@deleteflag,@qualitycheck,@qualitychecked,@materialqty,@receiveremarks,@pono,@lineitemno,@poitemdescription,@unitprice)returning inwardid</value>
+    <value>INSERT INTO wms.wms_storeinward(inwmasterid,receiveddate,receivedby,receivedqty,materialid,deleteflag,qualitycheckrequired,qualitychecked,materialqty,remarks,pono,lineitemno,poitemdescription,unitprice,saleorderno,solineitemno,projectid )
+VALUES(@inwmasterid,@receiveddate,@receivedby,@receivedqty,@materialid,@deleteflag,@qualitycheck,@qualitychecked,@materialqty,@receiveremarks,@pono,@lineitemno,@poitemdescription,@unitprice,@saleorderno,@solineitemno,@projectid)returning inwardid</value>
   </data>
   <data name="getGatePassApprovalHistoryList" xml:space="preserve">
     <value>SELECT * FROM  wms.wms_gatepassapprovals where gatepassid ='#gatepassid' ORDER BY historyid DESC LIMIT 2</value>
@@ -638,7 +638,7 @@ VALUES(@inwmasterid,@receiveddate,@receivedby,@receivedqty,@materialid,@deletefl
  inw.inwardid,inw.inwmasterid,inw.qualitychecked,inw.returnedby,inw.returnedon,inw.returnremarks,inw.receivedqty,inw.returnremarks,inw.materialqty as pendingqty,
  (select materialqty from wms.wms_pomaterials where pono = inw.pono and itemno::integer = inw.lineitemno::integer and materialid = inw.materialid and poitemdescription = inw.poitemdescription limit 1) as materialqty,
  (select asnqty from wms.wms_pomaterials where pono = inw.pono and itemno::integer = inw.lineitemno::integer and materialid = inw.materialid and poitemdescription = inw.poitemdescription limit 1) as asnqty,
- qc.qualitypassedqty,qc.qualityfailedqty,qc.qcby as checkedby,
+ qc.qualitypassedqty,qc.qualityfailedqty,qc.qcby as checkedby,inw.saleorderno,inw.solineitemno,inw.projectid,
  CASE
      WHEN inw.qualitycheckrequired != True and inw.returnedby is null THEN inw.receivedqty
 	 WHEN inw.qualitycheckrequired = True and inw.returnedby is null THEN qc.qualitypassedqty
@@ -1426,14 +1426,14 @@ left outer join wms.wms_stock sk on iss.itemid =sk.itemid
 where iss.requestid::text = '#gatepassmaterialid'::text and iss.requesttype = 'gatepass'</value>
   </data>
   <data name="getMaterialsforreceipt" xml:space="preserve">
-    <value>select mat.pono,mat.materialid as material,mat.itemno::text as lineitemno,ms.materialdescription,mat.poitemdescription,mat.unitprice,mat.materialqty,
+    <value>select mat.pono,mat.materialid as material,mat.itemno::text as lineitemno,mat.poitemdescription,mat.unitprice,mat.materialqty,mat.saleorderno,mat.solineitemno,
+(select max(wp2.projectcode) from wms.wms_project wp2 where wp2.pono = mat.pono group by wp2.pono) as projectid,
 case 
 when mat.wmsqty &gt; 0 then mat.wmsqty
 else (select wmsqty from wms.wms_pomaterials wp where pono = mat.pono and materialid = mat.materialid and itemno = mat.itemno and wmsqty is not null and wmsqty &gt; 0 limit 1)
 end as pendingqty,
 '#invoice' as invoiceno,'#inw' as inwmasterid,NULL as grnnumber,true as qualitycheck,mat.asnno,mat.asnqty,0 as receivedqty
-from wms.wms_pomaterials mat
-left outer join wms."MaterialMasterYGS" ms on ms.material = mat.materialid</value>
+from wms.wms_pomaterials mat</value>
   </data>
   <data name="getpobyinwardmasterid" xml:space="preserve">
     <value>select pono,asnno from wms.wms_securityinward where inwmasterid ='#inw' </value>
@@ -2367,5 +2367,8 @@ group by wp.projectcode,wp.pono</value>
   <data name="insertReprintHistory" xml:space="preserve">
     <value>insert into wms.wms_reprinthistory(reprinthistoryid,gatepassid,reprintedon,reprintedby,
 reprintcount,barcodeid, noofprint, inwmasterid,inwardid,printerid)values(default,@gatepassid,current_date,@reprintedby,@reprintcount,@barcodeid,@noofprint,@inwmasterid,@inwardid,@printerid)returning reprinthistoryid</value>
+  </data>
+  <data name="insertStockFromPutaway" xml:space="preserve">
+    <value>INSERT INTO wms.wms_stock(inwmasterid,stockstatus,pono,binid,rackid ,storeid, vendorid,totalquantity,shelflife,availableqty,deleteflag,itemlocation,createddate,createdby,materialid,inwardid,stcktype,lineitemno,receivedtype,poitemdescription,value,unitprice,projectid,saleorderno,solineitemno)VALUES(@inwmasterid,@stockstatus,@pono,@binid,@rackid,@storeid,@vendorid,@totalquantity,@shelflife,@availableqty,@deleteflag,@itemlocation,@createddate,@createdby,@materialid,@inwardid,@stocktype,@lineitemno,@receivedtype,@poitemdescription,@value,@unitprice,@projectid,@saleorderno,@solineitemno)returning itemid</value>
   </data>
 </root>

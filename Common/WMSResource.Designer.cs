@@ -1581,12 +1581,12 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select mat.pono,mat.materialid as material,mat.itemno::text as lineitemno,ms.materialdescription,mat.poitemdescription,mat.unitprice,mat.materialqty,
+        ///   Looks up a localized string similar to select mat.pono,mat.materialid as material,mat.itemno::text as lineitemno,mat.poitemdescription,mat.unitprice,mat.materialqty,mat.saleorderno,mat.solineitemno,
+        ///(select max(wp2.projectcode) from wms.wms_project wp2 where wp2.pono = mat.pono group by wp2.pono) as projectid,
         ///case 
         ///when mat.wmsqty &gt; 0 then mat.wmsqty
         ///else (select wmsqty from wms.wms_pomaterials wp where pono = mat.pono and materialid = mat.materialid and itemno = mat.itemno and wmsqty is not null and wmsqty &gt; 0 limit 1)
-        ///end as pendingqty,
-        ///&apos;#invoice&apos; as invoiceno,&apos;#inw&apos; as inwmasterid,NULL as grnnumber,true as qualitycheck,mat.asnno,mat.asnqty,0 as receivedqty        /// [rest of string was truncated]&quot;;.
+        ///end as pendingqty,        /// [rest of string was truncated]&quot;;.
         /// </summary>
         public static string getMaterialsforreceipt {
             get {
@@ -3028,6 +3028,15 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to INSERT INTO wms.wms_stock(inwmasterid,stockstatus,pono,binid,rackid ,storeid, vendorid,totalquantity,shelflife,availableqty,deleteflag,itemlocation,createddate,createdby,materialid,inwardid,stcktype,lineitemno,receivedtype,poitemdescription,value,unitprice,projectid,saleorderno,solineitemno)VALUES(@inwmasterid,@stockstatus,@pono,@binid,@rackid,@storeid,@vendorid,@totalquantity,@shelflife,@availableqty,@deleteflag,@itemlocation,@createddate,@createdby,@materialid,@inwardid,@stocktype,@lineitemno,@receivedtyp [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string insertStockFromPutaway {
+            get {
+                return ResourceManager.GetString("insertStockFromPutaway", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to INSERT INTO wms.sto_subcontract_gr
         ///(transferid, transfertype, wmsdate)
         ///VALUES(@transferid,@transfertype, current_timestamp).
@@ -3425,8 +3434,8 @@ namespace WMS.Common {
         /// <summary>
         ///   Looks up a localized string similar to select inwa.inwardid,inwa.lineitemno,inwa.inwardid as inwardidview,bin.binnumber, rack.racknumber, loc.locatorname,mat.rackid,mat.binid,inwa.poitemdescription,inwa.unitprice,
         /// mat.storeid,stocks.itemlocation,stocks.availableqty,stocks.itemid,inw.grnnumber,inwa.pono,inwa.pono as securitypo,inw.invoiceno,inw.receiveddate,
-        /// inw.isdirecttransferred,inw.projectcode,emp.name as mrnby,inw.mrnon,inw.mrnremarks,
-        /// inwa.materialqty,inwa.materialid as material, mat.materialdescription,mat.stocktype,inwa.receivedqty, [rest of string was truncated]&quot;;.
+        /// inw.isdirecttransferred,inw.projectcode,emp.name as mrnby,inw.mrnon,inw.mrnremarks,inwa.saleorderno,inwa.solineitemno,inwa.projectid,
+        /// inwa.materialqty,inwa.materialid as material, mat.m [rest of string was truncated]&quot;;.
         /// </summary>
         public static string queryforitemdetails {
             get {
@@ -3435,8 +3444,8 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO wms.wms_storeinward(inwmasterid,receiveddate,receivedby,receivedqty,materialid,deleteflag,qualitycheckrequired,qualitychecked,materialqty,remarks,pono,lineitemno,poitemdescription,unitprice)
-        ///VALUES(@inwmasterid,@receiveddate,@receivedby,@receivedqty,@materialid,@deleteflag,@qualitycheck,@qualitychecked,@materialqty,@receiveremarks,@pono,@lineitemno,@poitemdescription,@unitprice)returning inwardid.
+        ///   Looks up a localized string similar to INSERT INTO wms.wms_storeinward(inwmasterid,receiveddate,receivedby,receivedqty,materialid,deleteflag,qualitycheckrequired,qualitychecked,materialqty,remarks,pono,lineitemno,poitemdescription,unitprice,saleorderno,solineitemno,projectid )
+        ///VALUES(@inwmasterid,@receiveddate,@receivedby,@receivedqty,@materialid,@deleteflag,@qualitycheck,@qualitychecked,@materialqty,@receiveremarks,@pono,@lineitemno,@poitemdescription,@unitprice,@saleorderno,@solineitemno,@projectid)returning inwardid.
         /// </summary>
         public static string receiveforinvoice {
             get {

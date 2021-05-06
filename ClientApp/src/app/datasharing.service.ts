@@ -8,5 +8,7 @@ export class DataSharingService {
   public usernameshare: BehaviorSubject<string> = new BehaviorSubject<string>("");
   public imageurlshare: BehaviorSubject<string> = new BehaviorSubject<string>("");
   public loggedroleshare: BehaviorSubject<string> = new BehaviorSubject<string>("");
+  public searchmateriallist: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
+  public searchdescriptionlist: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
 }
 

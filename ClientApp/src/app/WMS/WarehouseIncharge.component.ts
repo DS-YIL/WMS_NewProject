@@ -35,6 +35,9 @@ export class WarehouseInchargeComponent implements OnInit {
   binid: any;
   rackid: any;
   isnonpo: boolean = false;
+  lblproject: string = "";
+  lblsaleorder: string = "";
+  lblsolineitemno: string = "";
   public url = "";
   constructor(private ConfirmationService: ConfirmationService, private http: HttpClient, private formBuilder: FormBuilder, private messageService: MessageService, private datePipe: DatePipe, private wmsService: wmsService, private route: ActivatedRoute, private router: Router, public constants: constants, private spinner: NgxSpinnerService, @Inject('BASE_URL') baseUrl: string) { this.url = baseUrl; }
 
@@ -116,6 +119,9 @@ export class WarehouseInchargeComponent implements OnInit {
     this.invoiceForm = this.formBuilder.group({
       itemRows: this.formBuilder.array([this.initItemRows()])
     });
+    this.lblproject = "";
+    this.lblsaleorder = "";
+    this.lblsolineitemno = "";
     this.requestedid = this.route.snapshot.queryParams.requestid;
     this.PoDetails = new PoDetails();
     this.StockModel = new StockModel();
@@ -279,7 +285,13 @@ export class WarehouseInchargeComponent implements OnInit {
         stockdata.locatorid = null;
         stockdata.rackid = null;
         stockdata.binid = null;
-        stockdata.stocktype = this.currentstocktype;
+        if ((!isNullOrUndefined(this.lblproject) && String(this.lblproject).trim() != "") || (!isNullOrUndefined(this.lblsaleorder) && String(this.lblsaleorder).trim() != "")) {
+          stockdata.stocktype = "Project Stock";
+        }
+        else {
+          stockdata.stocktype = "Plant Stock";
+        }
+        //stockdata.stocktype = this.currentstocktype;
         this.stock.push(stockdata);
         //this.stock.push(new StockModel());
       }
@@ -649,6 +661,9 @@ this.updateRowGroupMetaData();
     this.binid = details.binid;
     this.rackid = details.rackid;
     this.matid = details.material;
+    this.lblproject = details.projectid;
+    this.lblsaleorder = details.saleorderno;
+    this.lblsolineitemno = details.solineitemno;
     
     //this.invoiceForm.controls.itemRows.value[this.invoiceForm.controls.itemRows.value.length - 1].storeid = details.storeid;
     //this.invoiceForm.controls.itemRows.value[this.invoiceForm.controls.itemRows.value.length - 1].rackid = details.rackid;
@@ -675,7 +690,13 @@ this.updateRowGroupMetaData();
       stockdata.locatorid = details.storeid;
       stockdata.rackid = details.rackid;
       stockdata.binid = details.binid;
-      stockdata.stocktype = details.stocktype;
+      if ((!isNullOrUndefined(details.projectid) && String(details.projectid).trim() != "") || (!isNullOrUndefined(details.saleorderno) && String(details.saleorderno).trim() != "")) {
+        stockdata.stocktype = "Project Stock";
+      }
+      else {
+        stockdata.stocktype = "Plant Stock";
+      }
+     
       this.stock.push(stockdata);
       if (stockdata.locatorid) {
         this.onlocUpdate(stockdata.locatorid, stockdata, true);
@@ -782,6 +803,11 @@ this.updateRowGroupMetaData();
         this.StockModel.createdby = this.employee.employeeno;
         this.StockModel.inwardid = this.PoDetails.inwardid;
         this.StockModel.stocktype = item.stocktype;
+        this.StockModel.saleorderno = this.PoDetails.saleorderno;
+        this.StockModel.solineitemno = this.PoDetails.solineitemno;
+        this.StockModel.projectid = this.PoDetails.projectid;
+
+
 
         binnumber = this.bindata.filter(x => x.binid == item.binid);
         storelocation = this.locationdata.filter(x => x.locatorid == item.locatorid);

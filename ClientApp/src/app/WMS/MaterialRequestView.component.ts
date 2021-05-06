@@ -9,6 +9,7 @@ import { materialRequestDetails, gatepassModel, materialistModel, materialList, 
 import { MessageService } from 'primeng/api';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { DatePipe, DecimalPipe } from '@angular/common';
+import { DataSharingService } from '../datasharing.service';
 import { isNullOrUndefined } from 'util';
 @Component({
   selector: 'app-MaterialRequest',
@@ -24,9 +25,20 @@ export class MaterialRequestViewComponent implements OnInit {
     AddDialogfortransfer: boolean;
     showdialogfortransfer: boolean;
     projectcodes: string;
-    showhistory: boolean=false;
+  showhistory: boolean = false;
+  materialliststr: string[] = [];
+  descliststr: string[] = [];
 
-  constructor(private formBuilder: FormBuilder, private messageService: MessageService, private datePipe: DatePipe, private decimalPipe: DecimalPipe, private wmsService: wmsService, private route: ActivatedRoute, private router: Router, public constants: constants, private spinner: NgxSpinnerService) { }
+
+  constructor(private formBuilder: FormBuilder, private messageService: MessageService, private datePipe: DatePipe, private decimalPipe: DecimalPipe, private wmsService: wmsService, private route: ActivatedRoute, private router: Router, public constants: constants, private spinner: NgxSpinnerService, private dataSharingService: DataSharingService) {
+    this.dataSharingService.searchmateriallist.subscribe(value => {
+      this.materialliststr = value;
+    });
+    this.dataSharingService.searchdescriptionlist.subscribe(value => {
+      this.descliststr = value;
+    });
+
+  }
 
   public requestList: MaterialTransaction[] = [];
   public suppliername: string;
@@ -76,6 +88,9 @@ export class MaterialRequestViewComponent implements OnInit {
   selectedmuliplepo: any[];
   //Email
   reqid: string = "";
+  stocktype: string = "";
+  public materailsearchlist: Array<searchList> = [];
+  public descriptionsearchlist: Array<searchList> = [];
   ngOnInit() {
     if (localStorage.getItem("Employee"))
       this.employee = JSON.parse(localStorage.getItem("Employee"));
@@ -98,12 +113,27 @@ export class MaterialRequestViewComponent implements OnInit {
       //this.getMaterialRequestlist();
 
     }
-
+    this.stocktype = "Project Stock";
+    this.materailsearchlist = [];
+    this.descriptionsearchlist = [];
     this.selectedmuliplepo = [];
-   
-    //this.getdefaultmaterialstorequest();
     this.getprojects();
     this.getMaterialRequestlist();
+  }
+
+  getplantmaterials(event: any) {
+    var selectedval = event.target.value;
+    this.materialList = [];
+    this.selectedmuliplepo = [];
+    this.selectedproject = null;
+    if (selectedval == "Project Stock") {
+      this.displayDD = false;
+      this.displaylist = true;
+    } else {
+      this.displayDD = true;
+      this.displaylist = false;
+      this.addNewMaterial();
+    }
   }
 
   filterpos(event) {
@@ -138,76 +168,10 @@ export class MaterialRequestViewComponent implements OnInit {
     }
   }
 
-  getdefaultmaterialstorequest(projectcode: string) {
-    this.defaultmaterials = []
-    this.wmsService.getMaterialRequestlistdata(this.employee.employeeno, null, projectcode).subscribe(data => {
-      this.defaultmaterials = data;
-      this.setmatdesclist(this.defaultmaterials);
-      //this.defaultmaterialids = data;
-      //this.defaultmaterialidescs = data;
-    });
-  }
+ 
+  
 
-  setmatdesclist(datax: materialList[]) {
-    debugger;
-    var listdata = datax;
-    this.defaultmaterialidescs = [];
-    this.defaultmaterialids = [];
-    this.defaultuniquematerialids = [];
-    this.defaultuniquematerialidescs = [];
-    listdata.forEach(item => {
-      debugger;
-      var mat = item.material;
-      var desc = item.materialdescription;
-      var dt1 = this.defaultmaterialids.filter(function (element, index) {
-        return (element.material.toLowerCase() == String(mat).toLowerCase());
-      });
-      if (dt1.length == 0) {
-        this.defaultmaterialids.push(item);
-      }
-      var dt2 = this.defaultmaterialidescs.filter(function (element, index) {
-        return (element.materialdescription.toLowerCase() == String(desc).toLowerCase());
-      });
-      if (dt2.length == 0) {
-        this.defaultmaterialidescs.push(item);
-      }
-       
-    });
-    this.defaultuniquematerialids = this.defaultmaterialids;
-    this.defaultuniquematerialidescs = this.defaultmaterialidescs;
-
-  }
-
-  setmatlist(datax: materialList[]) {
-    var listdata = datax;
-    this.defaultmaterialids = [];
-    listdata.forEach(item => {
-      var mat = item.material;
-      var dt1 = this.defaultmaterialids.filter(function (element, index) {
-        return (element.material.toLowerCase() == String(mat).toLowerCase());
-      });
-      if (dt1.length == 0) {
-        this.defaultmaterialids.push(item);
-      }
-
-    });
-  }
-
-  setdesclist(datax: materialList[]) {
-    debugger;
-    var listdata = datax;
-    this.defaultmaterialidescs = [];
-    listdata.forEach(item => {
-      var desc = item.materialdescription;
-      var dt2 = this.defaultmaterialidescs.filter(function (element, index) {
-        return (element.materialdescription.toLowerCase() == String(desc).toLowerCase());
-      });
-      if (dt2.length == 0) {
-        this.defaultmaterialidescs.push(item);
-      }
-
-    });
-  }
+ 
 
   //get Material Rquest based on login employee && po no
   getMaterialRequestlist() {
@@ -259,12 +223,8 @@ export class MaterialRequestViewComponent implements OnInit {
 //Add rows
   //add materials for gate pass
   addNewMaterial() {
-    if (isNullOrUndefined(this.selectedproject)) {
-      this.messageService.add({ severity: 'error', summary: '', detail: 'Select Project' });
-      return;
-    }
     if (this.materialList.length <= 0) {
-      this.materialistModel = { material: "", materialid: "", materialdescription: "", quantity: 0, materialcost: 0, availableqty: 0, remarks: " ", issuedqty: 0, requesterid: this.employee.employeeno, stocktype: "", projectcode: "", plantstockavailableqty: 0, pono:"" };
+      this.materialistModel = new materialList();
       this.materialList.push(this.materialistModel);
     }
     else {
@@ -277,19 +237,8 @@ export class MaterialRequestViewComponent implements OnInit {
         this.messageService.add({ severity: 'error', summary: '', detail: 'Enter Quantity' });
         return false;
       }
-      else if (this.materialList[this.materialList.length - 1].quantity > 0) {
-        this.wmsService.checkMaterialandQty(this.materialList[this.materialList.length - 1].material, this.materialList[this.materialList.length - 1].quantity).subscribe(data => {
-          if (data == "true") {
-            //this.materialList.push(this.materialList);
-            this.materialistModel = new materialList();
 
-          }
-          else
-            this.messageService.add({ severity: 'error', summary: '', detail: data });
-          return false;
-        });
-      }
-      this.materialistModel = { material: "", materialid: "", materialdescription: "", quantity: 0, materialcost: 0, availableqty: 0, remarks: " ", issuedqty: 0, requesterid: this.employee.employeeno, stocktype: "", projectcode: "", plantstockavailableqty: 0,pono:"" };
+      this.materialistModel = new materialList();
       this.materialList.push(this.materialistModel);
     }
    
@@ -626,7 +575,6 @@ export class MaterialRequestViewComponent implements OnInit {
       var senddata = this.defaultmaterials.filter(function (element, index) {
         return (element.material == data.material);
       });
-      this.setdesclist(senddata);
 
     }
    
@@ -661,7 +609,6 @@ export class MaterialRequestViewComponent implements OnInit {
       var senddata = this.defaultmaterials.filter(function (element, index) {
         return (element.materialdescription == data.materialdescription);
       });
-      this.setmatlist(senddata);
 
     }
 
@@ -669,15 +616,7 @@ export class MaterialRequestViewComponent implements OnInit {
 
 
   filtermats(event,data : any) {
-    if (!isNullOrUndefined(data.materialdescription) && data.materialdescription != "") {
-      var senddata = this.defaultmaterials.filter(function (element, index) {
-        return (element.materialdescription == data.materialdescription);
-      });
-      this.setmatlist(senddata);
-    }
-    else {
-      this.defaultmaterialids = this.defaultuniquematerialids;
-    }
+    
     this.filteredmats = [];
     for (let i = 0; i < this.defaultmaterialids.length; i++) {
       let brand = this.defaultmaterialids[i].material;
@@ -689,15 +628,7 @@ export class MaterialRequestViewComponent implements OnInit {
   }
 
   filtermatdescs(event, data: any) {
-    if (!isNullOrUndefined(data.material) && data.material != "") {
-      var senddata = this.defaultmaterials.filter(function (element, index) {
-        return (element.material == data.material);
-      });
-      this.setdesclist(senddata);
-    }
-    else {
-      this.defaultmaterialidescs = this.defaultuniquematerialidescs;
-    }
+   
     this.filteredmatdesc = [];
     for (let i = 0; i < this.defaultmaterialidescs.length; i++) {
       let pos = this.defaultmaterialidescs[i].materialdescription;
@@ -707,6 +638,67 @@ export class MaterialRequestViewComponent implements OnInit {
 
     }
   }
+
+  public bindSearchListDatamaterialdesc(event: any) {
+    debugger;
+    //if (isNullOrUndefined(this.selectedproject) || !this.selectedproject.value) {
+    //  this.messageService.add({ severity: 'error', summary: '', detail: 'Select Project' });
+    //  return;
+    //}
+    var searchTxt = event.query;
+    //var matid = "";
+    //if (!isNullOrUndefined(data.materialObj)) {
+    //  matid = data.materialObj.code;
+    //}
+    if (searchTxt == undefined)
+      searchTxt = "";
+    searchTxt = searchTxt.replace('*', '%');
+    this.dynamicData = new DynamicSearchResult();
+    var query = "select poitemdescription from wms.wms_stock ws where stcktype = 'Plant Stock' group by poitemdescription limit 50";
+    this.dynamicData.query = query;
+    this.descriptionsearchlist = [];
+    this.wmsService.GetListItems(this.dynamicData).subscribe(data => {
+      this.searchresult = data;
+      this.descriptionsearchlist = [];
+      this.searchresult.forEach(item => {
+        let rslt = new searchList();
+        rslt.code = String(item["poitemdescription"])
+        this.descriptionsearchlist.push(rslt);
+      });
+    });
+  }
+public bindSearchListDatamaterial(event: any) {
+    debugger;
+    //if (isNullOrUndefined(this.selectedproject) || !this.selectedproject.value) {
+    //  this.messageService.add({ severity: 'error', summary: '', detail: 'Select Project' });
+    //  return;
+    //}
+    var description = "";
+    //if (!isNullOrUndefined(rdata.materialdescObj)) {
+    //  description = rdata.materialdescObj.name;
+    //}
+    var searchTxt = event.query;
+    if (searchTxt == undefined)
+      searchTxt = "";
+    searchTxt = searchTxt.replace('*', '%');
+    this.dynamicData = new DynamicSearchResult();
+    var query = "select materialid from wms.wms_stock ws where stcktype = 'Plant Stock' group by materialid limit 50";
+   
+    this.dynamicData.query = query;
+  this.filteredmats = [];
+  this.materialliststr = [];
+     this.wmsService.GetListItems(this.dynamicData).subscribe(data => {
+      this.searchresult = data;
+      var fName = "";
+      this.searchresult.forEach(item => {
+        var code = String(item["materialid"]);
+        this.materialliststr.push(code);
+      });
+       this.dataSharingService.searchmateriallist.next(this.materialliststr);
+    });
+  }
+
+
 
   //bind materials based search
   public bindSearchList(event: any, name?: string) {
@@ -738,9 +730,9 @@ export class MaterialRequestViewComponent implements OnInit {
     this.requestremarks = "";
     this.requestDialog = true;
     this.btnreq = true;
-    this.displayDD = true;
+    this.displayDD = false;
     this.pono = null;
-    this.displaylist = false;
+    this.displaylist = true;
     //Get PO number list, project list and materials available
    
     //if (this.materialList.length <= 0) {

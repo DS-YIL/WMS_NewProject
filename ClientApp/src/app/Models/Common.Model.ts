@@ -141,7 +141,7 @@ export class searchParams {
 export class searchList {
   //listName: string;
   code: string;
-  //name: string;
+ // name: string;
 }
 
 export class stockCardPrint {

@@ -4909,6 +4909,91 @@ namespace WMS.Controllers
 		}
 
 
+		/* Name of Function : <<miscellanousIssueDataUpdatek>>  Author :<<prasanna>>  
+		 Date of Creation <<21-12-2019>>
+		 Purpose : <<miscellanousIssueDataUpdate>>
+		 <param name="datamodel"></param>
+		 Review Date :<<>>   Reviewed By :<<>>
+		 */
+		[HttpGet]
+		[Route("uploadsaleorder")]
+		public string uploadsaleorder()
+		{
+			using (var DB = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				string result = "";
+
+				try
+				{
+					//var filePath = serverPath + "Yil_Po_Daily_report_" + DateTime.Now.ToString("dd-MM-yyyy").Replace("-", "_") + ".xlsx";
+					var filePath = @"D:\A_StagingTable\saleorders.xlsx";
+					DB.Open();
+					var filePathstr = filePath;
+					string[] filearr = filePathstr.Split("\\");
+					string nameoffile = filearr[filearr.Length - 1];
+					DataTable dtexcel = new DataTable();
+					string poitem = "";
+					System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+					using (var stream1 = System.IO.File.Open(filePath, FileMode.Open, FileAccess.Read))
+					{
+						using (var reader = ExcelReaderFactory.CreateReader(stream1))
+						{
+
+							var resultxx = reader.AsDataSet(new ExcelDataSetConfiguration()
+							{
+								ConfigureDataTable = (_) => new ExcelDataTableConfiguration()
+								{
+									UseHeaderRow = true
+								}
+							});
+
+							dtexcel = resultxx.Tables[0];
+
+						}
+					}
+					string uploadcode = Guid.NewGuid().ToString();
+
+					int i = 0;
+					foreach (DataRow row in dtexcel.Rows)
+					{
+						i++;
+						miscellanousIssueData item = new miscellanousIssueData();
+						item.ProjectId = Conversion.toStr(row["Project code"]);
+						item.pono = Conversion.toStr(row["PO No."]);
+						item.material = Conversion.toStr(row["Material"]);
+						item.materialdescription = Conversion.toStr(row["PO Item description"]);
+						string materialdescription = null;
+						if (item.materialdescription != null)
+						{
+							materialdescription = item.materialdescription.Replace("\'", "''");
+						}
+						if(item.pono != null && item.pono.Trim() != "")
+                        {
+							string insertqueryforstatusforqty = "update  wms.wms_stock set saleorderno = '" + item.ProjectId + "' where pono = '" + item.pono + "' and materialid = '"+item.material+"' and poitemdescription = '" + item.materialdescription + "'";
+							var data1 = DB.ExecuteScalar(insertqueryforstatusforqty, new { });
+						}
+
+						
+						
+					}
+					result = "saved";
+				}
+
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "miscellanousIssueDataUpdate", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
+					result = "";
+					return result;
+				}
+				finally
+				{
+					DB.Close();
+				}
+				return result;
+			}
+		}
+
+
 	}
 }
 

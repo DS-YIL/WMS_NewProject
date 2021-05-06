@@ -2113,7 +2113,11 @@ namespace WMS.DAL
 									item.pono,
 									item.lineitemno,
 									item.poitemdescription,
-									item.unitprice
+									item.unitprice,
+									item.saleorderno,
+									item.solineitemno,
+									item.projectid
+									
 
 								});
 								inwardid = Convert.ToInt32(results);
@@ -2343,7 +2347,7 @@ namespace WMS.DAL
 						// unitprice = objdata.unitprice;
 					}
 
-					string insertquery = WMSResource.insertstock;
+					string insertquery = WMSResource.insertStockFromPutaway;
 					int itemid = 0;
 					string materialid = item.Material;
 					item.availableqty = item.confirmqty;
@@ -2376,7 +2380,10 @@ namespace WMS.DAL
 							item.receivedtype,
 							item.poitemdescription,
 							value,
-							unitprice
+							unitprice,
+							item.projectid,
+							item.saleorderno,
+							item.solineitemno
 
 						}));
 						if (result != 0)
@@ -16315,7 +16322,6 @@ namespace WMS.DAL
 			using (var DB = new NpgsqlConnection(config.PostgresConnectionString))
 			{
 				string result = "";
-
 				try
 				{
 

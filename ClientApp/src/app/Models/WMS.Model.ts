@@ -1,4 +1,4 @@
-import { POList } from "./Common.Model";
+import { POList, searchList } from "./Common.Model";
 
 export class PoFilterParams {
   loginid: string = "";
@@ -45,6 +45,8 @@ export class PoDetails {
   projectid: string;
   value: number;
   unitprice: number;
+  saleorderno: string;
+  solineitemno: string;
 }
 
 export class BarcodeModel {
@@ -171,6 +173,9 @@ export class inwardModel {
   unitprice: number;
   asnqty: number;
   isasn: boolean;
+  saleorderno: string;
+  solineitemno: string;
+  projectid: string;
 }
 
 
@@ -224,6 +229,8 @@ export class StockModel {
   projectcode: string;
   materialcost: number;
   stockid: number;
+  saleorderno: string;
+  solineitemno: string;
 }
 
 export class locataionDetailsStock {

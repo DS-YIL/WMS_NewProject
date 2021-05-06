@@ -95,6 +95,9 @@ namespace WMS.Models
 		public decimal? unitprice { get; set; }
 
 		public decimal? initialstockavailableqty { get; set; }
+		public string saleorderno { get; set; }
+		public string solineitemno { get; set; }
+		public string projectid { get; set; }
 
 
 	}
@@ -295,7 +298,6 @@ namespace WMS.Models
 		public string mrnby { get; set; }
 		public DateTime mrnon { get; set; }
 		public string mrnremarks { get; set; }
-
 		public string notifyremarks { get; set; }
 		public string notifiedby { get; set; }
 		public bool notifiedtofinance { get; set; }
@@ -306,6 +308,9 @@ namespace WMS.Models
 		public string poitemdescription { get; set; }
 		public decimal? unitprice { get; set; }
 		public decimal? pendingqty { get; set; }
+		public string saleorderno { get; set; }
+		public string solineitemno { get; set; }
+		public string projectid { get; set; }
 	}
 
 	public class GPReasonMTData
@@ -434,6 +439,8 @@ namespace WMS.Models
 		public DateTime? issueddate { get; set; }
 		public string issuedby { get; set; }
 		public int stlogid { get; set; }
+		public string saleorderno { get; set; }
+		public string solineitemno { get; set; }
 
 	}
 
