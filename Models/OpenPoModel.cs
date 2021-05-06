@@ -456,6 +456,8 @@ namespace WMS.Models
 		List<matlocations> locations { get; set; }
 		public string receivedtype { get; set; }
 		public decimal? unitprice { get; set; }
+		public string saleorderno { get; set; }
+
 	}
 
 	public class matlocations
@@ -835,7 +837,11 @@ namespace WMS.Models
 
 		public bool? isnonproject { get; set; }
 		public string projectid { get; set; }
-
+		public string authid { get; set; }
+		public string authstatus { get; set; }
+		public string authremarks { get; set; }
+		public string authname { get; set; }
+		public DateTime authorizedon { get; set; }
 	}
 	public class materialistModel
 	{
@@ -2395,7 +2401,7 @@ public class printonholdGR
 	public int printcount { get; set; }
 	public bool isprint { get; set; }
 	public DateTime printedon { get; set; }
-	public string  inwmasterid { get; set; }
+	public string inwmasterid { get; set; }
 	public string reprintedby { get; set; }
 
 

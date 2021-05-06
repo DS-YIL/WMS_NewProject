@@ -328,6 +328,11 @@ export class gatepassModel {
   isnonproject: boolean;
   projectid: string;
   pono: string;
+  authid: string;
+  authstatus: string;
+  authremarks: string;
+  authname: string;
+  authorizedon: Date;
 }
 export class materialistModel {
   gatepassmaterialid: string;

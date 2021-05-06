@@ -280,7 +280,7 @@ where  inw.invoiceno='#invoiceno' and openpo.pono='#pono' group by grnnumber</va
     <value>select gate.isnonproject,gate.gatepassid,gate.vendorname,gate.gatepasstype,gate.reasonforgatepass,gate.otherreason,gate.status,gate.referenceno ,gate.fmapproverremarks ,gate.approverremarks ,gate.approverstatus ,
 mat.gatepassmaterialid,mat.deleteflag,mat.materialid,mat.expecteddate,mat.materialcost::decimal(19,5), mat.poitemdescription as materialdescription,mat.pono,mat.quantity,mat.remarks,
 emp.name,emp1.name as fmapprover,iss.itemissueddate,gate.remarks as  statusremarks,appr."name"  as approvername,
-gate.projectid,iss.issuedqty,gate.requestedby ,gate.requestedon,gate.fmapprovedstatus,gate.approverid ,gate.fmapproverid,gate.approvedon,gate.fmapprovedon,
+gate.projectid,iss.issuedqty,gate.requestedby ,gate.requestedon,gate.fmapprovedstatus,gate.approverid ,gate.fmapproverid,gate.approvedon,gate.fmapprovedon,gate.authid,gate.authstatus,gate.authremarks,gate.authorizedon, emp2.name as authname,
 case when gate.isnonproject is not true 
      then (select sum(ws.availableqty::decimal(19,5)) from wms.wms_stock ws where ws.projectid = gate.projectid and ws.pono = mat.pono and ws.materialid = mat.materialid and ws.poitemdescription = mat.poitemdescription group by ws.projectid,ws.pono,ws.materialid,ws.poitemdescription)
      else 0 end as availableqty,
@@ -292,6 +292,7 @@ case when gate.isnonproject is not true
    left join wms.employee emp on emp.employeeno=gate.requestedby
     left join wms.employee appr on appr.employeeno=gate.approverid 
 	left join wms.employee emp1 on emp1.employeeno=gate.fmapproverid  
+	left join wms.employee emp2 on emp2.employeeno=gate.authid  
    left join wms.wms_materialissue iss on (iss.requestid::text = mat.gatepassmaterialid::text and iss.requesttype = 'gatepass' )
    where gate.deleteflag=false order by gate.gatepassid desc</value>
   </data>
@@ -2289,10 +2290,13 @@ VALUES(default, @vendorcode,@vendorname,@faxno,@contactno,@street,@emailid,@upda
 emailid=@emailid,updatedby=@updatedby,updatedon =@updatedon,deleteflag=@deleteflag where vendorid ='#vendorid'</value>
   </data>
   <data name="inventoryreportqry" xml:space="preserve">
-    <value>select st.materialid as material,st.poitemdescription,st.projectid as projectname,sum(st.availableqty::decimal(19,5)) as availableqty,sum(st.availableqty::decimal(19,5) * st.unitprice::decimal(19,5)) as value,st.pono,string_agg(pl.suppliername , ', ') as suppliername,max(mat.hsncode) as hsncode from wms.wms_stock st
+    <value>select st.saleorderno, st.materialid as material,st.poitemdescription,
+st.projectid as projectname,sum(st.availableqty::decimal(19,5)) as availableqty,
+sum(st.availableqty::decimal(19,5) * st.unitprice::decimal(19,5)) as value,st.pono,
+string_agg(pl.suppliername , ', ') as suppliername,max(mat.hsncode) as hsncode from wms.wms_stock st
 left outer join wms."MaterialMasterYGS" mat on mat.material = st.materialid
 left outer join wms.wms_polist pl on pl.pono = st.pono 
-group by st.poitemdescription,st.materialid,st.projectid,st.pono</value>
+group by st.poitemdescription,st.materialid,st.projectid,st.pono,st.saleorderno</value>
   </data>
   <data name="inhandmatwithoutproject" xml:space="preserve">
     <value>select max(stk.storeid) as storeid ,max(stk.rackid) as rackid ,max(stk.binid) as binid,
