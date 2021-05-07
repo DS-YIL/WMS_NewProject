@@ -5,16 +5,16 @@
     margin-left: 0px !important;
     margin-right: 0px !important">
         <div class="col-lg-4 col-md-4 form-inline">
-        
-            <div class="form-inline">
-              <label class="labelheading">Status :</label>&nbsp;&nbsp;
-              <select [(ngModel)]="approverstatus" class="form-control" (change)="searchGatePassList()">
-                <option value="0">All</option>
-                <option value='Pending'>Pending</option>
-                <option value='Approved'>Approved</option>
-                <option value='Sent for Modification'>Sent for Modification</option>
-              </select>
-            </div>
+
+          <div class="form-inline">
+            <label class="labelheading">Status :</label>&nbsp;&nbsp;
+            <select [(ngModel)]="approverstatus" class="form-control" (change)="searchGatePassList()">
+              <option value="0">All</option>
+              <option value='Pending'>Pending</option>
+              <option value='Approved'>Approved</option>
+              <option value='Sent for Modification'>Sent for Modification</option>
+            </select>
+          </div>
         </div>
         <div class="col-lg-4 col-md-4 text-center">
           <span class="commonheadertext">
@@ -25,7 +25,7 @@
         </div>
       </div>
     </div>
-    <div class="card-body" style="overflow-y: scroll;" >
+    <div class="card-body" style="overflow-y: scroll;">
       <div style="margin-left:5px;margin-right:5px;margin-top:10px;">
         <p-table #dt [value]="gatepasslist" [style]="{'width':'100%','overflow':'auto!important'}"
                  [responsive]="true" [rows]="50"
@@ -70,7 +70,7 @@
               </td>
               <td class="ptable-cell" *ngIf="rowData.approverstatus && typeOfList == 'GatePassPMList'" style="text-align:left">{{rowData.approverstatus}}</td>
               <td class="ptable-cell" *ngIf="!rowData.approverstatus && typeOfList == 'GatePassPMList'" style="text-align:left">Pending</td>
-              
+
               <td class="ptable-cell" *ngIf="rowData.fmapprovedstatus && typeOfList != 'GatePassPMList'" style="text-align:left">{{rowData.fmapprovedstatus}}</td>
               <td class="ptable-cell" *ngIf="!rowData.fmapprovedstatus && typeOfList != 'GatePassPMList'" style="text-align:left">Pending</td>
               <td class="ptable-cell" style="text-align:left">{{rowData.name}}</td>
@@ -81,10 +81,10 @@
         </p-table>
       </div>
     </div>
-    </div>
-  
-
   </div>
+
+
+</div>
 
 <div *ngIf="showApprovertab">
   <div class="card commoncardcss" style="margin:10px">
@@ -116,28 +116,28 @@
         <div *ngIf="gatePassApprovalList.length>0 && showHistory" style="background-color:#2c898073">
           <div class="row mt-2" style="padding-left:20px;font-weight: 600;font-size: 16px;color: #265f18;text-decoration:underline">Approval Flow</div>
           <div class="row mt-2" style="padding-left:20px;" *ngFor="let item of gatePassApprovalList">
-            <div *ngIf="item.label==1" class="col-lg-2 col-md-2 col-sm-2 form-inline" style="font-weight: 600; font-size: 14px; color: darkblue; ">
+            <div *ngIf="item.label==1 || item.label==3" class="col-lg-2 col-md-2 col-sm-2 form-inline" style="font-weight: 600; font-size: 14px; color: darkblue; ">
               Name:&nbsp;<span style="color:#dc3545;">{{item.approvername}}</span>
             </div>
-            <div *ngIf="item.label==1" class="col-lg-2 col-md-2 col-sm-2 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
+            <div *ngIf="item.label==1 || item.label==3" class="col-lg-2 col-md-2 col-sm-2 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
               Type:&nbsp;<span *ngIf="item.label==1" style="color:#dc3545;">project Manager</span>
-              <!--<span *ngIf="item.label==2" style="color:#dc3545;">Finance Manager</span>-->
+              <span *ngIf="item.label==3" style="color:#dc3545;">Authorize Manager</span>
             </div>
-            <div *ngIf="item.label==1" class="col-lg-2 col-md-2 col-sm-2 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
+            <div *ngIf="item.label==1|| item.label==3" class="col-lg-2 col-md-2 col-sm-2 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
               Status:&nbsp;<span style="color:#dc3545;">{{item.approverstatus}}</span>
             </div>
-            <div *ngIf="item.label==1" class="col-lg-3 col-md-3 col-sm-3 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
+            <div *ngIf="item.label==1 || item.label==3" class="col-lg-3 col-md-3 col-sm-3 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
               Status Updated on:&nbsp;<span style="color:#dc3545;">{{item.approvedon  | date :  constants.dateFormat}}</span>
             </div>
-            <div *ngIf="item.label==1" class="col-lg-3 col-md-3 col-sm-3 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
-              Remarks:&nbsp;<span style="color:#dc3545;">{{item.approverremarks}}</span>
+            <div *ngIf="item.label==1 || item.label==3" class="col-lg-3 col-md-3 col-sm-3 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
+              Remarks:&nbsp;<span style="color:#dc3545;">{{item.remarks}}</span>
             </div>
           </div>
-          
+          <br />
         </div>
 
 
-        <div class="row" style="padding-left:20px;">
+        <div class="row mt-2" style="padding-left:20px;">
           <div class="col-lg-2 col-md-2 col-sm-2 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
             GatePass Id:&nbsp;<span style="color:#dc3545;">{{materialList[0].gatepassid}}</span>
           </div>
@@ -190,8 +190,8 @@
             Remarks:&nbsp;<span style="color:#dc3545;">{{gatepassModel.fmapproverremarks}}</span>
           </div>
           <!--<div class="col-lg-2 col-md-2 col-sm-2 form-inline">
-    <label class="form-label"><b>Vehicle No:</b></label>&nbsp;<span>{{materialList[0].vehicleno}}</span>
-  </div>-->
+            <label class="form-label"><b>Vehicle No:</b></label>&nbsp;<span>{{materialList[0].vehicleno}}</span>
+          </div>-->
         </div>
         <!--<br />-->
         <div class="row mt-4" style="    margin: 14px;
@@ -232,7 +232,7 @@
                 <td class="ptable-cell" style="text-align:center" *ngIf="employee.roleid !='8' && materialList[0].gatepasstype=='Returnable'">{{checkValiddate(rowData.expecteddate)}}</td>
                 <!--<td *ngIf="materialList[0].gatepasstype=='Returnable' && rowData.returneddate" class="ptable-cell" style="text-align:center">{{checkValiddate(rowData.returneddate)}}</td>-->
                 <td class="ptable-cell" style="text-align:left"> {{rowData.remarks}} </td>
-</ng-template>
+            </ng-template>
           </p-table>
         </div>
         <!--</div>-->
@@ -276,10 +276,10 @@
         </div>
       </div>
     </div>
-    </div>
-
-
   </div>
+
+
+</div>
 
 
 

@@ -52,8 +52,8 @@ namespace WMS.Common
 							int j = 0;
 							foreach (authUser user in result.Result)
 							{
-                                if (user.emailnotification == true)
-                                {
+								if (user.emailnotification == true)
+								{
 									if (i > 0)
 									{
 										multipleemails = true;
@@ -90,7 +90,7 @@ namespace WMS.Common
 				}
 				emlSndngList.ToEmailId = tomainlstring;
 				if(emlSndngList.ToEmailId == "")
-                {
+				{
 					emlSndngList.ToEmailId = "ramesh.kumar@in.yokogawa.com";
 				}
 				emlSndngList.CC = toccstring;
@@ -103,7 +103,15 @@ namespace WMS.Common
 				emlSndngList.ToEmailId = "sushma.patil@in.yokogawa.com";
 				emlSndngList.CC = "ramesh.kumar@in.yokogawa.com,Developer@in.yokogawa.com";
 			}
-			MailMessage mailMessage = new MailMessage(emlSndngList.FrmEmailId, emlSndngList.ToEmailId);
+			MailMessage mailMessage = new MailMessage();
+			mailMessage.From = new MailAddress(emlSndngList.FrmEmailId.Trim(), ""); //From Email Id
+			string[] ToMuliId = emlSndngList.ToEmailId.Split(',');
+			foreach (string ToEMailId in ToMuliId)
+			{
+				if (!string.IsNullOrEmpty(ToEMailId))
+					mailMessage.To.Add(new MailAddress(ToEMailId.Trim(), "")); //adding multiple TO Email Id
+			}
+
 			SmtpClient client = new SmtpClient();
 			var subbody = string.Empty;
 			//Security operator to inventory clerk(Receipts)
@@ -293,9 +301,9 @@ namespace WMS.Common
 
 			{
 				string requesteddte = emlSndngList.requestedon.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
-				mailMessage.Subject = emlSndngList.gatepasstype + " Gatepass Materials with GatePass ID -" + emlSndngList.gatepassid + "are pending for FM approval ";
+				mailMessage.Subject = "GatePass ID - " + emlSndngList.gatepassid + " - pending for FM approval ";
 				string requestedby = emlSndngList.requestedby;
-				subbody = "Please find the Material details below.<br/>GatePass Type : <b>" + emlSndngList.gatepasstype + "</b><br/>Requested By : <b>" + requestedby + "</b><br/>Requested On : <b>" + requesteddte + "</b><br/>GatePass Type : <b>" + emlSndngList.gatepasstype + "</b><br/>Approved By : <b>" + emlSndngList.approvername + "<b>";
+				subbody = "Please find the Material details below.<br/>GatePass Type : <b>" + emlSndngList.gatepasstype + "</b><br/>Requested By : <b>" + requestedby + "</b><br/>Requested On : <b>" + requesteddte + "</b><br/>GatePass Type : <b>" + emlSndngList.gatepasstype + "</b><br/>Approved By : <b>" + emlSndngList.approvername + "<b><br/>Authorized By : <b>" + emlSndngList.authname + "<b>";
 				//subbody = mailMessage.Subject;
 				link = linkurl + "WMS/Email/GatePassFMList?GateId=" + emlSndngList.gatepassid.Trim();
 
@@ -431,14 +439,14 @@ namespace WMS.Common
 				subbody = "The material request for Request Id " + emlSndngList.requestid + " has been rejected.";
 				//subbody += mailMessage.Subject;
 				if(emlSndngList.requesttype == "STO")
-                {
+				{
 					link = linkurl + "WMS/Email/StockTransferOrder?ReqId=" + emlSndngList.requestid;
 				}
 				else if(emlSndngList.requesttype == "SubContract")
-                {
+				{
 					link = linkurl + "WMS/Email/SubContractTransferOrder?ReqId=" + emlSndngList.requestid;
 				}
-				
+
 
 			}
 			else if (subjecttype == 32)
@@ -469,27 +477,35 @@ namespace WMS.Common
 				subbody = "Gate Pass approved for GatePass  ID : " + emlSndngList.gatepassid + " and ready for outward.";
 				//subbody = mailMessage.Subject;
 				link = linkurl + "WMS/Email/GatePass?GatepassId=" + emlSndngList.gatepassid.Trim();
-				
+
 
 
 			}
 
-
+			else if (subjecttype == 35)//mail to invenory manager after PM approval
+			{
+				string requesteddte = emlSndngList.requestedon.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
+				mailMessage.Subject = "GatePass ID -" + emlSndngList.gatepassid + " - Pending for Authorization ";
+				string requestedby = emlSndngList.requestedby;
+				subbody = "" + emlSndngList.gatepasstype + " gate pass was approved by PM <br/> Please find the Material details below.<br/>GatePass Type : <b>" + emlSndngList.gatepasstype + "</b><br/>Requested By : <b>" + requestedby + "</b><br/>Requested On : <b>" + requesteddte + "</b><br/>Approved By : <b>" + emlSndngList.approvername + "</b><br/>";
+				//subbody = mailMessage.Subject;
+				link = linkurl + "WMS/Email/GatePassAuthList?GateId=" + emlSndngList.gatepassid.Trim();
+			}
 
 			//mailMessage.Subject = body;
 			var body = string.Empty;
-			
+
 			string users = "";
 			if (!string.IsNullOrEmpty(emlSndngList.CC))
 				mailMessage.CC.Add(emlSndngList.CC);
 			if (emlSndngList.ToEmpName == null)
 				emlSndngList.ToEmpName = getname(emlSndngList.ToEmailId);
 			if (emlSndngList.sendername == null)
-            {
+			{
 				//emlSndngList.sendername = getname(emlSndngList.FrmEmailId);
 				emlSndngList.sendername = string.Empty;
 			}
-				
+
 			if (multipleemails == true || subjecttype == 16)
 			{
 				users = "All";

@@ -1053,6 +1053,10 @@ export class NavMenuComponent implements OnInit {
       if (rba.annexure_report) {
         this.items.push({ label: 'Sub Contract Annexure', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/AnnexureReport') });
       }
+      if (this.emp.roleid == "4") {
+        this.items.push({ label: 'GP Authorization', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GatePassAuthList') });
+      }
+      
 
       //let element1x: HTMLDivElement = document.getElementById("menudiv") as HTMLDivElement;
       //element1x.hidden = false;

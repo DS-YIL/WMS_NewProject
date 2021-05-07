@@ -1769,7 +1769,7 @@ namespace WMS.DAL
 								}
 								string descriptionstr = null;
 								if (po.poitemdescription!= null)
-                                {
+								{
 									descriptionstr = po.poitemdescription.Replace("\'", "''");
 								}
 								var fdata = datalist.Where(o => o.Material == po.Material && o.poitemdescription == descriptionstr && o.pono == po.pono && o.lineitemno == po.lineitemno && o.asnno == po.asnno).FirstOrDefault();
@@ -2117,7 +2117,7 @@ namespace WMS.DAL
 									item.saleorderno,
 									item.solineitemno,
 									item.projectid
-									
+
 
 								});
 								inwardid = Convert.ToInt32(results);
@@ -4110,7 +4110,7 @@ namespace WMS.DAL
 						var createdate = Convert.ToDateTime(item.createddate).ToString("yyyy-MM-dd");
 						string descriptionstr = null;
 						if (item.Materialdescription != null)
-                        {
+						{
 							descriptionstr = item.Materialdescription.Replace("\'", "''");
 						}
 						string stockquery = "select * from wms.wms_stock where projectid='"+item.projectid+"' and pono='"+item.pono+"' and materialid = '" + item.materialid + "' and lower(poitemdescription) = lower('" + descriptionstr + "') and availableqty > 0 and itemlocation = '" + item.itemlocation + "' and createddate::DATE = '" + createdate + "' order by itemid";
@@ -4430,6 +4430,7 @@ namespace WMS.DAL
 						string insertquery = WMSResource.insertgatepassdata;
 						string fmapprovedstatus = "";
 						string approverstatus = "Pending";
+						string authstatus = "Pending";
 
 						string insertgatepasshistory = WMSResource.insertgatepassapprovalhistory;
 						dataobj.deleteflag = false;
@@ -4459,6 +4460,7 @@ namespace WMS.DAL
 							dataobj.requestid,
 							dataobj.fmapprovedstatus,
 							dataobj.approverstatus,
+							authstatus,
 							remarks,
 							dataobj.otherreason,
 							dataobj.isnonproject,
@@ -9739,15 +9741,15 @@ namespace WMS.DAL
 						string querypmb = "select au.createdby as approverid from wms.auth_users au where au.isdelegatemember is true and au.deleteflag is not true and au.employeeid = '" + empno + "' limit 1";
 						var rslttmb = pgsql.ExecuteScalar(querypmb, null);
 						if(rslttmb == null)
-                        {
+						{
 							data = data.Where(o => o.projectmanager == empno);
 						}
-                        else
-                        {
+						else
+						{
 							string pmanager = rslttmb.ToString();
 							data = data.Where(o => o.projectmanager == empno || o.projectmanager == pmanager);
 						}
-						
+
 
 					}
 
@@ -10329,19 +10331,90 @@ namespace WMS.DAL
 						{
 							int label = 1;
 							string approvername = model.approvedby;
+							string remarks = model.approverremarks;
 							string insertgatepasshistory = WMSResource.insertgatepassapprovalhistory;
 							string approverstatus = model.approverstatus;
 							var gatepasshistory = DB.ExecuteScalar(insertgatepasshistory, new
 							{
-
+								model.gatepassid,
 								model.approverid,
 								approvername,
-								model.gatepassid,
+								approverstatus,
 								label,
-								approverstatus
+								remarks,
+
 							});
 							EmailModel emailmodel = new EmailModel();
 							emailmodel.approvername = model.approvedby;
+							emailmodel.approverid = model.approverid;
+							emailmodel.gatepassid = model.gatepassid;
+							emailmodel.approverstatus = model.approverstatus;
+							emailmodel.gatepasstype = model.gatepasstype;
+							emailmodel.requestedby = model.requestedby;
+							emailmodel.requestedon = model.requestedon;
+
+							EmailUtilities emailobj = new EmailUtilities();
+
+							if (model.approverstatus == "Approved")//Inventory mangers
+							{
+								var query = WMSResource.getINVMangerList;
+								List<User> data = DB.Query<User>(query, null, commandType: CommandType.Text).ToList();
+								foreach (User usr in data)
+								{
+									if (!string.IsNullOrEmpty(usr.email))
+										emailmodel.ToEmailId += usr.email + ",";
+								}
+								emailobj.sendEmail(emailmodel, 35);
+							}
+							else
+							{
+								string userquery = WMSResource.getRequesterEmail.Replace("#gatepassid", model.gatepassid);
+								User userdata = DB.QuerySingle<User>(
+								   userquery, null, commandType: CommandType.Text);
+								mailto = userdata.email;
+								emailmodel.ToEmailId = mailto;
+								emailobj.sendEmail(emailmodel, 21);
+							}
+
+
+
+						}
+					}
+				}
+				else if (model.categoryid == 3)//Authorization
+				{
+					model.approverstatus = model.authstatus;
+					updateapproverstatus = WMSResource.updateAuthstatusbyIM.Replace("#authstatus", model.authstatus);
+
+					using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
+					{
+
+						result = DB.Execute(updateapproverstatus, new
+						{
+							model.authid,
+							model.authremarks,
+							model.gatepassid
+
+						});
+						if (result == 1)
+						{
+							int label = 3;
+							string approvername = model.approvedby;
+							string remarks = model.authremarks;
+							string insertgatepasshistory = WMSResource.insertgatepassapprovalhistory;
+							string approverstatus = model.approverstatus;
+							var gatepasshistory = DB.ExecuteScalar(insertgatepasshistory, new
+							{
+								model.gatepassid,
+								model.approverid,
+								approvername,
+								approverstatus,
+								label,
+								remarks
+							});
+							EmailModel emailmodel = new EmailModel();
+							emailmodel.approvername = model.approvedby;
+							emailmodel.authname = model.authname;
 							emailmodel.approverid = model.approverid;
 							emailmodel.gatepassid = model.gatepassid;
 							emailmodel.approverstatus = model.approverstatus;
@@ -10425,19 +10498,23 @@ namespace WMS.DAL
 						{
 							int label = 2;
 							string approvername = model.approvedby;
+							string remarks = model.fmapproverremarks;
 							string insertgatepasshistory = WMSResource.insertgatepassapprovalhistory;
 							string approverstatus = model.fmapprovedstatus;
 							var gatepasshistory = DB.ExecuteScalar(insertgatepasshistory, new
 							{
 
+								model.gatepassid,
 								model.approverid,
 								approvername,
-								model.gatepassid,
+								approverstatus,
 								label,
-								approverstatus
+								remarks
+
 							});
 							EmailModel emailmodel = new EmailModel();
 							emailmodel.approvername = model.approvedby;
+							emailmodel.authname = model.authname;
 							emailmodel.approverid = model.approverid;
 							emailmodel.gatepassid = model.gatepassid;
 							emailmodel.approverstatus = model.fmapprovedstatus;
@@ -10473,11 +10550,19 @@ namespace WMS.DAL
 							else
 							{
 
-								string userquery = WMSResource.getRequesterEmail.Replace("#gatepassid", model.gatepassid); ;
+								//Inv manager
+								var query = WMSResource.getINVMangerList;
+								List<User> data = DB.Query<User>(query, null, commandType: CommandType.Text).ToList();
+								foreach (User usr in data)
+								{
+									if (!string.IsNullOrEmpty(usr.email) && usr.employeeno == model.authid)
+										emailmodel.ToEmailId += usr.email + ",";
+								}
+								string userquery = WMSResource.getRequesterEmail.Replace("#gatepassid", model.gatepassid);
 								User userdata = DB.QuerySingle<User>(
 								   userquery, null, commandType: CommandType.Text);
 								mailto = userdata.email;
-								emailmodel.ToEmailId = mailto;
+								emailmodel.CC = mailto;
 								emailobj.sendEmail(emailmodel, 21);
 							}
 							//emailobj.sendEmail(emailmodel, 17, 3);
@@ -11902,19 +11987,19 @@ namespace WMS.DAL
 							string delegatemanager = "";
 							string querypmb = "select au.createdby as approverid from wms.auth_users au where au.isdelegatemember is true and au.deleteflag is not true and au.employeeid = '" + data.approverid + "' limit 1";
 							var rslttmb = pgsql.ExecuteScalar(querypmb, null);
-							
+
 
 							string query = "update wms.wms_materialtransferapproval set approvaldate ='" + currentdatestr + "'";
 							if (rslttmb == null)
 							{
 								query += " ,isapproved = " + data.isapproved + ", remarks = '" + data.approvalremarks + "'  where transferid = '" + data.transferid + "' and approverid = '" + data.approverid + "'";
 							}
-                            else
-                            {
+							else
+							{
 								delegatemanager = rslttmb.ToString();
 								query += " ,isapproved = " + data.isapproved + ", remarks = '" + data.approvalremarks + "'  where transferid = '" + data.transferid + "' and (approverid = '" + data.approverid + "' or approverid = '" + delegatemanager + "' )";
 							}
-							
+
 
 							var rslt = pgsql.ExecuteScalar(query);
 							int nextlevel = data.approvallevel + 1;
@@ -11971,7 +12056,7 @@ namespace WMS.DAL
 								delegatemanager = rslttmb.ToString();
 								query += " ,isapproved = " + data.isapproved + ", remarks = '" + data.approvalremarks + "'  where transferid = '" + data.transferid + "' and (approverid = '" + data.approverid + "' or approverid = '" + delegatemanager + "')";
 							}
-							
+
 
 							var rslt = pgsql.ExecuteScalar(query);
 
@@ -14575,30 +14660,30 @@ namespace WMS.DAL
 						descriptionstr = poitemdescription.Replace("\'", "''");
 					}
 					string testgetquery = "";
-			
-						testgetquery = WMSResource.inhandmatwithoutproject.Replace("#poitemdescription", descriptionstr).Replace("#materialid", materialid);
-						if (projectid != null && projectid != "")
-						{
-							testgetquery += " and stk.projectid = '" + projectid + "'";
 
-						}
-                        else
-                        {
-							testgetquery += " and (stk.projectid is null or stk.projectid = '')";
-						}
-						if (pono != null && pono != "")
-						{
-							testgetquery += " and stk.pono = '" + pono + "'";
+					testgetquery = WMSResource.inhandmatwithoutproject.Replace("#poitemdescription", descriptionstr).Replace("#materialid", materialid);
+					if (projectid != null && projectid != "")
+					{
+						testgetquery += " and stk.projectid = '" + projectid + "'";
 
-						}
-						else
-						{
-							testgetquery += " and (stk.pono is null or stk.pono = '')";
-						}
-						testgetquery += "  group by stk.itemlocation";
-						
-						
-					
+					}
+					else
+					{
+						testgetquery += " and (stk.projectid is null or stk.projectid = '')";
+					}
+					if (pono != null && pono != "")
+					{
+						testgetquery += " and stk.pono = '" + pono + "'";
+
+					}
+					else
+					{
+						testgetquery += " and (stk.pono is null or stk.pono = '')";
+					}
+					testgetquery += "  group by stk.itemlocation";
+
+
+
 
 					await pgsql.OpenAsync();
 					var data = await pgsql.QueryAsync<matlocations>(
@@ -15202,7 +15287,7 @@ namespace WMS.DAL
 								  query, null, commandType: CommandType.Text);
 
 								string updatequery = WMSResource.updatereprintcount.Replace("#reprinthistoryid", Convert.ToString(data));
-								 reprintcount = res.reprintcount + 1;
+								reprintcount = res.reprintcount + 1;
 								using (IDbConnection pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 								{
 									var data1 = DB.Execute(updatequery, new
@@ -16081,8 +16166,8 @@ namespace WMS.DAL
 					//else
 					//	query += " group by st.poitemdescription,st.itemlocation";
 					string query1 = " select max(itemid) as itemid,projectid,materialid as material,pono,poitemdescription,itemlocation,sum(availableqty) as availableqty,sum(availableqty::decimal(19,5) * unitprice::decimal(19,5) ) as value from wms.wms_stock ws where availableqty > 0";
-						   query1 += " and initialstock=true group by projectid,materialid,pono,poitemdescription,itemlocation";
-					
+					query1 += " and initialstock=true group by projectid,materialid,pono,poitemdescription,itemlocation";
+
 					await pgsql.OpenAsync();
 					var result = await pgsql.QueryAsync<StockModel>(
 					  query1, null, commandType: CommandType.Text);
@@ -16200,8 +16285,8 @@ namespace WMS.DAL
 				try
 				{
 					string uploadcode = Guid.NewGuid().ToString();
-                    foreach (var item in dataobj)
-                    {
+					foreach (var item in dataobj)
+					{
 						string materialdescription = null;
 						if (item.materialdescription != null)
 						{
@@ -16209,18 +16294,18 @@ namespace WMS.DAL
 						}
 						string stockquery = "";
 						if(item.ProjectId != null && item.ProjectId.Trim() != "" && item.pono != null && item.pono.Trim() != "")
-                        {
+						{
 							stockquery = "select * from wms.wms_stock where materialid = '" + item.material + "' and lower(poitemdescription) = lower('" + materialdescription + "') and availableqty > 0 and itemlocation = '" + item.itemlocation + "' and  projectid = '" + item.ProjectId + "' and pono = '" + item.pono + "' order by itemid";
 						}
-                        else
-                        {
+						else
+						{
 							stockquery = "select * from wms.wms_stock where materialid = '" + item.material + "' and lower(poitemdescription) = lower('" + materialdescription + "') and availableqty > 0 and itemlocation = '" + item.itemlocation + "' ";
 							if(item.ProjectId == null || item.ProjectId.Trim() == "")
-                            {
-								stockquery += " and (projectid is null or projectid = '')";  
-                            }
-                            else
-                            {
+							{
+								stockquery += " and (projectid is null or projectid = '')";
+							}
+							else
+							{
 								stockquery +=  " and projectid = '" + item.ProjectId + "'";
 
 							}
@@ -16235,23 +16320,23 @@ namespace WMS.DAL
 							}
 							stockquery += " order by itemid";
 						}
-                        var stockdata = DB.QueryAsync<StockModel>(stockquery, null, commandType: CommandType.Text);
-                        if (stockdata != null)
-                        {
-                            decimal? quantitytoissue = item.issuedqty;
-                            decimal? issuedqty = 0;
-                            foreach (StockModel itm in stockdata.Result)
-                            {
-                                DateTime approvedon = System.DateTime.Now;
-                                string materialid = item.material;
-                                if (quantitytoissue <= itm.availableqty)
-                                {
-                                    issuedqty = quantitytoissue;
-                                }
-                                else
-                                {
-                                    issuedqty = itm.availableqty;
-                                }
+						var stockdata = DB.QueryAsync<StockModel>(stockquery, null, commandType: CommandType.Text);
+						if (stockdata != null)
+						{
+							decimal? quantitytoissue = item.issuedqty;
+							decimal? issuedqty = 0;
+							foreach (StockModel itm in stockdata.Result)
+							{
+								DateTime approvedon = System.DateTime.Now;
+								string materialid = item.material;
+								if (quantitytoissue <= itm.availableqty)
+								{
+									issuedqty = quantitytoissue;
+								}
+								else
+								{
+									issuedqty = itm.availableqty;
+								}
 
 								quantitytoissue = quantitytoissue - issuedqty;
 								string insertqueryforstatusforqty = WMSResource.updateqtyafterissue.Replace("#itemid", Convert.ToString(itm.itemid)).Replace("#issuedqty", Convert.ToString(issuedqty));

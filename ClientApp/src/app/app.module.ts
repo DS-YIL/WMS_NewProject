@@ -70,6 +70,7 @@ import { MaterialReleaseComponent } from './WMS/MaterialRelease.component';
 import { QualityCheckComponent } from './WMS/QualityCheck.component';
 import { BarcodeComponent } from './WMS/Barcode.component';
 import { GatePassApprovalList } from './WMS/GatePassApprovalList.component';
+import { GatePassAuthList } from './WMS/GatePassAuthList.component';
 import { SafetyStockComponent } from './WMS/SafetyStock.component';
 import { BinStatusReportComponent } from './WMS/BinStatusReport.component';
 import { StockTransferComponent } from './WMS/StockTransfer.component';
@@ -200,6 +201,7 @@ import { DataSharingService } from './datasharing.service';
     QualityCheckComponent,
     BarcodeComponent,
     GatePassApprovalList,
+    GatePassAuthList,
     SafetyStockComponent,
     BinStatusReportComponent,
     StockTransferComponent,

@@ -582,9 +582,9 @@ export class GatePassComponent implements OnInit {
         debugger;
         //this.totalGatePassList = this.totalGatePassList.filter(li => li.isnonproject != true);
         this.totalGatePassList.forEach(item => {
-          if (item.gatepasstype == "Returnable" && item.approverstatus == "Approved")
+          if (item.gatepasstype == "Returnable" && item.approverstatus == "Approved" && item.authstatus=="Approved")
             this.gatepasslist.push(item);
-          if (item.gatepasstype == "Non Returnable" && item.fmapprovedstatus == "Approved")
+          if (item.gatepasstype == "Non Returnable" && item.authstatus == "Approved" && item.fmapprovedstatus == "Approved" )
             this.gatepasslist.push(item);
         })
 

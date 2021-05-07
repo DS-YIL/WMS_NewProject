@@ -1181,6 +1181,7 @@ namespace WMS.Models
 		public string transferbody { get; set; }
 		public string approverid { get; set; }
 		public string approvername { get; set; }
+		public string authname { get; set; }
 		public string approverstatus { get; set; }
 		// public int inwmasterid { get; set; }
 		public string inwmasterid { get; set; }

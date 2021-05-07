@@ -1,0 +1,206 @@
+<div *ngIf="!showAuthtab">
+  <div class="card commoncardcss" style="margin:10px">
+    <div class="card-header text-center commoncardheader">
+      <div class="row " style="margin-top: 10px; margin-left: 0px !important; margin-right: 0px !important">
+        <div class="col-lg-2 col-md-2 form-inline">
+          <div class="form-inline">
+            <label class="labelheading">Status :</label>&nbsp;&nbsp;
+            <select [(ngModel)]="approverstatus" class="form-control" (change)="searchGatePassList()">
+              <option value="">All</option>
+              <option value='Pending'>Pending</option>
+              <option value='Approved'>Approved</option>
+              <option value='Sent for Modification'>Sent for Modification</option>
+            </select>
+          </div>
+          </div>
+          <div class="col-lg-2 col-md-2 form-inline">
+            <div class="form-inline">
+              <label class="labelheading">Type :</label>&nbsp;&nbsp;
+              <select [(ngModel)]="gatepassModel.gatepasstype" class="form-control" (change)="searchGatePassList()">
+                <option value="">All</option>
+                <option value='Returnable'>Returnable</option>
+                <option value='Non Returnable'>Non Returnable</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-4 text-center">
+            <span class="commonheadertext">
+              <i class="fa fa-check-circle-o commonheadertext"></i>&nbsp;Gate Pass
+            </span>
+          </div>
+          <div class="col-lg-4 col-md-4 form-inline">
+          </div>
+        </div>
+    </div>
+    <div class="card-body" style="overflow-y: scroll;">
+      <div style="margin-left:5px;margin-right:5px;margin-top:10px;">
+        <p-table #dt [value]="gatepasslist" [style]="{'width':'100%','overflow':'auto!important'}"
+                 [responsive]="true" [rows]="50"
+                 [resizableColumns]="true"
+                 columnResizeMode="expand"
+                 [paginator]="true" [rowsPerPageOptions]="[25,50,75,100]"
+                 appendTo="body">
+          <ng-template pTemplate="header">
+            <tr class="mprltbldata">
+              <th style="text-align: center; width: 70px">Sl. No.</th>
+              <th style="text-align:center">GatePass Id</th>
+              <th style="text-align:center">Type</th>
+              <th style="text-align:center">Supplier</th>
+              <th style="text-align:center">Reason</th>
+              <th style="text-align:center">PM Status</th>
+              <th style="text-align:center">Requested By</th>
+              <th style="text-align:center">Requested On</th>
+              <th *ngIf="approverstatus!='Pending'" style="text-align:center">Authorized By</th>
+              <th *ngIf="approverstatus!='Pending'" style="text-align:center">Authorized On</th>
+            </tr>
+            <tr>
+              <th></th>
+              <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'gatepassid', 'contains')"></th>
+              <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'gatepasstype', 'contains')"></th>
+              <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'vendorname', 'contains')"></th>
+              <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'reasonforgatepass', 'contains')"></th>
+              <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'approverstatus', 'contains')"></th>
+              <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'name', 'contains')"></th>
+              <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'requestedon', 'contains')"></th>
+              <th *ngIf="approverstatus!='Pending'"> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'authname', 'contains')"></th>
+              <th *ngIf="approverstatus!='Pending'"> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'authorizedon', 'contains')"></th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
+            <tr>
+              <td class="ptable-cell" style="text-align:center">
+                {{ri+1}}
+              </td>
+              <td class="ptable-cell" style="text-align:center"><button class="btn btn-link" *ngIf="rowData.gatepassid" (click)="showApprover(rowData.gatepassid)">{{rowData.gatepassid}}</button></td>
+              <td class="ptable-cell" style="text-align:left">{{rowData.gatepasstype}}</td>
+              <td class="ptable-cell" style="text-align:left">{{rowData.vendorname}}</td>
+              <td class="ptable-cell" style="text-align:left">
+                <span *ngIf="rowData.reasonforgatepass && rowData.reasonforgatepass === 'Other'"> {{rowData.otherreason}}</span>
+                <span *ngIf="rowData.reasonforgatepass && rowData.reasonforgatepass != 'Other'"> {{rowData.reasonforgatepass}}</span>
+
+              </td>
+              <td class="ptable-cell" style="text-align:left">{{rowData.approverstatus}}</td>
+              <td class="ptable-cell" style="text-align:left">{{rowData.name}}</td>
+              <td class="ptable-cell" style="text-align:center">{{rowData.requestedon | date :  constants.dateFormat}}</td>
+              <td *ngIf="approverstatus!='Pending'" class="ptable-cell" style="text-align:left">{{rowData.authname}}</td>
+              <td *ngIf="approverstatus!='Pending'" class="ptable-cell" style="text-align:center">{{rowData.authorizedon | date :  constants.dateFormat}}</td>
+
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="showAuthtab">
+  <div class="card commoncardcss" style="margin:10px">
+    <div class="card-header text-center commoncardheader">
+      <div class="row " style="    margin-top: 10px;margin-left: 0px !important;margin-right: 0px !important">
+        <div class="col-lg-4 col-md-4 form-inline">
+          <button type="button" icon="fa fa-arrow-left" pButton aria-hidden="true" pTooltip="Back" (click)="hideApprover()" style="float: left; height: 26px;"></button>
+        </div>
+        <div class="col-lg-4 col-md-4 text-center">
+          <span class="commonheadertext">
+            <i class="fa fa-check-circle-o commonheadertext"></i>&nbsp;Gatepass Approval
+          </span>
+        </div>
+        <div class="col-lg-4 col-md-4 form-inline">
+        </div>
+      </div>
+    </div>
+    <div class="card-body" style="overflow-y:scroll;padding: 0rem !important ">
+      <div *ngIf="materialList.length>0">
+        <div class="row" style="padding-left:20px;">
+          <div class="col-lg-2 col-md-2 col-sm-2 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
+            GatePass Id:&nbsp;<span style="color:#dc3545;">{{materialList[0].gatepassid}}</span>
+          </div>
+          <div class="col-lg-2 col-md-2 col-sm-2 form-inline" style="font-weight:600;font-size:14px;color:darkblue;" *ngIf="!materialList[0].isnonproject">
+            Project:&nbsp;<span style="color:#dc3545;">{{materialList[0].projectid}}</span>
+          </div>
+          <div class="col-lg-2 col-md-2 col-sm-2 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
+            Requester:&nbsp;<span style="color:#dc3545;">{{materialList[0].name}}</span>
+          </div>
+          <div class="col-lg-2 col-md-2 col-sm-2 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
+            Supplier:&nbsp;<span style="color:#dc3545;">{{materialList[0].vendorname}}</span>
+          </div>
+          <div class="col-lg-2 col-md-2 col-sm-2 form-inline" *ngIf="employee.roleid!='8'" style="font-weight:600;font-size:14px;color:darkblue;">
+            Type:&nbsp;<span style="color:#dc3545;">{{materialList[0].gatepasstype}}</span>
+          </div>
+          <div class="col-lg-2 col-md-2 col-sm-2 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
+            Reason:
+            <span style="color:#dc3545;" *ngIf="materialList[0].reasonforgatepass === 'Other'"> {{materialList[0].otherreason}}</span>
+            <span style="color:#dc3545;" *ngIf="materialList[0].reasonforgatepass != 'Other'"> {{materialList[0].reasonforgatepass}}</span>
+
+          </div>
+
+        </div>
+        <!--<br />-->
+        <div class="row" style="padding-left:20px;">
+          <div class="col-lg-6 col-md-6 col-sm-6 form-inline" *ngIf="gatepassModel.authremarks" style="font-weight:600;font-size:14px;color:darkblue;">
+            Remarks:&nbsp;<span style="color:#dc3545;">{{gatepassModel.authremarks}}</span>
+          </div>
+        </div>
+        <div class="row mt-4" style="margin: 14px;margin-top: 0px !important">
+          <p-table [value]="materialList" [style]="{'width':'100%','overflow':'auto!important'}"
+                   [responsive]="true" [rows]="50"
+                   [resizableColumns]="true"
+                   columnResizeMode="expand"
+                   [paginator]="true" [rowsPerPageOptions]="[25,50,75,100]"
+                   appendTo="body">
+            <ng-template pTemplate="header">
+              <tr class="mprltbldata">
+                <th class="ptable-cell" style="text-align:center;width:60px;">Sl.No.</th>
+                <th class="ptable-cell" style="text-align:center;width:150px;" *ngIf="!materialList[0].isnonproject">PONo.</th>
+                <th class="ptable-cell" style="text-align:center">Material</th>
+                <th class="ptable-cell" style="text-align:center;width:350px;">PO Item Description</th>
+                <th class="ptable-cell" style="text-align:center">Price</th>
+                <th class="ptable-cell" style="text-align:center">Requested Qty</th>
+                <th class="ptable-cell" style="text-align:center" *ngIf="materialList[0].gatepasstype=='Returnable'">Expected Date</th>
+                <th class="ptable-cell" style="text-align:center">Remarks</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex" let-rindex=0>
+              <tr>
+                <td class="ptable-cell" style="text-align:center"> {{ri+1}} </td>
+                <td class="ptable-cell" style="text-align:center" *ngIf="!materialList[0].isnonproject"> {{rowData.pono}} </td>
+                <td class="ptable-cell" style="text-align:left">{{rowData.materialid}}</td>
+                <td class="ptable-cell" style="text-align:left"> {{rowData.materialdescription}} </td>
+                <td class="ptable-cell" style="text-align:right"><span *ngIf="rowData.materialcost">{{rowData.materialcost}}</span></td>
+                <td class="ptable-cell" style="text-align:right">{{rowData.quantity}}</td>
+                <td class="ptable-cell" style="text-align:center" *ngIf="materialList[0].gatepasstype=='Returnable'">{{checkValiddate(rowData.expecteddate)}}</td>
+                <td class="ptable-cell" style="text-align:left"> {{rowData.remarks}} </td>
+            </ng-template>
+          </p-table>
+        </div>
+        <div class="row">
+          <div class="col-lg-1 col-md-1 col-sm-1"></div>
+          <div class="col-lg-3 col-md-3 col-sm-3  form-inline" *ngIf="!btnDisable">
+            <label class="form-label labelheading">Status:</label>&nbsp;&nbsp;
+            <div class="form-inline-list">
+              <select class="form-control forms-input" [(ngModel)]="gatepassModel.authstatus">
+                <option value='Approved'>Approved</option>
+                <option value='Sent for Modification'>Sent for Modification</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-4 col-sm-4 form-inline" *ngIf="!btnDisable">
+            <label class="form-label labelheading">Remarks:</label>&nbsp;&nbsp;
+            <div class="form-inline-list" style="width:80%">
+              <textarea style="width:100%" class="form-control" [(ngModel)]="gatepassModel.authremarks"></textarea>
+            </div>
+          </div>
+          <div class="col-lg-2 col-md-2 col-sm-2 form-inline">
+            <button [disabled]="btnDisable" type="button" class="btn btn-primary" (click)="updategatepassapproverstatus()">Submit</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+</div>
+
+
+
+
