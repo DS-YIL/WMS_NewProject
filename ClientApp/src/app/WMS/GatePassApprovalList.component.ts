@@ -72,7 +72,7 @@ export class GatePassApprovalList implements OnInit {
         this.prepareGatepassList();
       }
       if (this.typeOfList == "GatePassFMList") {
-        this.gatepassData = this.totalGatePassList.filter(li => li.approverstatus == "Approved" && li.fmapprovedstatus == this.approverstatus && li.gatepasstype == "Non Returnable");
+        this.gatepassData = this.totalGatePassList.filter(li => li.approverstatus == "Approved" && li.authstatus == "Approved" && li.fmapprovedstatus == this.approverstatus && li.gatepasstype == "Non Returnable");
         this.prepareGatepassList();
       }
     });
@@ -205,11 +205,11 @@ export class GatePassApprovalList implements OnInit {
         return;
       }
     }
-   
-   
+
+
     this.gatepassModel.gatepassid = this.materialList[0].gatepassid;
     if (this.typeOfList == "GatePassPMList")
-     // if (isNullOrUndefined())
+      // if (isNullOrUndefined())
       this.gatepassModel.categoryid = 1;
     else
       this.gatepassModel.categoryid = 2;

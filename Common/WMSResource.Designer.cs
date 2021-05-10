@@ -790,7 +790,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SELECT * FROM  wms.wms_gatepassapprovals where gatepassid =&apos;#gatepassid&apos; ORDER BY historyid DESC LIMIT 2.
+        ///   Looks up a localized string similar to SELECT * FROM  wms.wms_gatepassapprovals where gatepassid =&apos;#gatepassid&apos; ORDER BY historyid DESC.
         /// </summary>
         public static string getGatePassApprovalHistoryList {
             get {
@@ -957,6 +957,17 @@ namespace WMS.Common {
         public static string getinternalstocktransferdata {
             get {
                 return ResourceManager.GetString("getinternalstocktransferdata", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to select emp.employeeno,emp.email from wms.auth_users au2 
+        ///inner join wms.employee emp  on emp.employeeno =au2.employeeid 
+        ///where au2.roleid=4 and deleteflag is false.
+        /// </summary>
+        public static string getINVMangerList {
+            get {
+                return ResourceManager.GetString("getINVMangerList", resourceCulture);
             }
         }
         
@@ -2667,7 +2678,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to insert into wms.wms_gatepassapprovals(historyid,gatepassid,approverid,approvername,approverstatus,&quot;label&quot;,approvedon)values(default,@gatepassid,@approverid,@approvername,@approverstatus,@label,current_timestamp).
+        ///   Looks up a localized string similar to insert into wms.wms_gatepassapprovals(historyid,gatepassid,approverid,approvername,approverstatus,&quot;label&quot;,approvedon,remarks)values(default,@gatepassid,@approverid,@approvername,@approverstatus,@label,current_timestamp,@remarks ).
         /// </summary>
         public static string insertgatepassapprovalhistory {
             get {
@@ -2676,7 +2687,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to insert into wms.wms_gatepass(gatepassid, gatepasstype, status, referenceno, vehicleno, requestedby, requestedon,deleteflag,vendorname,print,reasonforgatepass,approverid,fmapproverid,fmapprovedstatus,approverstatus,remarks,otherreason,isnonproject,projectid)values(default,@gatepasstype,@status,@referenceno,@vehicleno, @requestedby,@requestedon,@deleteflag,@vendorname,&apos;true&apos;,@reasonforgatepass,@approverid,@fmapproverid,@fmapprovedstatus,@approverstatus,@remarks,@otherreason,@isnonproject,@projectid)returning  [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to insert into wms.wms_gatepass(gatepassid, gatepasstype, status, referenceno, vehicleno, requestedby, requestedon,deleteflag,vendorname,print,reasonforgatepass,approverid,fmapproverid,fmapprovedstatus,approverstatus,authstatus,remarks,otherreason,isnonproject,projectid)values(default,@gatepasstype,@status,@referenceno,@vehicleno, @requestedby,@requestedon,@deleteflag,@vendorname,&apos;true&apos;,@reasonforgatepass,@approverid,@fmapproverid,@fmapprovedstatus,@approverstatus,@authstatus,@remarks,@otherreason,@isnonprojec [rest of string was truncated]&quot;;.
         /// </summary>
         public static string insertgatepassdata {
             get {
@@ -3642,6 +3653,15 @@ namespace WMS.Common {
         public static string updateapproverstatusforrelease {
             get {
                 return ResourceManager.GetString("updateapproverstatusforrelease", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to update wms.wms_gatepass set authstatus =&apos;#authstatus&apos;,authid =@authid,authremarks =@authremarks,authorizedon =current_timestamp where gatepassid=@gatepassid.
+        /// </summary>
+        public static string updateAuthstatusbyIM {
+            get {
+                return ResourceManager.GetString("updateAuthstatusbyIM", resourceCulture);
             }
         }
         

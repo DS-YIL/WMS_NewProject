@@ -297,7 +297,7 @@ case when gate.isnonproject is not true
    where gate.deleteflag=false order by gate.gatepassid desc</value>
   </data>
   <data name="insertgatepassdata" xml:space="preserve">
-    <value>insert into wms.wms_gatepass(gatepassid, gatepasstype, status, referenceno, vehicleno, requestedby, requestedon,deleteflag,vendorname,print,reasonforgatepass,approverid,fmapproverid,fmapprovedstatus,approverstatus,remarks,otherreason,isnonproject,projectid)values(default,@gatepasstype,@status,@referenceno,@vehicleno, @requestedby,@requestedon,@deleteflag,@vendorname,'true',@reasonforgatepass,@approverid,@fmapproverid,@fmapprovedstatus,@approverstatus,@remarks,@otherreason,@isnonproject,@projectid)returning gatepassid</value>
+    <value>insert into wms.wms_gatepass(gatepassid, gatepasstype, status, referenceno, vehicleno, requestedby, requestedon,deleteflag,vendorname,print,reasonforgatepass,approverid,fmapproverid,fmapprovedstatus,approverstatus,authstatus,remarks,otherreason,isnonproject,projectid)values(default,@gatepasstype,@status,@referenceno,@vehicleno, @requestedby,@requestedon,@deleteflag,@vendorname,'true',@reasonforgatepass,@approverid,@fmapproverid,@fmapprovedstatus,@approverstatus,@authstatus,@remarks,@otherreason,@isnonproject,@projectid)returning gatepassid</value>
   </data>
   <data name="checkmaterial" xml:space="preserve">
     <value>select * from wms.wms_stock where materialid='#materialid' limit 1</value>
@@ -332,7 +332,7 @@ values(default,@gatepassid,@materialid,@quantity,@deleteflag,@remarks,@materialc
   else 0 end as unitprice,
  pass.otherreason,pass.requestedon,pass.gatepasstype,pass.approverstatus,pass.reasonforgatepass,pass.approverremarks,pass.fmapprovedstatus,pass.fmapproverremarks,material.materialid,
  material.poitemdescription as materialdescription,material.poitemdescription,material.materialcost,material.quantity,material.remarks,pass.isnonproject,emp1."name" as approvedby,emp2."name" as fmapprovedby,
- pass.isnonproject,pass.projectid,material.pono
+ pass.isnonproject,pass.projectid,material.pono,pass.authid,pass.authremarks,pass.authorizedon,pass.authstatus 
  from wms.wms_gatepassmaterial material
  left outer join wms.wms_gatepass pass on pass.gatepassid = material.gatepassid
  left outer join wms.employee emp on pass.requestedby=emp.employeeno
@@ -623,7 +623,7 @@ values(default,@pono,@itemid,@gatepassmaterialid,@itemissueddate,@itemreceiverid
 VALUES(@inwmasterid,@receiveddate,@receivedby,@receivedqty,@materialid,@deleteflag,@qualitycheck,@qualitychecked,@materialqty,@receiveremarks,@pono,@lineitemno,@poitemdescription,@unitprice,@saleorderno,@solineitemno,@projectid)returning inwardid</value>
   </data>
   <data name="getGatePassApprovalHistoryList" xml:space="preserve">
-    <value>SELECT * FROM  wms.wms_gatepassapprovals where gatepassid ='#gatepassid' ORDER BY historyid DESC LIMIT 2</value>
+    <value>SELECT * FROM  wms.wms_gatepassapprovals where gatepassid ='#gatepassid' ORDER BY historyid DESC</value>
   </data>
   <data name="insertpo" xml:space="preserve">
     <value>insert into wms.wms_polist(pono,suppliername,type) values (@pono,@suppliername,@type)</value>
@@ -698,7 +698,7 @@ orgdept.departmenthead  as departmentheadid,emp1.name departmentheadname
 left join wms.employee emp on emp.employeeno=gate.requestedby  where approverid='#approverid'</value>
   </data>
   <data name="insertgatepassapprovalhistory" xml:space="preserve">
-    <value>insert into wms.wms_gatepassapprovals(historyid,gatepassid,approverid,approvername,approverstatus,"label",approvedon)values(default,@gatepassid,@approverid,@approvername,@approverstatus,@label,current_timestamp)</value>
+    <value>insert into wms.wms_gatepassapprovals(historyid,gatepassid,approverid,approvername,approverstatus,"label",approvedon,remarks)values(default,@gatepassid,@approverid,@approvername,@approverstatus,@label,current_timestamp,@remarks )</value>
   </data>
   <data name="updategatepasshistoryfornonreturn" xml:space="preserve">
     <value>insert into wms.wms_gatepassapprovals(historyid,gatepassid,fmapproverid,fmapprovername,fmapproverstatus,"label")
@@ -2374,5 +2374,13 @@ reprintcount,barcodeid, noofprint, inwmasterid,inwardid,printerid)values(default
   </data>
   <data name="insertStockFromPutaway" xml:space="preserve">
     <value>INSERT INTO wms.wms_stock(inwmasterid,stockstatus,pono,binid,rackid ,storeid, vendorid,totalquantity,shelflife,availableqty,deleteflag,itemlocation,createddate,createdby,materialid,inwardid,stcktype,lineitemno,receivedtype,poitemdescription,value,unitprice,projectid,saleorderno,solineitemno)VALUES(@inwmasterid,@stockstatus,@pono,@binid,@rackid,@storeid,@vendorid,@totalquantity,@shelflife,@availableqty,@deleteflag,@itemlocation,@createddate,@createdby,@materialid,@inwardid,@stocktype,@lineitemno,@receivedtype,@poitemdescription,@value,@unitprice,@projectid,@saleorderno,@solineitemno)returning itemid</value>
+  </data>
+  <data name="getINVMangerList" xml:space="preserve">
+    <value>select emp.employeeno,emp.email from wms.auth_users au2 
+inner join wms.employee emp  on emp.employeeno =au2.employeeid 
+where au2.roleid=4 and deleteflag is false</value>
+  </data>
+  <data name="updateAuthstatusbyIM" xml:space="preserve">
+    <value>update wms.wms_gatepass set authstatus ='#authstatus',authid =@authid,authremarks =@authremarks,authorizedon =current_timestamp where gatepassid=@gatepassid</value>
   </data>
 </root>
