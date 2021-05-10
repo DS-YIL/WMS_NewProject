@@ -902,6 +902,7 @@ export class MaterialinHand {
   hsncode: string;
   locations: matlocations[];
   itemlocation: any;
+  saleorderno: string;
 }
 
 export class matlocations {

@@ -265,7 +265,7 @@ namespace WMS.Interfaces
 
 		Task<IEnumerable<testcrud>> gettestcrud();
 		Task<IEnumerable<MaterialinHand>> getmatinhand(inventoryFilters filters);
-		Task<IEnumerable<matlocations>> getmatinhandlocation(string material, string materialid, string projectid,string pono);
+		Task<IEnumerable<matlocations>> getmatinhandlocation(string material, string materialid, string projectid,string pono,string sono);
 		Task<IEnumerable<StockModel>> getinitialstock(string code);
 		Task<IEnumerable<StockModel>> getinitialstockall(string code);
 		Task<IEnumerable<StockModel>> getinitialstockEX(string code);

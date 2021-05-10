@@ -841,10 +841,10 @@ export class wmsService {
   getmatinhand(inventoryFilters: inventoryFilters): Observable<MaterialinHand[]> {
     return this.http.post<MaterialinHand[]>(this.url + 'POData/getmatinhand', inventoryFilters, this.httpOptions);
   }
-  getmatinhandlocations(poitemdescription: string, material: string, projectid: string, pono: string): Observable<matlocations[]> {
+  getmatinhandlocations(poitemdescription: string, material: string, projectid: string, pono: string, sono: string): Observable<matlocations[]> {
     poitemdescription = encodeURIComponent(poitemdescription);
     material = encodeURIComponent(material);
-    return this.http.get<matlocations[]>(this.url + 'POData/getmatinhandlocation?poitemdescription=' + poitemdescription + '&materialid=' + material + '&projectid=' + projectid+'&pono='+pono, this.httpOptions);
+    return this.http.get<matlocations[]>(this.url + 'POData/getmatinhandlocation?poitemdescription=' + poitemdescription + '&materialid=' + material + '&projectid=' + projectid+'&pono='+pono+'&sono='+sono, this.httpOptions);
   }
 
   getinitialStock(uploadcode: string): Observable<StockModel[]> {

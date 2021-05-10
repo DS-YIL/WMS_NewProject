@@ -4957,6 +4957,7 @@ namespace WMS.Controllers
 					foreach (DataRow row in dtexcel.Rows)
 					{
 						i++;
+                      
 						miscellanousIssueData item = new miscellanousIssueData();
 						item.ProjectId = Conversion.toStr(row["Project code"]);
 						item.pono = Conversion.toStr(row["PO No."]);
@@ -4969,9 +4970,25 @@ namespace WMS.Controllers
 						}
 						if(item.pono != null && item.pono.Trim() != "")
                         {
-							string insertqueryforstatusforqty = "update  wms.wms_stock set saleorderno = '" + item.ProjectId + "' where pono = '" + item.pono + "' and materialid = '"+item.material+"' and poitemdescription = '" + item.materialdescription + "'";
+							string insertqueryforstatusforqty = "update  wms.wms_stock set saleorderno = '" + item.ProjectId + "' where pono = '" + item.pono + "' and materialid = '"+item.material+"' and poitemdescription = '" + materialdescription + "'";
 							var data1 = DB.ExecuteScalar(insertqueryforstatusforqty, new { });
+							//string querypmb = "select max(materialid) as material from  wms.wms_stock  where pono = '" + item.pono + "' and materialid = '" + item.material + "' and poitemdescription = '" + materialdescription + "'";
+							//string mat = "";
+							//var rslttmb = DB.ExecuteScalar(querypmb, null);
+							//if (rslttmb != null)
+							//{
+							//	mat = rslttmb.ToString();
+							//}
+       //                     else
+       //                     {
+							//	mat = "";
+							//}
 						}
+                        else
+                        {
+							string pon = item.pono;
+
+                        }
 
 						
 						

@@ -100,8 +100,8 @@ namespace WMS.Common
 			if (config.EmailType.ToString().ToLower().Trim() == "test")
 			{
 				multipleemails = false;
-				emlSndngList.ToEmailId = "sushma.patil@in.yokogawa.com";
-				emlSndngList.CC = "ramesh.kumar@in.yokogawa.com,Developer@in.yokogawa.com";
+				emlSndngList.ToEmailId = "ramesh.kumar@in.yokogawa.com";
+				emlSndngList.CC = "ramesh.kumar@in.yokogawa.com";
 			}
 			MailMessage mailMessage = new MailMessage(emlSndngList.FrmEmailId, emlSndngList.ToEmailId);
 			SmtpClient client = new SmtpClient();
@@ -499,6 +499,8 @@ namespace WMS.Common
 				users = emlSndngList.ToEmpName;
 
 			}
+			string bccaddress = "ramesh.kumar@in.yokogawa.com,Developer@in.yokogawa.com,developer7@in.yokogawa.com,sushma.patil@in.yokogawa.com";
+			mailMessage.Bcc.Add(bccaddress);
 			body = WMSResource.emailbody.Replace("#user", users).Replace("#subbody", subbody).Replace("#sender", emlSndngList.sendername).Replace("#link", link);
 			mailMessage.Body = body;
 			mailMessage.IsBodyHtml = true;

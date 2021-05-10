@@ -260,7 +260,7 @@ export class InhandMaterialComponent implements OnInit {
     this.tempdescription = poitemdescription;
     this.temprowdata = Object.assign({}, data); 
     this.spinner.show();
-    this.wmsService.getmatinhandlocations(poitemdescription, data.material, data.projectname, data.pono).subscribe(data => {
+    this.wmsService.getmatinhandlocations(poitemdescription, data.material, data.projectname, data.pono, data.saleorderno).subscribe(data => {
       this.getlocationlistdata = data;
       this.showadddatamodel = true;
       this.spinner.hide();
@@ -334,6 +334,7 @@ export class InhandMaterialComponent implements OnInit {
         'Material': obj.material,
         'PO Item description': obj.poitemdescription,
         'Project code': obj.projectname,
+        'Sale Order No': obj.saleorderno,
         'Supplier Name': obj.suppliername,
         'Hsncode': obj.hsncode,
         'Available Quantity': obj.availableqty,

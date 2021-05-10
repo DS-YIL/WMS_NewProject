@@ -6955,6 +6955,7 @@ namespace WMS.DAL
 					var MatRes = AcList.Where(li => li.roleid == 5).ToList();
 					var InvRes = AcList.Where(li => li.roleid == 2).ToList();
 					var aaprRes = AcList.Where(li => li.roleid == 8).ToList();
+					var PMRes = AcList.Where(li => li.roleid == 11).ToList();
 					if (MatRes.Count() == 0 && employeeid != "000000")
 					{
 						userAcessNamesModel res = new userAcessNamesModel();
@@ -6969,6 +6970,18 @@ namespace WMS.DAL
 						res1.roleid = 2;
 						res1.accessname = "Inventory Enquiry";
 						AcList.Add(res1);
+					}
+					if (PMRes.Count() == 0 && employeeid != "000000")
+					{
+						string querypm = "select projectmanager from wms.wms_project wp where projectmanager = '"+ employeeid + "'";
+						var rsltt = pgsql.ExecuteScalar(querypm, null);
+						if (rsltt != null)
+						{
+							userAcessNamesModel res1 = new userAcessNamesModel();
+							res1.roleid = 11;
+							res1.accessname = "Project Manager";
+							AcList.Add(res1);
+						}
 					}
 					if (aaprRes.Count() == 0 && employeeid != "000000")
 					{
@@ -14563,7 +14576,7 @@ namespace WMS.DAL
 		Purpose : <<get Materials in stock locations>>
 		Review Date :<<>>   Reviewed By :<<>>
 		*/
-		public async Task<IEnumerable<matlocations>> getmatinhandlocation(string poitemdescription,string materialid, string projectid,string pono)
+		public async Task<IEnumerable<matlocations>> getmatinhandlocation(string poitemdescription,string materialid, string projectid,string pono,string sono)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
@@ -14595,7 +14608,16 @@ namespace WMS.DAL
 						{
 							testgetquery += " and (stk.pono is null or stk.pono = '')";
 						}
-						testgetquery += "  group by stk.itemlocation";
+					if (sono != null && sono != "" && sono.ToLower() != "null")
+					{
+						testgetquery += " and stk.saleorderno = '" + sono + "'";
+
+					}
+					else
+					{
+						testgetquery += " and (stk.saleorderno is null or stk.saleorderno = '')";
+					}
+					testgetquery += "  group by stk.itemlocation";
 						
 						
 					
