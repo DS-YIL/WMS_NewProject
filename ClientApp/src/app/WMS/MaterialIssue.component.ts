@@ -48,6 +48,8 @@ export class MaterialIssueComponent implements OnInit {
   public reqqty; reservedQty: number;
   public btndisable: boolean = false;
   public issueqtyenable: boolean = true;
+  public isplantstockrequest: boolean = false;
+  public isissuedpopup: boolean = false;
   //Email
   reqid: string = "";
   // materialissueList: string = "";
@@ -57,6 +59,7 @@ export class MaterialIssueComponent implements OnInit {
     else
       this.router.navigateByUrl("Login");
     //Email
+
     this.reqid = this.route.snapshot.queryParams.requestid;
     this.itemlocationsaveData = [];
     if (this.reqid) {
@@ -66,7 +69,8 @@ export class MaterialIssueComponent implements OnInit {
       this.getmaterialIssueListbyrequestid();
 
     }
-
+    this.isissuedpopup = false;
+    this.isplantstockrequest = false;
     this.route.params.subscribe(params => {
       if (params["requestid"]) {
         this.requestId = params["requestid"];
@@ -93,12 +97,16 @@ export class MaterialIssueComponent implements OnInit {
     var data2 = this.itemlocationData.filter(function (element) {
       return element.initialstock == true && !(element.issuedqty);
     });
-    if (data2.length > 0) {
+    var data3 = this.itemlocationData.filter(function (element) {
+      return (element.initialstock == false && element.issuedqty > 0);
+    });
+    if (data2.length > 0 && data3.length > 0) {
       this.showAlert();
     }
-    if (data2.length == 0) {
+    else {
       this.issueOnconfirm();
     }
+   
   }
   Cancel() {
     this.AddDialog = false;
@@ -119,6 +127,13 @@ export class MaterialIssueComponent implements OnInit {
       item.requestid = this.materialissueList[this.roindex].requestid;
       item.requestmaterialid = this.materialissueList[this.roindex].requestmaterialid;
       item.requesttype = "MaterialRequest";
+      if (this.isplantstockrequest) {
+        item.materialtype = "Plant";
+      }
+      else {
+        item.materialtype = "Project"
+      }
+      item.createdby = this.materialissueList[this.roindex].requesterid;
       item.createdby = this.materialissueList[this.roindex].requesterid;
       item.projectid = this.materialissueList[this.roindex].projectname;
       item.pono = this.materialissueList[this.roindex].pono;
@@ -172,23 +187,46 @@ export class MaterialIssueComponent implements OnInit {
     this.reservedQty = reservedqty;
     this.id = id;
     this.AddDialog = true;
+    this.isissuedpopup = false;
     this.roindex = rowindex;
     this.itemlocationData = [];
     if (this.constants.materialIssueType == "Pending") {
       this.issueqtyenable = false;
       var pid = this.materialissueList[0].projectname;
-      this.wmsService.getItemlocationListByMaterialanddescpo(material, poitemdescription,pid,pono).subscribe(data => {
-        this.itemlocationData = data;
-        console.log(this.itemlocationData);
-        this.showdialog = true;
-      });
+      if (this.isplantstockrequest) {
+        this.wmsService.getlocationsforplantstockissue(material, poitemdescription).subscribe(data => {
+          this.itemlocationData = data;
+          console.log(this.itemlocationData);
+          this.showdialog = true;
+        });
+      }
+      else {
+        this.wmsService.getItemlocationListByMaterialanddescpo(material, poitemdescription, pid, pono).subscribe(data => {
+          this.itemlocationData = data;
+          console.log(this.itemlocationData);
+          this.showdialog = true;
+        });
+
+      }
+     
     }
     else {
       this.issueqtyenable = true;
-      this.wmsService.getItemlocationListByIssueId(requestmaterialid, 'MaterialRequest').subscribe(data => {
-        this.itemlocationData = data;
-        this.showdialog = true;
-      });
+      this.isissuedpopup = true;
+      if (this.isplantstockrequest) {
+        this.wmsService.getItemlocationListByPlantIssueId(requestmaterialid, 'MaterialRequest').subscribe(data => {
+          this.itemlocationData = data;
+          this.showdialog = true;
+        });
+      }
+      else {
+        this.wmsService.getItemlocationListByIssueId(requestmaterialid, 'MaterialRequest').subscribe(data => {
+          this.itemlocationData = data;
+          this.showdialog = true;
+        });
+
+      }
+      
     }
   }
   //show alert about oldest item location
@@ -245,6 +283,12 @@ export class MaterialIssueComponent implements OnInit {
     this.wmsService.getmaterialIssueListbyrequestid(this.requestId, this.pono).subscribe(data => {
       this.spinner.hide();
       this.materialissueList = data;
+      if (this.materialissueList[0].requesttype == "Plant") {
+        this.isplantstockrequest = true;
+      }
+      else {
+        this.isplantstockrequest = false;
+      }
 
       if (this.materialissueList.length != 0)
         this.showavailableqtyList = true;

@@ -241,29 +241,29 @@
 </div>
 <p-dialog header="Add Materials" [(visible)]="requestDialog" [responsive]="true" showEffect="fade" [modal]="true" (onHide)="close()" [style]="{'width':'98%','overflow':'auto!important','margin-right': '0px','margin-left':'0px'}">
   <div class="row " style="margin-top:-7px;background-color:antiquewhite;padding:5px;">
-    <!--<div class="col-lg-2 col-md-2 form-inline" style="background-color:antiquewhite">
+    <div class="col-lg-3 col-md-3 form-inline" style="background-color:antiquewhite">
       <label class="labelheading">Stock Type :</label>&nbsp;&nbsp;
       <select class="form-control" [(ngModel)]="stocktype" (change)="getplantmaterials($event)">
         <option value="Project Stock">Project Stock</option>
         <option value="Plant Stock">Plant Stock</option>
       </select>
-      
-    </div>-->
 
-    <div class="col-lg-4 col-md-4 form-inline" style="background-color:antiquewhite" *ngIf="!displayDD">
+    </div>
+
+    <div class="col-lg-3 col-md-3 form-inline" style="background-color:antiquewhite" *ngIf="!displayDD">
       <label class="labelheading">Project :</label>&nbsp;&nbsp;
       <p-autoComplete [(ngModel)]="selectedproject" field="text" appendTo="body" [suggestions]="filteredprojects" placeholder="search by name/code" [ngModelOptions]="{standalone: true}" (onSelect)="projectSelected($event)" [forceSelection]="true" (completeMethod)="filterprojects($event)" [size]="20"
                       [dropdown]="true"></p-autoComplete>
     </div>
-    <div class="col-lg-4 col-md-4 form-inline" style="background-color:antiquewhite" *ngIf="!displayDD">
+    <div class="col-lg-3 col-md-3 form-inline" style="background-color:antiquewhite" *ngIf="!displayDD">
 
 
       <label class="labelheading">PONo :</label>&nbsp;&nbsp;
       <p-multiSelect [appendTo]="body" [options]="ponolist" [(ngModel)]="selectedmuliplepo" optionLabel="pono" [style]="{'min-width':'300px'}" (onChange)="onPOSelected()"></p-multiSelect>
       <!--<p-autoComplete [(ngModel)]="selectedpono" [suggestions]="filteredpos" [ngModelOptions]="{standalone: true}" placeholder="search by PONo" [forceSelection]="false" (onSelect)="onPOSelected()" (change)="onPOSelected()" (completeMethod)="filterpos($event)" [size]="20"
-                    [dropdown]="true"></p-autoComplete>-->
+                  [dropdown]="true"></p-autoComplete>-->
     </div>
-    <div class="col-lg-4 col-md-4 form-inline" style="background-color:antiquewhite">
+    <div class="col-lg-3 col-md-3 form-inline" style="background-color:antiquewhite">
 
       <label class="labelheading">Remarks :</label>&nbsp;&nbsp;
       <textarea [(ngModel)]="requestremarks" style="width:80%;resize:none;padding-bottom:3px;resize:none" placeholder="Remarks"></textarea>
@@ -334,9 +334,9 @@
               <th class="ptable-cell" style="width:60px;text-align:center">Sl.No.</th>
               <th style="text-align:center;width:250px;" class="ptable-cell">Material</th>
               <th style="text-align:center" class="ptable-cell">PO Item Description</th>
-              <th style="text-align:center;width:130px;" class="ptable-cell">Unit Price(INR)</th>
+              <!--<th style="text-align:center;width:130px;" class="ptable-cell">Unit Price(INR)</th>-->
               <th style="text-align:center;width:150px;" class="ptable-cell">Available Qty</th>
-              <th style="text-align:center;width:130px;" class="ptable-cell">Value(INR)</th>
+              <!--<th style="text-align:center;width:130px;" class="ptable-cell">Value(INR)</th>-->
               <th style="text-align:center;width:150px;" class="ptable-cell">Request Qty</th>
               <th style="text-align:center;width:60px;" class="ptable-cell"><button type="button" icon="fa fa-plus" pButton aria-hidden="true" pTooltip="Add material" (click)="addNewMaterial()" style="float: right;height: 26px;"></button></th>
             </tr>
@@ -347,28 +347,31 @@
 
               <td class="ptable-cell" style="text-align:left;">
 
-                <p-autoComplete [(ngModel)]="rowData.material" [style]="{'width':'80%'}" [inputStyle]="{'width':'80%'}" placeholder="search by code" type="text" appendTo="body" [forceSelection]="true" (onSelect)="onMaterialSelected1(rowData,ri)" [suggestions]="materialliststr" field="code" (completeMethod)="bindSearchListDatamaterial($event)"
-                                [dropdown]="true"></p-autoComplete>
+                <!--<p-autoComplete [(ngModel)]="rowData.material" [style]="{'width':'80%'}" [inputStyle]="{'width':'80%'}" placeholder="search by code" type="text" appendTo="body" [forceSelection]="true" (onSelect)="onMaterialSelected1(rowData,ri)" [suggestions]="materialliststr" field="code" (completeMethod)="bindSearchListDatamaterial($event)"
+                                [dropdown]="true"></p-autoComplete>-->
+                <p-autoComplete appendTo="body" placeholder="search by materialcode" [(ngModel)]="rowData.materialobj" [style]="{'width':'80%'}" [inputStyle]="{'width':'80%'}"  type="text" [suggestions]="searchItems" field="name" (onSelect)="onMaterialSelected1(rowData,ri)" [forceSelection]="true" [dropdown]="true" (completeMethod)="bindSearchListDatamaterial($event,'material',rowData.materialdescriptionobj)"></p-autoComplete>
+
 
               </td>
               <td class="ptable-cell" style="text-align:left">
-                <p-autoComplete [(ngModel)]="rowData.materialdescription" [style]="{'width':'80%'}" [inputStyle]="{'width':'80%'}" placeholder="search by description" type="text" appendTo="body" [forceSelection]="true" (onSelect)="onDescriptionSelected(rowData,ri)" [suggestions]="filteredmatdesc" (completeMethod)="filtermatdescs($event,rowData)"
-                                [dropdown]="true"></p-autoComplete>
+                <!--<p-autoComplete [(ngModel)]="rowData.materialdescription" [style]="{'width':'80%'}" [inputStyle]="{'width':'80%'}" placeholder="search by description" type="text" appendTo="body" [forceSelection]="true" (onSelect)="onDescriptionSelected(rowData,ri)" [suggestions]="filteredmatdesc" (completeMethod)="filtermatdescs($event,rowData)"
+                                [dropdown]="true"></p-autoComplete>-->
+                <p-autoComplete appendTo="body" placeholder="search by description" [(ngModel)]="rowData.materialdescriptionobj" [style]="{'width':'80%'}" [inputStyle]="{'width':'80%'}" type="text" (onSelect)="onDescriptionSelected(rowData,ri)" [suggestions]="searchdescItems" field="name" [forceSelection]="true" [dropdown]="true" (completeMethod)="bindSearchListDatamaterialdescs($event,'materialdesc',rowData.materialobj)"></p-autoComplete>
 
               </td>
-              <td class="ptable-cell" style="text-align:right">
+              <!--<td class="ptable-cell" style="text-align:right">
                 <span>{{rowData.unitprice | number : '1.2-2'}}</span>
 
-              </td>
+              </td>-->
               <td class="ptable-cell" style="text-align:right">
                 <input [disabled]="true" [(ngModel)]="rowData.availableqty" style="text-align:right" class="form-control" type="text" name="{{rowData.availableqty}}" />
 
               </td>
-              <td class="ptable-cell" style="text-align:right">
+              <!--<td class="ptable-cell" style="text-align:right">
                
                 <input [disabled]="true" [(ngModel)]="rowData.materialcost" class="form-control" type="text" name="{{rowData.materialcost}}" />
 
-              </td>
+              </td>-->
               <td class="ptable-cell" style="text-align:right">
                 <input style="text-align:left" pInputText type="number" (blur)="onComplete(rowData.quantity ,rowData.availableqty, rowData.materialid,ri)" class="form-control" [(ngModel)]="rowData.quantity">
               </td>
@@ -418,12 +421,6 @@
               </td>
               <td class="ptable-cell" style="text-align:left;">
                 {{rowData.materialid}}
-
-                <!--<input *ngIf="rowData.material" [(ngModel)]="rowData.material" class="form-control" type="text" name="{{rowData.material}}" />-->
-                <!--<p-autoComplete [(ngModel)]="rowData.material" type="text" appendTo="body" [suggestions]="searchItems" (onSelect)="onMaterialSelected(rowData.material,ri)" (completeMethod)="bindSearchList($event,'material')" [size]="10"
-    [dropdown]="true"></p-autoComplete>-->
-
-
               </td>
               <td class="ptable-cell" style="text-align:left">
 

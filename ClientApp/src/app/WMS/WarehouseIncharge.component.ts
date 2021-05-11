@@ -285,7 +285,7 @@ export class WarehouseInchargeComponent implements OnInit {
         stockdata.locatorid = null;
         stockdata.rackid = null;
         stockdata.binid = null;
-        if ((!isNullOrUndefined(this.lblproject) && String(this.lblproject).trim() != "") || (!isNullOrUndefined(this.lblsaleorder) && String(this.lblsaleorder).trim() != "")) {
+        if ((!isNullOrUndefined(this.lblproject) && String(this.lblproject).trim() != "")) {
           stockdata.stocktype = "Project Stock";
         }
         else {
@@ -690,7 +690,7 @@ this.updateRowGroupMetaData();
       stockdata.locatorid = details.storeid;
       stockdata.rackid = details.rackid;
       stockdata.binid = details.binid;
-      if ((!isNullOrUndefined(details.projectid) && String(details.projectid).trim() != "") || (!isNullOrUndefined(details.saleorderno) && String(details.saleorderno).trim() != "")) {
+      if ((!isNullOrUndefined(details.projectid) && String(details.projectid).trim() != "")) {
         stockdata.stocktype = "Project Stock";
       }
       else {

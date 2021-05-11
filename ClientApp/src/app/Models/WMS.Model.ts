@@ -361,6 +361,7 @@ export class materialistModel {
 
 export class materialList {
   material: string;
+  materialtype: string;
   materialid: string;
   materialdescription: string;
   quantity: number = 0;
@@ -373,6 +374,9 @@ export class materialList {
   projectcode: string;
   plantstockavailableqty: number;
   pono: string;
+  materialobj: any;
+  materialdescriptionobj: any;
+  managerid: string;
 
 }
 

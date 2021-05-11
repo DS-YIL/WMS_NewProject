@@ -481,10 +481,20 @@ export class wmsService {
     poitemdescription = encodeURIComponent(poitemdescription);
     return this.http.get<any>(this.url + 'POData/GetItemLocationListByMaterialanddesc?material=' + material + '&description=' + poitemdescription, this.httpOptions);
   }
+  getlocationsforplantstockissue(material: string, poitemdescription: string): Observable<any> {
+    material = encodeURIComponent(material);
+    poitemdescription = encodeURIComponent(poitemdescription);
+    return this.http.get<any>(this.url + 'POData/GetItemLocationforplantstock?material=' + material + '&description=' + poitemdescription, this.httpOptions);
+  }
   getItemlocationListByMaterialanddescpo(material: string, poitemdescription: string, projectid: string, pono: string): Observable<any> {
     material = encodeURIComponent(material);
     poitemdescription = encodeURIComponent(poitemdescription);
     return this.http.get<any>(this.url + 'POData/GetItemLocationListByMaterialanddescpo?material=' + material + '&description=' + poitemdescription + '&projectid=' + projectid+'&pono='+pono, this.httpOptions);
+  }
+  getplantstockmatdetail(material: string, poitemdescription: string): Observable<any> {
+    material = encodeURIComponent(material);
+    poitemdescription = encodeURIComponent(poitemdescription);
+    return this.http.get<any>(this.url + 'POData/getplantstockmaterialdetails?material=' + material + '&description=' + poitemdescription, this.httpOptions);
   }
   getItemlocationListByMaterialdescstore(material: string, poitemdescription: string, projectcode: string, pono: string, store: string): Observable<any> {
     material = encodeURIComponent(material);
@@ -508,6 +518,10 @@ export class wmsService {
   getItemlocationListByIssueId(requestforissueid: string, requesttype: string): Observable<any> {
     requestforissueid = encodeURIComponent(requestforissueid);
     return this.http.get<any>(this.url + 'POData/getItemlocationListByIssueId?requestforissueid=' + requestforissueid + '&requesttype=' + requesttype, this.httpOptions);
+  }
+  getItemlocationListByPlantIssueId(requestforissueid: string, requesttype: string): Observable<any> {
+    requestforissueid = encodeURIComponent(requestforissueid);
+    return this.http.get<any>(this.url + 'POData/getItemlocationListByPlantIssueId?requestforissueid=' + requestforissueid + '&requesttype=' + requesttype, this.httpOptions);
   }
   UpdateMaterialqty(materialList: any): Observable<any> {
     return this.http.post<any>(this.url + 'POData/updateMaterialavailabality', materialList, this.httpOptions);

@@ -645,6 +645,12 @@ namespace WMS.Controllers
 
 			return await this._poService.GetItemlocationListBymterialanddesc(material, description);
 		}
+		[HttpGet("GetItemLocationforplantstock")]
+		public async Task<IEnumerable<IssueRequestModel>> GetItemLocationforplantstock(string material, string description)
+		{
+
+			return await this._poService.GetItemLocationforplantstock(material, description);
+		}
 		[HttpGet("GetItemLocationListByMaterialanddescpo")]
 		public async Task<IEnumerable<IssueRequestModel>> getitemlocationBymaterialanddescpo(string material, string description,string projectid,string pono)
 		{
@@ -674,6 +680,12 @@ namespace WMS.Controllers
 		{
 
 			return await this._poService.getItemlocationListByIssueId(requestforissueid, requesttype);
+		}
+		[HttpGet("getItemlocationListByPlantIssueId")]
+		public async Task<IEnumerable<IssueRequestModel>> getItemlocationListByPlantIssueId(string requestforissueid, string requesttype)
+		{
+
+			return await this._poService.getItemlocationListByPlantIssueId(requestforissueid, requesttype);
 		}
 
 		[HttpGet("getItemlocationListByGatepassmaterialid")]
@@ -1655,6 +1667,12 @@ namespace WMS.Controllers
 		public async Task<WMSHttpResponse> getAvailableQtyBystore(string store, string materialid, string description, string projectcode)
 		{
 			return await this._poService.getAvailableQtyBystore(store, materialid, description, projectcode);
+		}
+
+		[HttpGet("getplantstockmaterialdetails")]
+		public async Task<IssueRequestModel> getplantstockmaterialdetails(string material, string description)
+		{
+			return await this._poService.getplantstockmaterialdetails(material, description);
 		}
 
 		[HttpGet("getMatdetailsbyTransferId")]

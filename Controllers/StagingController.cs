@@ -4729,6 +4729,60 @@ namespace WMS.Controllers
 
 		}
 
+		/*Name of Function : <<loadProjectMasterData>>  Author :<<Prasanna>>  
+		Date of Creation <<22-04-2021>>
+		Purpose : <<fill po data from staging to base table>>
+		Review Date :<<>>   Reviewed By :<<>>
+		Sourcecode Copyright : Yokogawa India Limited
+		*/
+		public IActionResult loadPMAccess()
+		{
+			using (NpgsqlConnection pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+
+			{
+				try
+				{
+					string stockquery = "select projectmanager from wms.wms_project wp group by projectmanager";
+
+					var stockdata = pgsql.QueryAsync<ddlmodel>(stockquery, null, commandType: CommandType.Text);
+
+					if(stockdata != null)
+                    {
+						foreach(ddlmodel mdl in stockdata.Result)
+                        {
+							string pmgr = mdl.projectmanager;
+							if(pmgr != null && pmgr.Length == 6)
+                            {
+								//string querypmb = "Select Max(projectmember) as projectmember from wms.wms_project where  projectcode = '" + stag_data.projectcode + "' group by projectmanager";
+								//var rslttmb = pgsql.ExecuteScalar(querypmb, null);
+								//if (rslttmb != null)
+								//{
+								//	projectmember = rslttmb.ToString();
+								//}
+
+							}
+							
+
+						}
+                    }
+
+					string query = "UPDATE wms.wms_project SET projectmanager = wms.stag_projectmaster.projectmanager FROM wms.stag_projectmaster WHERE wms.stag_projectmaster.projectcode = wms.wms_project.projectcode and wms.wms_project.projectcode is not null and wms.stag_projectmaster.projectcode is not null";
+					pgsql.Open();
+					NpgsqlCommand command = new NpgsqlCommand(query, pgsql);
+					Int64 count = (Int64)command.ExecuteNonQuery();
+				}
+				catch (Exception e)
+				{
+					var res = e;
+					log.ErrorMessage("StagingController", "loadProjectMasterData", e.StackTrace.ToString(), e.Message.ToString(), url);
+
+				}
+				pgsql.Close();
+			}
+			return Ok(true);
+
+		}
+
 
 		/* Name of Function : <<miscellanousIssueDataUpdatek>>  Author :<<prasanna>>  
 		 Date of Creation <<21-12-2019>>

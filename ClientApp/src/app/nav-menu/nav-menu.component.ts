@@ -624,6 +624,22 @@ export class NavMenuComponent implements OnInit {
           }
         })
       }
+      else if (eurl.includes("/Email/MaterialRequestApprovalNP?ReqId")) {
+        debugger;
+        this.userrolelist.forEach(item => {
+          var dt1 = this.rbalist.filter(function (element, index) {
+            return (element.materialrequest_approval && element.roleid == item.roleid);
+          });
+          if (dt1.length > 0) {
+            this.emp.roleid = String(dt1[0].roleid);
+            this.setrolename(this.emp.roleid);
+            localStorage.removeItem('Employee');
+            localStorage.setItem('Employee', JSON.stringify(this.emp));
+            this.bindmenubyrba(eurl);
+            return false;
+          }
+        })
+      }
     }
 
   }
@@ -796,10 +812,9 @@ export class NavMenuComponent implements OnInit {
         });
 
       }
-      if (rba.gatepass_approval) {
-        this.items.push({ label: 'Manager Approval', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GatePassPMList') });
-        this.items.push({ label: 'Finance Approval', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GatePassFMList') });
-      }
+      //if (rba.gatepass_approval) {
+      //  this.items.push({ label: 'Finance Approval', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GatePassFMList') });
+      //}
       if (rba.material_issue) {
         this.items.push({
           label: 'Material Issue', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars',
@@ -1002,6 +1017,10 @@ export class NavMenuComponent implements OnInit {
         visible: (rba.material_transfer_approval || rba.materialrequest_approval),
         items: []
       };
+      if (rba.gatepass_approval) {
+        matrequestapprovals.items.push({ label: 'Manager Approval(GP)', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GatePassPMList') });
+        matrequestapprovals.items.push({ label: 'Finance Approval(GP)', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GatePassFMList') });
+      }
       if (rba.material_transfer_approval) {
         matrequestapprovals.items.push({ label: 'Material Transfer Approval', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/materialtransferapproval') });
 
@@ -1011,7 +1030,7 @@ export class NavMenuComponent implements OnInit {
         matrequestapprovals.items.push({ label: 'Intra Unit Transfer Approval', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/STOApproval') });
         matrequestapprovals.items.push({ label: 'Sub Contract Approval', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/SubcontractApproval') });
       }
-      if (rba.material_transfer_approval || rba.materialrequest_approval) {
+      if (rba.material_transfer_approval || rba.materialrequest_approval || rba.gatepass_approval) {
         this.items.push(matrequestapprovals);
       }
       if (rba.asn_view) {
@@ -1397,6 +1416,13 @@ export class NavMenuComponent implements OnInit {
         }
       }
       if (eurl.includes("/Email/MaterialRequestApproval?ReqId")) {
+        debugger;
+        this.transferid = eurl.split('=')[1];
+        if (this.transferid) {
+          this.router.navigate(['WMS/MaterialRequestApproval'], { queryParams: { transferid: this.transferid } });
+        }
+      }
+      if (eurl.includes("/Email/MaterialRequestApprovalNP?ReqId")) {
         debugger;
         this.transferid = eurl.split('=')[1];
         if (this.transferid) {

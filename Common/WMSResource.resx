@@ -1323,9 +1323,13 @@ where returnid = '#returnid'</value>
   <data name="getrequestdetailswithoutpo" xml:space="preserve">
     <value>select req.id as requestmaterialid,req.pono,req.requestedquantity,req.materialid,req.poitemdescription materialdescription,rq.requesterid,
  (select sum(issuedqty) from wms.wms_materialissue  where requestid::text = req.id::text and requesttype = 'MaterialRequest') as issuedqty,
- (select sum(availableqty) from wms.wms_stock ws where materialid =req.materialid and poitemdescription = req.poitemdescription and projectid = rq.projectcode and pono = req.pono) as availableqty,
+ case when rq.requesttype = 'Plant' then 
+ (select sum(availableqty) from wms.wms_stock ws where materialid =req.materialid and poitemdescription = req.poitemdescription and ws.stcktype = 'Plant Stock')
+ else 
+ (select sum(availableqty) from wms.wms_stock ws where materialid =req.materialid and poitemdescription = req.poitemdescription and projectid = rq.projectcode and pono = req.pono) 
+ end as availableqty,
  (select sum(reservequantity) from wms.materialreservedetails wm left outer join wms.materialreserve rsv on wm.reserveid = rsv.reserveid where  wm.materialid =req.materialid and poitemdescription = req.poitemdescription and rsv.requestedby is NOT null and  rsv.reserveupto::date &lt; current_date ) as reservedqty,
-  rq.projectcode as projectname,emp.name as name,rq.requesteddate,rq.requestid,rq.pono
+  rq.projectcode as projectname,emp.name as name,rq.requesteddate,rq.requestid,rq.pono,rq.requesttype 
  from  wms.materialrequestdetails req
  left outer join wms.materialrequest rq on rq.requestid=req.requestid
  left outer join wms.employee emp on emp.employeeno=rq.requesterid
@@ -1338,7 +1342,7 @@ left outer join wms.materialreserve rd on rsv.reserveid = rd.reserveid
 where rsv.reserveid = '#reserveid' group by rsv.reserveid,rsv.materialid,rsv.poitemdescription,rsv.itemid</value>
   </data>
   <data name="insertmaterialrequest" xml:space="preserve">
-    <value>INSERT INTO wms.materialrequest(approveremailid,approverid,requesterid,requesteddate,deleteflag,projectcode,remarks,isapprovalrequired,isapproved,approvalremarks,approvedon)VALUES(@approveremailid,@approverid,@requesterid,current_date,false,@projectcode,@remarks,@isapprovalrequired,@isapproved,@approvalremarks,@approvedon) returning requestid</value>
+    <value>INSERT INTO wms.materialrequest(approveremailid,approverid,requesterid,requesteddate,deleteflag,projectcode,remarks,isapprovalrequired,isapproved,approvalremarks,approvedon,requesttype)VALUES(@approveremailid,@approverid,@requesterid,current_date,false,@projectcode,@remarks,@isapprovalrequired,@isapproved,@approvalremarks,@approvedon,@requesttype) returning requestid</value>
   </data>
   <data name="insertmaterialrequestdetails" xml:space="preserve">
     <value>INSERT INTO wms.materialrequestdetails(id,requestid,materialid,requestedquantity,poitemdescription,pono)
@@ -2382,5 +2386,29 @@ where au2.roleid=4 and deleteflag is false</value>
   </data>
   <data name="updateAuthstatusbyIM" xml:space="preserve">
     <value>update wms.wms_gatepass set authstatus ='#authstatus',authid =@authid,authremarks =@authremarks,authorizedon =current_timestamp where gatepassid=@gatepassid</value>
+  </data>
+  <data name="getitemlocationsforplantstock" xml:space="preserve">
+    <value>select sum(sk.availableqty)as availableqty,sk.saleorderno,Max(sk.materialid) as materialid,sk.itemlocation,Max(sk.poitemdescription) as materialdescription,sk.createddate::DATE,bool_or(sk.initialstock) as initialstock 
+from wms.wms_stock sk 
+left outer join wms."MaterialMasterYGS" ygs on ygs.material=sk.materialid 
+where sk.materialid='#materialid' and lower(sk.poitemdescription)  = lower('#desc') and sk.stcktype = 'Plant Stock'
+and sk.availableqty&gt;0 
+group by sk.itemlocation,sk.saleorderno,sk.createddate::DATE order by sk.createddate::DATE Desc</value>
+  </data>
+  <data name="getMaterialdetailsforplantstock" xml:space="preserve">
+    <value>select materialid,poitemdescription,max(unitprice::decimal(19,5)) as unitprice,sum(availableqty::decimal(19,5)) as availableqty from wms.wms_stock ws where materialid = '#materialid' and Lower(poitemdescription) = Lower('#description')
+and stcktype = 'Plant Stock'
+group by materialid,poitemdescription</value>
+  </data>
+  <data name="getPlantstockissuedlocations" xml:space="preserve">
+    <value>select iss.requestid, sum(iss.issuedqty) as issuedqty ,max(sk.materialid) as materialid,sk.itemlocation,
+(select sum(sk1.availableqty) from wms.wms_stock sk1 where sk1.materialid = max(sk.materialid) and lower(sK1.poitemdescription)  = lower(max(sk.poitemdescription))  and sk1.itemlocation = sk.itemlocation and sk1.stcktype='Plant Stock') as availableqty
+,sk.createddate::DATE as createddate,
+max(sk.poitemdescription) as materialdescription
+from wms.wms_materialissue iss 
+left outer join wms.wms_stock sk on iss.itemid =sk.itemid
+left join wms."MaterialMasterYGS" ygs on ygs.material=sk.materialid 
+where iss.requestid = '#requestforissueid' and iss.requesttype = '#type'
+group by iss.requestid,sk.itemlocation,sk.createddate</value>
   </data>
 </root>

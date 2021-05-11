@@ -491,6 +491,16 @@ namespace WMS.Common
 				//subbody = mailMessage.Subject;
 				link = linkurl + "WMS/Email/GatePassAuthList?GateId=" + emlSndngList.gatepassid.Trim();
 			}
+			//Inventory Manager
+			else if (subjecttype == 36)
+			{
+				mailMessage.Subject = "Approval Request for Materials with request id:" + emlSndngList.requestid;
+				string requestedby = this.getnamebyid(emlSndngList.createdby);
+				subbody = "Please find the Material request details below. <br/> Requested By:" + requestedby + "<br/>Requested On:" + emlSndngList.createddate;
+				//subbody += "<br/>"+ mailMessage.Subject;
+				link = linkurl + "WMS/Email/MaterialRequestApprovalNP?ReqId=" + emlSndngList.requestid;
+
+			}
 
 			//mailMessage.Subject = body;
 			var body = string.Empty;

@@ -136,6 +136,7 @@ namespace WMS.Interfaces
 		Task<IEnumerable<OpenPoModel>> getASNListdata();
 		Task<IEnumerable<IssueRequestModel>> GetItemlocationListBymterial(string material);
 		Task<IEnumerable<IssueRequestModel>> GetItemlocationListBymterialanddesc(string material, string description);
+		Task<IEnumerable<IssueRequestModel>> GetItemLocationforplantstock(string material, string description);
 		Task<IEnumerable<IssueRequestModel>> GetItemlocationListBymterialanddescpo(string material, string description, string projectid, string pono);
 		Task<IEnumerable<IssueRequestModel>> GetItemLocationListByMaterialdescstore(string material, string description, string store, string projectid, string pono);
 		Task<IEnumerable<IssueRequestModel>> GetItemLocationListByMaterialdescpono(string material, string description, string pono);
@@ -145,6 +146,7 @@ namespace WMS.Interfaces
 
 
 		Task<IEnumerable<IssueRequestModel>> getItemlocationListByIssueId(string requestforissueid, string requesttype);
+		Task<IEnumerable<IssueRequestModel>> getItemlocationListByPlantIssueId(string requestforissueid, string requesttype);
 		int updateissuedmaterial(List<IssueRequestModel> obj);
 		int assignRole(authUser authuser);
 		Task<IEnumerable<userAcessNamesModel>> getuserAcessList(string employeeid, string roleid);
@@ -221,6 +223,7 @@ namespace WMS.Interfaces
 		int mattransferapprove(List<materialtransferMain> model);
 		string matrequestapprove(List<MaterialTransaction> model);
 		Task<WMSHttpResponse> getAvailableQtyBystore(string store, string materialid, string description, string projectcode);
+		Task<IssueRequestModel> getplantstockmaterialdetails(string material, string description);
 		string stomatrequestapprove(List<invstocktransfermodel> model);
 		string updaterba(List<rbamaster> model);
 		string updatepm(List<assignpmmodel> model);

@@ -16,7 +16,7 @@
     <label>Project Name :</label>&nbsp;<span><label *ngIf="materialissueList[0].projectname" class="labeltext">{{materialissueList[0].projectname}}</label></span>
     <span><label *ngIf="!materialissueList[0].projectname" class="labeltext">-</label></span>
   </div>-->
-        <div class="col-lg-3 col-md-3 col-sm-3 pt-2 labelheading">
+        <div class="col-lg-3 col-md-3 col-sm-3 pt-2 labelheading" *ngIf="!isplantstockrequest">
           <label>Project :</label>&nbsp;<span><label class="labeltext">{{materialissueList[0].projectname}}</label></span>
         </div>
         <div class="col-lg-3 col-md-3 col-sm-3 pt-2 labelheading">
@@ -43,7 +43,7 @@
       <ng-template pTemplate="header">
         <tr class="mprltbldata">
           <th style="text-align:center;width:70px">Sl.No.</th>
-          <th style="text-align:center">PO No</th>
+          <th style="text-align:center" *ngIf="!isplantstockrequest">PO No</th>
           <th style="text-align:center;width:200px;">Material</th>
           <th style="text-align:center;width:200px;">PO Item description</th>
           <th style="text-align:center">Request Quantity</th>
@@ -55,7 +55,7 @@
           <th></th>
           <!--<th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'pono', 'contains')"></th>-->
           <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'material', 'startsWith')"></th>
-          <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'pono', 'startsWith')"></th>
+          <th *ngIf="!isplantstockrequest"> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'pono', 'startsWith')"></th>
           <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'materialdescription', 'contains')"></th>
           <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'requestedquantity', 'contains')"></th>
           <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'quantity', 'contains')"></th>
@@ -68,7 +68,7 @@
           <td class="ptable-cell" style="text-align:right">
             {{ri+1}}
           </td>
-          <td class="ptable-cell" style="text-align:center">{{rowData.pono}}</td>
+          <td class="ptable-cell" style="text-align:center" *ngIf="!isplantstockrequest">{{rowData.pono}}</td>
           <td class="ptable-cell" style="text-align:left;width:200px;"><button type="button" class="btn btn-link" (click)="showmateriallocationList(rowData.materialid,ri+1,ri,rowData.requestedquantity,rowData.issuedqty,rowData.reservedqty,rowData.requestforissueid,rowData.requestmaterialid,rowData.materialdescription,rowData.pono);" style="padding-left:0px;">{{rowData.materialid}}</button></td>
           <td class="ptable-cell" style="text-align:left">{{rowData.materialdescription}}</td>
           <td class="ptable-cell" style="text-align:right">{{rowData.requestedquantity}}</td>
@@ -114,9 +114,10 @@
       <ng-template pTemplate="header">
         <tr class="mprltbldata">
           <th style="text-align:center;width:70px">S.No</th>
+          <th style="text-align:center;width:150px" *ngIf="isplantstockrequest && !isissuedpopup">Sale order no</th>
           <th style="text-align:center">Location</th>
           <th style="text-align:center">Available Qty</th>
-          <th style="text-align:center" >Issue Qty</th>
+          <th style="text-align:center">Issue Qty</th>
           <th style="text-align:center">Received Date</th>
 
         </tr>
@@ -127,6 +128,7 @@
           <td class="ptable-cell" style="text-align:right">
             {{ri+1}}
           </td>
+          <td class="ptable-cell" style="text-align:center" *ngIf="isplantstockrequest && !isissuedpopup">{{rowData.saleorderno}}</td>
           <td class="ptable-cell" style="text-align:center">{{rowData.itemlocation}}</td>
           <td class="ptable-cell" style="text-align:right">{{rowData.availableqty}}</td>
           <td class="ptable-cell" style="text-align:right">
