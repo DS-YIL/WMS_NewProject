@@ -763,6 +763,7 @@ export class MaterialRequestViewComponent implements OnInit {
     this.displayDD = false;
     this.pono = null;
     this.displaylist = true;
+    this.stocktype = "Project Stock";
     //Get PO number list, project list and materials available
    
     //if (this.materialList.length <= 0) {
