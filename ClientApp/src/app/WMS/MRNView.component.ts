@@ -52,12 +52,15 @@ export class MRNViewComponent implements OnInit {
   filteredpono: ddlmodel[] = [];
   isallplaced: boolean = false;
   mrnsavemodel: MRNsavemodel;
+  mrnList: Array<MRNsavemodel> = [];
   mrnremarks: string = "";
+  inwardid; confirmqty; issuedqty: number;
   isalreadytransferred; ShowPrint; showPrntBtn: boolean = false;
   public selectedStatus: string;
   public currentDate: Date;
   public totalGRNList: ddlmodel[] = [];
-
+  materialList: Array<any> = [];
+  public selectedRow: any;
   ngOnInit() {
     if (localStorage.getItem("Employee"))
       this.employee = JSON.parse(localStorage.getItem("Employee"));
@@ -130,7 +133,21 @@ export class MRNViewComponent implements OnInit {
     debugger;
   }
 
+  //check validations for issuer quantity
 
+  reqQtyChange(data: any) {
+    var comQty = data.confirmqty;
+    if (data.putawayqty)
+      comQty = comQty - data.putawayqty;
+    if (data.partialqty)
+      comQty = comQty - data.partialqty;
+
+    if (data.issuedqty > comQty) {
+      this.messageService.add({ severity: 'error', summary: '', detail: 'issued Quantity should be lessthan or equal to sum of put away and partial quantity' });
+      data.issuedqty = 0;
+      return;
+    }
+  }
   submitmr() {
     debugger;
 
@@ -143,21 +160,33 @@ export class MRNViewComponent implements OnInit {
       return;
     }
     debugger;
-    this.mrnsavemodel = new MRNsavemodel();
-    this.mrnsavemodel.grnnumber = this.selectedgrnno;
-    this.mrnsavemodel.projectcode = this.selectedponomodel.value;
-    this.mrnsavemodel.directtransferredby = this.employee.employeeno;
-    this.mrnsavemodel.mrnremarks = this.mrnremarks;
+    this.podetailsList.forEach(item => {
+      if (item.issuedqty) {
+        this.reqQtyChange(item);
+        this.mrnsavemodel = new MRNsavemodel();
+        this.mrnsavemodel.grnnumber = this.selectedgrnno;
+        this.mrnsavemodel.projectcode = this.selectedponomodel.value;
+        this.mrnsavemodel.directtransferredby = this.employee.employeeno;
+        this.mrnsavemodel.mrnremarks = item.mrnremarks;
+        this.mrnsavemodel.inwardid = item.inwardid;
+        this.mrnsavemodel.projectcode = this.selectedponomodel.value;
+        this.mrnsavemodel.acceptedqty = item.confirmqty;
+        this.mrnsavemodel.issuedqty = item.issuedqty;
+        this.mrnList.push(this.mrnsavemodel);
+      }
+    })
+
     this.spinner.show();
 
-    this.wmsService.updatemrn(this.mrnsavemodel).subscribe(data => {
+    this.wmsService.updatemrn(this.mrnList).subscribe(data => {
       this.spinner.hide();
       this.showPrntBtn = true;
       this.messageService.add({ severity: 'success', summary: '', detail: "Material transferred" });
-      //this.getponodetails(this.selectedpendingpo.value)
-
+      this.selectedponomodel = new ddlmodel();
+      this.selectedgrnno = "";
       this.SearchGRNNo();
       this.getcheckedgrn();
+     
     })
 
 
@@ -217,13 +246,32 @@ export class MRNViewComponent implements OnInit {
     this.selectedgrnno = "";
     this.selectedStatus = event.target.value;
     if (this.selectedStatus == "Pending") {
-      this.checkedgrnlist = this.totalGRNList.filter(li => li.isdirecttransferred != true);     
+      this.checkedgrnlist = this.totalGRNList.filter(li => li.isdirecttransferred != true);
     }
     else if (this.selectedStatus == "Approved") {
       this.checkedgrnlist = this.totalGRNList.filter(li => li.isdirecttransferred == true);
     }
   }
 
+  //Get details
+  showdetails(data: any, index: any) {
+
+    this.selectedRow = index;
+    this.materialList = [];
+    data.showdetail = !data.showdetail;
+    if (data.showdetail)
+    this.bindMaterilaDetails(data.value);
+  }
+
+  //get materials list
+  bindMaterilaDetails(inwardid: any) {
+    this.checkedgrnlist[this.selectedRow].materiallistarray = [];
+   this.wmsService.getMRNmaterials(inwardid).subscribe(data => {
+      this.materialList = data;
+      this.checkedgrnlist[this.selectedRow].materiallistarray = data;
+      
+    });
+  }
   PrintMRN(data: any) {
     var grnnumber = "";
     if (!data)

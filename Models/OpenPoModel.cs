@@ -311,6 +311,10 @@ namespace WMS.Models
 		public string saleorderno { get; set; }
 		public string solineitemno { get; set; }
 		public string projectid { get; set; }
+		public decimal? putawayqty { get; set; }
+		public decimal? partialqty { get; set; }
+		public decimal? issuedqty { get; set; }
+		public string materialid { get; set; }
 	}
 
 	public class GPReasonMTData
@@ -1286,7 +1290,12 @@ namespace WMS.Models
 		public string projectcode { get; set; }
 		public string directtransferredby { get; set; }
 		public string mrnremarks { get; set; }
+		public int inwardid { get; set; }
+		public int acceptedqty { get; set; }
+		public int issuedqty { get; set; }
+
 	}
+
 
 	public class DashboardModel
 	{
@@ -1600,6 +1609,8 @@ public class ddlmodel
 	public DateTime mrnon { get; set; }
 	public string mrnby { get; set; }
 	public bool isdirecttransferred { get; set; }
+	public int confirmqty { get; set; }
+	public int totalissued { get; set; }
 
 }
 

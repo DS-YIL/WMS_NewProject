@@ -108,7 +108,6 @@ export class UnholdGRModel {
 }
 
 
-
 export class inwardModel {
   serialno: number;
   inwardid: number;
@@ -123,6 +122,7 @@ export class inwardModel {
   returnqty: number;
   confirmqty: number;
   pendingqty: number;
+  issuedqty: number;
   pono: string;
   quality: string;
   qtype: string;
@@ -176,6 +176,8 @@ export class inwardModel {
   saleorderno: string;
   solineitemno: string;
   projectid: string;
+  putawayqty: number;
+  partialqty: number;
 }
 
 
@@ -503,8 +505,10 @@ export class ddlmodel {
   mrnon: Date;
   isdirecttransferred: boolean;
   mrnby: string;
+  confirmqty: number;
+  totalissuedqty: number;
+  materiallistarray: Array<any> = [];
 }
-
 
 export class locationdropdownModel {
   binid: number;
@@ -530,13 +534,16 @@ export class notifymodel {
   notifiedby: string;
   notifyremarks: string;
 }
-
 export class MRNsavemodel {
   grnnumber: string;
   projectcode: string;
   directtransferredby: string;
   mrnremarks: string
+  inwardid: number;
+  acceptedqty: number;
+  issuedqty: number
 }
+
 export class pageModel {
   id: number
   pagename: string

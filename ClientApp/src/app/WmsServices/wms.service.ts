@@ -754,10 +754,13 @@ export class wmsService {
     return this.http.post<any>(this.url + 'POData/UnholdGR', updaeonhold, this.httpOptions);
   }
 
-  updatemrn(updaeonhold: MRNsavemodel): Observable<any> {
-    return this.http.post<any>(this.url + 'POData/mrnupdate', updaeonhold, this.httpOptions);
+  getMRNmaterials(inwardid: string): Observable<any> {
+    return this.http.get<any>(this.url + 'POData/getMRNmaterials?inwardid=' + inwardid + '', this.httpOptions);
   }
 
+  updatemrn(updaeonhold: MRNsavemodel[]): Observable<any> {
+    return this.http.post<any>(this.url + 'POData/mrnupdate', updaeonhold, this.httpOptions);
+  }
   notifyputawayfn(data: notifymodel): Observable<any> {
     const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }), responseType: 'text' as any };
     return this.http.post<any>(this.url + 'POData/notifyputaway', data, httpOptions);

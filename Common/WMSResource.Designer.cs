@@ -873,12 +873,8 @@ namespace WMS.Common {
         
         /// <summary>
         ///   Looks up a localized string similar to select stinw.inwardid as value,sinw.grnnumber as text,
-        ///sinw.suppliername as supplier,sinw.isdirecttransferred,sinw.invoiceno ,emp.name as mrnby,sinw.mrnon 
-        ///from wms.wms_storeinward stinw 
-        ///left outer join wms.wms_securityinward sinw on stinw.inwmasterid = sinw.inwmasterid 
-        /// left outer join wms.employee emp on emp.employeeno=sinw.mrnby
-        ///where stinw.returnedby is not null and sinw.mrnon is null and stinw.confirmqty &gt; 0
-        ///and stinw.inwardid not in (select distinct inwardid from wms.wms_stock where inwardid i [rest of string was truncated]&quot;;.
+        ///sinw.suppliername as supplier,sinw.invoiceno ,stinw.confirmqty ,(select  COALESCE(SUM(mrn.issuedqty ),0)+ COALESCE(SUM(ws.totalquantity ),0)   as totalissued from wms.mrnmaterials mrn left join wms.wms_stock  ws on ws.inwardid =mrn.inwardid  where mrn.inwardid =stinw.inwardid )
+        ///,case when stinw.confirmqty=(select  COALESCE(SUM(mrn.issuedqty ),0)+ COALESCE(SUM(ws.totalquantity ),0)   as totalissued from wms.mrnmaterials mrn left join wms.wms_stock  ws  [rest of string was truncated]&quot;;.
         /// </summary>
         public static string getgrnlistdataforputaway {
             get {
@@ -1736,6 +1732,15 @@ namespace WMS.Common {
         public static string getMiscIssuedlist {
             get {
                 return ResourceManager.GetString("getMiscIssuedlist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to select st.materialid ,st.pono,st.poitemdescription,emp.name as mrnby,mrn.mrnon,mrn.projectcode,mrn.mrnremarks,mrn.issuedqty from wms.wms_storeinward st join wms.mrnmaterials mrn on mrn.inwardid =st.inwardid  join wms.employee emp on emp.employeeno =mrn.mrnby  where mrn.inwardid =&apos;#inwardid&apos;.
+        /// </summary>
+        public static string getMRNmaterials {
+            get {
+                return ResourceManager.GetString("getMRNmaterials", resourceCulture);
             }
         }
         
@@ -3487,10 +3492,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select inwa.inwardid,inwa.lineitemno,inwa.inwardid as inwardidview,bin.binnumber, rack.racknumber, loc.locatorname,mat.rackid,mat.binid,inwa.poitemdescription,inwa.unitprice,
-        /// mat.storeid,stocks.itemlocation,stocks.availableqty,stocks.itemid,inw.grnnumber,inwa.pono,inwa.pono as securitypo,inw.invoiceno,inw.receiveddate,
-        /// inw.isdirecttransferred,inw.projectcode,emp.name as mrnby,inw.mrnon,inw.mrnremarks,inwa.saleorderno,inwa.solineitemno,inwa.projectid,
-        /// inwa.materialqty,inwa.materialid as material, mat.m [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to select inwa.inwardid,inwa.lineitemno,inwa.inwardid as inwardidview,bin.binnumber, rack.racknumber, loc.locatorname,mat.rackid,mat.binid,inwa.poitemdescription,inwa.unitprice,mat.storeid,stocks.itemlocation,stocks.availableqty,stocks.itemid,inw.grnnumber,inwa.pono,inwa.pono as securitypo,inw.invoiceno,inw.receiveddate,inw.isdirecttransferred,inw.projectcode,inwa.saleorderno,inwa.solineitemno,inwa.projectid,inwa.materialqty,inwa.materialid as material, mat.materialdescription,mat.stocktype,inwa.receivedqty,in [rest of string was truncated]&quot;;.
         /// </summary>
         public static string queryforitemdetails {
             get {
@@ -3844,6 +3846,16 @@ namespace WMS.Common {
         public static string updateMisQty {
             get {
                 return ResourceManager.GetString("updateMisQty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to INSERT INTO wms.mrnmaterials(mrnid,inwardid,projectcode,mrnby,mrnon,mrnremarks,acceptedqty,issuedqty,deleteflag)values
+        ///(DEFAULT,@inwardid,@projectcode,@mrnby,current_date,@mrnremarks,@acceptedqty,@issuedqty,false).
+        /// </summary>
+        public static string updateMRNMaterials {
+            get {
+                return ResourceManager.GetString("updateMRNMaterials", resourceCulture);
             }
         }
         

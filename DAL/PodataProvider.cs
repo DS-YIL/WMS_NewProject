@@ -10529,14 +10529,14 @@ namespace WMS.DAL
 
 							if (model.approverstatus == "Approved")//Inventory mangers
 							{
-								var query = WMSResource.getINVMangerList;
-								List<User> data = DB.Query<User>(query, null, commandType: CommandType.Text).ToList();
-								foreach (User usr in data)
-								{
-									if (!string.IsNullOrEmpty(usr.email))
-										emailmodel.ToEmailId += usr.email + ",";
-								}
-								emailobj.sendEmail(emailmodel, 35);
+								//var query = WMSResource.getINVMangerList;
+								//List<User> data = DB.Query<User>(query, null, commandType: CommandType.Text).ToList();
+								//foreach (User usr in data)
+								//{
+								//	if (!string.IsNullOrEmpty(usr.email))
+								//		emailmodel.ToEmailId += usr.email + ",";
+								//}
+								emailobj.sendEmail(emailmodel, 35,4);
 							}
 							else
 							{
@@ -10723,19 +10723,19 @@ namespace WMS.DAL
 							{
 
 								//Inv manager
-								var query = WMSResource.getINVMangerList;
-								List<User> data = DB.Query<User>(query, null, commandType: CommandType.Text).ToList();
-								foreach (User usr in data)
-								{
-									if (!string.IsNullOrEmpty(usr.email) && usr.employeeno == model.authid)
-										emailmodel.ToEmailId += usr.email + ",";
-								}
+								//var query = WMSResource.getINVMangerList;
+								//List<User> data = DB.Query<User>(query, null, commandType: CommandType.Text).ToList();
+								//foreach (User usr in data)
+								//{
+								//	if (!string.IsNullOrEmpty(usr.email) && usr.employeeno == model.authid)
+								//		emailmodel.ToEmailId += usr.email + ",";
+								//}
 								string userquery = WMSResource.getRequesterEmail.Replace("#gatepassid", model.gatepassid);
 								User userdata = DB.QuerySingle<User>(
 								   userquery, null, commandType: CommandType.Text);
 								mailto = userdata.email;
 								emailmodel.CC = mailto;
-								emailobj.sendEmail(emailmodel, 21);
+								emailobj.sendEmail(emailmodel, 21,4);
 							}
 							//emailobj.sendEmail(emailmodel, 17, 3);
 
@@ -12286,13 +12286,47 @@ namespace WMS.DAL
 		}
 
 		/*
+		Name of Function : <<getitemdeatils>>  Author :<<Prasanna>>  
+		Date of Creation <<11-05-2021>>
+		Purpose : <<based on inwardid  will get lst of items>>
+		<param name="grnnumber"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
+		public async Task<IEnumerable<inwardModel>> getMRNmaterials(string inwardid)
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+
+				try
+				{
+					await pgsql.OpenAsync();
+					string queryforitemdetails = WMSResource.getMRNmaterials.Replace("#inwardid", inwardid);
+					var data = await pgsql.QueryAsync<inwardModel>(
+					   queryforitemdetails, null, commandType: CommandType.Text);
+					return data;
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "getMRNmaterials", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+				//throw new NotImplementedException();
+			}
+
+		}
+
+		/*
 		Name of Function : <<mrnupdate>>  Author :<<Ramesh>>  
 		Date of Creation <<12-12-2019>>
 		Purpose : <<mrn update>>
 		<param name="datamodel"></param>
 		Review Date :<<>>   Reviewed By :<<>>
 		*/
-		public int mrnupdate(MRNsavemodel datamodel)
+		public int mrnupdate(List<MRNsavemodel> datamodel)
 		{
 			int result = 0;
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
@@ -12302,10 +12336,23 @@ namespace WMS.DAL
 
 
 					pgsql.OpenAsync();
-					string qry = "Update wms.wms_securityinward set isdirecttransferred = True,projectcode='" + datamodel.projectcode + "',mrnby = '" + datamodel.directtransferredby + "',mrnon = current_date,mrnremarks = '" + datamodel.mrnremarks + "' where grnnumber = '" + datamodel.grnnumber + "'";
-					var results11 = pgsql.ExecuteScalar(qry);
-					result = 1;
 
+					string insertqry = WMSResource.updateMRNMaterials;
+					foreach (MRNsavemodel item in datamodel)
+					{
+						//string qry = "Update wms.wms_securityinward set isdirecttransferred = True,projectcode='" + datamodel.projectcode + "',mrnby = '" + datamodel.directtransferredby + "',mrnon = current_date,mrnremarks = '" + datamodel.mrnremarks + "' where grnnumber = '" + datamodel.grnnumber + "'";
+						//var results11 = pgsql.ExecuteScalar(qry);
+						string mrnby = item.directtransferredby;
+						result = pgsql.Execute(insertqry, new
+						{
+							item.inwardid,
+							item.projectcode,
+							mrnby,
+							item.mrnremarks,
+							item.acceptedqty,
+							item.issuedqty,
+						});
+					}
 				}
 				catch (Exception Ex)
 				{
@@ -12320,6 +12367,7 @@ namespace WMS.DAL
 			}
 			return result;
 		}
+
 
 		/*
 		Name of Function : <<updateonholdrow>>  Author :<<Ramesh>>  

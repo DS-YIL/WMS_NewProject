@@ -1211,11 +1211,18 @@ namespace WMS.Controllers
 			return this._poService.updatepm(obj);
 		}
 
+		[HttpGet("getMRNmaterials")]
+		public async Task<IEnumerable<inwardModel>> getMRNmaterials(string inwardid)
+		{
+			return await this._poService.getMRNmaterials(inwardid);
+		}
+
 		[HttpPost("mrnupdate")]
-		public int mrnupdate([FromBody] MRNsavemodel obj)
+		public int mrnupdate([FromBody] List<MRNsavemodel> obj)
 		{
 			return this._poService.mrnupdate(obj);
 		}
+
 
 		[HttpGet("GetReturnmaterialList")]
 		public async Task<IEnumerable<IssueRequestModel>> GetReturnmaterialList()
