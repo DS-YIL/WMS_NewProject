@@ -1310,5 +1310,20 @@ export class DashBoardFilters {
   toDate: string;
 }
 
+export class DirectDelivery {
+  pono: string;
+  invoiceno: string;
+  invoicedate: Date;
+  receivedby: string;
+  suppliername: string;
+  directdeliveryaddrs: string;
+  directdeliveredon: Date;
+  directdeliveryremarks: string
+  inwmasterid: string;
+  DDmaterialList: Array<any> = [];
+}
+
+
+
 
 

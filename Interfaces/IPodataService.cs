@@ -360,5 +360,11 @@ namespace WMS.Interfaces
 
 		Task<IEnumerable<StockModel>> getMiscellanousIssueListdatahistory();
 
+		 Task<IEnumerable<DDmaterials>> getDDdetailsByPono(string pono);
+
+		public bool updateDirectDelivery(DirectDelivery userRoles);
+
+		bool deleteDirectDelivery(string inwmasterid, string deletedby);
+
 	}
 }

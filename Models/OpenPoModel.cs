@@ -1466,6 +1466,44 @@ namespace WMS.Models
 		public int? availableqty { get; set; }
 
 	}
+
+	public class DirectDelivery
+	{
+		public string pono { get; set; }
+		public string invoiceno { get; set; }
+		public string receivedby { get; set; }
+		public DateTime invoicedate { get; set; }
+		public string suppliername { get; set; }
+		public string directdeliveryaddrs { get; set; }
+		public DateTime directdeliveredon { get; set; }
+		public string directdeliveryremarks { get; set; }
+		public string inwmasterid { get; set; }
+		
+		public List<DDmaterials> DDmaterialList { get; set; }
+}
+	public class DDmaterials
+	{
+		public int inwardid { get; set; }
+		public string pono { get; set; }
+		public string invoiceno { get; set; }
+		public DateTime invoicedate { get; set; }
+		public string receivedby { get; set; }
+		public string suppliername { get; set; }
+		public string directdeliveryaddrs { get; set; }
+		public DateTime directdeliveredon { get; set; }
+		public string directdeliveryremarks { get; set; }
+		public string materialid { get; set; }
+		public string materialdescription { get; set; }
+		public string poitemdescription  { get; set; }
+		public decimal materialqty { get; set; }
+		public string itemdeliverydate { get; set; }
+		public decimal? unitprice { get; set; }
+		public decimal deliveredqty { get; set; }
+		public decimal pendingqty { get; set; }
+		public string lineitemno { get; set; }
+
+	}
+
 }
 
 public class gatepassapprovalsModel
@@ -2467,3 +2505,5 @@ public class DashBoardFilters
 	public string fromDate { get; set; }
 	public string toDate { get; set; }
 }
+
+

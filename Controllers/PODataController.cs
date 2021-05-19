@@ -1743,5 +1743,23 @@ namespace WMS.Controllers
 		{
 			return this._poService.updateUserRole(userRole);
 		}
+
+		[HttpGet("getDDdetailsByPono")]
+		public async Task<IEnumerable<DDmaterials>> getDDdetailsByPono(string PONO)
+		{
+			return await this._poService.getDDdetailsByPono(PONO);
+		}
+		[HttpPost("updateDirectDelivery")]
+		public bool updateDirectDelivery(DirectDelivery userRole)
+		{
+			return this._poService.updateDirectDelivery(userRole);
+		}
+
+		[HttpGet("deleteDirectDelivery")]
+		public bool deleteDirectDelivery(string inwmasterid, string deletedby)
+		{
+			return  this._poService.deleteDirectDelivery(inwmasterid, deletedby);
+		}
+
 	}
 }

@@ -3683,7 +3683,7 @@ namespace WMS.DAL
 					string rsvid = dataobj[0].reserveid;
 					MaterialTransaction mainmodel = new MaterialTransaction();
 					if(mattype == "Project Stock")
-                    {
+					{
 						mainmodel.requesttype = "Project";
 						string storeQuery = "select projectmanager from wms.wms_project wp where projectcode = '" + dataobj[0].projectcode + "' and projectmanager is not null limit 1";
 						var projectmanagerid = pgsql.ExecuteScalar(storeQuery, null);
@@ -3709,8 +3709,8 @@ namespace WMS.DAL
 							}
 						}
 					}
-                    else
-                    {
+					else
+					{
 						mainmodel.requesttype = "Plant";
 						mainmodel.isapprovalrequired = true;
 						mainmodel.approverid = dataobj[0].managerid;
@@ -3718,7 +3718,7 @@ namespace WMS.DAL
 						mainmodel.approvalremarks = null;
 						mainmodel.approvedon = null;
 					}
-					
+
 
 
 
@@ -3806,11 +3806,11 @@ namespace WMS.DAL
 							{
 								emailobj.sendEmail(emailmodel, 23);
 							}
-                            else
-                            {
+							else
+							{
 								emailobj.sendEmail(emailmodel, 36);
 							}
-								
+
 						}
 						else
 						{
@@ -4139,19 +4139,19 @@ namespace WMS.DAL
 						}
 						string stockquery = "";
 						if(item.materialtype == "Project")
-                        {
+						{
 							stockquery = "select * from wms.wms_stock where projectid='" + item.projectid + "' and pono='" + item.pono + "' and materialid = '" + item.materialid + "' and lower(poitemdescription) = lower('" + descriptionstr + "') and availableqty > 0 and itemlocation = '" + item.itemlocation + "' and createddate::DATE = '" + createdate + "' order by itemid";
 						}
-                        else
-                        {
+						else
+						{
 							stockquery = "select * from wms.wms_stock where  materialid = '" + item.materialid + "' and lower(poitemdescription) = lower('" + descriptionstr + "') and availableqty > 0 and stcktype = 'Plant Stock' and itemlocation = '" + item.itemlocation + "' and createddate::DATE = '" + createdate + "' ";
 							if(item.saleorderno != null && item.saleorderno.Trim() != "")
-                            {
+							{
 								stockquery += " and saleorderno = '"+ item.saleorderno + "'";
 							}
 							stockquery += "order by itemid";
 						}
-						  
+
 						var stockdata = DB.QueryAsync<StockModel>(stockquery, null, commandType: CommandType.Text);
 						if (stockdata != null)
 						{
@@ -6831,7 +6831,7 @@ namespace WMS.DAL
 
 				try
 				{
-					
+
 					string query = WMSResource.getPlantstockissuedlocations.Replace("#requestforissueid", requestforissueid).Replace("#type", requesttype);
 					await pgsql.OpenAsync();
 					var data = await pgsql.QueryAsync<IssueRequestModel>(
@@ -14895,11 +14895,11 @@ namespace WMS.DAL
 					{
 						testgetquery += " and stk.pono = '" + pono + "'";
 
-						}
-						else
-						{
-							testgetquery += " and (stk.pono is null or stk.pono = '')";
-						}
+					}
+					else
+					{
+						testgetquery += " and (stk.pono is null or stk.pono = '')";
+					}
 					if (sono != null && sono != "" && sono.ToLower() != "null")
 					{
 						testgetquery += " and stk.saleorderno = '" + sono + "'";
@@ -14910,9 +14910,9 @@ namespace WMS.DAL
 						testgetquery += " and (stk.saleorderno is null or stk.saleorderno = '')";
 					}
 					testgetquery += "  group by stk.itemlocation";
-						
-						
-					
+
+
+
 
 					await pgsql.OpenAsync();
 					var data = await pgsql.QueryAsync<matlocations>(
@@ -17835,6 +17835,192 @@ Review Date :<<>>   Reviewed By :<<>>
 				return false;
 			}
 			return true;
+		}
+
+		/*Name of Function : <<getDDdetailsByPono>>  Author :<<Prasanna>>  
+		Date of Creation <<17/05/2021>>
+		Purpose : <<get direct delivery  details By Pono>>
+		<param name="type"></param>
+		Review Date :<<>>   Reviewed By :<<>>*/
+		public async Task<IEnumerable<DDmaterials>> getDDdetailsByPono(string pono)
+		{
+
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+
+				try
+				{
+					string query = WMSResource.getDirectDeliverybyPOno.Replace("#pono", pono);
+					await pgsql.OpenAsync();
+					var data = await pgsql.QueryAsync<DDmaterials>(
+					   query, null, commandType: CommandType.Text);
+					return data;
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "subcontractInoutList", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+			}
+
+		}
+		/*Name of Function : <<updateDirectDelivery>>  Author :<<Prasanna>>  
+		Date of Creation <<17/05/2021>>
+		Purpose : <<insert or update DirectDelivery delivery details>>
+		<param name="type"></param>
+		Review Date :<<>>   Reviewed By :<<>>*/
+
+		public bool updateDirectDelivery(DirectDelivery dddetails)
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+
+				try
+				{
+					pgsql.OpenAsync();
+					if (string.IsNullOrEmpty(dddetails.inwmasterid))
+					{
+						sequencModel obj = new sequencModel();
+						string lastinsertedgrn = WMSResource.lastinsertedgrn;
+						int grnnextsequence = 0;
+						string grnnumber = string.Empty;
+						DateTime grndate = DateTime.Now;
+						DateTime receiveddate = DateTime.Now;
+						string grnnogeneratedby = dddetails.receivedby;
+						obj = pgsql.QuerySingle<sequencModel>(
+					   lastinsertedgrn, null, commandType: CommandType.Text);
+						if (obj.id != 0)
+						{
+							grnnextsequence = (Convert.ToInt32(obj.sequencenumber) + 1);
+							grnnumber = obj.sequenceid + "-" + obj.year + "-" + grnnextsequence.ToString().PadLeft(6, '0');
+						}
+
+						string insertInv = WMSResource.insertDDInvoice;
+						var rslt = pgsql.ExecuteScalar(insertInv, new
+						{
+							dddetails.pono,
+							dddetails.invoiceno,
+							dddetails.invoicedate,
+							grnnumber,
+							grndate,
+							grnnogeneratedby,
+							dddetails.receivedby,
+							receiveddate,
+							dddetails.suppliername,
+							dddetails.directdeliveryaddrs,
+							dddetails.directdeliveryremarks,
+							dddetails.directdeliveredon
+						});
+						var inwmasterid = rslt.ToString();
+						string insertMat = WMSResource.insertDDinwardDetails;
+
+						foreach (DDmaterials model in dddetails.DDmaterialList)
+						{
+							var receivedqty = model.pendingqty;
+							var confirmqty = model.pendingqty;
+							var res = pgsql.Execute(insertMat, new
+							{
+								inwmasterid,
+								receiveddate,
+								dddetails.receivedby,
+								receivedqty,
+								confirmqty,
+								model.materialqty,
+								model.materialid,
+								model.pono,
+								model.lineitemno,
+								model.poitemdescription,
+								model.unitprice
+							});
+						}
+					}
+					else
+					{
+						foreach (var model in dddetails.DDmaterialList)
+						{
+							var receivedqty = model.pendingqty;
+							var confirmqty = model.pendingqty;
+							string insertforquality = WMSResource.updateddReceivedqty.Replace("#inwardid", model.inwardid.ToString());
+
+							var results = pgsql.ExecuteScalar(insertforquality, new
+							{
+								receivedqty,
+								confirmqty
+							});
+
+						}
+					}
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "updateDirectDelivery", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
+					return false;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+				return true;
+			}
+		}
+
+
+		/*Name of Function : <<deleteDirectDelivery>>  Author :<<Prasanna>>  
+		Date of Creation <<17/05/2021>>
+		Purpose : <<delete18 direct delivery  details By>>
+		<param name="type"></param>
+		Review Date :<<>>   Reviewed By :<<>>*/
+		public bool deleteDirectDelivery(string inwmasterid, string deletedby)
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				try
+				{
+					pgsql.OpenAsync();
+					DateTime deletedon = DateTime.Now;
+					string delSec = WMSResource.deleteDDSecInw.Replace("#inwmasterid", inwmasterid.ToString());
+					var results = pgsql.ExecuteScalar(delSec, new
+					{
+						deletedby,
+						deletedon
+					});
+					string query = "select inwardid from wms.wms_storeinward  where inwmasterid ='" + inwmasterid + "'";
+					var matList = pgsql.QueryAsync<DDmaterials>(
+					   query, null, commandType: CommandType.Text);
+
+					int count = matList.Result.Count();
+
+					if (matList != null && (matList.Result.Count() > 0))
+					{
+						foreach (var model in matList.Result)
+						{
+							string delStore = WMSResource.deleteDDStoreInw.Replace("#inwardid", model.inwardid.ToString());
+
+							var result = pgsql.ExecuteScalar(delStore, new
+							{
+								deletedby,
+								deletedon
+
+							});
+						}
+					}
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "deleteDirectDelivery", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
+					return false;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+				return true;
+			}
 		}
 	}
 }

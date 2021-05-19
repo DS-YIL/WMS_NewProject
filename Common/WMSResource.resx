@@ -241,8 +241,9 @@ max(req.ackremarks)as ackremarks,max(req.reserveid)as reserveid,max(req.projectc
   left join  wms.wms_materialissue issue on issue.requestforissueid=req.requestforissueid</value>
   </data>
   <data name="queryforitemdetails" xml:space="preserve">
-    <value>select inwa.inwardid,inwa.lineitemno,inwa.inwardid as inwardidview,bin.binnumber, rack.racknumber, loc.locatorname,mat.rackid,mat.binid,inwa.poitemdescription,inwa.unitprice,mat.storeid,stocks.itemlocation,stocks.availableqty,stocks.itemid,inw.grnnumber,inwa.pono,inwa.pono as securitypo,inw.invoiceno,inw.receiveddate,inw.isdirecttransferred,inw.projectcode,inwa.saleorderno,inwa.solineitemno,inwa.projectid,inwa.materialqty,inwa.materialid as material, mat.materialdescription,mat.stocktype,inwa.receivedqty,inwa.confirmqty,inwa.returnqty, (select sum(totalquantity ) from wms.wms_stock ws where ws.inwardid =inwa.inwardid ) as putawayqty, (select sum(issuedqty ) from wms.mrnmaterials mrn where mrn.inwardid =inwa.inwardid ) as partialqty, 0 as issuedqty
- from wms.wms_securityinward inw
+    <value>select inwa.inwardid,inwa.lineitemno,inwa.inwardid as inwardidview,bin.binnumber, rack.racknumber, loc.locatorname,mat.rackid,mat.binid,inwa.poitemdescription,inwa.unitprice,mat.storeid,stocks.itemlocation,stocks.availableqty,stocks.itemid,inw.grnnumber,inwa.pono,inwa.pono as securitypo,inw.invoiceno,inw.receiveddate,inw.projectcode,inwa.saleorderno,inwa.solineitemno,inwa.projectid,inwa.materialqty,inwa.materialid as material, mat.materialdescription,mat.stocktype,inwa.receivedqty,inwa.confirmqty,inwa.returnqty, (select sum(totalquantity ) from wms.wms_stock ws where ws.inwardid =inwa.inwardid ) as putawayqty, (select sum(issuedqty ) from wms.mrnmaterials mrn where mrn.inwardid =inwa.inwardid ) as partialqty, 0 as issuedqty
+ ,case when inwa.confirmqty=(select  COALESCE(SUM(mrn.issuedqty ),0)+ COALESCE(SUM(ws.totalquantity ),0)   as totalissued from wms.mrnmaterials mrn left join wms.wms_stock  ws on ws.inwardid =mrn.inwardid  where mrn.inwardid =inwa.inwardid ) 
+THEN true  else false  END AS isdirecttransferred from wms.wms_securityinward inw
 left join wms.wms_storeinward inwa on inw.inwmasterid=inwa.inwmasterid
 left join wms.wms_stock stocks on  stocks.inwardid=inwa.inwardid
  left join wms."MaterialMasterYGS" mat on inwa.materialid=mat.material
@@ -955,7 +956,8 @@ from wms.wms_project  where projectmanager is not null and (projectmanager = '#m
   <data name="getitemsfornotifypage" xml:space="preserve">
     <value>select inwa.inwardid,bin.binnumber, rack.racknumber, loc.locatorname,mat.rackid,mat.binid,
  mat.storeid,mat.stocktype,stocks.itemlocation,stocks.availableqty,stocks.itemid,inw.grnnumber,inw.pono,inw.invoiceno,inw.receiveddate,
- inw.isdirecttransferred,inw.projectcode,emp.name as mrnby,inw.mrnon,inw.mrnremarks,
+ case when inwa.confirmqty=(select  COALESCE(SUM(mrn.issuedqty ),0)+ COALESCE(SUM(ws.totalquantity ),0)   as totalissued from wms.mrnmaterials mrn left join wms.wms_stock  ws on ws.inwardid =mrn.inwardid  where mrn.inwardid =inwa.inwardid ) 
+THEN true  else false  END AS isdirecttransferred,inw.projectcode,emp.name as mrnby,inw.mrnon,inw.mrnremarks,
  inw.notifyremarks,inw.notifiedby,inw.notifiedtofinance,inw.notifiedon,inw.putawayfilename,
  inwa.materialqty,inwa.materialid as material,mat.materialdescription,inwa.receivedqty,inwa.confirmqty,inwa.returnqty 
  from wms.wms_securityinward inw
@@ -2415,5 +2417,29 @@ group by iss.requestid,sk.itemlocation,sk.createddate</value>
   <data name="updateMRNMaterials" xml:space="preserve">
     <value>INSERT INTO wms.mrnmaterials(mrnid,inwardid,projectcode,mrnby,mrnon,mrnremarks,acceptedqty,issuedqty,deleteflag)values
 (DEFAULT,@inwardid,@projectcode,@mrnby,current_date,@mrnremarks,@acceptedqty,@issuedqty,false)</value>
+  </data>
+  <data name="getDirectDeliverybyPOno" xml:space="preserve">
+    <value>select po.suppliername, concat(loc.Name,',',loc.street ,loc.street4 ,loc.city,loc.postalcode ) as directdeliveryaddrs, wp.pono ,wp.materialid ,wp.materialdescription ,wp.poitemdescription ,wp.materialqty ,wp.itemdeliverydate ,wp.unitprice,wp.itemno as lineitemno,
+ (select sum(inw.receivedqty ) from wms.wms_storeinward  inw where inw.pono =wp.pono and inw.materialid =wp.materialid and inw.lineitemno::int =wp.itemno::int and inw.deleteflag is not true) as deliveredqty from wms.wms_pomaterials wp 
+inner join wms.wms_polist po on po.pono =wp.pono  
+left join  wms.storagelocaddresses  loc on loc.storagelocation =po.sloc 
+where wp.pono ='#pono'</value>
+  </data>
+  <data name="insertDDInvoice" xml:space="preserve">
+    <value>INSERT INTO wms.wms_securityinward(inwmasterid,pono,invoiceno,invoicedate,grnnumber,grndate,grnnogeneratedby,receivedby,receiveddate,suppliername,isdirectdelivered,directdeliveryaddrs,directdeliveryremarks,directdeliveredon ,deleteflag)
+VALUES(default,@pono,@invoiceno,@invoicedate,@grnnumber,@grndate,@grnnogeneratedby,@receivedby,@receiveddate,@suppliername,true,@directdeliveryaddrs,@directdeliveryremarks,@directdeliveredon ,false) returning inwmasterid</value>
+  </data>
+  <data name="deleteDDSecInw" xml:space="preserve">
+    <value>UPDATE  wms.wms_securityinward set deleteflag =true,deletedby=@deletedby,deletedon=@deletedon where inwmasterid ='#inwmasterid'</value>
+  </data>
+  <data name="deleteDDStoreInw" xml:space="preserve">
+    <value>UPDATE wms.wms_storeinward set deleteflag =true,deletedby=@deletedby,deletedon=@deletedon where inwardid =#inwardid</value>
+  </data>
+  <data name="insertDDinwardDetails" xml:space="preserve">
+    <value>INSERT INTO wms.wms_storeinward(inwmasterid,receiveddate,receivedby,receivedqty,returnqty,confirmqty,materialqty,materialid,pono,lineitemno,poitemdescription,unitprice,deleteflag)
+VALUES(@inwmasterid,@receiveddate,@receivedby,@receivedqty,0,@confirmqty,@materialqty,@materialid,@pono,@lineitemno,@poitemdescription,@unitprice,false)returning inwardid</value>
+  </data>
+  <data name="updateddReceivedqty" xml:space="preserve">
+    <value>UPDATE  wms.wms_storeinward set receivedqty =@receivedqty,confirmqty = @confirmqty where inwardid =#inwardid</value>
   </data>
 </root>

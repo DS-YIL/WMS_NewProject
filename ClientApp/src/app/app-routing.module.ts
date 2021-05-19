@@ -103,6 +103,7 @@ import { BinMasterComponent } from './WMS/BinMaster.component';
 import { roleMaster, VendorMaster } from './Models/WMS.Model';
 import { AssignPMComponent } from './WMS/AssignPM.component';
 import { AssignIMComponent } from './WMS/AssignInventoryManage.component';
+import { DirectDeliveryComponent } from './WMS/DirectDelivery.component';
 
 const routes: Routes = [{
   path: 'WMS',
@@ -222,7 +223,8 @@ const routes: Routes = [{
     { path: "BinMaster", component: BinMasterComponent },
     { path: "AssignPM", component: AssignPMComponent },
     { path: "AssignInventoryManager", component: AssignIMComponent },
-    
+    { path: "DirectDelivery", component: DirectDeliveryComponent },
+      
 
 
   ]

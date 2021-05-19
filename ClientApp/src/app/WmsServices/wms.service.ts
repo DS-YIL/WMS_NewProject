@@ -5,7 +5,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { constants } from '../Models/WMSConstants'
 import { Employee, Login, DynamicSearchResult, printMaterial, rbamaster, locationBarcode, printonholdGR } from '../Models/Common.Model';
-import { PoFilterParams, PoDetails, BarcodeModel, StockModel, materialRequestDetails, inwardModel, gatepassModel, stocktransfermodel, Materials, authUser, invstocktransfermodel, ddlmodel, locataionDetailsStock, updateonhold, materialistModel, outwardmaterialistModel, pageModel, UserDashboardDetail, UserDashboardGraphModel, UnholdGRModel, MRNsavemodel, notifymodel, materialtransferMain, materialReservetorequestModel, testcrud, PrintHistoryModel, materilaTrasFilterParams, materialRequestFilterParams, materialResFilterParams, materialRetFilterParams, outwardinwardreportModel, UserModel, WMSHttpResponse, MaterialinHand, matlocations, grReports, MateriallabelModel, ManagerDashboard, pmDashboardCards, invDashboardCards, GraphModelNew, miscellanousIssueData, inventoryFilters, MaterialMaster, GPReasonMTdata, materialList, PlantMTdata, InitialStock, subrolemodel, AssignProjectModel, MaterialTransaction, plantddl, STOrequestTR, assignpmmodel, POReportModel, stocktransfermateriakmodel, VendorMaster, roleMaster, userRoles, DashBoardFilters } from '../Models/WMS.Model';
+import { PoFilterParams, PoDetails, BarcodeModel, StockModel, materialRequestDetails, inwardModel, gatepassModel, stocktransfermodel, Materials, authUser, invstocktransfermodel, ddlmodel, locataionDetailsStock, updateonhold, materialistModel, outwardmaterialistModel, pageModel, UserDashboardDetail, UserDashboardGraphModel, UnholdGRModel, MRNsavemodel, notifymodel, materialtransferMain, materialReservetorequestModel, testcrud, PrintHistoryModel, materilaTrasFilterParams, materialRequestFilterParams, materialResFilterParams, materialRetFilterParams, outwardinwardreportModel, UserModel, WMSHttpResponse, MaterialinHand, matlocations, grReports, MateriallabelModel, ManagerDashboard, pmDashboardCards, invDashboardCards, GraphModelNew, miscellanousIssueData, inventoryFilters, MaterialMaster, GPReasonMTdata, materialList, PlantMTdata, InitialStock, subrolemodel, AssignProjectModel, MaterialTransaction, plantddl, STOrequestTR, assignpmmodel, POReportModel, stocktransfermateriakmodel, VendorMaster, roleMaster, userRoles, DashBoardFilters, DirectDelivery } from '../Models/WMS.Model';
 import { Text } from '@angular/compiler/src/i18n/i18n_ast';
 
 @Injectable({
@@ -1139,6 +1139,17 @@ export class wmsService {
   }
   updateUserRole(rolemaster: userRoles): Observable<any> {
     return this.http.post<any>(this.url + 'POData/updateUserRole', rolemaster, this.httpOptions);
+  }
+  getDDdetailsByPono(PoNo: string): Observable<any> {
+    var sendparam = encodeURIComponent(PoNo);
+    return this.http.get<any>(this.url + "POData/getDDdetailsByPono?PONO=" + sendparam, this.httpOptions);
+  }
+  updateDirectDelivery(DDdetails: DirectDelivery): Observable<any> {
+    return this.http.post<any>(this.url + 'POData/updateDirectDelivery', DDdetails, this.httpOptions);
+  }
+
+  deleteDirectDelivery(inwmasterid: string, deletedby: string): Observable<any> {
+    return this.http.get<any>(this.url + 'POData/deleteDirectDelivery?inwmasterid=' + inwmasterid + '&deletedby=' + deletedby, this.httpOptions);
   }
 }
 
