@@ -152,6 +152,8 @@ namespace WMS.Controllers
 							StagingModel model = new StagingModel();
 							model.pono = Conversion.toStr(row["Purch.Doc."]);
 							model.itemdeliverydate = Conversion.TodtTime(row["Item Delivery Date"]);
+							model.docdate = Conversion.TodtTime(row["Doc. Date"]);
+							model.crcy = Conversion.toStr(row["Crcy"]);
 							model.materialid = Conversion.toStr(row["Material"]);
 							model.poitemdescription = Conversion.toStr(row["Short Text"]);
 							model.poquantity = Conversion.Todecimaltype(row["PO Quantity"]);
@@ -201,13 +203,15 @@ namespace WMS.Controllers
 							//dbcmd.ExecuteNonQuery();
 							poitem = model.pono + "-" + model.itemno.ToString();
 							string poitemdescription = model.poitemdescription;
-							var insertquery = "INSERT INTO wms.STAG_PO_SAP(PurchDoc,pocreatedby,ItemDeliveryDate,Material,poitemdescription,POQuantity,dci,deliveredqty,Vendor,VendorName,ProjectDefinition,Item,NetPrice,datasource,createddate,DataloadErrors ,Error_Description,uploadcode,saleorderno,solineitemno,saleordertype,codetype,costcenter,assetno,projecttext,sloc,mscode,plant,linkageno,assetsubno)";
-							insertquery += " VALUES(@pono,@pocreatedby, @itemdeliverydate,@materialid,@poitemdescription,@poquantity,@dci,@deliveredqty,@vendorcode,@vendorname,@projectdefinition,@itemno,@NetPrice,'SAP',current_timestamp,@dataloaderror,@error_description,@uploadcode,@saleorderno,@solineitemno,@saleordertype,@codetype,@costcenter,@assetno,@projecttext,@sloc,@mscode,@plant,@linkageno,@assetsubno)";
+							var insertquery = "INSERT INTO wms.STAG_PO_SAP(PurchDoc,pocreatedby,ItemDeliveryDate,docdate,Crcy,Material,poitemdescription,POQuantity,dci,deliveredqty,Vendor,VendorName,ProjectDefinition,Item,NetPrice,datasource,createddate,DataloadErrors ,Error_Description,uploadcode,saleorderno,solineitemno,saleordertype,codetype,costcenter,assetno,projecttext,sloc,mscode,plant,linkageno,assetsubno)";
+							insertquery += " VALUES(@pono,@pocreatedby, @itemdeliverydate,@docdate,@Crcy,@materialid,@poitemdescription,@poquantity,@dci,@deliveredqty,@vendorcode,@vendorname,@projectdefinition,@itemno,@NetPrice,'SAP',current_timestamp,@dataloaderror,@error_description,@uploadcode,@saleorderno,@solineitemno,@saleordertype,@codetype,@costcenter,@assetno,@projecttext,@sloc,@mscode,@plant,@linkageno,@assetsubno)";
 							var results = DB.ExecuteScalar(insertquery, new
 							{
 								model.pono,
 								model.pocreatedby,
 								model.itemdeliverydate,
+								model.docdate,
+								model.crcy,
 								model.materialid,
 								poitemdescription,
 								model.poquantity,
@@ -1543,13 +1547,16 @@ namespace WMS.Controllers
 							string query1 = "Select Count(*) as count from wms.wms_polist where pono = '" + stag_data.purchdoc + "'";
 							int pocount = int.Parse(pgsql.ExecuteScalar(query1, null).ToString());
 							bool isclosed = false;
+							DateTime? podate = stag_data.docdate;
 							if (pocount == 0)
 							{
 								//insert wms_polist ##pono,deliverydate,vendorid,supliername
-								var insertquery = "INSERT INTO wms.wms_polist(pono, vendorcode,suppliername,sloc,type,isclosed,uploadcode)VALUES(@pono, @vendorcode,@suppliername,@sloc,'po',@isclosed,@uploadcode)";
+								var insertquery = "INSERT INTO wms.wms_polist(pono,podate,crcy, vendorcode,suppliername,sloc,type,isclosed,uploadcode)VALUES(@pono,@podate,@crcy, @vendorcode,@suppliername,@sloc,'po',@isclosed,@uploadcode)";
 								var results = pgsql.ExecuteScalar(insertquery, new
 								{
 									stag_data.pono,
+									podate,
+									stag_data.crcy,
 									stag_data.vendorcode,
 									stag_data.suppliername,
 									stag_data.sloc,
