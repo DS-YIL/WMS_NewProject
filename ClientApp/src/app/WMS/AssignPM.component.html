@@ -12,8 +12,8 @@
             <th class="ptable-cell" style="text-align:center;width:70px;">Sl.No.</th>
             <th class="ptable-cell" style="text-align:center;width:200px;">Employee ID</th>
             <th class="ptable-cell" style="text-align:center;">Employee Name</th>
-            <th class="ptable-cell" style="text-align:center;;width:150px;">Delegate Member</th>
-            <!--<th style="text-align: center;width: 150px;">Edit</th>-->
+            <th class="ptable-cell" style="text-align:center;width:150px;">Delegate Member</th>
+            <th style="text-align: center;width: 150px;">Edit</th>
             <th style="text-align: center;width: 150px;">Delete</th>
           </tr>
           <tr>
@@ -21,7 +21,7 @@
             <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'employeeid', 'startsWith')"></th>
             <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'employeename', 'contains')"></th>
             <th></th>
-            <!--<th></th>-->
+            <th></th>
             <th></th>
           </tr>
         </ng-template>
@@ -34,9 +34,9 @@
               <span *ngIf="rowData.isdelegatemember">Yes</span>
               <span *ngIf="!rowData.isdelegatemember">No</span>
             </td>
-            <!--<td class="ptable-cell" style="text-align:center;width:150px;">
+            <td class="ptable-cell" style="text-align:center;width:150px;">
               <button class="btn btn-primary btn-sm" (click)="EditUser(rowData)"><i class="fa fa-edit"></i></button>
-            </td>-->
+            </td>
             <td class="ptable-cell" style="text-align:center;width:150px;">
               <span *ngIf="rowData.isdeleted">Not in Use</span>
               <button class="btn btn-danger btn-sm" *ngIf="!rowData.isdeleted" (click)="deleteUserauth(rowData)"><i class="fa fa-trash"></i></button>

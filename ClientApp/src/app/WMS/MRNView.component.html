@@ -20,39 +20,30 @@
           <div class="col-lg-4 col-md-4 form-inline"></div>
         </div>
         <div *ngIf="selectedStatus =='Pending'" class="row m-2">
-          <div class="col-lg-5 col-md-4 form-inline">
+          <div class="col-lg-4 col-md-4 form-inline">
             <label class="labelheading">Accepted Receipts:</label>&nbsp;
             <p-autoComplete [(ngModel)]="selectedgrnno" appendTo="body" [suggestions]="filteredgrns" (onSelect)="SearchGRNNo()" (change)="SearchGRNNo()" placeholder="search by supplier/GRN No" [ngModelOptions]="{standalone: true}" [forceSelection]="false" (completeMethod)="filtergrn($event)" [size]="30"
                             [dropdown]="true">
             </p-autoComplete>
           </div>
-          <div class="col-lg-4 col-md-4 form-inline">
+          <div class="col-lg-3 col-md-3 form-inline">
             <label class="labelheading">Project :</label>&nbsp;
             <p-autoComplete [(ngModel)]="selectedponomodel" [disabled]="isalreadytransferred" field="text" appendTo="body" [suggestions]="filteredpono" placeholder="search by name/code" [ngModelOptions]="{standalone: true}" [forceSelection]="false" (completeMethod)="filterpos($event)" [size]="30"
                             [dropdown]="true">
             </p-autoComplete>
           </div>
-          <div class="col-lg-3 col-md-3 form-inline">
-            <label class="labelheading">Remarks :</label>&nbsp;
-            <textarea [(ngModel)]="mrnremarks" [disabled]="isalreadytransferred" style="width:60%;resize: none"></textarea>
-          </div>
 
-        </div>
-        <div class="row " *ngIf="selectedStatus =='Pending' && podetailsList.length>0" style="margin-top: 10px;margin-left: 0px !important;margin-right: 0px !important">
-          <!--<div class="col-md-2 col-lg-2  pt-2 labelheading" *ngIf="podetailsList.length>0">
-            PO No : <span class="labeltext">{{podetailsList[0].pono}}</span>
-          </div>-->
-          <div class="col-md-2 col-lg-2 pt-2 labelheading" style="font-weight:600;font-size:14px;color:darkblue;" *ngIf="podetailsList.length>0">
+          <div *ngIf="selectedStatus =='Pending' && podetailsList.length>0" class="col-md-2 col-lg-2 pt-2 labelheading" style="font-weight:600;font-size:14px;color:darkblue;">
             Invoice No : <span class="labeltext">{{podetailsList[0].invoiceno}}</span>
           </div>
-          <div class="col-md-3 col-lg-3 pt-2 labelheading" style="font-weight:600;font-size:14px;color:darkblue;" *ngIf="podetailsList.length>0">
+          <div *ngIf="selectedStatus =='Pending' && podetailsList.length>0" class="col-md-3 col-lg-3 pt-2 labelheading" style="font-weight:600;font-size:14px;color:darkblue;">
             WMS GRN No : <span class="labeltext">{{podetailsList[0].grnnumber}}</span>
           </div>
           <div class="col-md-3 col-lg-3 pt-2 labelheading" style="font-weight:600;font-size:14px;color:darkblue;" *ngIf="podetailsList.length>0">
             <span class="text-success" *ngIf="isalreadytransferred"><span class="text-primary">Status : &nbsp;</span> Transferred</span>
           </div>
-
         </div>
+
       </div>
       <div *ngIf="selectedStatus =='Pending'" class="card-body" style="overflow-y:scroll">
         <p-table [columns]="cols" [scrollable]="true" scrollHeight="60vh" [value]="podetailsList" dataKey="material">
@@ -65,8 +56,12 @@
               <!--<th style="text-align: center">Material Description</th>-->
               <th style="text-align: center">PO Item Description</th>
               <th style="width:150px;text-align:center">Accepted Qty</th>
-              <th style="width:200px;text-align:center" *ngIf="isalreadytransferred">Transferred By</th>
-              <th style="width:100px;text-align:center" *ngIf="isalreadytransferred">Transferred On</th>
+              <th style="width:150px;text-align:center">Put away Qty</th>
+              <th style="width:150px;text-align:center">Partially Shipped Qty</th>
+              <th style="width:150px;text-align:center">issued Qty</th>
+              <th style="width:150px;text-align:center">Remarks</th>
+              <!--<th style="width:200px;text-align:center" *ngIf="isalreadytransferred">Transferred By</th>
+              <th style="width:100px;text-align:center" *ngIf="isalreadytransferred">Transferred On</th>-->
             </tr>
 
           </ng-template>
@@ -85,8 +80,12 @@
               </td>
               <td class="ptable-cell" style="text-align:left;">{{rowData.poitemdescription}}</td>
               <td class="ptable-cell" style="text-align:right;width:150px;">{{rowData.confirmqty}}</td>
-              <td class="ptable-cell" style="text-align:center;width:200px;" *ngIf="isalreadytransferred">{{rowData.mrnby}}</td>
-              <td class="ptable-cell" style="text-align:center;width:100px;" *ngIf="isalreadytransferred">{{rowData.mrnon | date: 'dd/MM/yyyy'}}</td>
+              <td class="ptable-cell" style="text-align:right;width:150px;">{{rowData.putawayqty}}</td>
+              <td class="ptable-cell" style="text-align:right;width:150px;">{{rowData.partialqty}}</td>
+              <td class="ptable-cell" style="text-align:right;width:150px;"><input type="number" [(ngModel)]="rowData.issuedqty" (change)="reqQtyChange(rowData)" class="form-control"></td>
+              <td class="ptable-cell" style="text-align:right;width:150px;"><input type="text" [(ngModel)]="rowData.mrnremarks" class="form-control"></td>
+              <!--<td class="ptable-cell" style="text-align:center;width:200px;" *ngIf="isalreadytransferred">{{rowData.mrnby}}</td>
+              <td class="ptable-cell" style="text-align:center;width:100px;" *ngIf="isalreadytransferred">{{rowData.mrnon | date: 'dd/MM/yyyy'}}</td>-->
             </tr>
           </ng-template>
 
@@ -107,33 +106,69 @@
                 <th style="width:150px;text-align:center">GRN NO</th>
                 <th style="width:200px;text-align:center">Supplier</th>
                 <th style="width:100px;text-align:center">Invoice No</th>
-                <th style="width:200px;text-align:center">Transferred By</th>
-                <th style="width:100px;text-align:center">Transferred On</th>
-                <th *ngIf="selectedStatus=='Approved'" style="text-align:center;width:100px">Print</th>
+                <!--<th style="width:200px;text-align:center">Transferred By</th>
+        <th style="width:100px;text-align:center">Transferred On</th>-->
+                <th style="text-align:center;width:100px">Print</th>
               </tr>
               <tr>
                 <th></th>
                 <th><input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'text', 'contains')"></th>
                 <th><input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'supplier', 'contains')"></th>
                 <th><input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'invoiceno', 'contains')"></th>
-                <th><input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'mrnby', 'contains')"></th>
-                <th></th>
+                <!--<th><input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'mrnby', 'contains')"></th>-->
                 <th></th>
               </tr>
             </ng-template>
             <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex" let-expanded="expanded" let-columns="columns">
-              <tr class="ui-widget-header">
+              <tr class="ui-widget-header" [ngClass]="{'data-selected': selectedRow === rowIndex}">
                 <td class="ptable-cell" style="text-align:center;width:70px">{{rowIndex + 1}}</td>
-                <td class="ptable-cell" style="text-align:center;width:150px;">{{rowData.text}}</td>
+                <td class="ptable-cell" style="text-align:center;width:150px;"><button class="btn btn-link" (click)="showdetails(rowData,rowIndex)">{{rowData.text}}</button></td>
                 <td class="ptable-cell" style="text-align:center;width:200px;">{{rowData.supplier}}</td>
                 <td class="ptable-cell" style="text-align:center;width:100px;">{{rowData.invoiceno}}</td>
-                <td class="ptable-cell" style="text-align:center;width:200px;">{{rowData.mrnby}}</td>
-                <td class="ptable-cell" style="text-align:center;width:100px;">{{rowData.mrnon | date: 'dd/MM/yyyy'}}</td>
                 <td class="ptable-cell" style="text-align:center;width:100px;">
                   <input class="btn btn-primary btn-sm" (click)="PrintMRN(rowData)" type="button" value="Print">
                 </td>
               </tr>
+              <tr *ngIf="rowData.showdetail">
+                <td [attr.colspan]="5" style="text-align:center;">
+                  <label class="labeltext">MRN Material Details</label>
+                </td>
+              </tr>
+              <tr *ngIf="rowData.showdetail">
+                <td [attr.colspan]="5" style="text-align:center;">
+                  <p-table [value]="rowData.materiallistarray" [style]="{'width':'100%','overflow':'auto!important'}"
+                           [responsive]="true"
+                           [resizableColumns]="true"
+                           columnResizeMode="expand"
+                           appendTo="body">
+                    <ng-template pTemplate="header">
+              <tr class="mprltbldata">
+                <th class="ptable-cell" style="text-align: center;width: 70px;background-color: #9ba5af !important">Sl.No.</th>
+                <th class="ptable-cell" style="text-align: center; width: 200px;background-color: #9ba5af !important">PO No</th>
+                <th class="ptable-cell" style="text-align: center; width: 200px;background-color: #9ba5af !important">Project Code</th>
+                <th class="ptable-cell" style="text-align: center;background-color: #9ba5af !important">Material</th>
+                <th class="ptable-cell" style="text-align: center;background-color: #9ba5af !important">Issued Qty</th>
+                <th class="ptable-cell" style="text-align: center;background-color: #9ba5af !important">Transferred On</th>
+                <th class="ptable-cell" style="text-align: center;background-color: #9ba5af !important">Transferred By</th>
+                <th class="ptable-cell" style="text-align: center;background-color: #9ba5af !important">Transferred Remarks</th>
+              </tr>
             </ng-template>
+            <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex" let-rindex=0>
+              <tr>
+                <td class="ptable-cell" style="text-align: center; width: 70px;"> {{ri+1}} </td>
+                <td class="ptable-cell" style="text-align: center;width: 200px;"> {{rowData.pono}} </td>
+                <td class="ptable-cell" style="text-align: center;width: 200px;"> {{rowData.projectcode}} </td>
+                <td class="ptable-cell" style="text-align: left;"> {{rowData.materialid}} </td>
+                <td class="ptable-cell" style="text-align:right"> {{rowData.issuedqty}} </td>
+                <td class="ptable-cell" style="text-align:center">{{rowData.mrnon | date :  constants.dateFormat}}</td>
+                <td class="ptable-cell" style="text-align:center">{{rowData.mrnby}}</td>
+                <td class="ptable-cell" style="text-align:center">{{rowData.mrnremarks}}</td>
+              </tr>
+            </ng-template>
+          </p-table>
+          </td>
+          </tr>
+          </ng-template>
           </p-table>
         </div>
       </div>

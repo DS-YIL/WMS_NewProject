@@ -241,18 +241,15 @@ max(req.ackremarks)as ackremarks,max(req.reserveid)as reserveid,max(req.projectc
   left join  wms.wms_materialissue issue on issue.requestforissueid=req.requestforissueid</value>
   </data>
   <data name="queryforitemdetails" xml:space="preserve">
-    <value>select inwa.inwardid,inwa.lineitemno,inwa.inwardid as inwardidview,bin.binnumber, rack.racknumber, loc.locatorname,mat.rackid,mat.binid,inwa.poitemdescription,inwa.unitprice,
- mat.storeid,stocks.itemlocation,stocks.availableqty,stocks.itemid,inw.grnnumber,inwa.pono,inwa.pono as securitypo,inw.invoiceno,inw.receiveddate,
- inw.isdirecttransferred,inw.projectcode,emp.name as mrnby,inw.mrnon,inw.mrnremarks,inwa.saleorderno,inwa.solineitemno,inwa.projectid,
- inwa.materialqty,inwa.materialid as material, mat.materialdescription,mat.stocktype,inwa.receivedqty,inwa.confirmqty,inwa.returnqty 
- from wms.wms_securityinward inw
+    <value>select inwa.inwardid,inwa.lineitemno,inwa.inwardid as inwardidview,bin.binnumber, rack.racknumber, loc.locatorname,mat.rackid,mat.binid,inwa.poitemdescription,inwa.unitprice,mat.storeid,stocks.itemlocation,stocks.availableqty,stocks.itemid,inw.grnnumber,inwa.pono,inwa.pono as securitypo,inw.invoiceno,inw.receiveddate,inw.projectcode,inwa.saleorderno,inwa.solineitemno,inwa.projectid,inwa.materialqty,inwa.materialid as material, mat.materialdescription,mat.stocktype,inwa.receivedqty,inwa.confirmqty,inwa.returnqty, (select sum(totalquantity ) from wms.wms_stock ws where ws.inwardid =inwa.inwardid ) as putawayqty, (select sum(issuedqty ) from wms.mrnmaterials mrn where mrn.inwardid =inwa.inwardid ) as partialqty, 0 as issuedqty
+ ,case when inwa.confirmqty=(select  COALESCE(SUM(mrn.issuedqty ),0)+ COALESCE(SUM(ws.totalquantity ),0)   as totalissued from wms.mrnmaterials mrn left join wms.wms_stock  ws on ws.inwardid =mrn.inwardid  where mrn.inwardid =inwa.inwardid ) 
+THEN true  else false  END AS isdirecttransferred from wms.wms_securityinward inw
 left join wms.wms_storeinward inwa on inw.inwmasterid=inwa.inwmasterid
 left join wms.wms_stock stocks on  stocks.inwardid=inwa.inwardid
  left join wms."MaterialMasterYGS" mat on inwa.materialid=mat.material
  left join wms.wms_rd_locator loc on loc.locatorid=mat.storeid
  left join wms.wms_rd_rack rack on rack.rackid=mat.rackid
- left join wms.wms_rd_bin bin on bin.binid=mat.binid
- left outer join wms.employee emp on emp.employeeno=inw.mrnby 
+ left join wms.wms_rd_bin bin on bin.binid=mat.binid 
  where inw.grnnumber='#grnnumber' and inwa.confirmqty &gt; 0</value>
   </data>
   <data name="statusupdatebySecurity" xml:space="preserve">
@@ -777,12 +774,14 @@ where (stinw.confirmqty is null or stinw.confirmqty = 0) and stinw.receivedqty &
   </data>
   <data name="getgrnlistdataforputaway" xml:space="preserve">
     <value>select stinw.inwardid as value,sinw.grnnumber as text,
-sinw.suppliername as supplier,sinw.isdirectdelivered,sinw.invoiceno ,emp.name as mrnby,sinw.mrnon 
+sinw.suppliername as supplier,sinw.invoiceno ,stinw.confirmqty ,(select  COALESCE(SUM(mrn.issuedqty ),0)+ COALESCE(SUM(ws.totalquantity ),0)   as totalissued from wms.mrnmaterials mrn left join wms.wms_stock  ws on ws.inwardid =mrn.inwardid  where mrn.inwardid =stinw.inwardid )
+,case when stinw.confirmqty=(select  COALESCE(SUM(mrn.issuedqty ),0)+ COALESCE(SUM(ws.totalquantity ),0)   as totalissued from wms.mrnmaterials mrn left join wms.wms_stock  ws on ws.inwardid =mrn.inwardid  where mrn.inwardid =stinw.inwardid ) 
+THEN true  else false  END AS isdirecttransferred
 from wms.wms_storeinward stinw 
 left outer join wms.wms_securityinward sinw on stinw.inwmasterid = sinw.inwmasterid 
- left outer join wms.employee emp on emp.employeeno=sinw.mrnby
-where stinw.returnedby is not null and sinw.mrnon is null and stinw.confirmqty &gt; 0
-and stinw.inwardid not in (select distinct inwardid from wms.wms_stock where inwardid is not null order by inwardid desc)</value>
+where stinw.returnedby is not null and stinw.confirmqty &gt; 0
+and stinw.inwardid not in (select distinct inwardid from wms.wms_stock 
+where inwardid is not null order by inwardid desc)</value>
   </data>
   <data name="getnonreturnablegatepassdata" xml:space="preserve">
     <value>(select Max(matis.requestid) as gatepassmaterialid,Max(matis.itemid) itemid,Max(matis.itemissueddate) as itemissueddate,Max(matgt.poitemdescription) as materialdescription,Max(emp.name) as name,
@@ -961,7 +960,8 @@ from wms.wms_project  where projectmanager is not null and (projectmanager = '#m
   <data name="getitemsfornotifypage" xml:space="preserve">
     <value>select inwa.inwardid,bin.binnumber, rack.racknumber, loc.locatorname,mat.rackid,mat.binid,
  mat.storeid,mat.stocktype,stocks.itemlocation,stocks.availableqty,stocks.itemid,inw.grnnumber,inw.pono,inw.invoiceno,inw.receiveddate,
- inw.isdirecttransferred,inw.projectcode,emp.name as mrnby,inw.mrnon,inw.mrnremarks,
+ case when inwa.confirmqty=(select  COALESCE(SUM(mrn.issuedqty ),0)+ COALESCE(SUM(ws.totalquantity ),0)   as totalissued from wms.mrnmaterials mrn left join wms.wms_stock  ws on ws.inwardid =mrn.inwardid  where mrn.inwardid =inwa.inwardid ) 
+THEN true  else false  END AS isdirecttransferred,inw.projectcode,emp.name as mrnby,inw.mrnon,inw.mrnremarks,
  inw.notifyremarks,inw.notifiedby,inw.notifiedtofinance,inw.notifiedon,inw.putawayfilename,
  inwa.materialqty,inwa.materialid as material,mat.materialdescription,inwa.receivedqty,inwa.confirmqty,inwa.returnqty 
  from wms.wms_securityinward inw
@@ -2410,30 +2410,6 @@ group by materialid,poitemdescription</value>
   <data name="getPlantstockissuedlocations" xml:space="preserve">
     <value>select iss.requestid, sum(iss.issuedqty) as issuedqty ,max(sk.materialid) as materialid,sk.itemlocation,
 (select sum(sk1.availableqty) from wms.wms_stock sk1 where sk1.materialid = max(sk.materialid) and lower(sK1.poitemdescription)  = lower(max(sk.poitemdescription))  and sk1.itemlocation = sk.itemlocation and sk1.stcktype='Plant Stock') as availableqty
-,sk.createddate::DATE as createddate,
-max(sk.poitemdescription) as materialdescription
-from wms.wms_materialissue iss 
-left outer join wms.wms_stock sk on iss.itemid =sk.itemid
-left join wms."MaterialMasterYGS" ygs on ygs.material=sk.materialid 
-where iss.requestid = '#requestforissueid' and iss.requesttype = '#type'
-group by iss.requestid,sk.itemlocation,sk.createddate</value>
-  </data>
-  <data name="getMaterialdetailsforplosstock" xml:space="preserve">
-    <value>select materialid,poitemdescription,max(unitprice::decimal(19,5)) as unitprice,sum(availableqty::decimal(19,5)) as availableqty from wms.wms_stock ws where materialid = '#materialid' and Lower(poitemdescription) = Lower('#description')
-and receivedtype = 'Material Return'
-group by materialid,poitemdescription</value>
-  </data>
-  <data name="getitemlocationsforplosstock" xml:space="preserve">
-    <value>select sum(sk.availableqty)as availableqty,sk.saleorderno,Max(sk.materialid) as materialid,sk.itemlocation,Max(sk.poitemdescription) as materialdescription,sk.createddate::DATE,bool_or(sk.initialstock) as initialstock 
-from wms.wms_stock sk 
-left outer join wms."MaterialMasterYGS" ygs on ygs.material=sk.materialid 
-where sk.materialid='#materialid' and lower(sk.poitemdescription)  = lower('#desc') and sk.receivedtype = 'Material Return'
-and sk.availableqty&gt;0 
-group by sk.itemlocation,sk.saleorderno,sk.createddate::DATE order by sk.createddate::DATE Desc</value>
-  </data>
-  <data name="getPlosstockissuedlocations" xml:space="preserve">
-    <value>select iss.requestid, sum(iss.issuedqty) as issuedqty ,max(sk.materialid) as materialid,sk.itemlocation,
-(select sum(sk1.availableqty) from wms.wms_stock sk1 where sk1.materialid = max(sk.materialid) and lower(sK1.poitemdescription)  = lower(max(sk.poitemdescription))  and sk1.itemlocation = sk.itemlocation and sk1.receivedtype ='Material Return') as availableqty
 ,sk.createddate::DATE as createddate,
 max(sk.poitemdescription) as materialdescription
 from wms.wms_materialissue iss 

@@ -118,6 +118,7 @@ import { StockTransferOrderComponent } from './WMS/StockTransferOrder.component'
 import { SubContractTransferOrderComponent } from './WMS/SubContractTransferOrder.component';
 import { STOApprovalComponent } from './WMS/STOApproval.component';
 import { SubcontractApprovalComponent } from './WMS/SubcontractApproval.component';
+import { DirectDeliveryComponent } from './WMS/DirectDelivery.component';
 
 //admin
 import { MaterilMasterComponent } from './WMS/Admin/Materialmaster.component';
@@ -256,6 +257,7 @@ import { DataSharingService } from './datasharing.service';
     MaterialRequestApprovalComponent,
     STOApprovalComponent,
     SubcontractApprovalComponent,
+    DirectDeliveryComponent,
     AssignProjectManagerComponent,
     POReportComponent,
     AnnexureReportComponent,

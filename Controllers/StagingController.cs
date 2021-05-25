@@ -55,349 +55,189 @@ namespace WMS.Controllers
 		[Route("uploadPoDataExcel")]
 		public IActionResult uploadPoDataExcel()
 		{
+			List<System.IO.FileInfo> files = null;
+			string serverPath = "";
+			//Getting files from server
 			try
 			{
-				string serverPath = "";
-				using (NpgsqlConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
+				if (config.EmailType.ToString().ToLower().Trim() == "test")
 				{
-					serverPath = config.FilePath;
-					var filePath = serverPath + "Yil_Po_Daily_report_" + DateTime.Now.ToString("dd-MM-yyyy").Replace("-", "_") + ".xlsx";
-					//Added lines - Gayathri
-					//var filePath1 = serverPath + "ZGSDR00006_"+ DateTime.Now.ToString("dd-MM-yyyy").Replace("-", "_") + ".xlsx";
-					//var filePath2 = serverPath +"ZGMMR02023_" + DateTime.Now.ToString("dd-MM-yyyy").Replace("-", "_") + ".xlsx"; 
-					//End - Gayathri
-					DB.Open();
-					var filePathstr = filePath;
-					string[] filearr = filePathstr.Split("\\");
-					string nameoffile = filearr[filearr.Length - 1];
-					DataTable dtexcel = new DataTable();
-					//Added lines - Gayathri
-					//DataTable dtexcel1 = new DataTable();
-					//DataTable dtexcel2 = new DataTable();
-					//End - Gayathri
-					string poitem = "";
-					System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
-					using (var stream1 = System.IO.File.Open(filePath, FileMode.Open, FileAccess.Read))
-					{
-						using (var reader = ExcelReaderFactory.CreateReader(stream1))
-						{
+					serverPath = @"\\ZAWMS-001\WMS_StagingFiles\Daily_PO_Files\";
+				}
+				else
+				{
+					serverPath = @"\\ZAWMS-003\WMS_StagingFiles\Daily_PO_Files\";
+				}
+				using (new NetworkConnection(serverPath, new NetworkCredential(@"ECH_Admin", "Jan@2019")))
+				{
+					var directory = new DirectoryInfo(serverPath);
+					DateTime from_date = DateTime.Now.AddDays(-7);
+					DateTime to_date = DateTime.Now;
+					files = directory.GetFiles()
+					   .Where(file => file.LastWriteTime >= from_date && file.LastWriteTime <= to_date).ToList();
 
-							var result = reader.AsDataSet(new ExcelDataSetConfiguration()
+					string uploadguid = Guid.NewGuid().ToString();
+					using (NpgsqlConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
+					{
+						foreach (var file in files)
+						{
+							string filename = Path.GetFileName(file.Name);
+							if (filename.Trim().StartsWith("Yil_Po_Daily_report"))
 							{
-								ConfigureDataTable = (_) => new ExcelDataTableConfiguration()
+								string storeQuery = "select filename from wms.auditlog a where Lower(filename) = Lower('" + filename + "') limit 1";
+								var fileexists = DB.ExecuteScalar(storeQuery, null);
+
+								if (fileexists == null)
 								{
-									UseHeaderRow = true
+									string filePath = serverPath + filename;
+									DataTable dtexcel = new DataTable();
+									System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+									using (var stream1 = System.IO.File.Open(filePath, FileMode.Open, FileAccess.Read))
+									{
+										using (var reader = ExcelReaderFactory.CreateReader(stream1))
+										{
+
+											var result = reader.AsDataSet(new ExcelDataSetConfiguration()
+											{
+												ConfigureDataTable = (_) => new ExcelDataTableConfiguration()
+												{
+													UseHeaderRow = true
+												}
+											});
+
+											dtexcel = result.Tables[0];
+
+										}
+									}
+
+
+
+									string uploadcode = Guid.NewGuid().ToString();
+									int i = 0;
+									foreach (DataRow row in dtexcel.Rows)
+									{
+										string poitem = "";
+										try
+										{
+											StagingModel model = new StagingModel();
+											model.pono = Conversion.toStr(row["Purch.Doc."]);
+											model.itemdeliverydate = Conversion.TodtTime(row["Item Delivery Date"]);
+											model.docdate = Conversion.TodtTime(row["Doc. Date"]);
+											model.crcy = Conversion.toStr(row["Crcy"]);
+											model.materialid = Conversion.toStr(row["Material"]);
+											model.poitemdescription = Conversion.toStr(row["Short Text"]);
+											model.poquantity = Conversion.Todecimaltype(row["PO Quantity"]);
+											model.dci = Conversion.toStr(row["DCI"]);//if blank it is open po
+											model.deliveredqty = Conversion.Todecimaltype(row["Delivered Qty"]);//already delivered qty
+											model.vendorcode = Conversion.toStr(row["Vendor"]);
+											model.vendorname = Conversion.toStr(row["Vendor Name"]);
+											model.projectdefinition = Conversion.toStr(row["Project Definition"]);
+											model.itemno = Conversion.toInt(row["Item"]);
+											model.NetPrice = Conversion.Todecimaltype(row["Net Price(Inhouse)"]);//total value
+											model.NetValue = Conversion.Todecimaltype(row["Net Value"]);
+											model.saleorderno = Conversion.toStr(row["Sales Order Number"]);
+											model.solineitemno = Conversion.toStr(row["Sales Order Item Number"]);
+											model.saleordertype = Conversion.toStr(row["Type"]);
+											model.codetype = Conversion.toStr(row["A"]);
+											model.costcenter = Conversion.toStr(row["Cost Center1"]);
+											model.assetno = Conversion.toStr(row["Asset Number"]);
+											model.projecttext = Conversion.toStr(row["Description"]);
+											model.sloc = Conversion.toStr(row["SLoc"]);
+											model.pocreatedby = Conversion.toStr(row["PO created by (User Id)"]);
+											model.mscode = Conversion.toStr(row["MS Code"]);
+											model.plant = Conversion.toStr(row["Plnt"]);
+											model.linkageno = Conversion.toStr(row["Linkage Number"]);
+											model.assetsubno = Conversion.toStr(row["Asset Subnumber"]);
+											model.ordernumber = Conversion.toStr(row["Order Number"]);
+											model.wbselement = Conversion.toStr(row["WBS Element"]);
+											model.exchangerate = Conversion.Todecimaltype(row["Exchange Rate"]);
+											model.pgr = Conversion.toStr(row["PGr"]);
+
+											string Error_Description = "";
+											bool dataloaderror = false;
+											if (string.IsNullOrEmpty(model.pono.Replace('.', '#')))
+												Error_Description += "There is NO PONO";
+											if (string.IsNullOrEmpty(model.materialid) && string.IsNullOrEmpty(model.poitemdescription))
+												Error_Description += ", No material";
+											if (model.poquantity < 1)
+												Error_Description += ", No PO Quantity";
+											if (!string.IsNullOrEmpty(Error_Description))
+											{
+												dataloaderror = true;
+												model.dataloaderror = true;
+												model.error_description = Error_Description;
+											}
+											if (string.IsNullOrEmpty(model.materialid))
+												model.materialid = "NewItem";
+											poitem = model.pono + "-" + model.itemno.ToString();
+											string poitemdescription = model.poitemdescription;
+											var insertquery = "INSERT INTO wms.STAG_PO_SAP(PurchDoc,pocreatedby,ItemDeliveryDate,docdate,Crcy,Material,poitemdescription,POQuantity,dci,deliveredqty,Vendor,VendorName,ProjectDefinition,Item,NetPrice,NetValue,datasource,createddate,DataloadErrors ,Error_Description,uploadcode,saleorderno,solineitemno,saleordertype,codetype,costcenter,assetno,projecttext,sloc,mscode,plant,linkageno,assetsubno,ordernumber,wbselement,exchangerate,pgr)";
+											insertquery += " VALUES(@pono,@pocreatedby, @itemdeliverydate,@docdate,@Crcy,@materialid,@poitemdescription,@poquantity,@dci,@deliveredqty,@vendorcode,@vendorname,@projectdefinition,@itemno,@NetPrice,@NetValue,'SAP',current_timestamp,@dataloaderror,@error_description,@uploadcode,@saleorderno,@solineitemno,@saleordertype,@codetype,@costcenter,@assetno,@projecttext,@sloc,@mscode,@plant,@linkageno,@assetsubno,@ordernumber,@wbselement,@exchangerate,@pgr)";
+											var results = DB.ExecuteScalar(insertquery, new
+											{
+												model.pono,
+												model.pocreatedby,
+												model.itemdeliverydate,
+												model.docdate,
+												model.crcy,
+												model.materialid,
+												poitemdescription,
+												model.poquantity,
+												model.dci,
+												model.deliveredqty,
+												model.vendorcode,
+												model.vendorname,
+												model.projectdefinition,
+												model.itemno,
+												model.NetPrice,
+												model.NetValue,
+												dataloaderror,
+												model.error_description,
+												uploadcode,
+												model.saleorderno,
+												model.solineitemno,
+												model.saleordertype,
+												model.codetype,
+												model.costcenter,
+												model.assetno,
+												model.projecttext,
+												model.sloc,
+												model.mscode,
+												model.plant,
+												model.assetsubno,
+												model.linkageno,
+												model.ordernumber,
+												model.wbselement,
+												model.exchangerate,
+												model.pgr
+											});
+
+
+
+										}
+										catch (Exception e)
+										{
+											var res = e;
+											log.ErrorMessage("StagingController", "uploadPoDataExcel", e.StackTrace.ToString(), "PO:" + poitem + "error:" + e.Message.ToString(), url);
+											continue;
+										}
+									}
+
+									DB.Close();
+									AuditLog auditlog = new AuditLog();
+									auditlog.filename = filename;
+									auditlog.filelocation = filePath;
+									auditlog.uploadedon = DateTime.Now;
+									auditlog.uploadedto = "STAG_PO_SAP";
+									auditlog.modulename = "uploadPoData";
+									auditlog.uploadcode = uploadcode;
+									loadAuditLog(auditlog);
+									loadPOData(uploadcode);
+
 								}
-							});
-
-							dtexcel = result.Tables[0];
-
-						}
-					}
-
-					////Added Lines -Gayathri
-					//if (System.IO.File.Exists(filePath1))
-					//               {
-					//	using (var stream2 = System.IO.File.Open(filePath1, FileMode.Open, FileAccess.Read))
-					//	{
-					//		using (var reader = ExcelReaderFactory.CreateReader(stream2))
-					//		{
-
-					//			// 2. Use the AsDataSet extension method
-					//			var result = reader.AsDataSet(new ExcelDataSetConfiguration()
-					//			{
-					//				ConfigureDataTable = (_) => new ExcelDataTableConfiguration()
-					//				{
-					//					UseHeaderRow = true
-					//				}
-					//			});
-
-					//			// The result of each spreadsheet is in result.Tables
-					//			dtexcel1 = result.Tables[0];
-
-					//		}
-					//	}
-					//}
-
-					//if (System.IO.File.Exists(filePath2))
-					//{
-					//	using (var stream3 = System.IO.File.Open(filePath2, FileMode.Open, FileAccess.Read))
-					//	{
-					//		using (var reader = ExcelReaderFactory.CreateReader(stream3))
-					//		{
-
-					//			var result = reader.AsDataSet(new ExcelDataSetConfiguration()
-					//			{
-					//				ConfigureDataTable = (_) => new ExcelDataTableConfiguration()
-					//				{
-					//					UseHeaderRow = true
-					//				}
-					//			});
-
-					//			// The result of each spreadsheet is in result.Tables
-					//			dtexcel2 = result.Tables[0];
-
-					//		}
-					//	}
-					//}
-
-					string uploadcode = Guid.NewGuid().ToString();
-					int i = 0;
-					foreach (DataRow row in dtexcel.Rows)
-					{
-
-
-						try
-						{
-							StagingModel model = new StagingModel();
-							model.pono = Conversion.toStr(row["Purch.Doc."]);
-							model.itemdeliverydate = Conversion.TodtTime(row["Item Delivery Date"]);
-							model.materialid = Conversion.toStr(row["Material"]);
-							model.poitemdescription = Conversion.toStr(row["Short Text"]);
-							model.poquantity = Conversion.Todecimaltype(row["PO Quantity"]);
-							model.dci = Conversion.toStr(row["DCI"]);//if blank it is open po
-							model.deliveredqty = Conversion.Todecimaltype(row["Delivered Qty"]);//already delivered qty
-							model.vendorcode = Conversion.toStr(row["Vendor"]);
-							model.vendorname = Conversion.toStr(row["Vendor Name"]);
-							model.projectdefinition = Conversion.toStr(row["Project Definition"]);
-							model.itemno = Conversion.toInt(row["Item"]);
-							model.NetPrice = Conversion.Todecimaltype(row["Net Price(Inhouse)"]);//total value
-							model.saleorderno = Conversion.toStr(row["Sales Order Number"]);
-							model.solineitemno = Conversion.toStr(row["Sales Order Item Number"]);
-							model.saleordertype = Conversion.toStr(row["Type"]);
-							model.codetype = Conversion.toStr(row["A"]);
-							model.costcenter = Conversion.toStr(row["Cost Center1"]);
-							model.assetno = Conversion.toStr(row["Asset Number"]);
-							model.projecttext = Conversion.toStr(row["Description"]);
-							model.sloc = Conversion.toStr(row["SLoc"]);
-							model.pocreatedby = Convert.ToString(row["PO created by (User Id)"]);
-							model.mscode = Convert.ToString(row["MS Code"]);
-							model.plant = Convert.ToString(row["Plnt"]);
-							model.linkageno = Convert.ToString(row["Linkage Number"]);
-							model.assetsubno = Convert.ToString(row["Asset Subnumber"]);
-							model.orderno = Convert.ToString(row["Order Number"]);
-
-							string Error_Description = "";
-							bool dataloaderror = false;
-							if (string.IsNullOrEmpty(model.pono.Replace('.', '#')))
-								Error_Description += "There is NO PONO";
-							if (string.IsNullOrEmpty(model.materialid))
-								Error_Description += ", No material";
-							if (model.poquantity < 1)
-								Error_Description += ", No PO Quantity";
-							if (!string.IsNullOrEmpty(Error_Description))
-							{
-								dataloaderror = true;
-								model.dataloaderror = true;
-								model.error_description = Error_Description;
 							}
-
-
-							//var query = "INSERT INTO wms.STAG_PO_SAP (PurchDoc,ItemDeliveryDate,Material,POQuantity,Vendor,VendorName,ProjectDefinition,Item,NetPrice,datasource,createddate,DataloadErrors ,Error_Description)VALUES" +
-							//    "('" + row["po_no"].ToString() + "'," + "'" + (Convert.ToDateTime(row["item_delivery_date"])).ToString("yyyy-MM-dd") + "','" + row["ms_cd"].ToString() + "','" + row["po_quantity"].ToString() + "','" +
-							//    row["vendor_cd"].ToString() + "','" + row["vendor_n"].ToString() + "'," + "'" + row["project_definition"].ToString() + "','" + row["po_item_no"].ToString() + "','" + row["po_item_amt"].ToString() + "','SAP','" + DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss") + "'," + dataloaderror + ", '" + Error_Description + "')";
-							//NpgsqlCommand dbcmd = DB.CreateCommand();
-							//dbcmd.CommandText = query;
-							//dbcmd.ExecuteNonQuery();
-							poitem = model.pono + "-" + model.itemno.ToString();
-							string poitemdescription = model.poitemdescription;
-							var insertquery = "INSERT INTO wms.STAG_PO_SAP(PurchDoc,pocreatedby,ItemDeliveryDate,Material,poitemdescription,POQuantity,dci,deliveredqty,Vendor,VendorName,ProjectDefinition,Item,NetPrice,datasource,createddate,DataloadErrors ,Error_Description,uploadcode,saleorderno,solineitemno,saleordertype,codetype,costcenter,assetno,projecttext,sloc,mscode,plant,linkageno,assetsubno)";
-							insertquery += " VALUES(@pono,@pocreatedby, @itemdeliverydate,@materialid,@poitemdescription,@poquantity,@dci,@deliveredqty,@vendorcode,@vendorname,@projectdefinition,@itemno,@NetPrice,'SAP',current_timestamp,@dataloaderror,@error_description,@uploadcode,@saleorderno,@solineitemno,@saleordertype,@codetype,@costcenter,@assetno,@projecttext,@sloc,@mscode,@plant,@linkageno,@assetsubno)";
-							var results = DB.ExecuteScalar(insertquery, new
-							{
-								model.pono,
-								model.pocreatedby,
-								model.itemdeliverydate,
-								model.materialid,
-								poitemdescription,
-								model.poquantity,
-								model.dci,
-								model.deliveredqty,
-								model.vendorcode,
-								model.vendorname,
-								model.projectdefinition,
-								model.itemno,
-								model.NetPrice,
-								dataloaderror,
-								model.error_description,
-								uploadcode,
-								model.saleorderno,
-								model.solineitemno,
-								model.saleordertype,
-								model.codetype,
-								model.costcenter,
-								model.assetno,
-								model.projecttext,
-								model.sloc,
-								model.mscode,
-								model.plant,
-								model.assetsubno,
-								model.linkageno,
-								model.orderno
-							});
-
-
-
-						}
-						catch (Exception e)
-						{
-							var res = e;
-							log.ErrorMessage("StagingController", "uploadPoDataExcel", e.StackTrace.ToString(), "PO:" + poitem + "error:" + e.Message.ToString(), url);
-							continue;
 						}
 					}
-
-					DB.Close();
-					AuditLog auditlog = new AuditLog();
-					auditlog.filename = nameoffile;
-					auditlog.filelocation = filePath;
-					auditlog.uploadedon = DateTime.Now;
-					auditlog.uploadedto = "STAG_PO_SAP";
-					auditlog.modulename = "uploadPoData";
-					auditlog.uploadcode = uploadcode;
-
-
-					//Added Gayathri
-					//string upcode = Guid.NewGuid().ToString();
-					//int J = 0;
-					//if(dtexcel2.Rows.Count>0)
-					//               {
-					//	foreach (DataRow row in dtexcel2.Rows)
-					//	{
-
-					//		string Error_Description = "";
-					//		bool dataloaderror = false;
-					//		MateriallabelModel slimports = new MateriallabelModel();
-					//		slimports.saleorderno = Conversion.toStr(row["Sales Document"]);
-					//		slimports.solineitemno = Conversion.toStr(row["Sales Document Item"]);
-
-					//	slimports.material = Conversion.toStr(row["Material Number"]);
-					//	slimports.gr = Conversion.toStr(row["Storage Location"]);
-					//	slimports.plant = Conversion.toStr(row["Plant"]);
-					//	slimports.serialno = Conversion.toStr(row["Serial Number"]);
-					//	slimports.uploadcode = uploadcode;
-					//	DateTime uploadedon = DateTime.Now;
-					//	if (string.IsNullOrEmpty(slimports.saleorderno))
-					//		Error_Description += " No saleorder";
-
-					//	if (!string.IsNullOrEmpty(Error_Description))
-					//	{
-					//		dataloaderror = true;
-					//		slimports.error_description = Error_Description;
-					//		slimports.isloaderror = dataloaderror;
-
-					//	}
-
-					//	string soQuery = "Select saleorderno from wms.st_slno_imports where saleorderno = '" + slimports.saleorderno + "' and solineitemno = '" + slimports.solineitemno + "' and serialno = '" + slimports.serialno + "' ";
-					//	var so = DB.ExecuteScalar(soQuery, null);
-					//	if (so == null)
-					//	{
-					//		string stquery = WMSResource.insertstserialimport;
-					//		var rslt = DB.Execute(stquery, new
-					//		{
-					//			slimports.saleorderno,
-					//			slimports.solineitemno,
-					//			slimports.material,
-					//			slimports.gr,
-					//			slimports.plant,
-					//			slimports.serialno,
-					//			slimports.uploadcode,
-					//			uploadedon,
-					//			slimports.error_description,
-					//			slimports.isloaderror
-					//		});
-
-					//		}
-
-
-
-
-					//	}
-					//}
-
-					//int K = 0;
-					//if(dtexcel1.Rows.Count>0)
-					//               {
-					//	foreach (DataRow row in dtexcel1.Rows)
-					//	{
-
-					//	string Error_Description = "";
-					//	bool dataloaderror = false;
-					//	MateriallabelModel model = new MateriallabelModel();
-					//	model.saleorderno = Conversion.toStr(row["Sales Document No."]);
-					//	model.solineitemno = Conversion.toStr(row["Sales Order Item No."]);
-					//	model.saleordertype = Conversion.toStr(row["Sales Document Type"]);
-					//	model.customername = Conversion.toStr(row["Sold-to party"]) + " " + Conversion.toStr(row["Name: Sold-to party"]);
-					//	model.shipto = Conversion.toStr(row["Ship-to party"]) + " " + Conversion.toStr(row["Name: Ship-to party"]);
-					//	model.shippingpoint = Conversion.toStr(row["Shipping Point"]) + " " + Conversion.toStr(row["Text: Shipping Point"]);
-					//	model.loadingdate = Conversion.TodtTime(row["Planned Billing Date"]);
-					//	model.projectiddef = Conversion.toStr(row["Project definition(level 0)"]);
-					//	model.projecttext = Conversion.toStr(row["Project text (Level 0)"]);
-					//	model.partno = Conversion.toStr(row["Material"]);
-					//	model.custpo = Conversion.toStr(row["PO number"]);
-					//	model.costcenter = Conversion.toStr(row["Cost Center"]);
-					//	model.costcentertext = Conversion.toStr(row["Text: Cost Center"]);
-					//	model.saleordertypetext = Conversion.toStr(row["Text: Sales Document Type"]);
-					//	model.customercode = Conversion.toStr(row["Sold-to party"]);
-					//	model.custpolineitem = Conversion.toStr(row["PO Item No. (Sold-to)"]);
-					//	model.serviceorderno = Conversion.toStr("Service Order Number");
-					//	model.uploadcode = uploadcode;
-					//	DateTime uploadedon = DateTime.Now;
-					//	if (string.IsNullOrEmpty(model.saleorderno))
-					//		Error_Description += " No saleorder";
-
-					//	if (!string.IsNullOrEmpty(Error_Description))
-					//	{
-					//		dataloaderror = true;
-					//		model.error_description = Error_Description;
-					//		model.isloaderror = dataloaderror;
-
-					//	}
-
-					//	string soQuery = "Select saleorderno from wms.st_QTSO where saleorderno = '" + model.saleorderno + "' and solineitemno = '" + model.solineitemno + "'";
-					//	var so = DB.ExecuteScalar(soQuery, null);
-					//	if (so == null)
-					//	{
-					//		string stquery = WMSResource.insertqtso;
-					//		var rslt = DB.Execute(stquery, new
-					//		{
-					//			model.saleorderno,
-					//			model.solineitemno,
-					//			model.saleordertype,
-					//			model.customername,
-					//			model.shipto,
-					//			model.shippingpoint,
-					//			model.loadingdate,
-					//			model.projectiddef,
-					//			model.partno,
-					//			model.custpo,
-					//			model.uploadcode,
-					//			uploadedon,
-					//			model.error_description,
-					//			model.isloaderror,
-					//			model.projecttext,
-					//			model.saleordertypetext,
-					//			model.customercode,
-					//			model.custpolineitem,
-					//			model.costcentertext,
-					//			model.serviceorderno
-					//		});
-
-
-					//	}
-
-
-
-					//	}
-					//}
-
-
-
-					//End - Gayathri
-					loadAuditLog(auditlog);
-					loadPOData(uploadcode);
-
-					//}
 				}
 			}
 			catch (Exception e)
@@ -933,7 +773,7 @@ namespace WMS.Controllers
 											model.plant = Convert.ToString(row["Plnt"]);
 											model.linkageno = Convert.ToString(row["Linkage Number"]);
 											model.assetsubno = Convert.ToString(row["Asset Subnumber"]);
-											model.orderno = Convert.ToString(row["Order Number"]);
+											model.ordernumber = Convert.ToString(row["Order Number"]);
 
 											string Error_Description = "";
 											bool dataloaderror = false;
@@ -959,8 +799,8 @@ namespace WMS.Controllers
 											//dbcmd.ExecuteNonQuery();
 											poitem = model.pono + "-" + model.itemno.ToString();
 											string poitemdescription = model.poitemdescription;
-											var insertquery = "INSERT INTO wms.STAG_PO_SAP(PurchDoc,pocreatedby,ItemDeliveryDate,Material,poitemdescription,POQuantity,dci,deliveredqty,Vendor,VendorName,ProjectDefinition,Item,NetPrice,datasource,createddate,DataloadErrors ,Error_Description,uploadcode,saleorderno,solineitemno,saleordertype,codetype,costcenter,assetno,projecttext,sloc,mscode,plant,linkageno,assetsubno)";
-											insertquery += " VALUES(@pono,@pocreatedby, @itemdeliverydate,@materialid,@poitemdescription,@poquantity,@dci,@deliveredqty,@vendorcode,@vendorname,@projectdefinition,@itemno,@NetPrice,'SAP',current_timestamp,@dataloaderror,@error_description,@uploadcode,@saleorderno,@solineitemno,@saleordertype,@codetype,@costcenter,@assetno,@projecttext,@sloc,@mscode,@plant,@linkageno,@assetsubno)";
+											var insertquery = "INSERT INTO wms.STAG_PO_SAP(PurchDoc,pocreatedby,ItemDeliveryDate,Material,poitemdescription,POQuantity,dci,deliveredqty,Vendor,VendorName,ProjectDefinition,Item,NetPrice,datasource,createddate,DataloadErrors ,Error_Description,uploadcode,saleorderno,solineitemno,saleordertype,codetype,costcenter,assetno,projecttext,sloc,mscode,plant,linkageno,assetsubno,ordernumber)";
+											insertquery += " VALUES(@pono,@pocreatedby, @itemdeliverydate,@materialid,@poitemdescription,@poquantity,@dci,@deliveredqty,@vendorcode,@vendorname,@projectdefinition,@itemno,@NetPrice,'SAP',current_timestamp,@dataloaderror,@error_description,@uploadcode,@saleorderno,@solineitemno,@saleordertype,@codetype,@costcenter,@assetno,@projecttext,@sloc,@mscode,@plant,@linkageno,@assetsubno,@ordernumber)";
 											var results = DB.ExecuteScalar(insertquery, new
 											{
 												model.pono,
@@ -991,7 +831,7 @@ namespace WMS.Controllers
 												model.plant,
 												model.assetsubno,
 												model.linkageno,
-												model.orderno
+												model.ordernumber
 											});
 
 
@@ -1125,7 +965,7 @@ namespace WMS.Controllers
 											model.plant = Convert.ToString(row["Plnt"]);
 											model.linkageno = Convert.ToString(row["Linkage Number"]);
 											model.assetsubno = Convert.ToString(row["Asset Subnumber"]);
-											model.orderno = Convert.ToString(row["Order Number"]);
+											model.ordernumber = Convert.ToString(row["Order Number"]);
 
 											string Error_Description = "";
 											bool dataloaderror = false;
@@ -1183,7 +1023,7 @@ namespace WMS.Controllers
 												model.plant,
 												model.assetsubno,
 												model.linkageno,
-												model.orderno
+												model.ordernumber
 											});
 
 
@@ -1526,7 +1366,14 @@ namespace WMS.Controllers
 						try
 						{
 							stag_data.pono = stag_data.purchdoc;
-							stag_data.projectmanager = stag_data.pocreatedby;
+							if (!string.IsNullOrEmpty(stag_data.pocreatedby))
+							{
+								string empIdQuery = "select employeeno from wms.employee where globalempno = '" + stag_data.pocreatedby + "'";
+								var pocreatorId = pgsql.QuerySingleOrDefault<string>(
+												empIdQuery, null, commandType: CommandType.Text);
+								if (!string.IsNullOrEmpty(pocreatorId))
+									stag_data.pocreatedby = pocreatorId;
+							}
 							stag_data.deliverydate = stag_data.itemdeliverydate;
 							stag_data.vendorcode = stag_data.vendor;
 							stag_data.suppliername = stag_data.vendorname;
@@ -1540,25 +1387,49 @@ namespace WMS.Controllers
 							stag_data.materialdescription = pgsql.QuerySingleOrDefault<string>(
 											materialdescquery, null, commandType: CommandType.Text);
 
-							string query1 = "Select Count(*) as count from wms.wms_polist where pono = '" + stag_data.purchdoc + "'";
+							string query1 = "Select Count(*) as count from wms.wms_polist where pono = '" + stag_data.purchdoc + "' and suppliername='" + stag_data.suppliername + "'";
 							int pocount = int.Parse(pgsql.ExecuteScalar(query1, null).ToString());
 							bool isclosed = false;
+							DateTime? podate = stag_data.docdate;
 							if (pocount == 0)
 							{
 								//insert wms_polist ##pono,deliverydate,vendorid,supliername
-								var insertquery = "INSERT INTO wms.wms_polist(pono, vendorcode,suppliername,sloc,type,isclosed,uploadcode)VALUES(@pono, @vendorcode,@suppliername,@sloc,'po',@isclosed,@uploadcode)";
+								var insertquery = "INSERT INTO wms.wms_polist(pono,podate,pocreatedby,crcy,exchangerate, vendorcode,suppliername,sloc,pgr,type,isclosed,uploadcode)VALUES(@pono,@podate,@pocreatedby,@crcy,@exchangerate, @vendorcode,@suppliername,@sloc,@pgr,'po',@isclosed,@uploadcode)";
 								var results = pgsql.ExecuteScalar(insertquery, new
 								{
 									stag_data.pono,
+									podate,
+									stag_data.pocreatedby,
+									stag_data.crcy,
+									stag_data.exchangerate,
 									stag_data.vendorcode,
 									stag_data.suppliername,
 									stag_data.sloc,
+									stag_data.pgr,
 									uploadcode,
 									isclosed
 								});
 
 							}
-							string query2 = "Select Count(*) as count from wms.wms_project where pono = '" + stag_data.purchdoc + "'";
+							else
+							{
+								var updateqry = "update wms.wms_polist set podate = @podate ,crcy = @crcy, exchangerate=@exchangerate,pocreatedby=@pocreatedby,pgr=@pgr where pono = '" + stag_data.purchdoc + "' and suppliername='" + stag_data.suppliername + "'";
+								var rslt = pgsql.Execute(updateqry, new
+								{
+
+									podate,
+									stag_data.crcy,
+									stag_data.exchangerate,
+									stag_data.pocreatedby,
+									stag_data.pgr
+								});
+							}
+							string query2 = "";
+							if (string.IsNullOrEmpty(stag_data.projectcode))
+								query2 = "Select Count(*) as count from wms.wms_project where pono = '" + stag_data.purchdoc + "'";
+							else
+								query2 = "Select Count(*) as count from wms.wms_project where pono = '" + stag_data.purchdoc + "' and projectcode='" + stag_data.projectcode + "'";
+
 							int Projcount = int.Parse(pgsql.ExecuteScalar(query2, null).ToString());
 
 							if (Projcount == 0)
@@ -1585,39 +1456,19 @@ namespace WMS.Controllers
 									uploadcode,
 									projectmember
 								});
-
 							}
-
-
-							string queryasn = "Select Count(*) as count from wms.wms_asn where pono = '" + stag_data.purchdoc + "'";
-							int asncountcount = int.Parse(pgsql.ExecuteScalar(queryasn, null).ToString());
-
-							if (asncountcount == 0)
+							else
 							{
-								//insert wms_project ##pono,jobname,projectcode,projectname,projectmanager,
-
-								string updatedby = "303268";
-								var insertquery = "INSERT INTO wms.wms_asn(pono,deliverydate,updatedby,updatedon,deleteflag,uploadcode) VALUES (@pono,@itemdeliverydate,@updatedby,current_date,false,@uploadcode)";
-								var results = pgsql.ExecuteScalar(insertquery, new
-								{
-									stag_data.pono,
-									stag_data.itemdeliverydate,
-									updatedby,
-									uploadcode
-
-								});
 
 							}
-
-
 							string query3 = "Select Count(*) as count from wms.wms_pomaterials where pono = '" + stag_data.purchdoc + "' and materialid='" + stag_data.material + "' and itemno = " + stag_data.itemno + "";
 							int matcount = int.Parse(pgsql.ExecuteScalar(query3, null).ToString());
-
+							var projectname = stag_data.projecttext;
 							if (matcount == 0)
 							{
 								var wmsqty = stag_data.poquantity - stag_data.deliveredqty;
 								//insert wms_pomaterials ##pono,materialid,materialdescr,materilaqty,itemno,itemamount,item deliverydate,
-								var insertquery = "INSERT INTO wms.wms_pomaterials(pono, materialid, materialdescription,materialqty,itemno,itemamount,itemdeliverydate,saleorderno,solineitemno,saleordertype,codetype,costcenter,assetno,poitemdescription,unitprice,deliveredqty,wmsqty)VALUES(@pono, @materialid, @materialdescription,@materialqty,@itemno,@itemamount,@itemdeliverydate,@saleorderno,@solineitemno,@saleordertype,@codetype,@costcenter,@assetno,@poitemdescription,@unitprice,@deliveredqty,@wmsqty)";
+								var insertquery = "INSERT INTO wms.wms_pomaterials(pono, materialid, materialdescription,materialqty,itemno,itemamount,itemdeliverydate,saleorderno,solineitemno,saleordertype,codetype,costcenter,assetno,poitemdescription,unitprice,deliveredqty,wmsqty,projectcode,projectname,uploadcode)VALUES(@pono, @materialid, @materialdescription,@materialqty,@itemno,@itemamount,@itemdeliverydate,@saleorderno,@solineitemno,@saleordertype,@codetype,@costcenter,@assetno,@poitemdescription,@unitprice,@deliveredqty,@wmsqty,@projectcode,@projectname,@uploadcode)";
 								var results = pgsql.ExecuteScalar(insertquery, new
 								{
 									stag_data.pono,
@@ -1636,7 +1487,21 @@ namespace WMS.Controllers
 									stag_data.poitemdescription,
 									unitprice,
 									stag_data.deliveredqty,
-									wmsqty
+									wmsqty,
+									stag_data.projectcode,
+									projectname,
+									uploadcode
+								});
+							}
+							else
+							{
+								//update project def,project name
+								var updateqry = "update wms.wms_pomaterials set projectcode = @projectcode ,projectname = @projectname where pono = '" + stag_data.purchdoc + "' and materialid='" + stag_data.material + "' and itemno = " + stag_data.itemno + "";
+								var rslt = pgsql.Execute(updateqry, new
+								{
+
+									stag_data.projectcode,
+									projectname
 								});
 							}
 
@@ -1686,11 +1551,11 @@ namespace WMS.Controllers
 
 
 		/*Name of Function : <<uploadInitialStockExcel>>  Author :<<Ramesh>>  
-        Date of Creation <<16-09-2020>>
-        Purpose : <<Upload initial stock from Excel to staging>>
-        Review Date :<<>>   Reviewed By :<<>>
-        Sourcecode Copyright : Yokogawa India Limited
-        */
+		Date of Creation <<16-09-2020>>
+		Purpose : <<Upload initial stock from Excel to staging>>
+		Review Date :<<>>   Reviewed By :<<>>
+		Sourcecode Copyright : Yokogawa India Limited
+		*/
 
 		[HttpGet]
 		[Route("uploadInitialStockExcel")]
@@ -1854,11 +1719,11 @@ namespace WMS.Controllers
 		}
 
 		/*Name of Function : <<uploadInitialStockExcelByUser>>  Author :<<Ramesh>>  
-        Date of Creation <<16-09-2020>>
-        Purpose : <<Upload initial stock from Excel to staging>>
-        Review Date :<<>>   Reviewed By :<<>>
-        Sourcecode Copyright : Yokogawa India Limited
-        */
+		Date of Creation <<16-09-2020>>
+		Purpose : <<Upload initial stock from Excel to staging>>
+		Review Date :<<>>   Reviewed By :<<>>
+		Sourcecode Copyright : Yokogawa India Limited
+		*/
 		[HttpPost("uploadInitialStockExcelByUser"), DisableRequestSizeLimit]
 		public WMSHttpResponse uploadInitialStockExcelByUser()
 		{
@@ -2679,12 +2544,12 @@ namespace WMS.Controllers
 
 
 		/*
-       function : <<loadStockData>>  Author :<<Ramesh>>  
-       Date of Creation <<20-11-2020>>
-       Purpose : <<upload material label data from excel to staging>>
-       Review Date :<<>>   Reviewed By :<<>>
-       Sourcecode Copyright : Yokogawa India Limited
-       */
+		function : <<loadStockData>>  Author :<<Ramesh>>  
+		Date of Creation <<20-11-2020>>
+		Purpose : <<upload material label data from excel to staging>>
+		Review Date :<<>>   Reviewed By :<<>>
+		Sourcecode Copyright : Yokogawa India Limited
+		*/
 		[HttpGet]
 		[Route("uploadDataExcel")]
 		public IActionResult uploadDataExcel()
@@ -4747,12 +4612,12 @@ namespace WMS.Controllers
 					var stockdata = pgsql.QueryAsync<ddlmodel>(stockquery, null, commandType: CommandType.Text);
 
 					if(stockdata != null)
-                    {
+					{
 						foreach(ddlmodel mdl in stockdata.Result)
-                        {
+						{
 							string pmgr = mdl.projectmanager;
 							if(pmgr != null && pmgr.Length == 6)
-                            {
+							{
 								//string querypmb = "Select Max(projectmember) as projectmember from wms.wms_project where  projectcode = '" + stag_data.projectcode + "' group by projectmanager";
 								//var rslttmb = pgsql.ExecuteScalar(querypmb, null);
 								//if (rslttmb != null)
@@ -4761,10 +4626,10 @@ namespace WMS.Controllers
 								//}
 
 							}
-							
+
 
 						}
-                    }
+					}
 
 					string query = "UPDATE wms.wms_project SET projectmanager = wms.stag_projectmaster.projectmanager FROM wms.stag_projectmaster WHERE wms.stag_projectmaster.projectcode = wms.wms_project.projectcode and wms.wms_project.projectcode is not null and wms.stag_projectmaster.projectcode is not null";
 					pgsql.Open();
@@ -4854,93 +4719,93 @@ namespace WMS.Controllers
 							decmresult =  Conversion.Todecimaltype(rslttmb);
 						}
 
-						
-							string stockquery = "";
-							if (item.ProjectId != null && item.ProjectId.Trim() != "" && item.pono != null && item.pono.Trim() != "")
+
+						string stockquery = "";
+						if (item.ProjectId != null && item.ProjectId.Trim() != "" && item.pono != null && item.pono.Trim() != "")
+						{
+							stockquery = "select * from wms.wms_stock where materialid = '" + item.material + "' and lower(poitemdescription) = lower('" + materialdescription + "') and availableqty > 0 and  projectid = '" + item.ProjectId + "' and pono = '" + item.pono + "' order by itemid";
+						}
+						else
+						{
+							stockquery = "select * from wms.wms_stock where materialid = '" + item.material + "' and lower(poitemdescription) = lower('" + materialdescription + "') and availableqty > 0 ";
+							if (item.ProjectId == null || item.ProjectId.Trim() == "")
 							{
-								stockquery = "select * from wms.wms_stock where materialid = '" + item.material + "' and lower(poitemdescription) = lower('" + materialdescription + "') and availableqty > 0 and  projectid = '" + item.ProjectId + "' and pono = '" + item.pono + "' order by itemid";
+								stockquery += " and (projectid is null or projectid = '')";
 							}
 							else
 							{
-								stockquery = "select * from wms.wms_stock where materialid = '" + item.material + "' and lower(poitemdescription) = lower('" + materialdescription + "') and availableqty > 0 ";
-								if (item.ProjectId == null || item.ProjectId.Trim() == "")
-								{
-									stockquery += " and (projectid is null or projectid = '')";
-								}
-								else
-								{
-									stockquery += " and projectid = '" + item.ProjectId + "'";
+								stockquery += " and projectid = '" + item.ProjectId + "'";
 
-								}
-								if (item.pono == null || item.pono.Trim() == "")
-								{
-									stockquery += " and (pono is null or pono = '')";
-								}
-								else
-								{
-									stockquery += " and pono = '" + item.pono + "'";
-
-								}
-								stockquery += " order by itemid";
 							}
-							var stockdata = DB.QueryAsync<StockModel>(stockquery, null, commandType: CommandType.Text);
-							if (stockdata != null)
+							if (item.pono == null || item.pono.Trim() == "")
 							{
-								decimal? quantitytoissue = item.issuedqty;
-								decimal? issuedqty = 0;
-								foreach (StockModel itm in stockdata.Result)
+								stockquery += " and (pono is null or pono = '')";
+							}
+							else
+							{
+								stockquery += " and pono = '" + item.pono + "'";
+
+							}
+							stockquery += " order by itemid";
+						}
+						var stockdata = DB.QueryAsync<StockModel>(stockquery, null, commandType: CommandType.Text);
+						if (stockdata != null)
+						{
+							decimal? quantitytoissue = item.issuedqty;
+							decimal? issuedqty = 0;
+							foreach (StockModel itm in stockdata.Result)
+							{
+								DateTime approvedon = System.DateTime.Now;
+								string materialid = item.material;
+								if (quantitytoissue <= itm.availableqty)
 								{
-									DateTime approvedon = System.DateTime.Now;
-									string materialid = item.material;
-									if (quantitytoissue <= itm.availableqty)
-									{
-										issuedqty = quantitytoissue;
-									}
-									else
-									{
-										issuedqty = itm.availableqty;
-									}
+									issuedqty = quantitytoissue;
+								}
+								else
+								{
+									issuedqty = itm.availableqty;
+								}
 
-									quantitytoissue = quantitytoissue - issuedqty;
-									string insertqueryforstatusforqty = WMSResource.updateqtyafterissue.Replace("#itemid", Convert.ToString(itm.itemid)).Replace("#issuedqty", Convert.ToString(issuedqty));
-									var data1 = DB.ExecuteScalar(insertqueryforstatusforqty, new
-									{
+								quantitytoissue = quantitytoissue - issuedqty;
+								string insertqueryforstatusforqty = WMSResource.updateqtyafterissue.Replace("#itemid", Convert.ToString(itm.itemid)).Replace("#issuedqty", Convert.ToString(issuedqty));
+								var data1 = DB.ExecuteScalar(insertqueryforstatusforqty, new
+								{
 
-									});
-									string transactiontype = "Miscellanous Issue";
-									int reason = 2;
-									string remarks = "";
-								    string createdby = "140020";
-									DateTime createddate = DateTime.Now;
-									string insertpry = WMSResource.updateStockLog;
-									string projectid = item.ProjectId;
+								});
+								string transactiontype = "Miscellanous Issue";
+								int reason = 2;
+								string remarks = "";
+								string createdby = "140020";
+								DateTime createddate = DateTime.Now;
+								string insertpry = WMSResource.updateStockLog;
+								string projectid = item.ProjectId;
 
-									DB.ExecuteScalar(insertpry, new
-									{
-										itm.itemid,
-										transactiontype,
-										issuedqty,
-										reason,
-										remarks,
-										createddate,
-										createdby,
-										projectid,
-										item.pono,
-										uploadcode
-									});
+								DB.ExecuteScalar(insertpry, new
+								{
+									itm.itemid,
+									transactiontype,
+									issuedqty,
+									reason,
+									remarks,
+									createddate,
+									createdby,
+									projectid,
+									item.pono,
+									uploadcode
+								});
 
-									if (quantitytoissue <= 0)
-									{
-										break;
-									}
-
-
+								if (quantitytoissue <= 0)
+								{
+									break;
 								}
 
 
-
 							}
-						
+
+
+
+						}
+
 
 					}
 
@@ -5011,7 +4876,7 @@ namespace WMS.Controllers
 					foreach (DataRow row in dtexcel.Rows)
 					{
 						i++;
-                      
+
 						miscellanousIssueData item = new miscellanousIssueData();
 						item.ProjectId = Conversion.toStr(row["Project code"]);
 						item.pono = Conversion.toStr(row["PO No."]);
@@ -5023,7 +4888,7 @@ namespace WMS.Controllers
 							materialdescription = item.materialdescription.Replace("\'", "''");
 						}
 						if(item.pono != null && item.pono.Trim() != "")
-                        {
+						{
 							string insertqueryforstatusforqty = "update  wms.wms_stock set saleorderno = '" + item.ProjectId + "' where pono = '" + item.pono + "' and materialid = '"+item.material+"' and poitemdescription = '" + materialdescription + "'";
 							var data1 = DB.ExecuteScalar(insertqueryforstatusforqty, new { });
 							//string querypmb = "select max(materialid) as material from  wms.wms_stock  where pono = '" + item.pono + "' and materialid = '" + item.material + "' and poitemdescription = '" + materialdescription + "'";
@@ -5033,19 +4898,19 @@ namespace WMS.Controllers
 							//{
 							//	mat = rslttmb.ToString();
 							//}
-       //                     else
-       //                     {
+							//                     else
+							//                     {
 							//	mat = "";
 							//}
 						}
-                        else
-                        {
+						else
+						{
 							string pon = item.pono;
 
-                        }
+						}
 
-						
-						
+
+
 					}
 					result = "saved";
 				}

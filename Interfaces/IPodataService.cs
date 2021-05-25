@@ -230,7 +230,8 @@ namespace WMS.Interfaces
 		string stomatrequestapprove(List<invstocktransfermodel> model);
 		string updaterba(List<rbamaster> model);
 		string updatepm(List<assignpmmodel> model);
-		int mrnupdate(MRNsavemodel model);
+		Task<IEnumerable<inwardModel>> getMRNmaterials(string grnnumber);
+		int mrnupdate(List<MRNsavemodel> model);
 		int GatepassapproveByMail(gatepassModel model);
 		Task<IEnumerable<pageModel>> Getpagesbyroleid(int roleid);
 		Task<IEnumerable<pageModel>> Getpages();
@@ -361,6 +362,12 @@ namespace WMS.Interfaces
 		public bool updateUserRole(userRoles userRoles);
 
 		Task<IEnumerable<StockModel>> getMiscellanousIssueListdatahistory();
+
+		 Task<IEnumerable<DDmaterials>> getDDdetailsByPono(string pono);
+
+		public bool updateDirectDelivery(DirectDelivery userRoles);
+
+		bool deleteDirectDelivery(string inwmasterid, string deletedby);
 
 	}
 }
