@@ -2418,4 +2418,35 @@ left join wms."MaterialMasterYGS" ygs on ygs.material=sk.materialid
 where iss.requestid = '#requestforissueid' and iss.requesttype = '#type'
 group by iss.requestid,sk.itemlocation,sk.createddate</value>
   </data>
+  <data name="deleteDDSecInw" xml:space="preserve">
+    <value>UPDATE  wms.wms_securityinward set deleteflag =true,deletedby=@deletedby,deletedon=@deletedon where inwmasterid ='#inwmasterid'</value>
+  </data>
+  <data name="deleteDDStoreInw" xml:space="preserve">
+    <value>UPDATE wms.wms_storeinward set deleteflag =true,deletedby=@deletedby,deletedon=@deletedon where inwardid =#inwardid</value>
+  </data>
+  <data name="getDirectDeliverybyPOno" xml:space="preserve">
+    <value>select po.suppliername, concat(loc.Name,',',loc.street ,loc.street4 ,loc.city,loc.postalcode ) as directdeliveryaddrs, wp.pono ,wp.materialid ,wp.materialdescription ,wp.poitemdescription ,wp.materialqty ,wp.itemdeliverydate ,wp.unitprice,wp.itemno as lineitemno,
+ (select sum(inw.receivedqty ) from wms.wms_storeinward  inw where inw.pono =wp.pono and inw.materialid =wp.materialid and inw.lineitemno::int =wp.itemno::int and inw.deleteflag is not true) as deliveredqty from wms.wms_pomaterials wp 
+inner join wms.wms_polist po on po.pono =wp.pono  
+left join  wms.storagelocaddresses  loc on loc.storagelocation =po.sloc 
+where wp.pono ='#pono'</value>
+  </data>
+  <data name="getMRNmaterials" xml:space="preserve">
+    <value>select st.materialid ,st.pono,st.poitemdescription,emp.name as mrnby,mrn.mrnon,mrn.projectcode,mrn.mrnremarks,mrn.issuedqty from wms.wms_storeinward st join wms.mrnmaterials mrn on mrn.inwardid =st.inwardid  join wms.employee emp on emp.employeeno =mrn.mrnby  where mrn.inwardid ='#inwardid'</value>
+  </data>
+  <data name="insertDDInvoice" xml:space="preserve">
+    <value>INSERT INTO wms.wms_securityinward(inwmasterid,pono,invoiceno,invoicedate,grnnumber,grndate,grnnogeneratedby,receivedby,receiveddate,suppliername,isdirectdelivered,directdeliveryaddrs,directdeliveryremarks,directdeliveredon ,deleteflag)
+VALUES(default,@pono,@invoiceno,@invoicedate,@grnnumber,@grndate,@grnnogeneratedby,@receivedby,@receiveddate,@suppliername,true,@directdeliveryaddrs,@directdeliveryremarks,@directdeliveredon ,false) returning inwmasterid</value>
+  </data>
+  <data name="insertDDinwardDetails" xml:space="preserve">
+    <value>INSERT INTO wms.wms_storeinward(inwmasterid,receiveddate,receivedby,receivedqty,returnqty,confirmqty,materialqty,materialid,pono,lineitemno,poitemdescription,unitprice,deleteflag)
+VALUES(@inwmasterid,@receiveddate,@receivedby,@receivedqty,0,@confirmqty,@materialqty,@materialid,@pono,@lineitemno,@poitemdescription,@unitprice,false)returning inwardid</value>
+  </data>
+  <data name="updateddReceivedqty" xml:space="preserve">
+    <value>UPDATE  wms.wms_storeinward set receivedqty =@receivedqty,confirmqty = @confirmqty where inwardid =#inwardid</value>
+  </data>
+  <data name="updateMRNMaterials" xml:space="preserve">
+    <value>INSERT INTO wms.mrnmaterials(mrnid,inwardid,projectcode,mrnby,mrnon,mrnremarks,acceptedqty,issuedqty,deleteflag)values
+(DEFAULT,@inwardid,@projectcode,@mrnby,current_date,@mrnremarks,@acceptedqty,@issuedqty,false)</value>
+  </data>
 </root>

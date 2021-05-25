@@ -1242,20 +1242,6 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select sum(sk.availableqty)as availableqty,sk.saleorderno,Max(sk.materialid) as materialid,sk.itemlocation,Max(sk.poitemdescription) as materialdescription,sk.createddate::DATE,bool_or(sk.initialstock) as initialstock 
-        ///from wms.wms_stock sk 
-        ///left outer join wms.&quot;MaterialMasterYGS&quot; ygs on ygs.material=sk.materialid 
-        ///where sk.materialid=&apos;#materialid&apos; and lower(sk.poitemdescription)  = lower(&apos;#desc&apos;) and sk.receivedtype = &apos;Material Return&apos;
-        ///and sk.availableqty&gt;0 
-        ///group by sk.itemlocation,sk.saleorderno,sk. [rest of string was truncated]&quot;;.
-        /// </summary>
-        public static string getitemlocationsforplosstock {
-            get {
-                return ResourceManager.GetString("getitemlocationsforplosstock", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to select inwa.inwardid,bin.binnumber, rack.racknumber, loc.locatorname,mat.rackid,mat.binid,
         /// mat.storeid,mat.stocktype,stocks.itemlocation,stocks.availableqty,stocks.itemid,inw.grnnumber,inw.pono,inw.invoiceno,inw.receiveddate,
         /// case when inwa.confirmqty=(select  COALESCE(SUM(mrn.issuedqty ),0)+ COALESCE(SUM(ws.totalquantity ),0)   as totalissued from wms.mrnmaterials mrn left join wms.wms_stock  ws on ws.inwardid =mrn.inwardid  where mrn.inwardid =inwa.inwardid ) 
@@ -1393,17 +1379,6 @@ namespace WMS.Common {
         public static string getMaterialdetailsforplantstock {
             get {
                 return ResourceManager.GetString("getMaterialdetailsforplantstock", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to select materialid,poitemdescription,max(unitprice::decimal(19,5)) as unitprice,sum(availableqty::decimal(19,5)) as availableqty from wms.wms_stock ws where materialid = &apos;#materialid&apos; and Lower(poitemdescription) = Lower(&apos;#description&apos;)
-        ///and receivedtype = &apos;Material Return&apos;
-        ///group by materialid,poitemdescription.
-        /// </summary>
-        public static string getMaterialdetailsforplosstock {
-            get {
-                return ResourceManager.GetString("getMaterialdetailsforplosstock", resourceCulture);
             }
         }
         
@@ -1907,20 +1882,6 @@ namespace WMS.Common {
         public static string getplantstockmaterials {
             get {
                 return ResourceManager.GetString("getplantstockmaterials", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to select iss.requestid, sum(iss.issuedqty) as issuedqty ,max(sk.materialid) as materialid,sk.itemlocation,
-        ///(select sum(sk1.availableqty) from wms.wms_stock sk1 where sk1.materialid = max(sk.materialid) and lower(sK1.poitemdescription)  = lower(max(sk.poitemdescription))  and sk1.itemlocation = sk.itemlocation and sk1.receivedtype =&apos;Material Return&apos;) as availableqty
-        ///,sk.createddate::DATE as createddate,
-        ///max(sk.poitemdescription) as materialdescription
-        ///from wms.wms_materialissue iss 
-        ///left outer join wms.wm [rest of string was truncated]&quot;;.
-        /// </summary>
-        public static string getPlosstockissuedlocations {
-            get {
-                return ResourceManager.GetString("getPlosstockissuedlocations", resourceCulture);
             }
         }
         

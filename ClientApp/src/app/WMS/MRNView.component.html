@@ -50,15 +50,15 @@
           <ng-template pTemplate="header" let-columns>
             <tr class="mprltbldata">
               <th style="width:70px;text-align:center">Sl.No.</th>
-              <th style="width:150px;text-align:center">PONo.</th>
-              <th style="width:200px;text-align:center">Material</th>
+              <th style="width:120px;text-align:center">PONo.</th>
+              <th style="width:180px;text-align:center">Material</th>
               <th style="width:100px;text-align:center">Line item no</th>
               <!--<th style="text-align: center">Material Description</th>-->
               <th style="text-align: center">PO Item Description</th>
-              <th style="width:150px;text-align:center">Accepted Qty</th>
-              <th style="width:150px;text-align:center">Put away Qty</th>
-              <th style="width:150px;text-align:center">Partially Shipped Qty</th>
-              <th style="width:150px;text-align:center">issued Qty</th>
+              <th style="width:100px;text-align:center">Accepted Qty</th>
+              <th style="width:100px;text-align:center">Put away Qty</th>
+              <th style="width:100px;text-align:center">Partially Shipped Qty</th>
+              <th style="width:100px;text-align:center">issued Qty</th>
               <th style="width:150px;text-align:center">Remarks</th>
               <!--<th style="width:200px;text-align:center" *ngIf="isalreadytransferred">Transferred By</th>
               <th style="width:100px;text-align:center" *ngIf="isalreadytransferred">Transferred On</th>-->
@@ -69,20 +69,20 @@
             <tr class="ui-widget-header">
 
               <td class="ptable-cell" style="text-align:center;width:70px">{{rowIndex + 1}}</td>
-              <td class="ptable-cell" style="text-align:center;width:150px;">
+              <td class="ptable-cell" style="text-align:center;width:120px;">
                 {{rowData.pono}}
               </td>
-              <td class="ptable-cell" style="text-align:center;width:200px;" colspan="1">
+              <td class="ptable-cell" style="text-align:center;width:180px;" colspan="1">
                 {{rowData.material}}
               </td>
               <td class="ptable-cell" style="text-align:center;width:100px;" colspan="1">
                 {{rowData.lineitemno}}
               </td>
               <td class="ptable-cell" style="text-align:left;">{{rowData.poitemdescription}}</td>
-              <td class="ptable-cell" style="text-align:right;width:150px;">{{rowData.confirmqty}}</td>
-              <td class="ptable-cell" style="text-align:right;width:150px;">{{rowData.putawayqty}}</td>
-              <td class="ptable-cell" style="text-align:right;width:150px;">{{rowData.partialqty}}</td>
-              <td class="ptable-cell" style="text-align:right;width:150px;"><input type="number" [(ngModel)]="rowData.issuedqty" (change)="reqQtyChange(rowData)" class="form-control"></td>
+              <td class="ptable-cell" style="text-align:right;width:100px;">{{rowData.confirmqty}}</td>
+              <td class="ptable-cell" style="text-align:right;width:100px;">{{rowData.putawayqty}}</td>
+              <td class="ptable-cell" style="text-align:right;width:100px;">{{rowData.partialqty}}</td>
+              <td class="ptable-cell" style="text-align:right;width:100px;"><input type="number" [(ngModel)]="rowData.issuedqty" (change)="reqQtyChange(rowData)" class="form-control"></td>
               <td class="ptable-cell" style="text-align:right;width:150px;"><input type="text" [(ngModel)]="rowData.mrnremarks" class="form-control"></td>
               <!--<td class="ptable-cell" style="text-align:center;width:200px;" *ngIf="isalreadytransferred">{{rowData.mrnby}}</td>
               <td class="ptable-cell" style="text-align:center;width:100px;" *ngIf="isalreadytransferred">{{rowData.mrnon | date: 'dd/MM/yyyy'}}</td>-->
