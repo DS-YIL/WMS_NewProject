@@ -366,6 +366,7 @@ namespace WMS.Models
 		public int stockid { get; set; }
 		public string Material { get; set; }
 		public string stcktype { get; set; }
+		public string uploadedby { get; set; }
 		public string lineitemno { get; set; }
 		public string receivedid { get; set; }
 		public string exceptions { get; set; }
@@ -767,6 +768,7 @@ namespace WMS.Models
 		internal object requestid;
 
 		public string statusremarks { get; set; }
+		public string saleorderno { get; set; }
 		public string managername { get; set; }
 		public string pono { get; set; }
 		public int itemid { get; set; }
@@ -851,6 +853,7 @@ namespace WMS.Models
 		public string authremarks { get; set; }
 		public string authname { get; set; }
 		public DateTime authorizedon { get; set; }
+		public string materialtype { get; set; }
 	}
 	public class materialistModel
 	{
@@ -1507,6 +1510,7 @@ public class stocktransferModel
 public class invstocktransfermodel
 {
 	public string transferid { get; set; }
+	public string materialtype { get; set; }
 	public string transferredby { get; set; }
 	public DateTime transferredon { get; set; }
 	public string transfertype { get; set; }

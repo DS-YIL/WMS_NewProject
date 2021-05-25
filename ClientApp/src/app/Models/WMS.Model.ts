@@ -183,6 +183,7 @@ export class StockModel {
   itemid: number;
   inwmasterid: string;
   lineitemno: string;
+  uploadedby: string;
   paitemid: number;
   testindex: number;
   receivedid: any;
@@ -340,6 +341,7 @@ export class gatepassModel {
   authremarks: string;
   authname: string;
   authorizedon: Date;
+  materialtype: string
 }
 export class materialistModel {
   gatepassmaterialid: string;
@@ -355,6 +357,7 @@ export class materialistModel {
   issuedqty: number;
   showdetail: boolean;
   pono: string;
+  materialtype: string;
 
   materiallistdata: any[] = [];
 }
@@ -626,6 +629,7 @@ export class invstocktransfermodel {
   sourcelocationcode: string;
   destinationlocationcode: string;
   pono: string;
+  materialtype: string;
 }
 
 export class assignpmmodel {

@@ -47,6 +47,8 @@ export class StockTransferOrderComponent implements OnInit {
 
   mainmodel: invstocktransfermodel;
   selectedRow: number;
+  stocktype: string = "";
+  immidiatemanagerid: string = "";
   
 
 
@@ -79,6 +81,7 @@ export class StockTransferOrderComponent implements OnInit {
   ponolist: any[] = [];
   selectedpono: string = "";
   filteredpos: any[];
+  isplantstocktrquest: boolean = false;
 
   ngOnInit() {
     if (localStorage.getItem("Employee"))
@@ -86,6 +89,9 @@ export class StockTransferOrderComponent implements OnInit {
     else
       this.router.navigateByUrl("Login");
 
+    this.stocktype = "Project Stock";
+    this.immidiatemanagerid = "";
+    this.isplantstocktrquest = false;
     this.minDate = new Date();
     this.sourceplant = new plantddl();
     this.destinationplant = new plantddl();
@@ -103,6 +109,7 @@ export class StockTransferOrderComponent implements OnInit {
     this.selectedlocation = new locationddl();
     this.selectedrack = new rackddl();
     this.showLocationDialog = false;
+    this.approverListdata();
     this.getprojects();
     this.getStocktransferdatagroup();
 
@@ -125,6 +132,19 @@ export class StockTransferOrderComponent implements OnInit {
       if (brand.toLowerCase().indexOf(event.query.toLowerCase()) == 0 || pos.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
         this.filteredprojects.push(this.projectlists[i]);
       }
+    }
+  }
+
+  getplantmaterials(event: any) {
+    var selectedval = event.target.value;
+    this.selectedmuliplepo = [];
+    this.selectedproject = null;
+    this.podetailsList = [];
+    this.ponolist = [];
+    if (selectedval == "Project Stock") {
+      this.isplantstocktrquest = false;
+    } else {
+      this.isplantstocktrquest = true;
     }
   }
 
@@ -202,10 +222,7 @@ export class StockTransferOrderComponent implements OnInit {
 
   public bindSearchListDatamaterialdesc(event: any, data: any) {
     debugger;
-    if (isNullOrUndefined(this.selectedproject) || !this.selectedproject.value) {
-      this.messageService.add({ severity: 'error', summary: '', detail: 'Select Project' });
-      return;
-    }
+   
     var searchTxt = event.query;
     var matid = "";
     if (!isNullOrUndefined(data.materialObj)) {
@@ -214,26 +231,14 @@ export class StockTransferOrderComponent implements OnInit {
     if (searchTxt == undefined)
       searchTxt = "";
     searchTxt = searchTxt.replace('*', '%');
+    searchTxt = searchTxt.replace("'", "''");
     this.dynamicData = new DynamicSearchResult();
-    var query = "(select wp.poitemdescription as materialdescription";
-    query += " from wms.wms_pomaterials wp";
-    query += " left outer join wms.wms_project prj on prj.pono = wp.pono";
-    query += " where prj.projectcode = '" + this.selectedproject.value + "' ";
-    query += " and wp.poitemdescription ilike '" + searchTxt + "%' "; 
-    if (!isNullOrUndefined(matid) && String(matid).trim() != "") {
-      query += " and wp.materialid  = '" + matid + "' ";
+    var query = "select poitemdescription from wms.wms_stock ws where stcktype = 'Plant Stock' ";
+    query += " and poitemdescription ilike '" + searchTxt + "%'";
+    if (!isNullOrUndefined(matid) && matid != "") {
+      query += " and materialid = '" + matid + "'";
     }
-    query += " group by wp.poitemdescription limit 50)";
-    query += " union";
-    query += " (select mmy.poitemdescription as materialdescription";
-    query += " from wms.wms_stock mmy";
-    query += " left outer join wms.wms_project prj on prj.pono = mmy.pono";
-    query += " where prj.projectcode = '" + this.selectedproject.value + "' ";
-    query += " and mmy.poitemdescription ilike '" + searchTxt + "%'";
-    if (!isNullOrUndefined(matid) && String(matid).trim() != "") {
-      query += " and mmy.materialid  = '" + matid + "' ";
-    }
-    query += " group by mmy.poitemdescription limit 50)";
+    query += " group by poitemdescription limit 50";
     this.dynamicData.query = query;
     this.filteredmats = [];
     this.wmsService.GetListItems(this.dynamicData).subscribe(data => {
@@ -243,7 +248,7 @@ export class StockTransferOrderComponent implements OnInit {
 
       var fName = "";
       this.searchresult.forEach(item => {
-        fName = item["materialdescription"];
+        fName = item["poitemdescription"];
         var value = { listName: 'matdesc', name: fName, code: fName };
         this.searchdescItems.push(value);
       });
@@ -252,10 +257,6 @@ export class StockTransferOrderComponent implements OnInit {
 
   public bindSearchListDatamaterial(event: any, rdata: any, name?: string ) {
     debugger;
-    if (isNullOrUndefined(this.selectedproject) || !this.selectedproject.value) {
-      this.messageService.add({ severity: 'error', summary: '', detail: 'Select Project' });
-      return;
-    }
     var description = "";
     if (!isNullOrUndefined(rdata.materialdescObj)) {
       description = rdata.materialdescObj.name;
@@ -264,26 +265,14 @@ export class StockTransferOrderComponent implements OnInit {
     if (searchTxt == undefined)
       searchTxt = "";
     searchTxt = searchTxt.replace('*', '%');
+    description = description.replace("'", "''");
     this.dynamicData = new DynamicSearchResult();
-    var query = "(select wp.materialid as material";
-    query += " from wms.wms_pomaterials wp";
-    query += " left outer join wms.wms_project prj on prj.pono = wp.pono";
-    query += " where prj.projectcode = '" + this.selectedproject.value + "' ";
-    query += " and wp.materialid ilike '" + searchTxt + "%' ";
-    if (!isNullOrUndefined(description) && String(description).trim() != "") {
-      query += " and wp.poitemdescription  = '" + description + "' ";
+    var query = "select materialid from wms.wms_stock ws where stcktype = 'Plant Stock'";
+    query += " and materialid ilike '" + searchTxt + "%'";
+    if (!isNullOrUndefined(description) && description != "") {
+      query += " and poitemdescription = '" + description + "'";
     }
-    query += " group by wp.materialid limit 50)";
-    query +=" union";
-    query += " (select mmy.materialid as material";
-    query += " from wms.wms_stock mmy";
-    query += " left outer join wms.wms_project prj on prj.pono = mmy.pono";
-    query += " where prj.projectcode = '" + this.selectedproject.value + "' ";
-    query += " and mmy.materialid ilike '" + searchTxt + "%'";
-    if (!isNullOrUndefined(description) && String(description).trim() != "") {
-      query += " and mmy.poitemdescription  = '" + description + "' ";
-    }
-    query += " group by mmy.materialid limit 50)";
+    query += " group by materialid limit 50";
     this.dynamicData.query = query;
     this.filteredmats = [];
     this.wmsService.GetListItems(this.dynamicData).subscribe(data => {
@@ -293,9 +282,8 @@ export class StockTransferOrderComponent implements OnInit {
 
       var fName = "";
       this.searchresult.forEach(item => {
-        fName = item[this.constants[name].fieldName];
-        fName = item[this.constants[name].fieldId];
-        var value = { listName: name, name: fName, code: item[this.constants[name].fieldId] };
+        fName = item["materialid"];
+        var value = { listName: fName, name: fName, code: fName };
         this.searchItems.push(value);
       });
     });
@@ -336,10 +324,13 @@ export class StockTransferOrderComponent implements OnInit {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Select destination location' });
       return;
     }
-    if (isNullOrUndefined(this.selectedproject) || !this.selectedproject.value) {
-      this.messageService.add({ severity: 'error', summary: '', detail: 'Select Project' });
-      return;
+    if (!this.isplantstocktrquest) {
+      if (isNullOrUndefined(this.selectedproject) || !this.selectedproject.value) {
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Select Project' });
+        return;
+      }
     }
+    
 
     if (this.sourceplant.locatorid == this.destinationplant.locatorid) {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Source and destination location cannot be same' });
@@ -439,6 +430,7 @@ export class StockTransferOrderComponent implements OnInit {
   Showadd() {
     //this.mainmodel.sourceplant = "Plant1";
     //this.mainmodel.destinationplant = "Plant1";
+    this.stocktype = "Project Stock";
     this.displaydetail = false;
     this.selectedRow = null;
     this.addprocess = true;
@@ -604,9 +596,70 @@ export class StockTransferOrderComponent implements OnInit {
 
   }
 
+  onMaterialSelected1(event: any,data: any, ind: number) {
+    debugger;
+    if (!isNullOrUndefined(data.materialdescObj)) {
+      this.podetailsList[ind].materialid = this.podetailsList[ind].materialObj.code;
+      var matdesc = data.materialdescObj.code;
+      var matcode = this.podetailsList[ind].materialObj.code;
+      var data1 = this.podetailsList.filter(function (element, index) {
+        return (element.materialid == matcode && element.materialdescription == matdesc && index != ind);
+      });
+      if (data1.length > 0) {
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Material already exist' });
+        this.podetailsList.splice(ind, 1);
+        this.addrows();
+        return false;
+      }
+      matdesc = matdesc.replace("'", "''");
+      this.wmsService.getplantstockmatdetail(matcode, matdesc).subscribe(res => {
+        if (!isNullOrUndefined(res)) {
+          //data.unitprice = res.unitprice;
+          data.availableqty = res.availableqty;
+        }
+      });
+    }
+    else {
+
+      this.podetailsList[ind].materialid = this.podetailsList[ind].materialObj.code;
+    }
 
 
-  onMaterialSelected1(event: any, data: any, ind: number) {
+  }
+
+  onDescriptionSelected(event: any,data: any, ind: number) {
+    debugger;
+    if (!isNullOrUndefined(data.materialObj)) {
+      this.podetailsList[ind].materialdescription = this.podetailsList[ind].materialdescObj.code;
+      var matdesc = data.materialdescObj.code;
+      var matcode = this.podetailsList[ind].materialObj.code;
+      var data1 = this.podetailsList.filter(function (element, index) {
+        return (element.materialid == matcode && element.materialdescription == matdesc && index != ind);
+      });
+      if (data1.length > 0) {
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Material and description already exist' });
+        this.podetailsList.splice(ind, 1);
+        this.addrows();
+        return false;
+      }
+      matdesc = matdesc.replace("'", "''");
+      this.wmsService.getplantstockmatdetail(matcode, matdesc).subscribe(res => {
+        if (!isNullOrUndefined(res)) {
+          //data.unitprice = res.unitprice;
+          data.availableqty = res.availableqty;
+        }
+      });
+    }
+    else {
+      this.podetailsList[ind].materialdescription = this.podetailsList[ind].materialdescObj.code;
+
+    }
+
+  }
+
+
+
+  onMaterialSelected1_old(event: any, data: any, ind: number) {
 
     debugger;
     if (!isNullOrUndefined(data.materialObj)) {
@@ -716,7 +769,7 @@ export class StockTransferOrderComponent implements OnInit {
     data.materialcost = data.unitprice * data.transferqty;
 
   }
-  onDescriptionSelected(event: any, data: any, ind: number) {
+  onDescriptionSelected_old(event: any, data: any, ind: number) {
     debugger;
     if (!isNullOrUndefined(data.materialdescObj)) {
       this.podetailsList[ind].materialdescription = data.materialdescObj.name;
@@ -1118,6 +1171,24 @@ export class StockTransferOrderComponent implements OnInit {
   getponodetails(data) {
     debugger;
   }
+  approverListdata() {
+
+    this.wmsService.getapproverdata(this.employee.employeeno).
+      subscribe(
+        res => {
+
+          if (!isNullOrUndefined(res[0].approverid) && String(res[0].approverid).trim() != "") {
+            this.immidiatemanagerid = res[0].approverid;
+
+          }
+          else {
+            this.immidiatemanagerid = res[0].departmentheadid;
+
+          }
+
+
+        });
+  }
 
 
   onsubmit1() {
@@ -1175,8 +1246,14 @@ export class StockTransferOrderComponent implements OnInit {
       this.mainmodel.approverid = this.selectedproject.projectmanager;
     }
     else {
-      this.messageService.add({ severity: 'error', summary: '', detail: 'Select project.' });
-      return;
+      if (this.isplantstocktrquest) {
+        this.mainmodel.approverid = this.immidiatemanagerid;
+      }
+      else{
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Select project.' });
+        return;
+      }
+     
     }
     //if (!isNullOrUndefined(this.selectedpono)) {
     //  this.mainmodel.pono = this.selectedpono;
@@ -1211,10 +1288,16 @@ export class StockTransferOrderComponent implements OnInit {
     this.podetailsList = this.podetailsList.filter(function (element, index) {
       return (element.transferqty > 0)
     });
-
+    if (this.isplantstocktrquest) {
+      this.mainmodel.materialtype = "plant";
+    }
+    else {
+      this.mainmodel.materialtype = "project";
+    }
     var svdata = this.mainmodel;
     svdata.transferredby = this.employee.employeeno;
     svdata.materialdata = this.podetailsList;
+    
 
     this.spinner.show();
     this.wmsService.Stocktransfer1(svdata).subscribe(data => {

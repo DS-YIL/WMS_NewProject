@@ -472,6 +472,22 @@ export class NavMenuComponent implements OnInit {
         })
        
       }
+      else if (eurl.includes("/Email/GatePassAuthList?GateId")) {
+        this.userrolelist.forEach(item => {
+          if (item.roleid == 4) {
+            this.emp.roleid = "4";
+            this.setrolename(this.emp.roleid);
+            localStorage.removeItem('Employee');
+            localStorage.setItem('Employee', JSON.stringify(this.emp));
+            this.bindmenubyrba(eurl);
+            return false;
+
+          }
+            
+          
+        })
+
+      }
 
       else if (eurl.includes("/Email/GatePass?GateId")) {
         this.userrolelist.forEach(item => {
@@ -625,6 +641,39 @@ export class NavMenuComponent implements OnInit {
         })
       }
       else if (eurl.includes("/Email/MaterialRequestApprovalNP?ReqId")) {
+        debugger;
+        this.userrolelist.forEach(item => {
+          var dt1 = this.rbalist.filter(function (element, index) {
+            return (element.materialrequest_approval && element.roleid == item.roleid);
+          });
+          if (dt1.length > 0) {
+            this.emp.roleid = String(dt1[0].roleid);
+            this.setrolename(this.emp.roleid);
+            localStorage.removeItem('Employee');
+            localStorage.setItem('Employee', JSON.stringify(this.emp));
+            this.bindmenubyrba(eurl);
+            return false;
+          }
+        })
+      }
+      else if (eurl.includes("/Email/ApproveSTOMaterialNP?ReqId")) {
+        debugger;
+        this.userrolelist.forEach(item => {
+          var dt1 = this.rbalist.filter(function (element, index) {
+            return (element.materialrequest_approval && element.roleid == item.roleid);
+          });
+          if (dt1.length > 0) {
+            this.emp.roleid = String(dt1[0].roleid);
+            this.setrolename(this.emp.roleid);
+            localStorage.removeItem('Employee');
+            localStorage.setItem('Employee', JSON.stringify(this.emp));
+            this.bindmenubyrba(eurl);
+            return false;
+          }
+        })
+
+      }
+      else if (eurl.includes("/Email/ApprovalSubcontractingMaterialNP?ReqId")) {
         debugger;
         this.userrolelist.forEach(item => {
           var dt1 = this.rbalist.filter(function (element, index) {
@@ -1240,6 +1289,13 @@ export class NavMenuComponent implements OnInit {
           this.router.navigate(['WMS/STOApproval'], { queryParams: { transferid: this.transferid } });
         }
       }
+      if (eurl.includes("/Email/ApproveSTOMaterialNP?ReqId")) {
+        debugger;
+        this.transferid = eurl.split('=')[1];
+        if (this.transferid) {
+          this.router.navigate(['WMS/STOApproval'], { queryParams: { transferid: this.transferid } });
+        }
+      }
 
       //Purpose: << Project Manager >>
 
@@ -1262,6 +1318,13 @@ export class NavMenuComponent implements OnInit {
       //Purpose: << Project Manager >>
 
       if (eurl.includes("/Email/ApprovalSubcontractingMaterial?ReqId")) {
+        debugger;
+        this.transferid = eurl.split('=')[1];
+        if (this.transferid) {
+          this.router.navigate(['WMS/SubcontractApproval'], { queryParams: { transferid: this.transferid } });
+        }
+      }
+      if (eurl.includes("/Email/ApprovalSubcontractingMaterialNP?ReqId")) {
         debugger;
         this.transferid = eurl.split('=')[1];
         if (this.transferid) {
@@ -1328,6 +1391,14 @@ export class NavMenuComponent implements OnInit {
         this.gateid = eurl.split('=')[1];
         if (this.gateid) {
           this.router.navigate(['WMS/GatePassPMList'], { queryParams: { requestid: this.gateid } });
+
+        }
+      }
+      if (eurl.includes("/Email/GatePassAuthList?GateId")) {
+        this.gateid = this.route.snapshot.queryParams.gateid;
+        this.gateid = eurl.split('=')[1];
+        if (this.gateid) {
+          this.router.navigate(['WMS/GatePassAuthList'], { queryParams: { requestid: this.gateid } });
 
         }
       }

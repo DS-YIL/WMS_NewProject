@@ -45,6 +45,8 @@ export class GatePassApproverComponent implements OnInit {
   public issueqtyenable: boolean = true;
   rbalist: rbamaster[];
   selectedrba: rbamaster;
+  isplantstockrequest: boolean = false;
+  isissuedpopup: boolean = false;
   //Email
   gateid: string = "";
   ngOnInit() {
@@ -55,6 +57,8 @@ export class GatePassApproverComponent implements OnInit {
       this.router.navigateByUrl("Login");
     this.selectedrba = new rbamaster();
     this.rbalist = [];
+    this.isplantstockrequest = false;
+    this.isissuedpopup = false;
     if (localStorage.getItem("rbalist")) {
       this.rbalist = JSON.parse(localStorage.getItem("rbalist")) as rbamaster[];
       var filterdt = this.rbalist.filter(o => o.roleid == parseInt(this.employee.roleid));
@@ -92,6 +96,7 @@ export class GatePassApproverComponent implements OnInit {
   //get gatepass list
   bindMaterilaDetails(gatepassId: any) {
     debugger;
+    this.isplantstockrequest = false;
     this.wmsService.gatepassmaterialdetail(gatepassId).subscribe(data => {
       debugger;
       this.materialList = data;
@@ -101,6 +106,9 @@ export class GatePassApproverComponent implements OnInit {
       debugger;
       if (this.gatepassModel.issuedqty > 0) {
         this.btnDisableissue = true;
+      }
+      if (this.gatepassModel.materialtype == 'plant') {
+        this.isplantstockrequest = true;
       }
       if (this.gatepassModel.approverstatus == 'Approved')
         this.btnDisable = true;
@@ -182,6 +190,7 @@ export class GatePassApproverComponent implements OnInit {
     this.AddDialog = true;
     this.roindex = rowindex;
     this.issuedqty = issuedqty;
+    this.isissuedpopup = false;
     //if (issuedqty > 0) {
     //  this.showdialog = true;
     //  //this.materialList.filter(li=>li.mater)
@@ -195,14 +204,26 @@ export class GatePassApproverComponent implements OnInit {
       this.issueqtyenable = false;
       debugger;
       var projectid = this.materialList[0].projectid;
-      this.wmsService.getItemlocationListByMaterialanddescpo(material, description, projectid, pono).subscribe(data => {
-        this.itemlocationData = data;
-        this.showdialog = true;
-      });
+      if (this.isplantstockrequest) {
+        this.wmsService.getlocationsforplantstockissue(material, description).subscribe(data => {
+          this.itemlocationData = data;
+          console.log(this.itemlocationData);
+          this.showdialog = true;
+        });
+      }
+      else {
+        this.wmsService.getItemlocationListByMaterialanddescpo(material, description, projectid, pono).subscribe(data => {
+          this.itemlocationData = data;
+          this.showdialog = true;
+        });
+
+      }
+     
     }
 
     else {
       this.issueqtyenable = true;
+      this.isissuedpopup = true
       this.wmsService.getItemlocationListByGatepassmaterialid(gatepassmaterialid).subscribe(data => {
         debugger;
         this.itemlocationData = data;
@@ -281,6 +302,12 @@ export class GatePassApproverComponent implements OnInit {
         item.projectid = this.materialList[this.roindex].projectid;
         item.pono = this.materialList[this.roindex].pono;
         item.requesttype = "GPRequest";
+        if (this.isplantstockrequest) {
+          item.materialtype = "Plant";
+        }
+        else {
+          item.materialtype = "Project"
+        }
         totalissuedqty = totalissuedqty + (item.issuedqty);
         this.issueFinalList.push(item);
       }

@@ -40,6 +40,7 @@ export class ReceiveSubContractRequestComponent implements OnInit {
   sourcelocation: string;
   pcode: string = "";
   pono: string = "";
+  isplantstockrequest: boolean = false;
 
   ngOnInit() {
     this.STORequestList = [];
@@ -51,6 +52,7 @@ export class ReceiveSubContractRequestComponent implements OnInit {
     this.selectedStatus = "Pending";
     this.vendorname = "";
     this.sourcelocation = "";
+    this.isplantstockrequest = false;
     this.FIFOvalues = new FIFOValues();
     this.getSTORequestList();
   }
@@ -84,6 +86,7 @@ export class ReceiveSubContractRequestComponent implements OnInit {
     this.showMatDetails = true;
     this.showavailableStock = true;
     this.materialissueList = [];
+    this.isplantstockrequest = false;
     this.transferId = details.transferid;
     this.requestedBy = details.transferredby;
     this.vendorname = details.vendorname;
@@ -91,6 +94,9 @@ export class ReceiveSubContractRequestComponent implements OnInit {
     this.pcode = details.projectcode;
     this.pono = details.pono;
     var type = "MatIssue";
+    if (String(details.materialtype).toLowerCase() == "plant") {
+      this.isplantstockrequest = true;
+    }
     this.wmsService.getMatdetailsbyTransferId(details.transferid, type, 'SubContract').subscribe(data => {
       this.spinner.hide();
       this.materialissueList = data;
@@ -159,10 +165,19 @@ export class ReceiveSubContractRequestComponent implements OnInit {
     this.itemlocationData = [];
     if (this.selectedStatus == "Pending") {
       this.issueqtyenable = false;
-      this.wmsService.getItemlocationListByMaterialdescstore(material, description, this.pcode,pono, this.sourcelocation).subscribe(data => {
-        this.itemlocationData = data;
-        this.showdialog = true;
-      });
+      if (this.isplantstockrequest) {
+        this.wmsService.getlocationsforplantstockissue(material, description).subscribe(data => {
+          this.itemlocationData = data;
+          this.showdialog = true;
+        });
+      }
+      else {
+        this.wmsService.getItemlocationListByMaterialdescstore(material, description, this.pcode, pono, this.sourcelocation).subscribe(data => {
+          this.itemlocationData = data;
+          this.showdialog = true;
+        });
+      }
+     
     }
     else {
       this.issueqtyenable = true;
@@ -200,6 +215,12 @@ export class ReceiveSubContractRequestComponent implements OnInit {
         item.transferid = this.materialissueList[this.roindex].transferid;
         item.createdby = this.materialissueList[this.roindex].createdby;
         item.requesttype = "SubContract";
+        if (this.isplantstockrequest) {
+          item.materialtype = "Plant";
+        }
+        else {
+          item.materialtype = "Project"
+        }
         totalissuedqty = totalissuedqty + (item.issuedqty);
         this.FIFOvalues.issueqty = totalissuedqty;
         this.itemlocationsaveData.push(item);

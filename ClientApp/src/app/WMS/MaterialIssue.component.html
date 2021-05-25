@@ -19,6 +19,15 @@
         <div class="col-lg-3 col-md-3 col-sm-3 pt-2 labelheading" *ngIf="!isplantstockrequest">
           <label>Project :</label>&nbsp;<span><label class="labeltext">{{materialissueList[0].projectname}}</label></span>
         </div>
+        <div class="col-lg-3 col-md-3 col-sm-3 pt-2 labelheading" *ngIf="isplantstockrequest && requesttypestr == 'Plant'">
+          <label>Material Type :</label>&nbsp;<span><label class="labeltext">Plant</label></span>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-3 pt-2 labelheading" *ngIf="isplantstockrequest && requesttypestr == 'PLOS'">
+          <label>Material Type :</label>&nbsp;<span><label class="labeltext">PLOS</label></span>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-3 pt-2 labelheading" *ngIf="!isplantstockrequest">
+          <label>Material Type :</label>&nbsp;<span><label class="labeltext">Project</label></span>
+        </div>
         <div class="col-lg-3 col-md-3 col-sm-3 pt-2 labelheading">
           <label>Requester :</label>&nbsp;<span><label class="labeltext">{{materialissueList[0].name}}</label></span>
         </div>

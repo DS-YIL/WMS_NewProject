@@ -3,7 +3,7 @@
     <div class="card-header text-center commoncardheader">
       <div class="row " style="margin-top: 10px; margin-left: 0px !important; margin-right: 0px !important">
         <div class="col-lg-2 col-md-2 form-inline">
-          <div class="form-inline">
+         
             <label class="labelheading">Status :</label>&nbsp;&nbsp;
             <select [(ngModel)]="approverstatus" class="form-control" (change)="searchGatePassList()">
               <option value="">All</option>
@@ -11,7 +11,7 @@
               <option value='Approved'>Approved</option>
               <option value='Sent for Modification'>Sent for Modification</option>
             </select>
-          </div>
+      
           </div>
           <div class="col-lg-2 col-md-2 form-inline">
             <div class="form-inline">
@@ -72,7 +72,7 @@
                 {{ri+1}}
               </td>
               <td class="ptable-cell" style="text-align:center"><button class="btn btn-link" *ngIf="rowData.gatepassid" (click)="showApprover(rowData.gatepassid)">{{rowData.gatepassid}}</button></td>
-              <td class="ptable-cell" style="text-align:left">{{rowData.gatepasstype}}</td>
+              <td class="ptable-cell" style="text-align:left">{{rowData.materialtype}} / {{rowData.gatepasstype}}</td>
               <td class="ptable-cell" style="text-align:left">{{rowData.vendorname}}</td>
               <td class="ptable-cell" style="text-align:left">
                 <span *ngIf="rowData.reasonforgatepass && rowData.reasonforgatepass === 'Other'"> {{rowData.otherreason}}</span>

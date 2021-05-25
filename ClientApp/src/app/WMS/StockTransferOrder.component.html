@@ -2,9 +2,14 @@
   <div class="card" style="width:100%;border-radius:10px; box-shadow:5px 10px #888888;min-height: 81vh; max-height: 81vh;">
     <div class="card-header">
       <div class="row">
-        <div class="col-lg-4 col-md-4">
+        <div class="col-lg-4 col-md-4 form-inline">
           <p-button icon="fa fa-arrow-left" label="Back" (click)="Showlist()" *ngIf="addprocess"></p-button>
           <p-button icon="fa fa-user-plus" label="Create Intra Unit Transfer" (click)="Showadd()" *ngIf="!addprocess"></p-button>
+          <label class="labelheading" *ngIf="addprocess">&nbsp;&nbsp;Stock Type :</label>&nbsp;&nbsp;
+          <select class="form-control" [(ngModel)]="stocktype" *ngIf="addprocess" (change)="getplantmaterials($event)" style="width:150px;">
+            <option value="Project Stock">Project Stock</option>
+            <option value="Plant Stock">Plant Stock</option>
+          </select>
         </div>
         <div class="col-lg-4 col-md-4">
           <h6 class="text-center">
@@ -37,13 +42,13 @@
           &nbsp;&nbsp;&nbsp;&nbsp;<label class="labelheading" *ngIf="addprocess">Destination :&nbsp;</label>
           &nbsp;&nbsp;&nbsp;
           <p-dropdown [options]="plantlist" [style]="{'width':'100%'}" [(ngModel)]="destinationplant" optionLabel="storagelocationdesc" (onChange)="destplantchange($event)" placeholder="Select location" *ngIf="addprocess" [showClear]="true"></p-dropdown>
-          &nbsp;&nbsp;&nbsp;&nbsp;<label class="labelheading" *ngIf="addprocess">Project :</label>
-          &nbsp;&nbsp;&nbsp;<p-autoComplete [(ngModel)]="selectedproject" *ngIf="addprocess" field="text" appendTo="body" (onSelect)="ProjectSelected()" [suggestions]="filteredprojects" placeholder="search by code" [ngModelOptions]="{standalone: true}" [forceSelection]="true" (completeMethod)="filterprojects($event)" [size]="25"
+          &nbsp;&nbsp;&nbsp;&nbsp;<label class="labelheading" *ngIf="addprocess && !isplantstocktrquest">Project :</label>
+          &nbsp;&nbsp;&nbsp;<p-autoComplete [(ngModel)]="selectedproject" *ngIf="addprocess && !isplantstocktrquest" field="text" appendTo="body" (onSelect)="ProjectSelected()" [suggestions]="filteredprojects" placeholder="search by code" [ngModelOptions]="{standalone: true}" [forceSelection]="true" (completeMethod)="filterprojects($event)" [size]="25"
                                             [dropdown]="true"></p-autoComplete>
           <!--&nbsp;&nbsp;&nbsp;&nbsp;<label class="labelheading" *ngIf="addprocess">Remarks:&nbsp;</label>
   &nbsp;&nbsp;&nbsp;<textarea type="text" [(ngModel)]="mainmodel.remarks" placeholder="Remarks" style="width:15%;resize:none" *ngIf="addprocess"></textarea>-->
-          &nbsp;&nbsp;&nbsp;&nbsp;<label class="labelheading" *ngIf="addprocess">PONO :</label>
-          &nbsp;&nbsp;&nbsp;<p-multiSelect [appendTo]="body" *ngIf="addprocess" [options]="ponolist" [(ngModel)]="selectedmuliplepo" optionLabel="pono" [style]="{'min-width':'300px'}" (onChange)="onPOSelected()"></p-multiSelect>
+          &nbsp;&nbsp;&nbsp;&nbsp;<label class="labelheading" *ngIf="addprocess && !isplantstocktrquest">PONO :</label>
+          &nbsp;&nbsp;&nbsp;<p-multiSelect [appendTo]="body" *ngIf="addprocess && !isplantstocktrquest" [options]="ponolist" [(ngModel)]="selectedmuliplepo" optionLabel="pono" [style]="{'min-width':'300px'}" (onChange)="onPOSelected()"></p-multiSelect>
           <!--<p-autoComplete [(ngModel)]="selectedpono" [suggestions]="filteredpos" *ngIf="addprocess" [ngModelOptions]="{standalone: true}" placeholder="search by PONo" [forceSelection]="false" (onSelect)="onPOSelected()" (change)="onPOSelected()" (completeMethod)="filterpos($event)" [size]="20"
                                              [dropdown]="true"></p-autoComplete>-->
         </div>
@@ -69,37 +74,37 @@
           <ng-template pTemplate="header">
             <tr class="mprltbldata">
               <th style="text-align:center;width:5%;">Sl.No.</th>
-              <th style="text-align:center;width:10%;">PONo</th>
+              <th style="text-align:center;width:10%;" *ngIf="!isplantstocktrquest">PONo</th>
               <th style="text-align:center;width:15%;">Material</th>
               <th style="text-align:center;">Item PO Description</th>
               <th style="text-align:center;width:8%;">Available Qty</th>
-              <th style="text-align:center;width:10%;">Unit Price(INR)</th>
+              <th style="text-align:center;width:10%;" *ngIf="!isplantstocktrquest">Unit Price(INR)</th>
               <th style="text-align:center;width:8%;">Transfer Qty</th>
               <th style="text-align:center;width:10%;">Value(INR)</th>
               <!--<th style="text-align:center;width:14%;">Project</th>-->
               <th style="text-align:center;width:15%;">Required Date</th>
-              <!--<th style="text-align:center;width:5%;">
+              <th style="text-align:center;width:5%;" *ngIf="isplantstocktrquest">
     <p-button icon="fa fa-user-plus" pTooltip="Add Material" (click)="addrows()" *ngIf="addprocess"></p-button>
-  </th>-->
+  </th>
             </tr>
           </ng-template>
           <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
             <tr>
               <td class="ptable-cell" style="text-align: center; width: 5%;">{{ri+1}}</td>
-              <td class="ptable-cell" style="text-align: center; width: 10%;">{{rowData.pono}}</td>
+              <td class="ptable-cell" style="text-align: center; width: 10%;" *ngIf="!isplantstocktrquest">{{rowData.pono}}</td>
               <td class="ptable-cell" style="text-align:center;width:15%;">
-                {{rowData.materialid}}
-                <!--<p-autoComplete appendTo="body" placeholder="search by material" [style]="{'width':'80%'}" [inputStyle]="{'width':'80%'}" (onSelect)="onMaterialSelected1($event,rowData,ri)" [(ngModel)]="rowData.materialObj" type="text" [suggestions]="searchItems" field="name" [forceSelection]="true" [dropdown]="true" (completeMethod)="bindSearchListDatamaterial($event,rowData,'material')" ></p-autoComplete>-->
+                <span *ngIf="!isplantstocktrquest">{{rowData.materialid}}</span>
+                <p-autoComplete appendTo="body" *ngIf="isplantstocktrquest" placeholder="search by material" [style]="{'width':'100%'}" [inputStyle]="{'width':'80%'}" (onSelect)="onMaterialSelected1($event,rowData,ri)" [(ngModel)]="rowData.materialObj" type="text" [suggestions]="searchItems" field="name" [forceSelection]="true" [dropdown]="true" (completeMethod)="bindSearchListDatamaterial($event,rowData,'material')" ></p-autoComplete>
               </td>
               <td class="ptable-cell" style="text-align:left;">
-                {{rowData.materialdescription}}
-                <!--<p-autoComplete appendTo="body" placeholder="search by description" [style]="{'width':'80%'}" [inputStyle]="{'width':'80%'}" (onSelect)="onDescriptionSelected($event,rowData,ri)" [(ngModel)]="rowData.materialdescObj" type="text" [suggestions]="searchdescItems" field="name" [forceSelection]="true" [dropdown]="true" (completeMethod)="bindSearchListDatamaterialdesc($event,rowData)"></p-autoComplete>-->
+                <span *ngIf="!isplantstocktrquest">{{rowData.materialdescription}}</span>
+                  <p-autoComplete appendTo="body" *ngIf="isplantstocktrquest" placeholder="search by description" [style]="{'width':'80%'}" [inputStyle]="{'width':'80%'}" (onSelect)="onDescriptionSelected($event,rowData,ri)" [(ngModel)]="rowData.materialdescObj" type="text" [suggestions]="searchdescItems" field="name" [forceSelection]="true" [dropdown]="true" (completeMethod)="bindSearchListDatamaterialdesc($event,rowData)"></p-autoComplete>
 
-              </td>
+</td>
               <td class="ptable-cell" style="text-align:right;width:8%;">
                 <input pInputText type="number" style="text-align:right" class="form-control" readonly [min]="0" [(ngModel)]="rowData.availableqty">
               </td>
-              <td class="ptable-cell" style="text-align:right;width:10%;">
+              <td class="ptable-cell" style="text-align:right;width:10%;" *ngIf="!isplantstocktrquest">
                 <span>{{rowData.unitprice | number : '1.2-2'}}</span>
               </td>
               <td class="ptable-cell" style="text-align:right;width:8%;">
@@ -117,9 +122,9 @@
                             placeholder="Select Date" dateFormat="dd/mm/yy" [showIcon]="true" appendTo="body" [minDate]="minDate"></p-calendar>
                 <!--<input pInputText type="date" style="text-align:right" class="form-control" [min]="0" [(ngModel)]="rowData.requireddate">-->
               </td>
-              <!--<td style="text-align:center;width:5%;">
+              <td style="text-align:center;width:5%;" *ngIf="isplantstocktrquest">
     <button (click)="deleteRow(ri)" class="btn btn-danger" style="margin-top:10%"><i class="fa fa-trash"></i></button>
-  </td>-->
+  </td>
 
             </tr>
           </ng-template>
@@ -141,7 +146,8 @@
               <th style="text-align:center;width:5%;">Sl.No.</th>
               <th style="text-align:center;width:10%;">Transfer Id</th>
               <th style="text-align:center;width:10%;">Project</th>
-              <th style="text-align:center;width:15%;">Source</th>
+              <th style="text-align:center;width:5%;">Type</th>
+              <th style="text-align:center;width:10%;">Source</th>
               <th style="text-align:center;width:10%;">Destination</th>
               <th style="text-align:center;width:10%;">Transferred By</th>
               <th style="text-align:center;width:10%;">Transferred On</th>
@@ -158,7 +164,10 @@
               <td class="ptable-cell" style="text-align:center;width:10%;">
                 <span>{{rowData.projectcode}}</span>
               </td>
-              <td class="ptable-cell" style="text-align:left;width:15%;">
+              <td class="ptable-cell" style="text-align:center;width:5%;">
+                <span>{{rowData.materialtype}}</span>
+              </td>
+              <td class="ptable-cell" style="text-align:left;width:10%;">
                 <span>{{rowData.sourceplant}}</span>
               </td>
               <td class="ptable-cell" style="text-align:left;width:10%;">

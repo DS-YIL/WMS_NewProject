@@ -117,6 +117,7 @@
               <!--<th class="ptable-cell" style="text-align:center;">Code</th>-->
               <th class="ptable-cell" style="text-align:center;">File Name</th>
               <th class="ptable-cell" style="text-align:center;">Upload Date</th>
+              <th class="ptable-cell" style="text-align:center;">Uploaded By</th>
               <th class="ptable-cell" style="text-align:center;">Total Records</th>
               <th class="ptable-cell" style="text-align:center;">Success Records</th>
               <th class="ptable-cell" style="text-align:center;">Exception Records</th>
@@ -125,6 +126,7 @@
               <th></th>
               <th> <input pInputText type="text" class="form-control" (input)="dt1.filter($event.target.value, 'uploadedfilename', 'startsWith')"></th>
               <th> <p-calendar (onSelect)="onDateSelect($event)" appendTo="body" (onClearClick)="dt1.filter('', 'createddate', 'equals')" [showButtonBar]="true" styleClass="p-column-filter" placeholder="Select Date" [readonlyInput]="true" dateFormat="dd/mm/yy"></p-calendar></th>
+              <th> <input pInputText type="text" class="form-control" (input)="dt1.filter($event.target.value, 'uploadedby', 'startsWith')"></th>
               <th> <input pInputText type="text" class="form-control" (input)="dt1.filter($event.target.value, 'totalrecords', 'startsWith')"></th>
               <th><input pInputText type="text" class="form-control" (input)="dt1.filter($event.target.value, 'successrecords', 'startsWith')"></th>
               <th><input pInputText type="text" class="form-control" (input)="dt1.filter($event.target.value, 'exceptionrecords', 'startsWith')"></th>
@@ -138,16 +140,18 @@
                 <span class="text-primary" style="text-decoration:underline;cursor:pointer" (click)="getalllist(rowData)">{{rowData.uploadedfilename}}</span>
               </td>
               <td class="ptable-cell" style="text-align:center;">{{rowData.createddate | date : 'dd/MM/yyyy'}} </td>
+              <td class="ptable-cell" style="text-align:center;">{{rowData.uploadedby}} </td>
               <td class="ptable-cell" style="text-align:right;">{{rowData.totalrecords}} </td>
               <td class="ptable-cell" style="text-align:right;">
-                <span class="text-primary" style="text-decoration:underline;cursor:pointer" (click)="getlist(rowData)">{{rowData.successrecords}}
-                  </span>
+                <span class="text-primary" style="text-decoration:underline;cursor:pointer" (click)="getlist(rowData)">
+                  {{rowData.successrecords}}
+                </span>
               </td>
               <td class="ptable-cell" style="text-align:right;">
                 <span class="text-primary" style="text-decoration:underline;cursor:pointer" (click)="getexlist(rowData)">{{rowData.exceptionrecords}}</span>
               </td>
 
-          </ng-template>
+</ng-template>
           <ng-template pTemplate="emptymessage">
             <tr>
               <td colspan="4" style="text-align:center;color:red">No Records.</td>

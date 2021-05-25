@@ -101,7 +101,7 @@
                 <a style="cursor:pointer;color:blue;text-decoration:underline;" *ngIf="rowData.gatepassid && selectedrba.gate_pass && employee.roleid=='5' || rowData.isnonproject" (click)="showdetails(rowData,ri)">{{rowData.gatepassid}}</a>
                 <a *ngIf="selectedrba.material_issue && employee.roleid!='5' && !rowData.isnonproject" [routerLink]="['/WMS/GatePassApprover',rowData.gatepassid]" (click)="showdetails(rowData,ri)" routerLinkActive="active">{{rowData.gatepassid}}</a>
               </td>
-              <td class="ptable-cell" style="text-align:left" *ngIf="!selectedrba.gatepass_approval">{{rowData.gatepasstype}}</td>
+              <td class="ptable-cell" style="text-align:left" *ngIf="!selectedrba.gatepass_approval">{{rowData.materialtype}} / {{rowData.gatepasstype}}</td>
               <td class="ptable-cell" style="text-align:left">{{rowData.vendorname}}</td>
               <td class="ptable-cell" style="text-align:left">
                 <span *ngIf="rowData.reasonforgatepass && rowData.reasonforgatepass === 'Other'"> {{rowData.otherreason}}</span>
@@ -214,6 +214,7 @@
         <div class="form-inline-list">
           <select class="form-control forms-input" [(ngModel)]="materialtype" (change)="materialtypechanged($event)" [disabled]="iseditprocess">
             <option value='project'>Project</option>
+            <option value='plant'>Plant</option>
             <option value='nonproject'>Non Project</option>
           </select>
         </div>
@@ -228,12 +229,12 @@
           </select>
         </div>
       </div>
-      <div class="col-lg-3 col-md-3 form-inline" *ngIf="!gatepassModel.isnonproject">
+      <div class="col-lg-3 col-md-3 form-inline" *ngIf="!gatepassModel.isnonproject && !isplanttype">
         <label class="labelheading">Project :</label>&nbsp;&nbsp;<br />
         <p-autoComplete [(ngModel)]="selectedproject" field="text" appendTo="body" [disabled]="iseditprocess" [suggestions]="filteredprojects" placeholder="search by name/code" [ngModelOptions]="{standalone: true}" (onSelect)="projectSelected($event)" [forceSelection]="true" (completeMethod)="filterprojects($event)" [size]="20"
                         [dropdown]="true"></p-autoComplete>
       </div>
-      <div class="col-lg-3 col-md-3 form-inline" *ngIf="!gatepassModel.isnonproject && !iseditprocess">
+      <div class="col-lg-3 col-md-3 form-inline" *ngIf="!gatepassModel.isnonproject && !iseditprocess && !isplanttype">
 
 
         <label class="labelheading">PONo :</label>&nbsp;&nbsp;<br />
@@ -302,55 +303,56 @@
         <ng-template pTemplate="caption">
           <label style="float:left">Approver : {{gatepassModel.managername}}</label>
           Add Material
-          <button type="button" icon="fa fa-plus" pButton aria-hidden="true" *ngIf="gatepassModel.isnonproject" pTooltip="Add material" (click)="addNewMaterial()" style="float: right;height: 26px;"></button>
+          <button type="button" icon="fa fa-plus" pButton aria-hidden="true" *ngIf="gatepassModel.isnonproject || isplanttype" pTooltip="Add material" (click)="addNewMaterial()" style="float: right;height: 26px;"></button>
         </ng-template>
         <ng-template pTemplate="header">
           <tr class="mprltbldata">
             <th class="ptable-cell" style="width:60px;text-align:center">Sl. No.</th>
-            <th style="text-align:center;width:120px;" class="ptable-cell" *ngIf="!gatepassModel.isnonproject">PONo</th>
-            <th style="text-align:center;width:200px;" class="ptable-cell" *ngIf="gatepassModel.isnonproject">Material</th>
-            <th style="text-align:center;width:110px;" class="ptable-cell" *ngIf="!gatepassModel.isnonproject">Material</th>
+            <th style="text-align:center;width:120px;" class="ptable-cell" *ngIf="!gatepassModel.isnonproject && !isplanttype">PONo</th>
+            <th style="text-align:center;width:200px;" class="ptable-cell" *ngIf="gatepassModel.isnonproject || isplanttype">Material</th>
+            <th style="text-align:center;width:110px;" class="ptable-cell" *ngIf="!gatepassModel.isnonproject && !isplanttype">Material</th>
             <th style="text-align:center" class="ptable-cell">PO Item description</th>
             <th style="text-align:center;width:100px;" class="ptable-cell" *ngIf="!gatepassModel.isnonproject">Available Qty</th>
-            <th style="text-align:center;width:100px;" class="ptable-cell" *ngIf="!gatepassModel.isnonproject">Unit Price(INR)</th>
+            <th style="text-align:center;width:100px;" class="ptable-cell" *ngIf="!gatepassModel.isnonproject && !isplanttype">Unit Price(INR)</th>
             <th style="text-align:center;width:100px;" class="ptable-cell">Quantity</th>
             <th style="text-align:center;width:100px;" class="ptable-cell">Value(INR)</th>
             <th style="text-align:center;width:200px;" class="ptable-cell">Remarks</th>
             <th *ngIf="gatepassModel.gatepasstype=='Returnable'" style="text-align:center;width:150px;" class="ptable-cell">Expected Date</th>
-            <th style="text-align:center;width:60px;" class="ptable-cell" *ngIf="gatepassModel.isnonproject && !iseditprocess"></th>
+            <th style="text-align:center;width:60px;" class="ptable-cell" *ngIf="(gatepassModel.isnonproject || isplanttype) && !iseditprocess"></th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex" let-rindex=0>
           <tr>
             <td class="ptable-cell" style="text-align:center"> {{ri+1}} </td>
-            <td class="ptable-cell" style="text-align:center" *ngIf="!gatepassModel.isnonproject"> {{rowData.pono}} </td>
+            <td class="ptable-cell" style="text-align:center" *ngIf="!gatepassModel.isnonproject && !isplanttype"> {{rowData.pono}} </td>
             <td class="ptable-cell" style="text-align:left;">
-              <span *ngIf="!gatepassModel.isnonproject">{{rowData.materialid}}</span>
+              <span *ngIf="!gatepassModel.isnonproject && !isplanttype">{{rowData.materialid}}</span>
               <!--<p-autoComplete *ngIf="!gatepassModel.isnonproject" [(ngModel)]="rowData.materialid" [style]="{'width':'80%'}" [inputStyle]="{'width':'80%'}" placeholder="search by name/code" type="text" appendTo="body" [forceSelection]="true" (onSelect)="onMaterialSelected1(rowData,ri)" [suggestions]="filteredmats" (completeMethod)="filtermats($event,rowData)"
-    [dropdown]="true"></p-autoComplete>-->
-              <input type="text" *ngIf="gatepassModel.isnonproject" (blur)="onmaterialchanged(rowData,ri)" class="form-control" [(ngModel)]="rowData.materialid" />
-
+  [dropdown]="true"></p-autoComplete>-->
+              <input type="text" *ngIf="gatepassModel.isnonproject && !isplanttype" (blur)="onmaterialchanged(rowData,ri)" class="form-control" [(ngModel)]="rowData.materialid" />
+              <p-autoComplete appendTo="body" placeholder="search by materialcode" *ngIf="isplanttype" [(ngModel)]="rowData.materialobj" [style]="{'width':'100%'}" [inputStyle]="{'width':'80%'}" type="text" [suggestions]="searchItems" field="name" (onSelect)="onMaterialSelected1(rowData,ri)" [forceSelection]="true" [dropdown]="true" (completeMethod)="bindSearchListDatamaterial($event,'material',rowData.materialdescriptionobj)"></p-autoComplete>
 
             </td>
             <td class="ptable-cell" style="text-align:left;">
-              <span *ngIf="!gatepassModel.isnonproject">{{rowData.materialdescription}}</span>
+              <span *ngIf="!gatepassModel.isnonproject && !isplanttype">{{rowData.materialdescription}}</span>
               <!--<p-autoComplete *ngIf="gatepassModel.gatepasstype=='Returnable' && !gatepassModel.isnonproject" [style]="{'width':'80%'}" [inputStyle]="{'width':'80%'}" [(ngModel)]="rowData.materialdescription" placeholder="search by description" type="text" appendTo="body" [forceSelection]="true" (onSelect)="onDescriptionSelected(rowData,ri)" [suggestions]="filteredmatdesc" (completeMethod)="filtermatdescs($event,rowData)"
-                    [dropdown]="true"></p-autoComplete>
-    <p-autoComplete *ngIf="gatepassModel.gatepasstype !=='Returnable' && !gatepassModel.isnonproject" [style]="{'width':'80%'}" [inputStyle]="{'width':'80%'}" [(ngModel)]="rowData.materialdescription" placeholder="search by description" type="text" appendTo="body" [forceSelection]="true" (onSelect)="onDescriptionSelected(rowData,ri)" [suggestions]="filteredmatdesc" (completeMethod)="filtermatdescs($event,rowData)"
-                    [dropdown]="true"></p-autoComplete>-->
-              <input type="text" *ngIf="gatepassModel.isnonproject" (blur)="ondescriptionchanged(rowData,ri)" class="form-control" [(ngModel)]="rowData.materialdescription" />
-
+                  [dropdown]="true"></p-autoComplete>
+  <p-autoComplete *ngIf="gatepassModel.gatepasstype !=='Returnable' && !gatepassModel.isnonproject" [style]="{'width':'80%'}" [inputStyle]="{'width':'80%'}" [(ngModel)]="rowData.materialdescription" placeholder="search by description" type="text" appendTo="body" [forceSelection]="true" (onSelect)="onDescriptionSelected(rowData,ri)" [suggestions]="filteredmatdesc" (completeMethod)="filtermatdescs($event,rowData)"
+                  [dropdown]="true"></p-autoComplete>-->
+              <input type="text" *ngIf="gatepassModel.isnonproject  && !isplanttype" (blur)="ondescriptionchanged(rowData,ri)" class="form-control" [(ngModel)]="rowData.materialdescription" />
+              <p-autoComplete appendTo="body" placeholder="search by description" *ngIf="isplanttype" [(ngModel)]="rowData.materialdescriptionobj" [style]="{'width':'80%'}" [inputStyle]="{'width':'80%'}" type="text" (onSelect)="onDescriptionSelected(rowData,ri)" [suggestions]="searchdescItems" field="name" [forceSelection]="true" [dropdown]="true" (completeMethod)="bindSearchListDatamaterialdescs($event,'materialdesc',rowData.materialobj)"></p-autoComplete>
             </td>
 
             <td class="ptable-cell" style="text-align:right" *ngIf="!gatepassModel.isnonproject">
               <span>{{rowData.availableqty}}</span>
             </td>
-            <td class="ptable-cell" style="text-align:right" *ngIf="!gatepassModel.isnonproject">
+            <td class="ptable-cell" style="text-align:right" *ngIf="!gatepassModel.isnonproject && !isplanttype">
               <span>{{rowData.unitprice}}</span>
             </td>
             <td class="ptable-cell" style="text-align:right">
-              <input *ngIf="!gatepassModel.isnonproject" style="text-align:right" pInputText type="number" (blur)="onComplete(rowData.quantity , rowData.availableqty,ri,rowData)" class="form-control" [(ngModel)]="rowData.quantity">
-              <input *ngIf="gatepassModel.isnonproject" style="text-align:right" pInputText type="number" (blur)="onCompletenonproject(rowData.quantity,ri,rowData)" class="form-control" [(ngModel)]="rowData.quantity">
+              <input *ngIf="!gatepassModel.isnonproject && !isplanttype" style="text-align:right" pInputText type="number" (blur)="onComplete(rowData.quantity , rowData.availableqty,ri,rowData)" class="form-control" [(ngModel)]="rowData.quantity">
+              <input *ngIf="gatepassModel.isnonproject && !isplanttype" style="text-align:right" pInputText type="number" (blur)="onCompletenonproject(rowData.quantity,ri,rowData)" class="form-control" [(ngModel)]="rowData.quantity">
+              <input *ngIf="isplanttype" style="text-align:right" pInputText type="number" (blur)="onPlantComplete(rowData.quantity,rowData.availableqty,ri)" class="form-control" [(ngModel)]="rowData.quantity">
             </td>
             <td class="ptable-cell" style="text-align:right">
               <!--<span *ngIf="!gatepassModel.isnonproject">{{rowData.materialcost | number : '1.2-2'}}</span>-->
@@ -364,7 +366,7 @@
             <td *ngIf="gatepassModel.gatepasstype=='Returnable'" class="ptable-cell" style="text-align:right">
               <p-calendar class="mprldatepick" [(ngModel)]="rowData.expecteddate" dateFormat="dd/mm/yy" [minDate]="mindate" appendTo="body" [monthNavigator]="true" [yearNavigator]="true" yearRange="1900:2050"></p-calendar>
             </td>
-            <td class="ptable-cell" style="text-align:center;width:60px;" *ngIf="gatepassModel.isnonproject && !iseditprocess"><button pButton type="button" icon="fa fa-trash" class="ui-button-info" style="margin-left: 1px;" (click)="removematerial(rowData.gatepassmaterialid, ri)"></button></td>
+            <td class="ptable-cell" style="text-align:center;width:60px;" *ngIf="(gatepassModel.isnonproject || isplanttype) && !iseditprocess"><button pButton type="button" icon="fa fa-trash" class="ui-button-info" style="margin-left: 1px;" (click)="removematerial(rowData.gatepassmaterialid, ri)"></button></td>
 
 
 </ng-template>

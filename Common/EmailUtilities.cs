@@ -501,6 +501,22 @@ namespace WMS.Common
 				link = linkurl + "WMS/Email/MaterialRequestApprovalNP?ReqId=" + emlSndngList.requestid;
 
 			}
+			else if (subjecttype == 37)
+			{
+				mailMessage.Subject = "Approval Request for Intra Unit Transfer with request id:" + emlSndngList.requestid;
+				string requestedby = this.getnamebyid(emlSndngList.createdby);
+				subbody = "Please find the Intra Unit Transfer request details below. <br/> Requested By:" + requestedby + "<br/>Requested On:" + emlSndngList.createddate;
+				//subbody += "<br/>"+ mailMessage.Subject;
+				link = linkurl + "WMS/Email/ApproveSTOMaterialNP?ReqId=" + emlSndngList.requestid;
+			}
+			else if (subjecttype == 38)
+			{
+				mailMessage.Subject = "Approval Request for Sub Contacting Materials with request id:" + emlSndngList.requestid;
+				string requestedby = this.getnamebyid(emlSndngList.createdby);
+				subbody = "Please find the Sub Contacting Material request details below. <br/> Requested By:" + requestedby + "<br/>Requested On:" + emlSndngList.createddate;
+				//subbody += "<br/>"+ mailMessage.Subject;
+				link = linkurl + "WMS/Email/ApprovalSubcontractingMaterialNP?ReqId=" + emlSndngList.requestid;
+			}
 
 			//mailMessage.Subject = body;
 			var body = string.Empty;

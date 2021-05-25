@@ -138,7 +138,7 @@ from wms.wms_stock sk
  group by  req.requestforissueid,sk.materialid--,sk.pono,req.requestedquantity,sk.availableqty,req.requestid,emp."name",req.requesteddate,pro.jobname</value>
   </data>
   <data name="GetListForMaterialRequestByapproverid" xml:space="preserve">
-    <value>select Max(issue.approvedstatus) as approvedstatus,req.pono,req.requestid,Max(req.requesteddate) as requesteddate,req.requesterid,emp."name",max(req.requesttype)as requesttype,max(req.returnon)as returnon
+    <value>select Max(issue.approvedstatus) as approvedstatus,req.pono,max(req.requesttype) as requesttype,req.requestid,Max(req.requesteddate) as requesteddate,req.requesterid,emp."name",max(req.requesttype)as requesttype,max(req.returnon)as returnon
         from wms.wms_materialrequest req 
        left join wms.employee emp on req.requesterid=emp.employeeno 
        --left join wms.wms_pomaterials pomat on pomat.pono=po.pono
@@ -280,9 +280,11 @@ where  inw.invoiceno='#invoiceno' and openpo.pono='#pono' group by grnnumber</va
     <value>select gate.isnonproject,gate.gatepassid,gate.vendorname,gate.gatepasstype,gate.reasonforgatepass,gate.otherreason,gate.status,gate.referenceno ,gate.fmapproverremarks ,gate.approverremarks ,gate.approverstatus ,
 mat.gatepassmaterialid,mat.deleteflag,mat.materialid,mat.expecteddate,mat.materialcost::decimal(19,5), mat.poitemdescription as materialdescription,mat.pono,mat.quantity,mat.remarks,
 emp.name,emp1.name as fmapprover,iss.itemissueddate,gate.remarks as  statusremarks,appr."name"  as approvername,
-gate.projectid,iss.issuedqty,gate.requestedby ,gate.requestedon,gate.fmapprovedstatus,gate.approverid ,gate.fmapproverid,gate.approvedon,gate.fmapprovedon,gate.authid,gate.authstatus,gate.authremarks,gate.authorizedon, emp2.name as authname,
-case when gate.isnonproject is not true 
+gate.projectid,iss.issuedqty,gate.requestedby ,gate.requestedon,gate.fmapprovedstatus,gate.approverid ,gate.fmapproverid,gate.approvedon,gate.fmapprovedon,gate.authid,gate.authstatus,gate.authremarks,gate.authorizedon, emp2.name as authname,gate.materialtype,
+case when gate.isnonproject is not true and gate.materialtype = 'project'
      then (select sum(ws.availableqty::decimal(19,5)) from wms.wms_stock ws where ws.projectid = gate.projectid and ws.pono = mat.pono and ws.materialid = mat.materialid and ws.poitemdescription = mat.poitemdescription group by ws.projectid,ws.pono,ws.materialid,ws.poitemdescription)
+     when gate.isnonproject is not true and gate.materialtype = 'plant'
+     then (select sum(ws.availableqty::decimal(19,5)) from wms.wms_stock ws where ws.stcktype = 'Plant Stock' and ws.materialid = mat.materialid and ws.poitemdescription = mat.poitemdescription group by ws.materialid,ws.poitemdescription)
      else 0 end as availableqty,
       case when gate.isnonproject is not true
   then (select max(unitprice) from wms.wms_stock ws1 where ws1.projectid = gate.projectid and ws1.pono = mat.pono and ws1.materialid = mat.materialid and ws1.poitemdescription = mat.poitemdescription)
@@ -297,7 +299,7 @@ case when gate.isnonproject is not true
    where gate.deleteflag=false order by gate.gatepassid desc</value>
   </data>
   <data name="insertgatepassdata" xml:space="preserve">
-    <value>insert into wms.wms_gatepass(gatepassid, gatepasstype, status, referenceno, vehicleno, requestedby, requestedon,deleteflag,vendorname,print,reasonforgatepass,approverid,fmapproverid,fmapprovedstatus,approverstatus,authstatus,remarks,otherreason,isnonproject,projectid)values(default,@gatepasstype,@status,@referenceno,@vehicleno, @requestedby,@requestedon,@deleteflag,@vendorname,'true',@reasonforgatepass,@approverid,@fmapproverid,@fmapprovedstatus,@approverstatus,@authstatus,@remarks,@otherreason,@isnonproject,@projectid)returning gatepassid</value>
+    <value>insert into wms.wms_gatepass(gatepassid, gatepasstype, status, referenceno, vehicleno, requestedby, requestedon,deleteflag,vendorname,print,reasonforgatepass,approverid,fmapproverid,fmapprovedstatus,approverstatus,authstatus,remarks,otherreason,isnonproject,projectid,materialtype)values(default,@gatepasstype,@status,@referenceno,@vehicleno, @requestedby,@requestedon,@deleteflag,@vendorname,'true',@reasonforgatepass,@approverid,@fmapproverid,@fmapprovedstatus,@approverstatus,@authstatus,@remarks,@otherreason,@isnonproject,@projectid,@materialtype)returning gatepassid</value>
   </data>
   <data name="checkmaterial" xml:space="preserve">
     <value>select * from wms.wms_stock where materialid='#materialid' limit 1</value>
@@ -324,13 +326,15 @@ values(default,@gatepassid,@materialid,@quantity,@deleteflag,@remarks,@materialc
   <data name="getgatepassmaterialdetailList" xml:space="preserve">
     <value>select material.gatepassmaterialid,material.gatepassid,material.poitemdescription,emp."name" as name,pass.vendorname,material.expecteddate,
  (select sum(issuedqty) from wms.wms_materialissue  where requestid::text =material.gatepassmaterialid::text and requesttype = 'gatepass' ) as issuedqty,
- case when pass.isnonproject is not true
+ case when (pass.isnonproject is not true and pass.materialtype = 'project')
   then (select sum(availableqty) from wms.wms_stock ws where projectid = pass.projectid and pono = pass.pono and materialid =material.materialid and poitemdescription = material.poitemdescription)
+  when (pass.isnonproject is not true and pass.materialtype = 'plant')
+  then (select sum(availableqty) from wms.wms_stock ws1 where ws1.stcktype = 'Plant Stock' and ws1.materialid =material.materialid and ws1.poitemdescription = material.poitemdescription)
   else 0 end as availableqty,
-  case when pass.isnonproject is not true
+  case when (pass.isnonproject is not true and pass.materialtype = 'project')
   then (select max(unitprice) from wms.wms_stock ws where projectid = pass.projectid and pono = pass.pono and materialid =material.materialid and poitemdescription = material.poitemdescription)
   else 0 end as unitprice,
- pass.otherreason,pass.requestedon,pass.gatepasstype,pass.approverstatus,pass.reasonforgatepass,pass.approverremarks,pass.fmapprovedstatus,pass.fmapproverremarks,material.materialid,
+ pass.otherreason,pass.requestedon,pass.gatepasstype,pass.materialtype,pass.approverstatus,pass.reasonforgatepass,pass.approverremarks,pass.fmapprovedstatus,pass.fmapproverremarks,material.materialid,
  material.poitemdescription as materialdescription,material.poitemdescription,material.materialcost,material.quantity,material.remarks,pass.isnonproject,emp1."name" as approvedby,emp2."name" as fmapprovedby,
  pass.isnonproject,pass.projectid,material.pono,pass.authid,pass.authremarks,pass.authorizedon,pass.authstatus 
  from wms.wms_gatepassmaterial material
@@ -746,8 +750,8 @@ where inv.transferid = '#tid'
 group by inv.transferid,inv.id,inv.materialid,inv.materialid ,inv.poitemdesc, inv.sourcelocation,inv.destinationlocation</value>
   </data>
   <data name="insertInvStocktransfer" xml:space="preserve">
-    <value>insert into wms.wms_invstocktransfer (transferredby,transferredon,transfertype,sourceplant,destinationplant,vendorcode,vendorname,remarks,status,projectcode,approverid,isapprovalrequired,isapproved,approvedon,approvalremarks,sourcelocationcode,destinationlocationcode)
-values (@transferredby,@transferredon,@transfertype,@sourceplant,@destinationplant,@vendorcode,@vendorname,@remarks,@status,@projectcode,@approverid,@isapprovalrequired,@isapproved,@approvedon,@approvalremarks,@sourcelocationcode,@destinationlocationcode) returning transferid</value>
+    <value>insert into wms.wms_invstocktransfer (transferredby,transferredon,transfertype,sourceplant,destinationplant,vendorcode,vendorname,remarks,status,projectcode,approverid,isapprovalrequired,isapproved,approvedon,approvalremarks,sourcelocationcode,destinationlocationcode,materialtype )
+values (@transferredby,@transferredon,@transfertype,@sourceplant,@destinationplant,@vendorcode,@vendorname,@remarks,@status,@projectcode,@approverid,@isapprovalrequired,@isapproved,@approvedon,@approvalremarks,@sourcelocationcode,@destinationlocationcode,@materialtype) returning transferid</value>
   </data>
   <data name="insertinvtransfermaterial" xml:space="preserve">
     <value>insert into wms.wms_invtransfermaterial (transferid,materialid,sourcelocation,sourceitemid,destinationlocation,destinationitemid,transferqty,poitemdesc)
@@ -773,7 +777,7 @@ where (stinw.confirmqty is null or stinw.confirmqty = 0) and stinw.receivedqty &
   </data>
   <data name="getgrnlistdataforputaway" xml:space="preserve">
     <value>select stinw.inwardid as value,sinw.grnnumber as text,
-sinw.suppliername as supplier,sinw.isdirecttransferred,sinw.invoiceno ,emp.name as mrnby,sinw.mrnon 
+sinw.suppliername as supplier,sinw.isdirectdelivered,sinw.invoiceno ,emp.name as mrnby,sinw.mrnon 
 from wms.wms_storeinward stinw 
 left outer join wms.wms_securityinward sinw on stinw.inwmasterid = sinw.inwmasterid 
  left outer join wms.employee emp on emp.employeeno=sinw.mrnby
@@ -1267,7 +1271,7 @@ left join wms."MaterialMasterYGS" ygs on ygs.material=sk.materialid
 where iss.requestid = '#requestforissueid'</value>
   </data>
   <data name="getmaterialissuelist" xml:space="preserve">
-    <value>select req.requestid,req.requesteddate,emp.name,req.issuedby,req.issuedon,
+    <value>select req.requestid,req.requesteddate,emp.name,req.issuedby,req.issuedon,req.requesttype,
 	CASE WHEN req.issuedby IS Not NULL THEN 'Issued' ELSE 'Pending' END AS requeststatus
 	from wms.materialrequest req
 	left outer join wms.employee emp on req.requesterid = emp.employeeno
@@ -1281,7 +1285,7 @@ from wms.materialrequestdetails dt
 where requestid = '#requestid'</value>
   </data>
   <data name="getmaterialrequests" xml:space="preserve">
-    <value>select req.requestid,req.ackstatus,req.requesteddate,req.ackremarks,req.reserveid,req.projectcode,req.remarks,
+    <value>select req.requestid,req.ackstatus,req.requesteddate,req.ackremarks,req.reserveid,req.projectcode,req.remarks,req.requesttype,
   CASE WHEN req.ackstatus IS NULL THEN false ELSE true END AS status,req.approvalremarks,
   CASE WHEN req.issuedby IS NULL THEN 'Pending' ELSE 'Issued' END AS approvedstatus,
    CASE 
@@ -1325,6 +1329,8 @@ where returnid = '#returnid'</value>
  (select sum(issuedqty) from wms.wms_materialissue  where requestid::text = req.id::text and requesttype = 'MaterialRequest') as issuedqty,
  case when rq.requesttype = 'Plant' then 
  (select sum(availableqty) from wms.wms_stock ws where materialid =req.materialid and poitemdescription = req.poitemdescription and ws.stcktype = 'Plant Stock')
+ when rq.requesttype = 'PLOS' then 
+ (select sum(availableqty) from wms.wms_stock ws where materialid =req.materialid and poitemdescription = req.poitemdescription and ws.receivedtype = 'Material Return')
  else 
  (select sum(availableqty) from wms.wms_stock ws where materialid =req.materialid and poitemdescription = req.poitemdescription and projectid = rq.projectcode and pono = req.pono) 
  end as availableqty,
@@ -1496,14 +1502,15 @@ left outer join wms.wms_rd_bin bn on bn.binid = st.binid
 where st.initialstock is True and st.createdby = '#code'</value>
   </data>
   <data name="initialstockreportgroupby" xml:space="preserve">
-    <value>select st.uploadbatchcode,Max(st.uploadedfilename) as uploadedfilename,Max(st.createddate) as createddate,
+    <value>select st.uploadbatchcode,Max(st.uploadedfilename) as uploadedfilename,Max(st.createddate) as createddate,max(emp."name") as uploadedby,
 Count(*) as totalrecords,
 (select count(*) from wms.st_initialstock where dataloaderrors is True and uploadbatchcode = st.uploadbatchcode
  and stockid not in (select distinct receivedid::integer from wms.wms_stock where uploadbatchcode = st.uploadbatchcode and receivedid is not null)
 ) as exceptionrecords,
 (select count(*) from wms.wms_stock where uploadbatchcode = st.uploadbatchcode) as successrecords
-from wms.st_initialstock
-st where st.uploadedby = '#code' group by st.uploadbatchcode</value>
+from wms.st_initialstock st
+left outer join wms.employee emp on emp.employeeno = st.uploadedby 
+group by st.uploadbatchcode</value>
   </data>
   <data name="inhandmaterial" xml:space="preserve">
     <value>select st.materialid as material,st.unitprice,st.poitemdescription,st.pono,sum(st.availableqty) as availableqty, st.receivedtype,max(st.projectid) as projectname from wms.wms_stock st 
@@ -1913,7 +1920,7 @@ and sk.availableqty&gt;0
 group by sk.itemlocation,sk.createddate::DATE order by sk.createddate::DATE Desc</value>
   </data>
   <data name="getMaterialRequestForApproval" xml:space="preserve">
-    <value>select req.requestid,req.ackstatus,req.requesteddate,req.requesterid,emp."name" as requestedby,req.ackremarks,req.reserveid,req.projectcode,req.remarks,
+    <value>select req.requestid,req.requesttype,req.ackstatus,req.requesteddate,req.requesterid,emp."name" as requestedby,req.ackremarks,req.reserveid,req.projectcode,req.remarks,
 req.isapprovalrequired,req.approverid,req.isapproved,req.approvalremarks,req.approvedon,
 CASE WHEN req.isapproved is True THEN 'Approved' WHEN req.isapproved is False THEN 'Rejected' ELSE 'Pending' END AS approvedstatus
 from wms.materialrequest req 
@@ -1963,7 +1970,7 @@ left join wms."MaterialMasterYGS" ygs on ygs.material=sk.materialid
 where iss.requestid = '#requestforissueid' and iss.requesttype = '#type'</value>
   </data>
   <data name="getSTOListForIssue" xml:space="preserve">
-    <value>select inv.transferid,emp.name as transferredby,emp1.name as approvername,inv.transferredon,inv.transfertype,inv.sourceplant,inv.destinationplant,inv.remarks,inv.isporequested,inv.approverid ,inv.approvalremarks ,inv.approvedon,
+    <value>select inv.transferid,inv.materialtype,emp.name as transferredby,emp1.name as approvername,inv.transferredon,inv.transfertype,inv.sourceplant,inv.destinationplant,inv.remarks,inv.isporequested,inv.approverid ,inv.approvalremarks ,inv.approvedon,
 (select SUM(wm.issuedqty) from wms.wms_materialissue wm where wm.requesttype = '#type' and wm.requestid::text in (
 select id::text from wms.wms_invtransfermaterial wi where wi.transferid = inv.transferid)) as issuedqty,
 (select SUM(wiv.transferqty) from wms.wms_invtransfermaterial wiv where wiv.transferid = inv.transferid) as transferqty,
@@ -2033,7 +2040,7 @@ where loc.locatorid = #store and ws.materialid = '#material' and Lower(ws.poitem
 and (prj.projectcode = '#projectcode' or ws.projectid = '#projectcode')</value>
   </data>
   <data name="getSTOSubConForApproval" xml:space="preserve">
-    <value>select req.transferid,req.transferredon,emp."name" as transferredbyname,req.transferredby,req.projectcode,req.remarks,req.transfertype,req.sourceplant,req.destinationplant,req.vendorcode,req.vendorname, 
+    <value>select req.transferid,req.transferredon,emp."name" as transferredbyname,req.transferredby,req.projectcode,req.remarks,req.transfertype,req.sourceplant,req.destinationplant,req.vendorcode,req.vendorname, req.materialtype ,
 req.isapprovalrequired,req.approverid,req.isapproved,req.approvalremarks,req.approvedon,
 CASE WHEN req.isapproved is True THEN 'Approved' WHEN req.isapproved is False THEN 'Rejected' ELSE 'Pending' END AS approvedstatus
 from wms.wms_invstocktransfer req 
@@ -2297,7 +2304,7 @@ emailid=@emailid,updatedby=@updatedby,updatedon =@updatedon,deleteflag=@deletefl
     <value>select st.saleorderno, st.materialid as material,st.poitemdescription,
 st.projectid as projectname,sum(st.availableqty::decimal(19,5)) as availableqty,
 sum(st.availableqty::decimal(19,5) * st.unitprice::decimal(19,5)) as value,st.pono,
-string_agg(pl.suppliername , ', ') as suppliername,max(mat.hsncode) as hsncode from wms.wms_stock st
+max(pl.suppliername) as suppliername,max(mat.hsncode) as hsncode from wms.wms_stock st
 left outer join wms."MaterialMasterYGS" mat on mat.material = st.materialid
 left outer join wms.wms_polist pl on pl.pono = st.pono 
 group by st.poitemdescription,st.materialid,st.projectid,st.pono,st.saleorderno</value>
@@ -2403,6 +2410,30 @@ group by materialid,poitemdescription</value>
   <data name="getPlantstockissuedlocations" xml:space="preserve">
     <value>select iss.requestid, sum(iss.issuedqty) as issuedqty ,max(sk.materialid) as materialid,sk.itemlocation,
 (select sum(sk1.availableqty) from wms.wms_stock sk1 where sk1.materialid = max(sk.materialid) and lower(sK1.poitemdescription)  = lower(max(sk.poitemdescription))  and sk1.itemlocation = sk.itemlocation and sk1.stcktype='Plant Stock') as availableqty
+,sk.createddate::DATE as createddate,
+max(sk.poitemdescription) as materialdescription
+from wms.wms_materialissue iss 
+left outer join wms.wms_stock sk on iss.itemid =sk.itemid
+left join wms."MaterialMasterYGS" ygs on ygs.material=sk.materialid 
+where iss.requestid = '#requestforissueid' and iss.requesttype = '#type'
+group by iss.requestid,sk.itemlocation,sk.createddate</value>
+  </data>
+  <data name="getMaterialdetailsforplosstock" xml:space="preserve">
+    <value>select materialid,poitemdescription,max(unitprice::decimal(19,5)) as unitprice,sum(availableqty::decimal(19,5)) as availableqty from wms.wms_stock ws where materialid = '#materialid' and Lower(poitemdescription) = Lower('#description')
+and receivedtype = 'Material Return'
+group by materialid,poitemdescription</value>
+  </data>
+  <data name="getitemlocationsforplosstock" xml:space="preserve">
+    <value>select sum(sk.availableqty)as availableqty,sk.saleorderno,Max(sk.materialid) as materialid,sk.itemlocation,Max(sk.poitemdescription) as materialdescription,sk.createddate::DATE,bool_or(sk.initialstock) as initialstock 
+from wms.wms_stock sk 
+left outer join wms."MaterialMasterYGS" ygs on ygs.material=sk.materialid 
+where sk.materialid='#materialid' and lower(sk.poitemdescription)  = lower('#desc') and sk.receivedtype = 'Material Return'
+and sk.availableqty&gt;0 
+group by sk.itemlocation,sk.saleorderno,sk.createddate::DATE order by sk.createddate::DATE Desc</value>
+  </data>
+  <data name="getPlosstockissuedlocations" xml:space="preserve">
+    <value>select iss.requestid, sum(iss.issuedqty) as issuedqty ,max(sk.materialid) as materialid,sk.itemlocation,
+(select sum(sk1.availableqty) from wms.wms_stock sk1 where sk1.materialid = max(sk.materialid) and lower(sK1.poitemdescription)  = lower(max(sk.poitemdescription))  and sk1.itemlocation = sk.itemlocation and sk1.receivedtype ='Material Return') as availableqty
 ,sk.createddate::DATE as createddate,
 max(sk.poitemdescription) as materialdescription
 from wms.wms_materialissue iss 
