@@ -18009,7 +18009,8 @@ Review Date :<<>>   Reviewed By :<<>>
 
 		/*Name of Function : <<getDDdetailsByPono>>  Author :<<Prasanna>>  
 		Date of Creation <<17/05/2021>>
-		Purpose : <<get direct delivery  details By Pono>>
+		Purpose : <<get 
+		delivery  details By Pono>>
 		<param name="type"></param>
 		Review Date :<<>>   Reviewed By :<<>>*/
 		public async Task<IEnumerable<DDmaterials>> getDDdetailsByPono(string pono)
@@ -18069,6 +18070,15 @@ Review Date :<<>>   Reviewed By :<<>>
 							grnnextsequence = (Convert.ToInt32(obj.sequencenumber) + 1);
 							grnnumber = obj.sequenceid + "-" + obj.year + "-" + grnnextsequence.ToString().PadLeft(6, '0');
 						}
+
+						int id = obj.id;
+						string updateseqnumber = WMSResource.updateseqnumber;
+						var results1 = pgsql.ExecuteScalar(updateseqnumber, new
+						{
+							grnnextsequence,
+							id,
+
+						});
 
 						string insertInv = WMSResource.insertDDInvoice;
 						var rslt = pgsql.ExecuteScalar(insertInv, new

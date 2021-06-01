@@ -119,6 +119,7 @@ export class AssignPMComponent implements OnInit {
    
     this.getaddlistdetail = [];
     this.authUser.roleid = 11;
+    this.authUser.authid = data.authid;
     this.authUser.isdelegatemember = true;
     if (this.IsEdit) {//edit
       this.authUser.modifiedby = this.employee.employeeno;
