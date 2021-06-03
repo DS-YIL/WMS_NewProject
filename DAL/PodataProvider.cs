@@ -1768,7 +1768,7 @@ namespace WMS.DAL
 									po.isasn = false;
 								}
 								string descriptionstr = null;
-								if (po.poitemdescription!= null)
+								if (po.poitemdescription != null)
 								{
 									descriptionstr = po.poitemdescription.Replace("\'", "''");
 								}
@@ -3682,8 +3682,8 @@ namespace WMS.DAL
 					string mattype = dataobj[0].materialtype;
 					string rsvid = dataobj[0].reserveid;
 					MaterialTransaction mainmodel = new MaterialTransaction();
-					if(mattype == "Project Stock")
-                    {
+					if (mattype == "Project Stock")
+					{
 						mainmodel.requesttype = "Project";
 						string storeQuery = "select projectmanager from wms.wms_project wp where projectcode = '" + dataobj[0].projectcode + "' and projectmanager is not null limit 1";
 						var projectmanagerid = pgsql.ExecuteScalar(storeQuery, null);
@@ -3709,8 +3709,8 @@ namespace WMS.DAL
 							}
 						}
 					}
-                    else
-                    {
+					else
+					{
 						mainmodel.requesttype = "Plant";
 						mainmodel.isapprovalrequired = true;
 						mainmodel.approverid = dataobj[0].managerid;
@@ -3718,7 +3718,7 @@ namespace WMS.DAL
 						mainmodel.approvalremarks = null;
 						mainmodel.approvedon = null;
 					}
-					
+
 
 
 
@@ -3806,11 +3806,11 @@ namespace WMS.DAL
 							{
 								emailobj.sendEmail(emailmodel, 23);
 							}
-                            else
-                            {
+							else
+							{
 								emailobj.sendEmail(emailmodel, 36);
 							}
-								
+
 						}
 						else
 						{
@@ -4138,20 +4138,20 @@ namespace WMS.DAL
 							descriptionstr = item.Materialdescription.Replace("\'", "''");
 						}
 						string stockquery = "";
-						if(item.materialtype == "Project")
-                        {
+						if (item.materialtype == "Project")
+						{
 							stockquery = "select * from wms.wms_stock where projectid='" + item.projectid + "' and pono='" + item.pono + "' and materialid = '" + item.materialid + "' and lower(poitemdescription) = lower('" + descriptionstr + "') and availableqty > 0 and itemlocation = '" + item.itemlocation + "' and createddate::DATE = '" + createdate + "' order by itemid";
 						}
-                        else
-                        {
+						else
+						{
 							stockquery = "select * from wms.wms_stock where  materialid = '" + item.materialid + "' and lower(poitemdescription) = lower('" + descriptionstr + "') and availableqty > 0 and stcktype = 'Plant Stock' and itemlocation = '" + item.itemlocation + "' and createddate::DATE = '" + createdate + "' ";
-							if(item.saleorderno != null && item.saleorderno.Trim() != "")
-                            {
-								stockquery += " and saleorderno = '"+ item.saleorderno + "'";
+							if (item.saleorderno != null && item.saleorderno.Trim() != "")
+							{
+								stockquery += " and saleorderno = '" + item.saleorderno + "'";
 							}
 							stockquery += "order by itemid";
 						}
-						  
+
 						var stockdata = DB.QueryAsync<StockModel>(stockquery, null, commandType: CommandType.Text);
 						if (stockdata != null)
 						{
@@ -4958,7 +4958,7 @@ namespace WMS.DAL
 						{
 							item.materialdescription = item.materialdescription.Replace("\'", "''");
 						}
-						string stockquery = "select * from wms.wms_stock where projectid='"+item.projectid+"' and pono = '"+item.pono+"' and materialid = '" + item.materialid + "' and lower(poitemdescription) = lower('" + item.materialdescription + "') and availableqty > 0 and itemlocation = '" + item.itemlocation + "' and createddate::DATE = '" + createdate + "' order by itemid";
+						string stockquery = "select * from wms.wms_stock where projectid='" + item.projectid + "' and pono = '" + item.pono + "' and materialid = '" + item.materialid + "' and lower(poitemdescription) = lower('" + item.materialdescription + "') and availableqty > 0 and itemlocation = '" + item.itemlocation + "' and createddate::DATE = '" + createdate + "' order by itemid";
 						var stockdata = pgsql.QueryAsync<StockModel>(stockquery, null, commandType: CommandType.Text);
 						if (stockdata != null)
 						{
@@ -6577,7 +6577,7 @@ namespace WMS.DAL
 					{
 						descriptionstr = description.Replace("\'", "''");
 					}
-					string query = WMSResource.getitemlocationbymaterialdescpo.Replace("#materialid", material).Replace("#desc", descriptionstr).Replace("#projectid",projectid).Replace("#pono",pono);
+					string query = WMSResource.getitemlocationbymaterialdescpo.Replace("#materialid", material).Replace("#desc", descriptionstr).Replace("#projectid", projectid).Replace("#pono", pono);
 					await pgsql.OpenAsync();
 					var data = await pgsql.QueryAsync<IssueRequestModel>(
 					  query, null, commandType: CommandType.Text);
@@ -6619,7 +6619,7 @@ namespace WMS.DAL
 					{
 						descriptionstr = description.Replace("\'", "''");
 					}
-					string query = WMSResource.getitemlocationbystock.Replace("#materialid", material).Replace("#desc", descriptionstr).Replace("#store", store).Replace("#project",projectid).Replace("#pono",pono);
+					string query = WMSResource.getitemlocationbystock.Replace("#materialid", material).Replace("#desc", descriptionstr).Replace("#store", store).Replace("#project", projectid).Replace("#pono", pono);
 					await pgsql.OpenAsync();
 					var data = await pgsql.QueryAsync<IssueRequestModel>(
 					  query, null, commandType: CommandType.Text);
@@ -6831,7 +6831,7 @@ namespace WMS.DAL
 
 				try
 				{
-					
+
 					string query = WMSResource.getPlantstockissuedlocations.Replace("#requestforissueid", requestforissueid).Replace("#type", requesttype);
 					await pgsql.OpenAsync();
 					var data = await pgsql.QueryAsync<IssueRequestModel>(
@@ -7134,7 +7134,7 @@ namespace WMS.DAL
 					}
 					if (PMRes.Count() == 0 && employeeid != "000000")
 					{
-						string querypm = "select projectmanager from wms.wms_project wp where projectmanager = '"+ employeeid + "'";
+						string querypm = "select projectmanager from wms.wms_project wp where projectmanager = '" + employeeid + "'";
 						var rsltt = pgsql.ExecuteScalar(querypm, null);
 						if (rsltt != null)
 						{
@@ -9912,7 +9912,7 @@ namespace WMS.DAL
 					{
 						string querypmb = "select au.createdby as approverid from wms.auth_users au where au.isdelegatemember is true and au.deleteflag is not true and au.employeeid = '" + empno + "' limit 1";
 						var rslttmb = pgsql.ExecuteScalar(querypmb, null);
-						if(rslttmb == null)
+						if (rslttmb == null)
 						{
 							data = data.Where(o => o.projectmanager == empno);
 						}
@@ -10536,7 +10536,7 @@ namespace WMS.DAL
 								//	if (!string.IsNullOrEmpty(usr.email))
 								//		emailmodel.ToEmailId += usr.email + ",";
 								//}
-								emailobj.sendEmail(emailmodel, 35,4);
+								emailobj.sendEmail(emailmodel, 35, 4);
 							}
 							else
 							{
@@ -10735,7 +10735,7 @@ namespace WMS.DAL
 								   userquery, null, commandType: CommandType.Text);
 								mailto = userdata.email;
 								emailmodel.CC = mailto;
-								emailobj.sendEmail(emailmodel, 21,4);
+								emailobj.sendEmail(emailmodel, 21, 4);
 							}
 							//emailobj.sendEmail(emailmodel, 17, 3);
 
@@ -14868,7 +14868,7 @@ namespace WMS.DAL
 		Purpose : <<get Materials in stock locations>>
 		Review Date :<<>>   Reviewed By :<<>>
 		*/
-		public async Task<IEnumerable<matlocations>> getmatinhandlocation(string poitemdescription,string materialid, string projectid,string pono,string sono)
+		public async Task<IEnumerable<matlocations>> getmatinhandlocation(string poitemdescription, string materialid, string projectid, string pono, string sono)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
@@ -14895,11 +14895,11 @@ namespace WMS.DAL
 					{
 						testgetquery += " and stk.pono = '" + pono + "'";
 
-						}
-						else
-						{
-							testgetquery += " and (stk.pono is null or stk.pono = '')";
-						}
+					}
+					else
+					{
+						testgetquery += " and (stk.pono is null or stk.pono = '')";
+					}
 					if (sono != null && sono != "" && sono.ToLower() != "null")
 					{
 						testgetquery += " and stk.saleorderno = '" + sono + "'";
@@ -14910,9 +14910,9 @@ namespace WMS.DAL
 						testgetquery += " and (stk.saleorderno is null or stk.saleorderno = '')";
 					}
 					testgetquery += "  group by stk.itemlocation";
-						
-						
-					
+
+
+
 
 					await pgsql.OpenAsync();
 					var data = await pgsql.QueryAsync<matlocations>(
@@ -16522,20 +16522,20 @@ namespace WMS.DAL
 							materialdescription = item.materialdescription.Replace("\'", "''");
 						}
 						string stockquery = "";
-						if(item.ProjectId != null && item.ProjectId.Trim() != "" && item.pono != null && item.pono.Trim() != "")
+						if (item.ProjectId != null && item.ProjectId.Trim() != "" && item.pono != null && item.pono.Trim() != "")
 						{
 							stockquery = "select * from wms.wms_stock where materialid = '" + item.material + "' and lower(poitemdescription) = lower('" + materialdescription + "') and availableqty > 0 and itemlocation = '" + item.itemlocation + "' and  projectid = '" + item.ProjectId + "' and pono = '" + item.pono + "' order by itemid";
 						}
 						else
 						{
 							stockquery = "select * from wms.wms_stock where materialid = '" + item.material + "' and lower(poitemdescription) = lower('" + materialdescription + "') and availableqty > 0 and itemlocation = '" + item.itemlocation + "' ";
-							if(item.ProjectId == null || item.ProjectId.Trim() == "")
+							if (item.ProjectId == null || item.ProjectId.Trim() == "")
 							{
 								stockquery += " and (projectid is null or projectid = '')";
 							}
 							else
 							{
-								stockquery +=  " and projectid = '" + item.ProjectId + "'";
+								stockquery += " and projectid = '" + item.ProjectId + "'";
 
 							}
 							if (item.pono == null || item.pono.Trim() == "")
@@ -17836,5 +17836,35 @@ Review Date :<<>>   Reviewed By :<<>>
 			}
 			return true;
 		}
+
+
+		/*Name of Function : <<updateSubRole>>  Author :<<Vidya>>  
+		Date of Creation <<19/05/2021>>
+		Purpose : <<Update YGRGR table>>
+		<param name="type"></param>
+		Review Date :<<>>   Reviewed By :<<>>*/
+		public async Task<IEnumerable<YGSGR>> getYGSGR()
+		{
+			
+			try
+			{
+				
+				using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+				{
+					string query = "select wmsgr,pono,invoiceno,failreason,faileddatetime from wms.rpa_migo_failed_records";
+					await pgsql.OpenAsync();
+					var data = await pgsql.QueryAsync<YGSGR>(
+					   query, null, commandType: CommandType.Text);
+					return data;
+				}
+			}
+			catch (Exception ex)
+			{
+				log.ErrorMessage("PODataProvider", "getygsgr", ex.StackTrace.ToString(), ex.Message.ToString(), url);
+				return null;
+			}
+		}
 	}
 }
+
+

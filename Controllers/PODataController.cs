@@ -1743,5 +1743,11 @@ namespace WMS.Controllers
 		{
 			return this._poService.updateUserRole(userRole);
 		}
+		[HttpGet("GetYGSGRList")]
+		public async Task<IEnumerable<YGSGR>> GetYGSGRList()
+		{
+			return await this._poService.getYGSGR();
+		}
 	}
+
 }

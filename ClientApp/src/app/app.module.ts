@@ -118,6 +118,7 @@ import { StockTransferOrderComponent } from './WMS/StockTransferOrder.component'
 import { SubContractTransferOrderComponent } from './WMS/SubContractTransferOrder.component';
 import { STOApprovalComponent } from './WMS/STOApproval.component';
 import { SubcontractApprovalComponent } from './WMS/SubcontractApproval.component';
+import { YGSGRComponent } from './WMS/YGSGR.component';
 
 //admin
 import { MaterilMasterComponent } from './WMS/Admin/Materialmaster.component';
@@ -264,7 +265,8 @@ import { DataSharingService } from './datasharing.service';
     RackMasterComponent,
     BinMasterComponent,
     AssignPMComponent,
-    AssignIMComponent
+    AssignIMComponent,
+    YGSGRComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

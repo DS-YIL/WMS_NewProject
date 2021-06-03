@@ -1309,6 +1309,13 @@ export class DashBoardFilters {
   fromDate: string;
   toDate: string;
 }
+export class YGSGR {
+  wmsgr: string;
+  pono: string;
+  invoiceno: string;
+  failreason: string;
+  faileddatetime: Date;
+}
 
 
 

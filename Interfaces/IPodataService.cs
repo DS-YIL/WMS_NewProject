@@ -359,6 +359,6 @@ namespace WMS.Interfaces
 		public bool updateUserRole(userRoles userRoles);
 
 		Task<IEnumerable<StockModel>> getMiscellanousIssueListdatahistory();
-
+		Task<IEnumerable<YGSGR>> getYGSGR();
 	}
 }

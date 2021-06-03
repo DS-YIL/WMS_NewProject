@@ -1,0 +1,71 @@
+<div style="margin:10px;">
+  <div class="card commoncardcss" style="width:100%;">
+    <div class="card-header commoncardheader">
+      <div class="row " style="margin-top: 10px;margin-left: 0px !important;margin-right: 0px !important">
+        <div class="col-lg-4 col-md-4 form-inline">
+          <div class="form-inline">
+            <label class="labelheading">Status :</label>&nbsp;&nbsp;
+            <option value="Unsuccessful">Unsuccessful GR</option>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-4 text-center">
+          <span style="color:#428bca;font-size:18px" class="commonheadertext">
+            <i class="fa fa-check-circle-o commonheadertext"></i>&nbsp;YGSGR
+          </span>
+        </div>
+        <div class="col-lg-4 col-md-4 form-inline"></div>
+      </div>
+    </div>
+    <div class="card-body" style="overflow-y:hidden">
+      <div class="row" style="max-width:100%;position: relative; margin-top:5px;margin-left:3px;">
+        <p-table #dt [value]="failedgrlist" [style]="{'width':'100%','overflow':'auto!important'}"
+                 [responsive]="true" [rows]="10"
+                 [resizableColumns]="true"
+                 columnResizeMode="expand"
+                 [scrollable]="true" scrollHeight="60vh"
+                 appendTo="body">
+          <ng-template pTemplate="header">
+            <tr class="mprltbldata">
+              <th style="text-align:center;width:5%;">Sl.No.</th>
+              <th style="text-align:center;width:15%;">WMS GR</th>
+              <th style="text-align:center;;width:15%;">PO No</th>
+              <th style="text-align:center;width:20%;">Invoice No</th>
+              <th style="text-align:center;width:30%;">Reason</th>
+              <th style="text-align:center;width:15%;">Failed On</th>
+            </tr>
+            <tr>
+              <th></th>
+              <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'wmsgr', 'startsWith')"></th>
+              <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'pono', 'startsWith')"></th>
+              <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'invoiceno', 'startsWith')"></th>
+              <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'failreason', 'contains')"></th>
+              <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'faileddatetime', 'contains')"></th>
+            
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
+            <tr>
+              <td class="ptable-cell" style="text-align:right;width:5%;">{{ri+1}}</td>
+              <td class="ptable-cell" style="text-align:center;width:15%;">
+                {{rowData.wmsgr}}
+              </td>
+              <td class="ptable-cell" style="text-align:center;width:15%;">
+                {{rowData.pono}}
+              </td>
+              <td class="ptable-cell" style="text-align:center;width:20%;">
+                <span>{{rowData.invoiceno}}</span>
+              </td>
+              <td class="ptable-cell" style="text-align:left;width:30%;">
+                <span>{{rowData.failreason}}</span>
+              </td>
+              <td class="ptable-cell" style="text-align:center;width:15%;" >
+                <span>{{rowData.faileddatetime | date : 'dd/MM/yyyy'}}</span>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </div>
+  </div>
+</div>
+

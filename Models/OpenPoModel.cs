@@ -2467,3 +2467,11 @@ public class DashBoardFilters
 	public string fromDate { get; set; }
 	public string toDate { get; set; }
 }
+public class YGSGR
+{
+	public string wmsgr { get; set; }
+	public string pono { get; set; }
+	public string invoiceno { get; set; }
+	public string failreason { get; set; }
+	public DateTime? faileddatetime { get; set; }
+}
