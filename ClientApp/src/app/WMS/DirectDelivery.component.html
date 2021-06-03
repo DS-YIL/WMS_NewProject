@@ -24,7 +24,7 @@
             <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'invoicedate', 'contains')"></th>
             <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'suppliername', 'contains')"></th>
             <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'directdeliveryaddrs', 'contains')"></th>
-            <!--<th></th>-->
+            <th></th>
             <th></th>
           </tr>
         </ng-template>
@@ -36,7 +36,7 @@
             <td class="ptable-cell" style="text-align: center">{{rowData.invoicedate  | date : constants.dateFormat}} </td>
             <td class="ptable-cell" style="text-align:left">{{rowData.suppliername}}</td>
             <td class="ptable-cell" style="text-align:left">{{rowData.directdeliveryaddrs}}</td>
-            <!--<td class="ptable-cell" style="text-align:center"><button pButton type="button" icon="fa fa-edit" class="ui-button-info" style="margin-left: 1px;" (click)="editdirectdelivery(rowData)"></button></td>-->
+            <td class="ptable-cell" style="text-align:center"><button pButton type="button" icon="fa fa-edit" class="ui-button-info" style="margin-left: 1px;" (click)="editdirectdelivery(rowData)"></button></td>
             <td class="ptable-cell" style="text-align:center"><button pButton type="button" icon="fa fa-trash" class="ui-button-info" style="margin-left: 1px;" (click)="removedirectdelivery(rowData)"></button></td>
           </tr>
         </ng-template>
