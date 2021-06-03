@@ -18445,14 +18445,6 @@ Review Date :<<>>   Reviewed By :<<>>
 							grnnumber = obj.sequenceid + "-" + obj.year + "-" + grnnextsequence.ToString().PadLeft(6, '0');
 						}
 
-						int id = obj.id;
-						string updateseqnumber = WMSResource.updateseqnumber;
-						var results1 = pgsql.ExecuteScalar(updateseqnumber, new
-						{
-							grnnextsequence,
-							id,
-
-						});
 
 						string insertInv = WMSResource.insertDDInvoice;
 						var rslt = pgsql.ExecuteScalar(insertInv, new
