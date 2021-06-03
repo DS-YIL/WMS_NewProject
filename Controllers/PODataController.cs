@@ -427,6 +427,12 @@ namespace WMS.Controllers
 			return this._poService.getPODetailsByProjectCode(empno, projectcode);
 
 		}
+		[HttpGet("getStorePODetailsbyprojectcode")]
+		public Task<IEnumerable<PODetails>> getStorePODetailsbyprojectcode(string empno, string projectcode)
+		{
+			return this._poService.getStorePODetailsByProjectCode(empno, projectcode);
+
+		}
 
 		[HttpGet("getPODetailsbyprojectcodeformiscissue")]
 		public Task<IEnumerable<PODetails>> getPODetailsbyprojectcodeformiscissue(string projectcode)
@@ -663,6 +669,12 @@ namespace WMS.Controllers
 
 			return await this._poService.GetItemlocationListBymterialanddescpo(material, description, projectid, pono);
 		}
+		[HttpGet("GetItemLocationwithStore")]
+		public async Task<IEnumerable<IssueRequestModel>> GetItemLocationwithStore(string material, string description, string projectid, string pono)
+		{
+
+			return await this._poService.GetItemlocationwithStore(material, description, projectid, pono);
+		}
 		[HttpGet("GetItemLocationListByMaterialdescstore")]
 		public async Task<IEnumerable<IssueRequestModel>> GetItemLocationListByMaterialdescstore(string material, string description, string store, string projectid, string pono)
 		{
@@ -686,6 +698,12 @@ namespace WMS.Controllers
 		{
 
 			return await this._poService.getItemlocationListByIssueId(requestforissueid, requesttype);
+		}
+		[HttpGet("getItemlocationListByIssueIdWithStore")]
+		public async Task<IEnumerable<IssueRequestModel>> getItemlocationListByIssueIdWithStore(string requestforissueid, string requesttype)
+		{
+
+			return await this._poService.getItemlocationListByIssueIdWithStore(requestforissueid, requesttype);
 		}
 		[HttpGet("getItemlocationListByPlantIssueId")]
 		public async Task<IEnumerable<IssueRequestModel>> getItemlocationListByPlantIssueId(string requestforissueid, string requesttype)
@@ -803,6 +821,12 @@ namespace WMS.Controllers
 		public async Task<IEnumerable<IssueRequestModel>> getmaterialrequestforgatepass(string pono, string projectcode)
 		{
 			return await this._poService.MaterialRequestdataforgatepass(pono, projectcode);
+		}
+
+		[HttpGet("getmaterialswithstore")]
+		public async Task<IEnumerable<IssueRequestModel>> getmaterialswithstore(string pono, string projectcode)
+		{
+			return await this._poService.getmaterialswithstore(pono, projectcode);
 		}
 		[HttpGet("getmaterialrequestforsto")]
 		public async Task<IEnumerable<IssueRequestModel>> getmaterialrequestforsto(string pono, string projectcode,string store)
@@ -1058,6 +1082,7 @@ namespace WMS.Controllers
 			return await this._poService.getprojectlistbymanager(empno);
 		}
 
+		
 
 
 		[HttpGet("getmateriallistfortransfer")]
@@ -1224,11 +1249,15 @@ namespace WMS.Controllers
 		}
 
 		[HttpGet("getMRNmaterials")]
-		public async Task<IEnumerable<inwardModel>> getMRNmaterials(string inwardid)
+		public async Task<IEnumerable<inwardModel>> getMRNmaterials(string grnnumber)
 		{
-			return await this._poService.getMRNmaterials(inwardid);
+			return await this._poService.getMRNmaterials(grnnumber);
 		}
-
+		[HttpGet("getMRNList")]
+		public async Task<IEnumerable<MRNsavemodel>> getMRNList()
+		{
+			return await this._poService.getmrnlist();
+		}
 		[HttpPost("mrnupdate")]
 		public int mrnupdate([FromBody] List<MRNsavemodel> obj)
 		{

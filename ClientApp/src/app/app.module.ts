@@ -138,6 +138,7 @@ import { RackMasterComponent } from './WMS/RackMaster.component';
 import { BinMasterComponent } from './WMS/BinMaster.component';
 import { AssignPMComponent } from './WMS/AssignPM.component';
 import { AssignIMComponent } from './WMS/AssignInventoryManage.component';
+import { errorpageComponent } from './WMS/errorpage.component';
 
 ////pages
 import { LoginComponent } from './WMS/Login.component';
@@ -266,7 +267,8 @@ import { DataSharingService } from './datasharing.service';
     RackMasterComponent,
     BinMasterComponent,
     AssignPMComponent,
-    AssignIMComponent
+    AssignIMComponent,
+    errorpageComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

@@ -95,6 +95,11 @@ export class wmsService {
   }
 
   //Get PO Details by code
+  getStorePODetailsbyprojectcode(empno: string, projectcode: string): Observable<any[]> {
+    return this.http.get<any[]>(this.url + 'POData/getStorePODetailsbyprojectcode?empno=' + empno + '&projectcode=' + projectcode, this.httpOptions);
+  }
+
+  //Get PO Details by code
   getPODetailsbyprojectcodeformisc(projectcode: string): Observable<any[]> {
     return this.http.get<any[]>(this.url + 'POData/getPODetailsbyprojectcodeformiscissue?projectcode=' + projectcode, this.httpOptions);
   }
@@ -272,6 +277,9 @@ export class wmsService {
   }
   getMaterialRequestlistdataforgp(pono: string, projectcode: string): Observable<any> {
     return this.http.get<any>(this.url + 'POData/getmaterialrequestforgatepass?pono=' + pono + '&projectcode=' + projectcode, this.httpOptions);
+  }
+  getMaterialswithstore(pono: string, projectcode: string): Observable<any> {
+    return this.http.get<any>(this.url + 'POData/getmaterialswithstore?pono=' + pono + '&projectcode=' + projectcode, this.httpOptions);
   }
   getMaterialRequestlistdataforgpandstore(pono: string, projectcode: string, store: string): Observable<any> {
     return this.http.get<any>(this.url + 'POData/getmaterialrequestforsto?pono=' + pono + '&projectcode=' + projectcode + '&store=' + store, this.httpOptions);
@@ -496,6 +504,11 @@ export class wmsService {
     poitemdescription = encodeURIComponent(poitemdescription);
     return this.http.get<any>(this.url + 'POData/GetItemLocationListByMaterialanddescpo?material=' + material + '&description=' + poitemdescription + '&projectid=' + projectid+'&pono='+pono, this.httpOptions);
   }
+  getItemlocationwithstore(material: string, poitemdescription: string, projectid: string, pono: string): Observable<any> {
+    material = encodeURIComponent(material);
+    poitemdescription = encodeURIComponent(poitemdescription);
+    return this.http.get<any>(this.url + 'POData/GetItemLocationwithStore?material=' + material + '&description=' + poitemdescription + '&projectid=' + projectid + '&pono=' + pono, this.httpOptions);
+  }
   getplantstockmatdetail(material: string, poitemdescription: string): Observable<any> {
     material = encodeURIComponent(material);
     poitemdescription = encodeURIComponent(poitemdescription);
@@ -528,6 +541,10 @@ export class wmsService {
   getItemlocationListByIssueId(requestforissueid: string, requesttype: string): Observable<any> {
     requestforissueid = encodeURIComponent(requestforissueid);
     return this.http.get<any>(this.url + 'POData/getItemlocationListByIssueId?requestforissueid=' + requestforissueid + '&requesttype=' + requesttype, this.httpOptions);
+  }
+  getItemlocationListByIssueIdWithStore(requestforissueid: string, requesttype: string): Observable<any> {
+    requestforissueid = encodeURIComponent(requestforissueid);
+    return this.http.get<any>(this.url + 'POData/getItemlocationListByIssueIdWithStore?requestforissueid=' + requestforissueid + '&requesttype=' + requesttype, this.httpOptions);
   }
   getItemlocationListByPlantIssueId(requestforissueid: string, requesttype: string): Observable<any> {
     requestforissueid = encodeURIComponent(requestforissueid);
@@ -662,6 +679,9 @@ export class wmsService {
   getcheckedgrnlistforputaway(): Observable<ddlmodel[]> {
     return this.http.get<ddlmodel[]>(this.url + 'POData/getgrnforacceptanceputaway/', this.httpOptions);
   }
+  getmrnlistgrp(): Observable<MRNsavemodel[]> {
+    return this.http.get<MRNsavemodel[]>(this.url + 'POData/getMRNList/', this.httpOptions);
+  }
 
   getuserauthdata(): Observable<authUser[]> {
     return this.http.get<authUser[]>(this.url + 'POData/getuserauthdata/', this.httpOptions);
@@ -728,6 +748,9 @@ export class wmsService {
   getprojectlistbymanager(empno: string): Observable<ddlmodel[]> {
     return this.http.get<ddlmodel[]>(this.url + 'POData/getprojectlistbymanager?empno=' + empno, this.httpOptions);
   }
+  getprojectlistbymanagerwithstore(empno: string): Observable<ddlmodel[]> {
+    return this.http.get<ddlmodel[]>(this.url + 'POData/getprojectlistbymanagerwithstore?empno=' + empno, this.httpOptions);
+  }
 
   getmateriallistfortransfer(querytext: string): Observable<ddlmodel[]> {
     return this.http.get<ddlmodel[]>(this.url + 'POData/getmateriallistfortransfer?querytext=' + querytext, this.httpOptions);
@@ -768,8 +791,8 @@ export class wmsService {
     return this.http.post<any>(this.url + 'POData/UnholdGR', updaeonhold, this.httpOptions);
   }
 
-  getMRNmaterials(inwardid: string): Observable<any> {
-    return this.http.get<any>(this.url + 'POData/getMRNmaterials?inwardid=' + inwardid + '', this.httpOptions);
+  getMRNmaterials(grnnumber: string): Observable<inwardModel[]> {
+    return this.http.get<inwardModel[]>(this.url + 'POData/getMRNmaterials?grnnumber=' + grnnumber + '', this.httpOptions);
   }
 
   updatemrn(updaeonhold: MRNsavemodel[]): Observable<any> {

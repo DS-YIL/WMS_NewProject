@@ -365,7 +365,7 @@ export class MaterialRequestViewComponent implements OnInit {
         pono += "'"+item.pono+"'";
         i++;
       });
-      this.wmsService.getMaterialRequestlistdataforgp(pono, this.selectedproject.value).subscribe(data => {
+      this.wmsService.getMaterialswithstore(pono, this.selectedproject.value).subscribe(data => {
         this.materialList = data;
         this.pono = pono;
         this.displayDD = false;
@@ -862,7 +862,7 @@ export class MaterialRequestViewComponent implements OnInit {
 
   GetPONo(projectcode: string) {
 
-    this.wmsService.getPODetailsbyprojectcode(this.employee.employeeno, projectcode).subscribe(data => {
+    this.wmsService.getStorePODetailsbyprojectcode(this.employee.employeeno, projectcode).subscribe(data => {
       this.spinner.hide();
       if (data) {
         this.ponolist = data;

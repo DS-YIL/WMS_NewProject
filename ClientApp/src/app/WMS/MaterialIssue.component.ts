@@ -214,7 +214,7 @@ export class MaterialIssueComponent implements OnInit {
         });
       }
       else {
-        this.wmsService.getItemlocationListByMaterialanddescpo(material, poitemdescription, pid, pono).subscribe(data => {
+        this.wmsService.getItemlocationwithstore(material, poitemdescription, pid, pono).subscribe(data => {
           this.itemlocationData = data;
           console.log(this.itemlocationData);
           this.showdialog = true;
@@ -239,7 +239,7 @@ export class MaterialIssueComponent implements OnInit {
         });
       }
       else {
-        this.wmsService.getItemlocationListByIssueId(requestmaterialid, 'MaterialRequest').subscribe(data => {
+        this.wmsService.getItemlocationListByIssueIdWithStore(requestmaterialid, 'MaterialRequest').subscribe(data => {
           this.itemlocationData = data;
           this.showdialog = true;
         });
@@ -296,6 +296,13 @@ export class MaterialIssueComponent implements OnInit {
         this.spinner.hide();
       });
     }
+  }
+
+  setissuedqty() {
+
+  }
+  setavaiableqty() {
+
   }
   //Email
   getmaterialIssueListbyrequestid() {

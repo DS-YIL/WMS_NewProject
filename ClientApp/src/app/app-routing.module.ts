@@ -78,6 +78,7 @@ import { STOApprovalComponent } from './WMS/STOApproval.component';
 import { SubcontractApprovalComponent } from './WMS/SubcontractApproval.component';
 import { POReportComponent } from './WMS/POReport.component';
 import { AnnexureReportComponent } from './WMS/AnnexureReport.component';
+import { errorpageComponent } from './WMS/errorpage.component';
 
 //admin
 import { MaterilMasterComponent } from './WMS/Admin/Materialmaster.component';
@@ -224,6 +225,7 @@ const routes: Routes = [{
     { path: "AssignPM", component: AssignPMComponent },
     { path: "AssignInventoryManager", component: AssignIMComponent },
     { path: "DirectDelivery", component: DirectDeliveryComponent },
+    { path: "errorpage", component: errorpageComponent },
       
 
 

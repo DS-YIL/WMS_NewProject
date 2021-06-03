@@ -374,6 +374,7 @@ export class WarehouseInchargeComponent implements OnInit {
     this.wmsService.getcheckedgrnlistforputaway().subscribe(data => {
       debugger;
       this.checkedgrnlist = data;
+      this.checkedgrnlist = this.checkedgrnlist.filter(li => li.isdirecttransferred != true);
       if (this.requestedid) {
         debugger;
         this.selectedgrnno = this.requestedid;
@@ -557,13 +558,13 @@ export class WarehouseInchargeComponent implements OnInit {
           debugger;
           //this.PoDetails = data[0];
           this.podetailsList = data;
-          this.isalreadytransferred = this.podetailsList[0].isdirecttransferred;
-          if (this.isalreadytransferred) {
-            this.podetailsList = [];
-            this.messageService.add({ severity: 'warn', summary: '', detail: 'Materials already transferred to a project' });
-            return;
+          //this.isalreadytransferred = this.podetailsList[0].isdirecttransferred;
+          //if (this.isalreadytransferred) {
+          //  this.podetailsList = [];
+          //  this.messageService.add({ severity: 'warn', summary: '', detail: 'Materials already transferred to a project' });
+          //  return;
            
-          }
+          //}
           var allplacedchk = this.podetailsList.filter(function (element, index) {
             return (!element.itemlocation);
           });
@@ -673,7 +674,13 @@ this.updateRowGroupMetaData();
     this.StockModel.rackid = details.rackid;
     this.StockModel.binid = details.binid;
     this.matdescription = details.poitemdescription;
-    this.matqty = details.confirmqty;
+    if (!isNullOrUndefined(details.partialqty)) {
+      this.matqty = String(parseFloat(details.confirmqty) - parseFloat(details.partialqty));
+    }
+    else {
+      this.matqty = details.confirmqty;
+    }
+    
    
     
     this.StockModelForm = this.formBuilder.group({
@@ -806,6 +813,7 @@ this.updateRowGroupMetaData();
         this.StockModel.saleorderno = this.PoDetails.saleorderno;
         this.StockModel.solineitemno = this.PoDetails.solineitemno;
         this.StockModel.projectid = this.PoDetails.projectid;
+        this.StockModel.initialputawayqty = parseFloat(this.matqty);
 
 
 

@@ -14,7 +14,7 @@
             <th style="text-align:center;width:180px">Invoice Date</th>
             <th style="text-align:center;">Supplier Name</th>
             <th style="text-align:left;">Delivery Address</th>
-            <th style="text-align:center;width:90px">Edit</th>
+            <th style="text-align:center;width:90px">View</th>
             <th style="text-align:center;width:90px">Delete</th>
           </tr>
           <tr>
@@ -128,7 +128,7 @@
             <th class="ptable-cell" style="text-align:center">PO Item Description</th>
             <th class="ptable-cell" style="text-align:center">PO Quantity</th>
             <th *ngIf="!showEdit" class="ptable-cell" style="text-align:center">Delivered Qty</th>
-            <th class="ptable-cell" style="text-align:center">Pending Qty</th>
+            <th class="ptable-cell" style="text-align:center">Deliver Qty</th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex" let-rindex=0>
@@ -138,8 +138,13 @@
             <td class="ptable-cell" style="text-align:left"> {{rowData.poitemdescription}} </td>
             <td class="ptable-cell" style="text-align:right">{{rowData.materialqty}}</td>
             <td *ngIf="!showEdit" class="ptable-cell" style="text-align:right">{{rowData.deliveredqty}}</td>
-            <td class="ptable-cell" style="text-align:center"><input type="number" *ngIf="rowData.materialqty!=rowData.deliveredqty" class="form-control" [(ngModel)]="rowData.pendingqty" (change)="QtyChange(rowData)"></td>
-        </ng-template>
+            <td class="ptable-cell" style="text-align:center" *ngIf="!showEdit">
+              <input type="number" *ngIf="rowData.materialqty!=rowData.deliveredqty" class="form-control" [(ngModel)]="rowData.pendingqty" (change)="QtyChange(rowData)">
+            </td>
+            <td class="ptable-cell" style="text-align:center" *ngIf="showEdit">
+              {{rowData.pendingqty}}
+            </td>
+</ng-template>
       </p-table>
     </div>
   </div>

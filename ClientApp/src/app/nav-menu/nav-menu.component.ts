@@ -252,9 +252,14 @@ export class NavMenuComponent implements OnInit {
               this.bindmenubyrba(eurl);
               return false;
             }
+
           }
 
         })
+        if (!found) {
+          alert("You are not authorized to view this page.")
+          this.bindmenubyrba();
+        }
       }
       else if (eurl.includes("/Email/GRNPosting?GRNo")) {
         debugger;
@@ -276,6 +281,10 @@ export class NavMenuComponent implements OnInit {
           }
 
         })
+        if (!found) {
+          alert("You are not authorized to view this page.")
+          this.bindmenubyrba();
+        }
       }
       else if (eurl.includes("/Email/QualityCheck?GRNo")) {
         debugger;
@@ -296,6 +305,10 @@ export class NavMenuComponent implements OnInit {
             }
           }
         })
+        if (!found) {
+          alert("You are not authorized to view this page.")
+          this.bindmenubyrba();
+        }
       }
       else if (eurl.includes("/Email/MaterialIssueDashboard?ReqId")) {
         var found = false;
@@ -317,22 +330,35 @@ export class NavMenuComponent implements OnInit {
           }
 
         })
+        if (!found) {
+          alert("You are not authorized to view this page.")
+          this.bindmenubyrba();
+        }
       }
       else if (eurl.includes("/Email/ApproveSTOMaterial?ReqId")) {
         debugger;
+        var found = false;
         this.userrolelist.forEach(item => {
-          var dt1 = this.rbalist.filter(function (element, index) {
-            return (element.materialrequest_approval && element.roleid == item.roleid);
-          });
-          if (dt1.length > 0) {
-            this.emp.roleid = String(dt1[0].roleid);
-            this.setrolename(this.emp.roleid);
-            localStorage.removeItem('Employee');
-            localStorage.setItem('Employee', JSON.stringify(this.emp));
-            this.bindmenubyrba(eurl);
-            return false;
+          if (!found) {
+            var dt1 = this.rbalist.filter(function (element, index) {
+              return (element.materialrequest_approval && element.roleid == item.roleid);
+            });
+            if (dt1.length > 0) {
+              found = true;
+              this.emp.roleid = String(dt1[0].roleid);
+              this.setrolename(this.emp.roleid);
+              localStorage.removeItem('Employee');
+              localStorage.setItem('Employee', JSON.stringify(this.emp));
+              this.bindmenubyrba(eurl);
+              return false;
+            }
           }
+         
         })
+        if (!found) {
+          alert("You are not authorized to view this page.")
+          this.bindmenubyrba();
+        }
 
       }
       else if (eurl.includes("/Email/IssueSTOMaterial?ReqId")) {
@@ -352,6 +378,10 @@ export class NavMenuComponent implements OnInit {
             }
           }
         })
+        if (!found) {
+          alert("You are not authorized to view this page.")
+          this.bindmenubyrba();
+        }
       }
       else if (eurl.includes("/Email/grnputaway?GRNo")) {
         var found = false;
@@ -372,6 +402,10 @@ export class NavMenuComponent implements OnInit {
           }
 
         })
+        if (!found) {
+          alert("You are not authorized to view this page.")
+          this.bindmenubyrba();
+        }
       }
       else if (eurl.includes("/Email/ApprovalSubcontractingMaterial?ReqId")) {
         debugger;

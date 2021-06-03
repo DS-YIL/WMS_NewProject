@@ -48,9 +48,9 @@
                   <th rowspan="2" style="width:70px;text-align:center">Line item no</th>
                   <!--<th rowspan="2" style="width:200px; text-align: center">Material Description</th>-->
                   <th rowspan="2" style="width:200px; text-align: center">PO Item Description</th>
-                  <th rowspan="2" style="width:70px;text-align:center">Received Quantity</th>
                   <th rowspan="2" style="width:70px;text-align:center">Accepted Quantity</th>
-                  <th rowspan="2" style="width:70px;text-align: center">Returned Quantity</th>
+                  <th rowspan="2" style="width:70px;text-align:center">MRN Quantity</th>
+                  <th rowspan="2" style="width:70px;text-align: center">Pending PutAway Quantity</th>
                   <th colspan="2" style="width:200px; text-align: center">Put Away</th>
                 </tr>
                 <tr class="mprltbldata">
@@ -74,13 +74,14 @@
                   </td>
                   <td class="ptable-cell" style="text-align:left;">
                     <!--<span *ngIf="rowData.materialdescription">{{rowData.materialdescription}}</span>
-                     <span *ngIf="!rowData.materialdescription">-</span>-->
+     <span *ngIf="!rowData.materialdescription">-</span>-->
                     <span *ngIf="rowData.poitemdescription">{{rowData.poitemdescription}}</span>
                     <span *ngIf="!rowData.poitemdescription">-</span>
                   </td>
-                  <td class="ptable-cell" style="text-align:right;width:100px;">{{rowData.receivedqty}}</td>
+
                   <td class="ptable-cell" style="text-align:right;width:100px;">{{rowData.confirmqty}}</td>
-                  <td class="ptable-cell" style="text-align:right;width:100px;">{{rowData.returnqty}}</td>
+                  <td class="ptable-cell" style="text-align:right;width:100px;">{{rowData.partialqty}}</td>
+                  <td class="ptable-cell" style="text-align:right;width:100px;">{{rowData.confirmqty - rowData.partialqty}}</td>
                   <td colspan="2" class="ptable-cell" style="text-align:center;width:200px;">
                     <a *ngIf="rowData.itemlocation" href="#" [pRowToggler]="rowData">
                       <i [ngClass]="expanded ? 'pi pi-fw pi-chevron-circle-down' : 'pi pi-fw pi-chevron-circle-right'" style="    vertical-align: middle;padding-bottom: .1em;color: #20f320d6"></i>
@@ -183,7 +184,7 @@
       <div class="col-lg-1 col-md-1 col-sm-1 form-inline">
       </div>
       <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
-        <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">Accepted Qty:</label>
+        <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">PutAway Qty:</label>
       </div>
       <div class="col-lg-2 col-md-2 col-sm-2 form-inline ">
         <input type="text" [disabled]="true" class="form-control" [(ngModel)]="acceptedQty" />
@@ -340,7 +341,7 @@
         </span>
       </div>
       <div class="col-lg-2 col-md-2 labelheading">
-        <label>Accepted Qty :</label>&nbsp;<span><label class="labeltext">{{matqty}}</label></span>
+        <label>Pending Putaway Qty :</label>&nbsp;<span><label class="labeltext">{{matqty}}</label></span>
       </div>
     </div>
     <div class="row">

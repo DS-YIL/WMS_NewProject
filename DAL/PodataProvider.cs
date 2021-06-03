@@ -2383,7 +2383,8 @@ namespace WMS.DAL
 							unitprice,
 							item.projectid,
 							item.saleorderno,
-							item.solineitemno
+							item.solineitemno,
+							item.initialputawayqty
 
 						}));
 						if (result != 0)
@@ -3512,8 +3513,46 @@ namespace WMS.DAL
 
 
 					await pgsql.OpenAsync();
-					return await pgsql.QueryAsync<IssueRequestModel>(
+					var data = await pgsql.QueryAsync<IssueRequestModel>(
 					   query, null, commandType: CommandType.Text);
+
+					foreach(IssueRequestModel mdl in data)
+                    {
+
+						if(mdl.storeavailableqty != null && mdl.mrntotalissuedqty != null)
+                        {
+							
+							decimal? diff = mdl.storeavailableqty - mdl.mrntotalissuedqty;
+							if (diff < 0)
+							{
+								mdl.storeavailableqty = 0;
+							}
+							else
+							{
+								mdl.storeavailableqty = diff;
+
+							}
+						}
+						if (mdl.storeavailableqty != null && mdl.mrnissuedqty != null)
+						{
+
+							if (mdl.issuedqty != null)
+							{
+								mdl.issuedqty = mdl.issuedqty + mdl.mrnissuedqty;
+							}
+							else
+							{
+								mdl.issuedqty = mdl.mrnissuedqty;
+							}
+
+
+						}
+
+					}
+
+					return data;
+
+
 
 
 				}
@@ -4147,112 +4186,195 @@ namespace WMS.DAL
 						{
 							descriptionstr = item.Materialdescription.Replace("\'", "''");
 						}
-						string stockquery = "";
-						if(item.materialtype == "Project")
-						{
-							stockquery = "select * from wms.wms_stock where projectid='" + item.projectid + "' and pono='" + item.pono + "' and materialid = '" + item.materialid + "' and lower(poitemdescription) = lower('" + descriptionstr + "') and availableqty > 0 and itemlocation = '" + item.itemlocation + "' and createddate::DATE = '" + createdate + "' order by itemid";
-						}
-                        else if(item.materialtype == "PLOS")
+						if(item.itemlocation != "ON FLOOR")
                         {
-							stockquery = "select * from wms.wms_stock where  materialid = '" + item.materialid + "' and lower(poitemdescription) = lower('" + descriptionstr + "') and availableqty > 0 and receivedtype = 'Material Return' and itemlocation = '" + item.itemlocation + "' and createddate::DATE = '" + createdate + "' ";
-							if(item.saleorderno != null && item.saleorderno.Trim() != "")
-                            {
-								stockquery += " and saleorderno = '"+ item.saleorderno + "'";
-							}
-							stockquery += "order by itemid";
-						}
-						else
-						{
-							stockquery = "select * from wms.wms_stock where  materialid = '" + item.materialid + "' and lower(poitemdescription) = lower('" + descriptionstr + "') and availableqty > 0 and stcktype = 'Plant Stock' and itemlocation = '" + item.itemlocation + "' and createddate::DATE = '" + createdate + "' ";
-							if (item.saleorderno != null && item.saleorderno.Trim() != "")
+							string stockquery = "";
+							if (item.materialtype == "Project")
 							{
-								stockquery += " and saleorderno = '" + item.saleorderno + "'";
+								stockquery = "select * from wms.wms_stock where projectid='" + item.projectid + "' and pono='" + item.pono + "' and materialid = '" + item.materialid + "' and lower(poitemdescription) = lower('" + descriptionstr + "') and availableqty > 0 and itemlocation = '" + item.itemlocation + "' and createddate::DATE = '" + createdate + "' order by itemid";
 							}
-							stockquery += "order by itemid";
-						}
-
-						var stockdata = DB.QueryAsync<StockModel>(stockquery, null, commandType: CommandType.Text);
-						if (stockdata != null)
-						{
-							decimal? quantitytoissue = item.issuedqty;
-							decimal? issuedqty = 0;
-							foreach (StockModel itm in stockdata.Result)
+							else if (item.materialtype == "PLOS")
 							{
-								string approvedstatus = string.Empty;
-								if (item.issuedqty != 0)
+								stockquery = "select * from wms.wms_stock where  materialid = '" + item.materialid + "' and lower(poitemdescription) = lower('" + descriptionstr + "') and availableqty > 0 and receivedtype = 'Material Return' and itemlocation = '" + item.itemlocation + "' and createddate::DATE = '" + createdate + "' ";
+								if (item.saleorderno != null && item.saleorderno.Trim() != "")
 								{
-									approvedstatus = "Approved";
+									stockquery += " and saleorderno = '" + item.saleorderno + "'";
 								}
-								DateTime approvedon = System.DateTime.Now;
-
-								int requestforissueid = item.requestforissueid;
-								string requestmaterialid = item.requestmaterialid;
-								string materialid = item.materialid;
-								if (quantitytoissue <= itm.availableqty)
-								{
-									issuedqty = quantitytoissue;
-								}
-								else
-								{
-									issuedqty = itm.availableqty;
-								}
-
-								quantitytoissue = quantitytoissue - issuedqty;
-
-								DateTime itemissueddate = System.DateTime.Now;
-
-								string updateapproverstatus = WMSResource.updateapproverstatus;
-								string requestid = null;
-								if (item.requesttype == "MaterialRequest")
-								{
-									requestid = requestmaterialid;
-
-								}
-								else
-								{
-									requestid = item.requestid;
-								}
-
-								if (item.issuedqty > 0)
-								{
-									result = DB.Execute(updateapproverstatus, new
-									{
-										approvedstatus,
-										requestmaterialid,
-										approvedon,
-										issuedqty,
-										materialid,
-										itm.pono,
-										itm.itemid,
-										item.itemreturnable,
-										item.approvedby,
-										itemissueddate,
-										item.itemreceiverid,
-										itm.itemlocation,
-										requestid,
-										item.requesttype
-
-									});
-									decimal? availableqty = itm.availableqty - item.issuedqty;
-
-									string insertqueryforstatusforqty = WMSResource.updateqtyafterissue.Replace("#itemid", Convert.ToString(itm.itemid)).Replace("#issuedqty", Convert.ToString(issuedqty));
-
-									var data1 = DB.ExecuteScalar(insertqueryforstatusforqty, new
-									{
-
-									});
-
-
-								}
-
-								if (quantitytoissue <= 0)
-								{
-									break;
-								}
-
+								stockquery += "order by itemid";
 							}
-						}
+							else
+							{
+								stockquery = "select * from wms.wms_stock where  materialid = '" + item.materialid + "' and lower(poitemdescription) = lower('" + descriptionstr + "') and availableqty > 0 and stcktype = 'Plant Stock' and itemlocation = '" + item.itemlocation + "' and createddate::DATE = '" + createdate + "' ";
+								if (item.saleorderno != null && item.saleorderno.Trim() != "")
+								{
+									stockquery += " and saleorderno = '" + item.saleorderno + "'";
+								}
+								stockquery += "order by itemid";
+							}
 
+							var stockdata = DB.QueryAsync<StockModel>(stockquery, null, commandType: CommandType.Text);
+							if (stockdata != null)
+							{
+								decimal? quantitytoissue = item.issuedqty;
+								decimal? issuedqty = 0;
+								foreach (StockModel itm in stockdata.Result)
+								{
+									string approvedstatus = string.Empty;
+									if (item.issuedqty != 0)
+									{
+										approvedstatus = "Approved";
+									}
+									DateTime approvedon = System.DateTime.Now;
+
+									int requestforissueid = item.requestforissueid;
+									string requestmaterialid = item.requestmaterialid;
+									string materialid = item.materialid;
+									if (quantitytoissue <= itm.availableqty)
+									{
+										issuedqty = quantitytoissue;
+									}
+									else
+									{
+										issuedqty = itm.availableqty;
+									}
+
+									quantitytoissue = quantitytoissue - issuedqty;
+
+									DateTime itemissueddate = System.DateTime.Now;
+
+									string updateapproverstatus = WMSResource.updateapproverstatus;
+									string requestid = null;
+									if (item.requesttype == "MaterialRequest")
+									{
+										requestid = requestmaterialid;
+
+									}
+									else
+									{
+										requestid = item.requestid;
+									}
+
+									if (item.issuedqty > 0)
+									{
+										result = DB.Execute(updateapproverstatus, new
+										{
+											approvedstatus,
+											requestmaterialid,
+											approvedon,
+											issuedqty,
+											materialid,
+											itm.pono,
+											itm.itemid,
+											item.itemreturnable,
+											item.approvedby,
+											itemissueddate,
+											item.itemreceiverid,
+											itm.itemlocation,
+											requestid,
+											item.requesttype
+
+										});
+										decimal? availableqty = itm.availableqty - item.issuedqty;
+
+										string insertqueryforstatusforqty = WMSResource.updateqtyafterissue.Replace("#itemid", Convert.ToString(itm.itemid)).Replace("#issuedqty", Convert.ToString(issuedqty));
+
+										var data1 = DB.ExecuteScalar(insertqueryforstatusforqty, new
+										{
+
+										});
+
+
+									}
+
+									if (quantitytoissue <= 0)
+									{
+										break;
+									}
+
+								}
+							}
+
+						}
+                        else
+                        {
+							string stockquery = "";
+							stockquery = "select * from wms.wms_storeinward ws where ws.projectid = '" + item.projectid + "' and ws.pono = '" + item.pono + "' and ws.materialid = '" + item.materialid + "'";
+							stockquery += " and Lower(ws.poitemdescription) = Lower('" + descriptionstr + "') and ws.confirmqty > 0 ";
+							stockquery += " and ws.inwardid not in (select distinct ws2.inwardid from wms.wms_stock ws2 where ws2.inwardid is not null)";
+							var stockdata = DB.QueryAsync<StockModel>(stockquery, null, commandType: CommandType.Text);
+							if (stockdata != null)
+							{
+								decimal? quantitytoissue = item.issuedqty;
+								decimal? issuedqty = 0;
+								foreach (StockModel itm in stockdata.Result)
+								{
+									string approvedstatus = string.Empty;
+									if (item.issuedqty != 0)
+									{
+										approvedstatus = "Approved";
+									}
+									DateTime approvedon = System.DateTime.Now;
+
+									int requestforissueid = item.requestforissueid;
+									string requestmaterialid = item.requestmaterialid;
+									string materialid = item.materialid;
+									if (quantitytoissue <= itm.confirmqty)
+									{
+										issuedqty = quantitytoissue;
+									}
+									else
+									{
+										issuedqty = itm.confirmqty;
+									}
+
+									quantitytoissue = quantitytoissue - issuedqty;
+
+									DateTime itemissueddate = System.DateTime.Now;
+
+									string updateapproverstatus = WMSResource.updateapproverstatus;
+									string requestid = null;
+									if (item.requesttype == "MaterialRequest")
+									{
+										requestid = requestmaterialid;
+
+									}
+									else
+									{
+										requestid = item.requestid;
+									}
+
+									if (item.issuedqty > 0)
+									{
+										string insertqry = WMSResource.issueMRNMaterials;
+									    string mrnby = dataobj[0].approvedby;
+										string mrnremarks = "";
+										string projectcode = item.projectid;
+										string requesttype = "MaterialRequest";
+										decimal? acceptedqty = itm.confirmqty;
+									    result = DB.Execute(insertqry, new
+											{
+												itm.inwardid,
+												projectcode,
+												mrnby,
+												mrnremarks,
+												acceptedqty,
+											    issuedqty,
+												requestid,
+											    requesttype
+										});
+										
+
+									}
+
+									if (quantitytoissue <= 0)
+									{
+										break;
+									}
+
+								}
+							}
+
+						}
 					}
 
 					if (dataobj[0].requesttype == "MaterialRequest")
@@ -6295,7 +6417,7 @@ namespace WMS.DAL
 
 					}
 					string receivedlistqry = WMSResource.getsecurityreceivedlist;
-					receivedlistqry = receivedlistqry + " where sl.invoicedate <= '" + deliverydate + " 23:59:59' and sl.invoicedate >= '" + deliverydate + " 00:00:00'";
+					receivedlistqry = receivedlistqry + " where sl.isdirectdelivered is not true and sl.deleteflag is not true and sl.invoicedate <= '" + deliverydate + " 23:59:59' and sl.invoicedate >= '" + deliverydate + " 00:00:00'";
 					var receivedrcpts = await pgsql.QueryAsync<SecurityInwardreceivedModel>(
 					   receivedlistqry, null, commandType: CommandType.Text);
 					if (receivedrcpts != null && receivedrcpts.Count() > 0)
@@ -6677,6 +6799,65 @@ namespace WMS.DAL
 		}
 
 		/*
+		Name of Function : <<GetItemlocationwithStore>>  Author :<<Ramesh>>  
+		Date of Creation <<26_05_2021>>
+		Purpose : <<get itemlocation to issue materials>>
+		<param name="material,description"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
+
+		public async Task<IEnumerable<IssueRequestModel>> GetItemlocationwithStore(string material, string description, string projectid, string pono)
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+
+				try
+				{
+					string descriptionstr = null;
+					if (description != null)
+					{
+						descriptionstr = description.Replace("\'", "''");
+					}
+					string query = WMSResource.getItemlocationwithStore.Replace("#materialid", material).Replace("#desc", descriptionstr).Replace("#projectid", projectid).Replace("#pono", pono);
+					await pgsql.OpenAsync();
+					var data = await pgsql.QueryAsync<IssueRequestModel>(
+					  query, null, commandType: CommandType.Text);
+					foreach(IssueRequestModel mdl in data)
+                    {
+						if(mdl.mrntotalissuedqty != null && mdl.mrntotalissuedqty > 0)
+                        {
+							decimal? avlqty = mdl.availableqty - mdl.mrntotalissuedqty;
+							if(avlqty < 0)
+                            {
+								mdl.availableqty = 0;
+
+							}
+                            else
+                            {
+								mdl.availableqty = avlqty;
+							}
+
+						}
+                    }
+					return data;
+
+
+
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "GetItemlocationwithStore", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+			}
+		}
+
+		/*
 		Name of Function : <<GetItemlocationListBymterialanddesc>>  Author :<<Ramesh>>  
 		Date of Creation <<29_01_2021>>
 		Purpose : <<get itemlocation to issue materials>>
@@ -6923,6 +7104,76 @@ namespace WMS.DAL
 				catch (Exception Ex)
 				{
 					log.ErrorMessage("PODataProvider", "GetItemlocationListBymterial", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+			}
+		}
+
+		/// <summary>
+		/// Get list of Material issued by issueid
+		/// </summary>
+		/// <param name="requestforissueid"></param>
+		/// Revised by Ramesh 10_01_2020
+		/// <returns></returns>
+		public async Task<IEnumerable<IssueRequestModel>> getItemlocationListByIssueIdWithStore(string requestforissueid, string requesttype)
+		{
+
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+
+				try
+				{
+					string query = WMSResource.getissuedlocationwithStore.Replace("#requestforissueid", requestforissueid).Replace("#type", requesttype);
+					await pgsql.OpenAsync();
+					var data = await pgsql.QueryAsync<IssueRequestModel>(
+					 query, null, commandType: CommandType.Text);
+					foreach (IssueRequestModel mdl in data)
+					{
+						if (mdl.itemlocation == "ON FLOOR")
+						{
+							decimal? diff = mdl.availableqty - mdl.mrntotalissuedqty;
+							if (diff < 0)
+							{
+								mdl.availableqty = 0;
+							}
+							else
+							{
+								mdl.availableqty = diff;
+
+							}
+						}
+
+					}
+					data = data.OrderByDescending(o => o.createddate);
+
+					IEnumerable<IssueRequestModel> result = data.GroupBy(c => new { c.itemlocation, c.createddate }).Select(t => new IssueRequestModel
+					{
+
+						availableqty = t.Sum(u => u.availableqty),
+						issuedqty = t.Sum(u => u.issuedqty),
+						pono = t.First().pono,
+						materialid = t.First().materialid,
+						itemid = t.First().itemid,
+						Materialdescription = t.First().Materialdescription,
+						material = t.First().material,
+						itemlocation = t.Key.itemlocation,
+						createddate = t.Key.createddate,
+						stocktype = t.First().stocktype
+					});
+
+					
+
+					return result;
+
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "getItemlocationListByIssueIdWithStore", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 				finally
@@ -8218,6 +8469,64 @@ namespace WMS.DAL
 		}
 
 		/*
+		Name of Function : <<getmaterialswithstore>>  Author :<<Ramesh>>  
+		Date of Creation <<26-05-2021>>
+		Purpose : <<Material Request data>>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
+		public async Task<IEnumerable<IssueRequestModel>> getmaterialswithstore(string pono, string projectcode)
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+
+				try
+				{
+					pono = pono.Replace("\"", "\'");
+					string materialrequestquery = WMSResource.getMateralfromstockstore.Replace("#projectid", projectcode).Replace("#pono", pono);
+					await pgsql.OpenAsync();
+					var data = await pgsql.QueryAsync<IssueRequestModel>(
+					  materialrequestquery, null, commandType: CommandType.Text);
+					foreach(IssueRequestModel mdl in data)
+                    {
+						if(mdl.mrnissuedqty != null && mdl.mrnissuedqty > 0)
+                        {
+							decimal? avlqty = mdl.availableqty - mdl.mrnissuedqty;
+							if(avlqty < 0)
+                            {
+								mdl.availableqty = 0;
+                            }
+                            else
+                            {
+								mdl.availableqty = mdl.availableqty - mdl.mrnissuedqty;
+                            }
+                        }
+                    }
+					IEnumerable<IssueRequestModel> result = data.GroupBy(c => new { c.materialid, c.Materialdescription,c.pono }).Select(t => new IssueRequestModel
+					{
+						availableqty = t.Sum(u => u.availableqty),
+						pono = t.First().pono,
+						materialid = t.First().materialid,
+						Materialdescription = t.First().Materialdescription,
+						material = t.First().material,
+						unitprice = t.First().unitprice,
+					});
+					return result;
+
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "getmaterialswithstore", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+			}
+		}
+
+		/*
 	Name of Function : <<MaterialRequestdata>>  Author :<<Ramesh>>  
 	Date of Creation <<12-12-2019>>
 	Purpose : <<Material Request data>>
@@ -9039,7 +9348,7 @@ namespace WMS.DAL
 					DateTime dt = DateTime.Now;
 					string date = dt.ToString("yyyy-MM-dd");
 					string query = WMSResource.getsecurityreceivedlist;
-					query = query + " where sl.invoicedate <= '" + date + " 23:59:59' and sl.invoicedate >= '" + date + " 00:00:00'";
+					query = query + " where sl.isdirectdelivered is not true and sl.deleteflag is not true and sl.invoicedate <= '" + date + " 23:59:59' and sl.invoicedate >= '" + date + " 00:00:00'";
 					await pgsql.OpenAsync();
 					return await pgsql.QueryAsync<SecurityInwardreceivedModel>(
 					   query, null, commandType: CommandType.Text);
@@ -9760,6 +10069,7 @@ namespace WMS.DAL
 			}
 		}
 
+		
 		/*
 		Name of Function : <<getmatlist>>  Author :<<Ramesh>>  
 		Date of Creation <<12-12-2019>>
@@ -11781,6 +12091,38 @@ namespace WMS.DAL
 		}
 
 		/*
+		Name of Function : <<getmrnlist>>  Author :<<Ramesh>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<get grn list for acceptance put away>>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
+		public async Task<IEnumerable<MRNsavemodel>> getmrnlist()
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				try
+				{
+					string materialrequestquery = WMSResource.getMRNList;
+					await pgsql.OpenAsync();
+					var data = await pgsql.QueryAsync<MRNsavemodel>(
+					  materialrequestquery, null, commandType: CommandType.Text);
+					return data;
+
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "getmrnlist", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+			}
+		}
+
+		/*
 		Name of Function : <<getgrnlistforacceptancenotify>>  Author :<<Ramesh>>  
 		Date of Creation <<12-12-2019>>
 		Purpose : <<get grn list for acceptance notify>>
@@ -12462,7 +12804,7 @@ namespace WMS.DAL
 		<param name="grnnumber"></param>
 		Review Date :<<>>   Reviewed By :<<>>
 		*/
-		public async Task<IEnumerable<inwardModel>> getMRNmaterials(string inwardid)
+		public async Task<IEnumerable<inwardModel>> getMRNmaterials(string grnnumber)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
@@ -12470,7 +12812,7 @@ namespace WMS.DAL
 				try
 				{
 					await pgsql.OpenAsync();
-					string queryforitemdetails = WMSResource.getMRNmaterials.Replace("#inwardid", inwardid);
+					string queryforitemdetails = WMSResource.getmrnmaterialsbygr.Replace("#grnnumber", grnnumber);
 					var data = await pgsql.QueryAsync<inwardModel>(
 					   queryforitemdetails, null, commandType: CommandType.Text);
 					return data;
@@ -14646,6 +14988,38 @@ namespace WMS.DAL
 				catch (Exception Ex)
 				{
 					log.ErrorMessage("PODataProvider", "getPODetailsByProjectCode", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
+					return null;
+				}
+			}
+		}
+
+		/*
+		Name of Function : <<getStorePODetailsByProjectCode>>  Author :<<Ramesh>>  
+		Date of Creation <<26/05/2021>>
+		Purpose : <<Get podetails list>>
+		<param name="empno"></param>
+		Review Date :<<>>   Reviewed By :<<>>
+		*/
+		public async Task<IEnumerable<PODetails>> getStorePODetailsByProjectCode(string empno, string projectcode)
+		{
+			//List<PODetails> objPO = new List<PODetails>();
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				try
+				{
+					await pgsql.OpenAsync();
+					string getpoquery = WMSResource.getStorePODetailsByProjectCode.Replace("#manager", empno).Replace("#projectcode", projectcode);
+
+					var objPO = await pgsql.QueryAsync<PODetails>(
+					   getpoquery, null, commandType: CommandType.Text);
+					//objPO = pgsql.QueryAsync<List<PODetails>>(
+					//			getpoquery, null, commandType: CommandType.Text);
+
+					return objPO;
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "getStorePODetailsByProjectCode", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return null;
 				}
 			}
@@ -18085,6 +18459,14 @@ Review Date :<<>>   Reviewed By :<<>>
 							dddetails.directdeliveryaddrs,
 							dddetails.directdeliveryremarks,
 							dddetails.directdeliveredon
+						});
+						string updateseqnumber = WMSResource.updateseqnumber;
+						int id = obj.id;
+						var results1 = pgsql.ExecuteScalar(updateseqnumber, new
+						{
+							grnnextsequence,
+							id,
+
 						});
 						var inwmasterid = rslt.ToString();
 						string insertMat = WMSResource.insertDDinwardDetails;

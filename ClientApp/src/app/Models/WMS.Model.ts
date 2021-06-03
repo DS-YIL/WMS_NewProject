@@ -234,6 +234,7 @@ export class StockModel {
   stockid: number;
   saleorderno: string;
   solineitemno: string;
+  initialputawayqty: number;
 }
 
 export class locataionDetailsStock {
@@ -539,12 +540,15 @@ export class notifymodel {
 }
 export class MRNsavemodel {
   grnnumber: string;
+  suppliername: string;
+  invoiceno: string;
   projectcode: string;
   directtransferredby: string;
   mrnremarks: string
   inwardid: number;
   acceptedqty: number;
-  issuedqty: number
+  issuedqty: number;
+  materiallist: inwardModel[];
 }
 
 export class pageModel {

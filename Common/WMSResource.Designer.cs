@@ -902,8 +902,8 @@ namespace WMS.Common {
         
         /// <summary>
         ///   Looks up a localized string similar to select stinw.inwardid as value,sinw.grnnumber as text,
-        ///sinw.suppliername as supplier,sinw.invoiceno ,stinw.confirmqty ,(select  COALESCE(SUM(mrn.issuedqty ),0)+ COALESCE(SUM(ws.totalquantity ),0)   as totalissued from wms.mrnmaterials mrn left join wms.wms_stock  ws on ws.inwardid =mrn.inwardid  where mrn.inwardid =stinw.inwardid )
-        ///,case when stinw.confirmqty=(select  COALESCE(SUM(mrn.issuedqty ),0)+ COALESCE(SUM(ws.totalquantity ),0)   as totalissued from wms.mrnmaterials mrn left join wms.wms_stock  ws  [rest of string was truncated]&quot;;.
+        ///sinw.suppliername as supplier,sinw.invoiceno ,stinw.confirmqty ,(select  COALESCE(SUM(mrn.issuedqty ),0)+ COALESCE(SUM(ws.initialputawayqty ),0)   as totalissued from wms.mrnmaterials mrn left join wms.wms_stock  ws on ws.inwardid =mrn.inwardid  where mrn.inwardid =stinw.inwardid )
+        ///,case when stinw.confirmqty=(select  COALESCE(SUM(mrn.issuedqty ),0)+ COALESCE(SUM(ws.initialputawayqty ),0)   as totalissued from wms.mrnmaterials mrn left join wms.wms_st [rest of string was truncated]&quot;;.
         /// </summary>
         public static string getgrnlistdataforputaway {
             get {
@@ -1053,6 +1053,21 @@ namespace WMS.Common {
         public static string getinwmasterid {
             get {
                 return ResourceManager.GetString("getinwmasterid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to select iss.requestid, iss.issuedqty,sk.pono,sk.materialid,sk.itemid,sk.itemlocation,sk.stcktype as stocktype,
+        ///(select sum(sk1.availableqty) from wms.wms_stock sk1 where sk1.materialid = sk.materialid and lower(sK1.poitemdescription)  = lower(sk.poitemdescription)  and sk1.itemlocation = sk.itemlocation and sk1.pono = sk.pono and sk1.projectid = sk.projectid) as availableqty,
+        ///0 as mrntotalissuedqty
+        ///,sk.createddate::DATE,
+        ///sk.poitemdescription as materialdescription
+        ///from wms.wms_materialissue iss 
+        ///left o [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string getissuedlocationwithStore {
+            get {
+                return ResourceManager.GetString("getissuedlocationwithStore", resourceCulture);
             }
         }
         
@@ -1242,6 +1257,35 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to select sum(sk.availableqty)as availableqty,sk.saleorderno,Max(sk.materialid) as materialid,sk.itemlocation,Max(sk.poitemdescription) as materialdescription,sk.createddate::DATE,bool_or(sk.initialstock) as initialstock 
+        ///from wms.wms_stock sk 
+        ///left outer join wms.&quot;MaterialMasterYGS&quot; ygs on ygs.material=sk.materialid 
+        ///where sk.materialid=&apos;#materialid&apos; and lower(sk.poitemdescription)  = lower(&apos;#desc&apos;) and sk.receivedtype = &apos;Material Return&apos;
+        ///and sk.availableqty&gt;0 
+        ///group by sk.itemlocation,sk.saleorderno,sk. [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string getitemlocationsforplosstock {
+            get {
+                return ResourceManager.GetString("getitemlocationsforplosstock", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to (select sum(sk.availableqty::decimal(19,5))as availableqty,Max(sk.materialid) as materialid,sk.itemlocation,Max(sk.poitemdescription) as materialdescription,sk.createddate::DATE,0 as mrntotalissuedqty
+        ///from wms.wms_stock sk 
+        ///where sk.materialid=&apos;#materialid&apos; and lower(sk.poitemdescription)  = lower(&apos;#desc&apos;) and sk.projectid = &apos;#projectid&apos; and sk.pono = &apos;#pono&apos;
+        ///and sk.availableqty&gt;0 
+        ///group by sk.itemlocation,sk.createddate::DATE order by sk.createddate::DATE desc)
+        ///union all
+        ///(select sum(ws.confirmqty ::d [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string getItemlocationwithStore {
+            get {
+                return ResourceManager.GetString("getItemlocationwithStore", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to select inwa.inwardid,bin.binnumber, rack.racknumber, loc.locatorname,mat.rackid,mat.binid,
         /// mat.storeid,mat.stocktype,stocks.itemlocation,stocks.availableqty,stocks.itemid,inw.grnnumber,inw.pono,inw.invoiceno,inw.receiveddate,
         /// case when inwa.confirmqty=(select  COALESCE(SUM(mrn.issuedqty ),0)+ COALESCE(SUM(ws.totalquantity ),0)   as totalissued from wms.mrnmaterials mrn left join wms.wms_stock  ws on ws.inwardid =mrn.inwardid  where mrn.inwardid =inwa.inwardid ) 
@@ -1333,6 +1377,22 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to select  sk.materialid,sk.poitemdescription  as materialdescription,
+        ///sum(sk.availableqty) as availableqty,sk.pono,0 as mrnissuedqty,
+        ///max(sk.unitprice::decimal(19,5)) as unitprice from wms.wms_stock  sk  
+        ///where sk.availableqty &gt; 0 and sk.projectid = &apos;#projectid&apos; and sk.pono in (#pono) group by sk.poitemdescription, sk.materialid,sk.pono
+        ///union all
+        ///select  ws.materialid ,ws.poitemdescription  as materialdescription,
+        ///sum(ws.confirmqty) as availableqty,ws.pono,
+        ///(select sum(m.issuedqty) from wms.mrnmaterial [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string getMateralfromstockstore {
+            get {
+                return ResourceManager.GetString("getMateralfromstockstore", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to select max(sk.pono) as pono ,sk.materialid as material,Max(prj.projectmanager) as projectmanager,
         ///sum(sk.availableqty) as availableqty,
         ///max(sk.stcktype) as stocktype,max(po.suppliername) as suppliername,
@@ -1379,6 +1439,17 @@ namespace WMS.Common {
         public static string getMaterialdetailsforplantstock {
             get {
                 return ResourceManager.GetString("getMaterialdetailsforplantstock", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to select materialid,poitemdescription,max(unitprice::decimal(19,5)) as unitprice,sum(availableqty::decimal(19,5)) as availableqty from wms.wms_stock ws where materialid = &apos;#materialid&apos; and Lower(poitemdescription) = Lower(&apos;#description&apos;)
+        ///and receivedtype = &apos;Material Return&apos;
+        ///group by materialid,poitemdescription.
+        /// </summary>
+        public static string getMaterialdetailsforplosstock {
+            get {
+                return ResourceManager.GetString("getMaterialdetailsforplosstock", resourceCulture);
             }
         }
         
@@ -1764,11 +1835,38 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to select si.grnnumber, si.suppliername, si.invoiceno from wms.mrnmaterials m
+        ///left outer join wms.wms_storeinward sinw on  sinw.inwardid = m.inwardid 
+        ///left outer join wms.wms_securityinward si on si.inwmasterid = sinw.inwmasterid
+        ///group by si.grnnumber, si.suppliername, si.invoiceno
+        ///order by max(m.mrnid) desc.
+        /// </summary>
+        public static string getMRNList {
+            get {
+                return ResourceManager.GetString("getMRNList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to select st.materialid ,st.pono,st.poitemdescription,emp.name as mrnby,mrn.mrnon,mrn.projectcode,mrn.mrnremarks,mrn.issuedqty from wms.wms_storeinward st join wms.mrnmaterials mrn on mrn.inwardid =st.inwardid  join wms.employee emp on emp.employeeno =mrn.mrnby  where mrn.inwardid =&apos;#inwardid&apos;.
         /// </summary>
         public static string getMRNmaterials {
             get {
                 return ResourceManager.GetString("getMRNmaterials", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to select sinw.pono ,m.projectcode ,sinw.materialid ,m.issuedqty , m.mrnon ,emp.&quot;name&quot; as mrnby ,m.mrnremarks from wms.mrnmaterials m
+        ///left outer join wms.wms_storeinward sinw on  sinw.inwardid = m.inwardid 
+        ///left outer join wms.wms_securityinward si on si.inwmasterid = sinw.inwmasterid
+        ///left outer join wms.employee emp on emp.employeeno = m.mrnby 
+        ///where si.grnnumber = &apos;#grnnumber&apos;
+        ///order by m.mrnid desc.
+        /// </summary>
+        public static string getmrnmaterialsbygr {
+            get {
+                return ResourceManager.GetString("getmrnmaterialsbygr", resourceCulture);
             }
         }
         
@@ -1882,6 +1980,20 @@ namespace WMS.Common {
         public static string getplantstockmaterials {
             get {
                 return ResourceManager.GetString("getplantstockmaterials", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to select iss.requestid, sum(iss.issuedqty) as issuedqty ,max(sk.materialid) as materialid,sk.itemlocation,
+        ///(select sum(sk1.availableqty) from wms.wms_stock sk1 where sk1.materialid = max(sk.materialid) and lower(sK1.poitemdescription)  = lower(max(sk.poitemdescription))  and sk1.itemlocation = sk.itemlocation and sk1.receivedtype =&apos;Material Return&apos;) as availableqty
+        ///,sk.createddate::DATE as createddate,
+        ///max(sk.poitemdescription) as materialdescription
+        ///from wms.wms_materialissue iss 
+        ///left outer join wms.wm [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string getPlosstockissuedlocations {
+            get {
+                return ResourceManager.GetString("getPlosstockissuedlocations", resourceCulture);
             }
         }
         
@@ -2359,6 +2471,22 @@ namespace WMS.Common {
         public static string getstoredata {
             get {
                 return ResourceManager.GetString("getstoredata", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to select sk.pono, polist.suppliername,prj.projectmanager from wms.wms_stock sk
+        ///left outer join wms.wms_polist polist on sk.pono = polist.pono
+        ///left outer join wms.wms_project prj on sk.pono = prj.pono 
+        ///where sk.availableqty &gt; 0 and prj.projectcode = &apos;#projectcode&apos; and (prj.projectmanager = &apos;#manager&apos; or prj.projectmember ilike &apos;%#manager%&apos;)
+        ///group by sk.pono, polist.suppliername,prj.projectmanager
+        ///union
+        ///select ws.pono, polist.suppliername,prj.projectmanager from wms.wms_storeinward ws
+        ///left outer join wms [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string getStorePODetailsByProjectCode {
+            get {
+                return ResourceManager.GetString("getStorePODetailsByProjectCode", resourceCulture);
             }
         }
         
@@ -3132,7 +3260,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO wms.wms_stock(inwmasterid,stockstatus,pono,binid,rackid ,storeid, vendorid,totalquantity,shelflife,availableqty,deleteflag,itemlocation,createddate,createdby,materialid,inwardid,stcktype,lineitemno,receivedtype,poitemdescription,value,unitprice,projectid,saleorderno,solineitemno)VALUES(@inwmasterid,@stockstatus,@pono,@binid,@rackid,@storeid,@vendorid,@totalquantity,@shelflife,@availableqty,@deleteflag,@itemlocation,@createddate,@createdby,@materialid,@inwardid,@stocktype,@lineitemno,@receivedtyp [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to INSERT INTO wms.wms_stock(inwmasterid,stockstatus,pono,binid,rackid ,storeid, vendorid,totalquantity,shelflife,availableqty,deleteflag,itemlocation,createddate,createdby,materialid,inwardid,stcktype,lineitemno,receivedtype,poitemdescription,value,unitprice,projectid,saleorderno,solineitemno,initialputawayqty)VALUES(@inwmasterid,@stockstatus,@pono,@binid,@rackid,@storeid,@vendorid,@totalquantity,@shelflife,@availableqty,@deleteflag,@itemlocation,@createddate,@createdby,@materialid,@inwardid,@stocktype,@linei [rest of string was truncated]&quot;;.
         /// </summary>
         public static string insertStockFromPutaway {
             get {
@@ -3327,6 +3455,16 @@ namespace WMS.Common {
         public static string issuedqtydetails {
             get {
                 return ResourceManager.GetString("issuedqtydetails", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to INSERT INTO wms.mrnmaterials(mrnid,inwardid,projectcode,mrnby,mrnon,mrnremarks,acceptedqty,issuedqty,deleteflag,requestid ,requesttype )values
+        ///(DEFAULT,@inwardid,@projectcode,@mrnby,current_date,@mrnremarks,@acceptedqty,@issuedqty,false,@requestid,@requesttype).
+        /// </summary>
+        public static string issueMRNMaterials {
+            get {
+                return ResourceManager.GetString("issueMRNMaterials", resourceCulture);
             }
         }
         
