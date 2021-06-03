@@ -1387,7 +1387,7 @@ namespace WMS.Controllers
 							stag_data.materialdescription = pgsql.QuerySingleOrDefault<string>(
 											materialdescquery, null, commandType: CommandType.Text);
 
-							string query1 = "Select Count(*) as count from wms.wms_polist where pono = '" + stag_data.purchdoc + "' and suppliername='" + stag_data.suppliername + "'";
+							string query1 = "Select Count(*) as count from wms.wms_polist where pono = '" + stag_data.purchdoc + "'";
 							int pocount = int.Parse(pgsql.ExecuteScalar(query1, null).ToString());
 							bool isclosed = false;
 							DateTime? podate = stag_data.docdate;
@@ -1413,7 +1413,7 @@ namespace WMS.Controllers
 							}
 							else
 							{
-								var updateqry = "update wms.wms_polist set podate = @podate ,crcy = @crcy, exchangerate=@exchangerate,pocreatedby=@pocreatedby,pgr=@pgr where pono = '" + stag_data.purchdoc + "' and suppliername='" + stag_data.suppliername + "'";
+								var updateqry = "update wms.wms_polist set podate = @podate ,crcy = @crcy, exchangerate=@exchangerate,pocreatedby=@pocreatedby,pgr=@pgr where pono = '" + stag_data.purchdoc +  "'";
 								var rslt = pgsql.Execute(updateqry, new
 								{
 

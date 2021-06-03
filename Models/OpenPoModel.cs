@@ -1301,7 +1301,7 @@ namespace WMS.Models
 		public string mrnremarks { get; set; }
 		public int inwardid { get; set; }
 		public int acceptedqty { get; set; }
-		public int issuedqty { get; set; }
+		public decimal issuedqty { get; set; }
 
 		public inwardModel[] materiallist { get; set; }
 

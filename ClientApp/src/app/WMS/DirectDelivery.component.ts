@@ -52,7 +52,7 @@ export class DirectDeliveryComponent implements OnInit {
   getdeliveryList() {
     this.spinner.show();
     this.dynamicData = new DynamicSearchResult();
-    this.dynamicData.query = "select * from wms.wms_securityinward  where isdirectdelivered is true and (deleteflag is false or deleteflag is null)";
+    this.dynamicData.query = "select * from wms.wms_securityinward  where isdirectdelivered is true and (deleteflag is false or deleteflag is null) order by inwmasterid desc";
     this.wmsService.GetListItems(this.dynamicData).subscribe(data => {
       this.spinner.hide();
       this.deliveryList = data;
