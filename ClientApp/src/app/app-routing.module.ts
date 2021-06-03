@@ -78,6 +78,7 @@ import { STOApprovalComponent } from './WMS/STOApproval.component';
 import { SubcontractApprovalComponent } from './WMS/SubcontractApproval.component';
 import { POReportComponent } from './WMS/POReport.component';
 import { AnnexureReportComponent } from './WMS/AnnexureReport.component';
+import { errorpageComponent } from './WMS/errorpage.component';
 import { YGSGRComponent } from './WMS/YGSGR.component';
 
 //admin
@@ -104,6 +105,7 @@ import { BinMasterComponent } from './WMS/BinMaster.component';
 import { roleMaster, VendorMaster } from './Models/WMS.Model';
 import { AssignPMComponent } from './WMS/AssignPM.component';
 import { AssignIMComponent } from './WMS/AssignInventoryManage.component';
+import { DirectDeliveryComponent } from './WMS/DirectDelivery.component';
 
 const routes: Routes = [{
   path: 'WMS',
@@ -223,6 +225,8 @@ const routes: Routes = [{
     { path: "BinMaster", component: BinMasterComponent },
     { path: "AssignPM", component: AssignPMComponent },
     { path: "AssignInventoryManager", component: AssignIMComponent },
+    { path: "DirectDelivery", component: DirectDeliveryComponent },
+    { path: "errorpage", component: errorpageComponent }, 
     { path: "YGSGR", component: YGSGRComponent },
     
 

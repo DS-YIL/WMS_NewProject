@@ -26,21 +26,23 @@
         <ng-template pTemplate="header">
           <tr class="mprltbldata">
             <th style="text-align:center;width:70px">Sl.No.</th>
-            <th style="text-align:center;width:150px">Request Id</th>
+            <th style="text-align:center;width:130px">Request Id</th>
             <th style="text-align:center;width:100px">Project</th>
+            <th style="text-align:center;width:70px">Type</th>
             <th style="text-align:center;width:100px">Source Location</th>
             <th style="text-align:center;width:150px">Vendor Name</th>
             <th style="text-align:center;width:100px">Requested On</th>
             <th style="text-align:center;width:150px">Requested By</th>
-            <th style="text-align:center;width:200px">Remarks</th>
+            <th style="text-align:center;width:150px">Remarks</th>
             <th style="text-align:center;width:200px" *ngIf="returntype === 'Pending'">
-              <button class="btn btn-success btn-sm" (click)="savedata()">Submit</button>
+              <button class="btn btn-success btn-sm" *ngIf="requestList.length" (click)="savedata()">Submit</button>
             </th>
           </tr>
           <tr>
             <th></th>
             <th> <input pInputText type="text" class="form-control" (input)="dt1.filter($event.target.value, 'transferid', 'contains')"></th>
             <th> <input pInputText type="text" class="form-control" (input)="dt1.filter($event.target.value, 'projectcode', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt1.filter($event.target.value, 'materialtype', 'contains')"></th>
             <th> <input pInputText type="text" class="form-control" (input)="dt1.filter($event.target.value, 'sourceplant', 'contains')"></th>
             <th> <input pInputText type="text" class="form-control" (input)="dt1.filter($event.target.value, 'vendorname', 'contains')"></th>
             <th> <input pInputText type="text" class="form-control" (input)="dt1.filter($event.target.value, 'transferredon', 'contains')"></th>
@@ -54,17 +56,18 @@
         <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
           <tr>
             <td class="ptable-cell" style="text-align:right;width:70px;">{{ri+1}}</td>
-            <td class="ptable-cell" style="text-align: center;width: 150px;">
+            <td class="ptable-cell" style="text-align: center;width: 130px;padding:0">
               <button type="button" class="btn btn-link" (click)="showattachtrdata(rowData)" style="padding-left:0px;text-align:center;">{{rowData.transferid}}</button>
             </td>
-            <td class="ptable-cell" style="text-align:center;width:100px;">{{rowData.projectcode}}</td>
+            <td class="ptable-cell" style="text-align:center;width:100px;padding:0">{{rowData.projectcode}}</td>
+            <td class="ptable-cell" style="text-align:left;width:70px;">{{rowData.materialtype}}</td>
             <td class="ptable-cell" style="text-align:left;width:100px;">{{rowData.sourceplant}}</td>
             <td class="ptable-cell" style="text-align:left;width:150px;">{{rowData.vendorname}}</td>
             <td class="ptable-cell" style="text-align:center;width:100px;">{{rowData.transferredon| date :  constants.dateFormat}}</td>
             <td class="ptable-cell" style="text-align:left;width:150px;">
               <span>{{rowData.transferredbyname}}</span>
             </td>
-            <td class="ptable-cell" style="text-align:left;width:200px;resize:none">
+            <td class="ptable-cell" style="text-align:left;width:150px;resize:none;padding:0">
               <span *ngIf="rowData.approvedon">
                 {{rowData.approvalremarks}}
               </span>
@@ -79,14 +82,14 @@
 
           </tr>
           <tr *ngIf="rowData.showtr">
-            <td [attr.colspan]="(returntype === 'Pending') ? '9' : '8'" style="text-align:center;">
+            <td [attr.colspan]="(returntype === 'Pending') ? '10' : '9'" style="text-align:center;">
               <label class="labeltext">Material Detail</label>
             </td>
 
           </tr>
 
           <tr *ngIf="rowData.showtr">
-            <td [attr.colspan]="(returntype === 'Pending') ? '9' : '8'" style="text-align:center;">
+            <td [attr.colspan]="(returntype === 'Pending') ? '10' : '9'" style="text-align:center;">
 
               <p-table [value]="rowData.materialdata" [style]="{'width':'100%'}">
                 <ng-template pTemplate="header">

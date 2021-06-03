@@ -370,6 +370,7 @@ namespace WMS.Models
 		public int stockid { get; set; }
 		public string Material { get; set; }
 		public string stcktype { get; set; }
+		public string uploadedby { get; set; }
 		public string lineitemno { get; set; }
 		public string receivedid { get; set; }
 		public string exceptions { get; set; }
@@ -387,6 +388,7 @@ namespace WMS.Models
 		public int? storeid { get; set; }
 		public int? vendorid { get; set; }
 		public decimal? totalquantity { get; set; }
+		public decimal? initialputawayqty { get; set; }
 		public DateTime? shelflife { get; set; }
 		public decimal? availableqty { get; set; }
 		public bool deleteflag { get; set; }
@@ -640,6 +642,9 @@ namespace WMS.Models
 		//public string materialdescription { get; set; }
 		public string transferid { get; set; }
 		public decimal? confirmqty { get; set; }
+		public decimal? mrnissuedqty { get; set; }
+		public decimal? mrntotalissuedqty { get; set; }
+		public decimal? storeavailableqty { get; set; }
 		public int reserveformaterialid { get; set; }
 		public string ackstatus { get; set; }
 		public string remarks { get; set; }
@@ -771,6 +776,7 @@ namespace WMS.Models
 		internal object requestid;
 
 		public string statusremarks { get; set; }
+		public string saleorderno { get; set; }
 		public string managername { get; set; }
 		public string pono { get; set; }
 		public int itemid { get; set; }
@@ -855,6 +861,7 @@ namespace WMS.Models
 		public string authremarks { get; set; }
 		public string authname { get; set; }
 		public DateTime authorizedon { get; set; }
+		public string materialtype { get; set; }
 	}
 	public class materialistModel
 	{
@@ -1287,12 +1294,16 @@ namespace WMS.Models
 	public class MRNsavemodel
 	{
 		public string grnnumber { get; set; }
+		public string suppliername { get; set; }
+		public string invoiceno { get; set; }
 		public string projectcode { get; set; }
 		public string directtransferredby { get; set; }
 		public string mrnremarks { get; set; }
 		public int inwardid { get; set; }
 		public int acceptedqty { get; set; }
-		public int issuedqty { get; set; }
+		public decimal issuedqty { get; set; }
+
+		public inwardModel[] materiallist { get; set; }
 
 	}
 
@@ -1466,6 +1477,44 @@ namespace WMS.Models
 		public int? availableqty { get; set; }
 
 	}
+
+	public class DirectDelivery
+	{
+		public string pono { get; set; }
+		public string invoiceno { get; set; }
+		public string receivedby { get; set; }
+		public DateTime invoicedate { get; set; }
+		public string suppliername { get; set; }
+		public string directdeliveryaddrs { get; set; }
+		public DateTime directdeliveredon { get; set; }
+		public string directdeliveryremarks { get; set; }
+		public string inwmasterid { get; set; }
+		
+		public List<DDmaterials> DDmaterialList { get; set; }
+}
+	public class DDmaterials
+	{
+		public int inwardid { get; set; }
+		public string pono { get; set; }
+		public string invoiceno { get; set; }
+		public DateTime invoicedate { get; set; }
+		public string receivedby { get; set; }
+		public string suppliername { get; set; }
+		public string directdeliveryaddrs { get; set; }
+		public DateTime directdeliveredon { get; set; }
+		public string directdeliveryremarks { get; set; }
+		public string materialid { get; set; }
+		public string materialdescription { get; set; }
+		public string poitemdescription  { get; set; }
+		public decimal materialqty { get; set; }
+		public string itemdeliverydate { get; set; }
+		public decimal? unitprice { get; set; }
+		public decimal deliveredqty { get; set; }
+		public decimal pendingqty { get; set; }
+		public string lineitemno { get; set; }
+
+	}
+
 }
 
 public class gatepassapprovalsModel
@@ -1516,6 +1565,7 @@ public class stocktransferModel
 public class invstocktransfermodel
 {
 	public string transferid { get; set; }
+	public string materialtype { get; set; }
 	public string transferredby { get; set; }
 	public DateTime transferredon { get; set; }
 	public string transfertype { get; set; }

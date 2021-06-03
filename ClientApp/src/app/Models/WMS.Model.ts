@@ -185,6 +185,7 @@ export class StockModel {
   itemid: number;
   inwmasterid: string;
   lineitemno: string;
+  uploadedby: string;
   paitemid: number;
   testindex: number;
   receivedid: any;
@@ -233,6 +234,7 @@ export class StockModel {
   stockid: number;
   saleorderno: string;
   solineitemno: string;
+  initialputawayqty: number;
 }
 
 export class locataionDetailsStock {
@@ -342,6 +344,7 @@ export class gatepassModel {
   authremarks: string;
   authname: string;
   authorizedon: Date;
+  materialtype: string
 }
 export class materialistModel {
   gatepassmaterialid: string;
@@ -357,6 +360,7 @@ export class materialistModel {
   issuedqty: number;
   showdetail: boolean;
   pono: string;
+  materialtype: string;
 
   materiallistdata: any[] = [];
 }
@@ -536,12 +540,15 @@ export class notifymodel {
 }
 export class MRNsavemodel {
   grnnumber: string;
+  suppliername: string;
+  invoiceno: string;
   projectcode: string;
   directtransferredby: string;
   mrnremarks: string
   inwardid: number;
   acceptedqty: number;
-  issuedqty: number
+  issuedqty: number;
+  materiallist: inwardModel[];
 }
 
 export class pageModel {
@@ -633,6 +640,7 @@ export class invstocktransfermodel {
   sourcelocationcode: string;
   destinationlocationcode: string;
   pono: string;
+  materialtype: string;
 }
 
 export class assignpmmodel {
@@ -1316,6 +1324,21 @@ export class YGSGR {
   failreason: string;
   faileddatetime: Date;
 }
+
+export class DirectDelivery {
+  pono: string;
+  invoiceno: string;
+  invoicedate: Date;
+  receivedby: string;
+  suppliername: string;
+  directdeliveryaddrs: string;
+  directdeliveredon: Date;
+  directdeliveryremarks: string
+  inwmasterid: string;
+  DDmaterialList: Array<any> = [];
+}
+
+
 
 
 

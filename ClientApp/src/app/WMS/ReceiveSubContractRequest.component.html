@@ -27,7 +27,8 @@
           <ng-template pTemplate="header">
             <tr class="mprltbldata">
               <th style="text-align:center;width:70px">Sl.No.</th>
-              <th style="text-align:center;width:100px">STO No.</th>
+              <th style="text-align:center;width:100px">Request ID</th>
+              <th style="text-align:center;width:100px">Stock Type</th>
               <th style="text-align: center;width:170px">Requested By</th>
               <th style="text-align:center;width:100px">Vendor Code</th>
               <th style="text-align:center;width:180px">Vendor Name</th>
@@ -40,6 +41,7 @@
             <tr>
               <th></th>
               <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'transferid', 'contains')"></th>
+              <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'materialtype', 'contains')"></th>
               <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'transferredbyname', 'contains')"></th>
               <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'vendorcode', 'contains')"></th>
               <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'vendorname', 'contains')"></th>
@@ -56,6 +58,7 @@
                 {{ri+1}}
               </td>
               <td class="ptable-cell" style="text-align:center;width:100px;">{{rowData.transferid}}</td>
+              <td class="ptable-cell" style="text-align:center;width:100px;">{{rowData.materialtype}}</td>
               <td class="ptable-cell" style="text-align:left;width:170px;">{{rowData.transferredby}}</td>
               <td class="ptable-cell" style="text-align:center;width:100px;">{{rowData.vendorcode}}</td>
               <td class="ptable-cell" style="text-align:left;width:180px;">{{rowData.vendorname}}</td>
@@ -95,6 +98,15 @@
           <div class="col-lg-3 col-md-3 col-sm-3 pt-2 labelheading">
             <label> Vendor Name:</label>&nbsp;<span><label class="labeltext">{{vendorname}}</label></span>
           </div>
+          <div class="col-lg-3 col-md-3 col-sm-3 pt-2 labelheading" *ngIf="!isplantstockrequest">
+            <label>Project:</label>&nbsp;<span><label class="labeltext">{{pcode}}</label></span>
+          </div>
+          <div class="col-lg-3 col-md-3 col-sm-3 pt-2 labelheading" *ngIf="!isplantstockrequest">
+            <label>Material Type:</label>&nbsp;<span><label class="labeltext">Project</label></span>
+          </div>
+          <div class="col-lg-3 col-md-3 col-sm-3 pt-2 labelheading" *ngIf="isplantstockrequest">
+            <label>Material Type:</label>&nbsp;<span><label class="labeltext">Plant</label></span>
+          </div>
         </div>
       </div>
       <p-table #dt [value]="materialissueList">
@@ -128,8 +140,8 @@
               {{rowData.pono}}
             </td>
             <td class="ptable-cell" style="text-align:left;width:200px;">
-              <button type="button" *ngIf="(rowData.availableqty && rowData.availableqty > 0 && rowData.availableqty!=null) || rowData.issuedqty > 0" class="btn btn-link" (click)="showmateriallocationList(rowData.materialid,ri+1,ri,rowData.transferqty,rowData.issuedqty,rowData.poitemdescription,rowData.id,rowData.pono);" style="padding-left:0px;">{{rowData.materialid}}</button>
-              <span *ngIf="(!rowData.availableqty || rowData.availableqty == 0 || rowData.availableqty==null) && (!rowData.issuedqty || rowData.issuedqty == 0)">{{rowData.materialid}}</span>
+              <button type="button"  class="btn btn-link" (click)="showmateriallocationList(rowData.materialid,ri+1,ri,rowData.transferqty,rowData.issuedqty,rowData.poitemdescription,rowData.id,rowData.pono);" style="padding-left:0px;">{{rowData.materialid}}</button>
+              <!--<span *ngIf="(!rowData.availableqty || rowData.availableqty == 0 || rowData.availableqty==null) && (!rowData.issuedqty || rowData.issuedqty == 0)">{{rowData.materialid}}</span>-->
             </td>
             <td class="ptable-cell" style="text-align:left">{{rowData.poitemdescription}}</td>
             <td class="ptable-cell" style="text-align:right">{{rowData.transferqty}}</td>
@@ -180,6 +192,7 @@
         <ng-template pTemplate="header">
           <tr class="mprltbldata">
             <th style="text-align:center;width:70px">S.No</th>
+            <th style="text-align:center" *ngIf="isplantstockrequest && !issueqtyenable">Saleorder no</th>
             <th style="text-align:center">Location</th>
             <th style="text-align:center">Available Qty</th>
             <th style="text-align:center">Issue Qty</th>
@@ -192,6 +205,7 @@
             <td class="ptable-cell" style="text-align:right">
               {{ri+1}}
             </td>
+            <td class="ptable-cell" style="text-align:center" *ngIf="isplantstockrequest && !issueqtyenable">{{rowData.saleorderno}}</td>
             <td class="ptable-cell" style="text-align:center">{{rowData.itemlocation}}</td>
             <td class="ptable-cell" style="text-align:right">{{rowData.availableqty}}</td>
             <td class="ptable-cell" style="text-align:right">

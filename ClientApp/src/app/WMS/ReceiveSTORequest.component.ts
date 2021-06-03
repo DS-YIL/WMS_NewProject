@@ -43,6 +43,7 @@ export class ReceiveSTORequestComponent implements OnInit {
   requestedid: string;
   pcode: string;
   pono: string;
+  isplantstockrequest: boolean = false;
   ngOnInit() {
     this.STORequestList = [];
     if (localStorage.getItem("Employee"))
@@ -54,6 +55,7 @@ export class ReceiveSTORequestComponent implements OnInit {
     this.source = "";
     this.destination = "";
     this.viewprocess = false;
+    this.isplantstockrequest = false;
     this.matdesc = "";
     this.FIFOvalues = new FIFOValues();
     this.getSTORequestList();
@@ -95,6 +97,7 @@ export class ReceiveSTORequestComponent implements OnInit {
     debugger;
     this.showMatDetails = true;
     this.showavailableStock = true;
+    this.isplantstockrequest = false;
     this.materialissueList = [];
     this.transferId = details.transferid;
     this.requestedBy = details.transferredby;
@@ -108,6 +111,9 @@ export class ReceiveSTORequestComponent implements OnInit {
     }
     else {
       this.viewprocess = false;
+    }
+    if (String(details.materialtype).toLowerCase() == "plant") {
+      this.isplantstockrequest = true;
     }
     var type = "MatIssue";
     this.wmsService.getMatdetailsbyTransferId(details.transferid, type, 'STO').subscribe(data => {
@@ -189,10 +195,19 @@ export class ReceiveSTORequestComponent implements OnInit {
     this.itemlocationData = [];
     if (this.selectedStatus == "Pending" && !this.viewprocess) {
       this.issueqtyenable = false;
-      this.wmsService.getItemlocationListByMaterialdescstore(material, poitemdescription, this.pcode, pono, this.source).subscribe(data => {
-        this.itemlocationData = data;
-        this.showdialog = true;
-      });
+      if (this.isplantstockrequest) {
+        this.wmsService.getlocationsforplantstockissue(material, poitemdescription).subscribe(data => {
+          this.itemlocationData = data;
+          this.showdialog = true;
+        });
+      }
+      else {
+        this.wmsService.getItemlocationListByMaterialdescstore(material, poitemdescription, this.pcode, pono, this.source).subscribe(data => {
+          this.itemlocationData = data;
+          this.showdialog = true;
+        });
+      }
+     
     }
     else {
       this.issueqtyenable = true;
@@ -230,6 +245,12 @@ export class ReceiveSTORequestComponent implements OnInit {
         item.createdby = this.materialissueList[this.roindex].createdby;
         item.pono = this.materialissueList[this.roindex].pono;
         item.requesttype = "STO";
+        if (this.isplantstockrequest) {
+          item.materialtype = "Plant";
+        }
+        else {
+          item.materialtype = "Project"
+        }
         totalissuedqty = totalissuedqty + (item.issuedqty);
         this.FIFOvalues.issueqty = totalissuedqty;
         this.itemlocationsaveData.push(item);

@@ -34,18 +34,20 @@
             <th style="text-align:center;width:70px">Sl.No.</th>
             <th style="text-align:center;width:150px">Request Id</th>
             <th style="text-align:center;width:100px">Project</th>
-            <th style="text-align:center;width:150px">Requested On</th>
+            <th style="text-align:center;width:70px">Type</th>
+            <th style="text-align:center;width:100px">Requested On</th>
             <th style="text-align:center;width:150px">Requested By</th>
             <th style="text-align:center;width:100px">Status</th>
-            <th style="text-align:center;width:200px">Remarks</th>
+            <th style="text-align:center;width:180px">Remarks</th>
             <th style="text-align:center;width:200px" *ngIf="returntype === 'Pending'">
-              <button class="btn btn-success btn-sm" (click)="savedata()">Submit</button>
+              <button class="btn btn-success btn-sm" *ngIf="requestList.length" (click)="savedata()">Submit</button>
             </th>
           </tr>
           <tr>
             <th></th>
             <th> <input pInputText type="text" class="form-control" (input)="dt1.filter($event.target.value, 'requestid', 'contains')"></th>
             <th> <input pInputText type="text" class="form-control" (input)="dt1.filter($event.target.value, 'projectcode', 'contains')"></th>
+            <th> <input pInputText type="text" class="form-control" (input)="dt1.filter($event.target.value, 'requesttype', 'contains')"></th>
             <th> <input pInputText type="text" class="form-control" (input)="dt1.filter($event.target.value, 'requesteddate', 'contains')"></th>
             <th> <input pInputText type="text" class="form-control" (input)="dt1.filter($event.target.value, 'requestedby', 'contains')"></th>
             <th> <input pInputText type="text" class="form-control" (input)="dt1.filter($event.target.value, 'approvedstatus', 'contains')"></th>
@@ -62,14 +64,15 @@
               <button type="button" class="btn btn-link" (click)="showattachtrdata(rowData)" style="padding-left:0px;text-align:center;">{{rowData.requestid}}</button>
             </td>
             <td class="ptable-cell" style="text-align:center;width:100px;">{{rowData.projectcode}}</td>
-            <td class="ptable-cell" style="text-align:center;width:150px;">{{rowData.requesteddate| date :  constants.dateFormat}}</td>
+            <td class="ptable-cell" style="text-align:center;width:70px;">{{rowData.requesttype}}</td>
+            <td class="ptable-cell" style="text-align:center;width:100px;">{{rowData.requesteddate| date :  constants.dateFormat}}</td>
             <td class="ptable-cell" style="text-align:center;width:150px;">
               <span>{{rowData.requestedby}}</span>
             </td>
             <td class="ptable-cell" style="text-align:left;width:100px;">
               <span>{{rowData.approvedstatus}}</span>
             </td>
-            <td class="ptable-cell" style="text-align:left;width:200px;resize:none">
+            <td class="ptable-cell" style="text-align:left;width:180px;resize:none">
               <span *ngIf="rowData.approvedon">
                 {{rowData.approvalremarks}}
               </span>
@@ -78,20 +81,20 @@
             <td class="ptable-cell" style="text-align:left;width:200px;resize:none;font-weight:600" *ngIf="returntype === 'Pending'">
               <p-radioButton name="groupname{{ri}}" value="1" label="Approve" [(ngModel)]="rowData.approvalcheck"></p-radioButton>
               <p-radioButton name="groupname{{ri}}" value="0" label="Reject" [(ngModel)]="rowData.approvalcheck"></p-radioButton>
-              &nbsp;&nbsp;<span style="font-size:large;font-weight:600;cursor:pointer;text-decoration:underline"(click)="noaction(rowData)">&times;</span>
+              &nbsp;&nbsp;<span style="font-size:large;font-weight:600;cursor:pointer;text-decoration:underline" (click)="noaction(rowData)">&times;</span>
             </td>
 
 
           </tr>
           <tr *ngIf="rowData.showtr">
-            <td [attr.colspan]="(returntype === 'Pending') ? '8' : '7'" style="text-align:center;">
+            <td [attr.colspan]="(returntype === 'Pending') ? '9' : '8'" style="text-align:center;">
               <label class="labeltext">Material Detail</label>
             </td>
 
           </tr>
 
           <tr *ngIf="rowData.showtr">
-            <td [attr.colspan]="(returntype === 'Pending') ? '8' : '7'" style="text-align:center;">
+            <td [attr.colspan]="(returntype === 'Pending') ? '9' : '8'" style="text-align:center;">
 
               <p-table [value]="rowData.materialdata" [style]="{'width':'100%'}">
                 <ng-template pTemplate="header">

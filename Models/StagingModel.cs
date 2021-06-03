@@ -32,7 +32,12 @@ namespace WMS.Models
 		public decimal? unitprice { get; set; }
 
 		public DateTime? itemdeliverydate { get; set; }
+		public DateTime? docdate { get; set; }
+		public string crcy { get; set; }
+		
 		public decimal? NetPrice { get; set; }
+		public decimal? NetValue { get; set; }
+		
 		public bool dataloaderror { get; set; }
 		public string error_description { get; set; }
 		public string purchdoc { get; set; }
@@ -57,11 +62,15 @@ namespace WMS.Models
 		public string plant { get; set; }
 		public string linkageno { get; set; }
 		public string assetsubno { get; set; }
-		public string orderno { get; set; }
+		public string ordernumber { get; set; }
+		public string wbselement { get; set; }
+		public decimal? exchangerate { get; set; }
 		public string description { get; set; }
 		public DateTime? dateofcreation { get; set; }
 		public string ProjectManagerName { get; set; }
 		public string globalpmno { get; set; }
+		public string pgr { get; set; }
+	
 
 	}
 

@@ -53,6 +53,7 @@ export class MRNViewComponent implements OnInit {
   isallplaced: boolean = false;
   mrnsavemodel: MRNsavemodel;
   mrnList: Array<MRNsavemodel> = [];
+  mrnListgroup: MRNsavemodel[] = [];
   mrnremarks: string = "";
   inwardid; confirmqty; issuedqty: number;
   isalreadytransferred; ShowPrint; showPrntBtn: boolean = false;
@@ -61,6 +62,7 @@ export class MRNViewComponent implements OnInit {
   public totalGRNList: ddlmodel[] = [];
   materialList: Array<any> = [];
   public selectedRow: any;
+
   ngOnInit() {
     if (localStorage.getItem("Employee"))
       this.employee = JSON.parse(localStorage.getItem("Employee"));
@@ -71,9 +73,12 @@ export class MRNViewComponent implements OnInit {
     this.PoDetails = new PoDetails();
     this.mrnsavemodel = new MRNsavemodel();
     this.selectedponomodel = new ddlmodel();
+    this.mrnListgroup = [];
     this.isalreadytransferred = false;
+    this.isallplaced = false;
     this.mrnremarks = "";
     this.getcheckedgrn();
+    this.getmrnlist();
     this.getprojects();
     this.cols = [
       { field: 'material', header: 'Material' },
@@ -95,6 +100,12 @@ export class MRNViewComponent implements OnInit {
       this.totalGRNList = data;
       this.spinner.hide();
       this.checkedgrnlist = this.totalGRNList.filter(li => li.isdirecttransferred != true);
+    });
+  }
+  getmrnlist() {
+    this.mrnListgroup = [];
+    this.wmsService.getmrnlistgrp().subscribe(data => {
+      this.mrnListgroup = data;
     });
   }
   getprojects() {
@@ -160,6 +171,7 @@ export class MRNViewComponent implements OnInit {
       return;
     }
     debugger;
+    this.mrnList = [];
     this.podetailsList.forEach(item => {
       if (item.issuedqty) {
         this.reqQtyChange(item);
@@ -183,9 +195,10 @@ export class MRNViewComponent implements OnInit {
       this.showPrntBtn = true;
       this.messageService.add({ severity: 'success', summary: '', detail: "Material transferred" });
       this.selectedponomodel = new ddlmodel();
-      this.selectedgrnno = "";
+      //this.selectedgrnno = "";
       this.SearchGRNNo();
       this.getcheckedgrn();
+      this.getmrnlist();
      
     })
 
@@ -212,25 +225,44 @@ export class MRNViewComponent implements OnInit {
         debugger;
         //this.PoDetails = data[0];
         this.podetailsList = data;
-        var itemlocationavailable = this.podetailsList.filter(function (element, index) {
-          return (element.itemlocation);
+        //var itemlocationavailable = this.podetailsList.filter(function (element, index) {
+        //  return (element.itemlocation);
+        //});
+        //if (itemlocationavailable.length > 0) {
+        //  this.podetailsList = [];
+        //  this.messageService.add({ severity: 'warn', summary: '', detail: 'Materials already in stock for this GRN.' });
+        //  return;
+        //}
+        var ponumber = this.podetailsList[0].pono;
+        var fltdata = this.podetailsList.filter(function (element, index) {
+          return (element.isdirecttransferred);
         });
-        if (itemlocationavailable.length > 0) {
-          this.podetailsList = [];
-          this.messageService.add({ severity: 'warn', summary: '', detail: 'Materials already in stock for this GRN.' });
-          return;
+        if (fltdata.length > 0) {
+          this.isalreadytransferred = true;
+        }
+        else {
+          this.isalreadytransferred = false;
         }
         var ponumber = this.podetailsList[0].pono;
-        this.isalreadytransferred = this.podetailsList[0].isdirecttransferred;
-        if (this.isalreadytransferred) {
-          debugger;
-          var dtlist = this.podetailsList;
-          var datax = this.projectlists.filter(function (element, index) {
-            return (element.value == dtlist[0].projectcode);
-          });
-          this.selectedponomodel = datax[0];
-          this.mrnremarks = this.podetailsList[0].mrnremarks;
+        var fltdata1 = this.podetailsList.filter(function (element, index) {
+          return (!element.isdirecttransferred);
+        });
+        if (fltdata1.length == 0) {
+          this.isallplaced = true;
         }
+        else {
+          this.isallplaced = false;
+        }
+        //this.isalreadytransferred = this.podetailsList[0].isdirecttransferred;
+        //if (this.isalreadytransferred) {
+        //  debugger;
+        //  var dtlist = this.podetailsList;
+        //  var datax = this.projectlists.filter(function (element, index) {
+        //    return (element.value == dtlist[0].projectcode);
+        //  });
+        //  this.selectedponomodel = datax[0];
+        //  this.mrnremarks = this.podetailsList[0].mrnremarks;
+        //}
         if (ponumber.startsWith("NP")) {
           this.isnonpo = true;
         }
@@ -248,9 +280,9 @@ export class MRNViewComponent implements OnInit {
     if (this.selectedStatus == "Pending") {
       this.checkedgrnlist = this.totalGRNList.filter(li => li.isdirecttransferred != true);
     }
-    else if (this.selectedStatus == "Approved") {
-      this.checkedgrnlist = this.totalGRNList.filter(li => li.isdirecttransferred == true);
-    }
+    //else if (this.selectedStatus == "Approved") {
+    //  this.checkedgrnlist = this.totalGRNList.filter(li => li.isdirecttransferred == true);
+    //}
   }
 
   //Get details
@@ -260,15 +292,15 @@ export class MRNViewComponent implements OnInit {
     this.materialList = [];
     data.showdetail = !data.showdetail;
     if (data.showdetail)
-    this.bindMaterilaDetails(data.value);
+    this.bindMaterilaDetails(data.grnnumber);
   }
 
   //get materials list
-  bindMaterilaDetails(inwardid: any) {
-    this.checkedgrnlist[this.selectedRow].materiallistarray = [];
-   this.wmsService.getMRNmaterials(inwardid).subscribe(data => {
+  bindMaterilaDetails(grnnumber: any) {
+    this.mrnListgroup[this.selectedRow].materiallist = [];
+    this.wmsService.getMRNmaterials(grnnumber).subscribe(data => {
       this.materialList = data;
-      this.checkedgrnlist[this.selectedRow].materiallistarray = data;
+      this.mrnListgroup[this.selectedRow].materiallist = data;
       
     });
   }

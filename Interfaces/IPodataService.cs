@@ -27,6 +27,7 @@ namespace WMS.Interfaces
 		//Get po details
 		Task<IEnumerable<PODetails>> getPODetails(string empno);
 		Task<IEnumerable<PODetails>> getPODetailsByProjectCode(string empno, string projectcode);
+		Task<IEnumerable<PODetails>> getStorePODetailsByProjectCode(string empno, string projectcode);
 		Task<IEnumerable<PODetails>> getPODetailsbyprojectcodeformiscissue(string projectcode);
 
 		//Get direct transfer data
@@ -86,6 +87,7 @@ namespace WMS.Interfaces
 		Task<IEnumerable<MaterialTransaction>> MaterialRequest(string pono, string material);
 		Task<IEnumerable<IssueRequestModel>> MaterialRequestdata(string pono, string material, string projectcode);
 		Task<IEnumerable<IssueRequestModel>> MaterialRequestdataforgatepass(string pono, string projectcode);
+		Task<IEnumerable<IssueRequestModel>> getmaterialswithstore(string pono, string projectcode);
 		Task<IEnumerable<IssueRequestModel>> MaterialRequestdataforsto(string pono, string projectcode, string store);
 		Task<IEnumerable<POReportModel>> getPOReportdata(string empno, string projectcode, string pono);
 		Task<IEnumerable<stocktransfermateriakmodel>> getsubconannexuredata(string empno, string subconno);
@@ -137,7 +139,9 @@ namespace WMS.Interfaces
 		Task<IEnumerable<IssueRequestModel>> GetItemlocationListBymterial(string material);
 		Task<IEnumerable<IssueRequestModel>> GetItemlocationListBymterialanddesc(string material, string description);
 		Task<IEnumerable<IssueRequestModel>> GetItemLocationforplantstock(string material, string description);
+		Task<IEnumerable<IssueRequestModel>> GetItemLocationforplosstock(string material, string description);
 		Task<IEnumerable<IssueRequestModel>> GetItemlocationListBymterialanddescpo(string material, string description, string projectid, string pono);
+		Task<IEnumerable<IssueRequestModel>> GetItemlocationwithStore(string material, string description, string projectid, string pono);
 		Task<IEnumerable<IssueRequestModel>> GetItemLocationListByMaterialdescstore(string material, string description, string store, string projectid, string pono);
 		Task<IEnumerable<IssueRequestModel>> GetItemLocationListByMaterialdescpono(string material, string description, string pono);
 
@@ -146,9 +150,12 @@ namespace WMS.Interfaces
 
 
 		Task<IEnumerable<IssueRequestModel>> getItemlocationListByIssueId(string requestforissueid, string requesttype);
+		Task<IEnumerable<IssueRequestModel>> getItemlocationListByIssueIdWithStore(string requestforissueid, string requesttype);
 		Task<IEnumerable<IssueRequestModel>> getItemlocationListByPlantIssueId(string requestforissueid, string requesttype);
+		Task<IEnumerable<IssueRequestModel>> getItemlocationListByPlosIssueId(string requestforissueid, string requesttype);
 		int updateissuedmaterial(List<IssueRequestModel> obj);
 		int assignRole(authUser authuser);
+		Task<IEnumerable<MRNsavemodel>> getmrnlist();
 		Task<IEnumerable<userAcessNamesModel>> getuserAcessList(string employeeid, string roleid);
 		Task<IEnumerable<userAcessNamesModel>> getuserroleList(string employeeid);
 		Task<Enquirydata> GetEnquirydata(string materialid);
@@ -224,6 +231,7 @@ namespace WMS.Interfaces
 		string matrequestapprove(List<MaterialTransaction> model);
 		Task<WMSHttpResponse> getAvailableQtyBystore(string store, string materialid, string description, string projectcode);
 		Task<IssueRequestModel> getplantstockmaterialdetails(string material, string description);
+		Task<IssueRequestModel> getplosstockmaterialdetails(string material, string description);
 		string stomatrequestapprove(List<invstocktransfermodel> model);
 		string updaterba(List<rbamaster> model);
 		string updatepm(List<assignpmmodel> model);
@@ -257,6 +265,7 @@ namespace WMS.Interfaces
 		Task<IEnumerable<ddlmodel>> getprojectlistfortransfer();
 		Task<IEnumerable<ddlmodel>> getgatepassreason();
 		Task<IEnumerable<ddlmodel>> getprojectlistbymanager(string empno);
+		
 		Task<IEnumerable<AssignProjectModel>> getprojectlisttoassign(string empno);
 		Task<IEnumerable<locataionDetailsStock>> getstorelist();
 		Task<IEnumerable<locataionDetailsStock>> getracklist();
@@ -359,6 +368,13 @@ namespace WMS.Interfaces
 		public bool updateUserRole(userRoles userRoles);
 
 		Task<IEnumerable<StockModel>> getMiscellanousIssueListdatahistory();
+
+		 Task<IEnumerable<DDmaterials>> getDDdetailsByPono(string pono);
+
+		public bool updateDirectDelivery(DirectDelivery userRoles);
+
+		bool deleteDirectDelivery(string inwmasterid, string deletedby);
+
 		Task<IEnumerable<YGSGR>> getYGSGR();
 	}
 }

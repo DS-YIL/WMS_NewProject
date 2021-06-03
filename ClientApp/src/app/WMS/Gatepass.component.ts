@@ -30,6 +30,8 @@ export class GatePassComponent implements OnInit {
   edit: boolean = false;
   public showList: boolean = false;
   public searchItems: Array<searchList> = [];
+  public descriptionsearchlist: Array<searchList> = [];
+  public searchdescItems: Array<searchList> = [];
   public selectedlist: Array<searchList> = [];
   public searchresult: Array<object> = [];
   rbalist: rbamaster[] = [];
@@ -84,6 +86,7 @@ export class GatePassComponent implements OnInit {
   ponolist: any[];
   selectedmuliplepo: any[];
   iseditprocess: boolean = false;
+  isplanttype: boolean = false;
   ngOnInit() {
     if (localStorage.getItem("Employee"))
       this.employee = JSON.parse(localStorage.getItem("Employee"));
@@ -98,6 +101,7 @@ export class GatePassComponent implements OnInit {
       { field: 'remarks', header: 'Remarks' },
     ];
     this.getprojects();
+    this.isplanttype = false;
     this.selectedproject = null;
     this.filteredprojects = [];
     this.selectedmuliplepo = [];
@@ -280,14 +284,14 @@ export class GatePassComponent implements OnInit {
       }
       else {
         debugger;
-        this.materialistModel = { materialid: "", gatepassmaterialid: "0", materialdescription: "", quantity: 0, materialcost: 0, remarks: " ", expecteddate: this.date, returneddate: this.date, issuedqty: 0, showdetail: false, materiallistdata: [], availableqty: 0, unitprice: 0, pono:"" };
+        this.materialistModel = { materialid: "", gatepassmaterialid: "0", materialdescription: "", quantity: 0, materialcost: 0, remarks: " ", expecteddate: this.date, returneddate: this.date, issuedqty: 0, showdetail: false, materiallistdata: [], availableqty: 0, unitprice: 0, pono: "", materialtype:"" };
         this.gatepassModel.materialList.push(this.materialistModel);
       }
 
     }
     else {
       if (this.gatepassModel.materialList.length <= 0) {
-        this.materialistModel = { materialid: "", gatepassmaterialid: "0", materialdescription: "", quantity: 0, materialcost: 0, remarks: " ", expecteddate: this.date, returneddate: this.date, issuedqty: 0, showdetail: false, materiallistdata: [], availableqty: 0, unitprice: 0, pono:"" };
+        this.materialistModel = { materialid: "", gatepassmaterialid: "0", materialdescription: "", quantity: 0, materialcost: 0, remarks: " ", expecteddate: this.date, returneddate: this.date, issuedqty: 0, showdetail: false, materiallistdata: [], availableqty: 0, unitprice: 0, pono: "", materialtype:"" };
         this.gatepassModel.materialList.push(this.materialistModel);
       }
       else {
@@ -344,6 +348,14 @@ export class GatePassComponent implements OnInit {
       this.gatepassModel.materialList[index].materialcost = 0;
       return;
     }
+  }
+  onPlantComplete(reqqty: number, avqty: number, index) {
+    if (avqty < reqqty) {
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Requested qty cannot exceed available qty' });
+      this.gatepassModel.materialList[index].quantity = 0;
+      return false;
+    }
+
   }
 
   getdefaultmaterialsforgatepass() {
@@ -465,38 +477,7 @@ export class GatePassComponent implements OnInit {
 
  
 
-  //bind materials based search
-  public bindSearchListData(event: any, name?: string) {
-    debugger;
-    var searchTxt = event.query;
-    if (searchTxt == undefined)
-      searchTxt = "";
-    searchTxt = searchTxt.replace('*', '%');
-    this.dynamicData = new DynamicSearchResult();
-    this.dynamicData.tableName = this.constants[name].tableName + " ";
-    this.dynamicData.searchCondition = "" + this.constants[name].condition;
-    this.dynamicData.searchCondition += "sk.materialid" + " ilike '" + searchTxt + "%'" + " and sk.availableqty>=1";
-    //this.materialistModel.materialcost = "";
-    this.wmsService.GetMaterialItems(this.dynamicData).subscribe(data => {
-      debugger;
-
-      this.searchresult = data;
-      this.gatepasslistmodel = data;
-      this.searchItems = [];
-      var fName = "";
-      this.searchresult.forEach(item => {
-        fName = item[this.constants[name].fieldName];
-        if (name == "ItemId")
-          //fName = item[this.constants[name].fieldName] + " - " + item[this.constants[name].fieldId];
-          fName = item[this.constants[name].fieldId];
-        // var value = { listName: name, name: fName, code: item[this.constants[name].fieldId] };
-        var value = { code: item[this.constants[name].fieldId] };
-        //this.materialistModel.materialcost = data[0].materialcost;
-        this.searchItems.push(item[this.constants[name].fieldId]);
-      });
-    });
-  }
-
+  
   getcolspan() {
     var colspan = 7;
     if (!this.selectedrba.gatepass_approval) {
@@ -550,6 +531,139 @@ export class GatePassComponent implements OnInit {
 
     });
   }
+
+  public bindSearchListDatamaterialdescs(event: any, name?: string, material?: any) {
+    debugger;
+    var materialid = "";
+    if (!isNullOrUndefined(material)) {
+      materialid = material.code;
+    }
+    var searchTxt = event.query;
+    if (searchTxt == undefined)
+      searchTxt = "";
+    searchTxt = searchTxt.replace('*', '%');
+    searchTxt = searchTxt.replace("'", "''");
+    this.dynamicData = new DynamicSearchResult();
+    var query = "select poitemdescription from wms.wms_stock ws where stcktype = 'Plant Stock' ";
+    query += " and poitemdescription ilike '" + searchTxt + "%'";
+    if (!isNullOrUndefined(material)) {
+      query += " and materialid = '" + materialid + "'";
+    }
+    query += " group by poitemdescription limit 50";
+    this.dynamicData.query = query;
+    this.filteredmatdesc = [];
+    this.wmsService.GetListItems(this.dynamicData).subscribe(data => {
+      this.searchresult = data;
+      this.filteredmatdesc = data;
+      this.searchdescItems = [];
+      var fName = "";
+      this.searchresult.forEach(item => {
+        fName = String(item["poitemdescription"]);
+        //fName = item[this.constants[name].fieldId];
+        var value = { listName: fName, name: fName, code: fName };
+        this.searchdescItems.push(value);
+      });
+    });
+  }
+
+
+  public bindSearchListDatamaterial(event: any, name?: string, desc?: any) {
+    debugger;
+    var materialiddesc = "";
+    if (!isNullOrUndefined(desc)) {
+      materialiddesc = desc.code;
+    }
+    var searchTxt = event.query;
+    if (searchTxt == undefined)
+      searchTxt = "";
+    searchTxt = searchTxt.replace('*', '%');
+    materialiddesc = materialiddesc.replace("'", "''");
+    this.dynamicData = new DynamicSearchResult();
+    var query = "select materialid from wms.wms_stock ws where stcktype = 'Plant Stock'";
+    query += " and materialid ilike '" + searchTxt + "%'";
+    if (!isNullOrUndefined(desc)) {
+      query += " and poitemdescription = '" + materialiddesc + "'";
+
+    }
+    query += " group by materialid limit 50";
+    this.dynamicData.query = query;
+    this.filteredmats = [];
+    this.wmsService.GetListItems(this.dynamicData).subscribe(data => {
+      this.searchresult = data;
+      this.filteredmats = data;
+      this.searchItems = [];
+
+      var fName = "";
+      this.searchresult.forEach(item => {
+        fName = String(item["materialid"]);
+        //fName = item[this.constants[name].fieldId];
+        var value = { listName: fName, name: fName, code: fName };
+        this.searchItems.push(value);
+      });
+    });
+  }
+
+  onMaterialSelected1(data: any, ind: number) {
+    debugger;
+    if (!isNullOrUndefined(data.materialdescriptionobj)) {
+      data.materialid = data.materialobj.code;
+      var matdesc = data.materialdescriptionobj.code;
+      var matcode = data.materialobj.code;
+      var data1 = this.gatepassModel.materialList.filter(function (element, index) {
+        return (element.materialid == matcode && element.materialdescription == matdesc && index != ind);
+      });
+      if (data1.length > 0) {
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Material already exist' });
+        this.gatepassModel.materialList.splice(ind, 1);
+        this.addNewMaterial();
+        return false;
+      }
+      matdesc = matdesc.replace("'", "''");
+      this.wmsService.getplantstockmatdetail(matcode, matdesc).subscribe(res => {
+        if (!isNullOrUndefined(res)) {
+          //data.unitprice = res.unitprice;
+          data.availableqty = res.availableqty;
+        }
+      });
+    }
+    else {
+
+      data.materialid = data.materialobj.code;
+    }
+
+
+  }
+
+  onDescriptionSelected(data: any, ind: number) {
+    debugger;
+    if (!isNullOrUndefined(data.materialobj)) {
+      data.materialdescription = data.materialdescriptionobj.code;
+      var matdesc = data.materialdescriptionobj.code;
+      var matcode = data.materialobj.code;
+      var data1 = this.gatepassModel.materialList.filter(function (element, index) {
+        return (element.materialid == matcode && element.materialdescription == matdesc && index != ind);
+      });
+      if (data1.length > 0) {
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Material and description already exist' });
+        this.gatepassModel.materialList.splice(ind, 1);
+        this.addNewMaterial();
+        return false;
+      }
+      matdesc = matdesc.replace("'", "''");
+      this.wmsService.getplantstockmatdetail(matcode, matdesc).subscribe(res => {
+        if (!isNullOrUndefined(res)) {
+          //data.unitprice = res.unitprice;
+          data.availableqty = res.availableqty;
+        }
+      });
+    }
+    else {
+      data.materialdescription = data.materialdescriptionobj.code;
+
+    }
+
+  }
+
 
   getGatePassHistoryList(gatepassId: any) {
     this.wmsService.getGatePassApprovalHistoryList(gatepassId).subscribe(data => {
@@ -813,6 +927,7 @@ export class GatePassComponent implements OnInit {
           material.materialcost = result[i].materialcost;
           material.unitprice = result[i].unitprice;
           material.remarks = result[i].remarks;
+          material.materialtype = result[i].materialtype;
           material.showdetail = false;
           material.expecteddate = new Date(result[i].expecteddate);
           if (isNullOrUndefined(result[i].returneddate)) {
@@ -842,6 +957,7 @@ export class GatePassComponent implements OnInit {
   }
   materialtypechanged(event: any) {
     var val = event.target.value;
+    this.isplanttype = false;
     if (val == "nonproject") {
       this.gatepassModel.isnonproject = true;
       this.selectedpono = "";
@@ -861,6 +977,10 @@ export class GatePassComponent implements OnInit {
       this.filteredprojects = [];
       this.filteredpos = []
       this.gatepassModel.materialList = [];
+      if (val == "plant") {
+        this.isplanttype = true;
+        this.addNewMaterial();
+      }
     }
    
   }
@@ -875,6 +995,7 @@ export class GatePassComponent implements OnInit {
     this.selectedproject = null;
     this.selectedpono = "";
     this.selectedmuliplepo = [];
+    this.isplanttype = false;
 
     if (gatepassobject) {
       this.edit = true;
@@ -886,6 +1007,18 @@ export class GatePassComponent implements OnInit {
         this.isotherreason = false;
       }
       this.gatepassModel = gatepassobject;
+      if (this.gatepassModel.isnonproject) {
+        this.materialtype = "nonproject";
+      }
+      else {
+        if (this.gatepassModel.materialtype == "plant") {
+          this.materialtype = "plant";
+          this.isplanttype = true;
+        }
+        else {
+          this.materialtype = "project";
+        }
+      }
      
       if (dialogstr == 'updateReturnedDateDialog') {
         var matdata = [];
@@ -904,7 +1037,13 @@ export class GatePassComponent implements OnInit {
           debugger;
           var exisdata = matdata.filter(o => o.materialid == item.materialid && o.materialdescription == item.materialdescription && o.pono == item.pono);
 
-          if (exisdata.length == 0) {
+            if (exisdata.length == 0) {
+                if (this.isplanttype) {
+                    var mat = { listName: item.materialid, name: item.materialid, code: item.materialid };
+                    var dsc = { listName: item.materialdescription, name: item.materialdescription, code: item.materialdescription };
+                    item.materialobj = mat;
+                    item.materialdescriptionobj = dsc;
+                }
             matdata.push(item);
           }
 
@@ -931,10 +1070,18 @@ export class GatePassComponent implements OnInit {
         this.iseditprocess = true;
         gatepassobject.tempmaterialList.forEach(item => {
           debugger;
-          item.expected = new Date(item.expected);
+            item.expected = new Date(item.expected);
+         
           var exisdata = this.gatepassModel.materialList.filter(o => o.materialid == item.materialid && o.materialdescription == item.materialdescription && o.pono == item.pono);
-          if (exisdata.length == 0) {
-            var dt = Object.assign({}, item)
+            if (exisdata.length == 0) {
+                if (this.isplanttype) {
+                    var mat = { listName: item.materialid, name: item.materialid, code: item.materialid };
+                    var dsc = { listName: item.materialdescription, name: item.materialdescription, code: item.materialdescription };
+                    item.materialobj = mat;
+                    item.materialdescriptionobj = dsc;
+                }
+              var dt = Object.assign({}, item);
+            
             this.gatepassModel.materialList.push(dt);
           }
 
@@ -947,6 +1094,7 @@ export class GatePassComponent implements OnInit {
      
     } else {
       this.materialtype = "project";
+      this.isplanttype = false;
       if (this.materialtype == "nonproject") {
         this.gatepassModel.isnonproject = true;
       }
@@ -1063,7 +1211,7 @@ export class GatePassComponent implements OnInit {
 
   }
 
-  onMaterialSelected1(data: any, ind: number) {
+  onMaterialSelected1x(data: any, ind: number) {
     debugger;
     if (!isNullOrUndefined(data.materialdescription) && data.materialdescription != "") {
       var data1 = this.gatepassModel.materialList.filter(function (element, index) {
@@ -1099,7 +1247,7 @@ export class GatePassComponent implements OnInit {
 
   }
 
-  onDescriptionSelected(data: any, ind: number) {
+  onDescriptionSelectedx(data: any, ind: number) {
     debugger;
     if (!isNullOrUndefined(data.materialid) && data.materialid != "") {
       var data1 = this.gatepassModel.materialList.filter(function (element, index) {
@@ -1291,9 +1439,18 @@ export class GatePassComponent implements OnInit {
         
           this.spinner.show();
         this.gatepassModel.requestedby = this.employee.employeeno;
-        if (!this.gatepassModel.isnonproject) {
+        if (!this.gatepassModel.isnonproject && !this.isplanttype) {
           this.gatepassModel.projectid = this.selectedproject.value;
+          this.gatepassModel.materialtype = "project";
         }
+        else if (this.isplanttype) {
+          this.gatepassModel.materialtype = "plant";
+        }
+        else if (this.gatepassModel.isnonproject) {
+          this.gatepassModel.materialtype = "nonproject";
+        }
+        
+       
         
           this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].expecteddate = this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].expecteddate != null ? new Date(this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].expecteddate).toLocaleDateString() : undefined;
           this.spinner.show();

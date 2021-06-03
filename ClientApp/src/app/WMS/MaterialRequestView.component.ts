@@ -222,6 +222,15 @@ export class MaterialRequestViewComponent implements OnInit {
     data.materialcost = reqqty * data.unitprice;
 
   }
+  //Check for requested qty
+  onPlantComplete(reqqty: number, avqty: number, material: any, index, data: any) {
+    if (avqty < reqqty) {
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Requested qty cannot exceed available qty' });
+      this.materialList[index].quantity = 0;
+      return false;
+    }
+
+  }
 
 //Add rows
   //add materials for gate pass
@@ -356,7 +365,7 @@ export class MaterialRequestViewComponent implements OnInit {
         pono += "'"+item.pono+"'";
         i++;
       });
-      this.wmsService.getMaterialRequestlistdataforgp(pono, this.selectedproject.value).subscribe(data => {
+      this.wmsService.getMaterialswithstore(pono, this.selectedproject.value).subscribe(data => {
         this.materialList = data;
         this.pono = pono;
         this.displayDD = false;
@@ -561,7 +570,7 @@ export class MaterialRequestViewComponent implements OnInit {
       var matdesc = data.materialdescriptionobj.code;
       var matcode = this.materialList[ind].materialobj.code;
       var data1 = this.materialList.filter(function (element, index) {
-        return (element.material == matcode && element.materialdescription == matdesc && index != ind);
+        return (element.materialid == matcode && element.materialdescription == matdesc && index != ind);
       });
       if (data1.length > 0) {
         this.messageService.add({ severity: 'error', summary: '', detail: 'Material already exist' });
@@ -569,13 +578,24 @@ export class MaterialRequestViewComponent implements OnInit {
         this.addNewMaterial();
         return false;
       }
-
-      this.wmsService.getplantstockmatdetail(matcode, matdesc).subscribe(res => {
-        if (!isNullOrUndefined(res)) {
-          data.unitprice = res.unitprice;
-          data.availableqty = res.availableqty;
-        }
-      });
+      matdesc = matdesc.replace("'", "''");
+      if (this.stocktype == "PLOS") {
+        this.wmsService.getplosstockmatdetail(matcode, matdesc).subscribe(res => {
+          if (!isNullOrUndefined(res)) {
+            //data.unitprice = res.unitprice;
+            data.availableqty = res.availableqty;
+          }
+        });
+      }
+      else {
+        this.wmsService.getplantstockmatdetail(matcode, matdesc).subscribe(res => {
+          if (!isNullOrUndefined(res)) {
+            //data.unitprice = res.unitprice;
+            data.availableqty = res.availableqty;
+          }
+        });
+      }
+    
     }
     else {
      
@@ -592,7 +612,7 @@ export class MaterialRequestViewComponent implements OnInit {
       var matdesc = data.materialdescriptionobj.code;
       var matcode = this.materialList[ind].materialobj.code;
       var data1 = this.materialList.filter(function (element, index) {
-        return (element.material == matcode && element.materialdescription == matdesc && index != ind);
+        return (element.materialid == matcode && element.materialdescription == matdesc && index != ind);
       });
       if (data1.length > 0) {
         this.messageService.add({ severity: 'error', summary: '', detail: 'Material and description already exist' });
@@ -600,12 +620,23 @@ export class MaterialRequestViewComponent implements OnInit {
         this.addNewMaterial();
         return false;
       }
-      this.wmsService.getplantstockmatdetail(matcode, matdesc).subscribe(res => {
-        if (!isNullOrUndefined(res)) {
-          data.unitprice = res.unitprice;
-          data.availableqty = res.availableqty;
-        }
-      });
+      matdesc = matdesc.replace("'", "''");
+      if (this.stocktype == "PLOS") {
+        this.wmsService.getplosstockmatdetail(matcode, matdesc).subscribe(res => {
+          if (!isNullOrUndefined(res)) {
+            //data.unitprice = res.unitprice;
+            data.availableqty = res.availableqty;
+          }
+        });
+      }
+      else {
+        this.wmsService.getplantstockmatdetail(matcode, matdesc).subscribe(res => {
+          if (!isNullOrUndefined(res)) {
+            //data.unitprice = res.unitprice;
+            data.availableqty = res.availableqty;
+          }
+        });
+      }
     }
     else {
       this.materialList[ind].materialdescription = this.materialList[ind].materialdescriptionobj.code;
@@ -613,6 +644,8 @@ export class MaterialRequestViewComponent implements OnInit {
     }
 
   }
+
+
 
 
   filtermats(event,data : any) {
@@ -653,6 +686,7 @@ export class MaterialRequestViewComponent implements OnInit {
     if (searchTxt == undefined)
       searchTxt = "";
     searchTxt = searchTxt.replace('*', '%');
+    searchTxt = searchTxt.replace("'", "''");
     this.dynamicData = new DynamicSearchResult();
     var query = "select poitemdescription from wms.wms_stock ws where stcktype = 'Plant Stock' group by poitemdescription limit 50";
     this.dynamicData.query = query;
@@ -678,14 +712,30 @@ export class MaterialRequestViewComponent implements OnInit {
     if (searchTxt == undefined)
       searchTxt = "";
     searchTxt = searchTxt.replace('*', '%');
+    materialiddesc = materialiddesc.replace("'", "''");
     this.dynamicData = new DynamicSearchResult();
-    var query = "select materialid from wms.wms_stock ws where stcktype = 'Plant Stock'";
-    query += " and materialid ilike '" + searchTxt + "%'";
-    if (!isNullOrUndefined(desc)) {
-      query += " and poitemdescription = '" + materialiddesc + "'";
+    var query = "";
+    if (this.stocktype == "PLOS") {
+      query = "select materialid from wms.wms_stock ws where receivedtype = 'Material Return'";
+      query += " and materialid ilike '" + searchTxt + "%'";
+      if (!isNullOrUndefined(desc)) {
+        query += " and poitemdescription = '" + materialiddesc + "'";
+
+      }
+      query += " group by materialid limit 50";
      
     }
-    query += " group by materialid limit 50";
+    else {
+      query = "select materialid from wms.wms_stock ws where stcktype = 'Plant Stock'";
+      query += " and materialid ilike '" + searchTxt + "%'";
+      if (!isNullOrUndefined(desc)) {
+        query += " and poitemdescription = '" + materialiddesc + "'";
+
+      }
+      query += " group by materialid limit 50";
+
+    }
+   
     this.dynamicData.query = query;
     this.filteredmats = [];
     this.wmsService.GetListItems(this.dynamicData).subscribe(data => {
@@ -732,13 +782,30 @@ export class MaterialRequestViewComponent implements OnInit {
     if (searchTxt == undefined)
       searchTxt = "";
     searchTxt = searchTxt.replace('*', '%');
+    searchTxt = searchTxt.replace("'", "''");
     this.dynamicData = new DynamicSearchResult();
-    var query = "select poitemdescription from wms.wms_stock ws where stcktype = 'Plant Stock' ";
-    query += " and poitemdescription ilike '" + searchTxt + "%'";
-    if (!isNullOrUndefined(material)) {
-      query += " and materialid = '" + materialid+"'";
+    var query = "";
+    if (this.stocktype == "PLOS") {
+
+      query = "select poitemdescription from wms.wms_stock ws where receivedtype = 'Material Return' ";
+      query += " and poitemdescription ilike '" + searchTxt + "%'";
+      if (!isNullOrUndefined(material)) {
+        query += " and materialid = '" + materialid + "'";
+      }
+      query += " group by poitemdescription limit 50";
+
+
     }
-    query += " group by poitemdescription limit 50";
+    else {
+      query = "select poitemdescription from wms.wms_stock ws where stcktype = 'Plant Stock' ";
+      query += " and poitemdescription ilike '" + searchTxt + "%'";
+      if (!isNullOrUndefined(material)) {
+        query += " and materialid = '" + materialid + "'";
+      }
+      query += " group by poitemdescription limit 50";
+
+    }
+  
     this.dynamicData.query = query;
     this.filteredmatdesc = [];
     this.wmsService.GetListItems(this.dynamicData).subscribe(data => {
@@ -795,7 +862,7 @@ export class MaterialRequestViewComponent implements OnInit {
 
   GetPONo(projectcode: string) {
 
-    this.wmsService.getPODetailsbyprojectcode(this.employee.employeeno, projectcode).subscribe(data => {
+    this.wmsService.getStorePODetailsbyprojectcode(this.employee.employeeno, projectcode).subscribe(data => {
       this.spinner.hide();
       if (data) {
         this.ponolist = data;

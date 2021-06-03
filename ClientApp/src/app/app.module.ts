@@ -118,6 +118,7 @@ import { StockTransferOrderComponent } from './WMS/StockTransferOrder.component'
 import { SubContractTransferOrderComponent } from './WMS/SubContractTransferOrder.component';
 import { STOApprovalComponent } from './WMS/STOApproval.component';
 import { SubcontractApprovalComponent } from './WMS/SubcontractApproval.component';
+import { DirectDeliveryComponent } from './WMS/DirectDelivery.component';
 import { YGSGRComponent } from './WMS/YGSGR.component';
 
 //admin
@@ -138,6 +139,7 @@ import { RackMasterComponent } from './WMS/RackMaster.component';
 import { BinMasterComponent } from './WMS/BinMaster.component';
 import { AssignPMComponent } from './WMS/AssignPM.component';
 import { AssignIMComponent } from './WMS/AssignInventoryManage.component';
+import { errorpageComponent } from './WMS/errorpage.component';
 
 ////pages
 import { LoginComponent } from './WMS/Login.component';
@@ -257,6 +259,7 @@ import { DataSharingService } from './datasharing.service';
     MaterialRequestApprovalComponent,
     STOApprovalComponent,
     SubcontractApprovalComponent,
+    DirectDeliveryComponent,
     AssignProjectManagerComponent,
     POReportComponent,
     AnnexureReportComponent,
@@ -266,6 +269,7 @@ import { DataSharingService } from './datasharing.service';
     BinMasterComponent,
     AssignPMComponent,
     AssignIMComponent,
+    errorpageComponent,
     YGSGRComponent
   ],
   imports: [
