@@ -36,7 +36,7 @@
             <td class="ptable-cell" style="text-align: center">{{rowData.invoicedate  | date : constants.dateFormat}} </td>
             <td class="ptable-cell" style="text-align:left">{{rowData.suppliername}}</td>
             <td class="ptable-cell" style="text-align:left">{{rowData.directdeliveryaddrs}}</td>
-            <td class="ptable-cell" style="text-align:center"><button pButton type="button" icon="fa fa-edit" class="ui-button-info" style="margin-left: 1px;" (click)="editdirectdelivery(rowData)"></button></td>
+            <td class="ptable-cell" style="text-align:center"><button pButton type="button" icon="fa fa-eye" class="ui-button-info" style="margin-left: 1px;" (click)="editdirectdelivery(rowData)"></button></td>
             <td class="ptable-cell" style="text-align:center"><button pButton type="button" icon="fa fa-trash" class="ui-button-info" style="margin-left: 1px;" (click)="removedirectdelivery(rowData)"></button></td>
           </tr>
         </ng-template>
@@ -150,7 +150,7 @@
   </div>
   <p-footer>
     <div *ngIf="DirectDelivery.DDmaterialList.length>0" class="ui-dialog-buttonpane ui-helper-clearfix">
-      <button type="submit" pButton icon="fa fa-check" class="ui-button-primary" (click)="onSubmit()" label="Submit"></button>&nbsp;&nbsp;
+      <button type="submit" pButton icon="fa fa-check" class="ui-button-primary" *ngIf="!showEdit" (click)="onSubmit()" label="Submit"></button>&nbsp;&nbsp;
       <button type="button" pButton icon="fa fa-close" class="ui-button-danger" (click)="dialogCancel('displayDDDialog')" label="Cancel"></button>
     </div>
   </p-footer>
