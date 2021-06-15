@@ -1,0 +1,179 @@
+<div style="margin:10px;">
+  <div class="card commoncardcss" style="width:100%;">
+    <div class="card-header">
+      <div class="row " style="margin-top: 10px;margin-left: 0px !important;margin-right: 0px !important">
+        <div class="col-lg-4 col-md-4 form-inline">
+        </div>
+        <div class="col-lg-4 col-md-4 text-center">
+          <span style="color:#428bca;font-size:18px" class="commonheadertext">
+            <i class="fa fa-check-circle-o commonheadertext"></i>&nbsp;Gatepass Report
+          </span>
+        </div>
+        <div class="col-lg-4 col-md-4 form-inline"></div>
+      </div>
+      <div class="row" style="margin-left: 0px !important;margin-right: 0px !important">
+        <div class="col-lg-3 col-md-3 form-inline">
+          <label class="labelheading">From Date :</label>&nbsp;&nbsp;
+          <p-calendar class="mprldatepick" [(ngModel)]="fromDate" [monthNavigator]="true" [yearNavigator]="true" yearRange="1900:2050" dateFormat="dd/mm/yy"></p-calendar>
+        </div>
+        <div class="col-lg-3 col-md-3 form-inline">
+          <label class="labelheading">To Date :</label>&nbsp;&nbsp;
+          <p-calendar class="mprldatepick" [(ngModel)]="toDate" [monthNavigator]="true" [yearNavigator]="true" yearRange="1900:2050" dateFormat="dd/mm/yy"></p-calendar>
+        </div>
+        <div class="col-lg-5 col-md-5 form-inline">
+          <label class="labelheading">Ageing :</label>&nbsp;&nbsp;
+          <input type="number" min="0" [(ngModel)]="ageing" />&nbsp;&nbsp;
+          <select [(ngModel)]="checkvalue">
+            <option value="0">Select</option>
+            <option value="1">equal to</option>
+            <option value="2">greater than equal to</option>
+            <option value="3">less than equal to</option>
+            <option value="4">greater than</option>
+            <option value="5">less than</option>
+          </select>
+          <!--<p-radioButton name="group1" value="greater" label="greater than" [(ngModel)]="checkvalue" inputId="opt1"></p-radioButton>
+          <p-radioButton name="group1" value="less" label="less than" [(ngModel)]="checkvalue" inputId="opt1"></p-radioButton>-->
+        </div>
+        <div class="col-lg-1 col-md-1 form-inline">
+          <button type="button" class="btn btn-success" (click)="gatepassreport()" label="Save">Search</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-body" style="overflow-y:scroll">
+      <div class="row" style="max-width:100%;position: relative; margin-top:5px;margin-left:3px;">
+        <p-table #dt [value]="gplist" [style]="{'width':'100%','overflow':'auto!important'}"
+                 [responsive]="true" [rows]="10"
+                 [resizableColumns]="true"
+                 columnResizeMode="expand"
+                 [scrollable]="true" scrollHeight="60vh"
+                 appendTo="body">
+          <ng-template pTemplate="header">
+            <tr class="mprltbldata">
+              <th style="text-align:center;width:5%;">Sl.No.</th>
+              <th style="text-align:center;width:13%;">Gatepass ID</th>
+              <th style="text-align:center;width:12%;">Type</th>
+              <th style="text-align:center;width:15%;">Supplier</th>
+              <th style="text-align:center;width:10%;">Status</th>
+              <th style="text-align:center;width:15%;">Reason</th>
+              <th style="text-align:center;width:10%;">Requested On</th>
+              <th style="text-align:center;width:20%;">Requested By</th>
+            </tr>
+            <tr>
+              <th></th>
+              <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'gatepassid', 'startsWith')"></th>
+              <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'gatepasstype', 'startsWith')"></th>
+              <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'vendorname', 'contains')"></th>
+              <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'status', 'startsWith')"></th>
+              <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'reasonforgatepass', 'contains')"></th>
+              <th></th>
+              <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'requestedby', 'contains')"></th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
+            <tr>
+              <td class="ptable-cell" style="text-align:right;width:5%;">{{ri+1}}</td>
+              <td class="ptable-cell" style="text-align:center;width:13%;">
+                <span class="text-primary" style="text-decoration:underline;cursor:pointer" (click)="showdetails(rowData.gatepassid,rowData)">{{rowData.gatepassid}}</span>
+              </td>
+              <td class="ptable-cell" style="text-align:center;width:12%;">
+                {{rowData.gatepasstype}}
+              </td>
+              <td class="ptable-cell" style="text-align:center;width:15%;">
+                {{rowData.vendorname}}
+              </td>
+              <td class="ptable-cell" style="text-align:center;width:10%;">
+                {{rowData.status}}
+              </td>
+
+              <td class="ptable-cell" style="text-align:center;width:15%;">
+                <span>{{rowData.reasonforgatepass}}</span>
+              </td>
+              <td class="ptable-cell" style="text-align:center;width:10%;">
+                <span>{{rowData.requestedon | date : 'dd/MM/yyyy'}}</span>
+              </td>
+              <td class="ptable-cell" style="text-align:center;width:20%;">
+                <span>{{rowData.requestedby}}</span>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </div>
+  </div>
+  <p-dialog header="Material Details" [(visible)]="showdetail" (onHide)="hideDG()" [modal]="true" [style]="{width: '95vw'}" [maximizable]="true" [baseZIndex]="10000"
+            [draggable]="true" [resizable]="false">
+    <div class="row">
+      <div class="col-lg-4 col-md-4 col-sm-6 form-inline">
+        <label class="labelheading">Gatepass ID :</label>&nbsp;&nbsp;
+        <label class="labelheading">{{gpid}}</label>
+      </div>
+      <div class="col-lg-4 col-md-4 col-sm-6">
+        <label class="labelheading">Type:</label>&nbsp;&nbsp;
+        <label class="labelheading">{{gptype}}</label>
+      </div>
+      <div class="col-lg-4 col-md-4 col-sm-6">
+        <label class="labelheading">Project :</label>&nbsp;&nbsp;
+        <label class="labelheading">{{gpproject}}</label>
+      </div>
+      <div class="col-lg-4 col-md-4 col-sm-6">
+        <label class="labelheading">Supplier :</label>&nbsp;&nbsp;
+        <label class="labelheading">{{gpsupplier}}</label>
+      </div>
+
+    </div>
+   
+    <p-table #dt [value]="filteredmatdetailsList"
+             [responsive]="true" [rows]="10"
+             [resizableColumns]="true"
+             appendTo="body">
+      <ng-template pTemplate="header">
+        <tr class="mprltbldata">
+          <th style="text-align:center;width:5%;">Sl.No.</th>
+          <th style="text-align:center;width:10%;">PONo.</th>
+          <th style="text-align:center;width:15%;">Material</th>
+          <th style="text-align:center;width:15%;">PO Item Description</th>
+          <th style="text-align:center;width:10%;">Requested Qty</th>
+          <th style="text-align:center;width:9%;">Issued Qty</th>
+          <th style="text-align:center;width:9%;">Outward Qty</th>
+          <th style="text-align:center;width:9%;" *ngIf="isreturnable">Inward Qty</th>
+          <th style="text-align:center;width:10%;" *ngIf="isreturnable">Expected Date</th>
+          <th style="text-align:center;width:8%;" *ngIf="isreturnable">Ageing (in days)</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
+        <tr>
+          <td class="ptable-cell" style="text-align:right;width:5%;">{{ri+1}}</td>
+          <td class="ptable-cell" style="text-align:center;width:10%;">
+            {{rowData.pono}}
+          </td>
+          <td class="ptable-cell" style="text-align:center;width:15%;">
+            {{rowData.materialid}}
+          </td>
+          <td class="ptable-cell" style="text-align:center;width:15%;">
+            {{rowData.poitemdescription}}
+          </td>
+          <td class="ptable-cell" style="text-align:right;width:10%;">
+            {{rowData.quantity}}
+          </td>
+          <td class="ptable-cell" style="text-align:right;width:9%;">
+            {{rowData.issuedqty}}
+          </td>
+          <td class="ptable-cell" style="text-align:right;width:9%;">
+            {{rowData.outwardqty}}
+          </td>
+          <td class="ptable-cell" style="text-align:right;width:9%;" *ngIf="isreturnable">
+            {{rowData.inwardqty}}
+          </td>
+          <td class="ptable-cell" style="text-align:center;width:10%;" *ngIf="isreturnable">
+            {{rowData.expecteddate | date : 'dd/MM/yyyy'}}
+          </td>
+          <td class="ptable-cell" style="text-align:right;width:8%;" *ngIf="isreturnable">
+            {{rowData.ageing}}
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </p-dialog>
+</div>
+

@@ -2468,8 +2468,8 @@ where iss.requestid = '#requestforissueid' and iss.requesttype = '#type'
 group by iss.requestid,sk.itemlocation,sk.createddate</value>
   </data>
   <data name="insertDDInvoice" xml:space="preserve">
-    <value>INSERT INTO wms.wms_securityinward(inwmasterid,pono,invoiceno,invoicedate,grnnumber,grndate,grnnogeneratedby,receivedby,receiveddate,suppliername,isdirectdelivered,directdeliveryaddrs,directdeliveryremarks,directdeliveredon ,deleteflag)
-VALUES(default,@pono,@invoiceno,@invoicedate,@grnnumber,@grndate,@grnnogeneratedby,@receivedby,@receiveddate,@suppliername,true,@directdeliveryaddrs,@directdeliveryremarks,@directdeliveredon ,false) returning inwmasterid</value>
+    <value>INSERT INTO wms.wms_securityinward(inwmasterid,pono,invoiceno,invoicedate,grnnumber,grndate,grnnogeneratedby,receivedby,receiveddate,suppliername,isdirectdelivered,directdeliveryaddrs,directdeliveryremarks,directdeliveredon ,deleteflag,vehicleno ,transporterdetails )
+VALUES(default,@pono,@invoiceno,@invoicedate,@grnnumber,@grndate,@grnnogeneratedby,@receivedby,@receiveddate,@suppliername,true,@directdeliveryaddrs,@directdeliveryremarks,@directdeliveredon ,false,@vehicleno,@transporterdetails) returning inwmasterid</value>
   </data>
   <data name="insertDDinwardDetails" xml:space="preserve">
     <value>INSERT INTO wms.wms_storeinward(inwmasterid,receiveddate,receivedby,receivedqty,returnqty,confirmqty,materialqty,materialid,pono,lineitemno,poitemdescription,unitprice,deleteflag)
@@ -2511,8 +2511,9 @@ left outer join wms.wms_storeinward sw on sw.inwardid = m.inwardid
 left outer join wms.wms_securityinward siw on siw.inwmasterid = sw.inwmasterid 
 where sw.projectid = '#projectid' and sw.materialid = ws.materialid and sw.pono = ws.pono and sw.poitemdescription = ws.poitemdescription ) as mrnissuedqty, 
 max(ws.unitprice::decimal(19,5)) as unitprice from wms.wms_storeinward ws 
+left outer join wms.wms_securityinward sinw on sinw.inwmasterid = ws.inwmasterid 
 where (ws.inwardid not in (select distinct ws2.inwardid from wms.wms_stock ws2 where ws2.inwardid is not null)) and ws.confirmqty &gt; 0 and ws.projectid = '#projectid' and ws.deleteflag is not true 
-and siw.isdirectdelivered is true and siw.deleteflag is not true and ws.pono in (#pono) group by ws.poitemdescription, ws.materialid,ws.pono</value>
+and sinw.isdirectdelivered is not true and sinw.deleteflag is not true and ws.deleteflag is not true and ws.pono in (#pono) group by ws.poitemdescription, ws.materialid,ws.pono</value>
   </data>
   <data name="getStorePODetailsByProjectCode" xml:space="preserve">
     <value>select sk.pono, polist.suppliername,prj.projectmanager from wms.wms_stock sk
@@ -2571,5 +2572,25 @@ left outer join wms.wms_securityinward si on si.inwmasterid = sinw.inwmasterid
 left outer join wms.employee emp on emp.employeeno = m.mrnby 
 where si.grnnumber = '#grnnumber'
 order by m.mrnid desc</value>
+  </data>
+  <data name="getGPReport" xml:space="preserve">
+    <value>select gp.gatepassid,gp.gatepasstype,gp.projectid,wg.gatepassmaterialid,wg.materialid,wg.poitemdescription,wg.materialcost::decimal(19,5),wg.expecteddate,wg.pono,
+wg.quantity,(select sum(wm.issuedqty) from wms.wms_materialissue wm where wm.requesttype = 'gatepass' and wm.requestid::text = wg.gatepassmaterialid::text) as issuedqty,
+(select sum(o.outwardqty) from wms.outwatdinward o where o.gatepassmaterialid = wg.gatepassmaterialid group by o.gatepassmaterialid) as outwardqty,
+(select sum(o1.inwardqty) from wms.outwatdinward o1 where o1.gatepassmaterialid = wg.gatepassmaterialid group by o1.gatepassmaterialid) as inwardqty,
+gp.requestedon,gp.reasonforgatepass,gp.vendorname,emp."name" as requestedby,gp.status,
+(select sum(o.outwardqty) from wms.outwatdinward o where o.gatepassid = gp.gatepassid group by o.gatepassid) as totaloutwardqty,
+(select sum(o1.inwardqty) from wms.outwatdinward o1 where o1.gatepassid = gp.gatepassid group by o1.gatepassid) as totalinwardqty
+from wms.wms_gatepassmaterial wg 
+left outer join wms.wms_gatepass gp on gp.gatepassid = wg.gatepassid 
+left outer join wms.employee emp on emp.employeeno = gp.requestedby
+where gp.deleteflag is not true</value>
+  </data>
+  <data name="gatepassreportmaterials" xml:space="preserve">
+    <value>select wg.gatepassid,wg.gatepassmaterialid,wg.materialid,wg.poitemdescription,wg.materialcost::decimal(19,5),wg.expecteddate,wg.pono,
+wg.quantity,(select sum(wm.issuedqty) from wms.wms_materialissue wm where wm.requesttype = 'gatepass' and wm.requestid::text = wg.gatepassmaterialid::text) as issuedqty,
+(select sum(o.outwardqty) from wms.outwatdinward o where o.gatepassmaterialid = wg.gatepassmaterialid group by o.gatepassmaterialid) as outwardqty,
+(select sum(o1.inwardqty) from wms.outwatdinward o1 where o1.gatepassmaterialid = wg.gatepassmaterialid group by o1.gatepassmaterialid) as inwardqty
+from wms.wms_gatepassmaterial wg where wg.gatepassid = '#gatepassid'</value>
   </data>
 </root>

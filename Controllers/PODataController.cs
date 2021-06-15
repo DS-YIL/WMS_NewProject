@@ -1812,6 +1812,11 @@ namespace WMS.Controllers
 		{
 			return await this._poService.getYGSGR();
 		}
+		[HttpGet("GetGPReport")]
+		public async Task<IEnumerable<gatepassModel>> GetGPReport(string fromdate,string todate)
+		{
+			return await this._poService.GetGPReport(fromdate, todate);
+		}
 	}
 
 }

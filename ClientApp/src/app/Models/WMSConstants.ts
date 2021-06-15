@@ -12,7 +12,7 @@ export class constants {
   public materialIssueType: string = "";
   public gatePassIssueType: string = "";
   public dateFormat = "dd/MM/yyyy";
-  public venderid: searchParams = { tableName: 'wms.VendorMaster', fieldId: 'vendorid', fieldName: 'vendorname', condition: " where  deleteflag=true and ", fieldAliasName: "", updateColumns: "Emailid" };
+  public venderid: searchParams = { tableName: 'wms.VendorMaster', fieldId: 'vendorid', fieldName: 'vendorname', condition: " where  deleteflag is not true and ", fieldAliasName: "", updateColumns: "Emailid" };
   public itemlocation: searchParams = { tableName: 'wms.wms_rd_locator', fieldId: 'locatorid', fieldName: 'locatorname', condition: " where ", fieldAliasName: "", updateColumns: "" };
   public rackid: searchParams = { tableName: 'wms.wms_rd_rack', fieldId: 'rackid', fieldName: 'racknumber', condition: "  where ", fieldAliasName: "", updateColumns: "" };
   public binid: searchParams = { tableName: 'wms.wms_rd_bin', fieldId: 'binid', fieldName: 'binnumber', condition: "  where ", fieldAliasName: "", updateColumns: "" };

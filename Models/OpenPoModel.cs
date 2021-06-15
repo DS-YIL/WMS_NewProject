@@ -833,11 +833,14 @@ namespace WMS.Models
 		public string inwardedby { get; set; }
 		public string inwardremarks { get; set; }
 		public decimal? outwardqty { get; set; }
+		public decimal? totaloutwardqty { get; set; }
 		public decimal? outwardedqty { get; set; }
 		public decimal? inwardqty { get; set; }
+		public decimal? totalinwardqty { get; set; }
 		public decimal? inwardedqty { get; set; }
 		public string itemlocation { get; set; }
 		public string mgapprover { get; set; }
+		public int ageing { get; set; }
 
 		public DateTime? securityinwarddate { get; set; }
 
@@ -1482,6 +1485,8 @@ namespace WMS.Models
 	{
 		public string pono { get; set; }
 		public string invoiceno { get; set; }
+		public string vehicleno { get; set; }
+		public string transporterdetails { get; set; }
 		public string receivedby { get; set; }
 		public DateTime invoicedate { get; set; }
 		public string suppliername { get; set; }

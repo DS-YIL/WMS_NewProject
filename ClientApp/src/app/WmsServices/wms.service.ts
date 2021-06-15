@@ -1151,6 +1151,11 @@ export class wmsService {
   getFailedGR(): Observable<YGSGR[]> {
     return this.http.get<YGSGR[]>(this.url + 'POData/GetYGSGRList', this.httpOptions);
   }
+  getGatepassReport(fromdate: string, todate: string): Observable<gatepassModel[]> {
+    fromdate = encodeURIComponent(fromdate);
+    todate = encodeURIComponent(todate);
+    return this.http.get<gatepassModel[]>(this.url + 'POData/GetGPReport?fromdate=' + fromdate + '&todate=' + todate, this.httpOptions);
+  }
   updateSubcontractAcKstatus(ackData: any[]): Observable<any> {
     const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }), responseType: 'text' as any };
     return this.http.post<any>(this.url + 'POData/updateSubcontractAcKstatus/', ackData, httpOptions);

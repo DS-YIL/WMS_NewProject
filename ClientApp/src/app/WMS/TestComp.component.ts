@@ -60,6 +60,7 @@ export class TestCompComponent implements OnInit {
   }
 
   getlist() {
+    debugger;
     this.getlistdata = [];
     this.spinner.show();
     this.wmsService.gettestcrud().subscribe(data => {
@@ -69,6 +70,7 @@ export class TestCompComponent implements OnInit {
   }
 
   post() {
+    debugger;
     if (!this.postmodel.name) {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Enter Name' });
       return;
@@ -89,6 +91,7 @@ export class TestCompComponent implements OnInit {
   }
 
   delete(testdata: testcrud) {
+    debugger;
     this.wmsService.deletetestcurd(testdata.id).subscribe(data => {
       if (data) {
         this.messageService.add({ severity: 'success', summary: '', detail: data });

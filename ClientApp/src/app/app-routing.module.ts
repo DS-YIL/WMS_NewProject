@@ -106,6 +106,7 @@ import { roleMaster, VendorMaster } from './Models/WMS.Model';
 import { AssignPMComponent } from './WMS/AssignPM.component';
 import { AssignIMComponent } from './WMS/AssignInventoryManage.component';
 import { DirectDeliveryComponent } from './WMS/DirectDelivery.component';
+import { GatepassReportComponent } from './WMS/GatepassReport.component';
 
 const routes: Routes = [{
   path: 'WMS',
@@ -228,6 +229,7 @@ const routes: Routes = [{
     { path: "DirectDelivery", component: DirectDeliveryComponent },
     { path: "errorpage", component: errorpageComponent }, 
     { path: "YGSGR", component: YGSGRComponent },
+    { path: "GPReport", component: GatepassReportComponent },
     
 
 

@@ -37,9 +37,12 @@ export class DirectDeliveryComponent implements OnInit {
       pono: ['', [Validators.required]],
       invoiceno: ['', [Validators.required]],
       invoicedate: ['', [Validators.required]],
-      directdeliveryaddrs: ['', [Validators.required]],
-      directdeliveredon: ['', [Validators.required]],
-      directdeliveryremarks: ['', [Validators.required]],
+      directdeliveryaddrs: [''],
+      directdeliveredon: [''],
+      directdeliveryremarks: [''],
+      vehicleno: [''],
+      transporterdetails: ['']
+
     });
 
     this.CreateDD.controls['pono'].clearValidators();
@@ -89,8 +92,8 @@ export class DirectDeliveryComponent implements OnInit {
       this.DirectDelivery.invoiceno = this.totalMaterialList[0].invoiceno;
     if (this.checkValiddate(this.totalMaterialList[0].invoicedate))
       this.DirectDelivery.invoicedate = this.totalMaterialList[0].invoicedate;
-    if (this.totalMaterialList[0].directdeliveryaddrs)
-      this.DirectDelivery.directdeliveryaddrs = this.totalMaterialList[0].directdeliveryaddrs;
+    //if (this.totalMaterialList[0].directdeliveryaddrs)
+    //  this.DirectDelivery.directdeliveryaddrs = this.totalMaterialList[0].directdeliveryaddrs;
     if (this.checkValiddate(this.totalMaterialList[0].directdeliveredon))
       this.DirectDelivery.directdeliveredon = this.totalMaterialList[0].directdeliveredon;
     if (this.totalMaterialList[0].directdeliveryremarks)
@@ -120,6 +123,8 @@ export class DirectDeliveryComponent implements OnInit {
     this.DirectDelivery.directdeliveredon = rowdata.directdeliveredon;
     this.DirectDelivery.directdeliveryremarks = rowdata.directdeliveryremarks;
     this.DirectDelivery.inwmasterid = rowdata.inwmasterid;
+    this.DirectDelivery.vehicleno = rowdata.vehicleno;
+    this.DirectDelivery.transporterdetails = rowdata.transporterdetails;
     this.dynamicData = new DynamicSearchResult();
     this.dynamicData.query = "select inwardid, materialid,poitemdescription,materialqty,receivedqty as pendingqty from wms.wms_storeinward  where inwmasterid ='" + this.DirectDelivery.inwmasterid +"' and deleteflag is false";
     this.wmsService.GetListItems(this.dynamicData).subscribe(data => {

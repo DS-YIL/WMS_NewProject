@@ -7520,7 +7520,7 @@ namespace WMS.DAL
 					var InvRes = AcList.Where(li => li.roleid == 2).ToList();
 					var aaprRes = AcList.Where(li => li.roleid == 8).ToList();
 					var PMRes = AcList.Where(li => li.roleid == 11).ToList();
-					if (MatRes.Count() == 0 && employeeid != "000000")
+					if (MatRes.Count() == 0 && employeeid != "000000" && employeeid != "000001")
 					{
 						userAcessNamesModel res = new userAcessNamesModel();
 						res.roleid = 5;
@@ -7528,14 +7528,14 @@ namespace WMS.DAL
 						res.subroleid = "1,2";
 						AcList.Add(res);
 					}
-					if (InvRes.Count() == 0 && employeeid != "000000")
+					if (InvRes.Count() == 0 && employeeid != "000000" && employeeid != "000001")
 					{
 						userAcessNamesModel res1 = new userAcessNamesModel();
 						res1.roleid = 2;
 						res1.accessname = "Inventory Enquiry";
 						AcList.Add(res1);
 					}
-					if (PMRes.Count() == 0 && employeeid != "000000")
+					if (PMRes.Count() == 0 && employeeid != "000000" && employeeid != "000001")
 					{
 						string querypm = "select projectmanager from wms.wms_project wp where projectmanager = '" + employeeid + "'";
 						var rsltt = pgsql.ExecuteScalar(querypm, null);
@@ -7547,7 +7547,7 @@ namespace WMS.DAL
 							AcList.Add(res1);
 						}
 					}
-					if (aaprRes.Count() == 0 && employeeid != "000000")
+					if (aaprRes.Count() == 0 && employeeid != "000000" && employeeid != "000001")
 					{
 						string empstr = config.FinanceEmployeeNo;
 						string querypm = "select employeeno from wms.employee e where hodempno = '" + employeeid + "'";
@@ -12963,6 +12963,7 @@ namespace WMS.DAL
 							model.emailccnotification = false;
 							model.subroleid = "1";
 							model.plantid = datamodel.plantid;
+							bool isdelegatemember = false;
 							string insertquery = WMSResource.insertAuthUser;
 							model.createdby = model.modifiedby;
 							var resultsx = pgsql.ExecuteScalar(insertquery, new
@@ -12975,7 +12976,8 @@ namespace WMS.DAL
 								model.emailnotification,
 								model.emailccnotification,
 								model.subroleid,
-								model.plantid
+								model.plantid,
+								isdelegatemember
 							});
 						}
 					}
@@ -17965,7 +17967,7 @@ Review Date :<<>>   Reviewed By :<<>>
 			{
 				try
 				{
-					string materialrequestquery = "select * from wms.wms_rd_locator where deleteflag=false  order by locatorid asc";
+					string materialrequestquery = "select * from wms.wms_rd_locator where deleteflag is not true  order by locatorid asc";
 
 					await pgsql.OpenAsync();
 					return await pgsql.QueryAsync<plantddl>(
@@ -18440,6 +18442,90 @@ Review Date :<<>>   Reviewed By :<<>>
 
 			}
 		}
+
+		public async Task<IEnumerable<gatepassModel>> GetGPReport(string fromdate, string todate)
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+
+				try
+				{
+					string query = WMSResource.getGPReport;
+					if (!string.IsNullOrEmpty(todate))
+						query += " and gp.requestedon::date <= '" + todate + "'";
+					if (!string.IsNullOrEmpty(fromdate))
+						query += "  and gp.requestedon::date >= '" + fromdate + "'";
+					query += " order by gp.gatepassid desc";
+					await pgsql.OpenAsync();
+					var data = await pgsql.QueryAsync<gatepassModel>(
+					   query, null, commandType: CommandType.Text);
+					foreach(gatepassModel gp in data)
+                    {
+						if(gp.gatepasstype == "Returnable")
+                        {
+							if (gp.totaloutwardqty != null)
+							{
+								gp.status = "Open";
+							}
+							if(gp.totalinwardqty != null)
+                            {
+								if(gp.totaloutwardqty == gp.totalinwardqty)
+                                {
+									gp.status = "Closed";
+								}
+                                else
+                                {
+									gp.status = "Partially Closed";
+								}
+                            }
+							double age = (DateTime.Now - Convert.ToDateTime(gp.expecteddate)).TotalDays;
+							gp.ageing = Convert.ToInt32(Math.Floor(age));
+
+						}
+						if(gp.status == "Pending")
+                        {
+							gp.status = "Created";
+						}
+					}
+					return data;
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "getGPReport", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+			}
+		}
+		public async Task<IEnumerable<gatepassModel>> GetGPReportMaterials()
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+
+				try
+				{
+					string query = WMSResource.gatepassreportmaterials;
+					await pgsql.OpenAsync();
+					var data = await pgsql.QueryAsync<gatepassModel>(
+					   query, null, commandType: CommandType.Text);
+					return data;
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider", "GetGPReportMaterials", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
+					return null;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+
+			}
+		}
 		/*Name of Function : <<updateDirectDelivery>>  Author :<<Prasanna>>  
 		Date of Creation <<17/05/2021>>
 		Purpose : <<insert or update DirectDelivery delivery details>>
@@ -18486,7 +18572,9 @@ Review Date :<<>>   Reviewed By :<<>>
 							dddetails.suppliername,
 							dddetails.directdeliveryaddrs,
 							dddetails.directdeliveryremarks,
-							dddetails.directdeliveredon
+							dddetails.directdeliveredon,
+							dddetails.vehicleno,
+							dddetails.transporterdetails
 						});
 						string updateseqnumber = WMSResource.updateseqnumber;
 						int id = obj.id;

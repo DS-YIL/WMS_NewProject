@@ -140,7 +140,7 @@ import { BinMasterComponent } from './WMS/BinMaster.component';
 import { AssignPMComponent } from './WMS/AssignPM.component';
 import { AssignIMComponent } from './WMS/AssignInventoryManage.component';
 import { errorpageComponent } from './WMS/errorpage.component';
-
+import { GatepassReportComponent } from './WMS/GatepassReport.component';
 ////pages
 import { LoginComponent } from './WMS/Login.component';
 import {HomeComponent} from './WMS/Home.component';
@@ -270,7 +270,8 @@ import { DataSharingService } from './datasharing.service';
     AssignPMComponent,
     AssignIMComponent,
     errorpageComponent,
-    YGSGRComponent
+    YGSGRComponent,
+    GatepassReportComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

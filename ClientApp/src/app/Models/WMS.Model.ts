@@ -344,7 +344,12 @@ export class gatepassModel {
   authremarks: string;
   authname: string;
   authorizedon: Date;
-  materialtype: string
+  materialtype: string;
+  inwardqty: number;
+  outwardqty: number;
+  totaloutwardqty: number;
+  totalinwardqty: number;
+  ageing: number;
 }
 export class materialistModel {
   gatepassmaterialid: string;
@@ -1335,6 +1340,8 @@ export class DirectDelivery {
   directdeliveredon: Date;
   directdeliveryremarks: string
   inwmasterid: string;
+  vehicleno: string;
+  transporterdetails: string;
   DDmaterialList: Array<any> = [];
 }
 

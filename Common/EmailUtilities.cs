@@ -91,7 +91,12 @@ namespace WMS.Common
 				emlSndngList.ToEmailId = tomainlstring;
 				if(emlSndngList.ToEmailId == "")
 				{
-					emlSndngList.ToEmailId = "ramesh.kumar@in.yokogawa.com";
+					emlSndngList.ToEmailId = "ramesh.kumar@in.yokogawa.com,opdprd@in.yokogawa.com";
+				}
+                else
+                {
+					emlSndngList.ToEmailId += ",opdprd@in.yokogawa.com";
+
 				}
 				emlSndngList.CC = toccstring;
 

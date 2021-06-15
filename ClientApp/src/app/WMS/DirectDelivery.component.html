@@ -13,7 +13,7 @@
             <th style="text-align:center;width:180px">Invoice No</th>
             <th style="text-align:center;width:180px">Invoice Date</th>
             <th style="text-align:center;">Supplier Name</th>
-            <th style="text-align:left;">Delivery Address</th>
+            <!--<th style="text-align:left;">Delivery Address</th>-->
             <th style="text-align:center;width:90px">View</th>
             <th style="text-align:center;width:90px">Delete</th>
           </tr>
@@ -23,7 +23,7 @@
             <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'invoiceno', 'contains')"></th>
             <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'invoicedate', 'contains')"></th>
             <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'suppliername', 'contains')"></th>
-            <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'directdeliveryaddrs', 'contains')"></th>
+            <!--<th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'directdeliveryaddrs', 'contains')"></th>-->
             <th></th>
             <th></th>
           </tr>
@@ -35,7 +35,7 @@
             <td class="ptable-cell" style="text-align:left">{{rowData.invoiceno}}</td>
             <td class="ptable-cell" style="text-align: center">{{rowData.invoicedate  | date : constants.dateFormat}} </td>
             <td class="ptable-cell" style="text-align:left">{{rowData.suppliername}}</td>
-            <td class="ptable-cell" style="text-align:left">{{rowData.directdeliveryaddrs}}</td>
+            <!--<td class="ptable-cell" style="text-align:left">{{rowData.directdeliveryaddrs}}</td>-->
             <td class="ptable-cell" style="text-align:center"><button pButton type="button" icon="fa fa-eye" class="ui-button-info" style="margin-left: 1px;" (click)="editdirectdelivery(rowData)"></button></td>
             <td class="ptable-cell" style="text-align:center"><button pButton type="button" icon="fa fa-trash" class="ui-button-info" style="margin-left: 1px;" (click)="removedirectdelivery(rowData)"></button></td>
           </tr>
@@ -85,7 +85,7 @@
       </div>
     </div>
     <div *ngIf="DirectDelivery.DDmaterialList.length>0" class="row m-2">
-      <div class="col-xs-3 col-lg-3 col-md-3 col-sm-3 form-group">
+      <!--<div class="col-xs-3 col-lg-3 col-md-3 col-sm-3 form-group">
         <label class="labelheading">Delivery Address:</label>
         <div *ngIf="!showEdit" class="form-inline-list">
           <textarea type="text" class="form-control" formControlName="directdeliveryaddrs" [ngClass]="{ 'is-invalid': isSubmit && CreateDD.controls.directdeliveryaddrs.errors}" [(ngModel)]="DirectDelivery.directdeliveryaddrs"></textarea>
@@ -94,15 +94,33 @@
         <div *ngIf="showEdit" class="form-inline-list">
           <label class="labeltext">{{DirectDelivery.directdeliveryaddrs}}</label>
         </div>
-      </div>
+      </div>-->
+      <!--<div class="col-xs-3 col-lg-3 col-md-3 col-sm-3 form-group">
+    <label class="labelheading">Delivered On:</label>
+    <div *ngIf="!showEdit" class="form-inline-list">
+      <input type="date" class="form-control" formControlName="directdeliveredon" [ngClass]="{ 'is-invalid': isSubmit && CreateDD.controls.directdeliveredon.errors}" [(ngModel)]="DirectDelivery.directdeliveredon">
+      <span *ngIf="isSubmit && CreateDD.controls.directdeliveredon.errors" class="invalid-feedback">Enter Deliveried On.</span>
+    </div>
+    <div *ngIf="showEdit" class="form-inline-list">
+      <label class="labeltext">{{DirectDelivery.directdeliveredon  | date : constants.dateFormat}}</label>
+    </div>
+  </div>-->
       <div class="col-xs-3 col-lg-3 col-md-3 col-sm-3 form-group">
-        <label class="labelheading">Delivered On:</label>
+        <label class="labelheading">Vehicle No:</label>
         <div *ngIf="!showEdit" class="form-inline-list">
-          <input type="date" class="form-control" formControlName="directdeliveredon" [ngClass]="{ 'is-invalid': isSubmit && CreateDD.controls.directdeliveredon.errors}" [(ngModel)]="DirectDelivery.directdeliveredon">
-          <span *ngIf="isSubmit && CreateDD.controls.directdeliveredon.errors" class="invalid-feedback">Enter Deliveried On.</span>
+          <input type="text" class="form-control" formControlName="vehicleno" [(ngModel)]="DirectDelivery.vehicleno">
         </div>
         <div *ngIf="showEdit" class="form-inline-list">
-          <label class="labeltext">{{DirectDelivery.directdeliveredon  | date : constants.dateFormat}}</label>
+          <label class="labeltext">{{DirectDelivery.vehicleno}}</label>
+        </div>
+      </div>
+      <div class="col-xs-3 col-lg-3 col-md-3 col-sm-3 form-group">
+        <label class="labelheading">Transport Details:</label>
+        <div *ngIf="!showEdit" class="form-inline-list">
+          <input type="text" class="form-control" formControlName="transporterdetails" [(ngModel)]="DirectDelivery.transporterdetails">
+        </div>
+        <div *ngIf="showEdit" class="form-inline-list">
+          <label class="labeltext">{{DirectDelivery.transporterdetails}}</label>
         </div>
       </div>
       <div class="col-xs-3 col-lg-3 col-md-3 col-sm-3 form-group">

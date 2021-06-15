@@ -376,5 +376,7 @@ namespace WMS.Interfaces
 		bool deleteDirectDelivery(string inwmasterid, string deletedby);
 
 		Task<IEnumerable<YGSGR>> getYGSGR();
+
+		Task<IEnumerable<gatepassModel>> GetGPReport(string fromdate, string todate);
 	}
 }

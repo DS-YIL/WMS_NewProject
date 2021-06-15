@@ -447,6 +447,18 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to select wg.gatepassid,wg.gatepassmaterialid,wg.materialid,wg.poitemdescription,wg.materialcost::decimal(19,5),wg.expecteddate,wg.pono,
+        ///wg.quantity,(select sum(wm.issuedqty) from wms.wms_materialissue wm where wm.requesttype = &apos;gatepass&apos; and wm.requestid::text = wg.gatepassmaterialid::text) as issuedqty,
+        ///(select sum(o.outwardqty) from wms.outwatdinward o where o.gatepassmaterialid = wg.gatepassmaterialid group by o.gatepassmaterialid) as outwardqty,
+        ///(select sum(o1.inwardqty) from wms.outwatdinward o1 where [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string gatepassreportmaterials {
+            get {
+                return ResourceManager.GetString("gatepassreportmaterials", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to select * from wms.wms_rd_category where deleteflag=false.
         /// </summary>
         public static string getabccategorydata {
@@ -885,6 +897,18 @@ namespace WMS.Common {
         public static string getGPReasons {
             get {
                 return ResourceManager.GetString("getGPReasons", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to select gp.gatepassid,gp.gatepasstype,gp.projectid,wg.gatepassmaterialid,wg.materialid,wg.poitemdescription,wg.materialcost::decimal(19,5),wg.expecteddate,wg.pono,
+        ///wg.quantity,(select sum(wm.issuedqty) from wms.wms_materialissue wm where wm.requesttype = &apos;gatepass&apos; and wm.requestid::text = wg.gatepassmaterialid::text) as issuedqty,
+        ///(select sum(o.outwardqty) from wms.outwatdinward o where o.gatepassmaterialid = wg.gatepassmaterialid group by o.gatepassmaterialid) as outwardqty,
+        ///(select sum(o1.inwardqty) fr [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string getGPReport {
+            get {
+                return ResourceManager.GetString("getGPReport", resourceCulture);
             }
         }
         
@@ -2860,8 +2884,8 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO wms.wms_securityinward(inwmasterid,pono,invoiceno,invoicedate,grnnumber,grndate,grnnogeneratedby,receivedby,receiveddate,suppliername,isdirectdelivered,directdeliveryaddrs,directdeliveryremarks,directdeliveredon ,deleteflag)
-        ///VALUES(default,@pono,@invoiceno,@invoicedate,@grnnumber,@grndate,@grnnogeneratedby,@receivedby,@receiveddate,@suppliername,true,@directdeliveryaddrs,@directdeliveryremarks,@directdeliveredon ,false) returning inwmasterid.
+        ///   Looks up a localized string similar to INSERT INTO wms.wms_securityinward(inwmasterid,pono,invoiceno,invoicedate,grnnumber,grndate,grnnogeneratedby,receivedby,receiveddate,suppliername,isdirectdelivered,directdeliveryaddrs,directdeliveryremarks,directdeliveredon ,deleteflag,vehicleno ,transporterdetails )
+        ///VALUES(default,@pono,@invoiceno,@invoicedate,@grnnumber,@grndate,@grnnogeneratedby,@receivedby,@receiveddate,@suppliername,true,@directdeliveryaddrs,@directdeliveryremarks,@directdeliveredon ,false,@vehicleno,@transporterdetails) returning inw [rest of string was truncated]&quot;;.
         /// </summary>
         public static string insertDDInvoice {
             get {

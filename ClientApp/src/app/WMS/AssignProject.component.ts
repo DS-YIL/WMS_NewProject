@@ -23,6 +23,7 @@ export class AssignProjectComponent implements OnInit {
   filteredEmployees: any[] = [];
   //configuration task
   getlistdata: AssignProjectModel[] = [];
+  savelistdata: AssignProjectModel;
   projectcode: string = "";
   managername: string = "";
   showadddatamodel: boolean = false;
@@ -35,6 +36,7 @@ export class AssignProjectComponent implements OnInit {
       this.router.navigateByUrl("Login");
 
     this.showadddatamodel = false;
+    this.savelistdata = new AssignProjectModel();
     this.projectcode = "";
     this.managername = "";
     this.getlistdata = [];
@@ -90,13 +92,15 @@ export class AssignProjectComponent implements OnInit {
       i++;
 
     })
-    this.getlistdata[this.currentindex].projectmember = memberid;
-    this.getlistdata[this.currentindex].projectmembername = membername;
-    this.getlistdata[this.currentindex].projectmemberlist = this.selectedEmployee;
-    this.getlistdata[this.currentindex].modifiedby = this.employee.employeeno;
-    this.getlistdata[this.currentindex].plantid = this.employee.plantid;
+    this.savelistdata = new AssignProjectModel();
+    this.savelistdata.projectmember = memberid;
+    this.savelistdata.projectmembername = membername;
+    this.savelistdata.projectmemberlist = this.selectedEmployee;
+    this.savelistdata.modifiedby = this.employee.employeeno;
+    this.savelistdata.plantid = this.employee.plantid;
+    this.savelistdata.projectcode = this.projectcode;
     this.spinner.show();
-      this.wmsService.updateProjectMember(this.getlistdata[this.currentindex]).subscribe(data => {
+    this.wmsService.updateProjectMember(this.savelistdata).subscribe(data => {
         this.showadddatamodel = false;
         if (String(data) == "saved") {
           this.messageService.add({ severity: 'success', summary: '', detail: 'Project assigned' });

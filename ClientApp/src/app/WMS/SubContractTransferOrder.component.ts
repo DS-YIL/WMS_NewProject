@@ -150,7 +150,7 @@ export class SubContractTransferOrderComponent implements OnInit {
       this.dynamicData.query = query;
     }
     if (name == "venderid")
-      this.dynamicData.searchCondition += "vendorname" + " ilike '%" + searchTxt + "%' or vendorcode" + " ilike '%" + searchTxt + "%' limit 50";
+      this.dynamicData.searchCondition += "(vendorname" + " ilike '%" + searchTxt + "%' or vendorcode" + " ilike '%" + searchTxt + "%') limit 50";
     //this.filteredmats = [];
     this.wmsService.GetListItems(this.dynamicData).subscribe(data => {
       if (name == "material") {
