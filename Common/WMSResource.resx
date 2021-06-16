@@ -2434,7 +2434,7 @@ group by iss.requestid,sk.itemlocation,sk.createddate</value>
     <value>UPDATE wms.wms_storeinward set deleteflag =true,deletedby=@deletedby,deletedon=@deletedon where inwardid =#inwardid</value>
   </data>
   <data name="getDirectDeliverybyPOno" xml:space="preserve">
-    <value>select po.suppliername, concat(loc.Name,',',loc.street ,loc.street4 ,loc.city,loc.postalcode ) as directdeliveryaddrs, wp.pono ,wp.materialid ,wp.materialdescription ,wp.poitemdescription ,wp.materialqty ,wp.itemdeliverydate ,wp.unitprice,wp.itemno as lineitemno,
+    <value>select po.suppliername, concat(loc.Name,',',loc.street ,loc.street4 ,loc.city,loc.postalcode ) as directdeliveryaddrs, wp.pono ,wp.materialid ,wp.materialdescription ,wp.poitemdescription ,wp.materialqty,wp.wmsqty,wp.itemdeliverydate ,wp.unitprice,wp.itemno as lineitemno,
  (select sum(inw.receivedqty ) from wms.wms_storeinward  inw where inw.pono =wp.pono and inw.materialid =wp.materialid and inw.lineitemno::int =wp.itemno::int and inw.deleteflag is not true) as deliveredqty from wms.wms_pomaterials wp 
 inner join wms.wms_polist po on po.pono =wp.pono  
 left join  wms.storagelocaddresses  loc on loc.storagelocation =po.sloc 

@@ -134,7 +134,7 @@ export class DirectDeliveryComponent implements OnInit {
   }
   //check validations for delivered quantity
   QtyChange(data: any) {
-    var comQty = data.materialqty - data.deliveredqty;
+    var comQty = data.wmsqty - data.deliveredqty;
     if (data.pendingqty > comQty) {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Delivered Quantity should be lessthan or equal to Difference of  PO & Delivered quantity' });
       data.pendingqty = 0;

@@ -1517,7 +1517,8 @@ namespace WMS.Models
 		public decimal deliveredqty { get; set; }
 		public decimal pendingqty { get; set; }
 		public string lineitemno { get; set; }
-
+		public string wmsqty { get; set; }
+		
 	}
 
 }

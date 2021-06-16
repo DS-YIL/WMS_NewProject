@@ -1464,9 +1464,9 @@ namespace WMS.Controllers
 							string query3 = "Select Count(*) as count from wms.wms_pomaterials where pono = '" + stag_data.purchdoc + "' and materialid='" + stag_data.material + "' and itemno = " + stag_data.itemno + "";
 							int matcount = int.Parse(pgsql.ExecuteScalar(query3, null).ToString());
 							var projectname = stag_data.projecttext;
+							var wmsqty = stag_data.poquantity - stag_data.deliveredqty;
 							if (matcount == 0)
 							{
-								var wmsqty = stag_data.poquantity - stag_data.deliveredqty;
 								//insert wms_pomaterials ##pono,materialid,materialdescr,materilaqty,itemno,itemamount,item deliverydate,
 								var insertquery = "INSERT INTO wms.wms_pomaterials(pono, materialid, materialdescription,materialqty,itemno,itemamount,itemdeliverydate,saleorderno,solineitemno,saleordertype,codetype,costcenter,assetno,poitemdescription,unitprice,deliveredqty,wmsqty,projectcode,projectname,uploadcode)VALUES(@pono, @materialid, @materialdescription,@materialqty,@itemno,@itemamount,@itemdeliverydate,@saleorderno,@solineitemno,@saleordertype,@codetype,@costcenter,@assetno,@poitemdescription,@unitprice,@deliveredqty,@wmsqty,@projectcode,@projectname,@uploadcode)";
 								var results = pgsql.ExecuteScalar(insertquery, new
@@ -1496,12 +1496,16 @@ namespace WMS.Controllers
 							else
 							{
 								//update project def,project name
-								var updateqry = "update wms.wms_pomaterials set projectcode = @projectcode ,projectname = @projectname where pono = '" + stag_data.purchdoc + "' and materialid='" + stag_data.material + "' and itemno = " + stag_data.itemno + "";
+								var updateqry = "update wms.wms_pomaterials set materialqty=@materialqty,deliveredqty=@deliveredqty,wmsqty=@wmsqty,itemamount=@itemamount,itemdeliverydate=@itemdeliverydate, projectcode = @projectcode ,projectname = @projectname where pono = '" + stag_data.purchdoc + "' and materialid='" + stag_data.material + "' and itemno = " + stag_data.itemno + "";
 								var rslt = pgsql.Execute(updateqry, new
 								{
-
+									stag_data.materialqty,
+									stag_data.deliveredqty,
+									wmsqty,
+									stag_data.itemamount,
+									stag_data.itemdeliverydate,
 									stag_data.projectcode,
-									projectname
+									projectname						
 								});
 							}
 

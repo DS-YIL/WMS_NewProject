@@ -784,9 +784,9 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select po.suppliername, concat(loc.Name,&apos;,&apos;,loc.street ,loc.street4 ,loc.city,loc.postalcode ) as directdeliveryaddrs, wp.pono ,wp.materialid ,wp.materialdescription ,wp.poitemdescription ,wp.materialqty ,wp.itemdeliverydate ,wp.unitprice,wp.itemno as lineitemno,
+        ///   Looks up a localized string similar to select po.suppliername, concat(loc.Name,&apos;,&apos;,loc.street ,loc.street4 ,loc.city,loc.postalcode ) as directdeliveryaddrs, wp.pono ,wp.materialid ,wp.materialdescription ,wp.poitemdescription ,wp.materialqty,wp.wmsqty,wp.itemdeliverydate ,wp.unitprice,wp.itemno as lineitemno,
         /// (select sum(inw.receivedqty ) from wms.wms_storeinward  inw where inw.pono =wp.pono and inw.materialid =wp.materialid and inw.lineitemno::int =wp.itemno::int and inw.deleteflag is not true) as deliveredqty from wms.wms_pomaterials wp 
-        ///inner join [rest of string was truncated]&quot;;.
+        ///i [rest of string was truncated]&quot;;.
         /// </summary>
         public static string getDirectDeliverybyPOno {
             get {
