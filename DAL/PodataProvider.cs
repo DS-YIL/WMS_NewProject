@@ -17271,12 +17271,20 @@ namespace WMS.DAL
 					StockModel objs = new StockModel();
 					pgsql.Open();
 					item.createddate = System.DateTime.Now;
-					string insertquery = WMSResource.insertstock;
+					string insertquery = WMSResource.insertmiscreceipt;
 					int itemid = 0;
 					string materialid = item.Material;
 					item.totalquantity = item.availableqty;
 					item.receivedtype = "Miscellanous Receipt";
 					var unitprice = item.value / item.availableqty;
+					if(item.projectid != null && item.projectid != "")
+                    {
+						item.stocktype = "Project Stock";
+                    }
+                    else
+                    {
+						item.stocktype = "Plant Stock";
+                    }
 					using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
 					{
 						result = Convert.ToInt32(DB.ExecuteScalar(insertquery, new
@@ -17302,7 +17310,8 @@ namespace WMS.DAL
 							item.receivedtype,
 							item.poitemdescription,
 							item.value,
-							unitprice
+							unitprice,
+							item.projectid
 						}));
 
 						itemid = Convert.ToInt32(result);
@@ -17312,6 +17321,7 @@ namespace WMS.DAL
 						int? issuedqty = null;
 						var remarks = "";
 						int? reason = null;
+						string uploadcode = null;
 						pgsql.ExecuteScalar(insertpry, new
 						{
 							itemid,
@@ -17321,6 +17331,10 @@ namespace WMS.DAL
 							remarks,
 							createddate,
 							item.createdby,
+							item.pono,
+							item.projectid,
+							uploadcode
+
 						});
 						return "Sucess";
 

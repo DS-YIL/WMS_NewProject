@@ -3113,6 +3113,15 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to INSERT INTO wms.wms_stock(inwmasterid,stockstatus,pono,binid,rackid ,storeid, vendorid,totalquantity,shelflife,availableqty,deleteflag,itemlocation,createddate,createdby,materialid,inwardid,stcktype,lineitemno,receivedtype,poitemdescription,value,unitprice,projectid )VALUES(@inwmasterid,@stockstatus,@pono,@binid,@rackid,@storeid,@vendorid,@totalquantity,@shelflife,@availableqty,@deleteflag,@itemlocation,@createddate,@createdby,@materialid,@inwardid,@stocktype,@lineitemno,@receivedtype,@poitemdescription,@va [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string insertmiscreceipt {
+            get {
+                return ResourceManager.GetString("insertmiscreceipt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to insert into wms.wms_rd_Plant(plantid ,plantname,createdby,createdon)values(default,@plantname,@createdby,current_timestamp).
         /// </summary>
         public static string insertplantname {

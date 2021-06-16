@@ -2593,4 +2593,7 @@ wg.quantity,(select sum(wm.issuedqty) from wms.wms_materialissue wm where wm.req
 (select sum(o1.inwardqty) from wms.outwatdinward o1 where o1.gatepassmaterialid = wg.gatepassmaterialid group by o1.gatepassmaterialid) as inwardqty
 from wms.wms_gatepassmaterial wg where wg.gatepassid = '#gatepassid'</value>
   </data>
+  <data name="insertmiscreceipt" xml:space="preserve">
+    <value>INSERT INTO wms.wms_stock(inwmasterid,stockstatus,pono,binid,rackid ,storeid, vendorid,totalquantity,shelflife,availableqty,deleteflag,itemlocation,createddate,createdby,materialid,inwardid,stcktype,lineitemno,receivedtype,poitemdescription,value,unitprice,projectid )VALUES(@inwmasterid,@stockstatus,@pono,@binid,@rackid,@storeid,@vendorid,@totalquantity,@shelflife,@availableqty,@deleteflag,@itemlocation,@createddate,@createdby,@materialid,@inwardid,@stocktype,@lineitemno,@receivedtype,@poitemdescription,@value,@unitprice,@projectid)returning itemid</value>
+  </data>
 </root>
