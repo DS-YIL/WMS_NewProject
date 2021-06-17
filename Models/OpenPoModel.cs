@@ -514,6 +514,8 @@ namespace WMS.Models
 		public string pono { get; set; }
 		public string suppliername { get; set; }
 		public string quotationqty { get; set; }
+		public string projectmanager { get; set; }
+		public string projectmember { get; set; }
 	}
 
 	//Invoice Details

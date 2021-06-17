@@ -2596,4 +2596,32 @@ from wms.wms_gatepassmaterial wg where wg.gatepassid = '#gatepassid'</value>
   <data name="insertmiscreceipt" xml:space="preserve">
     <value>INSERT INTO wms.wms_stock(inwmasterid,stockstatus,pono,binid,rackid ,storeid, vendorid,totalquantity,shelflife,availableqty,deleteflag,itemlocation,createddate,createdby,materialid,inwardid,stcktype,lineitemno,receivedtype,poitemdescription,value,unitprice,projectid )VALUES(@inwmasterid,@stockstatus,@pono,@binid,@rackid,@storeid,@vendorid,@totalquantity,@shelflife,@availableqty,@deleteflag,@itemlocation,@createddate,@createdby,@materialid,@inwardid,@stocktype,@lineitemno,@receivedtype,@poitemdescription,@value,@unitprice,@projectid)returning itemid</value>
   </data>
+  <data name="getPODetailsByProjectCode_v1" xml:space="preserve">
+    <value>select sk.pono, polist.suppliername,
+(select max(projectmanager) from wms.wms_project wp where projectcode = '#projectcode') as projectmanager,
+(select max(projectmember) from wms.wms_project wp where projectcode = '#projectcode') as projectmember
+from wms.wms_stock sk
+left outer join wms.wms_polist polist on sk.pono = polist.pono
+left outer join wms.wms_project prj on sk.pono = prj.pono 
+where sk.availableqty &gt; 0 and sk.projectid = '#projectcode'
+group by sk.pono, polist.suppliername</value>
+  </data>
+  <data name="getStorePODetailsByProjectCode_v1" xml:space="preserve">
+    <value>select sk.pono, polist.suppliername,
+(select max(projectmanager) from wms.wms_project wp where projectcode = '#projectcode') as projectmanager,
+(select max(projectmember) from wms.wms_project wp where projectcode = '#projectcode') as projectmember
+ from wms.wms_stock sk
+left outer join wms.wms_polist polist on sk.pono = polist.pono
+left outer join wms.wms_project prj on sk.pono = prj.pono 
+where sk.availableqty &gt; 0 and sk.projectid = '#projectcode'
+group by sk.pono, polist.suppliername
+union
+select ws.pono, polist.suppliername,
+(select max(projectmanager) from wms.wms_project wp where projectcode = '#projectcode') as projectmanager,
+(select max(projectmember) from wms.wms_project wp where projectcode = '#projectcode') as projectmember
+from wms.wms_storeinward ws
+left outer join wms.wms_polist polist on ws.pono = polist.pono
+where ws.confirmqty &gt; 0 and ws.projectid = '#projectcode'
+group by ws.pono, polist.suppliername</value>
+  </data>
 </root>

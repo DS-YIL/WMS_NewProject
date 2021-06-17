@@ -2057,6 +2057,22 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to select sk.pono, polist.suppliername,
+        ///(select max(projectmanager) from wms.wms_project wp where projectcode = &apos;#projectcode&apos;) as projectmanager,
+        ///(select max(projectmember) from wms.wms_project wp where projectcode = &apos;#projectcode&apos;) as projectmember
+        ///from wms.wms_stock sk
+        ///left outer join wms.wms_polist polist on sk.pono = polist.pono
+        ///left outer join wms.wms_project prj on sk.pono = prj.pono 
+        ///where sk.availableqty &gt; 0 and sk.projectid = &apos;#projectcode&apos;
+        ///group by sk.pono, polist.suppliername.
+        /// </summary>
+        public static string getPODetailsByProjectCode_v1 {
+            get {
+                return ResourceManager.GetString("getPODetailsByProjectCode_v1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to select pl.pono,sum(pomat.materialqty) as qty from wms.wms_polist pl
         ///join wms.wms_pomaterials pomat on pl.pono= pomat.pono 
         ///group by pl.pono.
@@ -2511,6 +2527,24 @@ namespace WMS.Common {
         public static string getStorePODetailsByProjectCode {
             get {
                 return ResourceManager.GetString("getStorePODetailsByProjectCode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to select sk.pono, polist.suppliername,
+        ///(select max(projectmanager) from wms.wms_project wp where projectcode = &apos;#projectcode&apos;) as projectmanager,
+        ///(select max(projectmember) from wms.wms_project wp where projectcode = &apos;#projectcode&apos;) as projectmember
+        /// from wms.wms_stock sk
+        ///left outer join wms.wms_polist polist on sk.pono = polist.pono
+        ///left outer join wms.wms_project prj on sk.pono = prj.pono 
+        ///where sk.availableqty &gt; 0 and sk.projectid = &apos;#projectcode&apos;
+        ///group by sk.pono, polist.suppliername
+        ///union
+        ///select [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string getStorePODetailsByProjectCode_v1 {
+            get {
+                return ResourceManager.GetString("getStorePODetailsByProjectCode_v1", resourceCulture);
             }
         }
         

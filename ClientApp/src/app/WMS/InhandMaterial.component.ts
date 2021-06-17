@@ -104,6 +104,7 @@ export class InhandMaterialComponent implements OnInit {
     data.isedit = false;
   }
   saveloc(data: matlocations) {
+    debugger;
     var itemloc = "";
     if (isNullOrUndefined(data.storeid) || data.storeid == 0) {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Select Store.' });
@@ -153,6 +154,7 @@ export class InhandMaterialComponent implements OnInit {
         return;
       }
     }
+    data.itemlocation = itemloc;
     this.wmsService.updatestocklocation(data).subscribe(data => {
       if (String(data) == "saved") {
         this.messageService.add({ severity: 'success', summary: '', detail: 'Location Updated Successfully' });

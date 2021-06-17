@@ -648,13 +648,13 @@ namespace WMS.DAL
 					//For F-type get the based on order No.
 					if (objprint.codetype == "F")
 					{
-						string querydata = "select * from wms.st_QTSO where serviceorderno='" + objprint.serviceorderno + "'";
+						string querydata = "select * from wms.st_QTSO where serviceorderno='" + objprint.serviceorderno + "' limit 1";
 						objdata = DB.QueryFirstOrDefault<MateriallabelModel>(
 							   querydata, null, commandType: CommandType.Text);
 
 						if (objdata != null)
 						{
-							string queryserial = "select * from wms.st_slno_imports where saleorderno='" + objdata.saleorderno + "' and solineitemno= '" + objdata.solineitemno + "' ";
+							string queryserial = "select * from wms.st_slno_imports where saleorderno='" + objdata.saleorderno + "' and solineitemno= '" + objdata.solineitemno + "' limit 1";
 							objserial = DB.QueryFirstOrDefault<MateriallabelModel>(
 								   queryserial, null, commandType: CommandType.Text);
 						}
@@ -665,30 +665,38 @@ namespace WMS.DAL
 					//For N-type get data based from st_QTSO based on project definition
 					else if (objprint.codetype == "N")
 					{
+						if(objprint.projectiddef != null)
+                        {
+							string querydata = "select * from wms.st_QTSO where projectiddef='" + objprint.projectiddef + "' limit 1";
+							objdata = DB.QueryFirstOrDefault<MateriallabelModel>(
+								   querydata, null, commandType: CommandType.Text);
 
-						string querydata = "select * from wms.st_QTSO where projectiddef='" + objprint.projectiddef + "'";
-						objdata = DB.QueryFirstOrDefault<MateriallabelModel>(
-							   querydata, null, commandType: CommandType.Text);
+							if (objdata != null)
+							{
+								string queryserial = "select * from wms.st_slno_imports where saleorderno='" + objdata.saleorderno + "' and solineitemno= '" + objdata.solineitemno + "' limit 1";
+								objserial = DB.QueryFirstOrDefault<MateriallabelModel>(
+									   queryserial, null, commandType: CommandType.Text);
+							}
 
-						if (objdata != null)
-						{
-							string queryserial = "select * from wms.st_slno_imports where saleorderno='" + objdata.saleorderno + "' and solineitemno= '" + objdata.solineitemno + "' ";
-							objserial = DB.QueryFirstOrDefault<MateriallabelModel>(
-								   queryserial, null, commandType: CommandType.Text);
 						}
+
 
 
 
 					}
 					else
 					{
-						string queryserial = "select * from wms.st_slno_imports where saleorderno='" + objprint.saleorderno + "' and solineitemno= '" + objprint.solineitemno + "' ";
-						objserial = DB.QueryFirstOrDefault<MateriallabelModel>(
-							   queryserial, null, commandType: CommandType.Text);
+                        if (objprint.saleorderno != null)
+                        {
+							string queryserial = "select * from wms.st_slno_imports where saleorderno='" + objprint.saleorderno + "' and solineitemno= '" + objprint.solineitemno + "' limit 1";
+							objserial = DB.QueryFirstOrDefault<MateriallabelModel>(
+								   queryserial, null, commandType: CommandType.Text);
 
-						string querydata = "select * from wms.st_QTSO where saleorderno='" + objprint.saleorderno + "' and solineitemno= '" + objprint.solineitemno + "' ";
-						objdata = DB.QueryFirstOrDefault<MateriallabelModel>(
-							   querydata, null, commandType: CommandType.Text);
+							string querydata = "select * from wms.st_QTSO where saleorderno='" + objprint.saleorderno + "' and solineitemno= '" + objprint.solineitemno + "' limit 1";
+							objdata = DB.QueryFirstOrDefault<MateriallabelModel>(
+								   querydata, null, commandType: CommandType.Text);
+						}
+						
 					}
 
 					//Get YGS GR No.
@@ -14978,13 +14986,13 @@ namespace WMS.DAL
 				try
 				{
 					await pgsql.OpenAsync();
-					string getpoquery = WMSResource.getPODetailsByProjectCode.Replace("#manager", empno).Replace("#projectcode", projectcode);
+					string getpoquery = WMSResource.getPODetailsByProjectCode_v1.Replace("#projectcode", projectcode);
 
 					var objPO = await pgsql.QueryAsync<PODetails>(
 					   getpoquery, null, commandType: CommandType.Text);
 					//objPO = pgsql.QueryAsync<List<PODetails>>(
 					//			getpoquery, null, commandType: CommandType.Text);
-
+					objPO = objPO.Where(o => o.projectmanager == empno || o.projectmember.Contains(empno));
 					return objPO;
 				}
 				catch (Exception Ex)
@@ -15010,12 +15018,14 @@ namespace WMS.DAL
 				try
 				{
 					await pgsql.OpenAsync();
-					string getpoquery = WMSResource.getStorePODetailsByProjectCode.Replace("#manager", empno).Replace("#projectcode", projectcode);
+					string getpoquery = WMSResource.getStorePODetailsByProjectCode_v1.Replace("#projectcode", projectcode);
 
 					var objPO = await pgsql.QueryAsync<PODetails>(
 					   getpoquery, null, commandType: CommandType.Text);
 					//objPO = pgsql.QueryAsync<List<PODetails>>(
 					//			getpoquery, null, commandType: CommandType.Text);
+
+					objPO = objPO.Where(o => o.projectmanager == empno || o.projectmember.Contains(empno));
 
 					return objPO;
 				}
