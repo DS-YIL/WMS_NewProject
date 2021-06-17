@@ -70,7 +70,9 @@ namespace WMS.Models
 		public string ProjectManagerName { get; set; }
 		public string globalpmno { get; set; }
 		public string pgr { get; set; }
-	
+		public string shiptoparty { get; set; }
+		
+
 
 	}
 

@@ -152,6 +152,8 @@ namespace WMS.Controllers
 											model.wbselement = Conversion.toStr(row["WBS Element"]);
 											model.exchangerate = Conversion.Todecimaltype(row["Exchange Rate"]);
 											model.pgr = Conversion.toStr(row["PGr"]);
+											model.shiptoparty = Conversion.toStr(row["Ship to Party"]);
+											
 
 											string Error_Description = "";
 											bool dataloaderror = false;
@@ -171,8 +173,8 @@ namespace WMS.Controllers
 												model.materialid = "NewItem";
 											poitem = model.pono + "-" + model.itemno.ToString();
 											string poitemdescription = model.poitemdescription;
-											var insertquery = "INSERT INTO wms.STAG_PO_SAP(PurchDoc,pocreatedby,ItemDeliveryDate,docdate,Crcy,Material,poitemdescription,POQuantity,dci,deliveredqty,Vendor,VendorName,ProjectDefinition,Item,NetPrice,NetValue,datasource,createddate,DataloadErrors ,Error_Description,uploadcode,saleorderno,solineitemno,saleordertype,codetype,costcenter,assetno,projecttext,sloc,mscode,plant,linkageno,assetsubno,ordernumber,wbselement,exchangerate,pgr)";
-											insertquery += " VALUES(@pono,@pocreatedby, @itemdeliverydate,@docdate,@Crcy,@materialid,@poitemdescription,@poquantity,@dci,@deliveredqty,@vendorcode,@vendorname,@projectdefinition,@itemno,@NetPrice,@NetValue,'SAP',current_timestamp,@dataloaderror,@error_description,@uploadcode,@saleorderno,@solineitemno,@saleordertype,@codetype,@costcenter,@assetno,@projecttext,@sloc,@mscode,@plant,@linkageno,@assetsubno,@ordernumber,@wbselement,@exchangerate,@pgr)";
+											var insertquery = "INSERT INTO wms.STAG_PO_SAP(PurchDoc,pocreatedby,ItemDeliveryDate,docdate,Crcy,Material,poitemdescription,POQuantity,dci,deliveredqty,Vendor,VendorName,ProjectDefinition,Item,NetPrice,NetValue,datasource,createddate,DataloadErrors ,Error_Description,uploadcode,saleorderno,solineitemno,saleordertype,codetype,costcenter,assetno,projecttext,sloc,mscode,plant,linkageno,assetsubno,ordernumber,wbselement,exchangerate,pgr,shiptoparty)";
+											insertquery += " VALUES(@pono,@pocreatedby, @itemdeliverydate,@docdate,@Crcy,@materialid,@poitemdescription,@poquantity,@dci,@deliveredqty,@vendorcode,@vendorname,@projectdefinition,@itemno,@NetPrice,@NetValue,'SAP',current_timestamp,@dataloaderror,@error_description,@uploadcode,@saleorderno,@solineitemno,@saleordertype,@codetype,@costcenter,@assetno,@projecttext,@sloc,@mscode,@plant,@linkageno,@assetsubno,@ordernumber,@wbselement,@exchangerate,@pgr,@shiptoparty)";
 											var results = DB.ExecuteScalar(insertquery, new
 											{
 												model.pono,
@@ -209,7 +211,8 @@ namespace WMS.Controllers
 												model.ordernumber,
 												model.wbselement,
 												model.exchangerate,
-												model.pgr
+												model.pgr,
+												model.shiptoparty
 											});
 
 
@@ -1383,6 +1386,8 @@ namespace WMS.Controllers
 							stag_data.itemno = stag_data.item;
 							stag_data.itemamount = stag_data.NetPrice;
 							var unitprice = stag_data.itemamount / stag_data.poquantity;
+							//Need to insert material in materialmasterygs if not exist 
+
 							string materialdescquery = WMSResource.getMateDescr.Replace("#materialid", stag_data.materialid.ToString());
 							stag_data.materialdescription = pgsql.QuerySingleOrDefault<string>(
 											materialdescquery, null, commandType: CommandType.Text);
@@ -1465,10 +1470,11 @@ namespace WMS.Controllers
 							int matcount = int.Parse(pgsql.ExecuteScalar(query3, null).ToString());
 							var projectname = stag_data.projecttext;
 							var wmsqty = stag_data.poquantity - stag_data.deliveredqty;
+							var shippingpoint = stag_data.shiptoparty;
 							if (matcount == 0)
 							{
 								//insert wms_pomaterials ##pono,materialid,materialdescr,materilaqty,itemno,itemamount,item deliverydate,
-								var insertquery = "INSERT INTO wms.wms_pomaterials(pono, materialid, materialdescription,materialqty,itemno,itemamount,itemdeliverydate,saleorderno,solineitemno,saleordertype,codetype,costcenter,assetno,poitemdescription,unitprice,deliveredqty,wmsqty,projectcode,projectname,uploadcode)VALUES(@pono, @materialid, @materialdescription,@materialqty,@itemno,@itemamount,@itemdeliverydate,@saleorderno,@solineitemno,@saleordertype,@codetype,@costcenter,@assetno,@poitemdescription,@unitprice,@deliveredqty,@wmsqty,@projectcode,@projectname,@uploadcode)";
+								var insertquery = "INSERT INTO wms.wms_pomaterials(pono, materialid, materialdescription,materialqty,itemno,itemamount,itemdeliverydate,saleorderno,solineitemno,saleordertype,codetype,costcenter,assetno,poitemdescription,unitprice,deliveredqty,wmsqty,projectcode,projectname,mscode,linkageno,assetsubno,plant,shippingpoint,uploadcode)VALUES(@pono, @materialid, @materialdescription,@materialqty,@itemno,@itemamount,@itemdeliverydate,@saleorderno,@solineitemno,@saleordertype,@codetype,@costcenter,@assetno,@poitemdescription,@unitprice,@deliveredqty,@wmsqty,@projectcode,@projectname,@mscode,@linkageno,@assetsubno,@plant,@shippingpoint,@uploadcode)";
 								var results = pgsql.ExecuteScalar(insertquery, new
 								{
 									stag_data.pono,
@@ -1490,22 +1496,33 @@ namespace WMS.Controllers
 									wmsqty,
 									stag_data.projectcode,
 									projectname,
+									stag_data.mscode,
+									stag_data.linkageno,
+									stag_data.assetsubno,
+									stag_data.plant,
+									shippingpoint,
 									uploadcode
 								});
 							}
 							else
 							{
 								//update project def,project name
-								var updateqry = "update wms.wms_pomaterials set materialqty=@materialqty,deliveredqty=@deliveredqty,wmsqty=@wmsqty,itemamount=@itemamount,itemdeliverydate=@itemdeliverydate, projectcode = @projectcode ,projectname = @projectname where pono = '" + stag_data.purchdoc + "' and materialid='" + stag_data.material + "' and itemno = " + stag_data.itemno + "";
+								var updateqry = "update wms.wms_pomaterials set materialdescription=@materialdescription, materialqty=@materialqty,deliveredqty=@deliveredqty,wmsqty=@wmsqty,itemamount=@itemamount,itemdeliverydate=@itemdeliverydate, projectcode = @projectcode ,projectname = @projectname ,mscode=@mscode,linkageno=@linkageno,assetsubno=@assetsubno,plant=@plant,shippingpoint=@shippingpoint where pono = '" + stag_data.purchdoc + "' and materialid='" + stag_data.material + "' and itemno = " + stag_data.itemno + "";
 								var rslt = pgsql.Execute(updateqry, new
 								{
+									stag_data.materialdescription,
 									stag_data.materialqty,
 									stag_data.deliveredqty,
 									wmsqty,
 									stag_data.itemamount,
 									stag_data.itemdeliverydate,
 									stag_data.projectcode,
-									projectname						
+									projectname,
+									stag_data.mscode,
+									stag_data.linkageno,
+									stag_data.assetsubno,
+									stag_data.plant,
+									shippingpoint,
 								});
 							}
 
