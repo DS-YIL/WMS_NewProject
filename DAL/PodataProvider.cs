@@ -10237,7 +10237,7 @@ namespace WMS.DAL
 
 					EmailModel emailmodel1 = new EmailModel();
 					emailmodel1.grnnumber = grnnumber;
-					emailmodel1.FrmEmailId = "ramesh.kumar@in.yokogawa.com";
+					emailmodel1.FrmEmailId = "ramesh.kumar@yokogawa.com";
 					EmailUtilities emailobj1 = new EmailUtilities();
 					emailobj1.sendEmail(emailmodel1, 32, 3);
 					return "counted";
@@ -12712,8 +12712,8 @@ namespace WMS.DAL
 								emailmodel1.transferbody = "Material Transfer request initiated for approval with Transferid :" + data.transferid.ToString();
 								//emailmodel1.ToEmailId = "developer1@in.yokogawa.com";
 								emailmodel1.ToEmailId = mailto;
-								emailmodel1.FrmEmailId = "developer1@in.yokogawa.com";
-								emailmodel1.CC = "ramesh.kumar@in.yokogawa.com";
+								emailmodel1.FrmEmailId = "developer1@yokogawa.com";
+								emailmodel1.CC = "ramesh.kumar@yokogawa.com";
 								emailmodels.Add(emailmodel1);
 
 
@@ -12728,7 +12728,7 @@ namespace WMS.DAL
 								emailmodel1.transferbody = "Material Transfer request approved with Transferid :" + data.transferid.ToString();
 								//emailmodel1.ToEmailId = "developer1@in.yokogawa.com";
 								emailmodel1.ToEmailId = mailto;
-								emailmodel1.FrmEmailId = "developer1@in.yokogawa.com";
+								emailmodel1.FrmEmailId = "developer1@yokogawa.com";
 								emailmodels.Add(emailmodel1);
 							}
 
@@ -12763,7 +12763,7 @@ namespace WMS.DAL
 							emailmodel1.transferbody = "Material Transfer request rejected with Transferid :" + data.transferid.ToString();
 							//emailmodel1.ToEmailId = "developer1@in.yokogawa.com";
 							emailmodel1.ToEmailId = mailto;
-							emailmodel1.FrmEmailId = "ramesh.kumar@in.yokogawa.com";
+							emailmodel1.FrmEmailId = "ramesh.kumar@yokogawa.com";
 							emailmodels.Add(emailmodel1);
 
 						}
@@ -13741,7 +13741,7 @@ namespace WMS.DAL
 			EmailUtilities emailobj = new EmailUtilities();
 			EmailModel emailmodel = new EmailModel();
 
-			emailmodel.CC = "sushma.patil@in.yokogawa.com";
+			emailmodel.CC = "sushma.patil@yokogawa.com";
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
 				try
@@ -13979,7 +13979,7 @@ namespace WMS.DAL
 							EmailModel emailmodel = new EmailModel();
 							emailmodel.returnid = rslt.ToString();
 
-							emailmodel.CC = "ramesh.kumar@in.yokogawa.com";
+							emailmodel.CC = "ramesh.kumar@yokogawa.com";
 							EmailUtilities emailobj = new EmailUtilities();
 							emailobj.sendEmail(emailmodel, 19, 3);
 
