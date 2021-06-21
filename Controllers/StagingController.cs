@@ -152,6 +152,8 @@ namespace WMS.Controllers
 											model.wbselement = Conversion.toStr(row["WBS Element"]);
 											model.exchangerate = Conversion.Todecimaltype(row["Exchange Rate"]);
 											model.pgr = Conversion.toStr(row["PGr"]);
+											model.shiptoparty = Conversion.toStr(row["Ship to Party"]);
+											
 
 											string Error_Description = "";
 											bool dataloaderror = false;
@@ -171,8 +173,8 @@ namespace WMS.Controllers
 												model.materialid = "NewItem";
 											poitem = model.pono + "-" + model.itemno.ToString();
 											string poitemdescription = model.poitemdescription;
-											var insertquery = "INSERT INTO wms.STAG_PO_SAP(PurchDoc,pocreatedby,ItemDeliveryDate,docdate,Crcy,Material,poitemdescription,POQuantity,dci,deliveredqty,Vendor,VendorName,ProjectDefinition,Item,NetPrice,NetValue,datasource,createddate,DataloadErrors ,Error_Description,uploadcode,saleorderno,solineitemno,saleordertype,codetype,costcenter,assetno,projecttext,sloc,mscode,plant,linkageno,assetsubno,ordernumber,wbselement,exchangerate,pgr)";
-											insertquery += " VALUES(@pono,@pocreatedby, @itemdeliverydate,@docdate,@Crcy,@materialid,@poitemdescription,@poquantity,@dci,@deliveredqty,@vendorcode,@vendorname,@projectdefinition,@itemno,@NetPrice,@NetValue,'SAP',current_timestamp,@dataloaderror,@error_description,@uploadcode,@saleorderno,@solineitemno,@saleordertype,@codetype,@costcenter,@assetno,@projecttext,@sloc,@mscode,@plant,@linkageno,@assetsubno,@ordernumber,@wbselement,@exchangerate,@pgr)";
+											var insertquery = "INSERT INTO wms.STAG_PO_SAP(PurchDoc,pocreatedby,ItemDeliveryDate,docdate,Crcy,Material,poitemdescription,POQuantity,dci,deliveredqty,Vendor,VendorName,ProjectDefinition,Item,NetPrice,NetValue,datasource,createddate,DataloadErrors ,Error_Description,uploadcode,saleorderno,solineitemno,saleordertype,codetype,costcenter,assetno,projecttext,sloc,mscode,plant,linkageno,assetsubno,ordernumber,wbselement,exchangerate,pgr,shiptoparty)";
+											insertquery += " VALUES(@pono,@pocreatedby, @itemdeliverydate,@docdate,@Crcy,@materialid,@poitemdescription,@poquantity,@dci,@deliveredqty,@vendorcode,@vendorname,@projectdefinition,@itemno,@NetPrice,@NetValue,'SAP',current_timestamp,@dataloaderror,@error_description,@uploadcode,@saleorderno,@solineitemno,@saleordertype,@codetype,@costcenter,@assetno,@projecttext,@sloc,@mscode,@plant,@linkageno,@assetsubno,@ordernumber,@wbselement,@exchangerate,@pgr,@shiptoparty)";
 											var results = DB.ExecuteScalar(insertquery, new
 											{
 												model.pono,
@@ -209,7 +211,8 @@ namespace WMS.Controllers
 												model.ordernumber,
 												model.wbselement,
 												model.exchangerate,
-												model.pgr
+												model.pgr,
+												model.shiptoparty
 											});
 
 
@@ -1383,6 +1386,8 @@ namespace WMS.Controllers
 							stag_data.itemno = stag_data.item;
 							stag_data.itemamount = stag_data.NetPrice;
 							var unitprice = stag_data.itemamount / stag_data.poquantity;
+							//Need to insert material in materialmasterygs if not exist 
+
 							string materialdescquery = WMSResource.getMateDescr.Replace("#materialid", stag_data.materialid.ToString());
 							stag_data.materialdescription = pgsql.QuerySingleOrDefault<string>(
 											materialdescquery, null, commandType: CommandType.Text);
@@ -1465,10 +1470,11 @@ namespace WMS.Controllers
 							int matcount = int.Parse(pgsql.ExecuteScalar(query3, null).ToString());
 							var projectname = stag_data.projecttext;
 							var wmsqty = stag_data.poquantity - stag_data.deliveredqty;
+							var shippingpoint = stag_data.shiptoparty;
 							if (matcount == 0)
 							{
 								//insert wms_pomaterials ##pono,materialid,materialdescr,materilaqty,itemno,itemamount,item deliverydate,
-								var insertquery = "INSERT INTO wms.wms_pomaterials(pono, materialid, materialdescription,materialqty,itemno,itemamount,itemdeliverydate,saleorderno,solineitemno,saleordertype,codetype,costcenter,assetno,poitemdescription,unitprice,deliveredqty,wmsqty,projectcode,projectname,uploadcode)VALUES(@pono, @materialid, @materialdescription,@materialqty,@itemno,@itemamount,@itemdeliverydate,@saleorderno,@solineitemno,@saleordertype,@codetype,@costcenter,@assetno,@poitemdescription,@unitprice,@deliveredqty,@wmsqty,@projectcode,@projectname,@uploadcode)";
+								var insertquery = "INSERT INTO wms.wms_pomaterials(pono, materialid, materialdescription,materialqty,itemno,itemamount,itemdeliverydate,saleorderno,solineitemno,saleordertype,codetype,costcenter,assetno,poitemdescription,unitprice,deliveredqty,wmsqty,projectcode,projectname,mscode,linkageno,assetsubno,plant,shippingpoint,uploadcode)VALUES(@pono, @materialid, @materialdescription,@materialqty,@itemno,@itemamount,@itemdeliverydate,@saleorderno,@solineitemno,@saleordertype,@codetype,@costcenter,@assetno,@poitemdescription,@unitprice,@deliveredqty,@wmsqty,@projectcode,@projectname,@mscode,@linkageno,@assetsubno,@plant,@shippingpoint,@uploadcode)";
 								var results = pgsql.ExecuteScalar(insertquery, new
 								{
 									stag_data.pono,
@@ -1490,22 +1496,33 @@ namespace WMS.Controllers
 									wmsqty,
 									stag_data.projectcode,
 									projectname,
+									stag_data.mscode,
+									stag_data.linkageno,
+									stag_data.assetsubno,
+									stag_data.plant,
+									shippingpoint,
 									uploadcode
 								});
 							}
 							else
 							{
 								//update project def,project name
-								var updateqry = "update wms.wms_pomaterials set materialqty=@materialqty,deliveredqty=@deliveredqty,wmsqty=@wmsqty,itemamount=@itemamount,itemdeliverydate=@itemdeliverydate, projectcode = @projectcode ,projectname = @projectname where pono = '" + stag_data.purchdoc + "' and materialid='" + stag_data.material + "' and itemno = " + stag_data.itemno + "";
+								var updateqry = "update wms.wms_pomaterials set materialdescription=@materialdescription, materialqty=@materialqty,deliveredqty=@deliveredqty,wmsqty=@wmsqty,itemamount=@itemamount,itemdeliverydate=@itemdeliverydate, projectcode = @projectcode ,projectname = @projectname ,mscode=@mscode,linkageno=@linkageno,assetsubno=@assetsubno,plant=@plant,shippingpoint=@shippingpoint where pono = '" + stag_data.purchdoc + "' and materialid='" + stag_data.material + "' and itemno = " + stag_data.itemno + "";
 								var rslt = pgsql.Execute(updateqry, new
 								{
+									stag_data.materialdescription,
 									stag_data.materialqty,
 									stag_data.deliveredqty,
 									wmsqty,
 									stag_data.itemamount,
 									stag_data.itemdeliverydate,
 									stag_data.projectcode,
-									projectname						
+									projectname,
+									stag_data.mscode,
+									stag_data.linkageno,
+									stag_data.assetsubno,
+									stag_data.plant,
+									shippingpoint,
 								});
 							}
 
@@ -3569,6 +3586,7 @@ namespace WMS.Controllers
 							empmodel.designation = Convert.ToString(empdr["Designation"]);
 							empmodel.functionalroleid = string.IsNullOrEmpty(empdr["FunctionalRoleId"].ToString()) ? (Int16?)null : Convert.ToInt16(empdr["FunctionalRoleId"]);
 							empmodel.email = Convert.ToString(empdr["EMail"]);
+							empmodel.oldemail = Convert.ToString(empdr["OldEMail"]);
 							empmodel.serialno = Convert.ToString(empdr["SerialNo"]);
 							empmodel.bloodgroup = Convert.ToString(empdr["BloodGroup"]);
 							empmodel.hodempno = Convert.ToString(empdr["HODEmpNo"]);
@@ -3631,7 +3649,7 @@ namespace WMS.Controllers
 							int empCnt = int.Parse(pgsql.ExecuteScalar(query1, null).ToString());
 							if (empCnt == 0)
 							{
-								var insertquery = "INSERT INTO wms.employee(employeeno ,name ,nickname ,shortname ,globalempno ,ygsaccountcode ,domainid ,ygscostcenter ,costcenter ,orgdepartmentid ,orgofficeid ,sex ,maritalstatus ,dob ,boolcontract ,doj ,effectivedoj ,confirmationduedate ,confirmationdate ,dol ,departmentid ,groupid ,deptcode ,grade ,designation ,functionalroleid ,email ,serialno ,bloodgroup ,hodempno ,boolhod ,blockid ,floorid ,qualification ,qualificationstring ,boolfurnishedcertificates ,prevemployment ,boolexecutive ,mobileno ,basic ,hra ,medicalallowance ,specialallowance ,transportallowance ,traineeallowance ,personalpay ,professionalallowance ,pfno ,fpfno ,accountsdetails ,boolesi ,iciciaccno ,medallbal ,pickuppointid ,homephone ,presentaddress ,permanentaddress ,emergencycontactperson ,emergencycontactno ,boolhasproximitycard ,plstatus ,leavesdeductedfromflexidaily ,leavesdeductedfromflexiweekly ,restrictedholidaysavailed ,paternityleavesavailed ,nameasinpassport ,passportno ,passportissuedplace ,passportissueddate ,passportexpirydate ,addressasinpassport ,birthplace ,panno ,aadhaarno ,boolkannadiga ,communityid ,fathersname ,spousename ,organizationid ,boolintranetenabled ,uan ,expensecategoryid ,boolexpatriate ,pwd ,roleid)VALUES(@employeeno ,@name ,@nickname ,@shortname ,@globalempno ,@ygsaccountcode ,@domainid ,@ygscostcenter ,@costcenter ,@orgdepartmentid ,@orgofficeid ,@sex ,@maritalstatus ,@dob ,@boolcontract ,@doj ,@effectivedoj ,@confirmationduedate ,@confirmationdate ,@dol ,@departmentid ,@groupid ,@deptcode ,@grade ,@designation ,@functionalroleid ,@email ,@serialno ,@bloodgroup ,@hodempno ,@boolhod ,@blockid ,@floorid ,@qualification ,@qualificationstring ,@boolfurnishedcertificates ,@prevemployment ,@boolexecutive ,@mobileno ,@basic ,@hra ,@medicalallowance ,@specialallowance ,@transportallowance ,@traineeallowance ,@personalpay ,@professionalallowance ,@pfno ,@fpfno ,@accountsdetails ,@boolesi ,@iciciaccno ,@medallbal ,@pickuppointid ,@homephone ,@presentaddress ,@permanentaddress ,@emergencycontactperson ,@emergencycontactno ,@boolhasproximitycard ,@plstatus ,@leavesdeductedfromflexidaily ,@leavesdeductedfromflexiweekly ,@restrictedholidaysavailed ,@paternityleavesavailed ,@nameasinpassport ,@passportno ,@passportissuedplace ,@passportissueddate ,@passportexpirydate ,@addressasinpassport ,@birthplace ,@panno ,@aadhaarno ,@boolkannadiga ,@communityid ,@fathersname ,@spousename ,@organizationid ,@boolintranetenabled ,@uan ,@expensecategoryid ,@boolexpatriate ,@pwd ,@roleid)";
+								var insertquery = "INSERT INTO wms.employee(employeeno ,name ,nickname ,shortname ,globalempno ,ygsaccountcode ,domainid ,ygscostcenter ,costcenter ,orgdepartmentid ,orgofficeid ,sex ,maritalstatus ,dob ,boolcontract ,doj ,effectivedoj ,confirmationduedate ,confirmationdate ,dol ,departmentid ,groupid ,deptcode ,grade ,designation ,functionalroleid ,email ,oldemail,serialno ,bloodgroup ,hodempno ,boolhod ,blockid ,floorid ,qualification ,qualificationstring ,boolfurnishedcertificates ,prevemployment ,boolexecutive ,mobileno ,basic ,hra ,medicalallowance ,specialallowance ,transportallowance ,traineeallowance ,personalpay ,professionalallowance ,pfno ,fpfno ,accountsdetails ,boolesi ,iciciaccno ,medallbal ,pickuppointid ,homephone ,presentaddress ,permanentaddress ,emergencycontactperson ,emergencycontactno ,boolhasproximitycard ,plstatus ,leavesdeductedfromflexidaily ,leavesdeductedfromflexiweekly ,restrictedholidaysavailed ,paternityleavesavailed ,nameasinpassport ,passportno ,passportissuedplace ,passportissueddate ,passportexpirydate ,addressasinpassport ,birthplace ,panno ,aadhaarno ,boolkannadiga ,communityid ,fathersname ,spousename ,organizationid ,boolintranetenabled ,uan ,expensecategoryid ,boolexpatriate ,pwd ,roleid)VALUES(@employeeno ,@name ,@nickname ,@shortname ,@globalempno ,@ygsaccountcode ,@domainid ,@ygscostcenter ,@costcenter ,@orgdepartmentid ,@orgofficeid ,@sex ,@maritalstatus ,@dob ,@boolcontract ,@doj ,@effectivedoj ,@confirmationduedate ,@confirmationdate ,@dol ,@departmentid ,@groupid ,@deptcode ,@grade ,@designation ,@functionalroleid ,@email ,@oldemail,@serialno ,@bloodgroup ,@hodempno ,@boolhod ,@blockid ,@floorid ,@qualification ,@qualificationstring ,@boolfurnishedcertificates ,@prevemployment ,@boolexecutive ,@mobileno ,@basic ,@hra ,@medicalallowance ,@specialallowance ,@transportallowance ,@traineeallowance ,@personalpay ,@professionalallowance ,@pfno ,@fpfno ,@accountsdetails ,@boolesi ,@iciciaccno ,@medallbal ,@pickuppointid ,@homephone ,@presentaddress ,@permanentaddress ,@emergencycontactperson ,@emergencycontactno ,@boolhasproximitycard ,@plstatus ,@leavesdeductedfromflexidaily ,@leavesdeductedfromflexiweekly ,@restrictedholidaysavailed ,@paternityleavesavailed ,@nameasinpassport ,@passportno ,@passportissuedplace ,@passportissueddate ,@passportexpirydate ,@addressasinpassport ,@birthplace ,@panno ,@aadhaarno ,@boolkannadiga ,@communityid ,@fathersname ,@spousename ,@organizationid ,@boolintranetenabled ,@uan ,@expensecategoryid ,@boolexpatriate ,@pwd ,@roleid)";
 								var results = pgsql.ExecuteScalar(insertquery, new
 								{
 
@@ -3662,6 +3680,7 @@ namespace WMS.Controllers
 									empmodel.designation,
 									empmodel.functionalroleid,
 									empmodel.email,
+									empmodel.oldemail,
 									empmodel.serialno,
 									empmodel.bloodgroup,
 									empmodel.hodempno,
@@ -3724,7 +3743,7 @@ namespace WMS.Controllers
 							}
 							else
 							{
-								var updateqry = "update wms.employee set name = @name ,nickname = @nickname ,shortname = @shortname , globalempno = @globalempno ,ygsaccountcode = @ygsaccountcode , domainid = @domainid , ygscostcenter = @ygscostcenter , costcenter = @costcenter , orgdepartmentid = @orgdepartmentid , orgofficeid = @orgofficeid , sex = @sex , maritalstatus = @maritalstatus , dob = @dob , boolcontract = @boolcontract , doj = doj ,effectivedoj = @effectivedoj , confirmationduedate = @confirmationduedate , confirmationdate = @confirmationdate , dol = @dol , departmentid = @departmentid , groupid = @groupid , deptcode = @deptcode , grade = @grade , designation = @designation , functionalroleid = @functionalroleid , email = @email , serialno = @serialno , bloodgroup = @bloodgroup , hodempno = @hodempno , boolhod = @boolhod , blockid = @blockid , floorid = @floorid , qualification = @qualification , qualificationstring = @qualificationstring , boolfurnishedcertificates = @boolfurnishedcertificates , prevemployment = @prevemployment , boolexecutive = @boolexecutive , mobileno = @mobileno , basic = basic , hra = @hra ,medicalallowance = @medicalallowance , specialallowance = @specialallowance , transportallowance = @transportallowance , traineeallowance = @traineeallowance , personalpay = @personalpay , professionalallowance = @professionalallowance , pfno = @pfno , fpfno = @fpfno , accountsdetails = @accountsdetails , boolesi = @boolesi , iciciaccno = @iciciaccno , medallbal = @medallbal , pickuppointid = @pickuppointid , homephone = @homephone , presentaddress = @presentaddress , permanentaddress = @permanentaddress , emergencycontactperson = @emergencycontactperson , emergencycontactno = @emergencycontactno , boolhasproximitycard = @boolhasproximitycard , plstatus = @plstatus , leavesdeductedfromflexidaily = @leavesdeductedfromflexidaily , leavesdeductedfromflexiweekly = @leavesdeductedfromflexiweekly , restrictedholidaysavailed = @restrictedholidaysavailed , paternityleavesavailed = @paternityleavesavailed , nameasinpassport = @nameasinpassport , passportno = @passportno , passportissuedplace = @passportissuedplace , passportissueddate = @passportissueddate , passportexpirydate = @passportexpirydate , addressasinpassport = @addressasinpassport , birthplace = @birthplace , panno = @panno , aadhaarno = @aadhaarno , boolkannadiga = @boolkannadiga , communityid = @communityid , fathersname = @fathersname , spousename = @spousename , organizationid = @organizationid , boolintranetenabled = @boolintranetenabled , uan = @uan , expensecategoryid = @expensecategoryid , boolexpatriate = @boolexpatriate , pwd = @pwd, roleid = @roleid where employeeno= '" + empdr["EmployeeNo"] + "'";
+								var updateqry = "update wms.employee set name = @name ,nickname = @nickname ,shortname = @shortname , globalempno = @globalempno ,ygsaccountcode = @ygsaccountcode , domainid = @domainid , ygscostcenter = @ygscostcenter , costcenter = @costcenter , orgdepartmentid = @orgdepartmentid , orgofficeid = @orgofficeid , sex = @sex , maritalstatus = @maritalstatus , dob = @dob , boolcontract = @boolcontract , doj = doj ,effectivedoj = @effectivedoj , confirmationduedate = @confirmationduedate , confirmationdate = @confirmationdate , dol = @dol , departmentid = @departmentid , groupid = @groupid , deptcode = @deptcode , grade = @grade , designation = @designation , functionalroleid = @functionalroleid , email = @email ,oldemail=@oldemail, serialno = @serialno , bloodgroup = @bloodgroup , hodempno = @hodempno , boolhod = @boolhod , blockid = @blockid , floorid = @floorid , qualification = @qualification , qualificationstring = @qualificationstring , boolfurnishedcertificates = @boolfurnishedcertificates , prevemployment = @prevemployment , boolexecutive = @boolexecutive , mobileno = @mobileno , basic = basic , hra = @hra ,medicalallowance = @medicalallowance , specialallowance = @specialallowance , transportallowance = @transportallowance , traineeallowance = @traineeallowance , personalpay = @personalpay , professionalallowance = @professionalallowance , pfno = @pfno , fpfno = @fpfno , accountsdetails = @accountsdetails , boolesi = @boolesi , iciciaccno = @iciciaccno , medallbal = @medallbal , pickuppointid = @pickuppointid , homephone = @homephone , presentaddress = @presentaddress , permanentaddress = @permanentaddress , emergencycontactperson = @emergencycontactperson , emergencycontactno = @emergencycontactno , boolhasproximitycard = @boolhasproximitycard , plstatus = @plstatus , leavesdeductedfromflexidaily = @leavesdeductedfromflexidaily , leavesdeductedfromflexiweekly = @leavesdeductedfromflexiweekly , restrictedholidaysavailed = @restrictedholidaysavailed , paternityleavesavailed = @paternityleavesavailed , nameasinpassport = @nameasinpassport , passportno = @passportno , passportissuedplace = @passportissuedplace , passportissueddate = @passportissueddate , passportexpirydate = @passportexpirydate , addressasinpassport = @addressasinpassport , birthplace = @birthplace , panno = @panno , aadhaarno = @aadhaarno , boolkannadiga = @boolkannadiga , communityid = @communityid , fathersname = @fathersname , spousename = @spousename , organizationid = @organizationid , boolintranetenabled = @boolintranetenabled , uan = @uan , expensecategoryid = @expensecategoryid , boolexpatriate = @boolexpatriate , pwd = @pwd, roleid = @roleid where employeeno= '" + empdr["EmployeeNo"] + "'";
 								var rslt = pgsql.Execute(updateqry, new
 								{
 
@@ -3754,6 +3773,7 @@ namespace WMS.Controllers
 									empmodel.designation,
 									empmodel.functionalroleid,
 									empmodel.email,
+									empmodel.oldemail,
 									empmodel.serialno,
 									empmodel.bloodgroup,
 									empmodel.hodempno,

@@ -1093,6 +1093,7 @@ namespace WMS.Models
 		public string designation { get; set; }
 		public Nullable<short> functionalroleid { get; set; }
 		public string email { get; set; }
+		public string oldemail { get; set; }
 		public string serialno { get; set; }
 		public string bloodgroup { get; set; }
 		public string hodempno { get; set; }
