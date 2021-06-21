@@ -91,11 +91,11 @@ namespace WMS.Common
 				emlSndngList.ToEmailId = tomainlstring;
 				if(emlSndngList.ToEmailId == "")
 				{
-					emlSndngList.ToEmailId = "ramesh.kumar@in.yokogawa.com,opdprd@in.yokogawa.com";
+					emlSndngList.ToEmailId = config.testemail + "," + config.opdrpd;
 				}
                 else
                 {
-					emlSndngList.ToEmailId += ",opdprd@in.yokogawa.com";
+					emlSndngList.ToEmailId += "," + config.opdrpd;
 
 				}
 				emlSndngList.CC = toccstring;
@@ -105,8 +105,8 @@ namespace WMS.Common
 			if (config.EmailType.ToString().ToLower().Trim() == "test")
 			{
 				multipleemails = false;
-				emlSndngList.ToEmailId = "ramesh.kumar@in.yokogawa.com";
-				emlSndngList.CC = "ramesh.kumar@in.yokogawa.com";
+				emlSndngList.ToEmailId = config.testemail;
+				emlSndngList.CC = config.testemail;
 			}
 			MailMessage mailMessage = new MailMessage();
 			mailMessage.From = new MailAddress(emlSndngList.FrmEmailId.Trim(), ""); //From Email Id
@@ -546,7 +546,7 @@ namespace WMS.Common
 				users = emlSndngList.ToEmpName;
 
 			}
-			string bccaddress = "ramesh.kumar@in.yokogawa.com,Developer@in.yokogawa.com,developer7@in.yokogawa.com,sushma.patil@in.yokogawa.com";
+			string bccaddress = config.BCC;
 			mailMessage.Bcc.Add(bccaddress);
 			body = WMSResource.emailbody.Replace("#user", users).Replace("#subbody", subbody).Replace("#sender", emlSndngList.sendername).Replace("#link", link);
 			mailMessage.Body = body;
