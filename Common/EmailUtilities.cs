@@ -552,7 +552,7 @@ namespace WMS.Common
 			mailMessage.Body = body;
 			mailMessage.IsBodyHtml = true;
 			mailMessage.BodyEncoding = Encoding.UTF8;
-			SmtpClient mailClient = new SmtpClient("10.29.15.9", 25);
+			SmtpClient mailClient = new SmtpClient(config.smtpip, 25);
 			mailClient.DeliveryMethod = SmtpDeliveryMethod.Network;
 			mailClient.EnableSsl = false;
 			mailClient.Send(mailMessage);
@@ -724,7 +724,7 @@ namespace WMS.Common
 					mailMessage.Body = emlSndngList.Body;
 					mailMessage.IsBodyHtml = true;
 					mailMessage.BodyEncoding = Encoding.UTF8;
-					SmtpClient mailClient = new SmtpClient("10.29.15.9", 25);
+					SmtpClient mailClient = new SmtpClient(config.smtpip, 25);
 					mailClient.EnableSsl = true;
 					mailClient.DeliveryMethod = SmtpDeliveryMethod.Network;
 					mailClient.Send(mailMessage);

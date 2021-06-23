@@ -31,6 +31,7 @@ namespace WMS.Common
 		public readonly string _BCC = string.Empty;
 		public readonly string _opdrpd = string.Empty;
 		public readonly string _testemail = string.Empty;
+		public readonly string _smtpip = string.Empty;
 
 		public Configurations()
 		{
@@ -62,6 +63,7 @@ namespace WMS.Common
 			_BCC = root.GetSection("ConnectionStrings").GetSection("BCC").Value;
 			_opdrpd = root.GetSection("ConnectionStrings").GetSection("opdrpd").Value;
 			_testemail = root.GetSection("ConnectionStrings").GetSection("testemail").Value;
+			_smtpip = root.GetSection("ConnectionStrings").GetSection("smtpip").Value;
 
 			var appSetting = root.GetSection("ApplicationSettings");
 
@@ -136,6 +138,10 @@ namespace WMS.Common
 		public string testemail
 		{
 			get => _testemail;
+		}
+		public string smtpip
+		{
+			get => _smtpip;
 		}
 	}
 }

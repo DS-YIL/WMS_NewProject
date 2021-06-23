@@ -770,7 +770,7 @@ order by sl.inwmasterid desc</value>
     <value>select MAX(stinw.inwardid) as value,sinw.grnnumber as text,Max(sinw.suppliername) as supplier 
 from wms.wms_storeinward stinw
 left outer join wms.wms_securityinward sinw on stinw.inwmasterid = sinw.inwmasterid 
-where (stinw.confirmqty is null or stinw.confirmqty = 0) and stinw.receivedqty &gt; 0  and stinw.returnedby is null and sinw.grnnumber is not null and sinw.onhold is not True  group by stinw.inwmasterid,sinw.grnnumber</value>
+where (stinw.confirmqty is null or stinw.confirmqty = 0) and stinw.receivedqty &gt; 0  and stinw.returnedby is null and sinw.grnnumber is not null and sinw.onhold is not True and stinw.qualitychecked is true   group by stinw.inwmasterid,sinw.grnnumber</value>
   </data>
   <data name="getgrnlistdataforputaway" xml:space="preserve">
     <value>select stinw.inwardid as value,sinw.grnnumber as text,

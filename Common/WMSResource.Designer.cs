@@ -916,7 +916,7 @@ namespace WMS.Common {
         ///   Looks up a localized string similar to select MAX(stinw.inwardid) as value,sinw.grnnumber as text,Max(sinw.suppliername) as supplier 
         ///from wms.wms_storeinward stinw
         ///left outer join wms.wms_securityinward sinw on stinw.inwmasterid = sinw.inwmasterid 
-        ///where (stinw.confirmqty is null or stinw.confirmqty = 0) and stinw.receivedqty &gt; 0  and stinw.returnedby is null and sinw.grnnumber is not null and sinw.onhold is not True  group by stinw.inwmasterid,sinw.grnnumber.
+        ///where (stinw.confirmqty is null or stinw.confirmqty = 0) and stinw.receivedqty &gt; 0  and stinw.returnedby is null and sinw.grnnumber is not null and sinw.onhold is not True and stinw.qualitychecked is true   group by stinw.inwmasterid,sinw.grnnumber.
         /// </summary>
         public static string getgrnlistdata {
             get {
