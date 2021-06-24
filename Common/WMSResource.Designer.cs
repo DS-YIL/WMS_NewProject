@@ -925,9 +925,9 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select stinw.inwardid as value,sinw.grnnumber as text,
+        ///   Looks up a localized string similar to select stinw.inwardid as value,sinw.grnnumber as text,stinw.pono as pos,stinw.projectid as projects,
         ///sinw.suppliername as supplier,sinw.invoiceno ,stinw.confirmqty ,(select  COALESCE(SUM(mrn.issuedqty ),0)+ COALESCE(SUM(ws.initialputawayqty ),0)   as totalissued from wms.mrnmaterials mrn left join wms.wms_stock  ws on ws.inwardid =mrn.inwardid  where mrn.inwardid =stinw.inwardid )
-        ///,case when stinw.confirmqty=(select  COALESCE(SUM(mrn.issuedqty ),0)+ COALESCE(SUM(ws.initialputawayqty ),0)   as totalissued from wms.mrnmaterials mrn left join wms.wms_st [rest of string was truncated]&quot;;.
+        ///,case when stinw.confirmqty=(select  COALESCE(SUM(mrn.issuedqty ),0)+ COALESCE(SUM(ws.initialputawayqty ),0)   as totalissued  [rest of string was truncated]&quot;;.
         /// </summary>
         public static string getgrnlistdataforputaway {
             get {
@@ -1737,11 +1737,12 @@ namespace WMS.Common {
         
         /// <summary>
         ///   Looks up a localized string similar to select mat.pono,mat.materialid as material,mat.itemno::text as lineitemno,mat.poitemdescription,mat.unitprice,mat.materialqty,mat.saleorderno,mat.solineitemno,
-        ///(select max(wp2.projectcode) from wms.wms_project wp2 where wp2.pono = mat.pono group by wp2.pono) as projectid,
+        ///mat.projectcode  as projectid,
         ///case 
         ///when mat.wmsqty &gt; 0 then mat.wmsqty
         ///else (select wmsqty from wms.wms_pomaterials wp where pono = mat.pono and materialid = mat.materialid and itemno = mat.itemno and wmsqty is not null and wmsqty &gt; 0 limit 1)
-        ///end as pendingqty,        /// [rest of string was truncated]&quot;;.
+        ///end as pendingqty,
+        ///&apos;#invoice&apos; as invoiceno,&apos;#inw&apos; as inwmasterid,NULL as grnnumber,true as qualitych [rest of string was truncated]&quot;;.
         /// </summary>
         public static string getMaterialsforreceipt {
             get {

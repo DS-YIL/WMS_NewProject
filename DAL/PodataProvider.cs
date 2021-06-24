@@ -12079,6 +12079,19 @@ namespace WMS.DAL
 							returnlist.Add(ddl);
 
 						}
+                        else
+                        {
+							if(exixtedrow.pos != null && exixtedrow.pos.Trim() != "")
+                            {
+								exixtedrow.pos += "," + exixtedrow.pos;
+
+							}
+							if (exixtedrow.projects != null && exixtedrow.projects.Trim() != "")
+							{
+								exixtedrow.projects += "," + exixtedrow.projects;
+
+							}
+						}
 
 					}
 					return returnlist.OrderByDescending(o => o.value);
@@ -12969,11 +12982,11 @@ namespace WMS.DAL
 							model.deleteflag = false;
 							model.emailccnotification = false;
 							model.emailccnotification = false;
-							model.subroleid = "1";
+							model.subroleid = "1,2";
 							model.plantid = datamodel.plantid;
 							bool isdelegatemember = false;
 							string insertquery = WMSResource.insertAuthUser;
-							model.createdby = model.modifiedby;
+							//model.createdby = model.modifiedby;
 							var resultsx = pgsql.ExecuteScalar(insertquery, new
 							{
 								model.employeeid,

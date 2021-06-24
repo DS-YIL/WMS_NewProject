@@ -82,7 +82,7 @@ namespace WMS.Controllers
 
 
 					//Prn code for TSC TE310 printer
-					string formateddate = model.gateentrytime.ToString("dd-MM-yyyy");
+					string formateddate = model.gateentrytime.ToString("dd-MM-yyyy hh:mm:ss");
 					tw.WriteLine("<xpml><page quantity='0' pitch='38.0 mm'></xpml>SIZE 97.5 mm, 38 mm");
 					tw.WriteLine("DIRECTION 0,0");
 					tw.WriteLine("REFERENCE 0,0");

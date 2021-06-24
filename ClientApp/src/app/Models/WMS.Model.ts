@@ -508,6 +508,7 @@ export class ddlmodel {
   text: string;
   supplier: string;
   pos: string;
+  projects: string;
   projectmanager: string;
   receiveddate: Date;
   invoiceno: string;

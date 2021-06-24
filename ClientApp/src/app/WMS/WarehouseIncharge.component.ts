@@ -109,6 +109,7 @@ export class WarehouseInchargeComponent implements OnInit {
   sendmailtofinance: boolean = false;
   currentstocktype: string = "";
   requestedid: string;
+  listview: boolean = false;
   ngOnInit() {
     if (localStorage.getItem("Employee"))
       this.employee = JSON.parse(localStorage.getItem("Employee"));
@@ -122,6 +123,7 @@ export class WarehouseInchargeComponent implements OnInit {
     this.lblproject = "";
     this.lblsaleorder = "";
     this.lblsolineitemno = "";
+    this.listview = true;
     this.requestedid = this.route.snapshot.queryParams.requestid;
     this.PoDetails = new PoDetails();
     this.StockModel = new StockModel();
@@ -378,11 +380,22 @@ export class WarehouseInchargeComponent implements OnInit {
       if (this.requestedid) {
         debugger;
         this.selectedgrnno = this.requestedid;
+        this.listview = false;
         this.SearchGRNNo();
 
       }
       this.spinner.hide();
     });
+  }
+  showputaway(rowdata: ddlmodel) {
+    this.selectedgrnno = rowdata.text;
+    this.listview = false;
+    this.SearchGRNNo();
+  }
+
+  Showlist() {
+    this.selectedgrnno = "";
+    this.listview = true;
   }
 
   filtergrn(event) {

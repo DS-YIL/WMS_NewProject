@@ -1662,6 +1662,7 @@ public class ddlmodel
 	public string text { get; set; }
 	public string supplier { get; set; }
 	public string pos { get; set; }
+	public string projects { get; set; }
 	public string projectmanager { get; set; }
 	public DateTime receiveddate { get; set; }
 	public string invoiceno { get; set; }

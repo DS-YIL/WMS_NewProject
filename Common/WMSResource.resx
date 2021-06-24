@@ -773,7 +773,7 @@ left outer join wms.wms_securityinward sinw on stinw.inwmasterid = sinw.inwmaste
 where (stinw.confirmqty is null or stinw.confirmqty = 0) and stinw.receivedqty &gt; 0  and stinw.returnedby is null and sinw.grnnumber is not null and sinw.onhold is not True and stinw.qualitychecked is true   group by stinw.inwmasterid,sinw.grnnumber</value>
   </data>
   <data name="getgrnlistdataforputaway" xml:space="preserve">
-    <value>select stinw.inwardid as value,sinw.grnnumber as text,
+    <value>select stinw.inwardid as value,sinw.grnnumber as text,stinw.pono as pos,stinw.projectid as projects,
 sinw.suppliername as supplier,sinw.invoiceno ,stinw.confirmqty ,(select  COALESCE(SUM(mrn.issuedqty ),0)+ COALESCE(SUM(ws.initialputawayqty ),0)   as totalissued from wms.mrnmaterials mrn left join wms.wms_stock  ws on ws.inwardid =mrn.inwardid  where mrn.inwardid =stinw.inwardid )
 ,case when stinw.confirmqty=(select  COALESCE(SUM(mrn.issuedqty ),0)+ COALESCE(SUM(ws.initialputawayqty ),0)   as totalissued from wms.mrnmaterials mrn left join wms.wms_stock  ws on ws.inwardid =mrn.inwardid  where mrn.inwardid =stinw.inwardid ) 
 THEN true  else false  END AS isdirecttransferred
@@ -1447,7 +1447,7 @@ where iss.requestid::text = '#gatepassmaterialid'::text and iss.requesttype = 'g
   </data>
   <data name="getMaterialsforreceipt" xml:space="preserve">
     <value>select mat.pono,mat.materialid as material,mat.itemno::text as lineitemno,mat.poitemdescription,mat.unitprice,mat.materialqty,mat.saleorderno,mat.solineitemno,
-(select max(wp2.projectcode) from wms.wms_project wp2 where wp2.pono = mat.pono group by wp2.pono) as projectid,
+mat.projectcode  as projectid,
 case 
 when mat.wmsqty &gt; 0 then mat.wmsqty
 else (select wmsqty from wms.wms_pomaterials wp where pono = mat.pono and materialid = mat.materialid and itemno = mat.itemno and wmsqty is not null and wmsqty &gt; 0 limit 1)
