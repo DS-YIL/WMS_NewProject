@@ -12,6 +12,7 @@ export class Employee {
   roleid: string;
   plantid: string;
   isdelegatemember: boolean;
+  isFinancemember: boolean;
 
 }
 

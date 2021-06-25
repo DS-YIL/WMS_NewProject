@@ -116,20 +116,21 @@
         <div *ngIf="gatePassApprovalList.length>0 && showHistory" style="background-color:#2c898073">
           <div class="row mt-2" style="padding-left:20px;font-weight: 600;font-size: 16px;color: #265f18;text-decoration:underline">Approval Flow</div>
           <div class="row mt-2" style="padding-left:20px;" *ngFor="let item of gatePassApprovalList">
-            <div *ngIf="item.label==1 || item.label==3" class="col-lg-2 col-md-2 col-sm-2 form-inline" style="font-weight: 600; font-size: 14px; color: darkblue; ">
+            <div  class="col-lg-2 col-md-2 col-sm-2 form-inline" style="font-weight: 600; font-size: 14px; color: darkblue; ">
               Name:&nbsp;<span style="color:#dc3545;">{{item.approvername}}</span>
             </div>
-            <div *ngIf="item.label==1 || item.label==3" class="col-lg-2 col-md-2 col-sm-2 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
+            <div  class="col-lg-2 col-md-2 col-sm-2 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
               Type:&nbsp;<span *ngIf="item.label==1" style="color:#dc3545;">project Manager</span>
               <span *ngIf="item.label==3" style="color:#dc3545;">Authorize Manager</span>
+              <span *ngIf="item.label==2" style="color:#dc3545;">Finance Manager</span>
             </div>
-            <div *ngIf="item.label==1|| item.label==3" class="col-lg-2 col-md-2 col-sm-2 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
+            <div  class="col-lg-2 col-md-2 col-sm-2 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
               Status:&nbsp;<span style="color:#dc3545;">{{item.approverstatus}}</span>
             </div>
-            <div *ngIf="item.label==1 || item.label==3" class="col-lg-3 col-md-3 col-sm-3 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
+            <div class="col-lg-3 col-md-3 col-sm-3 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
               Status Updated on:&nbsp;<span style="color:#dc3545;">{{item.approvedon  | date :  constants.dateFormat}}</span>
             </div>
-            <div *ngIf="item.label==1 || item.label==3" class="col-lg-3 col-md-3 col-sm-3 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
+            <div  class="col-lg-3 col-md-3 col-sm-3 form-inline" style="font-weight:600;font-size:14px;color:darkblue;">
               Remarks:&nbsp;<span style="color:#dc3545;">{{item.remarks}}</span>
             </div>
           </div>

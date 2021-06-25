@@ -7572,6 +7572,7 @@ namespace WMS.DAL
 							userAcessNamesModel res1 = new userAcessNamesModel();
 							res1.roleid = 8;
 							res1.accessname = "Approver";
+							res1.isFinancemember = true;
 							AcList.Add(res1);
 						}
 					}

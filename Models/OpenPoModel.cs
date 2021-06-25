@@ -1276,6 +1276,7 @@ namespace WMS.Models
 		public string accessname { get; set; }
 		public string plantid { get; set; }
 		public bool isdelegatemember { get; set; }
+		public bool isFinancemember { get; set; }
 
 	}
 	public class Enquirydata

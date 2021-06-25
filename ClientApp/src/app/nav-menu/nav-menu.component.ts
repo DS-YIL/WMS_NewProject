@@ -353,7 +353,7 @@ export class NavMenuComponent implements OnInit {
               return false;
             }
           }
-         
+
         })
         if (!found) {
           alert("You are not authorized to view this page.")
@@ -504,7 +504,7 @@ export class NavMenuComponent implements OnInit {
             return false;
           }
         })
-       
+
       }
       else if (eurl.includes("/Email/GatePassAuthList?GateId")) {
         this.userrolelist.forEach(item => {
@@ -517,8 +517,8 @@ export class NavMenuComponent implements OnInit {
             return false;
 
           }
-            
-          
+
+
         })
 
       }
@@ -738,7 +738,7 @@ export class NavMenuComponent implements OnInit {
     this.dataSharingService.loggedroleshare.next("");
     $("#menudiv").show();
     this.router.navigateByUrl("WMS/Home");
-   
+
   }
   activeMenu(event) {
     let node;
@@ -820,14 +820,14 @@ export class NavMenuComponent implements OnInit {
             { label: 'YGSGR', style: { 'font-weight': '600', 'width': '270px' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/YGSGR') },
             { label: 'Print Barcode', icon: 'pi pi-fw pi-print', style: { 'width': '250px' }, command: () => this.router.navigateByUrl('WMS/PrintBarcode') },
             { label: 'Gatepass Report', icon: 'pi pi-fw pi-print', style: { 'width': '250px' }, command: () => this.router.navigateByUrl('WMS/GPReport') }
-            
+
           ]
 
         });
       }
       if (rba.gate_entry) {
         this.items.push({ label: 'Inbound', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/SecurityCheck') });
-        this.items.push({ label: 'Outbound', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars'});
+        this.items.push({ label: 'Outbound', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars' });
       }
       var receiptsitems = {
         label: 'Material Receipts',
@@ -860,7 +860,7 @@ export class NavMenuComponent implements OnInit {
       if (rba.receive_material || rba.put_away || rba.notify_to_finance) {
         this.items.push(receiptsitems);
       }
-     
+
       var matrequestitems = {
         label: 'Material Request',
         icon: 'pi pi-fw pi-bars',
@@ -1082,7 +1082,7 @@ export class NavMenuComponent implements OnInit {
         this.items.push({ label: 'Quality Check', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/QualityCheck') });
       }
       if (rba.pmdashboard_view) {
-          this.items.push({ label: 'PM Dashboard', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-chart-bar', command: () => this.router.navigateByUrl('WMS/Dashboard') });
+        this.items.push({ label: 'PM Dashboard', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-chart-bar', command: () => this.router.navigateByUrl('WMS/Dashboard') });
       }
       if (rba.min) {
         this.items.push({ label: 'Material Requisition Note', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/MRNView') });
@@ -1105,7 +1105,8 @@ export class NavMenuComponent implements OnInit {
       };
       if (rba.gatepass_approval) {
         matrequestapprovals.items.push({ label: 'Manager Approval(GP)', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GatePassPMList') });
-        matrequestapprovals.items.push({ label: 'Finance Approval(GP)', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GatePassFMList') });
+        if (this.emp.isFinancemember)
+          matrequestapprovals.items.push({ label: 'Finance Approval(GP)', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GatePassFMList') });
       }
       if (rba.material_transfer_approval) {
         matrequestapprovals.items.push({ label: 'Material Transfer Approval', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/materialtransferapproval') });
@@ -1127,8 +1128,8 @@ export class NavMenuComponent implements OnInit {
         this.items.push({ label: 'Internal Stock Transfer', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/Stocktransfer') });
 
       }
-      if (this.emp.roleid == "3") 
-      this.items.push({ label: 'Direct Delivery', icon: 'pi pi-fw pi-bars', style: { 'font-weight': '600' }, command: () => this.router.navigateByUrl('WMS/DirectDelivery') });
+      if (this.emp.roleid == "3")
+        this.items.push({ label: 'Direct Delivery', icon: 'pi pi-fw pi-bars', style: { 'font-weight': '600' }, command: () => this.router.navigateByUrl('WMS/DirectDelivery') });
 
       if (!this.emp.isdelegatemember && this.emp.roleid == "4") {
         this.items.push({ label: 'Delegation', icon: 'pi pi-fw pi-bars', style: { 'font-weight': '600' }, command: () => this.router.navigateByUrl('WMS/AssignInventoryManager') });
@@ -1164,7 +1165,7 @@ export class NavMenuComponent implements OnInit {
       if (this.emp.roleid == "4") {
         this.items.push({ label: 'GP Authorization', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/GatePassAuthList') });
       }
-      
+
 
       //let element1x: HTMLDivElement = document.getElementById("menudiv") as HTMLDivElement;
       //element1x.hidden = false;
@@ -1250,8 +1251,8 @@ export class NavMenuComponent implements OnInit {
       this.router.navigateByUrl('WMS/Home');
     }
     else if (this.emp.roleid == "5") {
-        this.router.navigateByUrl('WMS/Home');
-      }
+      this.router.navigateByUrl('WMS/Home');
+    }
     else if (this.emp.roleid == "6") {
       this.router.navigateByUrl('WMS/Home');
     }
@@ -1275,7 +1276,7 @@ export class NavMenuComponent implements OnInit {
     else if (this.emp.roleid == "11") {
       this.router.navigateByUrl('WMS/Home');
     }
-    else{
+    else {
       this.router.navigateByUrl('WMS/Home');
     }
 

@@ -158,6 +158,8 @@ export class LoginComponent implements OnInit {
                   if (dt1.length > 0) {
                     this.employee.roleid = this.LoginForm.value.roleid;
                     this.employee.isdelegatemember = this.AcessNameList.filter(li => li.roleid == this.employee.roleid)[0].isdelegatemember;
+                    this.employee.isFinancemember = this.AcessNameList.filter(li => li.roleid == this.employee.roleid)[0].isFinancemember;
+
                     this.employee.plantid = this.AcessNameList[0].plantid;
                     this.wmsService.getpagesbyrole(parseInt(this.employee.roleid)).subscribe(datax => {
                       this.pagelist = datax;
