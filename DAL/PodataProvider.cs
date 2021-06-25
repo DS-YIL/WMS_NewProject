@@ -665,8 +665,8 @@ namespace WMS.DAL
 					//For N-type get data based from st_QTSO based on project definition
 					else if (objprint.codetype == "N")
 					{
-						if(objprint.projectiddef != null)
-                        {
+						if (objprint.projectiddef != null)
+						{
 							string querydata = "select * from wms.st_QTSO where projectiddef='" + objprint.projectiddef + "' limit 1";
 							objdata = DB.QueryFirstOrDefault<MateriallabelModel>(
 								   querydata, null, commandType: CommandType.Text);
@@ -686,8 +686,8 @@ namespace WMS.DAL
 					}
 					else
 					{
-                        if (objprint.saleorderno != null)
-                        {
+						if (objprint.saleorderno != null)
+						{
 							string queryserial = "select * from wms.st_slno_imports where saleorderno='" + objprint.saleorderno + "' and solineitemno= '" + objprint.solineitemno + "' limit 1";
 							objserial = DB.QueryFirstOrDefault<MateriallabelModel>(
 								   queryserial, null, commandType: CommandType.Text);
@@ -696,7 +696,7 @@ namespace WMS.DAL
 							objdata = DB.QueryFirstOrDefault<MateriallabelModel>(
 								   querydata, null, commandType: CommandType.Text);
 						}
-						
+
 					}
 
 					//Get YGS GR No.
@@ -2815,7 +2815,7 @@ namespace WMS.DAL
 
 						if (!string.IsNullOrEmpty(Result.query))
 							query = Result.query;
-	
+
 						selectCommand.CommandText = query;
 						IDbDataAdapter dbDataAdapter = new NpgsqlDataAdapter();
 						dbDataAdapter.SelectCommand = selectCommand;
@@ -3524,12 +3524,12 @@ namespace WMS.DAL
 					var data = await pgsql.QueryAsync<IssueRequestModel>(
 					   query, null, commandType: CommandType.Text);
 
-					foreach(IssueRequestModel mdl in data)
-                    {
+					foreach (IssueRequestModel mdl in data)
+					{
 
-						if(mdl.storeavailableqty != null && mdl.mrntotalissuedqty != null)
-                        {
-							
+						if (mdl.storeavailableqty != null && mdl.mrntotalissuedqty != null)
+						{
+
 							decimal? diff = mdl.storeavailableqty - mdl.mrntotalissuedqty;
 							if (diff < 0)
 							{
@@ -3757,8 +3757,8 @@ namespace WMS.DAL
 							}
 						}
 					}
-					else if(mattype == "PLOS")
-                    {
+					else if (mattype == "PLOS")
+					{
 						mainmodel.requesttype = "PLOS";
 						mainmodel.isapprovalrequired = true;
 						mainmodel.approverid = dataobj[0].managerid;
@@ -3766,8 +3766,8 @@ namespace WMS.DAL
 						mainmodel.approvalremarks = null;
 						mainmodel.approvedon = null;
 					}
-                    else
-                    {
+					else
+					{
 						mainmodel.requesttype = "Plant";
 						mainmodel.isapprovalrequired = true;
 						mainmodel.approverid = dataobj[0].managerid;
@@ -4194,8 +4194,8 @@ namespace WMS.DAL
 						{
 							descriptionstr = item.Materialdescription.Replace("\'", "''");
 						}
-						if(item.itemlocation != "ON FLOOR")
-                        {
+						if (item.itemlocation != "ON FLOOR")
+						{
 							string stockquery = "";
 							if (item.materialtype == "Project")
 							{
@@ -4303,8 +4303,8 @@ namespace WMS.DAL
 							}
 
 						}
-                        else
-                        {
+						else
+						{
 							string stockquery = "";
 							stockquery = "select * from wms.wms_storeinward ws where ws.projectid = '" + item.projectid + "' and ws.pono = '" + item.pono + "' and ws.materialid = '" + item.materialid + "'";
 							stockquery += " and Lower(ws.poitemdescription) = Lower('" + descriptionstr + "') and ws.confirmqty > 0 ";
@@ -4354,23 +4354,23 @@ namespace WMS.DAL
 									if (item.issuedqty > 0)
 									{
 										string insertqry = WMSResource.issueMRNMaterials;
-									    string mrnby = dataobj[0].approvedby;
+										string mrnby = dataobj[0].approvedby;
 										string mrnremarks = "";
 										string projectcode = item.projectid;
 										string requesttype = "MaterialRequest";
 										decimal? acceptedqty = itm.confirmqty;
-									    result = DB.Execute(insertqry, new
-											{
-												itm.inwardid,
-												projectcode,
-												mrnby,
-												mrnremarks,
-												acceptedqty,
-											    issuedqty,
-												requestid,
-											    requesttype
+										result = DB.Execute(insertqry, new
+										{
+											itm.inwardid,
+											projectcode,
+											mrnby,
+											mrnremarks,
+											acceptedqty,
+											issuedqty,
+											requestid,
+											requesttype
 										});
-										
+
 
 									}
 
@@ -5122,7 +5122,7 @@ namespace WMS.DAL
 							}
 							stockquery += "order by itemid";
 						}
-						
+
 						var stockdata = pgsql.QueryAsync<StockModel>(stockquery, null, commandType: CommandType.Text);
 						if (stockdata != null)
 						{
@@ -6830,23 +6830,23 @@ namespace WMS.DAL
 					await pgsql.OpenAsync();
 					var data = await pgsql.QueryAsync<IssueRequestModel>(
 					  query, null, commandType: CommandType.Text);
-					foreach(IssueRequestModel mdl in data)
-                    {
-						if(mdl.mrntotalissuedqty != null && mdl.mrntotalissuedqty > 0)
-                        {
+					foreach (IssueRequestModel mdl in data)
+					{
+						if (mdl.mrntotalissuedqty != null && mdl.mrntotalissuedqty > 0)
+						{
 							decimal? avlqty = mdl.availableqty - mdl.mrntotalissuedqty;
-							if(avlqty < 0)
-                            {
+							if (avlqty < 0)
+							{
 								mdl.availableqty = 0;
 
 							}
-                            else
-                            {
+							else
+							{
 								mdl.availableqty = avlqty;
 							}
 
 						}
-                    }
+					}
 					return data;
 
 
@@ -7174,7 +7174,7 @@ namespace WMS.DAL
 						stocktype = t.First().stocktype
 					});
 
-					
+
 
 					return result;
 
@@ -8495,22 +8495,22 @@ namespace WMS.DAL
 					await pgsql.OpenAsync();
 					var data = await pgsql.QueryAsync<IssueRequestModel>(
 					  materialrequestquery, null, commandType: CommandType.Text);
-					foreach(IssueRequestModel mdl in data)
-                    {
-						if(mdl.mrnissuedqty != null && mdl.mrnissuedqty > 0)
-                        {
+					foreach (IssueRequestModel mdl in data)
+					{
+						if (mdl.mrnissuedqty != null && mdl.mrnissuedqty > 0)
+						{
 							decimal? avlqty = mdl.availableqty - mdl.mrnissuedqty;
-							if(avlqty < 0)
-                            {
+							if (avlqty < 0)
+							{
 								mdl.availableqty = 0;
-                            }
-                            else
-                            {
+							}
+							else
+							{
 								mdl.availableqty = mdl.availableqty - mdl.mrnissuedqty;
-                            }
-                        }
-                    }
-					IEnumerable<IssueRequestModel> result = data.GroupBy(c => new { c.materialid, c.Materialdescription,c.pono }).Select(t => new IssueRequestModel
+							}
+						}
+					}
+					IEnumerable<IssueRequestModel> result = data.GroupBy(c => new { c.materialid, c.Materialdescription, c.pono }).Select(t => new IssueRequestModel
 					{
 						availableqty = t.Sum(u => u.availableqty),
 						pono = t.First().pono,
@@ -10078,7 +10078,7 @@ namespace WMS.DAL
 			}
 		}
 
-		
+
 		/*
 		Name of Function : <<getmatlist>>  Author :<<Ramesh>>  
 		Date of Creation <<12-12-2019>>
@@ -11862,13 +11862,13 @@ namespace WMS.DAL
 
 				EmailUtilities emailobj = new EmailUtilities();
 				if (requesttyp == "STO")
-				{	
-					if(mattype == "plant")
-                    {
+				{
+					if (mattype == "plant")
+					{
 						emailobj.sendEmail(emailmodel, 29);
 					}
-                    else
-                    {
+					else
+					{
 						emailobj.sendEmail(emailmodel, 37);
 					}
 				}
@@ -11882,7 +11882,7 @@ namespace WMS.DAL
 					{
 						emailobj.sendEmail(emailmodel, 38);
 					}
-					
+
 				}
 
 			}
@@ -12062,47 +12062,60 @@ namespace WMS.DAL
 		*/
 		public async Task<IEnumerable<ddlmodel>> getgrnlistforacceptanceputaway()
 		{
+			List<ddlmodel> returnlist = new List<ddlmodel>();
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
 				try
 				{
 					string materialrequestquery = WMSResource.getgrnlistdataforputaway;
-					List<ddlmodel> returnlist = new List<ddlmodel>();
+
 					await pgsql.OpenAsync();
 					var data = await pgsql.QueryAsync<ddlmodel>(
 					  materialrequestquery, null, commandType: CommandType.Text);
 
 					foreach (ddlmodel ddl in data)
 					{
-						var exixtedrow = returnlist.Where(o => o.text == ddl.text).FirstOrDefault();
-						if (exixtedrow == null)
+						try
 						{
-							returnlist.Add(ddl);
-
-						}
-                        else
-                        {
-							if(exixtedrow.pos != null && exixtedrow.pos.Trim() != "")
-                            {
-								exixtedrow.pos += "," + exixtedrow.pos;
-
-							}
-							if (exixtedrow.projects != null && exixtedrow.projects.Trim() != "")
+							var exixtedrow = returnlist.Where(o => o.text == ddl.text).FirstOrDefault();
+							if (exixtedrow == null)
 							{
-								exixtedrow.projects += "," + exixtedrow.projects;
-
+								var List = data.Where(li => li.text == ddl.text).ToList();
+								if (List.Count > 0)
+								{
+									ddl.pos = string.Join(",", (List.Select(c => c.pos).ToList()).Distinct().ToArray());
+									ddl.projects = string.Join(",", (List.Select(c => c.projects).ToList()).Distinct().ToArray());
+								}
+								returnlist.Add(ddl);
 							}
+							//else
+							//{
+							//	if (exixtedrow.pos != null && exixtedrow.pos.Trim() != "")
+							//	{
+							//		exixtedrow.pos += "," + exixtedrow.pos;
+
+							//	}
+							//	if (exixtedrow.projects != null && exixtedrow.projects.Trim() != "")
+							//	{
+							//		exixtedrow.projects += "," + exixtedrow.projects;
+
+							//	}
+							//}
 						}
-
+						catch (Exception Ex)
+						{
+							log.ErrorMessage("PODataProvider", "getgrnlistforacceptanceputaway", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
+							continue;
+						}
 					}
-					return returnlist.OrderByDescending(o => o.value);
 
+					return returnlist.OrderByDescending(o => o.value);
 
 				}
 				catch (Exception Ex)
 				{
 					log.ErrorMessage("PODataProvider", "getgrnlistforacceptanceputaway", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
-					return null;
+					return returnlist.OrderByDescending(o => o.value);
 				}
 				finally
 				{
@@ -17301,14 +17314,14 @@ namespace WMS.DAL
 					item.totalquantity = item.availableqty;
 					item.receivedtype = "Miscellanous Receipt";
 					var unitprice = item.value / item.availableqty;
-					if(item.projectid != null && item.projectid != "")
-                    {
+					if (item.projectid != null && item.projectid != "")
+					{
 						item.stocktype = "Project Stock";
-                    }
-                    else
-                    {
+					}
+					else
+					{
 						item.stocktype = "Plant Stock";
-                    }
+					}
 					using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
 					{
 						result = Convert.ToInt32(DB.ExecuteScalar(insertquery, new
@@ -18456,7 +18469,7 @@ Review Date :<<>>   Reviewed By :<<>>
 		}
 
 		public async Task<IEnumerable<YGSGR>> getYGSGR()
-        {
+		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
 
@@ -18497,31 +18510,31 @@ Review Date :<<>>   Reviewed By :<<>>
 					await pgsql.OpenAsync();
 					var data = await pgsql.QueryAsync<gatepassModel>(
 					   query, null, commandType: CommandType.Text);
-					foreach(gatepassModel gp in data)
-                    {
-						if(gp.gatepasstype == "Returnable")
-                        {
+					foreach (gatepassModel gp in data)
+					{
+						if (gp.gatepasstype == "Returnable")
+						{
 							if (gp.totaloutwardqty != null)
 							{
 								gp.status = "Open";
 							}
-							if(gp.totalinwardqty != null)
-                            {
-								if(gp.totaloutwardqty == gp.totalinwardqty)
-                                {
+							if (gp.totalinwardqty != null)
+							{
+								if (gp.totaloutwardqty == gp.totalinwardqty)
+								{
 									gp.status = "Closed";
 								}
-                                else
-                                {
+								else
+								{
 									gp.status = "Partially Closed";
 								}
-                            }
+							}
 							double age = (DateTime.Now - Convert.ToDateTime(gp.expecteddate)).TotalDays;
 							gp.ageing = Convert.ToInt32(Math.Floor(age));
 
 						}
-						if(gp.status == "Pending")
-                        {
+						if (gp.status == "Pending")
+						{
 							gp.status = "Created";
 						}
 					}
