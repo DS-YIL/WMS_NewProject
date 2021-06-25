@@ -836,7 +836,7 @@ export class GatePassComponent implements OnInit {
             doc.text("Authorized by: ", 80, pageHeight - 22);
           }
           else {
-            doc.text("Authorized by:" + gatepassobject.fmapprover, 80, pageHeight - 22);
+            doc.text("Authorized by:", 80, pageHeight - 22);
             doc.text(gatepassobject.fmapprover, 80, pageHeight - 15);
           }
          
