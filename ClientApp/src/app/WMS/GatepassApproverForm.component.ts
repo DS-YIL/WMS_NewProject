@@ -212,7 +212,7 @@ export class GatePassApproverComponent implements OnInit {
         });
       }
       else {
-        this.wmsService.getItemlocationListByMaterialanddescpo(material, description, projectid, pono).subscribe(data => {
+        this.wmsService.getItemlocationwithstore(material, description, projectid, pono).subscribe(data => {
           this.itemlocationData = data;
           this.showdialog = true;
         });

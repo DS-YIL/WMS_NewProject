@@ -827,7 +827,7 @@ export class NavMenuComponent implements OnInit {
       }
       if (rba.gate_entry) {
         this.items.push({ label: 'Inbound', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars', command: () => this.router.navigateByUrl('WMS/SecurityCheck') });
-        this.items.push({ label: 'Outbound', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars' });
+        //this.items.push({ label: 'Outbound', style: { 'font-weight': '600' }, icon: 'pi pi-fw pi-bars' });
       }
       var receiptsitems = {
         label: 'Material Receipts',

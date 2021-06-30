@@ -784,6 +784,7 @@ namespace WMS.Models
 		public int itemid { get; set; }
 		public string itemreturnable { get; set; }
 		public decimal? issuedqty { get; set; }
+		public decimal? mrnissuedqty { get; set; }
 		public string reprintedby { get; set; }
 		public decimal? availableqty { get; set; }
 		//gate pass change
@@ -2274,6 +2275,7 @@ public class STOIssueModel
 	public string poitemdescription { get; set; }
 	public string transferqty { get; set; }
 	public decimal? availableqty { get; set; }
+	public decimal? mrnissuedqty { get; set; }
 	public string issuedqty { get; set; }
 	public string uploadedby { get; set; }
 	public string createdby { get; set; }

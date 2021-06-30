@@ -156,7 +156,7 @@ export class StockTransferOrderComponent implements OnInit {
 
   GetPONo(projectcode: string) {
 
-    this.wmsService.getPODetailsbyprojectcode(this.employee.employeeno, projectcode).subscribe(data => {
+    this.wmsService.getStorePODetailsbyprojectcode(this.employee.employeeno, projectcode).subscribe(data => {
       this.spinner.hide();
       if (data) {
         this.ponolist = data;
@@ -170,7 +170,7 @@ export class StockTransferOrderComponent implements OnInit {
   onPOSelected() {
     this.podetailsList = [];
     debugger;
-    if (isNullOrUndefined(this.sourceplant.locatorid)) {
+    if (isNullOrUndefined(this.sourceplant) || isNullOrUndefined(this.sourceplant.locatorid)) {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Select Source' });
       this.selectedpono = "";
       this.selectedmuliplepo = [];
@@ -188,7 +188,7 @@ export class StockTransferOrderComponent implements OnInit {
       });
      
 
-        this.wmsService.getMaterialRequestlistdataforgpandstore(pono, this.selectedproject.value, this.sourceplant.locatorid).subscribe(data => {
+      this.wmsService.getMaterialRequestlistdataforgpandstore_v1(pono, this.selectedproject.value, this.sourceplant.locatorid).subscribe(data => {
           this.podetailsList = data;
         });
       
@@ -340,7 +340,7 @@ export class StockTransferOrderComponent implements OnInit {
     
       var invalidrow = this.podetailsList.filter(function (element, index) {
         debugger;
-        return (!element.transferqty) || (!element.materialid) || (!element.materialdescription) || (!element.requireddate) || (!element.value);
+        return (!element.transferqty) || (!element.materialid) || (!element.materialdescription) || (!element.requireddate) || (!element.materialcost);
       });
       if (invalidrow.length > 0) {
         this.messageService.add({ severity: 'error', summary: '', detail: 'Fill all the details.' });
@@ -614,7 +614,7 @@ export class StockTransferOrderComponent implements OnInit {
       matdesc = matdesc.replace("'", "''");
       this.wmsService.getplantstockmatdetail(matcode, matdesc).subscribe(res => {
         if (!isNullOrUndefined(res)) {
-          //data.unitprice = res.unitprice;
+          data.unitprice = res.unitprice;
           data.availableqty = res.availableqty;
         }
       });
@@ -645,7 +645,7 @@ export class StockTransferOrderComponent implements OnInit {
       matdesc = matdesc.replace("'", "''");
       this.wmsService.getplantstockmatdetail(matcode, matdesc).subscribe(res => {
         if (!isNullOrUndefined(res)) {
-          //data.unitprice = res.unitprice;
+          data.unitprice = res.unitprice;
           data.availableqty = res.availableqty;
         }
       });

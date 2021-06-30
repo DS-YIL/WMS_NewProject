@@ -177,7 +177,7 @@ export class GatePassComponent implements OnInit {
 
   GetPONo(projectcode: string) {
     this.ponolist = [];
-    this.wmsService.getPODetailsbyprojectcode(this.employee.employeeno, projectcode).subscribe(data => {
+    this.wmsService.getStorePODetailsbyprojectcode(this.employee.employeeno, projectcode).subscribe(data => {
       this.spinner.hide();
       if (data) {
         this.ponolist = data;
@@ -203,7 +203,7 @@ export class GatePassComponent implements OnInit {
         pono += "'" + item.pono + "'";
         i++;
       });
-      this.wmsService.getMaterialRequestlistdataforgp(pono, this.selectedproject.value).subscribe(data => {
+      this.wmsService.getMaterialswithstore(pono, this.selectedproject.value).subscribe(data => {
         this.gatepassModel.materialList = data;
         if (this.gatepassModel.materialList && this.gatepassModel.materialList.length == 0) {
           this.messageService.add({ severity: 'error', summary: '', detail: 'Materials not available in stock for selected po.' });

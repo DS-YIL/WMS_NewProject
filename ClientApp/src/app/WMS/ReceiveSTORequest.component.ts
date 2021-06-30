@@ -202,7 +202,7 @@ export class ReceiveSTORequestComponent implements OnInit {
         });
       }
       else {
-        this.wmsService.getItemlocationListByMaterialdescstore(material, poitemdescription, this.pcode, pono, this.source).subscribe(data => {
+        this.wmsService.getItemlocationListByMaterialdescstore_v1(material, poitemdescription, this.pcode, pono, this.source).subscribe(data => {
           this.itemlocationData = data;
           this.showdialog = true;
         });
@@ -211,7 +211,7 @@ export class ReceiveSTORequestComponent implements OnInit {
     }
     else {
       this.issueqtyenable = true;
-      this.wmsService.getItemlocationListByIssueId(String(rid), 'STO').subscribe(data => {
+      this.wmsService.getItemlocationListByIssueIdWithStore(String(rid), 'STO').subscribe(data => {
         this.itemlocationData = data;
         this.showdialog = true;
       });

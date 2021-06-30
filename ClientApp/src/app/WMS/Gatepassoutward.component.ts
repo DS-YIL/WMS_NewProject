@@ -64,6 +64,7 @@ export class GatePassoutwardComponent implements OnInit {
   nonreturn: boolean = false;
   returnable: boolean = false;
   materialListDG: outwardmaterialistModel[] = [];
+  senddata: outwardmaterialistModel[] = [];
   selectedmats: outwardmaterialistModel[];
   selectedmdata : outwardmaterialistModel[] = [];
   showmatDialog: boolean = false;
@@ -95,6 +96,7 @@ export class GatePassoutwardComponent implements OnInit {
     this.returnable = false;
     this.returntype = "out";
     var dt = new Date();
+    this.senddata = [];
     this.fromdateview = this.datePipe.transform(dt, this.constants.dateFormat);
     this.fromdateview1 = this.datePipe.transform(dt, 'yyyy-MM-dd hh:mm:ss');
     this.cols = [
@@ -250,7 +252,8 @@ export class GatePassoutwardComponent implements OnInit {
 
   updateoutinward() {
     debugger;
-    var senddata = this.materialListDG;
+    this.senddata = [];
+    this.senddata = this.materialListDG;
     this.selectedmdata = [];
     var tdate = new Date();
     if (this.isoutward) {
@@ -266,26 +269,27 @@ export class GatePassoutwardComponent implements OnInit {
       //});
     }
     else {
-      var invalidrcv = senddata.filter(function (element, index) {
-        return (element.inwardqty != 0);
+      debugger;
+      var invalidrcv = this.senddata.filter(function (element, index) {
+        return (element.inwardqty > 0);
       });
       if (invalidrcv.length == 0) {
-        this.messageService.add({ severity: 'error', summary: '', detail: 'Enter Inward Quantity' });
+        this.messageService.add({ severity: 'error', summary: '', detail: 'Enter valid Inward Quantity' });
         return;
       }
-      var invalidrcv1 = senddata.filter(function (element, index) {
+      var invalidrcv1 = this.senddata.filter(function (element, index) {
         return (element.inwardqty > (element.outwardedqty - element.inwardedqty));
       });
       if (invalidrcv1.length > 0) {
         this.messageService.add({ severity: 'error', summary: '', detail: 'Intward quantity cannot exceed Pending quantity.' });
         return;
       }
-      senddata = senddata.filter(function (element, index) {
-        return (element.inwardqty != 0);
+      this.senddata = this.senddata.filter(function (element, index) {
+        return (element.inwardqty > 0);
       });
 
     }
-    senddata.forEach(item => {
+    this.senddata.forEach(item => {
       let mdata = new outwardmaterialistModel();
       mdata.gatepassmaterialid = item.gatepassmaterialid;
       mdata.gatepassid = this.DGgatepassid;

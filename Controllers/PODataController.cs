@@ -675,6 +675,12 @@ namespace WMS.Controllers
 
 			return await this._poService.GetItemlocationwithStore(material, description, projectid, pono);
 		}
+		[HttpGet("GetItemLocationListByMaterialdescstore_v1")]
+		public async Task<IEnumerable<IssueRequestModel>> GetItemLocationwithStore_V1(string material, string description, string store, string projectid, string pono)
+		{
+
+			return await this._poService.GetItemLocationListByMaterialdescstore_v1(material, description, store, projectid, pono);
+		}
 		[HttpGet("GetItemLocationListByMaterialdescstore")]
 		public async Task<IEnumerable<IssueRequestModel>> GetItemLocationListByMaterialdescstore(string material, string description, string store, string projectid, string pono)
 		{
@@ -832,6 +838,11 @@ namespace WMS.Controllers
 		public async Task<IEnumerable<IssueRequestModel>> getmaterialrequestforsto(string pono, string projectcode,string store)
 		{
 			return await this._poService.MaterialRequestdataforsto(pono, projectcode, store);
+		}
+		[HttpGet("getmaterialrequestforsto_v1")]
+		public async Task<IEnumerable<IssueRequestModel>> getmaterialrequestforsto_v1(string pono, string projectcode, string store)
+		{
+			return await this._poService.MaterialRequestdataforsto_v1(pono, projectcode, store);
 		}
 
 		[HttpGet("getmaterialreserveListdata")]

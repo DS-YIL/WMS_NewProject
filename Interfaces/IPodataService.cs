@@ -89,6 +89,7 @@ namespace WMS.Interfaces
 		Task<IEnumerable<IssueRequestModel>> MaterialRequestdataforgatepass(string pono, string projectcode);
 		Task<IEnumerable<IssueRequestModel>> getmaterialswithstore(string pono, string projectcode);
 		Task<IEnumerable<IssueRequestModel>> MaterialRequestdataforsto(string pono, string projectcode, string store);
+		Task<IEnumerable<IssueRequestModel>> MaterialRequestdataforsto_v1(string pono, string projectcode, string store);
 		Task<IEnumerable<POReportModel>> getPOReportdata(string empno, string projectcode, string pono);
 		Task<IEnumerable<stocktransfermateriakmodel>> getsubconannexuredata(string empno, string subconno);
 		Task<IEnumerable<POReportModel>> getPOReportdetail(string materialid, string description, string pono, string querytype, string requesttype, string projectcode, string empno);
@@ -142,6 +143,7 @@ namespace WMS.Interfaces
 		Task<IEnumerable<IssueRequestModel>> GetItemLocationforplosstock(string material, string description);
 		Task<IEnumerable<IssueRequestModel>> GetItemlocationListBymterialanddescpo(string material, string description, string projectid, string pono);
 		Task<IEnumerable<IssueRequestModel>> GetItemlocationwithStore(string material, string description, string projectid, string pono);
+		Task<IEnumerable<IssueRequestModel>> GetItemLocationListByMaterialdescstore_v1(string material, string description, string store, string projectid, string pono);
 		Task<IEnumerable<IssueRequestModel>> GetItemLocationListByMaterialdescstore(string material, string description, string store, string projectid, string pono);
 		Task<IEnumerable<IssueRequestModel>> GetItemLocationListByMaterialdescpono(string material, string description, string pono);
 

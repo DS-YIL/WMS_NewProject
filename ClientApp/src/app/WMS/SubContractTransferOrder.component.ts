@@ -224,7 +224,7 @@ export class SubContractTransferOrderComponent implements OnInit {
   }
   GetPONo(projectcode: string) {
 
-    this.wmsService.getPODetailsbyprojectcode(this.employee.employeeno, projectcode).subscribe(data => {
+    this.wmsService.getStorePODetailsbyprojectcode(this.employee.employeeno, projectcode).subscribe(data => {
       this.spinner.hide();
       if (data) {
         this.ponolist = data;
@@ -238,7 +238,7 @@ export class SubContractTransferOrderComponent implements OnInit {
   onPOSelected() {
     this.podetailsList = [];
     debugger;
-    if (isNullOrUndefined(this.sourceplant.locatorid)) {
+    if (isNullOrUndefined(this.sourceplant) || isNullOrUndefined(this.sourceplant.locatorid)) {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Select Source' });
       this.selectedpono = "";
       return;
@@ -255,7 +255,7 @@ export class SubContractTransferOrderComponent implements OnInit {
       });
 
 
-      this.wmsService.getMaterialRequestlistdataforgpandstore(pono, this.selectedproject.value, this.sourceplant.locatorid).subscribe(data => {
+      this.wmsService.getMaterialRequestlistdataforgpandstore_v1(pono, this.selectedproject.value, this.sourceplant.locatorid).subscribe(data => {
         this.podetailsList = data;
       });
 

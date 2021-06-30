@@ -277,7 +277,7 @@ where  inw.invoiceno='#invoiceno' and openpo.pono='#pono' group by grnnumber</va
     <value>select gate.isnonproject,gate.gatepassid,gate.vendorname,gate.gatepasstype,gate.reasonforgatepass,gate.otherreason,gate.status,gate.referenceno ,gate.fmapproverremarks ,gate.approverremarks ,gate.approverstatus ,
 mat.gatepassmaterialid,mat.deleteflag,mat.materialid,mat.expecteddate,mat.materialcost::decimal(19,5), mat.poitemdescription as materialdescription,mat.pono,mat.quantity,mat.remarks,
 emp.name,emp1.name as fmapprover,iss.itemissueddate,gate.remarks as  statusremarks,appr."name"  as approvername,
-gate.projectid,iss.issuedqty,gate.requestedby ,gate.requestedon,gate.fmapprovedstatus,gate.approverid ,gate.fmapproverid,gate.approvedon,gate.fmapprovedon,gate.authid,gate.authstatus,gate.authremarks,gate.authorizedon, emp2.name as authname,gate.materialtype,
+gate.projectid,gate.requestedby ,gate.requestedon,gate.fmapprovedstatus,gate.approverid ,gate.fmapproverid,gate.approvedon,gate.fmapprovedon,gate.authid,gate.authstatus,gate.authremarks,gate.authorizedon, emp2.name as authname,gate.materialtype,
 case when gate.isnonproject is not true and gate.materialtype = 'project'
      then (select sum(ws.availableqty::decimal(19,5)) from wms.wms_stock ws where ws.projectid = gate.projectid and ws.pono = mat.pono and ws.materialid = mat.materialid and ws.poitemdescription = mat.poitemdescription group by ws.projectid,ws.pono,ws.materialid,ws.poitemdescription)
      when gate.isnonproject is not true and gate.materialtype = 'plant'
@@ -285,7 +285,12 @@ case when gate.isnonproject is not true and gate.materialtype = 'project'
      else 0 end as availableqty,
       case when gate.isnonproject is not true
   then (select max(unitprice) from wms.wms_stock ws1 where ws1.projectid = gate.projectid and ws1.pono = mat.pono and ws1.materialid = mat.materialid and ws1.poitemdescription = mat.poitemdescription)
-  else 0 end as unitprice
+  else 0 end as unitprice,
+  case when (iss.issuedqty is not null and (select sum(m1.issuedqty) from wms.mrnmaterials m1 where m1.requesttype = 'GatePass' and m1.requestid::text = mat.gatepassmaterialid::text ) &gt; 0)
+          then (iss.issuedqty::decimal(19,5) + (select sum(m1.issuedqty::decimal(19,5)) from wms.mrnmaterials m1 where m1.requesttype = 'GatePass' and m1.requestid::text = mat.gatepassmaterialid::text ))
+       when (iss.issuedqty is null and (select sum(m1.issuedqty) from wms.mrnmaterials m1 where m1.requesttype = 'GatePass' and m1.requestid::text = mat.gatepassmaterialid::text ) &gt; 0)
+           then (select sum(m1.issuedqty::decimal(19,5)) from wms.mrnmaterials m1 where m1.requesttype = 'GatePass' and m1.requestid::text = mat.gatepassmaterialid::text )
+       else iss.issuedqty::decimal(19,5) end as issuedqty
      from wms.wms_gatepass gate
    left join wms.wms_gatepassmaterial mat on gate.gatepassid=mat.gatepassid 
    left join wms.employee emp on emp.employeeno=gate.requestedby
@@ -323,6 +328,7 @@ values(default,@gatepassid,@materialid,@quantity,@deleteflag,@remarks,@materialc
   <data name="getgatepassmaterialdetailList" xml:space="preserve">
     <value>select material.gatepassmaterialid,material.gatepassid,material.poitemdescription,emp."name" as name,pass.vendorname,material.expecteddate,
  (select sum(issuedqty) from wms.wms_materialissue  where requestid::text =material.gatepassmaterialid::text and requesttype = 'gatepass' ) as issuedqty,
+  (select sum(m1.issuedqty::decimal(19,5)) from wms.mrnmaterials m1 where m1.requesttype = 'GatePass' and m1.requestid::text = material.gatepassmaterialid::text) as mrnissuedqty,
  case when (pass.isnonproject is not true and pass.materialtype = 'project')
   then (select sum(availableqty) from wms.wms_stock ws where projectid = pass.projectid and pono = pass.pono and materialid =material.materialid and poitemdescription = material.poitemdescription)
   when (pass.isnonproject is not true and pass.materialtype = 'plant')
@@ -1765,6 +1771,7 @@ stocktype=@stocktype,unitprice=@unitprice,hsncode=@hsncode where material ='#mat
     <value>select max(inv.id) as id,inv.transferid, inv.materialid ,Max(nv.transferredby) as createdby, Max(inv.poitemdesc) as poitemdescription, max(inv.transferqty) as transferqty,
 Max(nv.projectcode ) as projectcode,inv.pono,
 (select sum(matiss.issuedqty) from wms.wms_materialissue matiss  where matiss.requestid =cast(max(inv.id) as varchar ) and matiss.requesttype ='#transfertype' ) as issuedqty,
+(select sum(m1.issuedqty) from wms.mrnmaterials m1 where m1.requesttype = '#transfertype' and m1.requestid::text = max(inv.id::text)  ) as mrnissuedqty,
  (select sum(ws.availableqty) from wms.wms_stock ws where ws.materialid =inv.materialid and ws.poitemdescription = inv.poitemdesc and ws.projectid = max(nv.projectcode) and ws.pono = inv.pono ) as availableqty,
  (select sum(wi.poqty) from wms.wms_initiatepo wi  where wi.materialid = inv.materialid and wi.poitemdescription = inv.poitemdesc and wi.transferid = inv.transferid ) as poqty
 from wms.wms_invtransfermaterial inv
@@ -2623,5 +2630,63 @@ from wms.wms_storeinward ws
 left outer join wms.wms_polist polist on ws.pono = polist.pono
 where ws.confirmqty &gt; 0 and ws.projectid = '#projectcode'
 group by ws.pono, polist.suppliername</value>
+  </data>
+  <data name="getItemlocationwithStoreSTO" xml:space="preserve">
+    <value>(select sum(sk.availableqty::decimal(19,5))as availableqty,Max(sk.materialid) as materialid,sk.itemlocation,Max(sk.poitemdescription) as materialdescription,sk.createddate::DATE,0 as mrntotalissuedqty
+from wms.wms_stock sk 
+left outer join wms.wms_rd_locator loc on sk.storeid = loc.locatorid 
+where sk.materialid='#materialid' and lower(sk.poitemdescription)  = lower('#desc') and loc.locatorname = '#store' and sk.projectid = '#projectid' and sk.pono = '#pono'
+and sk.availableqty&gt;0 
+group by sk.itemlocation,sk.createddate::DATE order by sk.createddate::DATE desc)
+union all
+(select sum(ws.confirmqty ::decimal(19,5))as availableqty,ws.materialid as materialid,'ON FLOOR' as itemlocation,ws.poitemdescription as materialdescription,max(ws.receiveddate ::DATE) as createddate,
+(select sum(m.issuedqty) from wms.mrnmaterials m 
+left outer join wms.wms_storeinward sw on sw.inwardid = m.inwardid 
+where sw.projectid = max(ws.projectid) and sw.materialid = max(ws.materialid) and sw.pono = max(ws.pono) and sw.poitemdescription = max(ws.poitemdescription) ) as mrntotalissuedqty
+from wms.wms_storeinward ws
+left outer join wms.wms_securityinward siw on siw.inwmasterid = ws.inwmasterid 
+where siw.isdirectdelivered is not true and siw.deleteflag is not true and ws.deleteflag is not true and ws.materialid='#materialid' and lower(ws.poitemdescription)  = lower('#desc') and ws.projectid = '#projectid' and ws.pono = '#pono'
+and ws.confirmqty &gt; 0  group by ws.materialid,ws.poitemdescription)</value>
+  </data>
+  <data name="getmaterialsforsto_v1" xml:space="preserve">
+    <value>select  sk.materialid,sk.poitemdescription  as materialdescription,
+sum(sk.availableqty) as availableqty,sk.pono,0 as mrnissuedqty,
+max(sk.unitprice::decimal(19,5)) as unitprice from wms.wms_stock  sk  
+where sk.availableqty &gt; 0 and sk.projectid = '#projectid' and sk.pono in (#pono) and sk.storeid = #storeid group by sk.poitemdescription, sk.materialid,sk.pono
+union all
+select  ws.materialid ,ws.poitemdescription  as materialdescription,
+sum(ws.confirmqty) as availableqty,ws.pono,
+(select sum(m.issuedqty) from wms.mrnmaterials m 
+left outer join wms.wms_storeinward sw on sw.inwardid = m.inwardid 
+left outer join wms.wms_securityinward siw on siw.inwmasterid = sw.inwmasterid 
+where sw.projectid = '#projectid' and sw.materialid = ws.materialid and sw.pono = ws.pono and sw.poitemdescription = ws.poitemdescription ) as mrnissuedqty, 
+max(ws.unitprice::decimal(19,5)) as unitprice from wms.wms_storeinward ws 
+left outer join wms.wms_securityinward sinw on sinw.inwmasterid = ws.inwmasterid 
+where (ws.inwardid not in (select distinct ws2.inwardid from wms.wms_stock ws2 where ws2.inwardid is not null)) and ws.confirmqty &gt; 0 and ws.projectid = '#projectid' and ws.deleteflag is not true 
+and sinw.isdirectdelivered is not true and sinw.deleteflag is not true and ws.deleteflag is not true and ws.pono in (#pono) group by ws.poitemdescription, ws.materialid,ws.pono</value>
+  </data>
+  <data name="getItemlocationListByGatepassmaterialid_v2" xml:space="preserve">
+    <value>select iss.issuedqty,sk.pono,sk.materialid,sk.itemid,sk.itemlocation,
+(select sum(sk1.availableqty) from wms.wms_stock sk1 where sk1.materialid = sk.materialid and sK1.poitemdescription = sk.poitemdescription and sk1.itemlocation = sk.itemlocation and sk1.pono = sk.pono and sk1.projectid = sk.projectid) as availableqty,
+0 as mrntotalissuedqty,sk.createddate::DATE,
+sk.poitemdescription as materialdescription
+from wms.wms_materialissue iss 
+left outer join wms.wms_stock sk on iss.itemid =sk.itemid
+where iss.requestid::text = '#gatepassmaterialid'::text and iss.requesttype = 'gatepass'
+union all
+select m.issuedqty,ws.pono,ws.materialid,m.mrnid as itemid,'ON FLOOR' as itemlocation,
+(select sum(wsx.confirmqty) from wms.wms_storeinward wsx
+left outer join wms.wms_securityinward sinw on sinw.inwmasterid = wsx.inwmasterid 
+  where sinw.isdirectdelivered is not true and sinw.deleteflag is not true and wsx.deleteflag is not true and
+ (wsx.inwardid not in (select distinct ws2.inwardid from wms.wms_stock ws2 where ws2.inwardid is not null))
+  and wsx.projectid = m.projectcode and wsx.pono = ws.pono and wsx.materialid = ws.materialid and wsx.poitemdescription = ws.poitemdescription) as availableqty,
+    (select sum(m.issuedqty) from wms.mrnmaterials m 
+left outer join wms.wms_storeinward sw on sw.inwardid = m.inwardid 
+where sw.projectid = ws.projectid and sw.materialid = ws.materialid and sw.pono = ws.pono and sw.poitemdescription = ws.poitemdescription ) as mrntotalissuedqty,
+m.mrnon ::DATE as createddate,
+ws.poitemdescription as materialdescription
+from wms.mrnmaterials m  
+left outer join wms.wms_storeinward ws on m.inwardid = ws.inwardid 
+where m.requestid = '#gatepassmaterialid' and m.requesttype = 'GatePass'</value>
   </data>
 </root>

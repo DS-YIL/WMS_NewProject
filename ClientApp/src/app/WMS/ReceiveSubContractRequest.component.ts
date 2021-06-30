@@ -172,7 +172,8 @@ export class ReceiveSubContractRequestComponent implements OnInit {
         });
       }
       else {
-        this.wmsService.getItemlocationListByMaterialdescstore(material, description, this.pcode, pono, this.sourcelocation).subscribe(data => {
+        this.wmsService.getItemlocationListByMaterialdescstore_v1(material, description, this.pcode, pono, this.sourcelocation).subscribe(data => {
+          debugger;
           this.itemlocationData = data;
           this.showdialog = true;
         });
@@ -181,7 +182,7 @@ export class ReceiveSubContractRequestComponent implements OnInit {
     }
     else {
       this.issueqtyenable = true;
-      this.wmsService.getItemlocationListByIssueId(String(rid), 'SubContract').subscribe(data => {
+      this.wmsService.getItemlocationListByIssueIdWithStore(String(rid), 'SubContract').subscribe(data => {
         this.itemlocationData = data;
         this.showdialog = true;
       });
@@ -189,6 +190,7 @@ export class ReceiveSubContractRequestComponent implements OnInit {
   }
 
   issuematerial(itemlocationData) {
+    debugger;
     var data1 = this.itemlocationData.filter(function (element, index) {
       return (element.issuedqty > element.availableqty);
     });
@@ -196,9 +198,11 @@ export class ReceiveSubContractRequestComponent implements OnInit {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Issue Qty cannot exceed available Qty.' });
       return;
     }
-    var material = this.itemlocationData[0].materialid;
+   
+
+    var material = this.materialissueList[this.roindex].id;
     this.itemlocationsaveData = this.itemlocationsaveData.filter(function (element, index) {
-      return (element.materialid != material);
+      return (element.requestid != material);
     });
     var totalissuedqty = 0;
     if (this.itemlocationData.length > 0) {
