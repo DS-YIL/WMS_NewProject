@@ -505,7 +505,7 @@ export class wmsService {
   getItemlocationListByMaterialanddescpo(material: string, poitemdescription: string, projectid: string, pono: string): Observable<any> {
     material = encodeURIComponent(material);
     poitemdescription = encodeURIComponent(poitemdescription);
-    return this.http.get<any>(this.url + 'POData/GetItemLocationListByMaterialanddescpo?material=' + material + '&description=' + poitemdescription + '&projectid=' + projectid+'&pono='+pono, this.httpOptions);
+    return this.http.get<any>(this.url + 'POData/GetItemLocationListByMaterialanddescpo?material=' + material + '&description=' + poitemdescription + '&projectid=' + projectid + '&pono=' + pono, this.httpOptions);
   }
   getItemlocationwithstore(material: string, poitemdescription: string, projectid: string, pono: string): Observable<any> {
     material = encodeURIComponent(material);
@@ -906,7 +906,7 @@ export class wmsService {
   getmatinhandlocations(poitemdescription: string, material: string, projectid: string, pono: string, sono: string): Observable<matlocations[]> {
     poitemdescription = encodeURIComponent(poitemdescription);
     material = encodeURIComponent(material);
-    return this.http.get<matlocations[]>(this.url + 'POData/getmatinhandlocation?poitemdescription=' + poitemdescription + '&materialid=' + material + '&projectid=' + projectid+'&pono='+pono+'&sono='+sono, this.httpOptions);
+    return this.http.get<matlocations[]>(this.url + 'POData/getmatinhandlocation?poitemdescription=' + poitemdescription + '&materialid=' + material + '&projectid=' + projectid + '&pono=' + pono + '&sono=' + sono, this.httpOptions);
   }
 
   getinitialStock(uploadcode: string): Observable<StockModel[]> {
@@ -996,7 +996,7 @@ export class wmsService {
 
   getPODataList(suppliername: any): Observable<any> {
     //console.log(suppliername)
-    return this.http.get<any[]>(this.url + 'POData/getPODataList?suppliername=' + suppliername, this.httpOptions);
+    return this.http.get<any>(this.url + 'POData/getPODataList/' + suppliername, this.httpOptions);
   }
 
   getGRListData(): Observable<any> {
