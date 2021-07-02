@@ -795,7 +795,8 @@ namespace WMS.Controllers
 			return await this._poService.Getpagesbyroleid(roleid);
 		}
 
-		[HttpGet("getPODataList")]
+
+		[HttpGet("getPODataList/{suppliername}")]
 		public async Task<IEnumerable<POList>> getPODataList(string suppliername)
 		{
 			return await this._poService.getPODataList(suppliername);
