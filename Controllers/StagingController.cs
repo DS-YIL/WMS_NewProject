@@ -4601,7 +4601,7 @@ namespace WMS.Controllers
 				try
 				{
 
-					string query = "UPDATE wms.wms_project SET projectmanager = wms.stag_projectmaster.projectmanager FROM wms.stag_projectmaster WHERE wms.stag_projectmaster.projectcode = wms.wms_project.projectcode and wms.wms_project.projectcode is not null and wms.stag_projectmaster.projectcode is not null";
+					string query = "UPDATE wms.wms_project wp SET projectmanager = (select sp.projectmanager from wms.stag_projectmaster sp  where sp.projectcode = wp.projectcode order by id desc limit 1) where wp.projectcode is not null";
 					pgsql.Open();
 					NpgsqlCommand command = new NpgsqlCommand(query, pgsql);
 					Int64 count = (Int64)command.ExecuteNonQuery();

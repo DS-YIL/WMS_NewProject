@@ -237,7 +237,7 @@ namespace WMS.Common
 				//subbody = "Please find the Masterials request details below. <br/> Requested By:" + emlSndngList.requestedby + "<br/>Requested On:" + emlSndngList.requestedon;
 				//subbody = mailMessage.Subject;
 				string requesteddte = emlSndngList.requestedon.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
-				mailMessage.Subject = "Gatepass Materials for" + emlSndngList.gatepasstype + "- GatePass - ID : " + emlSndngList.gatepassid;
+				mailMessage.Subject = "Gatepass Materials for " + emlSndngList.gatepasstype + "- GatePass - ID : " + emlSndngList.gatepassid;
 				string requestedby = this.getnamebyid(emlSndngList.requestedby);
 				subbody = "Please find the " + emlSndngList.gatepasstype + " Gatepass Materials details below. <br/> Requested By : <b>" + requestedby + "</b><br/>Requested On : <b>" + requesteddte + "</b><br/>GatePass Type : <b>" + emlSndngList.gatepasstype + "</b>";
 				//subbody = mailMessage.Subject;
