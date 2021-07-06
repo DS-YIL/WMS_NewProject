@@ -17238,8 +17238,8 @@ Review Date :<<>>   Reviewed By :<<>>
 					//	query += " where st.initialstock=true group by st.poitemdescription, st.itemlocation";
 					//else
 					//	query += " group by st.poitemdescription,st.itemlocation";
-					string query1 = " select max(itemid) as itemid,projectid,materialid as material,pono,poitemdescription,itemlocation,sum(availableqty) as availableqty,sum(availableqty::decimal(19,5) * unitprice::decimal(19,5) ) as value from wms.wms_stock ws where availableqty > 0";
-					query1 += " and initialstock=true group by projectid,materialid,pono,poitemdescription,itemlocation";
+					string query1 = " select max(itemid) as itemid,projectid,saleorderno,materialid as material,pono,poitemdescription,itemlocation,sum(availableqty) as availableqty,sum(availableqty::decimal(19,5) * unitprice::decimal(19,5) ) as value from wms.wms_stock ws where availableqty > 0";
+					query1 += " and initialstock=true group by projectid,saleorderno,materialid,pono,poitemdescription,itemlocation";
 
 					await pgsql.OpenAsync();
 					var result = await pgsql.QueryAsync<StockModel>(
