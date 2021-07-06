@@ -32,6 +32,8 @@ namespace WMS.Common
 		public readonly string _opdrpd = string.Empty;
 		public readonly string _testemail = string.Empty;
 		public readonly string _smtpip = string.Empty;
+		public readonly string _qualityCheck = string.Empty;
+		
 
 		public Configurations()
 		{
@@ -64,6 +66,7 @@ namespace WMS.Common
 			_opdrpd = root.GetSection("ConnectionStrings").GetSection("opdrpd").Value;
 			_testemail = root.GetSection("ConnectionStrings").GetSection("testemail").Value;
 			_smtpip = root.GetSection("ConnectionStrings").GetSection("smtpip").Value;
+			_qualityCheck=root.GetSection("ConnectionStrings").GetSection("qualityCheck").Value;
 
 			var appSetting = root.GetSection("ApplicationSettings");
 
@@ -143,5 +146,10 @@ namespace WMS.Common
 		{
 			get => _smtpip;
 		}
+		public string qualityCheck
+		{
+			get => _qualityCheck;
+		}
+		
 	}
 }

@@ -2003,32 +2003,57 @@ namespace WMS.DAL
 					}
 					//if (inwardid != 0)
 
-					if (type == "1")
+					if (type == "1" || type == "2")
 					{
-						EmailModel emailmodel = new EmailModel();
-						emailmodel.grnnumber = verify.grnnumber;
-						EmailUtilities emailobj = new EmailUtilities();
-						emailobj.sendEmail(emailmodel, 2, 9);
+						var qualityCheck =Convert.ToBoolean(config.qualityCheck);
+						if (qualityCheck)
+						{
+							EmailModel emailmodel = new EmailModel();
+							emailmodel.grnnumber = verify.grnnumber;
+							EmailUtilities emailobj = new EmailUtilities();
+							emailobj.sendEmail(emailmodel, 2, 9);
+						}
+						else
+						{
+							string Qualquery = WMSResource.getdataforqualitydetails.Replace("#grnno", verify.grnnumber);// + pono+"'";//li
+							var data = await pgsql.QueryAsync<OpenPoModel>(
+							   Qualquery, null, commandType: CommandType.Text);
+							var datamodel = new List<inwardModel>();
+							foreach (var item in data)
+							{
+								var inwModel = new inwardModel();
+								inwModel.inwardid = item.inwardid;
+								inwModel.receivedqty=item.receivedqty;
+								inwModel.qualitypassedqty = item.receivedqty;
+								inwModel.qualityfailedqty = 0;
+								inwModel.remarks = "Automatic QC Clearance";
+								inwModel.pono = item.pono;
+								inwModel.projectname = item.projectname;
+								inwModel.grnnumber = item.grnnumber;
+								datamodel.Add(inwModel);
+							}
+							insertquantitycheck(datamodel);
+						}
 					}
-					else if (type == "2")
+					else if (type == "2" || type == "3")
 					{
 						EmailModel emailmodel = new EmailModel();
 						emailmodel.grnnumber = verify.grnnumber;
 						EmailUtilities emailobj = new EmailUtilities();
 						emailobj.sendEmail(emailmodel, 20, 3);
 					}
-					else if (type == "3")
-					{
-						EmailModel emailmodel = new EmailModel();
-						emailmodel.grnnumber = verify.grnnumber;
-						EmailUtilities emailobj = new EmailUtilities();
-						emailobj.sendEmail(emailmodel, 2, 9);
+					//else if (type == "3")
+					//{
+					//	EmailModel emailmodel = new EmailModel();
+					//	emailmodel.grnnumber = verify.grnnumber;
+					//	EmailUtilities emailobj = new EmailUtilities();
+					//	emailobj.sendEmail(emailmodel, 2, 9);
 
-						EmailModel emailmodel1 = new EmailModel();
-						emailmodel1.grnnumber = verify.grnnumber;
-						EmailUtilities emailobj1 = new EmailUtilities();
-						emailobj1.sendEmail(emailmodel1, 20, 3);
-					}
+					//	EmailModel emailmodel1 = new EmailModel();
+					//	emailmodel1.grnnumber = verify.grnnumber;
+					//	EmailUtilities emailobj1 = new EmailUtilities();
+					//	emailobj1.sendEmail(emailmodel1, 20, 3);
+					//}
 
 
 
@@ -5269,7 +5294,7 @@ namespace WMS.DAL
 									}
 									string updateissueqty = "update  wms.wms_gatepassmaterial set issuedqty=" + totalissued + " where gatepassmaterialid=" + item.gatepassmaterialid;
 									var result2 = pgsql.Execute(updateissueqty);
-									
+
 
 									if (quantitytoissue <= 0)
 									{
@@ -5329,13 +5354,13 @@ namespace WMS.DAL
 					await pgsql.OpenAsync();
 					var data = await pgsql.QueryAsync<gatepassModel>(
 					   query, null, commandType: CommandType.Text);
-					foreach(gatepassModel mdl in data)
-                    {
-						if(mdl.mrnissuedqty != null)
-                        {
+					foreach (gatepassModel mdl in data)
+					{
+						if (mdl.mrnissuedqty != null)
+						{
 							mdl.issuedqty = Conversion.Todecimaltype(mdl.issuedqty) + mdl.mrnissuedqty;
-                        }
-                    }
+						}
+					}
 
 					return data;
 
@@ -7742,16 +7767,16 @@ namespace WMS.DAL
 							AcList.Add(res1);
 						}
 					}
-					
+
 					string empstrxx = config.FinanceEmployeeNo;
 					foreach (userAcessNamesModel mdl in AcList)
-                    {
-							if(empstrxx.Contains(employeeid))
-                            {
-								mdl.isFinancemember = true;
-                            }
-                    }
-                 
+					{
+						if (empstrxx.Contains(employeeid))
+						{
+							mdl.isFinancemember = true;
+						}
+					}
+
 
 					return AcList;
 				}
@@ -18096,7 +18121,7 @@ Review Date :<<>>   Reviewed By :<<>>
 					foreach (STOIssueModel mdl in result)
 					{
 
-						
+
 						if (mdl.mrnissuedqty != null)
 						{
 

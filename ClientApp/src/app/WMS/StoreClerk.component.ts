@@ -782,7 +782,7 @@ export class StoreClerkComponent implements OnInit {
     if (acceptrequired.length > 0) {
       emailtype = "2";
     }
-    if (acceptrequired.length > 0 && acceptrequired.length > 0) {
+    if (qualityrequired.length > 0 && acceptrequired.length > 0) {
       emailtype = "3";
     }
     this.wmsService.verifythreewaymatch(details, this.PoDetails.invoiceno, emailtype).subscribe(data => {
