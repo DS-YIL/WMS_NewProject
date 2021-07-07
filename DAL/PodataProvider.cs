@@ -33,6 +33,7 @@ using System.Net.Http;
 using System.Text;
 using Newtonsoft.Json;
 using System.Configuration;
+using System.Net.Mail;
 
 /*
     Name of namespace : <<WMS>>  Author :<<Shashikala>>  
@@ -2005,7 +2006,7 @@ namespace WMS.DAL
 
 					if (type == "1" || type == "2")
 					{
-						var qualityCheck =Convert.ToBoolean(config.qualityCheck);
+						var qualityCheck = Convert.ToBoolean(config.qualityCheck);
 						if (qualityCheck)
 						{
 							EmailModel emailmodel = new EmailModel();
@@ -2023,7 +2024,7 @@ namespace WMS.DAL
 							{
 								var inwModel = new inwardModel();
 								inwModel.inwardid = item.inwardid;
-								inwModel.receivedqty=item.receivedqty;
+								inwModel.receivedqty = item.receivedqty;
 								inwModel.qualitypassedqty = item.receivedqty;
 								inwModel.qualityfailedqty = 0;
 								inwModel.remarks = "Automatic QC Clearance";
@@ -19014,6 +19015,83 @@ Review Date :<<>>   Reviewed By :<<>>
 				catch (Exception Ex)
 				{
 					log.ErrorMessage("PODataProvider", "deleteDirectDelivery", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
+					return false;
+				}
+				finally
+				{
+					pgsql.Close();
+				}
+				return true;
+			}
+		}
+
+		/*Name of Function : <<IssueStatusChange>>  Author :<<Prasanna>>  
+		Date of Creation <<07/07/2021>>
+		Purpose : <<status changes from inventory clerk>>
+		<param name="type"></param>
+		Review Date :<<>>   Reviewed By :<<>>*/
+
+		public bool IssueStatusChange(Issuestatus model)
+		{
+			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
+			{
+				try
+				{
+					pgsql.OpenAsync();
+					if (model.type == "MaterialRequest")
+					{
+
+						string matqry = WMSResource.updatesmaterialReqStatus.Replace("#requesterid", model.requestid.ToString());
+						using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
+						{
+							var results = DB.ExecuteScalar(matqry, new
+							{
+								model.status,
+								model.statusremarks,
+								model.statuschangeby
+							});
+						}
+					}
+					if (model.type == "gatepass")
+					{
+						string gatepassqry = WMSResource.updateGatePassStatus.Replace("#gatepassid", model.requestid.ToString());
+						using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
+						{
+							var results = DB.ExecuteScalar(gatepassqry, new
+							{
+								model.status,
+								model.statusremarks,
+								model.statuschangeby
+							});
+						}
+					}
+					if (model.type == "STO" || model.type == "SubContract")
+					{
+						string Invqry = WMSResource.updateInvtransferStatus.Replace("#transferid", model.requestid.ToString());
+						using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
+						{
+							var results = DB.ExecuteScalar(Invqry, new
+							{
+								model.status,
+								model.statusremarks,
+								model.statuschangeby
+							});
+						}
+					}
+					//mail to requester
+					EmailModel emailmodel = new EmailModel();
+					emailmodel.requestid = model.requestid;
+					emailmodel.approverstatus = model.status;
+					emailmodel.createdby = model.statuschangeby;
+					emailmodel.remarks = model.statusremarks;
+					emailmodel.requesttype = model.type;
+					emailmodel.createddate = DateTime.Now;
+					EmailUtilities emailobj = new EmailUtilities();
+					emailobj.sendEmail(emailmodel, 39);
+				}
+				catch (Exception Ex)
+				{
+					log.ErrorMessage("PODataProvider",k "IssueStatusChange", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return false;
 				}
 				finally

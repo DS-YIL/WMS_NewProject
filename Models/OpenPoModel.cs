@@ -2538,3 +2538,14 @@ public class YGSGR
 	public string failreason { get; set; }
 	public DateTime? faileddatetime { get; set; }
 }
+public class Issuestatus
+{
+	public string status { get; set; }
+	public string statusremarks { get; set; }
+	public string statuschangeby { get; set; }
+	public string statuschangedon { get; set; }
+	public string type { get; set; }
+	public string requestid { get; set; }
+	public string requestedby { get; set; }
+	
+}
