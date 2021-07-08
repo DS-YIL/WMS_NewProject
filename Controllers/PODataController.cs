@@ -1829,6 +1829,11 @@ namespace WMS.Controllers
 		{
 			return await this._poService.GetGPReport(fromdate, todate);
 		}
+		[HttpPost("IssueStatusChange")]
+		public bool IssueStatusChange(Issuestatus model)
+		{
+			return this._poService.IssueStatusChange(model);
+		}
 	}
 
 }

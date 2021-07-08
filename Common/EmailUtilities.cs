@@ -89,13 +89,13 @@ namespace WMS.Common
 					return false;
 				}
 				emlSndngList.ToEmailId = tomainlstring;
-				if(emlSndngList.ToEmailId == "")
+				if (emlSndngList.ToEmailId == "")
 				{
 					emlSndngList.ToEmailId = config.testemail + "," + config.opdrpd;
 					//emlSndngList.ToEmailId = "ramesh.kumar@yokogawa.com,yil.opdprd@yokogawa.com";
 				}
-                else
-                {
+				else
+				{
 					emlSndngList.ToEmailId += "," + config.opdrpd;
 					//emlSndngList.ToEmailId += ",yil.opdprd@yokogawa.com";
 
@@ -107,9 +107,9 @@ namespace WMS.Common
 			if (config.EmailType.ToString().ToLower().Trim() == "test")
 			{
 				multipleemails = false;
-                emlSndngList.ToEmailId = config.testemail;
-                emlSndngList.CC = config.testemail;
-                //emlSndngList.ToEmailId = "ramesh.kumar@yokogawa.com";
+				emlSndngList.ToEmailId = config.testemail;
+				emlSndngList.CC = config.testemail;
+				//emlSndngList.ToEmailId = "ramesh.kumar@yokogawa.com";
 				//emlSndngList.CC = "ramesh.kumar@yokogawa.com";
 			}
 			MailMessage mailMessage = new MailMessage();
@@ -205,7 +205,7 @@ namespace WMS.Common
 			//project manager
 			else if (subjecttype == 51)
 			{
-				mailMessage.Subject = "Materials Issued for Request Id" + emlSndngList.requestid ;
+				mailMessage.Subject = "Materials Issued for Request Id" + emlSndngList.requestid;
 				subbody = "The materials for Request Id " + emlSndngList.requestid + " has been issued.";
 				//subbody += mailMessage.Subject;
 				link = linkurl + "WMS/Email/MaterialReqView?ReqId=" + emlSndngList.requestid;
@@ -444,14 +444,14 @@ namespace WMS.Common
 			}
 			else if (subjecttype == 31)
 			{
-				mailMessage.Subject = "Rejected "+emlSndngList.requesttype+" Materials Request for Request Id" + emlSndngList.requestid;
+				mailMessage.Subject = "Rejected " + emlSndngList.requesttype + " Materials Request for Request Id" + emlSndngList.requestid;
 				subbody = "The material request for Request Id " + emlSndngList.requestid + " has been rejected.";
 				//subbody += mailMessage.Subject;
-				if(emlSndngList.requesttype == "STO")
+				if (emlSndngList.requesttype == "STO")
 				{
 					link = linkurl + "WMS/Email/StockTransferOrder?ReqId=" + emlSndngList.requestid;
 				}
-				else if(emlSndngList.requesttype == "SubContract")
+				else if (emlSndngList.requesttype == "SubContract")
 				{
 					link = linkurl + "WMS/Email/SubContractTransferOrder?ReqId=" + emlSndngList.requestid;
 				}
@@ -525,6 +525,21 @@ namespace WMS.Common
 				subbody = "Please find the Sub Contacting Material request details below. <br/> Requested By:" + requestedby + "<br/>Requested On:" + emlSndngList.createddate;
 				//subbody += "<br/>"+ mailMessage.Subject;
 				link = linkurl + "WMS/Email/ApprovalSubcontractingMaterialNP?ReqId=" + emlSndngList.requestid;
+			}
+			else if (subjecttype == 39)
+			{
+				mailMessage.Subject = "Status:" + emlSndngList.approverstatus + "; request id:" + emlSndngList.requestid;
+				string requestedby = this.getnamebyid(emlSndngList.createdby);
+				subbody = "Remarks: " + emlSndngList.remarks + "<br/> Status By:" + requestedby + "<br/>Status On:" + emlSndngList.createddate;
+				if (emlSndngList.requesttype == "MaterialRequest")
+					link = linkurl + "WMS/Email/MaterialIssueDashboard?ReqId=" + emlSndngList.requestid;
+				if (emlSndngList.requesttype == "gatepass")
+					link = linkurl + "WMS/Email/GatePass?GateId=" + emlSndngList.requestid;
+				if (emlSndngList.requesttype == "STO")
+					link = linkurl + "WMS/Email/IssueSTOMaterial?ReqId=" + emlSndngList.requestid;
+				if (emlSndngList.requesttype == "SubContract")
+					link = linkurl + "WMS/Email/IssueSubcontractingMaterial?ReqId=" + emlSndngList.requestid;
+
 			}
 
 			//mailMessage.Subject = body;
@@ -738,7 +753,7 @@ namespace WMS.Common
 			}
 			catch (Exception ex)
 			{
-				log.ErrorMessage("EmailTemplate",ex.StackTrace.ToString(), "sendEmail" + ";" + emlSndngList.ToEmailId.ToString() + "", ex.ToString());
+				log.ErrorMessage("EmailTemplate", ex.StackTrace.ToString(), "sendEmail" + ";" + emlSndngList.ToEmailId.ToString() + "", ex.ToString());
 			}
 			return true;
 		}

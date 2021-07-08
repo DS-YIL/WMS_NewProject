@@ -153,7 +153,7 @@ namespace WMS.Controllers
 											model.exchangerate = Conversion.Todecimaltype(row["Exchange Rate"]);
 											model.pgr = Conversion.toStr(row["PGr"]);
 											model.shiptoparty = Conversion.toStr(row["Ship to Party"]);
-											
+
 
 											string Error_Description = "";
 											bool dataloaderror = false;
@@ -1418,7 +1418,7 @@ namespace WMS.Controllers
 							}
 							else
 							{
-								var updateqry = "update wms.wms_polist set podate = @podate ,crcy = @crcy, exchangerate=@exchangerate,pocreatedby=@pocreatedby,pgr=@pgr where pono = '" + stag_data.purchdoc +  "'";
+								var updateqry = "update wms.wms_polist set podate = @podate ,crcy = @crcy, exchangerate=@exchangerate,pocreatedby=@pocreatedby,pgr=@pgr where pono = '" + stag_data.purchdoc + "'";
 								var rslt = pgsql.Execute(updateqry, new
 								{
 
@@ -4565,18 +4565,19 @@ namespace WMS.Controllers
 									}
 
 									DB.Close();
-									AuditLog auditlog = new AuditLog();
-									auditlog.filename = filename;
-									auditlog.filelocation = filePath;
-									auditlog.uploadedon = DateTime.Now;
-									auditlog.uploadedto = "STAG_ProjectMaster_SAP";
-									auditlog.modulename = "uploadProjectMaster";
-									auditlog.uploadcode = uploadcode;
-
-									loadAuditLog(auditlog);
-									loadProjectMasterData(uploadcode);
 								}
+								AuditLog auditlog = new AuditLog();
+								auditlog.filename = filename;
+								auditlog.filelocation = filePath;
+								auditlog.uploadedon = DateTime.Now;
+								auditlog.uploadedto = "STAG_ProjectMaster_SAP";
+								auditlog.modulename = "uploadProjectMaster";
+								auditlog.uploadcode = uploadcode;
+
+								loadAuditLog(auditlog);
+								loadProjectMasterData(uploadcode);
 							}
+
 						}
 					}
 				}
@@ -4635,12 +4636,12 @@ namespace WMS.Controllers
 
 					var stockdata = pgsql.QueryAsync<ddlmodel>(stockquery, null, commandType: CommandType.Text);
 
-					if(stockdata != null)
+					if (stockdata != null)
 					{
-						foreach(ddlmodel mdl in stockdata.Result)
+						foreach (ddlmodel mdl in stockdata.Result)
 						{
 							string pmgr = mdl.projectmanager;
-							if(pmgr != null && pmgr.Length == 6)
+							if (pmgr != null && pmgr.Length == 6)
 							{
 								//string querypmb = "Select Max(projectmember) as projectmember from wms.wms_project where  projectcode = '" + stag_data.projectcode + "' group by projectmanager";
 								//var rslttmb = pgsql.ExecuteScalar(querypmb, null);
@@ -4733,14 +4734,14 @@ namespace WMS.Controllers
 							materialdescription = item.materialdescription.Replace("\'", "''");
 						}
 						string querypmb = "select sum(si.quantity::decimal(19,5)) as quantity ";
-						querypmb += " from wms.st_initialstock si  where si.projectid = '"+ item.ProjectId + "' and si.pono = '" + item.pono + "'";
-						querypmb +=  " and si.material = '" + item.material + "' and si.materialdescription = '"+ materialdescription + "'";
+						querypmb += " from wms.st_initialstock si  where si.projectid = '" + item.ProjectId + "' and si.pono = '" + item.pono + "'";
+						querypmb += " and si.material = '" + item.material + "' and si.materialdescription = '" + materialdescription + "'";
 						querypmb += " group by si.projectid,si.pono,si.material,si.materialdescription";
 						var rslttmb = DB.ExecuteScalar(querypmb, null);
 						decimal? decmresult = null;
 						if (rslttmb != null)
 						{
-							decmresult =  Conversion.Todecimaltype(rslttmb);
+							decmresult = Conversion.Todecimaltype(rslttmb);
 						}
 
 
@@ -4911,9 +4912,9 @@ namespace WMS.Controllers
 						{
 							materialdescription = item.materialdescription.Replace("\'", "''");
 						}
-						if(item.pono != null && item.pono.Trim() != "")
+						if (item.pono != null && item.pono.Trim() != "")
 						{
-							string insertqueryforstatusforqty = "update  wms.wms_stock set saleorderno = '" + item.ProjectId + "' where pono = '" + item.pono + "' and materialid = '"+item.material+"' and poitemdescription = '" + materialdescription + "'";
+							string insertqueryforstatusforqty = "update  wms.wms_stock set saleorderno = '" + item.ProjectId + "' where pono = '" + item.pono + "' and materialid = '" + item.material + "' and poitemdescription = '" + materialdescription + "'";
 							var data1 = DB.ExecuteScalar(insertqueryforstatusforqty, new { });
 							//string querypmb = "select max(materialid) as material from  wms.wms_stock  where pono = '" + item.pono + "' and materialid = '" + item.material + "' and poitemdescription = '" + materialdescription + "'";
 							//string mat = "";

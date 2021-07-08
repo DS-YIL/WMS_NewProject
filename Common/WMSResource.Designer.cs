@@ -4103,6 +4103,15 @@ namespace WMS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to update wms.wms_gatepass set status =@status,statusremarks =@statusremarks,statuschangeby =@statuschangeby,statuschangedon =current_date where gatepassid =#gatepassid.
+        /// </summary>
+        public static string updateGatePassStatus {
+            get {
+                return ResourceManager.GetString("updateGatePassStatus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to update wms.rd_reason set reason=#reason, createddate =current_date ,createdby =#createdby .
         /// </summary>
         public static string updateGPReason {
@@ -4117,6 +4126,15 @@ namespace WMS.Common {
         public static string updategrnnumber {
             get {
                 return ResourceManager.GetString("updategrnnumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to update wms.wms_invstocktransfer set status =@status,statusremarks =@statusremarks,statuschangeby =@statuschangeby,statuschangedon =current_date where transferid =#transferid.
+        /// </summary>
+        public static string updateInvtransferStatus {
+            get {
+                return ResourceManager.GetString("updateInvtransferStatus", resourceCulture);
             }
         }
         
@@ -4354,6 +4372,15 @@ namespace WMS.Common {
         public static string updateseqnumber {
             get {
                 return ResourceManager.GetString("updateseqnumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to update wms.materialrequest set status =@status,statusremarks =@statusremarks,statuschangeby =@statuschangeby,statuschangedon =current_date where requesterid =#requesterid.
+        /// </summary>
+        public static string updatesmaterialReqStatus {
+            get {
+                return ResourceManager.GetString("updatesmaterialReqStatus", resourceCulture);
             }
         }
         
