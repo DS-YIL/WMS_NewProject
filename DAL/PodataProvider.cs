@@ -1757,6 +1757,7 @@ namespace WMS.DAL
 								OpenPoModel po = new OpenPoModel();
 								po.pono = pono;
 								po.inwmasterid = inwmasterid;
+								po.Material = "-";
 								po.invoiceno = invoiceno;
 								datalist.Add(po);
 								data = datalist;
@@ -1764,71 +1765,80 @@ namespace WMS.DAL
 						}
 						if (data.Count() > 0)
 						{
-
-							foreach (OpenPoModel po in data)
-							{
-								if (obj.asnno != null && obj.asnno != "")
+							string ponostr = data.FirstOrDefault().pono;
+                            if (ponostr.StartsWith("NP"))
+                            {
+								datalist = data.ToList();
+                            }
+                            else
+                            {
+								foreach (OpenPoModel po in data)
 								{
-									po.isasn = true;
-								}
-								else
-								{
-									po.isasn = false;
-								}
-								string descriptionstr = null;
-								if (po.poitemdescription != null)
-								{
-									descriptionstr = po.poitemdescription.Replace("\'", "''");
-								}
-								var fdata = datalist.Where(o => o.Material == po.Material && o.poitemdescription == descriptionstr && o.pono == po.pono && o.lineitemno == po.lineitemno && o.asnno == po.asnno).FirstOrDefault();
-								if (fdata == null)
-								{
-									string querya = "select inw.pono,inw.materialid,Max(inw.materialqty) as materialqty,SUM(inw.confirmqty) as confirmqty,SUM(inw.receivedqty) as receivedqty from wms.wms_storeinward inw";
-									querya += " where inw.pono = '" + po.pono + "' and inw.materialid = '" + po.Material + "'";
-									if (!pono.StartsWith("NP"))
+									if (obj.asnno != null && obj.asnno != "")
 									{
-										querya += " and inw.lineitemno = '" + po.lineitemno + "'";
-									}
-									querya += " group by inw.pono,inw.materialid";
-									var datax = await pgsql.QueryAsync<OpenPoModel>(
-									querya, null, commandType: CommandType.Text);
-									if (datax.Count() > 0)
-									{
-										po.isreceivedpreviosly = true;
-										decimal? pendingqty = 0;
-										if (datax.FirstOrDefault().confirmqty > 0)
-										{
-											pendingqty = po.pendingqty - datax.FirstOrDefault().confirmqty;
-										}
-										else
-										{
-											pendingqty = po.pendingqty - datax.FirstOrDefault().receivedqty;
-										}
-
-										if (pendingqty < 0)
-										{
-											po.pendingqty = 0;
-										}
-										else
-										{
-											po.pendingqty = pendingqty;
-										}
-
+										po.isasn = true;
 									}
 									else
 									{
-										po.pendingqty = po.materialqty;
-
+										po.isasn = false;
 									}
-									datalist.Add(po);
-								}
+									string descriptionstr = null;
+									if (po.poitemdescription != null)
+									{
+										descriptionstr = po.poitemdescription.Replace("\'", "''");
+									}
+									var fdata = datalist.Where(o => o.Material == po.Material && o.poitemdescription == descriptionstr && o.pono == po.pono && o.lineitemno == po.lineitemno && o.asnno == po.asnno).FirstOrDefault();
+									if (fdata == null)
+									{
+										string querya = "select inw.pono,inw.materialid,Max(inw.materialqty) as materialqty,SUM(inw.confirmqty) as confirmqty,SUM(inw.receivedqty) as receivedqty from wms.wms_storeinward inw";
+										querya += " where inw.pono = '" + po.pono + "' and inw.materialid = '" + po.Material + "'";
+										if (!pono.StartsWith("NP"))
+										{
+											querya += " and inw.lineitemno = '" + po.lineitemno + "'";
+										}
+										querya += " group by inw.pono,inw.materialid";
+										var datax = await pgsql.QueryAsync<OpenPoModel>(
+										querya, null, commandType: CommandType.Text);
+										if (datax.Count() > 0)
+										{
+											po.isreceivedpreviosly = true;
+											decimal? pendingqty = 0;
+											if (datax.FirstOrDefault().confirmqty > 0)
+											{
+												pendingqty = po.pendingqty - datax.FirstOrDefault().confirmqty;
+											}
+											else
+											{
+												pendingqty = po.pendingqty - datax.FirstOrDefault().receivedqty;
+											}
 
+											if (pendingqty < 0)
+											{
+												po.pendingqty = 0;
+											}
+											else
+											{
+												po.pendingqty = pendingqty;
+											}
+
+										}
+										else
+										{
+											po.pendingqty = po.materialqty;
+
+										}
+										datalist.Add(po);
+									}
+
+								}
 							}
+
+							
 						}
 					}
 
 
-					return datalist.OrderBy(o => o.Material);
+					return datalist.OrderBy(o => o.pono).ThenBy(n => n.lineitemno);
 				}
 				catch (Exception Ex)
 				{
@@ -2194,29 +2204,7 @@ namespace WMS.DAL
 							}
 
 
-							//if (inwardid != 0)
-							//{
-							//    string insertqueryforqualitycheck =WMSResource.insertqueryforqualitycheck;
-
-							//    var data = DB.ExecuteScalar(insertqueryforqualitycheck, new
-							//    {
-							//        inwardid,
-							//        datamodel.quality,
-							//        datamodel.qtype,
-							//        datamodel.qcdate,
-							//        datamodel.qcby,
-							//        datamodel.remarks,
-							//        datamodel.deleteflag,
-
-							//    });
-							//string insertqueryforstatusforqty = WMSResource.insertqueryforstatusforqty;
-
-							//var data1 = DB.ExecuteScalar(insertqueryforstatusforqty, new
-							//{
-							//	item.pono,
-							//	item.returnqty
-
-							//});
+							
 
 						}
 						Trans.Commit();
@@ -12657,8 +12645,10 @@ Review Date :<<>>   Reviewed By :<<>>
 					string materialrequestquery = WMSResource.getpendingreceiptslist;
 
 					await pgsql.OpenAsync();
-					return await pgsql.QueryAsync<ddlmodel>(
+					var data = await pgsql.QueryAsync<ddlmodel>(
 					  materialrequestquery, null, commandType: CommandType.Text);
+
+					return data.Where(o => o.inwardid == null);
 
 				}
 				catch (Exception Ex)

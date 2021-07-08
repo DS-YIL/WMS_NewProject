@@ -1673,6 +1673,7 @@ public class ddlmodel
 	public bool isdirecttransferred { get; set; }
 	public int confirmqty { get; set; }
 	public int totalissued { get; set; }
+	public string inwardid { get; set; }
 
 }
 

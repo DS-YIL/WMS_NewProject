@@ -2007,7 +2007,8 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select sl.invoiceno as value,sl.inwmasterid as text,pono as pos,suppliername as supplier 
+        ///   Looks up a localized string similar to select sl.invoiceno as value,sl.inwmasterid as text,pono as pos,suppliername as supplier,
+        ///(select max(inwardid) from wms.wms_storeinward ws where ws.pono ilike &apos;NP%&apos; and ws.inwmasterid = sl.inwmasterid limit 1) as inwardid
         ///from wms.wms_securityinward sl 
         ///where sl.grnnumber is null and sl.onhold is NOT True and (sl.holdgrstatus is NULL or sl.holdgrstatus =  &apos;accepted&apos;)
         ///order by sl.inwmasterid desc.

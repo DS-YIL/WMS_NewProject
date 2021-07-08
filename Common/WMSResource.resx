@@ -767,7 +767,8 @@ left outer join wms.employee emp  on emp.employeeno = inv.transferredby where in
 order by transferredon Desc</value>
   </data>
   <data name="getpendingreceiptslist" xml:space="preserve">
-    <value>select sl.invoiceno as value,sl.inwmasterid as text,pono as pos,suppliername as supplier 
+    <value>select sl.invoiceno as value,sl.inwmasterid as text,pono as pos,suppliername as supplier,
+(select max(inwardid) from wms.wms_storeinward ws where ws.pono ilike 'NP%' and ws.inwmasterid = sl.inwmasterid limit 1) as inwardid
 from wms.wms_securityinward sl 
 where sl.grnnumber is null and sl.onhold is NOT True and (sl.holdgrstatus is NULL or sl.holdgrstatus =  'accepted')
 order by sl.inwmasterid desc</value>

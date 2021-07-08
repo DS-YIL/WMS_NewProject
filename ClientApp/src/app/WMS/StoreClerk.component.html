@@ -50,7 +50,7 @@
               <th style="text-align:center;width:5%;">Sl.No.</th>
               <th style="text-align:center;width:10%;">PONo.</th>
               <th *ngIf="!isnonpo" style="text-align:center;width:5%;">item No.</th>
-              <th style="text-align:center;width:10%;">Material</th>
+              <th style="text-align:center;width:10%;" *ngIf="!isnonpoentry">Material</th>
               <th *ngIf="isnonpo" style="text-align:center;">Material Description</th>
               <th *ngIf="!isnonpo" style="text-align:center;">PO Item Description</th>
               <th *ngIf="!isnonpo && !qualitychecked" style="text-align:center;width:8%;">Material Qty</th>
@@ -58,8 +58,8 @@
               <th *ngIf="!isnonpo && !isonHold && isasnreceived" style="text-align:center;width:5%;">ASN Qty</th>
               <th style="text-align:center;width:10%;" *ngIf="!isonHoldview">Received Qty</th>
               <th style="text-align:center;width:15%;" *ngIf="!isonHoldview">Remarks</th>
-              <th style="text-align:center;width:10%;" *ngIf="!isonHoldview">QC Required</th>
-              <th style="text-align:center;width:10%;" *ngIf="isnonpoentry"></th>
+              <th style="text-align:center;width:10%;" *ngIf="!isonHoldview && !isnonpoentry">QC Required</th>
+              <th style="text-align:center;width:10%;" *ngIf="isnonpoentry && !isnonporeceived"></th>
             </tr>
           </ng-template>
           <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
@@ -67,14 +67,14 @@
               <td class="ptable-cell" style="text-align:right;width:5%;">{{ri+1}}</td>
               <td class="ptable-cell" style="text-align:center;width:10%;">{{rowData.pono}}</td>
               <td *ngIf="!isnonpo" class="ptable-cell" style="text-align:center;width:5%;">{{rowData.lineitemno}}</td>
-              <td class="ptable-cell" style="text-align:center;width:10%;">
+              <td class="ptable-cell" style="text-align:center;width:10%;" *ngIf="!isnonpoentry">
                 <span *ngIf="!isnonpoentry">{{rowData.material}}</span>
-                <input *ngIf="isnonpoentry" pInputText type="text" (change)="setmatdesc(rowData)" (blur)="validate(rowData,ri)" class="form-control" [(ngModel)]="rowData.material">
+                <input *ngIf="isnonpoentry" pInputText type="text" (change)="setmatdesc(rowData)"  class="form-control" [(ngModel)]="rowData.material">
               </td>
               <td class="ptable-cell" style="text-align:left;">
-                <span *ngIf="!isnonpoentry && rowData.poitemdescription">{{rowData.poitemdescription}}</span>
-                <span *ngIf="!isnonpoentry && !rowData.poitemdescription">-</span>
-                <input *ngIf="isnonpoentry" pInputText type="text"  id="receivedqty" class="form-control" [(ngModel)]="rowData.materialdescription">
+                <span *ngIf="(!isnonpoentry || isnonporeceived) && rowData.poitemdescription">{{rowData.poitemdescription}}</span>
+                <span *ngIf="(!isnonpoentry || isnonporeceived) && !rowData.poitemdescription">-</span>
+                <input *ngIf="isnonpoentry && !isnonporeceived" pInputText type="text"  id="receivedqty" class="form-control" [(ngModel)]="rowData.poitemdescription">
               </td>
               <td class="ptable-cell" *ngIf="!isnonpo && !qualitychecked" style="text-align:right;width:8%;">
                 <span>{{rowData.materialqty}}</span>
@@ -87,17 +87,17 @@
               </td>
               <td class="ptable-cell" style="text-align:right;width:10%;" *ngIf="!isonHoldview">
                 <span *ngIf="!grnnumber && !isnonpo && isallreceived">N/A</span>
-                <span *ngIf="grnnumber">{{rowData.receivedqty}}</span>
-                <input *ngIf="!grnnumber && (!isallreceived || isnonpo)" pInputText type="number" [min]="0" (change)="checkreceivedqty(rowData.receivedqty,rowData.confirmqty,rowData.returnqty,rowData.materialqty,rowData);" id="receivedqty" class="form-control" [(ngModel)]="rowData.receivedqty">
+                <span *ngIf="grnnumber || isnonporeceived">{{rowData.receivedqty}}</span>
+                <input *ngIf="!grnnumber && !isnonporeceived && (!isallreceived || isnonpo)" pInputText type="number" [min]="0" (change)="checkreceivedqty(rowData.receivedqty,rowData.confirmqty,rowData.returnqty,rowData.materialqty,rowData);" id="receivedqty" class="form-control" [(ngModel)]="rowData.receivedqty">
               </td>
               <td style="text-align: left;width: 15%;resize: none" *ngIf="!isonHoldview">
-                <span *ngIf="grnnumber || isonHold">{{rowData.receiveremarks}}</span>
-                <textarea *ngIf="!grnnumber && !isonHold" style="resize:none" [(ngModel)]="rowData.receiveremarks"></textarea>
+                <span *ngIf="grnnumber || isonHold || isnonporeceived">{{rowData.receiveremarks}}</span>
+                <textarea *ngIf="!grnnumber && !isonHold && !isnonporeceived" style="resize:none" [(ngModel)]="rowData.receiveremarks"></textarea>
               </td>
-              <td style="text-align:center;width:10%;" *ngIf="!isonHoldview">
+              <td style="text-align:center;width:10%;" *ngIf="!isonHoldview && !isnonpoentry">
                 <input type="checkbox" [disabled]="true" [(ngModel)]="rowData.qualitycheck" />
               </td>
-              <td style="text-align:center;width:10%;" *ngIf="isnonpoentry">
+              <td style="text-align:center;width:10%;" *ngIf="isnonpoentry && !isnonporeceived">
                 <button (click)="deleteRow(ri)" class="btn btn-danger" style="margin-top:10%"><i class="fa fa-trash"></i></button>
               </td>
             </tr>

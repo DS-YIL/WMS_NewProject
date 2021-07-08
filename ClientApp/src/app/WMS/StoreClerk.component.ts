@@ -91,6 +91,7 @@ export class StoreClerkComponent implements OnInit {
   isasnreceived: boolean = false;
   public locationMasterList: Array<any> = [];
   public printerid; inwardid: any;
+  public isnonporeceived: boolean = false;
 
   ngOnInit() {
     //this.autoCompleteObject.focusInput();
@@ -106,6 +107,7 @@ export class StoreClerkComponent implements OnInit {
     this.printerid = "";
     this.getpendingpos();
     this.getLocationMasterList();
+    this.isnonporeceived = false;
     //Email
 
 
@@ -290,7 +292,7 @@ export class StoreClerkComponent implements OnInit {
     let empltymodel = new inwardModel();
     empltymodel.pono = this.lblpono;
     empltymodel.inwmasterid = this.podetailsList[0].inwmasterid;
-    empltymodel.material = "";
+    empltymodel.material = "-";
     empltymodel.materialdescription = "";
     empltymodel.materialqty = 0;
     empltymodel.receivedqty = '0';
@@ -479,6 +481,7 @@ export class StoreClerkComponent implements OnInit {
   showpodata() {
     debugger;
     this.isacceptance = false;
+    this.isnonporeceived = false;
     this.selectedgrn = null;
     this.selectedgrnno = "";
     if (!isNullOrUndefined(this.selectedpendingpono) && this.selectedpendingpono != "") {
@@ -518,6 +521,7 @@ export class StoreClerkComponent implements OnInit {
   }
   showpodata1() {
     this.isacceptance = true;
+    this.isnonporeceived = false;
     this.selectedpendingpo = null;
     this.selectedpendingpono = "";
     if (!isNullOrUndefined(this.selectedgrnno) && this.selectedgrnno != "") {
@@ -633,6 +637,7 @@ export class StoreClerkComponent implements OnInit {
     this.isonHold = false;
     this.isonHoldview = false;
     this.isasnreceived = false;
+    this.isnonporeceived = false;
     this.onholdremarks = "";
     this.podetailsList = [];
     this.wmsService.Getthreewaymatchingdetails(data, invoiceno).subscribe(data => {
@@ -661,6 +666,9 @@ export class StoreClerkComponent implements OnInit {
         }
         if (pono.startsWith("NP")) {
           this.isnonpo = true;
+          if (!isNullOrUndefined(this.podetailsList[0].inwardid) && this.podetailsList[0].inwardid != 0) {
+            this.isnonporeceived = true;
+          }
         }
         else {
           if (!this.grnnumber) {
@@ -860,10 +868,23 @@ export class StoreClerkComponent implements OnInit {
     debugger;
     if (this.podetailsList.length > 0) {
       var invaliddata = this.podetailsList.filter(function (element, index) {
-        return (isNullOrUndefined(element.material) || element.material == "");
+        return (isNullOrUndefined(element.material) || String(element.material).trim() == "");
       });
-      if (invaliddata.length > 0) {
+      if (invaliddata.length > 0 && !this.isnonpoentry) {
         this.messageService.add({ severity: 'error', summary: '', detail: 'Please select material' });
+        return;
+      }
+      var invaliddatadesc = this.podetailsList.filter(function (element, index) {
+        return (isNullOrUndefined(element.poitemdescription) || String(element.poitemdescription).trim() == "");
+      });
+      if (invaliddatadesc.length > 0) {
+        if (this.isnonpoentry) {
+          this.messageService.add({ severity: 'error', summary: '', detail: 'Please enter material description' });
+        }
+        else {
+          this.messageService.add({ severity: 'error', summary: '', detail: 'Please enter material description' });
+        }
+        
         return;
       }
       this.inwardModel.pono = this.PoDetails.pono;
@@ -895,13 +916,16 @@ export class StoreClerkComponent implements OnInit {
             }
           }
           else {
-            var invalidrcv = this.podetailsList.filter(function (element, index) {
-              return (parseInt(element.receivedqty) > element.pendingqty);
-            });
-            if (invalidrcv.length > 0) {
-              this.messageService.add({ severity: 'error', summary: '', detail: 'Received Quantity should be less than or equal to Pending Quantity' });
-              return;
+            if (!this.isnonpoentry) {
+              var invalidrcv = this.podetailsList.filter(function (element, index) {
+                return (parseInt(element.receivedqty) > element.pendingqty);
+              });
+              if (invalidrcv.length > 0) {
+                this.messageService.add({ severity: 'error', summary: '', detail: 'Received Quantity should be less than or equal to Pending Quantity' });
+                return;
+              }
             }
+           
 
           }
          
@@ -947,7 +971,7 @@ export class StoreClerkComponent implements OnInit {
       this.wmsService.insertitems(this.podetailsList).subscribe(data => {
         var responsestring = String(data);
         if (responsestring.startsWith("Saved")) {
-          if (!this.isonHoldview) {
+          if (!this.isonHoldview && !this.isnonpoentry) {
             this.wmsService.verifythreewaymatch(this.PoDetails.pono, this.PoDetails.invoiceno, emailtype).subscribe(info => {
               this.spinner.hide();
 
