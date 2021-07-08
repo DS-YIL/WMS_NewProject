@@ -1987,7 +1987,7 @@ left join wms."MaterialMasterYGS" ygs on ygs.material=sk.materialid
 where iss.requestid = '#requestforissueid' and iss.requesttype = '#type'</value>
   </data>
   <data name="getSTOListForIssue" xml:space="preserve">
-    <value>select inv.transferid,inv.materialtype,emp.name as transferredby,emp1.name as approvername,inv.transferredon,inv.transfertype,inv.sourceplant,inv.destinationplant,inv.remarks,inv.isporequested,inv.approverid ,inv.approvalremarks ,inv.approvedon,
+    <value>select inv.transferid,inv.transferredby as requesterid,inv.materialtype,inv.status,emp2.name as statuschangeby,inv.statuschangedon,inv.statusremarks,emp.name as transferredby,emp1.name as approvername,inv.transferredon,inv.transfertype,inv.sourceplant,inv.destinationplant,inv.remarks,inv.isporequested,inv.approverid ,inv.approvalremarks ,inv.approvedon,
 (select SUM(wm.issuedqty) from wms.wms_materialissue wm where wm.requesttype = '#type' and wm.requestid::text in (
 select id::text from wms.wms_invtransfermaterial wi where wi.transferid = inv.transferid)) as issuedqty,
 (select SUM(wiv.transferqty) from wms.wms_invtransfermaterial wiv where wiv.transferid = inv.transferid) as transferqty,
@@ -1995,7 +1995,8 @@ inv.status,inv.vendorcode,inv.vendorname,inv.projectcode ,inv.pono,
 inv.issuedon,inv.isporequested   
 from wms.wms_invstocktransfer inv 
 left outer join wms.employee emp  on emp.employeeno = inv.transferredby
-left outer join wms.employee emp1  on emp1.employeeno = inv.approverid  
+left outer join wms.employee emp1  on emp1.employeeno = inv.approverid
+left outer join wms.employee emp2  on emp2.employeeno = inv.statuschangeby
 where  inv.transfertype ='#type' and (inv.isapprovalrequired is not true or (inv.isapprovalrequired is true and inv.isapproved is True))
 order by transferredon desc</value>
   </data>
@@ -2694,7 +2695,7 @@ where m.requestid = '#gatepassmaterialid' and m.requesttype = 'GatePass'</value>
     <value>update wms.wms_gatepass set status =@status,statusremarks =@statusremarks,statuschangeby =@statuschangeby,statuschangedon =current_date where gatepassid =#gatepassid</value>
   </data>
   <data name="updateInvtransferStatus" xml:space="preserve">
-    <value>update wms.wms_invstocktransfer set status =@status,statusremarks =@statusremarks,statuschangeby =@statuschangeby,statuschangedon =current_date where transferid =#transferid</value>
+    <value>update wms.wms_invstocktransfer set status =@status,statusremarks =@statusremarks,statuschangeby =@statuschangeby,statuschangedon =current_date where transferid ='#transferid'</value>
   </data>
   <data name="updatesmaterialReqStatus" xml:space="preserve">
     <value>update wms.materialrequest set status =@status,statusremarks =@statusremarks,statuschangeby =@statuschangeby,statuschangedon =current_date where requesterid =#requesterid</value>

@@ -19077,11 +19077,18 @@ Review Date :<<>>   Reviewed By :<<>>
 					emailmodel.requesttype = model.type;
 					emailmodel.createddate = DateTime.Now;
 					EmailUtilities emailobj = new EmailUtilities();
+					if(model.requestedby != null && model.requestedby.ToString().Trim() != "")
+                    {
+						string userquery = "select  * from wms.employee where employeeno='" + model.requestedby + "'";
+						User userdata = pgsql.QuerySingle<User>(
+						   userquery, null, commandType: CommandType.Text);
+						emailmodel.ToEmailId = userdata.email;
+					}
 					emailobj.sendEmail(emailmodel, 39);
 				}
 				catch (Exception Ex)
 				{
-					log.ErrorMessage("PODataProvider",k "IssueStatusChange", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
+					log.ErrorMessage("PODataProvider", "IssueStatusChange", Ex.StackTrace.ToString(), Ex.Message.ToString(), url);
 					return false;
 				}
 				finally

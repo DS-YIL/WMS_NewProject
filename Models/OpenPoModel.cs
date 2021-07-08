@@ -1611,6 +1611,11 @@ public class invstocktransfermodel
 	public string sourcelocationcode { get; set; }
 	public string destinationlocationcode { get; set; }
 	public string pono { get; set; }
+	public string statuschangeby { get; set; } 
+	public string statuschangedon { get; set; }
+	public string statusremarks { get; set; }
+	public string requesterid { get; set; }
+
 
 
 }

@@ -2533,10 +2533,9 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select inv.transferid,inv.materialtype,emp.name as transferredby,emp1.name as approvername,inv.transferredon,inv.transfertype,inv.sourceplant,inv.destinationplant,inv.remarks,inv.isporequested,inv.approverid ,inv.approvalremarks ,inv.approvedon,
+        ///   Looks up a localized string similar to select inv.transferid,inv.transferredby as requesterid,inv.materialtype,inv.status,emp2.name as statuschangeby,inv.statuschangedon,inv.statusremarks,emp.name as transferredby,emp1.name as approvername,inv.transferredon,inv.transfertype,inv.sourceplant,inv.destinationplant,inv.remarks,inv.isporequested,inv.approverid ,inv.approvalremarks ,inv.approvedon,
         ///(select SUM(wm.issuedqty) from wms.wms_materialissue wm where wm.requesttype = &apos;#type&apos; and wm.requestid::text in (
-        ///select id::text from wms.wms_invtransfermaterial wi where wi.transferid = inv.transferid)) as issuedqty,
-        ///(select SUM(wiv.transferqty) from wms.wms_i [rest of string was truncated]&quot;;.
+        ///select id::text from wms.wms_invtransfe [rest of string was truncated]&quot;;.
         /// </summary>
         public static string getSTOListForIssue {
             get {
@@ -4130,7 +4129,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to update wms.wms_invstocktransfer set status =@status,statusremarks =@statusremarks,statuschangeby =@statuschangeby,statuschangedon =current_date where transferid =#transferid.
+        ///   Looks up a localized string similar to update wms.wms_invstocktransfer set status =@status,statusremarks =@statusremarks,statuschangeby =@statuschangeby,statuschangedon =current_date where transferid =&apos;#transferid&apos;.
         /// </summary>
         public static string updateInvtransferStatus {
             get {

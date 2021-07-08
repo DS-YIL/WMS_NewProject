@@ -8,6 +8,8 @@
             <select placeholder="Status" name="Status" [ngModel]="selectedStatus" (change)="onSelectStatus($event)" class="form-control">
               <option value="Pending"> Pending</option>
               <option value="Issued"> Issued</option>
+              <option value="On Hold">On Hold</option>
+              <option value="Rejected">Rejected</option>
             </select>
           </div>
         </div>
@@ -29,11 +31,11 @@
               <th style="text-align:center;width:100px">STO No.</th>
               <th style="text-align:center;width:100px">Material Type</th>
               <th style="text-align: center;width:150px">Requested By</th>
-              <th style="text-align:center;width:150px">Source Location</th>
-              <th style="text-align:center;width:150px">Requester Location</th>
+              <th style="text-align:center;width:100px">Source Location</th>
+              <th style="text-align:center;width:100px">Requester Location</th>
               <th style="text-align:center;width:100px">Requested On</th>
               <th *ngIf="selectedStatus=='Issued'" style="text-align:center;width:100px">Issued On</th>
-              <th *ngIf="selectedStatus=='Pending' || selectedStatus=='Issued'" style="text-align:center;width:90px"></th>
+              <th style="text-align:center;width:190px"></th>
               <!--<th *ngIf="selectedStatus=='Pending'" style="text-align:center;width:90px"></th>-->
             </tr>
             <tr>
@@ -45,7 +47,7 @@
               <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'destinationplant', 'contains')"></th>
               <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'transferredon', 'contains')"></th>
               <th *ngIf="selectedStatus=='Issued'"></th>
-              <th *ngIf="selectedStatus=='Pending' || selectedStatus=='Issued'"></th>
+              <th></th>
               <!--<th *ngIf="selectedStatus=='Pending'"></th>-->
             </tr>
           </ng-template>
@@ -57,13 +59,15 @@
               <td class="ptable-cell" style="text-align:center;width:100px;">{{rowData.transferid}}</td>
               <td class="ptable-cell" style="text-align:center;width:100px;">{{rowData.materialtype}}</td>
               <td class="ptable-cell" style="text-align:center;width:150px;">{{rowData.transferredby}}</td>
-              <td class="ptable-cell" style="text-align:center;width:150px;">{{rowData.sourceplant}}</td>
-              <td class="ptable-cell" style="text-align:center;width:150px;">{{rowData.destinationplant}}</td>
+              <td class="ptable-cell" style="text-align:center;width:100px;">{{rowData.sourceplant}}</td>
+              <td class="ptable-cell" style="text-align:center;width:100px;">{{rowData.destinationplant}}</td>
               <td class="ptable-cell" style="text-align:center;width:100px;">{{rowData.transferredon  | date :  constants.dateFormat}}</td>
               <td *ngIf="selectedStatus=='Issued'" class="ptable-cell" style="text-align:center;width:100px;">{{rowData.issuedon  | date :  constants.dateFormat}}</td>
-              <td *ngIf="selectedStatus=='Pending' || selectedStatus=='Issued'" class="ptable-cell" style="text-align:center;width:90px;">
-                <button type="button" style="font-size:12px" class="btn btn-success" *ngIf="rowData.status=='Pending' && !rowData.isporequested" (click)="navigateToMatIssue(rowData)">Issue</button>
-                <button type="button" style="font-size:12px" class="btn btn-primary" *ngIf="rowData.status=='Issued' || rowData.isporequested" (click)="navigateToMatIssue(rowData)">View</button>
+              <td class="ptable-cell" style="text-align:center;width:190px;">
+                <button type="button" style="font-size:12px" class="btn btn-success" *ngIf="rowData.status=='Pending' && !rowData.isporequested || selectedStatus=='On Hold'" (click)="navigateToMatIssue(rowData)">Issue</button>
+                <button type="button" style="font-size:12px" class="btn btn-primary" *ngIf="rowData.status=='Issued' || rowData.isporequested || selectedStatus=='Rejected'" (click)="navigateToMatIssue(rowData)">View</button>
+                <button type="button" style="font-size:12px" class="btn btn-warning" *ngIf="rowData.status=='Pending' && !rowData.isporequested" (click)="holdreject(rowData,'On Hold')">Hold</button>
+                <button type="button" style="font-size:12px" class="btn btn-danger" *ngIf="(rowData.status=='Pending' && !rowData.isporequested) || selectedStatus=='On Hold'" (click)="holdreject(rowData,'Rejected')">Reject</button>
               </td>
               <!--<td *ngIf="selectedStatus=='Pending'" class="ptable-cell" style="text-align:center;width:90px;"><button type="button" [disabled]="rowData.isporequested==true?true:false" style="font-size:12px" [ngClass]="rowData.isporequested==true ? 'btn btn-secondary' : 'btn btn-success'" (click)="navigateToPOInitiate(rowData)">Initiate PO</button></td>-->
             </tr>
@@ -106,6 +110,18 @@
           <div class="col-lg-3 col-md-3 col-sm-3 pt-2 labelheading" *ngIf="isplantstockrequest">
             <label>Material Type:</label>&nbsp;<span><label class="labeltext">Plant</label></span>
           </div>
+          <div class="col-lg-3 col-md-3 col-sm-3 pt-2 labelheading">
+            <label>Status:</label>&nbsp;<span><label class="labeltext">{{lblstatus}}</label></span>
+          </div>
+          <div class="col-lg-3 col-md-3 col-sm-3 pt-2 labelheading">
+            <label>Remarks:</label>&nbsp;<span><label class="labeltext">{{lblstatusramarks}}</label></span>
+          </div>
+          <div class="col-lg-3 col-md-3 col-sm-3 pt-2 labelheading" *ngIf="lblstatus == 'On Hold' || lblstatus == 'Rejected'">
+            <label>{{lblstatus}} By:</label>&nbsp;<span><label class="labeltext">{{lblonholdrejectedby}}</label></span>
+          </div>
+          <div class="col-lg-3 col-md-3 col-sm-3 pt-2 labelheading" *ngIf="lblstatus == 'On Hold' || lblstatus == 'Rejected'">
+            <label>{{lblstatus}} On:</label>&nbsp;<span><label class="labeltext">{{lblonholdrejectedon}}</label></span>
+          </div>
 
         </div>
       </div>
@@ -142,8 +158,8 @@
               {{rowData.pono}}
             </td>
             <td class="ptable-cell" style="text-align:left;width:200px;">
-              <button type="button" class="btn btn-link"  (click)="showmateriallocationList(rowData.materialid,ri+1,ri,rowData.transferqty,rowData.issuedqty,rowData.poitemdescription,rowData.id,rowData.pono);" style="padding-left:0px;">{{rowData.materialid}}</button>
-              <!--<span *ngIf="(!rowData.availableqty || rowData.availableqty === 0) && (!rowData.issuedqty || rowData.issuedqty == 0)">{{rowData.materialid}}</span>-->
+              <button type="button" class="btn btn-link" *ngIf="selectedStatus!='Rejected'"  (click)="showmateriallocationList(rowData.materialid,ri+1,ri,rowData.transferqty,rowData.issuedqty,rowData.poitemdescription,rowData.id,rowData.pono);" style="padding-left:0px;">{{rowData.materialid}}</button>
+              <span *ngIf="selectedStatus=='Rejected'">{{rowData.materialid}}</span>
             </td>
             <td class="ptable-cell" style="text-align:left">{{rowData.poitemdescription}}</td>
             <td class="ptable-cell" style="text-align:right">{{rowData.transferqty}}</td>
@@ -236,6 +252,15 @@
   </div>
 
 </div>
+
+<p-dialog header="{{remarksheadertext}}" [(visible)]="displayRemarks" (onHide)="canclestatus()" [modal]="true" [style]="{width: '50vw'}" [baseZIndex]="10000">
+
+  <textarea style="width: 100%; height: 100px;resize: none" placeholder="Enter Remarks" [(ngModel)]="statusremarks">
+       </textarea>
+  <button class="btn btn-danger btn-sm" (click)="canclestatus()" style="float:right">No</button>
+  <button class="btn btn-success btn-sm" (click)="submitstatus()" style="float:right">Yes</button>
+
+</p-dialog>
 
 <div *ngIf="showMatDetails && !showavailableStock">
   <div class="card" style="min-height: 500px;border-radius: 10px;box-shadow: 5px 10px #888888;">

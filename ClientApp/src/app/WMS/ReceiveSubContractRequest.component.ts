@@ -3,7 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { wmsService } from '../WmsServices/wms.service';
 import { constants } from '../Models/WMSConstants';
 import { Employee } from '../Models/Common.Model';
-import { FIFOValues } from 'src/app/Models/WMS.Model';
+import { FIFOValues, Issuestatus } from 'src/app/Models/WMS.Model';
 import { NgxSpinnerService } from "ngx-spinner";
 import { MessageService } from 'primeng/api';
 import { ConfirmationService } from 'primeng/api';
@@ -41,6 +41,14 @@ export class ReceiveSubContractRequestComponent implements OnInit {
   pcode: string = "";
   pono: string = "";
   isplantstockrequest: boolean = false;
+  remarksheadertext: string = "";
+  displayRemarks: boolean = false;
+  statusremarks: string = "";
+  statusmodel: Issuestatus;
+  lblstatus: string = "";
+  lblstatusramarks: string = "";
+  lblonholdrejectedby: string = "";
+  lblonholdrejectedon: string = "";
 
   ngOnInit() {
     this.STORequestList = [];
@@ -52,6 +60,14 @@ export class ReceiveSubContractRequestComponent implements OnInit {
     this.selectedStatus = "Pending";
     this.vendorname = "";
     this.sourcelocation = "";
+    this.remarksheadertext = "";
+    this.displayRemarks = false;
+    this.statusremarks = "";
+    this.lblstatus = "";
+    this.lblstatusramarks = "";
+    this.lblonholdrejectedby = "";
+    this.lblonholdrejectedon = "";
+    this.statusmodel = new Issuestatus();
     this.isplantstockrequest = false;
     this.FIFOvalues = new FIFOValues();
     this.getSTORequestList();
@@ -82,6 +98,59 @@ export class ReceiveSubContractRequestComponent implements OnInit {
     }
   }
 
+  holdreject(data: any, status: string) {
+    this.statusmodel = new Issuestatus();
+    this.statusmodel.requestid = data.transferid;
+    this.statusmodel.status = status;
+    this.statusmodel.requestedby = data.requesterid;
+    this.statusmodel.statuschangeby = this.employee.employeeno;
+    this.statusmodel.type = "SubContract";
+
+    if (status == "On Hold") {
+      this.remarksheadertext = "Are you sure to put request on hold ?";
+    }
+    if (status == "Rejected") {
+      this.remarksheadertext = "Are you sure to reject the request ?";
+    }
+    this.displayRemarks = true;
+
+  }
+  submitstatus() {
+    debugger;
+    if (this.statusremarks.trim() == "") {
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Enter Remarks' });
+      return;
+    }
+    this.statusmodel.statusremarks = this.statusremarks;
+    var msg = "";
+    var errormsg = "";
+    if (this.statusmodel.status == "On Hold") {
+      msg = "On hold successful";
+      errormsg = "On hold failed";
+    }
+    if (this.statusmodel.status == "Rejected") {
+      msg = "Rejection successful";
+      errormsg = "Rejection failed";
+    }
+    this.wmsService.updateSTOSubcontractstatus(this.statusmodel).subscribe(data => {
+      if (data) {
+        this.messageService.add({ severity: 'success', summary: '', detail: msg });
+      }
+      else {
+        this.messageService.add({ severity: 'success', summary: '', detail: errormsg });
+      }
+      this.canclestatus();
+
+    });
+
+  }
+  canclestatus() {
+    this.remarksheadertext = "";
+    this.displayRemarks = false;
+    this.statusremarks = "";
+    this.statusmodel = new Issuestatus();
+  }
+
   navigateToMatIssue(details: any) {
     this.showMatDetails = true;
     this.showavailableStock = true;
@@ -93,6 +162,10 @@ export class ReceiveSubContractRequestComponent implements OnInit {
     this.sourcelocation = details.sourceplant;
     this.pcode = details.projectcode;
     this.pono = details.pono;
+    this.lblstatus = details.status;
+    this.lblstatusramarks = details.statusremarks;
+    this.lblonholdrejectedby = details.statuschangeby;
+    this.lblonholdrejectedon = details.statuschangedon;
     var type = "MatIssue";
     if (String(details.materialtype).toLowerCase() == "plant") {
       this.isplantstockrequest = true;

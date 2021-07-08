@@ -1346,6 +1346,18 @@ export class DirectDelivery {
   DDmaterialList: Array<any> = [];
 }
 
+export class Issuestatus
+{
+  statusremarks: string;
+  statuschangeby: string;
+  status: string;
+  statuschangedon: string;
+  type: string;
+  requestid: string;
+  requestedby: string;
+	
+}
+
 
 
 

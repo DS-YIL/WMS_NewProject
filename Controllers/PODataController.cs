@@ -708,7 +708,6 @@ namespace WMS.Controllers
 		[HttpGet("getItemlocationListByIssueIdWithStore")]
 		public async Task<IEnumerable<IssueRequestModel>> getItemlocationListByIssueIdWithStore(string requestforissueid, string requesttype)
 		{
-
 			return await this._poService.getItemlocationListByIssueIdWithStore(requestforissueid, requesttype);
 		}
 		[HttpGet("getItemlocationListByPlantIssueId")]

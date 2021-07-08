@@ -3,7 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { wmsService } from '../WmsServices/wms.service';
 import { constants } from '../Models/WMSConstants';
 import { Employee } from '../Models/Common.Model';
-import { FIFOValues } from 'src/app/Models/WMS.Model';
+import { FIFOValues, Issuestatus } from 'src/app/Models/WMS.Model';
 import { NgxSpinnerService } from "ngx-spinner";
 import { MessageService } from 'primeng/api';
 import { ConfirmationService } from 'primeng/api';
@@ -44,6 +44,14 @@ export class ReceiveSTORequestComponent implements OnInit {
   pcode: string;
   pono: string;
   isplantstockrequest: boolean = false;
+  remarksheadertext: string = "";
+  displayRemarks: boolean = false;
+  statusremarks: string = "";
+  lblstatus: string = "";
+  lblstatusramarks: string = "";
+  lblonholdrejectedby: string = "";
+  lblonholdrejectedon: string = "";
+  statusmodel: Issuestatus;
   ngOnInit() {
     this.STORequestList = [];
     if (localStorage.getItem("Employee"))
@@ -53,11 +61,20 @@ export class ReceiveSTORequestComponent implements OnInit {
     this.requestedid = this.route.snapshot.queryParams.requestid;
     this.selectedStatus = "Pending";
     this.source = "";
+    this.remarksheadertext = "";
+    this.displayRemarks = false;
+    this.statusremarks = "";
+    this.lblstatus = "";
+    this.lblstatusramarks = "";
+    this.statusmodel = new Issuestatus();
     this.destination = "";
     this.viewprocess = false;
     this.isplantstockrequest = false;
     this.matdesc = "";
+    this.lblonholdrejectedby = "";
+    this.lblonholdrejectedon = "";
     this.FIFOvalues = new FIFOValues();
+   
     this.getSTORequestList();
   }
 
@@ -66,8 +83,10 @@ export class ReceiveSTORequestComponent implements OnInit {
     this.STORequestList = [];
     this.wmsService.getSTORequestList('STO').subscribe(data => {
       this.STORequestList = data;
+      debugger;
+      var selectedsts = this.selectedStatus;
       var data1 = this.STORequestList.filter(function (element, index) {
-        return ((element.issuedqty == null) || (element.issuedqty == 0));
+        return (element.status == selectedsts || element.status == null);
       });
       this.FilteredSTORequestList = data1;
       if (!isNullOrUndefined(this.requestedid) && this.requestedid != "") {
@@ -77,21 +96,24 @@ export class ReceiveSTORequestComponent implements OnInit {
   }
 
   onSelectStatus(event) {
+    debugger;
     this.selectedStatus = event.target.value;
+    var selsts = this.selectedStatus;
     if (this.selectedStatus == "Pending") {
       var data1 = this.STORequestList.filter(function (element, index) {
-        return ((element.issuedqty == null) || (element.issuedqty == 0));
+        return (element.status == selsts || element.status == null);
       });
       this.FilteredSTORequestList = data1;
     }
-    else if (this.selectedStatus == "Issued") {
+    else {
       var data1 = this.STORequestList.filter(function (element, index) {
-        return (element.issuedqty != null && element.issuedqty > 0);
+        return (element.status == selsts);
       });
       this.FilteredSTORequestList = data1;
     }
-   
+    
   }
+  
 
   navigateToMatIssue(details: any) {
     debugger;
@@ -105,6 +127,10 @@ export class ReceiveSTORequestComponent implements OnInit {
     this.destination = details.destinationplant;
     this.pcode = details.projectcode;
     this.pono = details.pono;
+    this.lblstatus = details.status;
+    this.lblstatusramarks = details.statusremarks;
+    this.lblonholdrejectedby = details.statuschangeby;
+    this.lblonholdrejectedon = details.statuschangedon;
     var sts = details.status;
     if (sts == "Issued") {
       this.viewprocess = true;
@@ -159,6 +185,59 @@ export class ReceiveSTORequestComponent implements OnInit {
         this.spinner.hide();
       });
     }
+  }
+
+  holdreject(data: any, status: string) {
+    this.statusmodel = new Issuestatus();
+    this.statusmodel.requestid = data.transferid;
+    this.statusmodel.status = status;
+    this.statusmodel.requestedby = data.requesterid;
+    this.statusmodel.statuschangeby = this.employee.employeeno;
+    this.statusmodel.type = "STO";
+   
+    if (status == "On Hold") {
+      this.remarksheadertext = "Are you sure to put request on hold ?";
+    }
+    if (status == "Rejected") {
+      this.remarksheadertext = "Are you sure to reject the request ?";
+    }
+    this.displayRemarks = true;
+   
+  }
+  submitstatus() {
+    debugger;
+    if (this.statusremarks.trim() == "") {
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Enter Remarks' });
+      return;
+    }
+    this.statusmodel.statusremarks = this.statusremarks;
+    var msg = "";
+    var errormsg = "";
+    if (this.statusmodel.status == "On Hold") {
+      msg = "On hold successful";
+      errormsg = "On hold failed";
+    }
+    if (this.statusmodel.status == "Rejected") {
+      msg = "Rejection successful";
+      errormsg = "Rejection failed";
+    }
+    this.wmsService.updateSTOSubcontractstatus(this.statusmodel).subscribe(data => {
+      if (data) {
+        this.messageService.add({ severity: 'success', summary: '', detail: msg });
+      }
+      else {
+        this.messageService.add({ severity: 'success', summary: '', detail: errormsg });
+      }
+      this.canclestatus();
+
+    });
+
+  }
+  canclestatus() {
+    this.remarksheadertext = "";
+    this.displayRemarks = false;
+    this.statusremarks = "";
+    this.statusmodel = new Issuestatus();
   }
   //show alert about oldest item location
   alertconfirm(data) {
