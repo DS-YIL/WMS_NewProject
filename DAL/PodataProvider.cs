@@ -1873,7 +1873,7 @@ namespace WMS.DAL
 					string query = WMSResource.getdataforqualitydetails.Replace("#grnno", grnnumber);// + pono+"'";//li
 					var data = await pgsql.QueryAsync<OpenPoModel>(
 					   query, null, commandType: CommandType.Text);
-					return data;
+					return data.OrderBy(li => li.pono).ThenBy(n=>n.lineitemno);
 				}
 				catch (Exception Ex)
 				{
@@ -2978,7 +2978,7 @@ namespace WMS.DAL
 					string queryforitemdetails = WMSResource.queryforitemdetails.Replace("#grnnumber", grnnumber);
 					var data = await pgsql.QueryAsync<inwardModel>(
 					   queryforitemdetails, null, commandType: CommandType.Text);
-					return data;
+					return data.OrderBy(li=>li.pono).ThenBy(n=>n.lineitemno);
 				}
 				catch (Exception Ex)
 				{
