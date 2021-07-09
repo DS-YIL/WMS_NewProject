@@ -29,10 +29,11 @@
             <div class="form-inline">
               <label class="labelheading">Status :</label>&nbsp;&nbsp;
               <select placeholder="Status" name="Status" (change)="onSelectStatus()" [(ngModel)]="selectedStatus" class="form-control">
-                <option selected value="Pending"> Pending</option>
+                <option value="Pending"> Pending</option>
                 <option value="Issued"> Issued</option>
+                <option value="On Hold">On Hold</option>
+                <option value="Rejected">Rejected</option>
               </select>
-
             </div>
           </div>
 
@@ -50,7 +51,7 @@
             <span class="commonheadertext">
               <i class="fa fa-check-circle-o commonheadertext"></i>&nbsp;Gate Pass - Non Returnable Materials
             </span>
-          
+
           </div>
 
 
@@ -63,7 +64,7 @@
       </div>
     </div>
     <div class="card-body" style="overflow-y:hidden;padding-top:0px;">
-     
+
       <div class="row">
         <p-table #dt [value]="gatepassFiltered" [style]="{'width':'100%'}"
                  [responsive]="true" [rows]="10"
@@ -88,8 +89,9 @@
               <th *ngIf="!selectedrba.material_issue && !selectedrba.gatepass_approval" style="text-align:center;">Edit</th>
               <th *ngIf="(selectedrba.material_issue || selectedrba.gate_pass) && !selectedrba.gatepass_approval" style="text-align:center;">Print</th>
               <th *ngIf="selectedrba.material_issue && selectedStatus=='Issued' " style="text-align:center">Returned Date</th>
+              <th style="text-align:center;width:190px"></th>
             </tr>
-           
+
           </ng-template>
           <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
             <tr [ngClass]="{'data-selected': selectedRow === ri}">
@@ -106,22 +108,22 @@
               <td class="ptable-cell" style="text-align:left">
                 <span *ngIf="rowData.reasonforgatepass && rowData.reasonforgatepass === 'Other'"> {{rowData.otherreason}}</span>
                 <span *ngIf="rowData.reasonforgatepass && rowData.reasonforgatepass != 'Other'"> {{rowData.reasonforgatepass}}</span>
-               
+
               </td>
               <td class="ptable-cell" style="text-align:left">
                 <span *ngIf="!rowData.approverstatus">Pending for Approval</span>
                 <span *ngIf="rowData.gatepasstype == 'Returnable' && selectedStatus!='Issued'">{{rowData.approverstatus}}</span>
                 <span *ngIf="rowData.gatepasstype == 'Non Returnable' && !rowData.fmapprovedon && selectedStatus!='Issued'">(PM)-{{rowData.approverstatus}}</span>
                 <span *ngIf="rowData.gatepasstype == 'Non Returnable' && rowData.fmapprovedon && selectedStatus!='Issued'">(FM)-{{rowData.fmapprovedstatus}}</span>
-                
+
                 <span *ngIf="rowData.approverstatus=='Approved' && selectedStatus=='Issued'" [ngStyle]="{'color':rowData.status === 'Partial Closure' ? 'red' : 'black' }" style="color:red">
                   <span *ngIf="rowData.isnonproject">Approved</span>
                   <span *ngIf="!rowData.isnonproject">{{rowData.status}}</span>
                 </span>
-                
+
               </td>
 
-              
+
               <td class="ptable-cell" style="text-align:left" *ngIf="selectedrba.gate_pass && employee.roleid!='5'">{{rowData.name}}</td>
               <td class="ptable-cell" style="text-align:center" *ngIf="selectedrba.gate_pass && employee.roleid!='5'">{{rowData.requestedon | date :  constants.dateFormat}}</td>
               <td class="ptable-cell" style="text-align:left" *ngIf="selectedrba.gate_pass && employee.roleid == '5'">
@@ -137,10 +139,16 @@
               <td *ngIf="selectedStatus=='Issued'" class="ptable-cell" style="text-align:left">{{rowData.approvername}}</td>
               <td *ngIf="selectedStatus=='Issued'" class="ptable-cell" style="text-align:center">{{rowData.approvedon | date :  constants.dateFormat}}</td>
               <td class="ptable-cell" *ngIf="!selectedrba.material_issue && !selectedrba.gatepass_approval" style="text-align:center">
-              <button *ngIf="rowData.approverstatus!='Approved' && rowData.approverstatus!='Sent for Modification' && rowData.fmapprovedstatus!='Sent for Modification' && rowData.requestedby==employee.employeeno" type="button" icon="fa fa-edit" pButton aria-hidden="true" (click)="openGatepassDialog(rowData,ri,'gatepassdialogedit')"></button>
+                <button *ngIf="rowData.approverstatus!='Approved' && rowData.approverstatus!='Sent for Modification' && rowData.fmapprovedstatus!='Sent for Modification' && rowData.requestedby==employee.employeeno" type="button" icon="fa fa-edit" pButton aria-hidden="true" (click)="openGatepassDialog(rowData,ri,'gatepassdialogedit')"></button>
               </td>
               <td class="ptable-cell" *ngIf="(selectedrba.material_issue || selectedrba.gate_pass) && !selectedrba.gatepass_approval" style="text-align:center"><button *ngIf="rowData.approverstatus=='Approved'" type="button" icon="fa fa-print" pButton aria-hidden="true" (click)="showprint(rowData)"></button></td>
               <td *ngIf="selectedrba.material_issue && selectedStatus=='Issued'" class="ptable-cell" style="text-align:center"><button *ngIf="rowData.gatepasstype=='Returnable' && selectedrba.material_issue && rowData.approverstatus=='Approved' && rowData.status!='Full Closure' " type="button" icon="fa fa-pencil" pButton aria-hidden="true" (click)="openGatepassDialog(rowData,ri,'updateReturnedDateDialog')"></button></td>
+              <td class="ptable-cell" style="text-align:center;width:190px;">
+                <button type="button" style="font-size:12px" class="btn btn-success" *ngIf="rowData.selectedStatus=='Pending' && !rowData.isporequested || selectedStatus=='On Hold'" (click)="navigateToMatIssue(rowData)">Issue</button>
+                <button type="button" style="font-size:12px" class="btn btn-primary" *ngIf="rowData.selectedStatus=='Issued' || rowData.isporequested || selectedStatus=='Rejected'" (click)="navigateToMatIssue(rowData)">View</button>
+                <button type="button" style="font-size:12px" class="btn btn-warning" *ngIf="rowData.selectedStatus=='Pending' && !rowData.isporequested" (click)="holdreject(rowData,'On Hold')">Hold</button>
+                <button type="button" style="font-size:12px" class="btn btn-danger" *ngIf="(rowData.selectedStatus=='Pending' && !rowData.isporequested) || selectedStatus=='On Hold'" (click)="holdreject(rowData,'Rejected')">Reject</button>
+              </td>
             </tr>
             <tr *ngIf="rowData.showdetail">
               <td [attr.colspan]="getcolspan()" style="text-align:center;">
@@ -160,9 +168,9 @@
             <tr class="mprltbldata">
               <th class="ptable-cell" style="    text-align: center;width: 20px;background-color: #9ba5af !important">Sl.No.</th>
               <th class="ptable-cell" style="    text-align: center;background-color: #9ba5af !important">Material</th>
-              
+
               <th class="ptable-cell" style="    text-align: center; width: 500px;background-color: #9ba5af !important">PO Item Description</th>
-              
+
               <th class="ptable-cell" style="    text-align: center;background-color: #9ba5af !important">Remarks</th>
               <th class="ptable-cell" style="    text-align: center;background-color: #9ba5af !important">Requested Qty</th>
               <th class="ptable-cell" style="    text-align: center;background-color: #9ba5af !important" *ngIf="!selectedrba.gatepass_approval">Issued Qty</th>
@@ -178,7 +186,7 @@
                 <!--<button *ngIf="!selectedrba.gatepass_approval && (selectedrba.material_issue)" type="button" class="btn btn-link" (click)="showmateriallocationList(rowData.materialid,ri+1,ri,rowData.quantity);" style="padding-left:0px;">{{rowData.materialid}}</button>-->
               </td>
               <!--<td class="ptable-cell" style="    text-align: left;width: 500px;"> {{rowData.materialdescription}} </td>-->
-            <td class="ptable-cell" style="    text-align: left;width: 500px;"> {{rowData.materialdescription}} </td>
+              <td class="ptable-cell" style="    text-align: left;width: 500px;"> {{rowData.materialdescription}} </td>
               <!--<td class="ptable-cell" style="text-align:right"><span *ngIf="rowData.materialcost">{{rowData.materialcost}}</span></td>-->
               <td class="ptable-cell" style="text-align:left"> {{rowData.remarks}} </td>
               <td class="ptable-cell" style="text-align:right">{{rowData.quantity}}</td>
@@ -188,7 +196,7 @@
               <td class="ptable-cell" style="text-align:center" *ngIf="!selectedrba.gatepass_approval && gtptype=='Returnable'">{{checkValiddate(rowData.expecteddate) | date :  constants.dateFormat}}</td>
               <td *ngIf="gtptype=='Returnable' && rowData.returneddate" class="ptable-cell" style="text-align:center">{{checkValiddate(rowData.returneddate) | date :  constants.dateFormat}}</td>
 
-</ng-template>
+          </ng-template>
 
         </p-table>
         </td>
@@ -199,11 +207,11 @@
       </div>
     </div>
   </div>
-  </div>
-     
-    
+</div>
 
-     
+
+
+
 
 
 <p-dialog header={{GatepassTxt}} [(visible)]="gatepassdialog" [responsive]="true" showEffect="fade" [modal]="true" [style]="{'width':'98%','overflow':'auto!important','margin-right': '0px','margin-left':'0px'}">
@@ -283,14 +291,14 @@
         </div>
       </div>
       <!--<div class="col-lg-3 col-md-3 col-sm-2 form-inline">
-      <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">Approver</label>
-      <div class="form-inline-list">
-        <input disabled type="text" class="form-control" [(ngModel)]="gatepassModel.managername" />
-      </div>
-    </div>-->
+        <label class="form-label" style="font-weight:600;font-size:14px;color:darkblue;">Approver</label>
+        <div class="form-inline-list">
+          <input disabled type="text" class="form-control" [(ngModel)]="gatepassModel.managername" />
+        </div>
+      </div>-->
     </div>
   </div>
- 
+
 
 
   <div class="row " style="margin-top:10px">
@@ -328,7 +336,7 @@
             <td class="ptable-cell" style="text-align:left;">
               <span *ngIf="!gatepassModel.isnonproject && !isplanttype">{{rowData.materialid}}</span>
               <!--<p-autoComplete *ngIf="!gatepassModel.isnonproject" [(ngModel)]="rowData.materialid" [style]="{'width':'80%'}" [inputStyle]="{'width':'80%'}" placeholder="search by name/code" type="text" appendTo="body" [forceSelection]="true" (onSelect)="onMaterialSelected1(rowData,ri)" [suggestions]="filteredmats" (completeMethod)="filtermats($event,rowData)"
-  [dropdown]="true"></p-autoComplete>-->
+              [dropdown]="true"></p-autoComplete>-->
               <input type="text" *ngIf="gatepassModel.isnonproject && !isplanttype" (blur)="onmaterialchanged(rowData,ri)" class="form-control" [(ngModel)]="rowData.materialid" />
               <p-autoComplete appendTo="body" placeholder="search by materialcode" *ngIf="isplanttype" [(ngModel)]="rowData.materialobj" [style]="{'width':'100%'}" [inputStyle]="{'width':'80%'}" type="text" [suggestions]="searchItems" field="name" (onSelect)="onMaterialSelected1(rowData,ri)" [forceSelection]="true" [dropdown]="true" (completeMethod)="bindSearchListDatamaterial($event,'material',rowData.materialdescriptionobj)"></p-autoComplete>
 
@@ -336,9 +344,9 @@
             <td class="ptable-cell" style="text-align:left;">
               <span *ngIf="!gatepassModel.isnonproject && !isplanttype">{{rowData.materialdescription}}</span>
               <!--<p-autoComplete *ngIf="gatepassModel.gatepasstype=='Returnable' && !gatepassModel.isnonproject" [style]="{'width':'80%'}" [inputStyle]="{'width':'80%'}" [(ngModel)]="rowData.materialdescription" placeholder="search by description" type="text" appendTo="body" [forceSelection]="true" (onSelect)="onDescriptionSelected(rowData,ri)" [suggestions]="filteredmatdesc" (completeMethod)="filtermatdescs($event,rowData)"
-                  [dropdown]="true"></p-autoComplete>
-  <p-autoComplete *ngIf="gatepassModel.gatepasstype !=='Returnable' && !gatepassModel.isnonproject" [style]="{'width':'80%'}" [inputStyle]="{'width':'80%'}" [(ngModel)]="rowData.materialdescription" placeholder="search by description" type="text" appendTo="body" [forceSelection]="true" (onSelect)="onDescriptionSelected(rowData,ri)" [suggestions]="filteredmatdesc" (completeMethod)="filtermatdescs($event,rowData)"
-                  [dropdown]="true"></p-autoComplete>-->
+                              [dropdown]="true"></p-autoComplete>
+              <p-autoComplete *ngIf="gatepassModel.gatepasstype !=='Returnable' && !gatepassModel.isnonproject" [style]="{'width':'80%'}" [inputStyle]="{'width':'80%'}" [(ngModel)]="rowData.materialdescription" placeholder="search by description" type="text" appendTo="body" [forceSelection]="true" (onSelect)="onDescriptionSelected(rowData,ri)" [suggestions]="filteredmatdesc" (completeMethod)="filtermatdescs($event,rowData)"
+                              [dropdown]="true"></p-autoComplete>-->
               <input type="text" *ngIf="gatepassModel.isnonproject  && !isplanttype" (blur)="ondescriptionchanged(rowData,ri)" class="form-control" [(ngModel)]="rowData.materialdescription" />
               <p-autoComplete appendTo="body" placeholder="search by description" *ngIf="isplanttype" [(ngModel)]="rowData.materialdescriptionobj" [style]="{'width':'80%'}" [inputStyle]="{'width':'80%'}" type="text" (onSelect)="onDescriptionSelected(rowData,ri)" [suggestions]="searchdescItems" field="name" [forceSelection]="true" [dropdown]="true" (completeMethod)="bindSearchListDatamaterialdescs($event,'materialdesc',rowData.materialobj)"></p-autoComplete>
             </td>
@@ -369,7 +377,7 @@
             <td class="ptable-cell" style="text-align:center;width:60px;" *ngIf="(gatepassModel.isnonproject || isplanttype) && !iseditprocess"><button pButton type="button" icon="fa fa-trash" class="ui-button-info" style="margin-left: 1px;" (click)="removematerial(rowData.gatepassmaterialid, ri)"></button></td>
 
 
-</ng-template>
+        </ng-template>
 
 
       </p-table>
@@ -383,135 +391,140 @@
   </p-footer>
 </p-dialog>
 
-      <p-dialog header="Gate Pass" [(visible)]="updateReturnedDateDialog" [responsive]="true" (onHide)="resetDG()" showEffect="fade" [modal]="true" [style]="{'width':'85%','height':'500px','overflow':'auto!important','margin-right': '0px','margin-left':'0px'}">
-        <div class="row " style="margin-top:10px">
-          <div class="col-lg-3 col-md-3 col-sm-3 form-inline">
-            <label for="itemlocation" class="form-label"><b>GatePass Id: </b> </label>&nbsp;{{gatepassModel.gatepassid}}
-          </div>
-          <div class="col-lg-3 col-md-3 col-sm-3 form-inline">
-            <label for="itemlocation" class="form-label"><b>Type: </b> </label>&nbsp;{{gatepassModel.gatepasstype}}
-          </div>
-          <div class="col-lg-3 col-md-3 col-sm-3 form-inline">
-            <label class="form-label"><b>Reason: </b></label>&nbsp;{{gatepassModel.reasonforgatepass}}
-          </div>
-          <div class="col-lg-3 col-md-3 col-sm-3 form-inline">
-            <label class="form-label"><b>Supplier: </b></label>&nbsp;{{gatepassModel.vendorname}}
-          </div>
+<p-dialog header="Gate Pass" [(visible)]="updateReturnedDateDialog" [responsive]="true" (onHide)="resetDG()" showEffect="fade" [modal]="true" [style]="{'width':'85%','height':'500px','overflow':'auto!important','margin-right': '0px','margin-left':'0px'}">
+  <div class="row " style="margin-top:10px">
+    <div class="col-lg-3 col-md-3 col-sm-3 form-inline">
+      <label for="itemlocation" class="form-label"><b>GatePass Id: </b> </label>&nbsp;{{gatepassModel.gatepassid}}
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-3 form-inline">
+      <label for="itemlocation" class="form-label"><b>Type: </b> </label>&nbsp;{{gatepassModel.gatepasstype}}
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-3 form-inline">
+      <label class="form-label"><b>Reason: </b></label>&nbsp;{{gatepassModel.reasonforgatepass}}
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-3 form-inline">
+      <label class="form-label"><b>Supplier: </b></label>&nbsp;{{gatepassModel.vendorname}}
+    </div>
+  </div>
+  <br />
+  <!--<div class="row" style="padding-left: 443px;">
+    <b style="text-align:center;font-size:14px;color:darkblue;">List of Materials</b>
+  </div>-->
+
+  <div class="row " style="margin-top:10px">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+      <p-table *ngIf="gatepassModel.materialList" [value]="gatepassModel.materialList" [style]="{'width':'100%','height':'500px','overflow':'auto!important'}">
+        <ng-template pTemplate="header">
+          <tr class="mprltbldata">
+            <th class="ptable-cell" style="text-align:center;width:60px;">Sl. No.</th>
+            <th class="ptable-cell" style="text-align:center">Material</th>
+            <!--<th class="ptable-cell" style="text-align:center">Material Description</th>-->
+            <th class="ptable-cell" style="text-align:center">PO Item Description</th>
+            <th class="ptable-cell" style="text-align:center">Quantity</th>
+            <th class="ptable-cell" style="text-align:center">Price</th>
+            <th class="ptable-cell" style="text-align:center">Remarks</th>
+            <th class="ptable-cell" style="text-align:center">Expected Date</th>
+            <th *ngIf="gatepassModel.gatepasstype=='Returnable'" class="ptable-cell" style="width: 200px;text-align: center">Returned Date</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex" let-rindex=0>
+          <tr>
+            <td *ngIf="rowData.materialid" class="ptable-cell" style="text-align:center;width:60px;"> {{ri+1}} </td>
+            <td *ngIf="rowData.materialid" class="ptable-cell" style="text-align:left"> {{rowData.materialid}} </td>
+            <!--<td *ngIf="rowData.materialid" class="ptable-cell" style="text-align:left"> {{rowData.materialdescription}} </td>-->
+            <td *ngIf="rowData.materialid" class="ptable-cell" style="text-align:left"> {{rowData.poitemdescription}} </td>
+            <td *ngIf="rowData.materialid" class="ptable-cell" style="text-align:right">{{rowData.quantity}}</td>
+            <td *ngIf="rowData.materialid" class="ptable-cell" style="text-align:right">{{rowData.materialcost}}</td>
+            <td *ngIf="rowData.materialid" class="ptable-cell" style="text-align:left"> {{rowData.remarks}} </td>
+            <td *ngIf="rowData.materialid" class="ptable-cell" style="text-align:center">{{rowData.expecteddate | date :  constants.dateFormat}}</td>
+            <td *ngIf="gatepassModel.gatepasstype=='Returnable' && rowData.returneddate && rowData.materialid" class="ptable-cell" style="text-align:center">{{rowData.returneddate | date :  constants.dateFormat}}</td>
+            <td *ngIf="gatepassModel.gatepasstype=='Returnable'  && rowData.materialid && !rowData.returneddate" class="ptable-cell" style="text-align:center;text-align:center">
+              <p-calendar class="mprldatepick" *ngIf="selectedrba.material_issue && !rowData.returneddate" appendTo="body" dateFormat="dd/mm/yy" [(ngModel)]="rowData.returneddate" [monthNavigator]="true" [yearNavigator]="true" yearRange="1900:2050"></p-calendar>
+
+              <!--<input type="date" *ngIf="employee.roleid=='7'" [value]="rowData.returneddate |  date:'yyyy-MM-dd'" min={{mindate}} max={{maxdate}} (input)="rowData.returneddate=parseDate($event.target.value)">-->
+              <!--<input *ngIf="employee.roleid=='7' && !rowData.returneddate" appendTo="body" type="date" [(ngModel)]="rowData.returneddate" [value]="rowData.returneddate |  date:'yyyy-MM-dd'" (input)="rowData.returneddate=parseDate($event.target.value)">-->
+
+            </td>
+        </ng-template>
+      </p-table>
+    </div>
+  </div><br />
+  <p-footer>
+    <!--class="ui-dialog-buttonpane ui-helper-clearfix"-->
+    <div class="col-sm-12 col-lg-12 col-sm-12 row">
+      <div class="col-sm-1 col-lg-1 col-sm-1">
+        <label class="form-label">Status:</label>
+      </div>
+      <div class="col-sm-2 col-lg-2 col-sm-2 form-inline-list">
+        <select class="form-control forms-input" (change)="searchGatePassList()" [(ngModel)]="gatepassModel.status">
+          <option value='Partial Closure'>Partial Closure</option>
+          <option value='Full Closure'>Full closure</option>
+        </select>
+      </div>
+      <div class="col-sm-5 col-lg-5 col-sm-5 ">
+        <input type="text" [(ngModel)]="gatepassModel.statusremarks" placeholder="Remarks" style="width: 100%;" />
+      </div>
+      <div class="col-sm-2 col-lg-2 col-sm-2">
+        <button type="button" pButton icon="fa fa-close" (click)="onSubmitgatepassDetails()" label="Submit"></button>
+      </div>
+    </div>
+  </p-footer>
+</p-dialog>
+
+<div style="height: 5px; overflow-y: scroll">
+
+  <p-dialog header="Item Location" [(visible)]="AddDialog" [contentStyle]="{'overflow-y': 'scroll', 'overflow-x': 'hidden', 'max-height': '350px','min-height':'350px'}" showEffect="fade" [modal]="true" [responsive]="true" [style]="{width: '1024px'}">
+    <div *ngIf="showdialog">
+      <div class="row  pl-0">
+        <div class="col-lg-4 col-md-4 col-sm-4 pt-2 labelheading">
+          <label>Material Id :</label>&nbsp;<span><label class="labeltext">{{itemlocationData[0].material}}</label></span>
         </div>
-        <br />
-        <!--<div class="row" style="padding-left: 443px;">
-          <b style="text-align:center;font-size:14px;color:darkblue;">List of Materials</b>
-        </div>-->
-
-        <div class="row " style="margin-top:10px">
-          <div class="col-lg-12 col-md-12 col-sm-12">
-            <p-table *ngIf="gatepassModel.materialList" [value]="gatepassModel.materialList" [style]="{'width':'100%','height':'500px','overflow':'auto!important'}">
-              <ng-template pTemplate="header">
-                <tr class="mprltbldata">
-                  <th class="ptable-cell" style="text-align:center;width:60px;">Sl. No.</th>
-                  <th class="ptable-cell" style="text-align:center">Material</th>
-                  <!--<th class="ptable-cell" style="text-align:center">Material Description</th>-->
-                  <th class="ptable-cell" style="text-align:center">PO Item Description</th>
-                  <th class="ptable-cell" style="text-align:center">Quantity</th>
-                  <th class="ptable-cell" style="text-align:center">Price</th>
-                  <th class="ptable-cell" style="text-align:center">Remarks</th>
-                  <th class="ptable-cell" style="text-align:center">Expected Date</th>
-                  <th *ngIf="gatepassModel.gatepasstype=='Returnable'" class="ptable-cell" style="width: 200px;text-align: center">Returned Date</th>
-                </tr>
-              </ng-template>
-              <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex" let-rindex=0>
-                <tr>
-                  <td *ngIf="rowData.materialid" class="ptable-cell" style="text-align:center;width:60px;"> {{ri+1}} </td>
-                  <td *ngIf="rowData.materialid" class="ptable-cell" style="text-align:left"> {{rowData.materialid}} </td>
-                  <!--<td *ngIf="rowData.materialid" class="ptable-cell" style="text-align:left"> {{rowData.materialdescription}} </td>-->
-                <td *ngIf="rowData.materialid" class="ptable-cell" style="text-align:left"> {{rowData.poitemdescription}} </td>
-                  <td *ngIf="rowData.materialid" class="ptable-cell" style="text-align:right">{{rowData.quantity}}</td>
-                  <td *ngIf="rowData.materialid" class="ptable-cell" style="text-align:right">{{rowData.materialcost}}</td>
-                  <td *ngIf="rowData.materialid" class="ptable-cell" style="text-align:left"> {{rowData.remarks}} </td>
-                  <td *ngIf="rowData.materialid" class="ptable-cell" style="text-align:center">{{rowData.expecteddate | date :  constants.dateFormat}}</td>
-                  <td *ngIf="gatepassModel.gatepasstype=='Returnable' && rowData.returneddate && rowData.materialid" class="ptable-cell" style="text-align:center">{{rowData.returneddate | date :  constants.dateFormat}}</td>
-                  <td *ngIf="gatepassModel.gatepasstype=='Returnable'  && rowData.materialid && !rowData.returneddate" class="ptable-cell" style="text-align:center;text-align:center">
-                    <p-calendar class="mprldatepick" *ngIf="selectedrba.material_issue && !rowData.returneddate" appendTo="body" dateFormat="dd/mm/yy" [(ngModel)]="rowData.returneddate" [monthNavigator]="true" [yearNavigator]="true" yearRange="1900:2050"></p-calendar>
-
-                    <!--<input type="date" *ngIf="employee.roleid=='7'" [value]="rowData.returneddate |  date:'yyyy-MM-dd'" min={{mindate}} max={{maxdate}} (input)="rowData.returneddate=parseDate($event.target.value)">-->
-                    <!--<input *ngIf="employee.roleid=='7' && !rowData.returneddate" appendTo="body" type="date" [(ngModel)]="rowData.returneddate" [value]="rowData.returneddate |  date:'yyyy-MM-dd'" (input)="rowData.returneddate=parseDate($event.target.value)">-->
-
-                  </td>
-</ng-template>
-            </p-table>
-          </div>
-        </div><br />
-        <p-footer>
-          <!--class="ui-dialog-buttonpane ui-helper-clearfix"-->
-          <div class="col-sm-12 col-lg-12 col-sm-12 row">
-            <div class="col-sm-1 col-lg-1 col-sm-1">
-              <label class="form-label">Status:</label>
-            </div>
-            <div class="col-sm-2 col-lg-2 col-sm-2 form-inline-list">
-              <select class="form-control forms-input" (change)="searchGatePassList()" [(ngModel)]="gatepassModel.status">
-                <option value='Partial Closure'>Partial Closure</option>
-                <option value='Full Closure'>Full closure</option>
-              </select>
-            </div>
-            <div class="col-sm-5 col-lg-5 col-sm-5 ">
-              <input type="text" [(ngModel)]="gatepassModel.statusremarks" placeholder="Remarks" style="width: 100%;" />
-            </div>
-            <div class="col-sm-2 col-lg-2 col-sm-2">
-              <button type="button" pButton icon="fa fa-close" (click)="onSubmitgatepassDetails()" label="Submit"></button>
-            </div>
-          </div>
-        </p-footer>
-      </p-dialog>
-
-      <div style="height: 5px; overflow-y: scroll">
-
-        <p-dialog header="Item Location" [(visible)]="AddDialog" [contentStyle]="{'overflow-y': 'scroll', 'overflow-x': 'hidden', 'max-height': '350px','min-height':'350px'}" showEffect="fade" [modal]="true" [responsive]="true" [style]="{width: '1024px'}">
-          <div *ngIf="showdialog">
-            <div class="row  pl-0">
-              <div class="col-lg-4 col-md-4 col-sm-4 pt-2 labelheading">
-                <label>Material Id :</label>&nbsp;<span><label class="labeltext">{{itemlocationData[0].material}}</label></span>
-              </div>
-              <div class="col-lg-6 col-md-6 col-sm-6 pt-2 labelheading">
-                <label>Material desc :</label>&nbsp;<span><label class="labeltext">{{itemlocationData[0].materialdescription}}</label></span>
-              </div>
-            </div>
-
-          </div>
-          <p-table #dt [value]="itemlocationData">
-            <ng-template pTemplate="header">
-              <tr class="mprltbldata">
-                <th style="text-align:center;width:70px">S.No</th>
-                <th style="text-align:center">Location</th>
-                <th style="text-align:center">Available Qty</th>
-                <th style="text-align:center">Issued Qty</th>
-                <th style="text-align:center">Received Date</th>
-
-              </tr>
-
-            </ng-template>
-            <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
-              <tr>
-                <td class="ptable-cell" style="text-align:right">
-                  {{ri+1}}
-                </td>
-                <td class="ptable-cell" style="text-align:center">{{rowData.itemlocation}}</td>
-                <td class="ptable-cell" style="text-align:right">{{rowData.availableqty}}</td>
-                <td class="ptable-cell" style="text-align:right">
-                  <input id="{{ri+1}}" pInputText type="number" style="text-align:right" class="form-control" (change)="checkissueqty($event,rowData.issueqty,rowData.availableqty,rowData.material,rowData.createddate,rowData.materialdescription,rowData);" [(ngModel)]="rowData.issuedquantity">
-                </td>
-                <td class="ptable-cell" style="text-align:center">{{rowData.createddate | date :  constants.dateFormat}}</td>
-              </tr>
-            </ng-template>
-
-          </p-table>
-          <p-footer>
-            <div class="ui-dialog-buttonpane ui-helper-clearfix">
-              <button type="button" pButton icon="fa fa-check" class="ui-button-success" (click)="issuematerial(itemlocationData)" label="OK"></button>
-              <button type="button" pButton icon="fa fa-close" class="ui-button-danger" (click)="Cancel()" label="Cancel"></button>
-            </div>
-          </p-footer>
-        </p-dialog>
+        <div class="col-lg-6 col-md-6 col-sm-6 pt-2 labelheading">
+          <label>Material desc :</label>&nbsp;<span><label class="labeltext">{{itemlocationData[0].materialdescription}}</label></span>
+        </div>
       </div>
 
+    </div>
+    <p-table #dt [value]="itemlocationData">
+      <ng-template pTemplate="header">
+        <tr class="mprltbldata">
+          <th style="text-align:center;width:70px">S.No</th>
+          <th style="text-align:center">Location</th>
+          <th style="text-align:center">Available Qty</th>
+          <th style="text-align:center">Issued Qty</th>
+          <th style="text-align:center">Received Date</th>
 
+        </tr>
 
+      </ng-template>
+      <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
+        <tr>
+          <td class="ptable-cell" style="text-align:right">
+            {{ri+1}}
+          </td>
+          <td class="ptable-cell" style="text-align:center">{{rowData.itemlocation}}</td>
+          <td class="ptable-cell" style="text-align:right">{{rowData.availableqty}}</td>
+          <td class="ptable-cell" style="text-align:right">
+            <input id="{{ri+1}}" pInputText type="number" style="text-align:right" class="form-control" (change)="checkissueqty($event,rowData.issueqty,rowData.availableqty,rowData.material,rowData.createddate,rowData.materialdescription,rowData);" [(ngModel)]="rowData.issuedquantity">
+          </td>
+          <td class="ptable-cell" style="text-align:center">{{rowData.createddate | date :  constants.dateFormat}}</td>
+        </tr>
+      </ng-template>
+
+    </p-table>
+    <p-footer>
+      <div class="ui-dialog-buttonpane ui-helper-clearfix">
+        <button type="button" pButton icon="fa fa-check" class="ui-button-success" (click)="issuematerial(itemlocationData)" label="OK"></button>
+        <button type="button" pButton icon="fa fa-close" class="ui-button-danger" (click)="Cancel()" label="Cancel"></button>
+      </div>
+    </p-footer>
+  </p-dialog>
+</div>
+
+<p-dialog header="{{remarksheadertext}}" [(visible)]="displayRemarks" (onHide)="canclestatus()" [modal]="true" [style]="{width: '50vw'}" [baseZIndex]="10000">
+  <textarea style="width: 100%; height: 100px;resize: none" placeholder="Enter Remarks" [(ngModel)]="statusremarks">
+       </textarea>
+  <button class="btn btn-danger btn-sm" (click)="canclestatus()" style="float:right">No</button>
+  <button class="btn btn-success btn-sm" (click)="submitistatus()" style="float:right">Yes</button>
+
+</p-dialog>

@@ -1206,7 +1206,7 @@ export class wmsService {
   }
 
   updateSTOSubcontractstatus(model: Issuestatus): Observable<any> {
-    return this.http.post<any>(this.url + 'POData/IssueStatusChange', model, this.httpOptions);
+    return this.http.post<any>(this.url + 'POData/IssuerStatusChange', model, this.httpOptions);
   }
 }
 

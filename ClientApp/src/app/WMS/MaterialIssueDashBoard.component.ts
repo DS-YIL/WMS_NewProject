@@ -5,7 +5,7 @@ import { wmsService } from '../WmsServices/wms.service';
 import { constants } from '../Models/WMSConstants';
 import { Employee, DynamicSearchResult, searchList } from '../Models/Common.Model';
 import { NgxSpinnerService } from "ngx-spinner";
-import { materialRequestDetails } from 'src/app/Models/WMS.Model';
+import { materialRequestDetails, Issuestatus } from 'src/app/Models/WMS.Model';
 import { MessageService } from 'primeng/api';
 import { isNullOrUndefined } from 'util';
 
@@ -36,6 +36,14 @@ export class MaterialIssueDashBoardComponent implements OnInit {
   public materialissueDetailsList: Array<any> = [];
   public currentDate: Date;
   public requestedid: string = "";
+  statusmodel: Issuestatus;
+  remarksheadertext: string = "";
+  displayRemarks: boolean = false;
+  statusremarks: string = "";
+  lblstatus: string = "";
+  lblstatusramarks: string = "";
+  lblonholdrejectedby: string = "";
+  lblonholdrejectedon: string = "";
 
   ngOnInit() {
     debugger;
@@ -49,7 +57,7 @@ export class MaterialIssueDashBoardComponent implements OnInit {
     this.selectedStatus = "Pending";
     this.requestedid = this.route.snapshot.queryParams.requestid;
     this.getMaterialIssueList();
-
+    this.displayRemarks = false;
   }
 
   //get material issue list based on loginid
@@ -111,5 +119,56 @@ export class MaterialIssueDashBoardComponent implements OnInit {
   navigateToMatIssueView() {
     this.ShowPrint = false
   }
+  holdreject(data: any, status: string) {
+    this.statusmodel = new Issuestatus();
+    this.statusmodel.requestid = data.transferid;
+    this.statusmodel.issuerstatus = status;
+    this.statusmodel.requestedby = data.requesterid;
+    this.statusmodel.issuerstatuschangeby = this.employee.employeeno;
+    this.statusmodel.type = "STO";
 
+    if (status == "On Hold") {
+      this.remarksheadertext = "Are you sure to put request on hold ?";
+    }
+    if (status == "Rejected") {
+      this.remarksheadertext = "Are you sure to reject the request ?";
+    }
+    this.displayRemarks = true;
+
+  }
+  submitstatus() {
+    debugger;
+    if (this.statusremarks.trim() == "") {
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Enter Remarks' });
+      return;
+    }
+    this.statusmodel.issuerstatusremarks = this.statusremarks;
+    var msg = "";
+    var errormsg = "";
+    if (this.statusmodel.issuerstatus == "On Hold") {
+      msg = "On hold successful";
+      errormsg = "On hold failed";
+    }
+    if (this.statusmodel.issuerstatus == "Rejected") {
+      msg = "Rejection successful";
+      errormsg = "Rejection failed";
+    }
+    this.wmsService.updateSTOSubcontractstatus(this.statusmodel).subscribe(data => {
+      if (data) {
+        this.messageService.add({ severity: 'success', summary: '', detail: msg });
+      }
+      else {
+        this.messageService.add({ severity: 'success', summary: '', detail: errormsg });
+      }
+      this.canclestatus();
+
+    });
+
+  }
+  canclestatus() {
+    this.remarksheadertext = "";
+    this.displayRemarks = false;
+    this.statusremarks = "";
+    this.statusmodel = new Issuestatus();
+  }
 }

@@ -4102,7 +4102,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to update wms.wms_gatepass set status =@status,statusremarks =@statusremarks,statuschangeby =@statuschangeby,statuschangedon =current_date where gatepassid =#gatepassid.
+        ///   Looks up a localized string similar to update wms.wms_gatepass set issuerstatus =@issuerstatus,issuerstatusremarks =@issuerstatusremarks,issuerstatuschangeby =@issuerstatuschangeby,issuerstatuschangedon =current_date where gatepassid =#gatepassid.
         /// </summary>
         public static string updateGatePassStatus {
             get {
@@ -4129,7 +4129,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to update wms.wms_invstocktransfer set status =@status,statusremarks =@statusremarks,statuschangeby =@statuschangeby,statuschangedon =current_date where transferid =&apos;#transferid&apos;.
+        ///   Looks up a localized string similar to update wms.wms_invstocktransfer set issuerstatus =@issuerstatus,issuerstatusremarks =@issuerstatusremarks,issuerstatuschangeby =@issuerstatuschangeby,issuerstatuschangedon =current_date where transferid =&apos;#transferid&apos;.
         /// </summary>
         public static string updateInvtransferStatus {
             get {
@@ -4375,7 +4375,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to update wms.materialrequest set status =@status,statusremarks =@statusremarks,statuschangeby =@statuschangeby,statuschangedon =current_date where requesterid =#requesterid.
+        ///   Looks up a localized string similar to update wms.materialrequest set issuerstatus =@issuerstatus,issuerstatusremarks =@issuerstatusremarks,issuerstatuschangeby =@issuerstatuschangeby,issuerstatuschangedon =current_date where requesterid =#requesterid.
         /// </summary>
         public static string updatesmaterialReqStatus {
             get {

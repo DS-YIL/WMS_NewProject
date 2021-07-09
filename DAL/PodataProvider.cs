@@ -19021,7 +19021,7 @@ Review Date :<<>>   Reviewed By :<<>>
 		<param name="type"></param>
 		Review Date :<<>>   Reviewed By :<<>>*/
 
-		public bool IssueStatusChange(Issuestatus model)
+		public bool IssuerStatusChange(Issuestatus model)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
@@ -19036,9 +19036,9 @@ Review Date :<<>>   Reviewed By :<<>>
 						{
 							var results = DB.ExecuteScalar(matqry, new
 							{
-								model.status,
-								model.statusremarks,
-								model.statuschangeby
+								model.issuerstatus,
+								model.issuerstatusremarks,
+								model.issuerstatuschangeby
 							});
 						}
 					}
@@ -19049,9 +19049,9 @@ Review Date :<<>>   Reviewed By :<<>>
 						{
 							var results = DB.ExecuteScalar(gatepassqry, new
 							{
-								model.status,
-								model.statusremarks,
-								model.statuschangeby
+								model.issuerstatus,
+								model.issuerstatusremarks,
+								model.issuerstatuschangeby
 							});
 						}
 					}
@@ -19062,18 +19062,18 @@ Review Date :<<>>   Reviewed By :<<>>
 						{
 							var results = DB.ExecuteScalar(Invqry, new
 							{
-								model.status,
-								model.statusremarks,
-								model.statuschangeby
+								model.issuerstatus,
+								model.issuerstatusremarks,
+								model.issuerstatuschangeby
 							});
 						}
 					}
 					//mail to requester
 					EmailModel emailmodel = new EmailModel();
 					emailmodel.requestid = model.requestid;
-					emailmodel.approverstatus = model.status;
-					emailmodel.createdby = model.statuschangeby;
-					emailmodel.remarks = model.statusremarks;
+					emailmodel.approverstatus = model.issuerstatus;
+					emailmodel.createdby = model.issuerstatuschangeby;
+					emailmodel.remarks = model.issuerstatusremarks;
 					emailmodel.requesttype = model.type;
 					emailmodel.createddate = DateTime.Now;
 					EmailUtilities emailobj = new EmailUtilities();

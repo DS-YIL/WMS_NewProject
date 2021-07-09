@@ -380,6 +380,6 @@ namespace WMS.Interfaces
 		Task<IEnumerable<YGSGR>> getYGSGR();
 
 		Task<IEnumerable<gatepassModel>> GetGPReport(string fromdate, string todate);
-		bool IssueStatusChange(Issuestatus model);
+		bool IssuerStatusChange(Issuestatus model);
 	}
 }

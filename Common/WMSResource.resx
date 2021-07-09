@@ -2692,12 +2692,12 @@ left outer join wms.wms_storeinward ws on m.inwardid = ws.inwardid
 where m.requestid = '#gatepassmaterialid' and m.requesttype = 'GatePass'</value>
   </data>
   <data name="updateGatePassStatus" xml:space="preserve">
-    <value>update wms.wms_gatepass set status =@status,statusremarks =@statusremarks,statuschangeby =@statuschangeby,statuschangedon =current_date where gatepassid =#gatepassid</value>
+    <value>update wms.wms_gatepass set issuerstatus =@issuerstatus,issuerstatusremarks =@issuerstatusremarks,issuerstatuschangeby =@issuerstatuschangeby,issuerstatuschangedon =current_date where gatepassid =#gatepassid</value>
   </data>
   <data name="updateInvtransferStatus" xml:space="preserve">
-    <value>update wms.wms_invstocktransfer set status =@status,statusremarks =@statusremarks,statuschangeby =@statuschangeby,statuschangedon =current_date where transferid ='#transferid'</value>
+    <value>update wms.wms_invstocktransfer set issuerstatus =@issuerstatus,issuerstatusremarks =@issuerstatusremarks,issuerstatuschangeby =@issuerstatuschangeby,issuerstatuschangedon =current_date where transferid ='#transferid'</value>
   </data>
   <data name="updatesmaterialReqStatus" xml:space="preserve">
-    <value>update wms.materialrequest set status =@status,statusremarks =@statusremarks,statuschangeby =@statuschangeby,statuschangedon =current_date where requesterid =#requesterid</value>
+    <value>update wms.materialrequest set issuerstatus =@issuerstatus,issuerstatusremarks =@issuerstatusremarks,issuerstatuschangeby =@issuerstatuschangeby,issuerstatuschangedon =current_date where requesterid =#requesterid</value>
   </data>
 </root>

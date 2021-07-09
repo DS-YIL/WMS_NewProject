@@ -6,7 +6,7 @@ import { constants } from '../Models/WMSConstants';
 import { Employee, DynamicSearchResult, searchList, userAcessNamesModel, rbamaster } from '../Models/Common.Model';
 import { NgxSpinnerService } from "ngx-spinner";
 import { MessageService } from 'primeng/api';
-import { gatepassModel, materialistModel, FIFOValues, materialList, ddlmodel, gatepassprintdoc } from '../Models/WMS.Model';
+import { gatepassModel, materialistModel, FIFOValues, materialList, ddlmodel, gatepassprintdoc, Issuestatus } from '../Models/WMS.Model';
 import { isNullOrUndefined } from 'util';
 import { DatePipe, DecimalPipe } from '@angular/common';
 import { ConfirmationService } from 'primeng/api';
@@ -35,7 +35,7 @@ export class GatePassComponent implements OnInit {
   public selectedlist: Array<searchList> = [];
   public searchresult: Array<object> = [];
   rbalist: rbamaster[] = [];
-  selectedrba : rbamaster;
+  selectedrba: rbamaster;
 
   public gatepasslist: Array<any> = [];
   public totalGatePassList: Array<any> = [];
@@ -87,6 +87,15 @@ export class GatePassComponent implements OnInit {
   selectedmuliplepo: any[];
   iseditprocess: boolean = false;
   isplanttype: boolean = false;
+  statusmodel: Issuestatus;
+  remarksheadertext: string = "";
+  displayRemarks: boolean = false;
+  statusremarks: string = "";
+  lblstatus: string = "";
+  lblstatusramarks: string = "";
+  lblonholdrejectedby: string = "";
+  lblonholdrejectedon: string = "";
+
   ngOnInit() {
     if (localStorage.getItem("Employee"))
       this.employee = JSON.parse(localStorage.getItem("Employee"));
@@ -126,7 +135,7 @@ export class GatePassComponent implements OnInit {
       if (filterdt.length > 0) {
         this.selectedrba = filterdt[0];
       }
-      
+
     }
     debugger;
     this.emailgateid = this.route.snapshot.queryParams.gatepassid;
@@ -210,8 +219,8 @@ export class GatePassComponent implements OnInit {
         }
       });
     }
-   
-   
+
+
   }
   getprojects() {
 
@@ -251,7 +260,7 @@ export class GatePassComponent implements OnInit {
 
   //Adding new material - Gayathri
   addNewMaterial() {
-    
+
     this.gatePassChange();
     debugger;
     if (this.gatepassModel.materialList.length > 0) {
@@ -259,10 +268,10 @@ export class GatePassComponent implements OnInit {
         if (this.gatepassModel.isnonproject) {
           this.messageService.add({ severity: 'error', summary: '', detail: 'Enter material' });
         }
-        else{
+        else {
           this.messageService.add({ severity: 'error', summary: '', detail: 'Select material from list' });
         }
-        
+
         return false;
       }
       if (isNullOrUndefined(this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].materialdescription) || this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].materialdescription == "") {
@@ -284,14 +293,14 @@ export class GatePassComponent implements OnInit {
       }
       else {
         debugger;
-        this.materialistModel = { materialid: "", gatepassmaterialid: "0", materialdescription: "", quantity: 0, materialcost: 0, remarks: " ", expecteddate: this.date, returneddate: this.date, issuedqty: 0, showdetail: false, materiallistdata: [], availableqty: 0, unitprice: 0, pono: "", materialtype:"" };
+        this.materialistModel = { materialid: "", gatepassmaterialid: "0", materialdescription: "", quantity: 0, materialcost: 0, remarks: " ", expecteddate: this.date, returneddate: this.date, issuedqty: 0, showdetail: false, materiallistdata: [], availableqty: 0, unitprice: 0, pono: "", materialtype: "" };
         this.gatepassModel.materialList.push(this.materialistModel);
       }
 
     }
     else {
       if (this.gatepassModel.materialList.length <= 0) {
-        this.materialistModel = { materialid: "", gatepassmaterialid: "0", materialdescription: "", quantity: 0, materialcost: 0, remarks: " ", expecteddate: this.date, returneddate: this.date, issuedqty: 0, showdetail: false, materiallistdata: [], availableqty: 0, unitprice: 0, pono: "", materialtype:"" };
+        this.materialistModel = { materialid: "", gatepassmaterialid: "0", materialdescription: "", quantity: 0, materialcost: 0, remarks: " ", expecteddate: this.date, returneddate: this.date, issuedqty: 0, showdetail: false, materiallistdata: [], availableqty: 0, unitprice: 0, pono: "", materialtype: "" };
         this.gatepassModel.materialList.push(this.materialistModel);
       }
       else {
@@ -300,18 +309,18 @@ export class GatePassComponent implements OnInit {
       }
 
     }
-    
-   
+
+
 
 
   }
   onreasonchanged(event) {
     this.isotherreason = false;
-   var rsn = event.target.value;
+    var rsn = event.target.value;
     if (rsn == "Other") {
       this.isotherreason = true;
-   }
- }
+    }
+  }
 
   onComplete(qty: any, avlqty: any, index: any, data: any) {
     if (qty == 0 || qty < 0) {
@@ -400,8 +409,8 @@ export class GatePassComponent implements OnInit {
       //alert(Exception.message)
 
 
-    } 
-   
+    }
+
 
   }
 
@@ -475,9 +484,9 @@ export class GatePassComponent implements OnInit {
     }
   }
 
- 
 
-  
+
+
   getcolspan() {
     var colspan = 7;
     if (!this.selectedrba.gatepass_approval) {
@@ -696,9 +705,9 @@ export class GatePassComponent implements OnInit {
         debugger;
         //this.totalGatePassList = this.totalGatePassList.filter(li => li.isnonproject != true);
         this.totalGatePassList.forEach(item => {
-          if (item.gatepasstype == "Returnable" && item.approverstatus == "Approved" && item.authstatus=="Approved")
+          if (item.gatepasstype == "Returnable" && item.approverstatus == "Approved" && item.authstatus == "Approved")
             this.gatepasslist.push(item);
-          if (item.gatepasstype == "Non Returnable" && item.authstatus == "Approved" && item.fmapprovedstatus == "Approved" )
+          if (item.gatepasstype == "Non Returnable" && item.authstatus == "Approved" && item.fmapprovedstatus == "Approved")
             this.gatepasslist.push(item);
         })
 
@@ -717,7 +726,7 @@ export class GatePassComponent implements OnInit {
             this.selectedStatus = "Pending";
           }
         }
-       
+
       }
 
       this.gatepassModelList = [];
@@ -745,7 +754,7 @@ export class GatePassComponent implements OnInit {
     this.gatepassModelList = [];
     this.prepareGatepassList();
   }
-  exportPdf(gatepassobject: gatepassModel,materialarray : any[]) {
+  exportPdf(gatepassobject: gatepassModel, materialarray: any[]) {
     // debugger;
     debugger;
     import("jspdf").then(jsPDF => {
@@ -759,7 +768,7 @@ export class GatePassComponent implements OnInit {
         var pageWidth = doc.internal.pageSize.width || doc.internal.pageSize.getWidth();
         doc.setDrawColor(0);
         doc.setFillColor(255, 255, 255);
-        doc.rect(10, 10, 190, pageHeight-20, 'FD');
+        doc.rect(10, 10, 190, pageHeight - 20, 'FD');
         var img = new Image()
         img.src = './assets/banner1.jpg'
         doc.addImage(img, 'jpg', 12, 12, 40, 15);
@@ -786,7 +795,7 @@ export class GatePassComponent implements OnInit {
           doc.text("Representing: " + gatepassobject.vendorname + " ", 12, 52);
         }
 
-       
+
         doc.text("No: " + gatepassobject.gatepassid + " ", 125, 52);
         if (isNullOrUndefined(gatepassobject.referenceno)) {
           doc.text("Document Ref:", 12, 59);
@@ -817,19 +826,19 @@ export class GatePassComponent implements OnInit {
           }
 
         })
-       
+
         doc.line(10, pageHeight - 30, 200, pageHeight - 30);
-       
+
         if (gatepassobject.gatepasstype == "Returnable") {
           if (isNullOrUndefined(gatepassobject.approvername)) {
             doc.text("Authorized by: ", 80, pageHeight - 22);
-            
+
           }
           else {
             doc.text("Authorized by:", 80, pageHeight - 22);
             doc.text(gatepassobject.approvername, 80, pageHeight - 15);
           }
-          
+
         }
         else if (gatepassobject.gatepasstype == "Non Returnable") {
           if (isNullOrUndefined(gatepassobject.fmapprover)) {
@@ -839,7 +848,7 @@ export class GatePassComponent implements OnInit {
             doc.text("Authorized by:", 80, pageHeight - 22);
             doc.text(gatepassobject.fmapprover, 80, pageHeight - 15);
           }
-         
+
         }
         doc.text("Prepared by:", 12, pageHeight - 22);
         doc.text(gatepassobject.name, 12, pageHeight - 15);
@@ -896,15 +905,15 @@ export class GatePassComponent implements OnInit {
     })
   }
   alignCol(cell, data) {
-  var col = data.column.index;
-  if (col == 0 || col == 2) {
-    cell.styles.halign = 'right';
+    var col = data.column.index;
+    if (col == 0 || col == 2) {
+      cell.styles.halign = 'right';
 
-    console.log('2 data.column.index', data.column.index);
-    console.log('cell', cell);
-    console.log('data', data);
+      console.log('2 data.column.index', data.column.index);
+      console.log('cell', cell);
+      console.log('data', data);
+    }
   }
-}
 
   //prepare list based on gate pass id
   prepareGatepassList() {
@@ -939,7 +948,7 @@ export class GatePassComponent implements OnInit {
           }
           var tempmodel = Object.assign({}, material)
           item.materialList.push(material);
-          
+
           item.tempmaterialList.push(tempmodel);
         }
 
@@ -967,7 +976,7 @@ export class GatePassComponent implements OnInit {
       this.filteredpos = []
       this.gatepassModel.materialList = [];
       this.addNewMaterial();
-     
+
     }
     else {
       this.gatepassModel.isnonproject = false;
@@ -982,7 +991,7 @@ export class GatePassComponent implements OnInit {
         this.addNewMaterial();
       }
     }
-   
+
   }
   //open gate pass dialog
   openGatepassDialog(gatepassobject: any, gpIndx: any, dialogstr: string) {
@@ -1019,7 +1028,7 @@ export class GatePassComponent implements OnInit {
           this.materialtype = "project";
         }
       }
-     
+
       if (dialogstr == 'updateReturnedDateDialog') {
         var matdata = [];
         var materialdata = gatepassobject.materialList;
@@ -1037,13 +1046,13 @@ export class GatePassComponent implements OnInit {
           debugger;
           var exisdata = matdata.filter(o => o.materialid == item.materialid && o.materialdescription == item.materialdescription && o.pono == item.pono);
 
-            if (exisdata.length == 0) {
-                if (this.isplanttype) {
-                    var mat = { listName: item.materialid, name: item.materialid, code: item.materialid };
-                    var dsc = { listName: item.materialdescription, name: item.materialdescription, code: item.materialdescription };
-                    item.materialobj = mat;
-                    item.materialdescriptionobj = dsc;
-                }
+          if (exisdata.length == 0) {
+            if (this.isplanttype) {
+              var mat = { listName: item.materialid, name: item.materialid, code: item.materialid };
+              var dsc = { listName: item.materialdescription, name: item.materialdescription, code: item.materialdescription };
+              item.materialobj = mat;
+              item.materialdescriptionobj = dsc;
+            }
             matdata.push(item);
           }
 
@@ -1070,28 +1079,28 @@ export class GatePassComponent implements OnInit {
         this.iseditprocess = true;
         gatepassobject.tempmaterialList.forEach(item => {
           debugger;
-            item.expected = new Date(item.expected);
-         
+          item.expected = new Date(item.expected);
+
           var exisdata = this.gatepassModel.materialList.filter(o => o.materialid == item.materialid && o.materialdescription == item.materialdescription && o.pono == item.pono);
-            if (exisdata.length == 0) {
-                if (this.isplanttype) {
-                    var mat = { listName: item.materialid, name: item.materialid, code: item.materialid };
-                    var dsc = { listName: item.materialdescription, name: item.materialdescription, code: item.materialdescription };
-                    item.materialobj = mat;
-                    item.materialdescriptionobj = dsc;
-                }
-              var dt = Object.assign({}, item);
-            
+          if (exisdata.length == 0) {
+            if (this.isplanttype) {
+              var mat = { listName: item.materialid, name: item.materialid, code: item.materialid };
+              var dsc = { listName: item.materialdescription, name: item.materialdescription, code: item.materialdescription };
+              item.materialobj = mat;
+              item.materialdescriptionobj = dsc;
+            }
+            var dt = Object.assign({}, item);
+
             this.gatepassModel.materialList.push(dt);
           }
 
-          
-          
+
+
 
         })
       }
-      
-     
+
+
     } else {
       this.materialtype = "project";
       this.isplanttype = false;
@@ -1141,8 +1150,8 @@ export class GatePassComponent implements OnInit {
     }
   }
 
- 
- 
+
+
 
   //Delete material for gatepass
   removematerial(id: number, matIndex: number) {
@@ -1165,7 +1174,7 @@ export class GatePassComponent implements OnInit {
       this.gatepassModel.materialList[index] = new materialistModel();
       this.gatepassModel.materialList[index].materialid = "";
       this.messageService.add({ severity: 'error', summary: '', detail: 'Material already exist' });
-     
+
       return false;
     }
     //add material price
@@ -1191,7 +1200,7 @@ export class GatePassComponent implements OnInit {
         return false;
       }
     }
-   
+
   }
   ondescriptionchanged(data: any, ind: number) {
     if (!isNullOrUndefined(data.materialid) && data.materialid != "") {
@@ -1233,7 +1242,7 @@ export class GatePassComponent implements OnInit {
         data.materialdescription = data2[0].materialdescription;
         data.materialcost = data2[0].materialcost != null ? data2[0].materialcost : 0;
         data.availableqty = data2[0].availableqty != null ? data2[0].availableqty : 0;
-        
+
       }
     }
     else {
@@ -1283,7 +1292,7 @@ export class GatePassComponent implements OnInit {
 
   }
 
-  
+
 
   //update return dated based on role
   updateReturnedDate(gatepassobject: any) {
@@ -1353,12 +1362,12 @@ export class GatePassComponent implements OnInit {
           this.gatepassModel.materialList[i].returneddate = this.gatepassModel.materialList[i].returneddate != null ? new Date(this.gatepassModel.materialList[i].returneddate).toLocaleDateString() : undefined;
 
         }
-       
+
         var invalidrcvmat = this.gatepassModel.materialList.filter(function (element, index) {
-            return (isNullOrUndefined(element.materialid) || element.materialid == "");
+          return (isNullOrUndefined(element.materialid) || element.materialid == "");
         });
-       
-        
+
+
         if (invalidrcvmat.length > 0) {
           if (this.gatepassModel.isnonproject) {
             this.messageService.add({ severity: 'error', summary: '', detail: 'Enter Material' });
@@ -1390,7 +1399,7 @@ export class GatePassComponent implements OnInit {
           this.disableGPBtn = false;
           return false;
         }
-       
+
         if (this.gatepassModel.gatepasstype == "Returnable") {
           var invalidrcv = this.gatepassModel.materialList.filter(function (element, index) {
             return (isNullOrUndefined(element.expecteddate) || element.expecteddate == "");
@@ -1435,9 +1444,9 @@ export class GatePassComponent implements OnInit {
           });
         }
 
-       
-        
-          this.spinner.show();
+
+
+        this.spinner.show();
         this.gatepassModel.requestedby = this.employee.employeeno;
         if (!this.gatepassModel.isnonproject && !this.isplanttype) {
           this.gatepassModel.projectid = this.selectedproject.value;
@@ -1449,33 +1458,33 @@ export class GatePassComponent implements OnInit {
         else if (this.gatepassModel.isnonproject) {
           this.gatepassModel.materialtype = "nonproject";
         }
-        
-       
-        
-          this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].expecteddate = this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].expecteddate != null ? new Date(this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].expecteddate).toLocaleDateString() : undefined;
-          this.spinner.show();
-          debugger;
-          this.wmsService.saveoreditgatepassmaterial(this.gatepassModel).subscribe(data => {
-            this.spinner.hide();
-            this.disableGPBtn = false;
-            this.gatepassdialog = false;
-            this.updateReturnedDateDialog = false;
-            this.getGatePassList();
-            if (data) {
-              if (this.edit == true) {
-                this.messageService.add({ severity: 'success', summary: '', detail: 'Gate Pass Updated Successfully' });
-                this.edit = false;
-              }
-              else {
-                this.messageService.add({ severity: 'success', summary: '', detail: 'Gate Pass Created Successfully' });
-              }
+
+
+
+        this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].expecteddate = this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].expecteddate != null ? new Date(this.gatepassModel.materialList[this.gatepassModel.materialList.length - 1].expecteddate).toLocaleDateString() : undefined;
+        this.spinner.show();
+        debugger;
+        this.wmsService.saveoreditgatepassmaterial(this.gatepassModel).subscribe(data => {
+          this.spinner.hide();
+          this.disableGPBtn = false;
+          this.gatepassdialog = false;
+          this.updateReturnedDateDialog = false;
+          this.getGatePassList();
+          if (data) {
+            if (this.edit == true) {
+              this.messageService.add({ severity: 'success', summary: '', detail: 'Gate Pass Updated Successfully' });
+              this.edit = false;
             }
+            else {
+              this.messageService.add({ severity: 'success', summary: '', detail: 'Gate Pass Created Successfully' });
+            }
+          }
 
-          })
-          //check if for that material quanity exists or not
-          
+        })
+        //check if for that material quanity exists or not
 
-        
+
+
       }
       else {
         this.messageService.add({ severity: 'error', summary: '', detail: 'Add Material to create Gate Pass' });
@@ -1492,7 +1501,7 @@ export class GatePassComponent implements OnInit {
 
 
 
-   
+
 
 
   }
@@ -1504,11 +1513,11 @@ export class GatePassComponent implements OnInit {
       materialarray = data;
       this.exportPdf(gatepassobject, materialarray);
     });
-   
+
     //this.router.navigate(['/WMS/GatePassPrint', gatepassobject.gatepassid]);
   }
 
- 
+
 
   //shows list of items for particular material
   showmateriallocationList(material, id, rowindex) {
@@ -1541,7 +1550,7 @@ export class GatePassComponent implements OnInit {
     });
   }
   //check issued quantity
-  checkissueqty($event, entredvalue, maxvalue, material, createddate, description: string, rowdata : any) {
+  checkissueqty($event, entredvalue, maxvalue, material, createddate, description: string, rowdata: any) {
     if (entredvalue < 0) {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Enter value grater than 0' });
       rowdata.issuedquantity = 0;
@@ -1603,11 +1612,11 @@ export class GatePassComponent implements OnInit {
 
   }
   approverListdata() {
-   
+
     this.wmsService.getapproverdata(this.employee.employeeno).
       subscribe(
         res => {
-    
+
           if (!isNullOrUndefined(res[0].approverid) && String(res[0].approverid).trim() != "") {
             this.gatepassModel.approverid = res[0].approverid;
             this.gatepassModel.managername = res[0].managername;
@@ -1616,7 +1625,7 @@ export class GatePassComponent implements OnInit {
             this.gatepassModel.approverid = res[0].departmentheadid;
             this.gatepassModel.managername = res[0].departmentheadname;
           }
-         
+
 
         });
   }
@@ -1649,5 +1658,56 @@ export class GatePassComponent implements OnInit {
       this.gatepassFiltered = this.gatepassModelList.filter(li => li.issuedqty > 0);
     }
   }
+  holdreject(data: any, status: string) {
+    this.statusmodel = new Issuestatus();
+    this.statusmodel.requestid = data.transferid;
+    this.statusmodel.issuerstatus = status;
+    this.statusmodel.requestedby = data.requesterid;
+    this.statusmodel.issuerstatuschangeby = this.employee.employeeno;
+    this.statusmodel.type = "STO";
 
+    if (status == "On Hold") {
+      this.remarksheadertext = "Are you sure to put request on hold ?";
+    }
+    if (status == "Rejected") {
+      this.remarksheadertext = "Are you sure to reject the request ?";
+    }
+    this.displayRemarks = true;
+
+  }
+  submitistatus() {
+    debugger;
+    if (this.statusremarks.trim() == "") {
+      this.messageService.add({ severity: 'error', summary: '', detail: 'Enter Remarks' });
+      return;
+    }
+    this.statusmodel.issuerstatusremarks = this.statusremarks;
+    var msg = "";
+    var errormsg = "";
+    if (this.statusmodel.issuerstatus == "On Hold") {
+      msg = "On hold successful";
+      errormsg = "On hold failed";
+    }
+    if (this.statusmodel.issuerstatus == "Rejected") {
+      msg = "Rejection successful";
+      errormsg = "Rejection failed";
+    }
+    this.wmsService.updateSTOSubcontractstatus(this.statusmodel).subscribe(data => {
+      if (data) {
+        this.messageService.add({ severity: 'success', summary: '', detail: msg });
+      }
+      else {
+        this.messageService.add({ severity: 'success', summary: '', detail: errormsg });
+      }
+      this.canclestatus();
+
+    });
+
+  }
+  canclestatus() {
+    this.remarksheadertext = "";
+    this.displayRemarks = false;
+    this.statusremarks = "";
+    this.statusmodel = new Issuestatus();
+  }
 }

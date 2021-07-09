@@ -11,8 +11,10 @@
           <div class="form-inline">
             <label class="labelheading">Status :</label>&nbsp;&nbsp;
             <select placeholder="Status" name="Status" (change)="onSelectStatus($event)" [ngModel]="selectedStatus" class="form-control">
-              <option selected value="Pending"> Pending</option>
-              <option value="Approved"> Issued</option>
+              <option value="Pending"> Pending</option>
+              <option value="Issued"> Issued</option>
+              <option value="On Hold">On Hold</option>
+              <option value="Rejected">Rejected</option>
             </select>
           </div>
         </div>
@@ -50,6 +52,7 @@
               <th style="text-align:center;width:100px">Type</th>
               <th style="text-align: center;width:150px">Requested On</th>
               <th style="text-align:center;width:150px">Requester</th>
+              <th style="text-align:center;width:190px"></th>
               <!--<th *ngIf="selectedStatus=='Approved'" style="text-align:center;width:100px">Print</th>-->
             </tr>
             <tr>
@@ -60,6 +63,7 @@
               <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'requesteddate', 'contains')"></th>
               <th> <input pInputText type="text" class="form-control" (input)="dt.filter($event.target.value, 'name', 'contains')"></th>
               <!--<th *ngIf="selectedStatus=='Approved'"></th>-->
+              <th></th>
             </tr>
           </ng-template>
           <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
@@ -71,6 +75,12 @@
               <td class="ptable-cell" style="text-align:left;width:100px">{{rowData.requesttype}}</td>
               <td class="ptable-cell" style="text-align:center;width:150px;">{{rowData.requesteddate  | date :  constants.dateFormat}}</td>
               <td class="ptable-cell" style="text-align:left;width:150px;">{{rowData.name}}</td>
+              <td class="ptable-cell" style="text-align:center;width:190px;">
+                <button type="button" style="font-size:12px" class="btn btn-success" *ngIf="rowData.selectedStatus=='Pending' && !rowData.isporequested || selectedStatus=='On Hold'" (click)="navigateToMatIssue(rowData)">Issue</button>
+                <button type="button" style="font-size:12px" class="btn btn-primary" *ngIf="rowData.selectedStatus=='Issued' || rowData.isporequested || selectedStatus=='Rejected'" (click)="navigateToMatIssue(rowData)">View</button>
+                <button type="button" style="font-size:12px" class="btn btn-warning" *ngIf="rowData.selectedStatus=='Pending' && !rowData.isporequested" (click)="holdreject(rowData,'On Hold')">Hold</button>
+                <button type="button" style="font-size:12px" class="btn btn-danger" *ngIf="(rowData.selectedStatus=='Pending' && !rowData.isporequested) || selectedStatus=='On Hold'" (click)="holdreject(rowData,'Rejected')">Reject</button>
+              </td>
               <!--<td *ngIf="selectedStatus=='Approved'" class="ptable-cell" style="text-align:center;width:100px;">
                 <input class="btn btn-primary btn-sm" (click)="PrintMaterialIssue(rowData)" type="button" value="Print">
               </td>-->
@@ -196,4 +206,10 @@
     <button class="btn btn-primary" printTitle="MaterialIssue" [useExistingCss]="true" styleSheetFile="/styles.css" [printStyle]="{h1 : {'color': 'red'}, h2 : {'border': 'solid 1px'}}" printSectionId="print-section" ngxPrint> print</button>
   </div>
 </div>
+<p-dialog header="{{remarksheadertext}}" [(visible)]="displayRemarks" (onHide)="canclestatus()" [modal]="true" [style]="{width: '50vw'}" [baseZIndex]="10000">
+  <textarea style="width: 100%; height: 100px;resize: none" placeholder="Enter Remarks" [(ngModel)]="statusremarks">
+       </textarea>
+  <button class="btn btn-danger btn-sm" (click)="canclestatus()" style="float:right">No</button>
+  <button class="btn btn-success btn-sm" (click)="submitstatus()" style="float:right">Yes</button>
 
+</p-dialog>

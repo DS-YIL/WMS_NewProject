@@ -1348,10 +1348,10 @@ export class DirectDelivery {
 
 export class Issuestatus
 {
-  statusremarks: string;
-  statuschangeby: string;
-  status: string;
-  statuschangedon: string;
+  issuerstatusremarks: string;
+  issuerstatuschangeby: string;
+  issuerstatus: string;
+  issuerstatuschangedon: string;
   type: string;
   requestid: string;
   requestedby: string;

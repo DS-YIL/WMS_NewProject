@@ -2546,10 +2546,10 @@ public class YGSGR
 }
 public class Issuestatus
 {
-	public string status { get; set; }
-	public string statusremarks { get; set; }
-	public string statuschangeby { get; set; }
-	public string statuschangedon { get; set; }
+	public string issuerstatus { get; set; }
+	public string issuerstatusremarks { get; set; }
+	public string issuerstatuschangeby { get; set; }
+	public string issuerstatuschangedon { get; set; }
 	public string type { get; set; }
 	public string requestid { get; set; }
 	public string requestedby { get; set; }
