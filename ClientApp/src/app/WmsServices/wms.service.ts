@@ -661,8 +661,8 @@ export class wmsService {
   getstocktransferlistgroup(): Observable<invstocktransfermodel[]> {
     return this.http.get<invstocktransfermodel[]>(this.url + 'POData/getstocktransferdatagroup/', this.httpOptions);
   }
-  getstocktransferlistgroup1(transfertye: string): Observable<invstocktransfermodel[]> {
-    return this.http.get<invstocktransfermodel[]>(this.url + 'POData/getstocktransferdatagroup1?transfertype=' + transfertye, this.httpOptions);
+  getstocktransferlistgroup1(transfertye: string,employeeno: string): Observable<invstocktransfermodel[]> {
+    return this.http.get<invstocktransfermodel[]>(this.url + 'POData/getstocktransferdatagroup1?transfertype=' + transfertye + '&employeeno=' + employeeno, this.httpOptions);
   }
 
   Stocktransfer1(StockModel: invstocktransfermodel): Observable<any> {
@@ -1205,7 +1205,7 @@ export class wmsService {
     return this.http.get<any>(this.url + 'POData/deleteDirectDelivery?inwmasterid=' + inwmasterid + '&deletedby=' + deletedby, this.httpOptions);
   }
 
-  updateSTOSubcontractstatus(model: Issuestatus): Observable<any> {
+  updateIssuerstatus(model: Issuestatus): Observable<any> {
     return this.http.post<any>(this.url + 'POData/IssuerStatusChange', model, this.httpOptions);
   }
 }

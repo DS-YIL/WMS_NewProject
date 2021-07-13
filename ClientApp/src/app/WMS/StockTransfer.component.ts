@@ -600,7 +600,7 @@ export class StockTransferComponent implements OnInit {
 
   getStocktransferdatagroup() {
     this.stocktransferlist = [];
-    this.wmsService.getstocktransferlistgroup1("IST").subscribe(data => {
+    this.wmsService.getstocktransferlistgroup1("IST",'').subscribe(data => {
       debugger;
       if (data) {
         this.stocktransferlistgroup = data;

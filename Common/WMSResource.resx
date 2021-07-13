@@ -277,7 +277,7 @@ where  inw.invoiceno='#invoiceno' and openpo.pono='#pono' group by grnnumber</va
     <value>select gate.isnonproject,gate.gatepassid,gate.vendorname,gate.gatepasstype,gate.reasonforgatepass,gate.otherreason,gate.status,gate.referenceno ,gate.fmapproverremarks ,gate.approverremarks ,gate.approverstatus ,
 mat.gatepassmaterialid,mat.deleteflag,mat.materialid,mat.expecteddate,mat.materialcost::decimal(19,5), mat.poitemdescription as materialdescription,mat.pono,mat.quantity,mat.remarks,
 emp.name,emp1.name as fmapprover,iss.itemissueddate,gate.remarks as  statusremarks,appr."name"  as approvername,
-gate.projectid,gate.requestedby ,gate.requestedon,gate.fmapprovedstatus,gate.approverid ,gate.fmapproverid,gate.approvedon,gate.fmapprovedon,gate.authid,gate.authstatus,gate.authremarks,gate.authorizedon, emp2.name as authname,gate.materialtype,
+gate.projectid,gate.requestedby ,gate.requestedon,emp3."name" as issuername, gate.issuerstatus,gate.issuerstatusremarks ,gate.issuerstatuschangedon ,gate.fmapprovedstatus,gate.approverid ,gate.fmapproverid,gate.approvedon,gate.fmapprovedon,gate.authid,gate.authstatus,gate.authremarks,gate.authorizedon, emp2.name as authname,gate.materialtype,
 case when gate.isnonproject is not true and gate.materialtype = 'project'
      then (select sum(ws.availableqty::decimal(19,5)) from wms.wms_stock ws where ws.projectid = gate.projectid and ws.pono = mat.pono and ws.materialid = mat.materialid and ws.poitemdescription = mat.poitemdescription group by ws.projectid,ws.pono,ws.materialid,ws.poitemdescription)
      when gate.isnonproject is not true and gate.materialtype = 'plant'
@@ -297,6 +297,7 @@ case when gate.isnonproject is not true and gate.materialtype = 'project'
     left join wms.employee appr on appr.employeeno=gate.approverid 
 	left join wms.employee emp1 on emp1.employeeno=gate.fmapproverid  
 	left join wms.employee emp2 on emp2.employeeno=gate.authid  
+	left join wms.employee emp3 on emp3.employeeno=gate.issuerstatuschangeby  
    left join wms.wms_materialissue iss on (iss.requestid::text = mat.gatepassmaterialid::text and iss.requesttype = 'gatepass' )
    where gate.deleteflag=false order by gate.gatepassid desc</value>
   </data>
@@ -761,10 +762,10 @@ values (@transferredby,@transferredon,@transfertype,@sourceplant,@destinationpla
 values (@transferid,@materialid,@sourcelocation,@sourceitemid,@destinationlocation,@destinationitemid,@transferqty,@poitemdesc)</value>
   </data>
   <data name="invstocktransfermainquery" xml:space="preserve">
-    <value>select inv.*,emp.name as transferredbyname
+    <value>select inv.*,emp.name as transferredbyname,emp1.name as issuername 
 from wms.wms_invstocktransfer inv 
-left outer join wms.employee emp  on emp.employeeno = inv.transferredby where inv.transfertype='#transfertype'
-order by transferredon Desc</value>
+left outer join wms.employee emp  on emp.employeeno = inv.transferredby
+left outer join wms.employee emp1  on emp1.employeeno = inv.issuerstatuschangeby</value>
   </data>
   <data name="getpendingreceiptslist" xml:space="preserve">
     <value>select sl.invoiceno as value,sl.inwmasterid as text,pono as pos,suppliername as supplier,
@@ -1278,8 +1279,7 @@ left join wms."MaterialMasterYGS" ygs on ygs.material=sk.materialid
 where iss.requestid = '#requestforissueid'</value>
   </data>
   <data name="getmaterialissuelist" xml:space="preserve">
-    <value>select req.requestid,req.requesteddate,emp.name,req.issuedby,req.issuedon,req.requesttype,
-	CASE WHEN req.issuedby IS Not NULL THEN 'Issued' ELSE 'Pending' END AS requeststatus
+    <value>select req.requestid,req.requesteddate,emp.name,req.issuedby,req.issuedon,req.requesttype,req.issuerstatus 
 	from wms.materialrequest req
 	left outer join wms.employee emp on req.requesterid = emp.employeeno
 	where (req.isapprovalrequired is not true or (req.isapprovalrequired is true and req.isapproved is true))</value>
@@ -1293,7 +1293,7 @@ where requestid = '#requestid'</value>
   </data>
   <data name="getmaterialrequests" xml:space="preserve">
     <value>select req.requestid,req.ackstatus,req.requesteddate,req.ackremarks,req.reserveid,req.projectcode,req.remarks,req.requesttype,
-  CASE WHEN req.ackstatus IS NULL THEN false ELSE true END AS status,req.approvalremarks,
+  req.issuerstatus,req.issuerstatuschangedon ,req.issuerstatusremarks,emp."Name"  as issuername, CASE WHEN req.ackstatus IS NULL THEN false ELSE true END AS status,req.approvalremarks,
   CASE WHEN req.issuedby IS NULL THEN 'Pending' ELSE 'Issued' END AS approvedstatus,
    CASE 
    WHEN (req.isapprovalrequired is true and req.isapproved is true) THEN 'Approved'
@@ -1301,7 +1301,9 @@ where requestid = '#requestid'</value>
    WHEN (req.isapprovalrequired is true and req.isapproved is not true) THEN 'Pending'
    WHEN (req.isapprovalrequired is not true) THEN 'N/A'
    ELSE 'N/A' END AS pmapprovedstatus
-  from wms.materialrequest req where (req.requesterid = '#reqid' or req.approverid = '#reqid')order by req.requestid desc</value>
+  from wms.materialrequest req 
+  left join employee  emp on emp."EmployeeNo" =req.issuerstatuschangeby 
+  where (req.requesterid = '#reqid' or req.approverid = '#reqid')order by req.requestid desc</value>
   </data>
   <data name="getmaterialreservedata" xml:space="preserve">
     <value>select rd.reserveid,rd.materialid,rd.poitemdescription as materialdescription,sum(rd.reservequantity) reservedqty
@@ -1987,7 +1989,7 @@ left join wms."MaterialMasterYGS" ygs on ygs.material=sk.materialid
 where iss.requestid = '#requestforissueid' and iss.requesttype = '#type'</value>
   </data>
   <data name="getSTOListForIssue" xml:space="preserve">
-    <value>select inv.transferid,inv.transferredby as requesterid,inv.materialtype,inv.status,emp2.name as statuschangeby,inv.statuschangedon,inv.statusremarks,emp.name as transferredby,emp1.name as approvername,inv.transferredon,inv.transfertype,inv.sourceplant,inv.destinationplant,inv.remarks,inv.isporequested,inv.approverid ,inv.approvalremarks ,inv.approvedon,
+    <value>select inv.transferid,inv.transferredby as requesterid,inv.materialtype,inv.status,emp2.name as statuschangeby,inv.issuerstatuschangedon,inv.issuerstatusremarks,emp.name as transferredby,emp1.name as approvername,inv.transferredon,inv.transfertype,inv.sourceplant,inv.destinationplant,inv.remarks,inv.isporequested,inv.approverid ,inv.approvalremarks ,inv.approvedon,
 (select SUM(wm.issuedqty) from wms.wms_materialissue wm where wm.requesttype = '#type' and wm.requestid::text in (
 select id::text from wms.wms_invtransfermaterial wi where wi.transferid = inv.transferid)) as issuedqty,
 (select SUM(wiv.transferqty) from wms.wms_invtransfermaterial wiv where wiv.transferid = inv.transferid) as transferqty,
@@ -1996,7 +1998,7 @@ inv.issuedon,inv.isporequested
 from wms.wms_invstocktransfer inv 
 left outer join wms.employee emp  on emp.employeeno = inv.transferredby
 left outer join wms.employee emp1  on emp1.employeeno = inv.approverid
-left outer join wms.employee emp2  on emp2.employeeno = inv.statuschangeby
+left outer join wms.employee emp2  on emp2.employeeno = inv.issuerstatuschangeby
 where  inv.transfertype ='#type' and (inv.isapprovalrequired is not true or (inv.isapprovalrequired is true and inv.isapproved is True))
 order by transferredon desc</value>
   </data>
@@ -2692,12 +2694,12 @@ left outer join wms.wms_storeinward ws on m.inwardid = ws.inwardid
 where m.requestid = '#gatepassmaterialid' and m.requesttype = 'GatePass'</value>
   </data>
   <data name="updateGatePassStatus" xml:space="preserve">
-    <value>update wms.wms_gatepass set issuerstatus =@issuerstatus,issuerstatusremarks =@issuerstatusremarks,issuerstatuschangeby =@issuerstatuschangeby,issuerstatuschangedon =current_date where gatepassid =#gatepassid</value>
+    <value>update wms.wms_gatepass set issuerstatus =@issuerstatus,issuerstatusremarks =@issuerstatusremarks,issuerstatuschangeby =@issuerstatuschangeby,issuerstatuschangedon =current_date where gatepassid ='#gatepassid'</value>
   </data>
   <data name="updateInvtransferStatus" xml:space="preserve">
     <value>update wms.wms_invstocktransfer set issuerstatus =@issuerstatus,issuerstatusremarks =@issuerstatusremarks,issuerstatuschangeby =@issuerstatuschangeby,issuerstatuschangedon =current_date where transferid ='#transferid'</value>
   </data>
   <data name="updatesmaterialReqStatus" xml:space="preserve">
-    <value>update wms.materialrequest set issuerstatus =@issuerstatus,issuerstatusremarks =@issuerstatusremarks,issuerstatuschangeby =@issuerstatuschangeby,issuerstatuschangedon =current_date where requesterid =#requesterid</value>
+    <value>update wms.materialrequest set issuerstatus =@issuerstatus,issuerstatusremarks =@issuerstatusremarks,issuerstatuschangeby =@issuerstatuschangeby,issuerstatuschangedon =current_date where requestid='#requestid'</value>
   </data>
 </root>

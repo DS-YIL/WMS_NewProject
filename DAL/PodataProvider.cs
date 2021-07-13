@@ -1767,12 +1767,12 @@ namespace WMS.DAL
 						if (data.Count() > 0)
 						{
 							string ponostr = data.FirstOrDefault().pono;
-                            if (ponostr.StartsWith("NP"))
-                            {
+							if (ponostr.StartsWith("NP"))
+							{
 								datalist = data.ToList();
-                            }
-                            else
-                            {
+							}
+							else
+							{
 								foreach (OpenPoModel po in data)
 								{
 									if (obj.asnno != null && obj.asnno != "")
@@ -1834,7 +1834,7 @@ namespace WMS.DAL
 								}
 							}
 
-							
+
 						}
 					}
 
@@ -1873,7 +1873,7 @@ namespace WMS.DAL
 					string query = WMSResource.getdataforqualitydetails.Replace("#grnno", grnnumber);// + pono+"'";//li
 					var data = await pgsql.QueryAsync<OpenPoModel>(
 					   query, null, commandType: CommandType.Text);
-					return data.OrderBy(li => li.pono).ThenBy(n=>n.lineitemno);
+					return data.OrderBy(li => li.pono).ThenBy(n => n.lineitemno);
 				}
 				catch (Exception Ex)
 				{
@@ -2205,7 +2205,7 @@ namespace WMS.DAL
 							}
 
 
-							
+
 
 						}
 						Trans.Commit();
@@ -2978,7 +2978,7 @@ namespace WMS.DAL
 					string queryforitemdetails = WMSResource.queryforitemdetails.Replace("#grnnumber", grnnumber);
 					var data = await pgsql.QueryAsync<inwardModel>(
 					   queryforitemdetails, null, commandType: CommandType.Text);
-					return data.OrderBy(li=>li.pono).ThenBy(n=>n.lineitemno);
+					return data.OrderBy(li => li.pono).ThenBy(n => n.lineitemno);
 				}
 				catch (Exception Ex)
 				{
@@ -4403,7 +4403,7 @@ namespace WMS.DAL
 					{
 						string requestid = dataobj[0].requestid;
 						string approvedby = dataobj[0].approvedby;
-						string updaterequest = "update wms.materialrequest set issuedby = '" + approvedby + "',issuedon=current_date where requestid='" + requestid + "'";
+						string updaterequest = "update wms.materialrequest set issuerstatus='Issued',issuerstatuschangedon=current_date,issuerstatuschangeby='" + approvedby + "', issuedby = '" + approvedby + "',issuedon=current_date where requestid='" + requestid + "'";
 
 						var data2 = DB.ExecuteScalar(updaterequest, new
 						{
@@ -4424,7 +4424,7 @@ namespace WMS.DAL
 					{
 						string requestid = dataobj[0].transferid;
 						string approvedby = dataobj[0].approvedby;
-						string updaterequest = "update wms.wms_invstocktransfer set status = 'Issued',issuedon=current_date where transferid='" + requestid + "'";
+						string updaterequest = "update wms.wms_invstocktransfer set issuerstatus='Issued',issuerstatuschangedon=current_date,issuerstatuschangeby='" + approvedby + "',  status = 'Issued',issuedon=current_date where transferid='" + requestid + "'";
 
 						var data2 = DB.ExecuteScalar(updaterequest, new
 						{
@@ -12215,14 +12215,17 @@ Review Date :<<>>   Reviewed By :<<>>
 		Purpose : <<get stock transferdata>>
 		Review Date :<<>>   Reviewed By :<<>>
 		*/
-		public async Task<IEnumerable<invstocktransfermodel>> getstocktransferdatagroup1(string transfertype)
+		public async Task<IEnumerable<invstocktransfermodel>> getstocktransferdatagroup1(string transfertype, string employeeno)
 		{
 			using (var pgsql = new NpgsqlConnection(config.PostgresConnectionString))
 			{
 				try
 				{
-					string materialrequestquery = WMSResource.invstocktransfermainquery.Replace("#transfertype", transfertype);
-
+					string materialrequestquery = WMSResource.invstocktransfermainquery;
+					materialrequestquery += " where inv.transfertype='" + transfertype + "'";
+					if (!string.IsNullOrEmpty(employeeno))
+						materialrequestquery += " and inv.transferredby='" + employeeno + "'";
+					materialrequestquery += " order by transferredon desc";
 					await pgsql.OpenAsync();
 					var result = await pgsql.QueryAsync<invstocktransfermodel>(
 					  materialrequestquery, null, commandType: CommandType.Text);
@@ -19031,7 +19034,7 @@ Review Date :<<>>   Reviewed By :<<>>
 					if (model.type == "MaterialRequest")
 					{
 
-						string matqry = WMSResource.updatesmaterialReqStatus.Replace("#requesterid", model.requestid.ToString());
+						string matqry = WMSResource.updatesmaterialReqStatus.Replace("#requestid", model.requestid.ToString());
 						using (IDbConnection DB = new NpgsqlConnection(config.PostgresConnectionString))
 						{
 							var results = DB.ExecuteScalar(matqry, new
@@ -19077,8 +19080,8 @@ Review Date :<<>>   Reviewed By :<<>>
 					emailmodel.requesttype = model.type;
 					emailmodel.createddate = DateTime.Now;
 					EmailUtilities emailobj = new EmailUtilities();
-					if(model.requestedby != null && model.requestedby.ToString().Trim() != "")
-                    {
+					if (model.requestedby != null && model.requestedby.ToString().Trim() != "")
+					{
 						string userquery = "select  * from wms.employee where employeeno='" + model.requestedby + "'";
 						User userdata = pgsql.QuerySingle<User>(
 						   userquery, null, commandType: CommandType.Text);

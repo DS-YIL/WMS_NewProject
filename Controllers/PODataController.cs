@@ -1023,9 +1023,9 @@ namespace WMS.Controllers
 		}
 
 		[HttpGet("getstocktransferdatagroup1")]
-		public async Task<IEnumerable<invstocktransfermodel>> getstocktransferlistgroup1(string transfertype)
+		public async Task<IEnumerable<invstocktransfermodel>> getstocktransferlistgroup1(string transfertype,string employeeno)
 		{
-			return await this._poService.getstocktransferdatagroup1(transfertype);
+			return await this._poService.getstocktransferdatagroup1(transfertype,employeeno);
 		}
 
 		[HttpGet("getpendingpos")]

@@ -321,6 +321,7 @@ export class gatepassModel {
   tempmaterialList: Array<materialistModel> = [];
   approverremarks: string;
   approverstatus: string;
+  issuerstatus: string;
   fmapprovedstatus: string;
   printedon: Date;
   printedby: string;

@@ -68,7 +68,7 @@ export class MaterialIssueDashBoardComponent implements OnInit {
     this.wmsService.getMaterialIssueLlist(this.employee.employeeno).subscribe(data => {
       this.materialIssueListnofilter = data;
       debugger;
-      this.materialIssueList = this.materialIssueListnofilter.filter(li => li.requeststatus == "Pending");
+      this.materialIssueList = this.materialIssueListnofilter.filter(li => li.issuerstatus == "Pending");
       if (!isNullOrUndefined(this.requestedid) && this.requestedid != "") {
         this.materialIssueList = this.materialIssueList.filter(li => li.requestid == this.requestedid);
       }
@@ -76,19 +76,19 @@ export class MaterialIssueDashBoardComponent implements OnInit {
   }
   onSelectStatus(event) {
     this.selectedStatus = event.target.value;
-    if (this.selectedStatus == "Pending") {
-      this.materialIssueList = this.materialIssueListnofilter.filter(li => li.requeststatus == "Pending");
+    if (this.selectedStatus != "Issued") {
+      this.materialIssueList = this.materialIssueListnofilter.filter(li => li.issuerstatus == this.selectedStatus);
     }
-    else if (this.selectedStatus == "Approved") {
-      this.materialIssueList = this.materialIssueListnofilter.filter(li => li.requeststatus == "Issued" && li.issuedby == this.employee.employeeno);
+    else if (this.selectedStatus == "Issued") {
+      this.materialIssueList = this.materialIssueListnofilter.filter(li => li.issuerstatus == this.selectedStatus && li.issuedby == this.employee.employeeno);
     }
   }
   SubmitStatus() {
     if (this.selectedStatus == "Pending") {
-      this.materialIssueList = this.materialIssueListnofilter.filter(li => li.requeststatus == "Pending");
+      this.materialIssueList = this.materialIssueListnofilter.filter(li => li.issuerstatus == "Pending");
     }
-    else if (this.selectedStatus == "Approved") {
-      this.materialIssueList = this.materialIssueListnofilter.filter(li => li.requeststatus == "Issued" && li.issuedby == this.employee.employeeno);
+    else if (this.selectedStatus == "Issued") {
+      this.materialIssueList = this.materialIssueListnofilter.filter(li => li.issuerstatus == "Issued" && li.issuedby == this.employee.employeeno);
     }
   }
 
@@ -121,11 +121,11 @@ export class MaterialIssueDashBoardComponent implements OnInit {
   }
   holdreject(data: any, status: string) {
     this.statusmodel = new Issuestatus();
-    this.statusmodel.requestid = data.transferid;
+    this.statusmodel.requestid = data.requestid;
     this.statusmodel.issuerstatus = status;
     this.statusmodel.requestedby = data.requesterid;
     this.statusmodel.issuerstatuschangeby = this.employee.employeeno;
-    this.statusmodel.type = "STO";
+    this.statusmodel.type = "MaterialRequest";
 
     if (status == "On Hold") {
       this.remarksheadertext = "Are you sure to put request on hold ?";
@@ -153,9 +153,10 @@ export class MaterialIssueDashBoardComponent implements OnInit {
       msg = "Rejection successful";
       errormsg = "Rejection failed";
     }
-    this.wmsService.updateSTOSubcontractstatus(this.statusmodel).subscribe(data => {
+    this.wmsService.updateIssuerstatus(this.statusmodel).subscribe(data => {
       if (data) {
         this.messageService.add({ severity: 'success', summary: '', detail: msg });
+        this.getMaterialIssueList();
       }
       else {
         this.messageService.add({ severity: 'success', summary: '', detail: errormsg });

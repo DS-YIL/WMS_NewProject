@@ -1641,11 +1641,21 @@ export class GatePassComponent implements OnInit {
     //  this.gatepassFiltered = this.gatepassModelList;
     //}
     this.constants.gatePassIssueType = this.selectedStatus;
+    //if (this.selectedStatus == "Pending") {
+    //  this.gatepassFiltered = this.gatepassModelList.filter(li => (li.issuedqty == 0 || isNullOrUndefined(li.issuedqty)) && li.approverstatus == "Approved" && li.isnonproject != true);
+    //}
+    //else if (this.selectedStatus == "Issued") {
+    //  this.gatepassFiltered = this.gatepassModelList.filter(li => li.issuedqty > 0 || li.isnonproject == true);
+    //}
+
     if (this.selectedStatus == "Pending") {
       this.gatepassFiltered = this.gatepassModelList.filter(li => (li.issuedqty == 0 || isNullOrUndefined(li.issuedqty)) && li.approverstatus == "Approved" && li.isnonproject != true);
     }
     else if (this.selectedStatus == "Issued") {
       this.gatepassFiltered = this.gatepassModelList.filter(li => li.issuedqty > 0 || li.isnonproject == true);
+    }
+    else if (this.selectedStatus == "On Hold" || this.selectedStatus == "Rejected") {
+      this.gatepassFiltered = this.gatepassModelList.filter(li => li.issuerstatus == this.selectedStatus && !isNullOrUndefined(li.issuerstatus));
     }
   }
 
@@ -1692,7 +1702,7 @@ export class GatePassComponent implements OnInit {
       msg = "Rejection successful";
       errormsg = "Rejection failed";
     }
-    this.wmsService.updateSTOSubcontractstatus(this.statusmodel).subscribe(data => {
+    this.wmsService.updateIssuerstatus(this.statusmodel).subscribe(data => {
       if (data) {
         this.messageService.add({ severity: 'success', summary: '', detail: msg });
       }

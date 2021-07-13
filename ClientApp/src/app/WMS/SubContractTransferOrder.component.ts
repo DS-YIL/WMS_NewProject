@@ -597,7 +597,7 @@ export class SubContractTransferOrderComponent implements OnInit {
   getStocktransferdatagroup() {
     this.stocktransferlist = [];
     this.spinner.show();
-    this.wmsService.getstocktransferlistgroup1("SubContract").subscribe(data => {
+    this.wmsService.getstocktransferlistgroup1("SubContract", this.employee.employeeno).subscribe(data => {
       this.spinner.hide();
       if (data) {
         this.stocktransferlist = data;

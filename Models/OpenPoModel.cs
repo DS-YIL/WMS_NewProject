@@ -736,7 +736,8 @@ namespace WMS.Models
 		public bool initialstock { get; set; }
 		public string materialtype { get; set; }
 		public string managerid { get; set; }
-
+		public string issuerstatus { get; set; }
+		
 	}
 
 
@@ -868,6 +869,10 @@ namespace WMS.Models
 		public string authname { get; set; }
 		public DateTime authorizedon { get; set; }
 		public string materialtype { get; set; }
+		public string issuername { get; set; }
+		public string issuerstatus { get; set; }
+		public string issuerstatusremarks { get; set; }
+		public DateTime issuerstatuschangedon { get; set; }
 	}
 	public class materialistModel
 	{
@@ -1615,7 +1620,10 @@ public class invstocktransfermodel
 	public string statuschangedon { get; set; }
 	public string statusremarks { get; set; }
 	public string requesterid { get; set; }
-
+	public string issuername { get; set; }
+	public string issuerstatus { get; set; }
+	public string issuerstatusremarks { get; set; }
+	public DateTime issuerstatuschangedon { get; set; }
 
 
 }
@@ -2113,6 +2121,10 @@ public class MaterialTransaction
 	public string approvalremarks { get; set; }
 	public DateTime? approvedon { get; set; }
 	public string approvalcheck { get; set; }
+	public string issuername { get; set; }
+	public string issuerstatus { get; set; }
+	public string issuerstatusremarks { get; set; }
+	public DateTime issuerstatuschangedon { get; set; }
 }
 
 public class MaterialTransactionDetail

@@ -200,7 +200,7 @@ namespace WMS.Interfaces
 		Task<IEnumerable<stocktransferModel>> getstocktransferdata();
 		Task<IEnumerable<stocktransferModel>> getstocktransferdatagroup();
 
-		Task<IEnumerable<invstocktransfermodel>> getstocktransferdatagroup1(string transfertype);
+		Task<IEnumerable<invstocktransfermodel>> getstocktransferdatagroup1(string transfertype,string employeeno);
 		Task<IEnumerable<ddlmodel>> pendingreceiptslist();
 		Task<IEnumerable<ddlmodel>> pendingstogr();
 

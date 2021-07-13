@@ -221,7 +221,7 @@ export class ReceiveSTORequestComponent implements OnInit {
       msg = "Rejection successful";
       errormsg = "Rejection failed";
     }
-    this.wmsService.updateSTOSubcontractstatus(this.statusmodel).subscribe(data => {
+    this.wmsService.updateIssuerstatus(this.statusmodel).subscribe(data => {
       if (data) {
         this.messageService.add({ severity: 'success', summary: '', detail: msg });
       }
