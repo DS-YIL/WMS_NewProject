@@ -68,7 +68,7 @@
               <td class="ptable-cell" style="text-align:left;width:80px;">{{rowData.status}}</td>
               <td *ngIf="selectedStatus=='Issued' || selectedStatus=='Acknowledged'" class="ptable-cell" style="text-align:center;width:100px;">{{rowData.issuedon  | date :  constants.dateFormat}}</td>
               <td *ngIf="selectedStatus=='Issued' || selectedStatus=='Acknowledged' || selectedStatus=='Rejected'" class="ptable-cell" style="text-align:center;width:90px;"><button type="button" style="font-size:12px" class="btn btn-success" (click)="navigateToMatIssue(rowData)">View</button></td>
-              <td *ngIf="selectedStatus=='Pending' || selectedStatus=='On Hold'" class="ptable-cell" style="text-align:center;width:180px;">
+              <td *ngIf="selectedStatus=='Pending' || !rowData.status || selectedStatus=='On Hold'" class="ptable-cell" style="text-align:center;width:180px;">
                 <button type="button" style="font-size:12px" class="btn btn-success" (click)="navigateToMatIssue(rowData)">Issue</button>
                 <button type="button" style="font-size:12px" class="btn btn-warning" *ngIf="selectedStatus !='On Hold'" (click)="holdreject(rowData,'On Hold')">Hold</button>
                 <button type="button" style="font-size:12px" class="btn btn-danger"  (click)="holdreject(rowData,'Rejected')">Reject</button>

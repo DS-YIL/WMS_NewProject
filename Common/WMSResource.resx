@@ -1989,7 +1989,7 @@ left join wms."MaterialMasterYGS" ygs on ygs.material=sk.materialid
 where iss.requestid = '#requestforissueid' and iss.requesttype = '#type'</value>
   </data>
   <data name="getSTOListForIssue" xml:space="preserve">
-    <value>select inv.transferid,inv.transferredby as requesterid,inv.materialtype,inv.status,emp2.name as statuschangeby,inv.issuerstatus,inv.issuerstatuschangedon,inv.issuerstatusremarks,emp.name as transferredby,emp1.name as approvername,inv.transferredon,inv.transfertype,inv.sourceplant,inv.destinationplant,inv.remarks,inv.isporequested,inv.approverid ,inv.approvalremarks ,inv.approvedon,
+    <value>select inv.transferid,inv.transferredby as requesterid,inv.materialtype,inv.status,emp2.name as statuschangeby,inv.issuerstatuschangedon,inv.issuerstatusremarks,emp.name as transferredby,emp1.name as approvername,inv.transferredon,inv.transfertype,inv.sourceplant,inv.destinationplant,inv.remarks,inv.isporequested,inv.approverid ,inv.approvalremarks ,inv.approvedon,
 (select SUM(wm.issuedqty) from wms.wms_materialissue wm where wm.requesttype = '#type' and wm.requestid::text in (
 select id::text from wms.wms_invtransfermaterial wi where wi.transferid = inv.transferid)) as issuedqty,
 (select SUM(wiv.transferqty) from wms.wms_invtransfermaterial wiv where wiv.transferid = inv.transferid) as transferqty,
@@ -2495,7 +2495,7 @@ VALUES(@inwmasterid,@receiveddate,@receivedby,@receivedqty,0,@confirmqty,@materi
   </data>
   <data name="getItemlocationwithStore" xml:space="preserve">
     <value>(select sum(sk.availableqty::decimal(19,5))as availableqty,Max(sk.materialid) as materialid,sk.itemlocation,Max(sk.poitemdescription) as materialdescription,sk.createddate::DATE,0 as mrntotalissuedqty
-from wms.wms_stock sk 
+,null as putawayinward from wms.wms_stock sk 
 where sk.materialid='#materialid' and lower(sk.poitemdescription)  = lower('#desc') and sk.projectid = '#projectid' and sk.pono = '#pono'
 and sk.availableqty&gt;0 
 group by sk.itemlocation,sk.createddate::DATE order by sk.createddate::DATE desc)
@@ -2504,7 +2504,7 @@ union all
 (select sum(m.issuedqty) from wms.mrnmaterials m 
 left outer join wms.wms_storeinward sw on sw.inwardid = m.inwardid 
 where sw.projectid = max(ws.projectid) and sw.materialid = max(ws.materialid) and sw.pono = max(ws.pono) and sw.poitemdescription = max(ws.poitemdescription) ) as mrntotalissuedqty
-from wms.wms_storeinward ws
+,(select max(wss.inwardid) from wms.wms_stock wss where wss.inwardid = max(ws.inwardid) limit 1) as putawayinward from wms.wms_storeinward ws
 left outer join wms.wms_securityinward siw on siw.inwmasterid = ws.inwmasterid 
 where siw.isdirectdelivered is not true and siw.deleteflag is not true and ws.deleteflag is not true and ws.materialid='#materialid' and lower(ws.poitemdescription)  = lower('#desc') and ws.projectid = '#projectid' and ws.pono = '#pono'
 and ws.confirmqty &gt; 0  group by ws.materialid,ws.poitemdescription)</value>
@@ -2637,7 +2637,7 @@ group by ws.pono, polist.suppliername</value>
   </data>
   <data name="getItemlocationwithStoreSTO" xml:space="preserve">
     <value>(select sum(sk.availableqty::decimal(19,5))as availableqty,Max(sk.materialid) as materialid,sk.itemlocation,Max(sk.poitemdescription) as materialdescription,sk.createddate::DATE,0 as mrntotalissuedqty
-from wms.wms_stock sk 
+,null as putawayinward from wms.wms_stock sk 
 left outer join wms.wms_rd_locator loc on sk.storeid = loc.locatorid 
 where sk.materialid='#materialid' and lower(sk.poitemdescription)  = lower('#desc') and loc.locatorname = '#store' and sk.projectid = '#projectid' and sk.pono = '#pono'
 and sk.availableqty&gt;0 
@@ -2646,7 +2646,7 @@ union all
 (select sum(ws.confirmqty ::decimal(19,5))as availableqty,ws.materialid as materialid,'ON FLOOR' as itemlocation,ws.poitemdescription as materialdescription,max(ws.receiveddate ::DATE) as createddate,
 (select sum(m.issuedqty) from wms.mrnmaterials m 
 left outer join wms.wms_storeinward sw on sw.inwardid = m.inwardid 
-where sw.projectid = max(ws.projectid) and sw.materialid = max(ws.materialid) and sw.pono = max(ws.pono) and sw.poitemdescription = max(ws.poitemdescription) ) as mrntotalissuedqty
+where sw.projectid = max(ws.projectid) and sw.materialid = max(ws.materialid) and sw.pono = max(ws.pono) and sw.poitemdescription = max(ws.poitemdescription) ) as mrntotalissuedqty,(select max(wss.inwardid) from wms.wms_stock wss where wss.inwardid = max(ws.inwardid) limit 1) as putawayinward
 from wms.wms_storeinward ws
 left outer join wms.wms_securityinward siw on siw.inwmasterid = ws.inwmasterid 
 where siw.isdirectdelivered is not true and siw.deleteflag is not true and ws.deleteflag is not true and ws.materialid='#materialid' and lower(ws.poitemdescription)  = lower('#desc') and ws.projectid = '#projectid' and ws.pono = '#pono'
@@ -2697,7 +2697,7 @@ where m.requestid = '#gatepassmaterialid' and m.requesttype = 'GatePass'</value>
     <value>update wms.wms_gatepass set issuerstatus =@issuerstatus,issuerstatusremarks =@issuerstatusremarks,issuerstatuschangeby =@issuerstatuschangeby,issuerstatuschangedon =current_date where gatepassid ='#gatepassid'</value>
   </data>
   <data name="updateInvtransferStatus" xml:space="preserve">
-    <value>update wms.wms_invstocktransfer set issuerstatus =@issuerstatus,issuerstatusremarks =@issuerstatusremarks,issuerstatuschangeby =@issuerstatuschangeby,issuerstatuschangedon =current_date where transferid ='#transferid'</value>
+    <value>update wms.wms_invstocktransfer set status=@status, issuerstatusremarks =@issuerstatusremarks,issuerstatuschangeby =@issuerstatuschangeby,issuerstatuschangedon =current_date where transferid ='#transferid'</value>
   </data>
   <data name="updatesmaterialReqStatus" xml:space="preserve">
     <value>update wms.materialrequest set issuerstatus =@issuerstatus,issuerstatusremarks =@issuerstatusremarks,issuerstatuschangeby =@issuerstatuschangeby,issuerstatuschangedon =current_date where requestid='#requestid'</value>

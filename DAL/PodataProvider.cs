@@ -4424,7 +4424,7 @@ namespace WMS.DAL
 					{
 						string requestid = dataobj[0].transferid;
 						string approvedby = dataobj[0].approvedby;
-						string updaterequest = "update wms.wms_invstocktransfer set issuerstatus='Issued',issuerstatuschangedon=current_date,issuerstatuschangeby='" + approvedby + "',  status = 'Issued',issuedon=current_date where transferid='" + requestid + "'";
+						string updaterequest = "update wms.wms_invstocktransfer set status='Issued',issuerstatuschangedon=current_date,issuerstatuschangeby='" + approvedby + "',  status = 'Issued',issuedon=current_date where transferid='" + requestid + "'";
 
 						var data2 = DB.ExecuteScalar(updaterequest, new
 						{
@@ -6933,6 +6933,7 @@ namespace WMS.DAL
 					await pgsql.OpenAsync();
 					var data = await pgsql.QueryAsync<IssueRequestModel>(
 					  query, null, commandType: CommandType.Text);
+					data = data.Where(li => li.putawayinward == null).ToList();
 					foreach (IssueRequestModel mdl in data)
 					{
 						if (mdl.mrntotalissuedqty != null && mdl.mrntotalissuedqty > 0)
@@ -6993,6 +6994,7 @@ namespace WMS.DAL
 					await pgsql.OpenAsync();
 					var data = await pgsql.QueryAsync<IssueRequestModel>(
 					  query, null, commandType: CommandType.Text);
+					data = data.Where(li => li.putawayinward == null).ToList();
 					foreach (IssueRequestModel mdl in data)
 					{
 						if (mdl.mrntotalissuedqty != null && mdl.mrntotalissuedqty > 0)
@@ -19065,7 +19067,7 @@ Review Date :<<>>   Reviewed By :<<>>
 						{
 							var results = DB.ExecuteScalar(Invqry, new
 							{
-								model.issuerstatus,
+								model.status,
 								model.issuerstatusremarks,
 								model.issuerstatuschangeby
 							});

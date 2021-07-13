@@ -68,7 +68,7 @@ export class MaterialIssueDashBoardComponent implements OnInit {
     this.wmsService.getMaterialIssueLlist(this.employee.employeeno).subscribe(data => {
       this.materialIssueListnofilter = data;
       debugger;
-      this.materialIssueList = this.materialIssueListnofilter.filter(li => li.issuerstatus == "Pending");
+      this.materialIssueList = this.materialIssueListnofilter.filter(li => li.issuerstatus == "Pending" || li.issuerstatus == null);
       if (!isNullOrUndefined(this.requestedid) && this.requestedid != "") {
         this.materialIssueList = this.materialIssueList.filter(li => li.requestid == this.requestedid);
       }
@@ -76,16 +76,21 @@ export class MaterialIssueDashBoardComponent implements OnInit {
   }
   onSelectStatus(event) {
     this.selectedStatus = event.target.value;
-    if (this.selectedStatus != "Issued") {
-      this.materialIssueList = this.materialIssueListnofilter.filter(li => li.issuerstatus == this.selectedStatus);
+    if (this.selectedStatus == "Pending") {
+      this.materialIssueList = this.materialIssueListnofilter.filter(li => li.issuerstatus == this.selectedStatus || li.issuerstatus == null);
     }
     else if (this.selectedStatus == "Issued") {
       this.materialIssueList = this.materialIssueListnofilter.filter(li => li.issuerstatus == this.selectedStatus && li.issuedby == this.employee.employeeno);
     }
+    else {
+      this.materialIssueList = this.materialIssueListnofilter.filter(li => li.issuerstatus == this.selectedStatus);
+    }
+
+
   }
   SubmitStatus() {
     if (this.selectedStatus == "Pending") {
-      this.materialIssueList = this.materialIssueListnofilter.filter(li => li.issuerstatus == "Pending");
+      this.materialIssueList = this.materialIssueListnofilter.filter(li => li.issuerstatus == "Pending" || li.issuerstatus == null);
     }
     else if (this.selectedStatus == "Issued") {
       this.materialIssueList = this.materialIssueListnofilter.filter(li => li.issuerstatus == "Issued" && li.issuedby == this.employee.employeeno);

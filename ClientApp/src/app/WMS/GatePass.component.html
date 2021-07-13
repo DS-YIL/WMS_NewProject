@@ -92,7 +92,7 @@
               <th *ngIf="!selectedrba.material_issue && !selectedrba.gatepass_approval" style="text-align:center;">Edit</th>
               <th *ngIf="(selectedrba.material_issue || selectedrba.gate_pass) && !selectedrba.gatepass_approval" style="text-align:center;">Print</th>
               <th *ngIf="selectedrba.material_issue && selectedStatus=='Issued' " style="text-align:center">Returned Date</th>
-              <th *ngIf="selectedrba.gatepass_approval" style="text-align:center;width:190px"></th>
+              <th *ngIf="selectedrba.material_issue" style="text-align:center;width:220px"></th>
             </tr>
 
           </ng-template>
@@ -104,7 +104,7 @@
 
               <td class="ptable-cell" style="text-align:center;width:150px;">
                 <a style="cursor:pointer;color:blue;text-decoration:underline;" *ngIf="rowData.gatepassid && selectedrba.gate_pass && employee.roleid=='5' || rowData.isnonproject" (click)="showdetails(rowData,ri)">{{rowData.gatepassid}}</a>
-                <a *ngIf="selectedrba.material_issue && employee.roleid!='5' && !rowData.isnonproject" [routerLink]="['/WMS/GatePassApprover',rowData.gatepassid]" (click)="showdetails(rowData,ri)" routerLinkActive="active">{{rowData.gatepassid}}</a>
+                <a *ngIf="selectedrba.material_issue && employee.roleid!='5' && !rowData.isnonproject"   routerLinkActive="active">{{rowData.gatepassid}}</a>
               </td>
               <td class="ptable-cell" style="text-align:left" *ngIf="!selectedrba.gatepass_approval">{{rowData.materialtype}} / {{rowData.gatepasstype}}</td>
               <td class="ptable-cell" style="text-align:left">{{rowData.vendorname}}</td>
@@ -145,7 +145,7 @@
               </td>
               <td class="ptable-cell" *ngIf="(selectedrba.material_issue || selectedrba.gate_pass) && !selectedrba.gatepass_approval" style="text-align:center"><button *ngIf="rowData.approverstatus=='Approved'" type="button" icon="fa fa-print" pButton aria-hidden="true" (click)="showprint(rowData)"></button></td>
               <td *ngIf="selectedrba.material_issue && selectedStatus=='Issued'" class="ptable-cell" style="text-align:center"><button *ngIf="rowData.gatepasstype=='Returnable' && selectedrba.material_issue && rowData.approverstatus=='Approved' && rowData.status!='Full Closure' " type="button" icon="fa fa-pencil" pButton aria-hidden="true" (click)="openGatepassDialog(rowData,ri,'updateReturnedDateDialog')"></button></td>
-              <td *ngIf="selectedrba.gatepass_approval" class="ptable-cell" style="text-align:center;width:190px;">
+              <td *ngIf="selectedrba.material_issue" class="ptable-cell" style="text-align:center;width:220px;">
                 <button type="button" style="font-size:12px" class="btn btn-success" *ngIf="selectedStatus=='Pending' || selectedStatus=='On Hold'" (click)="navigateToMatIssue(rowData)">Issue</button>
                 <button type="button" style="font-size:12px" class="btn btn-primary" *ngIf="selectedStatus=='Issued' || selectedStatus=='Rejected'" (click)="navigateToMatIssue(rowData)">View</button>
                 <button type="button" style="font-size:12px" class="btn btn-warning" *ngIf="selectedStatus=='Pending' || selectedStatus=='Pending'" (click)="holdreject(rowData,'On Hold')">Hold</button>

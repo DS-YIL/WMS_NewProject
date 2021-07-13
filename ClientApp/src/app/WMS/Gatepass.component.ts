@@ -1649,7 +1649,7 @@ export class GatePassComponent implements OnInit {
     //}
 
     if (this.selectedStatus == "Pending") {
-      this.gatepassFiltered = this.gatepassModelList.filter(li => (li.issuedqty == 0 || isNullOrUndefined(li.issuedqty)) && li.approverstatus == "Approved" && li.isnonproject != true);
+      this.gatepassFiltered = this.gatepassModelList.filter(li => (li.issuedqty == 0 || isNullOrUndefined(li.issuedqty)) && li.issuerstatus==null  && li.approverstatus == "Approved" && li.isnonproject != true);
     }
     else if (this.selectedStatus == "Issued") {
       this.gatepassFiltered = this.gatepassModelList.filter(li => li.issuedqty > 0 || li.isnonproject == true);
@@ -1670,11 +1670,11 @@ export class GatePassComponent implements OnInit {
   }
   holdreject(data: any, status: string) {
     this.statusmodel = new Issuestatus();
-    this.statusmodel.requestid = data.transferid;
+    this.statusmodel.requestid = data.gatepassid;
     this.statusmodel.issuerstatus = status;
     this.statusmodel.requestedby = data.requesterid;
     this.statusmodel.issuerstatuschangeby = this.employee.employeeno;
-    this.statusmodel.type = "STO";
+    this.statusmodel.type = "gatepass";
 
     if (status == "On Hold") {
       this.remarksheadertext = "Are you sure to put request on hold ?";
@@ -1705,6 +1705,7 @@ export class GatePassComponent implements OnInit {
     this.wmsService.updateIssuerstatus(this.statusmodel).subscribe(data => {
       if (data) {
         this.messageService.add({ severity: 'success', summary: '', detail: msg });
+        this.getGatePassList()
       }
       else {
         this.messageService.add({ severity: 'success', summary: '', detail: errormsg });
@@ -1720,4 +1721,10 @@ export class GatePassComponent implements OnInit {
     this.statusremarks = "";
     this.statusmodel = new Issuestatus();
   }
+
+  //navigate to material issue page
+  navigateToMatIssue(details: any) {
+    this.router.navigate(["/WMS/GatePassApprover", details.gatepassid]);
+  }
+
 }

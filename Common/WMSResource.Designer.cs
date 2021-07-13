@@ -1311,12 +1311,12 @@ namespace WMS.Common {
         
         /// <summary>
         ///   Looks up a localized string similar to (select sum(sk.availableqty::decimal(19,5))as availableqty,Max(sk.materialid) as materialid,sk.itemlocation,Max(sk.poitemdescription) as materialdescription,sk.createddate::DATE,0 as mrntotalissuedqty
-        ///from wms.wms_stock sk 
+        ///,null as putawayinward from wms.wms_stock sk 
         ///where sk.materialid=&apos;#materialid&apos; and lower(sk.poitemdescription)  = lower(&apos;#desc&apos;) and sk.projectid = &apos;#projectid&apos; and sk.pono = &apos;#pono&apos;
         ///and sk.availableqty&gt;0 
         ///group by sk.itemlocation,sk.createddate::DATE order by sk.createddate::DATE desc)
         ///union all
-        ///(select sum(ws.confirmqty ::d [rest of string was truncated]&quot;;.
+        ///(selec [rest of string was truncated]&quot;;.
         /// </summary>
         public static string getItemlocationwithStore {
             get {
@@ -1326,11 +1326,10 @@ namespace WMS.Common {
         
         /// <summary>
         ///   Looks up a localized string similar to (select sum(sk.availableqty::decimal(19,5))as availableqty,Max(sk.materialid) as materialid,sk.itemlocation,Max(sk.poitemdescription) as materialdescription,sk.createddate::DATE,0 as mrntotalissuedqty
-        ///from wms.wms_stock sk 
+        ///,null as putawayinward from wms.wms_stock sk 
         ///left outer join wms.wms_rd_locator loc on sk.storeid = loc.locatorid 
         ///where sk.materialid=&apos;#materialid&apos; and lower(sk.poitemdescription)  = lower(&apos;#desc&apos;) and loc.locatorname = &apos;#store&apos; and sk.projectid = &apos;#projectid&apos; and sk.pono = &apos;#pono&apos;
-        ///and sk.availableqty&gt;0 
-        ///group by sk.itemlocat [rest of string was truncated]&quot;;.
+        ///and sk.availableqty&gt;0  [rest of string was truncated]&quot;;.
         /// </summary>
         public static string getItemlocationwithStoreSTO {
             get {
@@ -2531,9 +2530,9 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select inv.transferid,inv.transferredby as requesterid,inv.materialtype,inv.status,emp2.name as statuschangeby,inv.issuerstatus,inv.issuerstatuschangedon,inv.issuerstatusremarks,emp.name as transferredby,emp1.name as approvername,inv.transferredon,inv.transfertype,inv.sourceplant,inv.destinationplant,inv.remarks,inv.isporequested,inv.approverid ,inv.approvalremarks ,inv.approvedon,
+        ///   Looks up a localized string similar to select inv.transferid,inv.transferredby as requesterid,inv.materialtype,inv.status,emp2.name as statuschangeby,inv.issuerstatuschangedon,inv.issuerstatusremarks,emp.name as transferredby,emp1.name as approvername,inv.transferredon,inv.transfertype,inv.sourceplant,inv.destinationplant,inv.remarks,inv.isporequested,inv.approverid ,inv.approvalremarks ,inv.approvedon,
         ///(select SUM(wm.issuedqty) from wms.wms_materialissue wm where wm.requesttype = &apos;#type&apos; and wm.requestid::text in (
-        ///select id: [rest of string was truncated]&quot;;.
+        ///select id::text from wms.wm [rest of string was truncated]&quot;;.
         /// </summary>
         public static string getSTOListForIssue {
             get {
@@ -4127,7 +4126,7 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to update wms.wms_invstocktransfer set issuerstatus =@issuerstatus,issuerstatusremarks =@issuerstatusremarks,issuerstatuschangeby =@issuerstatuschangeby,issuerstatuschangedon =current_date where transferid =&apos;#transferid&apos;.
+        ///   Looks up a localized string similar to update wms.wms_invstocktransfer set status=@status, issuerstatusremarks =@issuerstatusremarks,issuerstatuschangeby =@issuerstatuschangeby,issuerstatuschangedon =current_date where transferid =&apos;#transferid&apos;.
         /// </summary>
         public static string updateInvtransferStatus {
             get {

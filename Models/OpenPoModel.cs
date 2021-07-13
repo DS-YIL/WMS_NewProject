@@ -737,6 +737,7 @@ namespace WMS.Models
 		public string materialtype { get; set; }
 		public string managerid { get; set; }
 		public string issuerstatus { get; set; }
+		public string putawayinward { get; set; }
 		
 	}
 
@@ -2558,6 +2559,7 @@ public class YGSGR
 }
 public class Issuestatus
 {
+	public string status { get; set; }
 	public string issuerstatus { get; set; }
 	public string issuerstatusremarks { get; set; }
 	public string issuerstatuschangeby { get; set; }

@@ -64,10 +64,10 @@
               <td class="ptable-cell" style="text-align:center;width:100px;">{{rowData.transferredon  | date :  constants.dateFormat}}</td>
               <td *ngIf="selectedStatus=='Issued'" class="ptable-cell" style="text-align:center;width:100px;">{{rowData.issuedon  | date :  constants.dateFormat}}</td>
               <td class="ptable-cell" style="text-align:center;width:190px;">
-                <button type="button" style="font-size:12px" class="btn btn-success" *ngIf="rowData.status=='Pending' && !rowData.isporequested || selectedStatus=='On Hold'" (click)="navigateToMatIssue(rowData)">Issue</button>
+                <button type="button" style="font-size:12px" class="btn btn-success" *ngIf="(rowData.status=='Pending' || !rowData.status) && !rowData.isporequested || selectedStatus=='On Hold'" (click)="navigateToMatIssue(rowData)">Issue</button>
                 <button type="button" style="font-size:12px" class="btn btn-primary" *ngIf="rowData.status=='Issued' || rowData.isporequested || selectedStatus=='Rejected'" (click)="navigateToMatIssue(rowData)">View</button>
-                <button type="button" style="font-size:12px" class="btn btn-warning" *ngIf="rowData.status=='Pending' && !rowData.isporequested" (click)="holdreject(rowData,'On Hold')">Hold</button>
-                <button type="button" style="font-size:12px" class="btn btn-danger" *ngIf="(rowData.status=='Pending' && !rowData.isporequested) || selectedStatus=='On Hold'" (click)="holdreject(rowData,'Rejected')">Reject</button>
+                <button type="button" style="font-size:12px" class="btn btn-warning" *ngIf="(rowData.status=='Pending' || !rowData.status) && !rowData.isporequested" (click)="holdreject(rowData,'On Hold')">Hold</button>
+                <button type="button" style="font-size:12px" class="btn btn-danger" *ngIf="((rowData.status=='Pending' || !rowData.status) && !rowData.isporequested) || selectedStatus=='On Hold'" (click)="holdreject(rowData,'Rejected')">Reject</button>
               </td>
               <!--<td *ngIf="selectedStatus=='Pending'" class="ptable-cell" style="text-align:center;width:90px;"><button type="button" [disabled]="rowData.isporequested==true?true:false" style="font-size:12px" [ngClass]="rowData.isporequested==true ? 'btn btn-secondary' : 'btn btn-success'" (click)="navigateToPOInitiate(rowData)">Initiate PO</button></td>-->
             </tr>

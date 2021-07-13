@@ -132,10 +132,10 @@
               <th style="text-align:center;width:20%;">Vendor Name</th>
               <!--<th style="text-align:center;width:10%;">Transferred By</th>-->
               <th style="text-align:center;width:10%;">Transferred On</th>
-              <th style="text-align:center;width:15%;">Issuer Status</th>
+              <th style="text-align:center;width:15%;">Status</th>
               <th style="text-align:center;width:10%;">Issuer</th>
               <th style="text-align:center;width:10%;">Issuer Remarks </th>
-              <th style="text-align:center;width:10%;">Status</th>
+              <!--<th style="text-align:center;width:10%;">Status</th>-->
               <th style="text-align:center;width:10%;">Remarks</th>
               <th style="text-align:center;width:15%;">Acknowledge</th>
             </tr>
@@ -167,12 +167,12 @@
               <td class="ptable-cell" style="text-align:center;width:10%;">
                 <span>{{rowData.transferredon | date :  constants.dateFormat}}</span>
               </td>
-              <td class="ptable-cell" style="text-align:center;width:15%;">{{rowData.issuerstatus}}</td>
+              <td class="ptable-cell" style="text-align:center;width:15%;">{{rowData.status}}</td>
               <td class="ptable-cell" style="text-align:center;width:10%;">{{rowData.issuername}}</td>
               <td class="ptable-cell" style="text-align:center;width:10%;">{{rowData.issuerstatusremarks}}</td>
-              <td class="ptable-cell" style="text-align:left;width:10%;">
+              <!--<td class="ptable-cell" style="text-align:left;width:10%;">
                 <span>{{rowData.status}}</span>
-              </td>
+              </td>-->
               <td class="ptable-cell" style="text-align:left;width:10%;">
                 <span>{{rowData.remarks}}</span>
               </td>

@@ -101,7 +101,7 @@ export class ReceiveSubContractRequestComponent implements OnInit {
   holdreject(data: any, status: string) {
     this.statusmodel = new Issuestatus();
     this.statusmodel.requestid = data.transferid;
-    this.statusmodel.issuerstatus = status;
+    this.statusmodel.status = status;
     this.statusmodel.requestedby = data.requesterid;
     this.statusmodel.issuerstatuschangeby = this.employee.employeeno;
     this.statusmodel.type = "SubContract";
@@ -124,17 +124,18 @@ export class ReceiveSubContractRequestComponent implements OnInit {
     this.statusmodel.issuerstatusremarks = this.statusremarks;
     var msg = "";
     var errormsg = "";
-    if (this.statusmodel.issuerstatus == "On Hold") {
+    if (this.statusmodel.status == "On Hold") {
       msg = "On hold successful";
       errormsg = "On hold failed";
     }
-    if (this.statusmodel.issuerstatus == "Rejected") {
+    if (this.statusmodel.status == "Rejected") {
       msg = "Rejection successful";
       errormsg = "Rejection failed";
     }
     this.wmsService.updateIssuerstatus(this.statusmodel).subscribe(data => {
       if (data) {
         this.messageService.add({ severity: 'success', summary: '', detail: msg });
+        this.getSTORequestList();
       }
       else {
         this.messageService.add({ severity: 'success', summary: '', detail: errormsg });

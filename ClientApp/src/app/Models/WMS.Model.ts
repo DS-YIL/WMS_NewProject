@@ -1356,6 +1356,7 @@ export class Issuestatus
   type: string;
   requestid: string;
   requestedby: string;
+  status: string;
 	
 }
 
