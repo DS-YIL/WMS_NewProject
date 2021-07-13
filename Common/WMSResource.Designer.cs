@@ -2531,9 +2531,9 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select inv.transferid,inv.transferredby as requesterid,inv.materialtype,inv.status,emp2.name as statuschangeby,inv.issuerstatuschangedon,inv.issuerstatusremarks,emp.name as transferredby,emp1.name as approvername,inv.transferredon,inv.transfertype,inv.sourceplant,inv.destinationplant,inv.remarks,inv.isporequested,inv.approverid ,inv.approvalremarks ,inv.approvedon,
+        ///   Looks up a localized string similar to select inv.transferid,inv.transferredby as requesterid,inv.materialtype,inv.status,emp2.name as statuschangeby,inv.issuerstatus,inv.issuerstatuschangedon,inv.issuerstatusremarks,emp.name as transferredby,emp1.name as approvername,inv.transferredon,inv.transfertype,inv.sourceplant,inv.destinationplant,inv.remarks,inv.isporequested,inv.approverid ,inv.approvalremarks ,inv.approvedon,
         ///(select SUM(wm.issuedqty) from wms.wms_materialissue wm where wm.requesttype = &apos;#type&apos; and wm.requestid::text in (
-        ///select id::text from wms.wm [rest of string was truncated]&quot;;.
+        ///select id: [rest of string was truncated]&quot;;.
         /// </summary>
         public static string getSTOListForIssue {
             get {
