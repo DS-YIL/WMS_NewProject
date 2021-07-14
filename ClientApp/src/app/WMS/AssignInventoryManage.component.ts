@@ -107,7 +107,7 @@ export class AssignIMComponent implements OnInit {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Select Employee' });
       return;
     }
-
+    if (this.selectedEmployee)
     var data = this.getlistdata.filter(li => li.employeeid == this.selectedEmployee.employeeno)[0];
     if (!this.IsEdit && data && !data.isdelegatemember && data.deleteflag != true) {
       this.messageService.add({ severity: 'error', summary: '', detail: 'Employee Already Inventory manager ' });
@@ -119,6 +119,7 @@ export class AssignIMComponent implements OnInit {
     }
     this.getaddlistdetail = [];
     this.authUser.roleid = 4;
+    if (data)
     this.authUser.authid = data.authid;
     this.authUser.isdelegatemember = true;
     if (this.IsEdit) {//edit

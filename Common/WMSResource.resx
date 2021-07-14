@@ -1293,7 +1293,7 @@ where requestid = '#requestid'</value>
   </data>
   <data name="getmaterialrequests" xml:space="preserve">
     <value>select req.requestid,req.ackstatus,req.requesteddate,req.ackremarks,req.reserveid,req.projectcode,req.remarks,req.requesttype,
-  req.issuerstatus,req.issuerstatuschangedon ,req.issuerstatusremarks,emp."Name"  as issuername, CASE WHEN req.ackstatus IS NULL THEN false ELSE true END AS status,req.approvalremarks,
+  req.issuerstatus,req.issuerstatuschangedon ,req.issuerstatusremarks,emp."name" as issuername, CASE WHEN req.ackstatus IS NULL THEN false ELSE true END AS status,req.approvalremarks,
   CASE WHEN req.issuedby IS NULL THEN 'Pending' ELSE 'Issued' END AS approvedstatus,
    CASE 
    WHEN (req.isapprovalrequired is true and req.isapproved is true) THEN 'Approved'
@@ -1302,7 +1302,7 @@ where requestid = '#requestid'</value>
    WHEN (req.isapprovalrequired is not true) THEN 'N/A'
    ELSE 'N/A' END AS pmapprovedstatus
   from wms.materialrequest req 
-  left join employee  emp on emp."EmployeeNo" =req.issuerstatuschangeby 
+  left join wms.employee  emp on emp.employeeno =req.issuerstatuschangeby 
   where (req.requesterid = '#reqid' or req.approverid = '#reqid')order by req.requestid desc</value>
   </data>
   <data name="getmaterialreservedata" xml:space="preserve">

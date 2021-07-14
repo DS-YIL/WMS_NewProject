@@ -196,7 +196,7 @@ export class MaterialIssueComponent implements OnInit {
     this.isissuedpopup = false;
     this.roindex = rowindex;
     this.itemlocationData = [];
-    if (this.constants.materialIssueType == "Pending") {
+    if (this.constants.materialIssueType == "Pending" || this.constants.materialIssueType == "On Hold") {
       this.issueqtyenable = false;
       var pid = this.materialissueList[0].projectname;
       if (this.isplantstockrequest && this.requesttypestr == "Plant") {

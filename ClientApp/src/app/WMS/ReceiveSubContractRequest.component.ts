@@ -237,7 +237,7 @@ export class ReceiveSubContractRequestComponent implements OnInit {
     this.AddDialog = true;
     this.roindex = rowindex;
     this.itemlocationData = [];
-    if (this.selectedStatus == "Pending") {
+    if (this.selectedStatus == "Pending" || this.selectedStatus == "On Hold") {
       this.issueqtyenable = false;
       if (this.isplantstockrequest) {
         this.wmsService.getlocationsforplantstockissue(material, description).subscribe(data => {

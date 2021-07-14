@@ -273,7 +273,7 @@ export class ReceiveSTORequestComponent implements OnInit {
     this.AddDialog = true;
     this.roindex = rowindex;
     this.itemlocationData = [];
-    if (this.selectedStatus == "Pending" && !this.viewprocess) {
+    if (this.selectedStatus == "Pending" || this.selectedStatus == "On Hold" && !this.viewprocess) {
       this.issueqtyenable = false;
       if (this.isplantstockrequest) {
         this.wmsService.getlocationsforplantstockissue(material, poitemdescription).subscribe(data => {

@@ -200,7 +200,7 @@ export class GatePassApproverComponent implements OnInit {
     //  this.itemissuedloc.push(this.locdetails);
     //}
     this.itemlocationData = [];
-    if (this.constants.gatePassIssueType == "Pending") {
+    if (this.constants.gatePassIssueType == "Pending" || this.constants.gatePassIssueType == "On Hold" ) {
       this.issueqtyenable = false;
       debugger;
       var projectid = this.materialList[0].projectid;

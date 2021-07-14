@@ -1629,11 +1629,11 @@ namespace WMS.Common {
         
         /// <summary>
         ///   Looks up a localized string similar to select req.requestid,req.ackstatus,req.requesteddate,req.ackremarks,req.reserveid,req.projectcode,req.remarks,req.requesttype,
-        ///  req.issuerstatus,req.issuerstatuschangedon ,req.issuerstatusremarks,emp.&quot;Name&quot;  as issuername, CASE WHEN req.ackstatus IS NULL THEN false ELSE true END AS status,req.approvalremarks,
+        ///  req.issuerstatus,req.issuerstatuschangedon ,req.issuerstatusremarks,emp.&quot;name&quot; as issuername, CASE WHEN req.ackstatus IS NULL THEN false ELSE true END AS status,req.approvalremarks,
         ///  CASE WHEN req.issuedby IS NULL THEN &apos;Pending&apos; ELSE &apos;Issued&apos; END AS approvedstatus,
         ///   CASE 
         ///   WHEN (req.isapprovalrequired is true and req.isapproved is true) THEN &apos;Approved&apos;
-        ///   WHEN (req.isap [rest of string was truncated]&quot;;.
+        ///   WHEN (req.isapp [rest of string was truncated]&quot;;.
         /// </summary>
         public static string getmaterialrequests {
             get {
