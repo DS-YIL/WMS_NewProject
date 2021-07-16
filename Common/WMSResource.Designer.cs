@@ -2618,11 +2618,11 @@ namespace WMS.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select invtras.*,stock.itemid,stock1.unitprice,stock1.lineitemno,stock.itemlocation,stock.totalquantity as putawayqty,stock1.itemlocation as defaultlocation,
-        ///matiss.issuedqty,matiss.requestid,stock1.storeid as defaultstore,stock1.rackid as defaultrack,stock1.binid as defaultbin,
-        ///stock1.stcktype as stocktype from wms.wms_materialissue matiss 
-        ///left join wms.wms_invtransfermaterial invtras on matiss.requestid  = invtras.id ::varchar(255)
-        ///left join wms.wms_stock stock on (stock.receivedid= invtras.id ::varc [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to select invtras.id,invtras.transferid,invtras.materialid,invtras.transferqty,invtras.poitemdesc,invtras.value,invtras.pono,
+        ///stock.itemid,max(stock1.unitprice) as unitprice,max(stock1.lineitemno) as lineitemno,
+        ///max(stock.itemlocation) as itemlocation,max(stock.totalquantity) as putawayqty,max(stock1.itemlocation) as defaultlocation,
+        ///sum(matiss.issuedqty) as issuedqty,max(matiss.requestid) as requestid,max(stock1.storeid) as defaultstore,max(stock1.rackid) as defaultrack,max(stock1.binid) as defaultbin,
+        ///max(st [rest of string was truncated]&quot;;.
         /// </summary>
         public static string getSTORequestMaterialsForPutaway {
             get {
